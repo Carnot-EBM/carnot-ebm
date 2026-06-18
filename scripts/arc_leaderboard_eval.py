@@ -29,7 +29,28 @@ sys.path.insert(0, str(REPO / "python"))
 
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
-from carnot.agentic.arc_competition_agent import CLAIMED, CarnotAgentPolicy, load_solutions, _level_of
+from carnot.agentic.arc_competition_agent import (
+    CLAIMED, CarnotAgentPolicy, E3AgentPolicy, load_solutions, _level_of,
+)
+
+
+def _oracle_levels() -> dict:
+    """The per-game levels our OFFLINE oracle (GameAdapter/OfflineSolver path) reproduces, read from
+    ops/arc_solve_registry.yaml. This is the upper bound the FRAME-ONLY LIVE path is measured against:
+    the honest 'live gap' = oracle_levels - live_frame_only_levels, per game and in total."""
+    import yaml
+    d = yaml.safe_load((REPO / "ops" / "arc_solve_registry.yaml").read_text())
+    return {g["game"]: int(g.get("levels_reproduced", 0)) for g in d.get("games", [])
+            if g.get("reproducibility") == "reproduced" and int(g.get("levels_reproduced", 0)) > 0}
+
+
+def _build_policy(kind: str, game: str):
+    """The LIVE agent policy under test -- NO banked solution, NO GameAdapter, NO internal-state reads
+    (the unseen-game simulation). 'explorer' = tier-1 graph_explore only; 'e3' = the FULL competition
+    cascade (graph_explore -> E3 executable-world-model induction on stall) that make_carnot_agent runs."""
+    if kind == "e3":
+        return E3AgentPolicy(game)
+    return CarnotAgentPolicy(game, {}, force_explore=True)   # force_explore -> ignores any banked plan
 
 
 def _baseline_actions(env, game: str) -> dict:
@@ -42,14 +63,10 @@ def _baseline_actions(env, game: str) -> dict:
     return {}
 
 
-def run_game(game: str, solutions: dict, *, explore: bool, budget: int) -> dict:
+def run_game(game: str, policy, *, budget: int) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     base = _baseline_actions(env, game)
-    # HUD-masking (StepwiseExplorer hud_mask) is available but OFF by default: measured
-    # neutral on the public set and the env-probe costs real actions in competition.
-    # Enable opt-in per-game if a counter-heavy hidden game shows state-explosion.
-    policy = CarnotAgentPolicy(game, solutions, force_explore=explore)
     frames, latest, actions = [], None, 0
     start = None
     for _ in range(budget):
@@ -85,39 +102,62 @@ def run_game(game: str, solutions: dict, *, explore: bool, budget: int) -> dict:
             "efficiency": eff, "gap": gap}
 
 
+def _arg(argv, flag, default):
+    return argv[argv.index(flag) + 1] if flag in argv else default
+
+
 def main() -> int:
     argv = sys.argv[1:]
-    explore = "replay" not in argv  # default: the from-scratch (competition-relevant) measure
-    # competition allows ~96k actions/game; 6000 badly understated solve-rate (8/11 of the
-    # public games solve from scratch at 8-11k actions). 20000 reveals the true solvable set
-    # while staying fast; the genuinely-hard tail (wa30/cn04/sk48) resists even 45k.
-    budget = 20000
-    if "--budget" in argv:
-        budget = int(argv[argv.index("--budget") + 1])
-    print(f"== ARC leaderboard eval — mode={'explore(from-scratch)' if explore else 'replay'} budget={budget} ==", flush=True)
-    sols = load_solutions()
+    # --games oracle: measure the LIVE frame-only agent against the 16 games our OFFLINE oracle solved,
+    #   reporting the honest GAP (oracle 32 levels - what the live path reaches with NO per-game knowledge).
+    #   This is the north-star metric: live capability, not the offline reproducibility scorecard.
+    # --policy e3: the FULL competition cascade (graph_explore + E3 world-model induction). default
+    #   'explorer' = the fast tier-1 graph_explore floor (no LLM); 'e3' needs the local GGUF + is slower.
+    games_mode = _arg(argv, "--games", "claimed")
+    policy_kind = _arg(argv, "--policy", "explorer")
+    budget = int(_arg(argv, "--budget", "20000"))
+    oracle = _oracle_levels()
+    games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
+    print(f"== ARC LIVE-loop eval — games={games_mode} policy={policy_kind} budget={budget} "
+          f"(frame-only, no banked plan, no GameAdapter) ==", flush=True)
     rows, total_levels, total_eff, gaps = [], 0, 0.0, []
-    for game in CLAIMED:
+    live_levels_sum, oracle_sum, gap_sum = 0, 0, 0
+    for game in games:
         t0 = time.time()
-        r = run_game(game, sols, explore=explore, budget=budget)
+        r = run_game(game, _build_policy(policy_kind, game), budget=budget)
+        if games_mode == "oracle":
+            r["oracle_levels"] = oracle.get(game, 0)
+            r["gap_vs_oracle"] = max(0, oracle.get(game, 0) - r["levels"])
+            live_levels_sum += r["levels"]
+            oracle_sum += r["oracle_levels"]
+            gap_sum += r["gap_vs_oracle"]
         rows.append(r)
         total_levels += r["levels"]
         total_eff += r["efficiency"]
         if r["gap"]:
             gaps.append(r["gap"])
-        print(f"  {game:5} levels={r['levels']} (L{r['reached']}) actions={r['actions']:5} "
-              f"eff={r['efficiency']:.3f}  {'GAP' if r['gap'] else 'ok'}  [{time.time()-t0:.0f}s]", flush=True)
-    print(f"\n  LEADERBOARD SCORE: {total_levels} levels, efficiency-sum {total_eff:.3f}; "
-          f"{len(gaps)} open gaps", flush=True)
-    if gaps:
-        print("  WORST GAPS (target next):", ", ".join(g["game"] for g in gaps[:6]), flush=True)
-    out = REPO / "results" / "arc_leaderboard_eval.json"
+        extra = (f" vs oracle L{r['oracle_levels']} (gap {r['gap_vs_oracle']})" if games_mode == "oracle" else "")
+        print(f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5}"
+              f"{extra}  [{time.time()-t0:.0f}s]", flush=True)
+    if games_mode == "oracle":
+        print(f"\n  LIVE-vs-ORACLE GAP: frame-only live path reaches {live_levels_sum}/{oracle_sum} "
+              f"oracle levels (gap {gap_sum}). Closed: "
+              f"{sorted(g for g in games if oracle.get(g, 0) and rows[games.index(g)]['levels'] >= oracle[g])}", flush=True)
+    else:
+        print(f"\n  LEADERBOARD SCORE: {total_levels} levels, efficiency-sum {total_eff:.3f}; "
+              f"{len(gaps)} open gaps", flush=True)
+    verdict = (f"complete_live_oracle_gap_{live_levels_sum}_of_{oracle_sum}_levels_gap_{gap_sum}"
+               if games_mode == "oracle" else
+               f"complete_leaderboard_eval_{total_levels}_levels_{len(gaps)}_gaps")
+    out = REPO / "results" / ("arc_live_oracle_gap.json" if games_mode == "oracle" else "arc_leaderboard_eval.json")
     out.write_text(json.dumps({
-        "experiment": "arc_leaderboard_eval", "mode": "explore" if explore else "replay",
-        "budget": budget, "total_levels": total_levels, "efficiency_sum": round(total_eff, 4),
-        "open_gaps": gaps, "per_game": rows, "inference_substrate": "offline_sim_no_quota",
-        "run_date": "2026-06-17",
-        "honest_verdict": f"complete_leaderboard_eval_{total_levels}_levels_{len(gaps)}_gaps",
+        "experiment": "arc_live_oracle_gap" if games_mode == "oracle" else "arc_leaderboard_eval",
+        "games_mode": games_mode, "policy": policy_kind, "budget": budget,
+        "live_levels": live_levels_sum if games_mode == "oracle" else total_levels,
+        "oracle_levels": oracle_sum, "gap": gap_sum,
+        "efficiency_sum": round(total_eff, 4), "open_gaps": gaps, "per_game": rows,
+        "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+        "honest_verdict": verdict,
     }, indent=2))
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
     return 0
