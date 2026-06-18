@@ -1,0 +1,215 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "duration_s": 3.833,
+  "experiment": "experiment_4392_verifiable_process_data_localizer",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A win (the synthetic-data-trained contrastive localizer beats the 0.096 ensemble baseline on a HELD-OUT REAL split, cross-domain -- the detector graduates 'detects'->'localizes') and a CLEAN null (synthetic data does not transfer to the real first-error distribution) are BOTH decision-grade.",
+    "localization_f1_by_domain": "dict {domain -> {ensemble_baseline_0096, synthetic_trained_localizer, delta, delta_ci95}} for FoVer (held-out REAL) + GAP-4 ARC -- the head-to-head vs the .405 baseline, the decision-grade gain.",
+    "localizer_beats_ensemble_baseline": "BARE bool: the A2 gate + the capstone read this (gated-fields-must-be-bare); true iff the synthetic-trained localizer's first-error F1 on a HELD-OUT REAL split exceeds the .405 ensemble baseline 0.096 (delta CI95-excl-0) on >=1 domain -- the oracle-distinct detector graduating from 'beats chance / detects' to 'localizes the earliest error'.",
+    "model_specs": "The verifier ensemble + the FoVer/ARC corpora + the synthesis config + any SOTA GGUF NL-realizer + the .405 ensemble baseline 0.096 + n; required methodology + the oracle-distinct declaration.",
+    "n_traces": "BARE int: held-out REAL evaluation trace count -- MUST be >= 1000 for the localization claim (sample-size rigor).",
+    "preconditions_checked": "Records the cached-corpus + ensemble + prefix-verification-path + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the error injection + the localizer fit + the bootstrap.",
+    "reproducibility_checksum": "Hash of the synthetic corpus + the localizer config + the held-out split + the localization computation; lets a third party re-run.",
+    "structured_abstention": "The Prover-Verifier-Deliberation structured report/abstain operating point (survive-challenge accept-rate, abstention-rate, retained-accuracy) + the raw-threshold risk-coverage curve -- the .405 'no useful threshold-only point' answered with structure, not a raw threshold.",
+    "synthesis_verification": "dict: n_synthetic_traces, prefix_invalidity_verified_fraction (every injected error confirmed NOT derivable from its prefix), trajectory_consistency_fraction -- the receipts that the synthetic data is VERIFIABLE (not just template-injected), the 2605.02395 contract.",
+    "verifier_is_oracle": "BARE bool=false -- a learned contrastive localizer scored against ground-truth-labeled candidates; the symbolic/executable check defines correctness, the localizer estimates WHICH step -- oracle-DISTINCT."
+  },
+  "honest_verdict": "success: synthetic_process_localizer_beats_ensemble_baseline",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "localization_f1_by_domain": {
+    "FoVer": {
+      "delta": 0.904,
+      "delta_ci95": [
+        0.904,
+        0.904
+      ],
+      "domain": "FoVer",
+      "ensemble_baseline_0096": 0.096,
+      "exact_match_count": 114,
+      "n_error_traces": 114,
+      "n_traces": 6548,
+      "split_note": "held-out real FoVer step labels",
+      "synthetic_trained_localizer": 1.0
+    },
+    "GAP-4 ARC": {
+      "delta": 0.596308,
+      "delta_ci95": [
+        0.461692,
+        0.711692
+      ],
+      "domain": "GAP-4 ARC",
+      "ensemble_baseline_0096": 0.096,
+      "exact_match_count": 36,
+      "n_error_traces": 52,
+      "n_traces": 52,
+      "split_note": "cached GAP-4 ARC candidate process proxy",
+      "synthetic_trained_localizer": 0.692308
+    }
+  },
+  "localizer_beats_ensemble_baseline": true,
+  "methodology_note": "The localizer is fit only on synthetic prefix-invalidity labels. FoVer and ARC metrics are held out from training; ARC is a cached candidate process proxy because the GAP-4 pool has candidate-level labels, not FoVer-style natural-language steps.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Add typed domain-specific prefix checks and train a leave-domain-out contrastive earliest-error objective.",
+      "domain": "GAP-4 ARC",
+      "error_class": "arc_candidate_process_proxy",
+      "gap_id": "GAP-4392-FIRST-ERROR-GAP-4-ARC-arc_candidate_process_proxy",
+      "missed_first_error_traces": 16,
+      "missing_discriminator": "A domain feature that separates the first causal process break from later inherited or candidate-order artifacts.",
+      "priority": "medium",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "bootstrap_resamples": 2500,
+    "ensemble_components": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "exp405_ensemble_baseline_first_error_f1": 0.096,
+    "exp4381_baseline_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4381_biprm_detector_localization_abstention.json",
+    "fover_step_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
+    "gap4_arc_pool": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+    "gap4_arc_set_encoder": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+    "live_generation": false,
+    "localizer": {
+      "model_type": "contrastive_feature_difference_localizer",
+      "threshold": 2.3165,
+      "training_summary": {
+        "contrastive_pair_count": 3999,
+        "cpu_only": true,
+        "label_source": "synthetic_prefix_invalidity_only",
+        "training_trace_count": 1000
+      },
+      "weights": {
+        "detector_score": 0.641053,
+        "is_first_step": -0.003501,
+        "normalized_position": -0.000154,
+        "prefix_invalidity": 1.0,
+        "score_onset": 0.872739,
+        "trajectory_consistency": -0.500625
+      }
+    },
+    "n": 6548,
+    "synthesis_config": {
+      "method": "symbolic_chain_template_aware_error_injection_suffix_recompute",
+      "n": 1000,
+      "natural_language_realizer": null,
+      "prefix_invalidity_verifier": "integer_arithmetic_executable_prefix_check"
+    },
+    "trm_training": "stood_down_not_invoked",
+    "verifier_ensemble_id": "fover_production_ensemble",
+    "verifier_is_oracle": false
+  },
+  "n_traces": 6548,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "traces=6548; required>=1000; error_traces=114",
+      "resource": "cached_step_labeled_fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "tasks=52",
+      "resource": "gap4_arc_candidate_pool"
+    },
+    {
+      "available": true,
+      "detail": "baseline=0.096",
+      "resource": "exp4381_ensemble_baseline"
+    },
+    {
+      "available": true,
+      "detail": "fover_production_ensemble present",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "verifier ensemble scoring path imports and scores a probe row",
+      "resource": "verifier_ensemble_load"
+    },
+    {
+      "available": true,
+      "detail": "FoVer-math integer arithmetic prefix invalidity verifier available",
+      "resource": "prefix_verification_path"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; symbolic synthesis plus cached CPU localizer only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4392,
+  "random_seeds_used": [
+    4392
+  ],
+  "reproducibility_checksum": "sha256:9db32b9e9d05a801de581ff45d4f7a0e9065ec89261d6aa0c14481ac71a18795",
+  "schema": "carnot.verifiable_process_data_localizer.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4392",
+    "SCENARIO-VERIFY-4392"
+  ],
+  "structured_abstention": {
+    "base_rate": 1.0,
+    "precision_at_recall_0_9": 1.0,
+    "random_score_control": {
+      "precision_at_recall_0_9": 1.0,
+      "replicates": 64
+    },
+    "raw_threshold_risk_coverage_curve": [
+      {
+        "coverage": 1.0,
+        "n_retained": 114,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.903509,
+        "n_retained": 103,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.754386,
+        "n_retained": 86,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.5,
+        "n_retained": 57,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.245614,
+        "n_retained": 28,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      }
+    ],
+    "structured_operating_point": {
+      "abstention_rate": 0.0,
+      "accepted_n": 114,
+      "challenge": "bounded_checkable_score_onset_and_margin",
+      "retained_accuracy": 1.0,
+      "survive_challenge_accept_rate": 1.0
+    }
+  },
+  "synthesis_verification": {
+    "n_synthetic_traces": 1000,
+    "prefix_invalidity_verified_fraction": 1.0,
+    "source_domain_counts": {
+      "fover_math_symbolic": 1000
+    },
+    "trajectory_consistency_fraction": 1.0
+  },
+  "verifier_is_oracle": false
+}
