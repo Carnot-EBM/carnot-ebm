@@ -145,6 +145,29 @@ def test_tr87_hand_verifier_l5_unsolvable_rule_config_returns_large():
     assert ad.hand_verifier(g) >= 1000.0
 
 
+def test_tr87_hand_verifier_l6_two_pass_alter_rules_solvable():
+    ad = adapters.get_adapter("tr87")
+    # L6-like: alter_rules + a 2-pass A->B->C chain (double_translation). A1->[B1,B2], B1->[C3], B2->[C5];
+    # target [A1] rewritten twice = [C3,C5]. A winning rule config EXISTS, so the verifier (which searches
+    # for one via the 2-level decomposition and routes by cyclic distance to it) returns a FINITE value,
+    # not the no-config sentinel. The end-to-end proof is solve_adaptered('tr87', 6) -> reproduced.
+    rules = [(["A1"], ["B1", "B2"]), (["B1"], ["C3"]), (["B2"], ["C5"])]
+    g = _Game(current=["C3", "C5"], target=["A1"], rules=rules,
+              flags={"alter_rules": True, "double_translation": True})
+    d = ad.hand_verifier(g)
+    assert 0.0 <= d < 1000.0
+    assert ad.hand_verifier(g) == d            # deterministic (the parse-search result is cached)
+
+
+def test_tr87_hand_verifier_l6_two_pass_unsolvable_returns_large():
+    ad = adapters.get_adapter("tr87")
+    # one A->B rule + one B->C rule produce a length-1 output, but editable has length 2 -> no config
+    rules = [(["A1"], ["B1"]), (["B1"], ["C3"])]
+    g = _Game(current=["C7", "C7"], target=["A1"], rules=rules,
+              flags={"alter_rules": True, "double_translation": True})
+    assert ad.hand_verifier(g) >= 1000.0
+
+
 def test_tr87_hand_verifier_unmatchable_target_returns_large():
     ad = adapters.get_adapter("tr87")
     # a target position no rule LHS matches (an unmodelled alter_rules twist) -> large, search stops
