@@ -1,0 +1,506 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "bootstrap_resamples": 2500,
+  "detection_by_domain": [
+    {
+      "auroc_ci95": [
+        0.961867,
+        0.9936
+      ],
+      "base_rate": 0.75,
+      "claim_scope": "underpowered_n=100; report_n_only_scope_claim",
+      "detection_auroc": 0.9808,
+      "domain": "code_humaneval",
+      "ece_lodo_calibrated": 0.06406,
+      "ece_uncalibrated": 0.1205,
+      "n": 100,
+      "platt_scaler": {
+        "bias": -2.83269,
+        "mean": 0.209395,
+        "n_train": 38872,
+        "scale": 0.353054,
+        "trained_on_domains": [
+          "fover",
+          "gap4_arc",
+          "gsm8k"
+        ],
+        "weight": 2.847515
+      },
+      "random_score_auroc_control": {
+        "auroc": 0.505188,
+        "replicates": 128,
+        "seed": 4397
+      },
+      "risk_coverage": [
+        {
+          "accuracy": 0.75,
+          "coverage": 1.0,
+          "n_kept": 100,
+          "risk": 0.25,
+          "threshold": 0.075495
+        },
+        {
+          "accuracy": 0.833333,
+          "coverage": 0.9,
+          "n_kept": 90,
+          "risk": 0.166667,
+          "threshold": 0.075495
+        },
+        {
+          "accuracy": 0.946667,
+          "coverage": 0.75,
+          "n_kept": 75,
+          "risk": 0.053333,
+          "threshold": 0.578762
+        },
+        {
+          "accuracy": 1.0,
+          "coverage": 0.5,
+          "n_kept": 50,
+          "risk": 0.0,
+          "threshold": 0.911657
+        },
+        {
+          "accuracy": 1.0,
+          "coverage": 0.25,
+          "n_kept": 25,
+          "risk": 0.0,
+          "threshold": 0.958536
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct",
+      "selection_headroom": 0.18,
+      "valid_but_wrong_restricted_auroc": 0.9808,
+      "valid_but_wrong_restricted_n": 100,
+      "valid_wrong_negative_n": 25
+    },
+    {
+      "auroc_ci95": [
+        0.909218,
+        0.926669
+      ],
+      "base_rate": 0.812097,
+      "claim_scope": "n>=1000",
+      "detection_auroc": 0.918304,
+      "domain": "fover",
+      "ece_lodo_calibrated": 0.129427,
+      "ece_uncalibrated": 0.122522,
+      "n": 8829,
+      "platt_scaler": {
+        "bias": -4.390119,
+        "mean": 0.041785,
+        "n_train": 30143,
+        "scale": 0.168995,
+        "trained_on_domains": [
+          "code_humaneval",
+          "gap4_arc",
+          "gsm8k"
+        ],
+        "weight": 1.263769
+      },
+      "random_score_auroc_control": {
+        "auroc": 0.500259,
+        "replicates": 128,
+        "seed": 4397
+      },
+      "risk_coverage": [
+        {
+          "accuracy": 0.812097,
+          "coverage": 1.0,
+          "n_kept": 8829,
+          "risk": 0.187903,
+          "threshold": 0.00899
+        },
+        {
+          "accuracy": 0.876793,
+          "coverage": 0.9,
+          "n_kept": 7946,
+          "risk": 0.123207,
+          "threshold": 0.374484
+        },
+        {
+          "accuracy": 0.968585,
+          "coverage": 0.75,
+          "n_kept": 6621,
+          "risk": 0.031415,
+          "threshold": 0.686735
+        },
+        {
+          "accuracy": 0.984368,
+          "coverage": 0.5,
+          "n_kept": 4414,
+          "risk": 0.015632,
+          "threshold": 0.848107
+        },
+        {
+          "accuracy": 0.972361,
+          "coverage": 0.25,
+          "n_kept": 2207,
+          "risk": 0.027639,
+          "threshold": 0.872397
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct",
+      "selection_headroom": 0.0,
+      "valid_but_wrong_restricted_auroc": 0.918304,
+      "valid_but_wrong_restricted_n": 8829,
+      "valid_wrong_negative_n": 1659
+    },
+    {
+      "auroc_ci95": [
+        0.921491,
+        0.990625
+      ],
+      "base_rate": 0.001688,
+      "claim_scope": "n>=1000",
+      "detection_auroc": 0.963317,
+      "domain": "gap4_arc",
+      "ece_lodo_calibrated": 0.005117,
+      "ece_uncalibrated": 0.01145,
+      "n": 28443,
+      "platt_scaler": {
+        "bias": 1.599181,
+        "mean": 0.744589,
+        "n_train": 10529,
+        "scale": 0.241078,
+        "trained_on_domains": [
+          "code_humaneval",
+          "fover",
+          "gsm8k"
+        ],
+        "weight": 2.698224
+      },
+      "random_score_auroc_control": {
+        "auroc": 0.497243,
+        "replicates": 128,
+        "seed": 4397
+      },
+      "risk_coverage": [
+        {
+          "accuracy": 0.001688,
+          "coverage": 1.0,
+          "n_kept": 28443,
+          "risk": 0.998312,
+          "threshold": 0.001188
+        },
+        {
+          "accuracy": 0.001875,
+          "coverage": 0.9,
+          "n_kept": 25598,
+          "risk": 0.998125,
+          "threshold": 0.001188
+        },
+        {
+          "accuracy": 0.002203,
+          "coverage": 0.75,
+          "n_kept": 21332,
+          "risk": 0.997797,
+          "threshold": 0.001188
+        },
+        {
+          "accuracy": 0.003305,
+          "coverage": 0.5,
+          "n_kept": 14221,
+          "risk": 0.996695,
+          "threshold": 0.001188
+        },
+        {
+          "accuracy": 0.00647,
+          "coverage": 0.25,
+          "n_kept": 7110,
+          "risk": 0.99353,
+          "threshold": 0.001199
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct",
+      "selection_headroom": 0.129,
+      "valid_but_wrong_restricted_auroc": 0.963316,
+      "valid_but_wrong_restricted_n": 28437,
+      "valid_wrong_negative_n": 28389
+    },
+    {
+      "auroc_ci95": [
+        0.984555,
+        0.994967
+      ],
+      "base_rate": 0.51,
+      "claim_scope": "n>=1000",
+      "detection_auroc": 0.990196,
+      "domain": "gsm8k",
+      "ece_lodo_calibrated": 0.027897,
+      "ece_uncalibrated": 0.0725,
+      "n": 1600,
+      "platt_scaler": {
+        "bias": -2.935794,
+        "mean": 0.198048,
+        "n_train": 37372,
+        "scale": 0.345189,
+        "trained_on_domains": [
+          "code_humaneval",
+          "fover",
+          "gap4_arc"
+        ],
+        "weight": 2.763358
+      },
+      "random_score_auroc_control": {
+        "auroc": 0.500339,
+        "replicates": 128,
+        "seed": 4397
+      },
+      "risk_coverage": [
+        {
+          "accuracy": 0.51,
+          "coverage": 1.0,
+          "n_kept": 1600,
+          "risk": 0.49,
+          "threshold": 0.020217
+        },
+        {
+          "accuracy": 0.565278,
+          "coverage": 0.9,
+          "n_kept": 1440,
+          "risk": 0.434722,
+          "threshold": 0.020217
+        },
+        {
+          "accuracy": 0.673333,
+          "coverage": 0.75,
+          "n_kept": 1200,
+          "risk": 0.326667,
+          "threshold": 0.023644
+        },
+        {
+          "accuracy": 1.0,
+          "coverage": 0.5,
+          "n_kept": 800,
+          "risk": 0.0,
+          "threshold": 0.936051
+        },
+        {
+          "accuracy": 1.0,
+          "coverage": 0.25,
+          "n_kept": 400,
+          "risk": 0.0,
+          "threshold": 0.956222
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct",
+      "selection_headroom": 0.0,
+      "valid_but_wrong_restricted_auroc": 0.990196,
+      "valid_but_wrong_restricted_n": 1600,
+      "valid_wrong_negative_n": 784
+    }
+  ],
+  "detection_calibrated_multi_domain": false,
+  "domains_at_chance": [],
+  "duration_s": 27.882,
+  "experiment": "experiment_4397_cross_domain_detection_calibration",
+  "field_principles": {
+    "detection_by_domain": "list of {domain, detection_auroc, auroc_ci95, selection_headroom, ece_uncalibrated, ece_lodo_calibrated, n, base_rate} -- the per-domain detection-vs-selection DIVERGENCE + calibration transfer.",
+    "detection_calibrated_multi_domain": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff detection AUROC CI95 lower bound > 0.5 on >=2 NON-FoVer domains AND leave-one-domain-out calibration keeps ECE below the uncalibrated baseline on the held-out domain -- a deployable multi-domain detector contract.",
+    "domains_at_chance": "list[str]: domains where detection AUROC CI95 includes 0.5 -- each LOGGED as a missing-verifier gap.",
+    "honest_verdict": "Terminal-prefixed. A calibration win (detection beats chance on >=2 non-FoVer domains + calibration transfers) and an honest null (calibration does not transfer / a domain is at chance -> logged gaps = product backlog) are BOTH decision-grade.",
+    "model_specs": "The verifier ensemble + FoVer/ARC/code/GSM cached corpora + selection-headroom source + calibration method + n per domain.",
+    "pools_built": "list of {domain, source_cached_artifacts, n} -- assembled from EXISTING cached candidates only; no new live inference.",
+    "preconditions_checked": "Records the >=2 non-FoVer cached pools + ensemble + TRM-stand-down verified; pre-empts silent missing-resource fabrication.",
+    "random_seed": "Determinism precondition for scoring, calibration, and bootstrap.",
+    "reproducibility_checksum": "Hash of the multi-domain pools + ensemble config + calibration + AUROC computation.",
+    "verifier_is_oracle": "BARE bool=false -- learned/energy or cached-feature detector scores are scored against executable/exact labels, oracle-distinct."
+  },
+  "honest_verdict": "complete: calibrated_multi_domain_contract_false",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "arc_selection_headroom_summary": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+    "bootstrap_method": "stratified_candidate_bootstrap",
+    "bootstrap_resamples": 2500,
+    "cached_corpora": {
+      "code_humaneval": {
+        "base_rate": 0.75,
+        "claim_scope": "underpowered_n=100; report_n_only_scope_claim",
+        "n": 100,
+        "selection_headroom": 0.18
+      },
+      "fover": {
+        "base_rate": 0.812097,
+        "claim_scope": "n>=1000",
+        "n": 8829,
+        "selection_headroom": 0.0
+      },
+      "gap4_arc": {
+        "base_rate": 0.001688,
+        "claim_scope": "n>=1000",
+        "n": 28443,
+        "selection_headroom": 0.129
+      },
+      "gsm8k": {
+        "base_rate": 0.51,
+        "claim_scope": "n>=1000",
+        "n": 1600,
+        "selection_headroom": 0.0
+      }
+    },
+    "calibration_method": "leave_one_domain_out_platt_scaling",
+    "calibration_reference": "arXiv:2102.10395 multi-domain calibration",
+    "code_gsm_score_note": "Code and GSM labels are executable/exact, while detector scores are cached metadata-derived proxies; no label is copied into the score.",
+    "ensemble_registry_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
+    "live_generation": false,
+    "pools_built": [
+      {
+        "domain": "fover",
+        "n": 8829,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4381_biprm_detector_localization_abstention.json"
+        ]
+      },
+      {
+        "domain": "gap4_arc",
+        "n": 28443,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz"
+        ]
+      },
+      {
+        "domain": "code_humaneval",
+        "n": 100,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2838_humaneval_full_ensemble_eval.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2839_humaneval_dual_condition_v3.json"
+        ]
+      },
+      {
+        "domain": "gsm8k",
+        "n": 1600,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1998_live_it_baselines_gsm8k.json"
+        ]
+      }
+    ],
+    "random_score_control_replicates": 128,
+    "random_seed": 4397,
+    "random_seeds_used": [
+      4397
+    ],
+    "score_orientation": "higher_verifier_score_means_more_likely_correct",
+    "score_sources": {
+      "code_humaneval": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+      "fover": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+      "gap4_arc": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+      "gsm8k": "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json"
+    },
+    "selection_headroom_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4175_headroom_gate_executable_census.json",
+    "sota_gguf_generated_candidate_pools": {
+      "code": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2838_humaneval_full_ensemble_eval.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2839_humaneval_dual_condition_v3.json"
+      ],
+      "gsm8k": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1998_live_it_baselines_gsm8k.json"
+      ]
+    },
+    "source_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4175_headroom_gate_executable_census.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4381_biprm_detector_localization_abstention.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2838_humaneval_full_ensemble_eval.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2839_humaneval_dual_condition_v3.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1998_live_it_baselines_gsm8k.json"
+    ],
+    "trm_training": "stood_down_not_invoked",
+    "unavailable_domains": [],
+    "verifier_ensemble_id": "fover_arc_code_gsm_cached_detector_suite",
+    "verifier_is_oracle": false
+  },
+  "pools_built": [
+    {
+      "domain": "fover",
+      "n": 8829,
+      "source_cached_artifacts": [
+        "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4381_biprm_detector_localization_abstention.json"
+      ]
+    },
+    {
+      "domain": "gap4_arc",
+      "n": 28443,
+      "source_cached_artifacts": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz"
+      ]
+    },
+    {
+      "domain": "code_humaneval",
+      "n": 100,
+      "source_cached_artifacts": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2838_humaneval_full_ensemble_eval.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2839_humaneval_dual_condition_v3.json"
+      ]
+    },
+    {
+      "domain": "gsm8k",
+      "n": 1600,
+      "source_cached_artifacts": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1998_live_it_baselines_gsm8k.json"
+      ]
+    }
+  ],
+  "positive_control_passed": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "loaded verifier registry",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "per_domain_headroom present",
+      "resource": "selection_headroom_census"
+    },
+    {
+      "available": true,
+      "detail": "oracle_ceiling present",
+      "resource": "gap4_arc_rerank_summary"
+    },
+    {
+      "available": true,
+      "detail": "code_humaneval:n=100, gap4_arc:n=28443, gsm8k:n=1600; required>=2",
+      "resource": "two_non_fover_cached_labeled_pools"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; Exp 4397 scores existing cached candidates only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4397,
+  "random_seeds_used": [
+    4397
+  ],
+  "reproducibility_checksum": "sha256:727e7ce5f78e58713079abc7a9a6c789b4ba47f7a88c9eaf3dd793f833acd1ce",
+  "schema": "carnot.cross_domain_detection_calibration.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4397",
+    "SCENARIO-VERIFY-4397"
+  ],
+  "unavailable_domains": [],
+  "verifier_is_oracle": false
+}

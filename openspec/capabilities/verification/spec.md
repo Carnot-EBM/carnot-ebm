@@ -19214,6 +19214,75 @@ positive cross-domain detector claim.
 |---|---|---|
 | REQ-VERIFY-4386 | Implemented (`python/carnot/experiment_4386_cross_domain_detection_generalization.py`, `results/experiment_4386_cross_domain_detection_generalization.py`) | Implemented (`tests/python/test_experiment_4386_cross_domain_detection_generalization.py`) |
 
+### REQ-VERIFY-4397: Cross-Domain Detector Calibration On Cached Pools
+
+The repository SHALL provide Exp 4397 at
+`python/carnot/experiment_4397_cross_domain_detection_calibration.py` and
+`results/experiment_4397_cross_domain_detection_calibration.py` to extend the
+Exp 4386 detector-generalization readout into a calibrated multi-domain
+contract using cached, labeled candidates only. The experiment SHALL score FoVer,
+GAP-4 ARC, HumanEval/code, and GSM8K cached pools when assemblable, SHALL NOT
+invoke live generation, SHALL NOT train TRM models, and SHALL treat the
+measurement as DETECTION + CALIBRATION rather than the retired cross-domain
+SELECTION axis.
+
+Before scoring, the runner SHALL check that at least two non-FoVer cached
+labeled pools can be assembled from existing artifacts, with GAP-4 ARC counted
+only when its cached scored rows are loadable and code/GSM counted only when
+their existing cached artifacts provide labels plus deterministic detector
+scores derivable from cached candidate metadata. If fewer than two non-FoVer
+pools are assemblable, it SHALL write
+`honest_verdict=blocked_insufficient_cached_pools`,
+`detection_calibrated_multi_domain=false`, `detection_by_domain=[]`, and stop
+without fabricated metrics.
+
+When preconditions hold, the runner SHALL compute per-domain detection AUROC,
+CI95 by bootstrap with at least 2000 resamples, base rate, random-score AUROC
+control, selection headroom from the headroom census or ARC rerank summary,
+and valid-but-wrong restricted AUROC for ARC/code when validity metadata is
+available. It SHALL fit Platt-style logistic calibration with
+leave-one-domain-out folds, train each calibrator on the other domains, and
+report calibrated versus uncalibrated expected calibration error plus
+risk-coverage points for each held-out domain.
+`detection_calibrated_multi_domain` SHALL be a bare bool true iff the detection
+AUROC CI95 lower bound exceeds 0.5 on at least two non-FoVer domains and every
+leave-one-domain-out held-out domain has calibrated ECE below its uncalibrated
+baseline. Any domain whose AUROC CI95 includes 0.5 SHALL be listed in
+`domains_at_chance` and SHALL produce a missing-verifier gap entry with failure
+mode, missing discriminator, and candidate design.
+
+The terminal artifact SHALL write
+`results/experiment_4397_cross_domain_detection_calibration.json` with
+top-level fields `honest_verdict`, bare bool
+`detection_calibrated_multi_domain`, `detection_by_domain`,
+`domains_at_chance`, `pools_built`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, `random_seeds_used`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate=verifier_ensemble_against_cached_candidates`,
+and `adversarial_verify`.
+
+### SCENARIO-VERIFY-4397: Cached Detector Pools Calibrate Leave-One-Domain-Out
+
+Given FoVer plus at least two non-FoVer cached labeled detector pools are
+available from existing checked-in artifacts, when Exp 4397 runs, then it
+reports each scored domain as `{domain, detection_auroc, auroc_ci95,
+selection_headroom, ece_uncalibrated, ece_lodo_calibrated, n, base_rate}`,
+includes random-score and valid-but-wrong controls where applicable, reports
+LODO risk-coverage, sets `detection_calibrated_multi_domain` from the
+CI95-lower-bound plus ECE-improvement rule, sets `verifier_is_oracle=false`,
+embeds pools-built provenance and a reproducibility checksum, and runs
+adversarial verification. If fewer than two non-FoVer pools are assemblable,
+then the artifact SHALL emit
+`honest_verdict=blocked_insufficient_cached_pools`,
+`detection_calibrated_multi_domain=false`, `detection_by_domain=[]`, and no
+positive calibrated multi-domain detector claim.
+
+## Implementation Status (REQ-VERIFY-4397)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4397 | Implemented (`python/carnot/experiment_4397_cross_domain_detection_calibration.py`, `results/experiment_4397_cross_domain_detection_calibration.py`) | Implemented (`tests/python/test_experiment_4397_cross_domain_detection_calibration.py`) |
+
 ### REQ-VERIFY-4392: Verifiable Process Data First-Error Localizer
 
 The repository SHALL provide Exp 4392 at
