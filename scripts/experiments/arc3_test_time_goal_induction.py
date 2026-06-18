@@ -94,6 +94,45 @@ def explore_for_win(arc, game, GameAction, budget, seed, episode_len=25):
     return None
 
 
+def _growth_agent(transitions, min_count=8, max_delta=15):
+    """RICHER DYNAMICS: when no object rigidly translates, the agent may GROW/SHRINK (fill/drain
+    cell-by-cell, e.g. a snake/path). Returns the non-bg colour whose cell-COUNT changes by a small
+    amount (incremental grow/shrink) in the most transitions, or None. Paired with _agent_centroid's
+    largest-component fallback (shape will not match a growing object), this lets the goal heuristic
+    track a growth agent's frontier toward the goal."""
+    from collections import Counter
+    from carnot.agentic.arc_world_model_dsl import _background
+    tally = Counter()
+    for t in transitions:
+        if t.level_after != t.level_before or np.array_equal(t.grid, t.next_grid):
+            continue
+        g0, g1 = np.asarray(t.grid), np.asarray(t.next_grid)
+        bg = _background(g0)
+        for color in (set(int(v) for v in np.unique(g0)) | set(int(v) for v in np.unique(g1))) - {bg}:
+            n0 = int((g0 == color).sum()); n1 = int((g1 == color).sum())
+            if n0 != n1 and abs(n1 - n0) <= max_delta:
+                tally[color] += 1
+    if not tally:
+        return None
+    color, n = tally.most_common(1)[0]
+    return color if n >= min_count else None
+
+
+def identify_agent_rich(transitions, H):
+    """Agent identification handling BOTH dynamics classes: rigid TRANSLATION first (the common case,
+    via H.identify_agent); if none, fall back to a GROWTH/shrink agent (cd82-class). Returns an agent
+    dict {'color','shape_sig','dynamics'}; shape_sig is a sentinel for grow agents (no stable shape),
+    so _agent_centroid uses its largest-component fallback."""
+    a = H.identify_agent(transitions)
+    if a is not None:
+        a = dict(a); a["dynamics"] = "translate"
+        return a
+    gc = _growth_agent(transitions)
+    if gc is not None:
+        return {"color": gc, "shape_sig": ("__grow__",), "dynamics": "grow"}
+    return None
+
+
 def identify_movers(transitions, top_k=3, min_moves=3):
     """Generalizes identify_agent: the top-K connected objects that translate under actions (most-
     frequent first), filtered to those that moved >= min_moves times (drops one-off / HUD-flicker
