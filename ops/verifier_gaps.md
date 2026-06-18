@@ -1738,3 +1738,72 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - Reproducibility checksum: `a0661e0d5b21d51275b5700ffdbe9e012c306fcf26f39a27afba305ad11eb3b9`
 - Gap: bounded active-data plus K-step named-register fidelity did not reproduce a new level beyond L1.
 
+<!-- exp4388-gap-e3-world-model-rule-lp85-l6-4383:start -->
+### GAP-E3-WORLD-MODEL-RULE-LP85-L6-4383: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4383_e3_deeper_high_headroom_lookahead.json; game=lp85; offline_reproduced=False; prior_best_level=5; new_reproduced_level=5; target_level=6; verifier_accuracy=0.833333; lookahead_fidelity=0.833333; residual=wall_time_cap_exhausted.
+- failure mode: lp85 L6 remains unreproduced due to wall_time_cap_exhausted
+- missing discriminator: lp85 executable world-model rule coverage for wall_time_cap_exhausted
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-lp85-l6-4383:end -->
+
+<!-- exp4388-gap-e3-world-model-rule-tu93-l5-4383:start -->
+### GAP-E3-WORLD-MODEL-RULE-TU93-L5-4383: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4383_e3_deeper_high_headroom_lookahead.json; game=tu93; offline_reproduced=False; prior_best_level=4; new_reproduced_level=4; target_level=5; verifier_accuracy=0.8; lookahead_fidelity=0.8; residual=wall_time_cap_exhausted.
+- failure mode: tu93 L5 remains unreproduced due to wall_time_cap_exhausted
+- missing discriminator: tu93 executable world-model rule coverage for wall_time_cap_exhausted
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-tu93-l5-4383:end -->
+
+<!-- exp4388-gap-e3-world-model-rule-tn36-l8-4383:start -->
+### GAP-E3-WORLD-MODEL-RULE-TN36-L8-4383: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4383_e3_deeper_high_headroom_lookahead.json; game=tn36; offline_reproduced=False; prior_best_level=7; new_reproduced_level=7; target_level=8; verifier_accuracy=0.875; lookahead_fidelity=0.875; residual=tn36_l8_program_editor_object_control_gap_sxhtkytekm_palette_population.
+- failure mode: tn36 L8 remains unreproduced due to tn36_l8_program_editor_object_control_gap_sxhtkytekm_palette_population
+- missing discriminator: tn36 executable world-model rule coverage for tn36_l8_program_editor_object_control_gap_sxhtkytekm_palette_population
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-tn36-l8-4383:end -->
+
+<!-- exp4388-gap-e3-world-model-rule-tr87-l7-4383:start -->
+### GAP-E3-WORLD-MODEL-RULE-TR87-L7-4383: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4383_e3_deeper_high_headroom_lookahead.json; game=tr87; offline_reproduced=False; prior_best_level=6; new_reproduced_level=6; target_level=7; verifier_accuracy=0.857143; lookahead_fidelity=0.857143; residual=wall_time_cap_exhausted.
+- failure mode: tr87 L7 remains unreproduced due to wall_time_cap_exhausted
+- missing discriminator: tr87 executable world-model rule coverage for wall_time_cap_exhausted
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-tr87-l7-4383:end -->
+
+<!-- exp4388-gap-e3-world-model-rule-ar25-l2-4384:start -->
+### GAP-E3-WORLD-MODEL-RULE-AR25-L2-4384: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4384_e3_blocked_mechanic_tails_ar25_ka59_ft09.json; game=ar25; offline_reproduced=False; prior_best_level=1; new_reproduced_level=1; target_level=None; verifier_accuracy=0.90625; lookahead_fidelity=0.733333; residual=ar25_l2_action7_undo_stack_hidden_rule_gap.
+- failure mode: ar25 L2 remains unreproduced due to ar25_l2_action7_undo_stack_hidden_rule_gap
+- missing discriminator: ar25 executable world-model rule coverage for ar25_l2_action7_undo_stack_hidden_rule_gap
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-ar25-l2-4384:end -->
+
+<!-- exp4388-gap-e3-world-model-rule-ka59-l2-4384:start -->
+### GAP-E3-WORLD-MODEL-RULE-KA59-L2-4384: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4384_e3_blocked_mechanic_tails_ar25_ka59_ft09.json; game=ka59; offline_reproduced=False; prior_best_level=1; new_reproduced_level=1; target_level=None; verifier_accuracy=0.125; lookahead_fidelity=0.112281; residual=ka59_l2_hidden_step_counter_hud_register_gap.
+- failure mode: ka59 L2 remains unreproduced due to ka59_l2_hidden_step_counter_hud_register_gap
+- missing discriminator: ka59 executable world-model rule coverage for ka59_l2_hidden_step_counter_hud_register_gap
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-ka59-l2-4384:end -->
+
+<!-- exp4388-gap-e3-world-model-rule-ft09-l2-4384:start -->
+### GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384: Exp 4388 .405 verifier gap update
+- status: open
+- evidence: results/experiment_4384_e3_blocked_mechanic_tails_ar25_ka59_ft09.json; game=ft09; offline_reproduced=False; prior_best_level=1; new_reproduced_level=1; target_level=None; verifier_accuracy=0.166667; lookahead_fidelity=0.347518; residual=ft09_l2_residual_world_model_mismatch_gap.
+- failure mode: ft09 L2 remains unreproduced due to ft09_l2_residual_world_model_mismatch_gap
+- missing discriminator: ft09 executable world-model rule coverage for ft09_l2_residual_world_model_mismatch_gap
+- candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4388-gap-e3-world-model-rule-ft09-l2-4384:end -->

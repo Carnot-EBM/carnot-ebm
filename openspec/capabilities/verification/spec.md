@@ -19214,6 +19214,87 @@ positive cross-domain detector claim.
 |---|---|---|
 | REQ-VERIFY-4386 | Implemented (`python/carnot/experiment_4386_cross_domain_detection_generalization.py`, `results/experiment_4386_cross_domain_detection_generalization.py`) | Implemented (`tests/python/test_experiment_4386_cross_domain_detection_generalization.py`) |
 
+### REQ-VERIFY-4388: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .405 Truth
+
+The repository SHALL provide Exp 4388 at
+`python/carnot/experiment_4388_registry_gaps_hygiene_gap4_guard.py` and
+`results/experiment_4388_registry_gaps_hygiene_gap4_guard.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/arc_solve_registry.yaml` to the `.405` verifier and ARC outcomes. Before
+mutating ledgers, the runner SHALL parse `ops/verifier_registry.yaml` and
+`ops/arc_solve_registry.yaml` with YAML-safe loading and SHALL read
+`ops/verifier_gaps.md` as Markdown text. If any required file is unreadable or
+unparseable, the runner SHALL write
+`honest_verdict=blocked_<file>_unreadable`, bare bool
+`gap4_regression_guard_passed=false`, bare bool
+`capstone_stamp_fix_durable=false`, bare bool `registries_reconciled=false`,
+and SHALL stop without mutating the registry or gap ledgers.
+
+When preconditions hold, the runner SHALL run the GAP-4 regression guard and
+require that the ARC oracle-distinct verifier-beats-vote result has not
+regressed. The runner SHALL record the `.405` outcomes in the registry and gap
+ledgers: Exp 4381's actionable detector/localization result is a clean powered
+null with `detector_localization_actionable=false`,
+`localization_delta_ci95=[0.0, 0.0]`, and
+`GAP-FOVER-BIPRM-LOCALIZATION-untyped`; Exp 4382 is recorded as blocked because
+Exp 4381 did not pass its gate; Exp 4383 and Exp 4384 are recorded as ARC E3
+partials with `new_levels_reproduced=0`, `reproducible_total_levels=34`, and
+open residual gaps for `lp85`, `tu93`, `tn36`, `tr87`, `ar25`, `ka59`, and
+`ft09`; Exp 4385 is recorded with `detector_compounds=true`,
+`positive_control_passed=true`, and `compounding_delta_ci95=[0.003396,
+0.032772]`; and Exp 4386 is recorded with
+`detector_generalizes_cross_domain=true`, `gap4_arc` AUROC `0.963317`, CI95
+`[0.922285, 0.990662]`, `domains_at_chance=[]`, and
+`verifier_is_oracle=false`. The runner SHALL never prune old entries; prior
+gaps that are actually filled SHALL move to `status: filled (...)`, and
+residual or newly exposed missing-verifier classes SHALL remain open with
+explicit evidence. If Exp 4386 reports any `domains_at_chance`, each SHALL be
+logged as an open missing-verifier gap.
+
+The runner SHALL confirm that the capstone verifier-is-oracle stamp fix remains
+durable by running `scripts/adversarial_verify.py --json` on
+`results/experiment_4379_capstone_v404.json`, requiring zero flags and no
+`CIRCULAR_MOAT_OVERCLAIM`, and by checking that the capstone aggregation path
+continues to emit and validate `verifier_is_oracle=false` through the
+aggregate-available helper.
+
+The terminal artifact SHALL write
+`results/experiment_4388_registry_gaps_hygiene_gap4_guard.json` with
+`honest_verdict`, bare bool `gap4_regression_guard_passed`, bare bool
+`capstone_stamp_fix_durable`, bare bool `registries_reconciled`,
+`preconditions_checked`, `reproducibility_checksum`, `v405_outcomes`,
+`registry_reconciliation`, `gap4_regression_guard`, `capstone_stamp_fix`,
+`random_seed`, `model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix durable.`;
+`gap4_regression_guard_passed` = `BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.`;
+`capstone_stamp_fix_durable` = `BARE bool: the capstone aggregation still propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM on a correct capstone.`;
+`registries_reconciled` = `BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .405 outcomes (never-prune).`;
+`preconditions_checked` = `Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.`
+
+### SCENARIO-VERIFY-4388: .405 Hygiene Guards GAP-4 And Confirms Durable Capstone Stamp
+
+Given `ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/arc_solve_registry.yaml` parse, the `.405` artifacts from Exp 4381, Exp
+4382, Exp 4383, Exp 4384, Exp 4385, and Exp 4386 are present, and the GAP-4
+guard inputs are present, when Exp 4388 runs, then it records the clean
+actionable-detector null and localization gap, the detector compounding win,
+the cross-domain detector generalization with no chance-domain gaps, the `.405`
+ARC reproduced total of 34 with no new reproduced levels, preserves the GAP-4
+regression guard as passed, verifies that
+`results/experiment_4379_capstone_v404.json` scans with zero
+`CIRCULAR_MOAT_OVERCLAIM` flags, writes `gap4_regression_guard_passed=true`,
+`capstone_stamp_fix_durable=true`, and `registries_reconciled=true`, and emits a
+terminal `honest_verdict`. If any required registry/gap file is unreadable or
+unparseable, then it writes `honest_verdict=blocked_<file>_unreadable` and stops
+without reconciliation.
+
+## Implementation Status (REQ-VERIFY-4388)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4388 | Implemented (`python/carnot/experiment_4388_registry_gaps_hygiene_gap4_guard.py`, `results/experiment_4388_registry_gaps_hygiene_gap4_guard.py`) | Implemented (`tests/python/test_experiment_4388_registry_gaps_hygiene_gap4_guard.py`) |
+
 ### REQ-VERIFY-4377: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .404 Truth
 
 The repository SHALL provide Exp 4377 at
