@@ -8729,3 +8729,4 @@ c |
 | 2026-06-18 13:39 UTC | PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 93 passed, 1 warning in 6.79s |
 | 2026-06-18 14:09 UTC | PHASE C (CONTINUOUS SELF-LEARNING; mandated per re | OK | 90 passed, 1 warning in 8.92s |
 | 2026-06-18 14:34 UTC | PHASE D (ORACLE-DISTINCT cross-domain DETECTION; c | OK | 92 passed, 1 warning in 6.54s |
+| 2026-06-18 14:49 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 134 passed, 1 warning in 6.15s |
