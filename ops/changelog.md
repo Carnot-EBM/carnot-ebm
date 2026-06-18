@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-06-18 (Milestone 2026.06.404 Operational Retrospective)
+
+- [outer-loop] Wrote `results/operational_retro_2026_06_404.json` (schema `carnot.operational_retro.v64`). The authoritative milestone-scoped timing detector reported no experiment commits since activation, so `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s were idle at the snapshot, but no bottleneck was flagged because there were 0 compute-bound tasks attributed (idle GPU on a synthesis-only attribution is correct behaviour).
+- This is the recurring false-zero detector gap (documented .363-.403, now extending to .404), NOT an idle milestone. On-disk ground truth read this turn: the milestone executed end-to-end as exp4369 (archive) -> exp4379 (capstone v404), mtimes 2026-06-18 02:36->06:21Z (~3h45m wall), clean/unflagged capstone, 0 flagged artifacts, no doomed reruns. The operational failure is observability, not execution.
+- Highest-leverage operational action (recurring): repair the milestone-scoped timing detector (mtime scan within the activation->capstone window + changelog-window fallback) + write-time `duration_s`/`compute_bound`/`inference_substrate` stamping in `scripts/experiment_template.py` + auto-emit `detector_gap_suspected` when artifacts exist on disk but the detector reports 0, so retros stop false-zeroing.
+
 ## 2026-06-18 (Exp 4358 Archive .402 -> .403)
 
 - Implemented and verified REQ-REPORT-4358: added `python/carnot/reporting/archive_v402_activate_v403_4358.py`, `python/carnot/experiment_4358_archive_v402_activate_v403.py`, `results/experiment_4358_archive_v402_activate_v403.py`, and `tests/python/test_experiment_4358_archive_v402_activate_v403.py`. The workflow validates YAML preconditions, runs the smart-subset pretest, confirms `.403`, canonicalizes the `.402` archive row, and writes `results/experiment_4358_archive_v402_activate_v403.json`.
