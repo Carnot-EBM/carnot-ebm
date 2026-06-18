@@ -19284,6 +19284,76 @@ missing-verifier gap entry and append the corresponding ledger entry to
 |---|---|---|
 | REQ-VERIFY-4392 | Implemented (`python/carnot/experiment_4392_verifiable_process_data_localizer.py`, `results/experiment_4392_verifiable_process_data_localizer.py`) | Implemented (`tests/python/test_experiment_4392_verifiable_process_data_localizer.py`) |
 
+### REQ-VERIFY-4393: Localizer Skeptic-Proof Diagnostic
+
+The repository SHALL provide Exp 4393 at
+`python/carnot/experiment_4393_localizer_skeptic_proof.py` and
+`results/experiment_4393_localizer_skeptic_proof.py` to re-test the Exp 4392
+A1 first-error localizer win against template-artifact leakage, position/length
+bias, and single-split synthetic-distribution overfit. The diagnostic SHALL be
+CPU-only, SHALL NOT train TRM models, SHALL NOT invoke live generation, and
+SHALL only run when `results/experiment_4392_verifiable_process_data_localizer.json`
+reports bare bool `localizer_beats_ensemble_baseline=true`. If that gate is
+false or absent, the runner SHALL write an honest
+`honest_verdict=blocked_no_win_to_validate` artifact and stop without
+fabricating controls.
+
+Before scoring controls, the runner SHALL check that the A1 artifact is
+loadable, the A1 localizer weights are present, the deterministic synthetic
+corpus can be reconstructed from the A1 synthesis configuration and matches the
+A1 synthesis-verification count, the REAL FoVer step-labeled split is loadable
+with first-error labels, and TRM training is stood down. If any resource is
+missing, the runner SHALL write `honest_verdict=blocked_<resource>` and stop.
+
+When preconditions hold, the runner SHALL score the A1 localizer on a second
+deterministic held-out REAL FoVer split using a second seed regime and SHALL
+report the localization delta against the Exp 4381 ensemble baseline `0.096`
+with a bootstrap CI95 using at least 2000 resamples. The runner SHALL build a
+content-blind position-only baseline from the empirical first-error-step
+distribution of the complementary REAL split and SHALL compare the A1 localizer
+against that baseline on the held-out REAL split with a paired bootstrap CI95.
+The runner SHALL also retrain the localizer on a template-ablation synthetic
+corpus whose synthetic first-error structure is scrambled, score that ablated
+localizer on the same held-out REAL split, and report the A1-vs-ablation F1
+drop and paired bootstrap CI95.
+
+The terminal artifact SHALL write
+`results/experiment_4393_localizer_skeptic_proof.json` with top-level fields
+`honest_verdict`, bare bool `localizer_win_is_genuine`, bare bool
+`beats_position_only_baseline`, bare float `template_ablation_drop`,
+`held_out_real_localization_delta_ci95`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, `random_seeds_used`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate=verifier_ensemble_against_cached_candidates`,
+and `adversarial_verify`. `localizer_win_is_genuine` SHALL be true iff the A1
+localizer beats the position-only baseline with CI95 excluding zero, materially
+degrades under template ablation with CI95 excluding zero, and holds its
+held-out REAL split advantage over `0.096` with CI95 excluding zero. If any
+control fails, the artifact SHALL quarantine the A1 headline as
+artifact-confounded and expose a missing-verifier gap for the residual
+confounder class.
+
+### SCENARIO-VERIFY-4393: Position And Template Controls Can Quarantine A1
+
+Given Exp 4392 reports `localizer_beats_ensemble_baseline=true`, has loadable
+localizer weights, and the REAL FoVer split contains labeled error traces, when
+Exp 4393 runs, then it reconstructs the deterministic synthetic corpus,
+constructs a second held-out REAL split, scores the A1 localizer against both
+the `0.096` ensemble baseline and the position-only baseline, retrains and
+scores the template-ablation localizer, reports all required bare fields and
+CI95 controls, sets `verifier_is_oracle=false`, records model specs and a
+reproducibility checksum, and runs adversarial verification. If the
+content-blind position-only baseline ties or beats the A1 localizer, or the
+template-ablation F1 does not drop materially, then
+`localizer_win_is_genuine=false` and the A1 headline is quarantined rather than
+graduated.
+
+## Implementation Status (REQ-VERIFY-4393)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4393 | Implemented (`python/carnot/experiment_4393_localizer_skeptic_proof.py`, `results/experiment_4393_localizer_skeptic_proof.py`) | Implemented (`tests/python/test_experiment_4393_localizer_skeptic_proof.py`) |
+
 ### REQ-VERIFY-4388: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .405 Truth
 
 The repository SHALL provide Exp 4388 at

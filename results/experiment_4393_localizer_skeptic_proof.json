@@ -1,0 +1,184 @@
+{
+  "a1_win_quarantined": true,
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "beats_position_only_baseline": false,
+  "diagnostics": {
+    "held_out_real_split": {
+      "a1_f1": 1.0,
+      "delta": 0.904,
+      "delta_ci95": [
+        0.904,
+        0.904
+      ],
+      "ensemble_baseline_0096": 0.096,
+      "exact_match_count": 57,
+      "holds_on_held_out_real_split": true,
+      "n_error_traces": 57,
+      "n_traces": 3274
+    },
+    "position_only_baseline": {
+      "a1_f1": 1.0,
+      "beats_position_only_baseline": false,
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "n_error_traces": 57,
+      "position_counts": {
+        "0": 57
+      },
+      "position_only_f1": 1.0
+    },
+    "split_sizes": {
+      "held_out_real_traces": 3274,
+      "primary_real_traces": 3274
+    },
+    "template_ablation": {
+      "a1_f1": 1.0,
+      "degrades_under_template_ablation": false,
+      "drop": 0.0,
+      "drop_ci95": [
+        0.0,
+        0.0
+      ],
+      "material_drop_floor": 0.05,
+      "n_error_traces": 57,
+      "template_ablated_f1": 1.0
+    }
+  },
+  "duration_s": 0.28,
+  "experiment": "experiment_4393_localizer_skeptic_proof",
+  "field_principles": {
+    "beats_position_only_baseline": "BARE bool: true iff the A1 localizer beats a content-blind position-only baseline on the REAL split (CI95-excl-0) -- rules out the 'localizer just learned where errors sit' artifact.",
+    "held_out_real_localization_delta_ci95": "Bootstrap CI95 of the localization delta on a HELD-OUT REAL split -- excluding 0 rules out synthetic-distribution / single-split overfit.",
+    "honest_verdict": "Terminal-prefixed. A genuine PASS (the localizer headline graduates) and a FAIL (the A1 win quarantined as template-leak/position/overfit-confounded) are BOTH decision-grade.",
+    "localizer_win_is_genuine": "BARE bool: the capstone reads this; true iff the A1 real-split advantage beats a content-blind position-only baseline AND degrades under template-ablation AND holds on a held-out REAL split (all CI95-excl-0) -- the diagnostic that the localizer win is real first-error structure, not synthetic-template leakage / position bias / overfit.",
+    "preconditions_checked": "Records the A1 win + corpus + REAL split + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the template-ablation + the position-only baseline + the held-out split + the bootstrap.",
+    "reproducibility_checksum": "Hash of the A1 localizer + the ablations + the held-out split; lets a third party re-run.",
+    "template_ablation_drop": "BARE float: the REAL-split F1 drop when the synthetic injection template is shuffled/randomized -- a material drop confirms the localizer learned real first-error structure, not the template; ~0 drop = template leakage.",
+    "verifier_is_oracle": "BARE bool=false -- the localizer is oracle-distinct."
+  },
+  "held_out_real_localization_delta_ci95": [
+    0.904,
+    0.904
+  ],
+  "honest_verdict": "complete: a1_win_quarantined_as_artifact_confounded",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "localizer_win_is_genuine": false,
+  "methodology_note": "The diagnostic uses the Exp 4392 A1 localizer as the model under test, reconstructs the deterministic synthetic corpus for the template-ablation retrain, and evaluates only cached REAL FoVer traces. No TRM training or live generation is invoked.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Collect or construct REAL first-error traces with varied first-error positions and retrain the localizer with template-family holdouts.",
+      "confounder": "position_only_baseline_ties_a1",
+      "gap_id": "GAP-4393-LOCALIZER-POSITION-OR-TEMPLATE-CONFOUND",
+      "missing_discriminator": "A held-out real split with non-degenerate first-error positions.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "a1_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4392_verifiable_process_data_localizer.json",
+    "a1_localizer": {
+      "model_type": "contrastive_feature_difference_localizer",
+      "threshold": 2.3165,
+      "training_summary": {
+        "contrastive_pair_count": 3999,
+        "cpu_only": true,
+        "label_source": "synthetic_prefix_invalidity_only",
+        "training_trace_count": 1000
+      },
+      "weights": {
+        "detector_score": 0.641053,
+        "is_first_step": -0.003501,
+        "normalized_position": -0.000154,
+        "prefix_invalidity": 1.0,
+        "score_onset": 0.872739,
+        "trajectory_consistency": -0.500625
+      }
+    },
+    "a1_reproducibility_checksum": "sha256:9db32b9e9d05a801de581ff45d4f7a0e9065ec89261d6aa0c14481ac71a18795",
+    "bootstrap_resamples": 2500,
+    "fover_step_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
+    "heldout_split_seed": 4393,
+    "live_generation": false,
+    "position_only_baseline": {
+      "content_blind": true,
+      "feature_inputs": [
+        "first_error_step_index_distribution_only"
+      ],
+      "position_counts": {
+        "0": 57
+      }
+    },
+    "synthetic_corpus": {
+      "n": 1000,
+      "source": "deterministic_reconstruction_from_exp4392_synthesis_config"
+    },
+    "template_ablated_localizer": {
+      "model_type": "contrastive_feature_difference_localizer",
+      "threshold": -0.027062,
+      "training_summary": {
+        "contrastive_pair_count": 3999,
+        "cpu_only": true,
+        "label_source": "synthetic_prefix_invalidity_only",
+        "training_trace_count": 1000
+      },
+      "weights": {
+        "detector_score": -0.16729,
+        "is_first_step": 0.019755,
+        "normalized_position": -0.016946,
+        "prefix_invalidity": -0.250063,
+        "score_onset": 0.1,
+        "trajectory_consistency": 0.110778
+      }
+    },
+    "trm_training": "stood_down_not_invoked",
+    "verifier_is_oracle": false
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "value=True",
+      "resource": "exp4392_localizer_beats_ensemble_baseline"
+    },
+    {
+      "available": true,
+      "detail": "weights present",
+      "resource": "a1_localizer"
+    },
+    {
+      "available": true,
+      "detail": "reconstructed=1000; expected=1000",
+      "resource": "synthetic_corpus_reconstruction"
+    },
+    {
+      "available": true,
+      "detail": "primary_traces=3274; primary_errors=57; heldout_traces=3274; heldout_errors=57",
+      "resource": "held_out_real_split"
+    },
+    {
+      "available": true,
+      "detail": "not invoked",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4393,
+  "random_seeds_used": [
+    4393,
+    4394
+  ],
+  "reproducibility_checksum": "sha256:9f1b81d94b831f734ddf5dc4432f21538fd091a154d036e810b8bf50a619d52a",
+  "schema": "carnot.localizer_skeptic_proof.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4393",
+    "SCENARIO-VERIFY-4393"
+  ],
+  "template_ablation_drop": 0.0,
+  "verifier_is_oracle": false
+}
