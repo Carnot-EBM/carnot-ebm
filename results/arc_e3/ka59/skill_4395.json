@@ -1,0 +1,63 @@
+{
+  "experiment": "experiment_4395_e3_blocked_mechanic_tails_ar25_ka59_ft09",
+  "fidelity_gate": 0.95,
+  "game": "ka59",
+  "lookahead_k": 3,
+  "method": "per_register_lookahead_fidelity_gate",
+  "named_register": "step_counter_hud_register_object_relevance",
+  "object_relevance_discriminator": {
+    "active_object_candidates": [
+      "selected_block",
+      "second_movable_block",
+      "agent_plus_second_movable_block",
+      "all_piece_objects"
+    ],
+    "blocker_class": "object_relevance_not_clicks_or_multi_object_push",
+    "commit_findings": [
+      "click_capable_piece_centroid_exploration_built_no_ka59_advance",
+      "adaptive_multi_object_push_state_built_no_regression_ka59_remains_over_fragmented"
+    ],
+    "hud_lemma_count": 12,
+    "hud_prediction_accuracy": 0.083333,
+    "lookahead_fidelity_after_discriminator": 0.112281,
+    "outcome": "object_relevance_hypothesis_recorded_but_named_register_fidelity_still_below_gate",
+    "planning_allowed": false,
+    "prior_lookahead_fidelity": 0.112281,
+    "provenance_commits": [
+      "f0b078247",
+      "6fba583c7"
+    ],
+    "selected_object_hypothesis": "agent_plus_second_movable_block"
+  },
+  "planning_gate": "blocked_until_named_register_fidelity_passes",
+  "prior_best_level": 1,
+  "random_seed": 4395,
+  "rounds": [
+    {
+      "lookahead_fidelity": 0.112281,
+      "round": 1,
+      "verifier_accuracy": 0.114583
+    },
+    {
+      "lookahead_fidelity": 0.112281,
+      "round": 2,
+      "verifier_accuracy": 0.104167
+    },
+    {
+      "lookahead_fidelity": 0.112281,
+      "round": 3,
+      "verifier_accuracy": 0.125
+    },
+    {
+      "lookahead_fidelity": 0.112281,
+      "round": 4,
+      "verifier_accuracy": 0.09375
+    }
+  ],
+  "spec_refs": [
+    "REQ-PHASE4-4395",
+    "SCENARIO-PHASE4-4395"
+  ],
+  "target_level": 2,
+  "world_model_path": "results/arc_e3/ka59/world_model.py"
+}
