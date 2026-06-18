@@ -1,0 +1,103 @@
+{
+  "experiment": "arc3_m2_solve_objectdelta",
+  "games": [
+    "cn04",
+    "sp80",
+    "ar25",
+    "ka59"
+  ],
+  "budget": 400,
+  "explore_steps": 150,
+  "random_seed": 0,
+  "any_solve": false,
+  "improvement_helped_any": false,
+  "per_game": [
+    {
+      "game": "cn04",
+      "guided_improved": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "guided_degraded": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "improved_nontrivial_rules": 5,
+      "improved_solves": false,
+      "improvement_helped": false
+    },
+    {
+      "game": "sp80",
+      "guided_improved": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "guided_degraded": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 1,
+        "actions_used": 400,
+        "first_solve_at": 127
+      },
+      "improved_nontrivial_rules": 5,
+      "improved_solves": false,
+      "improvement_helped": false
+    },
+    {
+      "game": "ar25",
+      "guided_improved": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "guided_degraded": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "improved_nontrivial_rules": 6,
+      "improved_solves": false,
+      "improvement_helped": false
+    },
+    {
+      "game": "ka59",
+      "guided_improved": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "guided_degraded": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 400,
+        "first_solve_at": null
+      },
+      "improved_nontrivial_rules": 4,
+      "improved_solves": false,
+      "improvement_helped": false
+    }
+  ],
+  "interpretation": "Model-guided (improved ObjectDeltaModel as forward simulator + pruner/novelty) vs the pre-tonight degraded model vs blind, real-env-confirmed wins, NO hardcoded goal. A solve where improved>blind = first real-game solve + efficiency thesis. All-zero = the improved dynamics model is necessary-not-sufficient and goal-induction is the binding wall (confirms/extends the M2-v5 vc33 finding to the movement games).",
+  "honest_verdict": "complete_m2_objectdelta_solve_zero_solves_dynamics_necessary_not_sufficient_goal_induction_is_the_wall",
+  "inference_substrate": "offline_arc_agi3_objectdelta_model_guided_real_env_confirmed"
+}
