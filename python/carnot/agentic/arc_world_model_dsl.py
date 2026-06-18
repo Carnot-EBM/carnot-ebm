@@ -143,6 +143,14 @@ class ObjectDeltaModel:
     # ---- rule application ----
     def _apply(self, s: np.ndarray, rule: tuple) -> np.ndarray:
         kind = rule[0]
+        if kind == "seq":
+            # a COMPOSITE: apply sub-rules in order. Captures an action that does TWO things at once
+            # (e.g. move an object AND recolor a HUD/selection cell) -- a single rule can express only
+            # one, which is why the per-action inducer floored on the 'multi/recolor' transitions.
+            out = s
+            for r in rule[1]:
+                out = self._apply(out, r)
+            return out
         if kind == "translate":
             _, color, dy, dx = rule
             out = s.copy()
@@ -191,6 +199,22 @@ class ObjectDeltaModel:
         union = real | (s != pred)
         return float(((pred == s2) & union).sum() / union.sum())
 
+    def _apply_seq(self, s: np.ndarray, rules: list) -> np.ndarray:
+        out = np.asarray(s)
+        for r in rules:
+            out = self._apply(out, r)
+        return out
+
+    def _residual_recolor_cands(self, pred: np.ndarray, s2: np.ndarray) -> set:
+        """Recolor rules that would fix where the current (partial) prediction still disagrees with
+        reality: the top color-remaps (c_from -> c_to) over the residual cells. Lets greedy composition
+        add 'and recolor the HUD/selection' on top of a move it already explains."""
+        mask = pred != s2
+        if not mask.any():
+            return set()
+        remaps = Counter(zip(pred[mask].tolist(), s2[mask].tolist()))
+        return {("recolor_all", int(cf), int(ct)) for (cf, ct), _ in remaps.most_common(3)}
+
     # ---- induction ----
     def fit(self, transitions) -> "ObjectDeltaModel":
         kbd: dict[int, list] = defaultdict(list)
@@ -210,37 +234,43 @@ class ObjectDeltaModel:
                 kbd[akey[0]].append((s, s2))
         self.bg = bgs.most_common(1)[0][0] if bgs else 0
 
-        # keyboard rules: pick the candidate maximizing mean dynamics accuracy over that action
+        # keyboard rules: GREEDILY COMPOSE atomic rules (move + recolor) to maximize mean dynamics
+        # accuracy. A single rule expresses only one effect; many actions both move an object AND
+        # recolor a HUD/selection cell, so a length-1 rule floors on those. Greedy keeps adding the
+        # atomic rule that best explains the RESIDUAL until none helps (cap length 3). Single-effect
+        # actions yield a length-1 (bare) rule -- byte-for-byte the old behaviour (back-compat).
         specificity = {"noop": 0, "recolor_all": 1, "translate": 2, "translate_obj": 3}
         for a, pairs in kbd.items():
-            cands = {("noop",)}
+            move_pool = set()                         # position-general move candidates from the data
             for s, s2 in pairs:
                 for color in np.unique(s):
                     if int(color) == self.bg:
                         continue
                     t = _detect_translation(s, s2, int(color))
                     if t:
-                        cands.add(("translate", int(color), t[0], t[1]))
-                    # per-OBJECT translate: one connected component of this color moved (others static).
-                    # Catches the move the per-color rule misses when same-colored objects coexist.
+                        move_pool.add(("translate", int(color), t[0], t[1]))
                     ot = _detect_object_translation(s, s2, int(color))
                     if ot:
-                        cands.add(("translate_obj", int(color), ot[2], ot[0], ot[1]))
-                # a global recolor candidate (c_from -> c_to) if exactly one color remapped
-                diff_colors = set(zip(s[s != s2].tolist(), s2[s != s2].tolist()))
-                if len(diff_colors) == 1:
-                    cf, ct = next(iter(diff_colors))
-                    cands.add(("recolor_all", int(cf), int(ct)))
-            # maximize dynamics accuracy; on ties prefer the SIMPLER rule (lower specificity) so the
-            # per-color translate is kept over per-object when both fit equally (back-compat) and noop
-            # over a spurious rule. Deterministic: (acc, -specificity) is a total order.
-            best, best_key = ("noop",), (-1.0, 0)
-            for r in cands:
-                acc = float(np.mean([self._dyn_acc(self._apply(s, r), s, s2) for s, s2 in pairs]))
-                key = (acc, -specificity[r[0]])
-                if key > best_key:
-                    best_key, best = key, r
-            self.kbd_rules[a] = best
+                        move_pool.add(("translate_obj", int(color), ot[2], ot[0], ot[1]))
+            seq: list = []
+            cur_acc = float(np.mean([self._dyn_acc(self._apply_seq(s, seq), s, s2) for s, s2 in pairs]))
+            for _ in range(3):                        # cap composite length at 3
+                # candidates this step: the move pool + recolor rules that fix the CURRENT residual
+                cands = set(move_pool)
+                for s, s2 in pairs:
+                    cands |= self._residual_recolor_cands(self._apply_seq(s, seq), s2)
+                best_r, best_key = None, (cur_acc + 1e-9, 0)
+                for r in cands:
+                    acc = float(np.mean([self._dyn_acc(self._apply_seq(s, seq + [r]), s, s2)
+                                         for s, s2 in pairs]))
+                    key = (acc, -specificity[r[0]])   # tie-break toward the simpler atomic rule
+                    if key > best_key:
+                        best_key, best_r = key, r
+                if best_r is None:                    # nothing improves the residual -> stop
+                    break
+                seq.append(best_r)
+                cur_acc = best_key[0]
+            self.kbd_rules[a] = seq[0] if len(seq) == 1 else (("seq", seq) if seq else ("noop",))
 
         # click rules: per clicked color, modal recolor target of the clicked component
         by_color: dict[int, Counter] = defaultdict(Counter)

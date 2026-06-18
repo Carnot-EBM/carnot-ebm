@@ -101,3 +101,27 @@ def test_per_object_translate_does_not_regress_single_object_translate():
     train = [(_agent((y, x)), (1,), _agent((y - 1, x))) for (y, x) in [(2, 1), (3, 2), (2, 3)]]
     m = ObjectDeltaModel("t").fit(train)
     assert m.kbd_rules[1] == ("translate", 3, -1, 0)            # simpler rule kept on tie
+
+
+def _agent_with_hud(apos, hud_color, agent=3, h=6, w=6):
+    """An agent (color 3) plus a single HUD/status cell at (0,0) whose color encodes step state."""
+    s = np.zeros((h, w), dtype=np.int16)
+    s[0, 0] = hud_color
+    s[apos] = agent
+    return s
+
+
+def test_composite_rule_move_and_recolor_in_one_action():
+    # ACTION1 moves the agent up AND flips the HUD cell from 7 to 8 -- ONE action, TWO effects.
+    # A single rule can express only one; the greedy composer must induce a ('seq', [...]) of both.
+    train = []
+    for (y, x) in [(2, 1), (3, 2), (2, 3), (4, 2)]:
+        train.append((_agent_with_hud((y, x), 7), (1,), _agent_with_hud((y - 1, x), 8)))
+    m = ObjectDeltaModel("t").fit(train)
+    rule = m.kbd_rules[1]
+    assert rule[0] == "seq", f"expected composite seq, got {rule}"
+    kinds = {r[0] for r in rule[1]}
+    assert "recolor_all" in kinds and ("translate" in kinds or "translate_obj" in kinds)
+    # generalizes to an unseen position: agent moves up AND HUD recolors 7->8
+    pred = m.predict(_agent_with_hud((5, 4), 7), (1,))
+    assert np.array_equal(pred, _agent_with_hud((4, 4), 8))
