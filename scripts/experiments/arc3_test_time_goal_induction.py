@@ -128,7 +128,8 @@ def _pieces_key(grid, min_size=4, max_size=30):
     return tuple(sorted(parts))
 
 
-def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None):
+def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None,
+                            key_mode="agent"):
     """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
     centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
     For navigation/movement games the agent position is the state variable that matters, so covering
@@ -144,9 +145,15 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
     start_level = _levels_completed(f0)
 
     def key(grid):
-        pk = _pieces_key(grid)                          # joint positions of ALL piece-sized objects
-        if pk:
-            return ("pieces",) + pk
+        # 'agent' (default): minimal key = agent position -- right for NAVIGATION games (cn04/sp80/ar25),
+        #   which over-fragment under a multi-object key. 'pieces': all piece-sized objects -- needed for
+        #   PUSH games (ka59) where the pushed block's position is part of the state, but it explodes the
+        #   state space of multi-object navigation puzzles, so it is opt-in (the granularity is genuinely
+        #   game-dependent; the principled fix is to ESCALATE granularity only when 'agent' search dries up).
+        if key_mode == "pieces":
+            pk = _pieces_key(grid)
+            if pk:
+                return ("pieces",) + pk
         if agent is not None:
             ac = H._agent_centroid(grid, agent)
             if ac is not None:
@@ -262,12 +269,21 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
                                   fromlist=["collect_transitions"]).collect_transitions(game, n=150)
     agent = H.identify_agent(explore_trans)
     movers = identify_movers(explore_trans)
+    key_used = None
     if curious:
+        # ADAPTIVE granularity: try the minimal AGENT-position key first (right for navigation, no
+        # over-fragmentation); only if it dries up, ESCALATE to the multi-object PIECES key (push games).
         prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
-                                         max_expansions=explore_budget, movers=movers)
+                                         max_expansions=explore_budget, key_mode="agent")
+        key_used = "agent"
+        if prewin is None:
+            prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
+                                             max_expansions=explore_budget, key_mode="pieces")
+            key_used = "pieces_escalated"
     else:
         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
-    rec = {"game": game, "explore_mode": ("curious_multiobject_bfs" if curious else "random"),
+    rec = {"game": game, "explore_mode": ("curious_adaptive_bfs" if curious else "random"),
+           "state_key_used": key_used,
            "agent": (None if agent is None else {"color": agent["color"]}),
            "movers": [m["color"] for m in movers], "win_stumbled": prewin is not None}
     if prewin is None or agent is None:
