@@ -1,64 +1,120 @@
 {
   "experiment": "arc3_full_pass_scorecard",
-  "n_games": 5,
-  "l1_first_contact_solved": 4,
-  "solve_rate": 0.8,
+  "n_games": 25,
+  "l1_first_contact_solved": 10,
+  "solve_rate": 0.4,
   "solved_games": [
-    "su15",
+    "ar25",
+    "cn04",
     "lp85",
+    "ls20",
+    "m0r0",
     "r11l",
-    "sp80"
+    "sp80",
+    "su15",
+    "tu93",
+    "vc33"
   ],
   "class_breakdown": {
-    "SOLVED": 4,
-    "FAIL_EXPLORATION": 1
+    "SOLVED": 10,
+    "FAIL_EXPLORATION": 13,
+    "FAIL_AGENT_ID": 1,
+    "FAIL_SOLVE": 1
   },
   "research_backlog_by_failure_class": [
     {
       "failure_class": "FAIL_EXPLORATION",
-      "games_blocked": 1,
+      "games_blocked": 13,
       "example_games": [
-        "ka59"
+        "bp35",
+        "cd82",
+        "dc22",
+        "g50t",
+        "ka59",
+        "lf52"
       ],
       "research_capability": "curiosity/directed exploration -- growth-aware + multi-instance state keys, deeper/novelty-weighted coverage to stumble deep wins"
+    },
+    {
+      "failure_class": "FAIL_AGENT_ID",
+      "games_blocked": 1,
+      "example_games": [
+        "ft09"
+      ],
+      "research_capability": "richer object/dynamics model -- non-translation mechanics (multi-colour sprites, rotation, configuration/toggle agents) beyond translate+growth"
+    },
+    {
+      "failure_class": "FAIL_SOLVE",
+      "games_blocked": 1,
+      "example_games": [
+        "sk48"
+      ],
+      "research_capability": "stronger planning -- learned/abstraction heuristics + subgoal decomposition for the combinatorial tail (ka59-class); the open research problem"
     }
   ],
   "per_game": [
     {
-      "game": "su15",
+      "game": "ar25",
       "class": "SOLVED",
-      "actions": 7,
-      "agent": null,
+      "actions": 15,
+      "agent": 4,
       "win_stumbled": true,
-      "goal": null,
-      "dur_s": 8.6
+      "goal": 11,
+      "dur_s": 67.1
     },
     {
-      "game": "lp85",
-      "class": "SOLVED",
-      "actions": 5,
-      "agent": null,
-      "win_stumbled": true,
+      "game": "bp35",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 11,
+      "win_stumbled": false,
       "goal": null,
-      "dur_s": 4.2
+      "dur_s": 285.0
     },
     {
-      "game": "r11l",
-      "class": "SOLVED",
-      "actions": 3,
-      "agent": null,
-      "win_stumbled": true,
+      "game": "cd82",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 4,
+      "win_stumbled": false,
       "goal": null,
-      "dur_s": 6.9
+      "dur_s": 1.7
     },
     {
-      "game": "sp80",
+      "game": "cn04",
       "class": "SOLVED",
-      "actions": 4,
+      "actions": 14,
+      "agent": 0,
+      "win_stumbled": true,
+      "goal": 8,
+      "dur_s": 14.6
+    },
+    {
+      "game": "dc22",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 28.9
+    },
+    {
+      "game": "ft09",
+      "class": "FAIL_AGENT_ID",
+      "actions": null,
+      "agent": null,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 5.3
+    },
+    {
+      "game": "g50t",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
       "agent": 9,
-      "win_stumbled": true,
-      "goal": 6,
-      "dur_s": 3.3
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 12.3
     },
     {
       "game": "ka59",
@@ -67,11 +123,164 @@
       "agent": 14,
       "win_stumbled": false,
       "goal": null,
-      "dur_s": 26.5
+      "dur_s": 30.5
+    },
+    {
+      "game": "lf52",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 1,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 43.6
+    },
+    {
+      "game": "lp85",
+      "class": "SOLVED",
+      "actions": 5,
+      "agent": null,
+      "win_stumbled": true,
+      "goal": null,
+      "dur_s": 4.3
+    },
+    {
+      "game": "ls20",
+      "class": "SOLVED",
+      "actions": 13,
+      "agent": 12,
+      "win_stumbled": true,
+      "goal": 3,
+      "dur_s": 62.0
+    },
+    {
+      "game": "m0r0",
+      "class": "SOLVED",
+      "actions": 15,
+      "agent": null,
+      "win_stumbled": true,
+      "goal": null,
+      "dur_s": 64.9
+    },
+    {
+      "game": "r11l",
+      "class": "SOLVED",
+      "actions": 3,
+      "agent": null,
+      "win_stumbled": true,
+      "goal": null,
+      "dur_s": 8.7
+    },
+    {
+      "game": "re86",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 0,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 39.2
+    },
+    {
+      "game": "s5i5",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 3,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 2.9
+    },
+    {
+      "game": "sb26",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 0,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 129.6
+    },
+    {
+      "game": "sc25",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 9,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.7
+    },
+    {
+      "game": "sk48",
+      "class": "FAIL_SOLVE",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": true,
+      "goal": 0,
+      "dur_s": 803.2
+    },
+    {
+      "game": "sp80",
+      "class": "SOLVED",
+      "actions": 4,
+      "agent": 9,
+      "win_stumbled": true,
+      "goal": 6,
+      "dur_s": 3.2
+    },
+    {
+      "game": "su15",
+      "class": "SOLVED",
+      "actions": 7,
+      "agent": null,
+      "win_stumbled": true,
+      "goal": null,
+      "dur_s": 23.7
+    },
+    {
+      "game": "tn36",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 3,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 22.2
+    },
+    {
+      "game": "tr87",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 5,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 161.1
+    },
+    {
+      "game": "tu93",
+      "class": "SOLVED",
+      "actions": 18,
+      "agent": 4,
+      "win_stumbled": true,
+      "goal": 9,
+      "dur_s": 9.8
+    },
+    {
+      "game": "vc33",
+      "class": "SOLVED",
+      "actions": 3,
+      "agent": 4,
+      "win_stumbled": true,
+      "goal": 0,
+      "dur_s": 2.5
+    },
+    {
+      "game": "wa30",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 137.8
     }
   ],
-  "total_duration_s": 49.5,
+  "total_duration_s": 1965.6,
   "scope": "L1 first-contact solvability; multi-level continuation is a noted follow-on",
-  "honest_verdict": "complete_full_pass_l1_solve_rate_4_of_5",
+  "honest_verdict": "complete_full_pass_l1_solve_rate_10_of_25",
   "inference_substrate": "offline_arc_agi3_generalized_first_contact_no_banked_solve"
 }
