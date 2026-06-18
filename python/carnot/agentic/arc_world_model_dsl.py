@@ -72,6 +72,62 @@ def _detect_translation(s: np.ndarray, s2: np.ndarray, color: int) -> Optional[t
     return None
 
 
+def _color_components(grid: np.ndarray, color: int) -> list[frozenset]:
+    """4-connected components of `color` -- each component is one OBJECT. Color-AND-connectivity
+    aware: two same-colored sprites that don't touch are separate objects (unlike the per-color
+    _detect_translation, which lumps all cells of a color together)."""
+    h, w = grid.shape
+    mask = grid == color
+    seen: set = set()
+    comps = []
+    for y in range(h):
+        for x in range(w):
+            if not mask[y, x] or (y, x) in seen:
+                continue
+            comp, stack = [], [(y, x)]
+            seen.add((y, x))
+            while stack:
+                cy, cx = stack.pop()
+                comp.append((cy, cx))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = cy + dy, cx + dx
+                    if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and (ny, nx) not in seen:
+                        seen.add((ny, nx)); stack.append((ny, nx))
+            comps.append(frozenset(comp))
+    return comps
+
+
+def _object_shape_sig(cells) -> tuple:
+    """Position-invariant signature of an object: its cell-set normalized to the top-left corner.
+    Identifies 'the same object' wherever it is on the board, so a per-object rule learned at one
+    position generalizes to an unseen position (the M2 generalization property)."""
+    ys = [y for y, _ in cells]; xs = [x for _, x in cells]
+    y0, x0 = min(ys), min(xs)
+    return tuple(sorted((y - y0, x - x0) for y, x in cells))
+
+
+def _detect_object_translation(s: np.ndarray, s2: np.ndarray, color: int):
+    """If exactly ONE connected component (object) of `color` rigidly translated while every OTHER
+    same-colored object stayed put, return (dy, dx, shape_sig); else None. This catches the
+    per-OBJECT move that the per-color _detect_translation misses whenever a game has more than one
+    object of the moving color (e.g. a movable piece sharing its colour with a static goal/wall --
+    the cn04/sp80 case where per-color-global translate induced all-noop)."""
+    cs, cs2 = _color_components(s, color), _color_components(s2, color)
+    set_s, set_s2 = set(cs), set(cs2)
+    gone = [c for c in cs if c not in set_s2]
+    came = [c for c in cs2 if c not in set_s]
+    if len(gone) != 1 or len(came) != 1:
+        return None
+    a, b = gone[0], came[0]
+    if len(a) != len(b):
+        return None
+    dy = min(y for y, _ in b) - min(y for y, _ in a)
+    dx = min(x for _, x in b) - min(x for _, x in a)
+    if (dy == 0 and dx == 0) or {(y + dy, x + dx) for y, x in a} != set(b):
+        return None
+    return (int(dy), int(dx), _object_shape_sig(a))
+
+
 class ObjectDeltaModel:
     """Object-level delta-DSL world-model: induces per-action translate/recolor rules + an exact table
     for memorized transitions, with the shared grid-grounded consistency-energy verifier."""
@@ -97,6 +153,22 @@ class ObjectDeltaModel:
                 ny, nx = y + dy, x + dx
                 if 0 <= ny < s.shape[0] and 0 <= nx < s.shape[1]:
                     out[ny, nx] = color
+            return out
+        if kind == "translate_obj":
+            # move only the connected component(s) of `color` whose shape matches the learned object,
+            # leaving other same-colored objects (goal/walls) in place. Generalizes to an unseen
+            # position because the object is identified by its position-invariant shape signature.
+            _, color, sig, dy, dx = rule
+            out = s.copy()
+            movers = [c for c in _color_components(s, color) if _object_shape_sig(c) == sig]
+            for comp in movers:
+                for (y, x) in comp:
+                    out[y, x] = self.bg
+            for comp in movers:
+                for (y, x) in comp:
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < s.shape[0] and 0 <= nx < s.shape[1]:
+                        out[ny, nx] = color
             return out
         if kind == "recolor_all":
             _, c_from, c_to = rule
@@ -139,6 +211,7 @@ class ObjectDeltaModel:
         self.bg = bgs.most_common(1)[0][0] if bgs else 0
 
         # keyboard rules: pick the candidate maximizing mean dynamics accuracy over that action
+        specificity = {"noop": 0, "recolor_all": 1, "translate": 2, "translate_obj": 3}
         for a, pairs in kbd.items():
             cands = {("noop",)}
             for s, s2 in pairs:
@@ -148,17 +221,25 @@ class ObjectDeltaModel:
                     t = _detect_translation(s, s2, int(color))
                     if t:
                         cands.add(("translate", int(color), t[0], t[1]))
+                    # per-OBJECT translate: one connected component of this color moved (others static).
+                    # Catches the move the per-color rule misses when same-colored objects coexist.
+                    ot = _detect_object_translation(s, s2, int(color))
+                    if ot:
+                        cands.add(("translate_obj", int(color), ot[2], ot[0], ot[1]))
                 # a global recolor candidate (c_from -> c_to) if exactly one color remapped
                 diff_colors = set(zip(s[s != s2].tolist(), s2[s != s2].tolist()))
                 if len(diff_colors) == 1:
                     cf, ct = next(iter(diff_colors))
                     cands.add(("recolor_all", int(cf), int(ct)))
-            best, best_acc = ("noop",), -1.0
+            # maximize dynamics accuracy; on ties prefer the SIMPLER rule (lower specificity) so the
+            # per-color translate is kept over per-object when both fit equally (back-compat) and noop
+            # over a spurious rule. Deterministic: (acc, -specificity) is a total order.
+            best, best_key = ("noop",), (-1.0, 0)
             for r in cands:
-                acc = np.mean([self._dyn_acc(self._apply(s, r), s, s2) for s, s2 in pairs])
-                # tie-break toward simpler rules (noop < recolor < translate already by acc); prefer higher acc
-                if acc > best_acc:
-                    best_acc, best = acc, r
+                acc = float(np.mean([self._dyn_acc(self._apply(s, r), s, s2) for s, s2 in pairs]))
+                key = (acc, -specificity[r[0]])
+                if key > best_key:
+                    best_key, best = key, r
             self.kbd_rules[a] = best
 
         # click rules: per clicked color, modal recolor target of the clicked component

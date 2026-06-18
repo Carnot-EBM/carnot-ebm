@@ -67,3 +67,37 @@ def test_noop_rule_when_action_has_no_consistent_effect():
     assert m.kbd_rules[2] == ("noop",)
     s = _agent((1, 1))
     assert np.array_equal(m.predict(s, (2,)), s)
+
+
+def _agent_and_goal(apos, color=3, h=7, w=7):
+    """A movable 2-cell agent AND a STATIC 1-cell goal at (0,0), BOTH color 3 -- the case where
+    per-color-global translate fails (the union of color-3 cells does not rigidly translate) but
+    per-OBJECT translate succeeds. The agent has a DISTINCT shape from the goal so the per-object
+    rule identifies it by shape (v1 limitation: identical-shaped movable+static objects are
+    ambiguous to shape-based identity)."""
+    s = np.zeros((h, w), dtype=np.int16)
+    s[0, 0] = color                                   # static 1-cell goal
+    ay, ax = apos
+    s[ay, ax] = color; s[ay, ax + 1] = color          # movable 2-cell horizontal agent
+    return s
+
+
+def test_per_object_translate_when_same_color_object_is_static():
+    # ACTION1 moves ONLY the agent up; the same-colored goal at (0,0) stays. Per-color-global
+    # translate cannot fit; per-object translate identifies the 2-cell agent by shape and moves it.
+    train = [(_agent_and_goal((y, x)), (1,), _agent_and_goal((y - 1, x)))
+             for (y, x) in [(3, 1), (4, 3), (3, 5)]]
+    m = ObjectDeltaModel("t").fit(train)
+    rule = m.kbd_rules[1]
+    assert rule[0] == "translate_obj", f"expected per-object translate, got {rule}"
+    assert rule[1] == 3 and (rule[3], rule[4]) == (-1, 0)        # color 3, moved up by one
+    # generalizes to an UNSEEN agent position while the static goal is preserved
+    pred = m.predict(_agent_and_goal((5, 2)), (1,))
+    assert np.array_equal(pred, _agent_and_goal((4, 2)))         # agent moved up, goal at (0,0) intact
+
+
+def test_per_object_translate_does_not_regress_single_object_translate():
+    # the original single-agent case must still induce the simpler per-COLOR translate (back-compat)
+    train = [(_agent((y, x)), (1,), _agent((y - 1, x))) for (y, x) in [(2, 1), (3, 2), (2, 3)]]
+    m = ObjectDeltaModel("t").fit(train)
+    assert m.kbd_rules[1] == ("translate", 3, -1, 0)            # simpler rule kept on tie
