@@ -8751,3 +8751,4 @@ c |
 | 2026-06-18 20:35 UTC | Archive .406 -> activate .407. Assert research-com | OK | 96 passed, 1 warning in 14.14s |
 | 2026-06-18 20:55 UTC | PHASE A1 (HEADLINE; oracle-distinct LOCALIZER, DEC | OK | 88 passed, 1 warning in 10.62s |
 | 2026-06-18 20:58 UTC | PHASE A2 (HEADLINE generalization; GATED on exp440 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4403-real-intervention-localizer-deconf |
+| 2026-06-18 21:00 UTC | PHASE A2 (HEADLINE generalization; GATED on exp440 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4403-real-intervention-localizer-deconf |
