@@ -20046,3 +20046,43 @@ domain, contrasts those AUROCs against selector headroom, includes random-score
 and base-rate controls plus the Sudoku valid-but-wrong split, and emits a
 terminal honest verdict that is complete whether AUROC is high where headroom is
 near zero or AUROC remains random everywhere.
+
+### REQ-VERIFY-4381: Bidirectional Detector Localization And Abstention
+
+The repository shall provide Exp 4381 to turn the oracle-distinct FoVer
+verifier-as-detector signal into a step-error localization and selective
+prediction measurement without generation or training.
+- The workflow SHALL first confirm the Exp 4375 cached FoVer detector corpus,
+  the FoVer production verifier ensemble registry entry, and a cached
+  step-labeled FoVer corpus with per-step labels that can derive a first-error
+  index per trace. Missing cached detector resources SHALL produce
+  `blocked_cached_step_labeled_corpus_unavailable`; missing step labels SHALL
+  produce `blocked_no_step_labels_for_localization`.
+- The workflow SHALL score each cached trace step with a causal L2R pass and a
+  suffix-aware R2L pass, fuse those scores into a bidirectional step-error
+  score, and report first-error localization for the unidirectional L2R
+  baseline, the offline bidirectional fusion, and the causal online number in
+  separate artifact fields.
+- The artifact SHALL report bootstrap CI95 from at least 2000 resamples for the
+  bidirectional-minus-unidirectional localization delta, and it SHALL keep a
+  clean null decision-grade when the CI includes zero.
+- The artifact SHALL compute selective prediction from trace-level detector
+  scores, including accuracy-vs-coverage / risk-coverage points,
+  precision@recall=0.9, a useful operating point, the base rate, and a
+  random-score AUROC control.
+- The artifact SHALL emit bare `detector_localization_actionable`,
+  `online_vs_offline_separated`, `n_traces`, and `verifier_is_oracle=false`,
+  plus `preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+  `model_specs`, missing-verifier gap summaries, and adversarial verification
+  output.
+
+### SCENARIO-VERIFY-4381: Bidirectional Localization Is Reported Separately
+
+**Given** the cached Exp 4375 detector corpus, FoVer production ensemble, and
+step-labeled FoVer traces are available
+**When** Exp 4381 scores causal L2R and suffix-aware R2L detector passes over
+the cached traces
+**Then** the artifact records separate online-causal and offline-bidirectional
+localization metrics, a bootstrap localization delta CI95, selective-prediction
+abstention points with controls, and a terminal honest verdict that is complete
+for either an actionable bidirectional gain or a clean powered null.

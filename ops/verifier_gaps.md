@@ -30,6 +30,30 @@ Never-prune; `status: filled` (with the registry verifier_id that closed it) rat
 
 ---
 
+## Exp 4381 FoVer BiPRM localization residual (2026-06-18)
+
+`results/experiment_4381_biprm_detector_localization_abstention.json` scored the cached
+step-labeled FoVer corpus with causal L2R and offline suffix-aware R2L verifier passes.
+The detector remained oracle-distinct and post-hoc bidirectional localization did not improve
+over causal L2R: both localized 11/114 first-error traces (accuracy/F1 0.096491), with
+bootstrap delta CI95 [0.0, 0.0]. The artifact records 103 missed first-error traces in the
+untyped residual class.
+
+### GAP-FOVER-BIPRM-LOCALIZATION-untyped: earliest causal error vs downstream consequence
+- status: open
+- evidence: `results/experiment_4381_biprm_detector_localization_abstention.json`;
+  clean powered null for bidirectional fusion, 103 missed first-error traces out of 114
+  error traces, no bidirectional-minus-L2R localization gain.
+- failure mode: the current FoVer verifier ensemble can detect trace-level error risk, but
+  it often assigns the highest step-error score to a later downstream consequence rather than
+  the earliest causal error.
+- missing discriminator: a per-step feature that distinguishes the first causal invariant break
+  from later steps that merely inherit the earlier mistake.
+- candidate design: add typed step-error labels and a contrastive earliest-error objective over
+  cached FoVer traces, then require separate causal L2R and offline R2L reporting so future-context
+  gains are not claimed as online-actionable.
+- priority: medium
+
 ## Empirical confirmation (TRM rerank, 2026-06-09)
 
 `results/arc3_trm_verifier_rerank.json` (n=31-task subset of TRM's arc_v1 candidate pool) tested
