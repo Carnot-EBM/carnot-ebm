@@ -23434,6 +23434,92 @@ not claim `.401` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4347 | Implemented (`python/carnot/reporting/archive_v401_activate_v402_4347.py`, `python/carnot/experiment_4347_archive_v401_activate_v402.py`, `results/experiment_4347_archive_v401_activate_v402.py`) | Implemented (`tests/python/test_experiment_4347_archive_v401_activate_v402.py`) |
 
+### REQ-REPORT-4358: Archive .402, Activate .403, And Preserve The True Close-State
+
+The Exp 4358 workflow SHALL archive milestone `2026.06.402`, confirm milestone
+`2026.06.403` is active, and write the record-only artifact
+`results/experiment_4358_archive_v402_activate_v403.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, it SHALL record that the conductor stays
+stood down on TRM training, and it SHALL NOT modify `scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` and `ops/exclusion_manifest.yaml` parse under
+  `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.402`
+archive record, appending the canonical `.402` record only when absent and
+removing duplicate top-level `.402` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit and SHALL record `activation_recorded:
+exp4358-archive-v402-activate-v403` on the `.402` archive row.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v402_close_state` SHALL truthfully record
+the Exp 4357 capstone scorecard corrected by the authoritative ARC solve
+registry: the `.402` S3 conversion failed as a HARNESS, not as a science null;
+Exp 4348 framed arms as multiple-choice SELECTION, causing best-of-K,
+self-reward-SMC, and unguided controls to collapse to argmax-logit, trip a
+CRITICAL TAUTOLOGY, and return `controls_not_differentiable`. The close-state
+SHALL record `s3_moat_utility=open`, SHALL keep the in-generation moat as
+PROVEN leak-robust from `.401`, and SHALL state that the moat's generation
+UTILITY remains UNTESTED.
+
+The close-state SHALL record ARC progress as ka59 L1 newly cracked (+1 game),
+tn36 L7 reproduced, and the registry-authoritative scorecard as `26` reproducible levels across `15` games. It SHALL record sc25 L2, ar25 L2, tr87,
+and ft09 as still open. It SHALL record the learned A* action-cost heuristic as
+a CLEAN WIN with held-out env-actions reduced from `25` to `16`,
+`positive_control_passed=true`, and `verifier_is_oracle=false`. It SHALL record
+cross-game value transfer as RETIRED from Exp 4342 and cross-domain selection as
+RETIRED from Exp 4314. It SHALL record the capstone CIRCULAR_MOAT_OVERCLAIM
+stamp fix as durable with zero `.402` capstone flags, keep `paper_ready=true`,
+and frame `.403` as a re-attempt of the conversion with a fixed Prism-hardened
+harness plus ARC-deeper plus compounding action-cost self-learning, not as a
+re-open of the retired axes.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v402_close_state`: "Honest record (S3 conversion HARNESS-FAILED / moat utility OPEN but moat still PROVEN leak-robust; ARC 26 levels/15 games, ka59 +1 game; action-cost heuristic WON 25->16; cross-game transfer + cross-domain selection RETIRED; capstone-stamp fix durable; paper_ready=True) so the .403 agents frame the milestone as re-attempt-the-conversion-with-a-fixed-Prism-harness + ARC-deeper + compound-the-action-cost-self-learning -- NOT a re-open of the retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4358: The Archive Records The True .402 Close-State
+
+**Given** `.402` has the Exp 4357 capstone, Exp 4348 S3 harness-failure
+evidence, Exp 4353 learned action-cost heuristic win, the ARC solve registry
+with 26 reproducible levels across 15 games, parseable history and
+exclusion-manifest YAML files, a green smart-subset pre-test gate, and `.403`
+active
+**When** the Exp 4358 archive workflow runs
+**Then** it archives `.402`, confirms `.403`, keeps the YAML history parseable
+with one `.402` record, writes
+`results/experiment_4358_archive_v402_activate_v403.json`, records the S3
+conversion as HARNESS-FAILED with moat utility OPEN while the moat remains
+PROVEN leak-robust, records ARC 26/15 with ka59 +1 game, records the
+action-cost heuristic win 25->16, records cross-game transfer and cross-domain
+selection RETIRED, records the capstone-stamp fix durable and
+`paper_ready=true`, records the checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a terminal-prefixed
+honest verdict.
+
+#### SCENARIO-REPORT-4358-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4358 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.402` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4358)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4358 | Implemented (`python/carnot/reporting/archive_v402_activate_v403_4358.py`, `python/carnot/experiment_4358_archive_v402_activate_v403.py`, `results/experiment_4358_archive_v402_activate_v403.py`) | Implemented (`tests/python/test_experiment_4358_archive_v402_activate_v403.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

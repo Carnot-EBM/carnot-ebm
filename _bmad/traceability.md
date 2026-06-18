@@ -1714,3 +1714,6 @@
 | REQ-LEARN-3604-2 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
 | REQ-LEARN-3604-3 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
 | SCENARIO-LEARN-3604 | Exp 3604: FR-11 Continuous Self Learning v6 | Implemented | results/experiment_3604_fr11_continuous_self_learning_v6.json |
+| REQ-REPORT-4358 | Archive .402, activate .403, and preserve the true close-state | Implemented | python/carnot/reporting/archive_v402_activate_v403_4358.py; results/experiment_4358_archive_v402_activate_v403.json |
+| SCENARIO-REPORT-4358 | Exp 4358 records the true `.402` close-state and emits a terminal successful archive artifact | Implemented | tests/python/test_experiment_4358_archive_v402_activate_v403.py |
+| SCENARIO-REPORT-4358-BLOCKED-PRECONDITION | Exp 4358 blocked paths stop before fabrication and record failed preconditions | Implemented | tests/python/test_experiment_4358_archive_v402_activate_v403.py |

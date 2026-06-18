@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-06-18 (Exp 4358 Archive .402 -> .403)
+
+- Implemented and verified REQ-REPORT-4358: added `python/carnot/reporting/archive_v402_activate_v403_4358.py`, `python/carnot/experiment_4358_archive_v402_activate_v403.py`, `results/experiment_4358_archive_v402_activate_v403.py`, and `tests/python/test_experiment_4358_archive_v402_activate_v403.py`. The workflow validates YAML preconditions, runs the smart-subset pretest, confirms `.403`, canonicalizes the `.402` archive row, and writes `results/experiment_4358_archive_v402_activate_v403.json`.
+- Corrected the persisted Exp 4358 artifact from a blocked smart-subset result to the successful close-state artifact: S3 conversion HARNESS-FAILED with `s3_moat_utility=open`, ARC `26` reproducible levels across `15` games, action-cost heuristic win `25->16`, retired Exp 4342/4314 axes, durable capstone-stamp fix, and `paper_ready=true`. Updated `research-complete.yaml` with the canonical `.402` finding and `activation_recorded: exp4358-archive-v402-activate-v403`.
+- Validation: smart subset passed (`97 passed, 1 warning`), Exp 4358 module/script coverage passed at 100% (`291` statements, `0` missing), Ruff check/format passed on changed Python files, and targeted spec coverage passed for the new test file. Repo-wide spec coverage remains blocked by pre-existing unreferenced legacy tests.
+
 ## 2026-06-07 (Milestone 2026.06.362 Operational Retrospective)
 
 - [outer-loop] Wrote `results/operational_retro_2026_06_362.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were dispatched to completion since milestone activation.
