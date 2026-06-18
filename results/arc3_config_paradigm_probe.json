@@ -1,0 +1,14 @@
+{
+  "experiment": "arc3_config_paradigm_probe",
+  "goal": "Build the config/toggle target-pattern induction paradigm (the #1 backlog lever, 9 games)",
+  "config_games": ["bp35","dc22","g50t","ka59","lf52","s5i5","tn36","sc25","tr87"],
+  "approaches_tried_and_measured": {
+    "stumble_click_config": "intractable -- the editable config space is 40-210 cells (colors^N); brute BFS cannot stumble a win (full-pass confirmed sc25/tr87 FAIL_EXPLORATION).",
+    "shape_matched_static_target": "FAILS 4/5 probed -- no static region matching the editable region's cell-shape exists for lf52/s5i5/sc25/g50t (only dc22, likely spurious). Config games do NOT have a generic 'edit this to match that same-shape reference' layout.",
+    "systematic_editable_sweep": "FAILS all 5 probed -- clicking each editable cell repeatedly (cycling colors, 200-964 clicks) never triggers a win on lf52/s5i5/dc22/g50t/bp35. No progress signal from sweeping."
+  },
+  "honest_verdict": "complete_config_paradigm_generic_target_induction_fails_needs_scene_understanding_or_per_game_logic",
+  "conclusion": "Config/toggle target-pattern induction has NO simple generic solution. The win requires KNOWING the specific target configuration (a pattern, a rule like tr87's glyph-rewrite, or a multi-path condition like sc25), which cannot be induced from generic heuristics (stumble / shape-target / sweep all measured to fail). This is the genuine research frontier: it needs scene-understanding (read the puzzle's target/rule from the layout) or learned/per-game target reasoning -- the same hard-tail conclusion as the combinatorial class. The click-interaction paradigm worked because stumbling sufficed; config does not yield to stumbling and has no generic target signal.",
+  "implication": "Do NOT ship a generic config solver -- 3 approaches measured to fail. The config paradigm is correctly the highest-leverage (9 games) AND the hardest; it is a scoped research build (scene-level target/rule induction), not an overnight heuristic tier.",
+  "inference_substrate": "offline_arc_agi3_config_target_induction_probe_no_quota"
+}
