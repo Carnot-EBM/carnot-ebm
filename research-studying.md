@@ -8,6 +8,83 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-18 Exp 4409 - .407 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4409_sota_ingestion_v408.json`.
+
+**Preconditions:** reliable channel reachable via arXiv API and arXiv/WebFetch
+HTTP 200 checks. `scripts/sweep_clusters.py` emitted the focused arXiv cluster
+URLs. `scripts/sweep_semscholar.py` imported and was run on focused real
+first-error, active PRM, calibration, and ARC world-model queries, but Semantic
+Scholar returned HTTP 429 for those focused queries, so no S2-only result was
+promoted. Low-concurrency WebSearch/WebFetch plus arXiv page checks verified
+arXiv:2512.22336, arXiv:2605.13772, arXiv:2503.02863, arXiv:2605.25931,
+arXiv:2508.02298, arXiv:2606.13565, and arXiv:2502.01384. The banned
+`/deep-research` channel was not invoked.
+
+**Filtered track:** .407 outcomes after real-intervention first-error
+localizer deconfounding, typed-taxonomy localizer audit, active-learning
+self-learning, cross-domain detector calibration repair, and ARC E3
+per-mechanic executable unit tests.
+
+**.407 outcome conditioning:**
+- Exp 4403: `complete: clean_powered_null_position_only_not_beaten`,
+  `localizer_genuinely_beats_position_only=false`, FoVer
+  `position_only_baseline=1.0`, GAP-4 ARC `delta_ci95=[-0.134615, 0.173077]`,
+  and `verifier_is_oracle=false`. The real-intervention text localizer is a
+  powered position-only null, not a .408 headline.
+- Exp 4404: `blocked_gate_check_failed` because
+  `localizer_genuinely_beats_position_only actual=False expected=True`. The
+  typed-taxonomy cross-domain localizer stays gated.
+- Exp 4407: `complete: clean_null_position_bound_or_saturated`,
+  `localizer_compounds=false`, `compounding_delta_ci95=[0.0, 0.0]`,
+  `positive_control_headroom=false`, and `verifier_is_oracle=false`. Active
+  selection over the same position-bound localizer did not compound.
+- Exp 4408: `complete: calibrated_multi_domain_contract_false_deconfounded`,
+  `detection_calibrated_multi_domain=false`,
+  `domains_at_chance=[code_humaneval]`, `positive_control_passed=true`, and
+  `verifier_is_oracle=false`. Detection calibration remains alive as a repair
+  track, but the deployable multi-domain contract is false.
+- Exp 4405/4406: `complete_e3_deeper_partial` and
+  `complete_e3_ar25_ka59_ft09_partial`, both with `new_levels_reproduced=0`,
+  `reproducible_total_levels=34`, and `verifier_is_oracle=true`. Static
+  per-mechanic tests did not deepen ARC E3.
+
+**Fresh-pass candidates marked ingested:**
+- Agent2World adaptive testing, arXiv:2512.22336 - mapped to behavior-aware
+  E3 mechanic repair after static unit tests found blockers but yielded zero
+  new levels.
+- GeoReason hidden-state transport, arXiv:2605.13772 - mapped to a diagnostic
+  first-error audit after the text localizer tied the position-only baseline.
+- SteerConf confidence elicitation, arXiv:2503.02863 - mapped to
+  domain-calibration repair after Exp 4408 left code_humaneval at chance.
+- AERA explore-verify-plan, arXiv:2605.25931 - mapped to speed-depth and
+  public-artifact controls around any renewed ARC E3 progress claim.
+- CAPO generative credit assignment, arXiv:2508.02298 - mapped only to offline
+  critique-label diagnostics after active localizer selection did not compound;
+  generator policy optimization is not auto-run in-loop.
+
+out_of_band_flagged:
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
+  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
+  verifier-as-reward generator training, NOT auto-run in-loop.
+
+flagged_for_v408: agent2world_adaptive_e3_mechanic_repair_v408
+
+Flagged for .408: `agent2world_adaptive_e3_mechanic_repair_v408`
+
+random_seed=4409
+
+**Bottom line for the .408 roadmap:** do not repeat the position-bound
+localizer, the gated typed-taxonomy branch, or active selection over the same
+failed signal. The single strongest .408 method is Agent2World-style
+behavior-aware adaptive testing for ARC E3 mechanic repair, with AERA
+speed-depth controls. GeoReason and CAPO are diagnostics for deciding whether
+any non-position first-error signal remains; SteerConf is the calibration
+repair support track. A2D2 and SEPO stay out of band for operator-owned
+verifier-as-reward generator training.
+
 ## 2026-06-18 Exp 4398 - .406 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4398_sota_ingestion_v407.json`.
