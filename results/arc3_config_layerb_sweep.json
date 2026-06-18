@@ -1,0 +1,102 @@
+{
+  "experiment": "arc3_config_layerb_sweep",
+  "games": [
+    "sc25",
+    "tn36",
+    "cd82",
+    "wa30",
+    "bp35",
+    "dc22",
+    "g50t",
+    "lf52",
+    "s5i5"
+  ],
+  "n_grounded": 1,
+  "grounded_games": [
+    "tn36"
+  ],
+  "n_coherent_reading_fixed": 1,
+  "coherent_games": [
+    "tn36"
+  ],
+  "blocked_no_banked_win": [
+    "sc25"
+  ],
+  "per_game": [
+    {
+      "game": "sc25",
+      "tier": "BLOCKED",
+      "honest_verdict": "blocked_no_editable_or_no_win_or_too_few_nonwins",
+      "has_editable": true,
+      "has_win": false,
+      "n_nonwins": 6
+    },
+    {
+      "game": "tn36",
+      "editable_cells": 60,
+      "n_nonwins": 6,
+      "coherent_runnable": true,
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "rule_grounded": true,
+      "literal_hardcode": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL",
+      "honest_verdict": "complete_scaffolded_tier2_grounded_relational"
+    },
+    {
+      "game": "cd82",
+      "editable_cells": 2166,
+      "n_nonwins": 6,
+      "coherent_runnable": false,
+      "tier": "TIER0_FAIL",
+      "honest_verdict": "tier0_fail_no_coherent_predicate",
+      "msg": "local gguf (GPU server) failed: <HTTPError 400: 'Bad Request'>"
+    },
+    {
+      "game": "wa30",
+      "editable_cells": 1280,
+      "n_nonwins": 6,
+      "coherent_runnable": false,
+      "tier": "TIER0_FAIL",
+      "honest_verdict": "tier0_fail_no_coherent_predicate",
+      "msg": "local gguf (GPU server) failed: <HTTPError 400: 'Bad Request'>"
+    },
+    {
+      "game": "bp35",
+      "tier": "ERROR",
+      "honest_verdict": "collect_error_TypeError",
+      "detail": "unsupported operand type(s) for /: 'PosixPath' and 'NoneType'"
+    },
+    {
+      "game": "dc22",
+      "tier": "ERROR",
+      "honest_verdict": "collect_error_TypeError",
+      "detail": "unsupported operand type(s) for /: 'PosixPath' and 'NoneType'"
+    },
+    {
+      "game": "g50t",
+      "tier": "ERROR",
+      "honest_verdict": "collect_error_TypeError",
+      "detail": "unsupported operand type(s) for /: 'PosixPath' and 'NoneType'"
+    },
+    {
+      "game": "lf52",
+      "tier": "ERROR",
+      "honest_verdict": "collect_error_TypeError",
+      "detail": "unsupported operand type(s) for /: 'PosixPath' and 'NoneType'"
+    },
+    {
+      "game": "s5i5",
+      "tier": "ERROR",
+      "honest_verdict": "collect_error_ValueError",
+      "detail": "attempt to get argmax of an empty sequence"
+    }
+  ],
+  "ka59_reference": "tier2_grounded (prior run)",
+  "tr87_reference": "rewrite-class, from-pixels decoder",
+  "honest_verdict": "complete_config_sweep_grounded_1_of_3_groundable_coherent_1",
+  "inference_substrate": "offline_arc_agi3_layerb_scaffolded_sweep_iGPU_port8920"
+}
