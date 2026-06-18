@@ -1,133 +1,141 @@
-milestone: 2026.06.402
-milestone_title: "CONVERT the PROVEN oracle-distinct verifier-moat into a generation GAIN (S3 stratified verifier-guided denoising search, arXiv:2604.06260, using the .401 leak-robust scorer) + drive the ARC north star DEEPER (E3 ka59 + sc25 L2+/ar25 L2/tn36 L7 + tr87/ft09) + PIVOT continuous self-learning to a learned ACTION-COST heuristic (cross-game value-transfer RETIRED 3rd-null). .401 PAID OFF the headline bet: the in-generation oracle-distinct moat REPLICATED leak-robust (exp4338 in_generation_moat_replicates=true, +0.358 vs best control, +0.321 vs self-reward SMC, CI95 [0.283,0.4375] excl 0, n=240, scorer_leak_recheck_passed=true, verifier_is_oracle=false) -> the DiffusionGemma gate is MET; the FIRST E3 ARC solves landed (ar25 L1 exp4339, sc25 L1 exp4341); ARC now 21 reproducible levels / 13 games; cross-game value transfer NULLED a 3rd time (exp4342) and RETIRED; paper_ready=True (FoVer 0.9131, G1-G4). .402 is DEPTH on the diagnosed forward question (north-star §1/§5): a proven moat is a MEASUREMENT; the win condition is UTILITY. (A) HEADLINE -- does putting the leak-robust scorer INSIDE the denoising loop (S3 stratified verifier-guided search) produce a better generation at FIXED compute vs best-of-K/unguided/self-reward-SMC? -> the moat graduates from 'exists' to 'useful' (Pareto-improves generation). (B) ARC NORTH STAR (operator MANDATORY 2026-06-17) -- E3 ka59 (closest still-partial), DEEPER on the cracked games (sc25 L2+ = +4 upside, ar25 L2, tn36 L7), tr87+ft09 breadth. (C) SELF-LEARNING -- learned A* ACTION-COST heuristic (north-star efficiency axis); cross-game value-transfer is RETIRED, do NOT re-attempt."
-milestone_doc: openspec/change-proposals/research-roadmap-v402.md
+milestone: 2026.06.403
+milestone_title: "RE-ATTEMPT the moat->generation CONVERSION with a FIXED, Prism-hardened verifier-guided denoising SEARCH (arXiv:2602.01842 HTS + partial-remask branching, the .401 leak-robust scorer INSIDE the loop, real token-by-token generation NOT MCQ-selection, at FIXED NFE vs unguided/best-of-N/intrinsic-SVF) + drive the ARC north star DEEPER (operator MANDATORY 2026-06-17: high-headroom cracked games + blocked-mechanic L2s + mechanic-limited tails) + COMPOUND the .402 self-learning win (deploy the learned action-cost heuristic as the standing planner + prove it compounds). .402 PROVED the harness, not the science: the S3 conversion test (exp4348) BROKE because the arms were framed as multiple-choice SELECTION (pick option A/B/C/D), so best-of-K/self-reward-SMC/unguided collapsed to argmax-logit -> CRITICAL TAUTOLOGY + controls_not_differentiable -> s3_moat_utility=open. The conversion question (does the PROVEN leak-robust scorer inside the denoising loop Pareto-improve generation at fixed compute?) has NEVER been validly tested -> .403 HEADLINE. ARC: ka59 L1 newly cracked (+1 game), tn36 L7; registry now 26 reproducible levels / 15 games; sc25 L2 / ar25 L2 / tr87 / ft09 open. Self-learning: the learned A* action-cost heuristic cut held-out env-actions 25->16 (clean win, exp4353). paper_ready=True (FoVer 0.9131, G1-G4)."
+milestone_doc: openspec/change-proposals/research-roadmap-v403.md
 milestone_overview: |
-  .401 produced the project's FIRST leak-robust, replicated, oracle-distinct verifier-moat win (the DiffusionGemma
-  gate, STILL-PENDING since 2026-06-13, is MET) AND the first two E3 ARC solves (ar25 L1, sc25 L1). .402 takes the
-  natural next DEPTH step on each (north-star Depth-Over-Breadth):
+  .402 left a sharp, honest scorecard: the in-generation oracle-distinct verifier-moat is PROVEN (leak-robust,
+  replicated, .401) but its UTILITY is UNTESTED -- the .402 S3 conversion instrument failed as a HARNESS (it framed
+  the arms as MCQ selection, so the controls collapsed and adversarial_verify fired TAUTOLOGY). .403 takes the
+  natural next DEPTH step on each axis (north-star Depth-Over-Breadth):
 
-    PHASE 0 -- TRANSITION: exp4347 archive .401 -> activate .402; record the TRUE .401 close-state.
+    PHASE 0 -- TRANSITION: exp4358 archive .402 -> activate .403; record the TRUE .402 close-state.
 
-    PHASE A -- HEADLINE (convert the proven moat into a generation GAIN):
-      A1 (exp4348) S3 stratified verifier-guided denoising SEARCH (arXiv:2604.06260): put the .401 leak-robust scorer
-        (exp4337 .pkl) INSIDE DiffusionGemma's denoising loop -- expand candidate partial states per step, score them
-        oracle-distinctly, resample the promising ones preserving diversity. At FIXED NFE, does it beat best-of-K@NFE
-        (compute-matched) + unguided + self-reward-SMC (intrinsic, the oracle-distinct must-beat)? Emit
-        s3_guided_beats_control BARE bool. verifier_is_oracle=false. The moat graduates from 'exists' to 'useful'.
-      A2 (exp4349, GATED on A1 s3_guided_beats_control==true) PAPO reward-state-alignment DIAGNOSTIC (arXiv:2606.08501):
-        skeptic-proof the gain -- is it from rewards aligned to AUTHENTIC denoising states (not remasking/position
-        artifacts)? The operator was twice-burned on DiffusionGemma; a gain that fails alignment is quarantined.
+    PHASE A -- HEADLINE (convert the proven moat into a generation GAIN, FIXED harness):
+      A1 (exp4359) Prism-hardened verifier-guided DENOISING SEARCH (arXiv:2602.01842): a REAL token-by-token
+        denoising-generation loop (NOT MCQ selection -- the .402 bug), Hierarchical Trajectory Search + local
+        branching with partial remasking, the .401 leak-robust scorer (exp4337 .pkl) as the EXTERNAL in-loop guide,
+        at FIXED NFE vs DIFFERENTIATED controls: unguided, best-of-N@matched-NFE, and Prism intrinsic Self-Verified
+        Feedback / self-reward SMC (the sharpest oracle-distinct must-beat). With the no-op DEGENERATE_CONTROLS guard,
+        a metric-TAUTOLOGY guard, an independent scorer leak re-check, branch-diversity receipts, and
+        scorer-disagreement rows. Emit s3_guided_beats_control BARE bool, n>=80, >=3 seeds. verifier_is_oracle=false.
+      A2 (exp4360, GATED on A1 s3_guided_beats_control==true) PAPO reward-state-alignment diagnostic
+        (arXiv:2606.08501): skeptic-proof a win -- is it from rewards aligned to AUTHENTIC denoising states (not
+        remasking/position artifacts)? The operator was twice-burned on DiffusionGemma over-claims.
 
-    PHASE B -- ARC NORTH STAR (operator MANDATORY 2026-06-17; incremental-progress, +1..+n per game):
-      B1 (exp4350) E3 ka59 -> L1 (closest still-partial deep tail, 0.56) via explore-verify-plan.
-      B2 (exp4351) E3 DEEPER on the cracked games: sc25 L2+ (reproduce the 5 live-recorded levels, +4 upside) +
-        ar25 L2 + tn36 L7.
-      B3 (exp4352) E3 tr87 + ft09 looped, +1 each (breadth).
+    PHASE B -- ARC NORTH STAR (operator MANDATORY 2026-06-17; incremental +1..+n per game; verifier_is_oracle=true):
+      B1 (exp4361) E3 DEEPER on the high-headroom cracked games: sc25 L2 (+4 upside toward its 5 live-recorded levels)
+        + tu93 L4 + lp85 L5 + tn36 L8 via explore-verify-plan.
+      B2 (exp4362) E3 the BLOCKED-mechanic next-levels: ar25 L2 (action7 undo-stack gap) + ka59 L2.
+      B3 (exp4363) E3 the MECHANIC-LIMITED tails tr87 + ft09 (world-model accuracy ~0) with active-data collection
+        (the M2-v4 disambiguation lever) on top of explore-verify-plan.
 
-    PHASE C -- CONTINUOUS SELF-LEARNING (mandated; PIVOT to the working+compounding mechanism):
-      exp4353 a learned A* ACTION-COST heuristic trained on the 21 solved-level traces -> ACTION-MINIMAL plans (north-star
-        EFFICIENCY axis: fewer env actions per solve / lower RHAE). Cross-game value-transfer is RETIRED (3 powered nulls
-        exp4318/4331/4342, manifest) -- do NOT re-attempt it. verifier_is_oracle=false.
+    PHASE C -- CONTINUOUS SELF-LEARNING (mandated; BUILD ON the .402 win; verifier_is_oracle=false):
+      exp4364 deploy the learned action-cost heuristic into arc_solver_kit as the standing A* cost + PROVE it
+        COMPOUNDS (held-out env-actions-to-solve vs solved-trace-corpus size), with an LLM-generated-heuristic
+        stronger-arm probe (arXiv:2503.18809). NOT cross-game value transfer (RETIRED, exp4342).
 
-    PHASE E -- INFRA + HYGIENE + CAPSTONE: exp4354 SOTA-ingestion -> .403; exp4355 registry/gaps hygiene + GAP-4
-      regression guard + fix the .401 capstone verifier_is_oracle stamp; exp4356 hardware continuity (KV260 opportunistic);
-      exp4357 capstone .402 + the headline decision (did S3 convert the moat?) + ARC reproducible-total + G1-G4.
+    PHASE E -- INFRA + HYGIENE + CAPSTONE: exp4365 SOTA-ingestion -> .404; exp4366 registry/gaps hygiene + GAP-4
+      regression guard; exp4367 hardware continuity (KV260 opportunistic); exp4368 capstone .403 + the headline
+      decision (did Prism-hardened search convert the moat?) + ARC reproducible-total + G1-G4.
 
   HARD RULE (every task): the conductor stays STOOD-DOWN on TRM training -- NO task may launch TRM training, run
   pkill/kill against train.py, or WRITE results/trm_runs/. Qwen is FORBIDDEN as the TRAINED base (Spurious-Rewards
   confound); Qwen/Gemma GGUF as an off-policy JUDGE/GENERATOR is fine. SEPO + A2D2 (verifier-as-reward GENERATOR
-  training, 2502.01384 / 2606.13565) are OUT-OF-BAND/operator-owned -- flagged in SOTA-ingestion, NOT auto-run in-loop;
-  the S3 headline is a NO-TRAINING test-time search. Every LEARNED-verifier value task MUST declare verifier_is_oracle
-  honestly (Circularity Discipline): an EXECUTABLE-oracle win (E3 solve) is execution_grounded (verifier_is_oracle=true,
-  ARC progress, NOT a moat headline); the moat is the oracle-DISTINCT learned result with a matched control + CI95-excl-0.
-  NO autonomous edits to docs/index.html / README / paper prose. Online ARC play stays operator-gated (NO leaderboard
-  submission; only offline-reproduced levels count). DiffusionGemma MUST use the llama.cpp PR binary, NOT a standard GGUF
-  loader (known-issues 2026-06-15). The cross-domain SELECTION scope (exp4314) and cross-game value TRANSFER (exp4342)
-  are RETIRED -- do NOT re-propose either.
+  training, 2502.01384 / 2606.13565) are OUT-OF-BAND/operator-owned -- flagged in SOTA-ingestion, NOT auto-run
+  in-loop; the .403 headline is a NO-TRAINING test-time search. Every LEARNED-verifier value task MUST declare
+  verifier_is_oracle honestly (Circularity Discipline): an EXECUTABLE-oracle win (E3 solve) is execution_grounded
+  (verifier_is_oracle=true, ARC progress, NOT a moat headline); the moat is the oracle-DISTINCT learned result with a
+  matched control + CI95-excl-0. NO autonomous edits to docs/index.html / README / paper prose. Online ARC play stays
+  operator-gated (NO leaderboard submission; only offline-reproduced levels count). DiffusionGemma MUST use the
+  llama.cpp PR binary, NOT a standard GGUF loader (known-issues 2026-06-15). Cross-game value TRANSFER (exp4342) and
+  cross-domain SELECTION (exp4314) are RETIRED -- do NOT re-propose either.
 
 tasks:
-  - id: exp4347-archive-v401-activate-v402
-    milestone: 2026.06.402
-    title: "Archive .401 -> activate .402; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the TRUE .401 close-state truthfully (per exp4346 capstone, corrected for the post-capstone outer-loop tn36 solves): the IN-GENERATION ORACLE-DISTINCT MOAT REPLICATED LEAK-ROBUST -> DiffusionGemma gate MET (exp4338 in_generation_moat_replicates=true, carnot_minus_best_control_delta +0.358, carnot_minus_self_reward_smc_delta +0.321, replication_ci95 [0.283,0.4375] excl 0, n=240, scorer_leak_recheck_passed=true, verifier_is_oracle=false; scorer exp4337 leak-audit passed: masked-answer AUROC 0.56 ~ chance, process-ranking 0.70); FIRST E3 ARC SOLVES (ar25 L1 exp4339, sc25 L1 exp4341); ARC now 21 reproducible levels / 13 games (registry 2026-06-17, authoritative -- the exp4346 capstone's 17 was pre-tn36-L4/L5/L6 outer-loop solves); ka59/tr87/ft09 still partial (E3 0.56/partial); CROSS-GAME VALUE TRANSFER NULLED a 3rd time (exp4342, reduction CI95 [1.0,1.017]) and RETIRED on the exclusion manifest; CROSS-DOMAIN SELECTION stays RETIRED (exp4314); paper_ready=True (FoVer 0.9131, G1-G4 pass). NOTE the exp4346 capstone carried a CIRCULAR_MOAT_OVERCLAIM flag because it omitted verifier_is_oracle (a STAMPING bug -- the underlying exp4338 is correctly verifier_is_oracle=false; the moat is genuinely oracle-distinct). Frame .402 as CONVERT-the-proven-moat-to-a-generation-gain (S3) + E3-ARC-DEEPER + learned-action-cost-self-learning."
+  - id: exp4358-archive-v402-activate-v403
+    milestone: 2026.06.403
+    title: "Archive .402 -> activate .403; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the TRUE .402 close-state truthfully (per exp4357 capstone): the S3 conversion test FAILED AS A HARNESS, not the science -- exp4348 framed the arms as multiple-choice SELECTION so best-of-K/self-reward-SMC/unguided collapsed to argmax-logit (CRITICAL TAUTOLOGY, controls_not_differentiable), so s3_moat_utility=OPEN and the in-generation moat's UTILITY is UNTESTED (the moat itself is still PROVEN leak-robust from .401 exp4338); ARC north star advanced -- ka59 L1 newly cracked (+1 game, exp4350), tn36 L7 (exp4351), registry now 26 reproducible levels / 15 games (authoritative ops/arc_solve_registry.yaml, after outer-loop tu93 L1->L3 etc.); sc25 L2 (spell-delta gap) / ar25 L2 (action7 undo-stack gap) / tr87 / ft09 (world-model accuracy ~0) OPEN; the learned A* action-cost heuristic WON (held-out env-actions 25->16, exp4353, positive control passed, verifier_is_oracle=false); cross-game value transfer (exp4342) + cross-domain selection (exp4314) RETIRED; the .401-capstone CIRCULAR_MOAT_OVERCLAIM stamp bug is FIXED and durable (exp4355, the .402 capstone scans 0 flags); paper_ready=True (FoVer 0.9131, G1-G4). Frame .403 as RE-ATTEMPT-the-conversion-with-a-fixed-Prism-hardened-harness + ARC-DEEPER + COMPOUND-the-action-cost-self-learning."
     priority: critical
     track: infra
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4336); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4347); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4347_archive_v401_activate_v402.json
+    deliverable: results/experiment_4358_archive_v402_activate_v403.json
     prompt: |
-      CONTEXT: Close .401, activate .402. The outer-loop owns TRM training; the conductor stays stood-down on TRM
-      training. This archive runs on CODEX (mechanical). .401 PAID OFF the headline bet: the in-generation oracle-distinct
-      verifier-moat REPLICATED LEAK-ROBUST (exp4338) -> the long-STILL-PENDING DiffusionGemma gate is MET; the first two
-      E3 ARC solves landed (ar25 L1, sc25 L1); ARC is now 21 reproducible levels / 13 games; cross-game value transfer
-      nulled a 3rd time and is RETIRED; paper_ready=True. .402 CONVERTS the proven moat into a generation gain (S3) and
-      drives the ARC north star deeper.
+      CONTEXT: Close .402, activate .403. The outer-loop owns TRM training; the conductor stays stood-down on TRM
+      training. This archive runs on CODEX (mechanical). .402 PROVED THE HARNESS, NOT THE SCIENCE: the S3 conversion
+      test (exp4348) broke because the arms were framed as multiple-choice SELECTION (best-of-K/self-reward-SMC/unguided
+      collapsed to argmax-logit -> CRITICAL TAUTOLOGY, controls_not_differentiable), so s3_moat_utility=OPEN and the
+      in-generation moat's UTILITY is UNTESTED. ARC advanced (ka59 +1 game; registry 26 levels / 15 games). The learned
+      action-cost heuristic WON (25->16 env-actions). paper_ready=True. .403 RE-ATTEMPTS the conversion with a FIXED,
+      Prism-hardened harness and drives ARC deeper + compounds the self-learning win.
 
       EXISTING CODE TO READ FIRST:
-        - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check; exp4342 cross-game-transfer + exp4314 cross-domain-selection retirements should be reflected)
-        - results/experiment_4346_capstone_v401.json (the .401 scorecard; NOTE its 17-level ARC count is stale and its CIRCULAR_MOAT_OVERCLAIM flag is a verifier_is_oracle stamping bug, not a science problem)
-        - results/experiment_4338_in_generation_moat_replicate_leak_robust.json (the moat-replicated-leak-robust result)
-        - results/experiment_4337_leak_robust_partial_state_scorer_build.json (the leak-robust scorer + its leak audit)
-        - ops/arc_solve_registry.yaml (21 reproducible levels / 13 games -- the authoritative count)
-        - openspec/change-proposals/research-roadmap-v402.md (the .402 design doc)
+        - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check; exp4342 cross-game-transfer + exp4314 cross-domain-selection retirements are reflected)
+        - results/experiment_4357_capstone_v402.json (the .402 scorecard: verifier_thesis_state moat_proven_leak_robust_but_s3_utility_open; s3_moat_utility=open; reproducible_total_levels)
+        - results/experiment_4348_s3_stratified_verifier_guided_search.json (the FLAGGED S3 harness failure -- controls_not_differentiable / TAUTOLOGY; NOTE the MCQ-selection framing bug)
+        - results/experiment_4353_learned_action_cost_heuristic_efficiency.json (the action-cost heuristic WIN 25->16)
+        - ops/arc_solve_registry.yaml (26 reproducible levels / 15 games -- the authoritative count)
+        - openspec/change-proposals/research-roadmap-v403.md (the .403 design doc)
 
-      TASK: archive .401, activate .402, record the TRUE .401 close-state truthfully.
+      TASK: archive .402, activate .403, record the TRUE .402 close-state truthfully.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
            a. `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0.
            b. The smart-subset pre-test gate is green.
            If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
-        1. Archive .401 into research-complete.yaml; activate .402.
-        2. Record the TRUE .401 close-state (per exp4346 + the registry): in-generation oracle-distinct moat REPLICATED
-           LEAK-ROBUST (gate MET, verifier_is_oracle=false); first E3 solves (ar25/sc25 L1); ARC 21 reproducible / 13
-           games; ka59/tr87/ft09 partial; cross-game value transfer + cross-domain selection RETIRED; paper_ready=True.
-           Frame .402 per the design doc.
+        1. Archive .402 into research-complete.yaml; activate .403.
+        2. Record the TRUE .402 close-state (per exp4357 + the registry): S3 conversion FAILED AS A HARNESS (moat still
+           PROVEN, utility OPEN); ARC ka59 +1 game / 26 levels / 15 games; learned action-cost heuristic WON; cross-game
+           transfer + cross-domain selection RETIRED; capstone-stamp fix durable; paper_ready=True. Frame .403 per the design doc.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
-        v401_close_state:
-          principle: "Honest record (moat REPLICATED LEAK-ROBUST/gate MET; first E3 solves ar25+sc25 L1; ARC 21 reproducible/13 games; cross-game transfer + cross-domain selection RETIRED; paper_ready=True) so the .402 agents frame the milestone as convert-the-moat-to-a-generation-gain + E3-deeper + action-cost-self-learning -- NOT a re-open of the retired axes."
+        v402_close_state:
+          principle: "Honest record (S3 conversion HARNESS-FAILED / moat utility OPEN but moat still PROVEN leak-robust; ARC 26 levels/15 games, ka59 +1 game; action-cost heuristic WON 25->16; cross-game transfer + cross-domain selection RETIRED; capstone-stamp fix durable; paper_ready=True) so the .403 agents frame the milestone as re-attempt-the-conversion-with-a-fixed-Prism-harness + ARC-deeper + compound-the-action-cost-self-learning -- NOT a re-open of the retired axes."
         preconditions_checked:
           principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
-      ACCEPTANCE: honest_verdict terminal-prefixed; .402 activated; close-state recorded truthfully.
+      ACCEPTANCE: honest_verdict terminal-prefixed; .403 activated; close-state recorded truthfully.
 
-      Run: `python3 {project_root}/results/experiment_4347_archive_v401_activate_v402.py` (or your archive script).
+      Run: `python3 {project_root}/results/experiment_4358_archive_v402_activate_v403.py` (or your archive script).
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4348-s3-stratified-verifier-guided-search
-    milestone: 2026.06.402
-    title: "PHASE A1 (HEADLINE; convert the PROVEN moat into a generation GAIN) -- S3 STRATIFIED VERIFIER-GUIDED DENOISING SEARCH (arXiv:2604.06260 VERIFIED) using the .401 LEAK-ROBUST scorer. .401 PROVED the in-generation oracle-distinct moat exists (exp4338, leak-robust, replicated, CI95-excl-0) -- but a proven moat is a MEASUREMENT; the north-star §5 win condition is UTILITY: the verifier earns its place when it makes generation MORE ACCURATE AT EQUAL COMPUTE (Pareto-improve the base generator). S3 (Stratified Scaling Search, 2604.06260) is the instrument: at each DiffusionGemma denoising step, expand K candidate partial states, score them with the leak-robust exp4337 scorer (the in-loop verifier), resample the promising ones while preserving frontier diversity -> a reward-tilted sampling distribution anchored to the model prior. The DECISIVE test is at a FIXED NFE (denoising compute) budget: does S3-Carnot beat (a) best-of-K@matched-NFE (the same compute spent on K independent samples + final selection -- the must-beat compute-matched baseline), (b) unguided single-pass, and (c) self-reward SMC (2602.01849, the model's INTRINSIC confidence -- the sharpest oracle-distinct test)? Reuse the .401 skeptic-proof harness: the no-op DEGENERATE_CONTROLS guard (controls_differentiated) + an INDEPENDENT leak re-check on the scorer. Emit s3_guided_beats_control BARE bool := (S3-Carnot - best-of-K@NFE > 0 AND its CI95 excludes 0 AND controls_differentiated AND S3-Carnot - self-reward-SMC > 0) at FIXED NFE, n>=80, >=3 seeds. verifier_is_oracle=false. A win = the moat graduates 'exists'->'useful' (Pareto-improves generation). An honest null (the proven scorer does NOT convert to a fixed-NFE generation gain) is decision-grade. NO TRAINING (test-time search only); NO TRM training; DiffusionGemma via the llama.cpp PR binary."
+  - id: exp4359-prism-hardened-verifier-guided-search
+    milestone: 2026.06.403
+    title: "PHASE A1 (HEADLINE; convert the PROVEN moat into a generation GAIN, FIXED harness) -- PRISM-HARDENED VERIFIER-GUIDED DENOISING SEARCH (arXiv:2602.01842 VERIFIED, ICML 2026) using the .401 LEAK-ROBUST scorer. .402's S3 test (exp4348) was a HARNESS BUG, not a null: it framed the arms as multiple-choice SELECTION (pick option A/B/C/D from option-logits), so best-of-K/self-reward-SMC/unguided all collapsed to argmax-logit -> the three deltas were bit-identical (0.266667) -> CRITICAL TAUTOLOGY + controls_not_differentiable -> s3_moat_utility=OPEN. The conversion question (does the PROVEN leak-robust scorer INSIDE the denoising loop Pareto-improve generation at FIXED compute? -- the north-star §5 'verifier earns its place' realized in-generation) has NEVER been validly tested. FIX it: run a REAL token-by-token DENOISING-GENERATION loop on a free-form executable task (NOT MCQ selection), use Prism Hierarchical Trajectory Search (HTS, prune/reallocate compute in an early-to-mid denoising window) + Local branching with partial remasking (diverse implementations, preserve high-confidence tokens), with the .401 leak-robust scorer (exp4337 .pkl) as the EXTERNAL in-loop guidance. The DECISIVE test at FIXED NFE vs DIFFERENTIATED controls: (a) unguided single-pass, (b) best-of-N@matched-NFE (compute-matched must-beat), (c) Prism INTRINSIC Self-Verified Feedback / self-reward SMC (the model's OWN self-verification -- the SHARPEST oracle-distinct must-beat). Skeptic-proof by construction: the no-op DEGENERATE_CONTROLS guard (controls_differentiated), a metric-TAUTOLOGY guard (reject bit-identical deltas), an INDEPENDENT scorer leak re-check, branch-DIVERSITY receipts (Prism warns HTS can hide diversity collapse), and scorer-DISAGREEMENT rows (where the external scorer and intrinsic SVF disagree). Emit s3_guided_beats_control BARE bool := (S3-Carnot - best-of-N@NFE > 0 AND its CI95 excludes 0 AND controls_differentiated AND S3-Carnot - intrinsic-SVF > 0) at FIXED NFE, n>=80, >=3 seeds. verifier_is_oracle=false. A win = the moat graduates 'exists'->'useful' (Pareto-improves generation). A clean null (controls differentiated, scorer leak-free, but Carnot does NOT beat best-of-N/SVF) is decision-grade. NO TRAINING (test-time search only); NO TRM training; DiffusionGemma via the llama.cpp PR binary."
     priority: critical
     track: diffusiongemma-headline
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4348_s3_stratified_verifier_guided_search.json
+    deliverable: results/experiment_4359_prism_hardened_verifier_guided_search.json
     prior_failures:
-      - experiment_id: exp4326-adaptive-guided-generation-scaleup
-        verdict: complete_adaptive_guidance_bounded_to_stitching_null
-        addressed_by: "exp4326 (.400) tried a SCHEDULE-only adaptive guidance scale-up and found it bounded to post-hoc stitching (adaptive_guidance_beats_control=false, CI95 [-0.075,0.35] incl 0) -- AND it used the LEAKY exp4292 scorer. This attempt is a DIFFERENT method: S3 stratified verifier-guided SEARCH (2604.06260 -- per-step frontier expansion + verifier scoring + resampling with diversity preservation, not a fixed schedule) AND it uses the now-PROVEN LEAK-ROBUST exp4337 scorer (the moat replicated leak-robust in exp4338, so scale-up is legitimate) AND the decisive test is at FIXED NFE vs best-of-K (compute-matched), which exp4326 did not run. retire_if_same_verdict: true -- if S3 with a proven leak-robust scorer ALSO cannot beat the compute-matched controls at fixed NFE, the in-generation moat does not convert to a generation gain (decision-grade; the in-generation-guidance scale-up direction retires)."
+      - experiment_id: exp4348-s3-stratified-verifier-guided-search
+        verdict: controls_not_differentiable
+        addressed_by: "exp4348 (.402) ran S3 stratified verifier-guided search but FRAMED THE ARMS AS MULTIPLE-CHOICE SELECTION (pick option A/B/C/D from option-logits), so best-of-K/self-reward-SMC/unguided collapsed to argmax-logit -> bit-identical deltas -> CRITICAL TAUTOLOGY + controls_not_differentiable (a HARNESS bug, not a science null). This attempt FIXES the harness three ways: (1) a REAL token-by-token DENOISING-GENERATION loop on a free-form executable task (the arms genuinely produce different completions), NOT MCQ selection; (2) Prism HTS + partial-remask branching (arXiv:2602.01842) as the search mechanism, with the external leak-robust exp4337 scorer as guidance and Prism intrinsic SVF as the sharpest oracle-distinct must-beat; (3) the no-op DEGENERATE_CONTROLS guard + a metric-TAUTOLOGY guard + branch-diversity receipts + scorer-disagreement rows so the controls are differentiated BY CONSTRUCTION. retire_if_same_verdict: true -- if the FIXED harness STILL returns controls_not_differentiable (the arms genuinely cannot be differentiated even with real generation + Prism HTS), the in-generation conversion direction is not measurable with our stack and retires; a CLEAN differentiated null (Carnot does not beat best-of-N/SVF) is a DIFFERENT, decision-grade verdict and does NOT trigger retirement."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: north-star §1 + §5 -- the in-generation oracle-distinct moat is PROVEN (exp4338, leak-robust, replicated).
-      The forward question is UTILITY: does the verifier improve generation at equal compute? S3 (arXiv:2604.06260) puts
-      the leak-robust scorer INSIDE the denoising loop as a verifier-guided search. The decisive comparison is at FIXED
-      NFE vs best-of-K (compute-matched) + unguided + self-reward SMC (intrinsic). A win = the moat is USEFUL, not just
-      real. The operator was twice-burned on DiffusionGemma over-claims -> skeptic-proof by construction.
+      CONTEXT: north-star §1 + §5 -- the in-generation oracle-distinct moat is PROVEN (exp4338, leak-robust, replicated)
+      but its UTILITY is UNTESTED because the .402 conversion instrument (exp4348 S3) broke as a HARNESS (MCQ-selection
+      framing -> controls collapsed -> TAUTOLOGY). The forward question is UTILITY: does the verifier improve generation
+      at equal compute? Prism (arXiv:2602.01842, ICML 2026) is the efficient search mechanism: Hierarchical Trajectory
+      Search + local branching with partial remasking, matching best-of-N at fewer NFE. Guide it with Carnot's EXTERNAL
+      leak-robust scorer and use Prism's intrinsic Self-Verified Feedback (SVF) as the SHARPEST oracle-distinct must-beat
+      (external verifier vs the model verifying itself). The operator was twice-burned on DiffusionGemma over-claims ->
+      skeptic-proof by construction (differentiated controls, tautology guard, branch-diversity + leak + disagreement receipts).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4337_leak_robust_partial_state_scorer_build.json (scorer_module_path = the persisted leak-robust scorer, results/dina_lrm_partial_state_scorer_exp4337.pkl) + results/experiment_4338_in_generation_moat_replicate_leak_robust.json (the proven moat: the exact harness, controls, leak re-check, bootstrap)
+        - results/experiment_4348_s3_stratified_verifier_guided_search.json (the .402 HARNESS FAILURE -- read benchmark_records_preview to SEE the MCQ-selection collapse; do NOT repeat it)
+        - results/experiment_4337_leak_robust_partial_state_scorer_build.json (scorer_module_path = results/dina_lrm_partial_state_scorer_exp4337.pkl, the external leak-robust scorer) + results/experiment_4338_in_generation_moat_replicate_leak_robust.json (the proven moat: the exact harness, controls, leak re-check, bootstrap)
         - results/experiment_4315_diffusiongemma_reward_guided_stitching.json (the .399 stitching harness -- the arms unguided/EntRGi/self-reward-SMC/Carnot; the no-op guard; the bootstrap CI)
-        - scripts/exp_diffusiongemma_energy_prior_extract.py + results/diffusiongemma_energy_prior_extracted.json (the PR-binary call: llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32> <out_logits.bin>; canvas=256 mask tokens id=4; vocab 262144)
-        - research-references.md (the .402 sweep: S3 2604.06260 stratified scaling search; self-reward SMC 2602.01849)
-        - scripts/experiment_template.py, scripts/adversarial_verify.py (DEGENERATE_CONTROLS), scripts/summarize_artifact.py
+        - scripts/exp_diffusiongemma_energy_prior_extract.py + results/diffusiongemma_energy_prior_extracted.json (the PR-binary call: ~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32> <out_logits.bin>; canvas=256 mask tokens id=4; vocab 262144)
+        - research-references.md (the .403 sweep: Prism HTS 2602.01842; self-reward SMC 2602.01849; S3 2604.06260)
+        - scripts/experiment_template.py, scripts/adversarial_verify.py (DEGENERATE_CONTROLS + TAUTOLOGY), scripts/summarize_artifact.py
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions", "Inference-Substrate Declaration", "GGUF tokenizer rule", "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: run S3 stratified verifier-guided denoising search with the leak-robust scorer; report whether it beats the compute-matched + intrinsic controls at FIXED NFE.
+      TASK: run a REAL Prism-hardened verifier-guided DENOISING-GENERATION search with the leak-robust scorer; report whether it beats the compute-matched + intrinsic controls at FIXED NFE, with controls differentiated by construction.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any inference):
@@ -136,25 +144,32 @@ tasks:
            c. The leak-robust scorer loads: `python3 -c "import pickle; pickle.load(open('results/dina_lrm_partial_state_scorer_exp4337.pkl','rb'))"` succeeds. If absent -> honest_verdict `blocked_leak_robust_scorer_unavailable` and STOP.
            d. Conductor stood-down on TRM training; this task does NO training of any kind (test-time search only).
            If ANY precondition fails -> honest_verdict `blocked_<resource>` and STOP. DO NOT fabricate inference.
-        1. INDEPENDENT LEAK RE-CHECK on the scorer (re-ablate the answer cells); if it now leaks -> scorer_leak_recheck_passed=false + honest_verdict `scorer_leaky_in_search_corpus` and STOP.
-        2. NO-OP GUARD: smoke that each arm CHANGES token selection; if any two arms tie bit-identically -> controls_differentiated=false + honest_verdict `controls_not_differentiable` and STOP.
-        3. WINDOW DISCIPLINE: synchronous, checkpoint after every seed, print per-arm/per-seed progress (codex idle-timeout fix). FIX an NFE (denoising-step x candidate) budget B. Run the arms at the SAME B: (a) unguided single-pass; (b) best-of-K@B (K independent samples + final selection, K chosen so total NFE == B); (c) self-reward SMC@B (intrinsic confidence particle filter); (d) S3-Carnot@B (per-step frontier expansion + leak-robust-scorer scoring + stratified resample with diversity preservation). n>=80, >=3 seeds. Report per-arm accuracy + S3-Carnot minus each control + task-level bootstrap CI95 (>=2000 resamples) of (S3-Carnot - best-of-K@NFE).
-        4. Emit s3_guided_beats_control BARE bool := (S3-Carnot - best-of-K@NFE > 0 AND its CI95 excludes 0 AND controls_differentiated AND S3-Carnot - self-reward-SMC > 0). Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum + model_specs (GGUF + PR binary + the leak-robust scorer + the S3 config + K + NFE budget B + the controls + n + seeds).
+        1. FRAMING FIX (the load-bearing change vs exp4348): run a REAL token-by-token DENOISING-GENERATION loop on a
+           FREE-FORM executable task (math/code generation over a denoising canvas), NOT a multiple-choice option pick.
+           Each arm must genuinely produce a DIFFERENT completion. Verify the arms diverge BEFORE scoring (the no-op guard, step 3).
+        2. INDEPENDENT LEAK RE-CHECK on the scorer (re-ablate the answer cells); if it now leaks -> scorer_leak_recheck_passed=false + honest_verdict `scorer_leaky_in_search_corpus` and STOP.
+        3. NO-OP GUARD + TAUTOLOGY GUARD: smoke that each arm CHANGES the generated tokens; if any two arms tie bit-identically OR any two delta metrics agree to >5 sig figs -> controls_differentiated=false + honest_verdict `controls_not_differentiable` and STOP (do NOT report a TAUTOLOGY-flagged result).
+        4. WINDOW DISCIPLINE: synchronous, checkpoint after every seed, print per-arm/per-seed progress (codex idle-timeout fix). FIX an NFE (denoising-step x candidate) budget B. Run the arms at the SAME B: (a) unguided single-pass; (b) best-of-N@B (N independent samples + final selection, N chosen so total NFE == B); (c) intrinsic Self-Verified-Feedback / self-reward SMC@B (the model's own self-evaluation -- NO external scorer); (d) Prism-Carnot@B (HTS + partial-remask local branching + the leak-robust-scorer scoring the frontier). n>=80, >=3 seeds. Report per-arm accuracy + S3-Carnot minus each control + task-level bootstrap CI95 (>=2000 resamples) of (S3-Carnot - best-of-N@NFE), PLUS branch_diversity (unique completions per frontier) + scorer_disagreement_rate (external scorer vs intrinsic SVF).
+        5. Emit s3_guided_beats_control BARE bool := (S3-Carnot - best-of-N@NFE > 0 AND its CI95 excludes 0 AND controls_differentiated AND S3-Carnot - intrinsic-SVF > 0). Run adversarial_verify.py (must be CLEAN -- no TAUTOLOGY; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum + model_specs (GGUF + PR binary + the leak-robust scorer + the Prism/HTS config + N + NFE budget B + the controls + n + seeds).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A generation gain (S3 beats the compute-matched + intrinsic controls at fixed NFE -- moat is USEFUL), a powered null (the proven scorer does not convert to a fixed-NFE gain -> retire the in-generation scale-up direction), a controls_not_differentiable, and a scorer_leaky_in_search_corpus are ALL decision-grade."
+          principle: "Terminal-prefixed. A generation gain (Carnot beats the compute-matched + intrinsic controls at fixed NFE -- moat is USEFUL), a CLEAN powered null (controls differentiated + scorer leak-free, but Carnot does not beat best-of-N/SVF -> the in-generation scale-up retires), a controls_not_differentiable (the harness STILL cannot differentiate the arms -> direction retires), and a scorer_leaky_in_search_corpus are ALL decision-grade."
         s3_guided_beats_control:
-          principle: "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff S3-Carnot beats best-of-K@matched-NFE AND CI95-excl-0 AND controls_differentiated AND beats self-reward SMC -- the moat graduating from 'exists' to 'useful' (Pareto-improves generation at equal compute)."
-        s3_minus_best_of_k_delta:
-          principle: "BARE float: S3-Carnot minus best-of-K at matched NFE -- the headline Pareto claim (more accurate at equal compute)."
-        s3_minus_self_reward_smc_delta:
-          principle: "BARE float: S3-Carnot minus self-reward SMC -- the sharpest oracle-distinct test (external leak-robust verifier vs the model's intrinsic confidence)."
+          principle: "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff Carnot-guided search beats best-of-N@matched-NFE AND CI95-excl-0 AND controls_differentiated AND beats intrinsic SVF -- the moat graduating from 'exists' to 'useful' (Pareto-improves generation at equal compute)."
+        s3_minus_best_of_n_delta:
+          principle: "BARE float: Carnot minus best-of-N at matched NFE -- the headline Pareto claim (more accurate at equal compute)."
+        s3_minus_intrinsic_svf_delta:
+          principle: "BARE float: Carnot minus intrinsic Self-Verified-Feedback -- the sharpest oracle-distinct test (external leak-robust verifier vs the model verifying itself)."
         s3_gain_ci95:
-          principle: "Task-level bootstrap CI95 (>=2000 resamples) of the S3-Carnot minus best-of-K@NFE delta -- excluding 0 is the decision-grade gain."
+          principle: "Task-level bootstrap CI95 (>=2000 resamples) of the Carnot minus best-of-N@NFE delta -- excluding 0 is the decision-grade gain."
         nfe_budget:
           principle: "BARE int: the FIXED denoising-compute (NFE) budget held equal across all arms -- the compute-matching that makes the Pareto claim honest."
         controls_differentiated:
-          principle: "BARE bool: true iff no two arms tie bit-identically (the no-op guard)."
+          principle: "BARE bool: true iff no two arms tie bit-identically AND no two delta metrics agree to >5 sig figs (the no-op + tautology guards that exp4348 failed)."
+        branch_diversity:
+          principle: "Per-frontier unique-completion count -- Prism warns HTS can hide diversity collapse; a collapsed frontier invalidates a gain."
+        scorer_disagreement_rate:
+          principle: "BARE float: fraction of cases where the external leak-robust scorer and intrinsic SVF pick different frontiers -- the external verifier only adds value where it DISAGREES with self-verification."
         scorer_leak_recheck_passed:
           principle: "BARE bool: the independent leak re-check of the scorer on the search corpus -- true iff its signal SURVIVES masking the answer cells."
         benchmark_n:
@@ -166,62 +181,64 @@ tasks:
         random_seed:
           principle: "Determinism precondition for the denoising + search + bootstrap."
         reproducibility_checksum:
-          principle: "Hash of the search corpus + the S3 config + the controls + PR-binary inputs; lets a third party re-run."
+          principle: "Hash of the search corpus + the Prism config + the controls + PR-binary inputs; lets a third party re-run."
         model_specs:
-          principle: "DiffusionGemma GGUF + PR binary + the leak-robust scorer + the S3 config + the best-of-K/self-reward-SMC baselines + the NFE budget + denoising steps + n + seeds; required methodology."
+          principle: "DiffusionGemma GGUF + PR binary + the leak-robust scorer + the Prism/HTS config + the best-of-N/intrinsic-SVF baselines + the NFE budget + denoising steps + n + seeds; required methodology."
       ACCEPTANCE GATE:
-        - condition: "s3_guided_beats_control + s3_minus_best_of_k_delta + s3_minus_self_reward_smc_delta + s3_gain_ci95 + nfe_budget + controls_differentiated + scorer_leak_recheck_passed + benchmark_n (>=80) reported with verifier_is_oracle=false and preconditions_checked, OR an honest blocked_leak_robust_scorer_unavailable / controls_not_differentiable / scorer_leaky_in_search_corpus / powered-null verdict"
-          principle: "A fixed-NFE generation gain from putting the proven oracle-distinct scorer inside the denoising loop converts the moat from a measurement to a Pareto-improvement of generation -- the north-star §5 win condition realized in-generation; a powered null retires the in-generation scale-up direction (decision-grade)."
+        - condition: "s3_guided_beats_control + s3_minus_best_of_n_delta + s3_minus_intrinsic_svf_delta + s3_gain_ci95 + nfe_budget + controls_differentiated + branch_diversity + scorer_disagreement_rate + scorer_leak_recheck_passed + benchmark_n (>=80) reported with verifier_is_oracle=false and preconditions_checked and adversarial_verify CLEAN (no TAUTOLOGY), OR an honest blocked_leak_robust_scorer_unavailable / controls_not_differentiable / scorer_leaky_in_search_corpus / clean-powered-null verdict"
+          principle: "A fixed-NFE generation gain from putting the proven oracle-distinct scorer inside a REAL denoising loop (vs best-of-N AND the model's own self-verification) converts the moat from a measurement to a Pareto-improvement of generation -- the north-star §5 win condition realized in-generation; a clean powered null retires the in-generation scale-up direction (decision-grade)."
 
-      Run: `python3 {project_root}/results/experiment_4348_s3_stratified_verifier_guided_search.py`
+      Run: `python3 {project_root}/results/experiment_4359_prism_hardened_verifier_guided_search.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4349-papo-reward-state-alignment-diagnostic
-    milestone: 2026.06.402
-    title: "PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4348 s3_guided_beats_control==true) -- PAPO REWARD-STATE-ALIGNMENT DIAGNOSTIC (arXiv:2606.08501 VERIFIED 'Back on Track: Aligning Rewards and States for Reasoning in Diffusion LLMs'). IF exp4348 shows an S3 generation gain, the operator (twice-burned on DiffusionGemma over-claims, .396/.397) will ask: is the gain from rewards aligned to AUTHENTIC denoising states, or an artifact of remasking / position cues / the scorer correlating with something other than process quality? PAPO is the diagnostic: evaluate the leak-robust scorer's one-step partial-state predictions against AUTHENTIC recorded denoising trajectories vs RANDOMLY-REMASKED (artificial-context) states, and report the reward-state ALIGNMENT (does the reward track genuine intermediate process quality, not reconstructed/leaked context?). Emit reward_state_alignment_passed BARE bool := (the scorer's reward correlates with authentic-trajectory process quality SIGNIFICANTLY MORE than with randomly-remasked states, CI95-excl-0). verifier_is_oracle=false. A pass = the S3 gain is genuine (headline graduates); a fail = the gain is alignment-confounded and is QUARANTINED (not headline-eligible) + the residual logged as a missing-verifier gap. NO training; NO TRM training; DiffusionGemma via the llama.cpp PR binary."
+  - id: exp4360-papo-reward-state-alignment-diagnostic
+    milestone: 2026.06.403
+    title: "PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4359 s3_guided_beats_control==true) -- PAPO REWARD-STATE-ALIGNMENT DIAGNOSTIC (arXiv:2606.08501 VERIFIED 'Back on Track: Aligning Rewards and States for Reasoning in Diffusion LLMs'). IF exp4359 shows a Prism-hardened generation gain, the operator (twice-burned on DiffusionGemma over-claims) will ask: is the gain from rewards aligned to AUTHENTIC denoising states, or an artifact of remasking / position cues / the scorer correlating with something other than process quality? PAPO is the diagnostic: evaluate the leak-robust scorer's partial-state predictions against AUTHENTIC recorded denoising trajectories vs RANDOMLY-REMASKED (artificial-context) states, and report the reward-state ALIGNMENT (does the reward track genuine intermediate process quality?). Emit reward_state_alignment_passed BARE bool := (the scorer's reward correlates with authentic-trajectory process quality SIGNIFICANTLY MORE than with randomly-remasked states, CI95-excl-0). verifier_is_oracle=false. A pass = the gain is genuine (headline graduates); a fail = the gain is alignment-confounded and is QUARANTINED (not headline-eligible) + the residual logged as a missing-verifier gap. NO training; NO TRM training; DiffusionGemma via the llama.cpp PR binary."
     priority: high
     track: diffusiongemma-headline
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4349_papo_reward_state_alignment_diagnostic.json
-    operator_override: "2026-05-29 operator directive (standing) auto-override (false-positive scope-match): the token 'diagnostic' falsely matches the retired backend-state-diagnostic-v4/v5/v6 infra tasks -- this is a NEW PAPO reward-state-ALIGNMENT validation for diffusion-LM generation (arXiv:2606.08501), a different domain entirely, gated on the same-milestone S3 gain (exp4348). Not a rerun of any backend-state diagnostic."
+    deliverable: results/experiment_4360_papo_reward_state_alignment_diagnostic.json
+    operator_override: "2026-05-29 operator directive (standing) auto-override (false-positive scope-match): the token 'diagnostic' falsely matches the retired backend-state-diagnostic-v4/v5/v6 infra tasks -- this is a NEW PAPO reward-state-ALIGNMENT validation for diffusion-LM generation (arXiv:2606.08501), gated on the same-milestone Prism-hardened gain (exp4359). Not a rerun of any backend-state diagnostic, and distinct from .402's exp4349 (which BLOCKED because .402's S3 harness failed; .403's harness is fixed)."
     gated_on:
-      - upstream: exp4348-s3-stratified-verifier-guided-search
+      - upstream: exp4359-prism-hardened-verifier-guided-search
         artifact_field: s3_guided_beats_control
         op: '=='
         value: true
     prompt: |
-      CONTEXT: north-star §1 + §5 -- this is the skeptic-proofing of the .402 headline. exp4348 (S3) showed a fixed-NFE
-      generation gain from the leak-robust scorer; before it graduates to a headline, verify the gain is from rewards
-      aligned to AUTHENTIC denoising states (PAPO, arXiv:2606.08501), not from remasking/position artifacts. This is a
-      DIAGNOSTIC (no training, no generation gate), gated on the S3 gain existing.
+      CONTEXT: north-star §1 + §5 -- this is the skeptic-proofing of the .403 headline. exp4359 (Prism-hardened search)
+      showed a fixed-NFE generation gain from the leak-robust scorer; before it graduates to a headline, verify the gain
+      is from rewards aligned to AUTHENTIC denoising states (PAPO, arXiv:2606.08501), not from remasking/position
+      artifacts. This is a DIAGNOSTIC (no training, no generation gate), gated on the gain existing. (.402's exp4349
+      BLOCKED because .402's S3 harness failed and the gate never opened; .403's harness is fixed, so this can run.)
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4348_s3_stratified_verifier_guided_search.json (the S3 gain to validate; the corpus + scorer + trajectories)
+        - results/experiment_4359_prism_hardened_verifier_guided_search.json (the gain to validate; the corpus + scorer + trajectories)
         - results/experiment_4337_leak_robust_partial_state_scorer_build.json (the leak-robust scorer .pkl) + results/experiment_4338_in_generation_moat_replicate_leak_robust.json (the masked-answer leak-audit methodology to reuse)
+        - results/experiment_4349_papo_reward_state_alignment_diagnostic.json (the .402 PAPO scaffold that blocked on the failed S3 gate -- the structure to reuse)
         - scripts/exp_diffusiongemma_energy_prior_extract.py (the PR-binary call)
-        - research-references.md (the .402 sweep: PAPO / Back-on-Track reward-state alignment 2606.08501)
+        - research-references.md (the .403 sweep: PAPO / Back-on-Track reward-state alignment 2606.08501)
         - scripts/adversarial_verify.py, scripts/summarize_artifact.py
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions", "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: measure the reward-state alignment of the leak-robust scorer over authentic vs randomly-remasked denoising states; decide whether the S3 gain is genuine or alignment-confounded.
+      TASK: measure the reward-state alignment of the leak-robust scorer over authentic vs randomly-remasked denoising states; decide whether the gain is genuine or alignment-confounded.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any inference):
-           a. exp4348 s3_guided_beats_control==true (the gate; if false, this task should be skipped by the conductor gate -- if it runs anyway, honest_verdict `blocked_no_s3_gain_to_validate` and STOP).
+           a. exp4359 s3_guided_beats_control==true (the gate; if false, this task should be skipped by the conductor gate -- if it runs anyway, honest_verdict `blocked_no_gain_to_validate` and STOP).
            b. PR binary + DiffusionGemma GGUF cached; the leak-robust scorer loads.
            c. Conductor stood-down on TRM training; this task does NO training.
            If ANY precondition fails -> honest_verdict `blocked_<resource>` and STOP. DO NOT fabricate inference.
         1. WINDOW DISCIPLINE: synchronous, checkpoint per phase, print progress. Record AUTHENTIC denoising trajectories (the real per-step partial states the PR binary produces) and a matched set of RANDOMLY-REMASKED states (same canvas positions, artificial context). Score both with the leak-robust scorer.
         2. ALIGNMENT TEST: report the correlation/AUROC of the scorer's reward with genuine process quality on AUTHENTIC states vs RANDOMLY-REMASKED states; the reward must track authentic-trajectory quality SIGNIFICANTLY MORE (CI95-excl-0 on the difference). Emit reward_state_alignment_passed BARE bool.
-        3. Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum + model_specs. If alignment FAILS -> log the residual as a missing-verifier gap (ops/verifier_gaps.md) and mark the S3 gain QUARANTINED (not headline-eligible).
+        3. Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum + model_specs. If alignment FAILS -> log the residual as a missing-verifier gap (ops/verifier_gaps.md) and mark the gain QUARANTINED (not headline-eligible).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An alignment PASS (S3 gain is genuine, headline graduates) and an alignment FAIL (gain quarantined as confounded) are BOTH decision-grade."
+          principle: "Terminal-prefixed. An alignment PASS (gain is genuine, headline graduates) and an alignment FAIL (gain quarantined as confounded) are BOTH decision-grade."
         reward_state_alignment_passed:
-          principle: "BARE bool: the capstone reads this; true iff the leak-robust scorer's reward tracks AUTHENTIC-trajectory process quality significantly more than randomly-remasked states (CI95-excl-0) -- the diagnostic that the S3 gain is not a remasking/position artifact."
+          principle: "BARE bool: the capstone reads this; true iff the leak-robust scorer's reward tracks AUTHENTIC-trajectory process quality significantly more than randomly-remasked states (CI95-excl-0) -- the diagnostic that the gain is not a remasking/position artifact."
         authentic_vs_remasked_alignment_delta:
           principle: "BARE float: the scorer's authentic-state alignment minus its randomly-remasked-state alignment -- the reward-state-alignment signal."
         alignment_ci95:
@@ -229,7 +246,7 @@ tasks:
         verifier_is_oracle:
           principle: "BARE bool=false -- the leak-robust reward head is oracle-distinct."
         preconditions_checked:
-          principle: "Records the S3-gain + PR-binary + GGUF + scorer + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode."
+          principle: "Records the gain + PR-binary + GGUF + scorer + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode."
         random_seed:
           principle: "Determinism precondition for the trajectory recording + remasking + scoring."
         reproducibility_checksum:
@@ -237,127 +254,59 @@ tasks:
         model_specs:
           principle: "DiffusionGemma GGUF + PR binary + the leak-robust scorer + the authentic/remasked trajectory sets + n + seeds; required methodology."
       ACCEPTANCE GATE:
-        - condition: "reward_state_alignment_passed + authentic_vs_remasked_alignment_delta + alignment_ci95 reported with verifier_is_oracle=false and preconditions_checked, OR an honest blocked_no_s3_gain_to_validate / blocked_<resource> verdict"
-          principle: "Reward-state alignment is the diagnostic that the S3 generation gain comes from authentic-state process rewards, not remasking artifacts -- the skeptic-proofing a twice-burned operator requires before the in-generation moat headlines."
+        - condition: "reward_state_alignment_passed + authentic_vs_remasked_alignment_delta + alignment_ci95 reported with verifier_is_oracle=false and preconditions_checked, OR an honest blocked_no_gain_to_validate / blocked_<resource> verdict"
+          principle: "Reward-state alignment is the diagnostic that the generation gain comes from authentic-state process rewards, not remasking artifacts -- the skeptic-proofing a twice-burned operator requires before the in-generation moat headlines."
 
-      Run: `python3 {project_root}/results/experiment_4349_papo_reward_state_alignment_diagnostic.py`
+      Run: `python3 {project_root}/results/experiment_4360_papo_reward_state_alignment_diagnostic.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4350-e3-explore-verify-plan-ka59
-    milestone: 2026.06.402
-    title: "PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026-06-17) -- E3 ka59 -> L1 with EXPLORE-VERIFY-PLAN, more refactor rounds in a quieter codex window. ka59 is the CLOSEST still-partial deep-tail game: .401 (exp4340) reached verifier_best_accuracy 0.56 with explore-verify-plan but did NOT reproduce L1. Continue the SAME upgraded harness (AERA explore-verify-plan arXiv:2605.25931 -- EXPLORE collects verifier-gated transition lemmas, PLAN only after the model passes mechanic checks; Agent2World adaptive world-model testing arXiv:2512.22336 -- adaptive unit tests surface the hidden-rule gap) with MORE refactor rounds and the higher-accuracy ar25/sc25 world models as shape templates. The codex agent IS the proposer (WRITES results/arc_e3/ka59/world_model.py; NO nested CodexProposer). INCREMENTAL-PROGRESS scoped: +1 level (L1). HARD gate: offline_reproduced=true AND reproduced_levels>=1 (arc_solver_kit.reproduce). An honest partial (best verifier_accuracy + the residual mismatch CLASS as a missing-world-model-rule gap in ops/verifier_gaps.md) is PROGRESS. verifier_is_oracle=true (execution-grounded ARC progress, NOT an oracle-distinct moat). NO TRM training; NO leaderboard submission; run when codex is NOT saturated; cap per-task wall-time."
+  - id: exp4361-e3-deeper-high-headroom-games
+    milestone: 2026.06.403
+    title: "PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026-06-17; biggest reproducible-level upside) -- E3 DEEPER on the HIGH-HEADROOM cracked games: sc25 L2 (the single biggest upside, +4 toward its 5 live-recorded levels) + tu93 L4 + lp85 L5 + tn36 L8, +1 each per Incremental-Progress Scoping. The registry (26 levels / 15 games) has un-reproduced deeper levels on these games: sc25 has 5 LIVE-RECORDED levels (only L1 offline-reproduced -> reproducing L2..L5 is +4), tu93 is at L3 (outer-loop fresh_env branch mode), lp85 at L4, tn36 at L7. EXTEND the existing world models / solvers (results/arc_e3/{{sc25}}/world_model.py, scripts/arc3_tn36_offline_solver.py, the tu93/lp85 solvers) to the next level via the SAME explore-verify-plan harness (AERA 2605.25931 EXPLORE-before-PLAN + Agent2World 2512.22336 adaptive testing). LOOP the four targets with a per-target checkpoint + hard per-target wall-time cap (breadth-of-progress beats all-or-nothing). The codex agent IS the proposer (NO nested CodexProposer). HARD gate per target: a NEW level offline_reproduced=true beyond the prior reproduced best (arc_solver_kit.reproduce). Report a per-target scorecard + the new reproducible_total_levels. An honest partial per target (best verifier_accuracy + the residual win-mechanic gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH target."
     priority: high
     track: arc-north-star
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
+    operator_override: "2026-06-17 operator E3 MANDATORY directive + CLAUDE.md ARC-AGI-3 Incremental-Progress Scoping (standing) auto-override class 3 (versioned-lineage continuation): this targets NEW levels (sc25 L2+, tu93 L4, lp85 L5, tn36 L8) on ALREADY-SOLVED games -- a STATED forward difference (levels never reproduced), NOT a rerun of the exp4351 deeper-solved-games task which SUCCEEDED for tn36 L7. Incremental +1..+n beyond the recorded reproduced best."
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4350_e3_explore_verify_plan_ka59.json
-    prior_failures:
-      - experiment_id: exp4340-e3-explore-verify-plan-ka59
-        verdict: complete_e3_ka59_partial_model_0.56
-        addressed_by: "exp4340 (.401) reached 0.56 verifier accuracy on ka59 with explore-verify-plan but did not reproduce L1 (single quieter-window pass). This attempt continues the SAME harness (AERA 2605.25931 + Agent2World 2512.22336) with MORE refactor rounds + the now-solved ar25/sc25 world models as shape templates + a deliberately uncontended codex window. A refined model + a sharper residual-mismatch gap is progress, not a re-run. retire_if_same_verdict: false."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT: north-star §0 + the 2026-06-17 operator E3 MANDATORY. ka59 is the closest still-partial deep tail (0.56).
-      The .401 gap was insufficient refactor rounds under contention. Continue AERA explore-verify-plan (arXiv:2605.25931)
-      + Agent2World adaptive testing (arXiv:2512.22336) with more rounds. YOU (codex) are the proposer. Offline; NO
-      leaderboard submission; only offline-reproduced levels count.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/agentic/arc_executable_world_model.py (collect_transitions, WorldModelVerifier, load_engine, plan_and_execute) + runner scripts/arc_e3_solve.py
-        - results/arc_e3/ka59/world_model.py (the 0.56 ka59 model to REFINE) + results/experiment_4340_e3_explore_verify_plan_ka59.json (the .401 residual mismatches)
-        - results/arc_e3/ar25/world_model.py + results/arc_e3/sc25/world_model.py (the now-SOLVED higher-accuracy models as shape templates)
-        - research-references.md (.402 sweep: AERA 2605.25931 + Agent2World 2512.22336 + Executable World Models 2605.05138)
-        - docs/research-notes/arc-agi3-sota-ingestion-2026-06-17.md + ops/arc_solve_registry.yaml (general gotchas) + python/carnot/agentic/arc_solve_learning.py (recommend_approach -- route ka59 to the closest solved recipe)
-        - python/carnot/agentic/arc_solver_kit.py (reproduce())
-        - CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping", "ARC Solve Reproducibility + Solver-Reuse Discipline", "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions"
-
-      TASK: refine + explore-verify-plan the ka59 executable world model to reach L1, offline-reproduced.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: `ls environment_files/ka59/` non-empty (offline sim present). The harness imports. Conductor stood-down on TRM training. If the offline env is missing -> honest_verdict `blocked_offline_env_missing_ka59` and STOP. NO leaderboard submission.
-        1. collect_transitions('ka59') -> offline dataset. EXPLORE (AERA): win-seeking exploration collecting verifier-gated transition lemmas; ADAPTIVE TESTING (Agent2World): adaptive unit tests for hidden-rule mismatches. REFINE results/arc_e3/ka59/world_model.py against WorldModelVerifier.score() mismatches over ~6-10 refactor rounds until accuracy >= ~0.95 or the round budget; PLAN only AFTER the model passes the mechanic checks. NO nested CodexProposer -- YOU write the model. Print per-round verifier accuracy. Cap wall-time.
-        2. HARD GATE: accept ONLY if offline_reproduced=true AND reproduced_levels>=1 (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml (win condition / action model / gotchas / dead-ends + the world-model path). If the round budget is hit without a solve -> honest partial: best verifier_accuracy + the residual mismatch CLASS as a missing-world-model-rule gap (ops/verifier_gaps.md). Declare random_seed + reproducibility_checksum.
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefixed (success_e3_ka59_L1_reproduced or complete_e3_ka59_partial_model_<acc>). A reproduced L1 and an honest partial are BOTH progress."
-        verifier_accuracy_per_round:
-          principle: "list[float]: the verifier's reproduction rate per refactor round -- the trustworthy progress signal (compare to .401's 0.56)."
-        explore_lemmas_collected:
-          principle: "BARE int: verifier-gated transition lemmas confirmed before planning (the AERA explore-before-plan discipline)."
-        world_model_path:
-          principle: "results/arc_e3/ka59/world_model.py -- the induced model IS the deliverable."
-        world_model_sha256:
-          principle: "Hash of the induced world model -- auditable/reproducible."
-        offline_reproduced:
-          principle: "BARE bool: the real env reaches L1 via the induced-model plan, re-gated -- only reproduced levels count."
-        reproduced_levels:
-          principle: "BARE int: levels offline-reproduced on ka59 (target >=1) -- the +1 incremental-progress unit."
-        plan_executed:
-          principle: "BARE bool + divergence_step: execution-grounded confirmation; halt-on-divergence."
-        verifier_is_oracle:
-          principle: "BARE bool=true -- the SOLVE is execution-grounded (real env defines the win); ARC progress, NOT a moat headline."
-        preconditions_checked:
-          principle: "Records the offline-env presence + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode."
-        random_seed:
-          principle: "Determinism precondition for the induction + exploration + planning."
-        reproducibility_checksum:
-          principle: "Hash of the world model + the plan + the reproduce() result; lets a third party re-run."
-      ACCEPTANCE GATE:
-        - condition: "offline_reproduced + reproduced_levels (>=1 on success) + verifier_accuracy_per_round + explore_lemmas_collected + world_model_path + world_model_sha256 + plan_executed reported with verifier_is_oracle=true and preconditions_checked, OR an honest partial OR blocked_offline_env_missing_ka59"
-          principle: "An E3 +1 (offline-reproduced) on ka59 is north-star accuracy progress on the closest still-partial deep-tail game; more refactor rounds in a quiet window is the diagnosed fix. An honest partial advances the world-model program."
-
-      Run: `python3 {project_root}/results/experiment_4350_e3_explore_verify_plan_ka59.py`
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4351-e3-deeper-solved-games
-    milestone: 2026.06.402
-    title: "PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17; biggest reproducible-level upside) -- E3 DEEPER on the CRACKED games: sc25 L2+ (the single biggest upside, +4) + ar25 L2 + tn36 L7, +1 each per Incremental-Progress Scoping. .401 reproduced sc25 L1 (exp4341, the spell-cast/cast-grid mechanic) and ar25 L1 (exp4339); sc25 has 5 LIVE-RECORDED levels (only L1 reproduced -> reproducing L2..L5 is +4 reproducible levels), and the registry notes tn36 L7 (obj 41,28 -> tgt 41,8) is a maze the current multi-run planner does not yet crack. EXTEND the existing world models (results/arc_e3/{{sc25,ar25}}/world_model.py) and the tn36 program-editor solver (scripts/arc3_tn36_offline_solver.py) to the next level(s) via the SAME explore-verify-plan harness (AERA 2605.25931 + Agent2World 2512.22336). LOOP the three targets with a per-target checkpoint + hard per-target wall-time cap (breadth-of-progress beats all-or-nothing). The codex agent IS the proposer (NO nested CodexProposer). HARD gate per target: a NEW level offline_reproduced=true beyond the prior reproduced best. Report a per-target scorecard + the new reproducible_total_levels. An honest partial per target (best verifier_accuracy + the residual win-mechanic gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH target."
-    priority: high
-    track: arc-north-star
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    operator_override: "2026-06-17 operator E3 MANDATORY directive + CLAUDE.md ARC-AGI-3 Incremental-Progress Scoping (standing) auto-override class 3 (versioned-lineage continuation): this targets NEW levels (sc25 L2+, ar25 L2, tn36 L7) on ALREADY-SOLVED games -- a STATED forward difference (levels never attempted), NOT a rerun of the exp4339/exp4341 L1 solves which SUCCEEDED. Incremental +1..+n beyond the recorded reproduced best."
-    inference_substrate: live_llm_inference
-    deliverable: results/experiment_4351_e3_deeper_solved_games.json
+    deliverable: results/experiment_4361_e3_deeper_high_headroom_games.json
     prompt: |
       CONTEXT: north-star §0 + the 2026-06-17 operator E3 MANDATORY + Incremental-Progress Scoping (+1..+n per game).
-      sc25/ar25 L1 are SOLVED; the upside is going DEEPER -- sc25 has 5 live-recorded levels (reproducing L2..L5 is +4
-      reproducible), ar25 L2 is the next level, tn36 L7 is a maze the multi-run planner does not yet crack. EXTEND the
-      existing world models / solvers to the next level via explore-verify-plan. YOU (codex) are the proposer. Offline;
-      NO leaderboard submission; only offline-reproduced levels count.
+      The upside is going DEEPER on cracked games with un-reproduced levels -- sc25 (5 live-recorded, only L1 reproduced,
+      +4 upside), tu93 (L3 -> L4), lp85 (L4 -> L5), tn36 (L7 -> L8). EXTEND the existing world models / solvers to the
+      next level via explore-verify-plan. YOU (codex) are the proposer. Offline; NO leaderboard submission; only
+      offline-reproduced levels count.
 
       EXISTING CODE TO READ FIRST:
         - python/carnot/agentic/arc_executable_world_model.py + runner scripts/arc_e3_solve.py
-        - results/arc_e3/sc25/world_model.py + results/experiment_4341_e3_sc25_reproduction.json (the sc25 L1 mechanic: spell-cast/cast-grid/tank-controls; the 5-live-recorded-levels note)
-        - results/arc_e3/ar25/world_model.py + results/experiment_4339_e3_explore_verify_plan_ar25.json (the ar25 L1 reflection mechanic; the ACTION7 undo-stack gap)
-        - scripts/arc3_tn36_offline_solver.py (the tn36 L1-L6 program-editor solver; the registry 'next:' note on L7 -- the multi-run planner is position-only and L7 may need transforms-within-a-maze-leg)
-        - ops/arc_solve_registry.yaml (the sc25/ar25/tn36 entries -- win conditions, action models, gotchas, dead-ends)
-        - research-references.md (.402 sweep: AERA 2605.25931 + Agent2World 2512.22336 + Executable World Models 2605.05138)
+        - results/arc_e3/sc25/world_model.py + results/experiment_4351_e3_deeper_solved_games.json (the sc25 L1 mechanic: spell-cast/cast-grid/tank-controls; the 5-live-recorded-levels note + the sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap)
+        - scripts/arc3_tn36_offline_solver.py (the tn36 L1-L7 program-editor solver; the registry 'next:' note on L8) + the tu93/lp85 solvers (per ops/arc_solve_registry.yaml entries)
+        - ops/arc_solve_registry.yaml (the sc25/tu93/lp85/tn36 entries -- win conditions, action models, gotchas, dead-ends, levels_reproduced)
+        - research-references.md (.403 sweep: AERA 2605.25931 + Agent2World 2512.22336 + Executable World Models 2605.05138)
         - python/carnot/agentic/arc_solver_kit.py (reproduce())
         - CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping", "ARC Solve Reproducibility + Solver-Reuse Discipline", "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions"
 
-      TASK: extend sc25 (L2+), ar25 (L2), tn36 (L7) to the next reproducible level each via explore-verify-plan; loop with a per-target checkpoint + wall-time cap.
+      TASK: extend sc25 (L2+), tu93 (L4), lp85 (L5), tn36 (L8) to the next reproducible level each via explore-verify-plan; loop with a per-target checkpoint + wall-time cap.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `ls environment_files/sc25/ environment_files/ar25/ environment_files/tn36/` non-empty. The harness imports. Conductor stood-down on TRM training. If an env is missing -> record blocked_offline_env_missing_<game> for that target and continue the others. NO leaderboard submission.
-        1. For EACH target (process in this order: sc25 -> tn36 -> ar25, the upside order), checkpoint FIRST so a window-exhaustion preserves prior targets:
-           - sc25: extend results/arc_e3/sc25/world_model.py from L1 to L2 (and onward toward the 5 live-recorded levels): collect_transitions, EXPLORE the L2 win-mechanic with verifier-gated lemmas, ADAPTIVE TEST the hidden-rule delta, refine ~4-8 rounds, PLAN only after mechanic checks pass.
-           - tn36: extend scripts/arc3_tn36_offline_solver.py / the program-editor model to L7 (obj 41,28 -> tgt 41,8); if it needs transforms-within-a-maze-leg (per the registry 'next:' note), implement that in the multi-run planner.
-           - ar25: extend results/arc_e3/ar25/world_model.py to L2.
+        0. PRECONDITIONS: `ls environment_files/sc25/ environment_files/tu93/ environment_files/lp85/ environment_files/tn36/` non-empty. The harness imports. Conductor stood-down on TRM training. If an env is missing -> record blocked_offline_env_missing_<game> for that target and continue the others. NO leaderboard submission.
+        1. For EACH target (process in this order: sc25 -> tn36 -> lp85 -> tu93, the upside order), checkpoint FIRST so a window-exhaustion preserves prior targets:
+           - sc25: extend results/arc_e3/sc25/world_model.py from L1 to L2 (and onward toward the 5 live-recorded levels): collect_transitions, EXPLORE the L2 win-mechanic with verifier-gated lemmas (the spell-delta gap), ADAPTIVE TEST the hidden-rule delta, refine ~4-8 rounds, PLAN only after mechanic checks pass.
+           - tn36: extend scripts/arc3_tn36_offline_solver.py / the program-editor model to L8 (per the registry 'next:' note).
+           - lp85: extend the permutation-BFS solver to L5.
+           - tu93: extend the frame-based / fresh_env branch-mode solver to L4.
            Print per-target per-round verifier accuracy. Cap per-target wall-time.
         2. HARD gate per target: accept a level ONLY if a NEW level offline_reproduced=true beyond the prior reproduced best (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml (per-game levels_reproduced + the new trajectory). Report a per-target scorecard + the new reproducible_total_levels. An honest partial per target (best verifier_accuracy + the residual win-mechanic gap CLASS in ops/verifier_gaps.md) is PROGRESS. Declare random_seed + reproducibility_checksum.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed (success_e3_deeper_<targets>_reproduced or complete_e3_deeper_partial). Any NEW reproduced level on any target is progress; an honest partial across all three is also progress."
+          principle: "Terminal-prefixed (success_e3_deeper_<targets>_reproduced or complete_e3_deeper_partial). Any NEW reproduced level on any target is progress; an honest partial across all four is also progress."
         per_target_scorecard:
-          principle: "list of {{game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced}} -- the per-target breadth-of-progress record (sc25/ar25/tn36)."
+          principle: "list of {{game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced}} -- the per-target breadth-of-progress record (sc25/tu93/lp85/tn36)."
         reproducible_total_levels:
-          principle: "BARE int: the ARC reproducible-level count after this task (>= the prior 21) -- the monotonic north-star accuracy signal; sc25 L2+ is the biggest single upside (+4 possible)."
+          principle: "BARE int: the ARC reproducible-level count after this task (>= the prior 26) -- the monotonic north-star accuracy signal; sc25 L2+ is the biggest single upside (+4 possible)."
         new_levels_reproduced:
-          principle: "BARE int: NEW levels offline-reproduced this task across the three targets -- the incremental-progress unit."
+          principle: "BARE int: NEW levels offline-reproduced this task across the four targets -- the incremental-progress unit."
         world_model_paths:
           principle: "list[str]: the extended world-model / solver paths (the deliverables)."
         verifier_is_oracle:
@@ -369,55 +318,55 @@ tasks:
         reproducibility_checksum:
           principle: "Hash of the extended models + the plans + the reproduce() results; lets a third party re-run."
       ACCEPTANCE GATE:
-        - condition: "per_target_scorecard + reproducible_total_levels + new_levels_reproduced + world_model_paths reported with verifier_is_oracle=true and preconditions_checked, OR an honest partial across all three targets"
-          principle: "Going DEEPER on already-cracked games is the biggest near-term reproducible-level upside (sc25's 5 live-recorded levels alone are +4); incremental +1..+n beyond the reproduced best is the operator's mandated ARC progress."
+        - condition: "per_target_scorecard + reproducible_total_levels + new_levels_reproduced + world_model_paths reported with verifier_is_oracle=true and preconditions_checked, OR an honest partial across all four targets"
+          principle: "Going DEEPER on cracked games with un-reproduced levels (sc25's 5 live-recorded alone are +4) is the biggest near-term reproducible-level upside; incremental +1..+n beyond the reproduced best is the operator's mandated ARC progress."
 
-      Run: `python3 {project_root}/results/experiment_4351_e3_deeper_solved_games.py`
+      Run: `python3 {project_root}/results/experiment_4361_e3_deeper_high_headroom_games.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4352-e3-explore-verify-plan-tr87-ft09
-    milestone: 2026.06.402
-    title: "PHASE B3 (ARC NORTH STAR; operator MANDATORY 2026-06-17; breadth) -- E3 tr87 AND ft09 -> L1 each, looped with a per-game checkpoint + hard per-game wall-time cap (breadth-of-progress beats an all-or-nothing single-game swing). Both are deep-tail games graph-explore NO-ADVANCEd; .401 (exp4329) reached partial models (ft09 ~0.10, tr87 ~0.00) BEFORE the explore-verify-plan upgrade that solved ar25/sc25. Apply the SAME upgraded harness (AERA explore-verify-plan arXiv:2605.25931 -- EXPLORE collects verifier-gated lemmas, PLAN only after mechanic checks; Agent2World adaptive world-model testing arXiv:2512.22336). The codex agent IS the proposer (WRITES results/arc_e3/<game>/world_model.py per game; NO nested CodexProposer). INCREMENTAL-PROGRESS scoped: +1 level (L1) EACH. HARD gate per game: offline_reproduced=true AND reproduced_levels>=1. An honest partial per game (best verifier_accuracy + the residual mismatch class as a missing-world-model-rule gap) is PROGRESS. Report a per-game scorecard. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH game so a window-exhaustion preserves the first game's result."
+  - id: exp4362-e3-blocked-mechanic-levels-ar25-ka59
+    milestone: 2026.06.403
+    title: "PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17; close the named hidden-rule gaps) -- E3 the BLOCKED-mechanic next-levels: ar25 L2 (close the action7 undo-stack gap) + ka59 L2, +1 each per Incremental-Progress Scoping. .402 reproduced ar25 L1 (exp4339, reflection mechanic) and ka59 L1 (exp4350, hidden_step_counter_hud_gap), but ar25 L2 is blocked on the named ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap and ka59 deeper is partial (verifier_best_accuracy 0.6375). EXTEND the existing world models (results/arc_e3/{{ar25,ka59}}/world_model.py) against the NAMED hidden-rule gaps via explore-verify-plan (AERA 2605.25931 + Agent2World 2512.22336): for ar25, model the action7 undo-stack; for ka59, model the hidden step-counter HUD. The codex agent IS the proposer (NO nested CodexProposer). HARD gate per game: a NEW level offline_reproduced=true beyond the prior best. An honest partial per game (refined model + the sharper residual gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH game."
     priority: high
     track: arc-north-star
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
+    operator_override: "2026-06-17 operator E3 MANDATORY directive + CLAUDE.md ARC-AGI-3 Incremental-Progress Scoping (standing) auto-override class 3 (versioned-lineage continuation): this targets NEW levels (ar25 L2, ka59 L2) on ALREADY-SOLVED games by closing the NAMED hidden-rule gaps -- a STATED forward difference (the action7 undo-stack model for ar25, the step-counter HUD for ka59), NOT a rerun of the exp4339/exp4350 L1 solves which SUCCEEDED. Incremental +1 beyond the reproduced best."
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json
-    prior_failures:
-      - experiment_id: exp4329-e3-executable-world-model-tr87-ft09
-        verdict: complete_e3_tr87_ft09_partial
-        addressed_by: "exp4329 (.400) reached partial models on tr87/ft09 with the PRE-upgrade E3 loop (plan-before-verify). This attempt applies the explore-verify-plan upgrade (AERA 2605.25931 EXPLORE-before-PLAN + Agent2World 2512.22336 adaptive testing) that subsequently SOLVED ar25 and sc25 in .401 -- a different loop structure, not a re-run. retire_if_same_verdict: false (a refined model + a sharper gap per game is progress)."
-        retire_if_same_verdict: false
+    deliverable: results/experiment_4362_e3_blocked_mechanic_levels_ar25_ka59.json
     prompt: |
-      CONTEXT: north-star §0 + the 2026-06-17 operator E3 MANDATORY. tr87/ft09 reached partial models in .400 BEFORE the
-      explore-verify-plan upgrade that cracked ar25/sc25. Apply that upgraded harness (AERA 2605.25931 + Agent2World
-      2512.22336). YOU (codex) are the proposer. Offline; NO leaderboard submission; only offline-reproduced levels count.
+      CONTEXT: north-star §0 + the 2026-06-17 operator E3 MANDATORY (ar25 + ka59 are two of the four named deep tails).
+      ar25 L1 + ka59 L1 are SOLVED; the next levels are blocked on NAMED hidden-rule gaps (ar25: action7 undo-stack;
+      ka59: hidden step-counter HUD). Close the named gap by extending the world model via explore-verify-plan. YOU
+      (codex) are the proposer. Offline; NO leaderboard submission; only offline-reproduced levels count.
 
       EXISTING CODE TO READ FIRST:
         - python/carnot/agentic/arc_executable_world_model.py + runner scripts/arc_e3_solve.py
-        - results/arc_e3/tr87/world_model.py + results/arc_e3/ft09/world_model.py (the .400 partial models) + results/experiment_4329_e3_executable_world_model_tr87_ft09.json (the residual mismatches)
-        - results/arc_e3/ar25/world_model.py + results/arc_e3/sc25/world_model.py (the now-SOLVED models as shape templates) + results/experiment_4339_e3_explore_verify_plan_ar25.json (the upgrade that worked)
-        - research-references.md (.402 sweep: AERA 2605.25931 + Agent2World 2512.22336)
-        - ops/arc_solve_registry.yaml (general gotchas) + python/carnot/agentic/arc_solve_learning.py (recommend_approach) + python/carnot/agentic/arc_solver_kit.py (reproduce())
+        - results/arc_e3/ar25/world_model.py + results/experiment_4339_e3_explore_verify_plan_ar25.json + results/experiment_4351_e3_deeper_solved_games.json (the ar25 L1 reflection mechanic; the ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap)
+        - results/arc_e3/ka59/world_model.py + results/experiment_4350_e3_explore_verify_plan_ka59.json (the ka59 L1 solve; the hidden_step_counter_hud_gap; verifier_best_accuracy 0.6375)
+        - ops/arc_solve_registry.yaml (the ar25/ka59 entries -- win conditions, action models, gotchas, dead-ends)
+        - research-references.md (.403 sweep: AERA 2605.25931 + Agent2World 2512.22336 + Executable World Models 2605.05138)
+        - python/carnot/agentic/arc_solve_learning.py (recommend_approach) + python/carnot/agentic/arc_solver_kit.py (reproduce())
         - CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping", "ARC Solve Reproducibility + Solver-Reuse Discipline", "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions"
 
-      TASK: explore-verify-plan tr87 and ft09 to L1 each; loop with a per-game checkpoint + wall-time cap.
+      TASK: close the named hidden-rule gaps to reach ar25 L2 + ka59 L2 via explore-verify-plan; loop with a per-game checkpoint + wall-time cap.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `ls environment_files/tr87/ environment_files/ft09/` non-empty. The harness imports. Conductor stood-down on TRM training. If a game's env is missing -> record blocked_offline_env_missing_<game> for that game and continue the other. NO leaderboard submission.
-        1. For EACH game (checkpoint FIRST so window-exhaustion preserves the first game): collect_transitions(game) -> offline dataset; EXPLORE (AERA) collecting verifier-gated lemmas; ADAPTIVE TEST (Agent2World) for hidden-rule mismatches; REFINE results/arc_e3/<game>/world_model.py ~4-8 rounds until accuracy >= ~0.95 or the round budget; PLAN only AFTER mechanic checks pass. NO nested CodexProposer. Print per-game per-round verifier accuracy. Cap per-game wall-time.
-        2. HARD gate per game: accept ONLY if offline_reproduced=true AND reproduced_levels>=1 (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml. If a game's round budget is hit without a solve -> honest partial: best verifier_accuracy + the residual mismatch CLASS as a missing-world-model-rule gap (ops/verifier_gaps.md). Report a per-game scorecard. Declare random_seed + reproducibility_checksum.
+        0. PRECONDITIONS: `ls environment_files/ar25/ environment_files/ka59/` non-empty. The harness imports. Conductor stood-down on TRM training. If a game's env is missing -> record blocked_offline_env_missing_<game> for that game and continue the other. NO leaderboard submission.
+        1. For EACH game (checkpoint FIRST so window-exhaustion preserves the first game): collect_transitions(game); EXPLORE (AERA) collecting verifier-gated lemmas TARGETED at the named gap (ar25: action7 undo-stack transitions; ka59: the step-counter HUD register); ADAPTIVE TEST (Agent2World) the hidden-rule mismatch; REFINE results/arc_e3/<game>/world_model.py ~4-8 rounds until accuracy >= ~0.95 or the round budget; PLAN only AFTER mechanic checks pass. NO nested CodexProposer. Print per-game per-round verifier accuracy. Cap per-game wall-time.
+        2. HARD gate per game: accept ONLY if a NEW level offline_reproduced=true beyond the prior best (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml. If a game's round budget is hit without a new level -> honest partial: best verifier_accuracy + the sharper residual mismatch CLASS as a missing-world-model-rule gap (ops/verifier_gaps.md). Report a per-game scorecard. Declare random_seed + reproducibility_checksum.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed (success_e3_tr87_ft09_<n>_reproduced or complete_e3_tr87_ft09_partial). Any reproduced L1 and an honest partial per game are BOTH progress."
+          principle: "Terminal-prefixed (success_e3_ar25_ka59_<n>_reproduced or complete_e3_ar25_ka59_partial). Any new reproduced level and an honest partial per game are BOTH progress."
         per_game_scorecard:
-          principle: "list of {{game, verifier_accuracy, offline_reproduced, reproduced_levels}} -- the breadth-of-progress record for tr87/ft09."
-        world_model_paths:
-          principle: "list[str]: results/arc_e3/{{tr87,ft09}}/world_model.py -- the induced models ARE the deliverables."
+          principle: "list of {{game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced, residual_gap_class}} -- the per-game record for ar25/ka59."
         new_levels_reproduced:
-          principle: "BARE int: NEW levels offline-reproduced across tr87+ft09 -- the incremental-progress unit."
+          principle: "BARE int: NEW levels offline-reproduced across ar25+ka59 -- the incremental-progress unit."
+        reproducible_total_levels:
+          principle: "BARE int: the ARC reproducible-level count after this task (>= the prior 26) -- the monotonic north-star accuracy signal."
+        world_model_paths:
+          principle: "list[str]: results/arc_e3/{{ar25,ka59}}/world_model.py -- the extended models ARE the deliverables."
         verifier_is_oracle:
           principle: "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline."
         preconditions_checked:
@@ -425,185 +374,247 @@ tasks:
         random_seed:
           principle: "Determinism precondition for the induction + exploration + planning."
         reproducibility_checksum:
-          principle: "Hash of the world models + the plans + the reproduce() results; lets a third party re-run."
+          principle: "Hash of the extended models + the plans + the reproduce() results; lets a third party re-run."
       ACCEPTANCE GATE:
-        - condition: "per_game_scorecard + world_model_paths + new_levels_reproduced reported with verifier_is_oracle=true and preconditions_checked, OR an honest partial per game OR blocked_offline_env_missing_<game>"
-          principle: "Breadth-of-progress on tr87+ft09 with the explore-verify-plan upgrade that cracked ar25/sc25 is north-star accuracy progress on two more deep-tail games; +1 per game beats an all-or-nothing single-game swing."
+        - condition: "per_game_scorecard + new_levels_reproduced + reproducible_total_levels + world_model_paths reported with verifier_is_oracle=true and preconditions_checked, OR an honest partial per game OR blocked_offline_env_missing_<game>"
+          principle: "Closing the NAMED hidden-rule gaps (ar25 action7 undo-stack, ka59 step-counter HUD) to reach the next level is targeted ARC north-star accuracy progress on two of the operator's four named deep tails; +1 beyond the reproduced best is the mandated incremental progress."
 
-      Run: `python3 {project_root}/results/experiment_4352_e3_explore_verify_plan_tr87_ft09.py`
+      Run: `python3 {project_root}/results/experiment_4362_e3_blocked_mechanic_levels_ar25_ka59.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4353-learned-action-cost-heuristic-efficiency
-    milestone: 2026.06.402
-    title: "PHASE C (CONTINUOUS SELF-LEARNING; mandated; PIVOT to the working+compounding mechanism) -- a learned A* ACTION-COST heuristic for ARC ACTION-EFFICIENCY, trained on our OWN solved-level traces. Cross-game VALUE-TRANSFER is RETIRED (3 powered nulls: exp4318 generic features, exp4331 learned-frame encoder, exp4342 action-role encoder -- all reduction ~1.0, on the exclusion manifest; the registry's own conclusion: generic/learned grid features do NOT transfer a search-value signal). The self-learning mandate PIVOTS to the mechanism the registry shows WORKS and COMPOUNDS: the per-game learned verifier (lp85: trained on L1-L2, cut HELD-OUT L3 search 9.36x). .402 advances it from a steps-to-go VALUE head (search-compute) to a learned PATH-COST heuristic that produces ACTION-MINIMAL plans -- directly serving the north-star EFFICIENCY axis (fewer ENV actions per solve / lower RHAE, the second first-class north-star metric), NOT just search compute. Train an A* path-cost heuristic on the 21 solved-level traces (state -> minimal-actions-to-win), wire it into the OfflineSolver/graph_explore as the A* cost, and measure the ACTIONS-TO-SOLVE reduction vs the current BFS/region-count plans on HELD-OUT levels (leave-some-levels-out), reproduction-gated (only plans that still reproduce count). Emit action_efficiency_improves BARE bool := (held-out actions-to-solve REDUCED vs the baseline planner, with a positive control: a level whose optimal is known). verifier_is_oracle=false (the learned heuristic is not the executable oracle). A null is COMPLETE (the value head already captures the efficiency signal). NO TRM training; do NOT re-attempt cross-game value transfer."
+  - id: exp4363-e3-mechanic-limited-tails-tr87-ft09
+    milestone: 2026.06.403
+    title: "PHASE B3 (ARC NORTH STAR; operator MANDATORY 2026-06-17; the mechanic-limited tails) -- E3 tr87 AND ft09 -> L1 each with ACTIVE-DATA collection ON TOP OF explore-verify-plan, looped with a per-game checkpoint + hard per-game wall-time cap. Both are the remaining deep-tail games where the explore-verify-plan loop CANNOT yet induce the mechanics: .402 (exp4352) reached world-model accuracy ~0 (tr87 0.0 on actions 1/2/3/4; ft09 0.05 on action 6) and the plan was withheld per the explore-verify-plan mechanic gate. The diagnosed lever is DATA, not inducer expressiveness (the M2-v4 active-data collection that took vc33 passive 0.586 -> active 0.005): random exploration under-determines the program. Apply ACTIVE-DATA collection (coverage-driven: balance every action, sample diverse object-configuration signatures, target every clickable color, avoid deadly) BEFORE the codex world-model synthesis, then explore-verify-plan (AERA 2605.25931 + Agent2World 2512.22336). The codex agent IS the proposer (WRITES results/arc_e3/<game>/world_model.py per game; NO nested CodexProposer). INCREMENTAL-PROGRESS scoped: +1 level (L1) EACH. HARD gate per game: offline_reproduced=true AND reproduced_levels>=1. An honest partial per game (best verifier_accuracy + the residual mismatch class as a missing-world-model-rule gap) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH game."
+    priority: high
+    track: arc-north-star
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json
+    prior_failures:
+      - experiment_id: exp4352-e3-explore-verify-plan-tr87-ft09
+        verdict: complete_e3_tr87_ft09_partial
+        addressed_by: "exp4352 (.402) applied explore-verify-plan to tr87/ft09 but reached world-model accuracy ~0 (tr87 0.0, ft09 0.05) -- the inducer could not recover the mechanics from PASSIVELY-collected random-exploration transitions (the plan was withheld per the mechanic gate). This attempt adds the diagnosed DATA lever: ACTIVE-DATA collection (coverage-driven action/color/configuration balancing, the M2-v4 method that took vc33 passive 0.586 -> active 0.005) BEFORE the codex synthesis -- a STATED forward difference (data disambiguation, not inducer expressiveness), not a re-run of the passive-data loop. retire_if_same_verdict: false (a refined model + a sharper missing-rule gap per game is progress; if active-data ALSO yields ~0 accuracy on both games, the residual is a genuine hidden-state/observation gap to log, not a doomed rerun)."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: north-star §0 + the 2026-06-17 operator E3 MANDATORY (tr87 + ft09 are two of the four named deep tails).
+      .402 explore-verify-plan reached world-model accuracy ~0 on both -- the inducer could not recover the mechanics
+      from PASSIVE random-exploration data. The diagnosed lever is DATA (the M2-v4 active-data collection that took vc33
+      passive 0.586 -> active 0.005): collect coverage-driven transitions to disambiguate the rule BEFORE codex
+      synthesis. YOU (codex) are the proposer. Offline; NO leaderboard submission; only offline-reproduced levels count.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/agentic/arc_executable_world_model.py + runner scripts/arc_e3_solve.py
+        - scripts/experiments/arc3_m2_active_data.py (the active_collect coverage-driven collector -- balance every action, sample diverse object-config signatures, target every clickable color, avoid deadly) + scripts/experiments/arc3_m2_active_codex.py (the active-data -> codex synthesis pattern that cracked vc33)
+        - results/arc_e3/tr87/world_model.py + results/arc_e3/ft09/world_model.py (the .402 ~0-accuracy partial models) + results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json (the residual mismatch classes: missing_world_model_rule_gap_actions_1_2_3_4 for tr87; _actions_6 for ft09)
+        - results/arc_e3/ar25/world_model.py + results/arc_e3/sc25/world_model.py (solved models as shape templates)
+        - research-references.md (.403 sweep: AERA 2605.25931 + Agent2World 2512.22336 + Executable World Models 2605.05138)
+        - ops/arc_solve_registry.yaml (general gotchas) + python/carnot/agentic/arc_solve_learning.py (recommend_approach) + python/carnot/agentic/arc_solver_kit.py (reproduce())
+        - CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping", "ARC Solve Reproducibility + Solver-Reuse Discipline", "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions"
+
+      TASK: active-data-collect then explore-verify-plan tr87 and ft09 to L1 each; loop with a per-game checkpoint + wall-time cap.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `ls environment_files/tr87/ environment_files/ft09/` non-empty. The harness + active_collect import. Conductor stood-down on TRM training. If a game's env is missing -> record blocked_offline_env_missing_<game> for that game and continue the other. NO leaderboard submission.
+        1. For EACH game (checkpoint FIRST so window-exhaustion preserves the first game): ACTIVE-DATA collect (coverage-driven: balance the actions named in the residual gap -- tr87 actions 1/2/3/4, ft09 action 6 -- across diverse object configurations) -> a disambiguating dataset; then codex world-model synthesis + EXPLORE (AERA) verifier-gated lemmas + ADAPTIVE TEST (Agent2World) for hidden-rule mismatches; REFINE results/arc_e3/<game>/world_model.py ~4-8 rounds until accuracy >= ~0.95 or the round budget; PLAN only AFTER mechanic checks pass. NO nested CodexProposer. Print per-game per-round verifier accuracy. Cap per-game wall-time.
+        2. HARD gate per game: accept ONLY if offline_reproduced=true AND reproduced_levels>=1 (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml. If a game's round budget is hit without a solve -> honest partial: best verifier_accuracy + the residual mismatch CLASS as a missing-world-model-rule gap (ops/verifier_gaps.md). Report a per-game scorecard. Declare random_seed + reproducibility_checksum.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed (success_e3_tr87_ft09_<n>_reproduced or complete_e3_tr87_ft09_partial). Any reproduced L1 and an honest partial per game are BOTH progress."
+        per_game_scorecard:
+          principle: "list of {{game, verifier_accuracy, offline_reproduced, reproduced_levels, active_transitions_collected}} -- the breadth-of-progress record for tr87/ft09."
+        world_model_paths:
+          principle: "list[str]: results/arc_e3/{{tr87,ft09}}/world_model.py -- the induced models ARE the deliverables."
+        new_levels_reproduced:
+          principle: "BARE int: NEW levels offline-reproduced across tr87+ft09 -- the incremental-progress unit."
+        verifier_is_oracle:
+          principle: "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline."
+        preconditions_checked:
+          principle: "Records the offline-env presence per game + active_collect import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode."
+        random_seed:
+          principle: "Determinism precondition for the active collection + induction + exploration + planning."
+        reproducibility_checksum:
+          principle: "Hash of the active dataset + the world models + the plans + the reproduce() results; lets a third party re-run."
+      ACCEPTANCE GATE:
+        - condition: "per_game_scorecard + world_model_paths + new_levels_reproduced reported with verifier_is_oracle=true and preconditions_checked, OR an honest partial per game OR blocked_offline_env_missing_<game>"
+          principle: "Adding the active-data disambiguation lever (which cracked vc33) to the explore-verify-plan harness is the diagnosed fix for the mechanic-limited tails tr87+ft09; +1 per game beats an all-or-nothing single-game swing, and an honest partial advances the world-model program."
+
+      Run: `python3 {project_root}/results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4364-self-learning-action-cost-compounds
+    milestone: 2026.06.403
+    title: "PHASE C (CONTINUOUS SELF-LEARNING; mandated; BUILD ON the .402 win) -- DEPLOY the learned action-cost heuristic into the standing planner + PROVE it COMPOUNDS, with an LLM-generated-heuristic stronger-arm probe. .402 (exp4353) PROVED the mechanism: a learned A* action-cost heuristic trained on solved-level traces cut HELD-OUT env-actions-to-solve 25->16 (positive control passed, reproduction-gated, verifier_is_oracle=false). The PRD's continuous-self-learning vision is learning that COMPOUNDS at inference speed ('Carnot must get smarter over time; every solve makes the next faster'). .403 advances it two ways: (1) DEPLOY -- wire the learned action-cost heuristic into arc_solver_kit as the standing A* cost so EVERY future ARC solve is action-minimal by default; (2) PROVE IT COMPOUNDS -- measure held-out env-actions-to-solve as a FUNCTION of the number of solved-level traces in the training corpus (a learning curve: does more experience -> fewer actions on held-out levels?), with the positive control distinguishing 'compounds' from 'no-headroom'. Optional stronger-arm probe: an LLM-generated heuristic PROGRAM per game (arXiv:2503.18809 classical planning with LLM-generated heuristics) selected by reproduced held-out action count, vs the linear heuristic -- on FRESH held-out levels with static-analysis receipts + reproduction gates. Emit action_efficiency_compounds BARE bool := (held-out actions-to-solve DECREASES as the solved-trace corpus grows, positive control confirming headroom). verifier_is_oracle=false. Cross-game VALUE-TRANSFER is RETIRED (exp4342); this is the WORKING per-game mechanism DEPLOYED + measured for compounding. NO TRM training."
     priority: high
     track: self-learning
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-17 planner self-learning-mandate PIVOT (standing): cross-game value-TRANSFER is RETIRED (exp4318/4331/4342, 3 powered nulls, exclusion manifest). This task is a DIFFERENT mechanism -- a learned A* ACTION-COST heuristic for action-efficiency (north-star efficiency axis), built on the WORKING per-game learned-verifier (arc_value_learner, lp85 9.36x), NOT a 4th cross-game value-transfer attempt. False-positive scope-match vs the retired transfer line; STATED forward difference = path-cost-for-action-minimality, not value-transfer-for-search-compute."
+    operator_override: "2026-06-17 planner self-learning-mandate continuation (standing): this is a DIFFERENT mechanism from the RETIRED cross-game value-TRANSFER (exp4318/4331/4342, 3 powered nulls, exclusion manifest) -- it DEPLOYS the WORKING per-game learned action-cost heuristic (exp4353, 25->16 held-out env-actions, a SUCCESS) as the standing planner cost and MEASURES whether it COMPOUNDS as the solve-trace corpus grows. False-positive scope-match vs the retired transfer line; STATED forward difference = deploy-and-measure-compounding of a proven per-game mechanism, NOT cross-game value transfer."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4353_learned_action_cost_heuristic_efficiency.json
+    deliverable: results/experiment_4364_self_learning_action_cost_compounds.json
     prompt: |
-      CONTEXT: research-program.md "Continuous Self-Learning" (mandated every milestone) + north-star §0 (EFFICIENCY is a
-      first-class metric: fewer ENV actions per solve). Cross-game value TRANSFER is RETIRED (3 nulls). The WORKING,
-      compounding self-learning mechanism is the per-game learned verifier (arc_value_learner; lp85 cut held-out L3 search
-      9.36x). This task advances it from a search-compute VALUE head to an ACTION-COST heuristic that produces
-      ACTION-MINIMAL plans -- self-learning that directly lowers the north-star action-efficiency metric. CPU-only,
-      offline, zero quota.
+      CONTEXT: research-program.md "Continuous Self-Learning" (mandated every milestone; learning that COMPOUNDS at
+      inference speed) + north-star §0 (EFFICIENCY is a first-class metric: fewer ENV actions per solve / lower RHAE).
+      .402 PROVED the per-game learned action-cost heuristic works (25->16 held-out env-actions, exp4353). .403 DEPLOYS
+      it as the standing planner cost and MEASURES whether it COMPOUNDS (more solved-trace experience -> fewer held-out
+      actions). Cross-game value TRANSFER is RETIRED (3 nulls) -- this is the WORKING per-game mechanism, not transfer.
+      CPU-only, offline, zero quota.
 
       EXISTING CODE TO READ FIRST:
-        - python/carnot/agentic/arc_value_learner.py (the LearnedVerifier: state -> steps-to-go; trains on our solve traces) + scripts/arc3_learned_verifier_demo.py (the 9.36x held-out demo)
-        - python/carnot/agentic/arc_solver_kit.py (OfflineSolver verifier= ; reproduce()) + python/carnot/agentic/arc_heuristic_select.py (the goal-distance heuristics: cell_count / region_count / bfs; recommend_order) + python/carnot/agentic/arc_graph_explore.py (graph_explore_solve_v2/v3, the A*-style goal heuristic hook)
-        - ops/arc_solve_registry.yaml (the 21 solved levels / 13 games -- the training corpus of solve traces; the learning_loop section; the 'Next: A* (path-cost + learned heuristic) for leaderboard action-efficiency' note)
+        - results/experiment_4353_learned_action_cost_heuristic_efficiency.json (the .402 WIN: held-out actions 25->16, positive_control_passed, reproduction_gated) + the experiment_4353 script (the learned A* path-cost heuristic + the held-out split)
+        - python/carnot/agentic/arc_value_learner.py (the LearnedVerifier: state -> steps-to-go) + python/carnot/agentic/arc_heuristic_select.py (the goal-distance heuristics cell_count/region_count/bfs; recommend_order) + python/carnot/agentic/arc_graph_explore.py (the A*-style goal heuristic hook) + python/carnot/agentic/arc_solver_kit.py (OfflineSolver verifier= / A* cost hook; reproduce())
+        - ops/arc_solve_registry.yaml (the 26 solved levels / 15 games -- the training corpus of solve traces; the learning_loop section; the 'Next: A* (path-cost + learned heuristic) for leaderboard action-efficiency' note)
         - results/experiment_4342_self_learning_action_role_cross_game_encoder.json (the RETIRED cross-game transfer null -- do NOT repeat this scope)
+        - research-references.md (.403 sweep: classical planning with LLM-generated heuristics 2503.18809)
         - CLAUDE.md "Missing-Verifier Gap Logging", "ARC Solve Reproducibility + Solver-Reuse Discipline", "Circularity / Oracle-Distinctness Discipline", "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: train a learned A* path-cost (action-cost) heuristic on the solved-level traces; measure the held-out actions-to-solve reduction vs the baseline planner, reproduction-gated.
+      TASK: deploy the learned action-cost heuristic into arc_solver_kit as the standing A* cost; measure the COMPOUNDING learning curve (held-out actions vs corpus size), reproduction-gated; optionally probe an LLM-generated heuristic stronger arm.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the solved-level trajectories are present (ops/arc_solve_registry.yaml + results/arc_explore_trajectory_*.json + the per-game solvers). If <5 reproduced levels with action traces are loadable -> honest_verdict `blocked_insufficient_solve_traces` and STOP. Conductor stood-down on TRM training (this is CPU heuristic learning, NOT model training).
-        1. Build the training corpus: for each reproduced level, extract (state -> minimal-actions-to-win) pairs from the offline-reproduced solve trace. Train an A* PATH-COST heuristic h(state) approximating minimal ENV-actions-to-win (a light regression on generic grid features; CPU). LEAVE-SOME-LEVELS-OUT (held-out split) so the measurement is honest.
-        2. Wire h(state) into the OfflineSolver / graph_explore as the A* cost; on the HELD-OUT levels, plan with (a) the baseline (BFS / region-count goal-distance) and (b) A*-with-h; measure ACTIONS-TO-SOLVE for each (the env-action count of the reproduced plan, NOT search expansions). REPRODUCTION-GATE both (a plan only counts if arc_solver_kit.reproduce passes). POSITIVE CONTROL: include >=1 level whose optimal action-count is known (a short solve) so a no-reduction is distinguishable from no-headroom.
-        3. Emit action_efficiency_improves BARE bool := (held-out total actions-to-solve with A*-h < baseline, AND the positive control confirms headroom existed). Log any level where the heuristic could NOT reduce actions as a missing-verifier gap (ops/verifier_gaps.md). Run adversarial_verify.py (clean; FALSE_NEGATIVE_RISK aware -- a null with the positive control passing is informative). Declare random_seed + reproducibility_checksum.
+        0. PRECONDITIONS: the solved-level trajectories are present (ops/arc_solve_registry.yaml + the per-game solve traces). If <8 reproduced levels with action traces are loadable -> honest_verdict `blocked_insufficient_solve_traces` and STOP. Conductor stood-down on TRM training (this is CPU heuristic learning, NOT model training).
+        1. DEPLOY: wire the .402 learned action-cost heuristic h(state) into arc_solver_kit's OfflineSolver / graph_explore as the standing A* cost (additive, opt-in default-on for the ARC planner) so future solves are action-minimal by default. Keep the existing BFS/region-count baseline available for comparison.
+        2. COMPOUNDING CURVE: train h on increasing prefixes of the solved-trace corpus (e.g. k = 4, 8, 12, ... solved levels), and for each k measure HELD-OUT env-actions-to-solve on a fixed held-out level set (leave-some-levels-out). Plot/record actions-to-solve vs k. POSITIVE CONTROL: include >=1 held-out level whose optimal action-count is known so a no-decrease is distinguishable from no-headroom. REPRODUCTION-GATE every counted plan (only plans that still arc_solver_kit.reproduce count).
+        3. OPTIONAL STRONGER ARM: sample a small LLM-generated heuristic PROGRAM per game (2503.18809), select by reproduced held-out action count, compare to the linear h -- on FRESH held-out levels with a static-analysis receipt (no per-game leakage) + reproduction gate. (If quota-tight, skip this arm and report the linear compounding curve only.)
+        4. Emit action_efficiency_compounds BARE bool := (held-out actions-to-solve DECREASES as the corpus grows AND the positive control confirms headroom). Log any held-out level where the heuristic could NOT reduce actions as a missing-verifier gap (ops/verifier_gaps.md). Run adversarial_verify.py (clean; FALSE_NEGATIVE_RISK aware -- a null with the positive control passing is informative). Declare random_seed + reproducibility_checksum.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An action-efficiency improvement (the learned heuristic lowers env-actions-to-solve on held-out levels) and an honest null with the positive control passing (the value head already captures it) are BOTH decision-grade."
-        action_efficiency_improves:
-          principle: "BARE bool: the capstone reads this; true iff held-out actions-to-solve is REDUCED with the learned A* path-cost heuristic vs the baseline planner AND the positive control confirms headroom existed (not a degenerate no-headroom null)."
-        held_out_actions_baseline:
-          principle: "BARE int: total env-actions-to-solve across held-out levels with the baseline planner -- the efficiency baseline."
-        held_out_actions_learned:
-          principle: "BARE int: total env-actions-to-solve across held-out levels with the learned A* heuristic -- the efficiency result (lower is better; the north-star action-efficiency metric)."
+          principle: "Terminal-prefixed. A compounding result (held-out env-actions fall as the corpus grows) and an honest null with the positive control passing (a plateau the value head already captures) are BOTH decision-grade."
+        action_efficiency_compounds:
+          principle: "BARE bool: the capstone reads this; true iff held-out env-actions-to-solve DECREASES as the solved-trace corpus grows (learning that compounds) AND the positive control confirms headroom existed (not a degenerate no-headroom null)."
+        compounding_curve:
+          principle: "list of {{corpus_size_k, held_out_actions_to_solve}} -- the learning curve; a monotone-ish decrease is the 'gets smarter over time' signal (PRD core)."
+        deployed_into_solver_kit:
+          principle: "BARE bool: true iff the learned action-cost heuristic is wired into arc_solver_kit as the standing A* cost (every future ARC solve action-minimal by default)."
         positive_control_passed:
-          principle: "BARE bool: a level with known optimal action-count confirms headroom existed, so a null is 'the value head already captures it', not 'no headroom' (FALSE_NEGATIVE_RISK guard)."
+          principle: "BARE bool: a held-out level with known optimal action-count confirms headroom existed, so a null is 'plateau', not 'no headroom' (FALSE_NEGATIVE_RISK guard)."
         reproduction_gated:
           principle: "BARE bool: true iff every counted plan still passes arc_solver_kit.reproduce -- an action-minimal plan that does not reproduce does NOT count."
+        llm_heuristic_arm:
+          principle: "optional {{ran: bool, beats_linear: bool, static_analysis_clean: bool}} -- the stronger-function-class probe (2503.18809), if quota allowed."
         verifier_is_oracle:
           principle: "BARE bool=false -- the learned action-cost heuristic is not the executable oracle."
         preconditions_checked:
           principle: "Records the solve-trace availability + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode."
         random_seed:
-          principle: "Determinism precondition for the heuristic training + the held-out split + the planning."
+          principle: "Determinism precondition for the heuristic training + the held-out split + the corpus-prefix curve."
         reproducibility_checksum:
-          principle: "Hash of the training corpus + the held-out split + the heuristic config; lets a third party re-run."
+          principle: "Hash of the training corpus + the held-out split + the heuristic config + the curve; lets a third party re-run."
       ACCEPTANCE GATE:
-        - condition: "action_efficiency_improves + held_out_actions_baseline + held_out_actions_learned + positive_control_passed + reproduction_gated reported with verifier_is_oracle=false and preconditions_checked, OR an honest blocked_insufficient_solve_traces verdict"
-          principle: "A learned heuristic that lowers env-actions-to-solve is continuous self-learning that COMPOUNDS (each solve improves the next) AND serves the north-star EFFICIENCY axis -- the working mechanism, distinct from the RETIRED cross-game value-transfer line."
+        - condition: "action_efficiency_compounds + compounding_curve + deployed_into_solver_kit + positive_control_passed + reproduction_gated reported with verifier_is_oracle=false and preconditions_checked, OR an honest blocked_insufficient_solve_traces verdict"
+          principle: "A learned heuristic DEPLOYED as the standing planner cost AND shown to COMPOUND (more solve experience -> fewer held-out env-actions) is the PRD's continuous self-learning realized -- the working per-game mechanism, distinct from the RETIRED cross-game value-transfer line, serving the north-star EFFICIENCY axis."
 
-      Run: `python3 {project_root}/results/experiment_4353_learned_action_cost_heuristic_efficiency.py`
+      Run: `python3 {project_root}/results/experiment_4364_self_learning_action_cost_compounds.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4354-sota-ingestion-v403
-    milestone: 2026.06.402
-    title: "PHASE E1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .402 bleeding-edge forks (verifier-guided diffusion-LM search/scale-up; E3 executable-world-model deeper/multi-game ARC solves; learned action-efficiency heuristics) and MAP the strongest 3-5 methods onto the .403 roadmap, conditioned on the .402 outcomes (did S3 convert the moat to a fixed-NFE generation gain? did E3 reach ka59/tr87/ft09/deeper levels? did the learned action-cost heuristic lower env-actions?). Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch) -- /deep-research is BANNED in-loop. Every method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication). FLAG A2D2 (2606.13565) + SEPO (2502.01384) verifier-as-reward GENERATOR-training as OUT-OF-BAND/operator-owned (NOT auto-run in-loop). Update research-studying.md (mark ingested) and emit flagged_for_v403 (the single strongest method for the .403 planner)."
+  - id: exp4365-sota-ingestion-v404
+    milestone: 2026.06.403
+    title: "PHASE E1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .403 bleeding-edge forks (Prism-hardened verifier-guided diffusion-LM search; E3 executable-world-model deeper/multi-game ARC solves; compounding learned action-efficiency heuristics) and MAP the strongest 3-5 methods onto the .404 roadmap, conditioned on the .403 outcomes (did the Prism-hardened search CONVERT the moat to a fixed-NFE generation gain? did E3 reach deeper/tail levels? did the action-cost heuristic COMPOUND?). Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch) -- /deep-research is BANNED in-loop. Every method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication). FLAG A2D2 (2606.13565) + SEPO (2502.01384) verifier-as-reward GENERATOR-training as OUT-OF-BAND/operator-owned (NOT auto-run in-loop). Update research-studying.md (mark ingested) and emit flagged_for_v404 (the single strongest method for the .404 planner)."
     priority: high
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine recurring infra task): SOTA-ingestion -- false-positive scope-match vs all prior sota_ingestion tasks (exp4343); structurally a per-milestone discovery slot, never a doomed rerun."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine recurring infra task): SOTA-ingestion -- false-positive scope-match vs all prior sota_ingestion tasks (exp4354); structurally a per-milestone discovery slot, never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4354_sota_ingestion_v403.json
+    deliverable: results/experiment_4365_sota_ingestion_v404.json
     prompt: |
-      CONTEXT: SOTA-Ingestion Cycle Discipline (mandatory; the .402 headline is the bleeding-edge verifier-guided
-      diffusion-LM track + the ARC E3 north star). Discover -> ingest -> plan -> experiment. Use the RELIABLE channel
-      ONLY; /deep-research is BANNED in-loop (it rate-limited + burned ~6M tokens for zero output on 2026-06-11).
+      CONTEXT: SOTA-Ingestion Cycle Discipline (mandatory; the .403 headline is the Prism-hardened verifier-guided
+      diffusion-LM search + the ARC E3 north star + compounding self-learning). Discover -> ingest -> plan -> experiment.
+      Use the RELIABLE channel ONLY; /deep-research is BANNED in-loop (it rate-limited + burned ~6M tokens for zero output).
 
       EXISTING CODE TO READ FIRST:
         - scripts/sweep_clusters.py + scripts/sweep_semscholar.py (the reliable arXiv / Semantic-Scholar discovery helpers)
-        - research-studying.md + research-references.md (the already-discovered corpus; the .401/.402 sweep blocks)
-        - results/experiment_4343_sota_ingestion_v402.json (the .401->.402 ingestion -- the template + the methods already mapped: S3 2604.06260, PAPO 2606.08501, A2D2 2606.13565, ReactiveGWM 2605.15256)
-        - results/experiment_4348_s3_stratified_verifier_guided_search.json + results/experiment_4351_e3_deeper_solved_games.json + results/experiment_4353_learned_action_cost_heuristic_efficiency.json (the .402 outcomes to condition on)
+        - research-studying.md + research-references.md (the already-discovered corpus; the .402/.403 sweep blocks)
+        - results/experiment_4354_sota_ingestion_v403.json (the .402->.403 ingestion -- the template + the methods already mapped: Prism 2602.01842, S3 2604.06260, PAPO 2606.08501, Executable World Models 2605.05138, LLM-gen heuristics 2503.18809)
+        - results/experiment_4359_prism_hardened_verifier_guided_search.json + results/experiment_4361_e3_deeper_high_headroom_games.json + results/experiment_4364_self_learning_action_cost_compounds.json (the .403 outcomes to condition on)
         - CLAUDE.md "SOTA-Ingestion Cycle Discipline", "Adversarial Artifact Verification" (no-fabrication: every method cites a real arXiv ID)
 
-      TASK: focused fresh SOTA pass on the .402 forks; map the strongest 3-5 methods onto .403 conditioned on the .402 outcomes; flag A2D2/SEPO out-of-band.
+      TASK: focused fresh SOTA pass on the .403 forks; map the strongest 3-5 methods onto .404 conditioned on the .403 outcomes; flag A2D2/SEPO out-of-band.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `curl -sf -o /dev/null https://huggingface.co/api/models` succeeds (network). If no network -> honest_verdict `blocked_network_unavailable` and STOP.
-        1. Read research-studying.md / research-references.md filtered to the active tracks. Run a FOCUSED fresh pass via sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers (verifier-guided diffusion-LM search; reward-state alignment; E3 executable-world-models; learned ARC action-efficiency heuristics).
-        2. Synthesize a SOTA->experiment mapping: the strongest 3-5 methods, each with a VERIFIED arXiv ID/URL + a one-line .403 experiment mapping + the failure mode + the .402-outcome conditioning. FLAG A2D2 (2606.13565) + SEPO (2502.01384) as OUT-OF-BAND/operator-owned (verifier-as-reward generator training).
-        3. Update research-studying.md (mark ingested). Emit flagged_for_v403 (the single strongest method for the .403 planner).
+        1. Read research-studying.md / research-references.md filtered to the active tracks. Run a FOCUSED fresh pass via sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers (verifier-guided diffusion-LM search / HTS; reward-state alignment; E3 executable-world-models; compounding ARC action-efficiency heuristics).
+        2. Synthesize a SOTA->experiment mapping: the strongest 3-5 methods, each with a VERIFIED arXiv ID/URL + a one-line .404 experiment mapping + the failure mode + the .403-outcome conditioning. FLAG A2D2 (2606.13565) + SEPO (2502.01384) as OUT-OF-BAND/operator-owned (verifier-as-reward generator training).
+        3. Update research-studying.md (mark ingested). Emit flagged_for_v404 (the single strongest method for the .404 planner).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. Records ingestion completed with verifiable citations (or blocked_network_unavailable)."
         methods_mapped:
-          principle: "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication) + a one-line .403 experiment mapping + the failure mode + the .402-outcome conditioning."
-        flagged_for_v403:
-          principle: "Closes discover->ingest->plan: names the single strongest method for the .403 planner, conditioned on the .402 outcomes."
+          principle: "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication) + a one-line .404 experiment mapping + the failure mode + the .403-outcome conditioning."
+        flagged_for_v404:
+          principle: "Closes discover->ingest->plan: names the single strongest method for the .404 planner, conditioned on the .403 outcomes."
         out_of_band_flagged:
           principle: "Records A2D2/SEPO (verifier-as-reward generator training) as operator-owned, NOT auto-run in-loop -- the standing HARD RULE."
         random_seed:
           principle: "Determinism placeholder for the discovery query set (reproducibility of the sweep)."
       ACCEPTANCE GATE:
-        - condition: "methods_mapped (>=3, each with a verified arXiv ID) + flagged_for_v403 + out_of_band_flagged reported, OR an honest blocked_network_unavailable verdict"
+        - condition: "methods_mapped (>=3, each with a verified arXiv ID) + flagged_for_v404 + out_of_band_flagged reported, OR an honest blocked_network_unavailable verdict"
           principle: "Discover->ingest->plan keeps the loop building on the SOTA rather than re-deriving it; verifiable citations are the no-fabrication bar."
 
-      Run: `python3 {project_root}/results/experiment_4354_sota_ingestion_v403.py`
+      Run: `python3 {project_root}/results/experiment_4365_sota_ingestion_v404.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4355-registry-gaps-hygiene-capstone-stamp-fix
-    milestone: 2026.06.402
-    title: "PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene + GAP-4 regression guard + FIX the .401 capstone verifier_is_oracle stamping bug. (1) Reconcile ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the .402 outcomes (S3 moat-utility, new ARC levels, the action-cost heuristic, any new missing-verifier gaps logged by exp4350-4353). (2) Run the GAP-4 regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently regress). (3) FIX the capstone-stamping bug: the .401 capstone (exp4346) carried a CIRCULAR_MOAT_OVERCLAIM critical flag because it OMITTED verifier_is_oracle (set None, not false) even though the underlying moat (exp4338) is correctly oracle-distinct -- the capstone aggregation must PROPAGATE verifier_is_oracle from the moat artifact it reads, so the .402 capstone (exp4357) does NOT recur the flag. Verify the fix by re-running adversarial_verify.py on a stamped sample capstone. NO production verifier edits (audit-only per Verifier Authenticity Discipline)."
+  - id: exp4366-registry-gaps-hygiene-gap4-guard
+    milestone: 2026.06.403
+    title: "PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene + GAP-4 regression guard. (1) Reconcile ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the .403 outcomes (the S3->Prism moat-utility result, new ARC reproduced levels from exp4361-4363, the compounding action-cost heuristic exp4364, any new missing-verifier gaps logged). (2) Run the GAP-4 regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently regress). (3) Verify the capstone verifier_is_oracle stamping fix is STILL durable (the .402 exp4355 fix made the .402 capstone scan 0 flags; confirm the .403 capstone path inherits it). NO production verifier edits (audit-only per Verifier Authenticity Discipline)."
     priority: medium
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine recurring infra task): registry/gaps hygiene + regression guard -- false-positive scope-match vs all prior hygiene tasks (exp4344); structurally a per-milestone reconciliation slot, never a doomed rerun."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine recurring infra task): registry/gaps hygiene + regression guard -- false-positive scope-match vs all prior hygiene tasks (exp4355); structurally a per-milestone reconciliation slot, never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
+    deliverable: results/experiment_4366_registry_gaps_hygiene_gap4_guard.json
     prompt: |
-      CONTEXT: per-milestone hygiene + a targeted fix. The .401 capstone (exp4346) tripped CIRCULAR_MOAT_OVERCLAIM only
-      because it omitted verifier_is_oracle (a STAMPING bug -- the moat exp4338 is genuinely oracle-distinct,
-      verifier_is_oracle=false). Fix the capstone aggregation to PROPAGATE verifier_is_oracle from the artifacts it reads,
-      so the .402 capstone does not recur the flag. Also reconcile the registries/gaps with the .402 outcomes and run the
-      GAP-4 regression guard.
+      CONTEXT: per-milestone hygiene + the GAP-4 guard. The .402 exp4355 FIXED the capstone verifier_is_oracle stamping
+      bug (the .402 capstone scanned 0 flags). This task reconciles the registries/gaps with the .403 outcomes, runs the
+      GAP-4 regression guard, and confirms the stamp fix is still durable for the .403 capstone.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4346_capstone_v401.json (the CIRCULAR_MOAT_OVERCLAIM flag + the capstone aggregation code experiment_4346_capstone_v401.py)
-        - scripts/adversarial_verify.py:check_circular_moat_overclaim (the lint that fired) + CLAUDE.md "Circularity / Oracle-Distinctness Discipline"
+        - results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json (the .402 hygiene + the durable stamp fix + the GAP-4 guard) + results/experiment_4357_capstone_v402.json (0-flags confirmation)
+        - scripts/adversarial_verify.py:check_circular_moat_overclaim + CLAUDE.md "Circularity / Oracle-Distinctness Discipline"
         - ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml (the reconciliation targets)
-        - results/experiment_4348_*.json, results/experiment_4350_*.json, results/experiment_4351_*.json, results/experiment_4353_*.json (the .402 outcomes + any new gaps logged)
-        - the GAP-4 regression-guard artifact/script from exp4344 (the prior hygiene task)
+        - results/experiment_4359_*.json, results/experiment_4361_*.json, results/experiment_4362_*.json, results/experiment_4363_*.json, results/experiment_4364_*.json (the .403 outcomes + any new gaps logged)
         - CLAUDE.md "Verifier Authenticity Discipline" (audit-only -- NO production verifier edits), "Missing-Verifier Gap Logging"
 
-      TASK: reconcile the registries/gaps with .402, run the GAP-4 regression guard, and fix the capstone verifier_is_oracle propagation.
+      TASK: reconcile the registries/gaps with .403, run the GAP-4 regression guard, confirm the capstone stamp fix is durable.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml parse under yaml/markdown read. If a file is unreadable -> honest_verdict `blocked_<file>_unreadable` and STOP.
-        1. Reconcile the registries/gaps with the .402 outcomes (S3 moat-utility result; new ARC reproduced levels from exp4350-4352; the action-cost heuristic exp4353; any new missing-verifier gaps). Never-prune; move filled gaps to status: filled.
+        1. Reconcile the registries/gaps with the .403 outcomes (the Prism-hardened moat-utility result; new ARC reproduced levels from exp4361-4363; the compounding action-cost heuristic exp4364; any new missing-verifier gaps). Never-prune; move filled gaps to status: filled.
         2. Run the GAP-4 regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently regress); report gap4_regression_guard_passed.
-        3. Fix the capstone aggregation (the exp4357 capstone code) to PROPAGATE verifier_is_oracle from the moat artifact(s) it reads (false when the moat is oracle-distinct), so adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM on a correctly-oracle-distinct capstone. Verify by running adversarial_verify.py on a stamped sample capstone artifact -> capstone_stamp_fix_verified.
+        3. Confirm the capstone verifier_is_oracle stamping fix is durable: run adversarial_verify.py on the .402 capstone (must scan 0 flags) and confirm the .403 capstone aggregation inherits the propagate-verifier_is_oracle helper -> capstone_stamp_fix_durable.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix verified."
+          principle: "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix durable."
         gap4_regression_guard_passed:
           principle: "BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed."
-        capstone_stamp_fix_verified:
-          principle: "BARE bool: the capstone aggregation now propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py no longer fires CIRCULAR_MOAT_OVERCLAIM on a correct capstone."
+        capstone_stamp_fix_durable:
+          principle: "BARE bool: the capstone aggregation still propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM on a correct capstone."
         registries_reconciled:
-          principle: "BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .402 outcomes (never-prune)."
+          principle: "BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .403 outcomes (never-prune)."
         preconditions_checked:
           principle: "Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode."
       ACCEPTANCE GATE:
-        - condition: "gap4_regression_guard_passed + capstone_stamp_fix_verified + registries_reconciled reported, OR an honest blocked_<file>_unreadable verdict"
-          principle: "Per-milestone hygiene + the capstone-stamp fix prevent the .402 capstone recurring the .401 CIRCULAR_MOAT_OVERCLAIM false-flag and keep the verifier registries an honest, growing record."
+        - condition: "gap4_regression_guard_passed + capstone_stamp_fix_durable + registries_reconciled reported, OR an honest blocked_<file>_unreadable verdict"
+          principle: "Per-milestone hygiene + the GAP-4 guard + the durable capstone-stamp fix keep the verifier registries an honest, growing record and prevent the .403 capstone recurring a CIRCULAR_MOAT_OVERCLAIM false-flag."
 
-      Run: `python3 {project_root}/results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py`
+      Run: `python3 {project_root}/results/experiment_4366_registry_gaps_hygiene_gap4_guard.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4356-hardware-continuity-kv260
-    milestone: 2026.06.402
+  - id: exp4367-hardware-continuity-kv260
+    milestone: 2026.06.403
     title: "PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic per north-star §3) -- KV260 SSH-reachability + loaded-bitstream continuity check. Per north-star §3, KV260 is THE sovereignty story (drive to terminal, then freeze); GateMate/PolarFire are opportunistic-only. SSH-reachability precondition ONLY (NEVER a host SD-card precondition per KV260 SSH-Not-SD-Card Discipline). If the board is reachable, record the loaded overlay (xmutil listapps) + a lightweight liveness check (the carnot_ising bitstream UIO device present); if it is the terminal board-latency transcript, capture it. If unreachable -> honest_verdict blocked_kv260_ssh_unreachable (a clean documented skip, NOT a fabrication). This keeps the board visible in the milestone retro without burning a deep task slot. NO host SD-card-device precondition (the retired mechanism). NO TRM training."
     priority: low
     track: hardware
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-18 Hardware-Task Continuity Discipline + 2026-05-29 standing auto-override class 2 (active hardware-continuity task, KV260 not yet terminal): false-positive scope-match vs prior KV260 continuity tasks (exp4345); required forward hardware work until the board reaches its terminal state (north-star §3)."
+    operator_override: "2026-05-18 Hardware-Task Continuity Discipline + 2026-05-29 standing auto-override class 2 (active hardware-continuity task, KV260 not yet terminal): false-positive scope-match vs prior KV260 continuity tasks (exp4356); required forward hardware work until the board reaches its terminal state (north-star §3)."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4356_hardware_continuity_kv260.json
+    deliverable: results/experiment_4367_hardware_continuity_kv260.json
     prompt: |
       CONTEXT: Hardware-Task Continuity Discipline (>=1 KV260 task/milestone until terminal) + north-star §3 (KV260 is THE
       sovereignty story, opportunistic for the others). This is a LIGHTWEIGHT SSH-reachability + loaded-bitstream
@@ -611,7 +622,7 @@ tasks:
       NEVER host SD-card presence.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4345_hardware_continuity.json (the prior KV260 continuity artifact -- the reachability + overlay pattern)
+        - results/experiment_4356_hardware_continuity_kv260.json (the prior KV260 continuity artifact -- the reachability + overlay pattern)
         - ops/north-star.md §3 (KV260 = THE sovereignty story; the terminal state = board-latency transcript + kv260_synthesis_succeeded)
         - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" (the SSH precondition; NEVER a host SD-card device path), "Pre-Launch Preconditions Discipline" (the KV260 row), "Hardware-Task Continuity Discipline"
         - ops/hardware-bringup-prep.md (the current board state)
@@ -637,64 +648,64 @@ tasks:
         - condition: "kv260_reachable + loaded_overlay (if reachable) + kv260_terminal_state_reached reported with preconditions_checked, OR an honest blocked_kv260_ssh_unreachable verdict"
           principle: "Hardware-Task Continuity keeps KV260 (the sovereignty story) visible each milestone via a lightweight SSH check; a clean unreachable skip is honest, NOT a fabrication, and NEVER a host SD-card escalation."
 
-      Run: `python3 {project_root}/results/experiment_4356_hardware_continuity_kv260.py`
+      Run: `python3 {project_root}/results/experiment_4367_hardware_continuity_kv260.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4357-capstone-v402
-    milestone: 2026.06.402
-    title: "PHASE E4 (CAPSTONE .402) -- the milestone scorecard + the HEADLINE DECISION. Headline questions: (1) did S3 stratified verifier-guided search CONVERT the proven oracle-distinct moat into a fixed-NFE GENERATION GAIN (exp4348 s3_guided_beats_control + the exp4349 reward-state-alignment validation)? -> the moat graduates 'exists'->'useful' (Pareto-improves generation), or a powered null retires the in-generation scale-up direction. (2) ARC north star: the new reproducible_total_levels (>=21?) across exp4350 (ka59) + exp4351 (sc25 L2+/ar25 L2/tn36 L7) + exp4352 (tr87+ft09); how many NEW levels/games. (3) self-learning: did the learned action-cost heuristic (exp4353) lower held-out env-actions-to-solve (north-star efficiency axis)? Aggregate (SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle -- a circular/execution-grounded win is NOT a moat). Emit verifier_thesis_state (one honest string) + s3_moat_utility (one of: useful_generation_gain / proven_but_not_useful / open) + reproducible_total_levels + action_efficiency_improves. Compute the G1-G4 publication gate via publication_gate.py. Use the robust aggregate-available-report-gaps helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the exp4355 stamp fix) so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM. NO gated_on."
+  - id: exp4368-capstone-v403
+    milestone: 2026.06.403
+    title: "PHASE E4 (CAPSTONE .403) -- the milestone scorecard + the HEADLINE DECISION. Headline questions: (1) did the FIXED, Prism-hardened verifier-guided denoising SEARCH CONVERT the proven oracle-distinct moat into a fixed-NFE GENERATION GAIN (exp4359 s3_guided_beats_control + the exp4360 reward-state-alignment validation), now that the .402 MCQ-selection harness bug is fixed (real generation, differentiated controls, branch-diversity + leak + disagreement receipts)? -> the moat graduates 'exists'->'useful' (Pareto-improves generation), or a clean powered null retires the in-generation scale-up direction. (2) ARC north star: the new reproducible_total_levels (>=26?) across exp4361 (deeper high-headroom) + exp4362 (ar25/ka59 L2) + exp4363 (tr87/ft09 active-data); how many NEW levels/games. (3) self-learning: did the learned action-cost heuristic COMPOUND (exp4364, held-out env-actions decreasing as the solve-trace corpus grows) + is it DEPLOYED into the standing planner? Aggregate (SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle -- a circular/execution-grounded win is NOT a moat). Emit verifier_thesis_state (one honest string) + s3_moat_utility (one of: useful_generation_gain / proven_but_not_useful / open) + reproducible_total_levels + action_efficiency_compounds. Compute the G1-G4 publication gate via publication_gate.py. Use the robust aggregate-available-report-gaps helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the durable exp4355 stamp fix) so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM. NO gated_on."
     priority: critical
     track: capstone
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-capstone task): capstone-vN -- false-positive scope-match vs all prior capstone-v* tasks (exp4346); structurally a per-milestone aggregation, never a doomed rerun. 2026-06-12 quota-conserve: capstone on codex."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-capstone task): capstone-vN -- false-positive scope-match vs all prior capstone-v* tasks (exp4357); structurally a per-milestone aggregation, never a doomed rerun. 2026-06-12 quota-conserve: capstone on codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4357_capstone_v402.json
+    deliverable: results/experiment_4368_capstone_v403.json
     prompt: |
-      CONTEXT: close .402. The headline question is whether the PROVEN oracle-distinct moat (.401) became USEFUL: does
-      putting the leak-robust scorer inside the denoising loop (S3) Pareto-improve generation at fixed NFE, validated by
-      reward-state alignment? Plus the ARC north-star reproducible-total + the self-learning action-efficiency result.
-      SKIP flagged artifacts; HONOR verifier_is_oracle; carry verifier_is_oracle correctly (the exp4355 stamp fix) so
-      THIS capstone is not itself flagged.
+      CONTEXT: close .403. The headline question is whether the PROVEN oracle-distinct moat (.401) became USEFUL now
+      that the .402 MCQ-selection harness bug is fixed: does putting the leak-robust scorer inside a REAL Prism-hardened
+      denoising loop (exp4359) Pareto-improve generation at fixed NFE, validated by reward-state alignment (exp4360)?
+      Plus the ARC north-star reproducible-total + the self-learning compounding result. SKIP flagged artifacts; HONOR
+      verifier_is_oracle; carry verifier_is_oracle correctly (the durable exp4355 stamp fix) so THIS capstone is not flagged.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4348_s3_stratified_verifier_guided_search.json (s3_guided_beats_control + the deltas/CI) + results/experiment_4349_papo_reward_state_alignment_diagnostic.json (reward_state_alignment_passed -- the headline validation)
-        - results/experiment_4350_*.json + results/experiment_4351_*.json + results/experiment_4352_*.json (the ARC E3 outcomes) + ops/arc_solve_registry.yaml (reproducible_total_levels -- authoritative)
-        - results/experiment_4353_learned_action_cost_heuristic_efficiency.json (action_efficiency_improves)
-        - results/experiment_4346_capstone_v401.json (the .401 capstone template + the robust aggregate-available helper; the CIRCULAR_MOAT_OVERCLAIM flag exp4355 fixes)
+        - results/experiment_4359_prism_hardened_verifier_guided_search.json (s3_guided_beats_control + the deltas/CI/branch_diversity/scorer_disagreement) + results/experiment_4360_papo_reward_state_alignment_diagnostic.json (reward_state_alignment_passed -- the headline validation)
+        - results/experiment_4361_*.json + results/experiment_4362_*.json + results/experiment_4363_*.json (the ARC E3 outcomes) + ops/arc_solve_registry.yaml (reproducible_total_levels -- authoritative)
+        - results/experiment_4364_self_learning_action_cost_compounds.json (action_efficiency_compounds + deployed_into_solver_kit)
+        - results/experiment_4357_capstone_v402.json (the .402 capstone template + the robust aggregate-available helper + the durable verifier_is_oracle stamp fix)
         - scripts/publication_gate.py (G1-G4), scripts/adversarial_verify.py, scripts/summarize_artifact.py
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Adversarial Artifact Verification + Sample-Size Rigor", "Reading-Results Discipline"
 
-      TASK: aggregate the .402 outcomes into the capstone scorecard + the headline decision; compute G1-G4; carry verifier_is_oracle correctly.
+      TASK: aggregate the .403 outcomes into the capstone scorecard + the headline decision; compute G1-G4; carry verifier_is_oracle correctly.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the upstream .402 artifacts are present (read what exists; report missing as per-axis gaps, do NOT hard-block-all-False). If publication_gate.py is unrunnable -> honest_verdict `blocked_publication_gate_unrunnable` and STOP.
+        0. PRECONDITIONS: the upstream .403 artifacts are present (read what exists; report missing as per-axis gaps, do NOT hard-block-all-False). If publication_gate.py is unrunnable -> honest_verdict `blocked_publication_gate_unrunnable` and STOP.
         1. Read each upstream artifact via scripts/summarize_artifact.py (Reading-Results Discipline). SKIP any flagged_adversarial artifact (never aggregate a flagged number). HONOR verifier_is_oracle (a circular/execution-grounded win is NOT a moat headline).
-        2. HEADLINE: from exp4348 s3_guided_beats_control + exp4349 reward_state_alignment_passed, decide s3_moat_utility (useful_generation_gain iff S3 beats the compute-matched + intrinsic controls at fixed NFE AND the gain is reward-state-aligned; proven_but_not_useful iff the moat replicated but S3 nulls; open otherwise). ARC: reproducible_total_levels (from the registry) + new levels/games. SELF-LEARNING: action_efficiency_improves (exp4353).
-        3. Emit verifier_thesis_state (one honest string) + s3_moat_utility + reproducible_total_levels + action_efficiency_improves. Compute G1-G4 via publication_gate.py. CARRY verifier_is_oracle correctly (false for the oracle-distinct moat read) so adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM. Declare inference_substrate=aggregation_from_upstream_artifacts + cited_upstream_artifacts.
+        2. HEADLINE: from exp4359 s3_guided_beats_control + exp4360 reward_state_alignment_passed, decide s3_moat_utility (useful_generation_gain iff the Prism-hardened search beats the compute-matched + intrinsic-SVF controls at fixed NFE AND the gain is reward-state-aligned; proven_but_not_useful iff the moat replicated but the search nulls cleanly; open otherwise -- e.g. a harness failure). ARC: reproducible_total_levels (from the registry) + new levels/games. SELF-LEARNING: action_efficiency_compounds (exp4364).
+        3. Emit verifier_thesis_state (one honest string) + s3_moat_utility + reproducible_total_levels + action_efficiency_compounds. Compute G1-G4 via publication_gate.py. CARRY verifier_is_oracle correctly (false for the oracle-distinct moat read) so adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM. Declare inference_substrate=aggregation_from_upstream_artifacts + cited_upstream_artifacts.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. The .402 scorecard string (whether S3 converted the moat, the ARC reproducible-total, the self-learning result)."
+          principle: "Terminal-prefixed. The .403 scorecard string (whether the Prism-hardened search converted the moat, the ARC reproducible-total, the self-learning compounding result)."
         s3_moat_utility:
-          principle: "One of useful_generation_gain / proven_but_not_useful / open -- the headline decision: did the proven oracle-distinct moat become a fixed-NFE generation gain (Pareto-improvement), validated by reward-state alignment?"
+          principle: "One of useful_generation_gain / proven_but_not_useful / open -- the headline decision: did the proven oracle-distinct moat become a fixed-NFE generation gain (Pareto-improvement), validated by reward-state alignment, now that the harness is fixed?"
         reproducible_total_levels:
-          principle: "BARE int: the ARC reproducible-level count after .402 (>= the prior 21) -- the monotonic north-star accuracy signal."
-        action_efficiency_improves:
-          principle: "BARE bool: did the learned action-cost heuristic lower held-out env-actions-to-solve (north-star efficiency axis)?"
+          principle: "BARE int: the ARC reproducible-level count after .403 (>= the prior 26) -- the monotonic north-star accuracy signal."
+        action_efficiency_compounds:
+          principle: "BARE bool: did the learned action-cost heuristic COMPOUND (held-out env-actions decreasing as the solve-trace corpus grows) and deploy into the standing planner (north-star efficiency axis)?"
         verifier_thesis_state:
-          principle: "One honest string summarizing where the verifier-moat thesis stands after .402 (moat proven+useful / proven-not-useful / etc.)."
+          principle: "One honest string summarizing where the verifier-moat thesis stands after .403 (moat proven+useful / proven-not-useful / harness-still-open / etc.)."
         publication_gate:
           principle: "G1-G4 via publication_gate.py (paper_ready + unmet_gates) -- the stable finish line (north-star §2)."
         verifier_is_oracle:
-          principle: "BARE bool=false for the oracle-distinct moat read (the exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM."
+          principle: "BARE bool=false for the oracle-distinct moat read (the durable exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM."
         cited_upstream_artifacts:
           principle: "list of {{experiment_id, fields_imported}} -- the audit trail so the capstone numbers trace to real measurements."
         preconditions_checked:
           principle: "Records the upstream-artifact + publication_gate availability; pre-empts the silent-missing-resource fabrication mode."
       ACCEPTANCE GATE:
-        - condition: "s3_moat_utility + reproducible_total_levels + action_efficiency_improves + verifier_thesis_state + publication_gate + cited_upstream_artifacts reported with verifier_is_oracle carried correctly (no CIRCULAR_MOAT_OVERCLAIM), OR an honest blocked_publication_gate_unrunnable verdict"
-          principle: "The capstone is the milestone's honest scorecard: whether the proven moat became useful, the ARC reproducible-total, and the publication gate -- aggregating only non-flagged, oracle-honest artifacts."
+        - condition: "s3_moat_utility + reproducible_total_levels + action_efficiency_compounds + verifier_thesis_state + publication_gate + cited_upstream_artifacts reported with verifier_is_oracle carried correctly (no CIRCULAR_MOAT_OVERCLAIM), OR an honest blocked_publication_gate_unrunnable verdict"
+          principle: "The capstone is the milestone's honest scorecard: whether the fixed Prism-hardened harness converted the proven moat into a generation gain, the ARC reproducible-total, and the publication gate -- aggregating only non-flagged, oracle-honest artifacts."
 
-      Run: `python3 {project_root}/results/experiment_4357_capstone_v402.py`
+      Run: `python3 {project_root}/results/experiment_4368_capstone_v403.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
