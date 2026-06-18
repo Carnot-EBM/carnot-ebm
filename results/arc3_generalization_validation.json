@@ -1,0 +1,153 @@
+{
+  "experiment": "arc3_generalization_validation",
+  "games": [
+    "cd82",
+    "tu93",
+    "m0r0",
+    "sk48",
+    "wa30",
+    "ls20"
+  ],
+  "first_contact_solves": [
+    "tu93",
+    "ls20"
+  ],
+  "per_game": [
+    {
+      "game": "cd82",
+      "explore_mode": "curious_adaptive_bfs",
+      "state_key_used": "agent",
+      "agent": null,
+      "clicks_used": false,
+      "relevant_colors": null,
+      "movers": [],
+      "win_stumbled": true,
+      "verdict": "no_win_stumbled_or_no_agent_cannot_induce_goal"
+    },
+    {
+      "game": "tu93",
+      "explore_mode": "curious_adaptive_bfs",
+      "state_key_used": "agent",
+      "agent": {
+        "color": 4
+      },
+      "clicks_used": false,
+      "relevant_colors": null,
+      "movers": [
+        4,
+        9
+      ],
+      "win_stumbled": true,
+      "induced_goal_color": 9,
+      "induced_goal_solve": {
+        "solved": true,
+        "actions": 18,
+        "nodes": 591
+      },
+      "solves_first_contact": true
+    },
+    {
+      "game": "m0r0",
+      "explore_mode": "curious_adaptive_bfs",
+      "state_key_used": "pieces_clicks_relevance_escalated",
+      "agent": {
+        "color": 10
+      },
+      "clicks_used": true,
+      "relevant_colors": [
+        0,
+        10
+      ],
+      "movers": [
+        10
+      ],
+      "win_stumbled": false,
+      "verdict": "no_win_stumbled_or_no_agent_cannot_induce_goal"
+    },
+    {
+      "game": "sk48",
+      "explore_mode": "curious_adaptive_bfs",
+      "state_key_used": "pieces_clicks_relevance_escalated",
+      "agent": {
+        "color": 14
+      },
+      "clicks_used": true,
+      "relevant_colors": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        14
+      ],
+      "movers": [
+        14,
+        0
+      ],
+      "win_stumbled": true,
+      "induced_goal_color": 1,
+      "induced_goal_solve": {
+        "solved": false,
+        "actions": null,
+        "nodes": 5000
+      },
+      "solves_first_contact": false
+    },
+    {
+      "game": "wa30",
+      "explore_mode": "curious_adaptive_bfs",
+      "state_key_used": "pieces_clicks_relevance_escalated",
+      "agent": {
+        "color": 14
+      },
+      "clicks_used": true,
+      "relevant_colors": [
+        0,
+        3,
+        4,
+        7,
+        9,
+        14
+      ],
+      "movers": [
+        14,
+        0,
+        0
+      ],
+      "win_stumbled": false,
+      "verdict": "no_win_stumbled_or_no_agent_cannot_induce_goal"
+    },
+    {
+      "game": "ls20",
+      "explore_mode": "curious_adaptive_bfs",
+      "state_key_used": "pieces_clicks_relevance_escalated",
+      "agent": {
+        "color": 12
+      },
+      "clicks_used": true,
+      "relevant_colors": [
+        3,
+        8,
+        9,
+        11,
+        12
+      ],
+      "movers": [
+        12,
+        9
+      ],
+      "win_stumbled": true,
+      "induced_goal_color": 5,
+      "induced_goal_solve": {
+        "solved": true,
+        "actions": 13,
+        "nodes": 255
+      },
+      "solves_first_contact": true
+    }
+  ],
+  "interpretation": "Fully first-contact (NO banked solve): explore -> stumble a win -> induce the agent (general method) -> induce the GOAL OBJECT colour (what the agent reached) -> solve via best_first_search guided by agent-to-goal-colour distance. A first-contact solve = the unseen-game pipeline works end to end on that game. Honest limit: only games whose win is STUMBLE-ABLE within the explore budget can have a goal induced this way; deep-solve games need curious/directed exploration or goal PERCEPTION (the remaining frontier).",
+  "honest_verdict": "complete_test_time_goal_induction_first_contact_solves_tu93_ls20",
+  "inference_substrate": "offline_arc_agi3_test_time_goal_induction_no_banked_solve",
+  "note": "Generalization test: full first-contact pipeline on 6 UNTESTED games (never iterated on). Combined with the tuned sample (sp80/cn04/ar25 solved, ka59 frontier), the all-10 first-contact solve set is sp80,cn04,ar25,tu93,ls20 = 5/10. Failure modes: ka59 combinatorial, cd82 agent-ID-None, m0r0 segmentation-1-blob, sk48 solve-heuristic-exhausted-5000nodes, wa30 win-not-stumbled."
+}
