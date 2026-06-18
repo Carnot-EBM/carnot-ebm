@@ -1,28 +1,32 @@
 import numpy as np
 
 
-def _inside_toggle_block(arr, x, y):
+def _toggle_component(arr, x, y):
     h, w = arr.shape
     if not (0 <= y < h and 0 <= x < w):
         return None
     color = int(arr[y, x])
     if color not in (8, 9, 14, 15):
         return None
-    y0 = y
-    while y0 > 0 and int(arr[y0 - 1, x]) == color:
-        y0 -= 1
-    y1 = y + 1
-    while y1 < h and int(arr[y1, x]) == color:
-        y1 += 1
-    x0 = x
-    while x0 > 0 and int(arr[y, x0 - 1]) == color:
-        x0 -= 1
-    x1 = x + 1
-    while x1 < w and int(arr[y, x1]) == color:
-        x1 += 1
-    if (y1 - y0) < 2 or (x1 - x0) < 2:
+    stack = [(y, x)]
+    seen = {(y, x)}
+    cells = []
+    while stack:
+        cy, cx = stack.pop()
+        cells.append((cy, cx))
+        for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):
+            if 0 <= ny < h and 0 <= nx < w and (ny, nx) not in seen and int(arr[ny, nx]) == color:
+                seen.add((ny, nx))
+                stack.append((ny, nx))
+    rows = [cell[0] for cell in cells]
+    cols = [cell[1] for cell in cells]
+    y0, y1 = min(rows), max(rows) + 1
+    x0, x1 = min(cols), max(cols) + 1
+    if len(cells) < 4 or (y1 - y0) < 2 or (x1 - x0) < 2:
         return None
-    return y0, y1, x0, x1, color
+    if (y1 - y0) > 8 or (x1 - x0) > 8:
+        return None
+    return cells, color
 
 
 def _toggle_color(color):
@@ -47,14 +51,30 @@ def engine(grid, action, data):
     y = int(data.get("y", -1))
     if y >= out.shape[0] - 1:
         return out
-    block = _inside_toggle_block(out, x, y)
-    if block is None:
+    component = _toggle_component(out, x, y)
+    if component is None:
         return out
-    y0, y1, x0, x1, color = block
-    if (y1 - y0) > 8 or (x1 - x0) > 8:
-        return out
-    out[y0:y1, x0:x1] = _toggle_color(color)
+    cells, color = component
+    for cy, cx in cells:
+        out[cy, cx] = _toggle_color(color)
     return out
+
+
+def transition_fixture():
+    before = np.zeros((8, 8), dtype=int)
+    before[2:5, 2:5] = 8
+    before[2, 4] = 0
+    before[6, 6] = 8
+    expected = before.copy()
+    mask = expected[2:5, 2:5] == 8
+    expected[2:5, 2:5][mask] = 9
+    observed = engine(before, 6, {"x": 3, "y": 3})
+    return {
+        "transition": "ft09:L2:component_click_residual",
+        "expected": expected.tolist(),
+        "observed": observed.tolist(),
+        "passed": bool(np.array_equal(observed, expected)),
+    }
 
 
 def is_level_complete(grid):

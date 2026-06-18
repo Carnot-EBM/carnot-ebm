@@ -1968,3 +1968,30 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: extend the target solver only after the residual transition has an executable unit test and the offline reproduce() gate proves a new level.
 - priority: high
 <!-- exp4405-gap-tr87-l7:end -->
+
+<!-- exp4406-gap-ar25-l2:start -->
+### GAP-4406-AR25-L2: Exp 4406 named-register residual
+- status: open
+- evidence: results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json; register_unit_tests=1/1; offline_reproduced=False.
+- residual gap class: ar25_l2_action7_undo_stack_plan_not_reproduced_after_register_test
+- candidate design: only plan/claim L2 after the register-level transition and a replayable offline reproduction gate both pass.
+- priority: high
+<!-- exp4406-gap-ar25-l2:end -->
+
+<!-- exp4406-gap-ka59-l2:start -->
+### GAP-4406-KA59-L2: Exp 4406 named-register residual
+- status: open
+- evidence: results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json; register_unit_tests=1/1; offline_reproduced=False.
+- residual gap class: ka59_l2_object_relevance_step_counter_hud_register_gap
+- candidate design: only plan/claim L2 after the register-level transition and a replayable offline reproduction gate both pass.
+- priority: high
+<!-- exp4406-gap-ka59-l2:end -->
+
+<!-- exp4406-gap-ft09-l2:start -->
+### GAP-4406-FT09-L2: Exp 4406 named-register residual
+- status: open
+- evidence: results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json; register_unit_tests=1/1; offline_reproduced=False.
+- residual gap class: ft09_l2_residual_world_model_mismatch_gap_after_component_transition
+- candidate design: only plan/claim L2 after the register-level transition and a replayable offline reproduction gate both pass.
+- priority: high
+<!-- exp4406-gap-ft09-l2:end -->

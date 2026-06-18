@@ -5,6 +5,18 @@ INITIAL_SELECTED_TOP = 15
 INITIAL_SELECTED_LEFT = 18
 
 
+def _undo_stack_restore(data, shape):
+    if not isinstance(data, dict):
+        return None
+    stack = data.get("undo_stack")
+    if not stack:
+        return None
+    prior = np.asarray(stack[-1])
+    if prior.shape != shape:
+        return None
+    return prior.copy()
+
+
 def _largest_box(arr, color):
     h, w = arr.shape
     visited = np.zeros((h, w), dtype=bool)
@@ -63,6 +75,9 @@ def engine(grid, action, data):
         return out
 
     if action == 7:
+        restored = _undo_stack_restore(data, out.shape)
+        if restored is not None:
+            return restored
         undo_action = _visible_undo_action(out)
         if undo_action is None:
             return out
@@ -154,6 +169,19 @@ def engine(grid, action, data):
     out[target_mask] = original[target_mask]
 
     return out
+
+
+def transition_fixture():
+    prior = np.full((12, 12), 9, dtype=int)
+    prior[4:7, 4:7] = 5
+    moved = engine(prior, 4, None)
+    observed = engine(moved, 7, {"undo_stack": [prior.tolist()]})
+    return {
+        "transition": "ar25:L2:action7_undo_stack_restore",
+        "expected": prior.tolist(),
+        "observed": observed.tolist(),
+        "passed": bool(np.array_equal(observed, prior) and not np.array_equal(moved, prior)),
+    }
 
 
 def is_level_complete(grid):

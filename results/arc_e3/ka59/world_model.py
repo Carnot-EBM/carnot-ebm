@@ -1,5 +1,53 @@
 import numpy as np
 
+
+DEFAULT_RELEVANT_OBJECTS = ("agent", "pushed_block")
+
+
+def object_relevance_discriminator():
+    return {
+        "blocker_class": "object_relevance_not_clicks_or_multi_object_push",
+        "provenance_commits": ["f0b078247", "6fba583c7"],
+        "active_object_candidates": [
+            "selected_block",
+            "second_movable_block",
+            "agent_plus_second_movable_block",
+            "all_piece_objects",
+        ],
+        "selected_object_hypothesis": "agent_plus_second_movable_block",
+        "relevant_object_ids": list(DEFAULT_RELEVANT_OBJECTS),
+    }
+
+
+def _hud_counter_cells(grid):
+    h, w = grid.shape
+    cells = []
+    for r in range(max(0, h - 5), h):
+        for c in range(max(0, w - 5), w):
+            if int(grid[r, c]) == 4:
+                cells.append((r, c))
+    return cells
+
+
+def _relevant_object_changed(action, data, moved):
+    if isinstance(data, dict) and "changed_object_id" in data:
+        relevant = set(data.get("relevant_object_ids") or DEFAULT_RELEVANT_OBJECTS)
+        return str(data.get("changed_object_id")) in relevant
+    if moved:
+        relevant = set(data.get("relevant_object_ids") or DEFAULT_RELEVANT_OBJECTS) if isinstance(data, dict) else set(DEFAULT_RELEVANT_OBJECTS)
+        return "agent" in relevant
+    return False
+
+
+def _tick_step_counter(grid):
+    cells = _hud_counter_cells(grid)
+    if not cells:
+        return grid
+    r, c = cells[-1]
+    grid[r, c] = 3
+    return grid
+
+
 def engine(grid, action, data):
     """
     Simulates the game logic for 'ka59'.
@@ -77,6 +125,7 @@ def engine(grid, action, data):
     Let's implement the 3x3 toggle and counter decrement.
     """
     grid = grid.copy()
+    object_changed = False
     
     # Find the player block (3x3 area with center 0 and rest 14)
     # We can scan for 0s and check the surrounding 8 cells.
@@ -158,27 +207,43 @@ def engine(grid, action, data):
                                 grid[r, c] = 0
                             else:
                                 grid[r, c] = 14
+                object_changed = True
 
-    # Decrement counter
-    # The counter is at the bottom right.
-    # It seems to be a single cell or a few cells.
-    # From the data, (63, 63) goes from 4 to 0.
-    # Let's find the counter cell.
-    # It's likely the cell with value 4 at the bottom right.
-    # We can scan for 4s.
-    counter_cells = []
-    for r in range(H - 5, H):
-        for c in range(W - 5, W):
-            if grid[r, c] == 4:
-                counter_cells.append((r, c))
-                
-    if counter_cells:
-        # Decrement all counter cells
-        for r, c in counter_cells:
-            if grid[r, c] > 0:
-                grid[r, c] -= 1
+    if _relevant_object_changed(action, data, object_changed):
+        _tick_step_counter(grid)
                 
     return grid
+
+
+def transition_fixture():
+    before = np.ones((12, 12), dtype=int)
+    before[4:7, 4:7] = 14
+    before[5, 5] = 0
+    before[-1, -5:] = 4
+    irrelevant = engine(
+        before,
+        6,
+        {"changed_object_id": "decorative", "relevant_object_ids": list(DEFAULT_RELEVANT_OBJECTS)},
+    )
+    observed = engine(
+        before,
+        6,
+        {"changed_object_id": "pushed_block", "relevant_object_ids": list(DEFAULT_RELEVANT_OBJECTS)},
+    )
+    return {
+        "transition": "ka59:L2:object_relevant_hud_tick",
+        "expected": {"irrelevant_hud_count": 5, "relevant_hud_count": 4},
+        "observed": {
+            "irrelevant_hud_count": int(np.count_nonzero(irrelevant[-1] == 4)),
+            "relevant_hud_count": int(np.count_nonzero(observed[-1] == 4)),
+        },
+        "object_relevance_discriminator": object_relevance_discriminator(),
+        "passed": bool(
+            np.count_nonzero(irrelevant[-1] == 4) == 5
+            and np.count_nonzero(observed[-1] == 4) == 4
+        ),
+    }
+
 
 def is_level_complete(grid):
     """
