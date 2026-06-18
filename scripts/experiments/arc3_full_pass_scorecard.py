@@ -77,7 +77,8 @@ def main():
     for g in games:
         gt = time.time()
         try:
-            rec = P.run_game(g, 150, args.explore_budget, args.seed, args.max_exp)
+            # run_game(game, explore_budget, max_exp, seed, curious=True) -- pass in THAT order
+            rec = P.run_game(g, args.explore_budget, args.max_exp, args.seed)
         except Exception as ex:
             rec = {"game": g, "error": f"{type(ex).__name__}: {str(ex)[:120]}"}
         cls, actions = ("ERROR", None) if "error" in rec else classify(rec)
