@@ -61,7 +61,11 @@ def _build_policy(kind: str, game: str):
         global _PROPOSER
         if _PROPOSER_REPO and _PROPOSER is None:
             from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
-            _PROPOSER = LocalGGUFProposer(repo_substr=_PROPOSER_REPO)
+            # port 8920 (NOT the conductor's E3 default 8919): LocalGGUFProposer reuses any server on its
+            # port WITHOUT a model check, so a shared port silently runs the wrong model (a stale gemma
+            # server made an earlier "Qwen" run actually use gemma-12B). A distinct port isolates this
+            # test from the conductor's E3 work and guarantees the requested model loads.
+            _PROPOSER = LocalGGUFProposer(repo_substr=_PROPOSER_REPO, port=8920)
         return E3AgentPolicy(game, proposer=_PROPOSER)
     if kind in ("explorer_vh", "explorer_bf"):              # BRIDGE: value-head-routed explorer
         global _VALUE_HEAD
