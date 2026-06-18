@@ -14394,3 +14394,120 @@ held-out level set across increasing corpus prefixes
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4364 | Planned (`python/carnot/experiment_4364_self_learning_action_cost_compounds.py`; `results/experiment_4364_self_learning_action_cost_compounds.py`; `results/experiment_4364_self_learning_action_cost_compounds.json`) | Planned (`tests/python/test_experiment_4364_self_learning_action_cost_compounds.py`) |
+
+---
+
+## REQ-LEARN-4370: ARC LLM-Generated Domain Heuristic Programs
+
+**Given** at least eight reproduced ARC-AGI-3 solved levels with loadable action
+traces and an importable `arc_solver_kit.reproduce` gate
+**When** Exp 4370 generates domain-dependent Python heuristic programs for ARC
+games with at least two reproduced levels
+**Then** each generated program SHALL pass static leakage analysis before
+selection
+**And** the selected clean heuristics SHALL be evaluated on a fresh held-out
+split against the deployed Exp 4364 linear action-cost heuristic and the
+BFS/region-count baseline
+**And** every counted plan SHALL be reproduction-gated
+**And** the artifact SHALL report bare gate fields: `llm_heuristic_beats_linear`,
+`held_out_actions_by_heuristic`, `per_game_scorecard`,
+`static_leakage_clean`, `reproduction_gated`, `n_held_out_levels`,
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`.
+
+### REQ-LEARN-4370 Sub-requirements
+
+- REQ-LEARN-4370-1: Preconditions SHALL verify the solved-level registry, local
+  trace files, deployed Exp 4364 linear heuristic artifact, `arc_solver_kit`
+  importability, `reproduce` availability, and TRM stand-down. If fewer than
+  eight reproduced levels with action traces are loadable, Exp 4370 SHALL emit
+  `honest_verdict=blocked_insufficient_solve_traces`. If the solver kit is not
+  importable or `reproduce` is unavailable, Exp 4370 SHALL emit
+  `honest_verdict=blocked_solver_kit_unavailable`.
+- REQ-LEARN-4370-2: For every game with at least two reproduced levels, the
+  generator SHALL write at least three candidate Python `h(state) -> cost`
+  functions using observable grid features only.
+- REQ-LEARN-4370-3: Static leakage analysis SHALL reject generated programs that
+  read answer cells, environment internals, solver goal predicates, or
+  hard-coded level layouts before any selection score is computed.
+- REQ-LEARN-4370-4: Selection SHALL score only clean heuristic programs on the
+  training split and keep the strongest per game by reproduced action count,
+  then expansions, then deterministic candidate name.
+- REQ-LEARN-4370-5: Held-out evaluation SHALL use at least eight fresh held-out
+  levels excluded from selection and report action totals for
+  `linear`, `llm_generated`, and `bfs_baseline`.
+- REQ-LEARN-4370-6: `llm_heuristic_beats_linear` SHALL be true exactly when the
+  selected clean LLM-generated heuristics have strictly fewer held-out
+  env-actions-to-solve than the deployed linear heuristic, static leakage is
+  clean, all counted plans reproduce, and `n_held_out_levels >= 8`.
+- REQ-LEARN-4370-7: Any held-out level where no clean selected heuristic reduces
+  actions below the deployed linear heuristic SHALL be represented in
+  `missing_verifier_gaps` and appended to `ops/verifier_gaps.md` when the
+  experiment writes the artifact.
+- REQ-LEARN-4370-8: The written artifact SHALL run cleanly through
+  `scripts/adversarial_verify.py` and SHALL include `random_seed`,
+  `reproducibility_checksum`, `model_specs`, a linear-baseline positive control,
+  and `verifier_is_oracle=false`.
+
+### REQ-LEARN-4370 Field Principles
+
+- `honest_verdict`: Terminal-prefixed. A win (the stronger function class
+  reduces held-out actions, leakage-clean and reproduction-gated) and a clean
+  null (the linear cost is already near-optimal on the solved games) are BOTH
+  decision-grade.
+- `llm_heuristic_beats_linear`: BARE bool: true iff the best clean
+  LLM-generated heuristic reduces held-out actions-to-solve below the deployed
+  linear heuristic AND static leakage is clean AND every counted plan
+  reproduces.
+- `held_out_actions_by_heuristic`: dict `{linear, llm_generated,
+  bfs_baseline}` -> held-out env-actions-to-solve.
+- `per_game_scorecard`: list of `{game, best_heuristic_src,
+  held_out_actions_llm, held_out_actions_linear, static_leakage_clean,
+  reproduced}`.
+- `static_leakage_clean`: BARE bool: true iff every selected heuristic passed
+  static leakage analysis.
+- `reproduction_gated`: BARE bool: true iff every counted plan still passes
+  `arc_solver_kit.reproduce`.
+- `n_held_out_levels`: BARE int: held-out level count, minimum eight for the
+  action-delta claim.
+- `verifier_is_oracle`: BARE bool=false -- the heuristic estimates
+  cost-to-go; the executable env defines the win.
+- `preconditions_checked`: Records solve-trace, solver-kit, Exp 4364 baseline,
+  and TRM-stand-down checks.
+- `random_seed`: Determinism precondition for heuristic synthesis, held-out
+  split, and selection.
+- `reproducibility_checksum`: Hash of the training corpus, held-out split,
+  selected heuristic programs, and reproduce results.
+- `model_specs`: Generator, declared reproducible alternative GGUF, deployed
+  linear baseline, held-out split, and sample size.
+
+### SCENARIO-LEARN-4370: Clean LLM-Heuristic Artifact Is Reproduction-Gated
+
+**Given** at least eight reproduced ARC solved-level traces are loadable
+**When** Exp 4370 generates clean domain-dependent heuristic programs, selects
+the strongest per game on training levels, and evaluates held-out levels
+**Then** the artifact SHALL include bare `llm_heuristic_beats_linear`,
+`held_out_actions_by_heuristic`, `per_game_scorecard`,
+`static_leakage_clean`, `reproduction_gated`, `n_held_out_levels`,
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`
+**And** `llm_heuristic_beats_linear=true` only if held-out
+`llm_generated < linear`, `static_leakage_clean=true`,
+`reproduction_gated=true`, and `n_held_out_levels >= 8`.
+
+### SCENARIO-LEARN-4370-BLOCKED: Missing Trace Or Solver Resources Stop Honestly
+
+**Given** fewer than eight reproduced levels with action traces are loadable or
+the solver-kit reproduction gate is unavailable
+**When** Exp 4370 runs
+**Then** it SHALL write a terminal artifact with `honest_verdict` equal to
+`blocked_insufficient_solve_traces` or `blocked_solver_kit_unavailable`
+**And** `llm_heuristic_beats_linear=false`, `held_out_actions_by_heuristic`
+contains zero totals, `static_leakage_clean=false`,
+`reproduction_gated=false`, and `n_held_out_levels=0`.
+
+## Implementation Status (Exp 4370)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4370 | Planned (`python/carnot/experiment_4370_llm_generated_action_cost_heuristics.py`; `results/experiment_4370_llm_generated_action_cost_heuristics.py`; `results/experiment_4370_llm_generated_action_cost_heuristics.json`) | Planned (`tests/python/test_experiment_4370_llm_generated_action_cost_heuristics.py`) |

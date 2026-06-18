@@ -1,0 +1,902 @@
+{
+  "acceptance_gate_passed": true,
+  "adversarial_verify": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4370_llm_generated_action_cost_heuristics.json",
+        "exp_id": "experiment_4370_llm_generated_action_cost_heuristics",
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: clean_powered_null_linear_not_beaten",
+        "loaded": true,
+        "max_severity": -1,
+        "title": "llm_generated_action_cost_heuristics"
+      }
+    ],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "duration_s": 1.074573278427124,
+  "experiment": "experiment_4370_llm_generated_action_cost_heuristics",
+  "field_principles": {
+    "held_out_actions_by_heuristic": "dict {linear, llm_generated, bfs_baseline} -> held-out env-actions-to-solve -- the head-to-head efficiency numbers (the north-star action-efficiency axis).",
+    "honest_verdict": "Terminal-prefixed. A win (the stronger function class reduces held-out actions, leakage-clean + reproduction-gated -- the efficiency moat deepens) and a CLEAN null (the linear cost is already near-optimal on our solved games -> the function class is settled) are BOTH decision-grade.",
+    "llm_heuristic_beats_linear": "BARE bool: the capstone + the A2 gate read this (gated-fields-must-be-bare); true iff the best CLEAN LLM-generated heuristic reduces held-out actions-to-solve BELOW the deployed linear heuristic AND static_leakage_clean AND every counted plan reproduces -- the stronger function class deepening the oracle-distinct efficiency moat.",
+    "model_specs": "The generator (codex/gpt-5.5 proposer + the declared unsloth/gemma-4-12B-it-GGUF reproducible alternative) + the deployed linear heuristic baseline + the held-out split + n; required methodology + SOTA-model compliance.",
+    "n_held_out_levels": "BARE int: held-out level count -- MUST be >= 8 (power; CLT minimum for the action-delta claim).",
+    "per_game_scorecard": "list of {game, best_heuristic_src, held_out_actions_llm, held_out_actions_linear, static_leakage_clean, reproduced} -- the per-game record.",
+    "preconditions_checked": "Records the solve-trace + solver-kit + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the heuristic synthesis + the held-out split + the GBFS selection.",
+    "reproducibility_checksum": "Hash of the training corpus + the held-out split + the selected heuristic programs + the reproduce() results; lets a third party re-run.",
+    "reproduction_gated": "BARE bool: true iff every counted plan still passes arc_solver_kit.reproduce -- an action-minimal plan that does not reproduce does NOT count.",
+    "static_leakage_clean": "BARE bool: true iff every SELECTED heuristic passed the static-leakage analysis (no answer-cell / env-internal / hard-coded-layout access) -- the no-cheating guard a twice-burned operator requires.",
+    "verifier_is_oracle": "BARE bool=false -- the learned/generated action-cost heuristic ESTIMATES cost-to-go; the executable env defines the win -- it is oracle-DISTINCT, not the oracle."
+  },
+  "held_out_actions_by_heuristic": {
+    "bfs_baseline": 646,
+    "linear": 646,
+    "llm_generated": 646
+  },
+  "held_out_level_rows": [
+    {
+      "bfs_baseline_actions": 16,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "lp85_color_load": {
+          "actions": 17,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "lp85_component_balance": {
+          "actions": 16,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "lp85_frontier_compactness": {
+          "actions": 18,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "lp85",
+      "level_id": "lp85:L3",
+      "linear_actions": 16,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 3,
+        "game": "lp85",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 3,
+        "reproduced": true,
+        "source_artifact": "results/experiment_4364_self_learning_action_cost_compounds.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 54,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "lp85_color_load": {
+          "actions": 55,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "lp85_component_balance": {
+          "actions": 54,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "lp85_frontier_compactness": {
+          "actions": 56,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "lp85",
+      "level_id": "lp85:L4",
+      "linear_actions": 54,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 4,
+        "game": "lp85",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 4,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_lp85.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 47,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tu93_color_load": {
+          "actions": 48,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tu93_component_balance": {
+          "actions": 47,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tu93_frontier_compactness": {
+          "actions": 49,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tu93",
+      "level_id": "tu93:L3",
+      "linear_actions": 47,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 3,
+        "game": "tu93",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 3,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tu93.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 64,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tu93_color_load": {
+          "actions": 65,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tu93_component_balance": {
+          "actions": 64,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tu93_frontier_compactness": {
+          "actions": 66,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tu93",
+      "level_id": "tu93:L4",
+      "linear_actions": 64,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 4,
+        "game": "tu93",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 4,
+        "reproduced": true,
+        "source_artifact": "results/experiment_4361_e3_deeper_high_headroom_games.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 60,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tr87_color_load": {
+          "actions": 61,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tr87_component_balance": {
+          "actions": 60,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tr87_frontier_compactness": {
+          "actions": 62,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tr87",
+      "level_id": "tr87:L3",
+      "linear_actions": 60,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 3,
+        "game": "tr87",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 3,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tr87.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 81,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tr87_color_load": {
+          "actions": 82,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tr87_component_balance": {
+          "actions": 81,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tr87_frontier_compactness": {
+          "actions": 83,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tr87",
+      "level_id": "tr87:L4",
+      "linear_actions": 81,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 4,
+        "game": "tr87",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 4,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tr87.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 95,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tr87_color_load": {
+          "actions": 96,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tr87_component_balance": {
+          "actions": 95,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tr87_frontier_compactness": {
+          "actions": 97,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tr87",
+      "level_id": "tr87:L5",
+      "linear_actions": 95,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 5,
+        "game": "tr87",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 5,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tr87.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 127,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tr87_color_load": {
+          "actions": 128,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tr87_component_balance": {
+          "actions": 127,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tr87_frontier_compactness": {
+          "actions": 129,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tr87",
+      "level_id": "tr87:L6",
+      "linear_actions": 127,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 6,
+        "game": "tr87",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 6,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tr87.json"
+      },
+      "split": "held_out"
+    },
+    {
+      "bfs_baseline_actions": 102,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tn36_color_load": {
+          "actions": 103,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tn36_component_balance": {
+          "actions": 102,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tn36_frontier_compactness": {
+          "actions": 104,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tn36",
+      "level_id": "tn36:L7",
+      "linear_actions": 102,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 7,
+        "game": "tn36",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 7,
+        "reproduced": true,
+        "source_artifact": "results/experiment_4361_e3_deeper_high_headroom_games.json"
+      },
+      "split": "held_out"
+    }
+  ],
+  "honest_verdict": "complete: clean_powered_null_linear_not_beaten",
+  "inference_substrate": "deterministic_replay_static_program_selection",
+  "linear_baseline_positive_control_passed": true,
+  "llm_heuristic_beats_linear": false,
+  "methodology_note": "CPU-only static Python heuristic synthesis and selection. Candidate programs use observable grid features only; selected programs are static-leakage-clean. Held-out action counts use checked-in reproduction-gated ARC solve evidence, and a null keeps the Exp 4364 linear baseline as the positive control rather than claiming the stronger function class failed on no-headroom data.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "richer state-transition features or more per-game reproduced training levels",
+      "failure_mode": "no clean LLM-generated heuristic reduced held-out env-actions below the deployed linear heuristic",
+      "gap_id": "GAP-4370",
+      "held_out_level_ids": [
+        "lp85:L3",
+        "lp85:L4",
+        "tu93:L3",
+        "tu93:L4",
+        "tr87:L3",
+        "tr87:L4",
+        "tr87:L5",
+        "tr87:L6",
+        "tn36:L7"
+      ],
+      "missing_discriminator": "domain feature that predicts a strictly shorter reproduced action plan",
+      "priority": "medium"
+    }
+  ],
+  "model_specs": {
+    "baseline_positive_control": "Exp 4364 reproduced lp85 L3 linear action-cost drop 25->16",
+    "deployed_linear_baseline": "results/experiment_4364_self_learning_action_cost_compounds.json",
+    "entrypoint": "results/experiment_4370_llm_generated_action_cost_heuristics.py",
+    "generator": {
+      "live_llm_inference": false,
+      "nested_codex_proposer": false,
+      "primary": "codex/gpt-5.5 proposer wrote deterministic Python heuristic programs directly"
+    },
+    "held_out_split": {
+      "fresh_for_selection": true,
+      "level_ids": [
+        "lp85:L3",
+        "lp85:L4",
+        "tu93:L3",
+        "tu93:L4",
+        "tr87:L3",
+        "tr87:L4",
+        "tr87:L5",
+        "tr87:L6",
+        "tn36:L7"
+      ],
+      "n": 9
+    },
+    "llm_weight_mutation": false,
+    "module": "python/carnot/experiment_4370_llm_generated_action_cost_heuristics.py",
+    "reproducible_alternative_generator": {
+      "declared_only_not_invoked": true,
+      "model": "unsloth/gemma-4-12B-it-GGUF"
+    },
+    "selection": {
+      "method": "static-clean candidates scored on training GBFS rows by actions, expansions, name",
+      "selected_games": [
+        "lp85",
+        "tn36",
+        "tr87",
+        "tu93"
+      ]
+    },
+    "verifier_is_oracle": false
+  },
+  "n_held_out_levels": 9,
+  "per_game_scorecard": [
+    {
+      "best_heuristic": "lp85_component_balance",
+      "best_heuristic_src": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "game": "lp85",
+      "held_out_actions_bfs_baseline": 70,
+      "held_out_actions_linear": 70,
+      "held_out_actions_llm": 70,
+      "held_out_level_ids": [
+        "lp85:L3",
+        "lp85:L4"
+      ],
+      "reproduced": true,
+      "static_leakage_clean": true
+    },
+    {
+      "best_heuristic": "tn36_component_balance",
+      "best_heuristic_src": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "game": "tn36",
+      "held_out_actions_bfs_baseline": 102,
+      "held_out_actions_linear": 102,
+      "held_out_actions_llm": 102,
+      "held_out_level_ids": [
+        "tn36:L7"
+      ],
+      "reproduced": true,
+      "static_leakage_clean": true
+    },
+    {
+      "best_heuristic": "tr87_component_balance",
+      "best_heuristic_src": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "game": "tr87",
+      "held_out_actions_bfs_baseline": 363,
+      "held_out_actions_linear": 363,
+      "held_out_actions_llm": 363,
+      "held_out_level_ids": [
+        "tr87:L3",
+        "tr87:L4",
+        "tr87:L5",
+        "tr87:L6"
+      ],
+      "reproduced": true,
+      "static_leakage_clean": true
+    },
+    {
+      "best_heuristic": "tu93_component_balance",
+      "best_heuristic_src": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "game": "tu93",
+      "held_out_actions_bfs_baseline": 111,
+      "held_out_actions_linear": 111,
+      "held_out_actions_llm": 111,
+      "held_out_level_ids": [
+        "tu93:L3",
+        "tu93:L4"
+      ],
+      "reproduced": true,
+      "static_leakage_clean": true
+    }
+  ],
+  "preconditions_checked": {
+    "clean_candidate_count": 12,
+    "cross_game_value_transfer_retired": true,
+    "eligible_games_with_ge2_reproduced_levels": [
+      "lp85",
+      "tn36",
+      "tr87",
+      "tu93"
+    ],
+    "exp4364_artifact_present": true,
+    "exp4364_linear_baseline_loaded": true,
+    "exp4364_positive_control_passed": true,
+    "generated_candidate_count": 12,
+    "minimum_held_out_levels": 8,
+    "minimum_reproduced_levels": 8,
+    "n_held_out_levels": 9,
+    "offline_cpu_only": true,
+    "registry_mentions_reproduced": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_present": true,
+    "registry_sha256": "sha256:5f13ff38bcf614922e81588feebe789a539c6bc57a8a7718dcb15c63675127d8",
+    "reproduce_callable": true,
+    "reproduce_runs": true,
+    "reproduce_smoke": {
+      "claimed_level": 1,
+      "game": "cd82",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true
+    },
+    "research_conductor_modified": false,
+    "solver_kit_importable": true,
+    "standing_solver_deployment_check": {
+      "baseline_constant": 0.0,
+      "baseline_path_cost_weight": 0.0,
+      "default_is_additive_astar": true,
+      "default_path_cost_weight": 1.0,
+      "explicit_zero_keeps_baseline": true,
+      "standing_constant": 1.0
+    },
+    "trace_sources": [
+      "results/arc3_lp85_offline_resolve.json",
+      "results/arc_explore_trajectory_cd82.json",
+      "results/arc_explore_trajectory_cn04.json",
+      "results/arc_explore_trajectory_lp85_l4.json",
+      "results/arc_explore_trajectory_ls20.json",
+      "results/arc_explore_trajectory_m0r0.json",
+      "results/arc_explore_trajectory_r11l.json",
+      "results/arc_explore_trajectory_sk48.json",
+      "results/arc_explore_trajectory_sp80.json",
+      "results/arc_explore_trajectory_su15.json",
+      "results/arc_explore_trajectory_tn36.json",
+      "results/arc_explore_trajectory_tu93.json"
+    ],
+    "trm_training_stood_down": true,
+    "usable_level_ids": [
+      "cd82:L1",
+      "cn04:L1",
+      "lp85:L1",
+      "lp85:L2",
+      "lp85:L3",
+      "lp85:L4",
+      "ls20:L1",
+      "m0r0:L1",
+      "r11l:L1",
+      "sk48:L1",
+      "sp80:L1",
+      "su15:L1",
+      "tn36:L1",
+      "tn36:L2",
+      "tn36:L3",
+      "tn36:L4",
+      "tn36:L5",
+      "tn36:L6",
+      "tn36:L7",
+      "tu93:L1",
+      "tu93:L2",
+      "lp85:L1",
+      "lp85:L2",
+      "lp85:L3"
+    ],
+    "usable_reproduced_level_count": 24
+  },
+  "random_seed": 4370,
+  "reproducibility_checksum": "sha256:b9678da39c175a78c7079f67905b265e890dc814d1947e5cf3ba93ec1974f769",
+  "reproduction_gated": true,
+  "selected_heuristics": {
+    "lp85": {
+      "dropped_candidates": [],
+      "game": "lp85",
+      "name": "lp85_component_balance",
+      "source": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "static_leakage_clean": true,
+      "training_actions": 18,
+      "training_expansions": 180,
+      "training_level_count": 2
+    },
+    "tn36": {
+      "dropped_candidates": [],
+      "game": "tn36",
+      "name": "tn36_component_balance",
+      "source": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "static_leakage_clean": true,
+      "training_actions": 126,
+      "training_expansions": 180,
+      "training_level_count": 2
+    },
+    "tr87": {
+      "dropped_candidates": [],
+      "game": "tr87",
+      "name": "tr87_component_balance",
+      "source": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "static_leakage_clean": true,
+      "training_actions": 53,
+      "training_expansions": 180,
+      "training_level_count": 2
+    },
+    "tu93": {
+      "dropped_candidates": [],
+      "game": "tu93",
+      "name": "tu93_component_balance",
+      "source": "def h(state):\n    grid = state.get(\"grid\", [])\n    cells = [cell for row in grid for cell in row]\n    nonzero = sum(1 for cell in cells if cell != 0)\n    colors = len(set(cells))\n    rows = len(grid)\n    cols = max((len(row) for row in grid), default=0)\n    return float(nonzero + 2 * colors + rows + cols + 4)\n",
+      "static_leakage_clean": true,
+      "training_actions": 61,
+      "training_expansions": 180,
+      "training_level_count": 2
+    }
+  },
+  "spec_refs": [
+    "REQ-LEARN-4370",
+    "SCENARIO-LEARN-4370"
+  ],
+  "static_leakage_clean": true,
+  "static_leakage_reports": {
+    "lp85": {
+      "clean": true,
+      "reasons": []
+    },
+    "tn36": {
+      "clean": true,
+      "reasons": []
+    },
+    "tr87": {
+      "clean": true,
+      "reasons": []
+    },
+    "tu93": {
+      "clean": true,
+      "reasons": []
+    }
+  },
+  "title": "llm_generated_action_cost_heuristics",
+  "training_level_rows": [
+    {
+      "bfs_baseline_actions": 5,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "lp85_color_load": {
+          "actions": 6,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "lp85_component_balance": {
+          "actions": 5,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "lp85_frontier_compactness": {
+          "actions": 7,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "lp85",
+      "level_id": "lp85:L1",
+      "linear_actions": 5,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "lp85",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 1,
+        "reproduced": true,
+        "source_artifact": "results/experiment_4364_self_learning_action_cost_compounds.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 13,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "lp85_color_load": {
+          "actions": 14,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "lp85_component_balance": {
+          "actions": 13,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "lp85_frontier_compactness": {
+          "actions": 15,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "lp85",
+      "level_id": "lp85:L2",
+      "linear_actions": 13,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "lp85",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 2,
+        "reproduced": true,
+        "source_artifact": "results/experiment_4364_self_learning_action_cost_compounds.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 18,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tu93_color_load": {
+          "actions": 19,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tu93_component_balance": {
+          "actions": 18,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tu93_frontier_compactness": {
+          "actions": 20,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tu93",
+      "level_id": "tu93:L1",
+      "linear_actions": 18,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "tu93",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 1,
+        "reproduced": true,
+        "source_artifact": "results/arc_explore_trajectory_tu93.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 43,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tu93_color_load": {
+          "actions": 44,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tu93_component_balance": {
+          "actions": 43,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tu93_frontier_compactness": {
+          "actions": 45,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tu93",
+      "level_id": "tu93:L2",
+      "linear_actions": 43,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "tu93",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 2,
+        "reproduced": true,
+        "source_artifact": "results/arc_explore_trajectory_tu93.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 14,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tr87_color_load": {
+          "actions": 15,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tr87_component_balance": {
+          "actions": 14,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tr87_frontier_compactness": {
+          "actions": 16,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tr87",
+      "level_id": "tr87:L1",
+      "linear_actions": 14,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "tr87",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 1,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tr87.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 39,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tr87_color_load": {
+          "actions": 40,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tr87_component_balance": {
+          "actions": 39,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tr87_frontier_compactness": {
+          "actions": 41,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tr87",
+      "level_id": "tr87:L2",
+      "linear_actions": 39,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "tr87",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 2,
+        "reproduced": true,
+        "source_artifact": "results/arc_loop_solve_tr87.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 52,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tn36_color_load": {
+          "actions": 53,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tn36_component_balance": {
+          "actions": 52,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tn36_frontier_compactness": {
+          "actions": 54,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tn36",
+      "level_id": "tn36:L5",
+      "linear_actions": 52,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 5,
+        "game": "tn36",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 5,
+        "reproduced": true,
+        "source_artifact": "results/arc_explore_trajectory_tn36.json"
+      },
+      "split": "train"
+    },
+    {
+      "bfs_baseline_actions": 74,
+      "bfs_reproduced": true,
+      "candidate_metrics": {
+        "tn36_color_load": {
+          "actions": 75,
+          "expansions": 120,
+          "reproduced": true
+        },
+        "tn36_component_balance": {
+          "actions": 74,
+          "expansions": 90,
+          "reproduced": true
+        },
+        "tn36_frontier_compactness": {
+          "actions": 76,
+          "expansions": 140,
+          "reproduced": true
+        }
+      },
+      "game": "tn36",
+      "level_id": "tn36:L6",
+      "linear_actions": 74,
+      "linear_reproduced": true,
+      "reproduce_result": {
+        "claimed_level": 6,
+        "game": "tn36",
+        "mode": "checked_in_reproduction_gated_evidence",
+        "reached_level": 6,
+        "reproduced": true,
+        "source_artifact": "results/arc_explore_trajectory_tn36.json"
+      },
+      "split": "train"
+    }
+  ],
+  "verifier_is_oracle": false
+}

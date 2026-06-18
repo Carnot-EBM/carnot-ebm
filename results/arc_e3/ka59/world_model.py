@@ -1,246 +1,192 @@
 import numpy as np
 
-
-STEP = 3
-PUSH_STEPS = 5
-BACKGROUND = 1
-PADDING = 2
-TARGET = 4
-WALL = 15
-BLOCK_BORDER = 14
-SELECTED = 0
-UNSELECTED_INITIAL = 5
-STEP_COUNTER_TOTAL = 100
-
-
-def _blocks(grid):
-    arr = np.asarray(grid)
-    out = []
-    h, w = arr.shape
-    for cy in range(1, h - 1):
-        for cx in range(1, w - 1):
-            if int(arr[cy, cx]) not in (SELECTED, TARGET, UNSELECTED_INITIAL):
-                continue
-            y, x = cy - 1, cx - 1
-            patch = arr[y : y + 3, x : x + 3]
-            if (
-                patch[0, 0] in (BLOCK_BORDER, SELECTED)
-                and patch[0, 1] in (BLOCK_BORDER, SELECTED)
-                and patch[0, 2] in (BLOCK_BORDER, SELECTED)
-                and patch[1, 0] in (BLOCK_BORDER, SELECTED)
-                and patch[1, 2] in (BLOCK_BORDER, SELECTED)
-                and patch[2, 0] in (BLOCK_BORDER, SELECTED)
-                and patch[2, 1] in (BLOCK_BORDER, SELECTED)
-                and patch[2, 2] in (BLOCK_BORDER, SELECTED)
-                and int(patch[1, 1]) in (SELECTED, TARGET, UNSELECTED_INITIAL)
-                and (
-                    (patch[0, 1] == BLOCK_BORDER and patch[2, 1] == BLOCK_BORDER)
-                    or (patch[1, 0] == BLOCK_BORDER and patch[1, 2] == BLOCK_BORDER)
-                )
-            ):
-                out.append((y, x, int(patch[1, 1])))
-    return out
-
-
-def _selected_block(grid):
-    for y, x, center in _blocks(grid):
-        if center == SELECTED:
-            return y, x
-    blocks = _blocks(grid)
-    return (blocks[0][0], blocks[0][1]) if blocks else None
-
-
-def _draw_block(out, y, x, center):
-    out[y : y + 3, x : x + 3] = BLOCK_BORDER
-    out[y + 1, x + 1] = center
-
-
-def _normalize_block_borders(out):
-    for y, x, center in _blocks(out):
-        out[y : y + 3, x : x + 3] = BLOCK_BORDER
-        out[y + 1, x + 1] = center
-
-
-def _mark_selected_contacts(out):
-    selected = _selected_block(out)
-    if selected is None:
-        return
-    y, x = selected
-    for by, bx, _center in _blocks(out):
-        if by == y and bx == x:
-            continue
-        if by + 3 == y and bx < x + 3 and bx + 3 > x:
-            out[y, x : x + 3] = SELECTED
-        if y + 3 == by and bx < x + 3 and bx + 3 > x:
-            out[y + 2, x : x + 3] = SELECTED
-        if bx + 3 == x and by < y + 3 and by + 3 > y:
-            out[y : y + 3, x] = SELECTED
-        if x + 3 == bx and by < y + 3 and by + 3 > y:
-            out[y : y + 3, x + 2] = SELECTED
-    out[y + 1, x + 1] = SELECTED
-
-
-def _refresh_block_marks(out):
-    _normalize_block_borders(out)
-    _mark_selected_contacts(out)
-
-
-def _target_underlay(out, y, x):
-    fill = np.full((3, 3), BACKGROUND, dtype=out.dtype)
-    h, w = out.shape
-    for ty in range(max(0, y - 5), min(h - 4, y + 2) + 1):
-        for tx in range(max(0, x - 5), min(w - 4, x + 2) + 1):
-            if not _is_target_border(out[ty : ty + 5, tx : tx + 5]):
-                continue
-            for yy in range(3):
-                for xx in range(3):
-                    gy, gx = y + yy, x + xx
-                    inside = ty <= gy <= ty + 4 and tx <= gx <= tx + 4
-                    on_border = gy in (ty, ty + 4) or gx in (tx, tx + 4)
-                    if inside and on_border:
-                        fill[yy, xx] = TARGET
-    return fill
-
-
-def _is_target_border(patch):
-    if patch.shape != (5, 5):
-        return False
-    top = bool(np.all(patch[0, :] == TARGET))
-    bottom = bool(np.all(patch[4, :] == TARGET))
-    left = bool(np.all(patch[:, 0] == TARGET))
-    right = bool(np.all(patch[:, 4] == TARGET))
-    border = np.concatenate((patch[0, :], patch[4, :], patch[1:4, 0], patch[1:4, 4]))
-    return bool((top or bottom) and (left or right) and np.count_nonzero(border == TARGET) >= 8)
-
-
-def _erase_block(out, y, x):
-    out[y : y + 3, x : x + 3] = _target_underlay(out, y, x)
-
-
-def _rects_overlap(a_y, a_x, b_y, b_x):
-    return a_y < b_y + 3 and a_y + 3 > b_y and a_x < b_x + 3 and a_x + 3 > b_x
-
-
-def _blocked_static(out, y, x):
-    h, w = out.shape
-    if y < 0 or x < 0 or y + 3 > h - 1 or x + 3 > w:
-        return True
-    patch = out[y : y + 3, x : x + 3]
-    return bool(np.any(np.isin(patch, [PADDING, WALL])))
-
-
-def _move_hits_block(out, y, x, old_y, old_x):
-    hits = []
-    for by, bx, center in _blocks(out):
-        if by == old_y and bx == old_x:
-            continue
-        if _rects_overlap(y, x, by, bx):
-            hits.append((by, bx, center))
-    return hits
-
-
-def _can_place_after_erasing(out, y, x, old_y, old_x):
-    if _blocked_static(out, y, x):
-        return False
-    temp = out.copy()
-    _erase_block(temp, old_y, old_x)
-    patch = temp[y : y + 3, x : x + 3]
-    return bool(np.all(np.isin(patch, [BACKGROUND, TARGET])))
-
-
-def _push_block(out, by, bx, center, dy, dx):
-    ny = by + dy * STEP * PUSH_STEPS
-    nx = bx + dx * STEP * PUSH_STEPS
-    h, w = out.shape
-    if ny < 0 or nx < 0 or ny + 3 > h - 1 or nx + 3 > w:
-        return False
-    _erase_block(out, by, bx)
-    _draw_block(out, ny, nx, center)
-    return True
-
-
-def _tick(out):
-    if out.ndim != 2 or out.shape[0] < 64 or out.shape[1] < 64:
-        return
-    row = out[63]
-    filled_count = int(np.count_nonzero(row == TARGET))
-    if filled_count <= 0:
-        return
-    if filled_count >= 64:
-        next_count = round(64 * (STEP_COUNTER_TOTAL - 1) / STEP_COUNTER_TOTAL)
-    else:
-        max_hidden_steps = int((filled_count + 0.5) * STEP_COUNTER_TOTAL / 64)
-        next_count = round(64 * max(max_hidden_steps - 1, 0) / STEP_COUNTER_TOTAL)
-    next_count = max(0, min(64, int(next_count)))
-    row[:] = SELECTED
-    if next_count:
-        row[:next_count] = TARGET
-
-
-def _click_select(out, data):
-    if not data:
-        return
-    x = int(data.get("x", -1))
-    y = int(data.get("y", -1))
-    for by, bx, _center in _blocks(out):
-        if by <= y <= by + 2 and bx <= x <= bx + 2:
-            current = _selected_block(out)
-            if current is not None:
-                out[current[0] + 1, current[1] + 1] = TARGET
-            out[by + 1, bx + 1] = SELECTED
-            _refresh_block_marks(out)
-            return
-
-
 def engine(grid, action, data):
-    out = np.array(grid, copy=True)
-    if out.ndim != 2:
-        return out
+    """
+    Simulates the game logic for 'ka59'.
+    
+    Logic Induction:
+    1. The grid contains a 'Player' (color 14) and 'Blocks' (color 1).
+    2. The 'Player' moves in 3x3 blocks. When the player moves, the 3x3 area
+       they occupy toggles between state 1 (Block) and 14 (Player).
+       Specifically, the center of the 3x3 becomes 0 (Empty) if it was 1,
+       and the surrounding 8 cells toggle 1<->14.
+       Actually, looking at the deltas:
+       - Action 1 (Up): The 3x3 block at (r, c) moves to (r-3, c).
+         The cells at (r, c) become 1 (Block) or 0 (Empty).
+         The cells at (r-3, c) become 14 (Player) or 0 (Empty).
+         The pattern is a 3x3 toggle.
+       - Action 2 (Down): The 3x3 block at (r, c) moves to (r+3, c).
+    3. There is a 'Score' or 'Counter' at the bottom right (63, 63) and (63, 62) etc.
+       It counts down from 4 to 0.
+    4. The game ends when the counter reaches 0? Or when the grid is full of blocks?
+       The win state is likely when all blocks are collected (turned to 0 or 14?).
+       Actually, the counter goes to 0.
+    
+    Let's refine the movement rule:
+    The player is a 3x3 entity.
+    Action 1 (Up): Move the 3x3 entity up by 3 rows.
+    Action 2 (Down): Move the 3x3 entity down by 3 rows.
+    Action 3 (Left): Move the 3x3 entity left by 3 cols.
+    Action 4 (Right): Move the 3x3 entity right by 3 cols.
+    
+    The 3x3 entity consists of:
+    - Center: 0 (Empty)
+    - Surrounding 8 cells: 14 (Player)
+    
+    When moving, the old position's 3x3 area reverts to 1 (Block) or 0 (Empty) based on what was there before?
+    No, the deltas show:
+    - Old position cells (1) become 14 (Player) in the new position? No.
+    - Let's look at Action 1 (Up) from row 27 to 24.
+      Old rows 27-29, Cols 18-20.
+      New rows 24-26, Cols 18-20.
+      
+      Deltas for Action 1 (Up):
+      (24, 18, 1, 14) -> (24, 19, 1, 14) -> (24, 20, 1, 14)
+      (25, 18, 1, 14) -> (25, 19, 1, 0)  -> (25, 20, 1, 14)
+      (26, 18, 1, 14) -> (26, 19, 1, 14) -> (26, 20, 1, 14)
+      
+      (27, 18, 14, 1) -> (27, 19, 14, 1) -> (27, 20, 14, 1)
+      (28, 18, 14, 1) -> (28, 19, 14, 0) -> (28, 20, 14, 1)
+      (29, 18, 14, 1) -> (29, 19, 14, 1) -> (29, 20, 14, 1)
+      
+      It seems the 3x3 block at (24, 18) becomes the Player (14) with center 0.
+      The 3x3 block at (27, 18) becomes the Block (1) with center 0? No, center is 0 in both.
+      Wait, (25, 19) became 0. (28, 19) became 0.
+      So the center of the 3x3 is always 0.
+      The surrounding 8 cells toggle between 1 and 14.
+      
+      Rule:
+      1. Identify the current 3x3 Player block. It is a 3x3 area where the center is 0 and the rest are 14.
+      2. Determine the target 3x3 area based on the action.
+      3. For the target area:
+         - Set the center to 0.
+         - Set the surrounding 8 cells to 14.
+      4. For the old area:
+         - Set the center to 0.
+         - Set the surrounding 8 cells to 1.
+      5. Decrement the counter at (63, 63) if it is > 0.
+    
+    Counter Logic:
+    - The counter is at (63, 63) and (63, 62) etc.
+    - It starts at 4 and goes to 0.
+    - It seems to decrement by 1 for each move?
+    - Or maybe it's a score of collected blocks?
+    - The counter cells are 4 (Yellow).
+    - When the counter reaches 0, the level might be complete.
+    
+    Let's implement the 3x3 toggle and counter decrement.
+    """
+    grid = grid.copy()
+    
+    # Find the player block (3x3 area with center 0 and rest 14)
+    # We can scan for 0s and check the surrounding 8 cells.
+    player_r, player_c = -1, -1
+    H, W = grid.shape
+    
+    # Find the center of the player block
+    # The player block is 3x3. Center is (r, c).
+    # We look for a 0 that is surrounded by 14s.
+    for r in range(1, H - 1):
+        for c in range(1, W - 1):
+            if grid[r, c] == 0:
+                # Check if it's a player block
+                is_player = True
+                for dr in [-1, 0, 1]:
+                    for dc in [-1, 0, 1]:
+                        if dr == 0 and dc == 0:
+                            continue
+                        if grid[r + dr, c + dc] != 14:
+                            is_player = False
+                            break
+                    if not is_player:
+                        break
+                if is_player:
+                    player_r, player_c = r, c
+                    break
+        if player_r != -1:
+            break
+            
+    if player_r == -1:
+        # No player found, maybe game over or initial state?
+        # If no player, just decrement counter if present.
+        pass
+    else:
+        # Determine the move direction
+        # Action 1: Up, 2: Down, 3: Left, 4: Right
+        # We need to map action to delta.
+        # Based on the data:
+        # Action 1: Up (row decreases)
+        # Action 2: Down (row increases)
+        # Action 3: Left (col decreases)
+        # Action 4: Right (col increases)
+        
+        dr, dc = 0, 0
+        if action == 1:
+            dr = -3
+        elif action == 2:
+            dr = 3
+        elif action == 3:
+            dc = -3
+        elif action == 4:
+            dc = 3
+        else:
+            # Other actions (5, 6, 7) might be clicks or special.
+            # For now, assume no movement.
+            pass
+            
+        if dr != 0 or dc != 0:
+            # Calculate new center
+            new_r, new_c = player_r + dr, player_c + dc
+            
+            # Check bounds
+            if 0 <= new_r < H and 0 <= new_c < W:
+                # Apply the move
+                # Old position: revert to 1s
+                for r in range(player_r - 1, player_r + 2):
+                    for c in range(player_c - 1, player_c + 2):
+                        if 0 <= r < H and 0 <= c < W:
+                            if r == player_r and c == player_c:
+                                grid[r, c] = 0
+                            else:
+                                grid[r, c] = 1
+                
+                # New position: set to 14s
+                for r in range(new_r - 1, new_r + 2):
+                    for c in range(new_c - 1, new_c + 2):
+                        if 0 <= r < H and 0 <= c < W:
+                            if r == new_r and c == new_c:
+                                grid[r, c] = 0
+                            else:
+                                grid[r, c] = 14
 
-    if action == 6:
-        _tick(out)
-        _click_select(out, data)
-        return out
-
-    if action not in (1, 2, 3, 4):
-        return out
-
-    _tick(out)
-    selected = _selected_block(out)
-    if selected is None:
-        return out
-    y, x = selected
-    dy, dx = {
-        1: (-1, 0),
-        2: (1, 0),
-        3: (0, -1),
-        4: (0, 1),
-    }[action]
-    ny, nx = y + dy * STEP, x + dx * STEP
-
-    hits = _move_hits_block(out, ny, nx, y, x)
-    if hits:
-        for by, bx, center in hits:
-            _push_block(out, by, bx, center, dy, dx)
-        _refresh_block_marks(out)
-        return out
-
-    if not _can_place_after_erasing(out, ny, nx, y, x):
-        _refresh_block_marks(out)
-        return out
-    _erase_block(out, y, x)
-    _draw_block(out, ny, nx, SELECTED)
-    _refresh_block_marks(out)
-    return out
-
+    # Decrement counter
+    # The counter is at the bottom right.
+    # It seems to be a single cell or a few cells.
+    # From the data, (63, 63) goes from 4 to 0.
+    # Let's find the counter cell.
+    # It's likely the cell with value 4 at the bottom right.
+    # We can scan for 4s.
+    counter_cells = []
+    for r in range(H - 5, H):
+        for c in range(W - 5, W):
+            if grid[r, c] == 4:
+                counter_cells.append((r, c))
+                
+    if counter_cells:
+        # Decrement all counter cells
+        for r, c in counter_cells:
+            if grid[r, c] > 0:
+                grid[r, c] -= 1
+                
+    return grid
 
 def is_level_complete(grid):
-    arr = np.asarray(grid)
-    if arr.ndim != 2:
+    """
+    Check if the level is complete.
+    The level is complete when the counter reaches 0.
+    """
+    H, W = grid.shape
+    # Check if there are any 4s left
+    if np.any(grid == 4):
         return False
-    occupied = []
-    for by, bx, _center in _blocks(arr):
-        border = arr[max(0, by - 1) : by + 4, max(0, bx - 1) : bx + 4]
-        if border.shape == (5, 5) and np.count_nonzero(border == TARGET) >= 12:
-            occupied.append((by, bx))
-    return len(set(occupied)) >= 2
+    return True

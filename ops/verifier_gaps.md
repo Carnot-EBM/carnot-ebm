@@ -1638,3 +1638,11 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: mine divergent traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
 - priority: high
 <!-- exp4366-gap-e3-world-model-rule-ka59-l2-4362:end -->
+
+### GAP-4370: ARC LLM-generated action-cost residual
+- status: open
+- evidence: `results/experiment_4370_llm_generated_action_cost_heuristics.json` reports unreduced held-out levels: lp85:L3, lp85:L4, tu93:L3, tu93:L4, tr87:L3, tr87:L4, tr87:L5, tr87:L6, tn36:L7.
+- failure mode: no clean generated heuristic reduced reproduced held-out actions below the deployed linear action-cost baseline.
+- missing discriminator: observable grid/action feature that predicts a strictly shorter valid plan than the current linear cost.
+- candidate design: add richer per-game transition features or collect more reproduced levels before re-running generated-program selection.
+- priority: medium
