@@ -276,6 +276,57 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
     return None
 
 
+def click_config_explore(arc, game, GameAction, max_expansions=6000):
+    """CLICK-INTERACTION paradigm (the multi-paradigm escalation for pure-click games su15/lp85/r11l
+    that have NO moving agent): BFS clicking object centroids, state key = the full grid CONFIGURATION
+    (no agent position -- the game state IS the configuration). A stumbled level-up directly yields the
+    solution because the action path is deterministic, so no goal heuristic is needed. Returns the solve
+    depth (n actions) on a win, else None."""
+    import copy as _copy
+    from collections import deque
+    from carnot.agentic.arc_agi3_world_model import objects
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    f = env.reset()
+    if f is None:
+        return None
+    start_level = _levels_completed(f)
+
+    def cands(frame):
+        g = np.asarray(grid_of(frame)); av = list(getattr(frame, "available_actions", []) or [])
+        out = []
+        if 6 in av and g.size > 0:
+            seen = set()
+            for (y, x) in objects(g):
+                k = (int(x), int(y))
+                if k not in seen:
+                    seen.add(k); out.append((6, int(x), int(y)))
+        for a in [x for x in av if x not in (0, 6)][:4]:
+            out.append((a,))
+        return out
+
+    frontier = deque([(env, f, 0)])
+    seen = {frame_hash(np.asarray(grid_of(f)))}
+    expansions = 0
+    while frontier and expansions < max_expansions:
+        e, ff, depth = frontier.popleft()
+        for c in cands(ff):
+            e2 = _copy.deepcopy(e)
+            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
+            nf = e2.step(_game_action(GameAction, c[0]), data=data)
+            expansions += 1
+            if nf is None:
+                continue
+            if _levels_completed(nf) > start_level:
+                return depth + 1                        # the stumble path IS the solution
+            g = np.asarray(grid_of(nf))
+            if g.size == 0:
+                continue
+            h = frame_hash(g)
+            if h not in seen:
+                seen.add(h); frontier.append((e2, nf, depth + 1))
+    return None
+
+
 def induce_goal_color(prewin, agent, H):
     """The goal object = the non-background, non-agent colour whose nearest cell is closest to the
     agent in the pre-win config (what the agent reached to win). Returns a colour G, or None."""
@@ -389,6 +440,16 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
                                              clicks=True, relevant_colors=rel)
             key_used, clicks_used = "pieces_clicks_relevance_escalated", True
             rec_rel = sorted(int(c) for c in rel)
+        if prewin is None:
+            # TIER 3 -- CLICK-INTERACTION paradigm (pure-click games with no moving agent). A stumbled
+            # win IS the solution (deterministic path), so it solves directly without goal induction.
+            depth = click_config_explore(arc, game, GameAction, max_expansions=explore_budget)
+            if depth is not None:
+                return {"game": game, "explore_mode": "click_config_paradigm", "paradigm": "click_config",
+                        "state_key_used": "grid_config", "agent": None, "win_stumbled": True,
+                        "induced_goal_color": None,
+                        "induced_goal_solve": {"solved": True, "actions": depth, "via": "stumble_is_solution"},
+                        "solves_first_contact": True}
     else:
         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
     rec = {"game": game, "explore_mode": ("curious_adaptive_bfs" if curious else "random"),
