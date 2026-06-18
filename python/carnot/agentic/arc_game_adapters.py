@@ -178,27 +178,46 @@ def _tr87():
     def _val(s):
         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
 
+    def _level_flag(game, name):
+        try:
+            return bool(game.current_level.get_data(name))
+        except Exception:
+            return False
+
     def _required_editable(game):
         # GREEDY multi-glyph-LHS rewrite matcher -- mirrors the game's bsqsshqpox win predicate. The
-        # visible reference grid is a rewrite rule LHS->RHS (LHS over the TARGET series, RHS over the
-        # EDITABLE series). Scan the target left-to-right; at each position take the FIRST rule whose LHS
-        # (by glyph name) is a prefix of the remaining target, emit that rule's RHS values, advance both
-        # pointers. Uniformly handles L1 (1-to-1, A4->[B3]), L2 (1-to-many, B3->[C1,C5,C1]) AND L3
-        # (many-to-many, [C3,C3]->[A6,A1]). Returns None if no rule matches a position (a deeper
-        # tree_translation / double_translation / alter_rules twist the base matcher does not model).
-        rules = [([s.name for s in lhs], [int(s.name[-1]) for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
-        target = [s.name for s in game.zvojhrjxxm]
-        req: list = []
-        pos = 0
-        while pos < len(target):
-            for lhs_names, rhs_vals in rules:
-                if target[pos:pos + len(lhs_names)] == lhs_names:
-                    req.extend(rhs_vals)
-                    pos += len(lhs_names)
-                    break
-            else:
-                return None      # unmodelled twist -> verifier returns large, search stops (no false claim)
-        return req
+        # visible reference grid is a set of rewrite rules LHS->RHS (LHS over the TARGET series, RHS over
+        # the next series). One PASS scans a sequence left-to-right and at each position takes the FIRST
+        # rule whose LHS is a prefix, emits its RHS, and advances. The required editable sequence is the
+        # rewrite of the target applied PASSES times:
+        #   L1-L3 (base):                       1 pass  -- 1-to-1 (A4->[B3]), 1-to-many (B3->[C1,C5,C1]),
+        #                                                  many-to-many ([C3,C3]->[A6,A1]).
+        #   L4 (double_translation / tree_translation): 2 passes -- a two-level chain A->B->C, so the
+        #                                                  editable matches the target rewritten twice.
+        # alter_rules (deeper) is a DIFFERENT mechanic (editing the rules, not the glyphs) and is NOT
+        # modelled here -- a pass will fail to match and the verifier returns large (search stops, no
+        # false claim). Returns None if any pass cannot match a position.
+        rules = [([s.name for s in lhs], [s.name for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
+
+        def _rewrite(seq):
+            out, pos = [], 0
+            while pos < len(seq):
+                for lhs_names, rhs_names in rules:
+                    if seq[pos:pos + len(lhs_names)] == lhs_names:
+                        out.extend(rhs_names)
+                        pos += len(lhs_names)
+                        break
+                else:
+                    return None
+            return out
+
+        seq = [s.name for s in game.zvojhrjxxm]
+        passes = 2 if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation")) else 1
+        for _ in range(passes):
+            seq = _rewrite(seq)
+            if seq is None:
+                return None
+        return [int(n[-1]) for n in seq]
 
     def _distance(game):
         req = _required_editable(game)

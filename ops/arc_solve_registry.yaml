@@ -205,20 +205,21 @@ games:
       - "Clicks must be derived from the current offline camera/grid offset and movable sprite centers, not hardcoded live pixels."
 
   - game: tr87
-    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-rewrite RE (L1-L3, reproduction-gated)
+    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-rewrite RE (L1-L4 of 6, reproduction-gated)
     mechanic_class: config_substitution  # strategy-router class: configure-to-target via a visible rewrite rule
-    levels_reproduced: 3
-    win_condition: "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (a set of rules LHS->RHS, LHS over the target series, RHS over the editable series). Win predicate = scan the target left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1: 1-to-1 (A4->[B3]). L2: 1-to-MANY (B3->[C1,C5,C1]). L3: MANY-to-many ([C3,C3]->[A6,A1], multi-glyph LHS)."
-    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector. Move budget 128; running out loses. L1: 14 actions/94 states. L2: +25 (39 total)/152. L3: +21 (60 total)/234 (verifier-routed)."
-    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=summed cyclic-distance to the GREEDY-rewritten target, branch_mode='fresh_env'); results/arc_loop_solve_tr87.json."
-    reproduce: "re-gated reproduced=True L3 (kit.reproduce, claimed_level=3, 60-action path); verifier-routed 234 states vs blind BFS exhausting 52k+ without even L1."
+    levels_reproduced: 4          # of 6 total levels
+    win_condition: "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan a sequence left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. The required editable = the target rewritten N passes: L1-L3 (base) = 1 pass; L4 (double_translation) = 2 passes (a two-level chain A->B->C). L1: 1-to-1 (A4->[B3]). L2: 1-to-MANY (B3->[C1,C5,C1]). L3: MANY-to-many ([C3,C3]->[A6,A1]). L4: 2-pass chain (A6->B1->C3)."
+    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector. Move budget 128; running out loses. L1: 14 actions/94 states. L2: +25 (39 total)/152. L3: +21 (60 total)/234. L4: +21 (81 total)/319 (verifier-routed)."
+    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=summed cyclic-distance to the N-pass-rewritten target, branch_mode='fresh_env'); results/arc_loop_solve_tr87.json."
+    reproduce: "re-gated reproduced=True L4 (kit.reproduce, claimed_level=4, 81-action path); verifier-routed 319 states vs blind BFS exhausting 52k+ without even L1."
     gotchas:
       - "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values."
-      - "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance both pointers. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many, B3->[C1,C5,C1]) AND L3 (many-to-many, [C3,C3]->[A6,A1]). NONE of L1-L3 set alter_rules/tree_translation/double_translation (all None); those appear at L4+."
-      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L3 in 234 states."
+      - "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1])."
+      - "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)"
+      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states."
       - "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct."
-      - "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions)."
-      - "L4+ boundary: the greedy matcher produces a same-length req at L4 but it does NOT win (level does not advance) -- L4 adds a tree_translation / double_translation / alter_rules twist that re-expands the RHS through the rules again (the win predicate's tree/double branches). The verifier returns None->1000 when no LHS matches, OR reaches 0 without a level-up at L4, so the search stops at L3 with NO false claim. L4 RE = decode the second-level RHS re-expansion (the tree_translation branch in bsqsshqpox)."
+      - "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions)."
+      - "L5-L6 boundary (2 levels remain of 6): not yet RE'd. L5+ likely sets alter_rules (the rules become EDITABLE -- the selector cycles over rule elements, ACTION1/2 edits a rule rather than a target glyph), a different mechanic the N-pass rewrite does not model. The verifier returns None->1000 when a pass cannot match, so the search stops cleanly at L4 with no false claim. L5 RE = decode the alter_rules editing semantics."
 
   # Remaining still-unsolved games include bp35, dc22, ft09, g50t, lf52,
   # re86, s5i5, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
@@ -236,11 +237,11 @@ games:
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 3 = 29 across 16 games  (tr87
-#   L1->L3 landed 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
-#   1-to-1, L2 1-to-many, L3 many-to-many greedy rewrite; offline-reproduction-gated; verify with
-#   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 29   # ... -> 28 (+tr87 L2) -> 29 (+tr87 L3 many-to-many greedy rewrite, 2026-06-17)
+#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 4 = 30 across 16 games  (tr87
+#   L1->L4 of 6 landed 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
+#   1-to-1, L2 1-to-many, L3 many-to-many, L4 double_translation 2-pass chain; offline-reproduction-gated;
+#   verify with scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
+reproducible_total_levels: 30   # ... -> 29 (+tr87 L3) -> 30 (+tr87 L4 double_translation 2-pass, 2026-06-17)
 reproducible_total_games: 16    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36, tr87
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
