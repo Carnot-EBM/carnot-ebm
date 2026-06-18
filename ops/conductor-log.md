@@ -8746,3 +8746,5 @@ c |
 | 2026-06-18 19:00 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 88 passed, 1 warning in 8.30s |
 | 2026-06-18 19:12 UTC | PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic | OK | 86 passed, 1 warning in 7.58s |
 | 2026-06-18 19:28 UTC | PHASE E4 (CAPSTONE .406) -- the milestone scorecar | OK | 88 passed, 1 warning in 7.83s |
+| 2026-06-18 20:13 UTC | Plan milestone 2026.06.407 | OK | 11 tasks proposed |
+| 2026-06-18 20:15 UTC | Milestone 2026.06.407 activated | OK | 11 tasks queued |
