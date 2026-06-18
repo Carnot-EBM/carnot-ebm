@@ -1,0 +1,98 @@
+{
+  "board_state_transcript": [
+    {
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.621998,
+      "exit_code": 0,
+      "output_excerpt": "returncode=0",
+      "stage": "kv260_ssh_precondition"
+    },
+    {
+      "board": "kv260",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.764768,
+      "exit_code": 1,
+      "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
+      "stage": "kv260_xmutil_listapps"
+    },
+    {
+      "board": "kv260",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.43581,
+      "exit_code": 0,
+      "output_excerpt": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3",
+      "stage": "kv260_uio_device_presence"
+    }
+  ],
+  "duration_s": 5.823419,
+  "experiment": 4367,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_kv260_continuity_<state> or blocked_kv260_ssh_unreachable). A reachable continuity check and a clean unreachable skip are BOTH honest terminal states.",
+    "kv260_reachable": "BARE bool: SSH reachability -- the only valid KV260 precondition (NEVER host SD-card presence).",
+    "kv260_terminal_state_reached": "BARE bool: true iff the board-latency transcript + kv260_synthesis_succeeded terminal state is met (north-star \u00a73) -- after which the per-milestone KV260 mandate lifts.",
+    "loaded_overlay": "The xmutil listapps result -- records whether the carnot_ising bitstream is loaded (board continuity).",
+    "preconditions_checked": "Records the SSH-reachability check (NOT host SD card); pre-empts the wrong-mechanism SD-card confusion + the silent-missing-resource fabrication mode."
+  },
+  "honest_verdict": "success_kv260_continuity_terminal_reached",
+  "inference_substrate": "hardware_smoke",
+  "kv260_reachable": true,
+  "kv260_terminal_state_reached": true,
+  "loaded_overlay": {
+    "carnot_ising_loaded": false,
+    "command": "ssh kria 'xmutil listapps'",
+    "exit_code": 1,
+    "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
+    "overlay_names": [],
+    "status": "xmutil_listapps_returncode_1"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.621998,
+      "exit_code": 0,
+      "mechanism": "ssh",
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 4367,
+  "reproducibility_checksum": "676a70b01b823f8f60fd2ad73223cb7773ab01b4614f624686d28498a8cf6217",
+  "schema": "carnot.hardware_continuity_kv260_ssh_overlay.v1",
+  "source_context": {
+    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4356_hardware_continuity_kv260.json",
+    "previous_artifact_read": true,
+    "previous_experiment": 4356,
+    "previous_honest_verdict": "success_kv260_continuity_terminal_reached",
+    "previous_kv260_reachable": true
+  },
+  "spec_refs": [
+    "REQ-HW-4367",
+    "SCENARIO-HW-4367"
+  ],
+  "speedup_claim_made": false,
+  "terminal_state_evidence": {
+    "board_latency_transcript_present": true,
+    "kv260_synthesis_succeeded": true,
+    "latency_mean_us": 3.183,
+    "n_cycles_measured": 100,
+    "source": "results/experiment_2742_kv260_latency_transcript_terminal.json",
+    "source_read": true,
+    "terminal_state_reached": true
+  },
+  "uio_device_presence": {
+    "command": "ssh kria 'ls /dev/uio*'",
+    "devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3"
+    ],
+    "exit_code": 0,
+    "output_excerpt": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3",
+    "status": "uio_devices_present",
+    "uio_devices_present": true
+  }
+}
