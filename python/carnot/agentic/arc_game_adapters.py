@@ -265,14 +265,96 @@ def _tr87():
         return result
 
     def _rule_sides(game):
-        # the 2*nrules editable rule-SIDES in the selector's cycle order: [r0.LHS, r0.RHS, r1.LHS, ...]
+        # the 2*nrules editable rule-SIDES in the selector's cycle order: [r0.LHS, r0.RHS, r1.LHS, ...].
+        # A side's "value" is its FIRST glyph (all glyphs in a side cycle together, preserving offsets).
         cur: list = []
         for lhs, rhs in game.cifzvbcuwqe:
             cur.append(int(lhs[0].name[-1]))
             cur.append(int(rhs[0].name[-1]))
         return cur
 
+    def _find_alter_2pass(meta, target, editable):
+        # ALTER_RULES + a 2-pass (tree/double_translation) chain A->B->C: the rules are editable AND the
+        # win is the target rewritten TWICE. The rules split by LHS series into FIRST-level (LHS matches
+        # the target series; pass 1: target->B-intermediate) and SECOND-level (pass 2: B-intermediate->
+        # editable). 2-level decomposition: enumerate first-level side first-values -> the B-intermediate
+        # each produces (hashed); enumerate second-level side first-values -> for each, check pass2 of any
+        # produced B-intermediate == editable. Multi-glyph sides cycle together, so each side is one
+        # first-value + fixed internal OFFSETS (carried in meta). Returns required (lhs_first, rhs_first)
+        # per rule (absolute, invariant of current values), or None. Cached per level.
+        key = ("2pass", meta, target, editable)
+        if key in _parse_cache:
+            return _parse_cache[key]
+        tser = target[0][0]
+        first = [i for i, m in enumerate(meta) if m[0] == tser]
+        second = [i for i, m in enumerate(meta) if m[0] != tser]
+        # bound the enumeration (7^(2*n)); refuse oversized levels -> verifier returns large, search stops
+        if not second or 2 * len(first) > 8 or 2 * len(second) > 8:
+            _parse_cache[key] = None
+            return None
+
+        def _build(i, lf, rf):
+            lser, rser, loff, roff = meta[i]
+            lhs = tuple((lser, ((lf - 1 + o) % 7) + 1) for o in loff)
+            rhs = tuple((rser, ((rf - 1 + o) % 7) + 1) for o in roff)
+            return lhs, rhs
+
+        def _greedy(rules, seq):
+            out: list = []
+            pos = 0
+            while pos < len(seq):
+                for lhs, rhs in rules:
+                    if seq[pos:pos + len(lhs)] == list(lhs):
+                        out.extend(rhs)
+                        pos += len(lhs)
+                        break
+                else:
+                    return None
+            return out
+
+        first_map: dict = {}
+        for fv in _product(range(1, 8), repeat=2 * len(first)):
+            rules = [_build(first[k], fv[2 * k], fv[2 * k + 1]) for k in range(len(first))]
+            bint = _greedy(rules, list(target))
+            if bint is not None:
+                first_map.setdefault(tuple(bint), fv)
+        result = None
+        for sv in _product(range(1, 8), repeat=2 * len(second)):
+            srules = [_build(second[k], sv[2 * k], sv[2 * k + 1]) for k in range(len(second))]
+            for bint, fv in first_map.items():
+                if _greedy(srules, list(bint)) == list(editable):
+                    req = [(0, 0)] * len(meta)
+                    for k, i in enumerate(first):
+                        req[i] = (fv[2 * k], fv[2 * k + 1])
+                    for k, i in enumerate(second):
+                        req[i] = (sv[2 * k], sv[2 * k + 1])
+                    result = req
+                    break
+            if result is not None:
+                break
+        _parse_cache[key] = result
+        return result
+
     def _rule_distance(game):
+        cur = _rule_sides(game)
+        passes = 2 if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation")) else 1
+        if passes == 2:
+            def _ser(s):
+                return s.name[-2]
+
+            def _off(side):
+                base = int(side[0].name[-1])
+                return tuple((int(s.name[-1]) - base) % 7 for s in side)
+
+            meta = tuple((_ser(lhs[0]), _ser(rhs[0]), _off(lhs), _off(rhs)) for lhs, rhs in game.cifzvbcuwqe)
+            target = tuple((_ser(s), int(s.name[-1])) for s in game.zvojhrjxxm)
+            editable = tuple((_ser(s), int(s.name[-1])) for s in game.ztgmtnnufb)
+            res = _find_alter_2pass(meta, target, editable)
+            if res is None:
+                return 1000.0
+            req = [v for pair in res for v in pair]        # flatten (lhs_first, rhs_first) -> side order
+            return float(sum(_cyc(c, r) for c, r in zip(cur, req)))
+        # 1-pass alter_rules (L5): RHS is forced by the editable segments once the LHS fix the parse.
         structs = tuple((len(lhs), len(rhs)) for lhs, rhs in game.cifzvbcuwqe)
         target = tuple(int(s.name[-1]) for s in game.zvojhrjxxm)
         editable = tuple(int(s.name[-1]) for s in game.ztgmtnnufb)
@@ -280,8 +362,7 @@ def _tr87():
         if res is None:
             return 1000.0                                  # no valid rule config found -> search stops
         lhs_vals, rhs_assign = res
-        cur = _rule_sides(game)
-        req: list = []
+        req = []
         for i in range(len(structs)):
             req.append(lhs_vals[i])
             req.append(rhs_assign.get(i, cur[2 * i + 1]))  # unparsed rule's RHS: leave at current (no-op)
