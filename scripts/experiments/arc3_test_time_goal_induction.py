@@ -48,6 +48,26 @@ def _kbd(frame, GameAction):
     return [(a,) for a in av] or [(a,) for a in (1, 2, 3, 4, 5)]
 
 
+def _click_capable(frame, GameAction, min_size=4, max_size=30):
+    """Keyboard actions PLUS clicks on PIECE-object centroids (bounded ~#pieces, not every pixel),
+    so a setup click like ka59's C:1 becomes reachable without exploding the action space."""
+    cands = list(_kbd(frame, GameAction))
+    av = list(getattr(frame, "available_actions", []) or [])
+    grid = np.asarray(grid_of(frame))
+    if 6 in av and grid.size > 0:
+        from carnot.agentic.arc_world_model_dsl import _color_components, _background
+        bg = _background(grid)
+        seen = set()
+        for color in set(int(v) for v in np.unique(grid)) - {bg}:
+            for comp in _color_components(grid, color):
+                if min_size <= len(comp) <= max_size:
+                    ys = [y for y, _ in comp]; xs = [x for _, x in comp]
+                    k = (6, int(round(float(np.mean(xs)))), int(round(float(np.mean(ys)))))
+                    if k not in seen:
+                        seen.add(k); cands.append(k)
+    return cands
+
+
 def explore_for_win(arc, game, GameAction, budget, seed, episode_len=25):
     """EPISODIC random exploration until a level-up is stumbled: take short random walks from reset
     (many short episodes from a fresh start hit a short win far more often than one long drifting
@@ -129,7 +149,7 @@ def _pieces_key(grid, min_size=4, max_size=30):
 
 
 def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None,
-                            key_mode="agent"):
+                            key_mode="agent", clicks=False):
     """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
     centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
     For navigation/movement games the agent position is the state variable that matters, so covering
@@ -160,6 +180,7 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
                 return ("p", int(round(ac[0])), int(round(ac[1])))
         return ("g", frame_hash(np.asarray(grid)))
 
+    cand_fn = _click_capable if clicks else _kbd
     frontier = deque([(env0, f0)])
     visited = {key(grid_of(f0))}
     expansions = 0
@@ -168,9 +189,10 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
         grid = np.asarray(grid_of(f))
         if grid.size == 0:
             continue
-        for c in _kbd(f, GameAction):
+        for c in cand_fn(f, GameAction):
             e2 = _copy.deepcopy(env)
-            nf = e2.step(_game_action(GameAction, c[0]), data=None)
+            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
+            nf = e2.step(_game_action(GameAction, c[0]), data=data)
             expansions += 1
             if nf is None:
                 continue
@@ -213,9 +235,10 @@ def agent_to_color_dist(grid, agent, G, H):
     return float(np.min(np.abs(cells[:, 0] - ac[0]) + np.abs(cells[:, 1] - ac[1])))
 
 
-def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5000):
+def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5000, clicks=False):
     """best_first_search over deepcopied real envs, guided by agent-to-colour-G distance (the INDUCED
-    goal -- no banked target), searching for a real level-up."""
+    goal -- no banked target), searching for a real level-up. clicks=True adds piece-centroid click
+    candidates (needed for games whose win setup requires a click, e.g. ka59's C:1)."""
     import copy as _copy
     from carnot.agentic.arc_heuristic_search_over_verified_wm import best_first_search
     env0 = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -234,15 +257,18 @@ def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5
     def heuristic(s):
         return float(s["h"])
 
+    cand_fn = _click_capable if clicks else _kbd
+
     def next_states(s):
         cur = reg.get(s["gh"])
         if cur is None:
             return []
         env, frame = cur
         out = []
-        for c in _kbd(frame, GameAction):
+        for c in cand_fn(frame, GameAction):
             e2 = _copy.deepcopy(env)
-            nf = e2.step(_game_action(GameAction, c[0]), data=None)
+            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
+            nf = e2.step(_game_action(GameAction, c[0]), data=data)
             if nf is None:
                 continue
             g = np.asarray(grid_of(nf))
@@ -270,21 +296,24 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
     agent = H.identify_agent(explore_trans)
     movers = identify_movers(explore_trans)
     key_used = None
+    clicks_used = False
     if curious:
-        # ADAPTIVE granularity: try the minimal AGENT-position key first (right for navigation, no
-        # over-fragmentation); only if it dries up, ESCALATE to the multi-object PIECES key (push games).
+        # ADAPTIVE: minimal AGENT-position key + keyboard first (navigation, no over-fragmentation);
+        # if it dries up, ESCALATE to the multi-object PIECES key WITH piece-centroid CLICKS (the
+        # push/click class, e.g. ka59 whose win setup needs a C:1 click).
         prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
                                          max_expansions=explore_budget, key_mode="agent")
         key_used = "agent"
         if prewin is None:
             prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
-                                             max_expansions=explore_budget, key_mode="pieces")
-            key_used = "pieces_escalated"
+                                             max_expansions=explore_budget, key_mode="pieces", clicks=True)
+            key_used, clicks_used = "pieces_clicks_escalated", True
     else:
         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
     rec = {"game": game, "explore_mode": ("curious_adaptive_bfs" if curious else "random"),
            "state_key_used": key_used,
            "agent": (None if agent is None else {"color": agent["color"]}),
+           "clicks_used": clicks_used,
            "movers": [m["color"] for m in movers], "win_stumbled": prewin is not None}
     if prewin is None or agent is None:
         rec["verdict"] = "no_win_stumbled_or_no_agent_cannot_induce_goal"
@@ -294,7 +323,8 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
     if G is None:
         rec["verdict"] = "win_stumbled_but_no_goal_object_induced"
         return rec
-    sol = solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=max_exp)
+    sol = solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=max_exp,
+                                  clicks=clicks_used)
     rec["induced_goal_solve"] = sol
     rec["solves_first_contact"] = bool(sol["solved"])
     return rec
