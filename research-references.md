@@ -1,3 +1,106 @@
+## 2026-06-18 — .407 planning sweep — DECONFOUND the oracle-distinct first-error LOCALIZER with REAL intervention data (the .406 synthetic localizer was pure position bias); drive the ARC north star DEEPER via per-mechanic executable unit tests; active-learning self-learning; repair cross-domain calibration
+
+Added by the `.407 planning sweep (Claude Opus 4.8, outer-loop planner). The `.406 scorecard
+(exp4401 capstone, `verifier_thesis_state: localizer_not_genuine_localizer_compounding_open_detection_not_calibrated_multi_domain`,
+read via `scripts/summarize_artifact.py`). `.406 attacked the .405 localization NULL (first-error F1
+0.096) with **synthetic verifiable process data** (arXiv:2605.02395) and came back **mostly null**:
+
+- **LOCALIZER → "localizes_but_not_genuine" (QUARANTINED).** exp4392 reported the synthetic-data
+  localizer "beats" the 0.096 ensemble baseline (FoVer F1 1.0, GAP-4 ARC 0.69), but exp4393's
+  skeptic-proof **quarantined it as artifact-confounded**: `localizer_win_is_genuine=false`,
+  `beats_position_only_baseline=false`, `template_ablation_drop=0.0`. The localizer learned NOTHING
+  real — it is pure POSITION bias (it ties a content-blind position-only baseline; ablating the
+  injection template changes nothing). The F1=1.0 is the IMPLAUSIBLE_PERFECT tell. Root cause:
+  synthetic template-injected data does not carry the REAL first-error distribution.
+- **SELF-LEARNING / COMPOUNDS → false (saturated null).** exp4396 `clean_saturated_null_localizer`,
+  learning curve F1=1.0 flat across corpus 566→5661 (the artifact saturates trivially; no headroom).
+- **CROSS-DOMAIN CALIBRATION → false.** exp4397 `calibrated_multi_domain_contract_false`;
+  code_humaneval detection AUROC 0.98 but underpowered (n=100) + multi-valid-output / base-rate
+  confounds unseparated.
+- **ARC north star → STILL 34 reproducible levels / 17 games.** exp4394 (deeper: lp85/tu93/tn36/tr87)
+  + exp4395 (tails: ar25/ka59/ft09) both `new_levels_reproduced=0`; the lookahead-fidelity GATE was
+  UNREACHABLE (ar25 0.73, tu93 0.80, lp85 0.83, tr87 0.86, tn36 0.875 — all below the ~0.95 gate).
+  Gating on aggregate fidelity only CONFIRMED the blocker; it did not decompose it.
+- **paper_ready=True** (G1–G4, FoVer 0.9131) carried unchanged.
+
+The `.406 SOTA-ingestion (exp4398) `flagged_for_v407 = intervention_active_real_first_error_deconfounding_v407`:
+**replace the artifact-confounded synthetic localizer with REAL intervention first-error data.** All
+`.407 methods below were arXiv-verified by the exp4398 SOTA-ingestion (reliable channel:
+low-concurrency WebSearch/WebFetch + arXiv page lookup + focused Semantic-Scholar, 2026-06-18).
+
+**A. HEADLINE — DECONFOUND the oracle-distinct first-error LOCALIZER (verifier_is_oracle=false):**
+- **arXiv:2601.14209** — "InT self-proposed interventions for first-error credit assignment." Collect
+  verifier-checked REAL traces where a single-step intervention redirects a failed trajectory;
+  stratify by first-error POSITION and TEMPLATE FAMILY; train/evaluate the localizer on HELD-OUT
+  intervention families. This attacks the exact .406 confound: real content-grounded first-error
+  labels (not synthetic template injection) with position/template DECONFOUNDING built in.
+  **.407 HEADLINE (exp4403):** does a localizer trained on REAL intervention first-error data
+  GENUINELY beat a content-blind position-only baseline (CI95-excl-0) AND degrade under
+  template-family holdout — the controls .406 FAILED. **Failure mode (load-bearing):** interventions
+  can become post-hoc rationalizations or drift into generator SFT/RL — use them as OFFLINE labels
+  ONLY, require executable/reference prefix-checks, and hold out template families + a position-only
+  control. `retire_if_same_verdict: true` (a third position-bound tie RETIRES the localizer-as-headline).
+- **arXiv:2603.25412** — "Reasoning Safety Monitor" typed step-localization taxonomy. A typed
+  reasoning-vulnerability taxonomy as an INDEPENDENT label/audit channel; compare it with localizer
+  onset scores; require disagreement analysis before accepting an earliest-error claim. **.407
+  (exp4404, gated on A1):** typed-taxonomy cross-check + cross-domain (GAP-4 ARC + held-out FoVer
+  family) generalization of the genuine localizer. **Failure mode:** prompt monitors overfit their
+  taxonomy / miss ARC mechanics / false-positive on unusual-but-correct reasoning — report per-type
+  FP + domain competence.
+
+**B. ARC north star DEEPER — per-mechanic EXECUTABLE UNIT TESTS (verifier_is_oracle=true; operator MANDATORY 2026-06-17):**
+- **arXiv:2606.16070** — "Mind-Studio" executable world models with lookahead evaluation (carried).
+  **.407 forward difference (exp4405/exp4406):** the .406 aggregate fidelity gate (0.73–0.875) only
+  CONFIRMED the blocker. Decompose it — turn each ar25/ka59/ft09/lp85/tu93/tn36/tr87 mechanic gap
+  into an EXPLICIT EXECUTABLE UNIT TEST (which specific transition the world model gets wrong), fix
+  the engine to pass each test (InT-style intervention on the world model), raise per-mechanic
+  fidelity, THEN plan deeper. Report mechanic-test pass/fail SEPARATELY from any solve claim.
+  **Failure mode:** Mind-Studio targets pygame/Real-ALE not ARC directly; E3 remains oracle-grounded
+  (ARC progress, not a moat). Carried baselines: **arXiv:2605.05138** (Executable World Models for
+  ARC-AGI-3), **arXiv:2605.25931** (AERA), **arXiv:2512.22336** (Agent2World).
+
+**C. CONTINUOUS SELF-LEARNING (mandated) — ACTIVE learning (verifier_is_oracle=false):**
+- **arXiv:2504.10559** — "ActPRM" active learning for PRM training (entropy/uncertainty + diversity
+  sampling). **.407 (exp4407):** the .406 SIZE-only corpus growth SATURATED (exp4396 null). The NEW
+  mechanism: ACTIVE selection (uncertainty + first-error-POSITION diversity) of REAL first-error
+  traces — does active selection produce compounding where size-only growth could not, on the best
+  available first-error localizer? **Failure mode:** uncertainty sampling can re-select the same
+  artifact family — keep template-family holdouts + a position-only control IN the active loop.
+
+**D. CROSS-DOMAIN DETECTION CALIBRATION (verifier_is_oracle=false):**
+- **arXiv:2602.07842** — "Semantic Confidence Aggregation" for multi-answer calibration. Aggregate
+  confidence across semantically-equivalent valid answers / verifier-success modes BEFORE
+  Platt/risk-coverage reporting, with per-domain base-rate + answer-cardinality metadata. **.407
+  (exp4408):** repair the .406 false calibrated-multi-domain contract — build PROPER pools (code
+  n≥300, GSM n≥300, not the underpowered n=100) + separate calibration failure from
+  multi-valid-output/base-rate effects + leave-one-domain-out calibration. **Failure mode:** semantic
+  grouping can HIDE wrong verifier modes unless checked against executable labels.
+
+**SETTLED / RETIRED (carried, do NOT re-propose / re-headline):**
+- **Cross-game ARC learned-verifier / value transfer** — RETIRED (3 powered nulls exp4318/4331/4342,
+  on the exclusion manifest). Do NOT propose any "distill a learned ARC verifier that transfers
+  cross-game" task.
+- **In-generation DiffusionGemma conversion** — RETIRED (4th block exp4374). **LLM-generated-heuristic
+  efficiency** — SETTLED (exp4370 null; the deployed linear action-cost heuristic exp4364 is the moat).
+  **Synthetic verifiable-process-data localizer** — the SYNTHETIC route is artifact-confounded (.406);
+  `.407 uses REAL intervention data instead.
+
+**OUT-OF-BAND / operator-owned (flagged, NOT auto-run in-loop — verifier-as-reward GENERATOR training):**
+- **arXiv:2606.13565** (A2D2 reward-guided any-length discrete diffusion), **arXiv:2502.01384** (SEPO
+  score-entropy policy optimization).
+
+**Bottom line for .407:** the .406 synthetic localizer was pure position bias — `.407 gives the
+oracle-distinct localizer ONE genuine attempt with REAL intervention data + the deconfounding controls
+.406 failed (retire-if-it-ties-position-only-again), while the PRIMARY work is the operator-MANDATORY
+ARC north star: decompose the lookahead-fidelity blocker into per-mechanic executable unit tests
+(exp4405/exp4406). Active-learning self-learning (exp4407) + repaired cross-domain calibration
+(exp4408) round out the verifier-domain-expansion. `paper_ready=True` (FoVer 0.9131) carried unchanged.
+
+Sources (this sweep, exp4398-verified 2026-06-18): arxiv.org/abs/{2601.14209, 2603.25412, 2504.10559,
+2602.07842, 2606.16070, 2605.05138, 2605.25931, 2512.22336, 2606.13565, 2502.01384}.
+
+---
+
 ## 2026-06-18 — .405 planning sweep — DEEPEN the one surviving oracle-distinct vehicle (the verifier-as-DETECTOR) into an ACTIONABLE capability: BiPRM step-error LOCALIZATION + selective-prediction ABSTENTION; cross-domain detection generalization; ARC E3 deeper with lookahead-fidelity
 
 Added by the `.405 planning sweep (Claude Opus 4.8, outer-loop planner). The `.404 scorecard
