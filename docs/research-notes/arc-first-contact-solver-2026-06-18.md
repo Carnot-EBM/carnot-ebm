@@ -153,3 +153,57 @@ rather than rediscover it per game.
 4. **Wire the first-contact pipeline into the live submission path** — it is the live-legal,
    no-prior-knowledge solver the M2/M3/M4 plan needs (operator-gated per Operator-Only External
    Publication).
+
+## Update (later 2026-06-18): multi-paradigm escalation + full-pass scorecard
+
+Two things changed after the consolidation above: a full 25-game pass quantified accuracy, and a
+second mechanic paradigm was added.
+
+### Full-pass scorecard (all 25 offline games, L1 first-contact, no banked solve)
+
+`scripts/experiments/arc3_full_pass_scorecard.py` runs the generalized solver on every game and
+classifies each outcome by failure stage. Headline:
+
+- **10/25 (40%)** L1 first-contact solves: ar25, cn04, lp85, ls20, m0r0, r11l, sp80, su15, tu93, vc33.
+- Up from a 6/25 baseline once the **click-interaction paradigm** tier was added.
+- (A first pass reported a false 2/25 due to an argument-order bug in the scorecard call --
+  `explore_budget=150`; caught and fixed. The pipeline was always healthy.)
+
+### Multi-paradigm: escalation, not classification
+
+A mechanic-class **classifier** (translate / growth / click / toggle) was prototyped and **rejected
+by measurement**: paradigms do not cleanly separate at the pixel representation -- a simple
+change-type classifier labels almost everything "growth", and even cn04 (which solves via translate)
+mislabels. The working architecture is **try-paradigms ESCALATION**: run paradigm tiers in order,
+keep whichever stumbles a win. Current tiers:
+
+1. **translate / growth navigation** -- agent-position BFS, agent-to-goal-colour heuristic (6 games).
+2. **multi-object pieces + clicks** -- escalated key for same-colour-object games.
+3. **click-interaction** (`click_config_explore`) -- pure-click games (su15, lp85, r11l) with no
+   moving agent: BFS clicking object centroids, full-grid-configuration state key. A stumbled level-up
+   IS the solution (deterministic path), so no goal heuristic is needed. Added 4 solves
+   (su15/lp85/r11l + a bonus m0r0).
+
+### Refined research backlog (the 15 remaining games, by paradigm needed)
+
+The coarse "FAIL_EXPLORATION" class was re-measured by action-effect (recolor-dominant vs
+move-dominant):
+
+- **TOGGLE/CONFIGURATION -- 9 games (the #1 lever):** bp35, dc22, g50t, ka59, lf52, s5i5, tn36,
+  sc25, tr87. Clicks recolor/cycle cells in place (no movement); the win is a target PATTERN, so
+  stumbling a 40-210-cell config space is intractable. NOTE: **ka59 reclassifies as config, not
+  push** (65 recolor / 0 move events). The hard part is **target-pattern induction**: the editable
+  region is 40-210 cells and the static reference is large (235-2800 cells), but identifying the
+  SPECIFIC sub-pattern the editable must match is research-grade (sc25 is multi-path, tr87 is a
+  rule-based glyph-rewrite). This is the highest-leverage AND the hardest next paradigm.
+- **GROWTH / other navigation -- 4 games:** cd82 (growth; needs a growth-aware exploration key,
+  not centroid), re86, sb26, wa30 (move-dominant; agent-ID picked the wrong object or the win is
+  deeper).
+- **sk48** -- FAIL_SOLVE (win stumbled + goal induced, but `best_first_search` exhausted 803s;
+  stronger/learned heuristic).
+- **ft09** -- FAIL_AGENT_ID (click-only, no translating agent; should route to the click tier with
+  better candidates).
+
+Net: the solver is at **40% first-contact across all 25 games** with two working paradigms; the
+config/toggle paradigm (target-pattern induction over 9 games) is the clear #1 next investment and
+the genuinely hard one.
