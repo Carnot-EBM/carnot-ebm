@@ -1,34 +1,58 @@
 {
   "experiment": "arc3_full_pass_scorecard",
-  "n_games": 2,
-  "l1_first_contact_solved": 1,
-  "solve_rate": 0.5,
+  "n_games": 25,
+  "l1_first_contact_solved": 2,
+  "solve_rate": 0.08,
   "solved_games": [
-    "sp80"
+    "sp80",
+    "vc33"
   ],
   "class_breakdown": {
-    "SOLVED": 1,
-    "FAIL_EXPLORATION": 1
+    "FAIL_EXPLORATION": 22,
+    "FAIL_AGENT_ID": 1,
+    "SOLVED": 2
   },
   "research_backlog_by_failure_class": [
     {
       "failure_class": "FAIL_EXPLORATION",
-      "games_blocked": 1,
+      "games_blocked": 22,
       "example_games": [
-        "cd82"
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "g50t"
       ],
       "research_capability": "curiosity/directed exploration -- growth-aware + multi-instance state keys, deeper/novelty-weighted coverage to stumble deep wins"
+    },
+    {
+      "failure_class": "FAIL_AGENT_ID",
+      "games_blocked": 1,
+      "example_games": [
+        "ft09"
+      ],
+      "research_capability": "richer object/dynamics model -- non-translation mechanics (multi-colour sprites, rotation, configuration/toggle agents) beyond translate+growth"
     }
   ],
   "per_game": [
     {
-      "game": "sp80",
-      "class": "SOLVED",
-      "actions": 4,
-      "agent": 9,
-      "win_stumbled": true,
-      "goal": 6,
-      "dur_s": 3.4
+      "game": "ar25",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 4,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 2.9
+    },
+    {
+      "game": "bp35",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 11,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 4.5
     },
     {
       "game": "cd82",
@@ -38,10 +62,208 @@
       "win_stumbled": false,
       "goal": null,
       "dur_s": 1.0
+    },
+    {
+      "game": "cn04",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 0,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.1
+    },
+    {
+      "game": "dc22",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 3.2
+    },
+    {
+      "game": "ft09",
+      "class": "FAIL_AGENT_ID",
+      "actions": null,
+      "agent": null,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.4
+    },
+    {
+      "game": "g50t",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 9,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.8
+    },
+    {
+      "game": "ka59",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.7
+    },
+    {
+      "game": "lf52",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 1,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.9
+    },
+    {
+      "game": "lp85",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 11,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.5
+    },
+    {
+      "game": "ls20",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 12,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 7.5
+    },
+    {
+      "game": "m0r0",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 10,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 3.9
+    },
+    {
+      "game": "r11l",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 6,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 2.4
+    },
+    {
+      "game": "re86",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 0,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.9
+    },
+    {
+      "game": "s5i5",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 3,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.2
+    },
+    {
+      "game": "sb26",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 0,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 2.7
+    },
+    {
+      "game": "sc25",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 9,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.3
+    },
+    {
+      "game": "sk48",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 3.5
+    },
+    {
+      "game": "sp80",
+      "class": "SOLVED",
+      "actions": 4,
+      "agent": 9,
+      "win_stumbled": true,
+      "goal": 6,
+      "dur_s": 3.5
+    },
+    {
+      "game": "su15",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 15,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 0.8
+    },
+    {
+      "game": "tn36",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 3,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 3.5
+    },
+    {
+      "game": "tr87",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 5,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 3.8
+    },
+    {
+      "game": "tu93",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 4,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.7
+    },
+    {
+      "game": "vc33",
+      "class": "SOLVED",
+      "actions": 3,
+      "agent": 4,
+      "win_stumbled": true,
+      "goal": 0,
+      "dur_s": 2.5
+    },
+    {
+      "game": "wa30",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 14,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 2.8
     }
   ],
-  "total_duration_s": 4.4,
+  "total_duration_s": 63.8,
   "scope": "L1 first-contact solvability; multi-level continuation is a noted follow-on",
-  "honest_verdict": "complete_full_pass_l1_solve_rate_1_of_2",
+  "honest_verdict": "complete_full_pass_l1_solve_rate_2_of_25",
   "inference_substrate": "offline_arc_agi3_generalized_first_contact_no_banked_solve"
 }
