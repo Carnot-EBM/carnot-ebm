@@ -74,7 +74,61 @@ def explore_for_win(arc, game, GameAction, budget, seed, episode_len=25):
     return None
 
 
-def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000):
+def identify_movers(transitions, top_k=3, min_moves=3):
+    """Generalizes identify_agent: the top-K connected objects that translate under actions (most-
+    frequent first), filtered to those that moved >= min_moves times (drops one-off / HUD-flicker
+    movers). For a push game this returns the agent AND the pushed block -- the objects whose JOINT
+    positions define the game state. Returns a list of {'color','shape_sig'}."""
+    from collections import Counter, defaultdict
+    from carnot.agentic.arc_world_model_dsl import _color_components, _object_shape_sig, _background
+    tally, sizes = Counter(), defaultdict(list)
+    for t in transitions:
+        if t.level_after != t.level_before or np.array_equal(t.grid, t.next_grid):
+            continue
+        bg = _background(t.grid)
+        for color in set(int(v) for v in np.unique(t.grid)) - {bg}:
+            cs = set(_color_components(t.grid, color)); cs2 = set(_color_components(t.next_grid, color))
+            gone = [c for c in cs if c not in cs2]; came = [c for c in cs2 if c not in cs]
+            if len(gone) == 1 and len(came) == 1 and len(gone[0]) == len(came[0]):
+                a, b = gone[0], came[0]
+                dy = min(y for y, _ in b) - min(y for y, _ in a)
+                dx = min(x for _, x in b) - min(x for _, x in a)
+                if (dy, dx) != (0, 0) and {(y + dy, x + dx) for y, x in a} == set(b):
+                    sig = (color, _object_shape_sig(a)); tally[sig] += 1; sizes[sig].append(len(a))
+    ranked = sorted([s for s in tally if tally[s] >= min_moves],
+                    key=lambda s: (tally[s], -float(np.mean(sizes[s]))), reverse=True)[:top_k]
+    return [{"color": c, "shape_sig": sig} for (c, sig) in ranked]
+
+
+def _movers_key(grid, movers, H):
+    """A state key = the centroid of EACH tracked mover (agent + pushed objects), so two states with
+    the same agent position but a differently-placed pushed block are DISTINCT (the fix for push games
+    that agent-position-only coverage wrongly merged)."""
+    parts = []
+    for m in movers:
+        ac = H._agent_centroid(grid, m)
+        parts.append(None if ac is None else (int(round(ac[0])), int(round(ac[1]))))
+    return tuple(parts)
+
+
+def _pieces_key(grid, min_size=4, max_size=30):
+    """A state key = the positions of all PIECE-sized objects (size band excludes big walls/frames).
+    Captures the agent AND a pushable block WITHOUT having to observe the block move first (random
+    explore rarely pushes it, so it never registers as a 'mover'). Static pieces are constant -> no
+    state-space blowup; only objects that actually move add dimensions."""
+    from carnot.agentic.arc_world_model_dsl import _color_components, _background
+    g = np.asarray(grid)
+    bg = _background(g)
+    parts = []
+    for color in set(int(v) for v in np.unique(g)) - {bg}:
+        for comp in _color_components(g, color):
+            if min_size <= len(comp) <= max_size:
+                ys = [y for y, _ in comp]; xs = [x for _, x in comp]
+                parts.append((color, int(round(float(np.mean(ys)))), int(round(float(np.mean(xs))))))
+    return tuple(sorted(parts))
+
+
+def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None):
     """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
     centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
     For navigation/movement games the agent position is the state variable that matters, so covering
@@ -90,6 +144,9 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
     start_level = _levels_completed(f0)
 
     def key(grid):
+        pk = _pieces_key(grid)                          # joint positions of ALL piece-sized objects
+        if pk:
+            return ("pieces",) + pk
         if agent is not None:
             ac = H._agent_centroid(grid, agent)
             if ac is not None:
@@ -204,13 +261,15 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
     explore_trans, _ = __import__("carnot.agentic.arc_executable_world_model",
                                   fromlist=["collect_transitions"]).collect_transitions(game, n=150)
     agent = H.identify_agent(explore_trans)
+    movers = identify_movers(explore_trans)
     if curious:
-        prewin = curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=explore_budget)
+        prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
+                                         max_expansions=explore_budget, movers=movers)
     else:
         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
-    rec = {"game": game, "explore_mode": ("curious_agent_position_bfs" if curious else "random"),
+    rec = {"game": game, "explore_mode": ("curious_multiobject_bfs" if curious else "random"),
            "agent": (None if agent is None else {"color": agent["color"]}),
-           "win_stumbled": prewin is not None}
+           "movers": [m["color"] for m in movers], "win_stumbled": prewin is not None}
     if prewin is None or agent is None:
         rec["verdict"] = "no_win_stumbled_or_no_agent_cannot_induce_goal"
         return rec
