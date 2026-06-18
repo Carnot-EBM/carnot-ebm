@@ -211,12 +211,13 @@ games:
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
-#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 = 23 across 14 games  (lp85 L3->L4 landed
-#   2026-06-17 via the standing loop adaptered path, offline-reproduction-gated; verify with
+#   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
+#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 = 26 across 15 games  (tu93 L2->L3 landed
+#   2026-06-17 via the GameAdapter + OfflineSolver branch_mode='fresh_env' adaptered path, offline-
+#   reproduction-gated; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 23   # ... -> 22 (+tn36 L7 timed spike-trap planner) -> 23 (+ka59 L1 E3 world-model plan, 2026-06-17)
-reproducible_total_games: 14    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36
+reproducible_total_levels: 26   # ... -> 23 (+ka59 L1) -> 26 (+sc25 L1 E3-plan counted + tu93 L1->L3 fresh_env, 2026-06-17)
+reproducible_total_games: 15    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- LIVE LEADERBOARD SUBMISSIONS (operator-gated External Publication) ----
