@@ -1217,22 +1217,22 @@ registry version that closed them when a new verifier captures a previously-open
 <!-- exp4333-gap-e3-world-model-rule-ka59-4328:end -->
 
 <!-- exp4333-gap-e3-world-model-rule-tr87-4329:start -->
-### GAP-E3-WORLD-MODEL-RULE-TR87-4329: Exp 4333 .400 verifier gap update
-- status: open
-- evidence: results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4.
-- failure mode: E3 induced world model for tr87 remained partial and could not execute a reproduced level through the real offline environment
-- missing discriminator: tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4
-- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+### GAP-E3-WORLD-MODEL-RULE-TR87-4329: Exp 4366 .403 filled verifier gap update
+- status: filled (exp4363_tr87_ft09_world_models)
+- evidence: results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json; game=tr87; offline_reproduced=True; reproduced_levels=1; verifier_accuracy=1.0; residual_mismatch_class=none; world_model_path=results/arc_e3/tr87/world_model.py.
+- failure mode: the prior tr87 partial world-model rule blocker no longer prevents an offline reproduced L1 gate.
+- missing discriminator: none for the reproduced L1 tail-game plan; deeper future mechanics remain separate gaps if exposed.
+- candidate design: preserve the Exp 4363 mechanic checks and reproduce() gate for this game.
 - priority: high
 <!-- exp4333-gap-e3-world-model-rule-tr87-4329:end -->
 
 <!-- exp4333-gap-e3-world-model-rule-ft09-4329:start -->
-### GAP-E3-WORLD-MODEL-RULE-FT09-4329: Exp 4333 .400 verifier gap update
-- status: open
-- evidence: results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.1; residual_mismatch_class=missing_world_model_rule_gap_actions_6.
-- failure mode: E3 induced world model for ft09 remained partial and could not execute a reproduced level through the real offline environment
-- missing discriminator: ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6
-- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+### GAP-E3-WORLD-MODEL-RULE-FT09-4329: Exp 4366 .403 filled verifier gap update
+- status: filled (exp4363_tr87_ft09_world_models)
+- evidence: results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json; game=ft09; offline_reproduced=True; reproduced_levels=1; verifier_accuracy=1.0; residual_mismatch_class=none; world_model_path=results/arc_e3/ft09/world_model.py.
+- failure mode: the prior ft09 partial world-model rule blocker no longer prevents an offline reproduced L1 gate.
+- missing discriminator: none for the reproduced L1 tail-game plan; deeper future mechanics remain separate gaps if exposed.
+- candidate design: preserve the Exp 4363 mechanic checks and reproduce() gate for this game.
 - priority: high
 <!-- exp4333-gap-e3-world-model-rule-ft09-4329:end -->
 
@@ -1532,22 +1532,22 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4355-gap-e3-world-model-rule-ar25-l2-4351:end -->
 
 <!-- exp4355-gap-e3-world-model-rule-tr87-4352:start -->
-### GAP-E3-WORLD-MODEL-RULE-TR87-4352: Exp 4355 .402 verifier gap update
-- status: open
-- evidence: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_3_4.
-- failure mode: tr87 E3 world model remains partial: missing_world_model_rule_gap_actions_1_2_3_4
-- missing discriminator: tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_3_4
-- candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
+### GAP-E3-WORLD-MODEL-RULE-TR87-4352: Exp 4366 .403 filled verifier gap update
+- status: filled (exp4363_tr87_ft09_world_models)
+- evidence: results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json; game=tr87; offline_reproduced=True; reproduced_levels=1; verifier_accuracy=1.0; residual_mismatch_class=none; world_model_path=results/arc_e3/tr87/world_model.py.
+- failure mode: the prior tr87 partial world-model rule blocker no longer prevents an offline reproduced L1 gate.
+- missing discriminator: none for the reproduced L1 tail-game plan; deeper future mechanics remain separate gaps if exposed.
+- candidate design: preserve the Exp 4363 mechanic checks and reproduce() gate for this game.
 - priority: high
 <!-- exp4355-gap-e3-world-model-rule-tr87-4352:end -->
 
 <!-- exp4355-gap-e3-world-model-rule-ft09-4352:start -->
-### GAP-E3-WORLD-MODEL-RULE-FT09-4352: Exp 4355 .402 verifier gap update
-- status: open
-- evidence: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_accuracy=0.05; residual_mismatch_class=missing_world_model_rule_gap_actions_6.
-- failure mode: ft09 E3 world model remains partial: missing_world_model_rule_gap_actions_6
-- missing discriminator: ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6
-- candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
+### GAP-E3-WORLD-MODEL-RULE-FT09-4352: Exp 4366 .403 filled verifier gap update
+- status: filled (exp4363_tr87_ft09_world_models)
+- evidence: results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json; game=ft09; offline_reproduced=True; reproduced_levels=1; verifier_accuracy=1.0; residual_mismatch_class=none; world_model_path=results/arc_e3/ft09/world_model.py.
+- failure mode: the prior ft09 partial world-model rule blocker no longer prevents an offline reproduced L1 gate.
+- missing discriminator: none for the reproduced L1 tail-game plan; deeper future mechanics remain separate gaps if exposed.
+- candidate design: preserve the Exp 4363 mechanic checks and reproduce() gate for this game.
 - priority: high
 <!-- exp4355-gap-e3-world-model-rule-ft09-4352:end -->
 
@@ -1589,3 +1589,52 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - Reproducibility checksum: `3f26809ef8c93a4f0dab633c35a36a516ffe4cc1b7d2d49fb67982681570c77d`
 - Gap: bounded explore-verify-plan did not reproduce a new level beyond L1.
 
+<!-- exp4366-gap-e3-world-model-rule-sc25-l2-4361:start -->
+### GAP-E3-WORLD-MODEL-RULE-SC25-L2-4361: Exp 4366 .403 verifier gap update
+- status: open
+- evidence: results/experiment_4361_e3_deeper_high_headroom_games.json; game=sc25; offline_reproduced=False; prior_best_level=1; new_reproduced_level=1; verifier_accuracy=1.0; residual=sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap.
+- failure mode: sc25 L2 remains unreproduced due to sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap
+- missing discriminator: sc25 executable world-model rule coverage for sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap
+- candidate design: mine divergent traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4366-gap-e3-world-model-rule-sc25-l2-4361:end -->
+
+<!-- exp4366-gap-e3-world-model-rule-tn36-l8-4361:start -->
+### GAP-E3-WORLD-MODEL-RULE-TN36-L8-4361: Exp 4366 .403 verifier gap update
+- status: open
+- evidence: results/experiment_4361_e3_deeper_high_headroom_games.json; game=tn36; offline_reproduced=False; prior_best_level=7; new_reproduced_level=7; verifier_accuracy=0.875; residual=tn36_l8_program_editor_maze_delta_gap.
+- failure mode: tn36 L8 remains unreproduced due to tn36_l8_program_editor_maze_delta_gap
+- missing discriminator: tn36 executable world-model rule coverage for tn36_l8_program_editor_maze_delta_gap
+- candidate design: mine divergent traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4366-gap-e3-world-model-rule-tn36-l8-4361:end -->
+
+<!-- exp4366-gap-e3-world-model-rule-lp85-l5-4361:start -->
+### GAP-E3-WORLD-MODEL-RULE-LP85-L5-4361: Exp 4366 .403 verifier gap update
+- status: open
+- evidence: results/experiment_4361_e3_deeper_high_headroom_games.json; game=lp85; offline_reproduced=False; prior_best_level=4; new_reproduced_level=4; verifier_accuracy=1.0; residual=lp85_l5_search_path_not_offline_reproduced_reset_replay_gap.
+- failure mode: lp85 L5 remains unreproduced due to lp85_l5_search_path_not_offline_reproduced_reset_replay_gap
+- missing discriminator: lp85 executable world-model rule coverage for lp85_l5_search_path_not_offline_reproduced_reset_replay_gap
+- candidate design: mine divergent traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4366-gap-e3-world-model-rule-lp85-l5-4361:end -->
+
+<!-- exp4366-gap-e3-world-model-rule-ar25-l2-4362:start -->
+### GAP-E3-WORLD-MODEL-RULE-AR25-L2-4362: Exp 4366 .403 verifier gap update
+- status: open
+- evidence: results/experiment_4362_e3_blocked_mechanic_levels_ar25_ka59.json; game=ar25; offline_reproduced=False; prior_best_level=1; new_reproduced_level=1; verifier_accuracy=0.86875; residual=ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap.
+- failure mode: ar25 L2 remains unreproduced due to ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap
+- missing discriminator: ar25 executable world-model rule coverage for ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap
+- candidate design: mine divergent traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4366-gap-e3-world-model-rule-ar25-l2-4362:end -->
+
+<!-- exp4366-gap-e3-world-model-rule-ka59-l2-4362:start -->
+### GAP-E3-WORLD-MODEL-RULE-KA59-L2-4362: Exp 4366 .403 verifier gap update
+- status: open
+- evidence: results/experiment_4362_e3_blocked_mechanic_levels_ar25_ka59.json; game=ka59; offline_reproduced=False; prior_best_level=1; new_reproduced_level=1; verifier_accuracy=0.64375; residual=ka59_l2_hidden_step_counter_hud_register_gap.
+- failure mode: ka59 L2 remains unreproduced due to ka59_l2_hidden_step_counter_hud_register_gap
+- missing discriminator: ka59 executable world-model rule coverage for ka59_l2_hidden_step_counter_hud_register_gap
+- candidate design: mine divergent traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
+- priority: high
+<!-- exp4366-gap-e3-world-model-rule-ka59-l2-4362:end -->

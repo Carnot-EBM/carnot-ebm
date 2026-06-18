@@ -120,12 +120,12 @@ games:
 
   - game: tu93
     reproducibility: reproduced
-    levels_reproduced: 3   # 2 -> 3 (2026-06-17: GameAdapter + OfflineSolver branch_mode='fresh_env', reproduction-gated)
+    levels_reproduced: 4   # 3 -> 4 (2026-06-18: Exp4361 offline_reproduced=True, reproduction-gated)
     mechanic_class: graph_explore   # 4-direction keyboard maze; frame-based RE (player=colour-9, goal=static colour-14)
-    win_condition: "L1-L3 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+    win_condition: "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
     action_model: "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states)."
-    solver: "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json."
-    reproduce: "re-gated reproduced=True L3 (kit.reproduce, claimed_level=3, full 47-action path); states_expanded=5903."
+    solver: "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json."
+    reproduce: "Exp4361 per_target_scorecard tu93 offline_reproduced=True, new_reproduced_level=4; checksum bce9878e3d5396e127ea1342fd0452b841b61935eb539e1da466055962842a90."
     gotchas:
       - "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2."
       - "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
@@ -253,12 +253,12 @@ games:
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 6 = 32 across 16 games  (tr87
+#   + tu93 4 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 6 + ft09 1 = 33 across 17 games  (tr87
 #   FULLY SOLVED 6/6 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
 #   1-to-1, L2 1-to-many, L3 many-to-many, L4 double_translation 2-pass, L5 alter_rules inverse, L6
 #   alter_rules + 2-pass (2-level decomposition); offline-reproduction-gated; verify
 #   scripts/arc3_replay_scorecard_metaharness.py)
-reproducible_total_levels: 33   # ... -> +ft09 L1 local-constraint color-cycle re-gated by Exp4363
+reproducible_total_levels: 33   # ... -> +tu93 L4 via Exp4361 and +ft09 L1 local-constraint color-cycle re-gated by Exp4363
 reproducible_total_games: 17   # adds ft09 via Exp4363 offline reproduction gate
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 

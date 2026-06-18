@@ -738,6 +738,34 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351
     - GAP-E3-WORLD-MODEL-RULE-TR87-4352
     - GAP-E3-WORLD-MODEL-RULE-FT09-4352
+    eval_exp_4366: results/experiment_4366_registry_gaps_hygiene_gap4_guard.json
+    exp4366_gap4_regression_guard_passed: true
+    exp4366_arc1_rule_exec_vote_pass2: 0.4516
+    exp4366_arc1_rule_exec_gated_pass2: 0.5806
+    exp4366_arc1_headroom_recovered: 4
+    exp4366_arc1_vote_wins_lost: 0
+    exp4366_v403_state: prism_scorer_leaky__arc_total_33_games_17__tu93_tr87_ft09_reproduced__action_cost_compounds
+    exp4366_prism_artifact: results/experiment_4359_prism_hardened_verifier_guided_search.json
+    exp4366_prism_scorer_leak_recheck_passed: false
+    exp4366_prism_controls_differentiated: false
+    exp4366_prism_guided_beats_control: false
+    exp4366_arc_reproducible_total_levels: 33
+    exp4366_tu93_reproduced_level: 4
+    exp4366_tr87_offline_reproduced: true
+    exp4366_ft09_offline_reproduced: true
+    exp4366_action_efficiency_compounds: true
+    exp4366_action_cost_deployed_into_solver_kit: true
+    exp4366_action_cost_baseline_actions: 25
+    exp4366_action_cost_learned_actions: 16
+    exp4366_filled_gaps:
+    - GAP-E3-WORLD-MODEL-RULE-TR87-4352
+    - GAP-E3-WORLD-MODEL-RULE-FT09-4352
+    exp4366_gaps_logged:
+    - GAP-E3-WORLD-MODEL-RULE-SC25-L2-4361
+    - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4361
+    - GAP-E3-WORLD-MODEL-RULE-LP85-L5-4361
+    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4362
+    - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4362
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4696,6 +4724,24 @@ verifiers:
     filled_gap_ids:
     - GAP-E3-WORLD-MODEL-RULE-KA59-4328
     eval_exp_4355: results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json
+  - role_id: oracle_distinct_v403_registry_gaps_hygiene_4366
+    experiment: results/experiment_4366_registry_gaps_hygiene_gap4_guard.json
+    role: registry_gaps_arc_hygiene_v403
+    status: v403_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    v403_state: prism_scorer_leaky__arc_total_33_games_17__tu93_tr87_ft09_reproduced__action_cost_compounds
+    prism_scorer_leak_recheck_passed: false
+    arc_reproducible_total_levels: 33
+    action_efficiency_compounds: true
+    gap_ids_logged:
+    - GAP-E3-WORLD-MODEL-RULE-SC25-L2-4361
+    - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4361
+    - GAP-E3-WORLD-MODEL-RULE-LP85-L5-4361
+    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4362
+    - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4362
+    filled_gap_ids:
+    - GAP-E3-WORLD-MODEL-RULE-TR87-4352
+    - GAP-E3-WORLD-MODEL-RULE-FT09-4352
+    eval_exp_4366: results/experiment_4366_registry_gaps_hygiene_gap4_guard.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1
@@ -4713,6 +4759,21 @@ verifiers:
     positive_control_passed: true
     reproduction_gated: true
     verifier_is_oracle: false
+    eval_exp_4364: results/experiment_4364_self_learning_action_cost_compounds.json
+    eval_exp_4366: results/experiment_4366_registry_gaps_hygiene_gap4_guard.json
+    action_efficiency_compounds: true
+    deployed_into_solver_kit: true
+    compounding_curve:
+    - corpus_size_k: 4
+      held_out_actions_to_solve: 25
+    - corpus_size_k: 8
+      held_out_actions_to_solve: 25
+    - corpus_size_k: 12
+      held_out_actions_to_solve: 25
+    - corpus_size_k: 16
+      held_out_actions_to_solve: 25
+    - corpus_size_k: 19
+      held_out_actions_to_solve: 16
   status: candidate
   notes: 'Oracle-distinct learned action-cost heuristic: reduces held-out lp85 L3
     actions from 25 to 16 under reproduction gate.'
