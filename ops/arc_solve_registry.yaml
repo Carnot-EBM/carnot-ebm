@@ -205,20 +205,20 @@ games:
       - "Clicks must be derived from the current offline camera/grid offset and movable sprite centers, not hardcoded live pixels."
 
   - game: tr87
-    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-substitution RE (L1-L2, reproduction-gated)
+    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-rewrite RE (L1-L3, reproduction-gated)
     mechanic_class: config_substitution  # strategy-router class: configure-to-target via a visible rewrite rule
-    levels_reproduced: 2
-    win_condition: "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the REWRITE of the TARGET sequence through the visible reference grid. L1: 1-to-1 (each target glyph -> 1 editable, A4->B3). L2: 1-to-MANY expansion (each target glyph -> a SEQUENCE, B3->[C1,C5,C1]); the required editable sequence is the concat of the rule RHS over the target sequence."
-    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector. Move budget 128; running out loses. L1: 14 actions / 94 states. L2: 25-action suffix (39 total) / 152 states (verifier-routed)."
-    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=summed cyclic-distance to the rule-EXPANDED target, branch_mode='fresh_env'); results/arc_loop_solve_tr87.json."
-    reproduce: "re-gated reproduced=True L2 (kit.reproduce, claimed_level=2, 39-action path); verifier-routed 152 states vs blind BFS exhausting 52k+ without even L1."
+    levels_reproduced: 3
+    win_condition: "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (a set of rules LHS->RHS, LHS over the target series, RHS over the editable series). Win predicate = scan the target left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1: 1-to-1 (A4->[B3]). L2: 1-to-MANY (B3->[C1,C5,C1]). L3: MANY-to-many ([C3,C3]->[A6,A1], multi-glyph LHS)."
+    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector. Move budget 128; running out loses. L1: 14 actions/94 states. L2: +25 (39 total)/152. L3: +21 (60 total)/234 (verifier-routed)."
+    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=summed cyclic-distance to the GREEDY-rewritten target, branch_mode='fresh_env'); results/arc_loop_solve_tr87.json."
+    reproduce: "re-gated reproduced=True L3 (kit.reproduce, claimed_level=3, 60-action path); verifier-routed 234 states vs blind BFS exhausting 52k+ without even L1."
     gotchas:
-      - "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable glyph must equal rule_expand[target glyph], not the target's raw value."
-      - "L2 generalizes the rule to 1-to-MANY: a target glyph expands to a SEQUENCE of editable glyphs (B3->[C1,C5,C1]). required_editable = concat of rule RHS over the target sequence; this subsumes L1 (RHS length 1). NOT alter_rules (that flag is None at L2 -- it appears at deeper levels)."
-      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L2 in 152 states."
+      - "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values."
+      - "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance both pointers. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many, B3->[C1,C5,C1]) AND L3 (many-to-many, [C3,C3]->[A6,A1]). NONE of L1-L3 set alter_rules/tree_translation/double_translation (all None); those appear at L4+."
+      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L3 in 234 states."
       - "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct."
       - "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions)."
-      - "L3+ add a tree_translation / double_translation twist where the EDITABLE glyphs ALSO expand (editable n=7 != expansion n=10 at L3). The L1/L2 formula leaves a >=7 residual there, so the search stops at L2 rather than false-claiming the unmodelled twist -- a clean honest boundary. L3 RE = decode the editable-side expansion."
+      - "L4+ boundary: the greedy matcher produces a same-length req at L4 but it does NOT win (level does not advance) -- L4 adds a tree_translation / double_translation / alter_rules twist that re-expands the RHS through the rules again (the win predicate's tree/double branches). The verifier returns None->1000 when no LHS matches, OR reaches 0 without a level-up at L4, so the search stops at L3 with NO false claim. L4 RE = decode the second-level RHS re-expansion (the tree_translation branch in bsqsshqpox)."
 
   # Remaining still-unsolved games include bp35, dc22, ft09, g50t, lf52,
   # re86, s5i5, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
@@ -236,11 +236,11 @@ games:
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 2 = 28 across 16 games  (tr87
-#   L1->L2 landed 2026-06-17 via the GameAdapter _tr87 glyph-substitution RE + verifier-routed search:
-#   L1 1-to-1 rewrite, L2 1-to-many expansion; offline-reproduction-gated; verify with
+#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 3 = 29 across 16 games  (tr87
+#   L1->L3 landed 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
+#   1-to-1, L2 1-to-many, L3 many-to-many greedy rewrite; offline-reproduction-gated; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 28   # ... -> 27 (+tr87 L1) -> 28 (+tr87 L2 1-to-many rewrite expansion, 2026-06-17)
+reproducible_total_levels: 29   # ... -> 28 (+tr87 L2) -> 29 (+tr87 L3 many-to-many greedy rewrite, 2026-06-17)
 reproducible_total_games: 16    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36, tr87
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 

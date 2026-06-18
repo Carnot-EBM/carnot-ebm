@@ -18,20 +18,23 @@ class _Sprite:
 
 
 class _Game:
-    """Synthetic tr87 game state. `rules` is [(lhs_val, [rhs_vals...])] -- the visible rewrite grid that
-    maps each TARGET-series glyph to a SEQUENCE of editable-series glyphs (1-to-1 at L1, 1-to-many at L2).
-    `current`/`target` are the editable/target value lists."""
+    """Synthetic tr87 game state. `rules` is [([lhs_vals...], [rhs_vals...])] -- the visible rewrite grid,
+    LHS over the TARGET series, RHS over the EDITABLE series (1-to-1 at L1, 1-to-many at L2, many-to-many
+    at L3). `current`/`target` are the editable/target value lists."""
 
     def __init__(self, current, target, rules):
-        self.cifzvbcuwqe = [([_Sprite(f"nxX{lhs}")], [_Sprite(f"nxY{v}") for v in rhs]) for lhs, rhs in rules]
+        self.cifzvbcuwqe = [([_Sprite(f"nxX{v}") for v in lhs], [_Sprite(f"nxY{v}") for v in rhs])
+                            for lhs, rhs in rules]
         self.ztgmtnnufb = [_Sprite(f"nxY{v}") for v in current]     # current editable values
         self.zvojhrjxxm = [_Sprite(f"nxX{v}") for v in target]      # target values
 
 
-# L1 rule map (1-to-1): A4->[3], A2->[2], A3->[6], A5->[5], A1->[1]
-_L1_RULES = [(4, [3]), (2, [2]), (3, [6]), (5, [5]), (1, [1])]
-# L2 rule map (1-to-many expansion): B1->[3], B3->[1,5,1], B5->[2,2], B7->[7]
-_L2_RULES = [(1, [3]), (3, [1, 5, 1]), (5, [2, 2]), (7, [7])]
+# L1 rule map (1-to-1): 4->[3], 2->[2], 3->[6], 5->[5], 1->[1]
+_L1_RULES = [([4], [3]), ([2], [2]), ([3], [6]), ([5], [5]), ([1], [1])]
+# L2 rule map (1-to-many expansion): 1->[3], 3->[1,5,1], 5->[2,2], 7->[7]
+_L2_RULES = [([1], [3]), ([3], [1, 5, 1]), ([5], [2, 2]), ([7], [7])]
+# L3 rule map (many-to-many greedy): [6]->[4], [3,3]->[6,1], [4]->[7,7], [7,7]->[3], [1,5,1]->[6], [2]->[5]
+_L3_RULES = [([6], [4]), ([3, 3], [6, 1]), ([4], [7, 7]), ([7, 7], [3]), ([1, 5, 1], [6]), ([2], [5])]
 
 
 def test_tr87_registered_and_structural():
@@ -76,6 +79,26 @@ def test_tr87_hand_verifier_l2_one_to_many_expansion():
 
     one_off = _Game(current=[3, 1, 5, 1, 2, 2, 6], target=target, rules=_L2_RULES)  # last 6, want 7
     assert ad.hand_verifier(one_off) == 1.0    # 6 -> 7 is one cyclic step
+
+
+def test_tr87_hand_verifier_l3_greedy_multi_glyph_lhs():
+    ad = adapters.get_adapter("tr87")
+    # L3 (many-to-many): target [6,1,5,1,4,2,3,3] greedily parses as
+    #   [6]->[4], [1,5,1]->[6], [4]->[7,7], [2]->[5], [3,3]->[6,1]  => required [4,6,7,7,5,6,1]
+    target = [6, 1, 5, 1, 4, 2, 3, 3]
+    solved = _Game(current=[4, 6, 7, 7, 5, 6, 1], target=target, rules=_L3_RULES)
+    assert ad.hand_verifier(solved) == 0.0     # editable == greedy-rewritten target -> win
+
+    start = _Game(current=[3, 4, 4, 5, 1, 4, 6], target=target, rules=_L3_RULES)   # the real L3 start
+    # cyclic dists: |3->4|=1,|4->6|=2,|4->7|=3,|5->7|=2,|1->5|=3,|4->6|=2,|6->1|=2  => 15
+    assert ad.hand_verifier(start) == 15.0
+
+
+def test_tr87_hand_verifier_unmatchable_target_returns_large():
+    ad = adapters.get_adapter("tr87")
+    # a target position no rule LHS matches (an unmodelled tree/double/alter twist) -> large, search stops
+    g = _Game(current=[1, 1], target=[9, 9], rules=_L1_RULES)
+    assert ad.hand_verifier(g) >= 1000.0
 
 
 def test_tr87_hand_verifier_length_gap_bounds_unmodelled_levels():
