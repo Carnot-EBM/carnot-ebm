@@ -140,3 +140,59 @@ research (LLM-scene-reader). Do Stages 1-2 first: they are decision-grade and ei
 end (de-risking Stage 3) or kill the whole direction early. This respects the phase-prototype +
 empirical-validation discipline: prove the executable prototype at small scale (handed the target)
 before investing in the hard induction.
+
+## DIRECTION CORRECTION (2026-06-18, operator): a GENERAL rule-INDUCER, not per-game rules
+
+The Stage 1+2 kill (`arc3_config_stage12.json`) was read too narrowly. It killed **config-MATCH**
+(make the editable region equal a static target) — and proved, by the executor failing even when
+handed the true config, that **the wins are RELATIONAL / rule-based**, not pattern-match. The wrong
+conclusion drawn was "re-scope config to per-game rules." That is the GameAdapter anti-pattern — a
+LESS general solution. Operator correction: the right target is a **general config-rule solver that
+INTROSPECTS a new game and DERIVES its win-rule** from a library of config-rule TYPES abstracted from
+previously-seen config games. This is meta-learning the rule-space, and it is the SAME thesis as the
+rest of the project: the verifier/inducer PROPOSES a rule, the consistency-energy VERIFIER grounds it
+(does the proposed rule fire on observed wins and not on non-wins), and the SKILL of inducing — not a
+per-game artifact — is what generalizes.
+
+### Corrected architecture (config-rule INDUCER)
+
+1. **Introspect** the new game: editable region, candidate rule structures in the scene (rule grids,
+   reference regions, legends, adjacency/count structure), and the action->effect model (what clicks
+   /keys do to the configuration).
+2. **Hypothesize the win-RULE** from a LIBRARY of parameterized rule-TYPES catalogued from seen games:
+   REWRITE(rule_grid) [tr87 glyph-rewrite], CONSTRAINT(local-predicate) [adjacency/parity/count],
+   MATCH-TRANSFORMED-REFERENCE(transform) [reflect/scale of a reference], SEQUENCE/STATE-MACHINE, etc.
+   A frontier LLM's puzzle knowledge IS a ready-made version of this library; a learned/structured
+   rule-type matcher is the decentralized version. The new game's rule is DERIVED by analogy to the
+   closest seen rule-type, then instantiated with this game's parameters.
+3. **VERIFY** the hypothesized rule (the Carnot pattern): the rule predicate must be consistent with
+   observed transitions and fire exactly on any stumbled/banked win. A rule that does not verify is
+   rejected; the inducer proposes another.
+4. **Solve** with the verified rule as the GOAL PREDICATE for search — which ALSO requires a working
+   interaction model (Stage 2 showed the executor itself is non-trivial: sc25 object-clicks do
+   nothing, ka59 needs keyboard sequences). So the executor + the rule-inducer are co-dependent: the
+   rule defines the goal, the interaction model + search reach it.
+
+### What this changes about the gates
+
+- Stage 1 taxonomy is re-aimed: classify each game's win-RULE TYPE (rewrite/constraint/reference/
+  sequence), building the rule-type LIBRARY from the games we can introspect (the meta-learning
+  training set), rather than looking for a static target. The earlier 0/9 "no findable reference" is
+  consistent — the wins are rules, not references.
+- Stage 2 is re-aimed: validate the executor against a verified RULE predicate (goal = rule
+  satisfied), not a fixed target config. ka59's 6/64-cells-from-the-pre-win-config result is
+  meaningless under a rule goal — the pre-win config was never the goal.
+- Stage 3 (the real research) is the rule-INDUCER: LLM-scene-reader (or learned rule-type matcher)
+  deriving the win-rule, verified, then solved. This is NOT pointless (the earlier note was wrong);
+  it is the correct generalized direction and is now the primary build.
+
+### First experiments toward the rule-inducer
+
+1. **Rule-type catalogue** of the config games we can introspect (CPU): for each, characterize the
+   scene rule-structure + the action->effect model -> the library's training set.
+2. **LLM rule-induction probe** on a game whose rule is KNOWN (tr87 glyph-rewrite, from its prior
+   GameAdapter): render the scene + transitions, ask the local GGUF to derive the win-rule, and check
+   the derived rule against the known one. This validates "introspect -> derive rule" on a ground-truth
+   case before trusting it on unknown games.
+3. **Verify-then-solve** loop: feed the induced rule as the goal predicate to the (fixed) executor and
+   measure first-contact solves.
