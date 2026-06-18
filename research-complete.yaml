@@ -42749,7 +42749,8 @@ milestones:
     AUROC 0.963). paper_ready=True (FoVer 0.9131, G1-G4).'
   doc: openspec/change-proposals/research-roadmap-v406.md
   completed: '2026-06-18'
-  finding: See conductor log for per-experiment results.
+  finding: '.406 close-state: TRUE scorecard per exp4401 plus the ARC registry. SYNTHETIC verifiable-process-data localizer looked like a win but was QUARANTINED as PURE POSITION BIAS: exp4392 reported localizer_beats_ensemble_baseline=True with FoVer F1 1.000000, but exp4393 localizer_win_is_genuine=False, beats_position_only_baseline=False, template_ablation_drop=0.0. The synthetic route is artifact-confounded, not a genuine first-error localizer. SELF-LEARNING saturated: exp4396 localizer_compounds=False, F1 1.0->1.0 over corpus 566->5661. CROSS-DOMAIN calibration false: exp4397 detection_calibrated_multi_domain=False, code_humaneval n=100 underpowered with base-rate/multi-valid-output confounds. ARC STUCK at 34/17; exp4394/4395 reproduced 0 new levels and the headline fidelity gate was unreachable 0.733-0.875. flagged_for_v407=intervention_active_real_first_error_deconfounding_v407 (methods: 2601.14209, 2603.25412, 2504.10559, 2602.07842, 2606.16070). Cross-game transfer RETIRED (exp4318/4331/4342), cross-domain selection RETIRED (exp4314), in-generation DiffusionGemma RETIRED (exp4374), and LLM-heuristic efficiency SETTLED (exp4370). paper_ready=True. Frame .407 as deconfound the localizer with REAL intervention data, drive ARC deeper via per-mechanic executable unit tests, use active-learning self-learning, and repair cross-domain calibration; do not reopen the settled/retired axes or rerun the synthetic localizer route.'
+  activation_recorded: exp4402-archive-v406-activate-v407
   tasks:
   - id: exp4391-archive-v405-activate-v406
     title: 'Archive .405 -> activate .406. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load;

@@ -24133,6 +24133,95 @@ not claim `.405` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4391 | Planned (`python/carnot/reporting/archive_v405_activate_v406_4391.py`, `python/carnot/experiment_4391_archive_v405_activate_v406.py`, `results/experiment_4391_archive_v405_activate_v406.py`) | Planned (`tests/python/test_experiment_4391_archive_v405_activate_v406.py`) |
 
+### REQ-REPORT-4402: Archive .406, Activate .407, And Preserve The Quarantined Synthetic-Localizer Close-State
+
+The Exp 4402 workflow SHALL archive milestone `2026.06.406`, confirm milestone
+`2026.06.407` is active, and write the record-only artifact
+`results/experiment_4402_archive_v406_activate_v407.json`. It SHALL run no live
+training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before editing `research-complete.yaml` or writing a complete artifact, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+- `.407` is the active milestone.
+- The required `.406` source artifacts exist: `experiment_4401_capstone_v406`,
+  `experiment_4392_verifiable_process_data_localizer`,
+  `experiment_4393_localizer_skeptic_proof`,
+  `experiment_4396_localizer_self_learning_compounds`,
+  `experiment_4397_cross_domain_detection_calibration`,
+  `experiment_4398_sota_ingestion_v407`, `experiment_4394_e3_deeper_fidelity_gate`,
+  `experiment_4395_e3_blocked_mechanic_tails_ar25_ka59_ft09`, the ARC solve
+  registry, the `.407` roadmap, and the exclusion manifest.
+
+The workflow SHALL ensure `research-complete.yaml` contains one top-level
+`.406` archive record, updating or appending the canonical close-state and
+collapsing duplicate `.406` records when needed. The workflow SHALL keep
+`research-complete.yaml` parseable before and after any edit.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `v406_close_state`, and `preconditions_checked`.
+Complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v406_close_state` SHALL truthfully
+record that the synthetic verifiable-process-data localizer was quarantined as
+position bias (`exp4393 localizer_win_is_genuine=false`,
+`beats_position_only_baseline=false`, `template_ablation_drop=0.0`); that
+self-learning saturated (`exp4396 localizer_compounds=false`,
+`compounding_delta_ci95=[0.0,0.0]`, flat F1 `1.0` from 566 to 5661 traces);
+that cross-domain calibration was false (`exp4397
+detection_calibrated_multi_domain=false`, code HumanEval underpowered at
+`n=100`, base-rate/multi-valid-output confounds still open); that ARC is stuck
+at 34 reproducible levels / 17 games with the fidelity gate unreachable over
+the headline targets (`0.73-0.875`); that `flagged_for_v407` is
+`intervention_active_real_first_error_deconfounding_v407`; that cross-game
+transfer, cross-domain selection, and in-generation DiffusionGemma are retired
+while LLM-heuristic efficiency is settled; and that `paper_ready=True`.
+
+The required field principles are:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v406_close_state`: "Honest record (SYNTHETIC localizer QUARANTINED as position bias / template_ablation_drop=0.0; self-learning saturated; cross-domain calibration false; ARC 34/17 fidelity-blocked 0.73-0.875; flagged_for_v407=intervention_active_real_first_error_deconfounding_v407; cross-game transfer + cross-domain selection + in-generation DiffusionGemma RETIRED, LLM-heuristic efficiency SETTLED; paper_ready=True) so the .407 agents frame the milestone as deconfound-the-localizer-with-REAL-intervention-data + ARC-deeper-via-per-mechanic-unit-tests + active-learning-self-learning + repair-cross-domain-calibration -- NOT a re-open of the settled/retired axes nor a re-run of the SYNTHETIC localizer route."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4402: The Archive Preserves The Honest .406 Quarantine Diagnosis
+
+**Given** the `.406` capstone and registry record `localizer_state` as
+`localizes_but_not_genuine`, self-learning and cross-domain calibration as
+false, ARC as `34/17`, and publication as ready; Exp 4393 records
+`localizer_win_is_genuine=false`, `beats_position_only_baseline=false`, and
+`template_ablation_drop=0.0`; Exp 4396 records a saturated self-learning null;
+Exp 4397 records a false calibrated multi-domain contract; Exp 4398 records
+`flagged_for_v407=intervention_active_real_first_error_deconfounding_v407`; the
+history and exclusion-manifest YAML files parse; the smart-subset pre-test gate
+is green; and `.407` is active
+**When** the Exp 4402 archive workflow runs
+**Then** it archives `.406`, confirms `.407`, keeps the YAML history parseable
+with one `.406` record, writes
+`results/experiment_4402_archive_v406_activate_v407.json`, records the
+synthetic-localizer quarantine, saturated self-learning, false cross-domain
+calibration, ARC fidelity block, retired/settled axes, SOTA pointer, and
+paper-ready state in `v406_close_state`, records checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4402-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4402 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.406` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4402)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4402 | Planned (`python/carnot/reporting/archive_v406_activate_v407_4402.py`, `python/carnot/experiment_4402_archive_v406_activate_v407.py`, `results/experiment_4402_archive_v406_activate_v407.py`) | Planned (`tests/python/test_experiment_4402_archive_v406_activate_v407.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
