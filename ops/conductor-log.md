@@ -8718,3 +8718,4 @@ c |
 | 2026-06-18 10:24 UTC | PHASE E4 (CAPSTONE .404) -- the milestone scorecar | OK | 88 passed, 1 warning in 6.77s |
 | 2026-06-18 11:07 UTC | Plan milestone 2026.06.405 | OK | 11 tasks proposed |
 | 2026-06-18 11:09 UTC | Milestone 2026.06.405 activated | OK | 11 tasks queued |
+| 2026-06-18 11:24 UTC | Archive .404 -> activate .405. Assert research-com | OK | 89 passed, 1 warning in 5.06s |
