@@ -21947,6 +21947,96 @@ A2D2/SEPO as out-of-band, updates `research-studying.md` idempotently, records
 |---|---|---|
 | REQ-REPORT-4376 | Planned (`python/carnot/experiment_4376_sota_ingestion_v405.py`) | Planned (`tests/python/test_experiment_4376_sota_ingestion_v405.py`) |
 
+### REQ-REPORT-4387: Ingest SOTA For The .406 Headline Branch From The .405 Outcomes
+
+The Exp 4387 workflow SHALL close the discover-to-ingest-to-plan loop for the
+`.406` headline branch by reading the `.405` fork outcome artifacts,
+filtering `research-studying.md` and `research-references.md` to the active
+verifier-as-detector localization/abstention, detector self-learning,
+cross-domain detector generalization, and ARC E3 executable-world-model tracks,
+and running the reliable discovery channel (`scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, plus low-concurrency WebSearch/WebFetch). The
+workflow SHALL NOT invoke `/deep-research`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave `ops/changelog.md`,
+`ops/status.md`, and `_bmad/traceability.md` untouched for the separate
+reconciliation step.
+
+Before writing a complete mapping, the workflow SHALL require network
+reachability to Hugging Face. If network is unavailable, it SHALL stop with
+`honest_verdict=blocked_network_unavailable` and SHALL NOT fabricate citations.
+When network is available, each mapped method SHALL carry a
+WebFetch/arXiv-API-verified arXiv ID and URL.
+
+The workflow SHALL branch on the actual `.405` artifacts. When Exp 4381 reports
+`honest_verdict=complete: clean_powered_null_bidirectional_not_actionable`,
+`detector_localization_actionable=false`, `localization_delta_ci95=[0.0, 0.0]`,
+and no useful selective-prediction operating point, the `.406` plan SHALL record
+BiPRM bidirectional fusion as a baseline/null rather than a repeated headline.
+When Exp 4382 reports `honest_verdict=blocked_gate_check_failed`, the `.406`
+plan SHALL keep skeptic-proofing blocked unless localization becomes
+actionable. When Exp 4385 reports
+`honest_verdict=success: detector_compounds_heldout_localization_f1`,
+`detector_compounds=true`, and a positive compounding CI, the `.406` plan SHALL
+preserve detector self-learning as the live oracle-distinct positive. When Exp
+4386 reports `honest_verdict=success: detector_generalizes_cross_domain_non_fover`,
+`detector_generalizes_cross_domain=true`, GAP-4 ARC AUROC CI95 lower bound above
+chance, `selection_headroom>0`, and `verifier_is_oracle=false`, the `.406` plan
+SHALL prioritize cross-domain calibrated detector expansion over another FoVer
+only localization retry. When Exp 4383 and Exp 4384 both report zero new E3
+levels reproduced, the `.406` plan SHALL record zero new E3 levels reproduced
+and SHALL keep ARC E3 as the oracle-grounded north star but SHALL treat
+Mind-Studio lookahead as an honest partial requiring mechanic-gap repair before
+another solve claim.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4387_sota_ingestion_v406.json`, and the required runner
+SHALL be `results/experiment_4387_sota_ingestion_v406.py` delegating to
+`python/carnot/experiment_4387_sota_ingestion_v406.py`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v406`, `out_of_band_flagged`, `random_seed`, and
+`field_principles`. `field_principles` SHALL contain exactly the principle
+annotations for `honest_verdict`, `methods_mapped`, `flagged_for_v406`,
+`out_of_band_flagged`, and `random_seed`. `honest_verdict` SHALL use a terminal
+prefix and, on the complete path, start with
+`complete: sota_ingestion_v406_mapped`. `methods_mapped` SHALL contain three to
+five dicts with exactly `name`, `arxiv_id_or_url`, `url`,
+`source_verification`, `track`, `v405_outcome_conditioning`,
+`carnot_stack_mapping`, `failure_mode`, and `experiment_mapping`. Each
+`arxiv_id_or_url` SHALL be a verified arXiv ID for a fresh or carried-forward
+method relevant to `.406`. `flagged_for_v406` SHALL be a non-empty concrete
+roadmap slug naming the single strongest `.406` method conditioned on the
+`.405` detector-localization null, detector-compounding win,
+cross-domain-detection win, and E3 partial outcomes. `out_of_band_flagged` SHALL
+record A2D2 (`arXiv:2606.13565`) and SEPO (`arXiv:2502.01384`) as
+operator-owned verifier-as-reward generator training that is not auto-run
+in-loop. `random_seed` SHALL record the deterministic discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the `.405`
+forks as ingested, SHALL include `flagged_for_v406`, SHALL declare
+`random_seed=4387`, SHALL cite all mapped WebFetch/arXiv-API-verified sources,
+and SHALL explicitly flag A2D2/SEPO as out-of-band.
+
+#### SCENARIO-REPORT-4387: The .405 Outcomes Close Into A .406 Cross-Domain First-Error Data Plan
+
+**Given** Exp 4381 reports a clean null for actionable BiPRM localization and abstention
+**And** Exp 4382 blocks the skeptic-proof phase because the actionable-localization gate failed
+**And** Exp 4385 reports detector self-learning compounding on held-out localization-F1
+**And** Exp 4386 reports non-FoVer GAP-4 ARC detector generalization above chance
+**And** Exp 4383 and Exp 4384 report honest ARC E3 partials with zero new reproduced levels
+**When** the Exp 4387 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five
+verified arXiv sources to concrete `.406` experiment targets, flags the
+strongest `.406` cross-domain first-error data method, records A2D2/SEPO as
+out-of-band, updates `research-studying.md` idempotently, records `random_seed`,
+and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4387)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4387 | Planned (`python/carnot/experiment_4387_sota_ingestion_v406.py`) | Planned (`tests/python/test_experiment_4387_sota_ingestion_v406.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

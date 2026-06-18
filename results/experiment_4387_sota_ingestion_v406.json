@@ -1,0 +1,85 @@
+{
+  "field_principles": {
+    "flagged_for_v406": "Closes discover->ingest->plan: names the single strongest method for the .406 planner, conditioned on the .405 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations (or blocked_network_unavailable).",
+    "methods_mapped": "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication) + a one-line .406 experiment mapping + the failure mode + the .405-outcome conditioning.",
+    "out_of_band_flagged": "Records A2D2/SEPO (verifier-as-reward generator training) as operator-owned, NOT auto-run in-loop -- the standing HARD RULE.",
+    "random_seed": "Determinism placeholder for the discovery query set (reproducibility of the sweep)."
+  },
+  "flagged_for_v406": "verifiable_process_data_cross_domain_localization_v406",
+  "honest_verdict": "complete: sota_ingestion_v406_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2605.02395",
+      "carnot_stack_mapping": "Generate prefix-invalid, trajectory-consistent first-error pairs for FoVer and GAP-4 ARC, verify the injected step against symbolic or executable prefixes, and fit the detector/localizer against a held-out cross-domain split.",
+      "experiment_mapping": ".406: turn the compounding/generalizing detector into a cross-domain first-error localizer by adding verifiable process data rather than retrying raw BiPRM fusion.",
+      "failure_mode": "Synthetic symbolic errors can miss ARC mechanics or leak template artifacts; .406 must keep source-domain labels, leave-domain-out validation, and executable prefix checks before claiming a localizer.",
+      "name": "Controllable and Verifiable Process Data Synthesis for PRMs",
+      "source_verification": "Verified by arXiv abs URL, focused Semantic Scholar query, and low-concurrency WebSearch/WebFetch on 2026-06-18.",
+      "track": "cross-domain first-error localization data",
+      "url": "https://arxiv.org/abs/2605.02395",
+      "v405_outcome_conditioning": "Exp 4381 reports detector_localization_actionable=false with localization_delta_ci95=[0.0, 0.0] and no useful abstention point, while Exp 4385/4386 report detector_compounds=true and detector_generalizes_cross_domain=true."
+    },
+    {
+      "arxiv_id_or_url": "2102.10395",
+      "carnot_stack_mapping": "Treat FoVer and GAP-4 ARC as separate calibration domains, add leave-one-domain-out calibration loss or temperature tuning, and report risk/coverage and localization-F1 by domain.",
+      "experiment_mapping": ".406: scale the cross-domain detector win into a calibrated multi-domain detector contract with explicit unavailable-domain gaps.",
+      "failure_mode": "Two domains are too few for a broad OOD claim; calibration can improve confidence without improving first-error localization, and code/GSM remain unavailable until labeled verifier-score pools exist.",
+      "name": "Multi-domain calibration for OOD detector generalization",
+      "source_verification": "Verified by arXiv abs URL and low-concurrency WebSearch/WebFetch on 2026-06-18 for the cross-domain/OOD detector track.",
+      "track": "cross-domain detector calibration",
+      "url": "https://arxiv.org/abs/2102.10395",
+      "v405_outcome_conditioning": "Exp 4386 reports success: detector_generalizes_cross_domain_non_fover on GAP-4 ARC with detection_auroc=0.963317, auroc_ci95=[0.922285, 0.990662], selection_headroom=0.129, and verifier_is_oracle=false."
+    },
+    {
+      "arxiv_id_or_url": "2605.25133",
+      "carnot_stack_mapping": "Wrap high-impact detector verdicts in a bounded prover/verifier challenge protocol over checkable subclaims, then accept only answers that survive without revision while logging abstentions.",
+      "experiment_mapping": ".406: retry abstention only as structured verifier deliberation on cross-domain detector outputs, not as a raw score threshold.",
+      "failure_mode": "PVD can collapse outside the verifier's effective region, costs extra calls, and does not itself repair first-error labels; it must remain an abstention layer over a validated detector/localizer.",
+      "name": "Prover-Verifier Deliberation for selective LLM prediction",
+      "source_verification": "Verified by arXiv abs/html URL and low-concurrency WebSearch/WebFetch on 2026-06-18 in the selective-prediction/abstention pass.",
+      "track": "selective prediction / abstention for verifier outputs",
+      "url": "https://arxiv.org/abs/2605.25133",
+      "v405_outcome_conditioning": "Exp 4381 reports useful_operating_point=null for threshold-only abstention, so .406 needs a structured report/abstain signal if selective prediction is retried."
+    },
+    {
+      "arxiv_id_or_url": "2504.16828",
+      "carnot_stack_mapping": "Use a small, bounded generative verifier pass to explain the first unsupported transition on missed traces and convert accepted explanations into typed verifier-gap labels for the detector.",
+      "experiment_mapping": ".406: use ThinkPRM-style explanations as a label generator for the untyped first-error gap, gated by verifiable prefix checks.",
+      "failure_mode": "Long-CoT PRMs are expensive and can hallucinate rationales; all explanations must be checked against executable or symbolic labels before they enter the training/evaluation set.",
+      "name": "ThinkPRM generative step-wise verifier",
+      "source_verification": "Reverified by arXiv abs URL and low-concurrency WebSearch/WebFetch on 2026-06-18; carried from prior verifier/PRM sweeps.",
+      "track": "generative verifier explanations for first-error gaps",
+      "url": "https://arxiv.org/abs/2504.16828",
+      "v405_outcome_conditioning": "Exp 4381 logs missed_first_error_traces=103 under an untyped FoVer missing-verifier gap, while Exp 4385 shows detector learning can improve when better supervision exists."
+    },
+    {
+      "arxiv_id_or_url": "2606.16070",
+      "carnot_stack_mapping": "Keep entropy-selected traces, skill files, and K-step lookahead fidelity, but aim .406 at named mechanic-gap repair for ar25, ka59, ft09, tn36, and tr87 before any replayable solve claim.",
+      "experiment_mapping": ".406: preserve E3 as the ARC north star with mechanic-gap repair, but do not displace the cross-domain detector data plan.",
+      "failure_mode": "Lookahead fidelity stayed partial and oracle-grounded; skill files can encode leakage, and zero new levels in .405 means .406 must treat E3 as north-star repair work rather than the detector headline.",
+      "name": "Mind-Studio executable world models with lookahead evaluation",
+      "source_verification": "Reverified by arXiv abs/html URL and low-concurrency WebSearch/WebFetch on 2026-06-18 for the ARC E3 lookahead track.",
+      "track": "ARC E3 executable-world-model mechanic-gap repair",
+      "url": "https://arxiv.org/abs/2606.16070",
+      "v405_outcome_conditioning": "Exp 4383 and Exp 4384 both report honest partials with new_levels_reproduced=0, reproducible_total_levels=34, and verifier_is_oracle=true across high-headroom and blocked-tail games."
+    }
+  ],
+  "out_of_band_flagged": [
+    {
+      "arxiv_id_or_url": "2606.13565",
+      "name": "A2D2 reward-guided any-length discrete diffusion",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "verifier-as-reward generator training",
+      "url": "https://arxiv.org/abs/2606.13565"
+    },
+    {
+      "arxiv_id_or_url": "2502.01384",
+      "name": "SEPO score-entropy policy optimization",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "policy-gradient fine-tuning over non-differentiable rewards",
+      "url": "https://arxiv.org/abs/2502.01384"
+    }
+  ],
+  "random_seed": 4387
+}
