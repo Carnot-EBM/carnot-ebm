@@ -1,0 +1,265 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "arc_proxy_trace_count": 52,
+  "beats_position_only_baseline": false,
+  "controls": {
+    "family_scramble_control": {
+      "interpretation": "zero drop is expected for one-step row-level labels and is not content evidence",
+      "scrambled_family_drop": 0.0
+    },
+    "heldout_family": "gsm8k",
+    "heldout_family_count": {
+      "gsm8k": 8013
+    },
+    "in_family_report": {
+      "beats_position_only_baseline": false,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_vs_ensemble_0096": 0.904,
+      "delta_vs_ensemble_ci95": [
+        0.904,
+        0.904
+      ],
+      "delta_vs_position_only": 0.0,
+      "ensemble_baseline_0096": 0.096,
+      "exact_match_count": 512,
+      "n_error_traces": 512,
+      "n_traces": 616,
+      "position_only_baseline": 1.0,
+      "real_intervention_localizer": 1.0,
+      "template_family_holdout_drop": 0.0
+    },
+    "train_family_count": {
+      "arc_challenge": 400,
+      "fover_v4_numeric": 19,
+      "math": 66,
+      "math_v3": 131
+    }
+  },
+  "duration_s": 5.357,
+  "experiment": "experiment_4403_real_intervention_localizer_deconfound",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A win (the real-intervention localizer GENUINELY beats the content-blind position-only baseline on a held-out-family REAL split, content-dependent) and a CLEAN null (it still ties position-only -> retire the localizer-as-headline) are BOTH decision-grade.",
+    "intervention_label_receipts": "dict with n_real_traces, n_intervention_verified, position_distribution, and family_count for real verifier-checked interventions.",
+    "localization_f1_by_domain": "dict {domain -> {ensemble_baseline_0096, position_only_baseline, real_intervention_localizer, delta_vs_position_only, delta_ci95, template_family_holdout_drop}} for FoVer + GAP-4 ARC.",
+    "localizer_genuinely_beats_position_only": "BARE bool: true iff the real-intervention localizer's held-out-family first-error F1 exceeds the content-blind position-only baseline (delta CI95-excl-0) AND it depends on CONTENT.",
+    "model_specs": "Verifier ensemble, FoVer/ARC corpora, intervention config, optional GGUF realizer, 0.096 ensemble baseline, position-only baseline, and n.",
+    "n_traces": "BARE int: held-out-family REAL evaluation trace count.",
+    "position_only_baseline_f1": "BARE float: the content-blind position-only baseline F1 on the REAL split.",
+    "preconditions_checked": "Records cached corpus, ensemble, intervention-verification path, and TRM stand-down checks.",
+    "random_seed": "Determinism precondition for labeling, fitting, splitting, and bootstrap.",
+    "reproducibility_checksum": "Hash of the real-intervention corpus, localizer config, held-out split, and controls.",
+    "template_family_holdout_drop": "BARE float: the held-out-family F1 drop vs in-family.",
+    "verifier_is_oracle": "BARE bool=false -- a learned contrastive localizer; the reference intervention check defines correctness, the localizer estimates WHICH step."
+  },
+  "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "intervention_label_receipts": {
+    "all_trace_family_count": {
+      "arc_challenge": 400,
+      "fover_v4_numeric": 19,
+      "gsm8k": 8013,
+      "math": 66,
+      "math_v3": 131
+    },
+    "family_count": {
+      "arc_challenge": 398,
+      "fover_v4_numeric": 9,
+      "gsm8k": 947,
+      "math": 29,
+      "math_v3": 76
+    },
+    "n_failed_real_traces": 1459,
+    "n_intervention_verified": 1459,
+    "n_real_traces": 8629,
+    "position_distribution": {
+      "0": 1459
+    },
+    "suffix_redirect_contract": "FoVer row-level interventions have an empty suffix; the cached correct reference row is the verifier-checked redirected success state.",
+    "verification_method": "single_step_reference_replacement_suffix_empty"
+  },
+  "localization_f1_by_domain": {
+    "FoVer": {
+      "beats_position_only_baseline": false,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_vs_ensemble_0096": 0.904,
+      "delta_vs_ensemble_ci95": [
+        0.904,
+        0.904
+      ],
+      "delta_vs_position_only": 0.0,
+      "ensemble_baseline_0096": 0.096,
+      "exact_match_count": 947,
+      "n_error_traces": 947,
+      "n_traces": 8013,
+      "position_only_baseline": 1.0,
+      "real_intervention_localizer": 1.0,
+      "template_family_holdout_drop": 0.0
+    },
+    "GAP-4 ARC": {
+      "delta_ci95": [
+        -0.134615,
+        0.173077
+      ],
+      "delta_vs_ensemble_0096": 0.711692,
+      "delta_vs_ensemble_ci95": [
+        0.596308,
+        0.807846
+      ],
+      "delta_vs_position_only": 0.019231,
+      "ensemble_baseline_0096": 0.096,
+      "exact_match_count": 42,
+      "n_error_traces": 52,
+      "n_traces": 52,
+      "position_only_baseline": 0.788462,
+      "real_intervention_localizer": 0.807692,
+      "split_note": "cached GAP-4 ARC candidate process proxy",
+      "template_family_holdout_drop": 0.0
+    }
+  },
+  "localizer_genuinely_beats_position_only": false,
+  "methodology_note": "Exp 4403 uses cached FoVer row-level real labels to reach the >=1000 real failed-label intervention receipt requirement. These are single-step interventions with empty suffixes, so the content-blind position-only baseline is expected to be strong. A tie against that baseline is reported as the decision-grade null, not a localizer win.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Collect typed multi-step FoVer interventions where correction at k is checked against a non-empty suffix, then re-run held-out-family position-only and template-family controls.",
+      "confounder": "position_only_or_template_family_control_failed",
+      "gap_id": "GAP-4403-REAL-INTERVENTION-LOCALIZER-POSITION-ONLY",
+      "missed_or_unlocalized_traces": 0,
+      "missing_discriminator": "Real multi-step intervention labels with non-degenerate first-error positions and suffix redirects.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "bootstrap_resamples": 2500,
+    "ensemble_baseline_first_error_f1": 0.096,
+    "ensemble_components": [
+      "fr11_session_memory",
+      "tier0r_curry_howard",
+      "tier0s_arithmetic_gap",
+      "tier0u_logical_consistency"
+    ],
+    "exp2850_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "fover_row_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "fover_step_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
+    "gap4_arc_candidate_pool": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+    "gap4_arc_summary": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+    "generator_training": "stood_down_not_invoked",
+    "intervention_config": {
+      "heldout_family": "gsm8k",
+      "method": "cached_correct_reference_row_single_step_replacement",
+      "natural_language_realizer": null,
+      "offline_labels_only": true,
+      "suffix_contract": "FoVer row-level interventions have an empty suffix; the cached correct reference row is the verifier-checked redirected success state."
+    },
+    "live_generation": false,
+    "localizer": {
+      "model_type": "contrastive_feature_difference_localizer",
+      "threshold": 0.0,
+      "training_summary": {
+        "contrastive_pair_count": 53248,
+        "cpu_only": true,
+        "label_source": "real_verifier_checked_intervention_labels",
+        "negative_reference_count": 104,
+        "positive_first_error_count": 512,
+        "training_trace_count": 616
+      },
+      "weights": {
+        "detector_score": 0.379056,
+        "is_first_step": 0.0,
+        "normalized_position": 0.0,
+        "prefix_invalidity": 0.0,
+        "score_onset": 0.379056,
+        "trajectory_consistency": 0.0
+      }
+    },
+    "n": 8013,
+    "position_only_baseline": {
+      "content_blind": true,
+      "position_counts": {
+        "0": 512
+      }
+    },
+    "sota_gguf_nl_realizer": null,
+    "trm_training": "stood_down_not_invoked",
+    "verifier_ensemble_id": "fover_production_ensemble",
+    "verifier_is_oracle": false
+  },
+  "n_traces": 8013,
+  "position_only_baseline_f1": 1.0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "n_examples=1000",
+      "resource": "exp2850_fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "step_traces=6548; error_traces=114",
+      "resource": "cached_step_labeled_fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "verified_failed_labels=1459; required>=1000",
+      "resource": "real_intervention_label_corpus"
+    },
+    {
+      "available": true,
+      "detail": "n_tasks=31",
+      "resource": "gap4_arc_summary_pool"
+    },
+    {
+      "available": true,
+      "detail": "traces=52",
+      "resource": "gap4_arc_candidate_pool"
+    },
+    {
+      "available": true,
+      "detail": "baseline=0.096",
+      "resource": "exp4381_ensemble_baseline"
+    },
+    {
+      "available": true,
+      "detail": "fover_production_ensemble present",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "verifier ensemble scoring path imports",
+      "resource": "verifier_ensemble_load"
+    },
+    {
+      "available": true,
+      "detail": "single-step reference replacement check available",
+      "resource": "intervention_verification_path"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; offline labels only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4403,
+  "random_seeds_used": [
+    4403,
+    4404,
+    4405
+  ],
+  "reproducibility_checksum": "sha256:b192f37de25b584bbecd7d33b6754ea30c23d22224ddec585d1ec18e4f11254f",
+  "schema": "carnot.real_intervention_localizer_deconfound.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4403",
+    "SCENARIO-VERIFY-4403"
+  ],
+  "template_family_holdout_drop": 0.0,
+  "verifier_is_oracle": false
+}

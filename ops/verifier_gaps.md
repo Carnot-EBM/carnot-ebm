@@ -1923,3 +1923,12 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
 - priority: high
 <!-- exp4399-gap-e3-world-model-rule-ft09-l2-4384:end -->
+
+### GAP-4403-REAL-INTERVENTION-LOCALIZER-POSITION-ONLY: Exp 4403 real-intervention localizer residual
+- status: open
+- evidence: `results/experiment_4403_real_intervention_localizer_deconfound.json`.
+- confounder: position_only_or_template_family_control_failed
+- failure mode: position-only first-error localization ties or beats the localizer.
+- missing discriminator: Real multi-step intervention labels with non-degenerate first-error positions and suffix redirects.
+- candidate design: Collect typed multi-step FoVer interventions where correction at k is checked against a non-empty suffix, then re-run held-out-family position-only and template-family controls.
+- priority: high
