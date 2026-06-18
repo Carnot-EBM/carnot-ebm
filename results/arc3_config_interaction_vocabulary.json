@@ -1,0 +1,25 @@
+{
+  "experiment": "arc3_config_interaction_vocabulary",
+  "goal": "First concrete step of the config rule-INDUCER (operator direction): introspect the config games' INTERACTION model -- the foundation of the meta-learned library.",
+  "method": "Per config game: click an object's cell repeatedly (does it cycle the cell's colour?) and try a keyboard action (does it change the grid?).",
+  "key_finding": "Clicking a cell NEVER changes that cell's colour in ANY config game (the click_cell_seq is constant for all 9). So the interaction is INDIRECT: clicking a control toggles a target ELSEWHERE, or keyboard cycles a SELECTED element. This is exactly why Stage 2's executor failed -- it assumed DIRECT cell-recolor (click cell -> set its colour), which is the wrong model for every config game.",
+  "interaction_vocabulary": {
+    "keyboard_cycle_or_move_selected": ["tr87","ka59","dc22","lf52","bp35"],
+    "click_toggle_indirect_or_keyboard_inert": ["sc25","tn36","s5i5"],
+    "keyboard_inert_needs_selection_first": ["g50t"]
+  },
+  "per_game": {
+    "ka59": "avail[1,2,3,4,6] nobj2 click_noeffect kbd_active -> keyboard-driven select/move",
+    "sc25": "avail[1,2,3,4,6] nobj4 click_noeffect kbd_inert -> click toggles indirectly",
+    "tn36": "avail[6] nobj21 click_noeffect kbd_inert -> click-only, indirect toggle",
+    "tr87": "avail[1,2,3,4] nobj7 no_click kbd_active -> keyboard cycles selected element (glyph-rewrite)",
+    "dc22": "avail[1,2,3,4,6] nobj8 click_noeffect kbd_active -> keyboard-driven",
+    "lf52": "avail[1,2,3,4,6,7] nobj2 click_noeffect kbd_active -> keyboard-driven",
+    "s5i5": "avail[6] nobj13 click_noeffect kbd_inert -> click-only, indirect toggle",
+    "bp35": "avail[3,4,6,7] nobj160 click_noeffect kbd_active -> keyboard-driven",
+    "g50t": "avail[1,2,3,4,5] nobj5 no_click kbd_inert -> keyboard needs selection first"
+  },
+  "implication_for_rule_inducer": "POSITIVE for the operator's direction: the config games share a SMALL, LEARNABLE interaction vocabulary (~2-3 types: keyboard-cycle/move-selected, click-toggle-indirect), NOT bespoke per-game mechanics. So a meta-learned library of interaction patterns IS viable -- introspection can classify a new game's interaction type from this vocabulary. The rule-inducer's introspection layer is feasible and is the first concrete piece. The next pieces: (1) MODEL each interaction type (what does keyboard-cycle do to the selected element? what does click toggle?), (2) induce the win-RULE on top (the relation the configuration must satisfy), (3) a search that uses the CORRECT interaction model (fixing the Stage 2 executor, which used direct-recolor).",
+  "honest_verdict": "complete_config_interaction_vocabulary_learnable_2to3_types_explains_stage2_executor_failure",
+  "inference_substrate": "offline_arc_agi3_config_introspection_no_llm_cpu"
+}
