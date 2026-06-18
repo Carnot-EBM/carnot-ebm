@@ -8312,6 +8312,90 @@ precondition.
 
 ---
 
+### REQ-HW-4367
+
+**Title:** KV260 continuity rerun MUST preserve SSH-only reachability and loaded-bitstream evidence
+
+**Description:**
+Experiment 4367 MUST produce
+`results/experiment_4367_hardware_continuity_kv260.json` as a lightweight
+KV260-only continuity artifact. Per north-star §3, KV260 remains the
+sovereignty story until the board-latency transcript plus
+`kv260_synthesis_succeeded` terminal state is met, but this experiment is only
+an SSH-reachability plus loaded-bitstream continuity check, not a deep hardware
+build. The only valid KV260 precondition is:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card presence is NEVER a valid precondition for this task; host block
+device probes such as `/dev/mmcblk*` MUST NOT appear in the JSON artifact.
+
+If the SSH precondition fails, the experiment MUST write an honest
+`blocked_kv260_ssh_unreachable` verdict, set `kv260_reachable` to bare
+`false`, populate `preconditions_checked` with the failed SSH command, and stop
+without running the overlay or UIO probes. If SSH succeeds, the experiment MUST
+record the loaded overlay with:
+
+`ssh kria 'xmutil listapps'`
+
+and the UIO device presence with:
+
+`ssh kria 'ls /dev/uio*'`
+
+The artifact MUST also report `kv260_terminal_state_reached` as a bare boolean.
+That boolean is true only when the terminal evidence shows both a
+board-latency transcript and `kv260_synthesis_succeeded=true`, matching
+north-star §3. The artifact MUST read the prior KV260 continuity context from
+`results/experiment_4356_hardware_continuity_kv260.json` when available and
+MUST NOT fabricate terminal status when evidence is absent.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `honest_verdict`: `Terminal-prefixed (success_kv260_continuity_<state> or blocked_kv260_ssh_unreachable). A reachable continuity check and a clean unreachable skip are BOTH honest terminal states.`
+- `kv260_reachable`: `BARE bool: SSH reachability -- the only valid KV260 precondition (NEVER host SD-card presence).`
+- `loaded_overlay`: `The xmutil listapps result -- records whether the carnot_ising bitstream is loaded (board continuity).`
+- `kv260_terminal_state_reached`: `BARE bool: true iff the board-latency transcript + kv260_synthesis_succeeded terminal state is met (north-star §3) -- after which the per-milestone KV260 mandate lifts.`
+- `preconditions_checked`: `Records the SSH-reachability check (NOT host SD card); pre-empts the wrong-mechanism SD-card confusion + the silent-missing-resource fabrication mode.`
+
+**Acceptance criteria:**
+- `python3 results/experiment_4367_hardware_continuity_kv260.py` writes
+  `results/experiment_4367_hardware_continuity_kv260.json`.
+- If KV260 is unreachable, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, `kv260_reachable` is a bare boolean false,
+  `preconditions_checked` records the KV260 SSH command and exit code, and no
+  overlay/UIO probe is run.
+- If KV260 is reachable, `kv260_reachable` is a bare boolean true,
+  `loaded_overlay` records the `ssh kria 'xmutil listapps'` transcript,
+  `uio_device_presence` records the `ssh kria 'ls /dev/uio*'` transcript, and
+  `kv260_terminal_state_reached` is reported as a bare boolean.
+- The JSON artifact includes `preconditions_checked`, the required
+  `field_principles`, deterministic seed, checksum, `hardware_smoke`
+  substrate, no fabric speedup claim, and no KV260 host SD-card precondition.
+- `honest_verdict` is either exactly `blocked_kv260_ssh_unreachable` or starts
+  with `success_kv260_continuity_`.
+
+**Implementation status:** Pending (Exp 4367)
+
+---
+
+### SCENARIO-HW-4367
+
+**Scenario:** Exp 4367 records KV260 SSH reachability, loaded overlay, and terminal continuity.
+
+**Given:** KV260 is checked only through board SSH reachability and never
+through host SD-card presence.
+**When:** Experiment 4367 runs the KV260 SSH precondition and, only when it
+succeeds, runs `xmutil listapps` and `/dev/uio*` listing over SSH.
+**Then:** It writes `results/experiment_4367_hardware_continuity_kv260.json`
+with a terminal-prefixed verdict, bare `kv260_reachable`, `loaded_overlay`,
+bare `kv260_terminal_state_reached`, `preconditions_checked`, UIO evidence,
+prior Exp 4356 context, deterministic seed, checksum, no speedup claim, and no
+KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4367)
+
+---
+
 ### SCENARIO-HW-4334
 
 **Scenario:** Exp 4334 reports KV260, PolarFire, and GateMate continuity without milestone blocking.
