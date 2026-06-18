@@ -1,0 +1,23 @@
+{
+  "experiment": "arc_offline_to_live_bridge_summary",
+  "question": "does the offline->live value-head bridge move the live frame-only oracle gap?",
+  "baseline_live_explorer_bfs": "8/32",
+  "v1_value_head_5feat": {
+    "frontier_override": "3/32 (regress)",
+    "depth_primary_tiebreak": "8/32 (neutral)"
+  },
+  "v2_value_head_41feat_spatial": {
+    "offline_graph_explore_solve_v2_Astar_w5": "UNLOCKED cn04 (BFS L0 -> v2 L1); 1/6 floor games; v1 did NOT unlock it -> richer features matter + value-routing helps a BEST-FIRST search",
+    "live_StepwiseExplorer_Astar_w5": "6/32 (REGRESS: lost cd82,m0r0; cn04 unlock did NOT transfer)"
+  },
+  "e3_world_model_induction_gemma4_12b": "0/6 gap-1 games closed",
+  "diagnostic": "floor wins are REACHABLE (oracle winning actions 91-100% in the explorer's candidate set) -> routing-limited, not action-generation-limited",
+  "honest_verdict": "complete_bridge_plumbed_v2_unlocks_cn04_offline_best_first_but_does_not_transfer_to_live_depth_first_explorer",
+  "root_cause": "the offline graph_explore_solve_v2 is BEST-FIRST (A* over the value heuristic) -- where richer value routing helps (cn04). The live StepwiseExplorer is depth-first-ride + frontier-jump, a structurally different search that does not benefit from A* frontier weighting (regresses at w5, no transfer).",
+  "next_levers": [
+    "BEST-FIRST live explorer: refactor StepwiseExplorer to the best-first form (like graph_explore_solve_v2) so the value-head routing that unlocked cn04 transfers to the SUBMITTED agent. This is the way to cash the bridge into live.",
+    "STRONGER world-model induction: E3 with gemma-4-12B closed 0/6; a bigger proposer (gemma-4-31B / Qwen3.6-35B) and/or RFT the proposer on our banked solves -- the deep-game lever (tn36/tr87)."
+  ],
+  "safe_state": "the SUBMITTED agent (make_carnot_agent -> E3AgentPolicy) is pure-BFS (value_weight=0 default); the value-routing is opt-in via the eval's --value-weight. No regression to the default agent.",
+  "inference_substrate": "offline_sim_no_quota_frame_only_live_agent"
+}

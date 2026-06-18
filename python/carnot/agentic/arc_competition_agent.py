@@ -77,13 +77,15 @@ class StepwiseExplorer:
     when fully explored."""
 
     def __init__(self, target_levels: int = 1, max_depth: int = 45, hud_mask=None,
-                 value_head=None) -> None:
+                 value_head=None, value_weight: float = 0.0) -> None:
         self.hud_mask = hud_mask             # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
-        # closer). Trained offline on ALL banked solves (the offline->live distillation). When set, the
-        # frontier is ordered BEST-FIRST by it instead of shallowest-first (BFS) -- the live agent's
-        # learned routing on an UNSEEN game. None (default) -> unchanged BFS-by-depth behaviour.
+        # closer). Trained offline on ALL banked solves (the offline->live distillation). The frontier is
+        # ordered A*-style: priority = depth + value_weight*value. value_weight=0 (default) -> pure BFS
+        # (value only breaks ties; can't regress). value_weight>0 -> the value head NUDGES the search
+        # toward predicted-closer states (the A* routing that unlocked cn04 in graph_explore_solve_v2).
         self.value_head = value_head
+        self.value_weight = float(value_weight)
         self.graph: dict[str, dict] = {}     # hash -> {"path": [...], "untested": [...], "value": float}
         self.root: Optional[str] = None
         self.cur: Optional[str] = None
@@ -155,19 +157,23 @@ class StepwiseExplorer:
                                       "value": self._value(latest)})
 
     def _frontier(self) -> Optional[str]:
-        # BRIDGE: the frontier is ordered DEPTH-PRIMARY (shallowest-first = the proven BFS order that
-        # finds the easy wins), with the cross-game value head only breaking TIES among equal-depth
-        # frontier states (lower predicted steps-to-level-up first). Depth-primary is load-bearing: a
-        # value-OVERRIDE (value before depth) measurably REGRESSED the baseline (the weak generic-feature
-        # head misroutes away from shallow wins -- cd82/ls20/m0r0 dropped gap-0 -> L0). Tie-break only
-        # provably cannot regress below BFS; it can only help when many frontier states share a depth.
+        # BRIDGE: A*-style frontier order -- priority = depth + value_weight*value. value_weight=0 is
+        # depth-primary (pure BFS; value only breaks ties -> provably cannot regress). value_weight>0
+        # lets the value head NUDGE toward predicted-closer states (the routing that unlocked cn04 in
+        # graph_explore at weight 5). A full value-OVERRIDE (ignoring depth) measurably REGRESSED the
+        # baseline (the weak head misroutes from shallow wins), so the blend keeps depth load-bearing.
         use_value = self.value_head is not None
+        w = self.value_weight
         best = None
         best_key = None
         for h, node in self.graph.items():
             if not node["untested"]:
                 continue
-            key = (len(node["path"]), node.get("value", 0.0)) if use_value else (len(node["path"]),)
+            depth = len(node["path"])
+            if use_value:
+                key = (depth + w * node.get("value", 0.0), depth)
+            else:
+                key = (depth,)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
@@ -246,15 +252,23 @@ def load_cross_game_value_head():
     the StepwiseExplorer routes its frontier with on an UNSEEN game, or None if not yet trained. This is
     the offline->live distillation: continued offline solves retrain it and the live agent inherits them."""
     from pathlib import Path
-    ckpt = Path(__file__).resolve().parents[3] / "models" / "arc_verifier_cross_game.json"
-    if not ckpt.exists():
-        return None
+    models = Path(__file__).resolve().parents[3] / "models"
     try:
-        from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features
-        v = LearnedVerifier.load(ckpt, cross_game_features)
-        return lambda frame: v(frame)        # v.__call__ -> cross_game_features(frame): FRAME-ONLY
+        from carnot.agentic.arc_value_learner import (
+            LearnedVerifier, cross_game_features, cross_game_features_v2,
+        )
+        # prefer the RICHER v2 head (spatial occupancy; it routed cn04 where v1's 5 scalars could not)
+        v2 = models / "arc_verifier_cross_game_v2.json"
+        if v2.exists():
+            v = LearnedVerifier.load(v2, cross_game_features_v2)
+            return lambda frame: v(frame)
+        v1 = models / "arc_verifier_cross_game.json"
+        if v1.exists():
+            v = LearnedVerifier.load(v1, cross_game_features)
+            return lambda frame: v(frame)
     except Exception:
         return None
+    return None
 
 
 class CarnotAgentPolicy:
@@ -264,7 +278,7 @@ class CarnotAgentPolicy:
 
     def __init__(self, game_id: str, solutions: Optional[dict] = None,
                  target_level: Optional[int] = None, force_explore: bool = False,
-                 hud_mask=None, value_head=None) -> None:
+                 hud_mask=None, value_head=None, value_weight: float = 0.0) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
         self.plan = [] if force_explore else sols.get(self.short, [])
@@ -272,10 +286,11 @@ class CarnotAgentPolicy:
         self.reset_sent = False
         self.target = target_level if target_level is not None else CLAIMED.get(self.short, 1)
         self.has_plan = bool(self.plan)
-        # eval games are UNSEEN -> no banked plan -> the generic step-wise explorer runs (value_head
-        # routes its frontier when provided -- the offline->live bridge).
+        # eval games are UNSEEN -> no banked plan -> the generic step-wise explorer runs (value_head +
+        # value_weight A*-route its frontier when provided -- the offline->live bridge).
         self.explorer: Optional[StepwiseExplorer] = (
-            None if self.has_plan else StepwiseExplorer(hud_mask=hud_mask, value_head=value_head))
+            None if self.has_plan else
+            StepwiseExplorer(hud_mask=hud_mask, value_head=value_head, value_weight=value_weight))
 
     def next_move(self, frames, latest_frame) -> tuple:
         """-> ("RESET", None) | (action_id:int, data:dict|None) | (None, None)."""

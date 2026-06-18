@@ -34,6 +34,9 @@ from carnot.agentic.arc_competition_agent import (
 )
 
 _VALUE_HEAD = None      # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
+_VALUE_WEIGHT = 0.0     # A* blend weight for explorer_vh; 0 = depth-primary tiebreak (neutral, safe).
+                        # weight 5 REGRESSED the live explorer (6/32 vs 8/32) -- the value head misroutes
+                        # the depth-first-ride structure. Set via --value-weight for sweeps.
 
 
 def _oracle_levels() -> dict:
@@ -52,11 +55,12 @@ def _build_policy(kind: str, game: str):
     cascade (graph_explore -> E3 executable-world-model induction on stall) that make_carnot_agent runs."""
     if kind == "e3":
         return E3AgentPolicy(game)
-    if kind == "explorer_vh":                               # BRIDGE: explorer routed by the cross-game value head
+    if kind == "explorer_vh":                               # BRIDGE: explorer A*-routed by the cross-game value head
         global _VALUE_HEAD
         if _VALUE_HEAD is None:
             _VALUE_HEAD = load_cross_game_value_head()
-        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD)
+        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD,
+                                 value_weight=_VALUE_WEIGHT)
     return CarnotAgentPolicy(game, {}, force_explore=True)   # force_explore -> ignores any banked plan
 
 
@@ -123,6 +127,8 @@ def main() -> int:
     games_mode = _arg(argv, "--games", "claimed")
     policy_kind = _arg(argv, "--policy", "explorer")
     budget = int(_arg(argv, "--budget", "20000"))
+    global _VALUE_WEIGHT
+    _VALUE_WEIGHT = float(_arg(argv, "--value-weight", "0"))   # explorer_vh A* blend weight (0 = neutral)
     oracle = _oracle_levels()
     games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
     only = _arg(argv, "--only", "")          # --only g1,g2 : target a subset (e.g. the worst gaps)
