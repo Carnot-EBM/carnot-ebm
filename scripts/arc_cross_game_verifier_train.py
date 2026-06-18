@@ -20,7 +20,7 @@ import importlib.util
 
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
-from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features
+from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features, cross_game_features_v2
 from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
 from carnot.agentic.arc_graph_explore import graph_explore_solve_v3
 
@@ -36,11 +36,12 @@ def _metaharness():
     return mh
 
 
-def collect_pooled():
-    """Pool FRAME-ONLY (cross_game_features, steps-to-next-level-up) over ALL banked solves. The label
-    is normalized steps to the NEXT level-up (lower == closer to advancing a level) -- exactly what the
-    live explorer's frontier ordering wants -- pooled across games so a never-seen game inherits a
-    progress heuristic. Replays the banked action lists offline; reads only FRAMES (live-legal)."""
+def collect_pooled(featurize=cross_game_features):
+    """Pool FRAME-ONLY (features, steps-to-next-level-up) over ALL banked solves. The label is normalized
+    steps to the NEXT level-up (lower == closer to advancing a level) -- exactly what the live explorer's
+    frontier ordering wants -- pooled across games so a never-seen game inherits a progress heuristic.
+    Replays the banked action lists offline; reads only FRAMES (live-legal). `featurize` selects v1 (5
+    scalars) or v2 (richer spatial)."""
     mh = _metaharness()
     arc = kit.offline_arcade()
     X, y, per_game = [], [], {}
@@ -61,11 +62,11 @@ def collect_pooled():
             aid, data = mh.normalize(a)
             if aid is None:
                 continue
-            seq.append((cross_game_features(f), _levels_completed(f)))
+            seq.append((featurize(f), _levels_completed(f)))
             f = env.step(getattr(GameAction, f"ACTION{aid}"), data=data)
             if f is None:
                 break
-        seq.append((cross_game_features(f), _levels_completed(f)))
+        seq.append((featurize(f), _levels_completed(f)))
         # label each state with normalized steps to the NEXT level-up (segment by level transitions)
         n = len(seq)
         # find, for each index, the distance to the next index where the level increases

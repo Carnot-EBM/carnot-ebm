@@ -45,6 +45,31 @@ def cross_game_features(frame: Any) -> list[float]:
     return [n_nonzero / total, float(n_colors), float(n_objects) / 32.0, spread, float(dom)]
 
 
+def cross_game_features_v2(frame: Any) -> list[float]:
+    """RICHER frame-only cross-game features (v2): the 5 v1 scalars PLUS a coarse SPATIAL occupancy map
+    (6x6 pooled nonzero-fraction) so the value head can locate WHERE activity is, not just how much.
+    The v1 head (5 scalars) was inert at routing because it threw away all spatial structure; this keeps
+    a small spatial signature (41 features) while staying game-agnostic + cheap. Frame-only (live-legal)."""
+    import numpy as np
+    from carnot.agentic.arc_agi3_world_model import grid_of
+    base = cross_game_features(frame)
+    g = np.asarray(grid_of(frame))
+    if g.ndim == 1:
+        s = int(round(g.size ** 0.5))
+        g = g.reshape(s, s) if s * s == g.size else g.reshape(1, -1)
+    nz = (g != 0).astype(float)
+    h, w = nz.shape
+    # pool into a 6x6 grid of nonzero-fraction (handles any input size; empty blocks -> 0)
+    grid = []
+    for by in range(6):
+        for bx in range(6):
+            y0, y1 = h * by // 6, max(h * by // 6 + 1, h * (by + 1) // 6)
+            x0, x1 = w * bx // 6, max(w * bx // 6 + 1, w * (bx + 1) // 6)
+            block = nz[y0:y1, x0:x1]
+            grid.append(float(block.mean()) if block.size else 0.0)
+    return base + grid
+
+
 def collect_trajectory_data(env: Any, solver: Any, prefix: Sequence[str],
                             level_path: Sequence[str], featurize: Callable[[Any], Sequence[float]]):
     """Replay a solved LEVEL path and emit (features, steps_remaining) per state —
