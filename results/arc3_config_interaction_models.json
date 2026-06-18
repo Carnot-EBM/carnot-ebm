@@ -1,0 +1,15 @@
+{
+  "experiment": "arc3_config_interaction_models",
+  "goal": "Config rule-inducer step 2 (operator direction): MODEL the interaction types (what each action does to the configuration).",
+  "interaction_mechanic_vocabulary": {
+    "progress_fill": {"games": ["lf52", "vc33"], "model": "keyboard advances a cursor filling cells one at a time (lf52: row-0 cells 0->1, cursor (0,0)->(0,4)). vc33 (top-row progress bar) is the same type and ALREADY solves."},
+    "rule_rewrite_propagate": {"games": ["tr87"], "model": "keyboard cycles a SELECTED glyph; the change PROPAGATES through a visible rule grid (13-29 cells change per press = the rewrite output)."},
+    "object_move": {"games": ["ka59"], "model": "keyboard MOVES a ~19-cell selected block (not recolor) -- ka59 is move+click, complex."},
+    "click_toggle_indirect": {"games": ["sc25", "tn36", "s5i5"], "model": "clicking a control toggles a target cell ELSEWHERE; clicking a cell never recolors that cell."},
+    "large_region_or_onetime": {"games": ["dc22", "bp35", "g50t"], "model": "keyboard causes large-region / one-time changes; mechanic not yet cleanly separated."}
+  },
+  "key_finding": "MODELING THE INTERACTION IS NECESSARY BUT NOT SUFFICIENT. A best-first search using each mechanic's natural heuristic (progress-fill = maximize filled cells) FAILS to solve lf52/dc22/g50t/bp35 even though the interaction is now modeled: lf52's keyboard-reachable state space is only ~260 states and NONE win, because the win is NOT 'maximize fill' -- it requires a SPECIFIC configuration (the win-RULE). The interaction model tells you WHAT actions do; it does not tell you WHICH configuration wins.",
+  "implication_for_rule_inducer": "The rule-inducer has TWO layers and step 2 isolated them cleanly: (LAYER A, done) the INTERACTION MODEL -- a small learnable vocabulary of mechanic-types (progress-fill / rule-rewrite / object-move / click-toggle), classifiable by introspection; (LAYER B, the remaining hard frontier) the WIN-RULE -- the relation/pattern the configuration must satisfy, which the interaction model does NOT provide and which generic heuristics (maximize-fill, mismatch-to-config) do not capture. Layer B is the rule/relation synthesis that needs the LLM-scene-reader (read the puzzle's goal) verified by the consistency energy -- the project's core propose-then-ground thesis. progress_fill games (lf52) may yet solve if the win-rule is 'fill to a SPECIFIC pattern' rather than 'fill maximally' -- that pattern is the Layer-B target the inducer must read.",
+  "honest_verdict": "complete_config_interaction_models_vocabulary_learned_but_necessary_not_sufficient_win_rule_is_layer_B",
+  "inference_substrate": "offline_arc_agi3_config_interaction_modeling_no_llm_cpu"
+}
