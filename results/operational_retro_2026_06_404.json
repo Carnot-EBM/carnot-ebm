@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.404",
+  "generated_at": "2026-06-18T10:28:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector attributed 0 experiment commits since activation, so total_wall_time_minutes=0, experiments_completed=0 and compute_bound_experiments_count=0 — this is the recurring false-zero detector gap (documented .363-.403, now extending to .404), NOT an idle milestone. With 0 compute-bound tasks attributed, both RTX 3090s sitting idle at the snapshot is correct behaviour, so gpu_idle_on_compute_bound_tasks is null and the idle GPU is not a bottleneck.",
+  "bottlenecks_identified": [
+    "Observability, not execution: the milestone-scoped timing detector false-zeroed again (experiments_completed=0) even though the milestone executed end-to-end on disk — the same gap recorded every milestone since .363. Retro timing numbers are therefore uninformative about real wall-time and cannot rank any experiment.",
+    "No write-time timing stamps: because the detector attributes 0 experiments, there is no per-experiment duration_s/compute_bound signal to populate slowest_experiments, so bottleneck ranking has nothing to act on this milestone.",
+    "GPU idle is explicitly NOT flagged: with 0 compute-bound tasks attributed (gpu_idle_on_compute_bound_tasks=null), the 0% utilization on both RTX 3090s at the snapshot is correct behaviour, not a bottleneck."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: add an mtime scan of results/experiment_*.json within the activation->capstone window plus a changelog-window fallback, so experiments executed since activation are attributed instead of reporting 0.",
+    "Stamp duration_s + compute_bound + inference_substrate at artifact write-time (in scripts/experiment_template.py) so retros can rank slowest experiments without depending on git-commit attribution.",
+    "Auto-emit detector_gap_suspected=true when on-disk artifacts exist for the active milestone window but the detector attributes 0, converting a silently-recurring gap into a self-flagging one.",
+    "Keep the established workaround: when the detector returns 0, the retro reads the on-disk capstone (this milestone: exp4379) for the narrative — but this manual re-discovery is the cost the detector fix would remove."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector (mtime scan within the activation->capstone window + changelog-window fallback) — this single fix ends the 40+-milestone false-zero streak and restores all downstream retro timing signal.",
+    "Add write-time duration_s/compute_bound/inference_substrate stamping in scripts/experiment_template.py so slowest-experiment ranking is detector-independent.",
+    "Auto-emit detector_gap_suspected when artifacts exist on disk but the detector reports 0, so the false-zero self-flags instead of being re-discovered each milestone."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The recurring lesson holds at .404: the operational failure is observability, not execution — the milestone ran cleanly end-to-end (clean, unflagged capstone exp4379; no doomed reruns; no flagged artifacts) yet the timing detector reported 0 for the 40-plus-th consecutive milestone, forcing the retro to reconstruct ground truth from on-disk artifact mtimes. Until the detector is repaired (mtime + changelog fallback) and duration_s is stamped at write-time, every retro keeps paying this manual re-discovery cost while the underlying research loop is healthy; the realistic wall-time speedup from these tooling changes is small (execution is already efficient) — the payoff is observability and analyst time, not faster experiments."
+}
