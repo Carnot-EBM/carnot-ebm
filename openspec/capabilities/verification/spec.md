@@ -19554,3 +19554,55 @@ one of `code_entry_added`, `gap_logged`, or `off_arc_pending` for Exp 4032's
 off-ARC state, and writes the required terminal artifact with
 `registry_updated=true`, `offline_reeval_bitexact=true`, and
 `inference_substrate=aggregation_from_upstream_artifacts`.
+
+### REQ-VERIFY-4394: ARC E3 Deeper Fidelity-Gated Offline Progress Harness
+
+The repository SHALL provide Exp 4394 at
+`python/carnot/agentic/arc_e3_fidelity_gate.py` and
+`results/experiment_4394_e3_deeper_fidelity_gate.py` to run the offline ARC E3
+deeper-target checkpoint over `lp85`, `tu93`, `tn36`, and `tr87` with a hard
+lookahead-fidelity gate. Before planning any deeper level, the harness SHALL
+check that each target's offline `environment_files/<game>/` directory is
+non-empty, that the ARC harness imports, that TRM training is stood down, and
+that no leaderboard submission is attempted. Missing environment files SHALL
+record `blocked_offline_env_missing_<game>` for that target while continuing the
+remaining targets.
+
+For every target, the harness SHALL read the authoritative prior best level from
+`ops/arc_solve_registry.yaml`, compute the target as prior best plus one, record
+per-round verifier accuracy and K-step lookahead fidelity, and set
+`fidelity_gate_passed=true` only when lookahead fidelity is at least `0.95`.
+The harness SHALL NOT count or attempt a deeper solve unless the fidelity gate
+passes. A level SHALL count only when `arc_solver_kit.reproduce` or an
+equivalent offline reproduction-gate result proves a new level beyond the prior
+best. If no target advances, the harness SHALL write an honest partial artifact
+with the best fidelity reached and the residual win-mechanic gap class for each
+target.
+
+The terminal artifact SHALL write
+`results/experiment_4394_e3_deeper_fidelity_gate.json` with
+`honest_verdict`, `per_target_scorecard`, bare int
+`reproducible_total_levels`, bare int `new_levels_reproduced`,
+`world_model_paths`, bare bool `verifier_is_oracle=true`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`field_principles`, `spec_refs`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-4394: Fidelity Gate Blocks Ungrounded Deeper ARC Claims
+
+Given the four target offline environments are present and Exp 4383 provides
+prior lookahead-fidelity measurements below the planning threshold, when Exp
+4394 runs, then every target scorecard records prior best, target level, verifier
+accuracy, lookahead fidelity, whether the fidelity gate passed, and whether an
+offline reproduction gate proved a new level. If no target reaches the fidelity
+gate or no reproduction gate proves a new level beyond the prior best, then the
+artifact writes `honest_verdict=complete_e3_deeper_partial`,
+`new_levels_reproduced=0`, `reproducible_total_levels=34`,
+`verifier_is_oracle=true`, and a reproducibility checksum. If any target's
+environment is missing, that target is blocked with
+`blocked_offline_env_missing_<game>` and the other targets still run.
+
+## Implementation Status (REQ-VERIFY-4394)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4394 | Implemented (`python/carnot/agentic/arc_e3_fidelity_gate.py`, `results/experiment_4394_e3_deeper_fidelity_gate.py`) | Implemented (`tests/python/test_arc_e3_fidelity_gate.py`) |
