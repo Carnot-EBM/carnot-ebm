@@ -1550,3 +1550,27 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
 - priority: high
 <!-- exp4355-gap-e3-world-model-rule-ft09-4352:end -->
+
+### 2026-06-17 Exp4361 sc25 E3 residual gap
+- Spec: REQ-PHASE4-085 / SCENARIO-PHASE4-085
+- Game: `sc25`
+- Best verifier accuracy: 1.0000
+- Residual mismatch class: `sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap`
+- Reproducibility checksum: `bce9878e3d5396e127ea1342fd0452b841b61935eb539e1da466055962842a90`
+- Gap: sc25 L1 remains reproduced, but L2 from the live-recorded spell-cast/cast-grid/tank-controls sequence did not satisfy the offline reproduced-level gate.
+
+### 2026-06-17 Exp4361 tn36 E3 residual gap
+- Spec: REQ-PHASE4-085 / SCENARIO-PHASE4-085
+- Game: `tn36`
+- Best verifier accuracy: 0.8750
+- Residual mismatch class: `tn36_l8_program_editor_maze_delta_gap`
+- Reproducibility checksum: `bce9878e3d5396e127ea1342fd0452b841b61935eb539e1da466055962842a90`
+- Gap: tn36 L7 remains reproduced, but the program-editor solver did not extend through L8 under the offline reproduction gate.
+
+### 2026-06-17 Exp4361 lp85 E3 residual gap
+- Spec: REQ-PHASE4-085 / SCENARIO-PHASE4-085
+- Game: `lp85`
+- Best verifier accuracy: 1.0000
+- Residual mismatch class: `lp85_l5_search_path_not_offline_reproduced_reset_replay_gap`
+- Reproducibility checksum: `bce9878e3d5396e127ea1342fd0452b841b61935eb539e1da466055962842a90`
+- Gap: lp85 search reached L5, but reset replay via `arc_solver_kit.reproduce()` only reproduced through L4, so L5 does not count.
