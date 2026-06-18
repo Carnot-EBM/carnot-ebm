@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.407",
+  "generated_at": "2026-06-18T23:32:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation of 2026.06.407 (experiments_completed=0, total_wall_time_minutes=0, compute_bound_experiments_count=0), so there are no per-experiment timings to rank. Both RTX 3090s are idle (0% util, 4MB each) at the 23:32Z snapshot, which is CORRECT because 0 compute-bound tasks were attributed: gpu_idle_on_compute_bound_tasks=null, not a bug. This is the recurring false-zero detector gap (documented .363-.406, now .407): the .407 artifacts exp4402-exp4412 actually landed on disk in a ~2h52m window, so the observed zero is an observability failure, not an execution failure.",
+  "bottlenecks_identified": [
+    "Milestone-scoped timing detector false-zeroed: it attributed 0 commits while exp4402-exp4412 (including capstone exp4412) landed on disk between 20:31:58Z and 23:24:16Z (~2h52m). This blanks the slowest-experiments ranking and prevents any real wall-time analysis for the milestone.",
+    "No write-time duration_s / compute_bound stamping on experiment artifacts: even when files are found on disk, the retro cannot rank them by compute cost because the per-task duration is not recorded at emission.",
+    "GPU idle is NOT flagged as a bottleneck this milestone: gpu_idle_on_compute_bound_tasks is null (0 compute-bound tasks attributed), so the idle 3090s are expected behaviour, not a regression."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector to scan results/*.json mtimes within the activation->close window (with a changelog-window fallback) instead of relying on git-commit attribution that mis-buckets conductor commits and reports false zeros.",
+    "Stamp duration_s + compute_bound + inference_substrate at artifact write time so the retro can rank slowest experiments even when commit attribution fails.",
+    "Auto-emit detector_gap_suspected=true when results/ contains milestone-range artifacts the detector reported as 0, so the retrospective self-diagnoses its own blind spot instead of requiring a human to reconstruct on-disk ground truth.",
+    "Have the retro generator read the milestone capstone artifact on disk (exp4412 here) as a cross-check whenever the timing detector returns 0, to confirm execution actually occurred."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the timing detector to use mtime-window scanning + changelog fallback (eliminates the recurring false-zero across .363-.407 in one change).",
+    "Stamp duration_s / compute_bound / inference_substrate at write time on every experiment artifact (enables slowest-experiment ranking without commit attribution).",
+    "Auto-emit detector_gap_suspected when results/ contains milestone-range artifacts the detector missed (self-diagnosing observability so future retros stop silently false-zeroing)."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The retrospective ran cleanly and correctly refused to fabricate timings from an empty detector window, but for the Nth consecutive milestone the signal it most needs (per-experiment wall time) was unavailable because the milestone-scoped timing detector false-zeroed while exp4402-exp4412 landed on disk. The durable lesson is unchanged: the recurring failure is observability (the detector), not execution; until write-time stamping + mtime-window scanning ship, every retro must reconstruct ground truth by hand."
+}
