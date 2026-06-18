@@ -172,11 +172,18 @@ def _tr87():
     FAIL the reproduction gate (it reproduced L1 by luck but not L2). Evaluating each candidate on a fresh
     env makes the search's win-detection match the gate. state_key is the full-grid hash so the
     win-animation frames stay distinct (the search reaches the level-up)."""
+    from itertools import product as _product
+
     from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
+    _parse_cache: dict = {}                             # alter_rules parse-search memo (fixed per level)
+
     def _val(s):
         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
+
+    def _cyc(a, b):
+        return min((b - a) % 7, (a - b) % 7)            # cyclic distance over the 7-value wheel
 
     def _level_flag(game, name):
         try:
@@ -219,22 +226,83 @@ def _tr87():
                 return None
         return [int(n[-1]) for n in seq]
 
+    def _solve_rule_parse(structs, target, editable):
+        # ALTER_RULES inverse puzzle: the RULES are editable, target+editable are FIXED. Find rule values
+        # so the greedy rewrite of target == editable. Rule STRUCTURE (lhs_len, rhs_len) is fixed; only
+        # values change, and all glyphs in a side share one value. RHS is DETERMINED once the LHS values
+        # fix the greedy parse, so search only the LHS values (7^nrules) and read RHS off the editable
+        # segments. Returns (lhs_vals, {rule_idx: rhs_val}) or None. Cached -- fixed per level.
+        key = (structs, target, editable)
+        if key in _parse_cache:
+            return _parse_cache[key]
+        result = None
+        for lhs_vals in _product(range(1, 8), repeat=len(structs)):
+            pos, parse, ok = 0, [], True
+            while pos < len(target):                       # forced greedy parse for this LHS assignment
+                for ri, (ll, _rl) in enumerate(structs):
+                    if pos + ll <= len(target) and all(target[pos + k] == lhs_vals[ri] for k in range(ll)):
+                        parse.append(ri)
+                        pos += ll
+                        break
+                else:
+                    ok = False
+                    break
+            if not ok or pos != len(target):
+                continue
+            ep, rhs, good = 0, {}, True
+            for ri in parse:                               # read RHS off the editable segments
+                rl = structs[ri][1]
+                seg = editable[ep:ep + rl]
+                if len(seg) < rl or len(set(seg)) != 1 or (ri in rhs and rhs[ri] != seg[0]):
+                    good = False
+                    break
+                rhs[ri] = seg[0]
+                ep += rl
+            if good and ep == len(editable):
+                result = (lhs_vals, rhs)
+                break
+        _parse_cache[key] = result
+        return result
+
+    def _rule_sides(game):
+        # the 2*nrules editable rule-SIDES in the selector's cycle order: [r0.LHS, r0.RHS, r1.LHS, ...]
+        cur: list = []
+        for lhs, rhs in game.cifzvbcuwqe:
+            cur.append(int(lhs[0].name[-1]))
+            cur.append(int(rhs[0].name[-1]))
+        return cur
+
+    def _rule_distance(game):
+        structs = tuple((len(lhs), len(rhs)) for lhs, rhs in game.cifzvbcuwqe)
+        target = tuple(int(s.name[-1]) for s in game.zvojhrjxxm)
+        editable = tuple(int(s.name[-1]) for s in game.ztgmtnnufb)
+        res = _solve_rule_parse(structs, target, editable)
+        if res is None:
+            return 1000.0                                  # no valid rule config found -> search stops
+        lhs_vals, rhs_assign = res
+        cur = _rule_sides(game)
+        req: list = []
+        for i in range(len(structs)):
+            req.append(lhs_vals[i])
+            req.append(rhs_assign.get(i, cur[2 * i + 1]))  # unparsed rule's RHS: leave at current (no-op)
+        return float(sum(_cyc(c, r) for c, r in zip(cur, req)))
+
     def _distance(game):
+        # alter_rules INVERTS the puzzle: the RULES are editable (selector cycles rule-sides, ACTION1/2
+        # edits a rule), the target+editable are FIXED. Route by the cyclic distance of each rule-side to
+        # a winning rule config found by _solve_rule_parse.
+        if _level_flag(game, "alter_rules"):
+            return _rule_distance(game)
+        # base (L1-L4): the EDITABLE glyphs are editable; route to the N-pass rewrite of the target.
         req = _required_editable(game)
         if req is None:
-            return 1000.0                                 # unmodelled twist -> search stops, no false win
-        cur = [_val(s) for s in game.ztgmtnnufb]          # current editable values
+            return 1000.0                                  # unmodelled twist -> search stops, no false win
+        cur = [_val(s) for s in game.ztgmtnnufb]
         n = min(len(cur), len(req))
-
-        def _cyc(a, b):
-            return min((b - a) % 7, (a - b) % 7)          # cyclic distance over the 7-value wheel
-
-        # SUM of per-glyph cyclic distance (NOT a bare mismatch count): this gives the best-first search
-        # a smooth gradient -- every ACTION1/2 that cycles a glyph TOWARD its target drops the score by 1,
-        # so the search walks straight to the win instead of blindly trying all 6 cycle steps per glyph
-        # (the mismatch-count version exploded at L2's 7 glyphs). The 7x length-gap term keeps L3+ bounded
-        # (editable ALSO expands there -- tree/double_translation -- so the L1/L2 formula leaves a >=7
-        # residual and the search stops rather than false-claiming the unmodelled twist).
+        # SUM of per-glyph cyclic distance (NOT a bare mismatch count): gives the best-first search a
+        # smooth gradient -- every ACTION1/2 toward target drops the score by 1, so the search walks
+        # straight to the win (mismatch-count gave no gradient and exploded at L2's 7 glyphs). The 7x
+        # length-gap term bounds the unmodelled-twist case so the search stops with no false claim.
         return float(sum(_cyc(cur[i], req[i]) for i in range(n)) + 7 * abs(len(cur) - len(req)))
 
     def action_labels(env, frame=None, path=None):

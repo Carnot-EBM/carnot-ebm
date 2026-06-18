@@ -120,6 +120,31 @@ def test_tr87_hand_verifier_l4_double_translation_two_pass_chain():
     assert ad.hand_verifier(g_single) > 0.0
 
 
+def test_tr87_hand_verifier_l5_alter_rules_inverse_puzzle():
+    ad = adapters.get_adapter("tr87")
+    # L5 (alter_rules=True) INVERTS the puzzle: the RULES are editable, the target+editable are FIXED.
+    # Use a UNIQUE-config instance so the parse-search result is deterministic: 1 rule [(1,1)],
+    # target [X3], editable [Y5] -> the only winning rule is X3->Y5 (LHS must match target, RHS emit
+    # editable). The verifier measures cyclic distance of the rule SIDES to that config.
+    target, editable = ["X3"], ["Y5"]
+
+    won = _Game(current=editable, target=target, rules=[(["X3"], ["Y5"])], flags={"alter_rules": True})
+    assert ad.hand_verifier(won) == 0.0        # rules already at the winning config
+
+    rhs_off = _Game(current=editable, target=target, rules=[(["X3"], ["Y1"])], flags={"alter_rules": True})
+    assert ad.hand_verifier(rhs_off) == 3.0    # RHS 1 -> 5 is 3 cyclic steps; LHS already correct
+
+    lhs_off = _Game(current=editable, target=target, rules=[(["X2"], ["Y5"])], flags={"alter_rules": True})
+    assert ad.hand_verifier(lhs_off) == 1.0    # LHS 2 -> 3 is 1 cyclic step; RHS already correct
+
+
+def test_tr87_hand_verifier_l5_unsolvable_rule_config_returns_large():
+    ad = adapters.get_adapter("tr87")
+    # editable longer than any single-rule rewrite can produce (RHS len 1, but 2 editable) -> no config
+    g = _Game(current=["Y5", "Y6"], target=["X3"], rules=[(["X3"], ["Y5"])], flags={"alter_rules": True})
+    assert ad.hand_verifier(g) >= 1000.0
+
+
 def test_tr87_hand_verifier_unmatchable_target_returns_large():
     ad = adapters.get_adapter("tr87")
     # a target position no rule LHS matches (an unmodelled alter_rules twist) -> large, search stops
