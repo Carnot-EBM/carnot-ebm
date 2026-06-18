@@ -1,0 +1,85 @@
+{
+  "field_principles": {
+    "flagged_for_v405": "Closes discover->ingest->plan: names the single strongest method for the .405 planner, conditioned on the .404 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations (or blocked_network_unavailable).",
+    "methods_mapped": "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication) + a one-line .405 experiment mapping + the failure mode + the .404-outcome conditioning.",
+    "out_of_band_flagged": "Records A2D2/SEPO (verifier-as-reward generator training) as operator-owned, NOT auto-run in-loop -- the standing HARD RULE.",
+    "random_seed": "Determinism placeholder for the discovery query set (reproducibility of the sweep)."
+  },
+  "flagged_for_v405": "biprm_processbench_detector_localization_v405",
+  "honest_verdict": "complete: sota_ingestion_v405_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2508.01682",
+      "carnot_stack_mapping": "Run a bidirectional L2R/R2L detector pass over cached FoVer rows and ARC/E3 trace prefixes, fuse the two scores, and report earliest-error localization plus risk-coverage without training a generator.",
+      "experiment_mapping": ".405: make the positive Exp 4375 detector signal actionable with BiPRM-style bidirectional step-error localization and abstention.",
+      "failure_mode": "Math PRM gains can fail on FoVer or ARC traces; R2L evaluation can use future context unavailable to an online actor, so .405 must separate offline detection from in-loop action selection.",
+      "name": "Bidirectional Process Reward Model for step-error detection",
+      "source_verification": "Verified by low-concurrency WebSearch/WebFetch and arXiv page on 2026-06-18; found in the focused verifier-as-detector / process reward model pass after Semantic Scholar returned HTTP 429.",
+      "track": "verifier-as-detector / step-error localization",
+      "url": "https://arxiv.org/abs/2508.01682",
+      "v404_outcome_conditioning": "Exp 4375 reports detector_auroc=0.918304, CI95 lower=0.909296, detector_beats_chance=true, n_candidates=8829, selection_headroom.headroom=0.0, and verifier_is_oracle=false."
+    },
+    {
+      "arxiv_id_or_url": "2606.16070",
+      "carnot_stack_mapping": "Add entropy-selected traces, a lightweight skill file, and K-step lookahead fidelity checks to the ARC E3 induction loop before planning on tn36/tr87/tu93/sc25/lp85 residual levels.",
+      "experiment_mapping": ".405: use Mind-Studio-style lookahead fidelity as the next E3 north-star method after the lp85 level advance.",
+      "failure_mode": "The paper targets pygame/Real-ALE-style games, not ARC-AGI-3; skill files can encode leaked mechanics, and executable rollout checks remain oracle-grounded rather than a verifier-moat result.",
+      "name": "Mind-Studio executable world models with lookahead evaluation",
+      "source_verification": "Fresh June 2026 cluster hit verified by arXiv API title lookup and low-concurrency WebSearch/WebFetch on 2026-06-18.",
+      "track": "ARC E3 executable-world-model continuation",
+      "url": "https://arxiv.org/abs/2606.16070",
+      "v404_outcome_conditioning": "Exp 4372 reports success_e3_deeper_lp85_reproduced, new_levels_reproduced=1, reproducible_total_levels=34, and verifier_is_oracle=true."
+    },
+    {
+      "arxiv_id_or_url": "2605.05138",
+      "carnot_stack_mapping": "Continue clean-workspace Python world-model induction with offline reproduce receipts, explicit model files, and per-target mechanic-gap labels.",
+      "experiment_mapping": ".405: keep E3 as the ARC accuracy continuation, now augmented by lookahead-fidelity checks rather than promoted as oracle-free.",
+      "failure_mode": "Solves can improve ARC count while still relying on execution as an oracle; public-game leakage and repeated-play memory must stay out of the north-star accounting.",
+      "name": "Executable World Models for ARC-AGI-3",
+      "source_verification": "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-18; carried forward as the ARC-AGI-3 E3 baseline.",
+      "track": "ARC E3 executable-world-model baseline",
+      "url": "https://arxiv.org/abs/2605.05138",
+      "v404_outcome_conditioning": "Exp 4372 advanced the E3 line from 33 to 34 reproducible ARC levels with lp85, while preserving verifier_is_oracle=true."
+    },
+    {
+      "arxiv_id_or_url": "2503.18809",
+      "carnot_stack_mapping": "Retain the static-leakage and reproduce gates as a negative control, but do not spend the .405 headline on another generated heuristic sweep unless new held-out games or features appear.",
+      "experiment_mapping": ".405: mark the LLM-generated action-cost arm as settled/null for this corpus and use it only as a control.",
+      "failure_mode": "The stronger function class did not beat the deployed linear action-cost baseline; rerunning it unchanged risks overfitting the same reproduced game set.",
+      "name": "Classical planning with LLM-generated heuristic programs",
+      "source_verification": "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-18; this was the .404 headline method.",
+      "track": "LLM-generated / code heuristics for planning",
+      "url": "https://arxiv.org/abs/2503.18809",
+      "v404_outcome_conditioning": "Exp 4370 reports complete: clean_powered_null_linear_not_beaten, llm_heuristic_beats_linear=false, and equal held-out totals for linear, llm_generated, and bfs_baseline at 646 actions."
+    },
+    {
+      "arxiv_id_or_url": "2603.20216",
+      "carnot_stack_mapping": "Keep CoDiLA as a diagnostic control for any future operator repair of DiffusionGemma, but do not auto-run in-loop generation search while the scorer and local-control gates are both failed.",
+      "experiment_mapping": ".405: retire DiffusionGemma in-generation conversion from the autonomous loop until a new scorer/control precondition is met.",
+      "failure_mode": "Local coherence scores tied across arms in Exp 4374 and did not produce a measurable benchmark; continuing the same harness would fabricate progress from a retired conversion path.",
+      "name": "CoDiLA local coherence control for diffusion LMs",
+      "source_verification": "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-18; carried forward from the .404 repair-or-retire fork.",
+      "track": "verifier-guided diffusion-LM search / local-coherence controls",
+      "url": "https://arxiv.org/abs/2603.20216",
+      "v404_outcome_conditioning": "Exp 4374 reports retired_in_generation_conversion_unmeasurable, scorer_requalified_leak_clean=false, codila_control_differentiates=false, benchmark_n=0, and s3_guided_beats_control=false."
+    }
+  ],
+  "out_of_band_flagged": [
+    {
+      "arxiv_id_or_url": "2606.13565",
+      "name": "A2D2 reward-guided any-length discrete diffusion",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "verifier-as-reward generator training",
+      "url": "https://arxiv.org/abs/2606.13565"
+    },
+    {
+      "arxiv_id_or_url": "2502.01384",
+      "name": "SEPO score-entropy policy optimization",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "policy-gradient fine-tuning over non-differentiable rewards",
+      "url": "https://arxiv.org/abs/2502.01384"
+    }
+  ],
+  "random_seed": 4376
+}

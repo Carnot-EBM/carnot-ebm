@@ -21859,6 +21859,94 @@ and leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4365 | Planned (`python/carnot/experiment_4365_sota_ingestion_v404.py`) | Planned (`tests/python/test_experiment_4365_sota_ingestion_v404.py`) |
 
+### REQ-REPORT-4376: Ingest SOTA For The .405 Headline Branch From The .404 Outcomes
+
+The Exp 4376 workflow SHALL close the discover-to-ingest-to-plan loop for the
+`.405` headline branch by reading the `.404` fork outcome artifacts,
+filtering `research-studying.md` and `research-references.md` to the active
+LLM-generated/code heuristics, ARC E3 executable-world-model, verifier-guided
+diffusion-LM search/local-coherence, and verifier-as-detector/step-error tracks,
+and running the reliable discovery channel (`scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, plus low-concurrency WebSearch/WebFetch). The
+workflow SHALL NOT invoke `/deep-research`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave `ops/changelog.md`,
+`ops/status.md`, and `_bmad/traceability.md` untouched for the separate
+reconciliation step.
+
+Before writing a complete mapping, the workflow SHALL require network
+reachability to Hugging Face. If network is unavailable, it SHALL stop with
+`honest_verdict=blocked_network_unavailable` and SHALL NOT fabricate citations.
+When network is available, each mapped method SHALL carry a
+WebFetch/arXiv-API-verified arXiv ID and URL.
+
+The workflow SHALL branch on the actual `.404` artifacts. When Exp 4370 reports
+`acceptance_gate_passed=true`, `llm_heuristic_beats_linear=false`, and equal
+held-out action totals for `linear` and `llm_generated`, the `.405` plan SHALL
+record the LLM-generated action-heuristic arm as a clean powered null rather
+than a repeated headline. When Exp 4372 reports
+`honest_verdict=success_e3_deeper_lp85_reproduced`,
+`new_levels_reproduced=1`, `reproducible_total_levels>=34`, and
+`verifier_is_oracle=true`, the `.405` plan SHALL preserve E3 as the
+oracle-grounded ARC north-star continuation. When Exp 4374 reports
+`honest_verdict=retired_in_generation_conversion_unmeasurable`,
+`scorer_requalified_leak_clean=false`, `codila_control_differentiates=false`,
+`benchmark_n=0`, and `s3_guided_beats_control=false`, the `.405` plan SHALL keep
+DiffusionGemma in-generation conversion retired from the in-loop headline.
+When Exp 4375 reports
+`honest_verdict=complete: detector_beats_chance_zero_selection_headroom_fover`,
+`detector_beats_chance=true`, `detector_auroc_ci95[0] > 0.5`,
+`selection_headroom.headroom=0.0`, and `n_candidates>=1000`, the `.405` plan
+SHALL prioritize the verifier-as-detector/step-error localization line as the
+strongest non-oracle positive fork.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4376_sota_ingestion_v405.json`, and the required runner
+SHALL be `results/experiment_4376_sota_ingestion_v405.py` delegating to
+`python/carnot/experiment_4376_sota_ingestion_v405.py`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v405`, `out_of_band_flagged`, `random_seed`, and
+`field_principles`. `field_principles` SHALL contain exactly the principle
+annotations for `honest_verdict`, `methods_mapped`, `flagged_for_v405`,
+`out_of_band_flagged`, and `random_seed`. `honest_verdict` SHALL use a terminal
+prefix and, on the complete path, start with
+`complete: sota_ingestion_v405_mapped`. `methods_mapped` SHALL contain three to
+five dicts with exactly `name`, `arxiv_id_or_url`, `url`,
+`source_verification`, `track`, `v404_outcome_conditioning`,
+`carnot_stack_mapping`, `failure_mode`, and `experiment_mapping`. Each
+`arxiv_id_or_url` SHALL be a verified arXiv ID for a fresh or carried-forward
+method relevant to `.405`. `flagged_for_v405` SHALL be a non-empty concrete
+roadmap slug naming the single strongest `.405` method conditioned on the
+`.404` LLM-heuristic, E3, DiffusionGemma, and detector outcomes.
+`out_of_band_flagged` SHALL record A2D2 (`arXiv:2606.13565`) and SEPO
+(`arXiv:2502.01384`) as operator-owned verifier-as-reward generator training
+that is not auto-run in-loop. `random_seed` SHALL record the deterministic
+discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the `.404`
+forks as ingested, SHALL include `flagged_for_v405`, SHALL declare
+`random_seed=4376`, SHALL cite all mapped WebFetch/arXiv-API-verified sources,
+and SHALL explicitly flag A2D2/SEPO as out-of-band.
+
+#### SCENARIO-REPORT-4376: The .404 Outcomes Close Into A .405 Detector-First Plan
+
+**Given** Exp 4370 reports a clean powered null for LLM-generated action-cost heuristics
+**And** Exp 4372 reports one new lp85 E3 level reproduced with oracle-grounded verification
+**And** Exp 4374 retires the DiffusionGemma in-generation conversion as unmeasurable after scorer and CoDiLA controls fail
+**And** Exp 4375 reports detector AUROC well above chance at zero selection headroom
+**When** the Exp 4376 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five
+verified arXiv sources to concrete `.405` experiment targets, flags the
+strongest `.405` verifier-as-detector step-error localization method, records
+A2D2/SEPO as out-of-band, updates `research-studying.md` idempotently, records
+`random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4376)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4376 | Planned (`python/carnot/experiment_4376_sota_ingestion_v405.py`) | Planned (`tests/python/test_experiment_4376_sota_ingestion_v405.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

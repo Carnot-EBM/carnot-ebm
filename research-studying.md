@@ -8,6 +8,85 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-18 Exp 4376 - .404 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4376_sota_ingestion_v405.json`.
+
+**Preconditions:** network precondition passed via Hugging Face reachability and
+arXiv/WebFetch verification. If that check had failed, the only honest artifact
+would have been `honest_verdict=blocked_network_unavailable`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
+world-model and verifier/process-reward arXiv discovery URLs and the arXiv API
+returned fresh June 2026 IDs. The relevant fresh cluster hit was
+arXiv:2606.16070 (Mind-Studio). `scripts/sweep_semscholar.py` was run on focused
+LLM-heuristic, diffusion-search, and step-error detector queries; Semantic
+Scholar returned HTTP 429, so no S2-only result was promoted. Low-concurrency
+WebSearch/WebFetch plus arXiv page checks verified arXiv:2508.01682,
+arXiv:2606.16070, arXiv:2605.05138, arXiv:2503.18809, arXiv:2603.20216,
+arXiv:2606.13565, and arXiv:2502.01384. Supporting detector benchmark context
+was checked against arXiv:2412.06559 and ThinkPRM against arXiv:2504.16828. The
+banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .404 outcomes after LLM-generated/code heuristics for
+planning, E3 executable-world-model ARC progression, DiffusionGemma
+repair-or-retire, and verifier-as-detector step-error measurement.
+
+**.404 outcome conditioning:**
+- Exp 4370: `complete: clean_powered_null_linear_not_beaten`,
+  `acceptance_gate_passed=true`, `llm_heuristic_beats_linear=false`,
+  `held_out_actions_equal=true`, and `verifier_is_oracle=false`. The stronger
+  generated-heuristic function class is a clean null on the reproduced corpus,
+  not the .405 headline.
+- Exp 4372: `success_e3_deeper_lp85_reproduced`,
+  `new_levels_reproduced=1`, `reproducible_total_levels=34`, and
+  `verifier_is_oracle=true`. E3 remains the ARC north star, but still
+  oracle-grounded.
+- Exp 4374: `retired_in_generation_conversion_unmeasurable`,
+  `scorer_requalified_leak_clean=false`, `codila_control_differentiates=false`,
+  `benchmark_n=0`, and `s3_guided_beats_control=false`. DiffusionGemma
+  in-generation conversion stays retired from the autonomous in-loop headline.
+- Exp 4375: `complete: detector_beats_chance_zero_selection_headroom_fover`,
+  `detector_auroc=0.918304`, `detector_beats_chance=true`,
+  `selection_headroom.headroom=0.0`, `n_candidates=8829`, and
+  `verifier_is_oracle=false`. This is the strongest non-oracle positive .404
+  signal.
+
+**Fresh-pass candidates marked ingested:**
+- Bidirectional Process Reward Model, arXiv:2508.01682 - mapped to the .405
+  detector-first follow-up: bidirectional step-error localization plus
+  risk-coverage on cached FoVer and ARC/E3 traces.
+- Mind-Studio executable world models with lookahead evaluation,
+  arXiv:2606.16070 - mapped to the E3 continuation with entropy-selected traces,
+  lightweight skill files, and K-step rollout-fidelity checks.
+- Executable World Models for ARC-AGI-3, arXiv:2605.05138 - carried forward as
+  the ARC E3 baseline after the lp85 level advance.
+- Classical Planning with LLM-Generated Heuristics, arXiv:2503.18809 - marked as
+  a clean-null control after Exp 4370 rather than a repeated .405 headline.
+- CoDiLA locally coherent parallel decoding, arXiv:2603.20216 - retained only as
+  a DiffusionGemma diagnostic/control once scorer and local-control preconditions
+  are repaired.
+
+out_of_band_flagged:
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
+  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
+  verifier-as-reward generator training, NOT auto-run in-loop.
+
+flagged_for_v405: biprm_processbench_detector_localization_v405
+
+Flagged for .405: `biprm_processbench_detector_localization_v405`
+
+random_seed=4376
+
+**Bottom line for the .405 roadmap:** do not re-run the LLM-generated heuristic
+arm unchanged, and do not revive DiffusionGemma in-loop while both scorer and
+CoDiLA gates failed. Continue E3 with Mind-Studio-style lookahead fidelity, but
+put the single .405 flag on the detector-first BiPRM/ProcessBench-style
+step-error localization and abstention path because Exp 4375 produced the clean
+non-oracle positive signal. A2D2 and SEPO stay out of band for operator-owned
+verifier-as-reward generator training.
+
 ## 2026-06-18 Exp 4365 - .403 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4365_sota_ingestion_v404.json`.
