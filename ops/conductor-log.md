@@ -8711,3 +8711,4 @@ c |
 | 2026-06-18 07:21 UTC | PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 100 passed, 1 warning in 5.31s |
 | 2026-06-18 07:40 UTC | PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 92 passed, 1 warning in 8.47s |
 | 2026-06-18 08:05 UTC | PHASE C1 (IN-GENERATION ACCURACY moat; REPAIR-OR-R | OK | 92 passed, 1 warning in 7.40s |
+| 2026-06-18 08:26 UTC | PHASE D1 (ORACLE-DISTINCT ACCURACY complementary m | OK | 90 passed, 1 warning in 9.86s |
