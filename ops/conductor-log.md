@@ -8705,3 +8705,4 @@ c |
 | 2026-06-18 05:40 UTC | Milestone 2026.06.404 activated | OK | 11 tasks queued |
 | 2026-06-18 06:38 UTC | Archive .403 -> activate .404. Assert research-com | OK | 89 passed, 1 warning in 10.70s |
 | 2026-06-18 06:57 UTC | PHASE A1 (HEADLINE; oracle-distinct EFFICIENCY moa | OK | 87 passed, 1 warning in 12.97s |
+| 2026-06-18 06:59 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4370-llm-generated-action-cost-heuristi |
