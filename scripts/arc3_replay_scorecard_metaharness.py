@@ -52,6 +52,9 @@ GAME_ARTIFACTS = {
 RESOLVED_ARTIFACTS = {
     # L4 re-derived offline (solve_adaptered + learned verifier), reproduction-gated reached_level=4
     "lp85": "results/arc_explore_trajectory_lp85_l4.json",  # L4
+    # L3 re-derived offline (GameAdapter + OfflineSolver branch_mode='fresh_env' for tu93's
+    # non-idempotent reset, gotcha #7), reproduction-gated reached_level=3, 47-action path
+    "tu93": "results/arc_loop_solve_tu93.json",             # L3 (was L2 graph_explore)
 }
 
 
