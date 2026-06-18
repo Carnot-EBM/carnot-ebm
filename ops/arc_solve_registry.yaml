@@ -209,6 +209,13 @@ games:
   # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
   # (cd82, sp80, su15, tu93); 14 resisted at L0 (deeper win-mechanics / per-game deltas).
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
+  # — fresh_env A/B sweep (2026-06-17, scripts/arc3_fresh_env_sweep.py -> results/
+  # arc3_fresh_env_sweep.json): ran the SAME bounded best-first search (generic adapter)
+  # under replay vs fresh_env (gotcha #7 branch mode) on all 10. 0/10 unlocked: replay ==
+  # fresh_env == L0 for every game (avg ~970 states searched). CONCLUSION: none of the 10
+  # are blocked by non-idempotent reset (tu93 was the only such game) -- the branch mode is
+  # not the bottleneck. They need PER-GAME RE (a deeper win mechanic), like tn36/tu93 each
+  # did. Do NOT re-run a blind branch-mode sweep on them; route each to per-game RE.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
