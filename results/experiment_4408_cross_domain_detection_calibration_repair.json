@@ -1,0 +1,752 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "base_rate_separation": {
+    "by_domain": {
+      "code_humaneval": {
+        "aggregation_rule": "noisy_or_probability_mass_over_semantic_group",
+        "answer_cardinality": {
+          "max": 5,
+          "mean": 3.36875,
+          "median": 4.0,
+          "min": 1
+        },
+        "base_rate": 0.90167,
+        "duplicate_group_count": 512,
+        "grouped_duplicate_rows": 1755,
+        "method": "semantic_confidence_aggregation",
+        "n": 539,
+        "raw_base_rate": 0.646905,
+        "raw_n": 2294,
+        "semantic_conflict_groups": 0,
+        "semantic_group_count": 539
+      },
+      "fover": {
+        "aggregation_rule": "noisy_or_probability_mass_over_semantic_group",
+        "answer_cardinality": {
+          "max": 2,
+          "mean": 1.07697,
+          "median": 1.0,
+          "min": 1
+        },
+        "base_rate": 0.812097,
+        "duplicate_group_count": 0,
+        "grouped_duplicate_rows": 0,
+        "method": "semantic_confidence_aggregation",
+        "n": 8829,
+        "raw_base_rate": 0.812097,
+        "raw_n": 8829,
+        "semantic_conflict_groups": 0,
+        "semantic_group_count": 8829
+      },
+      "gap4_arc": {
+        "aggregation_rule": "noisy_or_probability_mass_over_semantic_group",
+        "answer_cardinality": {
+          "max": 2003,
+          "mean": 546.980769,
+          "median": 520.5,
+          "min": 4
+        },
+        "base_rate": 0.001688,
+        "duplicate_group_count": 0,
+        "grouped_duplicate_rows": 0,
+        "method": "semantic_confidence_aggregation",
+        "n": 28443,
+        "raw_base_rate": 0.001688,
+        "raw_n": 28443,
+        "semantic_conflict_groups": 0,
+        "semantic_group_count": 28443
+      },
+      "gsm8k": {
+        "aggregation_rule": "noisy_or_probability_mass_over_semantic_group",
+        "answer_cardinality": {
+          "max": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1
+        },
+        "base_rate": 0.51,
+        "duplicate_group_count": 0,
+        "grouped_duplicate_rows": 0,
+        "method": "semantic_confidence_aggregation",
+        "n": 1600,
+        "raw_base_rate": 0.51,
+        "raw_n": 1600,
+        "semantic_conflict_groups": 0,
+        "semantic_group_count": 1600
+      }
+    },
+    "method": "semantic_confidence_aggregation",
+    "powered_non_fover_domains": [
+      "code_humaneval",
+      "gap4_arc",
+      "gsm8k"
+    ],
+    "reference": "arXiv:2602.07842 mapped by experiment_4398_sota_ingestion_v407",
+    "separation_read": "Calibration is computed after grouping semantically equivalent answers; raw base rates and answer cardinality remain reported so the Exp 4397 underpowered/base-rate confound is explicit."
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "4397",
+      "fields_imported": [
+        "detection_by_domain",
+        "underpowered code_humaneval n=100 confound"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4397_cross_domain_detection_calibration.json",
+      "sha256": "ff470621d76cd48563026e99891ec862fb78f5cc49d52dbd13478dbe7f28c9b7"
+    },
+    {
+      "experiment_id": "4398",
+      "fields_imported": [
+        "methods_mapped.Semantic Confidence Aggregation arXiv:2602.07842"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4398_sota_ingestion_v407.json",
+      "sha256": "72bb871178a6dd68c7c2db99c449b7b8445660a8e6ed7e4687ae1784f3b1b2c5"
+    },
+    {
+      "experiment_id": "1999",
+      "fields_imported": [
+        "results.baseline_passed",
+        "results.repair_passed"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+      "sha256": "84ce1fb6013d1557ff9633a59e82493297dbb89abe7b7d9ed5867f0befdc507d"
+    },
+    {
+      "experiment_id": "2838",
+      "fields_imported": [
+        "candidate_execution_summary",
+        "blocked sandboxed_unit_test_execution"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2838_humaneval_full_ensemble_eval.json",
+      "sha256": "7e9b5dd1810ef633ead211fbc36a00562736aecb7b81166116349e3c0479604f"
+    },
+    {
+      "experiment_id": "2839",
+      "fields_imported": [
+        "candidate_execution_summary",
+        "blocked sandboxed_unit_test_execution"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2839_humaneval_dual_condition_v3.json",
+      "sha256": "3aeb4d98aa556765d9153ffe3b124f796e945795b0678fa79e81935c64864dbf"
+    },
+    {
+      "experiment_id": "4233",
+      "fields_imported": [
+        "candidate_pool.source_paths",
+        "hidden_pass labels",
+        "visible_perfect metadata"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4233_oracle_distinct_code_beats_vote.json",
+      "sha256": "bb684a96fd09b4a9ffd32faf8ac7ce205e7c09f67e48be6855db337c7dba458b"
+    },
+    {
+      "experiment_id": "adversarial_gsm8k_data_400",
+      "fields_imported": [
+        "datasets.correct_answer",
+        "datasets.original_answer"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json",
+      "sha256": "506a7d90c804673bbe27e044b69f4b81dd90213461aa13947d499076ac9a4778"
+    },
+    {
+      "experiment_id": "1998",
+      "fields_imported": [
+        "responses",
+        "invariant_violations"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1998_live_it_baselines_gsm8k.json",
+      "sha256": "1af3680b41eaca24ebefeab4bf97dca141c94a386310af51941e2dc1b223e5b9"
+    },
+    {
+      "experiment_id": "2850",
+      "fields_imported": [
+        "condition_a_production_auroc_mean",
+        "n_examples"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "sha256": "b1beb0456398b3a0cc5c673ff40a6e192f514c084346a6467b8d0acd31028f93"
+    },
+    {
+      "experiment_id": "arc3_trm_verifier_rerank",
+      "fields_imported": [
+        "oracle_ceiling",
+        "trm_vote_pass2"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+      "sha256": "3584e450042375c5d9bef838f9dd41603726eb8b1a8548076e34b12ca0b93a63"
+    },
+    {
+      "experiment_id": "4244",
+      "fields_imported": [
+        "set_encoder_oof.rows"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+      "sha256": "701227818a0321e98de6e0d1d7bec1fdbfc6c1739eec127f5a6d34824f1faff9"
+    },
+    {
+      "experiment_id": "source:fover_corpus.jsonl",
+      "fields_imported": [
+        "cached candidate rows"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+      "sha256": "585a4b8099fae140b850e10d36f121e0a25e645c8d0d264936d5efa0a62b330f"
+    },
+    {
+      "experiment_id": "source:experiment_4375_verifier_as_detector_measurement.json",
+      "fields_imported": [
+        "cached candidate rows"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+      "sha256": "0a1eee866e7036c2d32fd7aaaba3b45f0c638f2771fccc2a0892debfe4d5b586"
+    },
+    {
+      "experiment_id": "source:experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+      "fields_imported": [
+        "cached candidate rows"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+      "sha256": "ab174673aa3c75f4f0e0952d845f78fbbcf5dee483be51c0ad7008597bdf818c"
+    }
+  ],
+  "detection_by_domain": [
+    {
+      "answer_cardinality": {
+        "max": 5,
+        "mean": 3.36875,
+        "median": 4.0,
+        "min": 1
+      },
+      "auroc_ci95": [
+        0.461255,
+        0.692756
+      ],
+      "base_rate": 0.90167,
+      "claim_scope": "proper_pool_n>=300",
+      "detection_auroc": 0.577374,
+      "domain": "code_humaneval",
+      "ece_lodo_calibrated": 0.062172,
+      "ece_uncalibrated": 0.071429,
+      "n": 539,
+      "platt_scaler": {
+        "bias": -2.83269,
+        "mean": 0.209395,
+        "n_train": 38872,
+        "scale": 0.353053,
+        "trained_on_domains": [
+          "fover",
+          "gap4_arc",
+          "gsm8k"
+        ],
+        "weight": 2.847515
+      },
+      "random_score_control": {
+        "auroc": 0.504817,
+        "replicates": 128,
+        "seed": 4408
+      },
+      "raw_base_rate": 0.646905,
+      "raw_n": 2294,
+      "risk_coverage": [
+        {
+          "accuracy": 0.90167,
+          "coverage": 1.0,
+          "n_kept": 539,
+          "risk": 0.09833,
+          "threshold": 0.882728
+        },
+        {
+          "accuracy": 0.946392,
+          "coverage": 0.9,
+          "n_kept": 485,
+          "risk": 0.053608,
+          "threshold": 0.963825
+        },
+        {
+          "accuracy": 0.935644,
+          "coverage": 0.75,
+          "n_kept": 404,
+          "risk": 0.064356,
+          "threshold": 0.964796
+        },
+        {
+          "accuracy": 0.907063,
+          "coverage": 0.5,
+          "n_kept": 269,
+          "risk": 0.092937,
+          "threshold": 0.966508
+        },
+        {
+          "accuracy": 0.813433,
+          "coverage": 0.25,
+          "n_kept": 134,
+          "risk": 0.186567,
+          "threshold": 0.967257
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct"
+    },
+    {
+      "answer_cardinality": {
+        "max": 2,
+        "mean": 1.07697,
+        "median": 1.0,
+        "min": 1
+      },
+      "auroc_ci95": [
+        0.90944,
+        0.926582
+      ],
+      "base_rate": 0.812097,
+      "claim_scope": "proper_pool_n>=300",
+      "detection_auroc": 0.918304,
+      "domain": "fover",
+      "ece_lodo_calibrated": 0.134538,
+      "ece_uncalibrated": 0.122522,
+      "n": 8829,
+      "platt_scaler": {
+        "bias": -4.200009,
+        "mean": 0.055921,
+        "n_train": 30582,
+        "scale": 0.203627,
+        "trained_on_domains": [
+          "code_humaneval",
+          "gap4_arc",
+          "gsm8k"
+        ],
+        "weight": 1.467421
+      },
+      "random_score_control": {
+        "auroc": 0.498654,
+        "replicates": 128,
+        "seed": 4408
+      },
+      "raw_base_rate": 0.812097,
+      "raw_n": 8829,
+      "risk_coverage": [
+        {
+          "accuracy": 0.812097,
+          "coverage": 1.0,
+          "n_kept": 8829,
+          "risk": 0.187903,
+          "threshold": 0.009922
+        },
+        {
+          "accuracy": 0.876793,
+          "coverage": 0.9,
+          "n_kept": 7946,
+          "risk": 0.123207,
+          "threshold": 0.362238
+        },
+        {
+          "accuracy": 0.968585,
+          "coverage": 0.75,
+          "n_kept": 6621,
+          "risk": 0.031415,
+          "threshold": 0.664878
+        },
+        {
+          "accuracy": 0.984368,
+          "coverage": 0.5,
+          "n_kept": 4414,
+          "risk": 0.015632,
+          "threshold": 0.830062
+        },
+        {
+          "accuracy": 0.972361,
+          "coverage": 0.25,
+          "n_kept": 2207,
+          "risk": 0.027639,
+          "threshold": 0.855844
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct"
+    },
+    {
+      "answer_cardinality": {
+        "max": 2003,
+        "mean": 546.980769,
+        "median": 520.5,
+        "min": 4
+      },
+      "auroc_ci95": [
+        0.921708,
+        0.9912
+      ],
+      "base_rate": 0.001688,
+      "claim_scope": "proper_pool_n>=300",
+      "detection_auroc": 0.963006,
+      "domain": "gap4_arc",
+      "ece_lodo_calibrated": 0.0055,
+      "ece_uncalibrated": 0.01145,
+      "n": 28443,
+      "platt_scaler": {
+        "bias": 1.652507,
+        "mean": 0.755874,
+        "n_train": 10968,
+        "scale": 0.240239,
+        "trained_on_domains": [
+          "code_humaneval",
+          "fover",
+          "gsm8k"
+        ],
+        "weight": 2.585288
+      },
+      "random_score_control": {
+        "auroc": 0.501353,
+        "replicates": 128,
+        "seed": 4408
+      },
+      "raw_base_rate": 0.001688,
+      "raw_n": 28443,
+      "risk_coverage": [
+        {
+          "accuracy": 0.001688,
+          "coverage": 1.0,
+          "n_kept": 28443,
+          "risk": 0.998312,
+          "threshold": 0.001529
+        },
+        {
+          "accuracy": 0.001875,
+          "coverage": 0.9,
+          "n_kept": 25598,
+          "risk": 0.998125,
+          "threshold": 0.001529
+        },
+        {
+          "accuracy": 0.00225,
+          "coverage": 0.75,
+          "n_kept": 21332,
+          "risk": 0.99775,
+          "threshold": 0.001529
+        },
+        {
+          "accuracy": 0.003305,
+          "coverage": 0.5,
+          "n_kept": 14221,
+          "risk": 0.996695,
+          "threshold": 0.001529
+        },
+        {
+          "accuracy": 0.00647,
+          "coverage": 0.25,
+          "n_kept": 7110,
+          "risk": 0.99353,
+          "threshold": 0.001543
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct"
+    },
+    {
+      "answer_cardinality": {
+        "max": 1,
+        "mean": 1.0,
+        "median": 1.0,
+        "min": 1
+      },
+      "auroc_ci95": [
+        0.98463,
+        0.994989
+      ],
+      "base_rate": 0.51,
+      "claim_scope": "proper_pool_n>=300",
+      "detection_auroc": 0.990196,
+      "domain": "gsm8k",
+      "ece_lodo_calibrated": 0.029442,
+      "ece_uncalibrated": 0.0725,
+      "n": 1600,
+      "platt_scaler": {
+        "bias": -2.859809,
+        "mean": 0.207667,
+        "n_train": 37811,
+        "scale": 0.354006,
+        "trained_on_domains": [
+          "code_humaneval",
+          "fover",
+          "gap4_arc"
+        ],
+        "weight": 2.806668
+      },
+      "random_score_control": {
+        "auroc": 0.499475,
+        "replicates": 128,
+        "seed": 4408
+      },
+      "raw_base_rate": 0.51,
+      "raw_n": 1600,
+      "risk_coverage": [
+        {
+          "accuracy": 0.51,
+          "coverage": 1.0,
+          "n_kept": 1600,
+          "risk": 0.49,
+          "threshold": 0.020392
+        },
+        {
+          "accuracy": 0.564583,
+          "coverage": 0.9,
+          "n_kept": 1440,
+          "risk": 0.435417,
+          "threshold": 0.020392
+        },
+        {
+          "accuracy": 0.673333,
+          "coverage": 0.75,
+          "n_kept": 1200,
+          "risk": 0.326667,
+          "threshold": 0.023813
+        },
+        {
+          "accuracy": 1.0,
+          "coverage": 0.5,
+          "n_kept": 800,
+          "risk": 0.0,
+          "threshold": 0.932719
+        },
+        {
+          "accuracy": 1.0,
+          "coverage": 0.25,
+          "n_kept": 400,
+          "risk": 0.0,
+          "threshold": 0.953719
+        }
+      ],
+      "score_orientation": "higher_verifier_score_means_more_likely_correct"
+    }
+  ],
+  "detection_calibrated_multi_domain": false,
+  "domains_at_chance": [
+    "code_humaneval"
+  ],
+  "duration_s": 24.112,
+  "experiment": "experiment_4408_cross_domain_detection_calibration_repair",
+  "field_principles": {
+    "base_rate_separation": "dict: how Semantic Confidence Aggregation separated multi-valid-output/base-rate effects from genuine calibration failure -- the .406 confound made explicit.",
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256} for each cached pool.",
+    "detection_by_domain": "list of {domain, n, base_rate, answer_cardinality, detection_auroc, auroc_ci95, ece_uncalibrated, ece_lodo_calibrated, risk_coverage, random_score_control} -- the per-domain de-confounded calibration record.",
+    "detection_calibrated_multi_domain": "BARE bool: the capstone reads this; true iff detection AUROC CI95 lower > 0.5 on >=2 NON-FoVer domains AND leave-one-domain-out ECE < the uncalibrated baseline on the held-out domain AFTER base-rate/multi-valid separation -- a deployable multi-domain detector contract.",
+    "honest_verdict": "Terminal-prefixed. A win (a calibrated multi-domain detector contract on de-confounded proper pools) and a clean null (a domain genuinely at chance -> logged gap) are BOTH decision-grade.",
+    "model_specs": "Verifier ensemble + cached pools per domain + n per domain + SCA config + oracle-distinct declaration.",
+    "preconditions_checked": "Records the per-domain pool sizes + TRM-stand-down verified; pre-empts silent-missing-resource and underpowered-claim fabrication modes.",
+    "random_seed": "Determinism precondition for the calibration fit and bootstrap.",
+    "reproducibility_checksum": "Hash of the pools + the SCA config + the leave-one-domain-out fits.",
+    "verifier_is_oracle": "BARE bool=false -- a learned/energy detection signal, oracle-distinct."
+  },
+  "honest_verdict": "complete: calibrated_multi_domain_contract_false_deconfounded",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Add a verifier score that targets the residual wrong mode, then rerun Exp 4408 with the same SCA and LODO calibration gate.",
+      "domain": "code_humaneval",
+      "failure_mode": "Deconfounded detection AUROC CI95 includes chance on code_humaneval after SCA; n=539.",
+      "gap_id": "GAP-4408-CODE-HUMANEVAL-DECONFOUNDED-DETECTOR-CHANCE",
+      "missing_discriminator": "A domain-native oracle-distinct verifier feature that separates semantically grouped correct answers from plausible wrong answers.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "bootstrap_method": "stratified_candidate_bootstrap",
+    "bootstrap_resamples": 2500,
+    "cached_pools": {
+      "code_humaneval": {
+        "answer_cardinality": {
+          "max": 5,
+          "mean": 3.36875,
+          "median": 4.0,
+          "min": 1
+        },
+        "base_rate": 0.90167,
+        "claim_scope": "proper_pool_n>=300",
+        "n": 539,
+        "raw_base_rate": 0.646905,
+        "raw_n": 2294
+      },
+      "fover": {
+        "answer_cardinality": {
+          "max": 2,
+          "mean": 1.07697,
+          "median": 1.0,
+          "min": 1
+        },
+        "base_rate": 0.812097,
+        "claim_scope": "proper_pool_n>=300",
+        "n": 8829,
+        "raw_base_rate": 0.812097,
+        "raw_n": 8829
+      },
+      "gap4_arc": {
+        "answer_cardinality": {
+          "max": 2003,
+          "mean": 546.980769,
+          "median": 520.5,
+          "min": 4
+        },
+        "base_rate": 0.001688,
+        "claim_scope": "proper_pool_n>=300",
+        "n": 28443,
+        "raw_base_rate": 0.001688,
+        "raw_n": 28443
+      },
+      "gsm8k": {
+        "answer_cardinality": {
+          "max": 1,
+          "mean": 1.0,
+          "median": 1.0,
+          "min": 1
+        },
+        "base_rate": 0.51,
+        "claim_scope": "proper_pool_n>=300",
+        "n": 1600,
+        "raw_base_rate": 0.51,
+        "raw_n": 1600
+      }
+    },
+    "calibration_method": "leave_one_domain_out_platt_scaling_after_sca",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates",
+    "live_generation": false,
+    "pools_built": [
+      {
+        "domain": "fover",
+        "n": 8829,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json"
+        ]
+      },
+      {
+        "domain": "gap4_arc",
+        "n": 28443,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json"
+        ]
+      },
+      {
+        "domain": "code_humaneval",
+        "n": 2294,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4233_oracle_distinct_code_beats_vote.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2838_humaneval_full_ensemble_eval.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2839_humaneval_dual_condition_v3.json"
+        ]
+      },
+      {
+        "domain": "gsm8k",
+        "n": 1600,
+        "source_cached_artifacts": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1998_live_it_baselines_gsm8k.json"
+        ]
+      }
+    ],
+    "random_score_control_replicates": 128,
+    "random_seed": 4408,
+    "random_seeds_used": [
+      4408
+    ],
+    "sca_config": {
+      "aggregation_rule": "noisy_or_probability_mass_over_semantic_group",
+      "reference": "arXiv:2602.07842",
+      "semantic_key_scope": "domain/task/normalized_answer"
+    },
+    "semantic_grouping": {
+      "code_humaneval": {
+        "duplicate_group_count": 512,
+        "n": 539,
+        "raw_n": 2294,
+        "semantic_conflict_groups": 0
+      },
+      "fover": {
+        "duplicate_group_count": 0,
+        "n": 8829,
+        "raw_n": 8829,
+        "semantic_conflict_groups": 0
+      },
+      "gap4_arc": {
+        "duplicate_group_count": 0,
+        "n": 28443,
+        "raw_n": 28443,
+        "semantic_conflict_groups": 0
+      },
+      "gsm8k": {
+        "duplicate_group_count": 0,
+        "n": 1600,
+        "raw_n": 1600,
+        "semantic_conflict_groups": 0
+      }
+    },
+    "trm_training": "stood_down_not_invoked",
+    "unavailable_domains": [],
+    "verifier_ensemble_id": "exp4408_deconfounded_cached_detector_suite",
+    "verifier_is_oracle": false
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "proper_pool_n>=300",
+      "domain": "code_humaneval",
+      "n": 539,
+      "raw_n": 2294,
+      "resource": "code_humaneval_proper_pool"
+    },
+    {
+      "available": true,
+      "detail": "proper_pool_n>=300",
+      "domain": "fover",
+      "n": 8829,
+      "raw_n": 8829,
+      "resource": "fover_proper_pool"
+    },
+    {
+      "available": true,
+      "detail": "proper_pool_n>=300",
+      "domain": "gap4_arc",
+      "n": 28443,
+      "raw_n": 28443,
+      "resource": "gap4_arc_proper_pool"
+    },
+    {
+      "available": true,
+      "detail": "proper_pool_n>=300",
+      "domain": "gsm8k",
+      "n": 1600,
+      "raw_n": 1600,
+      "resource": "gsm8k_proper_pool"
+    },
+    {
+      "available": true,
+      "detail": "3 >= 2",
+      "powered_non_fover_domains": [
+        "code_humaneval",
+        "gap4_arc",
+        "gsm8k"
+      ],
+      "resource": "two_non_fover_powered_proper_pools"
+    },
+    {
+      "available": true,
+      "detail": "no TRM training or live inference invoked; cached verifier scoring only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4408,
+  "random_seeds_used": [
+    4408
+  ],
+  "reproducibility_checksum": "sha256:7d9b8ac98fc17e3fd4bc328af1cd7e74e76b81fc3e9d0c4c2466b93a2c0a437d",
+  "schema": "carnot.cross_domain_detection_calibration_repair.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4408",
+    "SCENARIO-VERIFY-4408"
+  ],
+  "verifier_is_oracle": false
+}
