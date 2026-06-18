@@ -45,6 +45,8 @@ GAME_ARTIFACTS = {
     # E3 explore-verify-plan world-model solves (executed_steps under plan_executed_detail)
     "ar25": "results/experiment_4339_e3_explore_verify_plan_ar25.json",          # L1
     "ka59": "results/experiment_4350_e3_explore_verify_plan_ka59.json",          # L1
+    # glyph-substitution config puzzle solved via GameAdapter _tr87 (rule-mapped target verifier)
+    "tr87": "results/arc_loop_solve_tr87.json",                                  # L1
 }
 
 # from-scratch OFFLINE re-solves (these replay deterministically on the offline

@@ -204,8 +204,23 @@ games:
       - "A selected block collision pushes the other movable block by five 3-pixel steps through the central wall; ordinary movement cannot cross it."
       - "Clicks must be derived from the current offline camera/grid offset and movable sprite centers, not hardcoded live pixels."
 
+  - game: tr87
+    reproducibility: reproduced   # SOLVED 2026-06-17 via glyph-substitution RE (L1, reproduction-gated)
+    mechanic_class: config_substitution  # strategy-router class: configure-to-target via a visible rule map
+    levels_reproduced: 1
+    win_condition: "5 EDITABLE glyphs (series B, value 1-7) must be set so each, via a visible substitution rule (the top reference grid pairs A<->B values), matches the TARGET row (series A). Win = for every position i, value(editable_i) == rule_map[value(target_i)]."
+    action_model: "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED glyph's value (-1/+1 mod 7), ACTION3/4 move the selector among the 5 glyphs. Move budget 128; running out loses. L1 solved in 14 actions, 94 states (verifier-routed)."
+    solver: "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (verifier=rule-mapped mismatch count); results/arc_loop_solve_tr87.json."
+    reproduce: "re-gated reproduced=True L1 (kit.reproduce, claimed_level=1, 14-action path); verifier-routed 94 states vs blind BFS exhausting 52k+ without a win."
+    gotchas:
+      - "The win is a SUBSTITUTION-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-7bar-vs-target-A-bar ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The rule map (top reference grid, internal cifzvbcuwqe) maps A-values<->B-values; the editable B-glyph must equal rule_map[target A-value], not the target's raw value."
+      - "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier (mismatch count to the rule-mapped target) is load-bearing -- it routes to L1 in 94 states."
+      - "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions)."
+      - "DEAD-END: the win triggers a fade animation before next_level -- use a full-grid state_key (not a (selector,values) tuple) so the animation frames stay distinct and the search reaches the level-up."
+      - "L2+ add alter_rules / tree_translation / double_translation twists (control remap + multi-glyph rules); the base adapter reaches L1 cleanly, L2+ needs the twist decoded (a deeper-solve search on L2 did not converge in 900s)."
+
   # Remaining still-unsolved games include bp35, dc22, ft09, g50t, lf52,
-  # re86, s5i5, sb26, tr87, vc33.
+  # re86, s5i5, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
   # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
   # (cd82, sp80, su15, tu93); 14 resisted at L0 (deeper win-mechanics / per-game deltas).
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
@@ -214,17 +229,18 @@ games:
   # under replay vs fresh_env (gotcha #7 branch mode) on all 10. 0/10 unlocked: replay ==
   # fresh_env == L0 for every game (avg ~970 states searched). CONCLUSION: none of the 10
   # are blocked by non-idempotent reset (tu93 was the only such game) -- the branch mode is
-  # not the bottleneck. They need PER-GAME RE (a deeper win mechanic), like tn36/tu93 each
-  # did. Do NOT re-run a blind branch-mode sweep on them; route each to per-game RE.
+  # not the bottleneck. They need PER-GAME RE (a deeper win mechanic). tr87 was then RE'd this
+  # way (glyph-substitution config puzzle -> verifier-routed L1). Route the rest to per-game RE
+  # likewise; do NOT re-run a blind branch-mode sweep on them.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 = 26 across 15 games  (tu93 L2->L3 landed
-#   2026-06-17 via the GameAdapter + OfflineSolver branch_mode='fresh_env' adaptered path, offline-
+#   + tu93 3 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 1 = 27 across 16 games  (tr87 L1
+#   landed 2026-06-17 via the GameAdapter _tr87 glyph-substitution RE + verifier-routed search, offline-
 #   reproduction-gated; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 26   # ... -> 23 (+ka59 L1) -> 26 (+sc25 L1 E3-plan counted + tu93 L1->L3 fresh_env, 2026-06-17)
-reproducible_total_games: 15    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36
+reproducible_total_levels: 27   # ... -> 26 (+sc25 L1 + tu93 L1->L3) -> 27 (+tr87 L1 glyph-substitution RE, 2026-06-17)
+reproducible_total_games: 16    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36, tr87
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- LIVE LEADERBOARD SUBMISSIONS (operator-gated External Publication) ----
