@@ -1,0 +1,886 @@
+{
+  "availability_report": {
+    "available_artifact_keys": [
+      "4443_g50t_bank",
+      "4444_config_rule",
+      "4445_object_motion",
+      "4446_first_contact",
+      "4447_library",
+      "4448_loo_v2",
+      "4449_hygiene"
+    ],
+    "axes": {
+      "config_rule": {
+        "available_artifact_keys": [
+          "4444_config_rule"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "ft09_closed_dc22_open"
+      },
+      "first_contact": {
+        "available_artifact_keys": [
+          "4446_first_contact"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "routed_generic_first_contact_banked"
+      },
+      "g50t_bank": {
+        "available_artifact_keys": [
+          "4443_g50t_bank"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "g50t_l1_banked"
+      },
+      "library": {
+        "available_artifact_keys": [
+          "4447_library"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "documented_library_generalizes"
+      },
+      "loo_v2": {
+        "available_artifact_keys": [
+          "4448_loo_v2"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 5
+      },
+      "object_motion": {
+        "available_artifact_keys": [
+          "4445_object_motion"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "ar25_ka59_closed_accuracy_lift"
+      },
+      "registry_hygiene": {
+        "available_artifact_keys": [
+          "4449_hygiene"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 39
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4443_g50t_bank",
+      "experiment_id": 4443,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_games",
+        "reproducible_total_levels",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4443_bank_g50t_example_conditioned_win.json",
+      "sha256": "6fe9cd2d3433df5c5f0546cb2f758387a6cd38da621102f577d9d950f6ac492b"
+    },
+    {
+      "artifact_key": "4444_config_rule",
+      "experiment_id": 4444,
+      "fields_imported": [
+        "honest_verdict",
+        "ft09_resolved_generically",
+        "dc22_state",
+        "dc22_reproduction_result",
+        "missing_verifier_gaps",
+        "offline_reproduced",
+        "reproduced_levels",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+      "sha256": "575a9a46b6b7b8830c0948fb9fd1db792c42468bd0b42f6ef5eab7b4ea4567b1"
+    },
+    {
+      "artifact_key": "4445_object_motion",
+      "experiment_id": 4445,
+      "fields_imported": [
+        "honest_verdict",
+        "residuals_closed_generically",
+        "world_model_accuracy_cold",
+        "world_model_accuracy_with_examples",
+        "accuracy_margin",
+        "missing_verifier_gaps",
+        "offline_reproduced",
+        "reproduced_levels",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4445_generic_object_motion_world_model_operator.json",
+      "sha256": "819bec3fbc7da423d08be9327c2e3b4fe99b6b68e9bc44aac7247c02d9c4f2f2"
+    },
+    {
+      "artifact_key": "4446_first_contact",
+      "experiment_id": 4446,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "routed_to",
+        "offline_reproduced",
+        "reproduced_levels",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4446_drive_generic_first_contact_bank.json",
+      "sha256": "8181c9ba1cfccbcc76896120c323d27932a655b1780a913d6fd13ee1fdcdc349"
+    },
+    {
+      "artifact_key": "4447_library",
+      "experiment_id": 4447,
+      "fields_imported": [
+        "honest_verdict",
+        "library_coverage",
+        "retrieval_precision_at_1",
+        "primitives_documented",
+        "no_regression",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4447_lilo_documented_primitive_library.json",
+      "sha256": "20f0ca7a3368e6673cd90aa6e42c9713fb0f10f228a07fa747ddc543c60c663b"
+    },
+    {
+      "artifact_key": "4448_loo_v2",
+      "experiment_id": 4448,
+      "fields_imported": [
+        "honest_verdict",
+        "generic_loo_solve_count_v1_baseline",
+        "generic_loo_solve_count_v2",
+        "loo_gate_passed",
+        "missing_verifier_gaps",
+        "closed_residuals_by_new_operator",
+        "offline_reproduced",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+      "sha256": "6584f0a1fb8855be5690a5d8ba980a99e6f9591b088a9923fdf37bb7b9e48590"
+    },
+    {
+      "artifact_key": "4449_hygiene",
+      "experiment_id": 4449,
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_games",
+        "reproducible_total_levels",
+        "regression_guard_passed",
+        "availability_report",
+        "registry_reconciliation"
+      ],
+      "path": "results/experiment_4449_registry_gaps_hygiene.json",
+      "sha256": "30a77455691783b4953be15635ac80faa49ef698246fb5efbb14e7842c6475ff"
+    }
+  ],
+  "config_rule": {
+    "dc22_banked": false,
+    "dc22_state": "not_grounded",
+    "ft09_resolved_generically": true,
+    "honest_verdict": "complete: ft09_generic_resolved_dc22_not_grounded_gap_logged",
+    "missing_verifier_gaps": [
+      {
+        "game": "dc22",
+        "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+        "residual_delta": "missing_config_rule_verifier_grounding",
+        "status": "open"
+      }
+    ],
+    "reproduced_levels": 1,
+    "residual_deltas": [
+      {
+        "game": "dc22",
+        "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+        "residual_delta": "missing_config_rule_verifier_grounding",
+        "source_artifact": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+        "status": "open"
+      }
+    ],
+    "state": "ft09_closed_dc22_open",
+    "verifier_is_oracle": true
+  },
+  "duration_s": 0.38949,
+  "experiment": 4453,
+  "field_principles": {
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields",
+    "generic_loo_solve_count_v2": "bare int from exp4448 -- did the falsifiable generic metric rise above 2?",
+    "generic_solver_gap_state": "one honest string (closing/partial/total-gap) -- the .411 headline answer to 'is the example corpus closing the per-game-RE gap?'",
+    "honest_verdict": "terminal-prefixed",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream JSON + publication_gate.py; 100us floor",
+    "next_backlog": "the still-open residual_deltas + missing primitives that become the .412 generic-solver build backlog",
+    "publication_gate": "the G1-G4 publication_gate.py --json output; paper_ready stays True (FoVer 0.9131, FROZEN)",
+    "reproducibility_checksum": "content hash for reproducibility",
+    "reproducible_total_levels": "the authoritative monotonic sprint metric (target >= 38)",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; upstream execution-grounded ARC solves carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire"
+  },
+  "field_provenance": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_loo_solve_count_v2": {
+      "principle": "bare int from exp4448 -- did the falsifiable generic metric rise above 2?",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_solver_gap_state": {
+      "principle": "one honest string (closing/partial/total-gap) -- the .411 headline answer to 'is the example corpus closing the per-game-RE gap?'",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed",
+      "satisfied_by": "aggregation logic"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream JSON + publication_gate.py; 100us floor",
+      "satisfied_by": "aggregation logic"
+    },
+    "next_backlog": {
+      "principle": "the still-open residual_deltas + missing primitives that become the .412 generic-solver build backlog",
+      "satisfied_by": "aggregation logic"
+    },
+    "publication_gate": {
+      "principle": "the G1-G4 publication_gate.py --json output; paper_ready stays True (FoVer 0.9131, FROZEN)",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash for reproducibility",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative monotonic sprint metric (target >= 38)",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle": {
+      "principle": "BARE bool=false for the capstone itself; upstream execution-grounded ARC solves carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "first_contact": {
+    "honest_verdict": "success: generic_first_contact_vc33_L1_offline_reproduced",
+    "missing_verifier_gaps": [],
+    "reproduced_levels": 1,
+    "residual_deltas": [],
+    "routed_generic_first_contact_banked": true,
+    "routed_to": "s5i5",
+    "state": "routed_generic_first_contact_banked",
+    "target_game": "vc33",
+    "verifier_is_oracle": true
+  },
+  "flagged_artifacts_excluded": [],
+  "g50t_bank": {
+    "g50t_l1_cleanly_banked": true,
+    "honest_verdict": "success: example_conditioned_g50t_L1_banked_with_correct_substrate",
+    "plus_one_game_level": true,
+    "reproduced_levels": 1,
+    "reproducible_total_games": 19,
+    "reproducible_total_levels": 38,
+    "state": "g50t_l1_banked",
+    "target_game": "g50t",
+    "verifier_is_oracle": true
+  },
+  "generic_loo_solve_count_v2": 5,
+  "generic_solver_gap_state": "partial",
+  "headline_question_answers": {
+    "exp4443": {
+      "g50t_l1_cleanly_banked": true,
+      "plus_one_game_level": true,
+      "state": "g50t_l1_banked"
+    },
+    "exp4444": {
+      "dc22_banked": false,
+      "ft09_resolved_generically": true,
+      "residual_deltas": [
+        {
+          "game": "dc22",
+          "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+          "residual_delta": "missing_config_rule_verifier_grounding",
+          "source_artifact": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+          "status": "open"
+        }
+      ],
+      "state": "ft09_closed_dc22_open"
+    },
+    "exp4445": {
+      "accuracy_lift": 0.75,
+      "closed_ar25_ka59": true,
+      "state": "ar25_ka59_closed_accuracy_lift",
+      "world_model_accuracy_cold": 0.25,
+      "world_model_accuracy_with_examples": 1.0
+    },
+    "exp4446": {
+      "routed_generic_first_contact_banked": true,
+      "routed_to": "s5i5",
+      "state": "routed_generic_first_contact_banked",
+      "target_game": "vc33"
+    },
+    "exp4447": {
+      "library_coverage": 1.0,
+      "library_generalizes": true,
+      "retrieval_precision_at_1": 1.0,
+      "state": "documented_library_generalizes"
+    },
+    "exp4448": {
+      "generic_loo_solve_count_v1_baseline": 2,
+      "generic_loo_solve_count_v2": 5,
+      "residual_deltas": [
+        {
+          "game": "tr87",
+          "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
+          "retrieved_operator": "config_rule_grounding",
+          "source_artifact": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+          "status": "open",
+          "v1_routed_to": "tu93"
+        },
+        {
+          "game": "sc25",
+          "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+          "retrieved_operator": "active_data_collection",
+          "source_artifact": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+          "status": "open",
+          "v1_routed_to": "cd82"
+        }
+      ],
+      "state": "v2_rises_above_baseline",
+      "v2_rose_above_baseline": true
+    }
+  },
+  "honest_verdict": "complete: v411_generic_solver_partial_loo_v2_5_levels_39_games_20_publication_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "library": {
+    "honest_verdict": "success: documented_primitive_library_retrieval_gate_passed",
+    "library_coverage": 1.0,
+    "library_generalizes": true,
+    "no_regression": true,
+    "primitives_documented_count": 18,
+    "retrieval_precision_at_1": 1.0,
+    "state": "documented_library_generalizes",
+    "verifier_is_oracle": true
+  },
+  "loo_v2": {
+    "closed_residuals_by_new_operator": [
+      {
+        "closed_by_operator": "object_motion_world_model",
+        "game": "ka59",
+        "v1_residual_delta": "missing_push_block_world_model_and_dynamic_selection"
+      },
+      {
+        "closed_by_operator": "object_motion_world_model",
+        "game": "ar25",
+        "v1_residual_delta": "missing_reflection_world_model_and_object_motion_plan"
+      },
+      {
+        "closed_by_operator": "config_rule_verifier",
+        "game": "ft09",
+        "v1_residual_delta": "missing_local_constraint_color_cycle_verifier"
+      }
+    ],
+    "generic_loo_solve_count_v1_baseline": 2,
+    "generic_loo_solve_count_v2": 5,
+    "honest_verdict": "success: generic_loo_solve_count_v2_5_of_7_beats_v1_2",
+    "loo_gate_passed": true,
+    "residual_deltas": [
+      {
+        "game": "tr87",
+        "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
+        "retrieved_operator": "config_rule_grounding",
+        "source_artifact": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+        "status": "open",
+        "v1_routed_to": "tu93"
+      },
+      {
+        "game": "sc25",
+        "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+        "retrieved_operator": "active_data_collection",
+        "source_artifact": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+        "status": "open",
+        "v1_routed_to": "cd82"
+      }
+    ],
+    "state": "v2_rises_above_baseline",
+    "v2_rose_above_baseline": true,
+    "verifier_is_oracle": true
+  },
+  "next_backlog": {
+    "closed_residuals_by_new_operator": [
+      {
+        "closed_by_operator": "object_motion_world_model",
+        "game": "ka59",
+        "v1_residual_delta": "missing_push_block_world_model_and_dynamic_selection"
+      },
+      {
+        "closed_by_operator": "object_motion_world_model",
+        "game": "ar25",
+        "v1_residual_delta": "missing_reflection_world_model_and_object_motion_plan"
+      },
+      {
+        "closed_by_operator": "config_rule_verifier",
+        "game": "ft09",
+        "v1_residual_delta": "missing_local_constraint_color_cycle_verifier"
+      }
+    ],
+    "missing_primitives": [
+      "cast_grid_spell_shrink_tank_exit_verifier",
+      "config_rule_verifier_grounding",
+      "glyph_rewrite_rule_verifier_without_tr87_adapter"
+    ],
+    "open_gap_ids": [
+      "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+      "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
+      "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER"
+    ],
+    "residual_deltas": [
+      {
+        "game": "dc22",
+        "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+        "residual_delta": "missing_config_rule_verifier_grounding",
+        "source_artifact": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+        "status": "open"
+      },
+      {
+        "game": "tr87",
+        "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
+        "retrieved_operator": "config_rule_grounding",
+        "source_artifact": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+        "status": "open",
+        "v1_routed_to": "tu93"
+      },
+      {
+        "game": "sc25",
+        "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+        "retrieved_operator": "active_data_collection",
+        "source_artifact": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+        "status": "open",
+        "v1_routed_to": "cd82"
+      }
+    ]
+  },
+  "object_motion": {
+    "accuracy_lift": 0.75,
+    "closed_ar25_ka59": true,
+    "helped_vs_cold_control": true,
+    "honest_verdict": "success: ar25_ka59_object_motion_generic_L1_offline_reproduced",
+    "missing_verifier_gaps": [],
+    "residual_deltas": [],
+    "residuals_closed_generically": [
+      "ar25",
+      "ka59"
+    ],
+    "state": "ar25_ka59_closed_accuracy_lift",
+    "verifier_is_oracle": true,
+    "world_model_accuracy_cold": 0.25,
+    "world_model_accuracy_with_examples": 1.0
+  },
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "publication_gate": {
+      "exists": true,
+      "paper_ready": true,
+      "path": "scripts/publication_gate.py",
+      "runnable": true,
+      "unmet_gates": []
+    },
+    "registry_hygiene": {
+      "honest_verdict": "complete: registry_gaps_hygiene_4449_guard_passed",
+      "registry_reconciliation": {
+        "arc_solve_registry_reconciled": true,
+        "excluded_artifacts": [],
+        "filled_gap_ids": [
+          "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+          "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER",
+          "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN",
+          "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION",
+          "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT"
+        ],
+        "open_gap_ids": [
+          "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+          "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
+          "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER"
+        ],
+        "production_verifier_edits": false,
+        "registries_reconciled": true,
+        "reproducible_total_games": 20,
+        "reproducible_total_levels": 39,
+        "verifier_gaps_reconciled": true,
+        "verifier_registry_reconciled": true
+      },
+      "regression_guard_passed": true,
+      "reproducible_total_games": 20,
+      "reproducible_total_levels": 39,
+      "state": "reconciled"
+    },
+    "robust_aggregate_available_helper": "capstone_aggregate_available.aggregate_available_report_gaps",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4443_g50t_bank",
+        "exists": true,
+        "experiment_id": 4443,
+        "path": "results/experiment_4443_bank_g50t_example_conditioned_win.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4444_config_rule",
+        "exists": true,
+        "experiment_id": 4444,
+        "path": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4445_object_motion",
+        "exists": true,
+        "experiment_id": 4445,
+        "path": "results/experiment_4445_generic_object_motion_world_model_operator.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4446_first_contact",
+        "exists": true,
+        "experiment_id": 4446,
+        "path": "results/experiment_4446_drive_generic_first_contact_bank.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4447_library",
+        "exists": true,
+        "experiment_id": 4447,
+        "path": "results/experiment_4447_lilo_documented_primitive_library.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4448_loo_v2",
+        "exists": true,
+        "experiment_id": 4448,
+        "path": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4449_hygiene",
+        "exists": true,
+        "experiment_id": 4449,
+        "path": "results/experiment_4449_registry_gaps_hygiene.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_gate_checksum": "7647fd5ba3275c5994bf046360095a1511d7a0b5abd8bcdcd8c367fa1db3f9ac",
+  "random_seed": 4453,
+  "registry_hygiene": {
+    "honest_verdict": "complete: registry_gaps_hygiene_4449_guard_passed",
+    "registry_reconciliation": {
+      "arc_solve_registry_reconciled": true,
+      "excluded_artifacts": [],
+      "filled_gap_ids": [
+        "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+        "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER",
+        "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN",
+        "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION",
+        "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT"
+      ],
+      "open_gap_ids": [
+        "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+        "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
+        "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER"
+      ],
+      "production_verifier_edits": false,
+      "registries_reconciled": true,
+      "reproducible_total_games": 20,
+      "reproducible_total_levels": 39,
+      "verifier_gaps_reconciled": true,
+      "verifier_registry_reconciled": true
+    },
+    "regression_guard_passed": true,
+    "reproducible_total_games": 20,
+    "reproducible_total_levels": 39,
+    "state": "reconciled"
+  },
+  "reproducibility_checksum": "sha256:070734b204281855c876ca0db8aade98fc04acf3f33ce0b65dac3455fb420a90",
+  "reproducible_total_games": 20,
+  "reproducible_total_levels": 39,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "generic_solver_gap_state",
+    "generic_loo_solve_count_v2",
+    "reproducible_total_levels",
+    "reproducible_total_games",
+    "next_backlog",
+    "publication_gate",
+    "verifier_is_oracle",
+    "inference_substrate",
+    "cited_upstream_artifacts",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v411_4453.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4453",
+    "SCENARIO-CAPSTONE-4453"
+  ],
+  "submitted_to_leaderboard": false,
+  "unmet_gates": [],
+  "upstream_oracle_declarations": [
+    {
+      "artifact_key": "4443_g50t_bank",
+      "experiment_id": 4443,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4444_config_rule",
+      "experiment_id": 4444,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4445_object_motion",
+      "experiment_id": 4445,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4446_first_contact",
+      "experiment_id": 4446,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4447_library",
+      "experiment_id": 4447,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4448_loo_v2",
+      "experiment_id": 4448,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4449_hygiene",
+      "experiment_id": 4449,
+      "skipped": false,
+      "verifier_is_oracle": null
+    }
+  ],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4443_g50t_bank",
+      "experiment_id": 4443,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_games",
+        "reproducible_total_levels",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4443_bank_g50t_example_conditioned_win.json",
+      "payload_reproducibility_checksum": "b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9",
+      "sha256": "6fe9cd2d3433df5c5f0546cb2f758387a6cd38da621102f577d9d950f6ac492b",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4444_config_rule",
+      "experiment_id": 4444,
+      "fields_imported": [
+        "honest_verdict",
+        "ft09_resolved_generically",
+        "dc22_state",
+        "dc22_reproduction_result",
+        "missing_verifier_gaps",
+        "offline_reproduced",
+        "reproduced_levels",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+      "payload_reproducibility_checksum": "a3b42ddb64a5717d81c8ed0a7294fbd53ce93cca09d9da46d499a87ffdbe1cf4",
+      "sha256": "575a9a46b6b7b8830c0948fb9fd1db792c42468bd0b42f6ef5eab7b4ea4567b1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4445_object_motion",
+      "experiment_id": 4445,
+      "fields_imported": [
+        "honest_verdict",
+        "residuals_closed_generically",
+        "world_model_accuracy_cold",
+        "world_model_accuracy_with_examples",
+        "accuracy_margin",
+        "missing_verifier_gaps",
+        "offline_reproduced",
+        "reproduced_levels",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4445_generic_object_motion_world_model_operator.json",
+      "payload_reproducibility_checksum": "431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c",
+      "sha256": "819bec3fbc7da423d08be9327c2e3b4fe99b6b68e9bc44aac7247c02d9c4f2f2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4446_first_contact",
+      "experiment_id": 4446,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "routed_to",
+        "offline_reproduced",
+        "reproduced_levels",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4446_drive_generic_first_contact_bank.json",
+      "payload_reproducibility_checksum": "9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361",
+      "sha256": "8181c9ba1cfccbcc76896120c323d27932a655b1780a913d6fd13ee1fdcdc349",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4447_library",
+      "experiment_id": 4447,
+      "fields_imported": [
+        "honest_verdict",
+        "library_coverage",
+        "retrieval_precision_at_1",
+        "primitives_documented",
+        "no_regression",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4447_lilo_documented_primitive_library.json",
+      "payload_reproducibility_checksum": "40afa7857c381e2f81fdc469dd8e1a368172e32ad314480e37e73bc215e79699",
+      "sha256": "20f0ca7a3368e6673cd90aa6e42c9713fb0f10f228a07fa747ddc543c60c663b",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4448_loo_v2",
+      "experiment_id": 4448,
+      "fields_imported": [
+        "honest_verdict",
+        "generic_loo_solve_count_v1_baseline",
+        "generic_loo_solve_count_v2",
+        "loo_gate_passed",
+        "missing_verifier_gaps",
+        "closed_residuals_by_new_operator",
+        "offline_reproduced",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4448_loo_generic_solve_benchmark_v2.json",
+      "payload_reproducibility_checksum": "b935fcb58572409f81c07d85605bc104e586e452182290354d10fbddfee6890c",
+      "sha256": "6584f0a1fb8855be5690a5d8ba980a99e6f9591b088a9923fdf37bb7b9e48590",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4449_hygiene",
+      "experiment_id": 4449,
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_games",
+        "reproducible_total_levels",
+        "regression_guard_passed",
+        "availability_report",
+        "registry_reconciliation"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4449_registry_gaps_hygiene.json",
+      "payload_reproducibility_checksum": "c940dffc7e657c8a2216c41a7faac98b417930e4a1ad63cfd8251260ec62f2a9",
+      "sha256": "30a77455691783b4953be15635ac80faa49ef698246fb5efbb14e7842c6475ff",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "20f0ca7a3368e6673cd90aa6e42c9713fb0f10f228a07fa747ddc543c60c663b",
+    "30a77455691783b4953be15635ac80faa49ef698246fb5efbb14e7842c6475ff",
+    "575a9a46b6b7b8830c0948fb9fd1db792c42468bd0b42f6ef5eab7b4ea4567b1",
+    "6584f0a1fb8855be5690a5d8ba980a99e6f9591b088a9923fdf37bb7b9e48590",
+    "6fe9cd2d3433df5c5f0546cb2f758387a6cd38da621102f577d9d950f6ac492b",
+    "8181c9ba1cfccbcc76896120c323d27932a655b1780a913d6fd13ee1fdcdc349",
+    "819bec3fbc7da423d08be9327c2e3b4fe99b6b68e9bc44aac7247c02d9c4f2f2"
+  ],
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_honored": true
+}
