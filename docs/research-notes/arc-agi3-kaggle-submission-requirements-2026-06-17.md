@@ -170,3 +170,19 @@ live agent at `python/carnot/agentic/arc_competition_agent.py:_proposer()` (E2E-
   GGUF with MTP + q8 KV via the bundled binary/wheel and generate 1 token.
 
 Decentralization: mirror the bundled weights per Rule 3 ([[feedback_ipfs_over_gitea_for_mirror_channel]]).
+
+### Local CUDA validation (2026-06-19) — most of the engine question is settled
+
+Ran the existing CUDA `llama-server` (build/, CUDA 13) on a 3090 with Qwen3.5-9B-MTP + `--spec-type
+draft-mtp` + q8_0 KV (the exact submission flags). Result:
+- **CUDA + MTP + q8 KV works**: `draft-mtp` activated, **80.5% draft acceptance**, generated correct code,
+  **159 tok/s** (3090; a T4 is slower but still far above the iGPU's ~13).
+- **VRAM footprint = 11.5 GB** (model 5.9 + MTP self-draft ~5.2 + q8 KV @ ctx 4096) → **fits a 16 GB T4
+  with ~4.9 GB free for additional KV.** So even at the pessimistic 16 GB / T4 assumption, Qwen3.5-9B-MTP
+  + MTP + q8 KV deploys with headroom.
+
+**What this does NOT settle (still needs the Kaggle notebook):** the binary must be built on **Kaggle's
+CUDA (≈12.x)** — the local build links CUDA 13, so it would NOT run on Kaggle as-is (this confirms the
+build-ON-Kaggle approach is mandatory, not optional). And the real per-GPU VRAM (T4 vs L4) is still a
+Kaggle probe. Net: the engine + model + MTP + KV + fit are validated; only the CUDA-version-matched build
+and the live VRAM probe remain — exactly what `scripts/kaggle/build_verify_llamacpp_mtp.py` does.
