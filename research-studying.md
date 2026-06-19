@@ -8,6 +8,21 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 MANUFACTURED game variants — flagged for .413 (bigger generic-transfer benchmark)
+
+**Status:** SHIPPED (outer-loop) + flagged for the .413 planner. `python/carnot/agentic/arc_variant_generator.py`
+manufactures mechanic-preserving held-out layout variants of the 25 public games (deterministic
+color-permutation -> positions unchanged, no action remap; optional reflection w/ click remap), and
+`VariantEnv` + `arc_leaderboard_eval.py --variant N`/`--reflect` run the full CarnotAgent cascade
+against them. The REAL env keeps the win logic, so a solve is a real solve and a color-permuted variant
+forces the LLM inducer to RE-induce the win-rule in a new palette = a genuine generalization test.
+Validated: the explorer solves variant-1 lp85 to L1 in 21 actions (= the real game). **flagged_for_v413
+(operator 2026-06-19):** wire the variant set into the LOO/generic-transfer benchmark — score the
+generic solver on 25 games x N variants (not 2/7 LOO on 25), and TRAIN the generic operators +
+example-conditioned inducer against variant diversity. Solvability + gold solution are GUARANTEED per
+variant (inherited from the original game, judged by the real win-condition) so generated solutions are
+objectively gradeable. Just add `--variant`/`--reflect` to the next LOO benchmark task.
+
 ## 2026-06-19 Exp 4452 - .411 SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4452_sota_ingestion_411.json` and
