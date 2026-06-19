@@ -1,0 +1,10 @@
+[Unit]
+Description=Carnot ARC-AGI-3 daily submission prep — daily 09:37 local (EDT)
+Requires=carnot-arc-daily-prep.service
+
+[Timer]
+OnCalendar=*-*-* 09:37:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

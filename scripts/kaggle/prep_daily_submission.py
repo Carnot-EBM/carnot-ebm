@@ -133,11 +133,25 @@ def prep() -> None:
     kaggle("kernels", "output", KERNEL, "-p", str(out))
     parquet_ok = any(out.glob("*.parquet"))
 
+    ready = status == "complete" and parquet_ok
+    # Status file: the durable hand-off between the (session-independent) systemd timer that
+    # runs this prep and the in-session watchdog/operator that approves + submits. The timer
+    # can prep but cannot push-notify or submit (those need an agent / are operator-only), so
+    # it records readiness here; the watchdog surfaces it and the operator approves the submit.
+    status_path = REPO / "ops" / "arc-daily-prep-status.json"
+    status_path.write_text(json.dumps({
+        "prepped_at": stamp,
+        "kernel_version": kver,
+        "save_run": status,
+        "parquet_ok": parquet_ok,
+        "ready_for_operator_submit": ready,
+        "submit_command": f".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}",
+    }, indent=2))
+
     print("\n=== DAILY PREP RESULT ===")
     print(f"  dataset: re-versioned ({stamp})")
     print(f"  kernel:  v{kver}  save-run={status}  submission.parquet={'OK' if parquet_ok else 'MISSING'}")
-    print(f"  current best public score: see leaderboard (first scored = 0.08)")
-    ready = status == "complete" and parquet_ok
+    print(f"  status file: {status_path}")
     print(f"  READY FOR OPERATOR-APPROVED SUBMIT: {'YES' if ready else 'NO — investigate above'}")
     if ready:
         print("\n  To submit (operator approval), run:")
