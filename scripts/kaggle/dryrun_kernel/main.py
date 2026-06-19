@@ -39,8 +39,19 @@ def healthy():
 
 
 def main():
+    global SERVER, GGUF, BIN_DIR
     REPORT["gpu_before"] = vram()
     REPORT["kaggle_input"] = sorted(os.listdir("/kaggle/input")) if Path("/kaggle/input").exists() else []
+    # Kaggle's dataset mount path varies (here it nests under /kaggle/input/datasets/...), so SELF-LOCATE
+    # the bundled files anywhere under /kaggle/input rather than assume a fixed path.
+    servers = list(Path("/kaggle/input").rglob("llama-server"))
+    ggufs = list(Path("/kaggle/input").rglob("*.gguf"))
+    if servers:
+        SERVER = servers[0]; BIN_DIR = SERVER.parent
+    if ggufs:
+        GGUF = ggufs[0]
+    REPORT["found_server"] = str(SERVER) if servers else None
+    REPORT["found_gguf"] = str(GGUF) if ggufs else None
     REPORT["binary_exists"] = SERVER.exists()
     REPORT["gguf_exists"] = GGUF.exists()
     if not SERVER.exists() or not GGUF.exists():
