@@ -8880,3 +8880,4 @@ c |
 | 2026-06-19 20:30 UTC | PHASE B2 (RESERVED INFRA) -- provisional-vs-reprod | OK | 96 passed, 1 warning in 8.80s |
 | 2026-06-19 20:42 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | 88 passed, 1 warning in 6.02s |
 | 2026-06-19 20:56 UTC | PHASE D (SOTA-INGESTION; .412 bleeding-edge track) | OK | 105 passed, 1 warning in 7.87s |
+| 2026-06-19 21:12 UTC | PHASE E (CAPSTONE .412) -- the milestone scorecard | OK | 86 passed, 1 warning in 5.84s |
