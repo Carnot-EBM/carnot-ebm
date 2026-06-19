@@ -145,11 +145,22 @@ live agent at `python/carnot/agentic/arc_competition_agent.py:_proposer()` (E2E-
 **What to bundle as Kaggle Datasets (upload once, with internet):**
 1. **The GGUF** — `Qwen3.5-9B-Q4_K_M.gguf` from `unsloth/Qwen3.5-9B-MTP-GGUF` (5.9 GB). At submission set
    `CARNOT_ARC_GGUF_PATH=/kaggle/input/<dataset>/Qwen3.5-9B-Q4_K_M.gguf`.
-2. **A CUDA llama.cpp build** — the engine `LocalGGUFProposer` launches is the `llama-server` binary
-   (`_resolve_llama_server`), so bundle a **CUDA-compiled llama-server + its shared libs**
-   (libllama, libggml-cuda) matching Kaggle's CUDA, OR refactor `LocalGGUFProposer` to the
-   `llama-cpp-python` CUDA wheel (`pip install --no-index --find-links=/kaggle/input/...`). Either way the
-   build MUST include native MTP (`common_speculative_impl_draft_mtp`) — the repo build 9606 has it.
+2. **A CUDA llama.cpp BINARY (llama-server) — NOT a Python wheel.** This is load-bearing: native MTP
+   (`--spec-type draft-mtp`) is implemented in **`libllama-common`** (verified: 30 symbols there, 0 in core
+   `libllama`), which the **`llama-server` binary** links and which our `LocalGGUFProposer` already launches.
+   The stock **`llama-cpp-python` wheel wraps only core `libllama`** and uses its OWN Python-level
+   speculative decoding — it **cannot do the native self-MTP we validated.** So bundle the **CUDA-compiled
+   `llama-server` + its shared libs** (`libllama`, `libggml`, `libggml-cuda`, **`libllama-common`**) as a
+   Kaggle Dataset, and point the submission at it via **`CARNOT_LLAMA_SERVER=/kaggle/input/<dataset>/llama-server`**
+   (env, resolved at import). The binary is **model-agnostic** — it loads Qwen3.5-9B-MTP at runtime via
+   `-m` + the MTP/KV flags; nothing is baked in.
+   - **Build recipe (ahead of time, internet on):** `cmake -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="75;89"`
+     (75 = T4, 89 = L4) on a recent llama.cpp (≥ the build that merged `draft-mtp`; the repo's 9606 has it),
+     `--target llama-server`. **Build it inside a Kaggle notebook (internet on)** to guarantee the CUDA
+     toolkit + GPU-arch match, then save the build dir as a Kaggle Dataset output. (A local CUDA build works
+     only if its arch list covers the Kaggle GPU.)
+   - **Wheel fallback (no MTP):** if bundling the binary proves fiddly, use the `llama-cpp-python` CUDA wheel
+     and run **MTP-OFF** (`CARNOT_ARC_MTP=0`) — base Qwen3.5-9B still grounds, just ~6.6–8.2 tok/s vs ~13.
 3. Carnot's own code (the agent/solver/world-model) — already in-repo, MIT-0.
 
 **Two gating verifications before the submission is trusted (run a one-shot Kaggle notebook, internet OFF):**

@@ -351,6 +351,15 @@ def _resolve_gguf(repo_substr: str) -> Optional[str]:
 # CPU-only; llama-cli/llama-completion hang/crash on gemma's chat template — the server's
 # /completion does RAW completion (no chat template) and keeps the model loaded across calls.
 def _resolve_llama_server() -> Path:
+    # Kaggle/live submission: point CARNOT_LLAMA_SERVER at the bundled CUDA llama-server binary
+    # (/kaggle/input/<llamacpp-dataset>/llama-server). MTP (--spec-type draft-mtp) lives in
+    # libllama-common, which the BINARY links -- the stock llama-cpp-python wheel cannot do native MTP,
+    # so the submission bundles this binary + its shared libs, NOT a wheel.
+    import os
+
+    env = os.environ.get("CARNOT_LLAMA_SERVER")
+    if env:
+        return Path(env)
     base = Path.home() / ".cache" / "llama.cpp-master"
     hip = base / "build-hip" / "bin" / "llama-server"  # ROCm iGPU — no conductor contention
     return hip if hip.exists() else base / "build" / "bin" / "llama-server"  # CUDA 3090 fallback
