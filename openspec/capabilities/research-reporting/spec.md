@@ -24926,6 +24926,56 @@ archived successfully.
 |---|---|---|
 | REQ-REPORT-4431 | Planned (`python/carnot/reporting/archive_409_activate_410_4431.py`, `results/experiment_4431_archive_409_activate_410.json`) | Planned (`tests/python/test_experiment_4431_archive_409_activate_410.py`) |
 
+### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
+
+The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
+leave-one-out benchmark over at least six already-reproduced games from the ARC
+solve registry. For each target game, the workflow SHALL withhold that game's own
+per-game recipe, including GameAdapter, world model, frozen trajectory, and
+config-rule solve path, and SHALL attempt a fresh solve using only the standing
+generic `arc_loop_solve` loop or an equivalent injected adapter-free loop, transfer
+routing from `arc_solve_learning.recommend_approach` restricted to other solved
+games, and registry `general_gotchas` plus primitives from the non-held-out
+example corpus.
+
+Before solving, the workflow SHALL check that `environment_files/` is non-empty
+and that `carnot.agentic.arc_solver_kit` and
+`carnot.agentic.arc_solve_learning` import. If a target requires live LLM
+induction and the Qwen3.5-9B-MTP GGUF cache is absent, that target SHALL be marked
+`blocked_model_not_cached` and the benchmark SHALL continue over the remaining
+targets. The workflow SHALL NOT mutate the real ARC solve registry.
+
+The workflow SHALL write
+`results/experiment_4432_loo_generic_solve_benchmark.json` with required top-level
+fields `honest_verdict`, `generic_loo_solve_count`, `per_game`,
+`offline_reproduced`, `missing_verifier_gaps`, `random_seed`,
+`reproducibility_checksum`, and `verifier_is_oracle`. `per_game` SHALL be a list
+of `{game, solved_without_own_recipe, routed_to, residual_delta}` rows. A
+leave-one-out solve SHALL count only when the attempted solution is replayed
+through `arc_solver_kit.reproduce()` and reproduced offline; non-reproduced or
+ungated attempts SHALL be recorded as residual verifier/primitive gaps. The
+falsifiable gate SHALL be `generic_loo_solve_count >= 2` over the selected held-out
+set, and the artifact SHALL report the measurement whether the gate passes or
+fails.
+
+#### SCENARIO-REPORT-4432: Held-Out Solves Count Only Through Offline Reproduction
+
+**Given** a registry containing at least six reproduced ARC games, offline
+environment files, importable ARC solver modules, and a selected target set whose
+own recipes can be withheld
+**When** the Exp 4432 workflow runs the generic leave-one-out benchmark
+**Then** each target is routed to the closest other solved-game recipe, the real
+registry remains unmodified, each counted solve has a reproduction-gate result
+from `arc_solver_kit.reproduce()`, the artifact records the per-game residual
+delta for every miss, `generic_loo_solve_count` is a bare integer, and
+`honest_verdict` starts with a terminal complete/success/passed/shipped prefix.
+
+## Implementation Status (REQ-REPORT-4432)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4432 | Planned (`python/carnot/experiment_4432_loo_generic_solve_benchmark.py`, `results/experiment_4432_loo_generic_solve_benchmark.json`) | Planned (`tests/python/test_experiment_4432_loo_generic_solve_benchmark.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
