@@ -87,6 +87,44 @@ throughput and 3.5× faster wall-clock to a grounded predicate** (8.18 tok/s, 34
 (gemma 2/2 vs candidates ~1/2 — tiny + confounded sample); the real accuracy signal must come from the
 full pipeline / a larger generalization-aware benchmark.
 
+## Does a quantized Qwopus-27B beat the small models? (operator question) — NO
+
+Downloaded Qwopus-27B-Coder **Q3_K_M (13.5 GB, fits 16 GB)** and ran the same harness:
+ka59 **GROUND (129 tok, 46 s)**, tn36 **NOT grounded (1086 tok, 468 s — rambled 7.8 min)** → **1/2**,
+identical grounding to the small Qwen3.5-9B / Qwen3-14B / Phi-4 (also 1/2) but at 1.5–2.4× the VRAM and
+2–3× slower. Quantizing a 27B down to fit does **not** buy accuracy on this rule-INDUCTION task — a 9 GB
+reasoner matches a 13.5 GB coder. (Q2_K 10.9 GB would degrade further; not worth testing unless the env
+turns out to be 16 GB AND a 27B is wanted.)
+
+## Events-to-solve (token efficiency) — the larger reasoners win decisively
+
+The metric that matters for the per-step ARC harness + ARC-AGI-3 efficiency scoring is **tokens (events)
+to a grounded predicate**, not raw tok/s:
+
+| Model | tokens to ground | vs gemma |
+|---|---|---|
+| **Phi-4** | **52** (ka59) | 11× fewer |
+| Qwen3-14B | **188** (tn36) | 3× fewer |
+| Qwopus-Q3 | 129 (ka59) | 4.5× fewer |
+| Qwen3.5-9B | 283 (ka59) | 2× fewer |
+| gemma-12B | 586–607 | baseline (most verbose) |
+
+gemma grounds reliably but is **by far the most verbose**; the stronger reasoners reach the answer in
+3–11× fewer events. For a harness that calls the LLM per step, that is a large latency + cost win.
+
+## Deployment engine: llama.cpp IS available in Kaggle offline (not transformers-only)
+
+ARC Prize Kaggle disables internet at eval, but that blocks network calls, not engines. **llama-cpp-python
+with CUDA runs offline** by bundling a prebuilt CUDA wheel as a Kaggle Dataset (`pip install --no-index
+--find-links=...`) + the GGUF as another Dataset — a well-trodden public pattern, and the project's own
+plan (`arc-agi3-kaggle-submission-requirements-2026-06-17.md`). So **the GGUF benchmarking transfers.**
+`transformers` is the zero-risk fallback (pre-installed; bitsandbytes 4-bit; but bigger fp16 KV cache →
+tighter headroom). Two verifications before committing: (1) test the prebuilt CUDA wheel offline in a real
+Kaggle notebook (CUDA/Python match — the one load-bearing assumption); (2) **confirm the real per-GPU
+VRAM** — ARC Prize 2025/2026 runs on **L4×4 (24 GB each)** or T4×2 (16 GB each); at 24 GB a 27B Q4 (16.8 GB)
+fits a single L4 with ~7 GB KV and the "27B too big" conclusion flips. The 16 GB figure is a working
+assumption; the actual env GPU is the single most decision-changing unknown.
+
 ## Recommendation
 
 Download and benchmark **Qwen3.5-9B (or Qwen3-14B), Qwen2.5-Coder-14B, and Phi-4** on the exact Layer-B
