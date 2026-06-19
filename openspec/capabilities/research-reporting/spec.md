@@ -25326,6 +25326,72 @@ registry, while a grounded no-bank attempt logs the residual as a
 |---|---|---|
 | REQ-REPORT-4446 | Implemented (`python/carnot/experiment_4446_drive_generic_first_contact_bank.py`, `results/experiment_4446_drive_generic_first_contact_bank.json`) | Implemented (`tests/python/test_experiment_4446_drive_generic_first_contact_bank.py`) |
 
+### REQ-REPORT-4447: LILO-Style Documented Primitive Library Retrieves ARC Mechanics Before Generation
+
+The Exp 4447 workflow SHALL induce a documented ARC primitive library from the
+existing solve corpus in `ops/arc_solve_registry.yaml` and the consolidated
+operators exposed by `python/carnot/agentic/arc_solver_kit.py`. Each library row
+SHALL be an AutoDoc-style entry with a stable `name`, a `mechanic_class`, a
+one-line description of the mechanic class it solves, `derived_from_games`, and
+`retrieval_cues` that describe digest features signaling the primitive applies.
+The induction substrate SHALL be aggregation from upstream artifacts and
+symbolic compression over existing registry text; if a live LLM is ever invoked
+for documentation, the artifact SHALL declare `live_llm_inference` instead.
+
+The retrieval layer SHALL expose `retrieve_primitives(digest)` or equivalent and
+`arc_solve_learning.recommend_approach()` SHALL query the documented library
+before falling back to generator or hand-selected primitive routing. Retrieval
+SHALL be additive and backward-compatible: existing recommendation fields remain
+present, while ranked documented primitive entries are returned for the generic
+first-contact solver to try first.
+
+The workflow SHALL measure self-learning compounding by leave-one-out retrieval
+over the 18 solved games from the `.410` corpus. For each target, the target's
+own documented entry SHALL be withheld before retrieval. The artifact SHALL
+report `library_coverage` as the bare float fraction of targets whose mechanic
+is correctly identified by at least one retrieved documented primitive, and
+`retrieval_precision_at_1` as the bare float fraction whose top-ranked retrieved
+primitive identifies the target mechanic class. The falsifiable gate SHALL pass
+only when `library_coverage >= 0.5`, `constant_leak_violations` is empty, and the
+additive retrieval wiring does not regress prior reproduced solves.
+
+Every counted primitive SHALL pass a literal-scan guard for game-specific
+constants. The scan SHALL flag hardcoded coordinates, sprite tags, level IDs, or
+literal action sequences in the AutoDoc fields; entries with violations SHALL
+not count as generic primitives.
+
+The workflow SHALL write
+`results/experiment_4447_lilo_documented_primitive_library.json` with required
+top-level fields `honest_verdict`, `inference_substrate`, `library_coverage`,
+`retrieval_precision_at_1`, `primitives_documented`,
+`constant_leak_violations`, `no_regression`, `verifier_is_oracle`,
+`random_seed`, and `reproducibility_checksum`. Complete-path
+`honest_verdict` SHALL start with `complete:`, `success:`, `passed:`, or
+`shipped:`. `verifier_is_oracle` SHALL be true because execution-grounded ARC
+solves remain the verifier; the documented library is retrieval guidance, not a
+learned verifier.
+
+#### SCENARIO-REPORT-4447: Documented Library Retrieves Held-Out Mechanics Without Constant Leakage
+
+**Given** the ARC solve registry, consolidated primitive registry, and the 18
+solved `.410` games
+**When** Exp 4447 induces documented primitive entries, withholds each target's
+own entry in turn, retrieves primitives from that target's digest, scans entries
+for game-specific constants, and writes the artifact
+**Then** every documented primitive row includes a name, mechanic class,
+description, derived games, and retrieval cues; `recommend_approach()` exposes
+the ranked documented primitives before generator fallback; `library_coverage`
+is at least 0.5; `retrieval_precision_at_1` is a bare float; constant-leak
+violations are empty for counted primitives; `no_regression=true`;
+`verifier_is_oracle=true`; and the artifact has a deterministic checksum and
+terminal-prefixed honest verdict.
+
+## Implementation Status (REQ-REPORT-4447)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4447 | Implemented (`python/carnot/agentic/arc_primitive_library.py`, `python/carnot/experiment_4447_lilo_documented_primitive_library.py`, `results/experiment_4447_lilo_documented_primitive_library.json`) | Implemented (`tests/python/test_experiment_4447_lilo_documented_primitive_library.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a

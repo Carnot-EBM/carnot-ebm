@@ -162,13 +162,20 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
     strategy = strat.route_for_game(target_game, mechanic=mechanic, reg=reg)
     if target_game not in feats:
         from . import arc_solver_kit as kit
+        from . import arc_primitive_library as primitive_library
 
         # Unseen LIVE game (not in the public survey): no feature-based similarity transfer is
         # possible, so route COLD via the strategy + generic operators + cautions (FinAcumen: do not
         # fabricate a confident transfer when there is no relevant match).
+        primitive_digest = {
+            "game": target_game,
+            "mechanic_class": strategy.get("routed_mechanic", ""),
+            "action_model": "",
+        }
         return {
             "error": f"{target_game} not in survey",
             "strategy": strategy,
+            "retrieved_primitives": primitive_library.retrieve_primitives(primitive_digest),
             "selected_generic_operators": [
                 op.as_dict()
                 for op in kit.select_primitive_operators(
@@ -183,7 +190,22 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
         }
     tf = feats[target_game]
     from . import arc_solver_kit as kit
+    from . import arc_primitive_library as primitive_library
 
+    by_game = {g["game"]: g for g in reg.get("games", [])}
+    if target_game in by_game:
+        primitive_digest = primitive_library.game_digest(by_game[target_game])
+    else:
+        primitive_digest = {
+            "game": target_game,
+            "mechanic_class": strategy.get("routed_mechanic", ""),
+            "action_model": str(tf.get("action_type", "")),
+            "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
+        }
+    retrieved_primitives = primitive_library.retrieve_primitives(
+        primitive_digest,
+        exclude_games=(target_game,),
+    )
     selected_generic_operators = [
         op.as_dict()
         for op in kit.select_primitive_operators(
@@ -192,7 +214,6 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
             game=target_game,
         )
     ]
-    by_game = {g["game"]: g for g in reg.get("games", [])}
     ranked = []
     for solved in _solved_games(reg):
         gid = solved["game"]
@@ -235,6 +256,7 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
         "target_game": target_game,
         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
         "strategy": strategy,
+        "retrieved_primitives": retrieved_primitives,
         "selected_generic_operators": selected_generic_operators,
         "recommended": ranked[:3],
         # FinAcumen (arXiv:2606.17642) selective-activation: only few-shot the top recipe when the
