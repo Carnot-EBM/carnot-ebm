@@ -8815,3 +8815,5 @@ c |
 | 2026-06-19 09:10 UTC | PHASE C2 (RESERVED INFRA) -- verifier-gaps + regis | OK | 86 passed, 1 warning in 4.68s |
 | 2026-06-19 09:26 UTC | PHASE D (HARDWARE CONTINUITY; one task per attache | OK | 87 passed, 1 warning in 7.24s |
 | 2026-06-19 09:40 UTC | PHASE E (SOTA-INGESTION; .409 bleeding-edge track) | OK | 107 passed, 1 warning in 5.58s |
+| 2026-06-19 09:58 UTC | PHASE F (CAPSTONE .409) -- the milestone scorecard | OK | 97 passed, 1 warning in 6.94s |
+| 2026-06-19 10:00 UTC | Milestone 2026.06.410 activated | OK | 11 tasks queued |
