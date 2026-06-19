@@ -40,15 +40,17 @@ def sh(cmd, **kw):
 
 
 # %% CELL 1 — BUILD the CUDA llama-server with MTP (internet ON) ------------------------------------
-PR = "24423"  # the validated branch our local build (9b4dae81f) is on; HAS --spec-type draft-mtp + diffusion
+# MTP (--spec-type draft-mtp) is in UPSTREAM master/release (speculative.h maps {"draft-mtp",
+# COMMON_SPECULATIVE_TYPE_DRAFT_MTP}; arg.cpp has the --spec-type CLI + download_mtp auto-detect). Pin a
+# RELEASE TAG (reproducible submission artifact), NOT the diffusion PR. Bump only after re-verifying the
+# MTP self-check below. (Latest release at authoring: b9714.)
+RELEASE_TAG = "b9714"
 
 
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
     if not SRC.exists():
-        sh(f"git clone {LLAMA_REPO} {SRC}")
-        # fetch + checkout the validated PR branch (plain master may lack the draft-mtp CLI value)
-        sh(f"cd {SRC} && git fetch origin pull/{PR}/head && git checkout FETCH_HEAD")
+        sh(f"git clone --depth 1 --branch {RELEASE_TAG} {LLAMA_REPO} {SRC}")
     # CUDA toolkit (nvcc) + cmake are present on Kaggle GPU images; install cmake if missing.
     sh("cmake --version || pip install -q cmake", check=False)
     # Kaggle/Colab CUDA quirk: FindCUDAToolkit cannot locate the driver stub libcuda.so, so the
