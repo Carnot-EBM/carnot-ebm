@@ -25136,6 +25136,73 @@ action `g50t` level-1 plan offline, and verifies the artifact
 |---|---|---|
 | REQ-REPORT-4443 | Planned (`python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py`, `results/experiment_4443_bank_g50t_example_conditioned_win.json`) | Planned (`tests/python/test_experiment_4443_bank_g50t_example_conditioned_win.py`) |
 
+### REQ-REPORT-4444: Generic Config-Rule Verifier Grounds Local Constraints And Toggle Rules
+
+The Exp 4444 workflow SHALL promote the consolidated ARC
+`config_rule_grounding` primitive into a composable `config_rule_verifier`
+operator in `python/carnot/agentic/arc_solver_kit.py`. The operator SHALL accept
+an object-centric digest plus a corpus of grounded config/toggle few-shot
+win-rules, propose candidate local-constraint, coverage, or toggle predicates,
+ground them by executing verifier checks with `verifier_is_oracle=true`, reject
+ungrounded candidates, and return enough action labels and verifier metadata for
+`OfflineSolver` or `arc_solver_kit.reproduce()` to gate progress. The legacy
+`config_rule_grounding` helper and previously reproduced config-rule solves
+SHALL remain backward-compatible.
+
+Before solving, the workflow SHALL check that `environment_files/ft09/` and
+`environment_files/dc22/` are non-empty, that `arc_solver_kit` imports, that a
+local non-3090 generator substrate exists through either the cached
+`unsloth/Qwen3.5-9B-MTP-GGUF` files or an iGPU HIP llama-server, and that the
+focused pre-refactor `arc_solver_kit or config_rule` baseline has a green
+selected-test signal. Missing resources SHALL write an honest terminal artifact
+whose `honest_verdict` starts with `complete: blocked_<resource>` and SHALL NOT
+fabricate ft09, dc22, or no-regression progress.
+
+The workflow SHALL prove genericity by re-solving `ft09` level 1 through the
+new generic operator without using ft09's hand recipe as the solver source. A
+valid ft09 closure SHALL set `ft09_resolved_generically=true`, replay the
+generated action labels through `arc_solver_kit.reproduce(ft09, ...)`, and close
+`GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER` as a
+leave-one-out residual. The workflow SHALL also attack `dc22` level 1 with the
+same operator. `dc22_state` SHALL be exactly one of `solved`,
+`grounded_no_level`, or `not_grounded`; a grounded predicate that does not bank
+a level is terminal complete and SHALL log the residual in
+`missing_verifier_gaps` rather than using a `partial:` verdict.
+
+The artifact SHALL be written to
+`results/experiment_4444_generic_config_rule_verifier_operator.json` and SHALL
+include the required fields `honest_verdict`, `inference_substrate`,
+`ft09_resolved_generically`, `dc22_state`, `reproduced_levels`,
+`offline_reproduced`, `no_regression`, `missing_verifier_gaps`,
+`verifier_is_oracle`, `random_seed`, and `reproducibility_checksum`. Cached
+verifier-ensemble runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` and
+`duration_s>=1.0`; live LLM induction SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+#### SCENARIO-REPORT-4444: Generic Config-Rule Verifier Closes ft09 LOO And Records dc22 Honestly
+
+**Given** the offline `ft09` and `dc22` environment files, a non-3090 generator
+substrate, the grounded config/toggle few-shot corpus, and a green focused
+selected-test baseline
+**When** Exp 4444 builds a `config_rule_verifier`, grounds the ft09 local
+constraint color-cycle predicate without ft09's hand solver recipe, replays the
+result through `arc_solver_kit.reproduce()`, attacks dc22 with the same
+operator, runs the focused compatibility tests, and writes the artifact
+**Then** the artifact is terminal-prefixed, sets
+`ft09_resolved_generically=true`, `offline_reproduced=true`,
+`verifier_is_oracle=true`, and `no_regression=true`; records `dc22_state` as
+`solved`, `grounded_no_level`, or `not_grounded`; counts only reproduction-gated
+levels in bare-int `reproduced_levels`; and logs any remaining dc22 verifier gap
+as the next build backlog.
+
+## Implementation Status (REQ-REPORT-4444)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4444 | Implemented (`python/carnot/experiment_4444_generic_config_rule_verifier_operator.py`, `results/experiment_4444_generic_config_rule_verifier_operator.json`) | Implemented (`tests/python/test_experiment_4444_generic_config_rule_verifier_operator.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a

@@ -2266,22 +2266,24 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:start -->
 ### GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER: Exp 4438 .410 registry gap hygiene
-- status: open
-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=ft09; routed_to=s5i5; residual_delta=missing_local_constraint_color_cycle_verifier; generic_loo_solve_count=2
-- failure mode: missing_local_constraint_color_cycle_verifier
-- missing discriminator: generic primitive/verifier for missing_local_constraint_color_cycle_verifier
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- status: filled (exp4444_generic_config_rule_verifier_operator)
+- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; ft09_resolved_generically=True; offline_reproduced=True; reproduced_levels=1; operator=config_rule_verifier; target_recipe_withheld=ft09
+- failure mode: prior missing_local_constraint_color_cycle_verifier residual is closed for ft09 L1
+- missing discriminator: filled by generic execution-grounded local_constraint_color_cycle verifier over object-centric digest
+- candidate design: reuse config_rule_verifier for future local-constraint/toggle digests while preserving reproduce() gates
 - priority: high
 - source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+- movement: filled
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
 
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
 ### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4438 .410 registry gap hygiene
 - status: open
-- evidence: results/experiment_4435_generic_first_contact_fixed.json; target_game=dc22; honest_verdict=complete: generic_first_contact_dc22_routed_no_new_level_gap_logged; offline_reproduced=False; reproduced_levels=0
-- failure mode: needs_per_game_RE
-- missing discriminator: selectable verifier that distinguishes the target's winning delta from the explored non-winning states
-- candidate design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
+- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; reproduced_levels=1; dc22 reproduced_levels=0
+- failure mode: missing_config_rule_verifier_grounding
+- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest for config_rule_verifier
+- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until arc_solver_kit.reproduce(dc22, ...) passes
 - priority: high
-- source artifact: results/experiment_4435_generic_first_contact_fixed.json
+- source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
+- movement: updated_still_open
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->

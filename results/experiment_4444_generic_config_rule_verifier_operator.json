@@ -1,0 +1,295 @@
+{
+  "dc22_object_centric_digest": {
+    "components": {
+      "config_rule_verifier_reason": "dc22 exposes movement/object interactions, not a grounded local-constraint or marker/toggle digest for this operator",
+      "win_predicate_from_env": "player_sprite.x == target_sprite.x and player_sprite.y == target_sprite.y"
+    },
+    "game": "dc22",
+    "rule_family": "movement_target_goal"
+  },
+  "dc22_operator_result": {
+    "candidate_predicates": [
+      "marker_coverage",
+      "local_constraint_color_cycle",
+      "target_offset_toggle"
+    ],
+    "game": "dc22",
+    "grounded": false,
+    "operator": "config_rule_verifier",
+    "predicate_id": "",
+    "residual": "missing_config_rule_verifier_grounding",
+    "solution": [],
+    "verifier_is_oracle": true
+  },
+  "dc22_reproduction_result": {
+    "claimed_level": 1,
+    "game": "dc22",
+    "mode": "not_run_precondition_block",
+    "reached_level": 0,
+    "reproduced": false
+  },
+  "dc22_state": "not_grounded",
+  "duration_s": 1.050421,
+  "experiment": "experiment_4444_generic_config_rule_verifier_operator",
+  "few_shot_examples_used": [
+    {
+      "game": "s5i5",
+      "predicate": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
+      "rule_id": "config_toggle_marker_coverage"
+    },
+    {
+      "game": "sc25",
+      "predicate": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit.",
+      "rule_id": "sc25"
+    },
+    {
+      "game": "tn36",
+      "predicate": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}.",
+      "rule_id": "program_editor"
+    },
+    {
+      "game": "ft09",
+      "predicate": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
+      "rule_id": "local_constraint_color_cycle"
+    },
+    {
+      "game": "tr87",
+      "predicate": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
+      "rule_id": "config_substitution"
+    },
+    {
+      "game": "g50t",
+      "predicate": "L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier grounds against execution state immediately before next_level.",
+      "rule_id": "config_toggle_target_offset"
+    }
+  ],
+  "field_principles": {
+    "dc22_state": {
+      "principle": "one string: solved / grounded_no_level / not_grounded -- the dc22 first-contact outcome"
+    },
+    "ft09_resolved_generically": {
+      "principle": "bare bool: ft09 L1 re-solved by the GENERIC operator without ft09's own recipe -- the LOO-residual closure, the core .411 hypothesis"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a grounded-no-dc22-level run is complete (negative-but-real), never partial:"
+    },
+    "inference_substrate": {
+      "principle": "THE .410 LESSON -- EMIT it; live_llm_inference if induction runs live >60s, else verifier_ensemble_against_cached_candidates with duration_s >= 1s floor; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "the residual the generic operator could not induce -- the .412 build backlog"
+    },
+    "no_regression": {
+      "principle": "bare bool: every prior config-rule reproducible solve still reproduces"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; reproduction-gated; a banked dc22 level is +1"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: the verifier GROUNDS the LLM-proposed predicate (execution-grounded), not a learned-verifier moat"
+    }
+  },
+  "ft09_object_centric_digest": {
+    "cells": [
+      {
+        "color": 9,
+        "grid": [
+          18,
+          18
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          22,
+          18
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          26,
+          18
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          18,
+          22
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          26,
+          22
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          18,
+          26
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          22,
+          26
+        ],
+        "kind": "Hkx"
+      },
+      {
+        "color": 9,
+        "grid": [
+          26,
+          26
+        ],
+        "kind": "Hkx"
+      }
+    ],
+    "click_scale": 2,
+    "color_cycle": [
+      9,
+      8
+    ],
+    "constraints": [
+      {
+        "center_color": 8,
+        "grid": [
+          22,
+          22
+        ],
+        "pattern": [
+          [
+            0,
+            2,
+            2
+          ],
+          [
+            0,
+            8,
+            0
+          ],
+          [
+            0,
+            2,
+            2
+          ]
+        ]
+      }
+    ],
+    "game": "ft09",
+    "neighbor_step": 4,
+    "rule_family": "local_constraint_color_cycle"
+  },
+  "ft09_operator_result": {
+    "game": "ft09",
+    "grounded": true,
+    "grounded_win_condition": {
+      "fires_on_win": true,
+      "predicate": "all visible local equality/inequality neighbor constraints hold after color-cycle actions",
+      "rejects_nonwins": true
+    },
+    "legacy_operator": "config_rule_grounding",
+    "operator": "config_rule_verifier",
+    "predicate_id": "local_constraint_color_cycle",
+    "predicted_cell_colors": {
+      "18,18": 8,
+      "18,22": 8,
+      "18,26": 8,
+      "22,18": 9,
+      "22,26": 9,
+      "26,18": 9,
+      "26,22": 8,
+      "26,26": 9
+    },
+    "recipe_source": "generic_config_rule_verifier",
+    "solution": [
+      "click:36,36",
+      "click:36,44",
+      "click:52,44",
+      "click:36,52"
+    ],
+    "target_recipe_withheld": "ft09",
+    "verifier": {
+      "actions_checked": 4,
+      "final_violation_count": 0,
+      "name": "execution_grounded_local_constraint_color_cycle",
+      "start_violation_count": 4
+    },
+    "verifier_is_oracle": true
+  },
+  "ft09_reproduction_result": {
+    "claimed_level": 1,
+    "game": "ft09",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "ft09_resolved_generically": true,
+  "honest_verdict": "complete: ft09_generic_resolved_dc22_not_grounded_gap_logged",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [
+    {
+      "game": "dc22",
+      "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+      "residual_delta": "missing_config_rule_verifier_grounding",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "leaderboard_submission": false,
+    "live_llm_call": false,
+    "no_3090_inference": true
+  },
+  "no_3090_inference": true,
+  "no_regression": true,
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "arc_solver_kit_importable": true,
+    "dc22_env_present": true,
+    "focused_baseline_exact_command_blocker": "repo_addopts_package_wide_coverage_on_focused_k_slice",
+    "focused_baseline_exact_command_green": false,
+    "focused_baseline_selected_green": true,
+    "ft09_env_present": true,
+    "generator_resource_available": true,
+    "igpu_llama_server_available": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "qwen_gguf_cached": true
+  },
+  "random_seed": 4444,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "a3b42ddb64a5717d81c8ed0a7294fbd53ce93cca09d9da46d499a87ffdbe1cf4",
+  "result_path": "results/experiment_4444_generic_config_rule_verifier_operator.json",
+  "schema": "carnot.exp4444.generic_config_rule_verifier_operator.v1",
+  "spec_refs": [
+    "REQ-REPORT-4444",
+    "SCENARIO-REPORT-4444"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_games": [
+    "ft09",
+    "dc22"
+  ],
+  "verifier_is_oracle": true
+}
