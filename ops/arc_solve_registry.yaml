@@ -328,6 +328,9 @@ games:
   solver: results/experiment_4339_e3_explore_verify_plan_ar25.json + results/arc_e3/ar25/world_model.py
   reproduce: arc_solver_kit.reproduce(ar25, ['3']*5 + ['2']*10, Exp4339 apply) reproduced=True
     L1; checksum 8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391.
+  generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ar25
+    L1 without ar25's hand world-model recipe; offline_reproduced=True,
+    reproduced_levels=1; checksum 431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c.
   world_model: results/arc_e3/ar25/world_model.py
   world_model_sha256: d6274374375774291731d21258fc2ddb77b521fb13a7d762de693602897c492f
   gotchas:
@@ -348,6 +351,9 @@ games:
   solver: results/experiment_4350_e3_explore_verify_plan_ka59.json + results/arc_e3/ka59/world_model.py
   reproduce: arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3',
     'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06.
+  generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ka59
+    L1 without ka59's hand world-model recipe; offline_reproduced=True,
+    reproduced_levels=1; checksum 431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c.
   world_model: results/arc_e3/ka59/world_model.py
   world_model_sha256: ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba
   gotchas:
@@ -637,3 +643,23 @@ latest_config_rule_verifier_4444:
   - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
   note: .411 generic config-rule verifier closes the ft09 leave-one-out residual;
     dc22 remains an honest non-config movement/interaction target for a later verifier.
+latest_object_motion_world_model_4445:
+  artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
+  operator: object_motion_world_model
+  residuals_closed_generically:
+  - ar25
+  - ka59
+  world_model_accuracy_with_examples: 1.0
+  world_model_accuracy_cold: 0.25
+  reproduced_levels: 2
+  offline_reproduced: true
+  no_regression: true
+  filled_gap_ids:
+  - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
+  - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
+  remaining_gap_ids:
+  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+  note: .411 generic object-motion world-model operator closes the ar25 and ka59
+    leave-one-out residuals while recording the cold-control lift.

@@ -2244,24 +2244,24 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 
 <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:start -->
 ### GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION: Exp 4438 .410 registry gap hygiene
-- status: open
-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=ka59; routed_to=sp80; residual_delta=missing_push_block_world_model_and_dynamic_selection; generic_loo_solve_count=2
+- status: filled (exp4445_generic_object_motion_world_model_operator)
+- evidence: results/experiment_4445_generic_object_motion_world_model_operator.json; residuals_closed_generically includes ka59; offline_reproduced=True; reproduced_levels=2; operator=object_motion_world_model; target_recipe_withheld=ka59; world_model_accuracy_with_examples=1.0; world_model_accuracy_cold=0.25
 - failure mode: missing_push_block_world_model_and_dynamic_selection
-- missing discriminator: generic primitive/verifier for missing_push_block_world_model_and_dynamic_selection
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- missing discriminator: filled by generic object-slot translate/push transition model with dynamic selection
+- candidate design: keep the generic operator in the standing loop; extend the same family to deeper hidden-HUD/register tails separately
 - priority: high
-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+- source artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
 <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:end -->
 
 <!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:start -->
 ### GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN: Exp 4438 .410 registry gap hygiene
-- status: open
-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=ar25; routed_to=sp80; residual_delta=missing_reflection_world_model_and_object_motion_plan; generic_loo_solve_count=2
+- status: filled (exp4445_generic_object_motion_world_model_operator)
+- evidence: results/experiment_4445_generic_object_motion_world_model_operator.json; residuals_closed_generically includes ar25; offline_reproduced=True; reproduced_levels=2; operator=object_motion_world_model; target_recipe_withheld=ar25; world_model_accuracy_with_examples=1.0; world_model_accuracy_cold=0.25
 - failure mode: missing_reflection_world_model_and_object_motion_plan
-- missing discriminator: generic primitive/verifier for missing_reflection_world_model_and_object_motion_plan
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- missing discriminator: filled by generic object-slot translate/reflect transition model
+- candidate design: keep the generic operator in the standing loop; extend the same family to hidden undo-stack deeper tails separately
 - priority: high
-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+- source artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
 <!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:end -->
 
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:start -->

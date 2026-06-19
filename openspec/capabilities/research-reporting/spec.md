@@ -25203,6 +25203,73 @@ as the next build backlog.
 |---|---|---|
 | REQ-REPORT-4444 | Implemented (`python/carnot/experiment_4444_generic_config_rule_verifier_operator.py`, `results/experiment_4444_generic_config_rule_verifier_operator.json`) | Implemented (`tests/python/test_experiment_4444_generic_config_rule_verifier_operator.py`) |
 
+### REQ-REPORT-4445: Generic Object-Motion World Model Closes ar25/ka59 LOO Residuals Or Reports Cold-Control Lift
+
+The Exp 4445 workflow SHALL promote object-motion mechanics from per-game E3
+world models into a composable `object_motion_world_model` operator in
+`python/carnot/agentic/arc_solver_kit.py`. The operator SHALL represent scenes as
+object-centric slots, synthesize a transition model over `translate`, `reflect`,
+and `push` motion families, condition that synthesis on existing solved
+`results/arc_e3/{ar25,ka59,sc25,ft09}/world_model.py` examples, and expose action
+labels plus verifier metadata suitable for `WorldModelVerifier`,
+`plan_and_execute`, or `arc_solver_kit.reproduce()` grounding. The operator SHALL
+remain additive and backward-compatible with the existing object digest,
+active-data, config-rule, and per-game adapter paths.
+
+Before claiming progress, the workflow SHALL check that offline environment
+files for `ar25` and `ka59` exist, that at least two solved E3 world-model files
+exist under `results/arc_e3/`, and that the focused `arc_solver_kit` selected
+tests passed. If the repository-wide exact pytest command is blocked by global
+package coverage addopts, the workflow SHALL record that blocker honestly in the
+precondition payload rather than fabricating a green exact-command result. Missing
+resources SHALL write a terminal-prefixed `complete: blocked_<resource>` artifact
+without fabricated accuracy or reproduction metrics.
+
+The workflow SHALL prove genericity by withholding each target game's own
+world-model recipe as the solver source and attempting `ar25` level 1 and `ka59`
+level 1 through the generic operator. A residual closure SHALL count only when
+the synthesized generic plan replays through `arc_solver_kit.reproduce()` and
+reaches at least level 1 offline. The workflow SHALL also run a cold-synthesis
+control arm with no few-shot examples on the same active-data cases and SHALL
+report `world_model_accuracy_with_examples` and `world_model_accuracy_cold` so a
+no-help result remains interpretable.
+
+The artifact SHALL be written to
+`results/experiment_4445_generic_object_motion_world_model_operator.json` and
+SHALL include the required top-level fields `honest_verdict`,
+`inference_substrate`, `residuals_closed_generically`,
+`world_model_accuracy_with_examples`, `world_model_accuracy_cold`,
+`reproduced_levels`, `offline_reproduced`, `no_regression`,
+`missing_verifier_gaps`, `verifier_is_oracle`, `random_seed`, and
+`reproducibility_checksum`. Cached verifier-ensemble runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` and
+`duration_s>=1.0`; live LLM induction SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+#### SCENARIO-REPORT-4445: Object-Motion Operator Re-solves Held-Out Residuals Or Measures Real Lift
+
+**Given** offline `ar25` and `ka59` environment files, at least two solved E3
+world-model examples, object-centric digests for the two held-out residual
+mechanics, and a focused selected-test baseline
+**When** Exp 4445 builds `object_motion_world_model`, synthesizes example-
+conditioned and cold transition models, scores both with an execution-grounded
+verifier, plans through the generic operator without using each target's own
+hand recipe, replays any plans with `arc_solver_kit.reproduce()`, and writes the
+artifact
+**Then** the artifact is terminal-prefixed, records
+`residuals_closed_generically` as the subset of `{ar25, ka59}` reproduced through
+the generic operator, counts only reproduction-gated levels in bare-int
+`reproduced_levels`, reports both accuracy arms, sets `verifier_is_oracle=true`,
+sets `no_regression` as a bare bool, and logs any unclosed object-motion mechanic
+as the next verifier gap rather than using a `partial:` verdict.
+
+## Implementation Status (REQ-REPORT-4445)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4445 | Implemented (`python/carnot/experiment_4445_generic_object_motion_world_model_operator.py`, `results/experiment_4445_generic_object_motion_world_model_operator.json`) | Implemented (`tests/python/test_experiment_4445_generic_object_motion_world_model_operator.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
