@@ -13,7 +13,23 @@ open-source eligible — the project is MIT-0 ✅).
 | Binary loads the model on the **real P100** | Qwen3.5-9B-MTP + MTP + q8 KV, **11.5 GB / 16 GB**, 29 tok/s, generates, internet OFF ✅ |
 | Carnot agent imports **offline** on Kaggle | `make_carnot_agent` imports; jax IS preinstalled on Kaggle ✅ |
 | LLM proposer runs **through the bundled binary** | generated correct code (`def is_win(grid): return grid[0][0]==1`), 12 GB / 16 GB ✅ |
+| **Agent interface diffed vs the live framework** | `make_carnot_agent` checked against the real `agents/agent.py` `Agent` ABC + `arcengine.GameAction`; 2 submission-breaking bugs found & fixed (commit `22cc26e5d`) ✅ |
 | License / prize eligibility | whole project **MIT-0** ✅ |
+
+### Live-framework interface diff (the risk retired 2026-06-19)
+
+The offline validators drive `policy.next_move()` directly and never touch the adapter's
+`choose_action` — the method the real harness calls. A diff against the cloned
+`ARC-AGI-3-Agents` framework (`/home/ianblenke/arc3_agents`) caught two bugs invisible to
+the whole offline suite, now fixed + regression-tested (`tests/python/test_arc_competition_agent_adapter.py`):
+
+1. **(critical)** `choose_action` returned `GameAction.set_data(data)`, which yields the inner
+   `ComplexAction`, not the enum. The framework reads `action.action_data` off the return, so a
+   `ComplexAction` crashed **every click/coordinate action** (`AttributeError`). Fixed: mutate the
+   enum in place, return the enum, carry the required `game_id`. Verified against real `arcengine`.
+2. The framework's `Agent.MAX_ACTIONS` default is **80** — below even our deepest banked replay
+   (lp85 → L5). Raised to 400 so multi-level replays + held-out-game explore have room (the ≤12h
+   wall-clock is the real bound).
 
 Not yet exercised end-to-end (by design): the full game-play loop uses the **competition-provided**
 `arcengine` + `ARC-AGI-3-Agents` framework + the held-out games, which only exist in the eval sandbox.
