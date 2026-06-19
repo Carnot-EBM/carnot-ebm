@@ -1,0 +1,49 @@
+{
+  "artifact_kind": "arc_count_integrity_lint_guard",
+  "catches_provisional_inflation": true,
+  "duration_s": 2.236063,
+  "experiment": "experiment_4462_provisional_reproduced_count_integrity_lint",
+  "field_principles": {
+    "catches_provisional_inflation": {
+      "principle": "bare bool: the lint flags a registry where reproducible_total_levels counts a provisional/non-replaying level"
+    },
+    "guard_shipped": {
+      "principle": "bare bool: the count-integrity lint + replay guard + pre-commit hook landed green"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- this is a lint/test (CPU); 100us floor"
+    },
+    "tests_pass": {
+      "principle": "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"
+    }
+  },
+  "guard_shipped": true,
+  "honest_verdict": "shipped: provisional_reproduced_count_integrity_lint",
+  "implemented_paths": [
+    "scripts/arc_count_integrity_lint.py",
+    ".pre-commit-config.yaml",
+    "python/carnot/experiment_4462_provisional_reproduced_count_integrity_lint.py",
+    "tests/python/test_arc_count_integrity_lint.py",
+    "tests/python/test_experiment_4462_provisional_reproduced_count_integrity_lint.py"
+  ],
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "precommit_hook_configured": true,
+  "production_verifier_edits": false,
+  "registry_lint_issue_count": 0,
+  "registry_lint_issues": [],
+  "reproducibility_checksum": "8415463acea3574d20a23a2dc0e6150a4a729649feb30c5abdae31853c94ce29",
+  "retroactively_rewrote_past_artifacts": false,
+  "schema": "carnot.exp4462.provisional_reproduced_count_integrity_lint.v1",
+  "spec_refs": [
+    "REQ-REPORT-4462",
+    "SCENARIO-REPORT-4462",
+    "SCENARIO-REPORT-4462-SUBMISSION"
+  ],
+  "submission_lint_issue_count": 0,
+  "submission_lint_issues": [],
+  "submitted_to_leaderboard": false,
+  "tests_pass": true
+}
