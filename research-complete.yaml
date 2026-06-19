@@ -43502,3 +43502,76 @@ milestones:
       measurably close the per-game-RE gap?'
     deliverable: results/experiment_4441_capstone_v410.json
     result: OK (conductor)
+- id: 2026.06.410
+  title: 'CLOSE THE GENERIC-SOLVER GAP: turn the corpus of WORKING per-game solutions into a GENERIC live solver that solves
+    UNSEEN games WITHOUT per-game reverse-engineering. Today the 20 reproducible games are solved by a HETEROGENEOUS mix (hand-RE''d
+    GameAdapters tr87/tu93, per-game E3 world_models sc25/ar25/ka59/ft09, frozen trajectory replays r11l/ls20/wa30, graph-explore
+    trajectories, config-rule induction) -- only arc_loop_solve''s standing loop is truly generic, and every unseen game still
+    needs delta-RE. The Kaggle eval is HELD-OUT private games, so GENERIC solving is the entire competitive value. Operator
+    insight 2026-06-19: "we have examples of working level solutions -- that should help us get generic live solves." .410
+    mines that example corpus: (A) a LEAVE-ONE-OUT generic-solve benchmark that QUANTIFIES how many solved games are re-derivable
+    from the OTHER games'' examples alone; (B) example-corpus-conditioned win-condition + action-model induction for held-out
+    games; (C) the A3 generic-first-contact fix so a routed game actually SOLVES; (D) consolidation of the per-game solver
+    primitives into composable generic operators in arc_solver_kit. Monotonically grow reproducible_total_levels (currently
+    35/18). ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19; the Claude planner is SKIPPED via
+    this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]).
+    paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline.'
+  doc: ''
+  completed: '2026-06-19'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4431-archive-409-activate-410
+    title: PHASE 0 (TRANSITION) -- archive .409 -> activate .410; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .409 close-state.
+    deliverable: results/experiment_4431_archive_409_activate_410.json
+    result: OK (conductor)
+  - id: exp4432-loo-generic-solve-benchmark
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- LEAVE-ONE-OUT generic-solve benchmark: how many solved
+      games re-solve from the OTHER games'' example recipes alone (the falsifiable measure of the generic gap).'
+    deliverable: results/experiment_4432_loo_generic_solve_benchmark.json
+    result: OK (conductor)
+  - id: exp4433-example-conditioned-win-condition-induction
+    title: 'PHASE A2 (ARC NORTH STAR) -- example-corpus-conditioned WIN-CONDITION induction: few-shot the solved games'' grounded
+      win-rules to induce is_win() for a HELD-OUT game (+1 reproducible level if it grounds + solves).'
+    deliverable: results/experiment_4433_example_conditioned_win_induction.json
+    result: OK (conductor)
+  - id: exp4434-example-conditioned-action-model-induction
+    title: 'PHASE A3 (ARC NORTH STAR) -- example-corpus-conditioned ACTION-MODEL (E3 world_model) induction: few-shot the
+      solved games'' world_models to synthesize a HELD-OUT game''s transition model faster/more accurately.'
+    deliverable: results/experiment_4434_example_conditioned_action_model.json
+    result: OK (conductor)
+  - id: exp4435-fix-generic-first-contact-solver
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- FIX the generic first-contact solver (the .409 exp4423 partial:
+      FAIL-loop) so a ROUTED unseen game actually banks +1 reproducible level.'
+    deliverable: results/experiment_4435_generic_first_contact_fixed.json
+    result: OK (conductor)
+  - id: exp4436-deepen-plus-primitive-consolidation
+    title: PHASE A5 (ARC NORTH STAR; MULTI-LEVEL) -- take an already-solved game +1 DEEPER level AND consolidate the per-game
+      solver primitives into composable generic operators in arc_solver_kit.
+    deliverable: results/experiment_4436_deepen_plus_primitive_consolidation.json
+    result: OK (conductor)
+  - id: exp4437-arc-artifact-discipline-template-lint
+    title: PHASE B1 (RESERVED INFRA) -- ship an ARC-SOLVE task artifact-discipline template + lint so fast deterministic solves
+      declare inference_substrate (kills the .409 DURATION_TOO_SHORT false-positive class) and emit terminal verdicts.
+    deliverable: results/experiment_4437_arc_artifact_discipline_template.json
+    result: OK (conductor)
+  - id: exp4438-registry-gaps-hygiene-gap4-guard
+    title: PHASE B2 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .410 outcomes;
+      verify the capstone verifier_is_oracle stamping stays durable.
+    deliverable: results/experiment_4438_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4439-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4439_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4440-sota-ingestion-410
+    title: PHASE D (SOTA-INGESTION; .410 bleeding-edge track) -- ingest SOTA for GENERIC program-induction + few-shot world-model
+      induction across games; map the strongest 3-5 methods onto the .411 roadmap.
+    deliverable: results/experiment_4440_sota_ingestion_410.json
+    result: OK (conductor)
+  - id: exp4441-capstone-410
+    title: 'PHASE E (CAPSTONE .410) -- the milestone scorecard + the GENERIC-SOLVER HEADLINE DECISION: did the example corpus
+      measurably close the per-game-RE gap?'
+    deliverable: results/experiment_4441_capstone_v410.json
+    result: OK (conductor)
