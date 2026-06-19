@@ -521,6 +521,16 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
     (dev/known games only — useless on the hidden eval)."""
 
     class CarnotAgent(base_cls):  # type: ignore
+        # The framework's Agent.MAX_ACTIONS default is 80 ("avoid looping forever"),
+        # which is far too low for the eval: our deepest banked replay (lp85 -> L5)
+        # alone needs well over 80 actions, and the held-out-game explore fallback
+        # needs room to probe + solve several levels. 80 would truncate even our best
+        # known game. The real bound is the eval's wall-clock budget (<=12h across all
+        # games), not this per-game loop guard; Playback overrides it to 1e6 for the
+        # same reason, so it is an intended override point. 400 comfortably covers our
+        # multi-level replays + explore while staying well inside the time budget.
+        MAX_ACTIONS = 400
+
         def __init__(self, *args, **kwargs) -> None:
             super().__init__(*args, **kwargs)
             gid = getattr(self, "game_id", "")
@@ -540,6 +550,15 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
             if kind == "RESET" or kind is None:
                 return GameAction.RESET
             act = getattr(GameAction, f"ACTION{kind}")
-            return act.set_data(data) if data else act
+            if data:
+                # CRITICAL: GameAction.set_data() RETURNS the inner ComplexAction, NOT
+                # the enum member. The framework's do_action_request reads
+                # `action.action_data` off the object choose_action returns, so we must
+                # mutate the enum in place and return the ENUM. Returning set_data()'s
+                # result (a ComplexAction, which has no .action_data) crashes every
+                # coordinate/click action against the real harness. game_id is a required
+                # ComplexAction field (Playback injects it too), so carry it through.
+                act.set_data({"game_id": getattr(self, "game_id", ""), **data})
+            return act
 
     return CarnotAgent
