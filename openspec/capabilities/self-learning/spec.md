@@ -14577,3 +14577,61 @@ grounding-rate delta is positive and its CI95 excludes zero.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4418 | Planned (`python/carnot/experiment_4418_config_rule_vocabulary_transfer.py`; `results/experiment_4418_config_rule_vocabulary_transfer.py`; `results/experiment_4418_config_rule_vocabulary_transfer.json`) | Planned (`tests/python/test_experiment_4418_config_rule_vocabulary_transfer.py`) |
+
+---
+
+## REQ-LEARN-4425: Qwen Config-Rule Vocabulary Transfer Retest
+
+**Given** solved ARC config games with grounded win-rule predicates or
+reproduced registry entries
+**And** the Qwen3.5-9B-MTP local iGPU `/no_think` Layer-B repeat-bench output
+is available for cold-start comparison
+**When** Exp 4425 builds a reusable vocabulary of relational win-rule
+primitives and seeds the scaffolded inducer prompt with that vocabulary
+**Then** it SHALL write
+`results/experiment_4425_config_rule_vocabulary_transfer.json` with
+`config_rule_vocabulary`, `vocabulary_seeded_prompt`, `transfer_learning_curve`,
+`config_rule_vocabulary_transfers`, `verifier_is_oracle=false`,
+`random_seed`, `honest_verdict`, `logged_gaps`, `model_specs`, and
+`reproducibility_checksum`
+**And** `config_rule_vocabulary_transfers` SHALL be a bare boolean that is true
+only when the held-out vocabulary-seeded grounding-rate lift over cold-start is
+positive and the 95% confidence interval excludes zero.
+
+### REQ-LEARN-4425 Sub-requirements
+
+- REQ-LEARN-4425-1: The vocabulary SHALL include reusable relational
+  primitives such as editable/reference count equality, match-reference,
+  progress-fill, glyph-rewrite, marker-coverage, and shape-pattern match when
+  those primitives are present in solved config-game sources.
+- REQ-LEARN-4425-2: The seeded prompt SHALL include the vocabulary before the
+  scaffolded inducer task text, and the generator metadata SHALL declare
+  Qwen3.5-9B-MTP on iGPU with `/no_think`, MTP enabled, and four seeds.
+- REQ-LEARN-4425-3: The transfer curve SHALL report cold-start and
+  vocabulary-seeded grounded counts, grounding rates, lift, and CI95 for each
+  held-out game and overall.
+- REQ-LEARN-4425-4: If the vocabulary-seeded arm cannot be measured, Exp 4425
+  SHALL still write a terminal artifact, set
+  `config_rule_vocabulary_transfers=false`, and log the null measurement as a
+  gap instead of gating or fabricating a lift.
+- REQ-LEARN-4425-5: `verifier_is_oracle` SHALL be false because the verifier
+  grounds proposed predicates but does not define correctness for the transfer
+  claim.
+
+### SCENARIO-LEARN-4425: Seeded Prompt And Transfer Artifact Are Stable
+
+**Given** grounded source rules and four-seed cold/seeded arm observations
+**When** Exp 4425 builds the vocabulary-seeded prompt and transfer artifact
+**Then** the prompt SHALL name the relational primitives and the artifact SHALL
+validate the required fields
+**And** `config_rule_vocabulary_transfers=true` only when the held-out
+grounding-rate lift CI95 excludes zero.
+
+### SCENARIO-LEARN-4425-NULL: Missing Seeded Arm Logs A Gap
+
+**Given** the four-seed Qwen cold-start repeat-bench is available
+**And** no vocabulary-seeded repeat-bench artifact is available
+**When** Exp 4425 runs
+**Then** it SHALL write a terminal `complete:` verdict, set
+`config_rule_vocabulary_transfers=false`, keep `verifier_is_oracle=false`, and
+record the missing seeded-arm measurement in `logged_gaps`.
