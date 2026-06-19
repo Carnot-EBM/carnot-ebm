@@ -8810,3 +8810,4 @@ c |
 | 2026-06-19 06:57 UTC | PHASE A3 (ARC NORTH STAR) -- generic FIRST-CONTACT | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4423_generic |
 | 2026-06-19 08:03 UTC | PHASE A3 (ARC NORTH STAR) -- generic FIRST-CONTACT | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4423_generic |
 | 2026-06-19 08:24 UTC | PHASE A4 (ARC NORTH STAR; MULTI-LEVEL) -- take an  | OK | 86 passed, 1 warning in 5.52s |
+| 2026-06-19 08:37 UTC | PHASE B (TRANSFER) -- config-rule VOCABULARY from  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
