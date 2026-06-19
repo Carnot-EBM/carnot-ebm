@@ -15,6 +15,74 @@ performance.
 
 ## Requirements
 
+### REQ-REPORT-4420: Archive .408, Activate .409, Record The Honest Config-Rule Close-State
+
+The Exp 4420 workflow SHALL archive milestone `2026.06.408`, confirm milestone
+`2026.06.409` is the active milestone, and write a record-only transition
+artifact to `results/experiment_4420_archive_408_activate_409.json`. It SHALL
+run no live model, no TRM training, and no leaderboard submission; its
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+
+The workflow SHALL confirm `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` both parse under `yaml.safe_load`, run the
+smart-subset pre-test gate green, keep `research-complete.yaml` parseable after
+any edit, and ensure a top-level `2026.06.408` archive record exists. It MAY
+canonicalize or deduplicate that record, but it SHALL NOT treat any
+`flagged_adversarial` artifact as a trusted source.
+
+The artifact SHALL include the required fields `archived_milestone`,
+`activated_milestone`, `active_milestone_confirmed`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`pretest_suite_green`, `verifier_is_oracle`, `v408_close_state`,
+`preconditions_checked`, `honest_verdict`, `duration_s`,
+`inference_substrate`, `random_seed`, and `reproducibility_checksum`.
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`, and its field principle SHALL equal
+`terminal-prefixed self-declared state lets the reconciler classify without
+re-running`. The complete-path artifact SHALL set `verifier_is_oracle=true`
+because the milestone transition is execution-grounded; it SHALL NOT present
+execution-grounded ARC solves, Agent2World repairs, or GAP-4 execution gates as
+oracle-distinct learned-verifier moat evidence.
+
+The `v408_close_state` SHALL truthfully record the `.408` capstone facts:
+config-rule induction grounded the ka59 Tier-2 rule but added `0` new
+reproducible levels; Agent2World adaptive repair remained an honest partial with
+`0` new reproducible levels; `reproducible_total_levels` remained `34` with `0`
+new levels and `17` games; the hidden-state localizer falsification closed the
+first-error localizer program as text-and-hidden-state position-bound; the local
+generator GAP-4 execution gate held flat versus vote with `0` losses and local
+generator coverage around `0.2333`; config-rule vocabulary transfer was false
+or blocked by the local model precondition; SteerConf did not rescue code-domain
+detection; and the publication gate remained `paper_ready=true`.
+
+#### SCENARIO-REPORT-4420: The Archive Records The Honest .408 Close-State
+
+**Given** `.409` is active, the `.408` capstone and required upstream artifacts
+exist, the history and exclusion-manifest YAML files parse, and the smart-subset
+pre-test gate is green
+**When** the Exp 4420 archive workflow runs
+**Then** it records or canonicalizes a single `.408` archive row, writes
+`results/experiment_4420_archive_408_activate_409.json`, reports the true
+config-rule, Agent2World, hidden-state localizer, GAP-4 local-generator,
+vocabulary-transfer, SteerConf, and ARC-level close-state, sets
+`verifier_is_oracle=true`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict with the required principle text.
+
+#### SCENARIO-REPORT-4420-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent, poisoned, or red
+**When** the Exp 4420 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, leaves the
+close-state empty, and does not claim `.408` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4420)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4420 | Implemented (`python/carnot/reporting/archive_408_activate_409_4420.py`, `results/experiment_4420_archive_408_activate_409.py`) | Implemented (`tests/python/test_experiment_4420_archive_408_activate_409.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans
