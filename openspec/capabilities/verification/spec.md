@@ -19718,6 +19718,73 @@ clean powered null rather than graduating the localizer headline.
 |---|---|---|
 | REQ-VERIFY-4403 | Planned (`python/carnot/experiment_4403_real_intervention_localizer_deconfound.py`, `results/experiment_4403_real_intervention_localizer_deconfound.py`) | Planned (`tests/python/test_experiment_4403_real_intervention_localizer_deconfound.py`) |
 
+### REQ-VERIFY-4416: Hidden-State First-Error Localizer Falsification Audit
+
+The repository SHALL provide Exp 4416 at
+`python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py`
+and `results/experiment_4416_hidden_state_localizer_falsification_audit.py` to
+settle whether a local open model's hidden-state transport/margin feature
+carries any oracle-distinct, non-position first-error localization signal beyond
+the Exp 4403 content-blind position-only baseline. The experiment SHALL use
+cached FoVer traces only, SHALL run forward-pass hidden-state capture only,
+SHALL NOT train TRM, generator, SFT, or RL models, and SHALL respect the GGUF tokenizer rule
+by using a base HuggingFace repository when `transformers`
+hidden states are required.
+
+Before hidden-state capture, the runner SHALL check that the cached FoVer corpus
+from the Exp 2850/Exp 4403 lineage can supply at least 1000 verifier-checked
+failed FoVer traces with first-error labels, that a local open model can emit
+hidden states through a HuggingFace `output_hidden_states` path or an equivalent
+documented local extraction path, and that TRM training is stood down. If the
+cached corpus is missing or cannot supply the powered failed-trace requirement,
+the runner SHALL write `honest_verdict=blocked_cached_corpus_unavailable` and
+stop without capture. If no hidden-state extraction path exists, it SHALL write
+`honest_verdict=blocked_no_hidden_state_extraction_path` and stop without
+fabricating hidden-state metrics.
+
+When preconditions hold, the runner SHALL capture per-step hidden states for at
+least 1000 FoVer failed traces, compute a GeoReason-style transport/margin
+feature per step, record the captured trace count per first-error position bin,
+fit a CPU probe on train traces, evaluate first-error F1 on a held-out split of
+at least 1000 failed traces, and compare the held-out hidden-state probe against
+a content-blind position-only baseline fit only from empirical first-error
+position counts and against Exp 4403's text-localizer FoVer F1. The delta
+against position-only SHALL use at least 2000 paired bootstrap resamples, and
+`hidden_state_localizer_has_nonposition_signal` SHALL be true only when the
+hidden-state probe F1 exceeds the position-only baseline and the delta CI95
+excludes zero.
+
+The terminal artifact SHALL write
+`results/experiment_4416_hidden_state_localizer_falsification_audit.json` with
+top-level fields `honest_verdict`, bare bool
+`hidden_state_localizer_has_nonposition_signal`,
+`localization_f1_comparison`, bare float `position_only_baseline_f1`, bare int
+`n_traces`, bare bool `verifier_is_oracle=false`, `preconditions_checked`,
+`random_seed`, `reproducibility_checksum`, `model_specs`,
+`hidden_state_capture_receipts`, `missing_verifier_gaps`, `field_principles`,
+`spec_refs`, `duration_s`, `inference_substrate`, and `adversarial_verify`.
+Clean nulls SHALL be decision-grade and close the first-error localizer line
+when hidden-state transport/margin features tie the position-only baseline.
+
+### SCENARIO-VERIFY-4416: Hidden-State Probe Is Judged Against Position Only
+
+Given a cached powered FoVer failed-trace corpus and a local HuggingFace base
+checkpoint that can emit hidden states, when Exp 4416 runs, then it records
+precondition receipts, captures hidden states without model training, computes
+transport/margin features, evaluates a held-out first-error split against the
+position-only baseline and Exp 4403's text-localizer F1, records bootstrap CI95,
+sets `verifier_is_oracle=false`, records model specs and a reproducibility
+checksum, and runs adversarial verification. If the hidden-state probe ties or
+fails to beat the position-only baseline with CI95 excluding zero, then
+`hidden_state_localizer_has_nonposition_signal=false` and the artifact reports a
+clean null rather than redeploying the localizer.
+
+## Implementation Status (REQ-VERIFY-4416)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4416 | Planned (`python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py`, `results/experiment_4416_hidden_state_localizer_falsification_audit.py`) | Planned (`tests/python/test_experiment_4416_hidden_state_localizer_falsification_audit.py`) |
+
 ### REQ-VERIFY-4407: Active-Learning First-Error Localizer Compounding Curve
 
 The repository SHALL provide Exp 4407 at
