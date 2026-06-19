@@ -1,3 +1,83 @@
+## 2026-06-18 — .408 planning sweep — the oracle-distinct first-error LOCALIZER is RETIRED (position-bound); PIVOT the ARC north star to verifier-grounded CONFIG-RULE INDUCTION (the operator's #1 lever, 9 toggle/config games); Agent2World adaptive E3 repair; falsify the localizer in hidden-state space; repair code-domain detection calibration
+
+Added by the `.408 planning sweep (Claude Opus 4.8, outer-loop planner). The `.407 scorecard
+(exp4412 capstone, verdict
+`v407_localizer_position_bound_retired_compounds_false_calibrated_false_arc_levels_34_publication_ready`,
+read via `scripts/summarize_artifact.py`). `.407 took the honest next step on the .406 quarantine —
+**REAL verifier-checked intervention first-error data (arXiv:2601.14209)** instead of synthetic
+injection — and the oracle-distinct first-error LOCALIZER **RETIRED**:
+
+- **LOCALIZER → `position_bound_retired`.** exp4403's real-intervention localizer STILL tied the
+  content-blind position-only baseline: on FoVer the position-only baseline F1 is **1.0** (first-error
+  onset is near-deterministic in position — the corpus has ~zero CONTENT headroom for localization),
+  `delta_vs_position_only=0.0`, `template_family_holdout_drop=0.0`; on GAP-4 ARC `delta=+0.019` with
+  CI95 [−0.13, +0.17] (includes 0). `retire_if_same_verdict: true` fired → **two confounded attempts is
+  enough; the learned first-error-localizer-as-headline is retired** (the residual is a logged gap, not
+  a 4th rerun). exp4404 typed-taxonomy generalization was gate-blocked on the failed A1.
+- **SELF-LEARNING / COMPOUNDS → false** (exp4407): active-vs-random learning curve FLAT at F1=1.0
+  (saturated — no headroom on a position-bound signal; positive control did not pass).
+- **CROSS-DOMAIN DETECTION CALIBRATION → false** (exp4408): only FoVer detects (AUROC 0.918);
+  **code_humaneval is at chance (AUROC 0.577, CI95 [0.46, 0.69], n=539)** even after proper pools +
+  semantic-confidence aggregation. Confirms the verifier is **domain-bound** (math strong, code weak).
+- **ARC north star → STILL 34 reproducible levels / 17 games, 0 new** (exp4405 deeper + exp4406 tails).
+  The per-mechanic EXECUTABLE UNIT TESTS **passed** (ar25 register test 1.0) but reproduction did NOT
+  follow — `lookahead_fidelity` stuck ~0.73; the named registers are not the whole gap. **Static
+  per-mechanic unit tests document blockers but do not deepen ARC.**
+- `paper_ready=True` (FoVer 0.9131, G1–G4, unmet_gates: []) — the FROZEN headline (unchanged).
+
+**The .408 reframe (what the evidence forces).** The oracle-distinct LEARNED-verifier vehicles are now
+largely exhausted (first-error localizer RETIRED .407; GAP-3 trained-content-energy RETIRED earlier).
+The **highest-leverage, freshest, operator-hands-on lever is the verifier as the GROUNDING ORACLE for
+LLM-PROPOSED predicates** — proven this week by the Config Layer B thread
+(`docs/research-notes/arc-config-layerb-scaffolded-2026-06-18.md`): a local offline **gemma-4-12B that
+CANNOT read a raw 64×64 scene CAN induce a GROUNDED relational win-rule** when handed object-centric
+digests (ka59 → Tier-2 `count_4 == 32`, fires-on-win, 0 false-positives), and the **verifier grounds
+the proposed predicate and rejects wrong ones** (propose-then-ground). The operator's own first-contact
+audit names the **9 toggle/CONFIG games (bp35, dc22, g50t, ka59, lf52, s5i5, tn36, sc25, tr87) as "the
+clear #1 next investment and the genuinely hard one"** — target-pattern (win-RULE) induction over a
+40–210-cell editable space that random exploration cannot stumble. This is simultaneously ARC north-star
+progress (the biggest unsolved game class), the verifier-moat thesis made concrete (verifier grounds the
+generator's proposal), sovereignty-preserving (local open 12B; the lever is REPRESENTATION not model
+size), and a natural self-learning substrate (a config-rule VOCABULARY from solved games → transfer).
+
+**Method map (SOTA verified by the exp4409 SOTA-ingestion sweep, arXiv HTTP-200 + low-concurrency
+WebSearch, 2026-06-18 — `flagged_for_v408 = agent2world_adaptive_e3_mechanic_repair_v408`):**
+
+- **arXiv:2512.22336** — "Agent2World: Learning to Generate Symbolic World Models via Adaptive
+  Multi-Agent Feedback" (the #1 flagged method). A "Testing Team" generates ADAPTIVE behavior tests from
+  failing rollout traces, feeds them to the world-model developer, and reruns executable checks before
+  any solve. `.408 mapping: replace the .407 STATIC per-mechanic unit-test pass (which documented
+  blockers but did not deepen ARC) with behavior-aware, trace-driven ADAPTIVE E3 mechanic repair on the
+  deep-tail games. Failure mode to guard: adaptive tests can overfit public ARC mechanics / smuggle
+  game-specific code → keep held-out mechanic tests + fresh-agent state + solve-claims separate from
+  test repair.
+- **arXiv:2605.25931** — "AERA — Explore Before You Solve: the Speed-Depth Trade-off in Epistemic Agents
+  for ARC-AGI-3." `.408 mapping: wrap the Agent2World repair in speed-depth + public-artifact-leakage
+  controls so deeper E3 progress is not benchmark leakage.
+- **arXiv:2605.13772** — "GeoReason hidden-state transport" first-error localization. `.408 mapping: ONE
+  hidden-state first-error AUDIT — does a hidden-state transport margin carry ANY recoverable
+  NON-position first-error signal, independent of text position? A diagnostic FALSIFICATION pass (NOT a
+  redeployable localizer — the text localizer is retired): a clean null conclusively closes the
+  first-error-localizer program; a weak signal is logged as a gap. (Requires model hidden states +
+  label-conditioned traces; the paper reports student collapse under shift, so use it as falsification.)
+- **arXiv:2503.02863** — "SteerConf — steered confidence elicitation." `.408 mapping: repair the false
+  multi-domain detector contract — add conservative/optimistic steering probes + confidence-consistency
+  features beside the verifier score, fit domain-wise calibration with leave-domain-out + random-score
+  control; test whether STEERED confidence rescues code_humaneval where semantic-confidence-aggregation
+  (.407 exp4408) could not, without degrading FoVer/GAP/GSM.
+- **arXiv:2508.02298** — "CAPO — offline generative process-reward critique." `.408 mapping (optional):
+  a bounded offline critique-label baseline for failed localizer/compounding, with position-only
+  controls. (Carried; not a headline .408 task.)
+
+**OUT-OF-BAND / operator-owned (NOT auto-run in-loop):** arXiv:2606.13565 (A2D2 reward-guided discrete
+diffusion) + arXiv:2502.01384 (SEPO score-entropy policy optimization) — both are verifier-as-reward
+GENERATOR training (the conductor stays stood-down on TRM/generator training).
+
+Sources (this sweep, exp4409-verified 2026-06-18): arxiv.org/abs/{2512.22336, 2605.25931, 2605.13772,
+2503.02863, 2508.02298, 2606.13565, 2502.01384}; Config Layer B thread
+`docs/research-notes/arc-config-layerb-scaffolded-2026-06-18.md` +
+`arc-first-contact-solver-2026-06-18.md` (the 9-game config/toggle "#1 lever" re-measurement).
+
 ## 2026-06-18 — .407 planning sweep — DECONFOUND the oracle-distinct first-error LOCALIZER with REAL intervention data (the .406 synthetic localizer was pure position bias); drive the ARC north star DEEPER via per-mechanic executable unit tests; active-learning self-learning; repair cross-domain calibration
 
 Added by the `.407 planning sweep (Claude Opus 4.8, outer-loop planner). The `.406 scorecard

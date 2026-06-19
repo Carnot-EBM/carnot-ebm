@@ -1,0 +1,300 @@
+{
+  "activated_milestone": "2026.06.408",
+  "active_milestone_confirmed": "2026.06.408",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.407",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4412_capstone_v407.json",
+      "experiment_id": "4412",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "afb26fc517208350e77197d4fc5e86ae3daa0bf666e6a764d77f17100f72c8df"
+    },
+    {
+      "deliverable": "results/experiment_4403_real_intervention_localizer_deconfound.json",
+      "experiment_id": "4403",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "fe872c319031dbe81518ebb3ccd4655dfb3cc3a5c81d64ca1a47d6882e505eb2"
+    },
+    {
+      "deliverable": "results/experiment_4407_active_learning_self_learning_compounds.json",
+      "experiment_id": "4407",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "a686495e85751e5b4b154d45b63c05aa9c455055822b095a007546203186e324"
+    },
+    {
+      "deliverable": "results/experiment_4408_cross_domain_detection_calibration_repair.json",
+      "experiment_id": "4408",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "836bdfa6d03b3bad42f2aee7848b7ebf04d3c0cd6ac40d1cd2d533dc9ce214f9"
+    },
+    {
+      "deliverable": "results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
+      "experiment_id": "4405",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "215b78efb94a34314854285be89ff7979c07621305cced43bea4f542be8357df"
+    },
+    {
+      "deliverable": "results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json",
+      "experiment_id": "4406",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "21db4fd3ca611a9e4de310436c1afd27d0362d89fa957419755247b607ca1984"
+    },
+    {
+      "deliverable": "results/experiment_4409_sota_ingestion_v408.json",
+      "experiment_id": "4409",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "1e972f1949271d40f0ef67adc0ed10c9ccc0eac4e4748c31369e204238e497a3"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "document",
+      "required": true,
+      "sha256": "4ba44b48768ba071ad66d6403b36d1b3e518f46e8440b110a4aed2bebf6f6fe2"
+    },
+    {
+      "deliverable": "research-roadmap.yaml",
+      "experiment_id": "v408_active_roadmap",
+      "kind": "document",
+      "required": true,
+      "sha256": "536876545a41544e338fa61e9563eb37a13b0863e519bcc2a0437c9c1148808b"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v408.md",
+      "experiment_id": "v408_design_doc",
+      "kind": "document",
+      "required": true,
+      "sha256": "eed83f2c3ac6ba4ce92461eb75a9782815a67b463f91dcb7f57be6115a6b9eda"
+    },
+    {
+      "deliverable": "ops/exclusion_manifest.yaml",
+      "experiment_id": "exclusion_manifest",
+      "kind": "document",
+      "required": true,
+      "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+    }
+  ],
+  "duration_s": 20.326767,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4413,
+  "field_principles": {
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "v407_close_state": "Honest record (localizer RETIRED position-bound / exp4403 tied position-only F1=1.0; self-learning compounds=false; detection calibrated=false code-at-chance; ARC 34/17 0-new fidelity~0.73; flagged_for_v408=agent2world_adaptive_e3_mechanic_repair_v408; paper_ready=True) so the .408 agents frame the milestone as PIVOT-to-verifier-grounded-config-rule-induction + Agent2World-adaptive-E3 + hidden-state-localizer-falsification + config-rule-vocabulary-self-learning + SteerConf-calibration-repair -- NOT a re-run of the RETIRED text localizer nor the settled/retired axes."
+  },
+  "honest_verdict": "success: archived_v407_v408_active_localizer_position_bound_retired_compounds_false_calibrated_false_arc34_games17_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.408",
+      "expected": "2026.06.408",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4413_archive_v407_activate_v408.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 75%]\n........................                                                 [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n96 passed, 1 warning in 7.68s\n"
+    },
+    "source_artifacts": {
+      "4403": {
+        "exists": true,
+        "path": "results/experiment_4403_real_intervention_localizer_deconfound.json",
+        "required": true,
+        "sha256": "fe872c319031dbe81518ebb3ccd4655dfb3cc3a5c81d64ca1a47d6882e505eb2"
+      },
+      "4405": {
+        "exists": true,
+        "path": "results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
+        "required": true,
+        "sha256": "215b78efb94a34314854285be89ff7979c07621305cced43bea4f542be8357df"
+      },
+      "4406": {
+        "exists": true,
+        "path": "results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json",
+        "required": true,
+        "sha256": "21db4fd3ca611a9e4de310436c1afd27d0362d89fa957419755247b607ca1984"
+      },
+      "4407": {
+        "exists": true,
+        "path": "results/experiment_4407_active_learning_self_learning_compounds.json",
+        "required": true,
+        "sha256": "a686495e85751e5b4b154d45b63c05aa9c455055822b095a007546203186e324"
+      },
+      "4408": {
+        "exists": true,
+        "path": "results/experiment_4408_cross_domain_detection_calibration_repair.json",
+        "required": true,
+        "sha256": "836bdfa6d03b3bad42f2aee7848b7ebf04d3c0cd6ac40d1cd2d533dc9ce214f9"
+      },
+      "4409": {
+        "exists": true,
+        "path": "results/experiment_4409_sota_ingestion_v408.json",
+        "required": true,
+        "sha256": "1e972f1949271d40f0ef67adc0ed10c9ccc0eac4e4748c31369e204238e497a3"
+      },
+      "4412": {
+        "exists": true,
+        "path": "results/experiment_4412_capstone_v407.json",
+        "required": true,
+        "sha256": "afb26fc517208350e77197d4fc5e86ae3daa0bf666e6a764d77f17100f72c8df"
+      },
+      "arc_solve_registry": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "required": true,
+        "sha256": "4ba44b48768ba071ad66d6403b36d1b3e518f46e8440b110a4aed2bebf6f6fe2"
+      },
+      "exclusion_manifest": {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "required": true,
+        "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+      },
+      "v408_active_roadmap": {
+        "exists": true,
+        "path": "research-roadmap.yaml",
+        "required": true,
+        "sha256": "536876545a41544e338fa61e9563eb37a13b0863e519bcc2a0437c9c1148808b"
+      },
+      "v408_design_doc": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v408.md",
+        "required": true,
+        "sha256": "eed83f2c3ac6ba4ce92461eb75a9782815a67b463f91dcb7f57be6115a6b9eda"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4413,
+  "reproducibility_checksum": "2f770e8c3f4f47ea408f51282f76726fae929abcca8bd032ac3778337d2d194f",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v407_to_v408_4413.v1",
+  "spec_refs": [
+    "REQ-REPORT-4413",
+    "SCENARIO-REPORT-4413"
+  ],
+  "task_id": "exp4413-archive-v407-activate-v408",
+  "v407_close_state": {
+    "arc_axis_state": "STUCK_34_17_ZERO_NEW",
+    "arc_new_games_since_prior": 0,
+    "arc_new_levels_reproduced_exp4405": 0,
+    "arc_new_levels_reproduced_exp4406": 0,
+    "arc_new_levels_since_prior": 0,
+    "arc_reproducible_total_games": 17,
+    "arc_reproducible_total_levels": 34,
+    "arc_tail_fidelity_ar25": 0.733333,
+    "beats_position_only_baseline": false,
+    "calibration_axis_state": "FALSE_MULTI_DOMAIN_CODE_AT_CHANCE",
+    "calibration_honest_verdict": "complete: calibrated_multi_domain_contract_false_deconfounded",
+    "capstone_honest_verdict": "complete: v407_localizer_position_bound_retired_compounds_false_calibrated_false_arc_levels_34_publication_ready",
+    "code_humaneval_at_chance": true,
+    "code_humaneval_auroc_ci95": [
+      0.461255,
+      0.692756
+    ],
+    "code_humaneval_claim_scope": "proper_pool_n>=300",
+    "code_humaneval_detection_auroc": 0.577374,
+    "code_humaneval_n": 539,
+    "conductor_stands_down_on_trm_generator_training": true,
+    "detection_calibrated_multi_domain": false,
+    "domains_at_chance": [
+      "code_humaneval"
+    ],
+    "flagged_for_v408": "agent2world_adaptive_e3_mechanic_repair_v408",
+    "fover_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "fover_delta_vs_position_only": 0.0,
+    "fover_position_only_baseline_f1": 1.0,
+    "fover_real_intervention_localizer_f1": 1.0,
+    "gap4_delta_ci95": [
+      -0.134615,
+      0.173077
+    ],
+    "gap4_delta_vs_position_only": 0.019231,
+    "localizer_axis_state": "RETIRED_POSITION_BOUND",
+    "localizer_compounds": false,
+    "localizer_genuinely_beats_position_only": false,
+    "localizer_state": "position_bound_retired",
+    "lookahead_fidelity_max_all": 0.875,
+    "lookahead_fidelity_min_all": 0.112281,
+    "lookahead_fidelity_values": [
+      0.833333,
+      0.8,
+      0.875,
+      0.857143,
+      0.733333,
+      0.112281,
+      0.347518
+    ],
+    "not_reopen_settled_or_retired_axes": true,
+    "not_rerun_retired_text_localizer": true,
+    "outer_loop_owns_trm_training": true,
+    "paper_ready": true,
+    "per_mechanic_unit_tests_passed_but_reproduction_not_proven": true,
+    "position_only_baseline_f1": 1.0,
+    "publication_unmet_gates": [],
+    "real_intervention_honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
+    "retire_if_same_verdict_fired": true,
+    "self_learning_axis_state": "CLEAN_NULL_POSITION_BOUND_OR_SATURATED",
+    "self_learning_compounding_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "self_learning_corpus_first": 51,
+    "self_learning_corpus_last": 512,
+    "self_learning_f1_active_first": 1.0,
+    "self_learning_f1_active_last": 1.0,
+    "self_learning_f1_random_last": 1.0,
+    "self_learning_honest_verdict": "complete: clean_null_position_bound_or_saturated",
+    "self_learning_positive_control_passed": false,
+    "static_unit_tests_do_not_deepen_arc": true,
+    "summary": "position_bound_retired_compounds_false_calibrated_false_arc34_v408_config_rule_pivot",
+    "template_family_holdout_drop": 0.0,
+    "text_localizer_route_state": "DO_NOT_RERUN_RETIRED_POSITION_BOUND",
+    "v408_frame": "PIVOT_TO_VERIFIER_GROUNDED_CONFIG_RULE_INDUCTION_AGENT2WORLD_ADAPTIVE_E3_HIDDEN_STATE_LOCALIZER_FALSIFICATION_CONFIG_RULE_VOCABULARY_SELF_LEARNING_STEERCONF_CALIBRATION_REPAIR",
+    "v408_method_map_arxiv_ids": [
+      "2512.22336",
+      "2605.13772",
+      "2503.02863",
+      "2605.25931",
+      "2508.02298"
+    ]
+  }
+}

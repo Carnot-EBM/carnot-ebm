@@ -1,0 +1,45 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "phi-4",
+  "gguf": "phi-4-Q4_K_M.gguf",
+  "no_think": false,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 1.81,
+      "tokens": 52,
+      "dur_s": 28.7,
+      "coherent": true,
+      "raw_sample": "import numpy as np\n\ndef is_win(grid):\n    e = grid[63, 26:64]\n    return np.count_nonzero(e == 4) == 32 and np.count_nonzero(e == 0) == 6\n```",
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 2.44,
+      "tokens": 187,
+      "dur_s": 76.6,
+      "coherent": true,
+      "raw_sample": "import numpy as np\n\ndef is_win(grid):\n    e = grid[1:2, 2:62]   # the editable region\n    ref = grid[8:60, 13:51]  # the reference region\n\n    # Calculate the counts of each color in the editable region\n    e_counts = np.bincount(e.flatten(), minlength=12)\n    \n    # Calculate the counts of each color in the reference region\n    ref_counts = np.bincount(ref.flatten(), minlength=12)\n    \n    # Chec",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    }
+  ],
+  "grounded_games": [
+    "ka59"
+  ],
+  "honest_verdict": "complete_layerb_phi_4_grounded_1",
+  "inference_substrate": "offline_arc_agi3_phi-4_iGPU_port8921"
+}

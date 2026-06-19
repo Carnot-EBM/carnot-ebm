@@ -24320,6 +24320,101 @@ not claim `.406` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4402 | Planned (`python/carnot/reporting/archive_v406_activate_v407_4402.py`, `python/carnot/experiment_4402_archive_v406_activate_v407.py`, `results/experiment_4402_archive_v406_activate_v407.py`) | Planned (`tests/python/test_experiment_4402_archive_v406_activate_v407.py`) |
 
+### REQ-REPORT-4413: Archive .407, Activate .408, And Preserve The Retired Position-Bound Localizer Close-State
+
+The Exp 4413 workflow SHALL archive milestone `2026.06.407`, confirm milestone
+`2026.06.408` is active, and write the record-only artifact
+`results/experiment_4413_archive_v407_activate_v408.json`. It SHALL run no live
+training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, and it SHALL preserve that the outer loop
+owns TRM training while the conductor stays stood down on TRM/generator training.
+
+Before editing `research-complete.yaml` or writing a complete artifact, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+- `.408` is the active milestone.
+- The required `.407` source artifacts exist: `experiment_4412_capstone_v407`,
+  `experiment_4403_real_intervention_localizer_deconfound`,
+  `experiment_4407_active_learning_self_learning_compounds`,
+  `experiment_4408_cross_domain_detection_calibration_repair`,
+  `experiment_4405_e3_deeper_mechanic_unit_tests`,
+  `experiment_4406_e3_blocked_mechanic_tails_unit_tests`,
+  `experiment_4409_sota_ingestion_v408`, the ARC solve registry, the `.408`
+  roadmap design doc, the active roadmap, and the exclusion manifest.
+
+The workflow SHALL ensure `research-complete.yaml` contains one top-level `.407`
+archive record, updating or appending the canonical close-state and collapsing
+duplicate `.407` records when needed. The workflow SHALL keep
+`research-complete.yaml` parseable before and after any edit.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `v407_close_state`, and `preconditions_checked`.
+Complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v407_close_state` SHALL truthfully
+record that the oracle-distinct first-error localizer is retired as
+position-bound (`exp4403` FoVer position-only baseline F1 `1.0`,
+real-intervention localizer F1 `1.0`, `delta_vs_position_only=0.0`,
+`template_family_holdout_drop=0.0`, and the position-only same-verdict
+retirement fired); that self-learning compounds are false (`exp4407
+localizer_compounds=false`, active/random curve flat at F1 `1.0`, positive
+control headroom absent); that cross-domain detection remains uncalibrated
+(`exp4408 detection_calibrated_multi_domain=false`, `code_humaneval` AUROC at
+chance with CI including chance); that ARC remains stuck at 34 reproducible
+levels / 17 games with `0` new levels and fidelity around `0.73` on the ar25
+tail despite per-mechanic unit tests passing; that `flagged_for_v408` is
+`agent2world_adaptive_e3_mechanic_repair_v408`; that `paper_ready=True`; and
+that `.408` is framed as a pivot to verifier-grounded config-rule induction
+with Agent2World adaptive E3, hidden-state localizer falsification,
+config-rule-vocabulary self-learning, and SteerConf calibration repair rather
+than a rerun of the retired text-localizer or settled axes.
+
+The required field principles are:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v407_close_state`: "Honest record (localizer RETIRED position-bound / exp4403 tied position-only F1=1.0; self-learning compounds=false; detection calibrated=false code-at-chance; ARC 34/17 0-new fidelity~0.73; flagged_for_v408=agent2world_adaptive_e3_mechanic_repair_v408; paper_ready=True) so the .408 agents frame the milestone as PIVOT-to-verifier-grounded-config-rule-induction + Agent2World-adaptive-E3 + hidden-state-localizer-falsification + config-rule-vocabulary-self-learning + SteerConf-calibration-repair -- NOT a re-run of the RETIRED text localizer nor the settled/retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4413: The Archive Preserves The Honest .407 Retired-Localizer Diagnosis
+
+**Given** the `.407` capstone and registry record `localizer_state` as
+`position_bound_retired`, self-learning and cross-domain calibration as false,
+ARC as `34/17`, and publication as ready; Exp 4403 records a real-intervention
+localizer that ties the position-only baseline on FoVer and fails to beat
+position-only on GAP-4 ARC; Exp 4407 records a saturated active-learning null;
+Exp 4408 records a false calibrated multi-domain contract with code at chance;
+Exp 4405/4406 record `0` new reproducible ARC levels despite passing
+per-mechanic tests; Exp 4409 records
+`flagged_for_v408=agent2world_adaptive_e3_mechanic_repair_v408`; the history
+and exclusion-manifest YAML files parse; the smart-subset pre-test gate is
+green; and `.408` is active
+**When** the Exp 4413 archive workflow runs
+**Then** it archives `.407`, confirms `.408`, keeps the YAML history parseable
+with one `.407` record, writes
+`results/experiment_4413_archive_v407_activate_v408.json`, records the
+position-bound localizer retirement, saturated self-learning, false
+cross-domain calibration, ARC 34/17 zero-new state, SOTA pointer, and
+paper-ready state in `v407_close_state`, records checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4413-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4413 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.407` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4413)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4413 | Planned (`python/carnot/reporting/archive_v407_activate_v408_4413.py`, `results/experiment_4413_archive_v407_activate_v408.py`) | Planned (`tests/python/test_experiment_4413_archive_v407_activate_v408.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

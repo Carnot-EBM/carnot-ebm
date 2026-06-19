@@ -1,0 +1,45 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "qwen3-14b",
+  "gguf": "Qwen3-14B-Q4_K_M.gguf",
+  "no_think": true,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 2.9,
+      "tokens": 213,
+      "dur_s": 73.4,
+      "coherent": true,
+      "raw_sample": "</think>\n\n```python\nimport numpy as np\n\ndef is_win(grid):\n    # Extract the editable region (row 63, columns 26 to 63)\n    e = grid[63:64, 26:64]\n    \n    # Extract the reference region (rows 21 to 41, columns 9 to 53)\n    ref = grid[21:42, 9:54]\n    \n    # Count the number of cells with color 4 in the reference region\n    ref_color_4_count = np.count_nonzero(ref == 4)\n    \n    # Count the number ",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 2.46,
+      "tokens": 188,
+      "dur_s": 76.4,
+      "coherent": true,
+      "raw_sample": "</think>\n\n```python\nimport numpy as np\n\ndef is_win(grid):\n    # Extract the editable region (row 1, cols 2 to 61 inclusive)\n    e = grid[1:2, 2:62]\n    \n    # Extract the reference region (rows 8 to 59, cols 13 to 50 inclusive)\n    ref = grid[8:60, 13:51]\n    \n    # Count the number of cells of color 3 in the editable region\n    count_3 = np.count_nonzero(e == 3)\n    \n    # Count the number of cel",
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    }
+  ],
+  "grounded_games": [
+    "tn36"
+  ],
+  "honest_verdict": "complete_layerb_qwen3_14b_grounded_1",
+  "inference_substrate": "offline_arc_agi3_qwen3-14b_iGPU_port8921"
+}

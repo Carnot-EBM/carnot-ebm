@@ -1,0 +1,43 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "qwen2.5-coder-14b",
+  "gguf": "Qwen2.5-Coder-14B-Instruct-Q4_K_M.gguf",
+  "no_think": false,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 2.45,
+      "tokens": 142,
+      "dur_s": 57.9,
+      "coherent": true,
+      "raw_sample": "```python\nimport numpy as np\n\ndef is_win(grid):\n    e = grid[63:64, 26:64]   # the editable region\n    reference_region = grid[21:42, 9:54]  # the reference region\n\n    # Count the occurrences of each color in the reference region\n    ref_counts = np.bincount(reference_region.ravel(), minlength=16)\n\n    # Count the occurrences of each color in the editable region\n    edit_counts = np.bincount(e.ra",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 2.12,
+      "tokens": 137,
+      "dur_s": 64.8,
+      "coherent": true,
+      "raw_sample": "```python\nimport numpy as np\n\ndef is_win(grid):\n    e = grid[1:2, 2:62]   # the editable region\n    reference = grid[8:60, 13:51]  # the reference region\n\n    # Count the occurrences of each color in the reference region\n    ref_counts = np.bincount(reference.ravel(), minlength=12)\n\n    # Count the occurrences of each color in the editable region\n    e_counts = np.bincount(e.ravel(), minlength=12)",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    }
+  ],
+  "grounded_games": [],
+  "honest_verdict": "complete_layerb_qwen2_5_coder_14b_grounded_0",
+  "inference_substrate": "offline_arc_agi3_qwen2.5-coder-14b_iGPU_port8921"
+}
