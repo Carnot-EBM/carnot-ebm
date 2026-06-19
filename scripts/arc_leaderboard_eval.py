@@ -89,9 +89,17 @@ def _baseline_actions(env, game: str) -> dict:
     return {}
 
 
-def run_game(game: str, policy, *, budget: int) -> dict:
+def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
+    if variant:
+        # MANUFACTURED held-out layout variant (operator 2026-06-19): the agent observes a mechanic-
+        # preserving recolor/reflection it has never seen, while the REAL env keeps the win logic -> a
+        # solve here is a real solve and a genuine generic-transfer test (a bigger benchmark than the
+        # 2/7 LOO on 25 games). See arc_variant_generator.VariantEnv.
+        from carnot.agentic.arc_variant_generator import VariantEnv
+
+        env = VariantEnv(env, game, variant, reflect=reflect)
     base = _baseline_actions(env, game)
     frames, latest, actions = [], None, 0
     start = None
@@ -148,6 +156,9 @@ def main() -> int:
     oracle = _oracle_levels()
     games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
     only = _arg(argv, "--only", "")          # --only g1,g2 : target a subset (e.g. the worst gaps)
+    variant = int(_arg(argv, "--variant", "0"))  # 0 = real game; N>0 = manufactured held-out variant N
+    reflect_arg = _arg(argv, "--reflect", "")     # "" none; "0"/"1" = reflect axis (vertical/horizontal)
+    reflect = int(reflect_arg) if reflect_arg != "" else None
     if only:
         keep = set(only.split(","))
         games = [g for g in games if g in keep]
@@ -157,7 +168,7 @@ def main() -> int:
     live_levels_sum, oracle_sum, gap_sum = 0, 0, 0
     for game in games:
         t0 = time.time()
-        r = run_game(game, _build_policy(policy_kind, game), budget=budget)
+        r = run_game(game, _build_policy(policy_kind, game), budget=budget, variant=variant, reflect=reflect)
         if games_mode == "oracle":
             r["oracle_levels"] = oracle.get(game, 0)
             r["gap_vs_oracle"] = max(0, oracle.get(game, 0) - r["levels"])

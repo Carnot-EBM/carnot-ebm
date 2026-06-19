@@ -96,3 +96,49 @@ def transform_frame_grid(
     if reflect is not None:
         g = reflect_grid(g, axis=reflect)
     return apply_color_permutation(g, color_permutation(game_id, variant))
+
+
+class VariantEnv:
+    """Wrap an offline Arcade game so the AGENT observes a mechanic-preserving VARIANT, while the REAL
+    env keeps the true win/level logic. On reset()/step() the observed frame's grid is transformed
+    (color-permutation by default -> positions unchanged -> NO click remap; optional reflection ->
+    click data inverse-remapped). `levels_completed` and every other field pass through unchanged, so
+    `_level_of`/win-detection read the REAL game -- a solve on the variant is a real solve. This is how
+    the manufactured variants plug into the offline eval / LOO benchmark (a held-out-from-our-solver
+    layout the agent must re-induce). All other methods/attrs delegate to the wrapped env."""
+
+    def __init__(self, env: object, game_id: str, variant: int, *, reflect: Optional[int] = None):
+        self._env = env
+        self._game_id = game_id
+        self._variant = variant
+        self._reflect = reflect
+
+    def __getattr__(self, name: str):  # delegate open_scorecard / etc. to the real env
+        return getattr(self._env, name)
+
+    def _wrap(self, frame):
+        if frame is None:
+            return None
+        stack = np.array(frame.frame)  # (n, H, W) pixel-grid stack
+        if stack.ndim == 2:
+            stack = stack[None, ...]
+        out = np.stack(
+            [transform_frame_grid(stack[i], self._game_id, self._variant, reflect=self._reflect)
+             for i in range(stack.shape[0])]
+        )
+        f2 = frame.model_copy() if hasattr(frame, "model_copy") else frame.copy()
+        object.__setattr__(f2, "frame", out.tolist())
+        return f2
+
+    def _remap(self, data):
+        # only reflection moves positions; color-permutation needs no remap
+        if self._reflect is not None and isinstance(data, dict) and "x" in data and "y" in data:
+            x, y = remap_click_for_reflection(int(data["x"]), int(data["y"]), 64, 64, self._reflect)
+            return {**data, "x": x, "y": y}
+        return data
+
+    def reset(self, *a, **k):
+        return self._wrap(self._env.reset(*a, **k))
+
+    def step(self, action, data=None, *a, **k):
+        return self._wrap(self._env.step(action, data=self._remap(data), *a, **k))
