@@ -42,6 +42,25 @@ Submission itself is OPERATOR-ONLY (External Publication discipline) — the out
 verified the package; it did NOT and will NOT submit. Deadline: **2026-06-30** (milestone #1, prize +
 open-source eligible — the project is MIT-0 ✅).
 
+## Daily iteration routine (1 submission/day → climb from 0.08 before 06-30)
+
+`scripts/kaggle/prep_daily_submission.py` is the standing routine. Each day:
+
+1. **Prep (automated, never submits):** `.venv/bin/python scripts/kaggle/prep_daily_submission.py`
+   — downloads the `carnot-agent-code` dataset, overlays the repo's latest `python/carnot`
+   (so the live agent picks up the conductor's newly-banked solvers), runs safety guards
+   (adapter fix present + no `_rust.so` leak), re-versions the dataset, re-pushes the PUBLIC
+   kernel, validates the save-run, and prints `READY ... kernel vN`.
+2. **Approve + submit (OPERATOR-ONLY):** `.venv/bin/python scripts/kaggle/prep_daily_submission.py
+   --submit-only --kver N` (N = the version the prep printed). This is the only step that submits.
+3. **Watch:** the [Submissions page](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/submissions);
+   the scored rerun takes up to 12h.
+
+Scheduling: an in-session cron (`a26bfb30`, daily 9:37 AM local) runs the prep + notifies — but it is
+SESSION-ONLY (dies if this session ends) and auto-expires in 7 days. For a session-independent standing
+routine across the full sprint, a systemd user timer is the durable mechanism (matches
+`carnot-outer-loop.timer`) — TODO if the session-only cron proves insufficient.
+
 ## What was verified (so the operator can trust the package)
 
 | Gate | Result |
