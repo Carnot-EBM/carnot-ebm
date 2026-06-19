@@ -8763,3 +8763,4 @@ c |
 | 2026-06-18 23:27 UTC | PHASE E4 (CAPSTONE .407) -- the milestone scorecar | OK | 86 passed, 1 warning in 6.14s |
 | 2026-06-19 00:14 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-19 00:16 UTC | Milestone 2026.06.408 activated | OK | 11 tasks queued |
+| 2026-06-19 00:34 UTC | Archive .407 -> activate .408. Assert research-com | OK | 96 passed, 1 warning in 5.61s |
