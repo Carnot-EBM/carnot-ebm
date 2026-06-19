@@ -62,7 +62,21 @@ def main():
             sh(f"git clone --depth 1 --branch {RELEASE_TAG} {LLAMA_REPO} {SRC}")
         stage("cloned")
         sh("cmake --version || pip install -q cmake")
-        stubs = "/usr/local/cuda/lib64/stubs"
+        # ggml-cuda LINKS against the CUDA driver lib (libcuda). v5 failed here: the toolkit stub
+        # /usr/local/cuda/lib64/stubs/libcuda.so does NOT exist on the Kaggle image. Locate the REAL
+        # driver lib (libcuda.so.1, present because the GPU is on) and symlink it to the unversioned
+        # name cmake wants, in a WRITABLE dir; point cmake at that.
+        stubs = str(WORK / "cudastub")
+        os.makedirs(stubs, exist_ok=True)
+        find = subprocess.run(
+            "find /usr /lib -name 'libcuda.so*' 2>/dev/null | sort", shell=True, capture_output=True, text=True
+        )
+        cands = [ln for ln in find.stdout.splitlines() if ln.strip()]
+        REPORT["libcuda_candidates"] = cands
+        real = next((c for c in cands if c.endswith("libcuda.so")), None) or (cands[0] if cands else None)
+        if not real:
+            raise RuntimeError("no libcuda.so* found on the image; cannot link ggml-cuda")
+        sh(f"ln -sf {real} {stubs}/libcuda.so")
         sh(
             f"cmake -S {SRC} -B {SRC}/build -DGGML_CUDA=ON "
             f'-DCMAKE_CUDA_ARCHITECTURES="{CUDA_ARCHS}" -DLLAMA_CURL=OFF -DCMAKE_BUILD_TYPE=Release '
