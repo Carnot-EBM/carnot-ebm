@@ -8853,3 +8853,17 @@ c |
 | 2026-06-19 16:52 UTC | PHASE B2 (RESERVED INFRA) -- harden + CI-guard the | OK | 92 passed, 1 warning in 5.97s |
 | 2026-06-19 17:06 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | 88 passed, 1 warning in 7.61s |
 | 2026-06-19 17:24 UTC | PHASE D (SOTA-INGESTION; .411 bleeding-edge track) | OK | 105 passed, 1 warning in 7.45s |
+| 2026-06-19 17:40 UTC | PHASE E (CAPSTONE .411) -- the milestone scorecard | OK | 97 passed, 1 warning in 7.42s |
+| 2026-06-19 17:42 UTC | Milestone 2026.06.411 activated | OK | 12 tasks queued |
+| 2026-06-19 17:44 UTC | PHASE 0 (TRANSITION) -- archive .410 -> activate . | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE A2 (ARC NORTH STAR) -- GENERIC config-rule / | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE A3 (ARC NORTH STAR) -- GENERIC object-motion | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- D | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE A5 (ARC NORTH STAR; CONTINUOUS SELF-LEARNING | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE A6 (ARC NORTH STAR) -- LEAVE-ONE-OUT generic | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE B2 (RESERVED INFRA) -- harden + CI-guard the | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE D (SOTA-INGESTION; .411 bleeding-edge track) | OK | Deliverable already exists in repo |
+| 2026-06-19 17:44 UTC | PHASE E (CAPSTONE .411) -- the milestone scorecard | OK | Deliverable already exists in repo |
