@@ -8,6 +8,41 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 Exp 4440 - .410 example-corpus SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4440_sota_ingestion_410.json` and
+`docs/research-notes/sota-ingestion-410-2026-06-19.md`.
+
+**Preconditions:** reliable channel reachable on CPU. `scripts/sweep_clusters.py`
+emitted focused arXiv cluster URLs for world-model and verifier/program
+literature. `scripts/sweep_semscholar.py` ran focused ARC/program/library
+queries and returned HTTP 429; no S2-only source was promoted. Low-concurrency
+WebSearch/WebFetch plus arXiv API / arXiv abs-page HTTP 200 checks verified
+arXiv:2310.19791, arXiv:2006.08381, arXiv:2211.16605, arXiv:2405.15880,
+arXiv:2503.23145, arXiv:2605.05138, arXiv:2606.12316, and arXiv:2603.05099.
+The banned `/deep-research` channel was not invoked. No leaderboard submission
+or training run was launched.
+
+**.410 outcome conditioning:** Exp 4432 solved 2/7 leave-one-out targets; Exp
+4433 reproduced `g50t` L1 from example-conditioned win induction; Exp 4434
+lifted example-conditioned world-model accuracy from 0.714286 to 1.0 but added
+zero reproduced levels; Exp 4435 left `dc22` as an open verifier gap; Exp 4436
+deepened `tu93` to L5 and consolidated solver primitives.
+
+**Fresh-pass candidates marked ingested:** LILO (arXiv:2310.19791), DreamCoder
+(arXiv:2006.08381), Stitch (arXiv:2211.16605), HYSYNTH (arXiv:2405.15880),
+CodeARC (arXiv:2503.23145), Executable World Models (arXiv:2605.05138),
+Loop-OWM (arXiv:2606.12316), and ARC-TGI (arXiv:2603.05099).
+
+flagged_for_v411: LILO-style documented library induction over the ARC solver/example corpus (arXiv:2310.19791)
+
+random_seed=4440
+
+**SOTA->experiment mapping note:** Build a documented primitive-library induction
+pass over solved predicates, executable world models, and primitive ledger rows;
+retrieve those primitives during first-contact solving; and count only
+held-out, reproduction-gated improvements.
+
 ## 2026-06-19 Exp 4429 - .409 ARC headline SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4429_sota_ingestion_409.json`.
