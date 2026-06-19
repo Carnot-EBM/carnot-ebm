@@ -145,6 +145,22 @@ leaving ~5 GB KV on a 16 GB card (≈78k tokens at q8 KV — still ample). MTP O
 So MTP costs ~4 GB VRAM for ~1.4–2× speed; with q8 KV both modes leave plenty of context. Keep MTP a deploy
 flag: on by default (speed), off if a single call needs a very long context.
 
+### Repeated-seed confirmation: base beats the DeepSeek-V4-Flash distill 2.5×
+
+Operator asked to (a) test the `Jackrong/Qwen3.5-9B-DeepSeek-V4-Flash-MTP-GGUF` distill for better accuracy
+and (b) raise the token cap in case of truncation. Ran both 4 seeds × ka59+tn36, MTP on, **n_predict 2560**:
+
+| Model (MTP) | ka59 | tn36 | grounding rate | speed |
+|---|---|---|---|---|
+| **base Qwen3.5-9B-MTP** | 3/4 | 2/4 | **5/8 = 62.5%** | 11.5–13 tok/s |
+| DeepSeek-V4-Flash-MTP | 1/4 | 1/4 | **2/8 = 25%** | 17.8 tok/s, 90% MTP-accept |
+
+**Decision holds: base Qwen3.5-9B-MTP.** The DeepSeek-V4-Flash distill is faster (higher MTP acceptance) but
+grounds **2.5× less often** — it writes wrong/verbose rules more frequently (hit the 2560 cap on 3 of 8 runs
+even with the raised cap, so it's not just truncation). The cap finding is real, though: base went 1/2 → 3/4
+on ka59 and **2 grounding runs needed >1100 tokens** — so **set n_predict ≥ ~2048 at deploy** (the earlier
+1100 cap was truncating real solves). Net: base Qwen3.5-9B-MTP + 8-bit KV + n_predict≥2048.
+
 ## Recommendation
 
 Download and benchmark **Qwen3.5-9B (or Qwen3-14B), Qwen2.5-Coder-14B, and Phi-4** on the exact Layer-B
