@@ -39,6 +39,20 @@ partial-requires-gap assertions ~229-234). Same pattern applies to ANY ARC SOLVE
 emits `partial:` for a complete-no-level run. Outer-loop did NOT edit mid-run (poison-cascade
 risk > rescuing one bounded-skip task; the conductor skips and progresses regardless).
 
+**SIBLING ARTIFACT-DISCIPLINE GAPS in the same `.409 ARC tasks (fix together in .410):**
+(a) **DURATION_TOO_SHORT false-positives from missing `inference_substrate`.** PHASE A1
+(exp4421 config-rule SOLVE, 0.536s) and others are sub-60s deterministic offline-reproduction
+/ verifier-scoring work but DECLARE NO `inference_substrate`, so `adversarial_verify` applies
+the strict 60s live-model floor and QUARANTINES them (A1's claimed +1 level was not banked).
+Fix: ARC SOLVE / scoring tasks must set `inference_substrate`
+(`verifier_ensemble_against_cached_candidates` → 1s floor, or `aggregation_from_upstream_artifacts`
+→ 100µs floor) per the Inference-Substrate Declaration Discipline, so a fast-but-real solve is
+not falsely flagged. (b) **Dependency fragility:** PHASE B (exp4425 vocabulary transfer) returned
+a 0.001s null `complete: ..._seeded_arm_missing` because its upstream seed vocabulary came from
+A1/A3, which were quarantined/skipped — the `.409 transfer tasks must degrade gracefully (or be
+ordered after) the SOLVE tasks they consume. These are `.409 roadmap artifact-discipline gaps
+(outer-loop-authored); the conductor progresses regardless (A2/A4 banked levels OK).
+
 ### 2026-06-14 (P0 MANDATORY-NEXT-MILESTONE, operator "2+3+1"): Re-aim the verifier program at the ORACLE-DISTINCT frontier
 
 **Insight (the `.386–`.388 arc, see `docs/research-notes/verifier-graft-v3-design.md`):**
