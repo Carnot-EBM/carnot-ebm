@@ -8,9 +8,20 @@
 > table below are still real and reused (binary builds + loads Qwen + agent imports offline +
 > proposer generates), and the agent shape is confirmed correct vs the reference — but the
 > "Operator submission steps" section is superseded by **§ Real submission flow** at the bottom.
-> **Deadlines (operator-confirmed 2026-06-19):** the first ARC-AGI-3 **Milestone deadline is
-> 2026-06-30** (REAL, 11 days out — a scoring submission should land before it); the final
-> competition deadline is 2026-11-02. The sprint forcing function's 06-30 was correct.
+> **Deadlines / prizes (arcprize.org/competitions/2026/arc-agi-3, confirmed 2026-06-19):**
+> **Milestone #1 = 2026-06-30** ($25K/$10K/$2.5K to top 3; REAL, 11 days out — land a scored
+> submission before it); **Milestone #2 = 2026-09-30** (same split); **final submissions due
+> 2026-11-02**; results 2026-12-04. Track total $850K, incl. a $700K Grand Prize for the first
+> eligible agent at 100% on the fully-private set. **Milestone eligibility REQUIRES the solution
+> be open-sourced by the milestone deadline** — our MIT-0 satisfies the CC0/MIT-0 requirement.
+>
+> **Import probe (kernel `carnot-arc-import-probe`, 2026-06-19) — risk retired + 1 bug caught:**
+> jax 0.7.2 / numpy 2.4.6 ARE preinstalled on the Kaggle image; the competition wheels
+> (`arc_agi_3_wheels`) + framework ARE mounted in a regular notebook; `arcengine`/`arc_agi`
+> install clean offline; carnot imports in 1.1s. It CAUGHT that the `carnot-agent-code` dataset
+> was STALE (predated the adapter fix) — **re-versioned 2026-06-19 22:41Z with the fix** (the
+> `langgraph.store.sqlite` error was a probe artifact of loading `agent.py` directly; the real
+> notebook's minimal `__init__.py` rewrite avoids it).
 
 **STATUS: components VERIFIED on the real Kaggle P100; submission notebook authored against the
 correct gateway contract. NOT yet run end-to-end through the real gateway (only the eval sandbox
