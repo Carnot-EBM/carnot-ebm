@@ -2944,6 +2944,46 @@ CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" + "ARC Solve Reproducibility"
 CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precedent) · `[[project_arc_live_generator]]`
 (the frozen generator) · `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` (packaging).
 
+## ARC Level-Up Attempt Guarantee (MANDATORY)
+
+**Origin:** 2026-06-19 operator directive — "are we attempting to solve any game levels this roadmap?
+... how do we ensure we ALWAYS have at least one level-up attempt across all games once a roadmap."
+The ARC-sprint headline metric is `reproducible_total_levels` growing monotonically, but a planner can
+drift to all-META work (library induction, LOO benchmarks, registry/gaps hygiene, SOTA ingestion,
+submission packaging, generic-operator *re-solves* of already-banked levels) and ship a roadmap with
+ZERO concrete level-BANK attempts — pure churn (north-star §1). The Submission Sprint Forcing Function
+mandates the *majority* be ARC-solving and that levels grow, but "majority ARC" can be satisfied by
+meta tasks; this rule adds the missing floor.
+
+**The rule.** Every ARC-sprint roadmap (`.412+` through 2026-06-30, and any ARC-headline milestone
+after) MUST contain **at least one LEVEL-UP ATTEMPT**: a task whose acceptance gate requires actually
+BANKING a new reproducible level — `offline_reproduced=true` AND a new-level condition
+(`reproduced_levels>=1` on a first-contact of an UNSOLVED game, OR a NEW deeper level `level > N` on an
+already-solved game). A generic-operator *re-solve* of an already-banked level (generalization
+validation), a benchmark, a library induction, or a hygiene/ingestion/packaging task does **NOT**
+count. Default floor = 1; raise it when the milestone is a pure solving push.
+
+**Target ROTATION (the "across all games" half).** The planner SHOULD rotate the level-up targets so
+every game gets a periodic attempt rather than re-attempting the same one while others are neglected:
+prioritize the UNSOLVED public games (currently re86/sb26/bp35/lf52) for first-contact, plus the
+shallow-solved games for +1-deeper, so coverage sweeps the corpus over successive milestones. The
+lint prints the games targeted each roadmap so rotation is auditable.
+
+**Mechanical enforcement.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]` counts the
+level-up attempts and exits non-zero if `< --min` (default 1). Run it on every emitted roadmap; the
+activation guard SHOULD refuse a milestone that fails it (pending wiring, it is planner-discipline +
+outer-loop audit). Validated 2026-06-19: `.412 passes (4 attempts: dc22 solve, sc25 deepen,
+first-contact a new game, tr87 generic-with-new-game); an all-meta roadmap fails with exit 1.
+
+**Why this is in CLAUDE.md.** Same defense-in-depth as the other ARC forcing functions: the planner
+reads CLAUDE.md as required input, so it includes a level-up attempt at design time; the lint is the
+backstop. Without it, a meta-heavy milestone silently produces no banked level = churn.
+
+**Cross-references:** 2026-06-19 operator directive (origin) · `scripts/arc_levelup_guarantee_lint.py`
+· CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" (per-task +1 scoping; this is the per-ROADMAP ≥1
+floor) · "ARC-AGI-3 Submission Sprint Forcing Function" (majority-ARC + monotonic growth) ·
+`ops/arc_solve_registry.yaml` `reproducible_total_levels` (the metric this protects).
+
 ## ARC Solve Reproducibility + Solver-Reuse Discipline (MANDATORY)
 
 **Origin:** 2026-06-16 operator directive after the outer-loop spent a long
