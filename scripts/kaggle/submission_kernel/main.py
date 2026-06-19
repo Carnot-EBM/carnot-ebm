@@ -98,11 +98,27 @@ if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
         'AVAILABLE_AGENTS: dict[str, Type[Agent]] = '
         '{"random": Random, "carnotagent": CarnotAgent}\n'
     )
-    # 6) play all gateway games (12h Kaggle cap). main.py fetches the game list from the
-    #    gateway, runs the swarm, and submits the scorecard.
+    # 6) CRITICAL: point main.py at the gateway. main.py builds its game-API URL from
+    #    SCHEME/HOST/PORT env (default localhost:8001) and loads .env LAST with override=True.
+    #    Without this .env it queries localhost, finds no games, records no scorecard -> ERROR.
+    #    (This is the omission that errored submission 53862044; mirrors the canonical control nb.)
+    Path(f"{fw}/.env").write_text(
+        "SCHEME=http\n"
+        "HOST=gateway\n"
+        "PORT=8001\n"
+        "ARC_API_KEY=test-key-123\n"
+        "ARC_BASE_URL=http://gateway:8001/\n"
+        "OPERATION_MODE=online\n"
+        "ENVIRONMENTS_DIR=\n"
+        "RECORDINGS_DIR=/kaggle/working/server_recording\n"
+    )
+    # 7) play all gateway games (12h Kaggle cap). main.py fetches the game list from the
+    #    gateway, runs the swarm, and the gateway records the scorecard that is scored.
+    run_env = os.environ.copy()
+    run_env["MPLBACKEND"] = "agg"  # headless matplotlib (canonical nb sets this)
     subprocess.run(
-        [sys.executable, "main.py", "--agent=carnotagent"],
-        cwd=fw, env=os.environ.copy(), timeout=43200, check=False,
+        [sys.executable, "main.py", "--agent", "carnotagent"],
+        cwd=fw, env=run_env, timeout=43200, check=False,
     )
 else:
     # NON-rerun: write the placeholder submission so Save & Run produces a valid entry.
