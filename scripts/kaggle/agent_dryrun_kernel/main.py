@@ -21,10 +21,12 @@ def main():
     inp = Path("/kaggle/input")
     REPORT["kaggle_input"] = sorted(os.listdir(inp)) if inp.exists() else []
     # self-locate the 3 bundles anywhere under /kaggle/input (mount nests under .../datasets/...)
-    carnot = next((p.parent for p in inp.rglob("carnot/agentic/arc_competition_agent.py")), None)
+    # p = .../python/carnot/agentic/arc_competition_agent.py ; sys.path needs .../python (p.parents[2])
+    # so that `import carnot.agentic...` resolves.
+    carnot = next((p.parents[2] for p in inp.rglob("carnot/agentic/arc_competition_agent.py")), None)
     server = next(iter(inp.rglob("llama-server")), None)
     gguf = next(iter(inp.rglob("*.gguf")), None)
-    REPORT.update(carnot_pkg=str(carnot), server=str(server), gguf=str(gguf))
+    REPORT.update(carnot_pkg_root=str(carnot), server=str(server), gguf=str(gguf))
     if not (carnot and server and gguf):
         raise RuntimeError("missing carnot-code / binary / gguf bundle under /kaggle/input")
 
