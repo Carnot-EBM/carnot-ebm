@@ -95,9 +95,20 @@ def start_server(gguf, mtp=False):
     return None
 
 
-def gen(prompt, n_predict=1100):
-    body = json.dumps({"prompt": prompt, "n_predict": n_predict, "temperature": 0.2, "cache_prompt": True}).encode()
-    req = urllib.request.Request(f"http://127.0.0.1:{PORT}/completion", data=body, headers={"Content-Type": "application/json"})
+# the fairness clarification (reused by the repeated-benchmark driver): ka59's reference region is not
+# static, so tell models the digest counts are fixed constants -- measures whether they find the right
+# RELATION, not whether they hardcode vs recompute a non-static reference.
+CLARIFY = ("IMPORTANT: the per-colour counts in the reference digest are FIXED values measured "
+           "once; use those numbers as numeric CONSTANTS in your predicate. Do NOT recompute "
+           "reference-region counts from the live `grid` (the reference region is not static).\n\n")
+
+
+def gen(prompt, n_predict=1100, seed=None):
+    body = {"prompt": prompt, "n_predict": n_predict, "temperature": 0.2, "cache_prompt": True}
+    if seed is not None:
+        body["seed"] = int(seed)
+    req = urllib.request.Request(f"http://127.0.0.1:{PORT}/completion", data=json.dumps(body).encode(),
+                                 headers={"Content-Type": "application/json"})
     t0 = time.time()
     with urllib.request.urlopen(req, timeout=900) as r:
         resp = json.load(r)
@@ -139,10 +150,7 @@ def main():
             # (better) dynamic-recompute rule and were penalised. Tell every model the digest counts are
             # fixed constants so the comparison measures whether they find the right RELATION, not whether
             # they happened to hardcode vs recompute a non-static reference.
-            clarify = ("IMPORTANT: the per-colour counts in the reference digest are FIXED values measured "
-                       "once; use those numbers as numeric CONSTANTS in your predicate. Do NOT recompute "
-                       "reference-region counts from the live `grid` (the reference region is not static).\n\n")
-            prompt = (no_think or "") + clarify + prompt
+            prompt = (no_think or "") + CLARIFY + prompt
             if len(prompt) // 4 > 4500:
                 rows.append({"game": g, "tier": "SKIPPED_PROMPT_TOO_LARGE"}); print(f"  {g}: SKIPPED big prompt", flush=True); continue
             try:

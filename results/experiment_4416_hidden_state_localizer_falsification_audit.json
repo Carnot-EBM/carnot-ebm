@@ -1,0 +1,173 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "duration_s": 15.452,
+  "experiment": "experiment_4416_hidden_state_localizer_falsification_audit",
+  "field_principles": {
+    "hidden_state_localizer_has_nonposition_signal": "BARE bool: the capstone reads this; true iff the hidden-state probe's held-out first-error F1 exceeds the content-blind position-only baseline (delta CI95-excl-0) -- the one remaining oracle-distinct first-error question, settled off-text.",
+    "honest_verdict": "Terminal-prefixed. A measured off-text signal (logged as a gap) and a CLEAN NULL (the localizer program conclusively closed) are BOTH decision-grade.",
+    "localization_f1_comparison": "dict: {position_only_baseline_f1, text_localizer_f1_exp4403, hidden_state_probe_f1, delta_vs_position_only, delta_ci95, n_traces} -- the head-to-head that settles whether off-text adds anything.",
+    "model_specs": "The LOCAL open model used for hidden-state capture (HF base repo or documented local extraction path) + the FoVer corpus + the position-only baseline + n; required methodology + the oracle-distinct declaration.",
+    "n_traces": "BARE int: held-out evaluation trace count -- MUST be >= 1000 for the localization claim (sample-size rigor).",
+    "position_only_baseline_f1": "BARE float: the content-blind position-only baseline F1 on the held-out split -- the bar the hidden-state probe must clear CI95-excl-0 (the .407 confound made explicit).",
+    "preconditions_checked": "Records the cached-corpus + the hidden-state-extraction-path + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the capture + the probe fit + the bootstrap.",
+    "reproducibility_checksum": "Hash of the hidden-state capture + the probe config + the held-out split + the controls; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- a learned probe over model hidden states; the reference prefix-check defines correctness, the probe estimates WHICH step -- oracle-DISTINCT."
+  },
+  "hidden_state_capture_receipts": {
+    "feature_names": [
+      "hidden_norm",
+      "transport_from_prev_l2",
+      "transport_to_next_l2",
+      "trace_center_l2",
+      "local_transport_margin"
+    ],
+    "hidden_state_capture_sha256": "sha256:3a4f70d3c31856aed8c1d4d047eeca0d554318a8d5490c3fd7f636bdbe16b91e",
+    "n_captured_steps": 1250,
+    "n_captured_traces": 1250,
+    "n_heldout_traces": 1000,
+    "n_per_position_bin": {
+      "0": 1250
+    },
+    "n_train_traces": 250
+  },
+  "hidden_state_localizer_has_nonposition_signal": false,
+  "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
+  "inference_substrate": "local_hf_hidden_state_forward_pass",
+  "localization_f1_comparison": {
+    "delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "delta_vs_position_only": 0.0,
+    "hidden_exact_match_count": 1000,
+    "hidden_state_probe_f1": 1.0,
+    "n_traces": 1000,
+    "position_exact_match_count": 1000,
+    "position_only_baseline_f1": 1.0,
+    "text_localizer_f1_exp4403": 1.0
+  },
+  "methodology_note": "The default powered FoVer failed rows are verifier-checked one-step intervention traces from Exp 4403. Their first-error position is deterministic at step 0, so a hidden-state F1 tie at 1.0 is the expected content-blind null rather than evidence of a useful localizer.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Collect typed multi-step FoVer traces with non-first-position first errors before any localizer redeployment; do not revive the position-saturated text or hidden-state localizer line.",
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_vs_position_only": 0.0,
+      "evidence": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+      "failure_mode": "The hidden-state transport/margin probe tied the content-blind position-only first-error baseline; the available FoVer failed traces are position-saturated at first step.",
+      "gap_id": "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED",
+      "missing_discriminator": "A model-native signal that separates earliest causal error from position and downstream consequence under non-degenerate multi-step FoVer labels.",
+      "n_captured_traces": 1250,
+      "parent_gap": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+      "priority": "medium",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "batch_size": 16,
+    "bootstrap_resamples": 2500,
+    "capture_n": 1250,
+    "device": "cuda",
+    "exp2850_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "exp4403_text_localizer_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4403_real_intervention_localizer_deconfound.json",
+    "fover_row_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "fover_step_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
+    "generator_training": "stood_down_not_invoked",
+    "gguf_tokenizer_rule": "base_hf_repo_used_not_gguf_only_repo",
+    "heldout_n": 1000,
+    "hidden_size": 896,
+    "hidden_state_extraction_path": "transformers.AutoModel(output_hidden_states=True)",
+    "hidden_state_probe": {
+      "model_type": "linear_hidden_transport_margin_probe",
+      "training_summary": {
+        "feature_names": [
+          "hidden_norm",
+          "transport_from_prev_l2",
+          "transport_to_next_l2",
+          "trace_center_l2",
+          "local_transport_margin"
+        ],
+        "negative_non_first_error_steps": 0,
+        "position_features_used": false,
+        "positive_first_error_steps": 393,
+        "training_step_count": 393
+      },
+      "weights": {
+        "hidden_norm": 0.0,
+        "local_transport_margin": 0.0,
+        "trace_center_l2": 0.0,
+        "transport_from_prev_l2": 0.0,
+        "transport_to_next_l2": 0.0
+      }
+    },
+    "live_generation": false,
+    "max_length": 96,
+    "model_id": "Qwen/Qwen2.5-0.5B",
+    "num_hidden_layers": 24,
+    "position_only_baseline": {
+      "content_blind": true,
+      "position_counts": {
+        "0": 1250
+      }
+    },
+    "random_seed": 4416,
+    "random_seeds_used": [
+      4416
+    ],
+    "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B/snapshots/060db6499f32faf8b98477b0a26969ef7d8b9987",
+    "trm_training": "stood_down_not_invoked",
+    "verifier_is_oracle": false
+  },
+  "n_traces": 1000,
+  "position_only_baseline_f1": 1.0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "n_examples=1000",
+      "resource": "exp2850_fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "step_traces=6548; error_traces=114",
+      "resource": "cached_step_labeled_fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "failed_traces=1250; required>=1250",
+      "resource": "cached_real_fover_failed_traces"
+    },
+    {
+      "available": true,
+      "detail": "train=250; heldout=1000; required_heldout>=1000",
+      "resource": "heldout_first_error_eval_split"
+    },
+    {
+      "available": true,
+      "detail": "transformers output_hidden_states probe succeeded",
+      "resource": "hidden_state_extraction_path"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; this experiment runs forward-pass capture plus CPU probe only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4416,
+  "random_seeds_used": [
+    4416
+  ],
+  "reproducibility_checksum": "sha256:3be67173672bf3f6793b9db1c3832968ebc7aadbe2e85573419c5df48ef9bfa4",
+  "schema": "carnot.hidden_state_localizer_falsification_audit.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4416",
+    "SCENARIO-VERIFY-4416"
+  ],
+  "verifier_is_oracle": false
+}
