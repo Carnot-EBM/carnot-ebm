@@ -24848,6 +24848,84 @@ the audit output, and reports per-experiment `.409` reproduction-gate status.
 |---|---|---|
 | REQ-REPORT-4426 | Planned (`python/carnot/experiment_4426_arc_registry_repro_audit.py`, `results/experiment_4426_arc_registry_repro_audit.json`) | Planned (`tests/python/test_experiment_4426_arc_registry_repro_audit.py`) |
 
+### REQ-REPORT-4431: Archive .409, Activate .410, And Preserve The ARC Generic-Solver Close-State
+
+The Exp 4431 workflow SHALL archive milestone `2026.06.409`, confirm milestone
+`2026.06.410` is active, and write the record-only transition artifact
+`results/experiment_4431_archive_409_activate_410.json`. It SHALL run no TRM
+training and SHALL submit nothing to any leaderboard. Its `inference_substrate`
+SHALL equal `aggregation_from_upstream_artifacts`.
+
+Before writing a complete artifact, the workflow SHALL verify that
+`research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+`research-roadmap-next.yaml` parse under `yaml.safe_load`, that the active
+roadmap milestone is `2026.06.410`, and that the smart-subset pre-test gate is
+green. If any precondition fails, the workflow SHALL write a blocked artifact
+and SHALL NOT claim that `.409` was archived.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single top-level
+`.409` record, updating the canonical close-state and collapsing duplicate
+`.409` records when needed. The canonical close-state SHALL be derived from the
+Exp 4430 `.409` capstone, `ops/arc_solve_registry.yaml`, and the non-flagged
+upstream artifacts. It SHALL skip every upstream artifact stamped
+`flagged_adversarial:true`, SHALL record Exp 4421 as quarantined
+`DURATION_TOO_SHORT`, SHALL record Exp 4422 glyph rewrite as the clean
+reproduction-gated glyph advance, SHALL record Exp 4423 as a skipped partial
+verdict with its missing verifier gap, SHALL record Exp 4424 truthfully from the
+capstone instead of manufacturing a deeper-level success, and SHALL record Exp
+4425 config-rule vocabulary transfer as excluded or false according to the clean
+non-flagged evidence.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict` and `reproducible_total_levels`. Complete-path
+`honest_verdict` SHALL start with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+`reproducible_total_levels` SHALL be a bare integer derived from the ARC solve
+registry's reproduced entries and reconciled against the `.409` capstone audit.
+The artifact SHALL also record `reproducible_total_games`,
+`v409_close_state`, `preconditions_checked`, `verifier_is_oracle=true`,
+`trm_training_ran=false`, and `leaderboard_submission=false`.
+
+The required field principles are:
+
+- `honest_verdict`: "terminal-prefixed self-declared state lets the reconciler classify without re-running"
+- `reproducible_total_levels`: "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"
+
+#### SCENARIO-REPORT-4431: The Archive Preserves The Honest .409 ARC Close-State
+
+**Given** the `.409` capstone records Exp 4421 as flagged but registry-audit
+execution-grounded, Exp 4422 as glyph-rewrite grounded and offline solved, Exp
+4423 as a partial missing-verifier-gap verdict, Exp 4424 as a mechanic-repair
+no-new-level outcome, Exp 4425 as flagged or no clean vocabulary transfer, and
+the ARC solve registry records reproduced games and levels
+**And** `research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+`research-roadmap-next.yaml` parse; the smart-subset gate is green; and `.410`
+is active
+**When** the Exp 4431 archive workflow runs
+**Then** it archives `.409`, confirms `.410`, keeps the YAML history parseable
+with one `.409` record, writes
+`results/experiment_4431_archive_409_activate_410.json`, records the true Phase
+A bank/quarantine/skip states, records the final reproducible levels and games,
+records the config-rule vocabulary-transfer outcome, declares
+`verifier_is_oracle=true` while not treating execution-grounded ARC solves as an
+oracle-distinct moat headline, and emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4431-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required YAML parse, source artifact, active-roadmap, or
+smart-subset precondition is absent or red
+**When** the Exp 4431 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, does not
+edit the `.409` history record as complete, and does not claim `.409` was
+archived successfully.
+
+## Implementation Status (REQ-REPORT-4431)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4431 | Planned (`python/carnot/reporting/archive_409_activate_410_4431.py`, `results/experiment_4431_archive_409_activate_410.json`) | Planned (`tests/python/test_experiment_4431_archive_409_activate_410.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

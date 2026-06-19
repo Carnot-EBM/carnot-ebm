@@ -1,0 +1,341 @@
+{
+  "activated_milestone": "2026.06.410",
+  "active_milestone_confirmed": "2026.06.410",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.409",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4430_capstone_409.json",
+      "experiment_id": "4430",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "9d0a09d9be743d439ca90ef1252655a81fa507aedfc9cf16aa67e3cfdd6018a0"
+    },
+    {
+      "deliverable": "results/experiment_4421_config_rule_solve_unseen.json",
+      "experiment_id": "4421",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d"
+    },
+    {
+      "deliverable": "results/experiment_4422_glyph_rewrite_perception.json",
+      "experiment_id": "4422",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0"
+    },
+    {
+      "deliverable": "results/experiment_4423_generic_first_contact_breadth.json",
+      "experiment_id": "4423",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf"
+    },
+    {
+      "deliverable": "results/experiment_4424_deeper_solved_game.json",
+      "experiment_id": "4424",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af"
+    },
+    {
+      "deliverable": "results/experiment_4425_config_rule_vocabulary_transfer.json",
+      "experiment_id": "4425",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3"
+    },
+    {
+      "deliverable": "results/experiment_4426_arc_registry_repro_audit.json",
+      "experiment_id": "4426",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2"
+    },
+    {
+      "deliverable": "results/experiment_4429_sota_ingestion_409.json",
+      "experiment_id": "4429",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "registry",
+      "required": true,
+      "sha256": "214fe1323f4cf67ef2db34d3479061ab760e094ac8f137def5fcad5889e529b9"
+    }
+  ],
+  "duration_s": 14.443444,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4431,
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed self-declared state lets the reconciler classify without re-running",
+    "reproducible_total_levels": "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"
+  },
+  "honest_verdict": "complete: archived_v409_v410_active_arc_levels_36_games_18_glyph_banked_config_quarantined_first_contact_skipped_vocab_excluded_verifier_oracle_honored",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.410",
+      "expected": "2026.06.410",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "arc_solve_registry_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4431_archive_409_activate_410.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n91 passed, 1 warning in 5.42s\n"
+    },
+    "source_artifacts": {
+      "4421": {
+        "exists": true,
+        "path": "results/experiment_4421_config_rule_solve_unseen.json",
+        "required": true,
+        "sha256": "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d"
+      },
+      "4422": {
+        "exists": true,
+        "path": "results/experiment_4422_glyph_rewrite_perception.json",
+        "required": true,
+        "sha256": "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0"
+      },
+      "4423": {
+        "exists": true,
+        "path": "results/experiment_4423_generic_first_contact_breadth.json",
+        "required": true,
+        "sha256": "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf"
+      },
+      "4424": {
+        "exists": true,
+        "path": "results/experiment_4424_deeper_solved_game.json",
+        "required": true,
+        "sha256": "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af"
+      },
+      "4425": {
+        "exists": true,
+        "path": "results/experiment_4425_config_rule_vocabulary_transfer.json",
+        "required": true,
+        "sha256": "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3"
+      },
+      "4426": {
+        "exists": true,
+        "path": "results/experiment_4426_arc_registry_repro_audit.json",
+        "required": true,
+        "sha256": "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2"
+      },
+      "4429": {
+        "exists": true,
+        "path": "results/experiment_4429_sota_ingestion_409.json",
+        "required": true,
+        "sha256": "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a"
+      },
+      "4430": {
+        "exists": true,
+        "path": "results/experiment_4430_capstone_409.json",
+        "required": true,
+        "sha256": "9d0a09d9be743d439ca90ef1252655a81fa507aedfc9cf16aa67e3cfdd6018a0"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4431,
+  "registry_declared_reproducible_total_games": 18,
+  "registry_declared_reproducible_total_levels": 35,
+  "registry_entry_sum_reproducible_total_games": 18,
+  "registry_entry_sum_reproducible_total_levels": 36,
+  "registry_total_discrepancy": true,
+  "reproducibility_checksum": "c23ca5f82e364096da12989af833f2a931862b249b64b3e909fb93420764f0d8",
+  "reproducible_total_games": 18,
+  "reproducible_total_levels": 36,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "reproducible_total_levels",
+    "reproducible_total_games",
+    "v409_close_state",
+    "preconditions_checked",
+    "verifier_is_oracle",
+    "trm_training_ran",
+    "leaderboard_submission",
+    "duration_s",
+    "inference_substrate",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "research_roadmap_next_yaml_parses": true,
+  "schema": "carnot.archive_activation.v409_to_v410_4431.v1",
+  "spec_refs": [
+    "REQ-REPORT-4431",
+    "SCENARIO-REPORT-4431"
+  ],
+  "task_id": "exp4431-archive-409-activate-410",
+  "trm_training_ran": false,
+  "v409_close_state": {
+    "capstone_honest_verdict": "complete: v409_levels_36_new_levels_2_new_games_1_config_rule_flagged_registry_execution_grounded_glyph_solved_first_contact_gap_deepening_no_plus1_vocab_skipped_publication_ready",
+    "capstone_reproducible_total_levels": 36,
+    "circular_execution_grounded_arc_solve_not_moat_headline": true,
+    "config_rule_vocabulary_transfer": {
+      "artifact": "results/experiment_4425_config_rule_vocabulary_transfer.json",
+      "config_rule_vocabulary_transfers": false,
+      "corrigendum_kinds": [
+        "DURATION_TOO_SHORT"
+      ],
+      "experiment_id": 4425,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing",
+      "status": "excluded_flagged_adversarial",
+      "verifier_is_oracle": false
+    },
+    "config_rule_vocabulary_transfer_outcome": "excluded_flagged_adversarial",
+    "flagged_artifacts_skipped": [
+      4421,
+      4425
+    ],
+    "flagged_for_v410": "Executable ARC-AGI-3 world-model agent with verifier-grounded planning (arXiv:2605.05138)",
+    "leaderboard_submission": false,
+    "new_games_since_v408": 1,
+    "new_levels_since_v408": 2,
+    "paper_ready": true,
+    "phase_a_banked_reproducible_level_tasks": [
+      "A2"
+    ],
+    "phase_a_quarantined_or_skipped_tasks": [
+      "A1",
+      "A3"
+    ],
+    "phase_a_tasks": {
+      "A1_config_rule_unseen": {
+        "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+        "corrigendum_kinds": [
+          "DURATION_TOO_SHORT",
+          "METHODOLOGY_MISSING"
+        ],
+        "direct_artifact_imported": false,
+        "experiment_id": 4421,
+        "flagged_adversarial": true,
+        "honest_verdict": "success_s5i5_L1_offline_reproduced",
+        "new_levels_reproduced": 0,
+        "offline_reproduced": true,
+        "phase": "A1",
+        "registry_audit_counted_execution_grounded": true,
+        "reproduced_levels": 1,
+        "status": "quarantined_duration_too_short",
+        "verifier_is_oracle": true
+      },
+      "A2_glyph_rewrite": {
+        "artifact": "results/experiment_4422_glyph_rewrite_perception.json",
+        "banked_reproducible_level": true,
+        "experiment_id": 4422,
+        "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
+        "new_levels_banked": 1,
+        "offline_reproduced": true,
+        "phase": "A2",
+        "reproduced_levels": 6,
+        "status": "grounded_and_offline_solved",
+        "target_game": "tr87",
+        "verifier_is_oracle": true
+      },
+      "A3_generic_first_contact": {
+        "artifact": "results/experiment_4423_generic_first_contact_breadth.json",
+        "experiment_id": 4423,
+        "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
+        "missing_verifier_gaps": [
+          {
+            "candidate_design": "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
+            "failure_mode": "needs_per_game_RE",
+            "game": "g50t",
+            "gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+            "loop_result_summary": {
+              "mode": "standing_arc_loop_routing_only",
+              "offline_reproduced": false,
+              "reproduced_levels": 0
+            },
+            "missing_discriminator": "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
+            "routed_recipe": {
+              "action_model": null,
+              "game": "ls20",
+              "solver": "results/experiment_4285 solve_trace.actions.",
+              "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+            },
+            "status": "open"
+          }
+        ],
+        "new_game_added": false,
+        "offline_reproduced": false,
+        "phase": "A3",
+        "reproduced_levels": 0,
+        "status": "skipped_partial_verdict",
+        "target_game": "g50t",
+        "verifier_is_oracle": false
+      },
+      "A4_deeper_solved_game": {
+        "artifact": "results/experiment_4424_deeper_solved_game.json",
+        "banked_reproducible_level": false,
+        "experiment_id": 4424,
+        "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
+        "new_levels_reproduced": 0,
+        "offline_reproduced": false,
+        "phase": "A4",
+        "reproduced_levels": 1,
+        "residual_failing_mechanic": "sc25_l2_route_search_still_missing_after_hud_cleanup",
+        "status": "mechanic_repair_no_new_level",
+        "target_game": "sc25",
+        "verifier_is_oracle": true
+      }
+    },
+    "publication_unmet_gates": [],
+    "registry_audit_reproducible_total_levels": 36,
+    "registry_declared_reproducible_total_games": 18,
+    "registry_declared_reproducible_total_levels": 35,
+    "registry_entry_sum_reproducible_total_games": 18,
+    "registry_entry_sum_reproducible_total_levels": 36,
+    "registry_total_discrepancy": true,
+    "reproducible_total_games": 18,
+    "reproducible_total_levels": 36,
+    "summary": "glyph_rewrite_banked_config_rule_quarantined_first_contact_partial_deepening_no_new_level_vocab_excluded",
+    "trm_training_ran": false,
+    "verifier_is_oracle": true,
+    "verifier_is_oracle_honored": true
+  },
+  "verifier_is_oracle": true
+}
