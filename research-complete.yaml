@@ -43161,7 +43161,12 @@ milestones:
     code-domain calibration repair (exp4419). paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline.'
   doc: openspec/change-proposals/research-roadmap-v408.md
   completed: '2026-06-19'
-  finding: '.408 close-state: config-rule grounded; no new reproducible levels. ARC total remains 34 levels across 17 games; config-rule SOLVE grounded a ka59 Tier-2 win rule but reproduced 0 new levels; Agent2World adaptive repair remained an honest partial with residual ar25/tn36/lp85 gaps; hidden-state localizer falsification closed the first-error localizer program as position-bound; GAP-4 with a local generator held flat versus vote with zero losses; config-rule vocabulary transfer=false/blocked; SteerConf detection calibration=false; paper_ready=true. verifier_is_oracle=true: execution-grounded ARC checks are not moat evidence.'
+  finding: '.408 close-state: config-rule grounded; no new reproducible levels. ARC total remains 34 levels across 17 games;
+    config-rule SOLVE grounded a ka59 Tier-2 win rule but reproduced 0 new levels; Agent2World adaptive repair remained an
+    honest partial with residual ar25/tn36/lp85 gaps; hidden-state localizer falsification closed the first-error localizer
+    program as position-bound; GAP-4 with a local generator held flat versus vote with zero losses; config-rule vocabulary
+    transfer=false/blocked; SteerConf detection calibration=false; paper_ready=true. verifier_is_oracle=true: execution-grounded
+    ARC checks are not moat evidence.'
   activation_recorded: exp4420-archive-408-activate-409
   tasks:
   - id: exp4413-archive-v407-activate-v408
@@ -43346,4 +43351,73 @@ milestones:
       helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the durable stamp fix) so this capstone does NOT
       trip CIRCULAR_MOAT_OVERCLAIM. NO gated_on.'
     deliverable: results/experiment_4423_capstone_v408.json
+    result: OK (conductor)
+- id: 2026.06.409
+  title: 'ACCELERATE the GENERIC ARC-AGI-3 SOLVER pipeline toward live submission: turn the validated config-rule inducer
+    + first-contact solver + glyph perception into MULTI-LEVEL, UNSEEN-GAME reproducible progress (monotonically grow reproducible_total_levels
+    above 34). Operator direction 2026-06-19: offload the pipeline work to the CODEX conductor loop (Claude quota conserve
+    -- 26% weekly used since 06-18 noon); EVERY experiment agent_type=codex/gpt-5.5; the Claude planner is SKIPPED via this
+    pre-staged roadmap. The live generator is now Qwen3.5-9B-MTP ([[project_arc_live_generator]]); the Kaggle CUDA-12.8 binary
+    build is in flight. Each ARC SOLVE task targets +1..+n NEW reproducible levels on ONE game (ARC-AGI-3 Incremental-Progress
+    Scoping), reproduction-gated (arc_solver_kit.reproduce -> only reproduced levels count), and feeds reusable scaffolding
+    back into arc_solver_kit + ops/arc_solve_registry.yaml so the LIVE solver applies it to games it has never seen. paper_ready=True
+    (FoVer 0.9131, G1-G4) is the FROZEN headline.'
+  doc: ''
+  completed: '2026-06-19'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4420-archive-408-activate-409
+    title: PHASE 0 (TRANSITION) -- archive .408 -> activate .409; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .408 close-state.
+    deliverable: results/experiment_4420_archive_408_activate_409.json
+    result: OK (conductor)
+  - id: exp4421-config-rule-solve-unseen
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- first-contact CONFIG-RULE SOLVE on UNSEEN config games
+      (+1 reproducible level), verifier_is_oracle=true.
+    deliverable: results/experiment_4421_config_rule_solve_unseen.json
+    result: OK (conductor)
+  - id: exp4422-glyph-rewrite-perception
+    title: PHASE A2 (ARC NORTH STAR) -- from-PIXELS glyph-substitution perception to SOLVE a rewrite-class game (+1 level);
+      the tr87 class the count digest cannot reach.
+    deliverable: results/experiment_4422_glyph_rewrite_perception.json
+    result: OK (conductor)
+  - id: exp4423-generic-first-contact-breadth
+    title: PHASE A3 (ARC NORTH STAR) -- generic FIRST-CONTACT solver breadth + transfer-routing across UNSEEN games (+1 new
+      game), the live-solver capability.
+    deliverable: results/experiment_4423_generic_first_contact_breadth.json
+    result: OK (conductor)
+  - id: exp4424-deeper-solved-game
+    title: PHASE A4 (ARC NORTH STAR; MULTI-LEVEL) -- take an ALREADY-SOLVED game +1 deeper level (incremental, monotonic),
+      per-mechanic executable unit tests on the lookahead blocker.
+    deliverable: results/experiment_4424_deeper_solved_game.json
+    result: OK (conductor)
+  - id: exp4425-config-rule-vocabulary-transfer
+    title: PHASE B (TRANSFER) -- config-rule VOCABULARY from solved games raises the grounding rate on HELD-OUT config games
+      (the operator's 'derive config-rules from previously-seen games'), verifier_is_oracle=false.
+    deliverable: results/experiment_4425_config_rule_vocabulary_transfer.json
+    result: OK (conductor)
+  - id: exp4426-infra-arc-registry-repro-audit
+    title: 'PHASE C1 (RESERVED INFRA) -- ARC solve-registry reproducibility audit + scorecard refresh: re-run arc_solver_kit.reproduce
+      across ALL registry games, flag any provisional/non-reproducing entries.'
+    deliverable: results/experiment_4426_arc_registry_repro_audit.json
+    result: OK (conductor)
+  - id: exp4427-infra-verifier-gaps-hygiene
+    title: 'PHASE C2 (RESERVED INFRA) -- verifier-gaps + registry hygiene: reconcile ops/verifier_gaps.md (the missing-verifier
+      backlog) with the .409 solve residuals; queue the highest-headroom gap.'
+    deliverable: results/experiment_4427_verifier_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4428-hardware-continuity
+    title: PHASE D (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4428_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4429-sota-ingestion-409
+    title: PHASE E (SOTA-INGESTION; .409 bleeding-edge track) -- ingest SOTA for the GENERIC ARC solver + verifier-grounded
+      rule induction; map the strongest 3-5 methods onto the .410 roadmap.
+    deliverable: results/experiment_4429_sota_ingestion_409.json
+    result: OK (conductor)
+  - id: exp4430-capstone-409
+    title: 'PHASE F (CAPSTONE .409) -- the milestone scorecard + HEADLINE: did the generic pipeline ADD reproducible levels
+      (new total > 34)? aggregate (skip flagged; honor verifier_is_oracle); G1-G4 gate.'
+    deliverable: results/experiment_4430_capstone_409.json
     result: OK (conductor)
