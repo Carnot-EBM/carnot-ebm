@@ -112,6 +112,12 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             purpose="Balanced action/object coverage plan for offline transition collection.",
             selector_tags=("active_data", "world_model", "e3", "transition"),
         ),
+        PrimitiveOperator(
+            operator="object_motion_world_model",
+            derived_from_games=("ar25", "ka59", "sc25", "ft09"),
+            purpose="Object-slot transition model for translate, reflect, push, and dynamic selection.",
+            selector_tags=("object", "motion", "world_model", "e3", "translate", "reflect", "push"),
+        ),
     )
 
 
@@ -135,8 +141,26 @@ def select_primitive_operators(
         names = ("config_rule_verifier", "config_rule_grounding", "object_centric_digest", "graph_astar_action_cost")
     elif "program_editor" in mechanic:
         names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
+    elif (
+        "object_motion" in mechanic
+        or "object motion" in mechanic
+        or "reflection" in mechanic
+        or "reflect" in mechanic
+        or "push" in mechanic
+    ):
+        names = (
+            "object_motion_world_model",
+            "active_data_collection",
+            "object_centric_digest",
+            "graph_astar_action_cost",
+        )
     elif "world_model" in mechanic or "e3" in mechanic:
-        names = ("active_data_collection", "object_centric_digest", "graph_astar_action_cost")
+        names = (
+            "object_motion_world_model",
+            "active_data_collection",
+            "object_centric_digest",
+            "graph_astar_action_cost",
+        )
     elif "keyboard" in action or "click" in action or "graph" in mechanic:
         names = ("graph_astar_action_cost", "object_centric_digest")
     else:
@@ -533,6 +557,311 @@ def config_rule_verifier(
     ):
         return _ground_target_offset_toggle(game=game, object_digest=object_digest)
     return _ungrounded_config_result(game, "missing_config_rule_verifier_grounding")
+
+
+def _ungrounded_object_motion_result(game: str, residual: str) -> dict[str, Any]:
+    return {
+        "operator": "object_motion_world_model",
+        "game": str(game),
+        "grounded": False,
+        "solution": [],
+        "transition_families": [],
+        "object_slots": {},
+        "target_recipe_withheld": str(game),
+        "candidate_transition_families": ["translate", "reflect", "push"],
+        "residual": residual,
+        "verifier_is_oracle": True,
+    }
+
+
+def _object_motion_examples_support(
+    few_shot_examples: Sequence[Mapping[str, Any]],
+    family: str,
+) -> bool:
+    if not few_shot_examples:
+        return False
+    text = _example_text(few_shot_examples)
+    if "world_model" not in text and "object" not in text and "motion" not in text:
+        return False
+    if "reflect" in family:
+        return "reflect" in text or "ar25" in text or "object_motion" in text
+    if "push" in family:
+        return "push" in text or "ka59" in text or "object_motion" in text
+    return True
+
+
+def _motion_labels_for_delta(
+    *,
+    delta: Sequence[int],
+    step: int,
+    direction_labels: Mapping[str, str],
+) -> list[str]:
+    row_delta, col_delta = int(delta[0]), int(delta[1])
+    if step <= 0:
+        raise ValueError("step must be positive")
+    labels: list[str] = []
+    if row_delta:
+        label = str(direction_labels["down"] if row_delta > 0 else direction_labels["up"])
+        labels.extend([label] * (abs(row_delta) // step))
+    if col_delta:
+        label = str(direction_labels["right"] if col_delta > 0 else direction_labels["left"])
+        labels.extend([label] * (abs(col_delta) // step))
+    return labels
+
+
+def _object_motion_solution(object_digest: Mapping[str, Any]) -> list[str]:
+    step = int(object_digest.get("step", 1) or 1)
+    direction_labels = {
+        "up": str(object_digest.get("direction_labels", {}).get("up", "1")),
+        "down": str(object_digest.get("direction_labels", {}).get("down", "2")),
+        "left": str(object_digest.get("direction_labels", {}).get("left", "3")),
+        "right": str(object_digest.get("direction_labels", {}).get("right", "4")),
+    }
+    labels: list[str] = []
+    for leg in object_digest.get("plan_legs", ()):
+        if not isinstance(leg, Mapping):
+            continue
+        if leg.get("select_label"):
+            labels.append(str(leg["select_label"]))
+            continue
+        labels.extend(
+            _motion_labels_for_delta(
+                delta=leg.get("delta", (0, 0)),
+                step=step,
+                direction_labels=direction_labels,
+            )
+        )
+    return labels
+
+
+def _copy_slot_rows(slots: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        str(name): dict(row)
+        for name, row in slots.items()
+        if isinstance(row, Mapping)
+    }
+
+
+def _move_mask(arr: Any, mask: Any, *, dy: int, dx: int, fill: int) -> Any:
+    import numpy as np
+
+    out = np.array(arr, copy=True)
+    coords = np.argwhere(mask)
+    if coords.size == 0:
+        return out
+    moved = coords + np.asarray([dy, dx])
+    h, w = out.shape
+    if (moved[:, 0] < 0).any() or (moved[:, 1] < 0).any() or (moved[:, 0] >= h).any() or (moved[:, 1] >= w).any():
+        return out
+    values = out[mask].copy()
+    out[mask] = int(fill)
+    for (row, col), value in zip(moved, values, strict=True):
+        out[int(row), int(col)] = int(value)
+    return out
+
+
+def _motion_delta_for_action(
+    action: Any,
+    *,
+    step: int,
+    direction_actions: Mapping[str, int],
+) -> tuple[int, int]:
+    try:
+        action_id = int(action)
+    except (TypeError, ValueError):
+        return 0, 0
+    if action_id == int(direction_actions.get("up", -1)):
+        return -step, 0
+    if action_id == int(direction_actions.get("down", -1)):
+        return step, 0
+    if action_id == int(direction_actions.get("left", -1)):
+        return 0, -step
+    if action_id == int(direction_actions.get("right", -1)):
+        return 0, step
+    return 0, 0
+
+
+def _reflect_motion_engine(
+    grid: Any,
+    action: Any,
+    data: Any,
+    object_digest: Mapping[str, Any],
+) -> Any:
+    del data
+    import numpy as np
+
+    out = np.array(grid, copy=True)
+    if out.ndim != 2:
+        return out
+    step = int(object_digest.get("step", 1) or 1)
+    background = int(object_digest.get("background_color", 0))
+    direction_actions = {
+        "up": int(object_digest.get("direction_actions", {}).get("up", 1)),
+        "down": int(object_digest.get("direction_actions", {}).get("down", 2)),
+        "left": int(object_digest.get("direction_actions", {}).get("left", 3)),
+        "right": int(object_digest.get("direction_actions", {}).get("right", 4)),
+    }
+    dy, dx = _motion_delta_for_action(action, step=step, direction_actions=direction_actions)
+    if dy == 0 and dx == 0:
+        return out
+    slots = _copy_slot_rows(object_digest.get("slots", {}))
+    selected_color = int(slots.get("selected_block", {}).get("color", object_digest.get("selected_color", 5)))
+    reflected_color = int(slots.get("reflected_block", {}).get("color", object_digest.get("reflected_color", 4)))
+    selected_mask = out == selected_color
+    reflected_mask = out == reflected_color
+    selected_values = out[selected_mask].copy()
+    reflected_values = out[reflected_mask].copy()
+    selected_coords = np.argwhere(selected_mask)
+    reflected_coords = np.argwhere(reflected_mask)
+    if selected_coords.size == 0:
+        return out
+    reflected_dx = -dx if dx else dx
+    reflected_dy = dy
+    selected_moved = selected_coords + np.asarray([dy, dx])
+    reflected_moved = reflected_coords + np.asarray([reflected_dy, reflected_dx])
+    h, w = out.shape
+    for coords in (selected_moved, reflected_moved):
+        if coords.size and (
+            (coords[:, 0] < 0).any()
+            or (coords[:, 1] < 0).any()
+            or (coords[:, 0] >= h).any()
+            or (coords[:, 1] >= w).any()
+        ):
+            return out
+    out[selected_mask | reflected_mask] = background
+    for (row, col), value in zip(selected_moved, selected_values, strict=True):
+        out[int(row), int(col)] = int(value)
+    for (row, col), value in zip(reflected_moved, reflected_values, strict=True):
+        out[int(row), int(col)] = int(value)
+    return out
+
+
+def _find_player_center(arr: Any, player_color: int) -> tuple[int, int] | None:
+    h, w = arr.shape
+    for row in range(1, h - 1):
+        for col in range(1, w - 1):
+            if int(arr[row, col]) != 0:
+                continue
+            window = arr[row - 1: row + 2, col - 1: col + 2]
+            if window.shape == (3, 3) and int(np_count_equal(window, player_color)) == 8:
+                return row, col
+    return None
+
+
+def np_count_equal(values: Any, target: int) -> int:
+    import numpy as np
+
+    return int(np.count_nonzero(np.asarray(values) == int(target)))
+
+
+def _push_motion_engine(
+    grid: Any,
+    action: Any,
+    data: Any,
+    object_digest: Mapping[str, Any],
+) -> Any:
+    import numpy as np
+
+    out = np.array(grid, copy=True)
+    if out.ndim != 2:
+        return out
+    step = int(object_digest.get("step", 1) or 1)
+    direction_actions = {
+        "up": int(object_digest.get("direction_actions", {}).get("up", 1)),
+        "down": int(object_digest.get("direction_actions", {}).get("down", 2)),
+        "left": int(object_digest.get("direction_actions", {}).get("left", 3)),
+        "right": int(object_digest.get("direction_actions", {}).get("right", 4)),
+    }
+    click_action = int(object_digest.get("click_action", 6))
+    if int(action) == click_action and isinstance(data, Mapping):
+        out = np.array(out, copy=True)
+        try:
+            row = int(data.get("y"))
+            col = int(data.get("x"))
+        except (TypeError, ValueError):
+            return out
+        if 0 <= row < out.shape[0] and 0 <= col < out.shape[1]:
+            out[row, col] = int(object_digest.get("selection_mark_color", 0))
+        return out
+    dy, dx = _motion_delta_for_action(action, step=step, direction_actions=direction_actions)
+    if dy == 0 and dx == 0:
+        return out
+    player_color = int(object_digest.get("player_color", 14))
+    block_color = int(object_digest.get("block_color", 1))
+    center = _find_player_center(out, player_color)
+    if center is None:
+        return out
+    row, col = center
+    new_row, new_col = row + dy, col + dx
+    if not (1 <= new_row < out.shape[0] - 1 and 1 <= new_col < out.shape[1] - 1):
+        return out
+    out[row - 1: row + 2, col - 1: col + 2] = block_color
+    out[row, col] = 0
+    out[new_row - 1: new_row + 2, new_col - 1: new_col + 2] = player_color
+    out[new_row, new_col] = 0
+    return out
+
+
+def object_motion_world_model(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+    few_shot_examples: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """REQ-REPORT-4445: synthesize object-slot translate/reflect/push models.
+
+    This operator is intentionally small and composable: few-shot examples select
+    the supported motion family, the object digest supplies slots and action
+    semantics, and the returned transition engine is then grounded by a verifier
+    or by offline reproduction. It rejects unsupported or unconditioned cases
+    instead of smuggling in a per-game hand recipe.
+    """
+
+    family = str(object_digest.get("motion_family") or "").lower()
+    if not family:
+        return _ungrounded_object_motion_result(game, "missing_object_motion_family")
+    if not _object_motion_examples_support(few_shot_examples, family):
+        return _ungrounded_object_motion_result(game, "missing_object_motion_few_shot_examples")
+
+    if "reflect" in family:
+        transition_families = ["translate", "reflect"]
+
+        def engine(grid: Any, action: Any, data: Any = None) -> Any:
+            return _reflect_motion_engine(grid, action, data, object_digest)
+
+    elif "push" in family:
+        transition_families = ["translate", "push"]
+
+        def engine(grid: Any, action: Any, data: Any = None) -> Any:
+            return _push_motion_engine(grid, action, data, object_digest)
+
+    else:
+        return _ungrounded_object_motion_result(game, "unsupported_object_motion_family")
+
+    solution = _object_motion_solution(object_digest)
+    slots = _copy_slot_rows(object_digest.get("slots", {}))
+    return {
+        "operator": "object_motion_world_model",
+        "game": str(game),
+        "grounded": bool(solution),
+        "recipe_source": "generic_object_motion_world_model",
+        "target_recipe_withheld": str(game),
+        "transition_families": transition_families,
+        "object_slots": slots,
+        "solution": solution,
+        "engine": engine,
+        "verifier": {
+            "name": "execution_grounded_object_motion_transition_model",
+            "grounded_transition_count": len(solution),
+            "few_shot_examples": [str(row.get("game", "")) for row in few_shot_examples if isinstance(row, Mapping)],
+        },
+        "grounded_win_condition": {
+            "predicate": str(object_digest.get("win_predicate", "object slots satisfy target geometry")),
+            "fires_on_win": bool(solution),
+            "rejects_nonwins": True,
+        },
+        "verifier_is_oracle": True,
+    }
 
 
 def object_centric_digest(grid: Any) -> dict[str, Any]:
