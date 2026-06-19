@@ -1,0 +1,115 @@
+{
+  "field_principles": {
+    "field_principles": "Carries the why behind each required artifact field.",
+    "flagged_for_v409": "BARE str: the single strongest method (with its verified arXiv id) for the .409 planner -- the discover->ingest->plan->experiment hand-off.",
+    "honest_verdict": "Terminal-prefixed (complete: sota_ingestion_v409_mapped).",
+    "methods_mapped": "SOTA->.409 map; every method has a VERIFIED citation because no citation equals fabrication.",
+    "out_of_band_flagged": "Verifier-as-reward generator-training methods are operator-owned and not auto-run under the TRM stand-down boundary.",
+    "preconditions_checked": "Records reliable-channel reachability and TRM stand-down so missing resources cannot silently become fabricated sources.",
+    "random_seed": "Determinism precondition for the sweep dedup and ranking."
+  },
+  "flagged_for_v409": "ReaComp compiled symbolic solver induction (arXiv:2605.05485)",
+  "honest_verdict": "complete: sota_ingestion_v409_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2605.05485",
+      "carnot_stack_mapping": "Compile existing successful and diagnostic E3/config-rule traces into reusable constrained-DSL symbolic solvers that run with zero test-time LLM calls, then ensemble those solvers before invoking a local generator.",
+      "experiment_mapping": ".409: build a trace-to-symbolic-solver compiler for config-rule and GAP-4/E3 primitives, evaluate on held-out games, and require new reproduced levels or a falsifying blocked verdict.",
+      "failure_mode": "Compiled solvers can overfit the trace families or bake in public game leakage; .409 needs held-out game families, no game-specific literals, and separate oracle-verifier versus sovereign claims.",
+      "name": "ReaComp compiled symbolic solver induction",
+      "source_verification": "Verified by arXiv API id_list and arXiv abs WebFetch HTTP 200 on 2026-06-19: https://arxiv.org/abs/2605.05485.",
+      "v408_outcome_conditioning": "Exp 4414 found one grounded config rule but no new reproduced levels; Exp 4418 then blocked vocabulary transfer because the local inducer was unavailable. Exp 4417 kept the sovereign gate alive but with graded_gate_fires=0."
+    },
+    {
+      "arxiv_id_or_url": "2503.23145",
+      "carnot_stack_mapping": "Turn each config-rule or world-model hypothesis into an interactive differential-testing loop: query the executable oracle with targeted states, synthesize a candidate rule/program, and refine only from verifier-returned counterexamples.",
+      "experiment_mapping": ".409: replace passive cached-candidate reranking with a CodeARC query budget over held-out config-rule states and GAP-4 program families.",
+      "failure_mode": "The hidden target-function oracle can become a new oracle if used at solve time; Carnot must restrict it to offline induction and report final solve attempts without target-query leakage.",
+      "name": "CodeARC interactive differential-query program induction",
+      "source_verification": "Verified by arXiv API id_list and arXiv abs WebFetch HTTP 200 on 2026-06-19: https://arxiv.org/abs/2503.23145.",
+      "v408_outcome_conditioning": "Exp 4417 shows local open-weight coverage exists at 0.2333 but the verifier gate never fires; static candidate pools are not producing discriminative new wins."
+    },
+    {
+      "arxiv_id_or_url": "2605.22446",
+      "carnot_stack_mapping": "Insert a preemptive verifier head before executing or imagining an E3 action chunk: score action validity and expected advantage, filter low-quality chunks, and resample within a fixed budget.",
+      "experiment_mapping": ".409: wrap ar25/tn36/lp85 E3 rollouts in preemptive verify-before-rollout filtering and compare against the Exp 4415 adaptive-test baseline.",
+      "failure_mode": "A learned pre-filter can reject the rare necessary exploratory action or learn simulator artifacts; keep exact replay checks and report coverage loss separately from solve wins.",
+      "name": "Pre-VLA preemptive runtime verification for world-model rollouts",
+      "source_verification": "Verified by arXiv API id_list and arXiv abs WebFetch HTTP 200 on 2026-06-19: https://arxiv.org/abs/2605.22446.",
+      "v408_outcome_conditioning": "Exp 4415 adaptive behavior tests found failing mechanics but still reported new_levels_reproduced=0 and verifier_is_oracle=true."
+    },
+    {
+      "arxiv_id_or_url": "2605.09502",
+      "carnot_stack_mapping": "Keep hidden-state error awareness as a diagnostic feature only: measure whether new multi-step traces contain non-position signal before allowing any localizer to affect selection or repair.",
+      "experiment_mapping": ".409: collect non-step-zero intervention traces and run a hidden error-awareness audit; do not use activation steering or probe-guided generation as the headline.",
+      "failure_mode": "The paper reports the signal is diagnostic, not causal; using it as a steering reward would repeat the failed localizer line under a more opaque feature source.",
+      "name": "Hidden Error Awareness diagnostic hidden-state probe",
+      "source_verification": "Verified by arXiv API id_list and arXiv abs WebFetch HTTP 200 on 2026-06-19: https://arxiv.org/abs/2605.09502.",
+      "v408_outcome_conditioning": "Exp 4416 directly falsified the hidden-state localizer: hidden_state_localizer_has_nonposition_signal=false and the probe tied a position-only F1=1.0 baseline."
+    },
+    {
+      "arxiv_id_or_url": "2605.12201",
+      "carnot_stack_mapping": "Represent code outputs as risk-controlling partial-program or candidate sets, then score the set against executable tests rather than forcing one scalar confidence to calibrate across domains.",
+      "experiment_mapping": ".409: rebuild the code_humaneval detector as a risk-controlled prediction-set verifier and compare AUROC, coverage, and risk-coverage against Exp 4419.",
+      "failure_mode": "Prediction sets can become too large to be useful or can hide wrong code under broad partial programs; require compactness and executable correctness gates.",
+      "name": "RisCoSet risk-controlling prediction sets for code generation",
+      "source_verification": "Verified by arXiv API id_list and arXiv abs WebFetch HTTP 200 on 2026-06-19: https://arxiv.org/abs/2605.12201.",
+      "v408_outcome_conditioning": "Exp 4419 reports detection_calibrated_multi_domain=false and code_humaneval remains at chance after SteerConf features, with a positive control available."
+    }
+  ],
+  "out_of_band_flagged": [
+    {
+      "arxiv_id_or_url": "2606.13565",
+      "name": "A2D2 reward-guided any-length discrete diffusion",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "verifier-as-reward generator-training method",
+      "url": "https://arxiv.org/abs/2606.13565"
+    },
+    {
+      "arxiv_id_or_url": "2502.01384",
+      "name": "SEPO score-entropy policy optimization",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "policy-gradient generator training over non-differentiable rewards",
+      "url": "https://arxiv.org/abs/2502.01384"
+    },
+    {
+      "arxiv_id_or_url": "2508.02298",
+      "name": "CAPO generative credit-assignment policy optimization",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "full generator policy optimization; offline critique labels only are in-band",
+      "url": "https://arxiv.org/abs/2508.02298"
+    }
+  ],
+  "preconditions_checked": {
+    "arxiv_api_verified_ids": [
+      "2502.01384",
+      "2503.23145",
+      "2508.02298",
+      "2605.05485",
+      "2605.09502",
+      "2605.12201",
+      "2605.22446",
+      "2606.13565"
+    ],
+    "deep_research_invoked": false,
+    "research_conductor_modified": false,
+    "sweep_clusters_imported": true,
+    "sweep_clusters_ran": true,
+    "sweep_semscholar_imported": true,
+    "sweep_semscholar_ran": true,
+    "sweep_semscholar_status": "focused query ran; Semantic Scholar returned HTTP 429, so no S2-only source was promoted",
+    "trm_training_stood_down": true,
+    "webfetch_http_200_verified_urls": [
+      "https://arxiv.org/abs/2502.01384",
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2508.02298",
+      "https://arxiv.org/abs/2605.05485",
+      "https://arxiv.org/abs/2605.09502",
+      "https://arxiv.org/abs/2605.12201",
+      "https://arxiv.org/abs/2605.22446",
+      "https://arxiv.org/abs/2606.13565"
+    ],
+    "websearch_webfetch_reachable": true
+  },
+  "random_seed": 4420
+}
