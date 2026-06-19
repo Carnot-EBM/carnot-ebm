@@ -8827,3 +8827,16 @@ c |
 | 2026-06-19 12:33 UTC | PHASE B2 (RESERVED INFRA) -- registry/gaps hygiene | OK | 87 passed, 1 warning in 5.81s |
 | 2026-06-19 12:46 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | 117 passed, 1 warning in 7.90s |
 | 2026-06-19 13:03 UTC | PHASE D (SOTA-INGESTION; .410 bleeding-edge track) | OK | 113 passed, 1 warning in 5.81s |
+| 2026-06-19 13:17 UTC | PHASE E (CAPSTONE .410) -- the milestone scorecard | OK | 99 passed, 1 warning in 5.70s |
+| 2026-06-19 13:19 UTC | Milestone 2026.06.410 activated | OK | 11 tasks queued |
+| 2026-06-19 13:21 UTC | PHASE 0 (TRANSITION) -- archive .409 -> activate . | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE A2 (ARC NORTH STAR) -- example-corpus-condit | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE A3 (ARC NORTH STAR) -- example-corpus-condit | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- F | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE A5 (ARC NORTH STAR; MULTI-LEVEL) -- take an | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE B1 (RESERVED INFRA) -- ship an ARC-SOLVE tas | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE B2 (RESERVED INFRA) -- registry/gaps hygiene | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE D (SOTA-INGESTION; .410 bleeding-edge track) | OK | Deliverable already exists in repo |
+| 2026-06-19 13:21 UTC | PHASE E (CAPSTONE .410) -- the milestone scorecard | OK | Deliverable already exists in repo |
