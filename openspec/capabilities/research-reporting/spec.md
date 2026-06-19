@@ -24649,6 +24649,48 @@ honest verdict.
 |---|---|---|
 | REQ-REPORT-4421 | Implemented (`python/carnot/experiment_4421_config_rule_solve_unseen.py`, `results/experiment_4421_config_rule_solve_unseen.py`) | Covered (`tests/python/test_experiment_4421_config_rule_solve_unseen.py`) |
 
+### REQ-REPORT-4422: Ground tr87 Glyph-Rewrite Perception From Pixels And Reproduce A Level
+
+The Exp 4422 glyph-rewrite workflow SHALL implement a from-pixels verifier for
+the `tr87` rewrite-class configuration game. It SHALL reuse the existing
+`segment_glyphs` primitive from
+`scripts/experiments/arc3_config_layerb_glyph_tr87.py`, localize the visible
+rule bands, target band, and editable band from rendered ON-pixel rows, match
+glyph values with a tolerant Hamming-nearest matcher that is robust to the
+game's sprite rotations and small bitmap perturbations, and verify wins by
+greedily rewriting the target glyph sequence through the localized multi-glyph
+rules. Exact bitmap identity alone SHALL NOT be sufficient.
+
+The workflow SHALL write
+`results/experiment_4422_glyph_rewrite_perception.json` with the required bare
+fields `offline_reproduced`, `reproduced_levels`, `verifier_is_oracle`, and
+`honest_verdict`. `offline_reproduced` SHALL be true only when
+`arc_solver_kit.reproduce()` confirms the replayed solution in the offline
+environment, `reproduced_levels` SHALL count only those reproduced offline
+levels, `verifier_is_oracle` SHALL be true because the glyph check is
+execution-grounded rather than a generation moat, and `honest_verdict` SHALL be
+terminal-prefixed. The artifact SHALL also report whether the verifier fires on
+the rendered banked win, the non-win false-positive count, and the checksum of
+the grounding and reproduction evidence.
+
+#### SCENARIO-REPORT-4422: From-Pixels tr87 Glyph Rewrite Grounds And Drives Reproduction
+
+**Given** the offline `tr87` environment loads and the banked replay labels are
+available
+**When** the Exp 4422 workflow renders the banked winning glyph configuration,
+checks non-winning rendered configurations, and replays the solution through
+`arc_solver_kit.reproduce()`
+**Then** the artifact records `fires_on_win=true`, zero false positives,
+`offline_reproduced=true`, `reproduced_levels>=1`,
+`verifier_is_oracle=true`, a deterministic checksum, and a terminal-prefixed
+success verdict.
+
+## Implementation Status (REQ-REPORT-4422)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4422 | Planned (`python/carnot/experiment_4422_glyph_rewrite_perception.py`, `results/experiment_4422_glyph_rewrite_perception.py`) | Planned (`tests/python/test_experiment_4422_glyph_rewrite_perception.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
