@@ -19822,6 +19822,41 @@ the duration is at least 60 seconds, then the lint accepts it.
 |---|---|---|
 | REQ-VERIFY-4437 | Implemented (`python/carnot/agentic/arc_solve_artifact_discipline.py`, `scripts/arc_artifact_lint.py`, `results/experiment_4437_arc_artifact_discipline_template.json`) | Implemented (`tests/python/test_arc_solve_artifact_discipline.py`, `tests/python/test_arc_artifact_lint.py`) |
 
+### REQ-VERIFY-4450: ARC Inference-Substrate Emission Guard
+
+The ARC artifact lint SHALL include a regression guard for the `.410`
+`experiment_4433_example_conditioned_win_induction` class: ARC solve/scoring
+artifacts that omit `inference_substrate` or set it to `null` SHALL fail before
+they can be treated as clean fast deterministic predicate-transfer artifacts.
+The guard SHALL accept the same ARC solve/scoring payload once it declares a
+canonical substrate and its `duration_s` clears that substrate's floor. The
+pre-commit configuration SHALL run `scripts/arc_artifact_lint.py` on staged
+`results/experiment_*.json` artifacts whose path marks ARC, solve, config-rule,
+or world-model work, and SHALL pass a checked-in allow-list for legitimately
+live ARC artifacts instead of accepting `live_llm_inference` by convention.
+
+The terminal artifact SHALL write
+`results/experiment_4450_inference_substrate_emission_lint_guard.json` with
+terminal-prefixed `honest_verdict`, bare bool `guard_shipped`, bare bool
+`catches_exp4433_class`, bare bool `tests_pass`, `field_principles`,
+`duration_s`, and `inference_substrate=aggregation_from_upstream_artifacts`.
+
+### SCENARIO-VERIFY-4450: Exp4433-Class ARC Artifacts Cannot Omit Substrate
+
+Given the exp4433 ARC solve exemplar payload with `inference_substrate=null`,
+when the lint validates it, then it reports `MISSING_INFERENCE_SUBSTRATE`. Given
+the same payload declares `inference_substrate=aggregation_from_upstream_artifacts`
+and keeps a duration above 100us, then the lint accepts it. Given pre-commit is
+configured, when a staged result artifact path contains `arc`, `solve`,
+`config_rule`, or `world_model`, then the ARC artifact lint hook is selected and
+uses the checked-in live-artifact allow-list.
+
+## Implementation Status (REQ-VERIFY-4450)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4450 | Implemented (`scripts/arc_artifact_lint.py`, `.pre-commit-config.yaml`, `ops/arc_artifact_live_allowlist.txt`, `python/carnot/experiment_4450_inference_substrate_emission_lint_guard.py`, `results/experiment_4450_inference_substrate_emission_lint_guard.json`) | Implemented (`tests/python/test_arc_artifact_lint.py`, `tests/python/test_experiment_4450_inference_substrate_emission_lint_guard.py`) |
+
 ### REQ-VERIFY-4392: Verifiable Process Data First-Error Localizer
 
 The repository SHALL provide Exp 4392 at

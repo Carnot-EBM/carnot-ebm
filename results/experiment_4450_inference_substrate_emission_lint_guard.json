@@ -1,0 +1,36 @@
+{
+  "artifact_kind": "arc_artifact_lint_guard",
+  "catches_exp4433_class": true,
+  "duration_s": 0.001,
+  "experiment": "experiment_4450_inference_substrate_emission_lint_guard",
+  "field_principles": {
+    "catches_exp4433_class": "bare bool: the lint flags an inference_substrate=None ARC solve artifact (the .410 g50t false-positive class)",
+    "duration_s": "bare float; exceeds the 100us aggregation_from_upstream_artifacts floor",
+    "guard_shipped": "bare bool: the regression test + pre-commit hook landed green",
+    "honest_verdict": "terminal-prefixed",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- this is a lint/test (CPU); 100us floor",
+    "tests_pass": "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"
+  },
+  "fixed_exp4433_class_passes": true,
+  "guard_shipped": true,
+  "honest_verdict": "shipped: inference_substrate_emission_lint_guard",
+  "implemented_paths": [
+    "scripts/arc_artifact_lint.py",
+    ".pre-commit-config.yaml",
+    "ops/arc_artifact_live_allowlist.txt",
+    "python/carnot/experiment_4450_inference_substrate_emission_lint_guard.py",
+    "tests/python/test_arc_artifact_lint.py",
+    "tests/python/test_experiment_4450_inference_substrate_emission_lint_guard.py"
+  ],
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "precommit_hook_configured": true,
+  "reproducibility_checksum": "9a943f76ed018baaa3b44b588f8d4e82f9259608a4c79039e1051d76fefb5450",
+  "retroactively_rewrote_past_artifacts": false,
+  "schema": "carnot.exp4450.inference_substrate_emission_lint_guard.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4450",
+    "SCENARIO-VERIFY-4450"
+  ],
+  "tests_pass": true
+}

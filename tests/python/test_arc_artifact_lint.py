@@ -6,10 +6,17 @@ Spec refs: REQ-VERIFY-4437, SCENARIO-VERIFY-4437.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from carnot.agentic import arc_solve_artifact_discipline as discipline
 from scripts import arc_artifact_lint as lint
+
+
+REPO = Path(__file__).resolve().parents[2]
+EXP4433_PATH = REPO / "results" / "experiment_4433_example_conditioned_win_induction.json"
+PRE_COMMIT_PATH = REPO / ".pre-commit-config.yaml"
+ALLOWLIST_PATH = REPO / "ops" / "arc_artifact_live_allowlist.txt"
 
 
 def _write_json(path: Path, payload: dict[str, object]) -> Path:
@@ -135,3 +142,144 @@ def test_req_verify_4437_lint_main_returns_nonzero_and_json_report(
     assert lint.main(["--json", str(fixed)]) == 0
     ok_output = json.loads(capsys.readouterr().out)
     assert ok_output == {"ok": True, "issue_count": 0, "issues": []}
+
+
+def test_scenario_verify_4450_exp4433_class_missing_substrate_is_flagged(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-VERIFY-4450: exp4433-class ARC solves cannot omit substrate."""
+
+    payload = json.loads(EXP4433_PATH.read_text(encoding="utf-8"))
+    payload["inference_substrate"] = None
+    artifact = _write_json(
+        tmp_path / "results" / EXP4433_PATH.name,
+        payload,
+    )
+
+    issues = lint.lint_paths([artifact])
+    issue_kinds = {issue.kind for issue in issues}
+
+    assert "MISSING_INFERENCE_SUBSTRATE" in issue_kinds
+    assert any("inference_substrate" in issue.detail for issue in issues)
+
+
+def test_scenario_verify_4450_exp4433_class_passes_with_declared_substrate(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-VERIFY-4450: the same ARC solve passes with a valid substrate."""
+
+    payload = json.loads(EXP4433_PATH.read_text(encoding="utf-8"))
+    payload["inference_substrate"] = discipline.AGGREGATION_SUBSTRATE
+    artifact = _write_json(
+        tmp_path / "results" / EXP4433_PATH.name,
+        payload,
+    )
+
+    assert (
+        payload["duration_s"]
+        >= discipline.SUBSTRATE_DURATION_FLOORS[discipline.AGGREGATION_SUBSTRATE]
+    )
+    assert lint.lint_paths([artifact]) == []
+
+
+def test_req_verify_4450_cli_accepts_live_allowlist_file(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    """REQ-VERIFY-4450: legitimately live ARC artifacts use an allow-list file."""
+
+    artifact = _write_json(
+        tmp_path / "results" / "experiment_9010_arc_live_solve.json",
+        {
+            "honest_verdict": "success: live_llm_induction_solved",
+            "duration_s": 61.0,
+            "inference_substrate": discipline.LIVE_LLM_SUBSTRATE,
+        },
+    )
+    allowlist = tmp_path / "arc_live_allowlist.txt"
+    allowlist.write_text(f"{artifact}\n", encoding="utf-8")
+
+    blocked_exit = lint.main(["--json", str(artifact)])
+    blocked_report = json.loads(capsys.readouterr().out)
+    allowed_exit = lint.main(["--allow-live-file", str(allowlist), "--json", str(artifact)])
+    allowed_report = json.loads(capsys.readouterr().out)
+
+    assert blocked_exit == 1
+    assert blocked_report["issues"][0]["kind"] == "LIVE_LLM_NOT_ALLOWLISTED"
+    assert allowed_exit == 0
+    assert allowed_report == {"ok": True, "issue_count": 0, "issues": []}
+
+
+def test_req_verify_4450_precommit_hook_is_scoped_and_allowlisted() -> None:
+    """REQ-VERIFY-4450: pre-commit runs the ARC lint on result artifacts."""
+
+    config = PRE_COMMIT_PATH.read_text(encoding="utf-8")
+    hook_block = config.split("- id: arc-artifact-lint", maxsplit=1)[1].split(
+        "\n      - id:",
+        maxsplit=1,
+    )[0]
+    files_match = re.search(r"files: '([^']+)'", hook_block)
+
+    assert "scripts/arc_artifact_lint.py" in hook_block
+    assert f"--allow-live-file {ALLOWLIST_PATH.relative_to(REPO).as_posix()}" in hook_block
+    assert files_match is not None
+    files_re = re.compile(files_match.group(1))
+    assert files_re.search("results/experiment_9011_arc_solve.json")
+    assert files_re.search("results/experiment_9012_config_rule_solve.json")
+    assert files_re.search("results/nested/experiment_9013_world_model_report.json")
+    assert not files_re.search("results/experiment_9014_capstone.json")
+    assert ALLOWLIST_PATH.exists()
+
+
+def test_req_verify_4450_lint_guard_edge_paths_assert(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    """REQ-VERIFY-4450: candidate detection and allow-list edge paths assert."""
+
+    missing_results = tmp_path / "missing-results"
+    noncandidate = _write_json(
+        tmp_path / "results" / "experiment_9015_unrelated.json",
+        {"honest_verdict": "complete: unrelated", "duration_s": 0.01},
+    )
+    tagged_candidate = _write_json(
+        tmp_path / "results" / "experiment_9016_metadata_tagged.json",
+        {
+            "tags": ["arc"],
+            "honest_verdict": "complete: tagged_arc_artifact",
+            "duration_s": 0.01,
+            "inference_substrate": discipline.AGGREGATION_SUBSTRATE,
+        },
+    )
+    live_artifact = _write_json(
+        tmp_path / "results" / "experiment_9017_arc_live_solve.json",
+        {
+            "honest_verdict": "success: live_llm_induction_solved",
+            "duration_s": 61.0,
+            "inference_substrate": discipline.LIVE_LLM_SUBSTRATE,
+        },
+    )
+    nonpartial_bad_verdict = {
+        "honest_verdict": "ongoing",
+        "duration_s": 0.01,
+        "inference_substrate": discipline.AGGREGATION_SUBSTRATE,
+    }
+
+    assert lint.discover_candidate_artifacts(missing_results) == []
+    assert lint.lint_paths([noncandidate]) == []
+    assert lint.lint_paths([tagged_candidate]) == []
+    assert [
+        issue.kind for issue in lint.lint_artifact(tagged_candidate, nonpartial_bad_verdict)
+    ] == ["NON_TERMINAL_HONEST_VERDICT"]
+    assert (
+        lint.main(
+            [
+                "--allow-live-file",
+                str(tmp_path / "does-not-exist.txt"),
+                "--json",
+                str(live_artifact),
+            ]
+        )
+        == 1
+    )
+    assert json.loads(capsys.readouterr().out)["issues"][0]["kind"] == "LIVE_LLM_NOT_ALLOWLISTED"
