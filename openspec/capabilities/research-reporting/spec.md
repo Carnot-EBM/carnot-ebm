@@ -24691,6 +24691,47 @@ success verdict.
 |---|---|---|
 | REQ-REPORT-4422 | Planned (`python/carnot/experiment_4422_glyph_rewrite_perception.py`, `results/experiment_4422_glyph_rewrite_perception.py`) | Planned (`tests/python/test_experiment_4422_glyph_rewrite_perception.py`) |
 
+### REQ-REPORT-4423: Generic First-Contact Breadth Routes Unseen ARC Games Through Learned Recipes
+
+The Exp 4423 generic first-contact breadth workflow SHALL select ARC-AGI-3
+candidate games that are either absent from `ops/arc_solve_registry.yaml` or
+classified as `FAIL_EXPLORATION` by `results/arc3_full_pass_scorecard.json`.
+Before attempting a candidate, it SHALL call
+`arc_solve_learning.recommend_approach(game)` and preserve the routed closest
+solved-game recipe. The workflow SHALL expose the `.409` config-rule verifier
+from Exp 4421 and the glyph-rewrite verifier from Exp 4422 as explicit routing
+options, then run the standing generic loop
+`scripts/arc_loop_solve.py --game <target>` or an equivalent injected loop over
+the offline environment.
+
+The workflow SHALL write
+`results/experiment_4423_generic_first_contact_breadth.json` with required bare
+fields `offline_reproduced`, `reproduced_levels`, `missing_verifier_gaps`,
+`verifier_is_oracle`, and `honest_verdict`. A success verdict SHALL be emitted
+only when a game not already in the registry reproduces at least one offline
+level. If no candidate advances, the artifact SHALL still be valid only when it
+records the routed delta and an exact missing-verifier gap for the first
+unselectable failure, and when that dead-end is written back to the ARC solve
+registry so later runs can skip it.
+
+#### SCENARIO-REPORT-4423: Routed Unseen Game Either Reproduces Or Logs A Verifier Gap
+
+**Given** an offline ARC environment, `arc_solver_kit`, and an unseen or
+`FAIL_EXPLORATION` candidate game
+**When** the Exp 4423 workflow routes the game through
+`arc_solve_learning.recommend_approach(game)` and the standing loop
+**Then** the artifact records a reproduced level for a new registry game or
+records a terminal-prefixed flagged partial verdict with the precise
+missing-verifier gap, preserves the Exp 4421 and Exp 4422 routing options, sets
+`verifier_is_oracle=false` for non-oracle routing, and records the dead-end in
+the ARC solve registry.
+
+## Implementation Status (REQ-REPORT-4423)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4423 | Planned (`python/carnot/experiment_4423_generic_first_contact_breadth.py`, `results/experiment_4423_generic_first_contact_breadth.py`) | Planned (`tests/python/test_experiment_4423_generic_first_contact_breadth.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
