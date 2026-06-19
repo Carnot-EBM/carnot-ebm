@@ -42749,7 +42749,18 @@ milestones:
     AUROC 0.963). paper_ready=True (FoVer 0.9131, G1-G4).'
   doc: openspec/change-proposals/research-roadmap-v406.md
   completed: '2026-06-18'
-  finding: '.406 close-state: TRUE scorecard per exp4401 plus the ARC registry. SYNTHETIC verifiable-process-data localizer looked like a win but was QUARANTINED as PURE POSITION BIAS: exp4392 reported localizer_beats_ensemble_baseline=True with FoVer F1 1.000000, but exp4393 localizer_win_is_genuine=False, beats_position_only_baseline=False, template_ablation_drop=0.0. The synthetic route is artifact-confounded, not a genuine first-error localizer. SELF-LEARNING saturated: exp4396 localizer_compounds=False, F1 1.0->1.0 over corpus 566->5661. CROSS-DOMAIN calibration false: exp4397 detection_calibrated_multi_domain=False, code_humaneval n=100 underpowered with base-rate/multi-valid-output confounds. ARC STUCK at 34/17; exp4394/4395 reproduced 0 new levels and the headline fidelity gate was unreachable 0.733-0.875. flagged_for_v407=intervention_active_real_first_error_deconfounding_v407 (methods: 2601.14209, 2603.25412, 2504.10559, 2602.07842, 2606.16070). Cross-game transfer RETIRED (exp4318/4331/4342), cross-domain selection RETIRED (exp4314), in-generation DiffusionGemma RETIRED (exp4374), and LLM-heuristic efficiency SETTLED (exp4370). paper_ready=True. Frame .407 as deconfound the localizer with REAL intervention data, drive ARC deeper via per-mechanic executable unit tests, use active-learning self-learning, and repair cross-domain calibration; do not reopen the settled/retired axes or rerun the synthetic localizer route.'
+  finding: '.406 close-state: TRUE scorecard per exp4401 plus the ARC registry. SYNTHETIC verifiable-process-data localizer
+    looked like a win but was QUARANTINED as PURE POSITION BIAS: exp4392 reported localizer_beats_ensemble_baseline=True with
+    FoVer F1 1.000000, but exp4393 localizer_win_is_genuine=False, beats_position_only_baseline=False, template_ablation_drop=0.0.
+    The synthetic route is artifact-confounded, not a genuine first-error localizer. SELF-LEARNING saturated: exp4396 localizer_compounds=False,
+    F1 1.0->1.0 over corpus 566->5661. CROSS-DOMAIN calibration false: exp4397 detection_calibrated_multi_domain=False, code_humaneval
+    n=100 underpowered with base-rate/multi-valid-output confounds. ARC STUCK at 34/17; exp4394/4395 reproduced 0 new levels
+    and the headline fidelity gate was unreachable 0.733-0.875. flagged_for_v407=intervention_active_real_first_error_deconfounding_v407
+    (methods: 2601.14209, 2603.25412, 2504.10559, 2602.07842, 2606.16070). Cross-game transfer RETIRED (exp4318/4331/4342),
+    cross-domain selection RETIRED (exp4314), in-generation DiffusionGemma RETIRED (exp4374), and LLM-heuristic efficiency
+    SETTLED (exp4370). paper_ready=True. Frame .407 as deconfound the localizer with REAL intervention data, drive ARC deeper
+    via per-mechanic executable unit tests, use active-learning self-learning, and repair cross-domain calibration; do not
+    reopen the settled/retired axes or rerun the synthetic localizer route.'
   activation_recorded: exp4402-archive-v406-activate-v407
   tasks:
   - id: exp4391-archive-v405-activate-v406
@@ -42920,4 +42931,203 @@ milestones:
       verifier_is_oracle correctly (the durable exp4355 stamp fix) so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM.
       NO gated_on.'
     deliverable: results/experiment_4401_capstone_v406.json
+    result: OK (conductor)
+- id: 2026.06.407
+  title: 'DECONFOUND the one alive oracle-distinct vehicle -- the verifier-as-first-error-LOCALIZER -- with REAL intervention
+    data (arXiv:2601.14209), retire-if-it-ties-position-only-again. .406 attacked the .405 localization NULL (first-error
+    F1 0.096) with SYNTHETIC verifiable process data (arXiv:2605.02395) and came back MOSTLY NULL: exp4392 reported a localizer
+    ''win'' (FoVer F1 1.0) but exp4393''s skeptic-proof QUARANTINED it as pure POSITION BIAS (localizer_win_is_genuine=false,
+    beats_position_only_baseline=false, template_ablation_drop=0.0 -- the F1=1.0 is the IMPLAUSIBLE_PERFECT tell; synthetic
+    template-injected data does not carry the REAL first-error distribution); exp4396 SELF-LEARNING saturated (F1=1.0 flat
+    566->5661, localizer_compounds=false); exp4397 CROSS-DOMAIN calibration false (code_humaneval underpowered n=100 + base-rate
+    confound); ARC STUCK at 34 reproducible levels / 17 games (exp4394/4395 both 0 new -- the lookahead-fidelity GATE 0.73-0.875
+    was UNREACHABLE; gating on AGGREGATE fidelity only CONFIRMED the blocker). The .406 SOTA-ingestion (exp4398) flagged_for_v407
+    = intervention_active_real_first_error_deconfounding_v407 (arXiv:2601.14209): use REAL verifier-checked intervention first-error
+    data, stratified by position + template family, with the deconfounding controls BUILT INTO the headline. PRIMARY work
+    = the operator-MANDATORY ARC north star: DECOMPOSE the fidelity blocker into per-mechanic EXECUTABLE UNIT TESTS (which
+    transition the world model gets wrong), fix the engine test-by-test (arXiv:2606.16070), plan deeper. Plus active-learning
+    self-learning (arXiv:2504.10559) + a repaired cross-domain calibration contract (arXiv:2602.07842). paper_ready=True (FoVer
+    0.9131, G1-G4) is the FROZEN headline.'
+  doc: openspec/change-proposals/research-roadmap-v407.md
+  completed: '2026-06-19'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4402-archive-v406-activate-v407
+    title: 'Archive .406 -> activate .407. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load;
+      run the smart-subset pre-test gate green; RECORD the TRUE .406 close-state truthfully (per exp4401 capstone, verdict
+      v406_localizer_localizes_but_not_genuine_compounds_false_calibrated_false_arc_levels_34_publication_ready): the SYNTHETIC
+      verifiable-process-data localizer reported a ''win'' (exp4392 FoVer F1 1.0) but the skeptic-proof QUARANTINED it as
+      PURE POSITION BIAS (exp4393 localizer_win_is_genuine=false, beats_position_only_baseline=false, template_ablation_drop=0.0
+      -- synthetic template-injected data does not carry the REAL first-error distribution); SELF-LEARNING saturated (exp4396
+      F1=1.0 flat 566->5661, localizer_compounds=false); CROSS-DOMAIN calibration false (exp4397 code_humaneval underpowered
+      n=100 + base-rate confound); ARC STUCK at 34 reproducible levels / 17 games (exp4394/4395 both 0 new, lookahead-fidelity
+      gate UNREACHABLE 0.73-0.875); the SOTA-ingestion flagged_for_v407 = intervention_active_real_first_error_deconfounding_v407
+      (arXiv:2601.14209 -- REAL intervention first-error data instead of synthetic); cross-game value transfer (exp4318/4331/4342)
+      + cross-domain selection (exp4314) + in-generation DiffusionGemma (exp4374) RETIRED; LLM-heuristic efficiency SETTLED
+      (exp4370); paper_ready=True (FoVer 0.9131, G1-G4). Frame .407 as deconfound-the-oracle-distinct-localizer-with-REAL-intervention-data
+      + ARC-DEEPER-via-per-mechanic-executable-unit-tests + active-learning-self-learning + repair-cross-domain-calibration.'
+    deliverable: results/experiment_4402_archive_v406_activate_v407.json
+    result: OK (conductor)
+  - id: exp4403-real-intervention-localizer-deconfound
+    title: 'PHASE A1 (HEADLINE; oracle-distinct LOCALIZER, DECONFOUNDED; verifier_is_oracle=false) -- REAL INTERVENTION first-error
+      data + a contrastive earliest-error localizer with the deconfounding controls BUILT IN (arXiv:2601.14209 ''InT self-proposed
+      interventions for first-error credit assignment'', the .406 SOTA-ingestion flagged_for_v407). .406 (exp4392) trained
+      a localizer on SYNTHETIC template-injected first-error data and reported a ''win'' (FoVer F1 1.0 vs the 0.096 ensemble
+      baseline), but exp4393''s skeptic-proof QUARANTINED it as PURE POSITION BIAS: beats_position_only_baseline=false, template_ablation_drop=0.0
+      (the localizer learned nothing real -- the F1=1.0 is the IMPLAUSIBLE_PERFECT tell). ROOT CAUSE: synthetic template-injected
+      data does not carry the REAL first-error distribution. THE FIX (arXiv:2601.14209): use REAL verifier-checked intervention
+      first-error labels -- (1) take REAL failed reasoning traces (the cached FoVer step-labeled corpus + the GAP-4 ARC pool),
+      (2) for each, identify via a single-step INTERVENTION (replace step k with a verifier-checked correct step, recompute
+      the suffix) the EARLIEST step whose correction redirects the trajectory to success = the ground-truth first-error index,
+      (3) STRATIFY the resulting labels by first-error POSITION and template/problem FAMILY, (4) train a CONTRASTIVE earliest-error
+      localizer, (5) evaluate on a HELD-OUT-FAMILY REAL split with the deconfounding controls BUILT INTO THE HEADLINE (a content-blind
+      POSITION-ONLY baseline from the empirical first-error-step distribution + a TEMPLATE-FAMILY HOLDOUT: train on some families,
+      test on held-out families). Emit localizer_genuinely_beats_position_only BARE bool := (the real-intervention localizer''s
+      held-out-family first-error F1 EXCEEDS the content-blind position-only baseline, delta CI95-excl-0, AND degrades materially
+      under template-family holdout -- i.e. it depends on CONTENT, not just position). verifier_is_oracle=false (a learned
+      localizer; the executable/reference prefix-check defines correctness, the localizer estimates WHICH step). A win = the
+      oracle-distinct localizer GENUINELY localizes (the controls .406 FAILED now pass); a clean null (it still ties position-only)
+      RETIRES the localizer-as-headline + logs a sharper missing-verifier gap. Cached + CPU; the intervention check is symbolic/reference,
+      no live training. NO TRM training; interventions are OFFLINE labels ONLY (no generator SFT/RL).'
+    deliverable: results/experiment_4403_real_intervention_localizer_deconfound.json
+    result: OK (conductor)
+  - id: exp4404-localizer-typed-taxonomy-cross-domain
+    title: "PHASE A2 (HEADLINE generalization; GATED on exp4403 localizer_genuinely_beats_position_only==true) -- does the\
+      \ DECONFOUNDED localizer GENERALIZE: (a) cross-domain to the GAP-4 ARC split + a held-out FoVer template family, and\
+      \ (b) agree with an INDEPENDENT typed first-error taxonomy monitor (arXiv:2603.25412 'Reasoning Safety Monitor')? exp4403\
+      \ (gated) shows a real-intervention localizer that beats the content-blind position-only baseline on a held-out FoVer\
+      \ family. Before it graduates to a cross-domain headline, (1) build an INDEPENDENT typed first-error discriminator (a\
+      \ typed reasoning-vulnerability taxonomy as a SEPARATE label/audit channel) and compare its onset labels with the localizer's\
+      \ -- require a disagreement analysis (per-type false-positive + domain-competence) before accepting an earliest-error\
+      \ claim; (2) test cross-domain generalization (does the localizer's content-dependent advantage hold on GAP-4 ARC, where\
+      \ the mechanic differs from FoVer-math?). Emit localizer_generalizes_typed BARE bool := (the deconfounded localizer\
+      \ beats the position-only baseline CI95-excl-0 on >=1 NON-FoVer domain AND its onset labels agree with the independent\
+      \ typed-taxonomy monitor above chance, with per-type FP reported). verifier_is_oracle=false. A pass = the oracle-distinct\
+      \ localizer is a cross-domain capability (north-star \xA70 step 2); a fail = it is FoVer-family-bound (logged as a missing-verifier\
+      \ gap, the localizer is domain-narrow). This DIAGNOSTIC reuses exp4403's localizer; no new label infra, no live training.\
+      \ NO TRM training; CPU-offline."
+    deliverable: results/experiment_4404_localizer_typed_taxonomy_cross_domain.json
+    result: OK (conductor)
+  - id: exp4405-e3-deeper-mechanic-unit-tests
+    title: 'PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026-06-17; biggest reproducible-level upside) -- E3 DEEPER on the
+      high-headroom cracked games via per-mechanic EXECUTABLE UNIT TESTS that DECOMPOSE the lookahead-fidelity blocker (Mind-Studio
+      arXiv:2606.16070): lp85 L6 + tu93 L5 + tn36 L8 + tr87 L7, +1 each per Incremental-Progress Scoping. .406 (exp4394) gated
+      planning on AGGREGATE lookahead-fidelity and STALLED -- fidelity 0.80-0.875, UNREACHABLE, 0 new levels -- because an
+      aggregate gate only CONFIRMS the blocker, it does not tell you WHICH transition the world model gets wrong. This attempt''s
+      STATED forward difference: DECOMPOSE the fidelity failure into per-mechanic EXECUTABLE UNIT TESTS -- for each game,
+      run the world model''s K-step rollout against the env, identify the SPECIFIC mismatched transition(s), write an executable
+      unit test asserting the correct transition, FIX the engine to pass that test (an InT-style targeted intervention on
+      the world model), and only THEN re-check fidelity + plan deeper. Report per-mechanic test pass/fail SEPARATELY from
+      any solve claim. Entropy-selected exploration traces + a lightweight per-game skill file. LOOP the four targets with
+      a per-target checkpoint + hard per-target wall-time cap (breadth-of-progress beats all-or-nothing). The codex agent
+      IS the proposer (NO nested CodexProposer). HARD gate per target: a NEW level offline_reproduced=true beyond the prior
+      reproduced best (arc_solver_kit.reproduce). Report a per-target scorecard + the new reproducible_total_levels. An honest
+      partial per target (the per-mechanic unit tests that now PASS + the residual failing-mechanic test as the gap CLASS)
+      is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after
+      EACH target.'
+    deliverable: results/experiment_4405_e3_deeper_mechanic_unit_tests.json
+    result: OK (conductor)
+  - id: exp4406-e3-blocked-mechanic-tails-unit-tests
+    title: 'PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17; close the named hidden-rule gaps) -- E3 the BLOCKED-mechanic
+      next-levels via per-mechanic EXECUTABLE UNIT TESTS on the NAMED registers (arXiv:2606.16070): ar25 L2 (action7 undo-stack)
+      + ka59 L2 (step-counter HUD + object-RELEVANCE) + ft09 L2, +1 each per Incremental-Progress Scoping. ar25 L1 + ka59
+      L1 + ft09 L1 are SOLVED; the next levels are blocked on NAMED hidden-rule gaps. exp4395 (.406) added a per-register
+      lookahead-fidelity gate and produced NO new levels (fidelity stuck below the gate). This attempt''s STATED forward difference:
+      write an EXECUTABLE UNIT TEST for each NAMED hidden-rule register (ar25 action7 undo-stack restores the prior grid;
+      ka59 the step-counter HUD increments iff the RELEVANT object''s state changes -- the outer-loop''s object-RELEVANCE
+      finding, commits f0b078247/6fba583c7; ft09 the residual transition), FIX the world model to pass each test, and only
+      then plan. The codex agent IS the proposer (NO nested CodexProposer). HARD gate per game: a NEW level offline_reproduced=true
+      beyond the prior best. An honest partial per game (the per-register unit tests that now PASS + the residual failing-register
+      test as the sharper gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard
+      submission; checkpoint after EACH game.'
+    deliverable: results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json
+    result: OK (conductor)
+  - id: exp4407-active-learning-self-learning-compounds
+    title: 'PHASE C (CONTINUOUS SELF-LEARNING; mandated per research-program.md; verifier_is_oracle=false) -- does ACTIVE-LEARNING
+      trace selection produce COMPOUNDING where the .406 SIZE-only growth SATURATED? (ActPRM arXiv:2504.10559). .406 (exp4396)
+      grew the first-error corpus by SIZE alone and saturated (learning curve F1=1.0 FLAT 566->5661, localizer_compounds=false)
+      -- but that was on the ARTIFACT-confounded synthetic localizer (no real headroom). The NEW mechanism: ACTIVE selection
+      -- pick the next traces to label by UNCERTAINTY (the localizer''s least-confident first-error predictions) + first-error-POSITION
+      DIVERSITY (cover under-represented positions, NOT just add more of the same), and measure held-out first-error F1 vs
+      the accumulated-corpus SIZE as an ACTIVE-vs-RANDOM learning curve. Run on the BEST available first-error localizer:
+      exp4403''s REAL-intervention localizer if it is genuine, ELSE the deconfounded real-intervention corpus from exp4403
+      (the question is whether ACTIVE selection breaks the saturation that SIZE-only growth could not). Keep the template-family
+      holdout + a content-blind position-only control IN the active loop (so ''compounding'' is not re-learning the artifact).
+      Emit localizer_compounds BARE bool := (held-out first-error F1 under ACTIVE selection RISES with corpus size BEYOND
+      a RANDOM-selection baseline at the same corpus size, delta CI95-excl-0, with a positive control confirming non-trivial
+      ceiling headroom). verifier_is_oracle=false. A win = the localizer COMPOUNDS via active selection (the self-learning
+      headline on the axis that now has real headroom); a clean null (active selection does not beat random -> the localizer''s
+      signal is saturated or position-bound) is decision-grade. Cached candidates, CPU, zero quota. NO TRM training.'
+    deliverable: results/experiment_4407_active_learning_self_learning_compounds.json
+    result: OK (conductor)
+  - id: exp4408-cross-domain-detection-calibration-repair
+    title: "PHASE D (CROSS-DOMAIN DETECTION CALIBRATION; complementary; cached; verifier_is_oracle=false) -- REPAIR the .406\
+      \ false calibrated-multi-domain detector contract with PROPER pools + base-rate separation (Semantic Confidence Aggregation\
+      \ arXiv:2602.07842). .406 (exp4397) reported detection_calibrated_multi_domain=false, but the failure was CONFOUNDED:\
+      \ code_humaneval detection AUROC was 0.98 yet underpowered (n=100) and the multi-valid-output / base-rate effects were\
+      \ not separated from genuine calibration failure. This attempt: (1) build PROPER pools from EXISTING cached candidates\
+      \ -- code (HumanEval, cached exp1999/2838/2839, n>=300) + GSM8K (cached, n>=300) -- NOT the underpowered n=100; (2)\
+      \ apply SEMANTIC CONFIDENCE AGGREGATION (aggregate the verifier's confidence across semantically-equivalent valid answers\
+      \ / verifier-success modes BEFORE calibration) + per-domain BASE-RATE + answer-cardinality metadata, so calibration\
+      \ failure is separated from multi-valid-output/base-rate effects; (3) leave-one-domain-out calibration (Platt/temperature\
+      \ fit on the other domains) and report detection AUROC + risk-coverage + expected-calibration-error per domain. Emit\
+      \ detection_calibrated_multi_domain BARE bool := (detection AUROC CI95 lower bound > 0.5 on >=2 NON-FoVer domains AND\
+      \ leave-one-domain-out calibration keeps ECE below the uncalibrated baseline on the held-out domain, AFTER base-rate/multi-valid\
+      \ separation). verifier_is_oracle=false. A win = a deployable multi-domain detector contract (the verifier-domain-expansion\
+      \ step, north-star \xA70 step 2); a domain at chance is LOGGED as a missing-verifier gap (the product backlog). This\
+      \ is cross-domain DETECTION (AUROC), NOT the RETIRED cross-domain SELECTION axis (exp4314). Cached candidates, CPU,\
+      \ zero quota. NO new live inference; NO TRM training."
+    deliverable: results/experiment_4408_cross_domain_detection_calibration_repair.json
+    result: OK (conductor)
+  - id: exp4409-sota-ingestion-v408
+    title: PHASE E1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .407 bleeding-edge
+      forks (REAL-intervention first-error localizer deconfounding; cross-domain detection calibration; active-learning localizer
+      compounding; ARC E3 per-mechanic-unit-test deeper solves) and MAP the strongest 3-5 methods onto the .408 roadmap, conditioned
+      on the .407 outcomes (did the REAL-intervention localizer GENUINELY beat the position-only baseline + generalize cross-domain?
+      did active selection COMPOUND? did the repaired calibration hold multi-domain? did ARC reach deeper/tail levels via
+      per-mechanic unit tests?). Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency
+      WebSearch/WebFetch) -- /deep-research is BANNED in-loop. Every method MUST carry a real, VERIFIED arXiv ID/URL (no citation
+      = fabrication). FLAG A2D2 (2606.13565) + SEPO (2502.01384) verifier-as-reward GENERATOR-training as OUT-OF-BAND/operator-owned.
+      Update research-studying.md (mark ingested) and emit flagged_for_v408 (the single strongest method for the .408 planner).
+    deliverable: results/experiment_4409_sota_ingestion_v408.json
+    result: OK (conductor)
+  - id: exp4410-registry-gaps-hygiene-gap4-guard
+    title: 'PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene + GAP-4 regression guard. (1) Reconcile ops/verifier_registry.yaml
+      + ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the .407 outcomes (the deconfounded localizer exp4403/4404
+      -- move GAP-FOVER-BIPRM-LOCALIZATION to status: filled if the localizer GENUINELY localized + generalized, or sharpen
+      it if it retired as position-bound; the active-learning compounding result exp4407; the repaired cross-domain calibration
+      + any new chance-detection gaps exp4408; new ARC reproduced levels + per-mechanic-test gaps from exp4405/4406). (2)
+      Run the GAP-4 execution regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently regress).
+      (3) Verify the capstone verifier_is_oracle stamping fix is STILL durable (the .402 exp4355 fix; confirm the .407 capstone
+      path inherits it). Use the robust aggregate-available helper (read available artifacts, report gaps -- do NOT hard-block
+      all-False if one is missing). Emit regression_guard_passed BARE bool. NO production verifier edits (audit-only per Verifier
+      Authenticity Discipline).'
+    deliverable: results/experiment_4410_registry_gaps_hygiene_gap4_guard.json
+    result: OK (conductor)
+  - id: exp4411-hardware-continuity-kv260
+    title: "PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic per north-star \xA73) -- KV260 SSH-reachability + loaded-bitstream\
+      \ continuity check. Per north-star \xA73, KV260 is THE sovereignty story (drive to terminal, then freeze); GateMate/PolarFire\
+      \ are opportunistic-only. SSH-reachability precondition ONLY (NEVER a host SD-card precondition per KV260 SSH-Not-SD-Card\
+      \ Discipline). If the board is reachable, record the loaded overlay (xmutil listapps) + a lightweight liveness check\
+      \ (the carnot_ising bitstream UIO device present). If unreachable -> honest_verdict blocked_kv260_ssh_unreachable (a\
+      \ clean documented skip, NOT a fabrication). This keeps the board visible in the milestone retro without burning a deep\
+      \ task slot. NO host SD-card-device precondition (the retired mechanism). NO TRM training."
+    deliverable: results/experiment_4411_hardware_continuity_kv260.json
+    result: OK (conductor)
+  - id: exp4412-capstone-v407
+    title: 'PHASE E4 (CAPSTONE .407) -- the milestone scorecard + the HEADLINE DECISION. Headline questions: (1) did the oracle-distinct
+      first-error LOCALIZER GRADUATE from ''position-bias artifact'' (the .406 quarantine) to a GENUINE cross-domain localizer:
+      did the REAL-intervention localizer beat the content-blind position-only baseline on a held-out-family REAL split (exp4403
+      localizer_genuinely_beats_position_only), and GENERALIZE cross-domain + agree with an independent typed-taxonomy monitor
+      (exp4404 localizer_generalizes_typed)? -> localizer_state (one of: localizes_genuine_cross_domain / localizes_fover_bound
+      / position_bound_retired). (2) did the localizer COMPOUND via ACTIVE selection where size-only growth saturated (exp4407
+      localizer_compounds)? (3) did cross-domain detection become a CALIBRATED multi-domain contract on de-confounded proper
+      pools (exp4408 detection_calibrated_multi_domain), or are domains at chance (logged gaps)? (4) ARC north star: the new
+      reproducible_total_levels (>=34?) across exp4405 (deeper + per-mechanic unit tests) + exp4406 (ar25/ka59/ft09 L2); how
+      many NEW levels/games. Aggregate (SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle -- a circular/execution-grounded
+      ARC solve is NOT a moat). Emit verifier_thesis_state (one honest string) + localizer_state + localizer_compounds + detection_calibrated_multi_domain
+      + reproducible_total_levels. Compute the G1-G4 publication gate via publication_gate.py. Use the robust aggregate-available-report-gaps
+      helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the durable exp4355 stamp fix) so this capstone
+      does NOT trip CIRCULAR_MOAT_OVERCLAIM. NO gated_on.'
+    deliverable: results/experiment_4412_capstone_v407.json
     result: OK (conductor)
