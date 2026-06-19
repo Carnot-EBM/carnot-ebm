@@ -137,5 +137,13 @@ internal `gateway:8001`) + dep wheels in the rerun sandbox; we only drop in our 
    The first scored run surfaces the jax/numpy-on-rerun-image risk; leave time to fix + resubmit
    before the milestone. The final competition deadline (2026-11-02) is the longer horizon.
 
+**Submission limits (Kaggle API, authoritative, 2026-06-19):** `max_daily_submissions = 1`
+(ONE scored submission PER DAY), `is_kernels_submissions_only = True` (notebook, not a file),
+`max_team_size = 8`, `new_entrant_deadline`/`merger_deadline = 2026-10-26` (for the FINAL),
+`submissions_disabled = False` (open now), `evaluation_metric = "ARC-AGI-3 Metric"`. With 1/day
+and each scored rerun taking up to 12h, there are **~11 iterate-measure-fix cycles before
+06-30** — FRONT-LOAD: every day of delay is one lost attempt. The milestone prize goes to the
+best public-leaderboard score AT 06-30.
+
 Cross-refs: `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md`,
 `python/carnot/agentic/arc_competition_agent.py:make_carnot_agent`, `[[project_arc_live_generator]]`.
