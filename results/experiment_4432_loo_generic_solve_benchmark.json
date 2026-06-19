@@ -1,0 +1,1951 @@
+{
+  "attempts": [
+    {
+      "game": "tr87",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "tr87",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "tr87",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+            "game": "tu93",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+              "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+            "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+          },
+          {
+            "action_model": null,
+            "game": "wa30",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.5,
+            "solver": "results/experiment_4275 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "ls20",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "tr87",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "keyboard",
+          "difficulty": "hard",
+          "game": "tr87",
+          "spatial": true,
+          "win_kw": [
+            "pattern",
+            "position"
+          ]
+        },
+        "target_game": "tr87"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "tr87",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+            "game": "tu93",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+              "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+            "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+          },
+          {
+            "action_model": null,
+            "game": "wa30",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.5,
+            "solver": "results/experiment_4275 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "ls20",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "tr87",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "keyboard",
+          "difficulty": "hard",
+          "game": "tr87",
+          "spatial": true,
+          "win_kw": [
+            "pattern",
+            "position"
+          ]
+        },
+        "target_game": "tr87"
+      },
+      "search_reached_level": 0,
+      "solution_labels": [],
+      "solved_without_own_recipe": false,
+      "stats": {
+        "expansions": 6000,
+        "states": 3491
+      }
+    },
+    {
+      "game": "tu93",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": true,
+      "reproduced_levels": 1,
+      "reproduction_gate": {
+        "claimed_level": 1,
+        "game": "tu93",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "tu93",
+        "recommended": [
+          {
+            "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+            "game": "tr87",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+              "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+              "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+              "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+              "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+              "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+              "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+              "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+              "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+            "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable."
+          },
+          {
+            "action_model": null,
+            "game": "wa30",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.5,
+            "solver": "results/experiment_4275 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "ls20",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "tu93",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "keyboard",
+          "difficulty": "hard",
+          "game": "tu93",
+          "spatial": true,
+          "win_kw": [
+            "move",
+            "position"
+          ]
+        },
+        "target_game": "tu93"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "tu93",
+        "recommended": [
+          {
+            "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+            "game": "tr87",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+              "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+              "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+              "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+              "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+              "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+              "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+              "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+              "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+            "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable."
+          },
+          {
+            "action_model": null,
+            "game": "wa30",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.5,
+            "solver": "results/experiment_4275 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "ls20",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "tu93",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "keyboard",
+          "difficulty": "hard",
+          "game": "tu93",
+          "spatial": true,
+          "win_kw": [
+            "move",
+            "position"
+          ]
+        },
+        "target_game": "tu93"
+      },
+      "search_reached_level": 1,
+      "solution_labels": [
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 2, \"data\": null}",
+        "{\"action\": 2, \"data\": null}",
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 1, \"data\": null}",
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 2, \"data\": null}",
+        "{\"action\": 2, \"data\": null}",
+        "{\"action\": 3, \"data\": null}",
+        "{\"action\": 3, \"data\": null}",
+        "{\"action\": 2, \"data\": null}",
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 2, \"data\": null}",
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 1, \"data\": null}",
+        "{\"action\": 4, \"data\": null}",
+        "{\"action\": 2, \"data\": null}"
+      ],
+      "solved_without_own_recipe": true,
+      "stats": {
+        "expansions": 2114,
+        "states": 591
+      }
+    },
+    {
+      "game": "lp85",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": true,
+      "reproduced_levels": 1,
+      "reproduction_gate": {
+        "claimed_level": 1,
+        "game": "lp85",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "lp85",
+        "recommended": [
+          {
+            "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+            "game": "r11l",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+            "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+          },
+          {
+            "action_model": "ACTION6 click; data schema IS {x,y} and display->grid is 1:1 (camera.display_to_grid(30,13)==(30,13)). Clicks register (121/121 change the grid). Control is a PROGRAM/transform EDITOR, not direct steering: dispatch (tn36.py:2500) routes a click to a tool-palette (miytdaqzei, EMPTY at reset) else mvqheosngn(apply/2nd-object) else bzirenxmrg(the object); the object carries a move-program vkuvtkaerv=[3,0,3,0,0]; clicking it runs mmmdksslmq()->olrpupaury(). The exact EDIT->EXECUTE semantics that drive obj.y 13->33 are not yet cracked (directly invoking mmmdksslmq did NOT move the object; palette empty).",
+            "game": "tn36",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "CORRECTION (2026-06-17, deep RE): the prior 'ACTION6 schema is NOT {x,y} / KeyError x / explorer ERRORED' note is STALE/WRONG. {x,y} works; the KeyError only fires for data=None. rich_action_candidates emits {x,y} and graph_explore_solve_v2 runs CLEAN on tn36 (no error) \u2014 it just NO-ADVANCEs because the win needs the program-editor mechanic, not blind clicks.",
+              "tn36 is a multi-attribute alignment puzzle (move+scale+rotate+property to match a target), far harder than lp85's +1,+1 position-match \u2014 blind graph-explore can't drive 5 attributes onto a target."
+            ],
+            "similarity": 6.0,
+            "solver": "PROGRAM-EDITOR mechanic (FULLY RE'd 2026-06-17). The object runs an N-slot MOVE-PROGRAM (vkuvtkaerv); each slot holds a command code (tn36.py:2171 okllwtboml: 0=settle,1=left,2=right,3=down,33=up,5/6/7/16=rotate,8/9=scale+/-,14/15/63=property). Step CSPOIQWER=4. TOOL PALETTE = a 6-BIT code editor per slot: bit b's toggle-button is at (slot_x, slot_y_top + 3*b) for b=0..5 (values 1,2,4,8,16,32), so ANY code = sum of its set bits (down 3=bit0+bit1; up 33=bit0+bit5; scale+ 8=bit3; rotate+90 5=bit0+bit2). Slot positions ARE READABLE (controller.pfyayhyovw[i].{x,y}) and RE-LAY-OUT per level (L1: 5 slots; L2: 4 slots; different x/y) -> DISCOVER, don't hardcode. RUN by clicking the object sub-button sxhtkytekm (center, discovered). L1: program [3,3,3,3,3]=5 downs->y13->33. L2: [33,33,33,33]=4 ups->y24->8.",
+            "win_condition": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}."
+          },
+          {
+            "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
+            "game": "su15",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.5,
+            "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
+            "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "lp85",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "click",
+          "difficulty": "medium",
+          "game": "lp85",
+          "spatial": false,
+          "win_kw": [
+            "goal",
+            "move",
+            "position"
+          ]
+        },
+        "target_game": "lp85"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "lp85",
+        "recommended": [
+          {
+            "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+            "game": "r11l",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+            "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+          },
+          {
+            "action_model": "ACTION6 click; data schema IS {x,y} and display->grid is 1:1 (camera.display_to_grid(30,13)==(30,13)). Clicks register (121/121 change the grid). Control is a PROGRAM/transform EDITOR, not direct steering: dispatch (tn36.py:2500) routes a click to a tool-palette (miytdaqzei, EMPTY at reset) else mvqheosngn(apply/2nd-object) else bzirenxmrg(the object); the object carries a move-program vkuvtkaerv=[3,0,3,0,0]; clicking it runs mmmdksslmq()->olrpupaury(). The exact EDIT->EXECUTE semantics that drive obj.y 13->33 are not yet cracked (directly invoking mmmdksslmq did NOT move the object; palette empty).",
+            "game": "tn36",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "CORRECTION (2026-06-17, deep RE): the prior 'ACTION6 schema is NOT {x,y} / KeyError x / explorer ERRORED' note is STALE/WRONG. {x,y} works; the KeyError only fires for data=None. rich_action_candidates emits {x,y} and graph_explore_solve_v2 runs CLEAN on tn36 (no error) \u2014 it just NO-ADVANCEs because the win needs the program-editor mechanic, not blind clicks.",
+              "tn36 is a multi-attribute alignment puzzle (move+scale+rotate+property to match a target), far harder than lp85's +1,+1 position-match \u2014 blind graph-explore can't drive 5 attributes onto a target."
+            ],
+            "similarity": 6.0,
+            "solver": "PROGRAM-EDITOR mechanic (FULLY RE'd 2026-06-17). The object runs an N-slot MOVE-PROGRAM (vkuvtkaerv); each slot holds a command code (tn36.py:2171 okllwtboml: 0=settle,1=left,2=right,3=down,33=up,5/6/7/16=rotate,8/9=scale+/-,14/15/63=property). Step CSPOIQWER=4. TOOL PALETTE = a 6-BIT code editor per slot: bit b's toggle-button is at (slot_x, slot_y_top + 3*b) for b=0..5 (values 1,2,4,8,16,32), so ANY code = sum of its set bits (down 3=bit0+bit1; up 33=bit0+bit5; scale+ 8=bit3; rotate+90 5=bit0+bit2). Slot positions ARE READABLE (controller.pfyayhyovw[i].{x,y}) and RE-LAY-OUT per level (L1: 5 slots; L2: 4 slots; different x/y) -> DISCOVER, don't hardcode. RUN by clicking the object sub-button sxhtkytekm (center, discovered). L1: program [3,3,3,3,3]=5 downs->y13->33. L2: [33,33,33,33]=4 ups->y24->8.",
+            "win_condition": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}."
+          },
+          {
+            "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
+            "game": "su15",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.5,
+            "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
+            "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "lp85",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "click",
+          "difficulty": "medium",
+          "game": "lp85",
+          "spatial": false,
+          "win_kw": [
+            "goal",
+            "move",
+            "position"
+          ]
+        },
+        "target_game": "lp85"
+      },
+      "search_reached_level": 1,
+      "solution_labels": [
+        "{\"action\": 6, \"data\": {\"x\": 4, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 4, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 4, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 4, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 4, \"y\": 32}}"
+      ],
+      "solved_without_own_recipe": true,
+      "stats": {
+        "expansions": 272,
+        "states": 15
+      }
+    },
+    {
+      "game": "sc25",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "sc25",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "sc25",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+            "game": "cd82",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 8.0,
+            "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+            "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline."
+          },
+          {
+            "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+            "game": "r11l",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+            "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+          },
+          {
+            "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+            "game": "sp80",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+            "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "sc25",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "mixed",
+          "difficulty": "medium",
+          "game": "sc25",
+          "spatial": false,
+          "win_kw": [
+            "click",
+            "exit",
+            "pattern",
+            "position"
+          ]
+        },
+        "target_game": "sc25"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "sc25",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+            "game": "cd82",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 8.0,
+            "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+            "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline."
+          },
+          {
+            "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+            "game": "r11l",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+            "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+          },
+          {
+            "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+            "game": "sp80",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 5.0,
+            "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+            "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "sc25",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "mixed",
+          "difficulty": "medium",
+          "game": "sc25",
+          "spatial": false,
+          "win_kw": [
+            "click",
+            "exit",
+            "pattern",
+            "position"
+          ]
+        },
+        "target_game": "sc25"
+      },
+      "search_reached_level": 0,
+      "solution_labels": [],
+      "solved_without_own_recipe": false,
+      "stats": {
+        "expansions": 8,
+        "states": 1
+      }
+    },
+    {
+      "game": "ka59",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "ka59",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+            "game": "sp80",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+            "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+          },
+          {
+            "action_model": null,
+            "game": "cn04",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "Only solvable after the E1 salience-ordering upgrade \u2014 the winning actions were low in the pre-E1 raster order."
+            ],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 13-action sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "m0r0",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_m0r0.json (graph_explore_solve_v2 + salience/mask, 15 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 15-action sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "ka59",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "mixed",
+          "difficulty": "hard",
+          "game": "ka59",
+          "spatial": true,
+          "win_kw": [
+            "+1",
+            "position"
+          ]
+        },
+        "target_game": "ka59"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "ka59",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+            "game": "sp80",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+            "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+          },
+          {
+            "action_model": null,
+            "game": "cn04",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "Only solvable after the E1 salience-ordering upgrade \u2014 the winning actions were low in the pre-E1 raster order."
+            ],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 13-action sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "m0r0",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_m0r0.json (graph_explore_solve_v2 + salience/mask, 15 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 15-action sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "ka59",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "mixed",
+          "difficulty": "hard",
+          "game": "ka59",
+          "spatial": true,
+          "win_kw": [
+            "+1",
+            "position"
+          ]
+        },
+        "target_game": "ka59"
+      },
+      "search_reached_level": 0,
+      "solution_labels": [],
+      "solved_without_own_recipe": false,
+      "stats": {
+        "expansions": 6000,
+        "states": 1008
+      }
+    },
+    {
+      "game": "ar25",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ar25",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "ar25",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+            "game": "sp80",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 7.0,
+            "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+            "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+          },
+          {
+            "action_model": null,
+            "game": "cn04",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "Only solvable after the E1 salience-ordering upgrade \u2014 the winning actions were low in the pre-E1 raster order."
+            ],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 13-action sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "m0r0",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_m0r0.json (graph_explore_solve_v2 + salience/mask, 15 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 15-action sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "ar25",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "mixed",
+          "difficulty": "hard",
+          "game": "ar25",
+          "spatial": true,
+          "win_kw": [
+            "goal",
+            "move",
+            "position",
+            "reflect"
+          ]
+        },
+        "target_game": "ar25"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "ar25",
+        "recommended": [
+          {
+            "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+            "game": "sp80",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 7.0,
+            "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+            "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+          },
+          {
+            "action_model": null,
+            "game": "cn04",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "Only solvable after the E1 salience-ordering upgrade \u2014 the winning actions were low in the pre-E1 raster order."
+            ],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 13-action sequence replays offline."
+          },
+          {
+            "action_model": null,
+            "game": "m0r0",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 6.0,
+            "solver": "results/arc_explore_trajectory_m0r0.json (graph_explore_solve_v2 + salience/mask, 15 actions).",
+            "win_condition": "first-solve L1 adapter-free (E1); 15-action sequence replays offline."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "ar25",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "mixed",
+          "difficulty": "hard",
+          "game": "ar25",
+          "spatial": true,
+          "win_kw": [
+            "goal",
+            "move",
+            "position",
+            "reflect"
+          ]
+        },
+        "target_game": "ar25"
+      },
+      "search_reached_level": 0,
+      "solution_labels": [],
+      "solved_without_own_recipe": false,
+      "stats": {
+        "expansions": 6000,
+        "states": 846
+      }
+    },
+    {
+      "game": "ft09",
+      "mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ft09",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "route_result": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "ft09",
+        "recommended": [
+          {
+            "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+            "game": "s5i5",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
+            ],
+            "similarity": 6.0,
+            "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+            "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+          },
+          {
+            "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
+            "game": "su15",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 4.5,
+            "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
+            "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+          },
+          {
+            "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+            "game": "r11l",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 4.0,
+            "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+            "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "ft09",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "click",
+          "difficulty": "hard",
+          "game": "ft09",
+          "spatial": true,
+          "win_kw": [
+            "pattern",
+            "position"
+          ]
+        },
+        "target_game": "ft09"
+      },
+      "route_used": {
+        "general_gotchas": [
+          {
+            "id": "offline_is_a_simulator",
+            "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+          },
+          {
+            "id": "level_on_frame_not_game",
+            "note": "level = frame.levels_completed; env._game has no levels_completed."
+          },
+          {
+            "id": "deepcopy_injection_unreliable",
+            "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+          },
+          {
+            "id": "first_step_after_reset_consumed",
+            "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+          },
+          {
+            "id": "discover_coords_never_hardcode",
+            "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+          },
+          {
+            "id": "state_dependent_controls_and_animations",
+            "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+          },
+          {
+            "id": "non_idempotent_reset",
+            "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+          },
+          {
+            "id": "same_action_next_level",
+            "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+          }
+        ],
+        "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+        "heuristic_policy": {
+          "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+          "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+          "feature": "per-action cell impact + bfs_expansions headroom probe",
+          "rule": {
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+            "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+            "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+          },
+          "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+          "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+        },
+        "loo_target_recipe_withheld": "ft09",
+        "recommended": [
+          {
+            "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+            "game": "s5i5",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
+            ],
+            "similarity": 6.0,
+            "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+            "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+          },
+          {
+            "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
+            "game": "su15",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 4.5,
+            "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
+            "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+          },
+          {
+            "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+            "game": "r11l",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [],
+            "similarity": 4.0,
+            "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+            "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+          }
+        ],
+        "strategy": {
+          "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+          "game": "ft09",
+          "mechanic": "graph_explore",
+          "name": "graph_explore",
+          "needs": null,
+          "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+          "routed_mechanic": "graph_explore",
+          "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+          "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+          "uses_goal_distance_heuristic": true,
+          "wired": true
+        },
+        "target_features": {
+          "action_type": "click",
+          "difficulty": "hard",
+          "game": "ft09",
+          "spatial": true,
+          "win_kw": [
+            "pattern",
+            "position"
+          ]
+        },
+        "target_game": "ft09"
+      },
+      "search_reached_level": 0,
+      "solution_labels": [],
+      "solved_without_own_recipe": false,
+      "stats": {
+        "expansions": 29,
+        "states": 1
+      }
+    }
+  ],
+  "duration_s": 90.428875,
+  "example_corpus_snapshot": {
+    "fold_example_games": {
+      "ar25": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "lp85",
+        "sc25",
+        "cd82",
+        "sp80",
+        "su15",
+        "tu93",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ka59",
+        "ft09",
+        "tr87"
+      ],
+      "ft09": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "lp85",
+        "sc25",
+        "cd82",
+        "sp80",
+        "su15",
+        "tu93",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "ka59",
+        "tr87"
+      ],
+      "ka59": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "lp85",
+        "sc25",
+        "cd82",
+        "sp80",
+        "su15",
+        "tu93",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "ft09",
+        "tr87"
+      ],
+      "lp85": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "sc25",
+        "cd82",
+        "sp80",
+        "su15",
+        "tu93",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "ka59",
+        "ft09",
+        "tr87"
+      ],
+      "sc25": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "lp85",
+        "cd82",
+        "sp80",
+        "su15",
+        "tu93",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "ka59",
+        "ft09",
+        "tr87"
+      ],
+      "tr87": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "lp85",
+        "sc25",
+        "cd82",
+        "sp80",
+        "su15",
+        "tu93",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "ka59",
+        "ft09"
+      ],
+      "tu93": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "s5i5",
+        "lp85",
+        "sc25",
+        "cd82",
+        "sp80",
+        "su15",
+        "tn36",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "ar25",
+        "ka59",
+        "ft09",
+        "tr87"
+      ]
+    },
+    "heldout_games": [
+      "tr87",
+      "tu93",
+      "lp85",
+      "sc25",
+      "ka59",
+      "ar25",
+      "ft09"
+    ],
+    "primitive_hashes": {
+      "python/carnot/agentic/arc_graph_explore.py": "f5ba26c1748e6b55ff8d0f62c269dec4473f80110eba9b6acaf25bf94c1aeb82",
+      "python/carnot/agentic/arc_solve_learning.py": "803b7736c59f8a16581288fa7b01bc567c50066b5fe5b7995a730530ec4b2811",
+      "python/carnot/agentic/arc_solver_kit.py": "52871e94c61e70a420ca43b625b657008baff2c0d45857b72674c8c7ec43bc77",
+      "scripts/arc_loop_solve.py": "e8a56dc1f5a0185594fe5c5190ef7069796cb7dc41f5f69f403675bcf934cf8c"
+    }
+  },
+  "experiment": "experiment_4432_loo_generic_solve_benchmark",
+  "field_principles": {
+    "generic_loo_solve_count": "bare int: the count of games re-solved from the example corpus WITHOUT their own recipe -- the headline generic-capability number",
+    "honest_verdict": "terminal-prefixed (this benchmark ALWAYS completes with a measurement -- positive, partial, or zero -- so it is terminal, never partial:)",
+    "missing_verifier_gaps": "each residual_delta the generic path could not induce is a missing-verifier/missing-primitive gap -- the .410 A2-A5 build backlog",
+    "offline_reproduced": "every claimed re-solve is reproduction-gated -- a non-reproducible solve does not count (ARC Solve Reproducibility Discipline)",
+    "per_game": "list of {game, solved_without_own_recipe, routed_to, residual_delta} -- shows EXACTLY which mechanics the example corpus does and does not transfer",
+    "random_seed": "determinism precondition for a third party to re-run the benchmark",
+    "reproducibility_checksum": "content hash of the example-corpus snapshot used, so the LOO result is reproducible"
+  },
+  "generic_loo_solve_count": 2,
+  "heldout_games": [
+    "tr87",
+    "tu93",
+    "lp85",
+    "sc25",
+    "ka59",
+    "ar25",
+    "ft09"
+  ],
+  "honest_verdict": "complete: generic_loo_solve_count_2_of_7_gate_passed",
+  "leaderboard_submission": false,
+  "loo_gate": "generic_loo_solve_count >= 2",
+  "loo_gate_passed": true,
+  "missing_verifier_gaps": [
+    {
+      "attempt_mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "game": "tr87",
+      "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
+      "routed_to": "tu93"
+    },
+    {
+      "attempt_mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "game": "sc25",
+      "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+      "routed_to": "cd82"
+    },
+    {
+      "attempt_mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "game": "ka59",
+      "residual_delta": "missing_push_block_world_model_and_dynamic_selection",
+      "routed_to": "sp80"
+    },
+    {
+      "attempt_mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "game": "ar25",
+      "residual_delta": "missing_reflection_world_model_and_object_motion_plan",
+      "routed_to": "sp80"
+    },
+    {
+      "attempt_mode": "standing_arc_loop_adapter_withheld_graph_explore",
+      "game": "ft09",
+      "residual_delta": "missing_local_constraint_color_cycle_verifier",
+      "routed_to": "s5i5"
+    }
+  ],
+  "offline_reproduced": true,
+  "per_game": [
+    {
+      "game": "tr87",
+      "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
+      "routed_to": "tu93",
+      "solved_without_own_recipe": false
+    },
+    {
+      "game": "tu93",
+      "residual_delta": "none",
+      "routed_to": "tr87",
+      "solved_without_own_recipe": true
+    },
+    {
+      "game": "lp85",
+      "residual_delta": "none",
+      "routed_to": "r11l",
+      "solved_without_own_recipe": true
+    },
+    {
+      "game": "sc25",
+      "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+      "routed_to": "cd82",
+      "solved_without_own_recipe": false
+    },
+    {
+      "game": "ka59",
+      "residual_delta": "missing_push_block_world_model_and_dynamic_selection",
+      "routed_to": "sp80",
+      "solved_without_own_recipe": false
+    },
+    {
+      "game": "ar25",
+      "residual_delta": "missing_reflection_world_model_and_object_motion_plan",
+      "routed_to": "sp80",
+      "solved_without_own_recipe": false
+    },
+    {
+      "game": "ft09",
+      "residual_delta": "missing_local_constraint_color_cycle_verifier",
+      "routed_to": "s5i5",
+      "solved_without_own_recipe": false
+    }
+  ],
+  "preconditions_checked": {
+    "arc_solve_learning_import": true,
+    "arc_solver_kit_import": true,
+    "offline_env_file_count": 25,
+    "offline_env_files_present": true,
+    "ok": true,
+    "qwen_gguf_cached": true
+  },
+  "random_seed": 4432,
+  "reproducibility_checksum": "43cfc122fef24e02ffe154728a59d238ee10b20d4bb69054f867d3c0041106e4",
+  "result_path": "results/experiment_4432_loo_generic_solve_benchmark.json",
+  "schema": "carnot.exp4432.loo_generic_solve_benchmark.v1",
+  "spec_refs": [
+    "REQ-REPORT-4432",
+    "SCENARIO-REPORT-4432"
+  ],
+  "verifier_is_oracle": true,
+  "verifier_oracle_note": "execution-grounded reproduction gate; no leaderboard submission"
+}
