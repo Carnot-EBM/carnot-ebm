@@ -239,8 +239,9 @@ tasks:
     deliverable: results/experiment_4428_hardware_continuity.json
     prompt: |
       One forward step (or documentation/audit if blocked on operator action) per attached board. KV260:
-      PRECONDITION ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' (NEVER /dev/mmcblk -- host SD slot
-      is retired); if unreachable, honest_verdict blocked_kv260_ssh_unreachable. GateMate: nextpnr-himbaechel
+      PRECONDITION ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' (SSH-reachability is the ONLY valid
+      KV260 precondition; the retired host SD-card-device mechanism is forbidden per KV260 SSH-Not-SD-Card
+      Discipline); if unreachable, honest_verdict blocked_kv260_ssh_unreachable. GateMate: nextpnr-himbaechel
       (NOT nextpnr-gatemate) + openFPGALoader -c dirtyJtag --detect. PolarFire: ssh polarfire 'true'. For
       each reachable board take the next concrete step (latency transcript / bitstream pack / sampler smoke
       per its track); for each blocked board emit a precondition-gated blocked_<resource> + a one-line
