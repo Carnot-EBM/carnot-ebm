@@ -106,6 +106,17 @@ verifiers:
     - 0.990625
     exp4399_domains_at_chance: []
     exp4399_verifier_is_oracle: false
+    eval_exp_4421: results/experiment_4421_registry_gaps_hygiene_gap4_guard.json
+    exp4421_hidden_state_localizer_has_nonposition_signal: false
+    exp4421_position_only_baseline_f1: 1.0
+    exp4421_detection_calibrated_multi_domain: false
+    exp4421_code_humaneval_detection_auroc: 0.60191
+    exp4421_code_humaneval_detection_ci95:
+    - 0.48913
+    - 0.70483
+    exp4421_domains_at_chance:
+    - code_humaneval
+    exp4421_verifier_is_oracle: false
   lineage:
     from: v3
     change: 5-seed dual-condition rescue; CI-reproduced (G2, run 26725185125)
@@ -936,6 +947,33 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4384
     - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4384
     - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384
+    eval_exp_4421: results/experiment_4421_registry_gaps_hygiene_gap4_guard.json
+    exp4421_regression_guard_passed: true
+    exp4421_v408_state: config_rule_partial__adaptive_e3_zero_new__hidden_state_position_null__sovereign_gap4_holds_zero_fires__vocabulary_blocked__code_detection_chance
+    exp4421_arc_reproducible_total_levels: 34
+    exp4421_new_levels_reproduced: 0
+    exp4421_config_win_rules_grounded:
+    - false_positive_rate: 0.0
+      fires_on_win: true
+      game: ka59
+      literal_hardcode: false
+      predicate: editable_count_4_equals_reference_count_4_32
+      tier: 2
+    exp4421_sovereign_gap4_gate_holds: true
+    exp4421_graded_gate_fires: 0
+    exp4421_local_generator_coverage: 0.2333
+    exp4421_gaps_reconciled:
+    - GAP-4414-KA59-CONFIG-RULE-GROUNDED
+    - GAP-4414-CONFIG-RULE-INDUCTION-BP35
+    - GAP-4414-CONFIG-RULE-INDUCTION-DC22
+    - GAP-4415-ADAPTIVE-E3-AR25-L2
+    - GAP-4415-ADAPTIVE-E3-TN36-L8
+    - GAP-4415-ADAPTIVE-E3-LP85-L6
+    - GAP-FOVER-BIPRM-LOCALIZATION-untyped
+    - GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED
+    - GAP-4417-SOVEREIGN-GAP4-LOCAL-GENERATOR-ZERO-FIRES
+    - GAP-4418-CONFIG-RULE-VOCABULARY-LOCAL-MODEL-UNAVAILABLE
+    - GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4976,6 +5014,13 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384
     filled_gap_ids: []
     eval_exp_4399: results/experiment_4399_registry_gaps_hygiene_gap4_guard.json
+  - role_id: oracle_distinct_v408_registry_gaps_hygiene_4421
+    experiment: results/experiment_4421_registry_gaps_hygiene_gap4_guard.json
+    role: registry_gaps_arc_hygiene_v408
+    status: v408_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    v408_state: config_rule_partial__adaptive_e3_zero_new__hidden_state_position_null__sovereign_gap4_holds_zero_fires__vocabulary_blocked__code_detection_chance
+    arc_reproducible_total_levels: 34
+    new_levels_reproduced: 0
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1

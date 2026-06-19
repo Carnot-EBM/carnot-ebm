@@ -5,7 +5,7 @@ tags:
 - extreme
 ckpt_path: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
 save_dir: null
-seed: 4108
+seed: 42
 sweep_mode: false
 append_wandb_name_to_save_dir: false
 timekeeping:
@@ -15,8 +15,8 @@ timekeeping:
 data:
   _target_: src.nn.data.SudokuDataModule
   _recursive_: false
-  batch_size: ${timekeeping.batch_size}
-  num_workers: ${timekeeping.num_workers}
+  batch_size: 384
+  num_workers: 0
   num_train_puzzles: 0
   num_val_puzzles: 0
   num_test_puzzles: 0
@@ -30,35 +30,35 @@ data:
 model:
   _target_: src.nn.models.trm.TRMModule
   _recursive_: false
-  ffn_expansion: ${model_tuning.ffn_expansion}
-  hidden_size: ${model_tuning.hidden_size}
-  num_layers: ${model_tuning.num_layers}
-  N_supervision: ${model_tuning.N_supervision}
-  N_supervision_val: ${model_tuning.N_supervision_val}
-  learning_rate: ${model_tuning.learning_rate}
-  H_cycles: ${model_tuning.H_cycles}
-  L_cycles: ${model_tuning.L_cycles}
-  learning_rate_emb: ${model_tuning.learning_rate_emb}
-  weight_decay: ${model_tuning.weight_decay}
-  halt_exploration_prob: ${model_tuning.halt_exploration_prob}
-  warmup_steps: ${model_tuning.warmup_steps}
-  num_heads: ${model_tuning.num_heads}
-  puzzle_emb_dim: ${model_tuning.puzzle_emb_dim}
-  puzzle_emb_len: ${model_tuning.puzzle_emb_len}
-  rope_theta: ${model_tuning.rope_theta}
-  pos_emb_type: ${model_tuning.pos_emb_type}
-  lr_min_ratio: ${model_tuning.lr_min_ratio}
-  use_mlp_t: ${model_tuning.use_mlp_t}
-  use_conv_swiglu: ${model_tuning.use_conv_swiglu}
-  use_board_swiglu: ${model_tuning.use_board_swiglu}
-  use_muon: ${model_tuning.use_muon}
+  ffn_expansion: 4
+  hidden_size: 512
+  num_layers: 2
+  N_supervision: 16
+  N_supervision_val: 16
+  learning_rate: 0.0001
+  H_cycles: 3
+  L_cycles: 6
+  learning_rate_emb: 0.0001
+  weight_decay: 1.0
+  halt_exploration_prob: 0.1
+  warmup_steps: 2000
+  num_heads: 8
+  puzzle_emb_dim: 0
+  puzzle_emb_len: 0
+  rope_theta: 10000
+  pos_emb_type: 'null'
+  lr_min_ratio: 0.01
+  use_mlp_t: true
+  use_conv_swiglu: false
+  use_board_swiglu: false
+  use_muon: false
   output_dir: None
-  num_puzzles: 0
-  batch_size: 0
+  num_puzzles: 1
+  batch_size: 384
   pad_value: 0
-  max_grid_size: 0
-  vocab_size: 0
-  seq_len: 0
+  max_grid_size: 9
+  vocab_size: 12
+  seq_len: 81
 callbacks:
   model_checkpoint:
     _target_: lightning.pytorch.callbacks.ModelCheckpoint
@@ -83,13 +83,13 @@ callbacks:
 logger:
   csv:
     _target_: lightning.pytorch.loggers.csv_logs.CSVLogger
-    save_dir: ${paths.output_dir}
+    save_dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra
     name: csv/
     prefix: ''
 trainer:
   _target_: lightning.pytorch.trainer.Trainer
   min_epochs: 1
-  max_epochs: ${timekeeping.max_epochs}
+  max_epochs: 50000
   accelerator: gpu
   devices: 1
   check_val_every_n_epoch: 100
@@ -98,7 +98,7 @@ trainer:
   max_time: 00:12:00:00
 paths:
   log_dir: .
-  output_dir: ${hydra:runtime.output_dir}
+  output_dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra
 extras:
   ignore_warnings: false
   enforce_tags: true
@@ -126,3 +126,53 @@ model_tuning:
   use_conv_swiglu: false
   use_board_swiglu: false
   use_muon: false
+model/params/total: 4855809
+model/params/trainable: 4855809
+model/params/non_trainable: 0
+hidden_size: 512
+num_layers: 2
+num_heads: 8
+max_grid_size: 9
+H_cycles: 3
+L_cycles: 6
+N_supervision: 16
+N_supervision_val: 16
+ffn_expansion: 4
+learning_rate: 0.0001
+learning_rate_emb: 0.0001
+weight_decay: 1.0
+warmup_steps: 2000
+halt_exploration_prob: 0.1
+puzzle_emb_dim: 0
+puzzle_emb_len: 0
+rope_theta: 10000
+pos_emb_type: 'null'
+use_mlp_t: true
+use_conv_swiglu: false
+use_board_swiglu: false
+lr_min_ratio: 0.01
+use_muon: false
+vocab_size: 12
+num_puzzles: 1
+batch_size: 384
+pad_value: 0
+seq_len: 81
+output_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- home
+- ianblenke
+- github.com
+- ianblenke
+- carnot
+- results
+- trm_runs
+- contiguous_run_hydra
+forward_dtype: null
+data_dir: ./data/sudoku_extreme_1k_aug_1k
+num_train_puzzles: 0
+num_val_puzzles: 0
+num_test_puzzles: 0
+min_givens: null
+max_givens: null
+grid_size: 9
+num_workers: 0

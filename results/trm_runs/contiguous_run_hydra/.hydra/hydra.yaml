@@ -135,10 +135,11 @@ hydra:
     - callbacks.model_checkpoint.save_last=true
     - callbacks.model_checkpoint.save_top_k=1
     - callbacks.model_checkpoint.auto_insert_metric_name=false
+    - timekeeping.batch_size=384
   job:
     name: train
     chdir: null
-    override_dirname: +trainer.max_time=00:12:00:00,append_wandb_name_to_save_dir=false,callbacks.model_checkpoint.auto_insert_metric_name=false,callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline,callbacks.model_checkpoint.mode=max,callbacks.model_checkpoint.monitor=val/exact_accuracy,callbacks.model_checkpoint.save_last=true,callbacks.model_checkpoint.save_top_k=1,ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt,data.data_dir=./data/sudoku_extreme_1k_aug_1k,experiment=trm_sudoku_extreme_1k_aug_1k,logger=csv,save_dir=null,seed=4108
+    override_dirname: +trainer.max_time=00:12:00:00,append_wandb_name_to_save_dir=false,callbacks.model_checkpoint.auto_insert_metric_name=false,callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline,callbacks.model_checkpoint.mode=max,callbacks.model_checkpoint.monitor=val/exact_accuracy,callbacks.model_checkpoint.save_last=true,callbacks.model_checkpoint.save_top_k=1,ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt,data.data_dir=./data/sudoku_extreme_1k_aug_1k,experiment=trm_sudoku_extreme_1k_aug_1k,logger=csv,save_dir=null,seed=4108,timekeeping.batch_size=384
     id: ???
     num: ???
     config_name: train.yaml

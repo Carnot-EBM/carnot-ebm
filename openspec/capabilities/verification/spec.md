@@ -19643,6 +19643,77 @@ required registry or gap ledger fails `yaml.safe_load`, then it writes
 |---|---|---|
 | REQ-VERIFY-4410 | Implemented (`python/carnot/experiment_4410_registry_gaps_hygiene_gap4_guard.py`, `results/experiment_4410_registry_gaps_hygiene_gap4_guard.py`) | Implemented (`tests/python/test_experiment_4410_registry_gaps_hygiene_gap4_guard.py`) |
 
+### REQ-VERIFY-4421: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Stamp For .408 Outcomes
+
+The repository SHALL provide Exp 4421 at
+`python/carnot/experiment_4421_registry_gaps_hygiene_gap4_guard.py` and
+`results/experiment_4421_registry_gaps_hygiene_gap4_guard.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/arc_solve_registry.yaml` to the `.408` verifier and ARC outcomes without
+editing production verifier implementations or `scripts/research_conductor.py`.
+The runner SHALL parse the YAML registries with `yaml.safe_load` and SHALL load
+`ops/verifier_gaps.md` as a markdown text ledger, not as YAML. If a YAML
+registry is unreadable or the markdown gaps ledger cannot be read, the runner
+SHALL write an honest blocked artifact and stop without mutating ledgers.
+
+When registry preconditions hold, the runner SHALL use the robust
+aggregate-available helper to read all available `.408` artifacts while
+reporting missing upstreams as per-axis gaps rather than defaulting unrelated
+axes to false. It SHALL reconcile Exp 4414 grounded config-game win rules,
+Exp 4415 adaptive E3 partials with zero new reproduced levels, Exp 4416 hidden
+state localizer falsification, Exp 4417 sovereign GAP-4 local-generator guard,
+Exp 4418 config-rule vocabulary transfer/blocking evidence, and Exp 4419
+SteerConf/code detection still-at-chance evidence. Gaps that are filled SHALL
+move to `status: filled (...)`; Exp 4416 SHALL sharpen or close the
+first-error-localizer gap by recording that the hidden-state localizer has no
+non-position signal; new residual or chance-domain gaps SHALL remain open. The
+runner SHALL never prune old registry or gap entries.
+
+The runner SHALL run the GAP-4 execution regression guard. Bare bool
+`regression_guard_passed` SHALL be true only when the ARC oracle-distinct
+verifier-beats-vote result has not regressed and the verifier-is-oracle stamp
+fix is durable on the latest capstone path: the capstone artifact declares
+`verifier_is_oracle=false`, declares `verifier_is_oracle_honored=true`, the
+capstone implementation exposes `verifier_is_oracle`, uses the shared
+aggregate-available helper, and `scripts/adversarial_verify.py --json` does
+not emit `CIRCULAR_MOAT_OVERCLAIM`.
+
+The terminal artifact SHALL write
+`results/experiment_4421_registry_gaps_hygiene_gap4_guard.json` with
+`honest_verdict`, bare bool `regression_guard_passed`,
+`registry_reconciliation`, `preconditions_checked`, bare int `random_seed`,
+`reproducibility_checksum`, `.408` outcome summaries, guard diagnostics, field
+principles, and provenance. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed (complete: registry_gaps_reconciled_guard_<passed|failed>).`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution result did not regress AND the verifier_is_oracle stamping fix is durable -- the capstone reads this.`;
+`registry_reconciliation` = `dict: which gaps moved to filled / sharpened / newly-logged from the .408 outcomes (the never-prune audit trail).`;
+`preconditions_checked` = `Records the registries + the .408 artifacts loaded (robust aggregate-available) + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the guard checks.`;
+`reproducibility_checksum` = `Hash of the reconciliation + the guard inputs; lets a third party re-run.`
+
+### SCENARIO-VERIFY-4421: .408 Hygiene Reconciles Gaps And Guards GAP-4 Without Fabrication
+
+Given `ops/verifier_registry.yaml` and `ops/arc_solve_registry.yaml` parse,
+`ops/verifier_gaps.md` is readable markdown, the `.408` artifacts from Exp
+4414 through Exp 4419 are available or honestly missing, TRM training is stood
+down, the GAP-4 guard input is present, and the latest capstone path carries
+the verifier-is-oracle stamp, when Exp 4421 runs, then it reconciles available
+`.408` truth into the verifier registry, verifier gaps ledger, and ARC solve
+registry; reports any missing upstream artifact through the aggregate-available
+availability report; writes a non-empty `registry_reconciliation` dict listing
+filled, sharpened, and newly logged gaps; runs the GAP-4 regression guard;
+confirms the durable `verifier_is_oracle=false` capstone stamp path; emits bare
+bool `regression_guard_passed=true`; records `random_seed` and
+`reproducibility_checksum`; and emits a terminal-prefixed honest verdict. If a
+required registry or ledger cannot be loaded, then it writes a blocked honest
+verdict and stops without reconciliation.
+
+## Implementation Status (REQ-VERIFY-4421)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4421 | Implemented (`python/carnot/experiment_4421_registry_gaps_hygiene_gap4_guard.py`, `results/experiment_4421_registry_gaps_hygiene_gap4_guard.py`) | Implemented (`tests/python/test_experiment_4421_registry_gaps_hygiene_gap4_guard.py`) |
+
 ### REQ-VERIFY-4392: Verifiable Process Data First-Error Localizer
 
 The repository SHALL provide Exp 4392 at
