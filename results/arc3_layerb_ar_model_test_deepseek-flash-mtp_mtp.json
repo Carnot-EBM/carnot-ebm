@@ -1,0 +1,44 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "deepseek-flash-mtp",
+  "gguf": "Qwen3.5-9B-DeepSeek-V4-Flash-MTP-Q4_K_M.gguf",
+  "no_think": true,
+  "mtp": true,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 17.78,
+      "tokens": 1100,
+      "dur_s": 61.9,
+      "coherent": true,
+      "raw_sample": "import numpy as np\n\ndef is_win(grid):\n    # Extract the editable region (rows 63, cols 26-63)\n    e = grid[63:64, 26:64]\n    \n    # Extract the reference region (rows 21-41, cols 9-53)\n    ref = grid[21:42, 9:54]\n    \n    # The rule is: The editable region must exactly match the reference region's pattern\n    # Specifically, the editable region must be a 1x38 slice of the reference region\n    # th",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 13.16,
+      "tokens": 1100,
+      "dur_s": 83.6,
+      "coherent": true,
+      "raw_sample": "import numpy as np\n\ndef is_win(grid):\n    # Extract the editable region (rows 1..1, cols 2..61)\n    e = grid[1:2, 2:62]\n    \n    # Extract the reference region (rows 8..59, cols 13..50)\n    ref = grid[8:60, 13:51]\n    \n    # The reference region contains a pattern of colors that defines the rule.\n    # We need to find a relationship between the editable region and the reference region.\n    \n    # ",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    }
+  ],
+  "grounded_games": [],
+  "honest_verdict": "complete_layerb_deepseek_flash_mtp_mtp_True_grounded_0",
+  "inference_substrate": "offline_arc_agi3_deepseek-flash-mtp_mtp_iGPU_port8921"
+}
