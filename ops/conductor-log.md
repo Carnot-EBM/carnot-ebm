@@ -8818,3 +8818,4 @@ c |
 | 2026-06-19 09:58 UTC | PHASE F (CAPSTONE .409) -- the milestone scorecard | OK | 97 passed, 1 warning in 6.94s |
 | 2026-06-19 10:00 UTC | Milestone 2026.06.410 activated | OK | 11 tasks queued |
 | 2026-06-19 10:16 UTC | PHASE 0 (TRANSITION) -- archive .409 -> activate . | OK | 113 passed, 1 warning in 4.82s |
+| 2026-06-19 10:31 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 88 passed, 1 warning in 7.15s |
