@@ -8876,3 +8876,4 @@ c |
 | 2026-06-19 19:23 UTC | PHASE A4 (ARC NORTH STAR) -- FIRST-CONTACT a NEW n | OK | 100 passed, 1 warning in 6.39s |
 | 2026-06-19 19:38 UTC | PHASE A5 (ARC NORTH STAR) -- LEAVE-ONE-OUT generic | OK | 88 passed, 1 warning in 8.09s |
 | 2026-06-19 19:53 UTC | PHASE A6 (ARC NORTH STAR; operator-only submit) -- | OK | 107 passed, 1 warning in 5.97s |
+| 2026-06-19 20:11 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | 85 passed, 1 warning in 7.35s |
