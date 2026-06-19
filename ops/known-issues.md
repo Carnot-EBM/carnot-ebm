@@ -53,6 +53,23 @@ A1/A3, which were quarantined/skipped — the `.409 transfer tasks must degrade 
 ordered after) the SOLVE tasks they consume. These are `.409 roadmap artifact-discipline gaps
 (outer-loop-authored); the conductor progresses regardless (A2/A4 banked levels OK).
 
+**UPDATE 2026-06-19 (.410 A2 -- the gap is AGENT-EMISSION, and it suppressed a REAL win):** the
+`.410 exp4433 (example-conditioned win-induction) DEMONSTRATED the .410 thesis -- it transferred
+ka59's grounded win-rule (count_4==32) to SOLVE g50t L1, offline_reproduced=true, reproduced_levels=1
+(the FIRST example-corpus generic-transfer solve) -- but was QUARANTINED DURATION_TOO_SHORT because
+the ARTIFACT wrote `inference_substrate: None`. Root cause refinement: declaring `inference_substrate`
+at the TASK-YAML level is NOT enough -- `adversarial_verify reads it from the ARTIFACT, so the agent
+must EMIT it, which means `inference_substrate` MUST be a REQUIRED ARTIFACT FIELD in the task prompt
+(the .410 ARC tasks listed it as a task field but NOT in REQUIRED ARTIFACT FIELDS). For a fast
+deterministic predicate-transfer solve the correct value is `verifier_ensemble_against_cached_candidates`
+(1s floor) or `aggregation_from_upstream_artifacts` (100us floor), NOT `live_llm_inference. ACTIONS:
+(1) exp4437 (the .410 artifact-discipline template/lint, already queued) must enforce AGENT-emitted
+`inference_substrate on ARC solve/scoring artifacts; (2) the .410 capstone (exp4441) should treat
+exp4433's g50t L1 as a real-but-quarantined CORRIGENDUM (substrate-declaration false-positive) -- the
+thesis is VALIDATED even though the level is not auto-banked; (3) the .411 planner MUST put
+`inference_substrate in REQUIRED ARTIFACT FIELDS of every ARC SOLVE/scoring task. Outer-loop did NOT
+edit the running .410 roadmap or the artifact (mid-run + no-gate-gaming).
+
 ### 2026-06-14 (P0 MANDATORY-NEXT-MILESTONE, operator "2+3+1"): Re-aim the verifier program at the ORACLE-DISTINCT frontier
 
 **Insight (the `.386–`.388 arc, see `docs/research-notes/verifier-graft-v3-design.md`):**
