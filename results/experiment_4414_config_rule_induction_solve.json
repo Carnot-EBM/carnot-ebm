@@ -1,0 +1,134 @@
+{
+  "config_win_rules_grounded": [
+    {
+      "false_positive_rate": 0.0,
+      "fires_on_win": true,
+      "game": "ka59",
+      "literal_hardcode": false,
+      "predicate": "editable_count_4_equals_reference_count_4_32",
+      "tier": 2
+    }
+  ],
+  "duration_s": 0.22244,
+  "experiment": "experiment_4414_config_rule_induction_solve",
+  "field_principles": {
+    "config_win_rules_grounded": "Verifier-grounded win-rules produced or reused by this task.",
+    "honest_verdict": "Terminal-prefixed (success_config_rule_<game>_L<n>_reproduced or complete_config_rule_partial). Any NEW reproduced level is progress; a Tier-2 GROUNDED win-rule for a new config game is also progress.",
+    "model_specs": "The local gemma-4-12B-Q4 GGUF proposer status, config corpora, and verifier.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced this task across the targets.",
+    "per_target_scorecard": "list of per-target records separating the GROUNDING from the solve claim.",
+    "preconditions_checked": "Offline env, local model, harness import, TRM stand-down, and no leaderboard submission.",
+    "random_seed": "Determinism precondition for induction, search, and reproduction.",
+    "reproducibility_checksum": "Hash of grounded predicates, trajectories, and reproduce results.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after this task, monotonic against the prior registry total.",
+    "verifier_is_oracle": "BARE bool=true: the SOLVE is execution-grounded; the verifier grounds the LLM-proposed rule.",
+    "world_model_paths": "Grounded predicate paths plus the adapter/solver paths used by the deliverable."
+  },
+  "honest_verdict": "complete_config_rule_partial",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "model_specs": {
+    "config_corpora": [
+      "environment_files/ka59",
+      "environment_files/bp35",
+      "environment_files/dc22"
+    ],
+    "proposer": "unsloth/gemma-4-12B-it-GGUF Q4 on local iGPU port 8920",
+    "proposer_cached": false,
+    "proposer_server_started": false,
+    "proposer_status": "blocked_local_model_unavailable",
+    "verifier": "arc_solver_kit.reproduce offline reproduction gate plus grounded is_win predicate"
+  },
+  "new_levels_reproduced": 0,
+  "per_target_scorecard": [
+    {
+      "false_positive_rate": 0.0,
+      "fires_on_win": true,
+      "game": "ka59",
+      "grounding_tier": 2,
+      "honest_verdict": "complete_ka59_tier2_grounded_rule_reused_no_new_level",
+      "new_reproduced_level": 1,
+      "offline_reproduced": false,
+      "prior_best_level": 1,
+      "search_blocker": "no_registered_next_level_config_adapter",
+      "verifier_routed_states": 0,
+      "win_rule_predicate": "editable_count_4_equals_reference_count_4_32"
+    },
+    {
+      "false_positive_rate": null,
+      "fires_on_win": null,
+      "game": "bp35",
+      "grounding_tier": 0,
+      "honest_verdict": "blocked_local_model_unavailable",
+      "new_reproduced_level": 0,
+      "offline_reproduced": false,
+      "prior_best_level": 0,
+      "search_blocker": "blocked_local_model_unavailable",
+      "verifier_routed_states": 0,
+      "win_rule_predicate": null
+    },
+    {
+      "false_positive_rate": null,
+      "fires_on_win": null,
+      "game": "dc22",
+      "grounding_tier": 0,
+      "honest_verdict": "blocked_local_model_unavailable",
+      "new_reproduced_level": 0,
+      "offline_reproduced": false,
+      "prior_best_level": 0,
+      "search_blocker": "blocked_local_model_unavailable",
+      "verifier_routed_states": 0,
+      "win_rule_predicate": null
+    }
+  ],
+  "preconditions_checked": {
+    "harness_imports": {
+      "game_adapters_import": true,
+      "solver_kit_import": true
+    },
+    "leaderboard_submission": false,
+    "local_model_server": {
+      "cached": false,
+      "model_path": null,
+      "port": 8920,
+      "server_started": false,
+      "status": "blocked_local_model_unavailable"
+    },
+    "offline_envs": {
+      "bp35": {
+        "n_entries": 1,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/bp35",
+        "present": true,
+        "status": "ok"
+      },
+      "dc22": {
+        "n_entries": 1,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/dc22",
+        "present": true,
+        "status": "ok"
+      },
+      "ka59": {
+        "n_entries": 1,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+        "present": true,
+        "status": "ok"
+      }
+    },
+    "research_conductor_modified": false,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4414,
+  "reproducibility_checksum": "7a654b1b23beaa3c9eb3b471cde4e0ff04880e6da2ff3657da4e385f8d292979",
+  "reproducible_total_levels": 34,
+  "schema": "carnot.exp4414.config_rule_induction_solve.v1",
+  "spec_refs": [
+    "REQ-REPORT-4414",
+    "SCENARIO-REPORT-4414"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": true,
+  "world_model_paths": [
+    "python/carnot/experiment_4414_config_rule_induction_solve.py",
+    "python/carnot/agentic/arc_solver_kit.py",
+    "results/arc_config_layerb/ka59_scaffolded_is_win.py"
+  ]
+}

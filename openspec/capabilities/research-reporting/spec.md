@@ -24415,6 +24415,49 @@ not claim `.407` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4413 | Planned (`python/carnot/reporting/archive_v407_activate_v408_4413.py`, `results/experiment_4413_archive_v407_activate_v408.py`) | Planned (`tests/python/test_experiment_4413_archive_v407_activate_v408.py`) |
 
+### REQ-REPORT-4414: Ground Config-Game Win Rules And Gate Solver Claims Through Offline Reproduction
+
+The Exp 4414 workflow SHALL target `ka59` first and at least two unsolved
+configuration games from `bp35`, `dc22`, `g50t`, `lf52`, and `s5i5`. It SHALL
+check offline environment presence, the local `gemma-4-12B` Q4 GGUF/iGPU
+proposer availability, harness imports, TRM training stand-down, and no
+leaderboard submission before induction or solve attempts. When the local model
+is unavailable, it SHALL honestly block fresh induction for unsolved targets
+while still grounding and reusing the already-banked `ka59` Tier-2 predicate.
+
+The workflow SHALL write
+`results/experiment_4414_config_rule_induction_solve.json` with principle
+annotations and the required fields `honest_verdict`,
+`per_target_scorecard`, `reproducible_total_levels`,
+`new_levels_reproduced`, `config_win_rules_grounded`, `world_model_paths`,
+`verifier_is_oracle`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`. A new level SHALL count only
+when `arc_solver_kit.reproduce` reports `offline_reproduced=true` beyond the
+prior best level recorded in `ops/arc_solve_registry.yaml`. A Tier-2 grounded
+rule that does not drive a new level SHALL be reported as partial progress with
+the search blocker recorded separately from any solve claim.
+
+#### SCENARIO-REPORT-4414: Missing Local Proposer Blocks Fresh Induction Without Fabricating Solves
+
+**Given** the offline environment files exist for `ka59` and at least two
+unsolved configuration games, the `ka59` scaffolded predicate artifact is
+already grounded, and no cached `gemma-4-12B` Q4 GGUF is available to serve on
+the local iGPU
+**When** the Exp 4414 workflow runs
+**Then** it writes
+`results/experiment_4414_config_rule_induction_solve.json`, reports the `ka59`
+Tier-2 grounded predicate separately from the solve, marks fresh unsolved-game
+induction as `blocked_local_model_unavailable`, keeps
+`new_levels_reproduced=0`, keeps `reproducible_total_levels` at least the prior
+registry value, sets `verifier_is_oracle=true`, and emits a terminal-prefixed
+honest verdict.
+
+## Implementation Status (REQ-REPORT-4414)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4414 | Planned (`python/carnot/experiment_4414_config_rule_induction_solve.py`, `results/experiment_4414_config_rule_induction_solve.py`) | Planned (`tests/python/test_experiment_4414_config_rule_induction_solve.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
