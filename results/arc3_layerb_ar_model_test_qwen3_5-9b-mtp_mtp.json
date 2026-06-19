@@ -1,0 +1,46 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "qwen3.5-9b-mtp",
+  "gguf": "Qwen3.5-9B-Q4_K_M.gguf",
+  "no_think": true,
+  "mtp": true,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 11.53,
+      "tokens": 427,
+      "dur_s": 37.0,
+      "coherent": true,
+      "raw_sample": "def is_win(grid):\n    import numpy as np\n    e = grid[63:64, 26:64]\n    # ...\n```\n\n<think>\n\n</think>\n\n```python\ndef is_win(grid):\n    import numpy as np\n    e = grid[63:64, 26:64]\n    \n    # The rule derived from the reference region and winning/non-winning examples:\n    # The reference region contains exactly 1 cell of color 0 (at r10, c10 relative to region start).\n    # The winning configuratio",
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 13.02,
+      "tokens": 1100,
+      "dur_s": 84.5,
+      "coherent": true,
+      "raw_sample": "def is_win(grid):\n    import numpy as np\n    e = grid[1:2, 2:62]\n    # ...\n```\n\n<think>\nThinking process:\n\n1.  **Analyze the Request:**\n    *   **Goal:** Write a Python function `is_win(grid)` that determines if a given `64x64` numpy array `grid` represents a winning configuration for an ARC puzzle.\n    *   **Input:** `grid` (64x64 numpy int array).\n    *   **Output:** Boolean (`True` if win, `Fal",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    }
+  ],
+  "grounded_games": [
+    "ka59"
+  ],
+  "honest_verdict": "complete_layerb_qwen3_5_9b_mtp_mtp_True_grounded_1",
+  "inference_substrate": "offline_arc_agi3_qwen3.5-9b-mtp_mtp_iGPU_port8921"
+}

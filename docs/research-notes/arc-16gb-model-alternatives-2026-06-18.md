@@ -125,6 +125,26 @@ VRAM** — ARC Prize 2025/2026 runs on **L4×4 (24 GB each)** or T4×2 (16 GB ea
 fits a single L4 with ~7 GB KV and the "27B too big" conclusion flips. The 16 GB figure is a working
 assumption; the actual env GPU is the single most decision-changing unknown.
 
+## DECISION (2026-06-19, operator): Qwen3.5-9B-MTP
+
+Operator selected **Qwen3.5-9B** as the generator, paired with the **MTP variant** + llama.cpp native
+`--spec-type draft-mtp`: `unsloth/Qwen3.5-9B-MTP-GGUF` (Q4_K_M, 5.9 GB). Benchmarked with MTP on the
+grounding harness:
+
+| | ka59 | tn36 | draft acceptance | vs no-MTP |
+|---|---|---|---|---|
+| no-MTP | 8.18 tok/s (GND) | 6.66 tok/s | — | — |
+| **+MTP** | **11.53 tok/s** (GND) | **13.02 tok/s** | **67–75%** | **1.41–1.95×** |
+
+MTP gives a clean **1.4–2.0× speedup** (grounding unchanged), making Qwen3.5-9B-MTP the **fastest AR model
+tested (~13 tok/s, ~3× gemma's 4.2)** at the **smallest footprint (5.9 GB)**, Apache-2.0, with controllable
+thinking (`/no_think`).
+
+**VRAM tradeoff to tune at deploy:** self-MTP loads the model twice (target 5.9 GB + draft ~5.2 GB ≈ 11 GB),
+leaving ~5 GB KV on a 16 GB card (≈78k tokens at q8 KV — still ample). MTP OFF → 5.9 GB weights, ~9 GB KV.
+So MTP costs ~4 GB VRAM for ~1.4–2× speed; with q8 KV both modes leave plenty of context. Keep MTP a deploy
+flag: on by default (speed), off if a single call needs a very long context.
+
 ## Recommendation
 
 Download and benchmark **Qwen3.5-9B (or Qwen3-14B), Qwen2.5-Coder-14B, and Phi-4** on the exact Layer-B
