@@ -2314,3 +2314,13 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - source artifact: results/experiment_4458_first_contact_new_game.json
 - movement: updated_still_open
 <!-- exp4458-gap-sb26-color-match-slot-sequence:end -->
+
+<!-- exp4469-gap-sc25-cast-grid:start -->
+### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4469 generic cast-grid FSM
+- status: filled
+- evidence: results/experiment_4469_generic_cast_grid_fsm_operator.json; sc25_resolved_generically=True; sc25_generic_level_reproduced=1; offline_reproduced=True
+- failure mode: closed_by_cast_grid_phase_fsm_world_model
+- missing discriminator: filled by execution-grounded cast_grid_phase_fsm_world_model
+- candidate design: reuse two-phase cast/config toggle then navigation FSMs for future cast-grid games
+- priority: high
+<!-- exp4469-gap-sc25-cast-grid:end -->
