@@ -2895,7 +2895,8 @@ ARC-AGI-3 Kaggle submission deadline is **2026-06-30**, so the priority must per
 milestones. This forcing function is the durable mechanism (the planner reads CLAUDE.md as required input
 every plan generation).
 
-**The rule.** Until **2026-06-30** (or until the operator records submissions made / lifts this), the
+**The rule.** Until **2026-06-30** (the challenge deadline — the operator expects to submit MULTIPLE times
+before then, so the priority CONTINUES across submissions; do NOT treat a submission as retirement), the
 planner MUST, every milestone:
 
 1. **Allocate the MAJORITY of each milestone to ARC-AGI-3 live-game-solving progress** — the generic
@@ -2925,9 +2926,11 @@ planner MUST, every milestone:
 SOTA-ingestion slot are still reserved each milestone (those disciplines are not suspended) — the
 "majority" in rule 1 is of the REMAINING slots.
 
-**Retirement.** This forcing function retires on **2026-06-30**, OR when the operator records that the
-challenge submissions are made, OR when the operator explicitly lifts it. After retirement the planner
-resumes normal research breadth (the verifier-moat / cross-domain directions). Preserve per never-prune.
+**Retirement.** This forcing function retires on **2026-06-30** (the end of the challenge), OR when the
+operator explicitly lifts it. It does **NOT** retire when submissions are made — per the 2026-06-19
+operator directive the operator may submit MULTIPLE times before the deadline, and the priority continues
+(keep solving + improving the live solver across every submission) until 2026-06-30. After retirement the
+planner resumes normal research breadth (the verifier-moat / cross-domain directions). Preserve per never-prune.
 
 **Why this is in CLAUDE.md, not just `research-roadmap-next.yaml`.** A pre-staged roadmap steers ONE
 milestone and then is consumed; the planner reads CLAUDE.md on EVERY plan generation. Putting the sprint
