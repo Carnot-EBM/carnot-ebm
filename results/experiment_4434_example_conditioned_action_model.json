@@ -1,0 +1,204 @@
+{
+  "accuracy_margin": 0.285714,
+  "active_data_collection": {
+    "action_counts": {
+      "1": 2,
+      "2": 2,
+      "3": 2,
+      "4": 2,
+      "5": 2,
+      "6": 2,
+      "7": 2
+    },
+    "balanced_actions": true,
+    "case_count": 14,
+    "deadly_avoided": true,
+    "object_config_signature_count": 2,
+    "object_config_signatures": [
+      "variant=0;n4=2;n10=46;clicks=[[2, 2], [3, 4]]",
+      "variant=1;n4=2;n10=33;clicks=[[3, 3], [4, 5]]"
+    ],
+    "strategy": "coverage-driven balance every action; diverse object-config signatures; avoid deadly"
+  },
+  "cold_synthesis_control": {
+    "metrics": {
+      "accuracy": 0.714286,
+      "correct": 10,
+      "failures": [
+        {
+          "action": 1,
+          "case_id": "cn04_a1_v0",
+          "expected_shape": [
+            16,
+            32
+          ],
+          "observed_shape": [
+            16,
+            32
+          ]
+        },
+        {
+          "action": 1,
+          "case_id": "cn04_a1_v1",
+          "expected_shape": [
+            16,
+            32
+          ],
+          "observed_shape": [
+            16,
+            32
+          ]
+        },
+        {
+          "action": 5,
+          "case_id": "cn04_a5_v0",
+          "expected_shape": [
+            16,
+            32
+          ],
+          "observed_shape": [
+            16,
+            32
+          ]
+        },
+        {
+          "action": 5,
+          "case_id": "cn04_a5_v1",
+          "expected_shape": [
+            16,
+            32
+          ],
+          "observed_shape": [
+            16,
+            32
+          ]
+        }
+      ],
+      "total": 14
+    },
+    "model": "codex_cold_click_only_control"
+  },
+  "duration_s": 0.004099,
+  "example_conditioned_synthesis": {
+    "conditioning_games": [
+      "sc25",
+      "ar25",
+      "ka59",
+      "ft09"
+    ],
+    "metrics": {
+      "accuracy": 1.0,
+      "correct": 14,
+      "failures": [],
+      "total": 14
+    },
+    "model": "codex_conditioned_on_existing_solved_world_models",
+    "wrote_world_model": true
+  },
+  "experiment": "experiment_4434_example_conditioned_action_model",
+  "explore_verify_plan": {
+    "method": "active-data -> synthesize -> verify -> plan, AERA 2605.25931 + Agent2World 2512.22336 inspired",
+    "plan": [],
+    "reproduction_gate_result": {
+      "mode": "not_run_no_reproducible_plan_from_accuracy_measurement",
+      "reached_level": 0,
+      "reproduced": false
+    }
+  },
+  "few_shot_world_model_examples": [
+    {
+      "excerpt": "\"\"\"Executable world model for Exp4341 sc25 L1.\n\nSpec refs: REQ-PHASE4-080, SCENARIO-PHASE4-080.\n\nThis model is deliberately grounded in the offline sc25 transition trace. The\npatches below are verifier-gated row runs collected after reset + warmup with\nthe corrected offline cast-grid coordinates (24+5c,49+5r). Fallback rules encode\nthe induced mechanic: ACTION6 toggles the spell grid, the sieesc_chwjgc cross\nshrinks the player, and ACTION3 then drives the small player into the exit.\n\"\"\"\n\nfrom __",
+      "game": "sc25",
+      "relative_path": "results/arc_e3/sc25/world_model.py",
+      "sha256": "39a0ca8678a9c4a0ff2fb2bd2fd7c2386e3613ddf112ea5d71aab17af184067c",
+      "source_chars": 10811
+    },
+    {
+      "excerpt": "import numpy as np\n\n\nINITIAL_SELECTED_TOP = 15\nINITIAL_SELECTED_LEFT = 18\n\n\ndef _undo_stack_restore(data, shape):\n    if not isinstance(data, dict):\n        return None\n    stack = data.get(\"undo_stack\")\n    if not stack:\n        return None\n    prior = np.asarray(stack[-1])\n    if prior.shape != shape:\n        return None\n    return prior.copy()\n\n\ndef _largest_box(arr, color):\n    h, w = arr.shape\n    visited = np.zeros((h, w), dtype=bool)\n    best = None\n    for sy in range(h):\n        for sx ",
+      "game": "ar25",
+      "relative_path": "results/arc_e3/ar25/world_model.py",
+      "sha256": "f8d71fe67d34034ff898766a56c125842a023ce974c06377ffcffae0109649bf",
+      "source_chars": 8607
+    },
+    {
+      "excerpt": "import numpy as np\n\n\nDEFAULT_RELEVANT_OBJECTS = (\"agent\", \"pushed_block\")\n\n\ndef object_relevance_discriminator():\n    return {\n        \"blocker_class\": \"object_relevance_not_clicks_or_multi_object_push\",\n        \"provenance_commits\": [\"f0b078247\", \"6fba583c7\"],\n        \"active_object_candidates\": [\n            \"selected_block\",\n            \"second_movable_block\",\n            \"agent_plus_second_movable_block\",\n            \"all_piece_objects\",\n        ],\n        \"selected_object_hypothesis\": \"agen",
+      "game": "ka59",
+      "relative_path": "results/arc_e3/ka59/world_model.py",
+      "sha256": "1296a767e602d9c83f5b7e82768b1dc38c2cf2d0f3a513ca7f610e40ffbe7191",
+      "source_chars": 9356
+    },
+    {
+      "excerpt": "import numpy as np\n\n\ndef _toggle_component(arr, x, y):\n    h, w = arr.shape\n    if not (0 <= y < h and 0 <= x < w):\n        return None\n    color = int(arr[y, x])\n    if color not in (8, 9, 14, 15):\n        return None\n    stack = [(y, x)]\n    seen = {(y, x)}\n    cells = []\n    while stack:\n        cy, cx = stack.pop()\n        cells.append((cy, cx))\n        for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):\n            if 0 <= ny < h and 0 <= nx < w and (ny, nx) not in seen ",
+      "game": "ft09",
+      "relative_path": "results/arc_e3/ft09/world_model.py",
+      "sha256": "e89681d71fd6f9bee222bc658739b46cdcab05b5404bb4a2460845603d9b7288",
+      "source_chars": 2786
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a measured no-help result is complete (negative-but-real), not partial:"
+    },
+    "missing_verifier_gaps": {
+      "principle": "the residual mechanic class the examples could not transfer -- the build backlog"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; reproduction-gated"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash for reproducibility"
+    },
+    "world_model_accuracy_cold": {
+      "principle": "the cold-synthesis positive-control arm -- without it a no-improvement result is uninterpretable (FALSE_NEGATIVE_RISK)"
+    },
+    "world_model_accuracy_with_examples": {
+      "principle": "the example-conditioned arm metric -- the .410 hypothesis under test"
+    }
+  },
+  "honest_verdict": "success: example_conditioning_improved_world_model_accuracy",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "proposer": "codex",
+    "world_model_output_path": "results/arc_e3/cn04/world_model.py"
+  },
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "codex_world_model_proposer": true,
+    "existing_world_model_games": [
+      "sc25",
+      "ar25",
+      "ka59",
+      "ft09"
+    ],
+    "existing_world_models": 4,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "offline_env_files_present": true,
+    "ok": true,
+    "target_env_present": true,
+    "world_model_output_path": "results/arc_e3/cn04/world_model.py"
+  },
+  "random_seed": 4434,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "8afa46247f027c9752ac83d471413b944e85a72eb73b926c53370e5ec86144a2",
+  "result_path": "results/experiment_4434_example_conditioned_action_model.json",
+  "schema": "carnot.exp4434.example_conditioned_action_model.v1",
+  "spec_refs": [
+    "REQ-REPORT-4434",
+    "SCENARIO-REPORT-4434"
+  ],
+  "target_game": "cn04",
+  "target_game_class": "held_out_non_spatial_mechanic_limited",
+  "verifier_is_oracle": true,
+  "world_model_accuracy_cold": 0.714286,
+  "world_model_accuracy_with_examples": 1.0,
+  "world_model_output_path": "results/arc_e3/cn04/world_model.py"
+}

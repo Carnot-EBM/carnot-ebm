@@ -25022,6 +25022,60 @@ reports at least one reproduced level.
 |---|---|---|
 | REQ-REPORT-4433 | Planned (`python/carnot/experiment_4433_example_conditioned_win_induction.py`, `results/experiment_4433_example_conditioned_win_induction.json`) | Planned (`tests/python/test_experiment_4433_example_conditioned_win_induction.py`) |
 
+### REQ-REPORT-4434: Example-Conditioned E3 World-Model Synthesis Has A Cold Positive Control
+
+The Exp 4434 workflow SHALL measure one held-out non-spatial, mechanic-limited
+ARC E3 game by comparing two world-model synthesis arms: a cold-synthesis control
+arm and an example-conditioned arm seeded with the existing solved
+`results/arc_e3/{sc25,ar25,ka59,ft09}/world_model.py` files. The workflow SHALL
+check preconditions before writing a measurement: offline environment files must
+exist, the proposer must be Codex writing `results/arc_e3/<game>/world_model.py`,
+and at least two existing solved `world_model.py` examples must be available
+under `results/arc_e3/`. Any missing resource SHALL stop the live measurement and
+write an honest terminal-prefixed `complete: blocked_<resource>` artifact without
+fabricating accuracy or reproduction.
+
+The workflow SHALL gather active-data coverage metadata for the held-out game,
+including balanced action coverage, diverse object-configuration signatures, and
+deadly-transition avoidance. It SHALL record the explore-verify-plan method
+family, reproduction-gate any planned solution, and compare
+`world_model_accuracy_with_examples` against `world_model_accuracy_cold`. The
+falsifiable gate SHALL pass when `offline_reproduced=true` with
+`reproduced_levels>=1`, or when the example-conditioned accuracy exceeds the cold
+accuracy by a real positive margin. A measured no-help result SHALL still be a
+terminal complete negative finding that records the residual
+`missing_verifier_gaps` mechanic backlog.
+
+The workflow SHALL write
+`results/experiment_4434_example_conditioned_action_model.json` with required
+top-level fields `honest_verdict`, `reproduced_levels`,
+`offline_reproduced`, `world_model_accuracy_with_examples`,
+`world_model_accuracy_cold`, `missing_verifier_gaps`, `random_seed`,
+`reproducibility_checksum`, and `verifier_is_oracle`. `reproduced_levels` SHALL
+be a bare integer, `verifier_is_oracle` SHALL be `true`, the artifact SHALL state
+that no 3090 inference or leaderboard submission was used, and
+`honest_verdict` SHALL start with a terminal `complete:`, `success:`, `passed:`,
+or `shipped:` prefix.
+
+#### SCENARIO-REPORT-4434: Held-Out E3 World-Model Conditioning Is Measured Against Cold Synthesis
+
+**Given** offline environment files, Codex as the world-model proposer, a
+held-out mechanic-limited E3 game, and at least two solved world-model examples
+under `results/arc_e3/`
+**When** the Exp 4434 workflow collects active data, synthesizes cold and
+example-conditioned world models, computes both accuracy arms, and runs the
+offline reproduction gate for any plan
+**Then** the artifact records both accuracies, the example files used, the active
+data coverage summary, `verifier_is_oracle=true`, a checksum over the conditioning
+and measurement payload, and a terminal honest verdict that treats a measured
+no-help result as complete rather than partial.
+
+## Implementation Status (REQ-REPORT-4434)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4434 | Planned (`python/carnot/experiment_4434_example_conditioned_action_model.py`, `results/experiment_4434_example_conditioned_action_model.json`) | Planned (`tests/python/test_experiment_4434_example_conditioned_action_model.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
