@@ -1,0 +1,246 @@
+{
+  "duration_s": 0.754303,
+  "experiment": "experiment_4433_example_conditioned_win_induction",
+  "few_shot_examples_used": [
+    {
+      "game": "ka59",
+      "predicate": "editable_count_4_equals_reference_count_4_32",
+      "rule_id": "editable_count_4_equals_reference_count_4_32",
+      "source": "results/experiment_4414_config_rule_induction_solve.json"
+    },
+    {
+      "game": "s5i5",
+      "predicate": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]. python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce. ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+      "rule_id": "marker_coverage",
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "game": "tr87",
+      "predicate": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable. GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json. keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+      "rule_id": "glyph_rewrite",
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "game": "ft09",
+      "predicate": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate. python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
+      "rule_id": "local_color_cycle_constraint",
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "game": "sc25",
+      "predicate": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit. results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+      "rule_id": "grounded_relational_win_rule",
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "game": "lp85",
+      "predicate": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations. scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py. click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
+      "rule_id": "grounded_relational_win_rule",
+      "source": "ops/arc_solve_registry.yaml"
+    }
+  ],
+  "few_shot_prompt": "/no_think\nTask: induce the held-out ARC config/toggle win predicate as Python is_win(state).\nUse the solved grounded win-rule examples as few-shot conditioning.\n\nGROUNDED WIN-RULE EXAMPLES:\n- ka59 [editable_count_4_equals_reference_count_4_32 from results/experiment_4414_config_rule_induction_solve.json]: editable_count_4_equals_reference_count_4_32\n- s5i5 [marker_coverage from ops/arc_solve_registry.yaml]: L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]. python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce. ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.\n- tr87 [glyph_rewrite from ops/arc_solve_registry.yaml]: EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable. GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json. keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).\n- ft09 [local_color_cycle_constraint from ops/arc_solve_registry.yaml]: L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate. python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.\n- sc25 [grounded_relational_win_rule from ops/arc_solve_registry.yaml]: MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit. results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.\n- lp85 [grounded_relational_win_rule from ops/arc_solve_registry.yaml]: align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations. scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py. click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).\n\nHELD-OUT OBJECT-CENTRIC DIGEST:\n{\"available_actions\":[1,2,3,4,5],\"components\":{\"blocking_pieces\":[{\"height\":7,\"rotation\":270,\"visible\":true,\"width\":7,\"x\":13,\"y\":37}],\"clone_slots\":[{\"height\":5,\"rotation\":0,\"visible\":true,\"width\":5,\"x\":0,\"y\":0},{\"height\":5,\"rotation\":0,\"visible\":true,\"width\":5,\"x\":4,\"y\":0}],\"container\":{\"height\":50,\"rotation\":0,\"visible\":true,\"width\":38,\"x\":13,\"y\":7},\"goal_top_left\":{\"x\":43,\"y\":49},\"move_quantum\":6,\"player\":{\"height\":7,\"rotation\":0,\"visible\":true,\"width\":7,\"x\":13,\"y\":7},\"target\":{\"height\":9,\"rotation\":0,\"visible\":true,\"width\":9,\"x\":42,\"y\":48},\"triggers\":[{\"height\":7,\"rotation\":0,\"visible\":true,\"width\":7,\"x\":37,\"y\":7}]},\"game\":\"g50t\",\"source\":\"environment_files/g50t\",\"value_counts\":{\"0\":3006,\"1\":9,\"5\":880,\"8\":82,\"9\":119}}\n\nReturn only a Python predicate named is_win(state).",
+  "field_principles": {
+    "few_shot_examples_used": "list of which solved-game win-rules conditioned the induction -- proves the example corpus is the lever, the core .410 hypothesis",
+    "honest_verdict": "terminal-prefixed -- a fully-run induction that grounds-but-does-not-solve is COMPLETE (a negative-but-real outcome), so use complete: not partial: (the .409 exp4423 FAIL-loop fix)",
+    "offline_reproduced": "the reproduction gate -- a live-only solve does not count",
+    "random_seed": "determinism for re-run",
+    "reproduced_levels": "bare int; only reproduction-gated levels count (ARC Solve Reproducibility)",
+    "reproducibility_checksum": "content hash of corpus+prompt for reproducibility",
+    "verifier_is_oracle": "true: the verifier GROUNDS the LLM-proposed predicate (execution-grounded), so this is NOT a learned-verifier moat claim -- honest framing per Circularity Discipline"
+  },
+  "grounded_win_condition": {
+    "fires_on_win": true,
+    "grounded": true,
+    "initial_features": {
+      "player": {
+        "x": 13,
+        "y": 7
+      },
+      "target": {
+        "x": 42,
+        "y": 48
+      }
+    },
+    "known_win_features": {
+      "player": {
+        "x": 43,
+        "y": 49
+      },
+      "target": {
+        "x": 42,
+        "y": 48
+      }
+    },
+    "predicate": "player.x == target.x + 1 and player.y == target.y + 1",
+    "proposal_raw_sample": "def is_win(state):\n    player = state['components']['player']\n    target = state['components']['target']\n    return player['x'] == target['x'] + 1 and player['y'] == target['y'] + 1",
+    "rejects_nonwins": [
+      true,
+      true
+    ],
+    "verifier": "execution check against g50t object state before next_level"
+  },
+  "honest_verdict": "success: example_conditioned_g50t_L1_offline_reproduced",
+  "model_specs": {
+    "leaderboard_submission": false,
+    "model": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "no_3090_inference": true,
+    "qwen_gguf_cache": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF"
+  },
+  "object_centric_digest": {
+    "available_actions": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "components": {
+      "blocking_pieces": [
+        {
+          "height": 7,
+          "rotation": 270,
+          "visible": true,
+          "width": 7,
+          "x": 13,
+          "y": 37
+        }
+      ],
+      "clone_slots": [
+        {
+          "height": 5,
+          "rotation": 0,
+          "visible": true,
+          "width": 5,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "height": 5,
+          "rotation": 0,
+          "visible": true,
+          "width": 5,
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "container": {
+        "height": 50,
+        "rotation": 0,
+        "visible": true,
+        "width": 38,
+        "x": 13,
+        "y": 7
+      },
+      "goal_top_left": {
+        "x": 43,
+        "y": 49
+      },
+      "move_quantum": 6,
+      "player": {
+        "height": 7,
+        "rotation": 0,
+        "visible": true,
+        "width": 7,
+        "x": 13,
+        "y": 7
+      },
+      "target": {
+        "height": 9,
+        "rotation": 0,
+        "visible": true,
+        "width": 9,
+        "x": 42,
+        "y": 48
+      },
+      "triggers": [
+        {
+          "height": 7,
+          "rotation": 0,
+          "visible": true,
+          "width": 7,
+          "x": 37,
+          "y": 7
+        }
+      ]
+    },
+    "game": "g50t",
+    "source": "environment_files/g50t",
+    "value_counts": {
+      "0": 3006,
+      "1": 9,
+      "5": 880,
+      "8": 82,
+      "9": 119
+    }
+  },
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "generator_resource_available": true,
+    "grounded_few_shot_examples": 6,
+    "igpu_llama_server_available": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "offline_env_files_present": true,
+    "ok": true,
+    "qwen_gguf_cached": true,
+    "target_env_present": true,
+    "target_game_prior_best": 0
+  },
+  "prior_best_level": 0,
+  "qwen_generation": {
+    "device_policy": "cached_GGUF_or_local_iGPU_llama_server_only_no_3090",
+    "fires_on_win": true,
+    "grounded": true,
+    "model": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "no_think": true,
+    "raw_sample": "def is_win(state):\n    player = state['components']['player']\n    target = state['components']['target']\n    return player['x'] == target['x'] + 1 and player['y'] == target['y'] + 1",
+    "rejects_nonwins": [
+      true,
+      true
+    ]
+  },
+  "random_seed": 4433,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "ef9e21b95ae2c0ea8acfabd7c3661f2a4c71a78f46cd669a8a22a1e8f4c75d72",
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "g50t",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4433_example_conditioned_win_induction.json",
+  "schema": "carnot.exp4433.example_conditioned_win_induction.v1",
+  "solver": {
+    "derivation": "right to trigger, ACTION5 commits a trigger-holding clone, then active player descends left column and traverses bottom row to target offset",
+    "held_out_game": "g50t",
+    "module": "python/carnot/experiment_4433_example_conditioned_win_induction.py",
+    "offline_solver_win_check": "g50t_is_win_game / player.x==target.x+1 and player.y==target.y+1",
+    "solution": [
+      "4",
+      "4",
+      "4",
+      "4",
+      "5",
+      "2",
+      "2",
+      "2",
+      "2",
+      "2",
+      "2",
+      "2",
+      "4",
+      "4",
+      "4",
+      "4",
+      "4"
+    ]
+  },
+  "spec_refs": [
+    "REQ-REPORT-4433",
+    "SCENARIO-REPORT-4433"
+  ],
+  "target_game": "g50t",
+  "verifier_is_oracle": true
+}
