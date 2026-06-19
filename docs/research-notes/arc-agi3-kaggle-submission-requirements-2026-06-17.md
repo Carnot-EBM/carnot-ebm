@@ -128,3 +128,34 @@ else verifier-routed-explore) is a small, mechanical build on top of these.
 The durable competitive asset is the GENERIC solver (graph-explore + E3), not the 13
 banked replays — the competition rewards solving novel games offline, which is precisely
 the north-star capability we are already building.
+
+## SELECTED GENERATOR + PACKAGING MANIFEST (2026-06-19)
+
+**Generator: `unsloth/Qwen3.5-9B-MTP-GGUF` (Q4_K_M, 5.9 GB).** Chosen by benchmarking the 16 GB-fit
+shortlist on the Layer-B grounding harness ([[project_arc_live_generator]], full tables in
+`arc-16gb-model-alternatives-2026-06-18.md`): 62.5% grounding (4-seed) vs DeepSeek-V4-Flash-MTP 25% and a
+verbose gemma-4-12B; ~13 tok/s with MTP (fastest tested); Apache-2.0; controllable thinking. Wired into the
+live agent at `python/carnot/agentic/arc_competition_agent.py:_proposer()` (E2E-verified: grounds ka59).
+
+**Deploy config** (`LocalGGUFProposer`, validated): `mtp=True` (`--spec-type draft-mtp`, 1.4–2× speedup),
+`kv_quant="q8_0"` (`--cache-type-k/v q8_0`, near-lossless, doubles context), `no_think_prefix="/no_think\n"`,
+`max_tokens=2560` (n_predict ≥ 2048 — the 1100 cap truncated real solves). Env overrides:
+`CARNOT_ARC_GGUF_PATH` (the bundled model path), `CARNOT_ARC_MTP=0` (disable MTP on a tight-VRAM box).
+
+**What to bundle as Kaggle Datasets (upload once, with internet):**
+1. **The GGUF** — `Qwen3.5-9B-Q4_K_M.gguf` from `unsloth/Qwen3.5-9B-MTP-GGUF` (5.9 GB). At submission set
+   `CARNOT_ARC_GGUF_PATH=/kaggle/input/<dataset>/Qwen3.5-9B-Q4_K_M.gguf`.
+2. **A CUDA llama.cpp build** — the engine `LocalGGUFProposer` launches is the `llama-server` binary
+   (`_resolve_llama_server`), so bundle a **CUDA-compiled llama-server + its shared libs**
+   (libllama, libggml-cuda) matching Kaggle's CUDA, OR refactor `LocalGGUFProposer` to the
+   `llama-cpp-python` CUDA wheel (`pip install --no-index --find-links=/kaggle/input/...`). Either way the
+   build MUST include native MTP (`common_speculative_impl_draft_mtp`) — the repo build 9606 has it.
+3. Carnot's own code (the agent/solver/world-model) — already in-repo, MIT-0.
+
+**Two gating verifications before the submission is trusted (run a one-shot Kaggle notebook, internet OFF):**
+- **Real per-GPU VRAM** — `nvidia-smi`: T4 16 GB vs **L4 24 GB**. At 24 GB the 16 GB constraint relaxes (a
+  27B Q4 would fit) — but Qwen3.5-9B-MTP is still the validated pick on accuracy/speed/efficiency.
+- **The CUDA engine loads + generates offline** — the one load-bearing assumption. Smoke: load the bundled
+  GGUF with MTP + q8 KV via the bundled binary/wheel and generate 1 token.
+
+Decentralization: mirror the bundled weights per Rule 3 ([[feedback_ipfs_over_gitea_for_mirror_channel]]).

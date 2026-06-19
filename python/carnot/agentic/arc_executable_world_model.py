@@ -24,6 +24,7 @@ coarser LOGICAL grid. We detect the logical cell size and run the whole pipeline
 LOGICAL resolution (the paper's "settled ASCII frame"), so the induced model reasons
 about game cells, not pixels.
 """
+
 from __future__ import annotations
 
 import json
@@ -43,6 +44,7 @@ E3_DIR = REPO / "results" / "arc_e3"
 # logical-resolution helpers (the "settled ASCII frame")
 # ---------------------------------------------------------------------------
 
+
 def detect_cell(grid: np.ndarray) -> int:
     """Largest c in {8,4,2,1} (divisor of 64) for which the grid is EXACTLY constant
     within every c x c block -> the logical cell size. Lossless downsample factor."""
@@ -59,7 +61,7 @@ def detect_cell(grid: np.ndarray) -> int:
 
 def to_logical(grid: np.ndarray, cell: int) -> np.ndarray:
     h, w = grid.shape
-    return grid[:: cell, :: cell] if cell > 1 else grid
+    return grid[::cell, ::cell] if cell > 1 else grid
 
 
 def to_ascii(logical: np.ndarray) -> str:
@@ -71,18 +73,20 @@ def to_ascii(logical: np.ndarray) -> str:
 # transition collection (zero quota — offline sim)
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class Transition:
-    grid: np.ndarray            # logical grid BEFORE
+    grid: np.ndarray  # logical grid BEFORE
     action: int
     data: Optional[dict]
-    next_grid: np.ndarray       # logical grid AFTER
+    next_grid: np.ndarray  # logical grid AFTER
     level_before: int
     level_after: int
 
 
-def collect_transitions(game: str, n: int = 120, warmup: bool = False,
-                        seed: int = 0) -> tuple[list[Transition], int]:
+def collect_transitions(
+    game: str, n: int = 120, warmup: bool = False, seed: int = 0
+) -> tuple[list[Transition], int]:
     """Explore the offline sim and record logical-resolution transitions. Uses the
     salience-ordered candidate generator so the dataset covers meaningful actions, not
     just raster order. Returns (transitions, cell_size)."""
@@ -103,18 +107,23 @@ def collect_transitions(game: str, n: int = 120, warmup: bool = False,
     while len(trans) < n and restarts < n:
         cands = rich_action_candidates(f)
         if not cands:
-            f = _warm(env, warmup); restarts += 1; continue
-        c = cands[rng.randrange(min(len(cands), 8))]   # bias to salient, keep some variety
+            f = _warm(env, warmup)
+            restarts += 1
+            continue
+        c = cands[rng.randrange(min(len(cands), 8))]  # bias to salient, keep some variety
         g0 = to_logical(grid_of(f), cell)
         l0 = _levels_completed(f)
         nf = env.step(_game_action(GameAction, c.action_id), data=c.data)
         if nf is None:
-            f = _warm(env, warmup); restarts += 1; continue
+            f = _warm(env, warmup)
+            restarts += 1
+            continue
         g1 = to_logical(grid_of(nf), cell)
         l1 = _levels_completed(nf)
         trans.append(Transition(g0, int(c.action_id), c.data, g1, l0, l1))
         if _game_over(nf) or l1 > l0:
-            f = _warm(env, warmup); restarts += 1
+            f = _warm(env, warmup)
+            restarts += 1
         else:
             f = nf
     return trans, cell
@@ -123,6 +132,7 @@ def collect_transitions(game: str, n: int = 120, warmup: bool = False,
 # ---------------------------------------------------------------------------
 # THE CARNOT VERIFIER — grounds the LLM-induced model against reality
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class VerifyResult:
@@ -142,8 +152,9 @@ class WorldModelVerifier:
     def __init__(self, transitions: list[Transition]) -> None:
         self.transitions = transitions
 
-    def score(self, engine: Callable[[np.ndarray, int, Optional[dict]], np.ndarray],
-              max_mismatch: int = 8) -> VerifyResult:
+    def score(
+        self, engine: Callable[[np.ndarray, int, Optional[dict]], np.ndarray], max_mismatch: int = 8
+    ) -> VerifyResult:
         n_correct, mism = 0, []
         for i, t in enumerate(self.transitions):
             try:
@@ -158,10 +169,17 @@ class WorldModelVerifier:
                 ok_shape = pred.shape == t.next_grid.shape
                 # COMPACT mismatch (deltas, not full grids — fits a local model's context):
                 # what the TRUE action did vs where the engine's prediction was wrong.
-                mism.append({"i": i, "action": t.action, "data": t.data,
-                             "true_change": _delta(t.grid, t.next_grid),
-                             "your_prediction_was_wrong_at": (_delta(pred, t.next_grid)
-                                                              if ok_shape else f"wrong shape {pred.shape}")})
+                mism.append(
+                    {
+                        "i": i,
+                        "action": t.action,
+                        "data": t.data,
+                        "true_change": _delta(t.grid, t.next_grid),
+                        "your_prediction_was_wrong_at": (
+                            _delta(pred, t.next_grid) if ok_shape else f"wrong shape {pred.shape}"
+                        ),
+                    }
+                )
         n = len(self.transitions)
         return VerifyResult(n, n_correct, n_correct / max(1, n), mism)
 
@@ -170,6 +188,7 @@ def load_engine(game: str):
     """Import the codex-written world_model.py for a game and return (engine,
     is_level_complete). Re-imports fresh each call so a refactor is picked up."""
     import importlib.util
+
     p = E3_DIR / game / "world_model.py"
     if not p.exists():
         raise FileNotFoundError(p)
@@ -189,8 +208,18 @@ CODEX_BIN = "codex"
 def _codex(prompt: str, timeout: int = 420) -> tuple[bool, str]:
     """Invoke codex/gpt-5.5 (the orchestrate.py form) with the prompt on stdin. The
     agent edits files in the repo directly. Returns (ok, tail_of_output)."""
-    cmd = [CODEX_BIN, "exec", "--dangerously-bypass-approvals-and-sandbox",
-           "--color", "never", "--cd", str(REPO), "--model", "gpt-5.5", "-"]
+    cmd = [
+        CODEX_BIN,
+        "exec",
+        "--dangerously-bypass-approvals-and-sandbox",
+        "--color",
+        "never",
+        "--cd",
+        str(REPO),
+        "--model",
+        "gpt-5.5",
+        "-",
+    ]
     try:
         p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=timeout)
         return p.returncode == 0, (p.stdout or "")[-2000:] + (p.stderr or "")[-500:]
@@ -202,7 +231,8 @@ def _delta(g0: np.ndarray, g1: np.ndarray, cap: int = 80) -> list:
     """Changed cells (row, col, from, to) — a COMPACT transition encoding that fits a
     local model's small context (full 64x64 before/after grids blow it; a few-cell delta
     is tiny and is arguably MORE learnable: it shows exactly what the action changed)."""
-    g0 = np.asarray(g0); g1 = np.asarray(g1)
+    g0 = np.asarray(g0)
+    g1 = np.asarray(g1)
     if g0.shape != g1.shape:
         return []
     diff = np.argwhere(g0 != g1)
@@ -219,16 +249,22 @@ def _transitions_block(trans: list[Transition], k: int = 8) -> str:
     sample = changed[: k - 2] + noop[:2]
     out = []
     if sample:
-        out.append("INITIAL GRID (one full example of the state layout; all grids are this shape):\n"
-                   + to_ascii(sample[0].grid))
+        out.append(
+            "INITIAL GRID (one full example of the state layout; all grids are this shape):\n"
+            + to_ascii(sample[0].grid)
+        )
     for t in sample:
         click = f" data={t.data}" if t.data else ""
-        out.append(f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
-                   f"changed cells (row,col,from,to) = {_delta(t.grid, t.next_grid)}")
+        out.append(
+            f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
+            f"changed cells (row,col,from,to) = {_delta(t.grid, t.next_grid)}"
+        )
     win = next((t for t in trans if t.level_after > t.level_before), None)
     if win is not None:
-        out.append("WIN STATE (full grid of a level-complete state — is_level_complete must return True here):\n"
-                   + to_ascii(win.next_grid))
+        out.append(
+            "WIN STATE (full grid of a level-complete state — is_level_complete must return True here):\n"
+            + to_ascii(win.next_grid)
+        )
     return "\n".join(out)
 
 
@@ -284,6 +320,7 @@ class CodexProposer:
     """DEV-ONLY proposer (codex/gpt-5.5). Requires INTERNET, so it is NOT legal in the
     OFFLINE competition eval — use it only to validate the E3 loop during development.
     For the competition, use LocalGGUFProposer (open-weight, offline)."""
+
     timeout: int = 420
     offline_legal: bool = False
 
@@ -298,6 +335,7 @@ class CodexProposer:
 def _resolve_gguf(repo_substr: str) -> Optional[str]:
     """Find a cached GGUF weight file for an open-weight SOTA model (offline)."""
     import glob
+
     base = Path.home() / ".cache" / "huggingface" / "hub"
     for d in base.glob(f"models--*{repo_substr}*GGUF"):
         hits = sorted(d.glob("snapshots/*/*.gguf"))
@@ -314,7 +352,7 @@ def _resolve_gguf(repo_substr: str) -> Optional[str]:
 # /completion does RAW completion (no chat template) and keeps the model loaded across calls.
 def _resolve_llama_server() -> Path:
     base = Path.home() / ".cache" / "llama.cpp-master"
-    hip = base / "build-hip" / "bin" / "llama-server"      # ROCm iGPU — no conductor contention
+    hip = base / "build-hip" / "bin" / "llama-server"  # ROCm iGPU — no conductor contention
     return hip if hip.exists() else base / "build" / "bin" / "llama-server"  # CUDA 3090 fallback
 
 
@@ -334,12 +372,24 @@ class LocalGGUFProposer:
     and a 20-core conductor-fight). The model stays loaded across induce/refactor calls.
     NOT TRM and NOT a closed model: an open local LLM (a TRM-class trained model is the
     other local engine)."""
-    repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast on GPU for per-game induction
-    n_ctx: int = 16384                       # digit-dense grids tokenize ~1 char/token; 8192 overflowed
-    max_tokens: int = 4096                    # a full world-model engine needs >2048 (it truncated mid-code)
+
+    repo_substr: str = "gemma-4-12B-it"  # lightweight SOTA: fast on GPU for per-game induction
+    n_ctx: int = 16384  # digit-dense grids tokenize ~1 char/token; 8192 overflowed
+    max_tokens: int = 4096  # a full world-model engine needs >2048 (it truncated mid-code)
     timeout: int = 300
     port: int = 8919
     offline_legal: bool = True
+    # Live-submission deploy config (all OPT-IN; defaults preserve legacy behavior). Validated 2026-06-19:
+    # Qwen3.5-9B-MTP is the selected ARC live generator (62.5% Layer-B grounding vs DeepSeek-Flash 25%,
+    # ~13 tok/s with MTP, 5.9GB Q4 fits 16GB). See docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md.
+    mtp: bool = False  # --spec-type draft-mtp (self-draft via the -MTP- GGUF's nextn heads)
+    kv_quant: Optional[str] = (
+        None  # e.g. "q8_0" -> --cache-type-k/v q8_0 (halves KV, near-lossless)
+    )
+    no_think_prefix: str = ""  # e.g. "/no_think\n" -> suppress hybrid-thinking CoT (Qwen3)
+    model_path: Optional[str] = (
+        None  # explicit .gguf path; on Kaggle set to the bundled /kaggle/input/... path
+    )
     _proc: Any = None
 
     def _url(self) -> str:
@@ -347,6 +397,7 @@ class LocalGGUFProposer:
 
     def _healthy(self) -> bool:
         import urllib.request
+
         try:
             with urllib.request.urlopen(self._url() + "/health", timeout=2) as r:
                 return b"ok" in r.read()
@@ -355,22 +406,43 @@ class LocalGGUFProposer:
 
     def _ensure_server(self) -> bool:
         if self._healthy():
-            return True                       # reuse an already-running server (loaded model)
-        path = _resolve_gguf(self.repo_substr)
+            return True  # reuse an already-running server (loaded model)
+        path = self.model_path or _resolve_gguf(
+            self.repo_substr
+        )  # explicit path (Kaggle bundle) else cache
         if not path or not LLAMA_SERVER.exists():
-            return False                      # GPU enforcement: no CPU fallback
-        self._proc = subprocess.Popen(
-            [str(LLAMA_SERVER), "-m", path, "-ngl", "999", "-c", str(self.n_ctx),
-             "--port", str(self.port), "--host", "127.0.0.1"],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        for _ in range(90):                   # model load on GPU can take ~10-30s
+            return False  # GPU enforcement: no CPU fallback
+        args = [
+            str(LLAMA_SERVER),
+            "-m",
+            path,
+            "-ngl",
+            "999",
+            "-c",
+            str(self.n_ctx),
+            "--port",
+            str(self.port),
+            "--host",
+            "127.0.0.1",
+        ]
+        if self.mtp:  # native llama.cpp MTP speculative decoding (self-draft)
+            args += ["--spec-type", "draft-mtp", "--model-draft", path]
+        if self.kv_quant:  # 8-bit KV cache doubles usable context, near-lossless
+            args += ["--cache-type-k", self.kv_quant, "--cache-type-v", self.kv_quant]
+        self._proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(90):  # model load on GPU can take ~10-30s
             if self._healthy():
                 return True
             time.sleep(2)
         return False
 
-    def generate(self, prompt: str, required: tuple = ("engine", "is_level_complete"),
-                 validate=None, tries: int = 3) -> tuple[bool, str]:
+    def generate(
+        self,
+        prompt: str,
+        required: tuple = ("engine", "is_level_complete"),
+        validate=None,
+        tries: int = 3,
+    ) -> tuple[bool, str]:
         """Generic GPU-server completion: returns (True, code) where `code` contains every
         `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
         runtime check `validate(code) -> bool`. Retries on the iGPU (fast). This is the
@@ -380,33 +452,51 @@ class LocalGGUFProposer:
         import ast
         import json as _json
         import urllib.request
+
         if not self._ensure_server():
-            return False, (f"GPU llama-server failed for {self.repo_substr}; SOTA models "
-                           "must run on GPU (no CPU fallback)")
+            return False, (
+                f"GPU llama-server failed for {self.repo_substr}; SOTA models "
+                "must run on GPU (no CPU fallback)"
+            )
+        if self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
+            prompt = self.no_think_prefix + prompt
         last = ""
         for attempt in range(tries):
-            body = _json.dumps({"prompt": prompt, "n_predict": self.max_tokens,
-                                "temperature": 0.2 + 0.1 * attempt, "cache_prompt": True}).encode()
+            body = _json.dumps(
+                {
+                    "prompt": prompt,
+                    "n_predict": self.max_tokens,
+                    "temperature": 0.2 + 0.1 * attempt,
+                    "cache_prompt": True,
+                }
+            ).encode()
             try:
-                req = urllib.request.Request(self._url() + "/completion", data=body,
-                                             headers={"Content-Type": "application/json"})
+                req = urllib.request.Request(
+                    self._url() + "/completion",
+                    data=body,
+                    headers={"Content-Type": "application/json"},
+                )
                 with urllib.request.urlopen(req, timeout=self.timeout) as r:
                     text = _json.load(r).get("content", "")
             except Exception as e:
                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
             code = _extract_python(text)
             if not code or any(f"def {fn}" not in code for fn in required):
-                last = f"missing {required} in output"; continue
+                last = f"missing {required} in output"
+                continue
             try:
-                ast.parse(code)               # never use code that doesn't parse
+                ast.parse(code)  # never use code that doesn't parse
             except SyntaxError as se:
-                last = f"syntax error line {se.lineno}: {se.msg}"; continue
+                last = f"syntax error line {se.lineno}: {se.msg}"
+                continue
             if validate is not None:
                 try:
                     if not validate(code):
-                        last = "failed runtime validation (e.g. returned non-number)"; continue
+                        last = "failed runtime validation (e.g. returned non-number)"
+                        continue
                 except Exception as ve:
-                    last = f"runtime check raised: {ve!r}"[:120]; continue
+                    last = f"runtime check raised: {ve!r}"[:120]
+                    continue
             return True, code
         return False, f"local model code unusable after {tries} tries ({last})"
 
@@ -424,12 +514,18 @@ class LocalGGUFProposer:
             self._proc = None
 
     def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
-        return self._gen_to_file(game, induce_prompt(game, trans, cell) +
-                                 "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n")
+        return self._gen_to_file(
+            game,
+            induce_prompt(game, trans, cell)
+            + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
+        )
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
-        return self._gen_to_file(game, refactor_prompt(game, vr) +
-                                 "\n\nReturn ONLY the corrected ```python file.\n```python\n")
+        return self._gen_to_file(
+            game,
+            refactor_prompt(game, vr)
+            + "\n\nReturn ONLY the corrected ```python file.\n```python\n",
+        )
 
 
 def _extract_python(text: str) -> str:
@@ -445,24 +541,33 @@ def _extract_python(text: str) -> str:
 # plan in the verified model, execute in reality, halt on divergence
 # ---------------------------------------------------------------------------
 
+
 def _model_candidates(grid: np.ndarray) -> list[dict]:
     """Action candidates to try when planning INSIDE the induced model (no env): the 5
     directional/confirm keyboard actions + a click on each detected object (salience-
     ordered). Pure-grid, so it works on the engine's predicted grids."""
     from carnot.agentic.arc_graph_explore import _components_detailed
+
     cands = [{"action": a, "data": None} for a in (1, 2, 3, 4, 5)]
     comps = _components_detailed(grid)
     if comps:
         from collections import Counter
+
         cc = Counter(int(v) for v in grid.flatten().tolist())
         comps.sort(key=lambda c: c[2] * (1.0 + 1.0 / (1 + cc.get(c[3], 0))), reverse=True)
-        for (cy, cx, _a, _c) in comps[:32]:
+        for cy, cx, _a, _c in comps[:32]:
             cands.append({"action": 6, "data": {"x": int(cx), "y": int(cy)}})
     return cands
 
 
-def plan_in_model(engine, is_level_complete, start_grid: np.ndarray, *,
-                  max_nodes: int = 20000, max_depth: int = 40) -> Optional[list]:
+def plan_in_model(
+    engine,
+    is_level_complete,
+    start_grid: np.ndarray,
+    *,
+    max_nodes: int = 20000,
+    max_depth: int = 40,
+) -> Optional[list]:
     """BFS a path to an is_level_complete state ENTIRELY INSIDE the induced model
     (engine is pure: grid,action,data -> grid; no environment). Returns the action
     sequence [{"action","data"}] that the model believes reaches a win, or None. This
@@ -470,6 +575,7 @@ def plan_in_model(engine, is_level_complete, start_grid: np.ndarray, *,
     then executes it in the real env (few real actions = the EFFICIENCY win), halting if
     reality diverges from the model."""
     from collections import deque
+
     if is_level_complete is None:
         return None
     start = np.asarray(start_grid)
@@ -502,8 +608,15 @@ def plan_in_model(engine, is_level_complete, start_grid: np.ndarray, *,
     return None
 
 
-def plan_and_execute(game: str, engine, is_level_complete, *, warmup: bool = False,
-                     max_plan: int = 200, max_depth: int = 40) -> dict:
+def plan_and_execute(
+    game: str,
+    engine,
+    is_level_complete,
+    *,
+    warmup: bool = False,
+    max_plan: int = 200,
+    max_depth: int = 40,
+) -> dict:
     """BFS to an is_level_complete state INSIDE the induced model, then execute the plan
     in the REAL env step-by-step, halting the instant predicted != observed (the
     verifier-grounded safety the paper emphasizes). Returns an outcome dict."""
@@ -530,7 +643,7 @@ def plan_and_execute(game: str, engine, is_level_complete, *, warmup: bool = Fal
         g, path = frontier.popleft()
         if len(path) >= max_depth:
             continue
-        for c in rich_action_candidates(f)[:12]:        # candidate actions at logical state
+        for c in rich_action_candidates(f)[:12]:  # candidate actions at logical state
             try:
                 ng = np.asarray(engine(g.copy(), int(c.action_id), c.data))
             except Exception:
@@ -544,7 +657,8 @@ def plan_and_execute(game: str, engine, is_level_complete, *, warmup: bool = Fal
             if is_level_complete is not None:
                 try:
                     if bool(is_level_complete(ng)):
-                        plan = npath; break
+                        plan = npath
+                        break
                 except Exception:
                     pass
             frontier.append((ng, npath))
@@ -561,11 +675,26 @@ def plan_and_execute(game: str, engine, is_level_complete, *, warmup: bool = Fal
             return {"game": game, "planned": True, "executed": False, "reason": "env returned None"}
         obs = to_logical(grid_of(nf), cell)
         if _levels_completed(nf) > start_level:
-            return {"game": game, "planned": True, "executed": True, "level_up": True,
-                    "plan_len": len(plan)}
+            return {
+                "game": game,
+                "planned": True,
+                "executed": True,
+                "level_up": True,
+                "plan_len": len(plan),
+            }
         if pred.shape != obs.shape or not np.array_equal(pred, obs):
-            return {"game": game, "planned": True, "executed": False, "divergence_step": step,
-                    "reason": "model prediction diverged from observation — halted (verifier-grounded)"}
+            return {
+                "game": game,
+                "planned": True,
+                "executed": False,
+                "divergence_step": step,
+                "reason": "model prediction diverged from observation — halted (verifier-grounded)",
+            }
         gp = obs
-    return {"game": game, "planned": True, "executed": True, "level_up": False,
-            "reason": "plan executed but no level-up — model goal predicate imperfect"}
+    return {
+        "game": game,
+        "planned": True,
+        "executed": True,
+        "level_up": False,
+        "reason": "plan executed but no level-up — model goal predicate imperfect",
+    }
