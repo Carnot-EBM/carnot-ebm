@@ -1,0 +1,29 @@
+{
+  "experiment": "experiment_4437_arc_artifact_discipline_template",
+  "schema": "carnot.exp4437.arc_artifact_discipline_template.v1",
+  "artifact_kind": "arc_solve_artifact_discipline_template",
+  "honest_verdict": "shipped: arc_artifact_discipline_helper_lint_and_tests_green",
+  "template_shipped": true,
+  "tests_pass": true,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "duration_s": 0.001,
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed",
+    "template_shipped": "bare bool: the helper + lint + tests landed green",
+    "tests_pass": "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)",
+    "inference_substrate": "canonical ARC solve/scoring substrate; this artifact is helper/lint/template aggregation only",
+    "duration_s": "bare float; exceeds the 100us aggregation_from_upstream_artifacts floor"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-4437",
+    "SCENARIO-VERIFY-4437"
+  ],
+  "implemented_paths": [
+    "python/carnot/agentic/arc_solve_artifact_discipline.py",
+    "scripts/arc_artifact_lint.py",
+    "tests/python/test_arc_solve_artifact_discipline.py",
+    "tests/python/test_arc_artifact_lint.py"
+  ],
+  "leaderboard_submission": false,
+  "retroactively_rewrote_past_artifacts": false
+}
