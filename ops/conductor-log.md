@@ -8842,3 +8842,4 @@ c |
 | 2026-06-19 13:21 UTC | PHASE E (CAPSTONE .410) -- the milestone scorecard | OK | Deliverable already exists in repo |
 | 2026-06-19 14:06 UTC | Plan milestone 2026.06.411 | OK | 12 tasks proposed |
 | 2026-06-19 14:08 UTC | Milestone 2026.06.411 activated | OK | 12 tasks queued |
+| 2026-06-19 14:24 UTC | PHASE 0 (TRANSITION) -- archive .410 -> activate . | OK | 95 passed, 1 warning in 5.85s |
