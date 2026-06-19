@@ -8,6 +8,85 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 Exp 4420 - .408 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4420_sota_ingestion_v409.json`.
+
+**Preconditions:** reliable channel reachable. `scripts/sweep_clusters.py`
+imported and emitted focused arXiv cluster URLs. `scripts/sweep_semscholar.py`
+imported and was run on focused adaptive world-model repair queries; Semantic
+Scholar returned HTTP 429, so no S2-only source was promoted. Low-concurrency
+WebSearch/WebFetch plus arXiv API / arXiv abs-page HTTP 200 checks verified
+arXiv:2605.05485, arXiv:2503.23145, arXiv:2605.22446, arXiv:2605.09502,
+arXiv:2605.12201, arXiv:2606.13565, arXiv:2502.01384, and arXiv:2508.02298.
+The banned `/deep-research` channel was not invoked. TRM training stood down.
+
+**Filtered track:** .408 outcomes after config-rule induction, Agent2World
+adaptive E3 repair, hidden-state first-error localization, GAP-4 local
+sovereign generator gating, config-rule vocabulary transfer, and SteerConf code
+detection calibration repair.
+
+**.408 outcome conditioning:**
+- Exp 4414: `complete_config_rule_partial`, `new_levels_reproduced=0`,
+  `reproducible_total_levels=34`, and `verifier_is_oracle=true`. Config-rule
+  induction found a grounded rule but not a new reproduced level.
+- Exp 4415: `complete_e3_adaptive_partial`, `new_levels_reproduced=0`,
+  `reproducible_total_levels=34`, and `verifier_is_oracle=true`. Agent2World
+  adaptive behavior tests exposed mechanics but did not deepen E3.
+- Exp 4416: `complete: clean_powered_null_position_only_not_beaten`,
+  `hidden_state_localizer_has_nonposition_signal=false`,
+  `position_only_baseline_f1=1.0`, and `delta_ci95=[0.0, 0.0]`. Hidden-state
+  localization remains diagnostic, not actionable.
+- Exp 4417: `sovereign_gap4_gate_holds=true`, `local_generator_coverage=0.2333`,
+  `graded_gate_fires=0`, and `delta_ci95=[0.0, 0.0]`. Sovereign local
+  generation remains viable but flat under the current gate.
+- Exp 4418: `blocked_local_model_unavailable` and
+  `config_rule_vocabulary_transfers=false`. Do not plan another local-model-only
+  vocabulary transfer until the local inducer exists or the method avoids
+  test-time LLM calls.
+- Exp 4419: `complete: clean_null_steered_confidence_does_not_rescue_code_detector`,
+  `detection_calibrated_multi_domain=false`, `domains_at_chance=[code_humaneval]`,
+  `positive_control_passed=true`, and `verifier_is_oracle=false`. SteerConf did
+  not rescue the code detector.
+
+**Fresh-pass candidates marked ingested:**
+- ReaComp compiled symbolic solver induction, arXiv:2605.05485 - mapped to
+  reusable constrained-DSL solver induction from E3/config traces; strongest
+  .409 hand-off because it avoids the blocked local-model and zero-test-time
+  sovereignty bottleneck.
+- CodeARC interactive differential-query program induction, arXiv:2503.23145 -
+  mapped to verifier-returned counterexample queries for config-rule and GAP-4
+  program induction.
+- Pre-VLA preemptive runtime verification, arXiv:2605.22446 - mapped to
+  verify-before-rollout filtering and resampling for E3 action chunks after
+  Exp 4415 yielded zero new levels.
+- Hidden Error Awareness, arXiv:2605.09502 - mapped to a diagnostic-only
+  hidden-state audit after Exp 4416 tied the position-only baseline.
+- RisCoSet, arXiv:2605.12201 - mapped to risk-controlling prediction sets for
+  code_humaneval after SteerConf left code at chance.
+
+out_of_band_flagged:
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
+  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
+  verifier-as-reward generator training, NOT auto-run in-loop.
+- Full CAPO policy optimization, arXiv:2508.02298 - operator-owned generator
+  training; only offline critique-label diagnostics are in-band.
+
+flagged_for_v409: ReaComp compiled symbolic solver induction (arXiv:2605.05485)
+
+Flagged for .409: `ReaComp compiled symbolic solver induction (arXiv:2605.05485)`
+
+random_seed=4420
+
+**Bottom line for the .409 roadmap:** ReaComp is the single strongest method:
+compile existing verifier-checked traces into reusable symbolic solvers, then
+use CodeARC-style counterexample queries to widen rule coverage. Keep
+Pre-VLA-style preemptive filtering as the E3 repair support track, treat
+hidden-state awareness as diagnostic only, and rebuild code_humaneval detection
+around risk-controlled prediction sets rather than another scalar confidence
+calibrator.
+
 ## 2026-06-18 Exp 4409 - .407 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4409_sota_ingestion_v408.json`.

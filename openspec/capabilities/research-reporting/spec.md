@@ -22229,6 +22229,94 @@ A2D2/SEPO as out-of-band, updates `research-studying.md` idempotently, records
 |---|---|---|
 | REQ-REPORT-4409 | Planned (`python/carnot/experiment_4409_sota_ingestion_v408.py`) | Planned (`tests/python/test_experiment_4409_sota_ingestion_v408.py`) |
 
+### REQ-REPORT-4420: Ingest SOTA For The .409 Roadmap From The .408 Fork Outcomes
+
+The Exp 4420 workflow SHALL close the discover-to-ingest-to-plan loop for the
+`.409` roadmap by reading the `.408` fork outcome artifacts,
+`research-studying.md`, `research-references.md`,
+`results/experiment_4409_sota_ingestion_v408.json`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, `docs/research-notes/search-layer-literature-2026-06-11.md`,
+and the `CLAUDE.md` SOTA-Ingestion Cycle Discipline. The workflow SHALL run the
+reliable channel only: arXiv API / arXiv abs-page HTTP checks,
+`sweep_clusters.py`, `sweep_semscholar.py`, and low-concurrency
+WebSearch/WebFetch. It SHALL NOT invoke `/deep-research`, SHALL NOT launch TRM
+training, SHALL NOT modify `scripts/research_conductor.py`, and SHALL leave
+`ops/changelog.md`, `ops/status.md`, and `_bmad/traceability.md` untouched for
+the separate reconciliation step.
+
+Before writing a complete mapping, the workflow SHALL record reliable-channel
+preconditions. If the sweep helpers cannot import or run and no arXiv/WebFetch
+source page returns HTTP 200, it SHALL stop with
+`honest_verdict=blocked_sweep_channel_unreachable` and SHALL NOT fabricate
+citations. When the channel is available, every mapped method SHALL carry a
+verified arXiv ID or URL.
+
+The workflow SHALL branch on the actual `.408` outcomes. When Exp 4414 reports
+`complete_config_rule_partial` with `new_levels_reproduced=0`, Exp 4415 reports
+`complete_e3_adaptive_partial` with `new_levels_reproduced=0`,
+`reproducible_total_levels=34`, and `verifier_is_oracle=true`, Exp 4416 reports
+`complete: clean_powered_null_position_only_not_beaten` and
+`hidden_state_localizer_has_nonposition_signal=false`, Exp 4417 reports
+`sovereign_gap4_gate_holds=true` but `graded_gate_fires=0`, Exp 4418 reports
+`blocked_local_model_unavailable`, and Exp 4419 reports
+`complete: clean_null_steered_confidence_does_not_rescue_code_detector` with
+`detection_calibrated_multi_domain=false` and `domains_at_chance` containing
+`code_humaneval`, the `.409` flag SHALL prefer a reusable symbolic-solver
+induction method over another static E3 repair, hidden-state localizer retry,
+or steered-confidence calibration retry.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4420_sota_ingestion_v409.json`, and the required runner
+SHALL be `results/experiment_4420_sota_ingestion_v409.py` delegating to
+`python/carnot/experiment_4420_sota_ingestion_v409.py`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`flagged_for_v409`, `methods_mapped`, `out_of_band_flagged`,
+`preconditions_checked`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for the six
+required artifact fields plus `field_principles`. `honest_verdict` SHALL use a
+terminal prefix and, on the complete path, equal
+`complete: sota_ingestion_v409_mapped`. `flagged_for_v409` SHALL be a bare,
+non-empty string naming the single strongest `.409` method with its verified
+arXiv ID. `methods_mapped` SHALL contain three to five dicts with exactly
+`name`, `arxiv_id_or_url`, `source_verification`, `carnot_stack_mapping`,
+`experiment_mapping`, `failure_mode`, and `v408_outcome_conditioning`.
+`out_of_band_flagged` SHALL record verifier-as-reward generator-training
+methods as operator-owned and not auto-run, including A2D2 (`arXiv:2606.13565`),
+SEPO (`arXiv:2502.01384`), and full CAPO policy optimization
+(`arXiv:2508.02298`). `preconditions_checked` SHALL record reliable-channel
+reachability, arXiv HTTP 200 verification, Semantic Scholar 429 handling when
+observed, `/deep-research` non-use, and TRM stand-down. `random_seed` SHALL
+record the deterministic discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the `.408`
+forks as ingested, SHALL include `flagged_for_v409`, SHALL declare
+`random_seed=4420`, and SHALL cite all mapped WebFetch/arXiv-API-verified
+sources.
+
+#### SCENARIO-REPORT-4420: The .408 Outcomes Close Into A .409 Reusable Symbolic Solver Plan
+
+**Given** Exp 4414 and Exp 4418 report config-rule induction/vocabulary transfer
+did not produce a new reproduced level and the local model path was unavailable
+**And** Exp 4415 reports adaptive E3 repair produced zero new reproduced levels
+**And** Exp 4416 reports the hidden-state localizer is still position-saturated
+**And** Exp 4417 reports the sovereign local-generator gate holds but fires zero
+times over the matched pool
+**And** Exp 4419 reports steered confidence does not rescue the code detector
+**When** the Exp 4420 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five
+verified arXiv sources to concrete `.409` experiment targets, flags ReaComp
+compiled symbolic solver induction (`arXiv:2605.05485`) as the strongest `.409`
+hand-off, records verifier-as-reward generator-training methods as out-of-band,
+updates `research-studying.md` idempotently, records `preconditions_checked`
+and `random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4420)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4420 | Implemented (`python/carnot/experiment_4420_sota_ingestion_v409.py`) | Implemented (`tests/python/test_experiment_4420_sota_ingestion_v409.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
