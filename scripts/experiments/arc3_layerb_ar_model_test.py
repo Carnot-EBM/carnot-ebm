@@ -37,6 +37,9 @@ SERVER_LOG = Path("/tmp/ar_model_test_server.log")
 MODELS = {
     "qwen3.5-9b": ("models--unsloth--Qwen3.5-9B-GGUF/snapshots/*/Qwen3.5-9B-Q4_K_M.gguf", "/no_think\n"),
     "qwen3.5-9b-mtp": ("models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/*/Qwen3.5-9B-Q4_K_M.gguf", "/no_think\n"),
+    # DeepSeek-V4-Flash reasoning-distill of Qwen3.5-9B + MTP heads -- tests whether the distill improves
+    # grounding (accuracy) over base Qwen3.5-9B while keeping the speed.
+    "deepseek-flash-mtp": ("models--Jackrong--Qwen3.5-9B-DeepSeek-V4-Flash-MTP-GGUF/snapshots/*/Qwen3.5-9B-DeepSeek-V4-Flash-MTP-Q4_K_M.gguf", "/no_think\n"),
     "qwen3-14b": ("models--unsloth--Qwen3-14B-GGUF/snapshots/*/Qwen3-14B-Q4_K_M.gguf", "/no_think\n"),
     "phi-4": ("models--unsloth--phi-4-GGUF/snapshots/*/phi-4-Q4_K_M.gguf", None),  # base Phi-4: no thinking mode
     "qwen2.5-coder-14b": ("models--unsloth--Qwen2.5-Coder-14B-Instruct-GGUF/snapshots/*/Qwen2.5-Coder-14B-Instruct-Q4_K_M.gguf", None),
