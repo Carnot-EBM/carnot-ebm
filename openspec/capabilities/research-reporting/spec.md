@@ -24614,6 +24614,41 @@ honest verdict.
 |---|---|---|
 | REQ-REPORT-4414 | Planned (`python/carnot/experiment_4414_config_rule_induction_solve.py`, `results/experiment_4414_config_rule_induction_solve.py`) | Planned (`tests/python/test_experiment_4414_config_rule_induction_solve.py`) |
 
+### REQ-REPORT-4421: Reproduce One Unseen Config Toggle Game With A Grounded Win Predicate
+
+The Exp 4421 workflow SHALL take exactly one previously unreproduced config/toggle
+game from `bp35`, `dc22`, `g50t`, `lf52`, `s5i5`, `cd82`, or `wa30` and count
+progress only when `arc_solver_kit.reproduce` reports an offline reproduction
+beyond that game's prior registry best. It SHALL check the cached Qwen3.5-9B-MTP
+GGUF, the HIP `llama-server` binary, and the offline environment before writing
+a success artifact.
+
+The workflow SHALL write
+`results/experiment_4421_config_rule_solve_unseen.json` with the required fields
+`offline_reproduced`, `reproduced_levels`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `random_seed`, `reproducibility_checksum`, and
+`honest_verdict`. `verifier_is_oracle` SHALL be true only when the solver's win
+check is the execution-grounded predicate used by the offline environment, and
+`honest_verdict` SHALL begin with a terminal prefix such as `success_` or
+`blocked_`.
+
+#### SCENARIO-REPORT-4421: S5I5 Marker Coverage Predicate Drives One Offline Level
+
+**Given** the Qwen3.5-9B-MTP GGUF cache, HIP `llama-server`, and offline `s5i5`
+environment are present
+**When** the Exp 4421 workflow grounds the proposed marker-coverage predicate and
+derives the length-control click path
+**Then** the artifact records `offline_reproduced=true`,
+`reproduced_levels>=1`, `verifier_is_oracle=true`, the deterministic seed and
+checksum, and `success_s5i5_L1_offline_reproduced` as its terminal-prefixed
+honest verdict.
+
+## Implementation Status (REQ-REPORT-4421)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4421 | Implemented (`python/carnot/experiment_4421_config_rule_solve_unseen.py`, `results/experiment_4421_config_rule_solve_unseen.py`) | Covered (`tests/python/test_experiment_4421_config_rule_solve_unseen.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

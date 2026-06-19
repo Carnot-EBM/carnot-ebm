@@ -14,7 +14,7 @@
 #   unsolved    = no solve yet.
 
 schema_version: 1
-updated: "2026-06-18"
+updated: "2026-06-19"
 
 # ---- GENERAL GOTCHAS (apply to ANY game; encoded in arc_solver_kit) ----
 general_gotchas:
@@ -32,6 +32,8 @@ general_gotchas:
     note: "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
   - id: non_idempotent_reset
     note: "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+  - id: same_action_next_level
+    note: "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
 
 games:
   - game: r11l
@@ -55,6 +57,17 @@ games:
     win_condition: "first-solve L1; ACTION + kind sequence replays offline."
     solver: "results/experiment_4275 solve_trace.actions."
     gotchas: []
+
+  - game: s5i5
+    reproducibility: reproduced
+    levels_reproduced: 1
+    mechanic_class: config_toggle_marker_coverage
+    win_condition: "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+    action_model: "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3."
+    solver: "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce."
+    reproduce: "Exp4421 results/experiment_4421_config_rule_solve_unseen.json offline_reproduced=True, reproduced_levels=1, checksum bdc1ee86e85595873b11f11bf8ee38ab5a4ecf987c3530fa6dc01c43550f16bb."
+    gotchas:
+      - "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
 
   - game: lp85
     reproducibility: reproduced
@@ -238,7 +251,7 @@ games:
       - "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
 
   # Remaining still-unsolved games include bp35, dc22, g50t, lf52,
-  # re86, s5i5, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
+  # re86, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
   # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
   # (cd82, sp80, su15, tu93); 14 resisted at L0 (deeper win-mechanics / per-game deltas).
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
@@ -252,14 +265,14 @@ games:
   # likewise; do NOT re-run a blind branch-mode sweep on them.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
-#   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 5 + cd82 1 + sp80 1 + su15 1
-#   + tu93 4 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 6 + ft09 1 = 34 across 17 games  (tr87
+#   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + s5i5 1 + lp85 5 + cd82 1 + sp80 1 + su15 1
+#   + tu93 4 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 6 + ft09 1 = 35 across 18 games  (tr87
 #   FULLY SOLVED 6/6 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
 #   1-to-1, L2 1-to-many, L3 many-to-many, L4 double_translation 2-pass, L5 alter_rules inverse, L6
 #   alter_rules + 2-pass (2-level decomposition); offline-reproduction-gated; verify
 #   scripts/arc3_replay_scorecard_metaharness.py)
-reproducible_total_levels: 34   # ... -> +tu93 L4 via Exp4361, +ft09 L1 via Exp4363, and +lp85 L5 via Exp4372
-reproducible_total_games: 17   # adds ft09 via Exp4363 offline reproduction gate
+reproducible_total_levels: 35   # ... -> +tu93 L4 via Exp4361, +ft09 L1 via Exp4363, +lp85 L5 via Exp4372, +s5i5 L1 via Exp4421
+reproducible_total_games: 18   # adds s5i5 via Exp4421 offline reproduction gate
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- LIVE LEADERBOARD SUBMISSIONS (operator-gated External Publication) ----
