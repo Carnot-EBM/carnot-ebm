@@ -1,0 +1,75 @@
+{
+  "game": "vc33",
+  "status": "needs_per_game_RE",
+  "transfer_recommendation": [
+    {
+      "game": "s5i5",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+      "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
+      "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+      "reusable_gotchas": [
+        "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
+      ]
+    },
+    {
+      "game": "ft09",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+      "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
+      "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
+      "reusable_gotchas": [
+        "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
+        "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
+      ]
+    },
+    {
+      "game": "su15",
+      "similarity": 5.5,
+      "reproducibility": "reproduced",
+      "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
+      "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down).",
+      "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
+      "reusable_gotchas": []
+    }
+  ],
+  "general_gotchas": [
+    {
+      "id": "offline_is_a_simulator",
+      "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+    },
+    {
+      "id": "level_on_frame_not_game",
+      "note": "level = frame.levels_completed; env._game has no levels_completed."
+    },
+    {
+      "id": "deepcopy_injection_unreliable",
+      "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+    },
+    {
+      "id": "first_step_after_reset_consumed",
+      "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+    },
+    {
+      "id": "discover_coords_never_hardcode",
+      "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+    },
+    {
+      "id": "state_dependent_controls_and_animations",
+      "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+    },
+    {
+      "id": "non_idempotent_reset",
+      "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+    },
+    {
+      "id": "same_action_next_level",
+      "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+    }
+  ],
+  "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+  "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
+  "mode": "standing_arc_loop_routing_only"
+}
