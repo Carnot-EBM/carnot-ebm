@@ -1,0 +1,10 @@
+[Unit]
+Description=Carnot ARC-AGI-3 daily submission prep (refresh dataset + re-push public kernel; NEVER submits)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ianblenke/github.com/ianblenke/carnot
+Environment=PATH=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/kaggle/prep_daily_submission.py
+StandardOutput=journal
+StandardError=journal

@@ -56,10 +56,13 @@ open-source eligible — the project is MIT-0 ✅).
 3. **Watch:** the [Submissions page](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/submissions);
    the scored rerun takes up to 12h.
 
-Scheduling: an in-session cron (`a26bfb30`, daily 9:37 AM local) runs the prep + notifies — but it is
-SESSION-ONLY (dies if this session ends) and auto-expires in 7 days. For a session-independent standing
-routine across the full sprint, a systemd user timer is the durable mechanism (matches
-`carnot-outer-loop.timer`) — TODO if the session-only cron proves insufficient.
+Scheduling: **durable systemd user timer `carnot-arc-daily-prep.timer`** (daily 09:37 EDT, `Persistent=true`
+— survives session end + reboots; validated end-to-end 2026-06-19). It runs the prep `--default` (refresh +
+re-push + validate, NEVER submits) and writes `ops/arc-daily-prep-status.json` (`{kernel_version, ready,
+submit_command}`). The timer cannot push-notify or submit (agent-only / operator-only), so the in-session
+watchdog surfaces the status file and the operator runs the `--submit-only` command to approve. Units live at
+`~/.config/systemd/user/carnot-arc-daily-prep.{service,timer}` (copies tracked at `ops/systemd/`). The
+session-only cron approach was retired in favor of this.
 
 ## What was verified (so the operator can trust the package)
 
