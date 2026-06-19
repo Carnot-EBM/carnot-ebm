@@ -8,7 +8,9 @@
 > table below are still real and reused (binary builds + loads Qwen + agent imports offline +
 > proposer generates), and the agent shape is confirmed correct vs the reference — but the
 > "Operator submission steps" section is superseded by **§ Real submission flow** at the bottom.
-> Deadline on Kaggle is **2026-11-02** (our docs say 06-30 — likely a self-imposed milestone).
+> **Deadlines (operator-confirmed 2026-06-19):** the first ARC-AGI-3 **Milestone deadline is
+> 2026-06-30** (REAL, 11 days out — a scoring submission should land before it); the final
+> competition deadline is 2026-11-02. The sprint forcing function's 06-30 was correct.
 
 **STATUS: components VERIFIED on the real Kaggle P100; submission notebook authored against the
 correct gateway contract. NOT yet run end-to-end through the real gateway (only the eval sandbox
@@ -120,7 +122,9 @@ internal `gateway:8001`) + dep wheels in the rerun sandbox; we only drop in our 
    transfer is partial). Residual risk to watch in the first run's logs: that the Kaggle rerun
    image has jax/numpy preinstalled for the carnot import (the standard image does; the rerun image
    is unconfirmed) — if not, the agent import fails and we bundle those deps as a wheels dataset.
-6. Plenty of runway (Kaggle deadline 2026-11-02); iterate.
+6. **Test-submit SOON** — the first ARC-AGI-3 Milestone deadline is **2026-06-30** (11 days out).
+   The first scored run surfaces the jax/numpy-on-rerun-image risk; leave time to fix + resubmit
+   before the milestone. The final competition deadline (2026-11-02) is the longer horizon.
 
 Cross-refs: `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md`,
 `python/carnot/agentic/arc_competition_agent.py:make_carnot_agent`, `[[project_arc_live_generator]]`.
