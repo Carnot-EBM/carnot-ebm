@@ -563,7 +563,8 @@ config-rule induction, glyph/rewrite perception, multi-level deepening, and unse
 all reproduction-gated (`arc_solver_kit.reproduce`) and Incremental-Progress-scoped (+1 level/game). ALL
 experiments `agent_type: codex`; planner + retro STAY on Claude Opus (operator's quality choice). The
 generator is FROZEN: Qwen3.5-9B-MTP ([[project_arc_live_generator]]). `.409 is already pre-staged
-(`research-roadmap-next.yaml`) as the template. Retires 2026-06-30 / when submissions are recorded.
+(`research-roadmap-next.yaml`) as the template. Retires **2026-06-30** (the challenge deadline) ONLY — NOT
+on submissions (the operator expects MULTIPLE submissions before then; keep improving across all of them).
 
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
