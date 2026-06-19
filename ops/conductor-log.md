@@ -8767,3 +8767,4 @@ c |
 | 2026-06-19 00:47 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 84 passed, 1 warning in 12.64s |
 | 2026-06-19 01:04 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; flag | OK | 92 passed, 1 warning in 8.57s |
 | 2026-06-19 01:25 UTC | PHASE B1 (ORACLE-DISTINCT FRONTIER; operator P0; D | OK | 88 passed, 1 warning in 13.35s |
+| 2026-06-19 01:46 UTC | PHASE B2 (verifier-earns-its-place; SOVEREIGNTY ti | OK | 88 passed, 1 warning in 13.81s |
