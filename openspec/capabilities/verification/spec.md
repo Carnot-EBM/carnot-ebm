@@ -19769,6 +19769,59 @@ artifact and leaves the ledger unchanged.
 |---|---|---|
 | REQ-VERIFY-4427 | Implemented (`python/carnot/experiment_4427_verifier_gaps_hygiene.py`) | Implemented (`tests/python/test_experiment_4427_verifier_gaps_hygiene.py`) |
 
+### REQ-VERIFY-4437: ARC Solve Artifact Discipline Template And Lint
+
+The repository SHALL provide a reusable ARC solve/scoring artifact helper at
+`python/carnot/agentic/arc_solve_artifact_discipline.py` and a lightweight lint
+at `scripts/arc_artifact_lint.py` so future ARC solve, scoring, and
+config-rule artifacts cannot repeat the `.409` artifact-discipline losses. The
+helper SHALL require every constructed ARC solve/scoring artifact to declare
+`inference_substrate` using one of the canonical terminal substrates:
+`aggregation_from_upstream_artifacts` for sub-60s deterministic offline
+aggregation/reproduction with a 100us duration floor,
+`verifier_ensemble_against_cached_candidates` for cached verifier scoring with a
+1s duration floor, or `live_llm_inference` for real LLM-induction solves with a
+60s duration floor. The helper SHALL also require a terminal-prefixed
+`honest_verdict` using one of `complete:`, `success:`, `passed:`, or `shipped:`.
+
+The lint SHALL scan candidate `results/experiment_*.json` artifacts whose path
+or artifact metadata marks them as ARC, solve, scoring, or config-rule work, and
+SHALL flag missing `inference_substrate`, non-canonical substrates, duration
+values below the substrate floor, unallow-listed live LLM substrates, and
+non-terminal partial verdicts such as `partial:` or `partial_...`. The lint
+SHALL support an allow-list for legitimately live artifacts so live
+LLM-induction solves remain explicit rather than silently accepted by filename
+convention.
+
+The terminal artifact SHALL write
+`results/experiment_4437_arc_artifact_discipline_template.json` with
+`honest_verdict`, bare bool `template_shipped`, bare bool `tests_pass`,
+`field_principles`, `spec_refs`, `duration_s`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. Its field principles
+SHALL include:
+`honest_verdict` = `terminal-prefixed`;
+`template_shipped` = `bare bool: the helper + lint + tests landed green`;
+`tests_pass` = `bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)`.
+
+### SCENARIO-VERIFY-4437: ARC Artifacts Declare Substrate Before They Count
+
+Given an ARC config-rule solve artifact that completes offline in under 60
+seconds, when the helper builds or validates it, then it accepts only
+`inference_substrate=aggregation_from_upstream_artifacts` or
+`verifier_ensemble_against_cached_candidates` with the appropriate duration
+floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
+artifacts under `results`, when an artifact lacks `inference_substrate` or emits
+`honest_verdict=partial: ...`, then it reports a failing issue. Given an artifact
+declares `live_llm_inference`, when that artifact path is not allow-listed, then
+the lint reports a live-substrate issue; when the same path is allow-listed and
+the duration is at least 60 seconds, then the lint accepts it.
+
+## Implementation Status (REQ-VERIFY-4437)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4437 | Implemented (`python/carnot/agentic/arc_solve_artifact_discipline.py`, `scripts/arc_artifact_lint.py`, `results/experiment_4437_arc_artifact_discipline_template.json`) | Implemented (`tests/python/test_arc_solve_artifact_discipline.py`, `tests/python/test_arc_artifact_lint.py`) |
+
 ### REQ-VERIFY-4392: Verifiable Process Data First-Error Localizer
 
 The repository SHALL provide Exp 4392 at
