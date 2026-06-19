@@ -8813,3 +8813,4 @@ c |
 | 2026-06-19 08:37 UTC | PHASE B (TRANSFER) -- config-rule VOCABULARY from  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-19 08:55 UTC | PHASE C1 (RESERVED INFRA) -- ARC solve-registry re | OK | 84 passed, 1 warning in 7.11s |
 | 2026-06-19 09:10 UTC | PHASE C2 (RESERVED INFRA) -- verifier-gaps + regis | OK | 86 passed, 1 warning in 4.68s |
+| 2026-06-19 09:26 UTC | PHASE D (HARDWARE CONTINUITY; one task per attache | OK | 87 passed, 1 warning in 7.24s |
