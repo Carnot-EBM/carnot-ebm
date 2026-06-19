@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.410",
+  "generated_at": "2026-06-19T13:28:37Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The retro's authoritative milestone-scoped timing detector reported 0 experiment commits since activation, so the locked numeric fields stay 0 (conductor-owned). But on-disk ground truth read this turn contradicts that 0: results/experiment_4432..4441_*.json (10 artifacts, mtimes 2026-06-19T06:29:16->09:14:59 EDT, ~2h46m wall window) plus the ops/changelog window show milestone 2026.06.410 fully ran, with a clean/unflagged capstone (exp4441, paper_ready=true). The 0 is therefore the recurring false-zero milestone-scoped-timing-detector gap (documented .363-.407, now extending to .410) -- an observability artifact, NOT a genuinely empty milestone or a stalled launch.",
+  "bottlenecks_identified": [
+    "RECURRING (6+ consecutive milestones, .363-.407, now .410): the milestone-scoped timing detector false-zeroed -- it attributed 0 commits since activation while 10 experiment artifacts (exp4432-exp4441) sit on disk with mtimes spanning ~2h46m and a clean capstone. The bottleneck is observability, not execution.",
+    "GPU idle (both RTX 3090s at 0% util, 4MB allocated) is NOT flagged as a bottleneck: the detector attributed 0 compute-bound tasks, so gpu_idle_on_compute_bound_tasks=null per the GPU-idle interpretation rule (idle GPUs are correct when no compute-bound task is attributed). NOTE this idle reading is itself downstream of the same false-zero -- it cannot be trusted to mean the run used no GPU.",
+    "Because the detector returns 0, every operational retro for these milestones is forced to reconstruct ground truth by hand from on-disk mtimes + the changelog window, which is slow and erodes trust in the retro's own numeric fields."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: replace the commit-attribution scan with an mtime scan of results/experiment_*.json since milestone activation, plus an ops/changelog-window fallback, so experiments that landed (but were not attributed by commit) are counted.",
+    "Add write-time stamping of duration_s and a compute_bound flag onto every experiment artifact (in the experiment template / conductor), so the retro can populate slowest_experiments and total_wall_time_minutes directly from artifacts rather than re-deriving from filesystem mtimes.",
+    "Emit detector_gap_suspected=true automatically whenever the timing detector reports 0 BUT results/experiment_*.json artifacts exist on disk in the milestone window -- so a false-zero is self-flagged instead of being silently reported as an empty milestone."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the false-zero milestone-scoped timing detector (mtime scan + changelog-window fallback + detector_gap_suspected emission). This single fix removes the recurring observability failure that has degraded every operational retro from .363 through .410.",
+    "Stamp duration_s + compute_bound at artifact write-time so slowest_experiments and total_wall_time_minutes become directly computable, restoring the retro's ability to surface real wall-time bottlenecks.",
+    "Until the detector is fixed, keep cross-checking on-disk artifacts (results/experiment_*.json mtimes + changelog) before concluding a milestone is empty -- a 0 from the detector must be treated as suspect, not authoritative."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No experiment wall-time was wasted this milestone -- the 10 .410 experiments ran cleanly (exp4432-exp4441, capstone unflagged, paper_ready=true). The waste is purely analytic and recurring: the timing detector has false-zeroed for 6+ consecutive milestones, so each retro must reconstruct ground truth by hand. The lesson is process-level -- the operational failure here is observability, not execution -- and the standing highest-leverage fix is repairing the detector (mtime scan + changelog fallback + self-flagged detector_gap_suspected). estimated_time_savings_pct is 0 because the fix saves analytic/operator time and trust, not experiment compute."
+}
