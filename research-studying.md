@@ -8,6 +8,38 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 Exp 4464 - .412 SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4464_sota_ingestion_412.json` and
+`docs/research-notes/sota-ingestion-412-2026-06-19.md`.
+
+**Preconditions:** reliable channel reachable on CPU. The command
+`scripts/sweep_clusters.py --help` succeeded; the arXiv reachability check
+succeeded. `scripts/sweep_clusters.py` emitted focused verifier and world-model
+cluster URLs. `scripts/sweep_semscholar.py` ran five focused queries; Semantic
+Scholar returned HTTP 429 on all five queries, so no S2-only source was
+promoted. Low-concurrency WebSearch/WebFetch plus arXiv abs-page HTTP 200 checks
+verified arXiv:2309.16436, arXiv:2606.11521, arXiv:2507.14172,
+arXiv:2411.17708, arXiv:2411.02272, arXiv:2605.05138, arXiv:2606.12316, and
+arXiv:2603.13372. The banned `/deep-research` channel was not invoked.
+No leaderboard submission, live solve, or training run was launched.
+
+**Fresh-pass candidates marked ingested:** Counterexample-Guided Learning
+(arXiv:2606.11521), SMT-checked CEGIS (arXiv:2309.16436), SOAR
+(arXiv:2507.14172), neurally-guided program induction (arXiv:2411.17708),
+induction+transduction routing (arXiv:2411.02272), Executable World Models
+(arXiv:2605.05138), Loop-OWM (arXiv:2606.12316), and ARC living survey context
+(arXiv:2603.13372).
+
+flagged_for_v413: Counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)
+
+random_seed=4464
+
+**SOTA->experiment mapping note:** Add a counterexample-guided re-induction
+loop to the generic solver: feed verifier-rejected execution states back into
+dc22 config/toggle induction, tr87 glyph-rewrite induction, and sc25 phase-FSM
+world-model induction, then count only reproduction-gated fixes.
+
 ## 2026-06-19 MANUFACTURED game variants — flagged for .413 (bigger generic-transfer benchmark)
 
 **Status:** SHIPPED (outer-loop) + flagged for the .413 planner. `python/carnot/agentic/arc_variant_generator.py`
