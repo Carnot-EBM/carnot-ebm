@@ -1,0 +1,79 @@
+{
+  "game": "dc22",
+  "status": "needs_per_game_RE",
+  "transfer_recommendation": [
+    {
+      "game": "sc25",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py",
+      "win_condition": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit.",
+      "action_model": "ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+      "reusable_gotchas": [
+        "deepcopy-injection BROKEN -> replay-from-reset.",
+        "first step after reset consumed -> warm-up step.",
+        "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
+        "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).",
+        "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+      ]
+    },
+    {
+      "game": "cd82",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+      "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline.",
+      "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+      "reusable_gotchas": []
+    },
+    {
+      "game": "lp85",
+      "similarity": 5.0,
+      "reproducibility": "reproduced",
+      "solver": "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.",
+      "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations.",
+      "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
+      "reusable_gotchas": [
+        "deepcopy-injection WORKS for lp85 (unlike sc25).",
+        "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
+      ]
+    }
+  ],
+  "general_gotchas": [
+    {
+      "id": "offline_is_a_simulator",
+      "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+    },
+    {
+      "id": "level_on_frame_not_game",
+      "note": "level = frame.levels_completed; env._game has no levels_completed."
+    },
+    {
+      "id": "deepcopy_injection_unreliable",
+      "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+    },
+    {
+      "id": "first_step_after_reset_consumed",
+      "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+    },
+    {
+      "id": "discover_coords_never_hardcode",
+      "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+    },
+    {
+      "id": "state_dependent_controls_and_animations",
+      "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+    },
+    {
+      "id": "non_idempotent_reset",
+      "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+    },
+    {
+      "id": "same_action_next_level",
+      "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+    }
+  ],
+  "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+  "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
+  "mode": "standing_arc_loop_routing_only"
+}

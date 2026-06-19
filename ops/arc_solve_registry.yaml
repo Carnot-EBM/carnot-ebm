@@ -454,6 +454,35 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
+- game: dc22
+  reproducibility: unsolved
+  levels_reproduced: 0
+  solver: scripts/arc_loop_solve.py --game dc22
+  gotchas: []
+  dead_ends:
+  - gap_id: GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+    status: open
+    game: dc22
+    failure_mode: needs_per_game_RE
+    missing_discriminator: selectable verifier that distinguishes the target's winning
+      delta from the explored non-winning states
+    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's
+      visible toggles
+    routed_recipe:
+      game: sc25
+      solver: results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py
+      win_condition: 'MULTIPLE paths confirmed: (a) move player ''pluyoo'' to exit
+        ''exydhv''; (b) cast-grid alignment fires the active spell. L1 reproduced
+        by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player,
+        then moving left to the exit.'
+      action_model: ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r);
+        L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3',
+        'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3'];
+        ACTION1-4 remain tank-control moves with facing load-bearing.
+    loop_result_summary:
+      offline_reproduced: false
+      reproduced_levels: 0
+      mode: standing_arc_loop_routing_only
 reproducible_total_levels: 35
 reproducible_total_games: 18
 provisional_total_levels: 5
