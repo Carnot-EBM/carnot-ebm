@@ -67,6 +67,14 @@ def main() -> int:
     )
     args = ap.parse_args()
 
+    # Durable stop: the operator retired the Sudoku-Extreme TRM verifier-graft track (2026-06-18 —
+    # "kill it, we don't need it"; TRM is NOT on the live ARC-AGI-3 solve path). This sentinel makes
+    # the kill survive any watchdog decision-A restart attempt. Delete it to re-enable training.
+    sentinel = REPO_ROOT / "results" / "trm_runs" / "DO_NOT_RELAUNCH"
+    if sentinel.exists():
+        print(f"[relaunch] DO_NOT_RELAUNCH sentinel present ({sentinel}); TRM training is retired. Not launching.")
+        return 0
+
     config = exp4157.Exp4157Config(max_time=args.max_time)
 
     # Refuse to launch a competing run if the trainer is already alive (GPU/checkpoint contention).

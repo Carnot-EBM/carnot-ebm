@@ -1,0 +1,11 @@
+TRM Sudoku-Extreme verifier-graft training is RETIRED.
+
+Operator directive 2026-06-18 (overnight ARC sprint): "kill it, we don't need it."
+Rationale: TRM is NOT on the live ARC-AGI-3 generic solve path (that path = Qwen3.5-9B-MTP
+generator + LearnedVerifier energy ensemble + graph-explore A*). The nano-trm Sudoku-Extreme
+baseline was a Phase-3 verifier-graft-v3 research probe, now concluded/deprioritized for the
+2026-06-30 submission sprint.
+
+Effect: scripts/outer_loop_trm_relaunch.py refuses to launch while this file exists, so the
+hourly watchdog decision-A restart logic cannot resurrect the run. Delete this file to re-enable.
+Last banked checkpoint: results/trm_runs/sudoku_extreme_baseline/last.ckpt (val~0.75, intact).
