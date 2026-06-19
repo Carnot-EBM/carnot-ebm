@@ -25943,6 +25943,67 @@ using `partial:`.
 |---|---|---|
 | REQ-REPORT-4470 | Planned (`python/carnot/experiment_4470_color_match_slot_operator_solve_sb26.py`, `results/experiment_4470_color_match_slot_operator_solve_sb26.json`) | Planned (`tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py`) |
 
+### REQ-REPORT-4471: Rotated Generic First-Contact Driver Attempts One Never-Attempted Residual Game
+
+The Exp 4471 workflow SHALL run the generic first-contact solver on exactly one
+rotated ARC-AGI-3 residual game from `{bp35, lf52, re86}`. Before attempting the
+game it SHALL confirm non-empty target environment files, importable
+`arc_solver_kit` and `arc_solve_learning`, a permitted non-3090 generator
+substrate through a cached GGUF or iGPU llama-server, and a green focused
+baseline command exactly matching
+`.venv/bin/pytest -k "arc_solver_kit or first_contact" -q --no-cov`. Missing
+resources SHALL write a terminal-prefixed `complete: blocked_<resource>`
+artifact and SHALL NOT fabricate routing, grounding, reproduction, or
+leaderboard progress.
+
+The workflow SHALL call `arc_solve_learning.recommend_approach(target_game)` for
+the rotated candidates, preserve the selected solved-game route, and preserve
+the ranked documented-library primitives returned by `retrieve_primitives`.
+It SHALL select the best-fitting generic operator from the routing and primitive
+evidence, run a bounded counterexample-guided grounding attempt, and count a
+level only after `arc_solver_kit.reproduce()` reaches L1 offline. For the first
+Exp 4471 run, `re86` SHALL be the target when routing points to the generic
+graph-explore operator but counterexamples show that the residual requires a
+sprite-overlay pattern-match plus resize/transformation verifier not present in
+the `.413` operator set. A genuine no-bank attempt SHALL remain terminal
+complete and SHALL log that residual in `missing_verifier_gaps`,
+`ops/arc_solve_registry.yaml`, and `ops/verifier_gaps.md`.
+
+The workflow SHALL write
+`results/experiment_4471_first_contact_rotated_new_game.json` with required
+top-level fields `honest_verdict`, `inference_substrate`, `target_game`,
+`routed_to`, `retrieved_primitives`, `reproduced_levels`,
+`offline_reproduced`, `missing_verifier_gaps`, `verifier_is_oracle`,
+`reproducible_total_levels`, `random_seed`, and
+`reproducibility_checksum`. Complete-path `honest_verdict` SHALL start with
+`complete:`, `success:`, `passed:`, or `shipped:`; cached verifier-ensemble runs
+SHALL declare `inference_substrate=verifier_ensemble_against_cached_candidates`
+with `duration_s>=1.0`; live induction SHALL declare `live_llm_inference` with
+`duration_s>=60.0`; the workflow SHALL NOT use 3090 inference and SHALL NOT
+submit to a leaderboard.
+
+#### SCENARIO-REPORT-4471: re86 Routes Through Generic Graph Search And Logs Missing Sprite Pattern Verifier
+
+**Given** offline `re86` environment files, a permitted non-3090 generator
+substrate, a green focused no-coverage baseline, transfer routing, and LILO
+primitive retrieval
+**When** Exp 4471 selects the rotated target, routes it to the best-fitting
+generic primitive, runs the bounded graph-search grounding attempt, optionally
+replays any generated L1 labels through `arc_solver_kit.reproduce()`, and writes
+the artifact
+**Then** the artifact is terminal-prefixed, records `target_game=re86`, the
+`routed_to` solved recipe, non-empty `retrieved_primitives`, bare-int
+`reproduced_levels`, bare-bool `offline_reproduced`, `verifier_is_oracle=true`,
+and a deterministic checksum; a successful replay banks exactly one level, while
+a no-bank run logs
+`missing_pattern_match_sprite_resize_verifier` rather than using `partial:`.
+
+## Implementation Status (REQ-REPORT-4471)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4471 | Implemented (`python/carnot/experiment_4471_first_contact_rotated_new_game.py`, `results/experiment_4471_first_contact_rotated_new_game.json`) | Implemented (`tests/python/test_experiment_4471_first_contact_rotated_new_game.py`) |
+
 ### REQ-REPORT-4459: Leave-One-Out Generic-Solver V3 Re-Measures .412 Operator Transfer
 
 The Exp 4459 workflow SHALL re-run the Exp 4448 leave-one-out generic-solver
