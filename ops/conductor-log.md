@@ -8817,3 +8817,4 @@ c |
 | 2026-06-19 09:40 UTC | PHASE E (SOTA-INGESTION; .409 bleeding-edge track) | OK | 107 passed, 1 warning in 5.58s |
 | 2026-06-19 09:58 UTC | PHASE F (CAPSTONE .409) -- the milestone scorecard | OK | 97 passed, 1 warning in 6.94s |
 | 2026-06-19 10:00 UTC | Milestone 2026.06.410 activated | OK | 11 tasks queued |
+| 2026-06-19 10:16 UTC | PHASE 0 (TRANSITION) -- archive .409 -> activate . | OK | 113 passed, 1 warning in 4.82s |
