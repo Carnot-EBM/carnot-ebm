@@ -108,6 +108,39 @@ def _similarity(a: dict, b: dict) -> float:
     return score
 
 
+# FinAcumen (arXiv:2606.17642) selective-retrieval lesson: an IRRELEVANT retrieved example actively
+# DEGRADES reasoning -- precision beats recall. So below a confidence bar we must NOT few-shot the
+# top recipe (it would mislead the small local proposer); fall back to cold induction / the strategy
+# solver / graph-explore instead. On _similarity's scale the dominant signal is an action-type match
+# (+3): a top match that does not even share the action model is a risky transfer. Require >= that.
+_CONFIDENT_TRANSFER_MIN_SIM = 3.0
+
+
+def _cautions_from(ranked: list[dict], reg: dict) -> list[str]:
+    """Aggregate failure-derived CAUTIONS (FinAcumen's Cautions, the complement of the success
+    Findings) from the top matched games' recorded dead-ends + the registry general gotchas, so the
+    runtime induction prompt can be told what NOT to do, not just what worked. Deduplicated, order-
+    preserving."""
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def _add(items: Any) -> None:
+        for it in items or []:
+            s = it if isinstance(it, str) else (it.get("note") or it.get("dead_end") or str(it))
+            s = str(s).strip()
+            if s and s not in seen:
+                seen.add(s)
+                out.append(s)
+
+    by_game = {g.get("game"): g for g in reg.get("games", [])}
+    for r in ranked[:3]:  # only the games we'd actually transfer from
+        g = by_game.get(r.get("game"), {})
+        _add(g.get("dead_ends"))
+        _add(g.get("dead_ends_recorded"))
+    _add(reg.get("general_gotchas"))
+    return out[:8]  # cap (FinAcumen k_max-style): a few high-signal cautions, not a flood
+
+
 def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> dict:
     """Route a NEW game to the closest proven recipe. Returns the ranked solved
     games with their registry recipe (solver, win-condition, action-model,
@@ -130,6 +163,9 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
     if target_game not in feats:
         from . import arc_solver_kit as kit
 
+        # Unseen LIVE game (not in the public survey): no feature-based similarity transfer is
+        # possible, so route COLD via the strategy + generic operators + cautions (FinAcumen: do not
+        # fabricate a confident transfer when there is no relevant match).
         return {
             "error": f"{target_game} not in survey",
             "strategy": strategy,
@@ -139,6 +175,10 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
                     mechanic_class=strategy.get("routed_mechanic", ""), game=target_game
                 )
             ],
+            "confident_transfer": False,
+            "routing_confidence": 0.0,
+            "top_similarity": 0.0,
+            "cautions": _cautions_from([], reg),
             "general_gotchas": reg.get("general_gotchas", []),
         }
     tf = feats[target_game]
@@ -186,19 +226,38 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
             "search_engine": strategy.get("search_engine"),
             "needs": strategy.get("needs"),
         }
+    top_sim = ranked[0]["similarity"] if ranked else 0.0
+    confident_transfer = top_sim >= _CONFIDENT_TRANSFER_MIN_SIM
+    # routing_confidence: top_sim normalized to [0,1] against the confident bar (clamped) -- a
+    # monotone, interpretable proxy, NOT a probability.
+    routing_confidence = round(min(1.0, top_sim / (_CONFIDENT_TRANSFER_MIN_SIM * 2)), 2)
     return {
         "target_game": target_game,
         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
         "strategy": strategy,
         "selected_generic_operators": selected_generic_operators,
         "recommended": ranked[:3],
+        # FinAcumen (arXiv:2606.17642) selective-activation: only few-shot the top recipe when the
+        # match clears the confidence bar; below it, an irrelevant example MISLEADS the small proposer.
+        "confident_transfer": confident_transfer,
+        "routing_confidence": routing_confidence,
+        "top_similarity": round(top_sim, 2),
+        # Failure-derived CAUTIONS (what NOT to do), the complement of the success recipe, for the
+        # runtime induction prompt.
+        "cautions": _cautions_from(ranked, reg),
         "heuristic_policy": policy,
         "general_gotchas": reg.get("general_gotchas", []),
         "guidance": (
-            "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start "
-            "from the top-ranked solved game's solver + reuse its action-model and gotchas, "
-            "only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction "
-            "gate; append new mechanics/dead-ends to the registry."
+            ("CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's "
+             "solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot "
+             "the runtime proposer with that recipe AND the `cautions`. "
+             if confident_transfer else
+             "LOW-confidence routing (no solved game cleared the transfer bar): do NOT blind-copy the "
+             "top recipe -- an irrelevant example misleads the proposer (FinAcumen arXiv:2606.17642). "
+             "Induce COLD via the routed strategy.solver / graph-explore, using only the `cautions` + "
+             "general_gotchas as guardrails. ")
+            + "FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the "
+            "reproduction gate; append new mechanics/dead-ends to the registry."
         ),
     }
 
