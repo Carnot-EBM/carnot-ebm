@@ -1,0 +1,139 @@
+{
+  "config_rule_vocabulary": [],
+  "config_rule_vocabulary_transfers": false,
+  "duration_s": 0.040355,
+  "experiment": "experiment_4418_config_rule_vocabulary_transfer",
+  "field_principles": {
+    "config_rule_vocabulary": "The relational primitives extracted from solved config games; this is the learned reusable self-learning asset.",
+    "config_rule_vocabulary_transfers": "BARE bool: true iff vocabulary-seeded win-rule grounding exceeds cold-start on held-out config games and delta CI95 excludes zero.",
+    "honest_verdict": "Terminal-prefixed. A win (the config-rule vocabulary transfers -> compounding) and a clean null (too heterogeneous -> logged gap) are BOTH decision-grade.",
+    "model_specs": "Local Gemma 4 12B Q4 inducer, config corpora, vocabulary source games, and decentralization declaration.",
+    "preconditions_checked": "Records grounded-rule count, local iGPU inducer availability, and TRM stand-down before induction.",
+    "random_seed": "Determinism precondition for split order and bootstrap.",
+    "reproducibility_checksum": "Hash of vocabulary, per-arm grounding results, and held-out splits.",
+    "transfer_learning_curve": "Per-held-out-game leave-one-game-out transfer record with cold, seeded, delta, and CI95.",
+    "verifier_is_oracle": "BARE bool=false: grounding is execution-checked, but the compounding claim is about the learned vocabulary."
+  },
+  "honest_verdict": "blocked_local_model_unavailable",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "model_specs": {
+    "bootstrap_resamples": 2000,
+    "config_corpora": [
+      "ka59",
+      "tr87",
+      "tn36",
+      "sc25",
+      "bp35",
+      "dc22",
+      "g50t",
+      "lf52",
+      "s5i5"
+    ],
+    "decentralization": "open-weight local model path only; zero quota; no TRM training",
+    "distinction_from_refuted_transfer": "The registry's CROSS-GAME VALUE TRANSFER null was about generic grid-value features for NAV hard-tail search; this measures relational config-rule vocabulary transfer between solved config win-rules.",
+    "inducer": "local Gemma 4 12B Q4 scaffolded config-rule inducer",
+    "inducer_device": "iGPU only; 3090s not used",
+    "inducer_port": 8920,
+    "inducer_status": "blocked_local_model_unavailable",
+    "vocabulary_source_games": [
+      "ka59",
+      "sc25",
+      "tn36",
+      "tr87"
+    ],
+    "vocabulary_sources": [
+      "ops/arc_solve_registry.yaml",
+      "results/experiment_4414_config_rule_induction_solve.json"
+    ]
+  },
+  "overall_delta": null,
+  "overall_delta_ci95": null,
+  "preconditions_checked": {
+    "grounded_rules": {
+      "count": 4,
+      "games": [
+        "ka59",
+        "sc25",
+        "tn36",
+        "tr87"
+      ],
+      "sources": [
+        {
+          "game": "ka59",
+          "primitives": [
+            "count-equality",
+            "editable-reference-relation",
+            "position-region-match",
+            "shape-pattern-match"
+          ],
+          "rule_text": "E3 executable-world-model L1: use the selected 3x3 block to push the second block through the central wall, place the left block on the left target, then place the pushed block on the right target. results/experiment_4350_e3_explore_verify_plan_ka59.json + results/arc_e3/ka59/world_model.py arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3', 'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06. mixed keyboard+click [4,4,4,3,2,3,3,3,C:1,1,4]; C:1 dynamically clicks the second movable block after the first block is placed. editable_count_4_equals_reference_count_4_32",
+          "sources": [
+            "ops/arc_solve_registry.yaml",
+            "results/experiment_4414_config_rule_induction_solve.json"
+          ]
+        },
+        {
+          "game": "sc25",
+          "primitives": [
+            "position-region-match",
+            "shape-pattern-match"
+          ],
+          "rule_text": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit. results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py arc_solver_kit.reproduce(sc25, ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3'], Exp4341 apply, warmup_label='warmup') reproduced=True L1; checksum fb94af999655687f8f323de71c51be54838b6a39734652d654f4296b278b9e6f. ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+          "sources": [
+            "ops/arc_solve_registry.yaml"
+          ]
+        },
+        {
+          "game": "tn36",
+          "primitives": [
+            "position-region-match",
+            "attribute-match",
+            "glyph-map",
+            "sequence-rewrite",
+            "shape-pattern-match",
+            "program-command-map"
+          ],
+          "rule_text": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}. PROGRAM-EDITOR mechanic (FULLY RE'd 2026-06-17). The object runs an N-slot MOVE-PROGRAM (vkuvtkaerv); each slot holds a command code (tn36.py:2171 okllwtboml: 0=settle,1=left,2=right,3=down,33=up,5/6/7/16=rotate,8/9=scale+/-,14/15/63=property). Step CSPOIQWER=4. TOOL PALETTE = a 6-BIT code editor per slot: bit b's toggle-button is at (slot_x, slot_y_top + 3*b) for b=0..5 (values 1,2,4,8,16,32), so ANY code = sum of its set bits (down 3=bit0+bit1; up 33=bit0+bit5; scale+ 8=bit3; rotate+90 5=bit0+bit2). Slot positions ARE READABLE (controller.pfyayhyovw[i].{x,y}) and RE-LAY-OUT per level (L1: 5 slots; L2: 4 slots; different x/y) -> DISCOVER, don't hardcode. RUN by clicking the object sub-button sxhtkytekm (center, discovered). L1: program [3,3,3,3,3]=5 downs->y13->33. L2: [33,33,33,33]=4 ups->y24->8. scripts/arc3_tn36_offline_solver.py \u2014 GENERAL from-scratch solver: reads obj/target deltas + the per-level button layout (pfyayhyovw), computes the move-program (down/up/left/right + scale/rotate), edits slots via bit-toggle clicks, runs, and CHAINS levels. Reproduces L1-L3 (reproduced=True claimed_level=3, 25 clicks). PATH-ROUTING: some levels have wall OBSTACLES (bizgpiltwm) with a gap; cwtesiybfx (tn36.py:2269) reverts a move that collides, so the move ORDER must route the object through the gap. The solver computes the move MULTISET from deltas then searches orderings (the game is the path oracle) until one wins -> two-pass (discover winning order per level, then clean minimal replay on a fresh env, since env.reset() does NOT rewind an advanced episode). L3: gap at y[16,20) between walls at x45; winning order [33,2,2,2,33,2]. L4: SCALE<->collision interaction -- the object box changes size when scaled, so the SCALE-down move must be interleaved at the right point (straight [3,3,3,3,1,9] LOSES; winner e.g. [3,9,3,1,3,3]); the ordering search finds it. GOTCHA: a FRESH env is required per ordering attempt -- accumulating failed runs on one env trips the game's LOSS condition and resets the whole episode to L0 (was masking L4). L5: rotation (270->0=code5) + scale-up (code8) + PROPERTY change (sjmtdfxdrc 11->15 = code 63). PROPERTY codes DECODED 2026-06-17 (set sjmtdfxdrc absolutely): code14->9, code15->8, code63->15 (PROP_CODE map; code 63 = all 6 bits set). L6: MULTI-RUN MAZE -- the collision-free path (8 moves) exceeds the 6 slots, so it uses the CHECKPOINT mechanic (wgzwawbgew): a run that ENDS on a checkpoint advances the object's base (mnvoffrbex), so progress carries across runs. Solver reads box/obstacles/checkpoints from internal state, BFS-plans a path start->checkpoint->target with each leg <= n moves, runs the legs in sequence. L6: leg1 [2,2,2,2,33,33]->checkpoint(49,20), leg2 [1,1,33,33,33,1]->target. Reproduces L1-L6 (reproduced=True claimed_level=6, 74 clicks). Frozen trajectory at results/arc_explore_trajectory_tn36.json. ACTION6 click; data schema IS {x,y} and display->grid is 1:1 (camera.display_to_grid(30,13)==(30,13)). Clicks register (121/121 change the grid). Control is a PROGRAM/transform EDITOR, not direct steering: dispatch (tn36.py:2500) routes a click to a tool-palette (miytdaqzei, EMPTY at reset) else mvqheosngn(apply/2nd-object) else bzirenxmrg(the object); the object carries a move-program vkuvtkaerv=[3,0,3,0,0]; clicking it runs mmmdksslmq()->olrpupaury(). The exact EDIT->EXECUTE semantics that drive obj.y 13->33 are not yet cracked (directly invoking mmmdksslmq did NOT move the object; palette empty).",
+          "sources": [
+            "ops/arc_solve_registry.yaml"
+          ]
+        },
+        {
+          "game": "tr87",
+          "primitives": [
+            "editable-reference-relation",
+            "position-region-match",
+            "glyph-map",
+            "sequence-rewrite"
+          ],
+          "rule_text": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable. GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json. re-gated reproduced=True L6 (kit.reproduce, claimed_level=6, 127-action path); verifier-routed 511 states. tr87 is the deepest single-game solve (6 levels, 5 distinct mechanics). keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+          "sources": [
+            "ops/arc_solve_registry.yaml"
+          ]
+        }
+      ],
+      "status": "ok"
+    },
+    "induction_substrate": "local_iGPU_only_never_3090s",
+    "local_model_server": {
+      "available": false,
+      "device": "iGPU_required",
+      "endpoint": "http://127.0.0.1:8920/v1/models",
+      "model": null,
+      "port": 8920,
+      "status": "blocked_local_model_unavailable",
+      "uses_3090": false
+    },
+    "training_mode": "offline_induction_only_no_trm_training",
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4418,
+  "reproducibility_checksum": "4b3dc6c500f8fe7529057ed82ed9b5a69a0635b01e2ec72e994f65ebcc12a6e6",
+  "schema": "carnot.exp4418.config_rule_vocabulary_transfer.v1",
+  "spec_refs": [
+    "REQ-LEARN-4418",
+    "SCENARIO-LEARN-4418"
+  ],
+  "transfer_learning_curve": [],
+  "verifier_is_oracle": false
+}
