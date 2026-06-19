@@ -1,0 +1,124 @@
+{
+  "field_principles": {
+    "field_principles": "Carries the why behind each required artifact field.",
+    "flagged_for_v410": "BARE string: the single strongest .410 hand-off with a verified arXiv ID, conditioned on the .409 ARC outcomes.",
+    "honest_verdict": "Terminal-prefixed (complete: sota_ingestion_409_mapped).",
+    "inference_substrate": "CPU-only reliable-channel literature ingestion; no GPU training, no live ARC solve, and no TRM launch.",
+    "methods_mapped": "SOTA->experiment rows; every method has a VERIFIED arXiv ID and URL because no citation equals fabrication.",
+    "outcome_conditioning": "Machine-readable summary of the .409 ARC branch that shaped the method ranking.",
+    "preconditions_checked": "Records reliable-channel reachability and banned-channel stand-down so missing sources cannot become fabricated sources.",
+    "random_seed": "Determinism precondition for the sweep query ordering.",
+    "sota_to_experiment_mapping_note": "One synthesized note connecting the literature to concrete .410 experiments."
+  },
+  "flagged_for_v410": "Executable ARC-AGI-3 world-model agent with verifier-grounded planning (arXiv:2605.05138)",
+  "honest_verdict": "complete: sota_ingestion_409_mapped",
+  "inference_substrate": "cpu_reliable_channel_sota_ingestion_no_training",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2605.05138",
+      "carnot_stack_mapping": "Run a fresh-workspace coding-agent harness that builds executable Python world models from observations, verifies them against replays, plans through the model, and keeps game-specific state out of prompts and files.",
+      "experiment_mapping": ".410: first-contact harness for g50t plus one more unseen game; require offline reproduction or a structured verifier-gap ledger.",
+      "failure_mode": "Executable world models can leak benchmark-specific information through files, prior workspaces, or game-tailored prompts; .410 must use fresh agents and leakage audits.",
+      "headline_axis": "generic_first_contact_program_world_model_search",
+      "name": "Executable World Models for ARC-AGI-3",
+      "source_verification": "Verified by arXiv abs WebFetch HTTP 200 and arXiv API id_list on 2026-06-19: https://arxiv.org/abs/2605.05138.",
+      "url": "https://arxiv.org/abs/2605.05138",
+      "v409_outcome_conditioning": "Exp 4423 left generic first contact on g50t as a verifier-gap partial with zero reproduced levels, while Exp 4424 showed that mechanic repair alone did not add a level."
+    },
+    {
+      "arxiv_id_or_url": "2605.05485",
+      "carnot_stack_mapping": "Compile successful and failed win-rule traces into constrained DSL solvers that execute without test-time LLM calls, then evaluate against held-out game families.",
+      "experiment_mapping": ".410: trace-to-solver compiler for marker-coverage, glyph-rewrite, shape-pattern, and progress-fill predicates.",
+      "failure_mode": "Trace compilers can overfit known game families or hard-code constants; require held-out families and literal-hardcode checks.",
+      "headline_axis": "verifier_grounded_win_rule_induction",
+      "name": "ReaComp compiled symbolic solver induction",
+      "source_verification": "Verified by arXiv abs WebFetch HTTP 200 and arXiv API id_list on 2026-06-19: https://arxiv.org/abs/2605.05485.",
+      "url": "https://arxiv.org/abs/2605.05485",
+      "v409_outcome_conditioning": "Exp 4421 shows a config-rule predicate can count after the reproduction gate, but the artifact is adversarial-stamped and oracle-grounded; compiled solvers should amortize the rule without turning oracle checks into a moat claim."
+    },
+    {
+      "arxiv_id_or_url": "2503.23145",
+      "carnot_stack_mapping": "Turn win-rule hypotheses into small programs, ask the verifier for counterexample states, and refine the program until it separates wins from near-misses.",
+      "experiment_mapping": ".410: differential-query induction for g50t and sc25 residual route-search states, with final solve attempts isolated from offline induction queries.",
+      "failure_mode": "A target-function oracle can leak solve-time answers; keep queries offline and report final reproduction separately.",
+      "headline_axis": "counterexample_led_program_induction",
+      "name": "CodeARC inductive program synthesis loop",
+      "source_verification": "Verified by arXiv abs WebFetch HTTP 200 and arXiv API id_list on 2026-06-19: https://arxiv.org/abs/2503.23145.",
+      "url": "https://arxiv.org/abs/2503.23145",
+      "v409_outcome_conditioning": "Exp 4423 logged an unselectable verifier gap; static recipe routing needs targeted counterexamples that distinguish non-wins from true winning deltas."
+    },
+    {
+      "arxiv_id_or_url": "2512.22336",
+      "carnot_stack_mapping": "Generate adversarial behavior tests for induced ARC world models, feed failures back into the model developer, and rerun search only after the verifier accepts transition fidelity.",
+      "experiment_mapping": ".410: adaptive test-and-repair loop around sc25/g50t world models, measuring verifier-gap closure and reproduced levels separately.",
+      "failure_mode": "Adaptive tests can overfit the public game or reward simulator-only fidelity; keep fresh-env reproduction gates and held-out mechanics.",
+      "headline_axis": "program_induced_world_models_plus_search",
+      "name": "Agent2World adaptive symbolic world-model feedback",
+      "source_verification": "Verified by arXiv abs WebFetch HTTP 200 and arXiv API id_list on 2026-06-19: https://arxiv.org/abs/2512.22336.",
+      "url": "https://arxiv.org/abs/2512.22336",
+      "v409_outcome_conditioning": "Exp 4424 passed mechanic tests but stayed offline_reproduced=false for the deeper target, so .410 needs adaptive tests that expose world-model defects before search commits."
+    },
+    {
+      "arxiv_id_or_url": "2605.25931",
+      "carnot_stack_mapping": "Allocate a bounded first-contact budget across observation, hypothesis tests, model repair, and search so an unseen game gets enough evidence before attempting reproduction.",
+      "experiment_mapping": ".410: compare fixed solve-first routing to explore-before-solve budgets on g50t plus a second unseen game.",
+      "failure_mode": "Extra exploration can burn quota or chase irrelevant states; .410 must report CPU time, action count, and verifier-gap reduction.",
+      "headline_axis": "transfer_to_unseen_games_search_budgeting",
+      "name": "Explore Before You Solve speed-depth control",
+      "source_verification": "Verified by arXiv abs WebFetch HTTP 200 and arXiv API id_list on 2026-06-19: https://arxiv.org/abs/2605.25931.",
+      "url": "https://arxiv.org/abs/2605.25931",
+      "v409_outcome_conditioning": "Exp 4426 confirms counted registry entries reproduce, but Exp 4423 and Exp 4424 show the next frontier needs better exploration allocation before committing to a solve path."
+    }
+  ],
+  "outcome_conditioning": {
+    "config_rule_artifact_adversarial": true,
+    "config_rule_level_counted_after_gate": true,
+    "config_rule_verifier_oracle": true,
+    "deeper_world_model_mechanic_tests_pass": false,
+    "deeper_world_model_no_new_level": true,
+    "deeper_world_model_offline_not_reproduced": true,
+    "generic_first_contact_missing_verifier_gap": true,
+    "generic_first_contact_new_levels_zero": true,
+    "generic_first_contact_partial": true,
+    "generic_first_contact_verifier_non_oracle": true,
+    "registry_all_counted_entries_reproduced": true,
+    "registry_audit_cpu_no_llm": true,
+    "registry_claimed_total_35": true,
+    "registry_counted_entries_audited_18": true,
+    "registry_exp4421_new_level_counted": true,
+    "registry_exp4423_zero_new_levels_counted": true,
+    "registry_exp4424_zero_new_levels_counted": true,
+    "vocabulary_artifact_adversarial": true,
+    "vocabulary_transfer_false": true
+  },
+  "preconditions_checked": {
+    "arxiv_api_verified_ids": [
+      "2503.23145",
+      "2512.22336",
+      "2605.05138",
+      "2605.05485",
+      "2605.25931"
+    ],
+    "cpu_only": true,
+    "deep_research_invoked": false,
+    "research_conductor_modified": false,
+    "sweep_clusters_ran": true,
+    "sweep_clusters_urls": [
+      "scripts/sweep_clusters.py cluster=0 --max-results=5",
+      "scripts/sweep_clusters.py cluster=3 --max-results=5"
+    ],
+    "sweep_semscholar_ran": true,
+    "sweep_semscholar_status": "focused ARC/world-model queries ran; one useful ID surfaced (2605.05138), one focused verifier-grounded query returned HTTP 429, and no S2-only source was promoted",
+    "trm_training_stood_down": true,
+    "webfetch_http_200_verified_urls": [
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2512.22336",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2605.05485",
+      "https://arxiv.org/abs/2605.25931"
+    ],
+    "websearch_webfetch_reachable": true
+  },
+  "random_seed": 4429,
+  "sota_to_experiment_mapping_note": "SOTA->experiment map for .410: make arXiv:2605.05138 the headline by building a fresh-workspace executable world-model agent that learns each unseen ARC-AGI-3 game through observation-verification-planning loops; use arXiv:2605.05485 to compile stable verifier-grounded win rules into zero-token symbolic solvers; use arXiv:2503.23145 for counterexample-led program induction; use arXiv:2512.22336 for adaptive world-model tests; and use arXiv:2605.25931 to budget explore-before-solve search. This is conditioned on .409: one config-rule level counted after reproduction, generic first contact still partial, sc25 lookahead repaired mechanics but added zero levels, vocabulary transfer false, and the registry audit running on CPU."
+}

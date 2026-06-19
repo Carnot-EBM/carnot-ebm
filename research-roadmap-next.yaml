@@ -64,8 +64,8 @@ tasks:
       reproducible_total_levels/games, and the config-rule-vocabulary transfer outcome. SKIP any
       flagged_adversarial artifact; HONOR verifier_is_oracle (a circular/execution-grounded ARC solve
       is NOT a moat headline). REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed self-declared state lets the reconciler classify without re-running"}
-        reproducible_total_levels: {principle: "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"}
+        honest_verdict: {{principle: "terminal-prefixed self-declared state lets the reconciler classify without re-running"}}
+        reproducible_total_levels: {{principle: "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"}}
       honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.
       verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission.
 
@@ -104,13 +104,13 @@ tasks:
       transfer; if 0, the gap is total and A2/A3 are the levers). This counts NO new levels (it
       re-solves known games) -- it is the BASELINE measurement, not a level-banking task.
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed (this benchmark ALWAYS completes with a measurement -- positive, partial, or zero -- so it is terminal, never partial:)"}
-        generic_loo_solve_count: {principle: "bare int: the count of games re-solved from the example corpus WITHOUT their own recipe -- the headline generic-capability number"}
-        per_game: {principle: "list of {game, solved_without_own_recipe, routed_to, residual_delta} -- shows EXACTLY which mechanics the example corpus does and does not transfer"}
-        offline_reproduced: {principle: "every claimed re-solve is reproduction-gated -- a non-reproducible solve does not count (ARC Solve Reproducibility Discipline)"}
-        missing_verifier_gaps: {principle: "each residual_delta the generic path could not induce is a missing-verifier/missing-primitive gap -- the .410 A2-A5 build backlog"}
-        random_seed: {principle: "determinism precondition for a third party to re-run the benchmark"}
-        reproducibility_checksum: {principle: "content hash of the example-corpus snapshot used, so the LOO result is reproducible"}
+        honest_verdict: {{principle: "terminal-prefixed (this benchmark ALWAYS completes with a measurement -- positive, partial, or zero -- so it is terminal, never partial:)"}}
+        generic_loo_solve_count: {{principle: "bare int: the count of games re-solved from the example corpus WITHOUT their own recipe -- the headline generic-capability number"}}
+        per_game: {principle: "list of {{game, solved_without_own_recipe, routed_to, residual_delta}} -- shows EXACTLY which mechanics the example corpus does and does not transfer"}
+        offline_reproduced: {{principle: "every claimed re-solve is reproduction-gated -- a non-reproducible solve does not count (ARC Solve Reproducibility Discipline)"}}
+        missing_verifier_gaps: {{principle: "each residual_delta the generic path could not induce is a missing-verifier/missing-primitive gap -- the .410 A2-A5 build backlog"}}
+        random_seed: {{principle: "determinism precondition for a third party to re-run the benchmark"}}
+        reproducibility_checksum: {{principle: "content hash of the example-corpus snapshot used, so the LOO result is reproducible"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true
       (execution-grounded reproduction). NO leaderboard submission.
 
@@ -148,13 +148,13 @@ tasks:
       partial (grounded Tier-2 predicate but no reproduced level, with the residual logged as a gap) is
       PROGRESS but is reported with a TERMINAL complete: prefix, never partial:.
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed -- a fully-run induction that grounds-but-does-not-solve is COMPLETE (a negative-but-real outcome), so use complete: not partial: (the .409 exp4423 FAIL-loop fix)"}
-        reproduced_levels: {principle: "bare int; only reproduction-gated levels count (ARC Solve Reproducibility)"}
-        offline_reproduced: {principle: "the reproduction gate -- a live-only solve does not count"}
-        few_shot_examples_used: {principle: "list of which solved-game win-rules conditioned the induction -- proves the example corpus is the lever, the core .410 hypothesis"}
-        verifier_is_oracle: {principle: "true: the verifier GROUNDS the LLM-proposed predicate (execution-grounded), so this is NOT a learned-verifier moat claim -- honest framing per Circularity Discipline"}
-        random_seed: {principle: "determinism for re-run"}
-        reproducibility_checksum: {principle: "content hash of corpus+prompt for reproducibility"}
+        honest_verdict: {{principle: "terminal-prefixed -- a fully-run induction that grounds-but-does-not-solve is COMPLETE (a negative-but-real outcome), so use complete: not partial: (the .409 exp4423 FAIL-loop fix)"}}
+        reproduced_levels: {{principle: "bare int; only reproduction-gated levels count (ARC Solve Reproducibility)"}}
+        offline_reproduced: {{principle: "the reproduction gate -- a live-only solve does not count"}}
+        few_shot_examples_used: {{principle: "list of which solved-game win-rules conditioned the induction -- proves the example corpus is the lever, the core .410 hypothesis"}}
+        verifier_is_oracle: {{principle: "true: the verifier GROUNDS the LLM-proposed predicate (execution-grounded), so this is NOT a learned-verifier moat claim -- honest framing per Circularity Discipline"}}
+        random_seed: {{principle: "determinism for re-run"}}
+        reproducibility_checksum: {{principle: "content hash of corpus+prompt for reproducibility"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO
       leaderboard submission.
 
@@ -190,14 +190,14 @@ tasks:
       is a REAL finding reported with a terminal complete: prefix + the residual as a missing-world-model
       gap.
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed; a measured no-help result is complete (negative-but-real), not partial:"}
-        reproduced_levels: {principle: "bare int; reproduction-gated"}
-        offline_reproduced: {principle: "the gate"}
-        world_model_accuracy_with_examples: {principle: "the example-conditioned arm metric -- the .410 hypothesis under test"}
-        world_model_accuracy_cold: {principle: "the cold-synthesis positive-control arm -- without it a no-improvement result is uninterpretable (FALSE_NEGATIVE_RISK)"}
-        missing_verifier_gaps: {principle: "the residual mechanic class the examples could not transfer -- the build backlog"}
-        random_seed: {principle: "determinism"}
-        reproducibility_checksum: {principle: "content hash for reproducibility"}
+        honest_verdict: {{principle: "terminal-prefixed; a measured no-help result is complete (negative-but-real), not partial:"}}
+        reproduced_levels: {{principle: "bare int; reproduction-gated"}}
+        offline_reproduced: {{principle: "the gate"}}
+        world_model_accuracy_with_examples: {{principle: "the example-conditioned arm metric -- the .410 hypothesis under test"}}
+        world_model_accuracy_cold: {{principle: "the cold-synthesis positive-control arm -- without it a no-improvement result is uninterpretable (FALSE_NEGATIVE_RISK)"}}
+        missing_verifier_gaps: {{principle: "the residual mechanic class the examples could not transfer -- the build backlog"}}
+        random_seed: {{principle: "determinism"}}
+        reproducibility_checksum: {{principle: "content hash for reproducibility"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true. NO 3090
       inference; NO leaderboard submission.
 
@@ -236,12 +236,12 @@ tasks:
       PRECONDITIONS (check FIRST; on any miss honest_verdict blocked_<resource>, STOP): offline env files
       exist; the pytest above is GREEN after the fix; live generator GGUF cached if LLM induction needed.
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed complete:/success: -- the whole point of this task is to stop emitting the conductor-rejected partial:"}
-        verdict_contract_fixed: {principle: "bare bool: the 5-point atomic fix landed AND the test is green (the pre-test gate will not poison)"}
-        reproduced_levels: {principle: "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"}
-        offline_reproduced: {principle: "the gate"}
-        random_seed: {principle: "determinism"}
-        reproducibility_checksum: {principle: "content hash for reproducibility"}
+        honest_verdict: {{principle: "terminal-prefixed complete:/success: -- the whole point of this task is to stop emitting the conductor-rejected partial:"}}
+        verdict_contract_fixed: {{principle: "bare bool: the 5-point atomic fix landed AND the test is green (the pre-test gate will not poison)"}}
+        reproduced_levels: {{principle: "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"}}
+        offline_reproduced: {{principle: "the gate"}}
+        random_seed: {{principle: "determinism"}}
+        reproducibility_checksum: {{principle: "content hash for reproducibility"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true. NO 3090
       inference; NO leaderboard submission.
 
@@ -270,13 +270,13 @@ tasks:
       FALSIFIABLE GATE: reproduced_levels>=1 on the deepened game AND every PRE-EXISTING reproducible
       solve still passes arc_solver_kit.reproduce after the consolidation (no regression).
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed"}
-        reproduced_levels: {principle: "bare int; the +1 deeper level, reproduction-gated"}
-        offline_reproduced: {principle: "the gate"}
-        primitives_consolidated: {principle: "list of {operator, derived_from_games} -- the reusable generic operators the live solver now composes"}
-        no_regression: {principle: "bare bool: every prior reproducible solve still reproduces after the refactor -- additive-only guarantee"}
-        random_seed: {principle: "determinism"}
-        reproducibility_checksum: {principle: "content hash"}
+        honest_verdict: {{principle: "terminal-prefixed"}}
+        reproduced_levels: {{principle: "bare int; the +1 deeper level, reproduction-gated"}}
+        offline_reproduced: {{principle: "the gate"}}
+        primitives_consolidated: {principle: "list of {{operator, derived_from_games}} -- the reusable generic operators the live solver now composes"}
+        no_regression: {{principle: "bare bool: every prior reproducible solve still reproduces after the refactor -- additive-only guarantee"}}
+        random_seed: {{principle: "determinism"}}
+        reproducibility_checksum: {{principle: "content hash"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true. NO 3090
       inference; NO leaderboard submission.
 
@@ -303,9 +303,9 @@ tasks:
       the helper + lint (every test asserts; no skips). Do NOT retroactively rewrite past artifacts.
       PRECONDITIONS: `.venv/bin/python -c "import scripts.adversarial_verify"` succeeds.
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed"}
-        template_shipped: {principle: "bare bool: the helper + lint + tests landed green"}
-        tests_pass: {principle: "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"}
+        honest_verdict: {{principle: "terminal-prefixed"}}
+        template_shipped: {{principle: "bare bool: the helper + lint + tests landed green"}}
+        tests_pass: {{principle: "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
 
   - id: exp4438-registry-gaps-hygiene-gap4-guard
@@ -331,9 +331,9 @@ tasks:
       hard-block all-False if one is missing). SKIP any flagged_adversarial artifact. NO production
       verifier edits (audit-only per Verifier Authenticity Discipline).
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed"}
-        regression_guard_passed: {principle: "BARE bool (gated-fields-must-be-bare): the GAP-4 result did not regress"}
-        reproducible_total_levels: {principle: "the reconciled authoritative count"}
+        honest_verdict: {{principle: "terminal-prefixed"}}
+        regression_guard_passed: {{principle: "BARE bool (gated-fields-must-be-bare): the GAP-4 result did not regress"}}
+        reproducible_total_levels: {{principle: "the reconciled authoritative count"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
 
   - id: exp4439-hardware-continuity
@@ -357,9 +357,9 @@ tasks:
       bitstream pack / sampler smoke per its track); for each blocked board emit a precondition-gated
       blocked_<resource> + a one-line audit.
       REQUIRED ARTIFACT FIELDS:
-        preconditions_checked: {principle: "list of {resource, available}; pre-empts the fabricate-when-resource-missing mode"}
-        per_board_status: {principle: "one status per attached board so each stays visible in the milestone retro (Hardware-Task Continuity)"}
-        honest_verdict: {principle: "terminal-prefixed; a clean SSH-unreachable is blocked_, an audit-only step is complete_"}
+        preconditions_checked: {principle: "list of {{resource, available}}; pre-empts the fabricate-when-resource-missing mode"}
+        per_board_status: {{principle: "one status per attached board so each stays visible in the milestone retro (Hardware-Task Continuity)"}}
+        honest_verdict: {{principle: "terminal-prefixed; a clean SSH-unreachable is blocked_, an audit-only step is complete_"}}
       honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_/blocked_.
 
   - id: exp4440-sota-ingestion-410
@@ -384,9 +384,9 @@ tasks:
       (docs/research-notes/) + flag the single strongest method for the .411 planner. Update
       research-studying.md (mark ingested).
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed"}
-        methods: {principle: "list of {name, arxiv_id, what_it_takes_over_our_stack, pitfalls} -- each with a VERIFIED citation (no citation = fabrication)"}
-        flagged_for_v411: {principle: "the single strongest method fed forward so SOTA flows into the next milestone's experiments (discover->ingest->plan->experiment)"}
+        honest_verdict: {{principle: "terminal-prefixed"}}
+        methods: {principle: "list of {{name, arxiv_id, what_it_takes_over_our_stack, pitfalls}} -- each with a VERIFIED citation (no citation = fabrication)"}
+        flagged_for_v411: {{principle: "the single strongest method fed forward so SOTA flows into the next milestone's experiments (discover->ingest->plan->experiment)"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
 
   - id: exp4441-capstone-410
@@ -414,9 +414,9 @@ tasks:
       helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly so the capstone does NOT trip
       CIRCULAR_MOAT_OVERCLAIM. NO gated_on.
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed"}
-        generic_solver_gap_state: {principle: "one honest string (closing/partial/total-gap) -- the .410 headline answer to 'can the example corpus give us generic live solves?'"}
-        reproducible_total_levels: {principle: "the authoritative monotonic sprint metric"}
-        next_backlog: {principle: "the residual_deltas + missing primitives that become the .411 generic-solver build backlog"}
+        honest_verdict: {{principle: "terminal-prefixed"}}
+        generic_solver_gap_state: {{principle: "one honest string (closing/partial/total-gap) -- the .410 headline answer to 'can the example corpus give us generic live solves?'"}}
+        reproducible_total_levels: {{principle: "the authoritative monotonic sprint metric"}}
+        next_backlog: {{principle: "the residual_deltas + missing primitives that become the .411 generic-solver build backlog"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle handled per
       Circularity Discipline. NO leaderboard submission.
