@@ -25392,6 +25392,62 @@ terminal-prefixed honest verdict.
 |---|---|---|
 | REQ-REPORT-4447 | Implemented (`python/carnot/agentic/arc_primitive_library.py`, `python/carnot/experiment_4447_lilo_documented_primitive_library.py`, `results/experiment_4447_lilo_documented_primitive_library.json`) | Implemented (`tests/python/test_experiment_4447_lilo_documented_primitive_library.py`) |
 
+### REQ-REPORT-4448: Leave-One-Out Generic-Solver V2 Re-Measures .411 Operator Transfer
+
+The Exp 4448 workflow SHALL re-run the Exp 4432 leave-one-out generic-solver
+benchmark over the exact same held-out game set from
+`results/experiment_4432_loo_generic_solve_benchmark.json`, withholding each
+target game's own recipe in-memory and not mutating `ops/arc_solve_registry.yaml`.
+The workflow SHALL compare the new `.411` generic operator stack against the v1
+baseline count of `2`, including `config_rule_verifier`, `object_motion_world_model`,
+and documented primitive retrieval as available generic evidence.
+
+Before measuring, the workflow SHALL check that the offline environment files for
+the v1 held-out set exist, that `carnot.agentic.arc_solver_kit` and
+`carnot.agentic.arc_solve_learning` import, that the required upstream v1/.411
+artifacts are readable, and that no 3090 inference or leaderboard submission is
+used. If a game requires live induction and the permitted non-3090 generator is
+not cached or served locally, that game SHALL be marked `blocked_model_not_cached`
+and the benchmark SHALL continue over the remaining targets.
+
+The workflow SHALL count a v2 leave-one-out solve only when the target is either
+already reproduction-gated in the v1 generic loop or is closed by a `.411`
+generic operator with offline reproduction evidence from `arc_solver_kit.reproduce()`.
+Documented-library retrieval by itself SHALL be recorded as guidance but SHALL NOT
+count as a solve without reproduction-gated operator evidence.
+
+The workflow SHALL write
+`results/experiment_4448_loo_generic_solve_benchmark_v2.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`generic_loo_solve_count_v2`, `generic_loo_solve_count_v1_baseline`,
+`per_game`, `offline_reproduced`, `missing_verifier_gaps`,
+`verifier_is_oracle`, `random_seed`, and `reproducibility_checksum`. `per_game`
+SHALL be a list of `{game, solved_without_own_recipe, closed_by_operator,
+residual_delta}` rows. The falsifiable gate SHALL pass only when
+`generic_loo_solve_count_v2 > 2`; a flat or lower count SHALL still be a terminal
+complete measurement with residuals logged.
+
+#### SCENARIO-REPORT-4448: V2 Re-Measurement Counts Only Reproduction-Gated Generic Closures
+
+**Given** the Exp 4432 v1 benchmark artifact, the .411 config-rule, object-motion,
+and documented-library artifacts, importable ARC solver modules, and offline
+environment files for the v1 held-out games
+**When** Exp 4448 re-measures the same leave-one-out benchmark with each target's
+own recipe withheld and the .411 generic operators available
+**Then** it writes the v2 artifact, reports a bare integer
+`generic_loo_solve_count_v2`, compares it to the bare v1 baseline `2`, records
+which residuals `config_rule_verifier` and `object_motion_world_model` closed,
+keeps documented-library-only rows out of the solve count, sets
+`offline_reproduced=true` only when every counted solve has reproduction evidence,
+keeps `verifier_is_oracle=true`, records no 3090 or leaderboard use, and emits a
+terminal-prefixed honest verdict.
+
+## Implementation Status (REQ-REPORT-4448)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4448 | Planned (`python/carnot/experiment_4448_loo_generic_solve_benchmark_v2.py`, `results/experiment_4448_loo_generic_solve_benchmark_v2.json`) | Planned (`tests/python/test_experiment_4448_loo_generic_solve_benchmark_v2.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
