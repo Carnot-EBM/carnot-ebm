@@ -25782,6 +25782,61 @@ verdict.
 |---|---|---|
 | REQ-REPORT-4459 | Planned (`python/carnot/experiment_4459_loo_generic_solve_benchmark_v3.py`, `results/experiment_4459_loo_generic_solve_benchmark_v3.json`) | Planned (`tests/python/test_experiment_4459_loo_generic_solve_benchmark_v3.py`) |
 
+### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
+
+The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
+live replay package. It SHALL read `ops/arc_solve_registry.yaml`,
+`results/arc3_live_submit.json`, and the cached per-game replay sources, then
+re-run each registry row with `reproducibility: reproduced` and
+`levels_reproduced > 0` through `arc_solver_kit.reproduce()` against the local
+OFFLINE ARC environment. Games whose banked replay does not reproduce the
+claimed level SHALL be quarantined and SHALL NOT contribute to the package
+level count.
+
+Before validating the package, the workflow SHALL check that local offline
+environment files are present and that `carnot.agentic.arc_solver_kit` imports.
+It SHALL NOT require network access, open a live scorecard, close a scorecard,
+call the leaderboard, or invoke `scripts/arc3_live_submit.py`. Operator-only
+external publication discipline SHALL be represented by
+`submitted_to_leaderboard=false` and an operator checklist rather than any
+autonomous submission action.
+
+The workflow SHALL write
+`results/experiment_4460_submission_package_prep.json` with required top-level
+fields `honest_verdict`, `inference_substrate`, `submission_package_ready`,
+`total_reproduced_levels_in_package`, `prior_submitted_baseline_levels`,
+`beats_prior_baseline`, `per_game_replay_validation`,
+`submitted_to_leaderboard`, `verifier_is_oracle`, `random_seed`, and
+`reproducibility_checksum`. `inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates`; the run SHALL respect the
+verifier-scoring duration floor. `per_game_replay_validation` SHALL be a list of
+`{game, replays_ok, reproduced_levels, env_matched}` rows with action-sequence
+metadata sufficient for operator review. The falsifiable gate SHALL pass only
+when every packaged row replays successfully, `submitted_to_leaderboard=false`,
+and `total_reproduced_levels_in_package` is greater than the registry's
+`prior_submitted_baseline_levels` of `13`.
+
+#### SCENARIO-REPORT-4460: Submission Package Counts Only Revalidated Offline Replays
+
+**Given** the ARC solve registry contains reproduced games, the prior live
+submission artifact records the 13-level submitted baseline, local offline
+environment files are present, and `arc_solver_kit` imports
+**When** Exp 4460 prepares the operator package
+**Then** it replays each reproduced registry row through
+`arc_solver_kit.reproduce()`, excludes any row whose replay fails, records the
+live env-match status available from the prior live artifact for each game,
+writes the operator checklist and package manifest, reports a bare integer
+`total_reproduced_levels_in_package`, reports
+`beats_prior_baseline=true` only when that total is greater than `13`, keeps
+`submitted_to_leaderboard=false`, keeps `verifier_is_oracle=true`, and emits a
+terminal-prefixed honest verdict.
+
+## Implementation Status (REQ-REPORT-4460)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4460 | Planned (`python/carnot/experiment_4460_submission_package_prep.py`, `results/experiment_4460_submission_package_prep.json`) | Planned (`tests/python/test_experiment_4460_submission_package_prep.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
