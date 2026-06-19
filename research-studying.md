@@ -8,6 +8,19 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 FinAcumen experience-memory ingestion (arXiv:2606.17642) — INGESTED, flagged for .411
+
+**Status:** INGESTED → `docs/research-notes/finacumen-experience-memory-ingestion-2026-06-19.md`.
+Operator-handed paper. Structural mirror of our ARC live-solver (frozen small model + self-evolving
+experience memory + thresholded retrieval + verifier gate + fallback); a frozen 8B + memory rivals
+GPT-4o/72B (+41 pts) — empirical support that corpus/retrieval quality, not model size, is the lever.
+**Implemented this ingestion (committed):** confidence-threshold + failure-`cautions` in
+`arc_solve_learning.recommend_approach` (FinAcumen "irrelevant retrieval DEGRADES" → don't blind-copy a
+low-confidence recipe on unseen games). **flagged_for_v411 (STRONGEST):** wire `confident_transfer` +
+`cautions` into the runtime induction prompt (`arc_executable_world_model` induce/refactor) —
+precision-over-recall transfer on held-out games; calibrate the threshold against the .410 LOO
+benchmark. Plus: dedup/rank/cap few-shot (k_max=5); systematic corpus distillation (Findings+Cautions).
+
 ## 2026-06-19 Exp 4440 - .410 example-corpus SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4440_sota_ingestion_410.json` and
