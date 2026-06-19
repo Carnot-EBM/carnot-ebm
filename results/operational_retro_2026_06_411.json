@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.411",
+  "generated_at": "2026-06-19T17:48:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector AGAIN false-zeroed for 2026.06.411 (0 commits since activation), so the conductor-owned locked numeric fields stay at 0/0/0 and gpu_idle_on_compute_bound_tasks=null. On-disk ground truth READ THIS TURN (ops/changelog.md window + results/experiment_*.json mtimes + scripts/summarize_artifact.py) shows 12 experiments actually ran (exp4442-exp4453, mtimes 2026-06-19 10:21:48->13:37:53 local, ~3h16m wall window); capstone exp4453 is clean/unflagged with paper_ready=true. The recurring operational failure is OBSERVABILITY (the false-zero detector, .363-.410, now extending to .411), NOT execution.",
+  "bottlenecks_identified": [
+    "RECURRING FALSE-ZERO TIMING DETECTOR (the load-bearing bottleneck, .363-.410, now .411): the milestone-scoped detector reported 0 experiment commits since activation, but on-disk ground truth read this turn (changelog window + results/ mtimes) shows 12 experiments ran (exp4442-exp4453, ~3h16m wall window 10:21:48->13:37:53 local). The loop is healthy; only its self-measurement is blind. The operational failure is observability, not execution.",
+    "NO GPU bottleneck: both RTX 3090s idle (0% util, 4MB) at the 2026-06-19T17:48:17Z snapshot is CORRECT behaviour. The .411 tasks were ARC-solver synthesis + aggregation work (capstone exp4453 substrate=aggregation_from_upstream_artifacts, duration 0.39s) with 0 compute-bound GGUF/CUDA tasks attributed, so gpu_idle_on_compute_bound_tasks=null and DualGPURunner is not applicable."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: add an mtime scan of results/experiment_*.json plus a changelog-window fallback so it attributes commits within the milestone window instead of false-zeroing. This single fix retires the .363-.411 observability gap.",
+    "Stamp duration_s + compute_bound at artifact write-time (in scripts/experiment_template.py) so the retro reads per-experiment timing directly rather than re-deriving it from mtimes each milestone.",
+    "Emit a detector_gap_suspected signal whenever artifacts exist on disk for the active milestone but the detector reports 0 commits, so future retros auto-flag the gap instead of each one re-discovering it by hand.",
+    "Do NOT propose DualGPURunner enforcement: there were no parallel-model compute-bound tasks this milestone; the GPU-monitor DualGPURunner hint is a generic idle suggestion, not a .411 bottleneck."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the milestone-scoped timing detector (mtime scan + changelog-window fallback + detector_gap_suspected emission) -- the recurring .363-.411 false-zero is the only operational defect this milestone.",
+    "Move duration_s/compute_bound stamping to artifact write-time so timing is captured at the source instead of reconstructed at retro time.",
+    "Keep the conductor-owned locked numeric fields authoritative (0 here) but wire the detector fix so they reflect the real ~12-experiment, ~3h16m wall window next milestone."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The most efficient action is to follow the established .404-.410 precedent: keep the conductor-owned locked numeric fields at the detector's authoritative 0, but read on-disk ground truth this turn and flag the recurring false-zero observability gap as the real finding. The loop executed 12 experiments cleanly in ~3h16m and closed paper_ready=true (LOO generic-solve v2 5/7, reproducible_total_levels=39, games=20); the only operational defect is that its own timing detector cannot see that. Observability, not execution, is what needs the fix."
+}
