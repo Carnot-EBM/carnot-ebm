@@ -482,19 +482,20 @@ games:
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
 - game: g50t
-  reproducibility: unsolved
-  levels_reproduced: 0
-  solver: scripts/arc_loop_solve.py --game g50t
+  reproducibility: reproduced
+  levels_reproduced: 1
+  solver: python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py reuses the Exp4433 cached
+    Qwen proposal as a verifier-scored candidate, grounds it with the execution verifier, drives OfflineSolver,
+    and replays through arc_solver_kit.reproduce.
   gotchas: []
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
-    status: open
+    status: filled
     game: g50t
     failure_mode: needs_per_game_RE
-    missing_discriminator: selectable verifier that distinguishes the target's winning
-      delta from the explored non-winning states
-    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's
-      visible toggles
+    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the
+      explored non-winning states
+    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
     routed_recipe:
       game: ls20
       solver: results/experiment_4285 solve_trace.actions.
@@ -504,6 +505,17 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
+    filled_by: experiment_4443_bank_g50t_example_conditioned_win
+    filled_artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
+    filled_summary: Example-conditioned target-offset win predicate reproduced g50t L1 offline with corrected
+      inference_substrate.
+  mechanic_class: config_toggle_target_offset
+  win_condition: 'L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier
+    grounds against execution state immediately before next_level.'
+  action_model: Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves right, ACTION2 moves
+    down, ACTION5 commits the trigger clone.
+  reproduce: Exp4443 results/experiment_4443_bank_g50t_example_conditioned_win.json offline_reproduced=True,
+    reproduced_levels=1, checksum b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9.
 - game: dc22
   reproducibility: unsolved
   levels_reproduced: 0
@@ -533,8 +545,8 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
-reproducible_total_levels: 37
-reproducible_total_games: 18
+reproducible_total_levels: 38
+reproducible_total_games: 19
 provisional_total_levels: 5
 live_submissions:
 - date: '2026-06-17'

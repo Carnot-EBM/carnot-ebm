@@ -25075,6 +25075,67 @@ archived successfully.
 |---|---|---|
 | REQ-REPORT-4442 | Planned (`python/carnot/reporting/archive_410_activate_411_4442.py`, `python/carnot/experiment_4442_archive_410_activate_411.py`) | Planned (`tests/python/test_experiment_4442_archive_410_activate_411.py`) |
 
+### REQ-REPORT-4443: Bank The Correctly-Declared g50t Example-Conditioned Win-Induction Solve
+
+The Exp 4443 workflow SHALL re-run the example-conditioned win-induction banking
+path for held-out ARC game `g50t` level 1, using the Exp 4433 grounded predicate
+`player.x == target.x + 1 and player.y == target.y + 1` only through the
+execution verifier and the offline reproduction gate. If the run reuses the
+cached deterministic predicate instead of performing a fresh live Qwen generation,
+the artifact SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` and SHALL record
+a measured `duration_s` at or above the verifier-scoring one-second floor. It
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+Before banking, the workflow SHALL check that `environment_files/g50t/` is
+non-empty, that `carnot.agentic.arc_solver_kit` imports under the repository
+Python environment, and that either the cached
+`unsloth/Qwen3.5-9B-MTP-GGUF` directory is non-empty or a local iGPU
+llama-server is available. Missing resources SHALL write an honest blocked
+artifact whose `honest_verdict` starts with `complete: blocked_<resource>` and
+SHALL NOT fabricate generation, reproduction, or registry progress.
+
+The workflow SHALL gather at least three solved-game grounded win-rule examples,
+including the ka59 editable-count rule, the s5i5 marker-coverage rule, and the
+ft09 local-color-cycle rule when available, combine them with the `g50t`
+object-centric digest, ground the proposed predicate with
+`verifier_is_oracle=true`, drive the solution through
+`arc_solver_kit.reproduce()`, and write
+`results/experiment_4443_bank_g50t_example_conditioned_win.json`. The artifact
+SHALL include bare top-level fields `honest_verdict`, `inference_substrate`,
+`reproduced_levels`, `offline_reproduced`, `few_shot_examples_used`,
+`verifier_is_oracle`, `reproducible_total_levels`, `random_seed`, and
+`reproducibility_checksum`. A banked complete path SHALL have
+`offline_reproduced=true`, `reproduced_levels>=1`, and
+`reproducible_total_levels=38`.
+
+When the complete path reproduces `g50t` level 1, the workflow SHALL update
+`ops/arc_solve_registry.yaml` so `g50t` is `reproduced` with
+`levels_reproduced: 1`, records the grounded win condition, action model,
+solver, reproduce checksum, and marks `GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT`
+as filled. It SHALL update the authoritative registry totals from 37/18 to
+38/19.
+
+#### SCENARIO-REPORT-4443: Correct Substrate Declaration Lets The Real g50t L1 Solve Bank
+
+**Given** the offline `g50t` environment files, importable `arc_solver_kit`, an
+allowed local Qwen generator resource, and at least three solved-game grounded
+win-rule examples
+**When** Exp 4443 reuses or replays the example-conditioned proposal, grounds
+the target-offset predicate through the execution verifier, reproduces the 17
+action `g50t` level-1 plan offline, and verifies the artifact
+**Then** it writes a terminal-prefixed artifact with
+`inference_substrate=verifier_ensemble_against_cached_candidates`,
+`duration_s>=1.0`, `offline_reproduced=true`, `reproduced_levels=1`,
+`verifier_is_oracle=true`, `reproducible_total_levels=38`, no
+`flagged_adversarial` stamp, and updates the registry to bank `g50t` level 1.
+
+## Implementation Status (REQ-REPORT-4443)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4443 | Planned (`python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py`, `results/experiment_4443_bank_g50t_example_conditioned_win.json`) | Planned (`tests/python/test_experiment_4443_bank_g50t_example_conditioned_win.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
