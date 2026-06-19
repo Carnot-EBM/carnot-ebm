@@ -8,6 +8,20 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 VibeThinker-3B proposer candidate (HF WeiboAI/VibeThinker-3B) — INGESTED, flagged for .412
+
+**Status:** INGESTED → `docs/research-notes/vibethinker-3b-proposer-candidate-2026-06-19.md`.
+Operator-handed model. 3B, **MIT**, Qwen2.5-Coder base; IMO-AnswerBench 76.4–80.6% (rivals 671B–1T),
+96.1% LeetCode — a 3B near-frontier on VERIFIABLE math/code (3rd small-model-rivals-frontier datapoint
+after FinAcumen). Candidate **proposer swap** for the ARC live generator: 1.93 GB Q4 (vs Qwen3.5-9B's
+5.9 GB) → more 16 GB-Kaggle KV headroom; its "not for autonomous agents" limit is exactly the job our
+harness-as-agent design removes from the LLM. GGUF ready (`oussaber/VibeThinker-3B-Q4_K_M-GGUF`).
+**flagged_for_v412 (STRONGEST):** head-to-head proposer benchmark VibeThinker-3B (thinking) vs
+Qwen3.5-9B-MTP (`/no_think`) on the SAME E3 induce/refactor step — score **grounding rate +
+events-to-solve + WALL-TIME** (long-CoT slowness is the real risk vs the live time budget), not raw
+accuracy. Swap only if it grounds ≥ as well at ≤ the wall-time. Verifier/harness unchanged (LLM is
+swappable; the verifier is the moat).
+
 ## 2026-06-19 FinAcumen experience-memory ingestion (arXiv:2606.17642) — INGESTED, flagged for .411
 
 **Status:** INGESTED → `docs/research-notes/finacumen-experience-memory-ingestion-2026-06-19.md`.
