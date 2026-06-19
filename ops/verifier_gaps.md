@@ -2012,3 +2012,29 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate_design: Add a verifier score that targets the residual wrong mode, then rerun Exp 4408 with the same SCA and LODO calibration gate.
 - priority: high
 
+<!-- exp4415-gap-ar25-l2:start -->
+### GAP-4415-AR25-L2: Exp 4415 adaptive residual behavior
+- status: open
+- evidence: results/experiment_4415_agent2world_adaptive_e3_repair.json; adaptive_tests=1/2; offline_reproduced=False.
+- residual failing behavior: ar25_l2_hidden_undo_stack_state_not_visible_in_rollout
+- leakage control: held-out mechanic test and fresh-agent state are reported separately from the solve claim.
+- priority: high
+<!-- exp4415-gap-ar25-l2:end -->
+
+<!-- exp4415-gap-tn36-l8:start -->
+### GAP-4415-TN36-L8: Exp 4415 adaptive residual behavior
+- status: open
+- evidence: results/experiment_4415_agent2world_adaptive_e3_repair.json; adaptive_tests=1/2; offline_reproduced=False.
+- residual failing behavior: tn36_l8_palette_population_or_later_program_state_still_wrong
+- leakage control: held-out mechanic test and fresh-agent state are reported separately from the solve claim.
+- priority: high
+<!-- exp4415-gap-tn36-l8:end -->
+
+<!-- exp4415-gap-lp85-l6:start -->
+### GAP-4415-LP85-L6: Exp 4415 adaptive residual behavior
+- status: open
+- evidence: results/experiment_4415_agent2world_adaptive_e3_repair.json; adaptive_tests=1/2; offline_reproduced=False.
+- residual failing behavior: lp85_l6_button_permutation_search_reproduction_still_wrong
+- leakage control: held-out mechanic test and fresh-agent state are reported separately from the solve claim.
+- priority: high
+<!-- exp4415-gap-lp85-l6:end -->

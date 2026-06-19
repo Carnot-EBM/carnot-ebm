@@ -184,6 +184,40 @@ def transition_fixture():
     }
 
 
+def adaptive_trace_fixture_4415():
+    prior = np.full((12, 12), 9, dtype=int)
+    prior[4:7, 4:7] = 5
+    moved = engine(prior, 4, None)
+    restored = engine(moved, 7, {"undo_stack": [prior.tolist()]})
+    no_stack = engine(moved, 7, None)
+    return {
+        "adaptive_tests": [
+            {
+                "name": "ar25_adaptive_round1_explicit_hidden_stack_restore",
+                "round": 1,
+                "source_failing_transition": "ar25:L2:rollout_action7_wrong_cells_after_move",
+                "derived_from_rollout_trace": True,
+                "fresh_agent_state": True,
+                "expected": prior.tolist(),
+                "observed": restored.tolist(),
+                "passed": bool(np.array_equal(restored, prior)),
+                "residual_behavior_after_test": "ar25_l2_action7_without_hidden_stack_still_not_plan_safe",
+            },
+            {
+                "name": "ar25_adaptive_round2_missing_hidden_stack_residual",
+                "round": 2,
+                "source_failing_transition": "ar25:L2:fresh_agent_rollout_hidden_stack_absent",
+                "derived_from_rollout_trace": True,
+                "fresh_agent_state": True,
+                "expected": prior.tolist(),
+                "observed": no_stack.tolist(),
+                "passed": bool(np.array_equal(no_stack, prior)),
+                "residual_behavior_after_test": "ar25_l2_hidden_undo_stack_state_not_visible_in_rollout",
+            },
+        ]
+    }
+
+
 def is_level_complete(grid):
     arr = np.asarray(grid)
     if arr.ndim != 2:

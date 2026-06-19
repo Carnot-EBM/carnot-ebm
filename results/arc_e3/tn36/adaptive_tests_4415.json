@@ -1,0 +1,55 @@
+{
+  "experiment": "experiment_4415_agent2world_adaptive_e3_repair",
+  "fresh_agent_state": true,
+  "game": "tn36",
+  "held_out_mechanic_test_pass": true,
+  "method": "agent2world_adaptive_behavior_tests_from_failing_rollout_traces",
+  "random_seed": 4415,
+  "solve_claim_separate_from_test_repair": true,
+  "spec_refs": [
+    "REQ-PHASE4-4415",
+    "SCENARIO-PHASE4-4415"
+  ],
+  "tests": [
+    {
+      "derived_from_rollout_trace": true,
+      "expected": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
+      "fresh_agent_state": true,
+      "game": "tn36",
+      "name": "tn36_adaptive_round1_run_button_executes_program",
+      "observed": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
+      "passed": true,
+      "residual_behavior_after_test": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+      "round": 1,
+      "source_failing_transition": "tn36:L8:rollout_sxhtkytekm_program_did_not_move",
+      "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+      "world_model_path": "results/arc_e3/tn36/world_model.py"
+    },
+    {
+      "derived_from_rollout_trace": true,
+      "expected": "palette_state_tracks_real_l8_rollout",
+      "fresh_agent_state": true,
+      "game": "tn36",
+      "name": "tn36_adaptive_round2_palette_population_residual",
+      "observed": {
+        "bit_clicks_for_up_33": [
+          [
+            24,
+            41
+          ],
+          [
+            24,
+            56
+          ]
+        ],
+        "stateful_palette_model": "not_encoded"
+      },
+      "passed": false,
+      "residual_behavior_after_test": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+      "round": 2,
+      "source_failing_transition": "tn36:L8:fresh_agent_palette_population_still_wrong",
+      "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+      "world_model_path": "results/arc_e3/tn36/world_model.py"
+    }
+  ]
+}
