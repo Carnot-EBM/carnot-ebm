@@ -23960,3 +23960,47 @@ prior submitted baseline — operator-only submit). The `.412 SOTA-ingestion slo
 
 Sources (this sweep, WebSearch-verified 2026-06-19): arxiv.org/abs/{2309.16436, 2606.11521, 2507.14172, 2411.17708,
 2411.02272, 2605.05138, 2606.12316, 2310.19791, 2603.24621, 2603.13372}.
+
+---
+
+## .413 planning note (2026-06-19) — EXECUTE, don't re-design
+
+The `.412 capstone (`results/experiment_4465_capstone_v412.json`) closed
+`generic_solver_gap_state: partial`: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves
+generically, exp4456), raised `generic_loo_solve_count` 5→6 (exp4459), and shipped
+a 39-level submission package (exp4460) — but banked **ZERO new reproduced levels**
+(`reproducible_total_levels` stayed 39/20, FLAT vs `.411). The diagnosis is the
+key planning input for `.413: the two level-up attempts failed **operationally**,
+not on the research.
+
+- **dc22 (exp4455)** was `blocked_baseline_pytest_coverage` and NEVER ran the
+  counterexample-guided solve: its PRECONDITIONS ran `pytest -k "..."` which
+  inherits the global `--cov-fail-under=99` from `pyproject.toml addopts` (a `-k`
+  subset = 26.71% coverage = exit 1), and the agent treated exit-1 as a hard block.
+  The `.411 SUCCESSFUL solve (exp4446) used `--no-cov`. The CEGIS approach the `.412
+  task designed has therefore never had a real attempt.
+- **sc25 deeper-bank (exp4457)** produced NO artifact (over-scoped: bundled
+  "generalize a generic operator" + "bank 4 levels" in one 150-turn task). sc25's
+  L2-L5 are already live-recorded (`provisional_total_levels: 5`) — banking them is
+  the single biggest reproduced-level opportunity in the corpus.
+- **sb26 (exp4458)** is a genuine honest negative (missing
+  `color_match_slot_sequence_verifier`).
+
+The `.412 SOTA-ingestion slot (exp4464) flagged the same lever forward:
+**counterexample-guided re-induction from rejecting execution states**
+(arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436). `.413 therefore
+EXECUTES what `.412 designed rather than re-designing: (1) run the dc22 CEGIS solve
+with the corrected `--no-cov` precondition; (2) bank sc25's provisional L2-L5 via
+sc25's OWN cast-grid world model (split from the generic-operator generalization);
+(3) ship a durable `--no-cov` ARC-precondition smoke helper + lint so the
+dc22-class block never recurs; (4) build the missing sb26 operator; (5) the
+operator-mandated (2026-06-19) MANUFACTURED-variant generic-transfer benchmark
+(25 games × N variants — `python/carnot/agentic/arc_variant_generator.py`).
+
+No NEW arXiv references were required for `.413 — the `.412 sweep
+(CEGIS / SOAR 2507.14172 / neurally-guided induction 2411.17708 /
+induction+transduction 2411.02272 / Executable World Models 2605.05138 /
+Loop-OWM 2606.12316 / ARC survey 2603.13372) already maps onto the EXECUTE
+milestone; exp4477 (`.413 SOTA-ingestion) does the deeper fresh sweep in-loop,
+focused on executing CEGIS at scale + the program-induction precision/agreement
+frontier (GAP-4 / GAP-5).
