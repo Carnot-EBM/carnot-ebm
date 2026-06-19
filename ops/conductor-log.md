@@ -8846,3 +8846,4 @@ c |
 | 2026-06-19 14:41 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 85 passed, 1 warning in 4.95s |
 | 2026-06-19 14:58 UTC | PHASE A2 (ARC NORTH STAR) -- GENERIC config-rule / | OK | 108 passed, 1 warning in 5.35s |
 | 2026-06-19 15:20 UTC | PHASE A3 (ARC NORTH STAR) -- GENERIC object-motion | OK | 111 passed, 1 warning in 5.53s |
+| 2026-06-19 15:40 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- D | OK | 94 passed, 1 warning in 7.34s |
