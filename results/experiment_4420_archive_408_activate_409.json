@@ -1,0 +1,237 @@
+{
+  "activated_milestone": "2026.06.409",
+  "active_milestone_confirmed": "2026.06.409",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.408",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4423_capstone_v408.json",
+      "experiment_id": "4423",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "7276f2dc83b484f145fced97a691748ab813148c1b029b42ad079dc82cef6c27"
+    },
+    {
+      "deliverable": "results/experiment_4414_config_rule_induction_solve.json",
+      "experiment_id": "4414",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "9e67ba9610939e2019bddbb0cd304ce4232b7226d9dad684d1139ea839c49dbe"
+    },
+    {
+      "deliverable": "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+      "experiment_id": "4415",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "2f7a33727918fbaeb2dd6637f5626572649e533239c1042f26d6f9e4278398b1"
+    },
+    {
+      "deliverable": "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+      "experiment_id": "4416",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "ef380adab5b7bd0da4d3075ee25aeade252eae989fc799b42117e237cfb11407"
+    },
+    {
+      "deliverable": "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+      "experiment_id": "4417",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "f30e5acbc17cd16a414c3695b165189b8ebe8e3015a02871c4771333517e59f2"
+    },
+    {
+      "deliverable": "results/experiment_4418_config_rule_vocabulary_transfer.json",
+      "experiment_id": "4418",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "ab87308c06633f67ac0813ee87cf38d2f909b612ffdb40857c472e3a96945b2c"
+    },
+    {
+      "deliverable": "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+      "experiment_id": "4419",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "4df06c125867125546a7c19937a511fd12ac8fe1c830604a152f7772c8972b14"
+    }
+  ],
+  "duration_s": 14.989276,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4420,
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed self-declared state lets the reconciler classify without re-running",
+    "preconditions_checked": "Records YAML, smart-subset, active-roadmap, and source-artifact checks.",
+    "v408_close_state": "Records the .408 capstone truth: config-rule grounded but no new levels, Agent2World partial, localizer closed, GAP-4 local gate held flat, vocabulary false, SteerConf false, ARC total still 34.",
+    "verifier_is_oracle": "True means this transition is execution-grounded; circular ARC execution solves are not oracle-distinct verifier moat evidence."
+  },
+  "flagged_artifacts_excluded": [],
+  "honest_verdict": "success: archived_v408_v409_active_config_rule_grounded_no_new_levels_localizer_closed_gap4_holds_vocab_false_detection_false_arc34_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.409",
+      "expected": "2026.06.409",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4420_archive_408_activate_409.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 75%]\n.......................                                                  [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n95 passed, 1 warning in 5.84s\n"
+    },
+    "source_artifacts": {
+      "4414": {
+        "exists": true,
+        "path": "results/experiment_4414_config_rule_induction_solve.json",
+        "required": true,
+        "sha256": "9e67ba9610939e2019bddbb0cd304ce4232b7226d9dad684d1139ea839c49dbe"
+      },
+      "4415": {
+        "exists": true,
+        "path": "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+        "required": true,
+        "sha256": "2f7a33727918fbaeb2dd6637f5626572649e533239c1042f26d6f9e4278398b1"
+      },
+      "4416": {
+        "exists": true,
+        "path": "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+        "required": true,
+        "sha256": "ef380adab5b7bd0da4d3075ee25aeade252eae989fc799b42117e237cfb11407"
+      },
+      "4417": {
+        "exists": true,
+        "path": "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+        "required": true,
+        "sha256": "f30e5acbc17cd16a414c3695b165189b8ebe8e3015a02871c4771333517e59f2"
+      },
+      "4418": {
+        "exists": true,
+        "path": "results/experiment_4418_config_rule_vocabulary_transfer.json",
+        "required": true,
+        "sha256": "ab87308c06633f67ac0813ee87cf38d2f909b612ffdb40857c472e3a96945b2c"
+      },
+      "4419": {
+        "exists": true,
+        "path": "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+        "required": true,
+        "sha256": "4df06c125867125546a7c19937a511fd12ac8fe1c830604a152f7772c8972b14"
+      },
+      "4423": {
+        "exists": true,
+        "path": "results/experiment_4423_capstone_v408.json",
+        "required": true,
+        "sha256": "7276f2dc83b484f145fced97a691748ab813148c1b029b42ad079dc82cef6c27"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4420,
+  "reproducibility_checksum": "3f6764ad813e7558543084e0757446e4f1d74411ad3b161e00408baa2ae851ca",
+  "research_complete_duplicates_removed": 27,
+  "research_complete_record_action": "deduped",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v408_to_v409_4420.v1",
+  "spec_refs": [
+    "REQ-REPORT-4420",
+    "SCENARIO-REPORT-4420"
+  ],
+  "task_id": "exp4420-archive-408-activate-409",
+  "trm_training_ran": false,
+  "v408_close_state": {
+    "agent2world_honest_verdict": "complete_e3_adaptive_partial",
+    "agent2world_new_levels_reproduced": 0,
+    "agent2world_outcome": "honest_partial_zero_new_levels",
+    "agent2world_residual_games": [
+      "ar25",
+      "tn36",
+      "lp85"
+    ],
+    "agent2world_verifier_is_oracle": true,
+    "arc_config_rule_state": "grounded_config_rules_no_new_reproducible_levels",
+    "capstone_honest_verdict": "complete: v408_config_rule_grounded_no_new_levels_localizer_closed_sovereign_gap4_holds_vocab_false_detection_false_arc_levels_34_publication_ready",
+    "capstone_verifier_is_oracle": false,
+    "circular_execution_grounded_solves_not_moat": true,
+    "config_rule_honest_verdict": "complete_config_rule_partial",
+    "config_rule_new_levels_reproduced": 0,
+    "config_rule_verifier_is_oracle": true,
+    "config_rule_vocabulary_transfers": false,
+    "detection_calibrated_multi_domain": false,
+    "flagged_artifacts_excluded": [],
+    "gap4_delta": 0.0,
+    "gap4_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "gap4_gated_pass2": 0.4516,
+    "gap4_graded_gate_fires": 0,
+    "gap4_pass2_vote_wins_lost": 0,
+    "gap4_vote_pass2": 0.4516,
+    "grounded_win_rules": [
+      {
+        "false_positive_rate": 0.0,
+        "fires_on_win": true,
+        "game": "ka59",
+        "literal_hardcode": false,
+        "predicate": "editable_count_4_equals_reference_count_4_32",
+        "tier": 2
+      }
+    ],
+    "grounded_win_rules_count": 1,
+    "hidden_state_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "hidden_state_delta_vs_position_only": 0.0,
+    "hidden_state_honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
+    "hidden_state_localizer_has_nonposition_signal": false,
+    "hidden_state_n_traces": 1000,
+    "hidden_state_position_only_baseline_f1": 1.0,
+    "hidden_state_probe_f1": 1.0,
+    "hidden_state_verifier_is_oracle": false,
+    "leaderboard_submission": false,
+    "local_generator_coverage": 0.2333,
+    "localizer_program_state": "closed_position_bound_text_and_hidden",
+    "new_games_since_prior": 0,
+    "new_levels_since_prior": 0,
+    "paper_ready": true,
+    "publication_unmet_gates": [],
+    "reproducible_total_games": 17,
+    "reproducible_total_levels": 34,
+    "sovereign_gap4_gate_holds": true,
+    "sovereign_gap4_honest_verdict": "complete: sovereign_gap4_local_gate_holds_flat_cov_0.2333_fires_0_lost_0",
+    "sovereign_gap4_verifier_is_oracle": true,
+    "sovereign_verifier_state": "sovereign_gap4_local_gate_holds_execution_grounded",
+    "steerconf_honest_verdict": "complete: clean_null_steered_confidence_does_not_rescue_code_detector",
+    "steerconf_outcome": "clean_null_code_detector_not_rescued",
+    "summary": "config_rule_grounded_no_new_levels_agent2world_partial_localizer_closed_sovereign_gap4_holds_vocab_false_detection_false_arc34",
+    "trm_training_ran": false,
+    "verifier_is_oracle_respected": true,
+    "vocabulary_honest_verdict": "blocked_local_model_unavailable",
+    "vocabulary_outcome": "blocked_local_model_unavailable_or_false"
+  },
+  "verifier_is_oracle": true
+}
