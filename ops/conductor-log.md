@@ -8851,3 +8851,4 @@ c |
 | 2026-06-19 16:12 UTC | PHASE A6 (ARC NORTH STAR) -- LEAVE-ONE-OUT generic | OK | 88 passed, 1 warning in 5.50s |
 | 2026-06-19 16:31 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | 85 passed, 1 warning in 8.99s |
 | 2026-06-19 16:52 UTC | PHASE B2 (RESERVED INFRA) -- harden + CI-guard the | OK | 92 passed, 1 warning in 5.97s |
+| 2026-06-19 17:06 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | 88 passed, 1 warning in 7.61s |
