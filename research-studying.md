@@ -8,6 +8,20 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 RecursiveMAS (arXiv:2604.25917) — INGESTED as CORROBORATION; decomposition parked
+
+**Status:** INGESTED → `docs/research-notes/recursivemas-corroboration-2026-06-19.md`. Operator-handed;
+logged as corroboration (weaker fit — multi-agent LLM latent-recursion training technique, not a
+drop-in for our execution-grounded offline ARC agent). **Corroborates** (3rd datapoint): an explicit
+Critic/verifier in the loop + iterative refinement-on-mismatch improves accuracy = our
+propose→verify→refactor. **Does NOT transfer to the live agent:** latent collaboration bypasses text
+decoding, incompatible with our EXECUTION-grounded verifier (must run the code each round); multi-LLM
+infeasible on one offline 16GB P100 in the 8h budget. **flagged (PARKED, not an ARC-sprint task):** the
+Planner→Critic→Solver DECOMPOSITION idea → for the HIERARCHICAL-PLANNING track (the vc33/L4 wall;
+LeCun names hierarchical planning THE open problem) — DEV-side: frontier-model Planner decomposes a
+deep-tail game into subgoals, verifier grounds each, bank the decomposition as a richer corpus entry.
+No experiment staged.
+
 ## 2026-06-19 VibeThinker-3B proposer candidate (HF WeiboAI/VibeThinker-3B) — INGESTED, flagged for .412
 
 **Status:** INGESTED → `docs/research-notes/vibethinker-3b-proposer-candidate-2026-06-19.md`.
