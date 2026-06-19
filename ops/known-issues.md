@@ -11,6 +11,24 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-19 (MANDATORY-NEXT-MILESTONE for .413, operator-directed): wire MANUFACTURED variants into the LOO/generic-transfer benchmark
+
+**Operator 2026-06-19 ("flag the variant for 413"):** the variant generator is SHIPPED + wired into
+the offline eval (`python/carnot/agentic/arc_variant_generator.py` + `arc_leaderboard_eval.py --variant
+N`/`--reflect`; `VariantEnv` keeps the REAL win-logic so a solve is a real solve). It manufactures
+mechanic-preserving held-out layout variants of the 25 public games (color-permutation -> no action
+remap; optional reflection -> click remap), with GUARANTEED solvability + gold solution per variant
+(inherited from the original game, judged by the real win-condition). Validated: explorer solves
+variant-1 lp85 to L1 in 21 actions (= the real game).
+
+**.413 task (MANDATORY):** wire the variant set into the LOO/generic-transfer benchmark — score the
+generic solver on **25 games × N variants** (not 2/7 LOO on 25), and have the example-conditioned
+inducer + generic operators TRAIN against variant diversity (a color-permuted variant forces the LLM
+to RE-induce the win-rule in a new palette = a genuine generalization test, the closest legitimate
+proxy to the held-out OOD eval). Just add `--variant`/`--reflect` to the next LOO benchmark task +
+report `generic_transfer_rate_over_variants`. The held-out 110 are off-limits by design; this is the
+only rule-legal way to a bigger transfer benchmark. Cross-ref: research-studying.md `flagged_for_v413`.
+
 ### 2026-06-19 (MANDATORY-NEXT-MILESTONE, outer-loop watchdog): exp4423 verdict-vocabulary conflict — generic first-contact solver FAIL-loops on `partial:`
 
 **Symptom (`.409 PHASE A3):** exp4423 (generic first-contact solver breadth — the
