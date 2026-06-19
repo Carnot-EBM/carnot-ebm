@@ -39,6 +39,9 @@ MODELS = {
     "qwen3-14b": ("models--unsloth--Qwen3-14B-GGUF/snapshots/*/Qwen3-14B-Q4_K_M.gguf", "/no_think\n"),
     "phi-4": ("models--unsloth--phi-4-GGUF/snapshots/*/phi-4-Q4_K_M.gguf", None),  # base Phi-4: no thinking mode
     "qwen2.5-coder-14b": ("models--unsloth--Qwen2.5-Coder-14B-Instruct-GGUF/snapshots/*/Qwen2.5-Coder-14B-Instruct-Q4_K_M.gguf", None),
+    # Qwopus-27B-Coder at a SMALLER quant (Q3_K_M 13.5GB) to fit 16GB -- tests whether a quantized larger
+    # coder beats the small Q4 models on accuracy. Qwen3.6-based, so /no_think applies.
+    "qwopus-q3km": ("models--Jackrong--Qwopus3.6-27B-Coder-MTP-GGUF/snapshots/*/Qwopus3.6-27B-Coder-MTP-Q3_K_M.gguf", "/no_think\n"),
     "gemma-12b": ("models--unsloth--gemma-4-12B-it-GGUF/snapshots/*/gemma-4-12b-it-Q4_K_M.gguf", None),
 }
 
