@@ -40,6 +40,7 @@ def healthy():
 
 def main():
     REPORT["gpu_before"] = vram()
+    REPORT["kaggle_input"] = sorted(os.listdir("/kaggle/input")) if Path("/kaggle/input").exists() else []
     REPORT["binary_exists"] = SERVER.exists()
     REPORT["gguf_exists"] = GGUF.exists()
     if not SERVER.exists() or not GGUF.exists():
