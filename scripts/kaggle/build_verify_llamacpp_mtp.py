@@ -24,7 +24,7 @@ from pathlib import Path
 WORK = Path("/kaggle/working")
 OUT = WORK / "llamacpp-cuda-mtp"  # <- save this dir as a Kaggle Dataset
 SRC = WORK / "llama.cpp"
-CUDA_ARCHS = "75;89"  # 75 = T4, 89 = L4 (both Kaggle GPUs). Add 86 for a local 3090.
+CUDA_ARCHS = "60;70;75;89"  # P100=60, V100=70, T4=75, L4=89 -- cover ALL Kaggle GPUs (probe got a P100!)
 # Pin a known-good upstream commit for reproducibility; bump only after re-verifying the MTP smoke below.
 LLAMA_REPO = "https://github.com/ggml-org/llama.cpp"
 GGUF_REPO = "unsloth/Qwen3.5-9B-MTP-GGUF"
