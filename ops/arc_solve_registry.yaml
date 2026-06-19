@@ -670,3 +670,121 @@ latest_object_motion_world_model_4445:
   - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
   note: .411 generic object-motion world-model operator closes the ar25 and ka59
     leave-one-out residuals while recording the cold-control lift.
+latest_documented_primitive_library_4447:
+  artifact: results/experiment_4447_lilo_documented_primitive_library.json
+  inference_substrate: aggregation_from_upstream_artifacts
+  library_coverage: 1.0
+  retrieval_precision_at_1: 1.0
+  constant_leak_violations: []
+  note: .411 LILO-style AutoDoc library; entries are induced from the consolidated
+    primitive registry plus solved-game mechanic classes and are retrieved before
+    generator fallback.
+  documented_primitives:
+  - name: active_data_collection
+    mechanic_class: world_model
+    operator: active_data_collection
+    derived_from_games: [ar25, ka59, ft09, sc25]
+    description: Collects balanced action and object cases for offline transition grounding.
+    retrieval_cues: [active data, transition, coverage, object signature, world model]
+  - name: config_rule_grounding
+    mechanic_class: config_rule
+    operator: config_rule_grounding
+    derived_from_games: [s5i5, ft09, tr87]
+    description: Converts grounded visible configuration rules into executable action labels.
+    retrieval_cues: [config, rule, marker coverage, local constraint, toggle]
+  - name: config_rule_verifier
+    mechanic_class: config_rule
+    operator: config_rule_verifier
+    derived_from_games: [s5i5, ft09, g50t]
+    description: Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.
+    retrieval_cues: [config, verifier, marker coverage, local constraint, target offset, toggle]
+  - name: glyph_rewrite_matcher
+    mechanic_class: config_substitution
+    operator: glyph_rewrite_matcher
+    derived_from_games: [tr87]
+    description: Applies reusable glyph and sequence rewrite rules before per-game reverse engineering.
+    retrieval_cues: [glyph, rewrite, substitution, sequence, editable]
+  - name: graph_astar_action_cost
+    mechanic_class: graph_explore_navigation
+    operator: graph_astar_action_cost
+    derived_from_games: [tu93, lp85, cd82, sp80, cn04, m0r0, sk48, su15]
+    description: Ranks graph-search frontiers by path cost plus verifier or distance heuristic.
+    retrieval_cues: [graph, astar, keyboard, click, goal distance, action cost]
+  - name: object_centric_digest
+    mechanic_class: object_geometry_digest
+    operator: object_centric_digest
+    derived_from_games: [g50t, lp85, tn36, ka59]
+    description: Summarizes connected objects so routing and grounding match mechanic structure.
+    retrieval_cues: [object, digest, component, bbox, template, program editor]
+  - name: object_motion_world_model
+    mechanic_class: object_motion_world_model
+    operator: object_motion_world_model
+    derived_from_games: [ar25, ka59, sc25, ft09]
+    description: Retrieves translate, reflect, push, and dynamic-selection transition models.
+    retrieval_cues: [object motion, world model, motion family, translate, reflect, push]
+  - name: mechanic_action_sequence_replay
+    mechanic_class: action_sequence_replay
+    operator: graph_astar_action_cost
+    derived_from_games: [ls20, wa30]
+    description: Replays a discovered deterministic action-kind sequence through the offline gate.
+    retrieval_cues: [first solve, action kind sequence, replays offline, trajectory]
+  - name: mechanic_cast_grid_world_model
+    mechanic_class: cast_grid_world_model
+    operator: active_data_collection
+    derived_from_games: [sc25]
+    description: Models a cast-grid interaction whose spell changes object state before exit planning.
+    retrieval_cues: [cast grid, spell, shrink, exit, world model, tank controls]
+  - name: mechanic_click_connect_line
+    mechanic_class: click_connect_line
+    operator: graph_astar_action_cost
+    derived_from_games: [su15]
+    description: Searches click-only line-connection mechanics using object click candidates.
+    retrieval_cues: [click connect, line, diagonal, click only, rich action candidates]
+  - name: mechanic_config_substitution
+    mechanic_class: config_substitution
+    operator: glyph_rewrite_matcher
+    derived_from_games: [tr87]
+    description: Matches editable glyph or sequence substitutions through reusable rewrite rules.
+    retrieval_cues: [glyph, rewrite, substitution, editable sequence]
+  - name: mechanic_config_toggle_marker_coverage
+    mechanic_class: config_toggle_marker_coverage
+    operator: config_rule_verifier
+    derived_from_games: [s5i5]
+    description: Moves controlled markers or supports until all visible target slots are covered.
+    retrieval_cues: [marker coverage, controlled markers, target markers, support clearance]
+  - name: mechanic_graph_explore_navigation
+    mechanic_class: graph_explore_navigation
+    operator: graph_astar_action_cost
+    derived_from_games: [cd82, sp80, tu93, cn04, m0r0, sk48]
+    description: Plans keyboard or click graph exploration with additive path cost and verifier heuristic.
+    retrieval_cues: [graph explore, keyboard directional, goal distance, adapter free, confirm commit]
+  - name: mechanic_local_constraint_color_cycle
+    mechanic_class: local_constraint_color_cycle
+    operator: config_rule_verifier
+    derived_from_games: [ft09]
+    description: Cycles visible cell colors until local equality or inequality constraints hold.
+    retrieval_cues: [local constraint, color cycle, neighbor, constraints, cells]
+  - name: mechanic_object_motion_push
+    mechanic_class: object_motion_push
+    operator: object_motion_world_model
+    derived_from_games: [ka59]
+    description: Models player or selector movement that pushes a block through target geometry.
+    retrieval_cues: [push, block, dynamic selection, object motion, world model]
+  - name: mechanic_object_motion_reflect
+    mechanic_class: object_motion_reflect
+    operator: object_motion_world_model
+    derived_from_games: [ar25]
+    description: Models paired object motion where a selected object and reflected object move together.
+    retrieval_cues: [reflect, reflection, selected object, reflected object, object slots]
+  - name: mechanic_object_template_alignment
+    mechanic_class: object_template_alignment
+    operator: object_centric_digest
+    derived_from_games: [r11l, lp85]
+    description: Aligns moveable colored objects with visible goal templates using object geometry.
+    retrieval_cues: [align, template, goal sprite, moveable piece, drag, object]
+  - name: mechanic_program_editor_object_attribute_match
+    mechanic_class: program_editor_object_attribute_match
+    operator: object_centric_digest
+    derived_from_games: [tn36]
+    description: Edits object command slots until object attributes match the visible target.
+    retrieval_cues: [program editor, move program, slot, attribute, object target, bit code]

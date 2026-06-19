@@ -1,0 +1,360 @@
+{
+  "constant_leak_violations": [],
+  "experiment": "experiment_4447_lilo_documented_primitive_library",
+  "field_principles": {
+    "constant_leak_violations": {
+      "principle": "list of any library entry encoding a game-specific constant -- the LILO pitfall guard; a leaking primitive is not generic and does not count"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- the library is induced from existing solve artifacts using symbolic compression on CPU; no live LLM inference"
+    },
+    "library_coverage": {
+      "principle": "bare float: leave-one-out fraction of solved games whose mechanic a retrieved primitive identifies -- the self-learning compounding metric"
+    },
+    "no_regression": {
+      "principle": "bare bool: every prior reproducible solve still reproduces after wiring retrieval"
+    },
+    "primitives_documented": {
+      "principle": "list of {name, mechanic_class, derived_from_games} -- the AutoDoc library entries"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "retrieval_precision_at_1": {
+      "principle": "bare float: top-ranked retrieved primitive is the correct mechanic class"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: solves remain execution-grounded; the library is retrieval not a learned verifier"
+    }
+  },
+  "honest_verdict": "success: documented_primitive_library_retrieval_gate_passed",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- the library is induced from existing solve artifacts (symbolic compression, CPU); no live_llm_inference",
+  "library_coverage": 1.0,
+  "no_3090_inference": true,
+  "no_regression": true,
+  "per_game": [
+    {
+      "game": "r11l",
+      "identified": true,
+      "mechanic_class": "object_template_alignment",
+      "precision_at_1_hit": true,
+      "top_operator": "object_centric_digest",
+      "top_primitive": "mechanic_object_template_alignment"
+    },
+    {
+      "game": "ls20",
+      "identified": true,
+      "mechanic_class": "action_sequence_replay",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_action_sequence_replay"
+    },
+    {
+      "game": "wa30",
+      "identified": true,
+      "mechanic_class": "action_sequence_replay",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_action_sequence_replay"
+    },
+    {
+      "game": "s5i5",
+      "identified": true,
+      "mechanic_class": "config_toggle_marker_coverage",
+      "precision_at_1_hit": true,
+      "top_operator": "config_rule_verifier",
+      "top_primitive": "config_rule_verifier"
+    },
+    {
+      "game": "lp85",
+      "identified": true,
+      "mechanic_class": "object_template_alignment",
+      "precision_at_1_hit": true,
+      "top_operator": "object_centric_digest",
+      "top_primitive": "mechanic_object_template_alignment"
+    },
+    {
+      "game": "sc25",
+      "identified": true,
+      "mechanic_class": "cast_grid_world_model",
+      "precision_at_1_hit": true,
+      "top_operator": "active_data_collection",
+      "top_primitive": "active_data_collection"
+    },
+    {
+      "game": "cd82",
+      "identified": true,
+      "mechanic_class": "graph_explore_navigation",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_graph_explore_navigation"
+    },
+    {
+      "game": "sp80",
+      "identified": true,
+      "mechanic_class": "graph_explore_navigation",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_action_sequence_replay"
+    },
+    {
+      "game": "su15",
+      "identified": true,
+      "mechanic_class": "click_connect_line",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "graph_astar_action_cost"
+    },
+    {
+      "game": "tu93",
+      "identified": true,
+      "mechanic_class": "graph_explore_navigation",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_graph_explore_navigation"
+    },
+    {
+      "game": "tn36",
+      "identified": true,
+      "mechanic_class": "program_editor_object_attribute_match",
+      "precision_at_1_hit": true,
+      "top_operator": "object_centric_digest",
+      "top_primitive": "mechanic_object_template_alignment"
+    },
+    {
+      "game": "cn04",
+      "identified": true,
+      "mechanic_class": "graph_explore_navigation",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_action_sequence_replay"
+    },
+    {
+      "game": "m0r0",
+      "identified": true,
+      "mechanic_class": "graph_explore_navigation",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_action_sequence_replay"
+    },
+    {
+      "game": "sk48",
+      "identified": true,
+      "mechanic_class": "graph_explore_navigation",
+      "precision_at_1_hit": true,
+      "top_operator": "graph_astar_action_cost",
+      "top_primitive": "mechanic_action_sequence_replay"
+    },
+    {
+      "game": "ar25",
+      "identified": true,
+      "mechanic_class": "object_motion_reflect",
+      "precision_at_1_hit": true,
+      "top_operator": "object_motion_world_model",
+      "top_primitive": "object_motion_world_model"
+    },
+    {
+      "game": "ka59",
+      "identified": true,
+      "mechanic_class": "object_motion_push",
+      "precision_at_1_hit": true,
+      "top_operator": "object_motion_world_model",
+      "top_primitive": "object_motion_world_model"
+    },
+    {
+      "game": "ft09",
+      "identified": true,
+      "mechanic_class": "local_constraint_color_cycle",
+      "precision_at_1_hit": true,
+      "top_operator": "config_rule_verifier",
+      "top_primitive": "config_rule_verifier"
+    },
+    {
+      "game": "tr87",
+      "identified": true,
+      "mechanic_class": "config_substitution",
+      "precision_at_1_hit": true,
+      "top_operator": "config_rule_grounding",
+      "top_primitive": "config_rule_grounding"
+    }
+  ],
+  "preconditions_checked": {
+    "arc_solve_registry": true,
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "leaderboard_submission": false
+  },
+  "primitives_documented": [
+    {
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "ft09",
+        "sc25"
+      ],
+      "mechanic_class": "world_model",
+      "name": "active_data_collection"
+    },
+    {
+      "derived_from_games": [
+        "s5i5",
+        "ft09",
+        "tr87"
+      ],
+      "mechanic_class": "config_rule",
+      "name": "config_rule_grounding"
+    },
+    {
+      "derived_from_games": [
+        "s5i5",
+        "ft09",
+        "g50t"
+      ],
+      "mechanic_class": "config_rule",
+      "name": "config_rule_verifier"
+    },
+    {
+      "derived_from_games": [
+        "tr87"
+      ],
+      "mechanic_class": "config_substitution",
+      "name": "glyph_rewrite_matcher"
+    },
+    {
+      "derived_from_games": [
+        "tu93",
+        "lp85",
+        "cd82",
+        "sp80",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "su15"
+      ],
+      "mechanic_class": "graph_explore_navigation",
+      "name": "graph_astar_action_cost"
+    },
+    {
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "mechanic_class": "object_geometry_digest",
+      "name": "object_centric_digest"
+    },
+    {
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "sc25",
+        "ft09"
+      ],
+      "mechanic_class": "object_motion_world_model",
+      "name": "object_motion_world_model"
+    },
+    {
+      "derived_from_games": [
+        "ls20",
+        "wa30"
+      ],
+      "mechanic_class": "action_sequence_replay",
+      "name": "mechanic_action_sequence_replay"
+    },
+    {
+      "derived_from_games": [
+        "sc25"
+      ],
+      "mechanic_class": "cast_grid_world_model",
+      "name": "mechanic_cast_grid_world_model"
+    },
+    {
+      "derived_from_games": [
+        "su15"
+      ],
+      "mechanic_class": "click_connect_line",
+      "name": "mechanic_click_connect_line"
+    },
+    {
+      "derived_from_games": [
+        "tr87"
+      ],
+      "mechanic_class": "config_substitution",
+      "name": "mechanic_config_substitution"
+    },
+    {
+      "derived_from_games": [
+        "s5i5"
+      ],
+      "mechanic_class": "config_toggle_marker_coverage",
+      "name": "mechanic_config_toggle_marker_coverage"
+    },
+    {
+      "derived_from_games": [
+        "cd82",
+        "sp80",
+        "tu93",
+        "cn04",
+        "m0r0",
+        "sk48"
+      ],
+      "mechanic_class": "graph_explore_navigation",
+      "name": "mechanic_graph_explore_navigation"
+    },
+    {
+      "derived_from_games": [
+        "ft09"
+      ],
+      "mechanic_class": "local_constraint_color_cycle",
+      "name": "mechanic_local_constraint_color_cycle"
+    },
+    {
+      "derived_from_games": [
+        "ka59"
+      ],
+      "mechanic_class": "object_motion_push",
+      "name": "mechanic_object_motion_push"
+    },
+    {
+      "derived_from_games": [
+        "ar25"
+      ],
+      "mechanic_class": "object_motion_reflect",
+      "name": "mechanic_object_motion_reflect"
+    },
+    {
+      "derived_from_games": [
+        "r11l",
+        "lp85"
+      ],
+      "mechanic_class": "object_template_alignment",
+      "name": "mechanic_object_template_alignment"
+    },
+    {
+      "derived_from_games": [
+        "tn36"
+      ],
+      "mechanic_class": "program_editor_object_attribute_match",
+      "name": "mechanic_program_editor_object_attribute_match"
+    }
+  ],
+  "random_seed": 4447,
+  "registry_path": "ops/arc_solve_registry.yaml",
+  "reproducibility_checksum": "40afa7857c381e2f81fdc469dd8e1a368172e32ad314480e37e73bc215e79699",
+  "result_path": "results/experiment_4447_lilo_documented_primitive_library.json",
+  "retrieval_precision_at_1": 1.0,
+  "schema": "carnot.exp4447.lilo_documented_primitive_library.v1",
+  "spec_refs": [
+    "REQ-REPORT-4447",
+    "SCENARIO-REPORT-4447"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_count": 18,
+  "verifier_is_oracle": true
+}
