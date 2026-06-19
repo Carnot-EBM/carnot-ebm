@@ -25754,6 +25754,69 @@ leaderboard submission or production verifier edits.
 |---|---|---|
 | REQ-REPORT-4438 | Planned (`python/carnot/experiment_4438_registry_gaps_hygiene.py`, `results/experiment_4438_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4438_registry_gaps_hygiene.py`) |
 
+### REQ-REPORT-4449: Registry And Gap Hygiene Reconciles .411 Outcomes Without Verifier Edits
+
+The Exp 4449 workflow SHALL reconcile `ops/verifier_registry.yaml`,
+`ops/verifier_gaps.md`, and `ops/arc_solve_registry.yaml` with the `.411`
+outcome artifacts from Exp 4443 through Exp 4448. The workflow SHALL treat any
+`flagged_adversarial=true` artifact as excluded evidence, SHALL use the robust
+aggregate-available helper so missing or flagged artifacts report per-axis gaps
+without forcing every axis false, SHALL satisfy the compatibility precondition
+that `import scripts.capstone_aggregate_available` succeeds, and SHALL NOT edit
+production verifier code.
+
+The reconciliation SHALL bank the Exp 4443 g50t reproduced level and mark
+`GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT` filled, record the Exp 4444 ft09
+generic config-rule closure while preserving the dc22 residual as open, record
+the Exp 4445 ar25 and ka59 object-motion closures, record the Exp 4447
+documented primitive library, record the Exp 4446 first-contact bank and its
+filled gap, and convert Exp 4448 LOO v2 residuals into closed or still-open
+missing-primitive gap rows. The ARC solve registry SHALL update authoritative
+`reproducible_total_levels` and `reproducible_total_games` from reproduced game
+rows after applying trusted `.411` outcomes; the reconciled totals SHALL be at
+least `38` levels and `19` games after the g50t bank. The workflow SHALL
+preserve never-prune history and SHALL make markdown/YAML updates idempotently.
+
+The workflow SHALL run the GAP-4 execution regression guard and SHALL emit bare
+bool `regression_guard_passed=true` only when the ARC oracle-distinct
+verifier-beats-vote result has not regressed. It SHALL also verify that the
+capstone `verifier_is_oracle` stamping fix remains durable. The workflow SHALL
+write `results/experiment_4449_registry_gaps_hygiene.json` with required fields
+`honest_verdict`, `regression_guard_passed`, `reproducible_total_levels`,
+`reproducible_total_games`, `inference_substrate`, `registry_reconciliation`,
+`availability_report`, `capstone_stamp_fix_durable`, `random_seed`,
+`reproducibility_checksum`, `field_principles`, and
+`submitted_to_leaderboard=false`. Complete-path `honest_verdict` SHALL start
+with `complete:`, `success:`, `passed:`, or `shipped:`. The
+`field_principles.honest_verdict.principle` SHALL equal `terminal-prefixed`,
+`field_principles.regression_guard_passed.principle` SHALL equal
+`BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress`,
+`field_principles.reproducible_total_levels.principle` SHALL equal
+`the reconciled authoritative count (target >= 38 after the g50t bank)`, and
+`field_principles.inference_substrate.principle` SHALL equal
+`aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor`.
+
+#### SCENARIO-REPORT-4449: .411 Hygiene Logs Closures, Updates Counts, And Guards GAP-4
+
+**Given** the verifier registry, verifier-gaps ledger, ARC solve registry, and
+some subset of Exp 4443 through Exp 4448 artifacts are locally available
+**When** the Exp 4449 workflow runs
+**Then** it excludes flagged-adversarial artifacts, reports missing or flagged
+inputs in the aggregate availability report, fills the g50t, ft09, ar25, ka59,
+and first-contact gap rows when their trusted reproduction evidence is present,
+keeps the dc22, tr87, and sc25 residuals open when Exp 4444 or Exp 4448 leave
+them unresolved, records the documented primitive library, updates ARC
+reproducible totals from registry rows, records a verifier-registry role for the
+hygiene pass, emits bare bool `regression_guard_passed`, verifies the capstone
+stamp fix remains durable, writes the required JSON artifact, and performs no
+leaderboard submission or production verifier edits.
+
+## Implementation Status (REQ-REPORT-4449)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4449 | Planned (`python/carnot/experiment_4449_registry_gaps_hygiene.py`, `results/experiment_4449_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4449_registry_gaps_hygiene.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
