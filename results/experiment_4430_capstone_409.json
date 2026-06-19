@@ -1,0 +1,1081 @@
+{
+  "availability_report": {
+    "available_artifact_keys": [
+      "4422_glyph",
+      "4423_first_contact",
+      "4424_deepening",
+      "4426_registry_audit",
+      "4429_sota_ingestion"
+    ],
+    "axes": {
+      "config_rule_unseen": {
+        "available_artifact_keys": [
+          "4426_registry_audit"
+        ],
+        "flagged_artifacts": [
+          {
+            "artifact_key": "4421_config_rule",
+            "axis": "config_rule_unseen",
+            "experiment_id": 4421,
+            "reason": "flagged_adversarial"
+          }
+        ],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "generic_first_contact": {
+        "available_artifact_keys": [
+          "4423_first_contact"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "verifier_gap_logged_no_new_game"
+      },
+      "glyph_rewrite": {
+        "available_artifact_keys": [
+          "4422_glyph"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "grounded_and_offline_solved"
+      },
+      "multi_level_deepening": {
+        "available_artifact_keys": [
+          "4424_deepening"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "mechanic_repair_no_new_level"
+      },
+      "registry_audit": {
+        "available_artifact_keys": [
+          "4426_registry_audit"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 36
+      },
+      "sota_ingestion": {
+        "available_artifact_keys": [
+          "4429_sota_ingestion"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "mapped"
+      },
+      "vocabulary_transfer": {
+        "available_artifact_keys": [],
+        "flagged_artifacts": [
+          {
+            "artifact_key": "4425_vocabulary",
+            "axis": "vocabulary_transfer",
+            "experiment_id": 4425,
+            "reason": "flagged_adversarial"
+          }
+        ],
+        "missing_artifacts": [],
+        "verdict": "missing_or_excluded"
+      }
+    },
+    "flagged_artifacts_excluded": [
+      {
+        "artifact_key": "4421_config_rule",
+        "axis": "config_rule_unseen",
+        "experiment_id": 4421,
+        "reason": "flagged_adversarial"
+      },
+      {
+        "artifact_key": "4425_vocabulary",
+        "axis": "vocabulary_transfer",
+        "experiment_id": 4425,
+        "reason": "flagged_adversarial"
+      }
+    ],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4422_glyph",
+      "experiment_id": 4422,
+      "fields_imported": [
+        "honest_verdict",
+        "grounded",
+        "fires_on_win",
+        "false_positive_rate",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4422_glyph_rewrite_perception.json",
+      "sha256": "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0"
+    },
+    {
+      "artifact_key": "4423_first_contact",
+      "experiment_id": 4423,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "new_games_reproduced",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4423_generic_first_contact_breadth.json",
+      "sha256": "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf"
+    },
+    {
+      "artifact_key": "4424_deepening",
+      "experiment_id": 4424,
+      "fields_imported": [
+        "honest_verdict",
+        "game",
+        "offline_reproduced",
+        "new_levels_reproduced",
+        "reproduced_levels",
+        "per_mechanic_test_pass_rate",
+        "residual_failing_mechanic",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4424_deeper_solved_game.json",
+      "sha256": "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af"
+    },
+    {
+      "artifact_key": "4426_registry_audit",
+      "experiment_id": 4426,
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_levels",
+        "registry_claimed_reproducible_total_levels",
+        "registry_claimed_reproducible_total_games",
+        "counted_entries_audited",
+        "all_counted_entries_reproduced",
+        "milestone_409_reproduction_gates",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4426_arc_registry_repro_audit.json",
+      "sha256": "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2"
+    },
+    {
+      "artifact_key": "4429_sota_ingestion",
+      "experiment_id": 4429,
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_for_v410",
+        "outcome_conditioning",
+        "preconditions_checked",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4429_sota_ingestion_409.json",
+      "sha256": "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a"
+    }
+  ],
+  "config_rule_unseen": {
+    "direct_artifact_imported": false,
+    "execution_grounded": true,
+    "registry_audit_counted": true,
+    "registry_gate": {
+      "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+      "artifact_flagged_adversarial": true,
+      "artifact_present": true,
+      "experiment": "exp4421",
+      "gate_evidence_keys": [
+        "claimed_level",
+        "game",
+        "mode",
+        "reached_level",
+        "reproduced"
+      ],
+      "honest_verdict": "success_s5i5_L1_offline_reproduced",
+      "new_levels_counted": 1,
+      "offline_reproduced": true,
+      "reproduced_levels": 1,
+      "reproduction_gated": true
+    },
+    "state": "direct_artifact_flagged_registry_audit_counted_execution_grounded",
+    "verifier_is_oracle": null
+  },
+  "config_rule_unseen_state": "direct_artifact_flagged_registry_audit_counted_execution_grounded",
+  "config_rule_vocabulary_transfer": {
+    "config_rule_vocabulary_transfers": false,
+    "state": "excluded_flagged_adversarial"
+  },
+  "config_rule_vocabulary_transfer_state": "excluded_flagged_adversarial",
+  "config_rule_vocabulary_transfers": false,
+  "duration_s": 0.319405,
+  "experiment": 4430,
+  "field_principles": {
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts must import no fields.",
+    "config_rule_unseen_state": "One honest string answering exp4421 while respecting flagged_adversarial and verifier_is_oracle: direct flagged artifacts are skipped; any registry-audit reproduction is execution_grounded, not a moat.",
+    "config_rule_vocabulary_transfer_state": "One honest string answering exp4425 only from clean non-flagged vocabulary-transfer evidence.",
+    "generic_first_contact_state": "One honest string answering whether exp4423 added a new game or logged an open first-contact verifier gap.",
+    "generic_pipeline_state": "One honest string for the .409 generic pipeline: whether first contact added a new game, logged a verifier gap, or was blocked.",
+    "glyph_rewrite_state": "One honest string answering whether exp4422 grounded the glyph-rewrite verifier and solved offline.",
+    "honest_verdict": "Terminal-prefixed; one honest .409 scorecard string that separates audited ARC progress from skipped flagged artifacts.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, exp4426 registry audit, and publication_gate.py output.",
+    "multi_level_deepening_state": "One honest string answering whether exp4424 landed +1 or only fixed part of the world model with a residual reproduction gap.",
+    "new_games": "BARE int: audited game-count delta versus the prior .408 baseline of 17.",
+    "new_levels": "BARE int: audited level delta versus the prior .408 baseline of 34.",
+    "preconditions_checked": "Records upstream artifacts, robust aggregate-available, publication gate, registry audit, and TRM stand-down.",
+    "publication_gate": "The G1-G4 publication_gate.py output (paper_ready + unmet_gates) -- the frozen FoVer headline gate.",
+    "random_seed": "Determinism precondition for the aggregation.",
+    "reproducibility_checksum": "Hash of the aggregated upstream artifact sha256 set plus the publication gate output.",
+    "reproducible_total_levels": "BARE int: audited ARC reproducible-level count after .409, sourced from clean exp4426 when available rather than trusted registry assertion.",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; upstream execution-grounded solves are carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire."
+  },
+  "field_provenance": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts must import no fields.",
+      "satisfied_by": "aggregation logic"
+    },
+    "config_rule_unseen_state": {
+      "principle": "One honest string answering exp4421 while respecting flagged_adversarial and verifier_is_oracle: direct flagged artifacts are skipped; any registry-audit reproduction is execution_grounded, not a moat.",
+      "satisfied_by": "aggregation logic"
+    },
+    "config_rule_vocabulary_transfer_state": {
+      "principle": "One honest string answering exp4425 only from clean non-flagged vocabulary-transfer evidence.",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_first_contact_state": {
+      "principle": "One honest string answering whether exp4423 added a new game or logged an open first-contact verifier gap.",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_pipeline_state": {
+      "principle": "One honest string for the .409 generic pipeline: whether first contact added a new game, logged a verifier gap, or was blocked.",
+      "satisfied_by": "aggregation logic"
+    },
+    "glyph_rewrite_state": {
+      "principle": "One honest string answering whether exp4422 grounded the glyph-rewrite verifier and solved offline.",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "Terminal-prefixed; one honest .409 scorecard string that separates audited ARC progress from skipped flagged artifacts.",
+      "satisfied_by": "aggregation logic"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, exp4426 registry audit, and publication_gate.py output.",
+      "satisfied_by": "aggregation logic"
+    },
+    "multi_level_deepening_state": {
+      "principle": "One honest string answering whether exp4424 landed +1 or only fixed part of the world model with a residual reproduction gap.",
+      "satisfied_by": "aggregation logic"
+    },
+    "new_games": {
+      "principle": "BARE int: audited game-count delta versus the prior .408 baseline of 17.",
+      "satisfied_by": "aggregation logic"
+    },
+    "new_levels": {
+      "principle": "BARE int: audited level delta versus the prior .408 baseline of 34.",
+      "satisfied_by": "aggregation logic"
+    },
+    "preconditions_checked": {
+      "principle": "Records upstream artifacts, robust aggregate-available, publication gate, registry audit, and TRM stand-down.",
+      "satisfied_by": "aggregation logic"
+    },
+    "publication_gate": {
+      "principle": "The G1-G4 publication_gate.py output (paper_ready + unmet_gates) -- the frozen FoVer headline gate.",
+      "satisfied_by": "aggregation logic"
+    },
+    "random_seed": {
+      "principle": "Determinism precondition for the aggregation.",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hash of the aggregated upstream artifact sha256 set plus the publication gate output.",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducible_total_levels": {
+      "principle": "BARE int: audited ARC reproducible-level count after .409, sourced from clean exp4426 when available rather than trusted registry assertion.",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle": {
+      "principle": "BARE bool=false for the capstone itself; upstream execution-grounded solves are carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire.",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "flagged_artifacts_excluded": [
+    {
+      "artifact_key": "4421_config_rule",
+      "experiment_id": 4421,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "duration_s=0.53638 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "parse_error": "",
+      "path": "results/experiment_4421_config_rule_solve_unseen.json",
+      "reason": "flagged_adversarial",
+      "sha256": "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d",
+      "stamped_flagged_adversarial": true
+    },
+    {
+      "artifact_key": "4425_vocabulary",
+      "experiment_id": 4425,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "duration_s=0.001 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "parse_error": "",
+      "path": "results/experiment_4425_config_rule_vocabulary_transfer.json",
+      "reason": "flagged_adversarial",
+      "sha256": "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3",
+      "stamped_flagged_adversarial": true
+    }
+  ],
+  "flagged_sources_counted_by_registry_audit": [
+    {
+      "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+      "artifact_flagged_adversarial": true,
+      "artifact_present": true,
+      "experiment": "exp4421",
+      "gate_evidence_keys": [
+        "claimed_level",
+        "game",
+        "mode",
+        "reached_level",
+        "reproduced"
+      ],
+      "honest_verdict": "success_s5i5_L1_offline_reproduced",
+      "new_levels_counted": 1,
+      "offline_reproduced": true,
+      "reproduced_levels": 1,
+      "reproduction_gated": true
+    }
+  ],
+  "generic_first_contact": {
+    "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
+    "missing_verifier_gaps": [
+      {
+        "candidate_design": "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
+        "failure_mode": "needs_per_game_RE",
+        "game": "g50t",
+        "gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+        "loop_result_summary": {
+          "mode": "standing_arc_loop_routing_only",
+          "offline_reproduced": false,
+          "reproduced_levels": 0
+        },
+        "missing_discriminator": "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
+        "routed_recipe": {
+          "action_model": null,
+          "game": "ls20",
+          "solver": "results/experiment_4285 solve_trace.actions.",
+          "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+        },
+        "status": "open"
+      }
+    ],
+    "new_game_added": false,
+    "offline_reproduced": false,
+    "reproduced_levels": 0,
+    "state": "verifier_gap_logged_no_new_game",
+    "target_game": "g50t",
+    "verifier_is_oracle": false
+  },
+  "generic_first_contact_state": "verifier_gap_logged_no_new_game",
+  "generic_pipeline_state": "first_contact_verifier_gap_open_no_new_game",
+  "glyph_rewrite": {
+    "execution_grounded": true,
+    "grounded": true,
+    "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
+    "offline_reproduced": true,
+    "reproduced_levels": 6,
+    "state": "grounded_and_offline_solved",
+    "target_game": "tr87",
+    "verifier_is_oracle": true
+  },
+  "glyph_rewrite_state": "grounded_and_offline_solved",
+  "headline_question_answers": {
+    "exp4421": {
+      "direct_artifact_imported": false,
+      "execution_grounded": true,
+      "reproduced_level": true,
+      "state": "direct_artifact_flagged_registry_audit_counted_execution_grounded"
+    },
+    "exp4422": {
+      "grounded": true,
+      "offline_solved": true,
+      "state": "grounded_and_offline_solved"
+    },
+    "exp4423": {
+      "new_game_added": false,
+      "state": "verifier_gap_logged_no_new_game"
+    },
+    "exp4424": {
+      "new_level_added": false,
+      "state": "mechanic_repair_no_new_level"
+    },
+    "exp4425": {
+      "state": "excluded_flagged_adversarial",
+      "transferred": false
+    }
+  },
+  "honest_verdict": "complete: v409_levels_36_new_levels_2_new_games_1_config_rule_flagged_registry_execution_grounded_glyph_solved_first_contact_gap_deepening_no_plus1_vocab_skipped_publication_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "multi_level_deepening": {
+    "execution_grounded": true,
+    "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
+    "new_level_added": false,
+    "new_levels_reproduced": 0,
+    "offline_reproduced": false,
+    "per_mechanic_test_pass_rate": 0.5,
+    "reproduced_levels": 1,
+    "residual_failing_mechanic": "sc25_l2_route_search_still_missing_after_hud_cleanup",
+    "state": "mechanic_repair_no_new_level",
+    "verifier_is_oracle": true
+  },
+  "multi_level_deepening_state": "mechanic_repair_no_new_level",
+  "new_games": 1,
+  "new_levels": 2,
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "preconditions_checked": {
+    "publication_gate": {
+      "exists": true,
+      "paper_ready": true,
+      "path": "scripts/publication_gate.py",
+      "runnable": true,
+      "unmet_gates": []
+    },
+    "registry_audit": {
+      "all_counted_entries_reproduced": true,
+      "counted_entries_audited": 18,
+      "flagged_sources_counted": [
+        {
+          "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+          "artifact_flagged_adversarial": true,
+          "artifact_present": true,
+          "experiment": "exp4421",
+          "gate_evidence_keys": [
+            "claimed_level",
+            "game",
+            "mode",
+            "reached_level",
+            "reproduced"
+          ],
+          "honest_verdict": "success_s5i5_L1_offline_reproduced",
+          "new_levels_counted": 1,
+          "offline_reproduced": true,
+          "reproduced_levels": 1,
+          "reproduction_gated": true
+        }
+      ],
+      "honest_verdict": "complete: registry_repro_audit_total_35_asserted_36_audited",
+      "inference_substrate": "offline_arc_registry_repro_audit_cpu_no_llm",
+      "milestone_409_reproduction_gates": [
+        {
+          "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+          "artifact_flagged_adversarial": true,
+          "artifact_present": true,
+          "experiment": "exp4421",
+          "gate_evidence_keys": [
+            "claimed_level",
+            "game",
+            "mode",
+            "reached_level",
+            "reproduced"
+          ],
+          "honest_verdict": "success_s5i5_L1_offline_reproduced",
+          "new_levels_counted": 1,
+          "offline_reproduced": true,
+          "reproduced_levels": 1,
+          "reproduction_gated": true
+        },
+        {
+          "artifact": "results/experiment_4422_glyph_rewrite_perception.json",
+          "artifact_flagged_adversarial": false,
+          "artifact_present": true,
+          "experiment": "exp4422",
+          "gate_evidence_keys": [
+            "claimed_level",
+            "game",
+            "mode",
+            "reached_level",
+            "reproduced"
+          ],
+          "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
+          "new_levels_counted": 0,
+          "offline_reproduced": true,
+          "reproduced_levels": 6,
+          "reproduction_gated": true
+        },
+        {
+          "artifact": "results/experiment_4423_generic_first_contact_breadth.json",
+          "artifact_flagged_adversarial": false,
+          "artifact_present": true,
+          "experiment": "exp4423",
+          "gate_evidence_keys": [
+            "command",
+            "game",
+            "general_gotchas",
+            "guidance",
+            "instruction",
+            "mode",
+            "returncode",
+            "status",
+            "stderr",
+            "stdout",
+            "transfer_recommendation"
+          ],
+          "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
+          "new_levels_counted": 0,
+          "offline_reproduced": false,
+          "reproduced_levels": 0,
+          "reproduction_gated": true
+        },
+        {
+          "artifact": "results/experiment_4424_deeper_solved_game.json",
+          "artifact_flagged_adversarial": false,
+          "artifact_present": true,
+          "experiment": "exp4424",
+          "gate_evidence_keys": [
+            "claimed_level",
+            "game",
+            "mode",
+            "prior_best_level",
+            "reached_level",
+            "reproduced",
+            "reproduction_scope",
+            "root",
+            "solution_labels"
+          ],
+          "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
+          "new_levels_counted": 0,
+          "offline_reproduced": false,
+          "reproduced_levels": 1,
+          "reproduction_gated": true
+        }
+      ],
+      "registry_claimed_reproducible_total_games": 18,
+      "registry_claimed_reproducible_total_levels": 35,
+      "reproducible_total_levels": 36,
+      "status": "audited"
+    },
+    "robust_aggregate_available_helper": "capstone_aggregate_available.aggregate_available_report_gaps",
+    "trm_training_by_artifact": [
+      {
+        "artifact_key": "4421_config_rule",
+        "experiment_id": 4421,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4422_glyph",
+        "experiment_id": 4422,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4423_first_contact",
+        "experiment_id": 4423,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4424_deepening",
+        "experiment_id": 4424,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4425_vocabulary",
+        "experiment_id": 4425,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4426_registry_audit",
+        "experiment_id": 4426,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4429_sota_ingestion",
+        "experiment_id": 4429,
+        "trm_training_stood_down": true
+      }
+    ],
+    "trm_training_stood_down": true,
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4421_config_rule",
+        "exists": true,
+        "experiment_id": 4421,
+        "path": "results/experiment_4421_config_rule_solve_unseen.json",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "4422_glyph",
+        "exists": true,
+        "experiment_id": 4422,
+        "path": "results/experiment_4422_glyph_rewrite_perception.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4423_first_contact",
+        "exists": true,
+        "experiment_id": 4423,
+        "path": "results/experiment_4423_generic_first_contact_breadth.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4424_deepening",
+        "exists": true,
+        "experiment_id": 4424,
+        "path": "results/experiment_4424_deeper_solved_game.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4425_vocabulary",
+        "exists": true,
+        "experiment_id": 4425,
+        "path": "results/experiment_4425_config_rule_vocabulary_transfer.json",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "4426_registry_audit",
+        "exists": true,
+        "experiment_id": 4426,
+        "path": "results/experiment_4426_arc_registry_repro_audit.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4429_sota_ingestion",
+        "exists": true,
+        "experiment_id": 4429,
+        "path": "results/experiment_4429_sota_ingestion_409.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_gate_checksum": "7647fd5ba3275c5994bf046360095a1511d7a0b5abd8bcdcd8c367fa1db3f9ac",
+  "random_seed": 4430,
+  "registry_audit": {
+    "all_counted_entries_reproduced": true,
+    "counted_entries_audited": 18,
+    "flagged_sources_counted": [
+      {
+        "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+        "artifact_flagged_adversarial": true,
+        "artifact_present": true,
+        "experiment": "exp4421",
+        "gate_evidence_keys": [
+          "claimed_level",
+          "game",
+          "mode",
+          "reached_level",
+          "reproduced"
+        ],
+        "honest_verdict": "success_s5i5_L1_offline_reproduced",
+        "new_levels_counted": 1,
+        "offline_reproduced": true,
+        "reproduced_levels": 1,
+        "reproduction_gated": true
+      }
+    ],
+    "honest_verdict": "complete: registry_repro_audit_total_35_asserted_36_audited",
+    "inference_substrate": "offline_arc_registry_repro_audit_cpu_no_llm",
+    "milestone_409_reproduction_gates": [
+      {
+        "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+        "artifact_flagged_adversarial": true,
+        "artifact_present": true,
+        "experiment": "exp4421",
+        "gate_evidence_keys": [
+          "claimed_level",
+          "game",
+          "mode",
+          "reached_level",
+          "reproduced"
+        ],
+        "honest_verdict": "success_s5i5_L1_offline_reproduced",
+        "new_levels_counted": 1,
+        "offline_reproduced": true,
+        "reproduced_levels": 1,
+        "reproduction_gated": true
+      },
+      {
+        "artifact": "results/experiment_4422_glyph_rewrite_perception.json",
+        "artifact_flagged_adversarial": false,
+        "artifact_present": true,
+        "experiment": "exp4422",
+        "gate_evidence_keys": [
+          "claimed_level",
+          "game",
+          "mode",
+          "reached_level",
+          "reproduced"
+        ],
+        "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
+        "new_levels_counted": 0,
+        "offline_reproduced": true,
+        "reproduced_levels": 6,
+        "reproduction_gated": true
+      },
+      {
+        "artifact": "results/experiment_4423_generic_first_contact_breadth.json",
+        "artifact_flagged_adversarial": false,
+        "artifact_present": true,
+        "experiment": "exp4423",
+        "gate_evidence_keys": [
+          "command",
+          "game",
+          "general_gotchas",
+          "guidance",
+          "instruction",
+          "mode",
+          "returncode",
+          "status",
+          "stderr",
+          "stdout",
+          "transfer_recommendation"
+        ],
+        "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
+        "new_levels_counted": 0,
+        "offline_reproduced": false,
+        "reproduced_levels": 0,
+        "reproduction_gated": true
+      },
+      {
+        "artifact": "results/experiment_4424_deeper_solved_game.json",
+        "artifact_flagged_adversarial": false,
+        "artifact_present": true,
+        "experiment": "exp4424",
+        "gate_evidence_keys": [
+          "claimed_level",
+          "game",
+          "mode",
+          "prior_best_level",
+          "reached_level",
+          "reproduced",
+          "reproduction_scope",
+          "root",
+          "solution_labels"
+        ],
+        "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
+        "new_levels_counted": 0,
+        "offline_reproduced": false,
+        "reproduced_levels": 1,
+        "reproduction_gated": true
+      }
+    ],
+    "registry_claimed_reproducible_total_games": 18,
+    "registry_claimed_reproducible_total_levels": 35,
+    "reproducible_total_levels": 36,
+    "status": "audited"
+  },
+  "reproducibility_checksum": "sha256:b882b1a538febd1654fa6248acf85309f448cf1b14ea259cd21b07f9dcc889ef",
+  "reproducible_total_levels": 36,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "reproducible_total_levels",
+    "new_levels",
+    "new_games",
+    "generic_pipeline_state",
+    "config_rule_unseen_state",
+    "glyph_rewrite_state",
+    "generic_first_contact_state",
+    "multi_level_deepening_state",
+    "config_rule_vocabulary_transfer_state",
+    "publication_gate",
+    "verifier_is_oracle",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "cited_upstream_artifacts",
+    "inference_substrate"
+  ],
+  "schema": "carnot.capstone_v409_4430.v1",
+  "sota_ingestion": {
+    "flagged_for_v410": "Executable ARC-AGI-3 world-model agent with verifier-grounded planning (arXiv:2605.05138)",
+    "honest_verdict": "complete: sota_ingestion_409_mapped",
+    "inference_substrate": "cpu_reliable_channel_sota_ingestion_no_training",
+    "outcome_conditioning": {
+      "config_rule_artifact_adversarial": true,
+      "config_rule_level_counted_after_gate": true,
+      "config_rule_verifier_oracle": true,
+      "deeper_world_model_mechanic_tests_pass": false,
+      "deeper_world_model_no_new_level": true,
+      "deeper_world_model_offline_not_reproduced": true,
+      "generic_first_contact_missing_verifier_gap": true,
+      "generic_first_contact_new_levels_zero": true,
+      "generic_first_contact_partial": true,
+      "generic_first_contact_verifier_non_oracle": true,
+      "registry_all_counted_entries_reproduced": true,
+      "registry_audit_cpu_no_llm": true,
+      "registry_claimed_total_35": true,
+      "registry_counted_entries_audited_18": true,
+      "registry_exp4421_new_level_counted": true,
+      "registry_exp4423_zero_new_levels_counted": true,
+      "registry_exp4424_zero_new_levels_counted": true,
+      "vocabulary_artifact_adversarial": true,
+      "vocabulary_transfer_false": true
+    },
+    "status": "mapped"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4430",
+    "SCENARIO-CAPSTONE-4430"
+  ],
+  "unmet_gates": [],
+  "upstream_oracle_declarations": [
+    {
+      "artifact_key": "4421_config_rule",
+      "experiment_id": 4421,
+      "skipped": true,
+      "verifier_is_oracle": null
+    },
+    {
+      "artifact_key": "4422_glyph",
+      "experiment_id": 4422,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4423_first_contact",
+      "experiment_id": 4423,
+      "skipped": false,
+      "verifier_is_oracle": false
+    },
+    {
+      "artifact_key": "4424_deepening",
+      "experiment_id": 4424,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4425_vocabulary",
+      "experiment_id": 4425,
+      "skipped": true,
+      "verifier_is_oracle": null
+    },
+    {
+      "artifact_key": "4426_registry_audit",
+      "experiment_id": 4426,
+      "skipped": false,
+      "verifier_is_oracle": null
+    },
+    {
+      "artifact_key": "4429_sota_ingestion",
+      "experiment_id": 4429,
+      "skipped": false,
+      "verifier_is_oracle": null
+    }
+  ],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4421_config_rule",
+      "experiment_id": 4421,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "duration_s=0.53638 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4421_config_rule_solve_unseen.json",
+      "payload_reproducibility_checksum": "bdc1ee86e85595873b11f11bf8ee38ab5a4ecf987c3530fa6dc01c43550f16bb",
+      "sha256": "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "artifact_key": "4422_glyph",
+      "experiment_id": 4422,
+      "fields_imported": [
+        "honest_verdict",
+        "grounded",
+        "fires_on_win",
+        "false_positive_rate",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4422_glyph_rewrite_perception.json",
+      "payload_reproducibility_checksum": "d87a3158b546ba668e3a068efa92d6fa8c4874fae6809dac57cfee071e48bf9e",
+      "sha256": "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4423_first_contact",
+      "experiment_id": 4423,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "new_games_reproduced",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4423_generic_first_contact_breadth.json",
+      "payload_reproducibility_checksum": "de97f555355d891806b39a06e171346f9c58f11ee6f1f2b1f67967d398e1b774",
+      "sha256": "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4424_deepening",
+      "experiment_id": 4424,
+      "fields_imported": [
+        "honest_verdict",
+        "game",
+        "offline_reproduced",
+        "new_levels_reproduced",
+        "reproduced_levels",
+        "per_mechanic_test_pass_rate",
+        "residual_failing_mechanic",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4424_deeper_solved_game.json",
+      "payload_reproducibility_checksum": "f262494f967aa598cbcf7ec1a719e4ba2e36bba65ecc14d3c0bfbc62e333aa1e",
+      "sha256": "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4425_vocabulary",
+      "experiment_id": 4425,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "duration_s=0.001 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4425_config_rule_vocabulary_transfer.json",
+      "payload_reproducibility_checksum": "cb2e084037ca9edcd986884649545065d589988f1ef5cc6e6025453be829e0c1",
+      "sha256": "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "artifact_key": "4426_registry_audit",
+      "experiment_id": 4426,
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_levels",
+        "registry_claimed_reproducible_total_levels",
+        "registry_claimed_reproducible_total_games",
+        "counted_entries_audited",
+        "all_counted_entries_reproduced",
+        "milestone_409_reproduction_gates",
+        "inference_substrate"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4426_arc_registry_repro_audit.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4429_sota_ingestion",
+      "experiment_id": 4429,
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_for_v410",
+        "outcome_conditioning",
+        "preconditions_checked",
+        "inference_substrate"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4429_sota_ingestion_409.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af",
+    "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a",
+    "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d",
+    "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf",
+    "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2",
+    "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0",
+    "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3"
+  ],
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_honored": true
+}
