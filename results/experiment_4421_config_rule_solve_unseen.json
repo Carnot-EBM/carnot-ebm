@@ -1,0 +1,122 @@
+{
+  "duration_s": 0.53638,
+  "experiment": "experiment_4421_config_rule_solve_unseen",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed self-declared state.",
+    "missing_verifier_gaps": "Unselectable residual failures are the verifier-build backlog (ops/verifier_gaps.md).",
+    "offline_reproduced": "A solve not reproducible offline is wasted effort; only reproduced levels count toward total_levels.",
+    "random_seed": "Determinism precondition for third-party reproduction.",
+    "reproduced_levels": "Monotonic ARC progress is the milestone metric.",
+    "reproducibility_checksum": "Content hash catches silent corpus/model drift.",
+    "verifier_is_oracle": "true=execution-grounded: the win-check is the same marker-coverage predicate used by the environment before next_level."
+  },
+  "grounded_win_condition": {
+    "controlled_markers_initial": [
+      [
+        9,
+        33
+      ],
+      [
+        30,
+        9
+      ]
+    ],
+    "fires_on_win": true,
+    "predicate": "all target marker coordinates are occupied by controlled marker coordinates",
+    "predicted_markers_after_solution": [
+      [
+        9,
+        51
+      ],
+      [
+        51,
+        9
+      ]
+    ],
+    "rejects_nonwins": [
+      true,
+      true,
+      true
+    ],
+    "target_markers": [
+      [
+        9,
+        51
+      ],
+      [
+        51,
+        9
+      ]
+    ]
+  },
+  "honest_verdict": "success_s5i5_L1_offline_reproduced",
+  "missing_verifier_gaps": [],
+  "new_levels_reproduced": 1,
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "hip_llama_server_exists": true,
+    "offline_env_loads": {
+      "s5i5": true
+    },
+    "qwen_gguf_cached": true,
+    "target_game_prior_best": 0
+  },
+  "prior_best_level": 0,
+  "qwen_generation": {
+    "device": "iGPU_HIP_llama_server",
+    "fires_on_win": true,
+    "grounded": true,
+    "model": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "n_predict": 2048,
+    "no_think": true,
+    "raw_sample": "def is_win(controlled_markers, target_markers):\n    return all(c in controlled_markers for c in target_markers)",
+    "rejects_nonwins": true
+  },
+  "random_seed": 4421,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "bdc1ee86e85595873b11f11bf8ee38ab5a4ecf987c3530fa6dc01c43550f16bb",
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "s5i5",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4421_config_rule_solve_unseen.json",
+  "schema": "carnot.exp4421.config_rule_solve_unseen.v1",
+  "solver": {
+    "click_points": {
+      "h_extend": [
+        47,
+        21
+      ],
+      "v_extend": [
+        22,
+        47
+      ]
+    },
+    "module": "python/carnot/experiment_4421_config_rule_solve_unseen.py",
+    "solution": [
+      "h_extend",
+      "h_extend",
+      "h_extend",
+      "h_extend",
+      "h_extend",
+      "h_extend",
+      "h_extend",
+      "v_extend",
+      "v_extend",
+      "v_extend",
+      "v_extend",
+      "v_extend",
+      "v_extend"
+    ],
+    "win_check": "is_win(controlled_markers, target_markers)"
+  },
+  "spec_refs": [
+    "REQ-REPORT-4421",
+    "SCENARIO-REPORT-4421"
+  ],
+  "target_game": "s5i5",
+  "verifier_is_oracle": true
+}

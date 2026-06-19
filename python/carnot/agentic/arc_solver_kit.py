@@ -33,6 +33,11 @@ Hard-won general gotchas (apply to ANY ARC-AGI-3 game; see ops/arc_solve_registr
    direction turns, press-same moves) and MULTI-FRAME ANIMATIONS that must be let
    to resolve — the dedup state-key MUST include facing/phase, and you must step
    until animation phase flags clear before the next action / win check.
+7. Some config/toggle games call next_level() in the SAME action that creates the
+   winning arrangement, so the returned frame is already the next level and the
+   pre-win grid is not externally observable. Ground such win predicates on the
+   execution state immediately before next_level, then count only the reproduce()
+   level advance.
 """
 from __future__ import annotations
 
