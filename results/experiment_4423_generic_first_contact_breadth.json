@@ -1,25 +1,26 @@
 {
   "attempted_games": [
-    "vc33"
+    "g50t"
   ],
   "attempts": [
     {
       "candidate": {
-        "game": "vc33",
-        "prior_class": "SOLVED",
-        "prior_duration_s": 2.5,
+        "game": "g50t",
+        "prior_class": "FAIL_EXPLORATION",
+        "prior_duration_s": 12.3,
         "reason": "unseen_not_in_registry",
         "signals": [
-          "UNSEEN"
+          "UNSEEN",
+          "FAIL_EXPLORATION"
         ]
       },
-      "game": "vc33",
+      "game": "g50t",
       "missing_verifier_gaps": [
         {
-          "candidate_design": "derive a selectable verifier from the routed solved-game delta",
+          "candidate_design": "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
           "failure_mode": "needs_per_game_RE",
-          "game": "vc33",
-          "gap_id": "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT",
+          "game": "g50t",
+          "gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
           "loop_result_summary": {
             "mode": "standing_arc_loop_routing_only",
             "offline_reproduced": false,
@@ -27,10 +28,10 @@
           },
           "missing_discriminator": "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
           "routed_recipe": {
-            "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-            "game": "s5i5",
-            "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-            "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+            "action_model": null,
+            "game": "ls20",
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
           },
           "status": "open"
         }
@@ -87,41 +88,49 @@
         },
         "recommended": [
           {
-            "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-            "game": "s5i5",
-            "reproducibility": "reproduced",
-            "reusable_gotchas": [
-              "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
-            ],
-            "similarity": 6.0,
-            "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-            "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
-          },
-          {
-            "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
-            "game": "ft09",
-            "reproducibility": "reproduced",
-            "reusable_gotchas": [
-              "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
-              "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
-            ],
-            "similarity": 6.0,
-            "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
-            "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
-          },
-          {
-            "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
-            "game": "su15",
+            "action_model": null,
+            "game": "ls20",
             "reproducibility": "reproduced",
             "reusable_gotchas": [],
-            "similarity": 5.5,
-            "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
-            "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+            "similarity": 6.0,
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          },
+          {
+            "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+            "game": "tu93",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+              "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+            "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+          },
+          {
+            "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+            "game": "tr87",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+              "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+              "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+              "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+              "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+              "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+              "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+              "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+              "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+            "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable."
           }
         ],
         "strategy": {
           "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
-          "game": "vc33",
+          "game": "g50t",
           "mechanic": "graph_explore",
           "name": "graph_explore",
           "needs": null,
@@ -133,30 +142,29 @@
           "wired": true
         },
         "target_features": {
-          "action_type": "click",
+          "action_type": "keyboard",
           "difficulty": "hard",
-          "game": "vc33",
+          "game": "g50t",
           "spatial": true,
           "win_kw": [
-            "align",
             "goal",
             "position"
           ]
         },
-        "target_game": "vc33"
+        "target_game": "g50t"
       },
       "reproduced_levels": 0,
       "routing_options": [
         {
-          "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-          "game": "s5i5",
+          "action_model": null,
+          "game": "ls20",
           "id": "closest_solved_recipe",
           "kind": "learned_recipe_route",
           "selected": true,
-          "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+          "solver": "results/experiment_4285 solve_trace.actions.",
           "source": "arc_solve_learning.recommend_approach",
           "verifier_is_oracle": false,
-          "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+          "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
         },
         {
           "candidate_games": [
@@ -170,7 +178,7 @@
           ],
           "id": "exp4421_config_rule_unseen",
           "kind": "config_rule_verifier",
-          "matches_target": false,
+          "matches_target": true,
           "source_artifact": "results/experiment_4421_config_rule_solve_unseen.json",
           "verifier_is_oracle": true
         },
@@ -186,8 +194,8 @@
         }
       ],
       "standing_loop_result": {
-        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --game vc33",
-        "game": "vc33",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --game g50t",
+        "game": "g50t",
         "general_gotchas": [
           {
             "id": "offline_is_a_simulator",
@@ -228,54 +236,53 @@
         "returncode": 0,
         "status": "needs_per_game_RE",
         "stderr": "",
-        "stdout": "== standing ARC loop: game=vc33 ==\nINFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-06-19 02:46:52 | INFO | Created new scorecard: 108e1627-d210-4a76-97ea-272baad658ba\n2026-06-19 02:46:52 | INFO | Found latest version of vc33: vc33-5430563c (downloaded: 2026-06-08 07:25:22.654179+00:00)\n2026-06-19 02:46:52 | INFO | Successfully loaded game class Vc33 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/vc33/5430563c/vc33.py\n  status: needs_per_game_RE\n  wrote results/arc_loop_solve_vc33.json\n",
+        "stdout": "== standing ARC loop: game=g50t ==\nINFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-06-19 02:53:18 | INFO | Created new scorecard: c1e6936e-0661-4ae9-b4ca-29a25809db44\n2026-06-19 02:53:18 | INFO | Found latest version of g50t: g50t-5849a774 (downloaded: 2026-06-08 07:25:26.663660+00:00)\n2026-06-19 02:53:19 | INFO | Successfully loaded game class G50t from /home/ianblenke/github.com/ianblenke/carnot/environment_files/g50t/5849a774/g50t.py\n  status: needs_per_game_RE\n  wrote results/arc_loop_solve_g50t.json\n",
         "transfer_recommendation": [
           {
-            "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-            "game": "s5i5",
-            "reproducibility": "reproduced",
-            "reusable_gotchas": [
-              "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
-            ],
-            "similarity": 6.0,
-            "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-            "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
-          },
-          {
-            "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
-            "game": "ft09",
-            "reproducibility": "reproduced",
-            "reusable_gotchas": [
-              "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
-              "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
-            ],
-            "similarity": 6.0,
-            "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
-            "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
-          },
-          {
-            "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
-            "game": "su15",
+            "action_model": null,
+            "game": "ls20",
             "reproducibility": "reproduced",
             "reusable_gotchas": [],
-            "similarity": 5.5,
-            "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
-            "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+            "similarity": 6.0,
+            "solver": "results/experiment_4285 solve_trace.actions.",
+            "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+          },
+          {
+            "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+            "game": "tu93",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+              "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+            "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+          },
+          {
+            "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+            "game": "tr87",
+            "reproducibility": "reproduced",
+            "reusable_gotchas": [
+              "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+              "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+              "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+              "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+              "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+              "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+              "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+              "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+              "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+            ],
+            "similarity": 6.0,
+            "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+            "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable."
           }
         ]
       }
     }
   ],
   "candidate_games": [
-    {
-      "game": "vc33",
-      "prior_class": "SOLVED",
-      "prior_duration_s": 2.5,
-      "reason": "unseen_not_in_registry",
-      "signals": [
-        "UNSEEN"
-      ]
-    },
     {
       "game": "g50t",
       "prior_class": "FAIL_EXPLORATION",
@@ -337,11 +344,11 @@
       ]
     }
   ],
-  "command": ".venv/bin/python scripts/arc_loop_solve.py --game vc33",
+  "command": ".venv/bin/python scripts/arc_loop_solve.py --game g50t",
   "dead_ends_recorded": [
-    "vc33"
+    "g50t"
   ],
-  "duration_s": 1.462051,
+  "duration_s": 93.694132,
   "experiment": "experiment_4423_generic_first_contact_breadth",
   "field_principles": {
     "honest_verdict": "Terminal-prefixed status: success, partial, or blocked.",
@@ -350,13 +357,13 @@
     "reproduced_levels": "Bare int: reproduced offline levels reached for the attempted target.",
     "verifier_is_oracle": "Bare bool: false for generic non-oracle routing; true only if the loop explicitly reports an execution-grounded oracle verifier."
   },
-  "honest_verdict": "partial: generic_first_contact_vc33_routed_missing_verifier_gap_logged",
+  "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
   "missing_verifier_gaps": [
     {
-      "candidate_design": "derive a selectable verifier from the routed solved-game delta",
+      "candidate_design": "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
       "failure_mode": "needs_per_game_RE",
-      "game": "vc33",
-      "gap_id": "GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT",
+      "game": "g50t",
+      "gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
       "loop_result_summary": {
         "mode": "standing_arc_loop_routing_only",
         "offline_reproduced": false,
@@ -364,10 +371,10 @@
       },
       "missing_discriminator": "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
       "routed_recipe": {
-        "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-        "game": "s5i5",
-        "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-        "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+        "action_model": null,
+        "game": "ls20",
+        "solver": "results/experiment_4285 solve_trace.actions.",
+        "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
       },
       "status": "open"
     }
@@ -433,41 +440,49 @@
     },
     "recommended": [
       {
-        "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-        "game": "s5i5",
-        "reproducibility": "reproduced",
-        "reusable_gotchas": [
-          "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
-        ],
-        "similarity": 6.0,
-        "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-        "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
-      },
-      {
-        "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
-        "game": "ft09",
-        "reproducibility": "reproduced",
-        "reusable_gotchas": [
-          "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
-          "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
-        ],
-        "similarity": 6.0,
-        "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
-        "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
-      },
-      {
-        "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
-        "game": "su15",
+        "action_model": null,
+        "game": "ls20",
         "reproducibility": "reproduced",
         "reusable_gotchas": [],
-        "similarity": 5.5,
-        "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
-        "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+        "similarity": 6.0,
+        "solver": "results/experiment_4285 solve_trace.actions.",
+        "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+      },
+      {
+        "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+        "game": "tu93",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+          "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+        ],
+        "similarity": 6.0,
+        "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+        "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+      },
+      {
+        "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+        "game": "tr87",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+          "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+          "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+          "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+          "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+          "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+          "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+          "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+          "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+        ],
+        "similarity": 6.0,
+        "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+        "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable."
       }
     ],
     "strategy": {
       "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
-      "game": "vc33",
+      "game": "g50t",
       "mechanic": "graph_explore",
       "name": "graph_explore",
       "needs": null,
@@ -479,32 +494,31 @@
       "wired": true
     },
     "target_features": {
-      "action_type": "click",
+      "action_type": "keyboard",
       "difficulty": "hard",
-      "game": "vc33",
+      "game": "g50t",
       "spatial": true,
       "win_kw": [
-        "align",
         "goal",
         "position"
       ]
     },
-    "target_game": "vc33"
+    "target_game": "g50t"
   },
   "reproduced_levels": 0,
-  "reproducibility_checksum": "1b753229bc01ca9002209999474ec3642a4c786b5aa70f6872cdd6393d348fda",
+  "reproducibility_checksum": "de97f555355d891806b39a06e171346f9c58f11ee6f1f2b1f67967d398e1b774",
   "result_path": "results/experiment_4423_generic_first_contact_breadth.json",
   "routing_options": [
     {
-      "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-      "game": "s5i5",
+      "action_model": null,
+      "game": "ls20",
       "id": "closest_solved_recipe",
       "kind": "learned_recipe_route",
       "selected": true,
-      "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+      "solver": "results/experiment_4285 solve_trace.actions.",
       "source": "arc_solve_learning.recommend_approach",
       "verifier_is_oracle": false,
-      "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+      "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
     },
     {
       "candidate_games": [
@@ -518,7 +532,7 @@
       ],
       "id": "exp4421_config_rule_unseen",
       "kind": "config_rule_verifier",
-      "matches_target": false,
+      "matches_target": true,
       "source_artifact": "results/experiment_4421_config_rule_solve_unseen.json",
       "verifier_is_oracle": true
     },
@@ -539,8 +553,8 @@
     "SCENARIO-REPORT-4423"
   ],
   "standing_loop_result": {
-    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --game vc33",
-    "game": "vc33",
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --game g50t",
+    "game": "g50t",
     "general_gotchas": [
       {
         "id": "offline_is_a_simulator",
@@ -581,44 +595,52 @@
     "returncode": 0,
     "status": "needs_per_game_RE",
     "stderr": "",
-    "stdout": "== standing ARC loop: game=vc33 ==\nINFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-06-19 02:46:52 | INFO | Created new scorecard: 108e1627-d210-4a76-97ea-272baad658ba\n2026-06-19 02:46:52 | INFO | Found latest version of vc33: vc33-5430563c (downloaded: 2026-06-08 07:25:22.654179+00:00)\n2026-06-19 02:46:52 | INFO | Successfully loaded game class Vc33 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/vc33/5430563c/vc33.py\n  status: needs_per_game_RE\n  wrote results/arc_loop_solve_vc33.json\n",
+    "stdout": "== standing ARC loop: game=g50t ==\nINFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-06-19 02:53:18 | INFO | Created new scorecard: c1e6936e-0661-4ae9-b4ca-29a25809db44\n2026-06-19 02:53:18 | INFO | Found latest version of g50t: g50t-5849a774 (downloaded: 2026-06-08 07:25:26.663660+00:00)\n2026-06-19 02:53:19 | INFO | Successfully loaded game class G50t from /home/ianblenke/github.com/ianblenke/carnot/environment_files/g50t/5849a774/g50t.py\n  status: needs_per_game_RE\n  wrote results/arc_loop_solve_g50t.json\n",
     "transfer_recommendation": [
       {
-        "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-        "game": "s5i5",
-        "reproducibility": "reproduced",
-        "reusable_gotchas": [
-          "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
-        ],
-        "similarity": 6.0,
-        "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-        "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
-      },
-      {
-        "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
-        "game": "ft09",
-        "reproducibility": "reproduced",
-        "reusable_gotchas": [
-          "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
-          "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
-        ],
-        "similarity": 6.0,
-        "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
-        "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
-      },
-      {
-        "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
-        "game": "su15",
+        "action_model": null,
+        "game": "ls20",
         "reproducibility": "reproduced",
         "reusable_gotchas": [],
-        "similarity": 5.5,
-        "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
-        "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+        "similarity": 6.0,
+        "solver": "results/experiment_4285 solve_trace.actions.",
+        "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
+      },
+      {
+        "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+        "game": "tu93",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+          "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+        ],
+        "similarity": 6.0,
+        "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+        "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+      },
+      {
+        "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+        "game": "tr87",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+          "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+          "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+          "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+          "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+          "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+          "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+          "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+          "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+        ],
+        "similarity": 6.0,
+        "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+        "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable."
       }
     ]
   },
   "submitted_to_leaderboard": false,
-  "target_game": "vc33",
+  "target_game": "g50t",
   "target_was_new_to_registry": true,
   "verifier_is_oracle": false
 }

@@ -1,0 +1,83 @@
+{
+  "game": "g50t",
+  "status": "needs_per_game_RE",
+  "transfer_recommendation": [
+    {
+      "game": "ls20",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "results/experiment_4285 solve_trace.actions.",
+      "win_condition": "first-solve L1; ACTION + kind sequence replays offline.",
+      "action_model": null,
+      "reusable_gotchas": []
+    },
+    {
+      "game": "tu93",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
+      "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan).",
+      "action_model": "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states).",
+      "reusable_gotchas": [
+        "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2.",
+        "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
+      ]
+    },
+    {
+      "game": "tr87",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
+      "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
+      "action_model": "keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+      "reusable_gotchas": [
+        "The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target's raw values.",
+        "The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).",
+        "L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)",
+        "L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.",
+        "Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2's 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.",
+        "gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent 'wins' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode='fresh_env' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.",
+        "hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).",
+        "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
+        "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
+      ]
+    }
+  ],
+  "general_gotchas": [
+    {
+      "id": "offline_is_a_simulator",
+      "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+    },
+    {
+      "id": "level_on_frame_not_game",
+      "note": "level = frame.levels_completed; env._game has no levels_completed."
+    },
+    {
+      "id": "deepcopy_injection_unreliable",
+      "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+    },
+    {
+      "id": "first_step_after_reset_consumed",
+      "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+    },
+    {
+      "id": "discover_coords_never_hardcode",
+      "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+    },
+    {
+      "id": "state_dependent_controls_and_animations",
+      "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+    },
+    {
+      "id": "non_idempotent_reset",
+      "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+    },
+    {
+      "id": "same_action_next_level",
+      "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+    }
+  ],
+  "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+  "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
+  "mode": "standing_arc_loop_routing_only"
+}
