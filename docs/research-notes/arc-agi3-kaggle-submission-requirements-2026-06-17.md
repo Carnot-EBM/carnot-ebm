@@ -91,6 +91,15 @@ project to MIT-0 [foolproof compliance + simplest, but drops Apache-2.0's patent
 retaliation clause + attribution everywhere]. MIT-0 preferred over CC0 (real license w/
 warranty disclaimer).
 
+**RESOLVED (operator 2026-06-19): took option (B) — the WHOLE project is now MIT-0.** Verified:
+`LICENSE` = "MIT No Attribution"; `pyproject.toml` `license = {text = "MIT-0"}`,
+`license-files = ["LICENSE", "NOTICE"]` (the NOTICE file carries any vendored/3rd-party carve-outs).
+So the prize-eligibility LICENSING blocker is CLEARED — all submitter-authored Carnot code in the
+solution is MIT-0, and the 3rd-party deps (llama.cpp = MIT, arcengine/ARC-AGI-3-Agents, the
+Qwen3.5-9B GGUF = Apache-2.0) meet the "at least open-source" bar. A first submission can be
+**prize-eligible**. The remaining gates are purely technical: the runtime binary (in flight), dataset
+packaging, and the offline dry-run — NOT licensing.
+
 **(superseded) Earlier "TO VERIFY":** some ARC tracks (seen in the ARC-AGI-2 description) let
 submissions call OUT to third-party compute (Modal/Lambda/RunPod) under a ~$10k runtime
 cap — which would re-open external/larger compute. UNCONFIRMED for ARC-AGI-3 (its stated
