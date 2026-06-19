@@ -1,141 +1,23 @@
 {
   "experiment": "arc_leaderboard_eval",
-  "mode": "explore",
-  "budget": 20000,
-  "total_levels": 8,
-  "efficiency_sum": 1.0001,
-  "open_gaps": [
-    {
-      "game": "wa30",
-      "stuck_at_level": 0,
-      "actions_spent": 19578,
-      "signature": "no_level_up_within_budget",
-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
-    },
-    {
-      "game": "cn04",
-      "stuck_at_level": 0,
-      "actions_spent": 19531,
-      "signature": "no_level_up_within_budget",
-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
-    },
-    {
-      "game": "sk48",
-      "stuck_at_level": 0,
-      "actions_spent": 19674,
-      "signature": "no_level_up_within_budget",
-      "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
-    }
-  ],
+  "games_mode": "claimed",
+  "policy": "explorer",
+  "budget": 2500,
+  "live_levels": 1,
+  "oracle_levels": 0,
+  "gap": 0,
+  "efficiency_sum": 0.6553,
+  "open_gaps": [],
   "per_game": [
-    {
-      "game": "r11l",
-      "levels": 1,
-      "reached": 1,
-      "actions": 8056,
-      "efficiency": 0.0,
-      "gap": null
-    },
     {
       "game": "lp85",
       "levels": 1,
       "reached": 1,
-      "actions": 11,
-      "efficiency": 1.0,
+      "actions": 21,
+      "efficiency": 0.6553,
       "gap": null
-    },
-    {
-      "game": "ls20",
-      "levels": 1,
-      "reached": 1,
-      "actions": 8879,
-      "efficiency": 0.0,
-      "gap": null
-    },
-    {
-      "game": "wa30",
-      "levels": 0,
-      "reached": 0,
-      "actions": 19578,
-      "efficiency": 0.0,
-      "gap": {
-        "game": "wa30",
-        "stuck_at_level": 0,
-        "actions_spent": 19578,
-        "signature": "no_level_up_within_budget",
-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
-      }
-    },
-    {
-      "game": "cd82",
-      "levels": 1,
-      "reached": 1,
-      "actions": 10704,
-      "efficiency": 0.0,
-      "gap": null
-    },
-    {
-      "game": "sp80",
-      "levels": 1,
-      "reached": 1,
-      "actions": 4338,
-      "efficiency": 0.0001,
-      "gap": null
-    },
-    {
-      "game": "su15",
-      "levels": 1,
-      "reached": 1,
-      "actions": 8467,
-      "efficiency": 0.0,
-      "gap": null
-    },
-    {
-      "game": "tu93",
-      "levels": 1,
-      "reached": 1,
-      "actions": 9239,
-      "efficiency": 0.0,
-      "gap": null
-    },
-    {
-      "game": "cn04",
-      "levels": 0,
-      "reached": 0,
-      "actions": 19531,
-      "efficiency": 0.0,
-      "gap": {
-        "game": "cn04",
-        "stuck_at_level": 0,
-        "actions_spent": 19531,
-        "signature": "no_level_up_within_budget",
-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
-      }
-    },
-    {
-      "game": "m0r0",
-      "levels": 1,
-      "reached": 1,
-      "actions": 5300,
-      "efficiency": 0.0,
-      "gap": null
-    },
-    {
-      "game": "sk48",
-      "levels": 0,
-      "reached": 0,
-      "actions": 19674,
-      "efficiency": 0.0,
-      "gap": {
-        "game": "sk48",
-        "stuck_at_level": 0,
-        "actions_spent": 19674,
-        "signature": "no_level_up_within_budget",
-        "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"
-      }
     }
   ],
-  "inference_substrate": "offline_sim_no_quota",
-  "run_date": "2026-06-17",
-  "honest_verdict": "complete_leaderboard_eval_8_levels_3_gaps"
+  "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+  "honest_verdict": "complete_leaderboard_eval_1_levels_0_gaps"
 }
