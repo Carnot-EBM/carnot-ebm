@@ -1,0 +1,262 @@
+{
+  "closed_residuals_by_412_operator": [
+    {
+      "closed_by_operator": "glyph_rewrite_rule_verifier",
+      "game": "tr87",
+      "v2_residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter"
+    }
+  ],
+  "duration_s": 1.050144,
+  "example_corpus_snapshot": {
+    "heldout_games": [
+      "tr87",
+      "tu93",
+      "lp85",
+      "sc25",
+      "ka59",
+      "ar25",
+      "ft09"
+    ],
+    "per_game": [
+      {
+        "closed_by_operator": "glyph_rewrite_rule_verifier",
+        "game": "tr87",
+        "residual_delta": "none",
+        "solved_without_own_recipe": true
+      },
+      {
+        "closed_by_operator": "v1_generic_loop_reproduction_gate",
+        "game": "tu93",
+        "residual_delta": "none",
+        "solved_without_own_recipe": true
+      },
+      {
+        "closed_by_operator": "v1_generic_loop_reproduction_gate",
+        "game": "lp85",
+        "residual_delta": "none",
+        "solved_without_own_recipe": true
+      },
+      {
+        "closed_by_operator": "none",
+        "game": "sc25",
+        "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+        "solved_without_own_recipe": false
+      },
+      {
+        "closed_by_operator": "object_motion_world_model",
+        "game": "ka59",
+        "residual_delta": "none",
+        "solved_without_own_recipe": true
+      },
+      {
+        "closed_by_operator": "object_motion_world_model",
+        "game": "ar25",
+        "residual_delta": "none",
+        "solved_without_own_recipe": true
+      },
+      {
+        "closed_by_operator": "config_rule_verifier",
+        "game": "ft09",
+        "residual_delta": "none",
+        "solved_without_own_recipe": true
+      }
+    ],
+    "random_seed": 4459,
+    "source_hashes": {
+      "results/experiment_4448_loo_generic_solve_benchmark_v2.json": "6584f0a1fb8855be5690a5d8ba980a99e6f9591b088a9923fdf37bb7b9e48590",
+      "results/experiment_4456_generic_glyph_rewrite_operator.json": "1edb085ccb138644d254f045b0c798cd70607ffbe5fffe886b49e68ead7057b3",
+      "results/experiment_4457_*.json": {}
+    }
+  },
+  "experiment": "experiment_4459_loo_generic_solve_benchmark_v3",
+  "field_principles": {
+    "generic_loo_solve_count_v2_baseline": {
+      "principle": "bare int = 5; the .411 baseline this must beat to show progress"
+    },
+    "generic_loo_solve_count_v3": {
+      "principle": "bare int: the headline -- count of games re-solved from the corpus + .412 operators WITHOUT their own recipe"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed (this benchmark ALWAYS completes with a measurement, so terminal, never partial:)"
+    },
+    "inference_substrate": {
+      "principle": "THE .410/.411 LESSON -- EMIT it; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "each still-open residual -- the .413 build backlog"
+    },
+    "offline_reproduced": {
+      "principle": "every claimed re-solve is reproduction-gated"
+    },
+    "per_game": {
+      "principle": "list of {game, solved_without_own_recipe, closed_by_operator, residual_delta} -- shows EXACTLY which residuals the new operators closed"
+    },
+    "random_seed": {
+      "principle": "determinism for re-run"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of the example-corpus snapshot used"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: execution-grounded reproduction"
+    }
+  },
+  "generic_loo_solve_count_v2_baseline": 5,
+  "generic_loo_solve_count_v3": 6,
+  "heldout_games": [
+    "tr87",
+    "tu93",
+    "lp85",
+    "sc25",
+    "ka59",
+    "ar25",
+    "ft09"
+  ],
+  "honest_verdict": "success: generic_loo_solve_count_v3_6_of_7_beats_v2_5",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "loo_gate": "generic_loo_solve_count_v3 > 5",
+  "loo_gate_passed": true,
+  "missing_verifier_gaps": [
+    {
+      "attempt_mode": "v3_412_operator_remeasurement",
+      "game": "sc25",
+      "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+      "retrieved_operator": "active_data_collection"
+    }
+  ],
+  "no_3090_inference": true,
+  "offline_reproduced": true,
+  "per_game": [
+    {
+      "closed_by_operator": "glyph_rewrite_rule_verifier",
+      "game": "tr87",
+      "residual_delta": "none",
+      "solved_without_own_recipe": true
+    },
+    {
+      "closed_by_operator": "v1_generic_loop_reproduction_gate",
+      "game": "tu93",
+      "residual_delta": "none",
+      "solved_without_own_recipe": true
+    },
+    {
+      "closed_by_operator": "v1_generic_loop_reproduction_gate",
+      "game": "lp85",
+      "residual_delta": "none",
+      "solved_without_own_recipe": true
+    },
+    {
+      "closed_by_operator": "none",
+      "game": "sc25",
+      "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+      "solved_without_own_recipe": false
+    },
+    {
+      "closed_by_operator": "object_motion_world_model",
+      "game": "ka59",
+      "residual_delta": "none",
+      "solved_without_own_recipe": true
+    },
+    {
+      "closed_by_operator": "object_motion_world_model",
+      "game": "ar25",
+      "residual_delta": "none",
+      "solved_without_own_recipe": true
+    },
+    {
+      "closed_by_operator": "config_rule_verifier",
+      "game": "ft09",
+      "residual_delta": "none",
+      "solved_without_own_recipe": true
+    }
+  ],
+  "preconditions_checked": {
+    "arc_solve_learning_import": true,
+    "arc_solver_kit_import": true,
+    "igpu_llama_server_available": false,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "offline_env_files_present": true,
+    "offline_env_games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "ok": true,
+    "qwen_gguf_cached": true
+  },
+  "random_seed": 4459,
+  "reproducibility_checksum": "cc29c4a1976b36cc0f946cabf3ec36105c1b1f01e1b10726326a1c977627ccb1",
+  "reproduction_evidence": [
+    {
+      "game": "tr87",
+      "operator": "glyph_rewrite_rule_verifier",
+      "source": "results/experiment_4456_generic_glyph_rewrite_operator.json"
+    },
+    {
+      "game": "tu93",
+      "operator": "v1_generic_loop_reproduction_gate",
+      "source": "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
+    },
+    {
+      "game": "lp85",
+      "operator": "v1_generic_loop_reproduction_gate",
+      "source": "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
+    },
+    {
+      "game": "ka59",
+      "operator": "object_motion_world_model",
+      "source": "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
+    },
+    {
+      "game": "ar25",
+      "operator": "object_motion_world_model",
+      "source": "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
+    },
+    {
+      "game": "ft09",
+      "operator": "config_rule_verifier",
+      "source": "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
+    }
+  ],
+  "result_path": "results/experiment_4459_loo_generic_solve_benchmark_v3.json",
+  "schema": "carnot.exp4459.loo_generic_solve_benchmark_v3.v1",
+  "spec_refs": [
+    "REQ-REPORT-4459",
+    "SCENARIO-REPORT-4459"
+  ],
+  "upstream_artifacts": {
+    "cast_grid_phase_fsm_world_model": "",
+    "glyph_rewrite_rule_verifier": "results/experiment_4456_generic_glyph_rewrite_operator.json",
+    "source_hashes": {
+      "results/experiment_4448_loo_generic_solve_benchmark_v2.json": "6584f0a1fb8855be5690a5d8ba980a99e6f9591b088a9923fdf37bb7b9e48590",
+      "results/experiment_4456_generic_glyph_rewrite_operator.json": "1edb085ccb138644d254f045b0c798cd70607ffbe5fffe886b49e68ead7057b3",
+      "results/experiment_4457_*.json": {}
+    },
+    "v2_baseline": "results/experiment_4448_loo_generic_solve_benchmark_v2.json"
+  },
+  "verifier_is_oracle": true
+}

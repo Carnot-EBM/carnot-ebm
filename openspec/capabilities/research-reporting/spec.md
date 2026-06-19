@@ -25722,6 +25722,66 @@ verifier gap rather than using `partial:`.
 |---|---|---|
 | REQ-REPORT-4458 | Implemented (`python/carnot/experiment_4458_first_contact_new_game.py`, `results/experiment_4458_first_contact_new_game.json`) | Implemented (`tests/python/test_experiment_4458_first_contact_new_game.py`) |
 
+### REQ-REPORT-4459: Leave-One-Out Generic-Solver V3 Re-Measures .412 Operator Transfer
+
+The Exp 4459 workflow SHALL re-run the Exp 4448 leave-one-out generic-solver
+benchmark over the exact same held-out game set from
+`results/experiment_4448_loo_generic_solve_benchmark_v2.json`, withholding each
+target game's own recipe in-memory and not mutating `ops/arc_solve_registry.yaml`.
+The workflow SHALL compare the new `.412` generic operator stack against the v2
+baseline count of `5`, including `glyph_rewrite_rule_verifier` for the `tr87`
+residual and `cast_grid_phase_fsm_world_model` for the `sc25` residual when
+valid reproduction-gated closure evidence is present.
+
+Before measuring, the workflow SHALL check that offline environment files are
+present for the v2 held-out games, that `carnot.agentic.arc_solver_kit` and
+`carnot.agentic.arc_solve_learning` import, that the required upstream v2/.412
+artifacts are readable where they are used as evidence, and that no 3090
+inference or leaderboard submission is used. If a game requires live induction
+and the permitted non-3090 generator is not cached or served locally, that game
+SHALL be marked `blocked_model_not_cached` and the benchmark SHALL continue over
+the remaining targets.
+
+The workflow SHALL count a v3 leave-one-out solve only when the target is either
+already reproduction-gated in the Exp 4448 v2 generic re-measurement or is closed
+by a `.412` generic operator with offline reproduction evidence from
+`arc_solver_kit.reproduce()`. Operator presence, primitive retrieval, or a
+documented mechanic class SHALL NOT count as a solve without offline reproduction
+evidence while the target's own recipe is withheld.
+
+The workflow SHALL write
+`results/experiment_4459_loo_generic_solve_benchmark_v3.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`generic_loo_solve_count_v3`, `generic_loo_solve_count_v2_baseline`,
+`per_game`, `offline_reproduced`, `missing_verifier_gaps`,
+`verifier_is_oracle`, `random_seed`, and `reproducibility_checksum`. `per_game`
+SHALL be a list of `{game, solved_without_own_recipe, closed_by_operator,
+residual_delta}` rows. The falsifiable gate SHALL pass only when
+`generic_loo_solve_count_v3 > 5`; a flat or lower count SHALL still be a terminal
+complete measurement with residuals logged.
+
+#### SCENARIO-REPORT-4459: V3 Re-Measurement Counts Only Reproduction-Gated .412 Closures
+
+**Given** the Exp 4448 v2 benchmark artifact, the .412 glyph-rewrite and
+cast-grid operator artifacts when available, importable ARC solver modules, and
+offline environment files for the v2 held-out games
+**When** Exp 4459 re-measures the same leave-one-out benchmark with each target's
+own recipe withheld and the .412 generic operators available
+**Then** it writes the v3 artifact, reports a bare integer
+`generic_loo_solve_count_v3`, compares it to the bare v2 baseline `5`, records
+which residuals `glyph_rewrite_rule_verifier` and
+`cast_grid_phase_fsm_world_model` closed, logs any still-open `tr87` or `sc25`
+residual as `.413` build backlog, sets `offline_reproduced=true` only when every
+counted solve has reproduction evidence, keeps `verifier_is_oracle=true`,
+records no 3090 or leaderboard use, and emits a terminal-prefixed honest
+verdict.
+
+## Implementation Status (REQ-REPORT-4459)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4459 | Planned (`python/carnot/experiment_4459_loo_generic_solve_benchmark_v3.py`, `results/experiment_4459_loo_generic_solve_benchmark_v3.json`) | Planned (`tests/python/test_experiment_4459_loo_generic_solve_benchmark_v3.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
