@@ -25270,6 +25270,62 @@ as the next verifier gap rather than using a `partial:` verdict.
 |---|---|---|
 | REQ-REPORT-4445 | Implemented (`python/carnot/experiment_4445_generic_object_motion_world_model_operator.py`, `results/experiment_4445_generic_object_motion_world_model_operator.json`) | Implemented (`tests/python/test_experiment_4445_generic_object_motion_world_model_operator.py`) |
 
+### REQ-REPORT-4446: Generic First-Contact Driver Banks One Routed Unsolved ARC Game Or Logs The Residual
+
+The Exp 4446 workflow SHALL run the fixed generic first-contact solver on
+exactly one unsolved ARC-AGI-3 game, preferring `vc33` when its offline
+environment files are present. Before attempting the game it SHALL confirm the
+fixed Exp 4423 test signal, local offline environment files, importable
+`arc_solver_kit` and `arc_solve_learning`, and a non-3090 generator substrate
+through either cached GGUF files or an iGPU llama-server. Missing resources
+SHALL write a terminal-prefixed `complete: blocked_<resource>` artifact and
+SHALL NOT fabricate solver progress.
+
+The workflow SHALL call `arc_solve_learning.recommend_approach(target_game)`,
+preserve the routed solved-game recipe in the artifact, select the generic
+operator that best matches the routed recipe, and attempt level 1 through that
+operator. For `vc33`, the `s5i5` marker/config route SHALL select
+`config_rule_verifier` and express the local support-clearance predicate as a
+generic config-rule digest rather than a per-game adapter. A reproduced level
+SHALL count only after replay through `arc_solver_kit.reproduce()`. If the
+routed operator grounds but does not bank a level, the workflow SHALL finish
+with a terminal `complete:` routed-no-new-level result and log the residual
+mechanic in `missing_verifier_gaps` and `ops/verifier_gaps.md`.
+
+The workflow SHALL write
+`results/experiment_4446_drive_generic_first_contact_bank.json` with required
+top-level fields `honest_verdict`, `inference_substrate`, `target_game`,
+`routed_to`, `reproduced_levels`, `offline_reproduced`,
+`missing_verifier_gaps`, `verifier_is_oracle`, `random_seed`, and
+`reproducibility_checksum`. Cached verifier-ensemble runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` with
+`duration_s>=1.0`; live induction SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference, SHALL NOT submit to a leaderboard, and SHALL
+update `ops/arc_solve_registry.yaml` when the reproduction gate banks a real
+level.
+
+#### SCENARIO-REPORT-4446: Routed vc33 Config-Rule Attempt Is Reproduction-Gated
+
+**Given** offline `vc33` environment files, a non-3090 generator substrate, a
+green Exp 4423 fixed-contract test signal, the `arc_solve_learning`
+transfer route to `s5i5`, and the generic `config_rule_verifier`
+**When** Exp 4446 derives the `vc33` support-clearance config digest, grounds
+the routed operator, replays the generated L1 labels through
+`arc_solver_kit.reproduce()`, and writes the artifact
+**Then** the artifact is terminal-prefixed, records `target_game=vc33`,
+`routed_to=s5i5`, `verifier_is_oracle=true`, bare-int
+`reproduced_levels`, bare-bool `offline_reproduced`, and a deterministic
+checksum; a successful replay banks exactly one level and updates the ARC solve
+registry, while a grounded no-bank attempt logs the residual as a
+`missing_verifier_gap` rather than using `partial:`.
+
+## Implementation Status (REQ-REPORT-4446)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4446 | Implemented (`python/carnot/experiment_4446_drive_generic_first_contact_bank.py`, `results/experiment_4446_drive_generic_first_contact_bank.json`) | Implemented (`tests/python/test_experiment_4446_drive_generic_first_contact_bank.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a

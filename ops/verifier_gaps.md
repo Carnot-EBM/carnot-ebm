@@ -2287,3 +2287,14 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
 - movement: updated_still_open
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
+
+<!-- exp4446-gap-4423-vc33-unselectable-first-contact:start -->
+### GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT: Exp 4446 generic first-contact bank
+- status: filled
+- evidence: results/experiment_4446_drive_generic_first_contact_bank.json; target_game=vc33; routed_to=s5i5; offline_reproduced=True; reproduced_levels=1
+- failure mode: closed_by_support_clearance_config_rule
+- missing discriminator: filled by generic config_rule_verifier support-clearance digest over vc33 L1
+- candidate design: reuse routed config-rule support-clearance predicates for future click-control games
+- priority: high
+- movement: filled
+<!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
