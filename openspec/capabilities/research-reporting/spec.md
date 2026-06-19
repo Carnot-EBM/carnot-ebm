@@ -22462,6 +22462,77 @@ and `random_seed`, and leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4429 | Implemented (`python/carnot/experiment_4429_sota_ingestion_409.py`) | Implemented (`tests/python/test_experiment_4429_sota_ingestion_409.py`) |
 
+### REQ-REPORT-4440: Ingest SOTA For The .410 Example-Corpus Generic Solver Into The .411 Plan
+
+The Exp 4440 workflow SHALL ingest state-of-the-art methods for the `.410`
+headline: generic live solving from an example corpus. It SHALL cover
+few-shot/in-context program induction across tasks, DreamCoder-class library
+learning for reusable solver primitives, analogical world-model transfer, and
+meta-solvers that generalize across ARC-AGI-3-style interactive games. It SHALL
+condition the mapping on the actual `.410` outcomes: Exp 4432 measured a
+leave-one-out generic solver at `2/7` reproduction-gated solves; Exp 4433 used
+example-conditioned win induction to reproduce `g50t` L1; Exp 4434 showed
+example-conditioned world-model synthesis improved from `0.714286` cold control
+accuracy to `1.0` while adding zero reproduced levels; Exp 4435 fixed the
+first-contact verdict contract but left `dc22` as an open verifier gap; and Exp
+4436 deepened `tu93` to L5 while consolidating reusable primitives.
+
+The workflow SHALL use the reliable channel only: `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, arXiv API or arXiv abs-page HTTP checks, and
+low-concurrency WebSearch/WebFetch. It SHALL NOT invoke `/deep-research`, SHALL
+NOT submit to any leaderboard, SHALL NOT launch new training, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave `ops/changelog.md`,
+`ops/status.md`, and `_bmad/traceability.md` untouched for the separate
+reconciliation step. Every method SHALL carry a real verified arXiv ID, and the
+artifact SHALL reject any method whose ID is not present in the verified
+arXiv/API and HTTP-200 source set.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4440_sota_ingestion_410.json`, and the required runner SHALL
+be `results/experiment_4440_sota_ingestion_410.py` delegating to
+`python/carnot/experiment_4440_sota_ingestion_410.py`. The workflow SHALL also
+write the SOTA-to-experiment mapping note
+`docs/research-notes/sota-ingestion-410-2026-06-19.md` and update
+`research-studying.md` idempotently to mark the `.410` SOTA ingestion as
+ingested.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `methods`, `flagged_for_v411`,
+`sota_to_experiment_mapping_note`, `v410_outcome_conditioning`,
+`preconditions_checked`, `random_seed`, `research_note_path`, and
+`field_principles`. `honest_verdict` SHALL use a terminal prefix and, on the
+complete path, equal `complete: sota_ingestion_410_mapped`. `methods` SHALL be a
+list of dicts with exactly `name`, `arxiv_id`,
+`what_it_takes_over_our_stack`, and `pitfalls`; each `arxiv_id` SHALL map to a
+verified arXiv URL. `flagged_for_v411` SHALL be a bare, non-empty string naming
+the single strongest method fed forward to `.411` so the
+discover->ingest->plan->experiment loop remains intact. `field_principles`
+SHALL include the required principle strings for `honest_verdict`, `methods`,
+and `flagged_for_v411`.
+
+#### SCENARIO-REPORT-4440: The .410 Example-Corpus Results Close Into A .411 Library-Learning Plan
+
+**Given** Exp 4432 measured leave-one-out generic transfer at two of seven
+reproduction-gated solves
+**And** Exp 4433 reproduced `g50t` L1 from example-conditioned win induction
+**And** Exp 4434 showed example-conditioned world-model accuracy beating the
+cold synthesis control
+**And** Exp 4435 left a first-contact verifier gap open
+**And** Exp 4436 deepened `tu93` and consolidated primitives
+**When** the Exp 4440 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON artifact, maps five to eight verified arXiv
+sources to concrete `.411` experiments, flags LILO-style documented library
+induction (`arXiv:2310.19791`) as the strongest `.411` hand-off, emits a
+research note in `docs/research-notes/`, updates `research-studying.md`
+idempotently, records `/deep-research` non-use and Semantic Scholar 429
+handling when observed, and makes no leaderboard submission.
+
+## Implementation Status (REQ-REPORT-4440)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4440 | Planned (`python/carnot/experiment_4440_sota_ingestion_410.py`) | Planned (`tests/python/test_experiment_4440_sota_ingestion_410.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
