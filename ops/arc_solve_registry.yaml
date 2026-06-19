@@ -646,6 +646,27 @@ games:
     offline_reproduced: true
     reproduced_levels: 1
     reproducibility_checksum: 70d1253b011f3cce0d3552cf59abb2a93791e0859c71e8c27529c249bf8a0ca1
+- game: re86
+  reproducibility: unsolved
+  levels_reproduced: 0
+  mechanic_class: pattern_match_sprite_resize
+  solver: python/carnot/experiment_4471_first_contact_rotated_new_game.py --game re86
+  dead_ends:
+  - gap_id: GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
+    game: re86
+    routed_to: tu93
+    operator: graph_astar_action_cost
+    residual_delta: missing_pattern_match_sprite_resize_verifier
+    status: open
+    candidate_design: add a generic sprite-overlay pattern-match and resize/transformation verifier
+    routed_recipe:
+      game: tu93
+      selected_operator:
+        operator: graph_astar_action_cost
+        routed_to: tu93
+        reason: retrieved_graph_primitive_matches_re86_keyboard_pattern_route
+        source: retrieved_primitives
+    artifact: results/experiment_4471_first_contact_rotated_new_game.json
 reproducible_total_levels: 45
 reproducible_total_games: 22
 provisional_total_levels: 1

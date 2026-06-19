@@ -2322,3 +2322,14 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: reuse two-phase cast/config toggle then navigation FSMs for future cast-grid games
 - priority: high
 <!-- exp4469-gap-sc25-cast-grid:end -->
+
+<!-- exp4471-gap-re86-pattern-match-sprite-resize:start -->
+### GAP-4471-RE86-PATTERN-MATCH-SPRITE-RESIZE: Exp 4471 rotated first-contact
+- status: open
+- evidence: results/experiment_4471_first_contact_rotated_new_game.json; target_game=re86; routed_to=tu93; offline_reproduced=False; reproduced_levels=0
+- failure mode: missing_pattern_match_sprite_resize_verifier
+- missing discriminator: generic sprite-overlay pattern-match and resize/transformation verifier
+- candidate design: extend graph/object operators with exact overlay and ACTION5 resize grounding
+- priority: high
+- movement: still_open
+<!-- exp4471-gap-re86-pattern-match-sprite-resize:end -->
