@@ -8874,3 +8874,4 @@ c |
 | 2026-06-19 19:04 UTC | PHASE A2 (ARC NORTH STAR) -- GENERIC glyph-rewrite | OK | 117 passed, 1 warning in 7.17s |
 | 2026-06-19 19:10 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY) -- G | OK | cache hit: 81 passed, 1 warning in 4.25s |
 | 2026-06-19 19:23 UTC | PHASE A4 (ARC NORTH STAR) -- FIRST-CONTACT a NEW n | OK | 100 passed, 1 warning in 6.39s |
+| 2026-06-19 19:38 UTC | PHASE A5 (ARC NORTH STAR) -- LEAVE-ONE-OUT generic | OK | 88 passed, 1 warning in 8.09s |
