@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.412",
+  "generated_at": "2026-06-19T21:17:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The conductor's milestone-scoped timing detector AGAIN false-zeroed for .412 (0 commits since activation), so the locked numeric fields stay at the detector's authoritative 0. On-disk ground truth verified this turn (results/ mtimes + ops/changelog window + summarize_artifact.py) shows 11 experiment artifacts actually landed (exp4454-exp4465, ~2h30m wall window 2026-06-19 14:39:50->17:09:36 EDT); capstone exp4465 is clean/unflagged with paper_ready=true. The operational failure this milestone is observability (the recurring false-zero detector gap spanning .363-.411 and now .412), not execution.",
+  "bottlenecks_identified": [
+    "RECURRING FALSE-ZERO TIMING DETECTOR: the milestone-scoped detector reported 0 experiment commits since .412 activation, but 11 experiment artifacts (exp4454-exp4465) are on disk with mtimes spanning ~2h30m (2026-06-19 14:39:50->17:09:36 EDT). Same observability gap documented across .363-.411. The operational bottleneck is the detector, not the milestone -- execution proceeded normally.",
+    "Two early-milestone blocks consumed wall time without delivering their intended result: exp4454 (archive .411 -> activate .412 transition) returned blocked_yaml_parse, and exp4455 (dc22 L1 solve, the primary ARC north-star task) returned blocked_baseline_pytest_coverage. These are pre-test/parse-gate failures, not slow compute.",
+    "Both RTX 3090s idle at 0% at the 21:17Z snapshot, but this is CORRECT and is NOT flagged: the .412 capstone substrate is aggregation_from_upstream_artifacts and no compute-bound GGUF/CUDA task was attributed to the detector window, so gpu_idle_on_compute_bound_tasks stays null per the GPU-idle interpretation rule."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: add a results/ mtime scan plus an ops/changelog-window fallback so experiments committed within the milestone window are counted even when the primary git-diff-based detector returns 0.",
+    "Emit a detector_gap_suspected=true signal whenever experiment artifacts exist on disk within the milestone window but the detector reports 0 commits, so future retros surface the gap automatically instead of relying on a manual on-disk cross-check.",
+    "Stamp duration_s and a compute_bound flag at artifact write-time (in scripts/experiment_template.py) so wall-time and GPU-attribution analysis is self-contained per artifact and independent of the commit detector.",
+    "Triage the two early-milestone blocks (exp4454 archive/activate YAML parse; exp4455 dc22 baseline pytest coverage) so the next milestone's transition and primary solve are not gated by parse/pre-test failures."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the false-zero timing detector (mtime scan + changelog-window fallback + detector_gap_suspected emission) -- it has now mis-reported 0 commits across .363-.412, making every operational retro depend on a manual on-disk cross-check.",
+    "Move duration_s/compute_bound stamping to artifact write-time so operational metrics are self-contained per artifact and never depend on the milestone-scoped commit detector.",
+    "Triage the two early-milestone blocks (exp4454 archive/activate YAML parse, exp4455 dc22 baseline pytest coverage) so the next milestone's transition and primary ARC solve are not gated by parse/pre-test failures."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "For the seventh-plus milestone in the .363-.412 run, the operational story is not slow experiments -- execution was healthy (11 artifacts, capstone clean/unflagged, paper_ready=true, LOO generic-solve v3 6/7, submission package ready at 39 levels) -- but a broken observability layer: the milestone-scoped timing detector false-zeroed again, forcing a manual on-disk reconstruction to tell the true story. Until the detector is repaired and metrics are stamped at write-time, every operational retro keeps paying this manual-reconciliation tax."
+}
