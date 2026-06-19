@@ -23,9 +23,17 @@
 > `langgraph.store.sqlite` error was a probe artifact of loading `agent.py` directly; the real
 > notebook's minimal `__init__.py` rewrite avoids it).
 
-**STATUS: components VERIFIED on the real Kaggle P100; submission notebook authored against the
-correct gateway contract. NOT yet run end-to-end through the real gateway (only the eval sandbox
-has it). Ready for an OPERATOR test-submit.**
+**STATUS: FIRST SUBMISSION MADE 2026-06-19 22:54Z** (operator-directed, via the kernel API) —
+submission `ref 53862044` ("carnot v1"), kernel `iancblenke/carnot-arc-agi3-submission` v1,
+status PENDING (scored rerun against the hidden gateway, up to 12h). Today's 1/day slot used.
+Components were verified on the real Kaggle P100; the submission notebook is authored against the
+correct gateway contract; the first scored rerun is the end-to-end gateway validation.
+
+**Submit API note:** the CLI `kaggle competitions submit -k ... -v ...` returned a 400; the working
+path is the Python API `api.competition_submit_code(file_name="submission.parquet",
+message=..., competition="arc-prize-2026-arc-agi-3", kernel="iancblenke/carnot-arc-agi3-submission",
+kernel_version=1)`. The kernel's `/code/` URL 404s publicly because it is `is_private: true` — open
+it from Kaggle "Your Work → Notebooks" when logged in as iancblenke.
 Submission itself is OPERATOR-ONLY (External Publication discipline) — the outer loop prepared and
 verified the package; it did NOT and will NOT submit. Deadline: **2026-06-30** (milestone #1, prize +
 open-source eligible — the project is MIT-0 ✅).
