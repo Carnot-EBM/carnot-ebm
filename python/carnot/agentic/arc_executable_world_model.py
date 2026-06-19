@@ -367,6 +367,61 @@ def _resolve_llama_server() -> Path:
 
 LLAMA_SERVER = _resolve_llama_server()
 
+# Qwen3.5-9B-MTP loads ~11.5GB on a 3090 (weights + MTP self-draft + q8 KV, validated 2026-06-19).
+# Require headroom above that so the opt-in 3090 path NEVER binds a card a conductor training job is
+# using -- this is the "yield-if-the-conductor-needs-it" guard.
+_GENERATOR_CUDA_MIN_FREE_MB = 13000
+
+
+def _cuda_gpu_free_mb(idx: int) -> int:
+    """Free VRAM (MiB) on CUDA GPU `idx` via nvidia-smi; -1 if unavailable. The guard input for the
+    opt-in 3090 generator path."""
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        lines = [ln.strip() for ln in out.stdout.splitlines() if ln.strip()]
+        return int(lines[idx]) if 0 <= idx < len(lines) else -1
+    except Exception:
+        return -1
+
+
+def _generator_server_and_env() -> tuple[Path, Optional[dict]]:
+    """Resolve the llama-server binary + launch env for the generator, evaluated at LAUNCH time so the
+    3090 guard sees current GPU state.
+
+    Priority:
+      1. CARNOT_LLAMA_SERVER (Kaggle/live bundled CUDA binary) -- unchanged; inherits ambient env.
+      2. OPT-IN CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> the local CUDA build pinned to that 3090 via
+         CUDA_VISIBLE_DEVICES, but ONLY if the card has >=_GENERATOR_CUDA_MIN_FREE_MB free. This is the
+         operator-approved (2026-06-19) use of one idle 3090 for generator throughput now that the TRM
+         run is retired; the free-memory guard yields to any conductor job already on the card.
+      3. Default: the iGPU HIP build (no conductor contention), else the CUDA build.
+    Returns (server_path, env_or_None); env=None means inherit the ambient environment (legacy behavior).
+    """
+    import os
+
+    explicit = os.environ.get("CARNOT_LLAMA_SERVER")
+    if explicit:
+        return Path(explicit), None
+    base = Path.home() / ".cache" / "llama.cpp-master"
+    cuda = base / "build" / "bin" / "llama-server"
+    hip = base / "build-hip" / "bin" / "llama-server"
+    gpu = (os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU") or "").strip()
+    if gpu and cuda.exists():
+        try:
+            idx = int(gpu)
+        except ValueError:
+            idx = -1
+        if idx >= 0 and _cuda_gpu_free_mb(idx) >= _GENERATOR_CUDA_MIN_FREE_MB:
+            return cuda, dict(os.environ, CUDA_VISIBLE_DEVICES=str(idx))
+        # guard tripped (card busy / unavailable / bad idx) -> fall through to the iGPU path,
+        # never fight the conductor for the 3090.
+    return (hip if hip.exists() else cuda), None
+
 
 @dataclass
 class LocalGGUFProposer:
@@ -419,10 +474,13 @@ class LocalGGUFProposer:
         path = self.model_path or _resolve_gguf(
             self.repo_substr
         )  # explicit path (Kaggle bundle) else cache
-        if not path or not LLAMA_SERVER.exists():
+        # Resolve the server + launch env at LAUNCH time so the opt-in 3090 guard sees current GPU state
+        # (CARNOT_ARC_GENERATOR_CUDA_GPU=<idx> -> CUDA build pinned to that card iff it has headroom).
+        server, launch_env = _generator_server_and_env()
+        if not path or not server.exists():
             return False  # GPU enforcement: no CPU fallback
         args = [
-            str(LLAMA_SERVER),
+            str(server),
             "-m",
             path,
             "-ngl",
@@ -438,7 +496,10 @@ class LocalGGUFProposer:
             args += ["--spec-type", "draft-mtp", "--model-draft", path]
         if self.kv_quant:  # 8-bit KV cache doubles usable context, near-lossless
             args += ["--cache-type-k", self.kv_quant, "--cache-type-v", self.kv_quant]
-        self._proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # env=launch_env: None inherits the ambient env (legacy iGPU path); a dict pins CUDA_VISIBLE_DEVICES.
+        self._proc = subprocess.Popen(
+            args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=launch_env
+        )
         for _ in range(90):  # model load on GPU can take ~10-30s
             if self._healthy():
                 return True
