@@ -12228,6 +12228,62 @@ the Codex hardened-gate reference, reports
 programs banked, emits a terminal-prefix complete or success verdict, and
 writes the self-distillation corpus without gold labels.
 
+### REQ-VERIFY-4417: GAP-4 Local Generator Sovereign Forward Arm
+
+The repository SHALL provide Exp 4417 at
+`results/experiment_4417_gap4_local_generator_sovereign_arm.py` to replay the
+GAP-4 forward-protocol gate with a local open-weight GGUF generator source,
+the guarded graded min-Hamming gate (`tau=0.005`), and a k-consistency
+agreement requirement over independent local inductions. The runner SHALL use
+the cached ARC-1 candidate pool, the cached TRM vote baseline artifact, and the
+cached local generator checkpoint from the Qwen/Gemma GGUF arm; it SHALL NOT
+train TRM, fine-tune a generator, submit to a leaderboard, or call any
+closed-weight generator.
+
+Before any scoring, Exp 4417 SHALL verify that the cached ARC-1 pool and
+`results/arc3_trm_verifier_rerank.json` vote baseline load. If either is
+absent or malformed, it SHALL write
+`results/experiment_4417_gap4_local_generator_sovereign_arm.json` with
+`honest_verdict=blocked_cached_pool_unavailable` and stop. It SHALL then verify
+that at least one mandated local open-weight GGUF path is cached from
+`unsloth/gemma-4-31B-it-GGUF`, `unsloth/Qwen3.6-35B-A3B-GGUF`, or
+`unsloth/gemma-4-12B-it-GGUF`, and SHALL preflight that concrete `.gguf` path
+with `llama_cpp.Llama(model_path=..., vocab_only=True)` rather than
+`AutoTokenizer`; if no such path loads, it SHALL write
+`honest_verdict=blocked_local_generator_not_cached` and stop.
+
+For a complete run, the implementation SHALL mechanically re-verify cached
+local `def transform(grid)` programs against demo pairs only, execute verified
+demo-perfect programs on test inputs, group independent predictions by output
+hash, and allow a graded-gate promotion only when at least `k=2`
+demo-perfect local inductions agree on the executed output and the closest
+candidate is within normalized Hamming `tau=0.005` after the vote-aware guard.
+Correct labels and gold outputs SHALL be used only for post-hoc pass@k scoring,
+never for induction, k-consistency, or candidate selection.
+
+The terminal artifact SHALL include top-level fields `honest_verdict`,
+`sovereign_gap4_gate_holds`, `local_generator_coverage`, `pass2_vs_vote`,
+`verifier_is_oracle`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `duration_s`, and
+`inference_substrate`. `sovereign_gap4_gate_holds`, `verifier_is_oracle`, and
+any precondition availability values SHALL be bare bools;
+`local_generator_coverage` SHALL be a bare float; and `pass2_vs_vote` SHALL
+include `vote_pass2`, `gated_pass2`, `delta`, `delta_ci95`,
+`pass2_vote_wins_lost`, and `graded_gate_fires`.
+
+### SCENARIO-VERIFY-4417: K-Consistent Local Gate Reports Sovereign Verdict
+
+Given the ARC-1 GAP-4 candidate pool, TRM vote baseline, local GGUF checkpoint,
+and at least one cached mandated GGUF path are available, when Exp 4417 runs,
+then it records the local generator demo-perfect coverage separately from the
+gate effect, applies the `tau=0.005` guarded graded gate only to k-consistent
+local predictions, computes matched vote and gated pass@1/pass@2 on the same
+pool, bootstraps the paired pass@2 delta CI95, sets
+`verifier_is_oracle=true`, sets `sovereign_gap4_gate_holds=true` only when the
+local k-consistent gate has pass@2 at least vote with zero pass@2 vote-wins
+lost, and otherwise emits a terminal clean-null verdict that preserves the
+decentralization gap evidence without claiming an oracle-distinct moat.
+
 ### REQ-VERIFY-4200: GAP-4 Certified ARC Corpus And In-Context Distill-Lift Read
 
 The repository SHALL provide Exp 4200 at

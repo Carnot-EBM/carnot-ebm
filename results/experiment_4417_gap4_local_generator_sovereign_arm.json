@@ -1,0 +1,101 @@
+{
+  "duration_s": 1.663889,
+  "experiment": "experiment_4417_gap4_local_generator_sovereign_arm",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A sovereign gate that holds (local generator + graded gate >= vote) and a clean null (local generator cannot drive the gate -> decentralization gap) are BOTH decision-grade.",
+    "local_generator_coverage": "BARE float: the demo-perfect program rate from the LOCAL generator (vs exp4069's ~0.23) -- the raw sovereign-induction signal separate from the gate's pass@2 effect.",
+    "model_specs": "The LOCAL open-weight generator GGUF (the sovereign inducer) + the cached TRM pool + the graded-gate config + the vote baseline + n; required methodology + the decentralization (local/open) declaration.",
+    "pass2_vs_vote": "dict: {vote_pass2, gated_pass2, delta, delta_ci95, pass2_vote_wins_lost, graded_gate_fires} -- the gate's pass@2 effect on the matched pool with the no-verifier control.",
+    "preconditions_checked": "Records the cached-pool + the cached local generator + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the local induction + the graded gate + the bootstrap.",
+    "reproducibility_checksum": "Hash of the local-generator induced programs + the gate config + the pool + the control; lets a third party re-run.",
+    "sovereign_gap4_gate_holds": "BARE bool: the capstone reads this; true iff a LOCAL-generator demo-fit + graded-min-hamming + k-consistency gate holds pass@2 >= vote with 0 pass@2 losses on the matched pool (CI95) -- the decentralization/sovereignty tier of the GAP-4 forward protocol.",
+    "verifier_is_oracle": "BARE bool=true -- the demo-fit execution gate IS the oracle (execution-grounded); this is the SOVEREIGNTY question, NOT an oracle-distinct moat headline."
+  },
+  "honest_verdict": "complete: sovereign_gap4_local_gate_holds_flat_cov_0.2333_fires_0_lost_0",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "k_consistency_details": {
+    "demo_perfect_unique_tasks": 7,
+    "guard_block_count": 0,
+    "k_consistent_entries": 0,
+    "lost": 0,
+    "recovered": 0,
+    "unique_tasks": 30
+  },
+  "local_generator_coverage": 0.2333,
+  "model_specs": {
+    "cached_trm_pool_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_vote_baseline_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+    "generator_declaration": "local_open_weight_gguf_cached_checkpoint_replay",
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "generator_model": "Qwen3.6-35B-A3B",
+    "graded_gate_tau": 0.005,
+    "k_consistency": 2,
+    "leaderboard_submission": false,
+    "matched_vote_control": "recomputed from candidate votes on the matched pool",
+    "n_entries": 31,
+    "n_unique_tasks": 30,
+    "no_trm_training": true,
+    "source_checkpoint_k_samples_per_task": 8,
+    "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+    "source_checkpoint_schema": "carnot.experiment_4059_decentralization_moe_resume.checkpoint.v1",
+    "vote_aware_guard_threshold": 900,
+    "vote_baseline_artifact_pass2": 0.4839
+  },
+  "pass1_vs_vote": {
+    "delta": 0.0,
+    "gated_pass1": 0.4194,
+    "vote_pass1": 0.4194
+  },
+  "pass2_vs_vote": {
+    "delta": 0.0,
+    "delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "gated_pass2": 0.4516,
+    "graded_gate_fires": 0,
+    "pass2_vote_wins_lost": 0,
+    "vote_pass2": 0.4516
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "n_entries": 31,
+      "pool_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+      "resource": "cached_trm_pool_and_vote_baseline",
+      "vote_baseline_artifact_pass2": 0.4839,
+      "vote_baseline_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json"
+    },
+    {
+      "allowed_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-12B-it-GGUF"
+      ],
+      "available": true,
+      "loader": "llama_cpp.Llama(model_path=..., vocab_only=True)",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "local_open_weight_generator_gguf",
+      "selected_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "available": true,
+      "evidence": "runner is offline replay; no TRM or generator training entrypoint is invoked",
+      "resource": "trm_training_stood_down"
+    },
+    {
+      "available": true,
+      "n_tasks": 30,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+      "resource": "cached_local_generator_checkpoint"
+    }
+  ],
+  "random_seed": 12345,
+  "reproducibility_checksum": "7d5cc5b2a3cfda34f8d2fbb3488bae1df22a8211175e212d3231390cc9ef91d6",
+  "schema": "carnot.experiment_4417_gap4_local_generator_sovereign_arm.v1",
+  "sovereign_gap4_gate_holds": true,
+  "title": "GAP-4 local generator sovereign forward arm",
+  "verifier_is_oracle": true
+}

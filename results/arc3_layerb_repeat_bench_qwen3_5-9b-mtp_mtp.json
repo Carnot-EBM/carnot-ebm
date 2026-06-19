@@ -1,0 +1,81 @@
+{
+  "experiment": "arc3_layerb_repeat_bench",
+  "model_key": "qwen3.5-9b-mtp",
+  "mtp": true,
+  "repeat": 4,
+  "n_predict": 2560,
+  "per_game": {
+    "ka59": {
+      "grounded_rate": "3/4",
+      "n_grounded": 3,
+      "n_capped": 2,
+      "runs": [
+        {
+          "seed": 0,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 15.24
+        },
+        {
+          "seed": 1,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 11.41
+        },
+        {
+          "seed": 2,
+          "grounded": false,
+          "tokens": 1623,
+          "capped": false,
+          "tok_per_s": 7.51
+        },
+        {
+          "seed": 3,
+          "grounded": true,
+          "tokens": 812,
+          "capped": false,
+          "tok_per_s": 6.93
+        }
+      ]
+    },
+    "tn36": {
+      "grounded_rate": "2/4",
+      "n_grounded": 2,
+      "n_capped": 2,
+      "runs": [
+        {
+          "seed": 0,
+          "grounded": false,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 8.69
+        },
+        {
+          "seed": 1,
+          "grounded": true,
+          "tokens": 780,
+          "capped": false,
+          "tok_per_s": 8.67
+        },
+        {
+          "seed": 2,
+          "grounded": true,
+          "tokens": 526,
+          "capped": false,
+          "tok_per_s": 8.86
+        },
+        {
+          "seed": 3,
+          "grounded": false,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 8.38
+        }
+      ]
+    }
+  },
+  "honest_verdict": "complete_repeatbench_qwen3_5_9b_mtp_mtp_True",
+  "inference_substrate": "offline_arc_agi3_qwen3.5-9b-mtp_mtp_iGPU_repeat4"
+}
