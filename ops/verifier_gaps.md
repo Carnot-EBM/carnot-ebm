@@ -2302,3 +2302,14 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - source artifact: results/experiment_4446_drive_generic_first_contact_bank.json
 - movement: filled
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
+
+<!-- exp4458-gap-sb26-color-match-slot-sequence:start -->
+### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4458 first-contact new game
+- status: open
+- evidence: results/experiment_4458_first_contact_new_game.json; target_game=sb26; routed_to=s5i5; offline_reproduced=False; reproduced_levels=0
+- failure mode: missing_color_match_slot_sequence_verifier
+- missing discriminator: generic ordered color-match item-slot verifier with undo-aware grounding
+- candidate design: extend config_rule_verifier with color_match_slot_sequence digests
+- priority: high
+- movement: still_open
+<!-- exp4458-gap-sb26-color-match-slot-sequence:end -->
