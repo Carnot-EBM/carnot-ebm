@@ -182,7 +182,10 @@ def test_scenario_report_4423_partial_logs_gap_and_registry_dead_end(tmp_path: P
         now=lambda: 10.0,
     )
 
-    assert artifact["honest_verdict"] == "partial: generic_first_contact_bp35_routed_missing_verifier_gap_logged"
+    assert (
+        artifact["honest_verdict"]
+        == "complete: generic_first_contact_bp35_routed_no_new_level_gap_logged"
+    )
     assert artifact["offline_reproduced"] is False
     assert artifact["reproduced_levels"] == 0
     assert artifact["missing_verifier_gaps"][0]["gap_id"] == "GAP-4423-BP35-UNSELECTABLE-FIRST-CONTACT"
@@ -224,14 +227,16 @@ def test_req_report_4423_schema_rejects_fabricated_success_and_missing_gap(tmp_p
     assert "routing_options must include exp4421 and exp4422" in errors
     assert "reproducibility_checksum must be 64-char sha256 hex" in errors
 
-    partial = {
+    complete_no_level = {
         **artifact,
-        "honest_verdict": "partial: no gap",
+        "honest_verdict": "complete: no gap",
         "offline_reproduced": False,
         "reproduced_levels": 0,
         "missing_verifier_gaps": [],
     }
-    assert "partial verdict requires missing_verifier_gaps" in mod.artifact_schema_errors(partial)
+    assert "complete no-new-level verdict requires missing_verifier_gaps" in mod.artifact_schema_errors(
+        complete_no_level
+    )
 
 
 def test_req_report_4423_defensive_paths_and_schema_errors(tmp_path: Path) -> None:

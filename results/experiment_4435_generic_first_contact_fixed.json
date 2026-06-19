@@ -1,0 +1,312 @@
+{
+  "duration_s": 37.387759,
+  "experiment": "experiment_4435_generic_first_contact_fixed",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed complete:/success: -- the whole point of this task is to stop emitting the conductor-rejected partial:"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash for reproducibility"
+    },
+    "verdict_contract_fixed": {
+      "principle": "bare bool: the 5-point atomic fix landed AND the test is green (the pre-test gate will not poison)"
+    }
+  },
+  "honest_verdict": "complete: generic_first_contact_dc22_routed_no_new_level_gap_logged",
+  "inference_substrate": "offline_arc_solver_kit_reproduce_no_3090",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
+      "failure_mode": "needs_per_game_RE",
+      "game": "dc22",
+      "gap_id": "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+      "loop_result_summary": {
+        "mode": "standing_arc_loop_routing_only",
+        "offline_reproduced": false,
+        "reproduced_levels": 0
+      },
+      "missing_discriminator": "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
+      "routed_recipe": {
+        "action_model": "ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+        "game": "sc25",
+        "solver": "results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py",
+        "win_condition": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit."
+      },
+      "status": "open"
+    }
+  ],
+  "no_3090_inference": true,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "arc_solve_learning_import": true,
+    "arc_solver_kit_import": true,
+    "focused_exp4423_pytest_green": true,
+    "leaderboard_submission": false,
+    "live_generator_gguf_cached_if_needed": true,
+    "llm_induction_needed": false,
+    "no_3090_inference": true,
+    "offline_env_files_present": true,
+    "ok": true,
+    "verdict_contract_fixed": true
+  },
+  "random_seed": 4435,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "e0b5763caf730f28507444d162d1b703977cebb9617a88991d8ed8e6742881e3",
+  "residual_mechanic_gap_logged": true,
+  "result_path": "results/experiment_4435_generic_first_contact_fixed.json",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "routing_options": [
+    {
+      "action_model": "ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+      "game": "sc25",
+      "id": "closest_solved_recipe",
+      "kind": "learned_recipe_route",
+      "selected": true,
+      "solver": "results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py",
+      "source": "arc_solve_learning.recommend_approach",
+      "verifier_is_oracle": false,
+      "win_condition": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit."
+    },
+    {
+      "candidate_games": [
+        "bp35",
+        "dc22",
+        "g50t",
+        "lf52",
+        "s5i5",
+        "cd82",
+        "wa30"
+      ],
+      "id": "exp4421_config_rule_unseen",
+      "kind": "config_rule_verifier",
+      "matches_target": true,
+      "source_artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+      "verifier_is_oracle": true
+    },
+    {
+      "candidate_games": [
+        "tr87"
+      ],
+      "id": "exp4422_glyph_rewrite_pixels",
+      "kind": "glyph_rewrite_pixel_verifier",
+      "matches_target": false,
+      "source_artifact": "results/experiment_4422_glyph_rewrite_perception.json",
+      "verifier_is_oracle": true
+    }
+  ],
+  "routing_recommendation": {
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      }
+    ],
+    "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "heuristic_policy": {
+      "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+      "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+      "feature": "per-action cell impact + bfs_expansions headroom probe",
+      "rule": {
+        "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+        "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+        "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+        "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+      },
+      "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+      "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+    },
+    "recommended": [
+      {
+        "action_model": "ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+        "game": "sc25",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "deepcopy-injection BROKEN -> replay-from-reset.",
+          "first step after reset consumed -> warm-up step.",
+          "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
+          "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).",
+          "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+        ],
+        "similarity": 6.0,
+        "solver": "results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py",
+        "win_condition": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit."
+      },
+      {
+        "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+        "game": "cd82",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [],
+        "similarity": 6.0,
+        "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+        "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline."
+      },
+      {
+        "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
+        "game": "lp85",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "deepcopy-injection WORKS for lp85 (unlike sc25).",
+          "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
+        ],
+        "similarity": 5.0,
+        "solver": "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.",
+        "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations."
+      }
+    ],
+    "strategy": {
+      "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+      "game": "dc22",
+      "mechanic": "graph_explore",
+      "name": "graph_explore",
+      "needs": null,
+      "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+      "routed_mechanic": "graph_explore",
+      "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+      "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "uses_goal_distance_heuristic": true,
+      "wired": true
+    },
+    "target_features": {
+      "action_type": "mixed",
+      "difficulty": "medium",
+      "game": "dc22",
+      "spatial": false,
+      "win_kw": [
+        "goal",
+        "position"
+      ]
+    },
+    "target_game": "dc22"
+  },
+  "schema": "carnot.exp4435.generic_first_contact_fixed.v1",
+  "spec_refs": [
+    "REQ-REPORT-4435",
+    "SCENARIO-REPORT-4435"
+  ],
+  "standing_loop_result": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py --game dc22",
+    "game": "dc22",
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      }
+    ],
+    "guidance": "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
+    "mode": "standing_arc_loop_routing_only",
+    "returncode": 0,
+    "status": "needs_per_game_RE",
+    "stderr": "",
+    "stdout": "== standing ARC loop: game=dc22 ==\nINFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-06-19 07:28:03 | INFO | Created new scorecard: 91cbb9f8-a49b-4754-aecb-83497cad6f94\n2026-06-19 07:28:03 | INFO | Found latest version of dc22: dc22-fdcac232 (downloaded: 2026-06-08 07:25:18.826793+00:00)\n2026-06-19 07:28:03 | INFO | Successfully loaded game class Dc22 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/dc22/fdcac232/dc22.py\n  status: needs_per_game_RE\n  wrote results/arc_loop_solve_dc22.json\n",
+    "transfer_recommendation": [
+      {
+        "action_model": "ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+        "game": "sc25",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "deepcopy-injection BROKEN -> replay-from-reset.",
+          "first step after reset consumed -> warm-up step.",
+          "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
+          "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).",
+          "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+        ],
+        "similarity": 6.0,
+        "solver": "results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py",
+        "win_condition": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit."
+      },
+      {
+        "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+        "game": "cd82",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [],
+        "similarity": 6.0,
+        "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+        "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline."
+      },
+      {
+        "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
+        "game": "lp85",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "deepcopy-injection WORKS for lp85 (unlike sc25).",
+          "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
+        ],
+        "similarity": 5.0,
+        "solver": "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.",
+        "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations."
+      }
+    ]
+  },
+  "submitted_to_leaderboard": false,
+  "target_game": "dc22",
+  "underlying_exp4423_checksum": "6071b214d28bc562265e5d54dcf18bb4db58823e1e12ad824112552270d1426b",
+  "underlying_exp4423_honest_verdict": "complete: generic_first_contact_dc22_routed_no_new_level_gap_logged",
+  "verdict_contract_fixed": true,
+  "verifier_is_oracle": true
+}

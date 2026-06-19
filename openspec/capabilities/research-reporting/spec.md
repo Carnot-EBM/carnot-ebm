@@ -24798,7 +24798,7 @@ registry so later runs can skip it.
 **When** the Exp 4423 workflow routes the game through
 `arc_solve_learning.recommend_approach(game)` and the standing loop
 **Then** the artifact records a reproduced level for a new registry game or
-records a terminal-prefixed flagged partial verdict with the precise
+records a terminal-prefixed `complete:` no-new-level verdict with the precise
 missing-verifier gap, preserves the Exp 4421 and Exp 4422 routing options, sets
 `verifier_is_oracle=false` for non-oracle routing, and records the dead-end in
 the ARC solve registry.
@@ -25075,6 +25075,57 @@ no-help result as complete rather than partial.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4434 | Planned (`python/carnot/experiment_4434_example_conditioned_action_model.py`, `results/experiment_4434_example_conditioned_action_model.json`) | Planned (`tests/python/test_experiment_4434_example_conditioned_action_model.py`) |
+
+### REQ-REPORT-4435: Generic First-Contact Verdict Fix Drives One Routed Unseen Solve Attempt
+
+The Exp 4435 workflow SHALL verify the Exp 4423 verdict contract fix before
+running a routed generic first-contact attempt on exactly one unseen
+ARC-AGI-3 game. The workflow SHALL require the Exp 4423 no-new-level branch to
+emit a conductor-terminal `complete:` verdict instead of `partial:`, require the
+focused Exp 4423 pytest gate to be green, route the target through
+`arc_solve_learning.recommend_approach(game)`, run the standing generic solve
+loop, and count a level only when the loop result is offline reproduced through
+the ARC reproduction gate. The workflow SHALL NOT use 3090 inference and SHALL
+NOT submit to a leaderboard.
+
+Before attempting the target, the workflow SHALL check that offline
+`environment_files/` are present, `carnot.agentic.arc_solver_kit` and
+`carnot.agentic.arc_solve_learning` import, the fixed Exp 4423 focused pytest
+gate is green, and any live generator GGUF required by LLM induction is cached.
+If a precondition is missing, the workflow SHALL write a terminal-prefixed
+`complete: blocked_<resource>` artifact and SHALL NOT fabricate a solve.
+
+The workflow SHALL write
+`results/experiment_4435_generic_first_contact_fixed.json` with required
+top-level fields `honest_verdict`, bare bool `verdict_contract_fixed`, bare int
+`reproduced_levels`, bare bool `offline_reproduced`, bare int `random_seed`,
+`reproducibility_checksum`, and bare bool `verifier_is_oracle`. The artifact
+SHALL also preserve the routed recommendation, the underlying Exp 4423 terminal
+verdict, missing verifier gaps for a no-new-level result, the no-3090 and
+leaderboard policy fields, and exact field principles. `honest_verdict` SHALL
+start with `success:`, `complete:`, `passed:`, or `shipped:` and SHALL never use
+`partial:`. A routed game that does not solve generically SHALL be reported as
+`complete: ...routed_no_new_level_gap_logged` with the residual mechanic logged
+as a gap.
+
+#### SCENARIO-REPORT-4435: Fixed Routed No-Level Outcomes Are Terminal And Solves Are Reproduction-Gated
+
+**Given** the Exp 4423 focused pytest gate is green, offline ARC environment
+files are present, ARC solver modules import, and one unseen target game is
+selected
+**When** the Exp 4435 workflow routes the game, runs the standing generic loop,
+and writes its artifact
+**Then** `verdict_contract_fixed=true`, the routed recommendation is recorded,
+`offline_reproduced` and `reproduced_levels` mirror the reproduction-gated loop
+result, a real solve emits a `success:` verdict, a no-new-level attempt emits a
+terminal `complete:` verdict with a missing-verifier gap, `verifier_is_oracle`
+is true for the reproduction gate, and no `partial:` verdict is accepted.
+
+## Implementation Status (REQ-REPORT-4435)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4435 | Planned (`python/carnot/experiment_4435_generic_first_contact_fixed.py`, `results/experiment_4435_generic_first_contact_fixed.json`) | Planned (`tests/python/test_experiment_4435_generic_first_contact_fixed.py`) |
 
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 

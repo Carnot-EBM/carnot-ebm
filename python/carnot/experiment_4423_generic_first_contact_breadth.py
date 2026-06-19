@@ -47,7 +47,7 @@ FIELD_PRINCIPLES = {
         "Bare bool: false for generic non-oracle routing; true only if the loop "
         "explicitly reports an execution-grounded oracle verifier."
     ),
-    "honest_verdict": "Terminal-prefixed status: success, partial, or blocked.",
+    "honest_verdict": "Terminal-prefixed status: success, complete, or blocked.",
 }
 
 CONFIG_RULE_GAMES = ("bp35", "dc22", "g50t", "lf52", "s5i5", "cd82", "wa30")
@@ -357,7 +357,7 @@ def _default_recommend(game: str) -> Mapping[str, Any]:  # pragma: no cover - im
 
 
 def _terminal_prefixed(verdict: Any) -> bool:
-    return isinstance(verdict, str) and verdict.startswith(("success:", "partial:", "blocked:"))
+    return isinstance(verdict, str) and verdict.startswith(("success:", "complete:", "blocked:"))
 
 
 def _checksum_is_hex(value: Any) -> bool:
@@ -418,11 +418,11 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
             errors.append("success verdict requires reproduced_levels>=1")
         if artifact.get("target_was_new_to_registry") is not True:
             errors.append("success verdict requires target_was_new_to_registry true")
-    if isinstance(verdict, str) and verdict.startswith("partial:"):
+    if isinstance(verdict, str) and verdict.startswith("complete:"):
         if not artifact.get("missing_verifier_gaps"):
-            errors.append("partial verdict requires missing_verifier_gaps")
+            errors.append("complete no-new-level verdict requires missing_verifier_gaps")
         if not artifact.get("dead_ends_recorded"):
-            errors.append("partial verdict requires registry dead-end record")
+            errors.append("complete no-new-level verdict requires registry dead-end record")
     return errors
 
 
@@ -452,7 +452,7 @@ def _build_artifact(
     if offline_reproduced and reproduced_levels >= 1 and target_was_new:
         verdict = f"success: generic_first_contact_{game}_L{reproduced_levels}_offline_reproduced"
     elif game:
-        verdict = f"partial: generic_first_contact_{game}_routed_missing_verifier_gap_logged"
+        verdict = f"complete: generic_first_contact_{game}_routed_no_new_level_gap_logged"
     else:
         verdict = "blocked: generic_first_contact_no_candidate"
     attempts = []
@@ -610,4 +610,3 @@ def main() -> int:  # pragma: no cover - CLI wrapper
 
 if __name__ == "__main__":  # pragma: no cover - CLI wrapper
     raise SystemExit(main())
-
