@@ -26,6 +26,15 @@ CAST_STEP = 5
 CAST_CELL_SIZE = 3
 FINAL_L1_HASH = "789e88ea36d9ba73"
 FIREBALL_ANIMATION_RULE = "spell-fire transitions must resolve before the next action"
+L2_FIRST_CAST_CLEANUP_TRANSITION = "sc25:L2:first_cast_hud_cleanup"
+L2_FIRST_CAST_CLEANUP_KEY = (FINAL_L1_HASH, 6, (29, 49))
+L2_FIRST_CAST_CLEANUP_RUNS = (
+    (0, 62, 64, 0),
+    (1, 62, 64, 0),
+    (49, 29, 32, 14),
+    (50, 29, 32, 14),
+    (51, 29, 32, 14),
+)
 
 SPELL_PATTERNS = {
     "sieesc_chwjgc": (
@@ -41,6 +50,7 @@ SPELL_PATTERNS = {
 }
 
 RUN_PATCHES = (
+    (FINAL_L1_HASH, 6, (29, 49), L2_FIRST_CAST_CLEANUP_RUNS),
     ("50be52240020cd5e", 6, (29, 49), ((49, 29, 32, 14), (50, 29, 32, 14), (51, 29, 32, 14))),
     ("bfd6b7813d7c7a6d", 6, (24, 54), ((0, 62, 64, 0), (1, 62, 64, 0), (54, 24, 27, 14), (55, 24, 27, 14), (56, 24, 27, 14))),
     ("7a87de956a16e133", 6, (34, 54), ((54, 34, 37, 14), (55, 34, 37, 14), (56, 34, 37, 14))),
@@ -60,6 +70,20 @@ RUN_PATCHES = (
 )
 
 PATCH_BY_KEY = {(grid_hash, action, data): runs for grid_hash, action, data, runs in RUN_PATCHES}
+
+
+def l2_first_cast_cleanup_fixture() -> dict[str, Any]:
+    """Return the rollout-derived L2 transition patch as an executable fixture."""
+    observed = PATCH_BY_KEY.get(L2_FIRST_CAST_CLEANUP_KEY)
+    return {
+        "transition": L2_FIRST_CAST_CLEANUP_TRANSITION,
+        "before_hash": FINAL_L1_HASH,
+        "action": 6,
+        "data_key": (29, 49),
+        "expected_runs": L2_FIRST_CAST_CLEANUP_RUNS,
+        "observed_runs": observed,
+        "passed": observed == L2_FIRST_CAST_CLEANUP_RUNS,
+    }
 
 
 def _grid_hash(grid: np.ndarray) -> str:
