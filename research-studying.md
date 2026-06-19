@@ -8,6 +8,37 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 Exp 4452 - .411 SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4452_sota_ingestion_411.json` and
+`docs/research-notes/sota-ingestion-411-2026-06-19.md`.
+
+**Preconditions:** reliable channel reachable on CPU. The command
+`scripts/sweep_clusters.py --help` succeeded; the arXiv reachability check
+succeeded. `scripts/sweep_clusters.py` emitted focused cluster URLs.
+`scripts/sweep_semscholar.py` ran five focused queries; Semantic Scholar
+returned HTTP 429 on four queries and surfaced CodeARC from the
+counterexample-guided query. Low-concurrency WebSearch/WebFetch plus arXiv
+abs-page HTTP 200 checks verified arXiv:2310.19791, arXiv:2006.08381,
+arXiv:2211.16605, arXiv:2405.15880, arXiv:2503.23145, arXiv:2605.05138,
+arXiv:2606.12316, and arXiv:2603.05099. The banned `/deep-research` channel was
+not invoked. No leaderboard submission, live solve, or training run was
+launched.
+
+**Fresh-pass candidates marked ingested:** LILO (arXiv:2310.19791), DreamCoder
+(arXiv:2006.08381), Stitch (arXiv:2211.16605), HYSYNTH (arXiv:2405.15880),
+CodeARC (arXiv:2503.23145), Executable World Models (arXiv:2605.05138),
+Loop-OWM (arXiv:2606.12316), and ARC-TGI (arXiv:2603.05099).
+
+flagged_for_v412: LILO-style documented library induction over the ARC solver corpus (arXiv:2310.19791)
+
+random_seed=4452
+
+**SOTA->experiment mapping note:** Build a documented primitive-library
+induction pass over solved predicates, executable world models, and primitive
+ledger rows; retrieve those primitives during first-contact solving; and count
+only held-out, reproduction-gated improvements.
+
 ## 2026-06-19 RecursiveMAS (arXiv:2604.25917) — INGESTED as CORROBORATION; decomposition parked
 
 **Status:** INGESTED → `docs/research-notes/recursivemas-corroboration-2026-06-19.md`. Operator-handed;

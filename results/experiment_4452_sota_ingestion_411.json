@@ -1,0 +1,132 @@
+{
+  "field_principles": {
+    "flagged_for_v412": {
+      "principle": "the single strongest method fed forward so SOTA flows into the next milestone (discover->ingest->plan->experiment)"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- CPU-only reliable-channel ingestion; no live solve claim"
+    },
+    "methods": {
+      "principle": "list of {name, arxiv_id, what_it_takes_over_our_stack, pitfalls} -- each with a VERIFIED citation (no citation = fabrication)"
+    },
+    "preconditions_checked": {
+      "principle": "Reliable-channel, no-deep-research, no-leaderboard provenance."
+    },
+    "random_seed": {
+      "principle": "Deterministic focused sweep seed."
+    },
+    "research_note_path": {
+      "principle": "Repo-relative SOTA mapping note emitted with artifact."
+    },
+    "sota_to_experiment_mapping_note": {
+      "principle": "Concrete SOTA->experiment mapping for the `.412` planner."
+    }
+  },
+  "flagged_for_v412": "LILO-style documented library induction over the ARC solver corpus (arXiv:2310.19791)",
+  "honest_verdict": "complete: sota_ingestion_411_mapped_for_v412",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods": [
+    {
+      "arxiv_id": "2310.19791",
+      "name": "LILO documented library induction",
+      "pitfalls": "Auto-discovered libraries can hide game constants; require literal scans, held-out games, and reproduction gates before credit.",
+      "what_it_takes_over_our_stack": "Compress the solved ARC predicates, world-model fragments, and primitive ledger into named, documented operators retrievable by the .412 planner before candidate generation."
+    },
+    {
+      "arxiv_id": "2006.08381",
+      "name": "DreamCoder wake-sleep library learning",
+      "pitfalls": "It only learns useful concepts if the DSL covers the real mechanic space; missing ARC primitives become compressed blind spots.",
+      "what_it_takes_over_our_stack": "Use wake-sleep abstraction discovery as the search-prior backbone over reusable solver programs and replayed ARC tasks."
+    },
+    {
+      "arxiv_id": "2211.16605",
+      "name": "Stitch top-down synthesis for library learning",
+      "pitfalls": "Pure compression can produce opaque helpers; each abstraction needs docstrings, examples, and execution tests.",
+      "what_it_takes_over_our_stack": "Run corpus-guided compression over existing solver code to extract fast candidate abstractions before LILO documentation and retrieval."
+    },
+    {
+      "arxiv_id": "2405.15880",
+      "name": "HYSYNTH context-free LLM approximation",
+      "pitfalls": "The surrogate can overfit prompt artifacts; keep verifier-returned counterexamples and cold controls in the loop.",
+      "what_it_takes_over_our_stack": "Fit task-local synthesis surrogates from LLM completions so the planner searches rule space instead of accepting one completion."
+    },
+    {
+      "arxiv_id": "2503.23145",
+      "name": "CodeARC differential-query program induction",
+      "pitfalls": "A hidden target oracle is leakage if used at solve time; use it only for offline induction and separate final reproduction gates.",
+      "what_it_takes_over_our_stack": "Turn residual solver failures into targeted input/state queries and iteratively refine candidate predicates against differential tests."
+    },
+    {
+      "arxiv_id": "2605.05138",
+      "name": "Executable ARC-AGI-3 world models",
+      "pitfalls": "Fresh agent and clean workspace isolation are load-bearing; cross-game file leakage invalidates generic transfer.",
+      "what_it_takes_over_our_stack": "Use the induce-verify-refactor-plan harness as the live transfer surface that consumes the documented primitive library."
+    },
+    {
+      "arxiv_id": "2606.12316",
+      "name": "Loop-OWM composable object-centric world-model transfer",
+      "pitfalls": "ARC-1/2 transition prediction does not prove interactive game control; add action-cost, goal-inference, and reproduction checks.",
+      "what_it_takes_over_our_stack": "Represent ARC rules as demonstration-conditioned object-state transitions to test whether primitives transfer by structure."
+    },
+    {
+      "arxiv_id": "2603.05099",
+      "name": "ARC-TGI generator-backed held-out task families",
+      "pitfalls": "Synthetic families can teach benchmark shortcuts; retain human-like constraints and public/private split discipline.",
+      "what_it_takes_over_our_stack": "Generate verified task-family variants so induced primitives face variation instead of memorizing one public trace."
+    }
+  ],
+  "preconditions_checked": {
+    "arxiv_http_200_verified_ids": [
+      "2006.08381",
+      "2211.16605",
+      "2310.19791",
+      "2405.15880",
+      "2503.23145",
+      "2603.05099",
+      "2605.05138",
+      "2606.12316"
+    ],
+    "arxiv_http_200_verified_urls": [
+      "https://arxiv.org/abs/2006.08381",
+      "https://arxiv.org/abs/2211.16605",
+      "https://arxiv.org/abs/2310.19791",
+      "https://arxiv.org/abs/2405.15880",
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2603.05099",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2606.12316"
+    ],
+    "arxiv_reachable": true,
+    "cpu_only": true,
+    "deep_research_invoked": false,
+    "leaderboard_submission": false,
+    "live_solve_claim": false,
+    "research_conductor_modified": false,
+    "sweep_clusters_help_succeeded": true,
+    "sweep_clusters_ran": true,
+    "sweep_clusters_urls": [
+      "scripts/sweep_clusters.py 3 --max-results 8",
+      "scripts/sweep_clusters.py 0 --max-results 8"
+    ],
+    "sweep_semscholar_ran": true,
+    "sweep_semscholar_status": "five focused queries ran; Semantic Scholar returned HTTP 429 on four queries and surfaced arXiv:2503.23145 plus adjacent non-promoted IDs",
+    "top_abstracts_webfetched": [
+      "https://arxiv.org/abs/2006.08381",
+      "https://arxiv.org/abs/2211.16605",
+      "https://arxiv.org/abs/2310.19791",
+      "https://arxiv.org/abs/2405.15880",
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2603.05099",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2606.12316"
+    ],
+    "training_launched": false,
+    "websearch_webfetch_reachable": true
+  },
+  "random_seed": 4452,
+  "research_note_path": "docs/research-notes/sota-ingestion-411-2026-06-19.md",
+  "sota_to_experiment_mapping_note": "SOTA->experiment map for .412: keep LILO-style documented library induction (arXiv:2310.19791) as the strongest hand-off because .411 needs generic reusable primitives, not another ad hoc first-contact solve. Compress solved predicates and world-model snippets with DreamCoder (arXiv:2006.08381) and Stitch (arXiv:2211.16605), document them LILO-style, stress the abstractions with HYSYNTH (arXiv:2405.15880) and CodeARC (arXiv:2503.23145) counterexamples, and validate transfer inside the Executable World Models harness (arXiv:2605.05138) with Loop-OWM (arXiv:2606.12316) object-state tests plus ARC-TGI (arXiv:2603.05099) held-out task-family variation."
+}
