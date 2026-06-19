@@ -1,6 +1,18 @@
 # ARC-AGI-3 submission checklist (operator handoff) — 2026-06-19
 
-**STATUS: package VERIFIED OFFLINE on the real Kaggle P100. Ready for OPERATOR submission.**
+> **CONTRACT CORRECTION (2026-06-19, late).** A diff against the canonical arcprize control
+> notebook (Ronan McGovern's `arc3-random-control`, pulled via the kaggle CLI) showed the real
+> submission contract is a **code competition with an internal game GATEWAY**, NOT the
+> offline-bundled-`environment_files` shape the steps below originally assumed. The actual entry
+> is `scripts/kaggle/submission_kernel/main.py` (gateway pattern). The component gates in the
+> table below are still real and reused (binary builds + loads Qwen + agent imports offline +
+> proposer generates), and the agent shape is confirmed correct vs the reference — but the
+> "Operator submission steps" section is superseded by **§ Real submission flow** at the bottom.
+> Deadline on Kaggle is **2026-11-02** (our docs say 06-30 — likely a self-imposed milestone).
+
+**STATUS: components VERIFIED on the real Kaggle P100; submission notebook authored against the
+correct gateway contract. NOT yet run end-to-end through the real gateway (only the eval sandbox
+has it). Ready for an OPERATOR test-submit.**
 Submission itself is OPERATOR-ONLY (External Publication discipline) — the outer loop prepared and
 verified the package; it did NOT and will NOT submit. Deadline: **2026-06-30** (milestone #1, prize +
 open-source eligible — the project is MIT-0 ✅).
@@ -79,15 +91,36 @@ The generator binds **GPU 0** by default (`-ngl 999`); the agent uses graph-expl
 4. Build the binary ON Kaggle (matches CUDA 12.8/driver; a local CUDA-13.3 build w/o sm_60 won't run).
 5. Datasets must be fully **processed/ready** before a kernel attaches them (else a silent attach race).
 
-## Operator submission steps (operator-only)
+## Operator submission steps (operator-only) — SUPERSEDED, see § Real submission flow
 
-1. Open the ARC Prize 2026 / ARC-AGI-3 competition submission notebook (the `ARC-AGI-3-Agents` template).
-2. Attach the 3 datasets above (Add Data) + enable GPU; **internet OFF** (eval requirement).
-3. Drop in the agent setup above; confirm `CarnotAgent` instantiates.
-4. Save/submit per the competition's Code Competition flow (≤12 h runtime).
-5. Confirm the per-day submission limit on the My Submissions tab (not publicly documented; check there).
-6. First submission = pipeline validation on the real leaderboard (expected score modest — generic
-   transfer is partial); iterate toward the 2026-06-30 deadline (multiple submissions expected).
+(The original offline-bundle steps assumed we author a standalone notebook driving bundled
+`environment_files`. That is wrong — see the correction banner. Kept for history per never-prune.)
+
+1. ~~Open the ARC Prize 2026 / ARC-AGI-3 competition submission notebook (the `ARC-AGI-3-Agents` template).~~
+2. ~~Attach the 3 datasets above (Add Data) + enable GPU; internet OFF.~~
+3. ~~Drop in the agent setup above; confirm `CarnotAgent` instantiates.~~
+4. ~~Save/submit per the competition's Code Competition flow.~~
+
+## § Real submission flow (the corrected, gateway contract)
+
+The entry is `scripts/kaggle/submission_kernel/main.py` (modeled on Ronan McGovern's canonical
+`arc3-random-control`). The competition provides the `ARC-AGI-3-Agents` framework + games (via an
+internal `gateway:8001`) + dep wheels in the rerun sandbox; we only drop in our agent.
+
+1. Create a new notebook in the **arc-prize-2026-arc-agi-3** competition; paste
+   `scripts/kaggle/submission_kernel/main.py`.
+2. Add the competition as a data source + attach the 3 datasets
+   (`carnot-agent-code`, `carnot-llamacpp-mtp-binary`, `carnot-qwen35-9b-mtp-gguf`). GPU on; internet OFF.
+3. **Save & Run All** — in non-rerun mode it just writes the placeholder `submission.parquet`
+   (cheap; confirms the notebook is valid + the datasets/competition attach cleanly).
+4. **Submit** the notebook version to the competition. Kaggle then RE-RUNS it with
+   `KAGGLE_IS_COMPETITION_RERUN=1` against the hidden game gateway (≤12 h) — that scored run is the
+   leaderboard entry.
+5. First submission = pipeline validation on the real gateway (expected score modest — generic
+   transfer is partial). Residual risk to watch in the first run's logs: that the Kaggle rerun
+   image has jax/numpy preinstalled for the carnot import (the standard image does; the rerun image
+   is unconfirmed) — if not, the agent import fails and we bundle those deps as a wheels dataset.
+6. Plenty of runway (Kaggle deadline 2026-11-02); iterate.
 
 Cross-refs: `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md`,
 `python/carnot/agentic/arc_competition_agent.py:make_carnot_agent`, `[[project_arc_live_generator]]`.
