@@ -25178,6 +25178,60 @@ terminal honest verdict starting with `complete:`, `success:`, `passed:`, or
 |---|---|---|
 | REQ-REPORT-4436 | Planned (`python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py`, `results/experiment_4436_deepen_plus_primitive_consolidation.json`) | Planned (`tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py`) |
 
+### REQ-REPORT-4438: Registry And Gap Hygiene Reconciles .410 Outcomes Without Verifier Edits
+
+The Exp 4438 workflow SHALL reconcile `ops/verifier_registry.yaml`,
+`ops/verifier_gaps.md`, and `ops/arc_solve_registry.yaml` with the local `.410`
+outcome artifacts from Exp 4432 through Exp 4436. The workflow SHALL treat
+`flagged_adversarial=true` artifacts as excluded evidence, SHALL use the robust
+aggregate-available helper so missing or flagged artifacts report per-axis gaps
+without forcing every axis false, and SHALL NOT edit production verifier code.
+
+The reconciliation SHALL log Exp 4432 leave-one-out `residual_delta` misses as
+new missing-primitive or missing-verifier gaps, record Exp 4434 example-conditioned
+world-model improvement as measured evidence, record the Exp 4435 fixed terminal
+generic-first-contact no-new-level gap or any reproduced routed solve, and record
+Exp 4436 consolidated primitives. The ARC solve registry SHALL update
+authoritative `reproducible_total_levels` and `reproducible_total_games` from
+reproduced game rows after applying any non-adversarial reproduced .410 outcome,
+including a deeper reproduced game. The workflow SHALL preserve never-prune
+history and SHALL make markdown/YAML updates idempotently.
+
+The workflow SHALL run the GAP-4 execution regression guard and SHALL emit bare
+bool `regression_guard_passed=true` only when the ARC oracle-distinct
+verifier-beats-vote result has not regressed. It SHALL also verify that the
+capstone `verifier_is_oracle` stamping fix remains durable. The workflow SHALL
+write `results/experiment_4438_registry_gaps_hygiene.json` with required fields
+`honest_verdict`, `regression_guard_passed`, `reproducible_total_levels`,
+`reproducible_total_games`, `registry_reconciliation`, `availability_report`,
+`capstone_stamp_fix_durable`, `random_seed`, `reproducibility_checksum`,
+`field_principles`, and `submitted_to_leaderboard=false`. Complete-path
+`honest_verdict` SHALL start with `complete:`, `success:`, `passed:`, or
+`shipped:`. The `field_principles.honest_verdict.principle` SHALL equal
+`terminal-prefixed`, `field_principles.regression_guard_passed.principle` SHALL
+equal `BARE bool (gated-fields-must-be-bare): the GAP-4 result did not regress`,
+and `field_principles.reproducible_total_levels.principle` SHALL equal
+`the reconciled authoritative count`.
+
+#### SCENARIO-REPORT-4438: .410 Hygiene Logs Gaps, Updates Counts, And Guards GAP-4
+
+**Given** the verifier registry, verifier-gaps ledger, ARC solve registry, and
+some subset of Exp 4432 through Exp 4436 artifacts are locally available
+**When** the Exp 4438 workflow runs
+**Then** it excludes flagged-adversarial artifacts, reports missing or flagged
+inputs in the aggregate availability report, logs the Exp 4432 and Exp 4435
+residual gaps, records Exp 4434 and Exp 4436 evidence, updates the ARC
+reproducible totals from registry rows, records a verifier-registry role for the
+hygiene pass, emits bare bool `regression_guard_passed`, verifies the capstone
+stamp fix remains durable, writes the required JSON artifact, and performs no
+leaderboard submission or production verifier edits.
+
+## Implementation Status (REQ-REPORT-4438)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4438 | Planned (`python/carnot/experiment_4438_registry_gaps_hygiene.py`, `results/experiment_4438_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4438_registry_gaps_hygiene.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

@@ -974,6 +974,33 @@ verifiers:
     - GAP-4417-SOVEREIGN-GAP4-LOCAL-GENERATOR-ZERO-FIRES
     - GAP-4418-CONFIG-RULE-VOCABULARY-LOCAL-MODEL-UNAVAILABLE
     - GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE
+    eval_exp_4438: results/experiment_4438_registry_gaps_hygiene.json
+    exp4438_regression_guard_passed: true
+    exp4438_arc_oracle_distinct_verifier_beats_vote: true
+    exp4438_arc1_rule_exec_vote_pass2: 0.4516
+    exp4438_arc1_rule_exec_gated_pass2: 0.5806
+    exp4438_arc1_headroom_recovered: 4
+    exp4438_arc1_vote_wins_lost: 0
+    exp4438_capstone_stamp_fix_durable: true
+    exp4438_reproducible_total_levels: 37
+    exp4438_reproducible_total_games: 18
+    exp4438_gap_ids_logged: &id012
+    - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+    - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+    - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
+    - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
+    - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
+    - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+    exp4438_flagged_artifacts_excluded: &id013
+    - results/experiment_4433_example_conditioned_win_induction.json
+    exp4438_loo_generic_solve_count: 2
+    exp4438_action_model_accuracy_delta: 0.285714
+    exp4438_primitives_consolidated:
+    - glyph_rewrite_matcher
+    - config_rule_grounding
+    - graph_astar_action_cost
+    - object_centric_digest
+    - active_data_collection
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -5021,6 +5048,15 @@ verifiers:
     v408_state: config_rule_partial__adaptive_e3_zero_new__hidden_state_position_null__sovereign_gap4_holds_zero_fires__vocabulary_blocked__code_detection_chance
     arc_reproducible_total_levels: 34
     new_levels_reproduced: 0
+  - role_id: oracle_distinct_v410_registry_gaps_hygiene_4438
+    experiment: results/experiment_4438_registry_gaps_hygiene.json
+    role: registry_gaps_arc_hygiene_v410
+    status: v410_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    reproducible_total_levels: 37
+    reproducible_total_games: 18
+    gap_ids_logged: *id012
+    excluded_artifacts: *id013
+    eval_exp_4438: results/experiment_4438_registry_gaps_hygiene.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1

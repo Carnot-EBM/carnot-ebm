@@ -2219,3 +2219,69 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - build target for .410 planner: false
 - movement: newly_logged
 <!-- exp4427-gap-4424-sc25-l2-route-search:end -->
+
+<!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:start -->
+### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4438 .410 registry gap hygiene
+- status: open
+- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=tr87; routed_to=tu93; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; generic_loo_solve_count=2
+- failure mode: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+- missing discriminator: generic primitive/verifier for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- priority: high
+- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+<!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:end -->
+
+<!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:start -->
+### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4438 .410 registry gap hygiene
+- status: open
+- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=sc25; routed_to=cd82; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; generic_loo_solve_count=2
+- failure mode: missing_cast_grid_spell_shrink_tank_exit_verifier
+- missing discriminator: generic primitive/verifier for missing_cast_grid_spell_shrink_tank_exit_verifier
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- priority: high
+- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+<!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:end -->
+
+<!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:start -->
+### GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION: Exp 4438 .410 registry gap hygiene
+- status: open
+- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=ka59; routed_to=sp80; residual_delta=missing_push_block_world_model_and_dynamic_selection; generic_loo_solve_count=2
+- failure mode: missing_push_block_world_model_and_dynamic_selection
+- missing discriminator: generic primitive/verifier for missing_push_block_world_model_and_dynamic_selection
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- priority: high
+- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+<!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:end -->
+
+<!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:start -->
+### GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN: Exp 4438 .410 registry gap hygiene
+- status: open
+- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=ar25; routed_to=sp80; residual_delta=missing_reflection_world_model_and_object_motion_plan; generic_loo_solve_count=2
+- failure mode: missing_reflection_world_model_and_object_motion_plan
+- missing discriminator: generic primitive/verifier for missing_reflection_world_model_and_object_motion_plan
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- priority: high
+- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+<!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:end -->
+
+<!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:start -->
+### GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER: Exp 4438 .410 registry gap hygiene
+- status: open
+- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=ft09; routed_to=s5i5; residual_delta=missing_local_constraint_color_cycle_verifier; generic_loo_solve_count=2
+- failure mode: missing_local_constraint_color_cycle_verifier
+- missing discriminator: generic primitive/verifier for missing_local_constraint_color_cycle_verifier
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- priority: high
+- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+<!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
+
+<!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
+### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4438 .410 registry gap hygiene
+- status: open
+- evidence: results/experiment_4435_generic_first_contact_fixed.json; target_game=dc22; honest_verdict=complete: generic_first_contact_dc22_routed_no_new_level_gap_logged; offline_reproduced=False; reproduced_levels=0
+- failure mode: needs_per_game_RE
+- missing discriminator: selectable verifier that distinguishes the target's winning delta from the explored non-winning states
+- candidate design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
+- priority: high
+- source artifact: results/experiment_4435_generic_first_contact_fixed.json
+<!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
