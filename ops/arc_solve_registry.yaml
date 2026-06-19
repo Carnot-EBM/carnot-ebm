@@ -32,16 +32,16 @@ general_gotchas:
   operator: glyph_rewrite_matcher
   derived_from_games:
   - tr87
-  note: Generic greedy multi-glyph LHS->RHS rewrite matcher in arc_solver_kit;
-    handles one-to-one, one-to-many, many-to-many, and repeated-pass config chains.
+  note: Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from
+    Exp 4436.
 - id: primitive_config_rule_grounding
   operator: config_rule_grounding
   derived_from_games:
   - s5i5
   - ft09
   - tr87
-  note: Generic helper for grounding config/toggle rules against predicted object
-    or register coverage before the offline reproduce gate counts a solve.
+  note: Exp 4438 records consolidated generic primitive config_rule_grounding from
+    Exp 4436.
 - id: primitive_graph_astar_action_cost
   operator: graph_astar_action_cost
   derived_from_games:
@@ -53,8 +53,8 @@ general_gotchas:
   - m0r0
   - sk48
   - su15
-  note: Generic A* priority operator that composes path cost with verifier/action-cost
-    heuristic; OfflineSolver uses it as the standing best-first priority.
+  note: Exp 4438 records consolidated generic primitive graph_astar_action_cost from
+    Exp 4436.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
@@ -62,8 +62,8 @@ general_gotchas:
   - lp85
   - tn36
   - ka59
-  note: Generic connected-component object summary used for routing, candidate
-    generation, active-data signatures, and config grounding.
+  note: Exp 4438 records consolidated generic primitive object_centric_digest from
+    Exp 4436.
 - id: primitive_active_data_collection
   operator: active_data_collection
   derived_from_games:
@@ -71,8 +71,8 @@ general_gotchas:
   - ka59
   - ft09
   - sc25
-  note: Generic balanced action/object coverage planner for offline transition
-    collection before world-model induction or per-mechanic repair.
+  note: Exp 4438 records consolidated generic primitive active_data_collection from
+    Exp 4436.
 games:
 - game: r11l
   reproducibility: reproduced
@@ -187,7 +187,7 @@ games:
   gotchas: []
 - game: tu93
   reproducibility: reproduced
-  levels_reproduced: 4
+  levels_reproduced: 5
   mechanic_class: graph_explore
   win_condition: L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed
     best-first search (player->goal Manhattan).
@@ -205,6 +205,11 @@ games:
     L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter
     sets branch_mode=''fresh_env'' (fresh env per candidate eval) -> L3 reproduces.
     deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25).'
+  latest_exp4436_reproduce:
+    artifact: results/experiment_4436_deepen_plus_primitive_consolidation.json
+    offline_reproduced: true
+    new_levels_reproduced: 1
+    reproducibility_checksum: fef16a89aa8f7d0f24d60e457c8cbaa9f8b0b845cc8c3aabcb2a3c90a637f5ca
 - game: tn36
   reproducibility: reproduced
   mechanic_class: program_editor
@@ -528,7 +533,7 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
-reproducible_total_levels: 35
+reproducible_total_levels: 37
 reproducible_total_games: 18
 provisional_total_levels: 5
 live_submissions:
@@ -580,3 +585,17 @@ latest_hygiene_4421:
   exp4415_new_levels_reproduced: 0
   note: .408 grounded rules and adaptive E3 sharpened gaps but added zero reproduced
     ARC levels.
+latest_hygiene_4438:
+  artifact: results/experiment_4438_registry_gaps_hygiene.json
+  reproducible_total_levels: 37
+  reproducible_total_games: 18
+  gap_ids_logged:
+  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+  - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
+  - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
+  - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
+  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+  excluded_artifacts:
+  - results/experiment_4433_example_conditioned_win_induction.json
+  note: .410 registry hygiene; flagged_adversarial artifacts excluded from counts.

@@ -1,0 +1,292 @@
+{
+  "availability_report": {
+    "available_artifact_keys": [
+      "4432_loo_generic",
+      "4434_action_model",
+      "4435_first_contact",
+      "4436_primitives"
+    ],
+    "axes": {
+      "action_model": {
+        "available_artifact_keys": [
+          "4434_action_model"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "first_contact": {
+        "available_artifact_keys": [
+          "4435_first_contact"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "loo_generic": {
+        "available_artifact_keys": [
+          "4432_loo_generic"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 2
+      },
+      "primitives": {
+        "available_artifact_keys": [
+          "4436_primitives"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "win_induction": {
+        "available_artifact_keys": [],
+        "flagged_artifacts": [
+          {
+            "artifact_key": "4433_win_induction",
+            "axis": "win_induction",
+            "experiment_id": 4433,
+            "reason": "flagged_adversarial"
+          }
+        ],
+        "missing_artifacts": [],
+        "verdict": false,
+        "verdict_error": "'4433_win_induction'"
+      }
+    },
+    "flagged_artifacts_excluded": [
+      {
+        "artifact_key": "4433_win_induction",
+        "axis": "win_induction",
+        "experiment_id": 4433,
+        "reason": "flagged_adversarial"
+      }
+    ],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_stamp_fix": {
+    "capstone_aggregation_propagates_oracle_stamp": true,
+    "capstone_aggregation_source": "carnot.reporting.capstone_v406_4401",
+    "capstone_aggregation_uses_available_helper": true,
+    "capstone_path": "results/experiment_4401_capstone_v406.json",
+    "capstone_stamp_fix_durable": true,
+    "capstone_verifier_is_oracle": false,
+    "capstone_verifier_is_oracle_honored": true,
+    "circular_moat_overclaim_fired": false,
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4401_capstone_v406.json"
+    ],
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4401_capstone_v406.json\",\n      \"loaded\": true,\n      \"exp_id\": 4401,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v406_localizer_localizes_but_not_genuine_compounds_false_calibrated_fa\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "capstone_stamp_fix_durable": true,
+  "duration_s": 0.521076,
+  "excluded_artifacts": [
+    "results/experiment_4433_example_conditioned_win_induction.json"
+  ],
+  "experiment": "experiment_4438_registry_gaps_hygiene",
+  "field_principles": {
+    "availability_report": {
+      "principle": "robust aggregate-available report; missing or flagged inputs do not erase other axes"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed"
+    },
+    "regression_guard_passed": {
+      "principle": "BARE bool (gated-fields-must-be-bare): the GAP-4 result did not regress"
+    },
+    "reproducible_total_games": {
+      "principle": "the reconciled authoritative reproduced-game count"
+    },
+    "reproducible_total_levels": {
+      "principle": "the reconciled authoritative count"
+    },
+    "submitted_to_leaderboard": {
+      "principle": "must remain false for this audit-only task"
+    }
+  },
+  "gap4_regression_guard": {
+    "exp4333_guard": {
+      "offline_replay": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        },
+        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+        "expected": {
+          "arc1_rule_exec": {
+            "gated_pass2": 0.5806,
+            "headroom_recovered": 4,
+            "n": 31,
+            "vote_pass2": 0.4516,
+            "vote_wins_lost": 0
+          }
+        },
+        "no_codex_calls": true,
+        "no_gguf_inference": true,
+        "regression_guard_passed": true,
+        "trm_training_touched": false
+      },
+      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+      "recorded_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "regression_guard_passed": true,
+      "replayed_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "honest_verdict": "complete: registry_gaps_hygiene_4438_guard_passed",
+  "inference_substrate": "cached_registry_reconciliation_gap4_guard_and_stamp_audit",
+  "model_specs": {
+    "codex_calls": 0,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_registry_reconciliation_gap4_guard_and_stamp_audit",
+    "upstream_artifacts": [
+      "results/experiment_4432_loo_generic_solve_benchmark.json",
+      "results/experiment_4433_example_conditioned_win_induction.json",
+      "results/experiment_4434_example_conditioned_action_model.json",
+      "results/experiment_4435_generic_first_contact_fixed.json",
+      "results/experiment_4436_deepen_plus_primitive_consolidation.json"
+    ]
+  },
+  "no_production_verifier_edits": true,
+  "preconditions_checked": {
+    "files": {
+      "arc_solve_registry": {
+        "error": "",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+        "readable": true,
+        "yaml_safe_load": true
+      },
+      "verifier_gaps": {
+        "error": "",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_gaps.md",
+        "readable": true
+      },
+      "verifier_registry": {
+        "error": "",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
+        "readable": true,
+        "yaml_safe_load": true
+      }
+    },
+    "ok": true,
+    "source_artifacts": {
+      "4432_loo_generic": {
+        "available": true,
+        "error": "",
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: generic_loo_solve_count_2_of_7_gate_passed",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4432_loo_generic_solve_benchmark.json",
+        "relative_path": "results/experiment_4432_loo_generic_solve_benchmark.json",
+        "reproducibility_checksum": "43cfc122fef24e02ffe154728a59d238ee10b20d4bb69054f867d3c0041106e4"
+      },
+      "4433_win_induction": {
+        "available": true,
+        "error": "",
+        "flagged_adversarial": true,
+        "honest_verdict": "success: example_conditioned_g50t_L1_offline_reproduced",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4433_example_conditioned_win_induction.json",
+        "relative_path": "results/experiment_4433_example_conditioned_win_induction.json",
+        "reproducibility_checksum": "ef9e21b95ae2c0ea8acfabd7c3661f2a4c71a78f46cd669a8a22a1e8f4c75d72"
+      },
+      "4434_action_model": {
+        "available": true,
+        "error": "",
+        "flagged_adversarial": false,
+        "honest_verdict": "success: example_conditioning_improved_world_model_accuracy",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4434_example_conditioned_action_model.json",
+        "relative_path": "results/experiment_4434_example_conditioned_action_model.json",
+        "reproducibility_checksum": "8afa46247f027c9752ac83d471413b944e85a72eb73b926c53370e5ec86144a2"
+      },
+      "4435_first_contact": {
+        "available": true,
+        "error": "",
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: generic_first_contact_dc22_routed_no_new_level_gap_logged",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4435_generic_first_contact_fixed.json",
+        "relative_path": "results/experiment_4435_generic_first_contact_fixed.json",
+        "reproducibility_checksum": "e0b5763caf730f28507444d162d1b703977cebb9617a88991d8ed8e6742881e3"
+      },
+      "4436_primitives": {
+        "available": true,
+        "error": "",
+        "flagged_adversarial": false,
+        "honest_verdict": "success: tu93_L5_deepened_primitives_consolidated",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4436_deepen_plus_primitive_consolidation.json",
+        "relative_path": "results/experiment_4436_deepen_plus_primitive_consolidation.json",
+        "reproducibility_checksum": "fef16a89aa8f7d0f24d60e457c8cbaa9f8b0b845cc8c3aabcb2a3c90a637f5ca"
+      }
+    }
+  },
+  "random_seed": 4438,
+  "registries_reconciled": true,
+  "registry_reconciliation": {
+    "arc_solve_registry_reconciled": true,
+    "excluded_artifacts": [
+      "results/experiment_4433_example_conditioned_win_induction.json"
+    ],
+    "gap_ids_logged": [
+      "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
+      "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
+      "GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION",
+      "GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN",
+      "GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER",
+      "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT"
+    ],
+    "production_verifier_edits": false,
+    "registries_reconciled": true,
+    "reproducible_total_games": 18,
+    "reproducible_total_levels": 37,
+    "verifier_gaps_reconciled": true,
+    "verifier_registry_reconciled": true
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "eeee50cb9cbec2ad64eeb4453bfd944ec9b3ed2f9938b7eeb8a5f59489a032dd",
+  "reproducible_total_games": 18,
+  "reproducible_total_levels": 37,
+  "result_path": "results/experiment_4438_registry_gaps_hygiene.json",
+  "schema": "carnot.exp4438.registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-REPORT-4438",
+    "SCENARIO-REPORT-4438"
+  ],
+  "submitted_to_leaderboard": false
+}
