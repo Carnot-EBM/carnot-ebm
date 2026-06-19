@@ -2047,3 +2047,123 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate_design: Build a domain-specific oracle-distinct verifier feature, then rerun Exp 4419's same cached-pool SteerConf and LODO calibration gate.
 - priority: high
 
+<!-- exp4421-gap-4414-ka59-config-rule-grounded:start -->
+### GAP-4414-KA59-CONFIG-RULE-GROUNDED: Exp 4421 .408 verifier gap update
+- status: filled (ka59_config_win_rule_predicate)
+- evidence: results/experiment_4414_config_rule_induction_solve.json; predicate=editable_count_4_equals_reference_count_4_32; tier=2; false_positive_rate=0.0.
+- failure mode: ka59 had an ungrounded config-game win-rule predicate
+- missing discriminator: grounded config win rule checked against the offline state
+- candidate design: registry-backed config-rule predicate reused for future ka59 targets
+- priority: medium
+- movement: filled
+<!-- exp4421-gap-4414-ka59-config-rule-grounded:end -->
+
+<!-- exp4421-gap-4414-config-rule-induction-bp35:start -->
+### GAP-4414-CONFIG-RULE-INDUCTION-BP35: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4414_config_rule_induction_solve.json; game=bp35; search_blocker=blocked_local_model_unavailable.
+- failure mode: fresh config-rule induction did not run or did not reproduce a new level
+- missing discriminator: grounded reusable config win-rule for bp35
+- candidate design: run local symbolic/config-rule induction once the local proposer is available
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4414-config-rule-induction-bp35:end -->
+
+<!-- exp4421-gap-4414-config-rule-induction-dc22:start -->
+### GAP-4414-CONFIG-RULE-INDUCTION-DC22: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4414_config_rule_induction_solve.json; game=dc22; search_blocker=blocked_local_model_unavailable.
+- failure mode: fresh config-rule induction did not run or did not reproduce a new level
+- missing discriminator: grounded reusable config win-rule for dc22
+- candidate design: run local symbolic/config-rule induction once the local proposer is available
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4414-config-rule-induction-dc22:end -->
+
+<!-- exp4421-gap-4415-adaptive-e3-ar25-l2:start -->
+### GAP-4415-ADAPTIVE-E3-AR25-L2: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4415_agent2world_adaptive_e3_repair.json; game=ar25; target_level=2; adaptive_tests=1/2; verifier_accuracy=0.5; lookahead_fidelity=0.5; residual=ar25_l2_hidden_undo_stack_state_not_visible_in_rollout.
+- failure mode: ar25 L2 remains unreproduced after adaptive E3 repair
+- missing discriminator: state-grounded executable rule for ar25_l2_hidden_undo_stack_state_not_visible_in_rollout
+- candidate design: convert the residual behavior test into an offline reproduce() plan
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4415-adaptive-e3-ar25-l2:end -->
+
+<!-- exp4421-gap-4415-adaptive-e3-tn36-l8:start -->
+### GAP-4415-ADAPTIVE-E3-TN36-L8: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4415_agent2world_adaptive_e3_repair.json; game=tn36; target_level=8; adaptive_tests=1/2; verifier_accuracy=0.875; lookahead_fidelity=0.875; residual=tn36_l8_palette_population_or_later_program_state_still_wrong.
+- failure mode: tn36 L8 remains unreproduced after adaptive E3 repair
+- missing discriminator: state-grounded executable rule for tn36_l8_palette_population_or_later_program_state_still_wrong
+- candidate design: convert the residual behavior test into an offline reproduce() plan
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4415-adaptive-e3-tn36-l8:end -->
+
+<!-- exp4421-gap-4415-adaptive-e3-lp85-l6:start -->
+### GAP-4415-ADAPTIVE-E3-LP85-L6: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4415_agent2world_adaptive_e3_repair.json; game=lp85; target_level=6; adaptive_tests=1/2; verifier_accuracy=0.833333; lookahead_fidelity=0.833333; residual=lp85_l6_button_permutation_search_reproduction_still_wrong.
+- failure mode: lp85 L6 remains unreproduced after adaptive E3 repair
+- missing discriminator: state-grounded executable rule for lp85_l6_button_permutation_search_reproduction_still_wrong
+- candidate design: convert the residual behavior test into an offline reproduce() plan
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4415-adaptive-e3-lp85-l6:end -->
+
+<!-- exp4421-gap-fover-biprm-localization-untyped:start -->
+### GAP-FOVER-BIPRM-LOCALIZATION-untyped: Exp 4421 .408 verifier gap update
+- status: open (sharpened by exp4416 hidden-state null)
+- evidence: results/experiment_4416_hidden_state_localizer_falsification_audit.json; hidden_state_localizer_has_nonposition_signal=False; position_only_baseline_f1=1.0.
+- failure mode: hidden-state localizer tied the content-blind position baseline
+- missing discriminator: non-position earliest causal error signal under non-degenerate traces
+- candidate design: collect typed multi-step first-error traces before reviving localization
+- priority: medium
+- movement: sharpened
+<!-- exp4421-gap-fover-biprm-localization-untyped:end -->
+
+<!-- exp4421-gap-fover-hidden-state-localization-position-saturated:start -->
+### GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4416_hidden_state_localizer_falsification_audit.json; hidden-state localizer null.
+- failure mode: The hidden-state transport/margin probe tied the content-blind position-only first-error baseline; the available FoVer failed traces are position-saturated at first step.
+- missing discriminator: A model-native signal that separates earliest causal error from position and downstream consequence under non-degenerate multi-step FoVer labels.
+- candidate design: Collect typed multi-step FoVer traces with non-first-position first errors before any localizer redeployment; do not revive the position-saturated text or hidden-state localizer line.
+- priority: medium
+- movement: sharpened
+<!-- exp4421-gap-fover-hidden-state-localization-position-saturated:end -->
+
+<!-- exp4421-gap-4417-sovereign-gap4-local-generator-zero-fires:start -->
+### GAP-4417-SOVEREIGN-GAP4-LOCAL-GENERATOR-ZERO-FIRES: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4417_gap4_local_generator_sovereign_arm.json; sovereign_gap4_gate_holds=True; graded_gate_fires=0; gated_pass2=0.4516; vote_pass2=0.4516.
+- failure mode: local-generator sovereign arm holds the safety gate but fires zero graded wins
+- missing discriminator: local open-weight generator proposal that creates verifier-actionable GAP-4 candidates
+- candidate design: separate reusable symbolic induction from another static local-generator replay
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4417-sovereign-gap4-local-generator-zero-fires:end -->
+
+<!-- exp4421-gap-4418-config-rule-vocabulary-local-model-unavailable:start -->
+### GAP-4418-CONFIG-RULE-VOCABULARY-LOCAL-MODEL-UNAVAILABLE: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4418_config_rule_vocabulary_transfer.json; transfers=False; local_model_status=blocked_local_model_unavailable.
+- failure mode: config-rule vocabulary transfer was blocked by local model unavailability
+- missing discriminator: local config-rule proposer that transfers grounded vocabulary to unsolved games
+- candidate design: cache or start the declared local iGPU proposer and rerun vocabulary transfer
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4418-config-rule-vocabulary-local-model-unavailable:end -->
+
+<!-- exp4421-gap-4419-code-humaneval-steerconf-detector-chance:start -->
+### GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE: Exp 4421 .408 verifier gap update
+- status: open
+- evidence: results/experiment_4419_steerconf_code_detection_calibration_repair.json; SteerConf code detection chance.
+- failure mode: SteerConf cached-feature detection AUROC CI95 includes chance on code_humaneval; n=539, baseline_auroc=0.577374, steered_delta=0.024536.
+- missing discriminator: A domain-native verifier feature beyond self-reported or cached-feature confidence consistency that separates correct outputs from plausible wrong outputs.
+- candidate design: Build a domain-specific oracle-distinct verifier feature, then rerun Exp 4419's same cached-pool SteerConf and LODO calibration gate.
+- priority: high
+- movement: newly_logged
+<!-- exp4421-gap-4419-code-humaneval-steerconf-detector-chance:end -->

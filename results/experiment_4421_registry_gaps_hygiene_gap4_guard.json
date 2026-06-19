@@ -1,0 +1,2314 @@
+{
+  "arc_registry_path": "ops/arc_solve_registry.yaml",
+  "availability_report": {
+    "available_artifact_keys": [
+      "4414_config_rule",
+      "4415_adaptive_e3",
+      "4416_hidden_state",
+      "4417_sovereign_gap4",
+      "4418_vocab_transfer",
+      "4419_steerconf_code"
+    ],
+    "axes": {
+      "adaptive_e3": {
+        "available_artifact_keys": [
+          "4415_adaptive_e3"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 0
+      },
+      "code_detection": {
+        "available_artifact_keys": [
+          "4419_steerconf_code"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "config_rule": {
+        "available_artifact_keys": [
+          "4414_config_rule"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "config_rule_vocabulary": {
+        "available_artifact_keys": [
+          "4418_vocab_transfer"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "hidden_state_localizer": {
+        "available_artifact_keys": [
+          "4416_hidden_state"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "sovereign_gap4": {
+        "available_artifact_keys": [
+          "4417_sovereign_gap4"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_stamp_fix": {
+    "capstone_aggregation_propagates_oracle_stamp": true,
+    "capstone_aggregation_source": "carnot.reporting.capstone_v407_4412",
+    "capstone_aggregation_uses_available_helper": true,
+    "capstone_path": "results/experiment_4412_capstone_v407.json",
+    "capstone_stamp_fix_durable": true,
+    "capstone_verifier_is_oracle": false,
+    "capstone_verifier_is_oracle_honored": true,
+    "circular_moat_overclaim_fired": false,
+    "command": [
+      "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python3",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4412_capstone_v407.json"
+    ],
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4412_capstone_v407.json\",\n      \"loaded\": true,\n      \"exp_id\": 4412,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v407_localizer_position_bound_retired_compounds_false_calibrated_false\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "duration_s": 0.753666,
+  "experiment": "experiment_4421_registry_gaps_hygiene_gap4_guard",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "Terminal-prefixed (complete: registry_gaps_reconciled_guard_<passed|failed>)."
+    },
+    "preconditions_checked": {
+      "principle": "Records the registries + the .408 artifacts loaded (robust aggregate-available) + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode."
+    },
+    "random_seed": {
+      "principle": "Determinism precondition for the guard checks."
+    },
+    "registry_reconciliation": {
+      "principle": "dict: which gaps moved to filled / sharpened / newly-logged from the .408 outcomes (the never-prune audit trail)."
+    },
+    "regression_guard_passed": {
+      "principle": "BARE bool: the GAP-4 execution result did not regress AND the verifier_is_oracle stamping fix is durable -- the capstone reads this."
+    },
+    "reproducibility_checksum": {
+      "principle": "Hash of the reconciliation + the guard inputs; lets a third party re-run."
+    }
+  },
+  "gap4_regression_guard": {
+    "adversarial_verify": {
+      "flag_count": 0,
+      "flags": [],
+      "returncode": 0
+    },
+    "arc_oracle_distinct_verifier_beats_vote": true,
+    "artifact_path": "results/arc3_gap4_rule_exec_verifier.json",
+    "current": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "selection_beats_vote": true,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "gap4_execution_guard_passed": true,
+    "regression_guard_passed": true
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_reconciled_guard_passed",
+  "inference_substrate": "cached_registry_reconciliation_gap4_guard_and_capstone_stamp_audit",
+  "model_specs": {
+    "codex_calls": 0,
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v408_ledger_reconciliation_gap4_guard_and_stamp_audit",
+    "upstream_artifacts": [
+      "results/experiment_4414_config_rule_induction_solve.json",
+      "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+      "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+      "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+      "results/experiment_4418_config_rule_vocabulary_transfer.json",
+      "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+      "results/experiment_4412_capstone_v407.json",
+      "results/arc3_gap4_rule_exec_verifier.json"
+    ]
+  },
+  "preconditions_checked": {
+    "availability_report": {
+      "available_artifact_keys": [
+        "4414_config_rule",
+        "4415_adaptive_e3",
+        "4416_hidden_state",
+        "4417_sovereign_gap4",
+        "4418_vocab_transfer",
+        "4419_steerconf_code"
+      ],
+      "axes": {
+        "adaptive_e3": {
+          "available_artifact_keys": [
+            "4415_adaptive_e3"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": 0
+        },
+        "code_detection": {
+          "available_artifact_keys": [
+            "4419_steerconf_code"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": false
+        },
+        "config_rule": {
+          "available_artifact_keys": [
+            "4414_config_rule"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        },
+        "config_rule_vocabulary": {
+          "available_artifact_keys": [
+            "4418_vocab_transfer"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": false
+        },
+        "hidden_state_localizer": {
+          "available_artifact_keys": [
+            "4416_hidden_state"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": false
+        },
+        "sovereign_gap4": {
+          "available_artifact_keys": [
+            "4417_sovereign_gap4"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        }
+      },
+      "flagged_artifacts_excluded": [],
+      "missing_upstream_artifacts": []
+    },
+    "blocked_file": null,
+    "files": {
+      "arc_solve_registry": {
+        "error": "",
+        "key": "arc_solve_registry",
+        "path": "ops/arc_solve_registry.yaml",
+        "readable": true,
+        "top_level_type": "dict",
+        "yaml_safe_load": true
+      },
+      "verifier_gaps": {
+        "bytes": 171786,
+        "error": "",
+        "key": "verifier_gaps",
+        "markdown_text": true,
+        "path": "ops/verifier_gaps.md",
+        "readable": true
+      },
+      "verifier_registry": {
+        "error": "",
+        "key": "verifier_registry",
+        "path": "ops/verifier_registry.yaml",
+        "readable": true,
+        "top_level_type": "dict",
+        "yaml_safe_load": true
+      }
+    },
+    "ok": true,
+    "trm_training_stood_down": true,
+    "v408_artifacts_loaded": {
+      "adaptive_e3_repair": true,
+      "config_rule_induction": true,
+      "config_rule_vocabulary": true,
+      "hidden_state_localizer": true,
+      "sovereign_gap4": true,
+      "steerconf_code_detection": true
+    }
+  },
+  "random_seed": 4421,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciliation": {
+    "arc_solve_registry_reconciled": true,
+    "filled_gap_ids": [
+      "GAP-4414-KA59-CONFIG-RULE-GROUNDED"
+    ],
+    "gaps_moved": {
+      "filled": [
+        "GAP-4414-KA59-CONFIG-RULE-GROUNDED"
+      ],
+      "newly_logged": [
+        "GAP-4414-CONFIG-RULE-INDUCTION-BP35",
+        "GAP-4414-CONFIG-RULE-INDUCTION-DC22",
+        "GAP-4415-ADAPTIVE-E3-AR25-L2",
+        "GAP-4415-ADAPTIVE-E3-TN36-L8",
+        "GAP-4415-ADAPTIVE-E3-LP85-L6",
+        "GAP-4417-SOVEREIGN-GAP4-LOCAL-GENERATOR-ZERO-FIRES",
+        "GAP-4418-CONFIG-RULE-VOCABULARY-LOCAL-MODEL-UNAVAILABLE",
+        "GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE"
+      ],
+      "sharpened": [
+        "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+        "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED"
+      ]
+    },
+    "newly_logged_gap_ids": [
+      "GAP-4414-CONFIG-RULE-INDUCTION-BP35",
+      "GAP-4414-CONFIG-RULE-INDUCTION-DC22",
+      "GAP-4415-ADAPTIVE-E3-AR25-L2",
+      "GAP-4415-ADAPTIVE-E3-TN36-L8",
+      "GAP-4415-ADAPTIVE-E3-LP85-L6",
+      "GAP-4417-SOVEREIGN-GAP4-LOCAL-GENERATOR-ZERO-FIRES",
+      "GAP-4418-CONFIG-RULE-VOCABULARY-LOCAL-MODEL-UNAVAILABLE",
+      "GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE"
+    ],
+    "registries_reconciled": true,
+    "sharpened_gap_ids": [
+      "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+      "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED"
+    ],
+    "verifier_gaps_reconciled": true,
+    "verifier_registry_reconciled": true
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:c589d00d0554e2e117478405f9e34b87e8b0f0fe47e59a70ea808d5280edd964",
+  "schema": "carnot.experiment_4421_registry_gaps_hygiene_gap4_guard.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4421",
+    "SCENARIO-VERIFY-4421"
+  ],
+  "v408_outcomes": {
+    "adaptive_e3_repair": {
+      "artifact_path": "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+      "available": true,
+      "honest_verdict": "complete_e3_adaptive_partial",
+      "new_levels_reproduced": 0,
+      "per_target_scorecard": [
+        {
+          "adaptive_test_pass_rate": 0.5,
+          "adaptive_test_pass_rate_per_round": [
+            0.5
+          ],
+          "adaptive_test_path": "results/arc_e3/ar25/adaptive_tests_4415.json",
+          "adaptive_tests": [
+            {
+              "derived_from_rollout_trace": true,
+              "expected": [
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ]
+              ],
+              "fresh_agent_state": true,
+              "game": "ar25",
+              "name": "ar25_adaptive_round1_explicit_hidden_stack_restore",
+              "observed": [
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ]
+              ],
+              "passed": true,
+              "residual_behavior_after_test": "ar25_l2_action7_without_hidden_stack_still_not_plan_safe",
+              "round": 1,
+              "source_failing_transition": "ar25:L2:rollout_action7_wrong_cells_after_move",
+              "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+              "world_model_path": "results/arc_e3/ar25/world_model.py"
+            },
+            {
+              "derived_from_rollout_trace": true,
+              "expected": [
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ]
+              ],
+              "fresh_agent_state": true,
+              "game": "ar25",
+              "name": "ar25_adaptive_round2_missing_hidden_stack_residual",
+              "observed": [
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  5
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  5,
+                  5,
+                  5,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ],
+                [
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9,
+                  9
+                ]
+              ],
+              "passed": false,
+              "residual_behavior_after_test": "ar25_l2_hidden_undo_stack_state_not_visible_in_rollout",
+              "round": 2,
+              "source_failing_transition": "ar25:L2:fresh_agent_rollout_hidden_stack_absent",
+              "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+              "world_model_path": "results/arc_e3/ar25/world_model.py"
+            }
+          ],
+          "adaptive_tests_passed": 1,
+          "adaptive_tests_total": 2,
+          "checkpoint_status": "honest_partial_adaptive_residual_behavior_remaining",
+          "fresh_agent_state": true,
+          "game": "ar25",
+          "held_out_mechanic_test_pass": true,
+          "lookahead_fidelity": 0.5,
+          "new_reproduced_level": 1,
+          "offline_reproduced": false,
+          "plan": [],
+          "prior_best_level": 1,
+          "reproduce_result": {
+            "claimed_level": 2,
+            "game": "ar25",
+            "reached_level": 1,
+            "reason": "no_replayable_ar25_target_l2_plan_configured",
+            "reproduced": false
+          },
+          "residual_failing_behavior": "ar25_l2_hidden_undo_stack_state_not_visible_in_rollout",
+          "solver_path": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
+          "target_level": 2,
+          "target_wall_time_s": 30.0,
+          "verifier_accuracy": 0.5,
+          "verifier_accuracy_per_round": [
+            0.5
+          ],
+          "world_model_path": "results/arc_e3/ar25/world_model.py"
+        },
+        {
+          "adaptive_test_pass_rate": 0.5,
+          "adaptive_test_pass_rate_per_round": [
+            0.5
+          ],
+          "adaptive_test_path": "results/arc_e3/tn36/adaptive_tests_4415.json",
+          "adaptive_tests": [
+            {
+              "derived_from_rollout_trace": true,
+              "expected": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
+              "fresh_agent_state": true,
+              "game": "tn36",
+              "name": "tn36_adaptive_round1_run_button_executes_program",
+              "observed": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
+              "passed": true,
+              "residual_behavior_after_test": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+              "round": 1,
+              "source_failing_transition": "tn36:L8:rollout_sxhtkytekm_program_did_not_move",
+              "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+              "world_model_path": "results/arc_e3/tn36/world_model.py"
+            },
+            {
+              "derived_from_rollout_trace": true,
+              "expected": "palette_state_tracks_real_l8_rollout",
+              "fresh_agent_state": true,
+              "game": "tn36",
+              "name": "tn36_adaptive_round2_palette_population_residual",
+              "observed": {
+                "bit_clicks_for_up_33": [
+                  [
+                    24,
+                    41
+                  ],
+                  [
+                    24,
+                    56
+                  ]
+                ],
+                "stateful_palette_model": "not_encoded"
+              },
+              "passed": false,
+              "residual_behavior_after_test": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+              "round": 2,
+              "source_failing_transition": "tn36:L8:fresh_agent_palette_population_still_wrong",
+              "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+              "world_model_path": "results/arc_e3/tn36/world_model.py"
+            }
+          ],
+          "adaptive_tests_passed": 1,
+          "adaptive_tests_total": 2,
+          "checkpoint_status": "honest_partial_adaptive_residual_behavior_remaining",
+          "fresh_agent_state": true,
+          "game": "tn36",
+          "held_out_mechanic_test_pass": true,
+          "lookahead_fidelity": 0.875,
+          "new_reproduced_level": 7,
+          "offline_reproduced": false,
+          "plan": [
+            "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
+            "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
+            "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
+            "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
+            "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
+            "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
+            "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
+          ],
+          "prior_best_level": 7,
+          "reproduce_result": {
+            "claimed_level": 8,
+            "game": "tn36",
+            "mode": "offline_reproduction_gate_no_quota",
+            "plan": [
+              "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
+              "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
+              "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
+              "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
+              "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
+              "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
+              "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+              "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+              "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+              "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
+            ],
+            "reached_level": 7,
+            "reproduced": false,
+            "solver_reached_level": 7,
+            "trajectory_action_count": 102
+          },
+          "residual_failing_behavior": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+          "solver_path": "scripts/arc3_tn36_offline_solver.py",
+          "target_level": 8,
+          "target_wall_time_s": 30.0,
+          "verifier_accuracy": 0.875,
+          "verifier_accuracy_per_round": [
+            0.875
+          ],
+          "world_model_path": "results/arc_e3/tn36/world_model.py"
+        },
+        {
+          "adaptive_test_pass_rate": 0.5,
+          "adaptive_test_pass_rate_per_round": [
+            0.5
+          ],
+          "adaptive_test_path": "results/arc_e3/lp85/adaptive_tests_4415.json",
+          "adaptive_tests": [
+            {
+              "derived_from_rollout_trace": true,
+              "expected": [
+                "slot2",
+                "bghvgbtwcb",
+                "slot3",
+                "fdgmtkfrxl"
+              ],
+              "fresh_agent_state": true,
+              "game": "lp85",
+              "name": "lp85_adaptive_round1_permutation_from_wrong_slot_trace",
+              "observed": [
+                "slot2",
+                "bghvgbtwcb",
+                "slot3",
+                "fdgmtkfrxl"
+              ],
+              "passed": true,
+              "residual_behavior_after_test": "lp85_l6_search_not_yet_reproduced_after_permutation_repair",
+              "round": 1,
+              "source_failing_transition": "lp85:L6:rollout_wrong_button_permutation",
+              "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+              "world_model_path": "results/arc_e3/lp85/world_model.py"
+            },
+            {
+              "derived_from_rollout_trace": true,
+              "expected": "offline_reproduced_l6",
+              "fresh_agent_state": true,
+              "game": "lp85",
+              "name": "lp85_adaptive_round2_reproduction_search_residual",
+              "observed": "offline_reproduced_l5",
+              "passed": false,
+              "residual_behavior_after_test": "lp85_l6_button_permutation_search_reproduction_still_wrong",
+              "round": 2,
+              "source_failing_transition": "lp85:L6:fresh_agent_bfs_still_reaches_l5",
+              "test_path": "tests/python/test_experiment_4415_agent2world_adaptive_e3_repair.py",
+              "world_model_path": "results/arc_e3/lp85/world_model.py"
+            }
+          ],
+          "adaptive_tests_passed": 1,
+          "adaptive_tests_total": 2,
+          "checkpoint_status": "honest_partial_adaptive_residual_behavior_remaining",
+          "fresh_agent_state": true,
+          "game": "lp85",
+          "held_out_mechanic_test_pass": true,
+          "lookahead_fidelity": 0.833333,
+          "new_reproduced_level": 5,
+          "offline_reproduced": false,
+          "plan": [],
+          "prior_best_level": 5,
+          "reproduce_result": {
+            "claimed_level": 6,
+            "game": "lp85",
+            "reached_level": 5,
+            "reason": "no_replayable_lp85_target_l6_plan_configured",
+            "reproduced": false
+          },
+          "residual_failing_behavior": "lp85_l6_button_permutation_search_reproduction_still_wrong",
+          "solver_path": "python/carnot/agentic/arc_game_adapters.py",
+          "target_level": 6,
+          "target_wall_time_s": 30.0,
+          "verifier_accuracy": 0.833333,
+          "verifier_accuracy_per_round": [
+            0.833333
+          ],
+          "world_model_path": "results/arc_e3/lp85/world_model.py"
+        }
+      ],
+      "preconditions_checked": {
+        "adaptive_behavior_tests_from_rollout_traces": true,
+        "arc_solver_kit_import": true,
+        "executable_world_model_import": true,
+        "fresh_agent_state_for_repair": true,
+        "harness_import": true,
+        "held_out_mechanic_tests_separate": true,
+        "leaderboard_submission": false,
+        "research_conductor_modified": false,
+        "solver_kit_import": true,
+        "targets": {
+          "ar25": {
+            "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25",
+            "offline_env_present": true,
+            "status": "available"
+          },
+          "lp85": {
+            "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85",
+            "offline_env_present": true,
+            "status": "available"
+          },
+          "tn36": {
+            "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tn36",
+            "offline_env_present": true,
+            "status": "available"
+          }
+        },
+        "trm_training_stood_down": true
+      },
+      "random_seed": 4415,
+      "reproducibility_checksum": "d2ed24b992dd8fe4736ea00b3789bae3e6147a44c3584670f1ae2e7beed98912",
+      "reproducible_total_levels": 34,
+      "verifier_is_oracle": true
+    },
+    "availability_report": {
+      "available_artifact_keys": [
+        "4414_config_rule",
+        "4415_adaptive_e3",
+        "4416_hidden_state",
+        "4417_sovereign_gap4",
+        "4418_vocab_transfer",
+        "4419_steerconf_code"
+      ],
+      "axes": {
+        "adaptive_e3": {
+          "available_artifact_keys": [
+            "4415_adaptive_e3"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": 0
+        },
+        "code_detection": {
+          "available_artifact_keys": [
+            "4419_steerconf_code"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": false
+        },
+        "config_rule": {
+          "available_artifact_keys": [
+            "4414_config_rule"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        },
+        "config_rule_vocabulary": {
+          "available_artifact_keys": [
+            "4418_vocab_transfer"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": false
+        },
+        "hidden_state_localizer": {
+          "available_artifact_keys": [
+            "4416_hidden_state"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": false
+        },
+        "sovereign_gap4": {
+          "available_artifact_keys": [
+            "4417_sovereign_gap4"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        }
+      },
+      "flagged_artifacts_excluded": [],
+      "missing_upstream_artifacts": []
+    },
+    "config_rule_induction": {
+      "artifact_path": "results/experiment_4414_config_rule_induction_solve.json",
+      "available": true,
+      "config_win_rules_grounded": [
+        {
+          "false_positive_rate": 0.0,
+          "fires_on_win": true,
+          "game": "ka59",
+          "literal_hardcode": false,
+          "predicate": "editable_count_4_equals_reference_count_4_32",
+          "tier": 2
+        }
+      ],
+      "honest_verdict": "complete_config_rule_partial",
+      "new_levels_reproduced": 0,
+      "per_target_scorecard": [
+        {
+          "false_positive_rate": 0.0,
+          "fires_on_win": true,
+          "game": "ka59",
+          "grounding_tier": 2,
+          "honest_verdict": "complete_ka59_tier2_grounded_rule_reused_no_new_level",
+          "new_reproduced_level": 1,
+          "offline_reproduced": false,
+          "prior_best_level": 1,
+          "search_blocker": "no_registered_next_level_config_adapter",
+          "verifier_routed_states": 0,
+          "win_rule_predicate": "editable_count_4_equals_reference_count_4_32"
+        },
+        {
+          "false_positive_rate": null,
+          "fires_on_win": null,
+          "game": "bp35",
+          "grounding_tier": 0,
+          "honest_verdict": "blocked_local_model_unavailable",
+          "new_reproduced_level": 0,
+          "offline_reproduced": false,
+          "prior_best_level": 0,
+          "search_blocker": "blocked_local_model_unavailable",
+          "verifier_routed_states": 0,
+          "win_rule_predicate": null
+        },
+        {
+          "false_positive_rate": null,
+          "fires_on_win": null,
+          "game": "dc22",
+          "grounding_tier": 0,
+          "honest_verdict": "blocked_local_model_unavailable",
+          "new_reproduced_level": 0,
+          "offline_reproduced": false,
+          "prior_best_level": 0,
+          "search_blocker": "blocked_local_model_unavailable",
+          "verifier_routed_states": 0,
+          "win_rule_predicate": null
+        }
+      ],
+      "preconditions_checked": {
+        "harness_imports": {
+          "game_adapters_import": true,
+          "solver_kit_import": true
+        },
+        "leaderboard_submission": false,
+        "local_model_server": {
+          "cached": false,
+          "model_path": null,
+          "port": 8920,
+          "server_started": false,
+          "status": "blocked_local_model_unavailable"
+        },
+        "offline_envs": {
+          "bp35": {
+            "n_entries": 1,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/bp35",
+            "present": true,
+            "status": "ok"
+          },
+          "dc22": {
+            "n_entries": 1,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/dc22",
+            "present": true,
+            "status": "ok"
+          },
+          "ka59": {
+            "n_entries": 1,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+            "present": true,
+            "status": "ok"
+          }
+        },
+        "research_conductor_modified": false,
+        "trm_training_stood_down": true
+      },
+      "random_seed": 4414,
+      "reproducibility_checksum": "7a654b1b23beaa3c9eb3b471cde4e0ff04880e6da2ff3657da4e385f8d292979",
+      "reproducible_total_levels": 34,
+      "verifier_is_oracle": true
+    },
+    "config_rule_vocabulary": {
+      "artifact_path": "results/experiment_4418_config_rule_vocabulary_transfer.json",
+      "available": true,
+      "config_rule_vocabulary": [],
+      "config_rule_vocabulary_transfers": false,
+      "honest_verdict": "blocked_local_model_unavailable",
+      "local_model_status": "blocked_local_model_unavailable",
+      "preconditions_checked": {
+        "grounded_rules": {
+          "count": 4,
+          "games": [
+            "ka59",
+            "sc25",
+            "tn36",
+            "tr87"
+          ],
+          "sources": [
+            {
+              "game": "ka59",
+              "primitives": [
+                "count-equality",
+                "editable-reference-relation",
+                "position-region-match",
+                "shape-pattern-match"
+              ],
+              "rule_text": "E3 executable-world-model L1: use the selected 3x3 block to push the second block through the central wall, place the left block on the left target, then place the pushed block on the right target. results/experiment_4350_e3_explore_verify_plan_ka59.json + results/arc_e3/ka59/world_model.py arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3', 'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06. mixed keyboard+click [4,4,4,3,2,3,3,3,C:1,1,4]; C:1 dynamically clicks the second movable block after the first block is placed. editable_count_4_equals_reference_count_4_32",
+              "sources": [
+                "ops/arc_solve_registry.yaml",
+                "results/experiment_4414_config_rule_induction_solve.json"
+              ]
+            },
+            {
+              "game": "sc25",
+              "primitives": [
+                "position-region-match",
+                "shape-pattern-match"
+              ],
+              "rule_text": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit. results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py arc_solver_kit.reproduce(sc25, ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3'], Exp4341 apply, warmup_label='warmup') reproduced=True L1; checksum fb94af999655687f8f323de71c51be54838b6a39734652d654f4296b278b9e6f. ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+              "sources": [
+                "ops/arc_solve_registry.yaml"
+              ]
+            },
+            {
+              "game": "tn36",
+              "primitives": [
+                "position-region-match",
+                "attribute-match",
+                "glyph-map",
+                "sequence-rewrite",
+                "shape-pattern-match",
+                "program-command-map"
+              ],
+              "rule_text": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}. PROGRAM-EDITOR mechanic (FULLY RE'd 2026-06-17). The object runs an N-slot MOVE-PROGRAM (vkuvtkaerv); each slot holds a command code (tn36.py:2171 okllwtboml: 0=settle,1=left,2=right,3=down,33=up,5/6/7/16=rotate,8/9=scale+/-,14/15/63=property). Step CSPOIQWER=4. TOOL PALETTE = a 6-BIT code editor per slot: bit b's toggle-button is at (slot_x, slot_y_top + 3*b) for b=0..5 (values 1,2,4,8,16,32), so ANY code = sum of its set bits (down 3=bit0+bit1; up 33=bit0+bit5; scale+ 8=bit3; rotate+90 5=bit0+bit2). Slot positions ARE READABLE (controller.pfyayhyovw[i].{x,y}) and RE-LAY-OUT per level (L1: 5 slots; L2: 4 slots; different x/y) -> DISCOVER, don't hardcode. RUN by clicking the object sub-button sxhtkytekm (center, discovered). L1: program [3,3,3,3,3]=5 downs->y13->33. L2: [33,33,33,33]=4 ups->y24->8. scripts/arc3_tn36_offline_solver.py \u2014 GENERAL from-scratch solver: reads obj/target deltas + the per-level button layout (pfyayhyovw), computes the move-program (down/up/left/right + scale/rotate), edits slots via bit-toggle clicks, runs, and CHAINS levels. Reproduces L1-L3 (reproduced=True claimed_level=3, 25 clicks). PATH-ROUTING: some levels have wall OBSTACLES (bizgpiltwm) with a gap; cwtesiybfx (tn36.py:2269) reverts a move that collides, so the move ORDER must route the object through the gap. The solver computes the move MULTISET from deltas then searches orderings (the game is the path oracle) until one wins -> two-pass (discover winning order per level, then clean minimal replay on a fresh env, since env.reset() does NOT rewind an advanced episode). L3: gap at y[16,20) between walls at x45; winning order [33,2,2,2,33,2]. L4: SCALE<->collision interaction -- the object box changes size when scaled, so the SCALE-down move must be interleaved at the right point (straight [3,3,3,3,1,9] LOSES; winner e.g. [3,9,3,1,3,3]); the ordering search finds it. GOTCHA: a FRESH env is required per ordering attempt -- accumulating failed runs on one env trips the game's LOSS condition and resets the whole episode to L0 (was masking L4). L5: rotation (270->0=code5) + scale-up (code8) + PROPERTY change (sjmtdfxdrc 11->15 = code 63). PROPERTY codes DECODED 2026-06-17 (set sjmtdfxdrc absolutely): code14->9, code15->8, code63->15 (PROP_CODE map; code 63 = all 6 bits set). L6: MULTI-RUN MAZE -- the collision-free path (8 moves) exceeds the 6 slots, so it uses the CHECKPOINT mechanic (wgzwawbgew): a run that ENDS on a checkpoint advances the object's base (mnvoffrbex), so progress carries across runs. Solver reads box/obstacles/checkpoints from internal state, BFS-plans a path start->checkpoint->target with each leg <= n moves, runs the legs in sequence. L6: leg1 [2,2,2,2,33,33]->checkpoint(49,20), leg2 [1,1,33,33,33,1]->target. Reproduces L1-L6 (reproduced=True claimed_level=6, 74 clicks). Frozen trajectory at results/arc_explore_trajectory_tn36.json. ACTION6 click; data schema IS {x,y} and display->grid is 1:1 (camera.display_to_grid(30,13)==(30,13)). Clicks register (121/121 change the grid). Control is a PROGRAM/transform EDITOR, not direct steering: dispatch (tn36.py:2500) routes a click to a tool-palette (miytdaqzei, EMPTY at reset) else mvqheosngn(apply/2nd-object) else bzirenxmrg(the object); the object carries a move-program vkuvtkaerv=[3,0,3,0,0]; clicking it runs mmmdksslmq()->olrpupaury(). The exact EDIT->EXECUTE semantics that drive obj.y 13->33 are not yet cracked (directly invoking mmmdksslmq did NOT move the object; palette empty).",
+              "sources": [
+                "ops/arc_solve_registry.yaml"
+              ]
+            },
+            {
+              "game": "tr87",
+              "primitives": [
+                "editable-reference-relation",
+                "position-region-match",
+                "glyph-map",
+                "sequence-rewrite"
+              ],
+              "rule_text": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable. GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json. re-gated reproduced=True L6 (kit.reproduce, claimed_level=6, 127-action path); verifier-routed 511 states. tr87 is the deepest single-game solve (6 levels, 5 distinct mechanics). keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element's value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).",
+              "sources": [
+                "ops/arc_solve_registry.yaml"
+              ]
+            }
+          ],
+          "status": "ok"
+        },
+        "induction_substrate": "local_iGPU_only_never_3090s",
+        "local_model_server": {
+          "available": false,
+          "device": "iGPU_required",
+          "endpoint": "http://127.0.0.1:8920/v1/models",
+          "model": null,
+          "port": 8920,
+          "status": "blocked_local_model_unavailable",
+          "uses_3090": false
+        },
+        "training_mode": "offline_induction_only_no_trm_training",
+        "trm_training_stood_down": true
+      },
+      "random_seed": 4418,
+      "reproducibility_checksum": "4b3dc6c500f8fe7529057ed82ed9b5a69a0635b01e2ec72e994f65ebcc12a6e6",
+      "verifier_is_oracle": false
+    },
+    "hidden_state_localizer": {
+      "artifact_path": "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+      "available": true,
+      "hidden_state_localizer_has_nonposition_signal": false,
+      "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
+      "missing_verifier_gaps": [
+        {
+          "candidate_design": "Collect typed multi-step FoVer traces with non-first-position first errors before any localizer redeployment; do not revive the position-saturated text or hidden-state localizer line.",
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "delta_vs_position_only": 0.0,
+          "evidence": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+          "failure_mode": "The hidden-state transport/margin probe tied the content-blind position-only first-error baseline; the available FoVer failed traces are position-saturated at first step.",
+          "gap_id": "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED",
+          "missing_discriminator": "A model-native signal that separates earliest causal error from position and downstream consequence under non-degenerate multi-step FoVer labels.",
+          "n_captured_traces": 1250,
+          "parent_gap": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+          "priority": "medium",
+          "status": "open"
+        }
+      ],
+      "position_only_baseline_f1": 1.0,
+      "preconditions_checked": [
+        {
+          "available": true,
+          "detail": "n_examples=1000",
+          "resource": "exp2850_fover_corpus"
+        },
+        {
+          "available": true,
+          "detail": "step_traces=6548; error_traces=114",
+          "resource": "cached_step_labeled_fover_corpus"
+        },
+        {
+          "available": true,
+          "detail": "failed_traces=1250; required>=1250",
+          "resource": "cached_real_fover_failed_traces"
+        },
+        {
+          "available": true,
+          "detail": "train=250; heldout=1000; required_heldout>=1000",
+          "resource": "heldout_first_error_eval_split"
+        },
+        {
+          "available": true,
+          "detail": "transformers output_hidden_states probe succeeded",
+          "resource": "hidden_state_extraction_path"
+        },
+        {
+          "available": true,
+          "detail": "not invoked; this experiment runs forward-pass capture plus CPU probe only",
+          "resource": "trm_training_stand_down"
+        }
+      ],
+      "random_seed": 4416,
+      "reproducibility_checksum": "sha256:3be67173672bf3f6793b9db1c3832968ebc7aadbe2e85573419c5df48ef9bfa4",
+      "verifier_is_oracle": false
+    },
+    "sovereign_gap4": {
+      "artifact_path": "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+      "available": true,
+      "honest_verdict": "complete: sovereign_gap4_local_gate_holds_flat_cov_0.2333_fires_0_lost_0",
+      "local_generator_coverage": 0.2333,
+      "pass2_vs_vote": {
+        "delta": 0.0,
+        "delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "gated_pass2": 0.4516,
+        "graded_gate_fires": 0,
+        "pass2_vote_wins_lost": 0,
+        "vote_pass2": 0.4516
+      },
+      "preconditions_checked": [
+        {
+          "available": true,
+          "n_entries": 31,
+          "pool_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+          "resource": "cached_trm_pool_and_vote_baseline",
+          "vote_baseline_artifact_pass2": 0.4839,
+          "vote_baseline_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json"
+        },
+        {
+          "allowed_hf_ids": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-12B-it-GGUF"
+          ],
+          "available": true,
+          "loader": "llama_cpp.Llama(model_path=..., vocab_only=True)",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "resource": "local_open_weight_generator_gguf",
+          "selected_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+        },
+        {
+          "available": true,
+          "evidence": "runner is offline replay; no TRM or generator training entrypoint is invoked",
+          "resource": "trm_training_stood_down"
+        },
+        {
+          "available": true,
+          "n_tasks": 30,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+          "resource": "cached_local_generator_checkpoint"
+        }
+      ],
+      "random_seed": 12345,
+      "reproducibility_checksum": "7d5cc5b2a3cfda34f8d2fbb3488bae1df22a8211175e212d3231390cc9ef91d6",
+      "sovereign_gap4_gate_holds": true,
+      "verifier_is_oracle": true
+    },
+    "steerconf_code_detection": {
+      "artifact_path": "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+      "available": true,
+      "detection_by_domain": [
+        {
+          "auroc_ci95": [
+            0.48913,
+            0.70483
+          ],
+          "base_rate": 0.90167,
+          "baseline_verifier_auroc": 0.577374,
+          "claim_scope": "proper_pool_n>=300",
+          "detection_auroc": 0.60191,
+          "domain": "code_humaneval",
+          "ece_lodo_calibrated": 0.077816,
+          "ece_uncalibrated": 0.071429,
+          "feature_logistic_calibrator": {
+            "bias": -2.491845,
+            "feature_names": [
+              "verifier_score",
+              "conservative_confidence",
+              "optimistic_confidence",
+              "confidence_consistency",
+              "steer_width",
+              "task_rank_fraction",
+              "task_margin_confidence"
+            ],
+            "means": [
+              0.209395,
+              0.173916,
+              0.261688,
+              0.912228,
+              0.087772,
+              0.5,
+              0.13859
+            ],
+            "n_train": 38872,
+            "scales": [
+              0.353053,
+              0.312135,
+              0.385965,
+              0.102842,
+              0.102842,
+              0.226987,
+              0.23959
+            ],
+            "trained_on_domains": [
+              "fover",
+              "gap4_arc",
+              "gsm8k"
+            ],
+            "weights": [
+              0.975345,
+              1.101294,
+              0.8377,
+              0.198647,
+              -0.198647,
+              -0.356394,
+              0.314656
+            ]
+          },
+          "n": 539,
+          "random_score_control": {
+            "auroc": 0.496334,
+            "replicates": 128,
+            "seed": 4419
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.90167,
+              "coverage": 1.0,
+              "n_kept": 539,
+              "risk": 0.09833,
+              "threshold": 0.892521
+            },
+            {
+              "accuracy": 0.946392,
+              "coverage": 0.9,
+              "n_kept": 485,
+              "risk": 0.053608,
+              "threshold": 0.976897
+            },
+            {
+              "accuracy": 0.935644,
+              "coverage": 0.75,
+              "n_kept": 404,
+              "risk": 0.064356,
+              "threshold": 0.980802
+            },
+            {
+              "accuracy": 0.903346,
+              "coverage": 0.5,
+              "n_kept": 269,
+              "risk": 0.096654,
+              "threshold": 0.982137
+            },
+            {
+              "accuracy": 0.835821,
+              "coverage": 0.25,
+              "n_kept": 134,
+              "risk": 0.164179,
+              "threshold": 0.983536
+            }
+          ],
+          "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+          "steered_confidence_added_auroc": 0.024536,
+          "steering_probe_summary": {
+            "conservative_mean": 0.905099,
+            "consistency_mean": 0.91288,
+            "optimistic_mean": 0.992218,
+            "steer_width_mean": 0.08712
+          }
+        },
+        {
+          "auroc_ci95": [
+            0.899975,
+            0.918452
+          ],
+          "base_rate": 0.812097,
+          "baseline_verifier_auroc": 0.918304,
+          "claim_scope": "proper_pool_n>=300",
+          "detection_auroc": 0.909196,
+          "domain": "fover",
+          "ece_lodo_calibrated": 0.11516,
+          "ece_uncalibrated": 0.122522,
+          "feature_logistic_calibrator": {
+            "bias": -3.876802,
+            "feature_names": [
+              "verifier_score",
+              "conservative_confidence",
+              "optimistic_confidence",
+              "confidence_consistency",
+              "steer_width",
+              "task_rank_fraction",
+              "task_margin_confidence"
+            ],
+            "means": [
+              0.055921,
+              0.044267,
+              0.089011,
+              0.955256,
+              0.044744,
+              0.5,
+              0.037364
+            ],
+            "n_train": 30582,
+            "scales": [
+              0.203627,
+              0.186688,
+              0.212992,
+              0.052966,
+              0.052966,
+              0.240041,
+              0.129252
+            ],
+            "trained_on_domains": [
+              "code_humaneval",
+              "gap4_arc",
+              "gsm8k"
+            ],
+            "weights": [
+              0.472412,
+              0.515459,
+              0.421142,
+              0.123291,
+              -0.123291,
+              -0.173925,
+              0.241224
+            ]
+          },
+          "n": 8829,
+          "random_score_control": {
+            "auroc": 0.498896,
+            "replicates": 128,
+            "seed": 4419
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.812097,
+              "coverage": 1.0,
+              "n_kept": 8829,
+              "risk": 0.187903,
+              "threshold": 0.020864
+            },
+            {
+              "accuracy": 0.8778,
+              "coverage": 0.9,
+              "n_kept": 7946,
+              "risk": 0.1222,
+              "threshold": 0.18598
+            },
+            {
+              "accuracy": 0.967679,
+              "coverage": 0.75,
+              "n_kept": 6621,
+              "risk": 0.032321,
+              "threshold": 0.628157
+            },
+            {
+              "accuracy": 0.983235,
+              "coverage": 0.5,
+              "n_kept": 4414,
+              "risk": 0.016765,
+              "threshold": 0.860103
+            },
+            {
+              "accuracy": 0.971454,
+              "coverage": 0.25,
+              "n_kept": 2207,
+              "risk": 0.028546,
+              "threshold": 0.89096
+            }
+          ],
+          "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+          "steered_confidence_added_auroc": -0.009107,
+          "steering_probe_summary": {
+            "conservative_mean": 0.667633,
+            "consistency_mean": 0.763228,
+            "optimistic_mean": 0.904406,
+            "steer_width_mean": 0.236772
+          }
+        },
+        {
+          "auroc_ci95": [
+            0.772424,
+            0.948651
+          ],
+          "base_rate": 0.001688,
+          "baseline_verifier_auroc": 0.963006,
+          "claim_scope": "proper_pool_n>=300",
+          "detection_auroc": 0.865085,
+          "domain": "gap4_arc",
+          "ece_lodo_calibrated": 0.026287,
+          "ece_uncalibrated": 0.01145,
+          "feature_logistic_calibrator": {
+            "bias": 1.9105,
+            "feature_names": [
+              "verifier_score",
+              "conservative_confidence",
+              "optimistic_confidence",
+              "confidence_consistency",
+              "steer_width",
+              "task_rank_fraction",
+              "task_margin_confidence"
+            ],
+            "means": [
+              0.755874,
+              0.644317,
+              0.861791,
+              0.782526,
+              0.217474,
+              0.5,
+              0.490918
+            ],
+            "n_train": 10968,
+            "scales": [
+              0.240239,
+              0.261081,
+              0.2243,
+              0.092877,
+              0.092877,
+              0.185477,
+              0.182375
+            ],
+            "trained_on_domains": [
+              "code_humaneval",
+              "fover",
+              "gsm8k"
+            ],
+            "weights": [
+              0.721764,
+              0.717718,
+              0.727417,
+              0.2608,
+              -0.2608,
+              -0.188262,
+              0.000554
+            ]
+          },
+          "n": 28443,
+          "random_score_control": {
+            "auroc": 0.498272,
+            "replicates": 128,
+            "seed": 4419
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.001688,
+              "coverage": 1.0,
+              "n_kept": 28443,
+              "risk": 0.998312,
+              "threshold": 0.012668
+            },
+            {
+              "accuracy": 0.001758,
+              "coverage": 0.9,
+              "n_kept": 25598,
+              "risk": 0.998242,
+              "threshold": 0.015365
+            },
+            {
+              "accuracy": 0.001969,
+              "coverage": 0.75,
+              "n_kept": 21332,
+              "risk": 0.998031,
+              "threshold": 0.019613
+            },
+            {
+              "accuracy": 0.002883,
+              "coverage": 0.5,
+              "n_kept": 14221,
+              "risk": 0.997117,
+              "threshold": 0.022605
+            },
+            {
+              "accuracy": 0.005626,
+              "coverage": 0.25,
+              "n_kept": 7110,
+              "risk": 0.994374,
+              "threshold": 0.02719
+            }
+          ],
+          "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+          "steered_confidence_added_auroc": -0.097921,
+          "steering_probe_summary": {
+            "conservative_mean": 0.006379,
+            "consistency_mean": 0.962255,
+            "optimistic_mean": 0.044124,
+            "steer_width_mean": 0.037745
+          }
+        },
+        {
+          "auroc_ci95": [
+            0.984466,
+            0.994912
+          ],
+          "base_rate": 0.51,
+          "baseline_verifier_auroc": 0.990196,
+          "claim_scope": "proper_pool_n>=300",
+          "detection_auroc": 0.990196,
+          "domain": "gsm8k",
+          "ece_lodo_calibrated": 0.022132,
+          "ece_uncalibrated": 0.0725,
+          "feature_logistic_calibrator": {
+            "bias": -2.529545,
+            "feature_names": [
+              "verifier_score",
+              "conservative_confidence",
+              "optimistic_confidence",
+              "confidence_consistency",
+              "steer_width",
+              "task_rank_fraction",
+              "task_margin_confidence"
+            ],
+            "means": [
+              0.207667,
+              0.173596,
+              0.258518,
+              0.915078,
+              0.084922,
+              0.5,
+              0.125814
+            ],
+            "n_train": 37811,
+            "scales": [
+              0.354006,
+              0.312435,
+              0.386346,
+              0.103372,
+              0.103372,
+              0.234042,
+              0.234054
+            ],
+            "trained_on_domains": [
+              "code_humaneval",
+              "fover",
+              "gap4_arc"
+            ],
+            "weights": [
+              0.940792,
+              1.059278,
+              0.808408,
+              0.180227,
+              -0.180227,
+              -0.368608,
+              0.323493
+            ]
+          },
+          "n": 1600,
+          "random_score_control": {
+            "auroc": 0.501502,
+            "replicates": 128,
+            "seed": 4419
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.51,
+              "coverage": 1.0,
+              "n_kept": 1600,
+              "risk": 0.49,
+              "threshold": 0.032351
+            },
+            {
+              "accuracy": 0.564583,
+              "coverage": 0.9,
+              "n_kept": 1440,
+              "risk": 0.435417,
+              "threshold": 0.032351
+            },
+            {
+              "accuracy": 0.673333,
+              "coverage": 0.75,
+              "n_kept": 1200,
+              "risk": 0.326667,
+              "threshold": 0.035744
+            },
+            {
+              "accuracy": 1.0,
+              "coverage": 0.5,
+              "n_kept": 800,
+              "risk": 0.0,
+              "threshold": 0.961482
+            },
+            {
+              "accuracy": 1.0,
+              "coverage": 0.25,
+              "n_kept": 400,
+              "risk": 0.0,
+              "threshold": 0.978084
+            }
+          ],
+          "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+          "steered_confidence_added_auroc": 0.0,
+          "steering_probe_summary": {
+            "conservative_mean": 0.4278,
+            "consistency_mean": 0.8451,
+            "optimistic_mean": 0.5827,
+            "steer_width_mean": 0.1549
+          }
+        }
+      ],
+      "detection_calibrated_multi_domain": false,
+      "domains_at_chance": [
+        "code_humaneval"
+      ],
+      "honest_verdict": "complete: clean_null_steered_confidence_does_not_rescue_code_detector",
+      "missing_verifier_gaps": [
+        {
+          "candidate_design": "Build a domain-specific oracle-distinct verifier feature, then rerun Exp 4419's same cached-pool SteerConf and LODO calibration gate.",
+          "domain": "code_humaneval",
+          "failure_mode": "SteerConf cached-feature detection AUROC CI95 includes chance on code_humaneval; n=539, baseline_auroc=0.577374, steered_delta=0.024536.",
+          "gap_id": "GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE",
+          "missing_discriminator": "A domain-native verifier feature beyond self-reported or cached-feature confidence consistency that separates correct outputs from plausible wrong outputs.",
+          "priority": "high",
+          "status": "open"
+        }
+      ],
+      "positive_control_passed": true,
+      "preconditions_checked": [
+        {
+          "available": true,
+          "detail": "cached_pool_loaded; n=8829 >= 1",
+          "domain": "fover",
+          "n": 8829,
+          "raw_n": 8829,
+          "required_n": 1,
+          "resource": "fover_proper_pool"
+        },
+        {
+          "available": true,
+          "detail": "cached_pool_loaded; n=28443 >= 300",
+          "domain": "gap4_arc",
+          "n": 28443,
+          "raw_n": 28443,
+          "required_n": 300,
+          "resource": "gap4_arc_proper_pool"
+        },
+        {
+          "available": true,
+          "detail": "cached_pool_loaded; n=539 >= 300",
+          "domain": "code_humaneval",
+          "n": 539,
+          "raw_n": 2294,
+          "required_n": 300,
+          "resource": "code_humaneval_proper_pool"
+        },
+        {
+          "available": true,
+          "detail": "cached_pool_loaded; n=1600 >= 300",
+          "domain": "gsm8k",
+          "n": 1600,
+          "raw_n": 1600,
+          "required_n": 300,
+          "resource": "gsm8k_proper_pool"
+        },
+        {
+          "available": true,
+          "detail": "cached verifier-score rank/margin conservative-vs-optimistic SteerConf proxy available",
+          "resource": "steering_signal_path"
+        },
+        {
+          "available": true,
+          "detail": "no TRM training or live inference invoked; cached calibration measurement only",
+          "resource": "trm_training_stand_down"
+        }
+      ],
+      "random_seed": 4419,
+      "reproducibility_checksum": "sha256:1b5b5de632324ea3760e6377ec7bf8ec8d53ca76489bf428a479b300965d6e81",
+      "verifier_is_oracle": false
+    },
+    "trm_training_stood_down": true
+  }
+}

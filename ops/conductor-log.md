@@ -8771,3 +8771,4 @@ c |
 | 2026-06-19 02:02 UTC | PHASE C (CONTINUOUS SELF-LEARNING; mandated per re | OK | 85 passed, 1 warning in 7.34s |
 | 2026-06-19 02:17 UTC | PHASE D (CROSS-DOMAIN DETECTION CALIBRATION REPAIR | OK | 108 passed, 1 warning in 6.48s |
 | 2026-06-19 02:35 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 104 passed, 1 warning in 7.80s |
+| 2026-06-19 03:58 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: tr(REPO_ROOT / |

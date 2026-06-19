@@ -49,7 +49,7 @@ tasks:
       localizer falsification verdict, GAP-4-with-local-generator, config-rule-vocabulary transfer,
       SteerConf calibration). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a
       circular/execution-grounded ARC solve is NOT a moat). REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {principle: "terminal-prefixed self-declared state lets the reconciler classify without re-running"}
+        honest_verdict: {{principle: "terminal-prefixed self-declared state lets the reconciler classify without re-running"}}
       honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.
       verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission.
 
@@ -82,13 +82,13 @@ tasks:
       run arc_solver_kit.reproduce on the OFFLINE env -- ONLY reproduced levels count. Persist the
       win-condition + solver to ops/arc_solve_registry.yaml; add any new general gotcha to arc_solver_kit.
       REQUIRED ARTIFACT FIELDS:
-        offline_reproduced: {type: bool, principle: "a solve not reproducible offline is wasted effort; only reproduced levels count toward total_levels"}
-        reproduced_levels: {type: int, principle: "monotonic ARC progress is the milestone metric"}
-        verifier_is_oracle: {type: bool, principle: "true=execution-grounded (the win-check IS the oracle); a circular win is NOT a learned-verifier moat"}
-        missing_verifier_gaps: {principle: "unselectable residual failures are the verifier-build backlog (ops/verifier_gaps.md)"}
-        random_seed: {principle: "determinism precondition for third-party reproduction"}
-        reproducibility_checksum: {principle: "content hash catches silent corpus/model drift"}
-        honest_verdict: {principle: "terminal-prefixed self-declared state"}
+        offline_reproduced: {{type: bool, principle: "a solve not reproducible offline is wasted effort; only reproduced levels count toward total_levels"}}
+        reproduced_levels: {{type: int, principle: "monotonic ARC progress is the milestone metric"}}
+        verifier_is_oracle: {{type: bool, principle: "true=execution-grounded (the win-check IS the oracle); a circular win is NOT a learned-verifier moat"}}
+        missing_verifier_gaps: {{principle: "unselectable residual failures are the verifier-build backlog (ops/verifier_gaps.md)"}}
+        random_seed: {{principle: "determinism precondition for third-party reproduction"}}
+        reproducibility_checksum: {{principle: "content hash catches silent corpus/model drift"}}
+        honest_verdict: {{principle: "terminal-prefixed self-declared state"}}
       honest_verdict MUST start with a terminal prefix. ACCEPTANCE GATE: >=1 NEW level offline_reproduced=true
       beyond the prior best for that game (principle: incremental monotonic progress; a grounded-but-0-new
       attempt with the SAME verdict retires this scope). verifier_is_oracle=true.
@@ -244,7 +244,7 @@ tasks:
       (NOT nextpnr-gatemate) + openFPGALoader -c dirtyJtag --detect. PolarFire: ssh polarfire 'true'. For
       each reachable board take the next concrete step (latency transcript / bitstream pack / sampler smoke
       per its track); for each blocked board emit a precondition-gated blocked_<resource> + a one-line
-      audit. REQUIRED ARTIFACT FIELDS: preconditions_checked (list of {resource, available}; principle:
+      audit. REQUIRED ARTIFACT FIELDS: preconditions_checked (list of {{resource, available}}; principle:
       pre-empts the fabricate-when-resource-missing mode), per-board status, honest_verdict (terminal-prefixed).
 
   - id: exp4429-sota-ingestion-409
