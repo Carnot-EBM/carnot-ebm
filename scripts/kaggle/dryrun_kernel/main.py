@@ -58,9 +58,18 @@ def main():
         REPORT["error"] = "missing binary or gguf dataset"
         (WORK / "smoke_report.json").write_text(json.dumps(REPORT, indent=2))
         print(json.dumps(REPORT, indent=2)); return
-    os.chmod(SERVER, 0o755)  # datasets may drop the exec bit
+    # /kaggle/input is a READ-ONLY filesystem, so chmod-in-place fails. Copy the binary to writable
+    # /kaggle/working and chmod the copy; the libs stay read-only in /kaggle/input (readable is enough).
+    import shutil
+
+    lib_dir = SERVER.parent
+    run_server = WORK / "llama-server"
+    shutil.copy2(SERVER, run_server)
+    os.chmod(run_server, 0o755)
+    SERVER = run_server
+    REPORT["lib_dir"] = str(lib_dir)
     log = open(WORK / "server.log", "w")
-    env = dict(os.environ, LD_LIBRARY_PATH=f"{BIN_DIR}:" + os.environ.get("LD_LIBRARY_PATH", ""))
+    env = dict(os.environ, LD_LIBRARY_PATH=f"{lib_dir}:" + os.environ.get("LD_LIBRARY_PATH", ""))
     proc = subprocess.Popen(
         [str(SERVER), "-m", str(GGUF), "-ngl", "999", "-c", "4096",
          "--spec-type", "draft-mtp", "--model-draft", str(GGUF),  # MTP self-draft
@@ -103,4 +112,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:  # always leave a report, even on an unhandled crash
+        import traceback
+
+        REPORT["error"] = f"{type(e).__name__}: {e}"
+        REPORT["traceback"] = traceback.format_exc().splitlines()[-12:]
+        (WORK / "smoke_report.json").write_text(json.dumps(REPORT, indent=2))
+        print("CRASH:", REPORT["error"])
