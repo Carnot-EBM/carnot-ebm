@@ -8805,3 +8805,4 @@ c |
 | 2026-06-19 05:39 UTC | Milestone 2026.06.409 activated | OK | 11 tasks queued |
 | 2026-06-19 05:56 UTC | PHASE 0 (TRANSITION) -- archive .408 -> activate . | OK | 95 passed, 1 warning in 7.20s |
 | 2026-06-19 06:16 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-19 06:33 UTC | PHASE A2 (ARC NORTH STAR) -- from-PIXELS glyph-sub | OK | 88 passed, 1 warning in 5.69s |
