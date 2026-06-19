@@ -38,3 +38,36 @@ def transition_fixture() -> dict[str, object]:
         "sxhtkytekm_center": button,
         "passed": observed == expected and clicks == ((24, 41), (24, 56)) and button == (36, 55),
     }
+
+
+def adaptive_trace_fixture_4415() -> dict[str, object]:
+    before = EditorState(30, 13, 1, 0, 11)
+    expected = EditorState(30, 33, 1, 0, 11)
+    observed = simulate(before, [DOWN, DOWN, DOWN, DOWN, DOWN], EditorGeometry())
+    up_clicks = slot_bit_clicks((24, 41), 33)
+    return {
+        "adaptive_tests": [
+            {
+                "name": "tn36_adaptive_round1_run_button_executes_program",
+                "round": 1,
+                "source_failing_transition": "tn36:L8:rollout_sxhtkytekm_program_did_not_move",
+                "derived_from_rollout_trace": True,
+                "fresh_agent_state": True,
+                "expected": expected,
+                "observed": observed,
+                "passed": observed == expected,
+                "residual_behavior_after_test": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+            },
+            {
+                "name": "tn36_adaptive_round2_palette_population_residual",
+                "round": 2,
+                "source_failing_transition": "tn36:L8:fresh_agent_palette_population_still_wrong",
+                "derived_from_rollout_trace": True,
+                "fresh_agent_state": True,
+                "expected": "palette_state_tracks_real_l8_rollout",
+                "observed": {"bit_clicks_for_up_33": up_clicks, "stateful_palette_model": "not_encoded"},
+                "passed": False,
+                "residual_behavior_after_test": "tn36_l8_palette_population_or_later_program_state_still_wrong",
+            },
+        ]
+    }

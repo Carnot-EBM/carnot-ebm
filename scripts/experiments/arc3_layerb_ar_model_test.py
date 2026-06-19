@@ -36,6 +36,7 @@ SERVER_LOG = Path("/tmp/ar_model_test_server.log")
 # hybrid-thinking model's chain-of-thought (Qwen3 honors /no_think); None = model has no thinking mode.
 MODELS = {
     "qwen3.5-9b": ("models--unsloth--Qwen3.5-9B-GGUF/snapshots/*/Qwen3.5-9B-Q4_K_M.gguf", "/no_think\n"),
+    "qwen3.5-9b-mtp": ("models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/*/Qwen3.5-9B-Q4_K_M.gguf", "/no_think\n"),
     "qwen3-14b": ("models--unsloth--Qwen3-14B-GGUF/snapshots/*/Qwen3-14B-Q4_K_M.gguf", "/no_think\n"),
     "phi-4": ("models--unsloth--phi-4-GGUF/snapshots/*/phi-4-Q4_K_M.gguf", None),  # base Phi-4: no thinking mode
     "qwen2.5-coder-14b": ("models--unsloth--Qwen2.5-Coder-14B-Instruct-GGUF/snapshots/*/Qwen2.5-Coder-14B-Instruct-Q4_K_M.gguf", None),
@@ -76,8 +77,11 @@ def _healthy():
         return False
 
 
-def start_server(gguf):
+def start_server(gguf, mtp=False):
     args = [str(LLAMA_SERVER), "-m", gguf, "-ngl", "999", "-c", "6144", "--port", str(PORT), "--host", "127.0.0.1"]
+    if mtp:
+        # native llama.cpp MTP speculative decoding; the -MTP- GGUF carries the nextn heads as a self-draft
+        args += ["--spec-type", "draft-mtp", "--model-draft", gguf]
     log = open(SERVER_LOG, "w")
     proc = subprocess.Popen(args, stdout=log, stderr=log)
     for _ in range(180):
@@ -102,15 +106,16 @@ def main():
     if not sys.argv[1:] or sys.argv[1] not in MODELS:
         print(f"usage: <model_key in {list(MODELS)}> [games...]", flush=True); return 1
     key = sys.argv[1]
-    games = sys.argv[2:] or ["ka59", "tn36"]
+    mtp = "--mtp" in sys.argv
+    games = [a for a in sys.argv[2:] if a != "--mtp"] or ["ka59", "tn36"]
     glob_pat, no_think = MODELS[key]
     hits = list(HUB.glob(glob_pat))
     if not hits:
         print(f"  GGUF not found for {key}", flush=True); return 1
     gguf = str(hits[0])
-    print(f"== Layer-B benchmark: {key} (no_think={'yes' if no_think else 'n/a'}) games={games} ==", flush=True)
+    print(f"== Layer-B benchmark: {key} (no_think={'yes' if no_think else 'n/a'}, mtp={mtp}) games={games} ==", flush=True)
     sf = _scaffold()
-    proc = start_server(gguf)
+    proc = start_server(gguf, mtp=mtp)
     if proc is None:
         print(f"  server failed to start (see {SERVER_LOG})", flush=True); return 1
     rows = []
@@ -167,10 +172,11 @@ def main():
         proc.terminate()
     grounded = [r["game"] for r in rows if r.get("grounded")]
     out = {"experiment": "arc3_layerb_ar_model_test", "model_key": key, "gguf": Path(gguf).name,
-           "no_think": bool(no_think), "per_game": rows, "grounded_games": grounded,
-           "honest_verdict": f"complete_layerb_{key.replace('.','_').replace('-','_')}_grounded_{len(grounded)}",
-           "inference_substrate": f"offline_arc_agi3_{key}_iGPU_port8921"}
-    (REPO / "results" / f"arc3_layerb_ar_model_test_{key.replace('.','_')}.json").write_text(json.dumps(out, indent=2, default=str))
+           "no_think": bool(no_think), "mtp": mtp, "per_game": rows, "grounded_games": grounded,
+           "honest_verdict": f"complete_layerb_{key.replace('.','_').replace('-','_')}_mtp_{mtp}_grounded_{len(grounded)}",
+           "inference_substrate": f"offline_arc_agi3_{key}{'_mtp' if mtp else ''}_iGPU_port8921"}
+    tag = key.replace('.', '_') + ("_mtp" if mtp else "")
+    (REPO / "results" / f"arc3_layerb_ar_model_test_{tag}.json").write_text(json.dumps(out, indent=2, default=str))
     print(f"\n  grounded={grounded} -> {out['honest_verdict']}", flush=True)
     return 0
 
