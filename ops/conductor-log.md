@@ -8761,3 +8761,5 @@ c |
 | 2026-06-18 23:03 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 88 passed, 1 warning in 5.71s |
 | 2026-06-18 23:12 UTC | PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic | OK | 86 passed, 1 warning in 9.92s |
 | 2026-06-18 23:27 UTC | PHASE E4 (CAPSTONE .407) -- the milestone scorecar | OK | 86 passed, 1 warning in 6.14s |
+| 2026-06-19 00:14 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-19 00:16 UTC | Milestone 2026.06.408 activated | OK | 11 tasks queued |

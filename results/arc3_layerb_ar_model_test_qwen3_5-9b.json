@@ -1,0 +1,45 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "qwen3.5-9b",
+  "gguf": "Qwen3.5-9B-Q4_K_M.gguf",
+  "no_think": true,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 8.18,
+      "tokens": 283,
+      "dur_s": 34.6,
+      "coherent": true,
+      "raw_sample": "def is_win(grid):\n    import numpy as np\n    e = grid[63:64, 26:65]\n    if e.shape != (1, 38):\n        return False\n    # ...\n```\nNO_THINK\n</think>\n\n```python\ndef is_win(grid):\n    import numpy as np\n    e = grid[63:64, 26:64]\n    if e.shape != (1, 38):\n        return False\n    \n    # Extract the single row of the editable region\n    row = e[0]\n    \n    # The rule is: the row must contain exactly ",
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 6.66,
+      "tokens": 1100,
+      "dur_s": 165.1,
+      "coherent": true,
+      "raw_sample": "def is_win(grid):\n    import numpy as np\n    e = grid[1:2, 2:62]\n    # ...\n```\n\n<thinking>\nLet me analyze the data carefully.\n\n**EDITABLE region (rows 1..1, cols 2..61):**\n- Total: 60 cells (54 nines + 6 threes in WIN)\n- WIN: 54 nines, 6 threes\n- NON-WIN 1: 59 nines, 1 three\n- NON-WIN 2: 49 nines, 11 threes\n- NON-WIN 3: 39 nines, 21 threes\n- NON-WIN 4: 29 nines, 31 threes\n- NON-WIN 5: 19 nines, 41",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    }
+  ],
+  "grounded_games": [
+    "ka59"
+  ],
+  "honest_verdict": "complete_layerb_qwen3_5_9b_grounded_1",
+  "inference_substrate": "offline_arc_agi3_qwen3.5-9b_iGPU_port8921"
+}
