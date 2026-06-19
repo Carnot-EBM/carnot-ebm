@@ -329,8 +329,7 @@ games:
   reproduce: arc_solver_kit.reproduce(ar25, ['3']*5 + ['2']*10, Exp4339 apply) reproduced=True
     L1; checksum 8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391.
   generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ar25
-    L1 without ar25's hand world-model recipe; offline_reproduced=True,
-    reproduced_levels=1; checksum 431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c.
+    L1 without ar25's hand world-model recipe.
   world_model: results/arc_e3/ar25/world_model.py
   world_model_sha256: d6274374375774291731d21258fc2ddb77b521fb13a7d762de693602897c492f
   gotchas:
@@ -352,8 +351,7 @@ games:
   reproduce: arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3',
     'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06.
   generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ka59
-    L1 without ka59's hand world-model recipe; offline_reproduced=True,
-    reproduced_levels=1; checksum 431ddd1e7ad058e1fd84cbe5564bd9361fd85d428cda22c65425e295877b392c.
+    L1 without ka59's hand world-model recipe.
   world_model: results/arc_e3/ka59/world_model.py
   world_model_sha256: ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba
   gotchas:
@@ -378,8 +376,7 @@ games:
   reproduce: arc_solver_kit.reproduce(ft09, Exp4363 labels, _apply_ft09_label, claimed_level=1)
     reproduced=True L1; checksum fe02d5adf671bd769d10dea11d6b3a53ba1ff92e9d54d9c7bbbe8eb4d63e2168.
   generic_verifier_reproduce: Exp4444 results/experiment_4444_generic_config_rule_verifier_operator.json
-    ft09_resolved_generically=True via config_rule_verifier local_constraint_color_cycle
-    digest; offline_reproduced=True, reproduced_levels=1, checksum a3b42ddb64a5717d81c8ed0a7294fbd53ce93cca09d9da46d499a87ffdbe1cf4.
+    ft09_resolved_generically=True via config_rule_verifier.
   world_model: results/arc_e3/ft09/world_model.py
   world_model_sha256: 8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee
   gotchas:
@@ -474,53 +471,63 @@ games:
 - game: vc33
   reproducibility: reproduced
   levels_reproduced: 1
-  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes to s5i5 and applies
-    config_rule_verifier support-clearance-as-marker-coverage digest
+  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes
+    first contact through a generic config-rule verifier.
   gotchas: []
   dead_ends:
   - gap_id: GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
     status: filled
     game: vc33
     failure_mode: needs_per_game_RE
-    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the
-      explored non-winning states
+    missing_discriminator: selectable verifier that distinguishes the target's winning
+      delta from the explored non-winning states
     candidate_design: derive a selectable verifier from the routed solved-game delta
     routed_recipe:
       game: s5i5
-      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6
-        from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.
-      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must
-        occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial
-        controlled markers [(9,33),(30,9)].'
-      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker
-        x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.
+      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7
+        + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays
+        it through arc_solver_kit.reproduce.
+      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged
+        0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi.
+        L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].'
+      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal
+        controlled marker x by +3; v_extend click (22,47) increases the vertical controlled
+        marker y by +3.
     loop_result_summary:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
     filled_by: experiment_4446_drive_generic_first_contact_bank
     filled_artifact: results/experiment_4446_drive_generic_first_contact_bank.json
-    filled_summary: config_rule_verifier support-clearance digest reproduced vc33 L1 offline
+    filled_summary: config_rule_verifier support-clearance digest reproduced vc33
+      L1 offline
   mechanic_class: config_support_clearance
-  win_condition: 'L1 support-clearance config: lower click control shifts the paired supports until the
-    active piece clears the blocking goal color; next_level fires on replay.'
-  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.
+  win_condition: 'L1 support-clearance config: lower click control shifts the paired
+    supports until the active piece clears the blocking goal color; next_level fires
+    on replay.'
+  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated
+    3 times.
   reproduce: arc_solver_kit.reproduce(vc33, ['lower_click']*3, apply_vc33_label, claimed_level=1)
+  latest_exp4446_reproduce:
+    artifact: results/experiment_4446_drive_generic_first_contact_bank.json
+    offline_reproduced: true
+    reproduced_levels: 1
+    reproducibility_checksum: 9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361
 - game: g50t
   reproducibility: reproduced
   levels_reproduced: 1
-  solver: python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py reuses the Exp4433 cached
-    Qwen proposal as a verifier-scored candidate, grounds it with the execution verifier, drives OfflineSolver,
-    and replays through arc_solver_kit.reproduce.
+  solver: python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py execution-grounds
+    the target-offset predicate and replays OfflineSolver.
   gotchas: []
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
     game: g50t
     failure_mode: needs_per_game_RE
-    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the
-      explored non-winning states
-    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
+    missing_discriminator: selectable verifier that distinguishes the target's winning
+      delta from the explored non-winning states
+    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's
+      visible toggles
     routed_recipe:
       game: ls20
       solver: results/experiment_4285 solve_trace.actions.
@@ -532,15 +539,20 @@ games:
       mode: standing_arc_loop_routing_only
     filled_by: experiment_4443_bank_g50t_example_conditioned_win
     filled_artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
-    filled_summary: Example-conditioned target-offset win predicate reproduced g50t L1 offline with corrected
-      inference_substrate.
+    filled_summary: Example-conditioned target-offset win predicate reproduced g50t
+      L1 offline with corrected inference_substrate.
   mechanic_class: config_toggle_target_offset
-  win_condition: 'L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier
-    grounds against execution state immediately before next_level.'
-  action_model: Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves right, ACTION2 moves
-    down, ACTION5 commits the trigger clone.
-  reproduce: Exp4443 results/experiment_4443_bank_g50t_example_conditioned_win.json offline_reproduced=True,
-    reproduced_levels=1, checksum b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9.
+  win_condition: 'L1 target-offset predicate: player.x == target.x + 1 and player.y
+    == target.y + 1; verifier grounds against execution state immediately before next_level.'
+  action_model: Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves
+    right, ACTION2 moves down, ACTION5 commits the trigger clone.
+  reproduce: Exp4443 results/experiment_4443_bank_g50t_example_conditioned_win.json
+    offline_reproduced=True, reproduced_levels=1, checksum b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9.
+  latest_exp4443_reproduce:
+    artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
+    offline_reproduced: true
+    reproduced_levels: 1
+    reproducibility_checksum: b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9
 - game: dc22
   reproducibility: unsolved
   levels_reproduced: 0
@@ -648,8 +660,6 @@ latest_config_rule_verifier_4444:
   - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
   remaining_gap_ids:
   - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
-  note: .411 generic config-rule verifier closes the ft09 leave-one-out residual;
-    dc22 remains an honest non-config movement/interaction target for a later verifier.
 latest_object_motion_world_model_4445:
   artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
   operator: object_motion_world_model
@@ -661,130 +671,152 @@ latest_object_motion_world_model_4445:
   reproduced_levels: 2
   offline_reproduced: true
   no_regression: true
-  filled_gap_ids:
-  - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
-  - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
-  remaining_gap_ids:
-  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
-  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
-  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
-  note: .411 generic object-motion world-model operator closes the ar25 and ka59
-    leave-one-out residuals while recording the cold-control lift.
 latest_documented_primitive_library_4447:
   artifact: results/experiment_4447_lilo_documented_primitive_library.json
-  inference_substrate: aggregation_from_upstream_artifacts
+  inference_substrate: aggregation_from_upstream_artifacts -- the library is induced
+    from existing solve artifacts (symbolic compression, CPU); no live_llm_inference
   library_coverage: 1.0
   retrieval_precision_at_1: 1.0
   constant_leak_violations: []
-  note: .411 LILO-style AutoDoc library; entries are induced from the consolidated
-    primitive registry plus solved-game mechanic classes and are retrieved before
-    generator fallback.
   documented_primitives:
-  - name: active_data_collection
+  - derived_from_games:
+    - ar25
+    - ka59
+    - ft09
+    - sc25
     mechanic_class: world_model
-    operator: active_data_collection
-    derived_from_games: [ar25, ka59, ft09, sc25]
-    description: Collects balanced action and object cases for offline transition grounding.
-    retrieval_cues: [active data, transition, coverage, object signature, world model]
-  - name: config_rule_grounding
+    name: active_data_collection
+  - derived_from_games:
+    - s5i5
+    - ft09
+    - tr87
     mechanic_class: config_rule
-    operator: config_rule_grounding
-    derived_from_games: [s5i5, ft09, tr87]
-    description: Converts grounded visible configuration rules into executable action labels.
-    retrieval_cues: [config, rule, marker coverage, local constraint, toggle]
-  - name: config_rule_verifier
+    name: config_rule_grounding
+  - derived_from_games:
+    - s5i5
+    - ft09
+    - g50t
     mechanic_class: config_rule
-    operator: config_rule_verifier
-    derived_from_games: [s5i5, ft09, g50t]
-    description: Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.
-    retrieval_cues: [config, verifier, marker coverage, local constraint, target offset, toggle]
-  - name: glyph_rewrite_matcher
+    name: config_rule_verifier
+  - derived_from_games:
+    - tr87
     mechanic_class: config_substitution
-    operator: glyph_rewrite_matcher
-    derived_from_games: [tr87]
-    description: Applies reusable glyph and sequence rewrite rules before per-game reverse engineering.
-    retrieval_cues: [glyph, rewrite, substitution, sequence, editable]
-  - name: graph_astar_action_cost
+    name: glyph_rewrite_matcher
+  - derived_from_games:
+    - tu93
+    - lp85
+    - cd82
+    - sp80
+    - cn04
+    - m0r0
+    - sk48
+    - su15
     mechanic_class: graph_explore_navigation
-    operator: graph_astar_action_cost
-    derived_from_games: [tu93, lp85, cd82, sp80, cn04, m0r0, sk48, su15]
-    description: Ranks graph-search frontiers by path cost plus verifier or distance heuristic.
-    retrieval_cues: [graph, astar, keyboard, click, goal distance, action cost]
-  - name: object_centric_digest
+    name: graph_astar_action_cost
+  - derived_from_games:
+    - g50t
+    - lp85
+    - tn36
+    - ka59
     mechanic_class: object_geometry_digest
-    operator: object_centric_digest
-    derived_from_games: [g50t, lp85, tn36, ka59]
-    description: Summarizes connected objects so routing and grounding match mechanic structure.
-    retrieval_cues: [object, digest, component, bbox, template, program editor]
-  - name: object_motion_world_model
+    name: object_centric_digest
+  - derived_from_games:
+    - ar25
+    - ka59
+    - sc25
+    - ft09
     mechanic_class: object_motion_world_model
-    operator: object_motion_world_model
-    derived_from_games: [ar25, ka59, sc25, ft09]
-    description: Retrieves translate, reflect, push, and dynamic-selection transition models.
-    retrieval_cues: [object motion, world model, motion family, translate, reflect, push]
-  - name: mechanic_action_sequence_replay
+    name: object_motion_world_model
+  - derived_from_games:
+    - ls20
+    - wa30
     mechanic_class: action_sequence_replay
-    operator: graph_astar_action_cost
-    derived_from_games: [ls20, wa30]
-    description: Replays a discovered deterministic action-kind sequence through the offline gate.
-    retrieval_cues: [first solve, action kind sequence, replays offline, trajectory]
-  - name: mechanic_cast_grid_world_model
+    name: mechanic_action_sequence_replay
+  - derived_from_games:
+    - sc25
     mechanic_class: cast_grid_world_model
-    operator: active_data_collection
-    derived_from_games: [sc25]
-    description: Models a cast-grid interaction whose spell changes object state before exit planning.
-    retrieval_cues: [cast grid, spell, shrink, exit, world model, tank controls]
-  - name: mechanic_click_connect_line
+    name: mechanic_cast_grid_world_model
+  - derived_from_games:
+    - su15
     mechanic_class: click_connect_line
-    operator: graph_astar_action_cost
-    derived_from_games: [su15]
-    description: Searches click-only line-connection mechanics using object click candidates.
-    retrieval_cues: [click connect, line, diagonal, click only, rich action candidates]
-  - name: mechanic_config_substitution
+    name: mechanic_click_connect_line
+  - derived_from_games:
+    - tr87
     mechanic_class: config_substitution
-    operator: glyph_rewrite_matcher
-    derived_from_games: [tr87]
-    description: Matches editable glyph or sequence substitutions through reusable rewrite rules.
-    retrieval_cues: [glyph, rewrite, substitution, editable sequence]
-  - name: mechanic_config_toggle_marker_coverage
+    name: mechanic_config_substitution
+  - derived_from_games:
+    - s5i5
     mechanic_class: config_toggle_marker_coverage
-    operator: config_rule_verifier
-    derived_from_games: [s5i5]
-    description: Moves controlled markers or supports until all visible target slots are covered.
-    retrieval_cues: [marker coverage, controlled markers, target markers, support clearance]
-  - name: mechanic_graph_explore_navigation
+    name: mechanic_config_toggle_marker_coverage
+  - derived_from_games:
+    - cd82
+    - sp80
+    - tu93
+    - cn04
+    - m0r0
+    - sk48
     mechanic_class: graph_explore_navigation
-    operator: graph_astar_action_cost
-    derived_from_games: [cd82, sp80, tu93, cn04, m0r0, sk48]
-    description: Plans keyboard or click graph exploration with additive path cost and verifier heuristic.
-    retrieval_cues: [graph explore, keyboard directional, goal distance, adapter free, confirm commit]
-  - name: mechanic_local_constraint_color_cycle
+    name: mechanic_graph_explore_navigation
+  - derived_from_games:
+    - ft09
     mechanic_class: local_constraint_color_cycle
-    operator: config_rule_verifier
-    derived_from_games: [ft09]
-    description: Cycles visible cell colors until local equality or inequality constraints hold.
-    retrieval_cues: [local constraint, color cycle, neighbor, constraints, cells]
-  - name: mechanic_object_motion_push
+    name: mechanic_local_constraint_color_cycle
+  - derived_from_games:
+    - ka59
     mechanic_class: object_motion_push
-    operator: object_motion_world_model
-    derived_from_games: [ka59]
-    description: Models player or selector movement that pushes a block through target geometry.
-    retrieval_cues: [push, block, dynamic selection, object motion, world model]
-  - name: mechanic_object_motion_reflect
+    name: mechanic_object_motion_push
+  - derived_from_games:
+    - ar25
     mechanic_class: object_motion_reflect
-    operator: object_motion_world_model
-    derived_from_games: [ar25]
-    description: Models paired object motion where a selected object and reflected object move together.
-    retrieval_cues: [reflect, reflection, selected object, reflected object, object slots]
-  - name: mechanic_object_template_alignment
+    name: mechanic_object_motion_reflect
+  - derived_from_games:
+    - r11l
+    - lp85
     mechanic_class: object_template_alignment
-    operator: object_centric_digest
-    derived_from_games: [r11l, lp85]
-    description: Aligns moveable colored objects with visible goal templates using object geometry.
-    retrieval_cues: [align, template, goal sprite, moveable piece, drag, object]
-  - name: mechanic_program_editor_object_attribute_match
+    name: mechanic_object_template_alignment
+  - derived_from_games:
+    - tn36
     mechanic_class: program_editor_object_attribute_match
-    operator: object_centric_digest
-    derived_from_games: [tn36]
-    description: Edits object command slots until object attributes match the visible target.
-    retrieval_cues: [program editor, move program, slot, attribute, object target, bit code]
+    name: mechanic_program_editor_object_attribute_match
+latest_loo_generic_v2_4448:
+  artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
+  generic_loo_solve_count_v1_baseline: 2
+  generic_loo_solve_count_v2: 5
+  loo_gate_passed: true
+  closed_residuals_by_new_operator:
+  - closed_by_operator: object_motion_world_model
+    game: ka59
+    v1_residual_delta: missing_push_block_world_model_and_dynamic_selection
+  - closed_by_operator: object_motion_world_model
+    game: ar25
+    v1_residual_delta: missing_reflection_world_model_and_object_motion_plan
+  - closed_by_operator: config_rule_verifier
+    game: ft09
+    v1_residual_delta: missing_local_constraint_color_cycle_verifier
+  missing_verifier_gaps:
+  - attempt_mode: v2_411_operator_remeasurement
+    game: tr87
+    residual_delta: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+    retrieved_operator: config_rule_grounding
+    v1_routed_to: tu93
+  - attempt_mode: v2_411_operator_remeasurement
+    game: sc25
+    residual_delta: missing_cast_grid_spell_shrink_tank_exit_verifier
+    retrieved_operator: active_data_collection
+    v1_routed_to: cd82
+latest_hygiene_4449:
+  artifact: results/experiment_4449_registry_gaps_hygiene.json
+  reproducible_total_levels: 39
+  reproducible_total_games: 20
+  filled_gap_ids:
+  - GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
+  - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
+  - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
+  - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
+  - GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
+  open_gap_ids:
+  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+  excluded_artifacts: []
+  note: .411 registry hygiene; flagged_adversarial artifacts excluded from counts.

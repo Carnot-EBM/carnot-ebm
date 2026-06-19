@@ -1001,6 +1001,30 @@ verifiers:
     - graph_astar_action_cost
     - object_centric_digest
     - active_data_collection
+    eval_exp_4449: results/experiment_4449_registry_gaps_hygiene.json
+    exp4449_regression_guard_passed: true
+    exp4449_arc_oracle_distinct_verifier_beats_vote: true
+    exp4449_arc1_rule_exec_vote_pass2: 0.4516
+    exp4449_arc1_rule_exec_gated_pass2: 0.5806
+    exp4449_arc1_headroom_recovered: 4
+    exp4449_arc1_vote_wins_lost: 0
+    exp4449_capstone_stamp_fix_durable: true
+    exp4449_reproducible_total_levels: 39
+    exp4449_reproducible_total_games: 20
+    exp4449_filled_gap_ids: &id014
+    - GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
+    - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
+    - GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN
+    - GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION
+    - GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
+    exp4449_open_gap_ids: &id015
+    - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+    - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+    - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+    exp4449_flagged_artifacts_excluded: &id016 []
+    exp4449_generic_loo_solve_count_v2: 5
+    exp4449_primitive_library_coverage: 1.0
+    exp4449_retrieval_precision_at_1: 1.0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -5057,6 +5081,16 @@ verifiers:
     gap_ids_logged: *id012
     excluded_artifacts: *id013
     eval_exp_4438: results/experiment_4438_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v411_registry_gaps_hygiene_4449
+    experiment: results/experiment_4449_registry_gaps_hygiene.json
+    role: registry_gaps_arc_hygiene_v411
+    status: v411_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    reproducible_total_levels: 39
+    reproducible_total_games: 20
+    filled_gap_ids: *id014
+    open_gap_ids: *id015
+    excluded_artifacts: *id016
+    eval_exp_4449: results/experiment_4449_registry_gaps_hygiene.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1

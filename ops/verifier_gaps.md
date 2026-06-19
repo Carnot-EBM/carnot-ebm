@@ -2195,16 +2195,15 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4427-gap-4422-tr87-glyph-rewrite-perception:end -->
 
 <!-- exp4427-gap-4423-g50t-unselectable-first-contact:start -->
-### GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT: Exp 4427 .409 verifier gap hygiene
-- status: open
-- evidence: results/experiment_4423_generic_first_contact_breadth.json; game=g50t; honest_verdict=partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged; offline_reproduced=False; reproduced_levels=0
-- failure mode: needs_per_game_RE
-- missing discriminator: selectable verifier that distinguishes the target's winning delta from the explored non-winning states
-- candidate design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
+### GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
+- status: filled (exp4443_bank_g50t_example_conditioned_win)
+- evidence: results/experiment_4443_bank_g50t_example_conditioned_win.json; target_game=g50t; offline_reproduced=True; reproduced_levels=1; reproducible_total_levels=38
+- failure mode: prior first-contact route could not select the winning target-offset predicate
+- missing discriminator: filled by execution-grounded target-offset verifier
+- candidate design: keep the target-offset config-rule verifier in the generic bank
 - priority: high
-- headroom: 1
-- build target for .410 planner: true
-- movement: newly_logged
+- source artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
+- movement: filled
 <!-- exp4427-gap-4423-g50t-unselectable-first-contact:end -->
 
 <!-- exp4427-gap-4424-sc25-l2-route-search:start -->
@@ -2221,80 +2220,85 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4427-gap-4424-sc25-l2-route-search:end -->
 
 <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:start -->
-### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4438 .410 registry gap hygiene
+### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4449 .411 registry gap hygiene
 - status: open
-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=tr87; routed_to=tu93; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; generic_loo_solve_count=2
+- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=tr87; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; retrieved_operator=config_rule_grounding; generic_loo_solve_count_v2=5
 - failure mode: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
-- missing discriminator: generic primitive/verifier for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- missing discriminator: generic primitive/verifier still missing for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
 - priority: high
-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
+- movement: updated_still_open
 <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:end -->
 
 <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:start -->
-### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4438 .410 registry gap hygiene
+### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4449 .411 registry gap hygiene
 - status: open
-- evidence: results/experiment_4432_loo_generic_solve_benchmark.json; game=sc25; routed_to=cd82; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; generic_loo_solve_count=2
+- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=sc25; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; retrieved_operator=active_data_collection; generic_loo_solve_count_v2=5
 - failure mode: missing_cast_grid_spell_shrink_tank_exit_verifier
-- missing discriminator: generic primitive/verifier for missing_cast_grid_spell_shrink_tank_exit_verifier
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun the leave-one-out fold without the target game's own recipe
+- missing discriminator: generic primitive/verifier still missing for missing_cast_grid_spell_shrink_tank_exit_verifier
+- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
 - priority: high
-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
+- movement: updated_still_open
 <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:end -->
 
 <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:start -->
-### GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION: Exp 4438 .410 registry gap hygiene
+### GAP-4432-LOO-KA59-MISSING-PUSH-BLOCK-WORLD-MODEL-AND-DYNAMIC-SELECTION: Exp 4449 .411 registry gap hygiene
 - status: filled (exp4445_generic_object_motion_world_model_operator)
 - evidence: results/experiment_4445_generic_object_motion_world_model_operator.json; residuals_closed_generically includes ka59; offline_reproduced=True; reproduced_levels=2; operator=object_motion_world_model; target_recipe_withheld=ka59; world_model_accuracy_with_examples=1.0; world_model_accuracy_cold=0.25
 - failure mode: missing_push_block_world_model_and_dynamic_selection
 - missing discriminator: filled by generic object-slot translate/push transition model with dynamic selection
-- candidate design: keep the generic operator in the standing loop; extend the same family to deeper hidden-HUD/register tails separately
+- candidate design: keep the generic operator in the standing loop
 - priority: high
 - source artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
+- movement: filled
 <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:end -->
 
 <!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:start -->
-### GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN: Exp 4438 .410 registry gap hygiene
+### GAP-4432-LOO-AR25-MISSING-REFLECTION-WORLD-MODEL-AND-OBJECT-MOTION-PLAN: Exp 4449 .411 registry gap hygiene
 - status: filled (exp4445_generic_object_motion_world_model_operator)
 - evidence: results/experiment_4445_generic_object_motion_world_model_operator.json; residuals_closed_generically includes ar25; offline_reproduced=True; reproduced_levels=2; operator=object_motion_world_model; target_recipe_withheld=ar25; world_model_accuracy_with_examples=1.0; world_model_accuracy_cold=0.25
 - failure mode: missing_reflection_world_model_and_object_motion_plan
 - missing discriminator: filled by generic object-slot translate/reflect transition model
-- candidate design: keep the generic operator in the standing loop; extend the same family to hidden undo-stack deeper tails separately
+- candidate design: keep the generic operator in the standing loop
 - priority: high
 - source artifact: results/experiment_4445_generic_object_motion_world_model_operator.json
+- movement: filled
 <!-- exp4438-gap-4432-loo-ar25-missing-reflection-world-model-and-object-motion-plan:end -->
 
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:start -->
-### GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER: Exp 4438 .410 registry gap hygiene
+### GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER: Exp 4449 .411 registry gap hygiene
 - status: filled (exp4444_generic_config_rule_verifier_operator)
 - evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; ft09_resolved_generically=True; offline_reproduced=True; reproduced_levels=1; operator=config_rule_verifier; target_recipe_withheld=ft09
 - failure mode: prior missing_local_constraint_color_cycle_verifier residual is closed for ft09 L1
-- missing discriminator: filled by generic execution-grounded local_constraint_color_cycle verifier over object-centric digest
-- candidate design: reuse config_rule_verifier for future local-constraint/toggle digests while preserving reproduce() gates
+- missing discriminator: filled by generic execution-grounded local_constraint_color_cycle verifier
+- candidate design: reuse config_rule_verifier for future local-constraint/toggle digests
 - priority: high
-- source artifact: results/experiment_4432_loo_generic_solve_benchmark.json
+- source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
 - movement: filled
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
 
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
-### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4438 .410 registry gap hygiene
+### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
 - status: open
-- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; reproduced_levels=1; dc22 reproduced_levels=0
+- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; dc22 reproduced_levels=0
 - failure mode: missing_config_rule_verifier_grounding
-- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest for config_rule_verifier
-- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until arc_solver_kit.reproduce(dc22, ...) passes
+- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest
+- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until reproduce(dc22) passes
 - priority: high
 - source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
 - movement: updated_still_open
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
 
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:start -->
-### GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT: Exp 4446 generic first-contact bank
-- status: filled
+### GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
+- status: filled (exp4446_drive_generic_first_contact_bank)
 - evidence: results/experiment_4446_drive_generic_first_contact_bank.json; target_game=vc33; routed_to=s5i5; offline_reproduced=True; reproduced_levels=1
 - failure mode: closed_by_support_clearance_config_rule
-- missing discriminator: filled by generic config_rule_verifier support-clearance digest over vc33 L1
-- candidate design: reuse routed config-rule support-clearance predicates for future click-control games
+- missing discriminator: filled by generic config_rule_verifier support-clearance digest
+- candidate design: reuse routed config-rule support-clearance predicates
 - priority: high
+- source artifact: results/experiment_4446_drive_generic_first_contact_bank.json
 - movement: filled
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
