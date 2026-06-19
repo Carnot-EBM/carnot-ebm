@@ -1,0 +1,244 @@
+{
+  "activated_milestone": "2026.06.413",
+  "active_milestone_confirmed": "2026.06.413",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.412",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4465_capstone_v412.json",
+      "experiment_id": "4465",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "dcbfddfc705229c277365c9e4affee43a646717dcd6e981536e94518cf110418"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "registry",
+      "required": true,
+      "sha256": "93009967c62a2dc96bd619cdfd6e9973da327d1a57e76b6604889607ac3a4170"
+    }
+  ],
+  "closed_gap_ids": [
+    "GAP-4432-LOO-TR87"
+  ],
+  "duration_s": 12.598064,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4466,
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed self-declared state lets the reconciler classify without re-running",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- this transition reads upstream YAML/JSON, declares the 100us floor, the .410-lesson default for non-solve ARC-adjacent tasks",
+    "open_gap_ids": "the 3 open generic-solver gaps that become the .413 build backlog (dc22-blocked-by-precondition, sc25-no-artifact, sb26-missing-operator)",
+    "prior_milestone_churn_note": "one honest string: .412 banked ZERO new reproduced levels because the level-up attempts failed OPERATIONALLY (dc22 precondition block, sc25 no-artifact), not on the research",
+    "reproducible_total_levels": "the bare authoritative count from ops/arc_solve_registry.yaml (39, FLAT); the sprint's monotonic progress metric that .413 must finally move"
+  },
+  "flagged_artifacts_skipped": [],
+  "fover_auc": 0.9131,
+  "generic_loo_solve_count_v2_baseline": 5,
+  "generic_loo_solve_count_v3": 6,
+  "generic_solver_gap_state": "partial",
+  "honest_verdict": "complete: archived_v412_v413_active_generic_gap_partial_loo_v3_6_levels_39_games_20_zero_new_levels_open_gaps_3",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "no_3090_inference": true,
+  "open_gap_failure_modes": [
+    {
+      "counterexample_rounds": 0,
+      "dc22_cegis_solve_ran": false,
+      "failure_mode": "blocked_baseline_pytest_coverage",
+      "gap_id": "GAP-4423-DC22",
+      "source_artifact": "results/experiment_4455_solve_dc22_cegis_config_rule.json",
+      "source_experiment": 4455,
+      "status": "open",
+      "unblocks_with": "--no-cov precondition fix"
+    },
+    {
+      "failure_mode": "no_artifact_produced",
+      "gap_id": "GAP-4432-LOO-SC25",
+      "provisional_l2_l5_banked": false,
+      "sc25_provisional_levels": [
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ],
+      "source_artifact": "results/experiment_4457_cast_grid_spell_shrink_tank_exit.json",
+      "source_experiment": 4457,
+      "status": "open",
+      "unblocks_with": "split bank-from-generalize plus --no-cov fixes"
+    },
+    {
+      "failure_mode": "missing_color_match_slot_sequence_verifier",
+      "gap_id": "GAP-4458-SB26",
+      "honest_negative": true,
+      "missing_operator": "color_match_slot_sequence_verifier",
+      "source_artifact": "results/experiment_4458_first_contact_new_game.json",
+      "source_experiment": 4458,
+      "status": "open"
+    }
+  ],
+  "open_gap_ids": [
+    "GAP-4423-DC22",
+    "GAP-4432-LOO-SC25",
+    "GAP-4458-SB26"
+  ],
+  "paper_ready": true,
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.413",
+      "expected": "2026.06.413",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "arc_solve_registry_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4466_archive_412_activate_413.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 81%]\n................                                                         [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n88 passed, 1 warning in 5.53s\n"
+    },
+    "v412_capstone": {
+      "exists": true,
+      "path": "results/experiment_4465_capstone_v412.json",
+      "sha256": "dcbfddfc705229c277365c9e4affee43a646717dcd6e981536e94518cf110418"
+    }
+  },
+  "pretest_suite_green": true,
+  "prior_milestone_churn_note": ".412 banked ZERO new reproduced levels because the level-up attempts failed OPERATIONALLY: dc22 was blocked by a pytest coverage precondition before CEGIS ran, and sc25 produced no artifact, so the research lever was not actually tested for those level-up attempts.",
+  "random_seed": 4466,
+  "reproducibility_checksum": "58bccfd0aaec39fe17cc37604b979dd37868dc5bc6503485dacf27e55528a87d",
+  "reproducible_total_games": 20,
+  "reproducible_total_levels": 39,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "reproducible_total_levels",
+    "open_gap_ids",
+    "prior_milestone_churn_note",
+    "inference_substrate",
+    "reproducible_total_games",
+    "v412_close_state",
+    "open_gap_failure_modes",
+    "preconditions_checked",
+    "verifier_is_oracle",
+    "trm_training_ran",
+    "leaderboard_submission",
+    "duration_s",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "research_roadmap_next_yaml_parses": true,
+  "schema": "carnot.archive_activation.v412_to_v413_4466.v1",
+  "spec_refs": [
+    "REQ-REPORT-4466",
+    "SCENARIO-REPORT-4466"
+  ],
+  "submission_package_levels": 39,
+  "submission_package_ready": true,
+  "submitted_to_leaderboard": false,
+  "task_id": "exp4466-archive-412-activate-413",
+  "trm_training_ran": false,
+  "v412_close_state": {
+    "closed_gap_ids": [
+      "GAP-4432-LOO-TR87"
+    ],
+    "execution_grounded_arc_solve_not_moat_headline": true,
+    "flagged_artifacts_skipped": [],
+    "fover_auc": 0.9131,
+    "generic_loo_solve_count_v2_baseline": 5,
+    "generic_loo_solve_count_v3": 6,
+    "generic_solver_gap_state": "partial",
+    "open_gap_failure_modes": [
+      {
+        "counterexample_rounds": 0,
+        "dc22_cegis_solve_ran": false,
+        "failure_mode": "blocked_baseline_pytest_coverage",
+        "gap_id": "GAP-4423-DC22",
+        "source_artifact": "results/experiment_4455_solve_dc22_cegis_config_rule.json",
+        "source_experiment": 4455,
+        "status": "open",
+        "unblocks_with": "--no-cov precondition fix"
+      },
+      {
+        "failure_mode": "no_artifact_produced",
+        "gap_id": "GAP-4432-LOO-SC25",
+        "provisional_l2_l5_banked": false,
+        "sc25_provisional_levels": [
+          "L2",
+          "L3",
+          "L4",
+          "L5"
+        ],
+        "source_artifact": "results/experiment_4457_cast_grid_spell_shrink_tank_exit.json",
+        "source_experiment": 4457,
+        "status": "open",
+        "unblocks_with": "split bank-from-generalize plus --no-cov fixes"
+      },
+      {
+        "failure_mode": "missing_color_match_slot_sequence_verifier",
+        "gap_id": "GAP-4458-SB26",
+        "honest_negative": true,
+        "missing_operator": "color_match_slot_sequence_verifier",
+        "source_artifact": "results/experiment_4458_first_contact_new_game.json",
+        "source_experiment": 4458,
+        "status": "open"
+      }
+    ],
+    "open_gap_ids": [
+      "GAP-4423-DC22",
+      "GAP-4432-LOO-SC25",
+      "GAP-4458-SB26"
+    ],
+    "paper_ready": true,
+    "prior_milestone_churn_note": ".412 banked ZERO new reproduced levels because the level-up attempts failed OPERATIONALLY: dc22 was blocked by a pytest coverage precondition before CEGIS ran, and sc25 produced no artifact, so the research lever was not actually tested for those level-up attempts.",
+    "publication_gate": "G1-G4 FROZEN",
+    "reproducible_games_delta_vs_v411": 0,
+    "reproducible_levels_delta_vs_v411": 0,
+    "reproducible_total_games": 20,
+    "reproducible_total_levels": 39,
+    "submission_package_levels": 39,
+    "submission_package_ready": true,
+    "submitted_to_leaderboard": false,
+    "tr87_resolved_generically": true,
+    "tr87_source_experiment": 4456,
+    "v411_reproducible_total_games": 20,
+    "v411_reproducible_total_levels": 39,
+    "verifier_is_oracle_honored": true,
+    "zero_new_reproduced_levels": true
+  },
+  "verifier_is_oracle": true
+}

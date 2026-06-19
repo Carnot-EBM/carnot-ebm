@@ -25271,6 +25271,92 @@ archived successfully.
 |---|---|---|
 | REQ-REPORT-4454 | Planned (`python/carnot/reporting/archive_411_activate_412_4454.py`, `python/carnot/experiment_4454_archive_411_activate_412.py`) | Planned (`tests/python/test_experiment_4454_archive_411_activate_412.py`) |
 
+### REQ-REPORT-4466: Archive .412, Activate .413, And Preserve The True Generic-Solver Backlog
+
+The Exp 4466 workflow SHALL archive milestone `2026.06.412`, confirm milestone
+`2026.06.413` is active, and write the record-only transition artifact
+`results/experiment_4466_archive_412_activate_413.json`. It SHALL run no TRM
+training and SHALL submit nothing to any leaderboard. Its `inference_substrate`
+SHALL equal `aggregation_from_upstream_artifacts`.
+
+Before writing a complete artifact, the workflow SHALL verify that
+`research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+`research-roadmap-next.yaml` parse under `yaml.safe_load`, that the active
+roadmap milestone is `2026.06.413`, that `ops/arc_solve_registry.yaml` parses,
+and that the smart-subset pre-test gate is green. If any YAML precondition
+fails, the workflow SHALL write a blocked artifact whose `honest_verdict` is
+`blocked_yaml_parse` and SHALL NOT claim that `.412` was archived.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single top-level
+`.412` record with `activation_recorded: exp4466-archive-412-activate-413`.
+The canonical close-state SHALL be derived from the Exp 4465 `.412` capstone
+and `ops/arc_solve_registry.yaml`. It SHALL skip every upstream artifact stamped
+or reported as `flagged_adversarial`, SHALL record `generic_solver_gap_state`
+as `partial`, SHALL record `generic_loo_solve_count_v3=6` with v2 baseline
+`5`, SHALL record `reproducible_total_levels=39` and
+`reproducible_total_games=20`, SHALL record `.412` as flat against `.411` with
+zero new reproduced levels, SHALL record `GAP-4432-LOO-TR87` as closed by Exp
+4456, SHALL record `submission_package_ready=true` with a 39-level package from
+Exp 4460 and no leaderboard submission, and SHALL record `paper_ready=true`
+with the frozen FoVer `0.9131` G1-G4 publication gate.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `reproducible_total_levels`, `open_gap_ids`,
+`prior_milestone_churn_note`, and `inference_substrate`. Complete-path
+`honest_verdict` SHALL start with one of `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
+`open_gap_ids` SHALL contain the three `.413` build backlog gaps
+`GAP-4423-DC22`, `GAP-4432-LOO-SC25`, and `GAP-4458-SB26`, with failure modes:
+Exp 4455 was `blocked_baseline_pytest_coverage` and the dc22 CEGIS solve never
+ran; Exp 4457 produced no artifact so sc25 L2-L5 remain unbanked; and Exp 4458
+was an honest sb26 negative missing `color_match_slot_sequence_verifier`. The
+artifact SHALL also record `v412_close_state`, `preconditions_checked`,
+`verifier_is_oracle=true`, `trm_training_ran=false`, and
+`leaderboard_submission=false`. It SHALL honor that execution-grounded ARC
+solves are oracle executions, not oracle-distinct learned-verifier moat
+headlines.
+
+The required field principles are:
+
+- `honest_verdict`: "terminal-prefixed self-declared state lets the reconciler classify without re-running"
+- `reproducible_total_levels`: "the bare authoritative count from ops/arc_solve_registry.yaml (39, FLAT); the sprint's monotonic progress metric that .413 must finally move"
+- `open_gap_ids`: "the 3 open generic-solver gaps that become the .413 build backlog (dc22-blocked-by-precondition, sc25-no-artifact, sb26-missing-operator)"
+- `prior_milestone_churn_note`: "one honest string: .412 banked ZERO new reproduced levels because the level-up attempts failed OPERATIONALLY (dc22 precondition block, sc25 no-artifact), not on the research"
+- `inference_substrate`: "aggregation_from_upstream_artifacts -- this transition reads upstream YAML/JSON, declares the 100us floor, the .410-lesson default for non-solve ARC-adjacent tasks"
+
+#### SCENARIO-REPORT-4466: The Archive Preserves The Honest .412 Close-State
+
+**Given** the `.412` capstone records a partial generic-solver close-state, LOO
+v3 `6/7`, a closed tr87 glyph-rewrite residual, a 39-level submission package,
+frozen paper readiness, and the three open `.413` backlog gaps
+**And** `research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+`research-roadmap-next.yaml` parse; the smart-subset gate is green; and `.413`
+is active
+**When** the Exp 4466 archive workflow runs
+**Then** it archives `.412`, confirms `.413`, keeps the YAML history parseable
+with one `.412` record, writes
+`results/experiment_4466_archive_412_activate_413.json`, records the true
+generic-solver partial state, the registry totals of 39 levels and 20 games,
+the flat-zero level churn note, the three open `.413` backlog gap IDs and
+failure modes, `verifier_is_oracle=true`, `aggregation_from_upstream_artifacts`,
+and a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4466-BLOCKED-PRECONDITION: Missing Roadmap YAML Blocks Without Fabrication
+
+**Given** any required YAML parse, source artifact, active-roadmap, registry, or
+smart-subset precondition is absent or red
+**When** the Exp 4466 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, does not
+edit the `.412` history record as complete, and does not claim `.412` was
+archived successfully.
+
+## Implementation Status (REQ-REPORT-4466)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4466 | Planned (`python/carnot/reporting/archive_412_activate_413_4466.py`, `python/carnot/experiment_4466_archive_412_activate_413.py`) | Planned (`tests/python/test_experiment_4466_archive_412_activate_413.py`) |
+
 ### REQ-REPORT-4443: Bank The Correctly-Declared g50t Example-Conditioned Win-Induction Solve
 
 The Exp 4443 workflow SHALL re-run the example-conditioned win-induction banking
