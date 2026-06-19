@@ -11,6 +11,34 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-19 (MANDATORY-NEXT-MILESTONE, outer-loop watchdog): exp4423 verdict-vocabulary conflict — generic first-contact solver FAIL-loops on `partial:`
+
+**Symptom (`.409 PHASE A3):** exp4423 (generic first-contact solver breadth — the
+sprint's KEY live-solver capability) FAIL-loops `artifact_not_updated_past_bootstrap`
+and is 3-fail-SKIPPED every milestone, so it banks ZERO levels even when it runs cleanly
+(verified: a 93.7s run routed g50t, reproduced_levels=0, logged 1 missing_verifier_gap —
+a legit complete-no-level exploration).
+
+**Root cause:** exp4423's routed-no-level branch emits `honest_verdict =
+"partial: generic_first_contact_{game}_routed_missing_verifier_gap_logged"`
+(`python/carnot/experiment_4423_generic_first_contact_breadth.py:454`). The experiment's
+OWN validator (`_terminal_prefixed`, line 360) accepts `partial:`, but the CONDUCTOR's
+reconciler classifies `partial:` as a NON-terminal retry token (Verdict Terminal-Prefix
+Discipline accepts only `complete:/success:/passed:/shipped:`). So the conductor re-runs
+→ FAIL ×3 → SKIP (`MAX_FAILURES_PER_TASK=3`). Possibly compounded by JAX/XLA CPU
+worker aborts in the pre-test gate (nqueens cartridge; pytest recovers, non-fatal).
+
+**Fix (planner/agent, .410 — atomic 5-point change; do NOT do mid-run):** change the
+routed-no-level verdict to a conductor-accepted terminal prefix, e.g.
+`complete: generic_first_contact_{game}_routed_no_new_level_gap_logged` (terminal prefix +
+honest no-level outcome). MUST co-update atomically or it poisons the pre-test gate:
+(1) emission line 454; (2) `_terminal_prefixed` line 360 to accept `complete:`;
+(3) `artifact_schema_errors` partial-branch (~421); (4) the hard-asserting test
+`tests/python/test_experiment_4423_generic_first_contact_breadth.py:185` (and the
+partial-requires-gap assertions ~229-234). Same pattern applies to ANY ARC SOLVE task that
+emits `partial:` for a complete-no-level run. Outer-loop did NOT edit mid-run (poison-cascade
+risk > rescuing one bounded-skip task; the conductor skips and progresses regardless).
+
 ### 2026-06-14 (P0 MANDATORY-NEXT-MILESTONE, operator "2+3+1"): Re-aim the verifier program at the ORACLE-DISTINCT frontier
 
 **Insight (the `.386–`.388 arc, see `docs/research-notes/verifier-graft-v3-design.md`):**
@@ -8058,6 +8086,10 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
