@@ -8849,3 +8849,4 @@ c |
 | 2026-06-19 15:40 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- D | OK | 94 passed, 1 warning in 7.34s |
 | 2026-06-19 15:57 UTC | PHASE A5 (ARC NORTH STAR; CONTINUOUS SELF-LEARNING | OK | 110 passed, 1 warning in 6.25s |
 | 2026-06-19 16:12 UTC | PHASE A6 (ARC NORTH STAR) -- LEAVE-ONE-OUT generic | OK | 88 passed, 1 warning in 5.50s |
+| 2026-06-19 16:31 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | 85 passed, 1 warning in 8.99s |
