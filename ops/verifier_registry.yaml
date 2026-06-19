@@ -1025,6 +1025,26 @@ verifiers:
     exp4449_generic_loo_solve_count_v2: 5
     exp4449_primitive_library_coverage: 1.0
     exp4449_retrieval_precision_at_1: 1.0
+    eval_exp_4461: results/experiment_4461_registry_gaps_hygiene.json
+    exp4461_regression_guard_passed: true
+    exp4461_arc_oracle_distinct_verifier_beats_vote: true
+    exp4461_arc1_rule_exec_vote_pass2: 0.4516
+    exp4461_arc1_rule_exec_gated_pass2: 0.5806
+    exp4461_arc1_headroom_recovered: 4
+    exp4461_arc1_vote_wins_lost: 0
+    exp4461_capstone_stamp_fix_durable: true
+    exp4461_reproducible_total_levels: 39
+    exp4461_reproducible_total_games: 20
+    exp4461_filled_gap_ids: &id017
+    - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+    exp4461_open_gap_ids: &id018
+    - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+    - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+    - GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE
+    exp4461_flagged_artifacts_excluded: &id019 []
+    exp4461_generic_loo_solve_count_v3: 6
+    exp4461_submission_package_ready: true
+    exp4461_submission_package_levels: 39
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -5091,6 +5111,16 @@ verifiers:
     open_gap_ids: *id015
     excluded_artifacts: *id016
     eval_exp_4449: results/experiment_4449_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v412_registry_gaps_hygiene_4461
+    experiment: results/experiment_4461_registry_gaps_hygiene.json
+    role: registry_gaps_arc_hygiene_v412
+    status: v412_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    reproducible_total_levels: 39
+    reproducible_total_games: 20
+    filled_gap_ids: *id017
+    open_gap_ids: *id018
+    excluded_artifacts: *id019
+    eval_exp_4461: results/experiment_4461_registry_gaps_hygiene.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1

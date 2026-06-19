@@ -468,6 +468,8 @@ games:
     level properties -- a different path can see a different mechanic at the same
     index. Always inspect on the adapter''s exact path (replay the banked solution)
     when RE-ing a deeper level.'
+  generic_glyph_rewrite_reproduce: Exp4456 closed tr87 LOO through glyph_rewrite_rule_verifier
+    without tr87 adapter.
 - game: vc33
   reproducibility: reproduced
   levels_reproduced: 1
@@ -593,7 +595,8 @@ games:
     operator: config_rule_verifier
     residual_delta: missing_color_match_slot_sequence_verifier
     status: open
-    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware grounding
+    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware
+      grounding
     routed_recipe:
       game: s5i5
       selected_operator:
@@ -840,3 +843,41 @@ latest_hygiene_4449:
   - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
   excluded_artifacts: []
   note: .411 registry hygiene; flagged_adversarial artifacts excluded from counts.
+latest_glyph_rewrite_rule_verifier_4456:
+  artifact: results/experiment_4456_generic_glyph_rewrite_operator.json
+  tr87_resolved_generically: true
+  tr87_generic_level_reproduced: 1
+  offline_reproduced: true
+  no_regression: true
+latest_loo_generic_v3_4459:
+  artifact: results/experiment_4459_loo_generic_solve_benchmark_v3.json
+  generic_loo_solve_count_v2_baseline: 5
+  generic_loo_solve_count_v3: 6
+  loo_gate_passed: true
+  closed_residuals_by_412_operator:
+  - closed_by_operator: glyph_rewrite_rule_verifier
+    game: tr87
+    v2_residual_delta: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+  missing_verifier_gaps:
+  - attempt_mode: v3_412_operator_remeasurement
+    game: sc25
+    residual_delta: missing_cast_grid_spell_shrink_tank_exit_verifier
+    retrieved_operator: active_data_collection
+latest_submission_package_4460:
+  artifact: results/experiment_4460_submission_package_prep.json
+  submission_package_ready: true
+  total_reproduced_levels_in_package: 39
+  submitted_to_leaderboard: false
+latest_hygiene_4461:
+  artifact: results/experiment_4461_registry_gaps_hygiene.json
+  reproducible_total_levels: 39
+  reproducible_total_games: 20
+  filled_gap_ids:
+  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
+  open_gap_ids:
+  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+  - GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE
+  excluded_artifacts: []
+  note: .412 registry hygiene; missing, blocked, or flagged artifacts excluded from
+    counts.
