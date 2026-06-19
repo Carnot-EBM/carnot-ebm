@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+"""Runner for Exp 4428 precondition-gated hardware continuity.
+
+Spec refs: REQ-HW-4428, SCENARIO-HW-4428.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import sys
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "python"))
+
+
+def main() -> None:
+    from carnot.experiment_4428_hardware_continuity import run_experiment
+
+    out_path = run_experiment(repo_root=REPO_ROOT)
+    artifact = json.loads(out_path.read_text(encoding="utf-8"))
+    print(f"artifact: {out_path.relative_to(REPO_ROOT)}")
+    print(f"honest_verdict: {artifact['honest_verdict']}")
+    print(f"preconditions_checked: {artifact['preconditions_checked']}")
+    print(f"per_board_status: {artifact['per_board_status']}")
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()

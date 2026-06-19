@@ -1,0 +1,120 @@
+{
+  "duration_s": 7.3536,
+  "experiment": 4428,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A complete multi-board continuity result or blocked_<resource> outcome is honest when precondition-gated.",
+    "per_board_status": "One status record per board with reachable/blocked outcome and the concrete next step or one-line audit.",
+    "preconditions_checked": "list of {resource, available}; principle: pre-empts the fabricate-when-resource-missing mode."
+  },
+  "honest_verdict": "complete: hardware_continuity_4428_kv260_kv260_latency_transcript_recorded_gatemate_blocked_gatemate_dirtyjtag_unreachable_polarfire_polarfire_sampler_smoke_recorded",
+  "inference_substrate": "hardware_smoke",
+  "per_board_status": {
+    "gatemate": {
+      "audit": "GateMate DirtyJTAG detect failed; bitstream pack was not run.",
+      "board": "gatemate",
+      "honest_verdict": "blocked_gatemate_dirtyjtag_unreachable",
+      "reachable": false,
+      "status": "blocked_gatemate_dirtyjtag_unreachable",
+      "step": "precondition_audit"
+    },
+    "kv260": {
+      "audit": "KV260 SSH precondition passed; latency transcript command completed.",
+      "board": "kv260",
+      "honest_verdict": "complete: kv260_latency_transcript_recorded",
+      "latency_transcript": {
+        "per_sample_us": [
+          83.771,
+          70.801,
+          68.58,
+          92.57,
+          72.661
+        ],
+        "sample_count": 5,
+        "schema": "carnot.kv260.ssh_latency_transcript.v1",
+        "source": "ssh_python_perf_counter"
+      },
+      "reachable": true,
+      "status": "kv260_latency_transcript_recorded",
+      "step": "latency_transcript",
+      "step_transcript": {
+        "command": "ssh kria 'python3 - <<'\"'\"'PY'\"'\"'\nimport json\nimport time\nsamples = []\nfor _ in range(5):\n    start = time.perf_counter_ns()\n    time.sleep(0)\n    samples.append(max((time.perf_counter_ns() - start) / 1000.0, 0.001))\nprint(json.dumps({\n    \"schema\": \"carnot.kv260.ssh_latency_transcript.v1\",\n    \"sample_count\": len(samples),\n    \"per_sample_us\": samples,\n    \"source\": \"ssh_python_perf_counter\",\n}, sort_keys=True))\nPY'",
+        "duration_s": 0.571634,
+        "exit_code": 0,
+        "output_excerpt": "{\"per_sample_us\": [83.771, 70.801, 68.58, 92.57, 72.661], \"sample_count\": 5, \"schema\": \"carnot.kv260.ssh_latency_transcript.v1\", \"source\": \"ssh_python_perf_counter\"}",
+        "stage": "latency_transcript"
+      }
+    },
+    "polarfire": {
+      "audit": "PolarFire SSH precondition passed; sampler smoke command completed.",
+      "board": "polarfire",
+      "honest_verdict": "complete: polarfire_sampler_smoke_recorded",
+      "reachable": true,
+      "sampler_smoke": {
+        "sample_count": 4,
+        "sampler": "cpu_smoke",
+        "schema": "carnot.polarfire.sampler_smoke.v1"
+      },
+      "status": "polarfire_sampler_smoke_recorded",
+      "step": "sampler_smoke",
+      "step_transcript": {
+        "command": "ssh polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json\nprint(json.dumps({\n    \"schema\": \"carnot.polarfire.sampler_smoke.v1\",\n    \"sample_count\": 4,\n    \"sampler\": \"cpu_smoke\",\n}, sort_keys=True))\nPY'",
+        "duration_s": 1.250373,
+        "exit_code": 0,
+        "output_excerpt": "{\"sample_count\": 4, \"sampler\": \"cpu_smoke\", \"schema\": \"carnot.polarfire.sampler_smoke.v1\"}",
+        "stage": "sampler_smoke"
+      }
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.610456,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "command": "bash -lc 'command -v nextpnr-himbaechel'",
+      "duration_s": 0.007158,
+      "exit_code": 0,
+      "observed": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "resource": "gatemate_nextpnr_himbaechel"
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.016921,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_dirtyjtag_detect"
+    },
+    {
+      "available": true,
+      "command": "ssh polarfire true",
+      "duration_s": 0.8962,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4428,
+  "reproducibility_checksum": "c2fd10ac918169793bd21397d696b3e9543219fa06cd6f45ec4ec894192ec273",
+  "schema": "carnot.hardware_continuity_precondition_gated.v1",
+  "source_context": {
+    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4422_hardware_continuity_kv260.json",
+    "previous_artifact_read": true,
+    "previous_experiment": 4422,
+    "previous_honest_verdict": "success_kv260_reachable_overlay_unknown",
+    "previous_kv260_reachable": true,
+    "previous_loaded_overlay": null,
+    "previous_uio_present": true
+  },
+  "spec_refs": [
+    "REQ-HW-4428",
+    "SCENARIO-HW-4428"
+  ],
+  "speedup_claim_made": false
+}
