@@ -14511,3 +14511,69 @@ contains zero totals, `static_leakage_clean=false`,
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4370 | Planned (`python/carnot/experiment_4370_llm_generated_action_cost_heuristics.py`; `results/experiment_4370_llm_generated_action_cost_heuristics.py`; `results/experiment_4370_llm_generated_action_cost_heuristics.json`) | Planned (`tests/python/test_experiment_4370_llm_generated_action_cost_heuristics.py`) |
+
+---
+
+## REQ-LEARN-4418: Config-Rule Vocabulary Transfer Measurement
+
+**Given** at least two ARC config games with grounded win-rules from the solved
+registry or grounded Layer-B artifacts
+**And** the local Gemma 4 12B Q4 scaffolded inducer is serving on the iGPU
+**And** TRM training is stood down
+**When** Exp 4418 derives relational primitives from solved config-game
+win-rules and evaluates leave-one-game-out cold-start vs vocabulary-seeded
+induction on held-out config games
+**Then** the artifact SHALL report `config_rule_vocabulary`,
+`transfer_learning_curve`, `config_rule_vocabulary_transfers`,
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`
+**And** `config_rule_vocabulary_transfers` SHALL be true only when the
+vocabulary-seeded grounding rate exceeds cold-start on held-out games and the
+paired bootstrap CI95 for the delta excludes zero.
+
+### REQ-LEARN-4418 Sub-requirements
+
+- REQ-LEARN-4418-1: Preconditions SHALL verify at least two grounded
+  config-rule source games, the local iGPU Gemma 4 12B Q4 inducer, and TRM
+  stand-down before any induction measurement.
+- REQ-LEARN-4418-2: If fewer than two grounded rules are available, Exp 4418
+  SHALL write `honest_verdict=blocked_insufficient_grounded_rules` and SHALL
+  not claim transfer.
+- REQ-LEARN-4418-3: If the local iGPU inducer is unavailable, Exp 4418 SHALL
+  write `honest_verdict=blocked_local_model_unavailable` and SHALL not claim
+  transfer.
+- REQ-LEARN-4418-4: The vocabulary SHALL be extracted as reusable relational
+  primitives, including count equality, editable/reference relations,
+  position/region matches, glyph maps, sequence rewrites, and shape-pattern
+  matches when those primitives are present in grounded source rules.
+- REQ-LEARN-4418-5: The transfer curve SHALL contain per-held-out-game cold and
+  vocabulary-seeded grounding rates, delta, and bootstrap CI95.
+- REQ-LEARN-4418-6: `verifier_is_oracle` SHALL be false because grounding is
+  execution-checked but the transfer claim concerns a learned vocabulary, not
+  the executable oracle itself.
+
+### SCENARIO-LEARN-4418: Vocabulary-Seeded Transfer Artifact Is Decision-Grade
+
+**Given** grounded source rules exist for at least two solved config games
+**And** the local iGPU inducer is available
+**When** Exp 4418 evaluates cold-start and vocabulary-seeded arms on held-out
+config games
+**Then** it SHALL write a transfer curve with one record per held-out game
+**And** `config_rule_vocabulary_transfers=true` only when the seeded arm's
+grounding-rate delta is positive and its CI95 excludes zero.
+
+### SCENARIO-LEARN-4418-BLOCKED: Missing Local Inducer Stops Honestly
+
+**Given** at least two grounded source rules exist
+**And** the local Gemma 4 12B Q4 iGPU inducer is not serving
+**When** Exp 4418 runs
+**Then** it SHALL write `honest_verdict=blocked_local_model_unavailable`
+**And** `config_rule_vocabulary_transfers=false`,
+`transfer_learning_curve=[]`, `verifier_is_oracle=false`, and populated
+`preconditions_checked`.
+
+## Implementation Status (Exp 4418)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4418 | Planned (`python/carnot/experiment_4418_config_rule_vocabulary_transfer.py`; `results/experiment_4418_config_rule_vocabulary_transfer.py`; `results/experiment_4418_config_rule_vocabulary_transfer.json`) | Planned (`tests/python/test_experiment_4418_config_rule_vocabulary_transfer.py`) |
