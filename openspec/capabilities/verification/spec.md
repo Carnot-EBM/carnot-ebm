@@ -19413,6 +19413,89 @@ positive calibrated multi-domain detector claim.
 |---|---|---|
 | REQ-VERIFY-4408 | Implemented (`python/carnot/experiment_4408_cross_domain_detection_calibration_repair.py`, `results/experiment_4408_cross_domain_detection_calibration_repair.py`) | Implemented (`tests/python/test_experiment_4408_cross_domain_detection_calibration_repair.py`) |
 
+### REQ-VERIFY-4419: SteerConf Code-Domain Detector Calibration Repair
+
+The repository SHALL provide Exp 4419 at
+`python/carnot/experiment_4419_steerconf_code_detection_calibration_repair.py`
+and `results/experiment_4419_steerconf_code_detection_calibration_repair.py`
+to test whether SteerConf-style steered confidence consistency can rescue the
+Exp 4408 code HumanEval detector failure without degrading the FoVer, GAP-4
+ARC, and GSM8K cached-pool detector readouts. The experiment SHALL score only
+existing cached candidates, SHALL NOT invoke live LLM inference, SHALL NOT train
+TRM models, and SHALL treat the measurement as verifier-as-DETECTOR calibration
+rather than selector or generator training.
+
+Before scoring, the runner SHALL check three preconditions: the Exp 4408
+deconfounded pools load from checked-in cached sources with code HumanEval
+n>=300, GSM8K n>=300, FoVer available, and GAP-4 ARC n>=300; a non-live
+steering signal can be derived over those cached candidates from verifier-score
+and within-task cached-feature perturbations; and TRM training is stood down. If
+the cached pools are absent or underpowered, it SHALL write
+`honest_verdict=blocked_cached_pools_unavailable`,
+`detection_calibrated_multi_domain=false`, `detection_by_domain=[]`, record the
+failed preconditions, and stop without fabricated metrics. If no steering
+signal path can be derived, it SHALL write
+`honest_verdict=blocked_no_steering_signal_path`,
+`detection_calibrated_multi_domain=false`, `detection_by_domain=[]`, record the
+failed steering precondition, and stop without fabricated metrics.
+
+When preconditions hold, the runner SHALL reuse Exp 4408's Semantic Confidence
+Aggregation over the same cached domains, then derive conservative and
+optimistic confidence probes plus confidence-consistency features per
+post-aggregation candidate. The steering probes SHALL be oracle-distinct: they
+may use cached verifier scores, within-task score rank, score margin, and
+uncertainty, but SHALL NOT use hidden pass labels, executable test labels, live
+model logits generated during this run, or TRM training updates.
+
+The runner SHALL fit leave-one-domain-out logistic calibration using feature
+vectors containing the verifier score and the steered-confidence features. For
+each held-out domain it SHALL report detection AUROC, CI95 by bootstrap,
+uncalibrated ECE from the original verifier score, LODO-calibrated ECE from the
+steered feature model, risk-coverage, a random-score control, the AUROC delta
+added by steered confidence versus Exp 4408's verifier-only score, and n. Code
+HumanEval SHALL remain explicitly visible in `detection_by_domain` so the
+artifact decides whether the Exp 4408 AUROC 0.577 chance result was rescued.
+
+`detection_calibrated_multi_domain` SHALL be a bare bool true iff the steered
+LODO detector's AUROC CI95 lower bound exceeds 0.5 on at least two non-FoVer
+domains and every powered held-out domain has LODO-calibrated ECE below the
+uncalibrated verifier-score baseline. Any domain whose steered AUROC CI95 still
+includes 0.5 SHALL be listed in `domains_at_chance` and SHALL produce a
+missing-verifier gap entry for `ops/verifier_gaps.md`.
+
+The terminal artifact SHALL write
+`results/experiment_4419_steerconf_code_detection_calibration_repair.json` with
+top-level fields `honest_verdict`, bare bool
+`detection_calibrated_multi_domain`, `detection_by_domain`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `missing_verifier_gaps`,
+`field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`.
+
+### SCENARIO-VERIFY-4419: Steered Confidence Decides Whether Code Detection Is Rescued
+
+Given Exp 4408's deconfounded cached FoVer, GAP-4 ARC, HumanEval code, and
+GSM8K pools are available and a cached-feature conservative/optimistic steering
+path is available, when Exp 4419 runs, then it reports each scored domain as
+`{domain, detection_auroc, auroc_ci95, ece_uncalibrated,
+ece_lodo_calibrated, risk_coverage, random_score_control,
+steered_confidence_added_auroc, n}`, sets `verifier_is_oracle=false`, records
+the steering path and TRM stand-down in `preconditions_checked`, computes
+`detection_calibrated_multi_domain` from the CI95-lower-bound plus
+ECE-improvement rule, writes a reproducibility checksum over the pools,
+steering features, and calibration config, and runs adversarial verification.
+If code HumanEval remains at chance, then the artifact SHALL keep
+`detection_calibrated_multi_domain=false`, emit a clean-null verdict, and log
+the code-domain missing-verifier gap instead of claiming a deployable
+multi-domain detector.
+
+## Implementation Status (REQ-VERIFY-4419)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4419 | Implemented (`python/carnot/experiment_4419_steerconf_code_detection_calibration_repair.py`, `results/experiment_4419_steerconf_code_detection_calibration_repair.py`) | Implemented (`tests/python/test_experiment_4419_steerconf_code_detection_calibration_repair.py`) |
+
 ### REQ-VERIFY-4399: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .406 Truth
 
 The repository SHALL provide Exp 4399 at

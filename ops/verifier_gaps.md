@@ -2038,3 +2038,12 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - leakage control: held-out mechanic test and fresh-agent state are reported separately from the solve claim.
 - priority: high
 <!-- exp4415-gap-lp85-l6:end -->
+
+### GAP-4419-CODE-HUMANEVAL-STEERCONF-DETECTOR-CHANCE
+- status: open
+- domain: code_humaneval
+- failure_mode: SteerConf cached-feature detection AUROC CI95 includes chance on code_humaneval; n=539, baseline_auroc=0.577374, steered_delta=0.024536.
+- missing_discriminator: A domain-native verifier feature beyond self-reported or cached-feature confidence consistency that separates correct outputs from plausible wrong outputs.
+- candidate_design: Build a domain-specific oracle-distinct verifier feature, then rerun Exp 4419's same cached-pool SteerConf and LODO calibration gate.
+- priority: high
+
