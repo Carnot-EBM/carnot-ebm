@@ -1,0 +1,259 @@
+{
+  "deepened_game": "tu93",
+  "deepened_reproduction": {
+    "claimed_level": 5,
+    "deepened_suffix_action_count": 29,
+    "game": "tu93",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 5,
+    "reproduced": true,
+    "solution_action_count": 93,
+    "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
+  },
+  "experiment": "experiment_4436_deepen_plus_primitive_consolidation",
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed",
+    "no_regression": "bare bool: every prior reproducible solve still reproduces after the refactor -- additive-only guarantee",
+    "offline_reproduced": "the gate",
+    "primitives_consolidated": "list of {operator, derived_from_games} -- the reusable generic operators the live solver now composes",
+    "random_seed": "determinism",
+    "reproduced_levels": "bare int; the +1 deeper level, reproduction-gated",
+    "reproducibility_checksum": "content hash"
+  },
+  "honest_verdict": "success: tu93_L5_deepened_primitives_consolidated",
+  "new_levels_reproduced": 1,
+  "no_3090_inference": true,
+  "no_regression": true,
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "offline_env_files_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files",
+    "offline_env_files_present": true,
+    "registry_path": "ops/arc_solve_registry.yaml"
+  },
+  "primitives_consolidated": [
+    {
+      "derived_from_games": [
+        "tr87"
+      ],
+      "operator": "glyph_rewrite_matcher"
+    },
+    {
+      "derived_from_games": [
+        "s5i5",
+        "ft09",
+        "tr87"
+      ],
+      "operator": "config_rule_grounding"
+    },
+    {
+      "derived_from_games": [
+        "tu93",
+        "lp85",
+        "cd82",
+        "sp80",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "su15"
+      ],
+      "operator": "graph_astar_action_cost"
+    },
+    {
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "operator": "object_centric_digest"
+    },
+    {
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "ft09",
+        "sc25"
+      ],
+      "operator": "active_data_collection"
+    }
+  ],
+  "prior_reproduced_levels": 4,
+  "prior_reproductions": [
+    {
+      "claimed_level": 1,
+      "game": "r11l",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "ls20",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "wa30",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "s5i5",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/experiment_4421_config_rule_solve_unseen.json"
+    },
+    {
+      "claimed_level": 5,
+      "game": "lp85",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 5,
+      "reproduced": true,
+      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "sc25",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "python/carnot/experiment_4341_e3_sc25_reproduction.py"
+    },
+    {
+      "claimed_level": 1,
+      "game": "cd82",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/arc_explore_trajectory_cd82.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "sp80",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/arc_explore_trajectory_sp80.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "su15",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/arc_explore_trajectory_su15.json"
+    },
+    {
+      "claimed_level": 4,
+      "game": "tu93",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 4,
+      "reproduced": true,
+      "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
+    },
+    {
+      "claimed_level": 7,
+      "game": "tn36",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 7,
+      "reproduced": true,
+      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "cn04",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/arc_explore_trajectory_cn04.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "m0r0",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/arc_explore_trajectory_m0r0.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "sk48",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/arc_explore_trajectory_sk48.json"
+    },
+    {
+      "claimed_level": 1,
+      "game": "ar25",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
+    },
+    {
+      "claimed_level": 1,
+      "game": "ka59",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
+    },
+    {
+      "claimed_level": 1,
+      "game": "ft09",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true,
+      "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
+    },
+    {
+      "claimed_level": 6,
+      "game": "tr87",
+      "gate": "arc_solver_kit.reproduce",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 6,
+      "reproduced": true,
+      "source": "results/arc_loop_solve_tr87.json"
+    }
+  ],
+  "random_seed": 4436,
+  "reproduced_levels": 5,
+  "reproducibility_checksum": "fef16a89aa8f7d0f24d60e457c8cbaa9f8b0b845cc8c3aabcb2a3c90a637f5ca",
+  "result_path": "results/experiment_4436_deepen_plus_primitive_consolidation.json",
+  "schema": "carnot.exp4436.deepen_plus_primitive_consolidation.v1",
+  "spec_refs": [
+    "REQ-REPORT-4436",
+    "SCENARIO-REPORT-4436"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_level": 5,
+  "verifier_is_oracle": true
+}

@@ -32,30 +32,12 @@ def _components_detailed(grid) -> list:
     the key ingredient from the graph-explore SOTA (arXiv:2512.24156) that lets the
     search try the most salient interactive elements first instead of treating all
     objects uniformly."""
-    import numpy as np
-    vals, counts = np.unique(grid, return_counts=True)
-    bg = int(vals[counts.argmax()])
-    mask = grid != bg
-    h, w = grid.shape
-    seen = np.zeros_like(mask, dtype=bool)
+    from carnot.agentic.arc_solver_kit import object_centric_digest
+
     comps = []
-    for i in range(h):
-        for j in range(w):
-            if mask[i, j] and not seen[i, j]:
-                stack = [(i, j)]
-                seen[i, j] = True
-                cells = []
-                while stack:
-                    y, x = stack.pop()
-                    cells.append((y, x))
-                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        ny, nx = y + dy, x + dx
-                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
-                            seen[ny, nx] = True
-                            stack.append((ny, nx))
-                cy = sum(c[0] for c in cells) // len(cells)
-                cx = sum(c[1] for c in cells) // len(cells)
-                comps.append((cy, cx, len(cells), int(grid[i, j])))
+    for comp in object_centric_digest(grid)["components"]:
+        cx, cy = comp["centroid"]
+        comps.append((int(cy), int(cx), int(comp["area"]), int(comp["color"])))
     return comps
 
 
