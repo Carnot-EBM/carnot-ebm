@@ -613,18 +613,17 @@ games:
     reproduced_levels: 1
     reproducibility_checksum: 6df9101a1d7d60168201b113fe14c235a13aa8bf54f81532ca46f0d5613c9037
 - game: sb26
-  reproducibility: unsolved
-  levels_reproduced: 0
-  solver: python/carnot/experiment_4458_first_contact_new_game.py --game sb26
+  reproducibility: reproduced
+  levels_reproduced: 1
+  solver: python/carnot/experiment_4470_color_match_slot_operator_solve_sb26.py
   dead_ends:
   - gap_id: GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER
     game: sb26
     routed_to: s5i5
     operator: config_rule_verifier
     residual_delta: missing_color_match_slot_sequence_verifier
-    status: open
-    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware
-      grounding
+    status: filled
+    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware grounding
     routed_recipe:
       game: s5i5
       selected_operator:
@@ -633,8 +632,22 @@ games:
         reason: routed_recipe_contains_config_or_slot_sequence
         source: closest_recipe
     artifact: results/experiment_4458_first_contact_new_game.json
-reproducible_total_levels: 44
-reproducible_total_games: 21
+    filled_by: experiment_4470_color_match_slot_operator_solve_sb26
+    filled_artifact: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    filled_summary: sb26 L1 re-solved through generic color_match_slot_sequence_verifier
+  mechanic_class: color_match_slot_sequence
+  win_condition: ordered colored item-to-slot matching left-to-right, ACTION5 validates after all slots
+    match
+  action_model: ACTION6 item click then ACTION6 slot click; ACTION7 undo; ACTION5 validate
+  reproduce: arc_solver_kit.reproduce(sb26, solution_labels, apply_sb26_label, claimed_level=1)
+  latest_exp4470_color_match:
+    artifact: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    operator: color_match_slot_sequence_verifier
+    offline_reproduced: true
+    reproduced_levels: 1
+    reproducibility_checksum: 70d1253b011f3cce0d3552cf59abb2a93791e0859c71e8c27529c249bf8a0ca1
+reproducible_total_levels: 45
+reproducible_total_games: 22
 provisional_total_levels: 1
 live_submissions:
 - date: '2026-06-17'

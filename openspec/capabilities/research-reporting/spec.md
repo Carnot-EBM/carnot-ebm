@@ -25867,6 +25867,82 @@ verifier gap rather than using `partial:`.
 |---|---|---|
 | REQ-REPORT-4458 | Implemented (`python/carnot/experiment_4458_first_contact_new_game.py`, `results/experiment_4458_first_contact_new_game.json`) | Implemented (`tests/python/test_experiment_4458_first_contact_new_game.py`) |
 
+### REQ-REPORT-4470: Generic Color-Match Slot-Sequence Verifier Closes The sb26 First-Contact Residual
+
+The Exp 4470 workflow SHALL add a generic, composable
+`color_match_slot_sequence_verifier` operator to
+`python/carnot/agentic/arc_solver_kit.py`. The operator SHALL accept an
+object-centric digest describing colored clickable items, ordered colored target
+slots, an optional undo action, and validation action labels; it SHALL induce the
+ordered item-to-slot predicate from grounded config-rule few-shot examples plus
+the sb26 residual evidence, ground the predicate with execution/verifier checks,
+reject wrong-order or wrong-color counterexamples, re-induce after at least one
+counterexample round, and expose deterministic action labels suitable for
+`OfflineSolver` and `arc_solver_kit.reproduce()`. The operator SHALL remain
+additive and backward-compatible with `config_rule_verifier`,
+`glyph_rewrite_rule_verifier`, the documented primitive library, and prior
+reproduced solves.
+
+Before attempting sb26, the workflow SHALL confirm non-empty
+`environment_files/sb26/`, importable `arc_solver_kit` and
+`arc_solve_learning`, a permitted non-3090 generator substrate through either a
+cached GGUF or an iGPU llama-server, and a green focused baseline command exactly
+matching `.venv/bin/pytest -k "arc_solver_kit or color_match or sb26" -q --no-cov`.
+Missing resources SHALL write a terminal
+`complete: blocked_<resource>` artifact and SHALL NOT fabricate routing,
+grounding, reproduction, or leaderboard progress.
+
+The workflow SHALL call `arc_solve_learning.recommend_approach("sb26")` and the
+documented primitive retriever such that sb26 routes to
+`color_match_slot_sequence_verifier` before older config-rule fallbacks. It SHALL
+drive `OfflineSolver` or an equivalent replay-from-reset offline solving path
+using the generic operator's action model, and count a reproduced level only when
+`arc_solver_kit.reproduce("sb26", solution, apply_sb26_label, claimed_level=1)`
+reaches at least level 1. A successful run SHALL update
+`ops/arc_solve_registry.yaml` to bank sb26 level 1 and mark
+`GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER` filled in
+`ops/verifier_gaps.md`. A genuine no-bank attempt SHALL remain terminal
+complete and SHALL log the refined residual in `missing_verifier_gaps`.
+
+The workflow SHALL write
+`results/experiment_4470_color_match_slot_operator_solve_sb26.json` with
+required top-level fields `honest_verdict`, `inference_substrate`,
+`target_game`, `color_match_operator_built`, `reproduced_levels`,
+`offline_reproduced`, `counterexample_rounds`, `missing_verifier_gaps`,
+`verifier_is_oracle`, `reproducible_total_levels`, `random_seed`, and
+`reproducibility_checksum`. Complete-path `honest_verdict` SHALL start with
+`complete:`, `success:`, `passed:`, or `shipped:`; cached verifier-ensemble
+runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` with
+`duration_s>=1.0`; live induction SHALL declare `live_llm_inference` with
+`duration_s>=60.0`; the workflow SHALL NOT use 3090 inference and SHALL NOT
+submit to a leaderboard.
+
+#### SCENARIO-REPORT-4470: sb26 L1 Reproduces Through The Generic Color-Match Verifier
+
+**Given** offline `sb26` environment files, a permitted non-3090 generator
+substrate, the prior GAP-4458-SB26 residual, grounded config/toggle few-shot
+examples, and a green focused no-coverage baseline
+**When** Exp 4470 builds `color_match_slot_sequence_verifier`, routes
+`recommend_approach("sb26")` to that operator, grounds the left-to-right
+item-slot color predicate with counterexample evidence, drives the offline
+solver on sb26, replays the generated L1 labels through
+`arc_solver_kit.reproduce()`, and writes the artifact
+**Then** the artifact is terminal-prefixed, sets
+`target_game=sb26`, `color_match_operator_built=true`,
+`counterexample_rounds` as a bare integer, `offline_reproduced=true` only for a
+real reproduction-gated level, `reproduced_levels>=1` only when the gate reaches
+L1, `verifier_is_oracle=true`, a non-null inference substrate, and a
+deterministic checksum; on success it closes GAP-4458-SB26 in the registry and
+gap ledger, while a measured no-bank result logs a refined residual rather than
+using `partial:`.
+
+## Implementation Status (REQ-REPORT-4470)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4470 | Planned (`python/carnot/experiment_4470_color_match_slot_operator_solve_sb26.py`, `results/experiment_4470_color_match_slot_operator_solve_sb26.json`) | Planned (`tests/python/test_experiment_4470_color_match_slot_operator_solve_sb26.py`) |
+
 ### REQ-REPORT-4459: Leave-One-Out Generic-Solver V3 Re-Measures .412 Operator Transfer
 
 The Exp 4459 workflow SHALL re-run the Exp 4448 leave-one-out generic-solver

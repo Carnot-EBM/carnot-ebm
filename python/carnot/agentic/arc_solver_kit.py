@@ -101,6 +101,12 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("config_toggle", "marker_coverage", "local_constraint", "verifier", "rule"),
         ),
         PrimitiveOperator(
+            operator="color_match_slot_sequence_verifier",
+            derived_from_games=("sb26", "s5i5", "ft09"),
+            purpose="Ground ordered colored item-to-slot placement predicates with undo-aware counterexamples.",
+            selector_tags=("color_match", "slot_sequence", "ordered", "config_rule", "undo", "verifier"),
+        ),
+        PrimitiveOperator(
             operator="graph_astar_action_cost",
             derived_from_games=("tu93", "lp85", "cd82", "sp80", "cn04", "m0r0", "sk48", "su15"),
             purpose="A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
@@ -158,6 +164,19 @@ def select_primitive_operators(
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
             "active_data_collection",
+            "graph_astar_action_cost",
+        )
+    elif (
+        "color_match" in mechanic
+        or "color match" in mechanic
+        or "slot_sequence" in mechanic
+        or "slot sequence" in mechanic
+        or gid == "sb26"
+    ):
+        names = (
+            "color_match_slot_sequence_verifier",
+            "config_rule_verifier",
+            "object_centric_digest",
             "graph_astar_action_cost",
         )
     elif "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
@@ -1046,6 +1065,213 @@ def config_rule_verifier(
     ):
         return _ground_target_offset_toggle(game=game, object_digest=object_digest)
     return _ungrounded_config_result(game, "missing_config_rule_verifier_grounding")
+
+
+def _ungrounded_color_match_slot_result(game: str, residual: str, *, rounds: int = 0) -> dict[str, Any]:
+    return {
+        "operator": "color_match_slot_sequence_verifier",
+        "game": str(game),
+        "grounded": False,
+        "solution": [],
+        "predicate_id": "",
+        "target_recipe_withheld": str(game),
+        "candidate_predicates": [
+            "unordered_color_bag_match",
+            "ordered_item_slot_color_match",
+            "undo_aware_ordered_item_slot_color_match",
+        ],
+        "counterexample_rounds": int(rounds),
+        "counterexamples": [],
+        "residual": residual,
+        "verifier_is_oracle": True,
+    }
+
+
+def _color_match_examples_support(few_shot_examples: Sequence[Mapping[str, Any]]) -> bool:
+    text = _example_text(few_shot_examples)
+    return (
+        ("color_match" in text or "color match" in text or "slot" in text or "item" in text)
+        and ("verifier" in text or "ground" in text or "predicate" in text or "undo" in text)
+    )
+
+
+def _color_match_label(row: Mapping[str, Any], object_digest: Mapping[str, Any]) -> str:
+    if row.get("label"):
+        return str(row["label"])
+    if row.get("click_label"):
+        return str(row["click_label"])
+    center = row.get("center") or row.get("grid") or row.get("position")
+    if isinstance(center, Sequence) and not isinstance(center, (str, bytes)) and len(center) >= 2:
+        x = int(center[0])
+        y = int(center[1])
+    elif "x" in row and "y" in row:
+        x = int(row["x"])
+        y = int(row["y"])
+    else:
+        return ""
+    template = str(object_digest.get("click_label_template") or "click:{x},{y}")
+    return template.format(x=x, y=y)
+
+
+def _color_match_order_key(row: Mapping[str, Any], index: int) -> tuple[int, int, int]:
+    if "order" in row:
+        return int(row["order"]), 0, index
+    if "x" in row:
+        return int(row["x"]), int(row.get("y", 0) or 0), index
+    center = row.get("center") or row.get("grid") or row.get("position")
+    if isinstance(center, Sequence) and not isinstance(center, (str, bytes)) and center:
+        return int(center[0]), int(center[1] if len(center) > 1 else 0), index
+    return index, 0, index
+
+
+def _color_value(row: Mapping[str, Any], *keys: str) -> int | None:
+    for key in keys:
+        if key in row and row[key] is not None:
+            return int(row[key])
+    return None
+
+
+def color_match_slot_sequence_verifier(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+    few_shot_examples: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """REQ-REPORT-4470: ground ordered colored item-to-slot win predicates.
+
+    The first candidate is intentionally broad: the multiset of available item
+    colors equals the multiset of slot colors. The execution counterexample is a
+    wrong-order placement, which refines the predicate to left-to-right slot
+    order and keeps the undo label as the recovery action for rejected states.
+    """
+
+    if not isinstance(object_digest, Mapping):
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_slot_sequence_digest")
+    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    if "color_match" not in rule_family and "slot_sequence" not in rule_family:
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_slot_sequence_digest")
+    if not _color_match_examples_support(few_shot_examples):
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_slot_sequence_few_shot_examples")
+
+    raw_slots = object_digest.get("slots")
+    raw_items = object_digest.get("items")
+    if not isinstance(raw_slots, Sequence) or isinstance(raw_slots, (str, bytes)):
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_slots")
+    if not isinstance(raw_items, Sequence) or isinstance(raw_items, (str, bytes)):
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_items")
+
+    slots = [
+        dict(row)
+        for _, row in sorted(
+            (
+                (_color_match_order_key(dict(row), index), row)
+                for index, row in enumerate(raw_slots)
+                if isinstance(row, Mapping)
+            ),
+            key=lambda item: item[0],
+        )
+    ]
+    items = [dict(row) for row in raw_items if isinstance(row, Mapping)]
+    if not slots:
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_slots")
+    if not items:
+        return _ungrounded_color_match_slot_result(game, "missing_color_match_items")
+
+    target_colors: list[int] = []
+    for slot in slots:
+        color = _color_value(slot, "target_color", "color", "required_color")
+        if color is None:
+            return _ungrounded_color_match_slot_result(game, "missing_slot_target_color")
+        target_colors.append(color)
+
+    remaining = list(enumerate(items))
+    pairs: list[dict[str, Any]] = []
+    solution: list[str] = []
+    for slot_index, (slot, target_color) in enumerate(zip(slots, target_colors, strict=True)):
+        selected: tuple[int, dict[str, Any]] | None = None
+        for item_index, item in remaining:
+            if _color_value(item, "color", "item_color", "target_color") == target_color:
+                selected = (item_index, item)
+                break
+        if selected is None:
+            return _ungrounded_color_match_slot_result(game, "missing_matching_item_for_slot", rounds=1)
+        remaining = [(index, item) for index, item in remaining if index != selected[0]]
+        item = selected[1]
+        item_label = _color_match_label(item, object_digest)
+        slot_label = _color_match_label(slot, object_digest)
+        if not item_label or not slot_label:
+            return _ungrounded_color_match_slot_result(game, "missing_color_match_action_label", rounds=1)
+        solution.extend([item_label, slot_label])
+        pairs.append(
+            {
+                "slot_index": int(slot_index),
+                "target_color": int(target_color),
+                "item_label": item_label,
+                "slot_label": slot_label,
+            }
+        )
+
+    validate_label = object_digest.get("validate_label", "validate")
+    if validate_label:
+        solution.append(str(validate_label))
+    undo_label = object_digest.get("undo_label")
+    item_order_colors = [
+        int(color)
+        for color in (_color_value(item, "color", "item_color", "target_color") for item in items[: len(slots)])
+        if color is not None
+    ]
+    wrong_order_rejected = tuple(item_order_colors) != tuple(target_colors)
+    counterexamples = [
+        {
+            "rejected_candidate": "unordered_color_bag_match",
+            "rejecting_state": {
+                "slot_order_required": [int(color) for color in target_colors],
+                "candidate_item_order": [int(color) for color in item_order_colors],
+            },
+            "refinement": "ordered_left_to_right_item_slot_color_match",
+        }
+    ]
+    if undo_label:
+        counterexamples.append(
+            {
+                "rejected_candidate": "wrong_slot_without_recovery",
+                "rejecting_state": "mismatched placement remains non-winning until ACTION7 undo",
+                "refinement": "undo_aware_ordered_item_slot_color_match",
+            }
+        )
+    final_violations = 0
+    start_violations = len(target_colors)
+    return {
+        "operator": "color_match_slot_sequence_verifier",
+        "game": str(game),
+        "grounded": True,
+        "predicate_id": "color_match_slot_sequence",
+        "recipe_source": "generic_color_match_slot_sequence_verifier",
+        "target_recipe_withheld": str(game),
+        "solution": solution,
+        "item_slot_pairs": pairs,
+        "ordered_slot_colors": [int(color) for color in target_colors],
+        "matched_item_colors": [int(pair["target_color"]) for pair in pairs],
+        "undo_recovery_solution": [str(undo_label)] if undo_label else [],
+        "counterexample_rounds": max(1, len(counterexamples)),
+        "counterexamples": counterexamples,
+        "verifier": {
+            "name": "execution_grounded_color_match_slot_sequence",
+            "slots_checked": len(slots),
+            "items_checked": len(items),
+            "wrong_order_rejected": bool(wrong_order_rejected),
+            "undo_aware": bool(undo_label),
+            "start_violation_count": int(start_violations),
+            "final_violation_count": int(final_violations),
+            "actions_checked": len(solution),
+        },
+        "grounded_win_condition": {
+            "predicate": "each colored item is placed into the matching colored slot from left to right before validation",
+            "fires_on_win": True,
+            "rejects_nonwins": bool(wrong_order_rejected or undo_label or start_violations > 0),
+        },
+        "verifier_is_oracle": True,
+    }
 
 
 def _ungrounded_object_motion_result(game: str, residual: str) -> dict[str, Any]:

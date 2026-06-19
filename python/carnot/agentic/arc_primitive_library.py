@@ -82,6 +82,19 @@ _MECHANIC_TEMPLATES: dict[str, dict[str, Any]] = {
             "config_substitution",
         ),
     },
+    "color_match_slot_sequence": {
+        "operator": "color_match_slot_sequence_verifier",
+        "description": "Places colored items into matching colored slots in left-to-right order with undo recovery.",
+        "cues": (
+            "color match",
+            "slot sequence",
+            "item slot",
+            "left to right",
+            "undo",
+            "validation action",
+        ),
+        "supports": ("color_match_slot_sequence", "config_rule", "ordered_item_slot_color_match"),
+    },
     "config_substitution": {
         "operator": "glyph_rewrite_matcher",
         "description": "Matches editable glyph or sequence substitutions through reusable rewrite rules.",
@@ -163,6 +176,12 @@ _OPERATOR_MECHANICS: dict[str, dict[str, Any]] = {
         "cues": ("config", "verifier", "marker coverage", "local constraint", "target offset", "toggle"),
         "supports": _MECHANIC_TEMPLATES["config_rule"]["supports"],
     },
+    "color_match_slot_sequence_verifier": {
+        "mechanic": "color_match_slot_sequence",
+        "description": "Retrieves and execution-grounds ordered color item-slot matching with undo-aware CEGIS.",
+        "cues": _MECHANIC_TEMPLATES["color_match_slot_sequence"]["cues"],
+        "supports": _MECHANIC_TEMPLATES["color_match_slot_sequence"]["supports"],
+    },
     "glyph_rewrite_matcher": {
         "mechanic": "config_substitution",
         "description": "Applies reusable glyph and sequence rewrite rules before per-game reverse engineering.",
@@ -216,6 +235,7 @@ def _clean_mechanic(value: Any) -> str:
 
 
 def _entry_text(entry: Mapping[str, Any]) -> str:
+    dead_ends = entry.get("dead_ends") or entry.get("dead_ends_recorded") or []
     pieces = [
         entry.get("mechanic_class", ""),
         entry.get("win_condition", ""),
@@ -224,6 +244,7 @@ def _entry_text(entry: Mapping[str, Any]) -> str:
         entry.get("world_model", ""),
         entry.get("reproduce", ""),
         " ".join(str(item) for item in entry.get("gotchas", []) or []),
+        " ".join(str(item) for item in dead_ends if item),
     ]
     return " ".join(str(piece).lower() for piece in pieces)
 
@@ -242,6 +263,14 @@ def infer_mechanic_class(entry: Mapping[str, Any]) -> str:
     text = _entry_text(entry)
     if "local constraint" in text or "color-cycle" in text or "color cycle" in text:
         return "local_constraint_color_cycle"
+    if (
+        "color_match_slot_sequence" in text
+        or "color-match" in text
+        or "color match" in text
+        or "item-slot" in text
+        or "item slot" in text
+    ) and ("slot" in text or "sequence" in text):
+        return "color_match_slot_sequence"
     if "marker-coverage" in text or "marker coverage" in text:
         return "config_toggle_marker_coverage"
     if "support-clearance" in text or "support clearance" in text:

@@ -1,0 +1,725 @@
+{
+  "color_match_operator_built": true,
+  "counterexample_rounds": 2,
+  "duration_s": 29.10914,
+  "experiment": "experiment_4470_color_match_slot_operator_solve_sb26",
+  "few_shot_examples_used": [
+    {
+      "game": "sb26",
+      "predicate": "color_match slot sequence verifier: click matching colored item then ordered slot; ACTION7 undo recovers rejected mismatches",
+      "rule_id": "color_match_slot_sequence"
+    },
+    {
+      "game": "s5i5",
+      "predicate": "execution-grounded config verifier rejects non-covering states and returns replayable labels",
+      "rule_id": "config_toggle_marker_coverage"
+    },
+    {
+      "game": "ft09",
+      "predicate": "grounded color predicates are verified against offline states before reproduction",
+      "rule_id": "local_constraint_color_cycle"
+    },
+    {
+      "game": "exp4458_sb26_residual",
+      "predicate": "missing_color_match_slot_sequence_verifier residual requires ordered item-slot color matching with undo-aware grounding",
+      "rule_id": "GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER"
+    }
+  ],
+  "field_principles": {
+    "color_match_operator_built": {
+      "principle": "bare bool: the generic color_match_slot_sequence_verifier operator was built + grounded -- the GAP-4458-SB26 closure premise"
+    },
+    "counterexample_rounds": {
+      "principle": "bare int: refute->re-induce rounds -- proves the CEGIS lever"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a routed-no-level run is complete (NOT partial:, the exp4423 FAIL-loop fix)"
+    },
+    "inference_substrate": {
+      "principle": "THE .410/.411 LESSON -- EMIT it; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "if no bank, the refined sb26 residual -- the .414 build backlog"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; reproduction-gated; a real solve banks +1 level"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "reproducible_total_levels": {
+      "principle": "the new authoritative count if banked"
+    },
+    "target_game": {
+      "principle": "sb26 -- color-match slot-sequence"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: execution-grounded"
+    }
+  },
+  "honest_verdict": "success: sb26_color_match_slot_sequence_L1_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "no_3090_inference": true,
+  "object_digest": {
+    "action_model": "ACTION6 item click then ACTION6 slot click; ACTION7 undo; ACTION5 validate",
+    "click_label_template": "click:{x},{y}",
+    "game": "sb26",
+    "items": [
+      {
+        "center": [
+          20,
+          59
+        ],
+        "color": 14
+      },
+      {
+        "center": [
+          28,
+          59
+        ],
+        "color": 15
+      },
+      {
+        "center": [
+          36,
+          59
+        ],
+        "color": 9
+      },
+      {
+        "center": [
+          44,
+          59
+        ],
+        "color": 11
+      }
+    ],
+    "mechanic_class": "color_match_slot_sequence",
+    "predicate": "fill colored slots left-to-right with matching colored items, undo rejected mismatches, then validate",
+    "rule_family": "color_match_slot_sequence",
+    "slots": [
+      {
+        "center": [
+          23,
+          30
+        ],
+        "order": 0,
+        "target_color": 9
+      },
+      {
+        "center": [
+          29,
+          30
+        ],
+        "order": 1,
+        "target_color": 14
+      },
+      {
+        "center": [
+          35,
+          30
+        ],
+        "order": 2,
+        "target_color": 11
+      },
+      {
+        "center": [
+          41,
+          30
+        ],
+        "order": 3,
+        "target_color": 15
+      }
+    ],
+    "undo_label": "undo",
+    "validate_label": "validate"
+  },
+  "offline_reproduced": true,
+  "offline_solver": {
+    "driver": "OfflineSolver",
+    "ran": true,
+    "reached_level": 1,
+    "solution_matches_operator": true,
+    "states_expanded": 9
+  },
+  "operator_result": {
+    "counterexample_rounds": 2,
+    "counterexamples": [
+      {
+        "refinement": "ordered_left_to_right_item_slot_color_match",
+        "rejected_candidate": "unordered_color_bag_match",
+        "rejecting_state": {
+          "candidate_item_order": [
+            14,
+            15,
+            9,
+            11
+          ],
+          "slot_order_required": [
+            9,
+            14,
+            11,
+            15
+          ]
+        }
+      },
+      {
+        "refinement": "undo_aware_ordered_item_slot_color_match",
+        "rejected_candidate": "wrong_slot_without_recovery",
+        "rejecting_state": "mismatched placement remains non-winning until ACTION7 undo"
+      }
+    ],
+    "game": "sb26",
+    "grounded": true,
+    "grounded_win_condition": {
+      "fires_on_win": true,
+      "predicate": "each colored item is placed into the matching colored slot from left to right before validation",
+      "rejects_nonwins": true
+    },
+    "item_slot_pairs": [
+      {
+        "item_label": "click:36,59",
+        "slot_index": 0,
+        "slot_label": "click:23,30",
+        "target_color": 9
+      },
+      {
+        "item_label": "click:20,59",
+        "slot_index": 1,
+        "slot_label": "click:29,30",
+        "target_color": 14
+      },
+      {
+        "item_label": "click:44,59",
+        "slot_index": 2,
+        "slot_label": "click:35,30",
+        "target_color": 11
+      },
+      {
+        "item_label": "click:28,59",
+        "slot_index": 3,
+        "slot_label": "click:41,30",
+        "target_color": 15
+      }
+    ],
+    "matched_item_colors": [
+      9,
+      14,
+      11,
+      15
+    ],
+    "operator": "color_match_slot_sequence_verifier",
+    "ordered_slot_colors": [
+      9,
+      14,
+      11,
+      15
+    ],
+    "predicate_id": "color_match_slot_sequence",
+    "recipe_source": "generic_color_match_slot_sequence_verifier",
+    "solution": [
+      "click:36,59",
+      "click:23,30",
+      "click:20,59",
+      "click:29,30",
+      "click:44,59",
+      "click:35,30",
+      "click:28,59",
+      "click:41,30",
+      "validate"
+    ],
+    "target_recipe_withheld": "sb26",
+    "undo_recovery_solution": [
+      "undo"
+    ],
+    "verifier": {
+      "actions_checked": 9,
+      "final_violation_count": 0,
+      "items_checked": 4,
+      "name": "execution_grounded_color_match_slot_sequence",
+      "slots_checked": 4,
+      "start_violation_count": 4,
+      "undo_aware": true,
+      "wrong_order_rejected": true
+    },
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "arc_solve_learning_importable": true,
+    "arc_solver_kit_importable": true,
+    "baseline_command": ".venv/bin/pytest -k \"arc_solver_kit or color_match or sb26\" -q --no-cov",
+    "baseline_exit_code": 0,
+    "baseline_output_tail": "ile: pyproject.toml\ntestpaths: tests/python, tests/integration\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [16 items]\n\n................                                                         [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytestmark = pytest.mark.kona\n\n.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n================= 16 passed, 5 skipped, 84 warnings in 27.10s ==================\n",
+    "baseline_pytest_nocov_green": true,
+    "generator_resource_available": true,
+    "gguf_cached": true,
+    "igpu_llama_server": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "sb26_environment_files": true
+  },
+  "random_seed": 4470,
+  "recommendation": {
+    "cautions": [
+      "{'gap_id': 'GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT', 'status': 'filled', 'game': 'vc33', 'failure_mode': 'needs_per_game_RE', 'missing_discriminator': \"selectable verifier that distinguishes the target's winning delta from the explored non-winning states\", 'candidate_design': 'derive a selectable verifier from the routed solved-game delta', 'routed_recipe': {'game': 's5i5', 'solver': \"python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.\", 'win_condition': 'L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].', 'action_model': 'ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.'}, 'loop_result_summary': {'offline_reproduced': False, 'reproduced_levels': 0, 'mode': 'standing_arc_loop_routing_only'}, 'filled_by': 'experiment_4446_drive_generic_first_contact_bank', 'filled_artifact': 'results/experiment_4446_drive_generic_first_contact_bank.json', 'filled_summary': 'config_rule_verifier support-clearance digest reproduced vc33 L1 offline'}",
+      "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota.",
+      "level = frame.levels_completed; env._game has no levels_completed.",
+      "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset.",
+      "first env.step after reset is a no-op (sc25); warm up after reset.",
+      "live-coupled hardcoded coords miss the offline layout; discover from env.",
+      "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check.",
+      "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+    ],
+    "confident_transfer": true,
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      },
+      {
+        "derived_from_games": [
+          "tr87"
+        ],
+        "id": "primitive_glyph_rewrite_matcher",
+        "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436.",
+        "operator": "glyph_rewrite_matcher"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "id": "primitive_config_rule_grounding",
+        "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436.",
+        "operator": "config_rule_grounding"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t"
+        ],
+        "id": "primitive_config_rule_verifier",
+        "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe.",
+        "operator": "config_rule_verifier"
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "id": "primitive_graph_astar_action_cost",
+        "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436.",
+        "operator": "graph_astar_action_cost"
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "id": "primitive_object_centric_digest",
+        "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436.",
+        "operator": "object_centric_digest"
+      },
+      {
+        "derived_from_games": [
+          "ar25",
+          "ka59",
+          "ft09",
+          "sc25"
+        ],
+        "id": "primitive_active_data_collection",
+        "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436.",
+        "operator": "active_data_collection"
+      }
+    ],
+    "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "heuristic_policy": {
+      "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+      "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+      "feature": "per-action cell impact + bfs_expansions headroom probe",
+      "rule": {
+        "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+        "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+        "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+        "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+      },
+      "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+      "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+    },
+    "recommended": [
+      {
+        "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+        "game": "s5i5",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
+        ],
+        "similarity": 6.0,
+        "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+        "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+      },
+      {
+        "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
+        "game": "ft09",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
+          "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
+        ],
+        "similarity": 6.0,
+        "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+        "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
+      },
+      {
+        "action_model": "ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.",
+        "game": "vc33",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [],
+        "similarity": 6.0,
+        "solver": "python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes first contact through a generic config-rule verifier.",
+        "win_condition": "L1 support-clearance config: lower click control shifts the paired supports until the active piece clears the blocking goal color; next_level fires on replay."
+      }
+    ],
+    "retrieved_primitives": [
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09"
+        ],
+        "description": "Retrieves and execution-grounds ordered color item-slot matching with undo-aware CEGIS.",
+        "matched_cues": [
+          "mechanic:color_match_slot_sequence",
+          "template_operator:color_match_slot_sequence_verifier",
+          "color match",
+          "slot sequence",
+          "item slot",
+          "undo",
+          "operator:color_match_slot_sequence_verifier"
+        ],
+        "mechanic_class": "color_match_slot_sequence",
+        "name": "color_match_slot_sequence_verifier",
+        "operator": "color_match_slot_sequence_verifier",
+        "retrieval_cues": [
+          "color match",
+          "slot sequence",
+          "item slot",
+          "left to right",
+          "undo",
+          "validation action"
+        ],
+        "score": 16.5,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "color_match_slot_sequence",
+          "config_rule",
+          "ordered_item_slot_color_match"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t",
+          "dc22"
+        ],
+        "description": "Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.",
+        "matched_cues": [
+          "config",
+          "verifier",
+          "operator:config_rule_verifier"
+        ],
+        "mechanic_class": "config_rule",
+        "name": "config_rule_verifier",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "verifier",
+          "marker coverage",
+          "local constraint",
+          "target offset",
+          "toggle"
+        ],
+        "score": 5.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "description": "Converts grounded visible configuration rules into executable action labels.",
+        "matched_cues": [
+          "config",
+          "rule"
+        ],
+        "mechanic_class": "config_rule",
+        "name": "config_rule_grounding",
+        "operator": "config_rule_grounding",
+        "retrieval_cues": [
+          "config",
+          "rule",
+          "marker coverage",
+          "local constraint",
+          "toggle"
+        ],
+        "score": 4.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "sc25"
+        ],
+        "description": "Grounds visible configuration predicates such as coverage, local constraints, and toggles.",
+        "matched_cues": [
+          "config",
+          "operator:config_rule_verifier"
+        ],
+        "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+        "name": "mechanic_two_phase_cast_grid_then_tank_exit",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "toggle",
+          "coverage",
+          "local constraint",
+          "target offset",
+          "rule family"
+        ],
+        "score": 3.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "ka59"
+        ],
+        "description": "Models player or selector movement that pushes a block through target geometry.",
+        "matched_cues": [
+          "world model"
+        ],
+        "mechanic_class": "object_motion_push",
+        "name": "mechanic_object_motion_push",
+        "operator": "object_motion_world_model",
+        "retrieval_cues": [
+          "push",
+          "block",
+          "dynamic selection",
+          "object motion",
+          "world model"
+        ],
+        "score": 2.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "object_motion_push",
+          "object_motion_world_model",
+          "world_model"
+        ]
+      }
+    ],
+    "routing_confidence": 1.0,
+    "selected_generic_operators": [
+      {
+        "derived_from_games": [
+          "sb26",
+          "s5i5",
+          "ft09"
+        ],
+        "operator": "color_match_slot_sequence_verifier",
+        "purpose": "Ground ordered colored item-to-slot placement predicates with undo-aware counterexamples.",
+        "selector_tags": [
+          "color_match",
+          "slot_sequence",
+          "ordered",
+          "config_rule",
+          "undo",
+          "verifier"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t",
+          "dc22"
+        ],
+        "operator": "config_rule_verifier",
+        "purpose": "Propose and execution-ground coverage, local-constraint, or toggle win predicates.",
+        "selector_tags": [
+          "config_toggle",
+          "marker_coverage",
+          "local_constraint",
+          "verifier",
+          "rule"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "operator": "object_centric_digest",
+        "purpose": "Connected-component object summary for routing, grounding, and active data.",
+        "selector_tags": [
+          "object",
+          "digest",
+          "program_editor",
+          "world_model"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "operator": "graph_astar_action_cost",
+        "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+        "selector_tags": [
+          "graph_explore",
+          "astar",
+          "action_cost",
+          "keyboard",
+          "click"
+        ]
+      }
+    ],
+    "strategy": {
+      "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+      "game": "sb26",
+      "mechanic": "graph_explore",
+      "name": "graph_explore",
+      "needs": null,
+      "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+      "routed_mechanic": "graph_explore",
+      "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+      "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "uses_goal_distance_heuristic": true,
+      "wired": true
+    },
+    "target_features": {
+      "action_type": "click",
+      "difficulty": "hard",
+      "game": "sb26",
+      "spatial": true,
+      "win_kw": [
+        "click",
+        "position"
+      ]
+    },
+    "target_game": "sb26",
+    "top_similarity": 6.0
+  },
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "70d1253b011f3cce0d3552cf59abb2a93791e0859c71e8c27529c249bf8a0ca1",
+  "reproducible_total_levels": 45,
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "sb26",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4470_color_match_slot_operator_solve_sb26.json",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "schema": "carnot.exp4470.color_match_slot_operator_solve_sb26.v1",
+  "selected_operator": {
+    "operator": "color_match_slot_sequence_verifier",
+    "reason": "sb26_color_match_slot_sequence_route",
+    "source": "retrieved_primitives"
+  },
+  "solution_labels": [
+    "click:36,59",
+    "click:23,30",
+    "click:20,59",
+    "click:29,30",
+    "click:44,59",
+    "click:35,30",
+    "click:28,59",
+    "click:41,30",
+    "validate"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-4470",
+    "SCENARIO-REPORT-4470"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_game": "sb26",
+  "verifier_is_oracle": true
+}

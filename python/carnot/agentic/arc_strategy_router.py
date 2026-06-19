@@ -55,6 +55,19 @@ DEFAULT_MECHANIC = "graph_explore"
 # (True only for graph_explore — for the others it is a category error and is short-circuited).
 STRATEGY_CLASSES: list[dict] = [
     {
+        "name": "color_match_slot_sequence",
+        "mechanic": "color_match_slot_sequence",
+        "wired": True,
+        "uses_goal_distance_heuristic": False,
+        "applies_features": "colored clickable items and ordered colored slots with an undo action",
+        "solver": (
+            "arc_solver_kit.color_match_slot_sequence_verifier — ordered item-to-slot color "
+            "matching grounded by offline reproduction"
+        ),
+        "search_engine": "deterministic left-to-right slot sequence plus ACTION7 recovery counterexamples",
+        "needs": "complete for sb26 L1 through experiment_4470_color_match_slot_operator_solve_sb26",
+    },
+    {
         "name": "program_editor",
         "mechanic": "program_editor",
         "wired": True,

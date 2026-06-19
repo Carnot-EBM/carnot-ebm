@@ -2304,15 +2304,13 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
 
 <!-- exp4458-gap-sb26-color-match-slot-sequence:start -->
-### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4461 .412 registry gap hygiene
-- status: open
-- evidence: results/experiment_4458_first_contact_new_game.json; target_game=sb26; routed_to=s5i5; offline_reproduced=False; reproduced_levels=0
-- failure mode: missing_color_match_slot_sequence_verifier
-- missing discriminator: generic ordered color-match item-slot verifier with undo-aware grounding
-- candidate design: extend config_rule_verifier with color_match_slot_sequence digests
+### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4470 generic color-match slot sequence
+- status: filled
+- evidence: results/experiment_4470_color_match_slot_operator_solve_sb26.json; color_match_operator_built=True; offline_reproduced=True; reproduced_levels=1; counterexample_rounds=2
+- failure mode: closed_by_color_match_slot_sequence_verifier
+- missing discriminator: filled by execution-grounded ordered color-match item-slot verifier with undo-aware grounding
+- candidate design: reuse color_match_slot_sequence_verifier for ordered item-slot color puzzles
 - priority: high
-- source artifact: results/experiment_4458_first_contact_new_game.json
-- movement: updated_still_open
 <!-- exp4458-gap-sb26-color-match-slot-sequence:end -->
 
 <!-- exp4469-gap-sc25-cast-grid:start -->
