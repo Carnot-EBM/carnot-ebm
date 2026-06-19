@@ -550,6 +550,21 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-19 (TOP PRIORITY through 2026-06-30 — OPERATOR SUBMISSION SPRINT; preempts all carry-forward): ARC-AGI-3 LIVE-GAME SOLVING for the challenge submission
+
+**Origin:** 2026-06-19 operator directive — "The next 2 weeks will be focused on solving these games live...
+until the end of this month to make our submissions for the challenge contest." This entry is the
+per-milestone trigger for the CLAUDE.md **ARC-AGI-3 Submission Sprint Forcing Function (through 2026-06-30)**
+— read that rule for the full contract. Every planner from `.410 through the 2026-06-30 deadline MUST
+allocate the MAJORITY of each milestone (of the slots remaining after the 2 infra + 1 hardware + 1
+SOTA-ingestion reserved slots) to ARC-AGI-3 live-game solving that **monotonically grows
+`reproducible_total_levels`** (currently 34): the generic first-contact solver, verifier-grounded
+config-rule induction, glyph/rewrite perception, multi-level deepening, and unseen-game transfer-routing —
+all reproduction-gated (`arc_solver_kit.reproduce`) and Incremental-Progress-scoped (+1 level/game). ALL
+experiments `agent_type: codex`; planner + retro STAY on Claude Opus (operator's quality choice). The
+generator is FROZEN: Qwen3.5-9B-MTP ([[project_arc_live_generator]]). `.409 is already pre-staged
+(`research-roadmap-next.yaml`) as the template. Retires 2026-06-30 / when submissions are recorded.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
@@ -8042,6 +8057,10 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
