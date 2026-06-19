@@ -8,6 +8,58 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-19 Exp 4429 - .409 ARC headline SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4429_sota_ingestion_409.json`.
+
+**Preconditions:** reliable channel reachable on CPU. `scripts/sweep_clusters.py`
+emitted focused arXiv cluster URLs for verifier/reward and world-model
+literature. `scripts/sweep_semscholar.py` ran focused ARC/program/world-model
+queries, surfaced arXiv:2605.05138, and one verifier-grounded focused query
+returned HTTP 429; no S2-only source was promoted. Low-concurrency
+WebSearch/WebFetch plus arXiv API / arXiv abs-page HTTP 200 checks verified
+arXiv:2605.05138, arXiv:2605.05485, arXiv:2503.23145, arXiv:2512.22336, and
+arXiv:2605.25931. The banned `/deep-research` channel was not invoked. TRM
+training stood down. CPU substrate only: literature ingestion, not model
+execution.
+
+**.409 outcome conditioning:**
+- Exp 4421: one config-rule level counted after reproduction, but the source
+  artifact is adversarial-stamped and `verifier_is_oracle=true`.
+- Exp 4423: `partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged`,
+  `offline_reproduced=false`, and `reproduced_levels=0`.
+- Exp 4424: mechanic/lookahead repair improved tests for sc25 but
+  `new_levels_reproduced=0` and `offline_reproduced=false`.
+- Exp 4425: `config_rule_vocabulary_transfers=false`; no self-learning transfer
+  lift was proven.
+- Exp 4426: CPU registry audit reported all counted entries reproduced and
+  recorded the .409 reproduction-gate rows.
+
+**Fresh-pass candidates marked ingested:**
+- Executable World Models for ARC-AGI-3, arXiv:2605.05138 - mapped to a fresh
+  generic first-contact coding-agent harness that builds, verifies, and searches
+  executable world models across unseen games.
+- ReaComp compiled symbolic solver induction, arXiv:2605.05485 - mapped to
+  verifier-grounded win-rule induction compiled into reusable zero-token DSL
+  solvers.
+- CodeARC inductive program synthesis, arXiv:2503.23145 - mapped to
+  counterexample-led program induction for g50t and sc25 residual verifier gaps.
+- Agent2World adaptive symbolic world-model feedback, arXiv:2512.22336 - mapped
+  to adaptive behavior tests that repair induced world models before search.
+- Explore Before You Solve, arXiv:2605.25931 - mapped to speed-depth budget
+  control for unseen-game transfer.
+
+flagged_for_v410: Executable ARC-AGI-3 world-model agent with verifier-grounded planning (arXiv:2605.05138)
+
+random_seed=4429
+
+**SOTA->experiment mapping note:** The .410 headline should combine executable
+world-model induction with verifier-grounded search. Start from arXiv:2605.05138
+as the main harness, compile stable win rules via arXiv:2605.05485, use
+arXiv:2503.23145 for counterexample-led program refinement, use arXiv:2512.22336
+to stress-test induced transition models, and use arXiv:2605.25931 to allocate
+first-contact exploration before solve attempts.
+
 ## 2026-06-19 Exp 4420 - .408 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4420_sota_ingestion_v409.json`.

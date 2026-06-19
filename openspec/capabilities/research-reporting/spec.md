@@ -22385,6 +22385,83 @@ and `random_seed`, and leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4420 | Implemented (`python/carnot/experiment_4420_sota_ingestion_v409.py`) | Implemented (`tests/python/test_experiment_4420_sota_ingestion_v409.py`) |
 
+### REQ-REPORT-4429: Ingest SOTA For The .409 ARC Headline Into The .410 Plan
+
+The Exp 4429 workflow SHALL ingest state-of-the-art methods for the `.409`
+ARC headline: generic first-contact ARC-AGI-3 solving, verifier-grounded
+win-rule induction, program-induced world models plus search, and transfer to
+unseen games. It SHALL condition the mapping on the actual `.409` ARC outcomes:
+Exp 4421 contributed one reproduction-gated config-rule level but is
+adversarial-stamped and oracle-grounded; Exp 4423 generic first-contact on
+`g50t` remained a verifier-gap partial with zero reproduced levels; Exp 4424
+fixed/lookahead-tested `sc25` mechanics but added zero reproduced levels; Exp
+4425 did not prove config-rule vocabulary transfer and is adversarial-stamped;
+and Exp 4426's CPU registry audit reports all counted entries reproduced while
+recording the `.409` reproduction-gate rows.
+
+The workflow SHALL use the reliable channel only: `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, arXiv API or arXiv abs-page HTTP checks, and
+low-concurrency WebSearch/WebFetch. It SHALL NOT invoke `/deep-research`, SHALL
+NOT launch TRM training, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL leave `ops/changelog.md`, `ops/status.md`, and `_bmad/traceability.md`
+untouched for the separate reconciliation step. Every mapped method SHALL carry
+a real verified arXiv ID and URL; an uncited method row is fabrication and MUST
+be rejected.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4429_sota_ingestion_409.json`, and the required runner
+SHALL be `results/experiment_4429_sota_ingestion_409.py` delegating to
+`python/carnot/experiment_4429_sota_ingestion_409.py`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `flagged_for_v410`, `methods_mapped`,
+`sota_to_experiment_mapping_note`, `outcome_conditioning`,
+`preconditions_checked`, `random_seed`, and `field_principles`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, equal
+`complete: sota_ingestion_409_mapped`. `inference_substrate` SHALL record the
+CPU-only literature-ingestion substrate, not GPU training or live ARC solving.
+`flagged_for_v410` SHALL be a bare, non-empty string naming the single
+strongest `.410` method and its verified arXiv ID. `methods_mapped` SHALL
+contain three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`,
+`source_verification`, `headline_axis`, `carnot_stack_mapping`,
+`experiment_mapping`, `failure_mode`, and `v409_outcome_conditioning`.
+`sota_to_experiment_mapping_note` SHALL synthesize the method map into concrete
+`.410` experiment guidance. `outcome_conditioning` SHALL summarize the `.409`
+ARC outcome branch. `preconditions_checked` SHALL record reliable-channel
+reachability, arXiv HTTP/API verification, Semantic Scholar 429 handling when
+observed, `/deep-research` non-use, TRM stand-down, and conductor non-edit.
+`random_seed` SHALL record the deterministic discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the `.409`
+ARC headline SOTA ingestion as ingested, SHALL include `flagged_for_v410`, SHALL
+declare `random_seed=4429`, SHALL cite all mapped WebFetch/arXiv-API-verified
+sources, and SHALL explicitly state that the CPU substrate ran literature
+ingestion only.
+
+#### SCENARIO-REPORT-4429: The .409 ARC Outcomes Close Into A .410 Executable World-Model Plan
+
+**Given** Exp 4421 has one reproduction-gated config-rule level but is
+adversarial-stamped and oracle-grounded
+**And** Exp 4423 reports generic first-contact `g50t` as a verifier-gap partial
+with zero reproduced levels
+**And** Exp 4424 reports mechanic-test progress but zero new reproduced levels
+**And** Exp 4425 reports no proven config-rule vocabulary transfer
+**And** Exp 4426 records a CPU registry audit with all counted entries
+reproduced and the `.409` reproduction-gate rows
+**When** the Exp 4429 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five
+verified arXiv sources to concrete `.410` experiment targets, flags executable
+ARC-AGI-3 world-model agents (`arXiv:2605.05138`) as the strongest `.410`
+hand-off, records `inference_substrate=cpu_reliable_channel_sota_ingestion_no_training`,
+updates `research-studying.md` idempotently, records `preconditions_checked`
+and `random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4429)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4429 | Implemented (`python/carnot/experiment_4429_sota_ingestion_409.py`) | Implemented (`tests/python/test_experiment_4429_sota_ingestion_409.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
