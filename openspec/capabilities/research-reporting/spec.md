@@ -24732,6 +24732,45 @@ the ARC solve registry.
 |---|---|---|
 | REQ-REPORT-4423 | Planned (`python/carnot/experiment_4423_generic_first_contact_breadth.py`, `results/experiment_4423_generic_first_contact_breadth.py`) | Planned (`tests/python/test_experiment_4423_generic_first_contact_breadth.py`) |
 
+### REQ-REPORT-4426: ARC Registry Reproducibility Audit Refreshes The Single Progress Metric
+
+The Exp 4426 ARC registry audit workflow SHALL run the aggregate offline replay
+meta-harness `scripts/arc3_replay_scorecard_metaharness.py` and SHALL audit every
+entry in `ops/arc_solve_registry.yaml`. Every entry marked as counted
+(`reproducibility: reproduced` with `levels_reproduced > 0`) SHALL be checked by
+`arc_solver_kit.reproduce()` or an injected equivalent over the offline ARC
+environment. The workflow SHALL compute `reproducible_total_levels` from the
+audited reproduction results rather than trusting the registry's asserted total.
+
+The workflow SHALL write
+`results/experiment_4426_arc_registry_repro_audit.json` with required top-level
+fields `reproducible_total_levels`, `honest_verdict`, and
+`inference_substrate`. Any counted entry whose offline replay reaches fewer
+levels than the registry claim SHALL be flagged in the artifact with
+`downgraded_to_provisional=true` and SHALL not contribute unreproduced levels to
+the authoritative total. The artifact SHALL also report the aggregate replay
+meta-harness total separately from the registry-wide audit total, and SHALL
+confirm whether Exp 4421, Exp 4422, Exp 4423, and Exp 4424 artifacts are
+reproduction-gated without counting non-reproduced partials as new ARC progress.
+
+#### SCENARIO-REPORT-4426: Counted Registry Rows Must Reproduce Before They Count
+
+**Given** an ARC solve registry with counted, unsolved, and provisional entries
+and the `.409` result artifacts for Exp 4421 through Exp 4424
+**When** the Exp 4426 audit runs the aggregate replay meta-harness and audits
+each counted registry entry through the offline reproduction gate
+**Then** the terminal artifact records a bare integer
+`reproducible_total_levels` computed from reproduced evidence, includes a
+terminal-prefixed `honest_verdict`, declares a no-LLM CPU
+`inference_substrate`, flags any non-reproducing counted row as provisional in
+the audit output, and reports per-experiment `.409` reproduction-gate status.
+
+## Implementation Status (REQ-REPORT-4426)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4426 | Planned (`python/carnot/experiment_4426_arc_registry_repro_audit.py`, `results/experiment_4426_arc_registry_repro_audit.json`) | Planned (`tests/python/test_experiment_4426_arc_registry_repro_audit.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
