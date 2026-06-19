@@ -38,10 +38,15 @@ def sh(cmd, **kw):
 
 
 # %% CELL 1 — BUILD the CUDA llama-server with MTP (internet ON) ------------------------------------
+PR = "24423"  # the validated branch our local build (9b4dae81f) is on; HAS --spec-type draft-mtp + diffusion
+
+
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
     if not SRC.exists():
-        sh(f"git clone --depth 1 {LLAMA_REPO} {SRC}")
+        sh(f"git clone {LLAMA_REPO} {SRC}")
+        # fetch + checkout the validated PR branch (plain master may lack the draft-mtp CLI value)
+        sh(f"cd {SRC} && git fetch origin pull/{PR}/head && git checkout FETCH_HEAD")
     # CUDA toolkit (nvcc) + cmake are present on Kaggle GPU images; install cmake if missing.
     sh("cmake --version || pip install -q cmake", check=False)
     sh(
