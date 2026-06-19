@@ -1,0 +1,642 @@
+{
+  "duration_s": 3.761292,
+  "experiment": "experiment_4458_first_contact_new_game",
+  "few_shot_examples_used": [
+    {
+      "game": "s5i5",
+      "predicate": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
+      "rule_id": "config_toggle_marker_coverage"
+    },
+    {
+      "game": "sc25",
+      "predicate": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit.",
+      "rule_id": "sc25"
+    },
+    {
+      "game": "tn36",
+      "predicate": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}.",
+      "rule_id": "program_editor"
+    },
+    {
+      "game": "ft09",
+      "predicate": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
+      "rule_id": "local_constraint_color_cycle"
+    },
+    {
+      "game": "tr87",
+      "predicate": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
+      "rule_id": "config_substitution"
+    },
+    {
+      "game": "vc33",
+      "predicate": "L1 support-clearance config: lower click control shifts the paired supports until the active piece clears the blocking goal color; next_level fires on replay.",
+      "rule_id": "config_support_clearance"
+    },
+    {
+      "game": "bsqsshqpox",
+      "predicate": "scan target left-to-right; first prefix LHS emits RHS",
+      "rule_id": "greedy_multi_glyph_lhs_rewrite"
+    },
+    {
+      "game": "tr87_reference",
+      "predicate": "N-pass glyph rewrite handles double_translation and tree_translation",
+      "rule_id": "double_translation_rewrite"
+    },
+    {
+      "game": "tr87_reference",
+      "predicate": "editable rule sides are adjusted so rewrite(target) equals fixed editable sequence",
+      "rule_id": "alter_rules_inverse"
+    },
+    {
+      "game": "tr87",
+      "predicate": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
+      "rule_id": "config_substitution"
+    },
+    {
+      "excerpt": "import numpy as np\n\n\nINITIAL_SELECTED_TOP = 15\nINITIAL_SELECTED_LEFT = 18\n\n\ndef _undo_stack_restore(data, shape):\n    if not isinstance(data, dict):\n        return None\n    stack = data.get(\"undo_stack\")\n    if not stack:\n        return None\n    prior = np.asarray(stack[-1])\n    if prior.shape != shape:\n        return None\n    return prior.copy()\n\n\ndef _largest_box(arr, color):\n    h, w = arr.shape\n    visited = np.zeros((h, w), dtype=bool)\n    best = None\n    for sy in range(h):\n        for sx ",
+      "game": "ar25",
+      "predicate": "world_model object_motion example from ar25",
+      "relative_path": "results/arc_e3/ar25/world_model.py",
+      "rule_id": "ar25_world_model",
+      "sha256": "f8d71fe67d34034ff898766a56c125842a023ce974c06377ffcffae0109649bf",
+      "source_chars": 8607
+    },
+    {
+      "excerpt": "import numpy as np\n\n\nDEFAULT_RELEVANT_OBJECTS = (\"agent\", \"pushed_block\")\n\n\ndef object_relevance_discriminator():\n    return {\n        \"blocker_class\": \"object_relevance_not_clicks_or_multi_object_push\",\n        \"provenance_commits\": [\"f0b078247\", \"6fba583c7\"],\n        \"active_object_candidates\": [\n            \"selected_block\",\n            \"second_movable_block\",\n            \"agent_plus_second_movable_block\",\n            \"all_piece_objects\",\n        ],\n        \"selected_object_hypothesis\": \"agen",
+      "game": "ka59",
+      "predicate": "world_model object_motion example from ka59",
+      "relative_path": "results/arc_e3/ka59/world_model.py",
+      "rule_id": "ka59_world_model",
+      "sha256": "1296a767e602d9c83f5b7e82768b1dc38c2cf2d0f3a513ca7f610e40ffbe7191",
+      "source_chars": 9356
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed complete:/success: -- a routed-no-level run is complete (NOT partial:, the exp4423 FAIL-loop fix)"
+    },
+    "inference_substrate": {
+      "principle": "THE .410/.411 LESSON -- EMIT it; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "if no bank, the residual mechanic -- the .413 build backlog"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "reproducible_total_levels": {
+      "principle": "the new authoritative count if banked"
+    },
+    "retrieved_primitives": {
+      "principle": "the ranked documented-library primitives retrieve_primitives returned -- proves the LILO library is in the loop"
+    },
+    "routed_to": {
+      "principle": "which solved game's recipe transfer-routing selected -- proves the corpus is the lever"
+    },
+    "target_game": {
+      "principle": "the never-attempted game the generic solver attempted"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: execution-grounded"
+    }
+  },
+  "honest_verdict": "complete: generic_first_contact_sb26_routed_no_new_level",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "add a generic ordered color-match item-slot verifier with undo-aware grounding",
+      "game": "sb26",
+      "gap_id": "GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER",
+      "operator": "config_rule_verifier",
+      "residual_delta": "missing_color_match_slot_sequence_verifier",
+      "routed_to": "s5i5",
+      "status": "open"
+    }
+  ],
+  "no_3090_inference": true,
+  "offline_reproduced": false,
+  "operator_result": {
+    "candidate_predicates": [
+      "marker_coverage",
+      "local_constraint_color_cycle",
+      "target_offset_toggle"
+    ],
+    "counterexample_rounds": 1,
+    "counterexamples": [
+      {
+        "observed_digest_rule_family": "color_match_slot_sequence",
+        "rejected_candidate": "existing_config_rule_verifier_families",
+        "residual": "missing_config_rule_verifier_grounding"
+      }
+    ],
+    "game": "sb26",
+    "grounded": false,
+    "operator": "config_rule_verifier",
+    "predicate_id": "",
+    "residual": "missing_config_rule_verifier_grounding",
+    "solution": [],
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "arc_solve_learning_importable": true,
+    "arc_solver_kit_importable": true,
+    "focused_exp4423_exact_command_blocker": "repo_addopts_package_wide_coverage_on_focused_file",
+    "focused_exp4423_exact_command_green": false,
+    "focused_exp4423_pytest_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_experiment_4423_generic_first_contact_breadth.py -q --no-cov",
+    "focused_exp4423_pytest_green": true,
+    "focused_exp4423_pytest_summary": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [6 items]\n\n......                                                                   [100%]\n============================== 6 passed in 2.42s ===============================\n",
+    "generator_resource_available": true,
+    "igpu_llama_server_available": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "qwen_gguf_cached": true,
+    "target_env_present": true
+  },
+  "random_seed": 4458,
+  "recommendation": {
+    "cautions": [
+      "{'gap_id': 'GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT', 'status': 'filled', 'game': 'vc33', 'failure_mode': 'needs_per_game_RE', 'missing_discriminator': \"selectable verifier that distinguishes the target's winning delta from the explored non-winning states\", 'candidate_design': 'derive a selectable verifier from the routed solved-game delta', 'routed_recipe': {'game': 's5i5', 'solver': \"python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.\", 'win_condition': 'L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].', 'action_model': 'ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.'}, 'loop_result_summary': {'offline_reproduced': False, 'reproduced_levels': 0, 'mode': 'standing_arc_loop_routing_only'}, 'filled_by': 'experiment_4446_drive_generic_first_contact_bank', 'filled_artifact': 'results/experiment_4446_drive_generic_first_contact_bank.json', 'filled_summary': 'config_rule_verifier support-clearance digest reproduced vc33 L1 offline'}",
+      "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota.",
+      "level = frame.levels_completed; env._game has no levels_completed.",
+      "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset.",
+      "first env.step after reset is a no-op (sc25); warm up after reset.",
+      "live-coupled hardcoded coords miss the offline layout; discover from env.",
+      "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check.",
+      "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+    ],
+    "confident_transfer": true,
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      },
+      {
+        "derived_from_games": [
+          "tr87"
+        ],
+        "id": "primitive_glyph_rewrite_matcher",
+        "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436.",
+        "operator": "glyph_rewrite_matcher"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "id": "primitive_config_rule_grounding",
+        "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436.",
+        "operator": "config_rule_grounding"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t"
+        ],
+        "id": "primitive_config_rule_verifier",
+        "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe.",
+        "operator": "config_rule_verifier"
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "id": "primitive_graph_astar_action_cost",
+        "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436.",
+        "operator": "graph_astar_action_cost"
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "id": "primitive_object_centric_digest",
+        "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436.",
+        "operator": "object_centric_digest"
+      },
+      {
+        "derived_from_games": [
+          "ar25",
+          "ka59",
+          "ft09",
+          "sc25"
+        ],
+        "id": "primitive_active_data_collection",
+        "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436.",
+        "operator": "active_data_collection"
+      }
+    ],
+    "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "heuristic_policy": {
+      "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+      "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+      "feature": "per-action cell impact + bfs_expansions headroom probe",
+      "rule": {
+        "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+        "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+        "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+        "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+      },
+      "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+      "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+    },
+    "recommended": [
+      {
+        "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+        "game": "s5i5",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
+        ],
+        "similarity": 6.0,
+        "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+        "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+      },
+      {
+        "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
+        "game": "ft09",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
+          "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
+        ],
+        "similarity": 6.0,
+        "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+        "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
+      },
+      {
+        "action_model": "ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.",
+        "game": "vc33",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [],
+        "similarity": 6.0,
+        "solver": "python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes first contact through a generic config-rule verifier.",
+        "win_condition": "L1 support-clearance config: lower click control shifts the paired supports until the active piece clears the blocking goal color; next_level fires on replay."
+      }
+    ],
+    "retrieved_primitives": [
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "description": "Ranks graph-search frontiers by path cost plus verifier or distance heuristic.",
+        "matched_cues": [
+          "mechanic:graph_explore",
+          "graph",
+          "click"
+        ],
+        "mechanic_class": "graph_explore_navigation",
+        "name": "graph_astar_action_cost",
+        "operator": "graph_astar_action_cost",
+        "retrieval_cues": [
+          "graph",
+          "astar",
+          "keyboard",
+          "click",
+          "goal distance",
+          "action cost"
+        ],
+        "score": 9.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "graph_explore_navigation",
+          "graph_explore",
+          "click_connect_line",
+          "action_sequence_replay"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "cd82",
+          "sp80",
+          "tu93",
+          "cn04",
+          "m0r0",
+          "sk48"
+        ],
+        "description": "Plans keyboard or click graph exploration with additive path cost and verifier heuristic.",
+        "matched_cues": [
+          "mechanic:graph_explore",
+          "graph explore"
+        ],
+        "mechanic_class": "graph_explore_navigation",
+        "name": "mechanic_graph_explore_navigation",
+        "operator": "graph_astar_action_cost",
+        "retrieval_cues": [
+          "graph explore",
+          "keyboard directional",
+          "goal distance",
+          "adapter free",
+          "confirm commit"
+        ],
+        "score": 7.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "graph_explore_navigation",
+          "graph_explore"
+        ]
+      }
+    ],
+    "routing_confidence": 1.0,
+    "selected_generic_operators": [
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "operator": "graph_astar_action_cost",
+        "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+        "selector_tags": [
+          "graph_explore",
+          "astar",
+          "action_cost",
+          "keyboard",
+          "click"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "operator": "object_centric_digest",
+        "purpose": "Connected-component object summary for routing, grounding, and active data.",
+        "selector_tags": [
+          "object",
+          "digest",
+          "program_editor",
+          "world_model"
+        ]
+      }
+    ],
+    "strategy": {
+      "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+      "game": "sb26",
+      "mechanic": "graph_explore",
+      "name": "graph_explore",
+      "needs": null,
+      "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+      "routed_mechanic": "graph_explore",
+      "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+      "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "uses_goal_distance_heuristic": true,
+      "wired": true
+    },
+    "target_features": {
+      "action_type": "click",
+      "difficulty": "hard",
+      "game": "sb26",
+      "spatial": true,
+      "win_kw": [
+        "click",
+        "position"
+      ]
+    },
+    "target_game": "sb26",
+    "top_similarity": 6.0
+  },
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "03980670cd662ffefdbfb2033a60cc9cab596155dc34affd22e9490ddd5e04eb",
+  "reproducible_total_levels": 39,
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "sb26",
+    "mode": "not_run_precondition_or_ungrounded_operator",
+    "reached_level": 0,
+    "reproduced": false
+  },
+  "result_path": "results/experiment_4458_first_contact_new_game.json",
+  "retrieved_primitives": [
+    {
+      "derived_from_games": [
+        "tu93",
+        "lp85",
+        "cd82",
+        "sp80",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "su15"
+      ],
+      "description": "Ranks graph-search frontiers by path cost plus verifier or distance heuristic.",
+      "matched_cues": [
+        "mechanic:graph_explore",
+        "graph",
+        "click"
+      ],
+      "mechanic_class": "graph_explore_navigation",
+      "name": "graph_astar_action_cost",
+      "operator": "graph_astar_action_cost",
+      "retrieval_cues": [
+        "graph",
+        "astar",
+        "keyboard",
+        "click",
+        "goal distance",
+        "action cost"
+      ],
+      "score": 9.0,
+      "source": "consolidated_primitive",
+      "supported_mechanic_classes": [
+        "graph_explore_navigation",
+        "graph_explore",
+        "click_connect_line",
+        "action_sequence_replay"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "cd82",
+        "sp80",
+        "tu93",
+        "cn04",
+        "m0r0",
+        "sk48"
+      ],
+      "description": "Plans keyboard or click graph exploration with additive path cost and verifier heuristic.",
+      "matched_cues": [
+        "mechanic:graph_explore",
+        "graph explore"
+      ],
+      "mechanic_class": "graph_explore_navigation",
+      "name": "mechanic_graph_explore_navigation",
+      "operator": "graph_astar_action_cost",
+      "retrieval_cues": [
+        "graph explore",
+        "keyboard directional",
+        "goal distance",
+        "adapter free",
+        "confirm commit"
+      ],
+      "score": 7.0,
+      "source": "registry_mechanic",
+      "supported_mechanic_classes": [
+        "graph_explore_navigation",
+        "graph_explore"
+      ]
+    }
+  ],
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "routed_to": "s5i5",
+  "schema": "carnot.exp4458.first_contact_new_game.v1",
+  "selected_operator": {
+    "operator": "config_rule_verifier",
+    "reason": "routed_recipe_contains_config_or_slot_sequence",
+    "routed_to": "s5i5",
+    "source": "closest_recipe"
+  },
+  "solution_labels": [],
+  "spec_refs": [
+    "REQ-REPORT-4458",
+    "SCENARIO-REPORT-4458"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_digest": {
+    "action_model": "ACTION6 item click then ACTION6 slot click; ACTION7 undo; ACTION5 validate",
+    "available_item_sequence": [
+      14,
+      15,
+      9,
+      11
+    ],
+    "counterexample_guidance": [
+      "direct config_rule_verifier supports marker coverage, local constraints, and target-offset toggles",
+      "sb26 requires a selectable ordered item-slot color-match predicate"
+    ],
+    "game": "sb26",
+    "items": [
+      {
+        "color": 14,
+        "grid": [
+          17,
+          56
+        ]
+      },
+      {
+        "color": 15,
+        "grid": [
+          25,
+          56
+        ]
+      },
+      {
+        "color": 9,
+        "grid": [
+          33,
+          56
+        ]
+      },
+      {
+        "color": 11,
+        "grid": [
+          41,
+          56
+        ]
+      }
+    ],
+    "mechanic_class": "config_rule",
+    "predicate": "fill target slots left-to-right with same-colored clickable items, then validate",
+    "rule_family": "color_match_slot_sequence",
+    "slots": [
+      {
+        "grid": [
+          20,
+          27
+        ],
+        "target_color": 9
+      },
+      {
+        "grid": [
+          26,
+          27
+        ],
+        "target_color": 14
+      },
+      {
+        "grid": [
+          32,
+          27
+        ],
+        "target_color": 11
+      },
+      {
+        "grid": [
+          38,
+          27
+        ],
+        "target_color": 15
+      }
+    ],
+    "target_slot_sequence": [
+      9,
+      14,
+      11,
+      15
+    ]
+  },
+  "target_game": "sb26",
+  "verifier_is_oracle": true
+}

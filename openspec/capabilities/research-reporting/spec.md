@@ -25661,6 +25661,67 @@ verdict.
 |---|---|---|
 | REQ-REPORT-4456 | Implemented (`python/carnot/experiment_4456_generic_glyph_rewrite_operator.py`, `results/experiment_4456_generic_glyph_rewrite_operator.json`) | Implemented (`tests/python/test_experiment_4456_generic_glyph_rewrite_operator.py`) |
 
+### REQ-REPORT-4458: Generic First-Contact New-Game Driver Routes sb26 Through Library Primitives Or Logs The Residual
+
+The Exp 4458 workflow SHALL run the fixed generic first-contact solver on one
+never-attempted ARC-AGI-3 game from the remaining unsolved set, preferring
+`sb26` when its offline environment files are present. Before attempting the
+game it SHALL confirm non-empty target environment files, importable
+`arc_solver_kit` and `arc_solve_learning`, a permitted non-3090 generator
+substrate through a cached GGUF or iGPU llama-server, and a green focused Exp
+4423 contract test. Missing resources SHALL write a terminal-prefixed
+`complete: blocked_<resource>` artifact and SHALL NOT fabricate routing,
+grounding, reproduction, or leaderboard progress.
+
+The workflow SHALL call `arc_solve_learning.recommend_approach(target_game)`,
+preserve the routed solved-game recipe in the artifact, and preserve the ranked
+documented-library primitives returned by `retrieve_primitives(digest)` through
+the recommendation. It SHALL select the best-fitting generic operator from the
+routed recipe and retrieved primitives, build a target mechanic digest, run
+counterexample-guided grounding through the selected generic operator, and count
+a reproduced level only after `arc_solver_kit.reproduce()` reaches L1 offline.
+For `sb26`, the color-match slot-sequencing mechanic SHALL route toward config
+and sequence primitives but SHALL finish as a valid terminal no-new-level result
+when the current generic operators cannot ground a selectable left-to-right
+color-slot verifier. That residual SHALL be recorded in `missing_verifier_gaps`,
+`ops/arc_solve_registry.yaml`, and `ops/verifier_gaps.md` rather than using a
+`partial:` verdict.
+
+The workflow SHALL write
+`results/experiment_4458_first_contact_new_game.json` with required top-level
+fields `honest_verdict`, `inference_substrate`, `target_game`, `routed_to`,
+`retrieved_primitives`, `reproduced_levels`, `offline_reproduced`,
+`missing_verifier_gaps`, `verifier_is_oracle`,
+`reproducible_total_levels`, `random_seed`, and
+`reproducibility_checksum`. Cached verifier-ensemble runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` with
+`duration_s>=1.0`; live induction SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+#### SCENARIO-REPORT-4458: Routed sb26 Attempt Either Reproduces L1 Or Logs Missing Slot Sequencing
+
+**Given** offline `sb26` environment files, a non-3090 generator substrate, a
+green Exp 4423 fixed-contract test signal, `arc_solve_learning`
+transfer-routing, and LILO primitive retrieval
+**When** Exp 4458 routes `sb26`, selects the best-fitting documented generic
+operator, grounds the target digest with counterexample evidence, optionally
+replays any generated L1 labels through `arc_solver_kit.reproduce()`, and writes
+the artifact
+**Then** the artifact is terminal-prefixed, records the attempted
+`target_game`, the `routed_to` solved recipe, non-empty `retrieved_primitives`,
+bare-int `reproduced_levels`, bare-bool `offline_reproduced`,
+`verifier_is_oracle=true`, and a deterministic checksum; a successful replay
+banks exactly one new level and updates the ARC solve registry, while a
+grounded or ungrounded no-bank attempt logs the residual slot-sequencing
+verifier gap rather than using `partial:`.
+
+## Implementation Status (REQ-REPORT-4458)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4458 | Implemented (`python/carnot/experiment_4458_first_contact_new_game.py`, `results/experiment_4458_first_contact_new_game.json`) | Implemented (`tests/python/test_experiment_4458_first_contact_new_game.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a

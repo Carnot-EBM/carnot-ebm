@@ -582,6 +582,26 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
+- game: sb26
+  reproducibility: unsolved
+  levels_reproduced: 0
+  solver: python/carnot/experiment_4458_first_contact_new_game.py --game sb26
+  dead_ends:
+  - gap_id: GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER
+    game: sb26
+    routed_to: s5i5
+    operator: config_rule_verifier
+    residual_delta: missing_color_match_slot_sequence_verifier
+    status: open
+    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware grounding
+    routed_recipe:
+      game: s5i5
+      selected_operator:
+        operator: config_rule_verifier
+        routed_to: s5i5
+        reason: routed_recipe_contains_config_or_slot_sequence
+        source: closest_recipe
+    artifact: results/experiment_4458_first_contact_new_game.json
 reproducible_total_levels: 39
 reproducible_total_games: 20
 provisional_total_levels: 5
