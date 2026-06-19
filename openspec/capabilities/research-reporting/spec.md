@@ -26121,6 +26121,68 @@ the dc22 verifier gap is filled rather than left open.
 |---|---|---|
 | REQ-REPORT-4467 | Planned (`python/carnot/experiment_4467_solve_dc22_cegis_nocov.py`, `results/experiment_4467_solve_dc22_cegis_nocov.json`) | Planned (`tests/python/test_experiment_4467_solve_dc22_cegis_nocov.py`) |
 
+### REQ-REPORT-4468: Bank sc25 Provisional Levels Through Offline Reproduction
+
+The Exp 4468 workflow SHALL target `sc25` and convert only levels that replay
+through the offline reproduction gate from provisional to reproduced. It SHALL
+first check that `environment_files/sc25/` is non-empty, that
+`results/arc_e3/sc25/world_model.py` exists, that ARC solver imports work, that
+no 3090 inference or leaderboard submission is used, and that the exact focused
+baseline command `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25" -q --no-cov`
+is green. Missing preconditions SHALL write a terminal `complete: blocked_*`
+artifact without routing, induction, reproduction claims, or registry mutation.
+
+When preconditions pass, the workflow SHALL load the existing sc25 cast-grid
+world model, score it with `WorldModelVerifier`, plan-and-execute the already
+reproduced L1 cast-grid path, and then replay cumulative plans for L2 through
+L5 with `arc_solver_kit.reproduce("sc25", ...)` on a fresh offline env for each
+claimed level. The sc25 warm-up-after-reset action SHALL be applied, corrected
+offline cast-grid coordinates `(24+5c,49+5r)` SHALL be used for cast cells,
+raw spell-selection clicks SHALL be represented explicitly, and a level SHALL
+be banked only if the reproduction gate reaches at least that claimed level.
+If L2 cannot be reproduced, the workflow SHALL stop deeper attempts and record
+the residual in `missing_verifier_gaps`; a measured cannot-deepen result is a
+terminal `complete:` artifact, not a partial result.
+
+The workflow SHALL write
+`results/experiment_4468_bank_sc25_provisional_levels.json` with required
+top-level fields `honest_verdict`, `inference_substrate`, `target_game`,
+`new_sc25_levels_reproduced`, `sc25_levels_reproduced_total`,
+`reproduced_levels`, `offline_reproduced`, `baseline_pytest_nocov_green`,
+`no_regression`, `missing_verifier_gaps`, `verifier_is_oracle`,
+`reproducible_total_levels`, `random_seed`, and `reproducibility_checksum`.
+Cached verifier/planning runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` with
+`duration_s>=1.0`; live Qwen induction, if ever used, SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard. Successful
+offline reproduction SHALL update `ops/arc_solve_registry.yaml` so sc25
+`levels_reproduced` equals the reproduced depth, `reproducible_total_levels`
+increases by the newly banked level count, and `provisional_total_levels`
+decreases by the same newly banked count.
+
+#### SCENARIO-REPORT-4468: sc25 L2-L5 Provisional Levels Bank Through Fresh Offline Replay
+
+**Given** the existing sc25 world model, the prior reproduced L1 plan, offline
+sc25 environment files, a green exact `--no-cov` baseline, and provisional
+live-recorded L2-L5 suffixes
+**When** Exp 4468 scores the world model, replays L1, sequentially replays
+cumulative L2-L5 plans through `arc_solver_kit.reproduce()` on fresh envs, and
+writes the artifact
+**Then** the artifact is terminal-prefixed, sets `target_game=sc25`,
+`offline_reproduced=true`, bare-int `new_sc25_levels_reproduced>=1`, bare-int
+`sc25_levels_reproduced_total>1`, bare-int `reproduced_levels` equal to the
+new sc25 level count, `baseline_pytest_nocov_green=true`,
+`no_regression=true`, `missing_verifier_gaps=[]`, `verifier_is_oracle=true`,
+a deterministic checksum, and an authoritative `reproducible_total_levels`;
+the registry moves the banked sc25 levels from provisional to reproduced.
+
+## Implementation Status (REQ-REPORT-4468)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4468 | Planned (`python/carnot/experiment_4468_bank_sc25_provisional_levels.py`, `results/experiment_4468_bank_sc25_provisional_levels.json`) | Planned (`tests/python/test_experiment_4468_bank_sc25_provisional_levels.py`) |
+
 ### REQ-REPORT-4462: ARC Count-Integrity Lint Gates Provisional Inflation And Package Replay Claims
 
 The Exp 4462 workflow SHALL provide a count-integrity lint for
