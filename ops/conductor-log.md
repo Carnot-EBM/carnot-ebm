@@ -8820,3 +8820,4 @@ c |
 | 2026-06-19 10:16 UTC | PHASE 0 (TRANSITION) -- archive .409 -> activate . | OK | 113 passed, 1 warning in 4.82s |
 | 2026-06-19 10:31 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 88 passed, 1 warning in 7.15s |
 | 2026-06-19 11:00 UTC | PHASE A2 (ARC NORTH STAR) -- example-corpus-condit | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-19 11:15 UTC | PHASE A3 (ARC NORTH STAR) -- example-corpus-condit | OK | 97 passed, 1 warning in 7.46s |
