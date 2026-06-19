@@ -8867,6 +8867,85 @@ The artifact MUST include `field_principles` entries for the required fields:
 
 ---
 
+### REQ-HW-4451
+
+**Title:** Hardware continuity MUST produce a precondition-gated attached-board artifact for Exp 4451
+
+**Description:**
+Experiment 4451 MUST produce
+`results/experiment_4451_hardware_continuity.json` as a precondition-gated
+hardware-continuity artifact for KV260, GateMate, and PolarFire. It MUST read
+`results/experiment_4439_hardware_continuity.json` when available, but every
+live board claim remains valid only after the board-specific preconditions
+below:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. SSH
+  reachability is the ONLY valid KV260 precondition. Retired host SD-card-device
+  mechanisms are forbidden.
+- GateMate: `command -v nextpnr-himbaechel` and
+  `openFPGALoader -c dirtyJtag --detect`. The obsolete `nextpnr-gatemate`
+  executable MUST NOT be used.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+For each reachable board, the experiment MUST take one concrete next step for
+that board's track: KV260 records a latency transcript, GateMate performs a
+himbaechel/gmpack bitstream pack step toward the P&R/flash-smoke track, and
+PolarFire records a sampler smoke. For any blocked board, the artifact MUST
+emit that board's status as `blocked_<resource>` and include a one-line audit
+instead of fabricating a step. KV260 SSH failure is terminal for the overall
+verdict and MUST produce `honest_verdict="blocked_kv260_ssh_unreachable"` even
+when other board preconditions and steps are still recorded.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `preconditions_checked`: `list of {resource, available}; pre-empts the fabricate-when-resource-missing mode`
+- `per_board_status`: `one status per attached board so each stays visible in the milestone retro (Hardware-Task Continuity)`
+- `honest_verdict`: `terminal-prefixed; a clean SSH-unreachable is blocked_, an audit-only step is complete_`
+- `inference_substrate`: `hardware_smoke -- SSH-attached board test; per-board floor`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4451_hardware_continuity.py`
+  writes `results/experiment_4451_hardware_continuity.json`.
+- `preconditions_checked` is a list whose entries include bare `resource` and
+  bare boolean `available` fields for KV260 SSH, GateMate
+  nextpnr-himbaechel, GateMate DirtyJTAG detect, and PolarFire SSH.
+- KV260 uses only `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; no
+  host SD-card marker such as `/dev/mmcblk*` appears in the artifact.
+- GateMate uses `nextpnr-himbaechel` and `openFPGALoader -c dirtyJtag --detect`
+  and never uses `nextpnr-gatemate`.
+- PolarFire uses `ssh -o ConnectTimeout=5 polarfire 'true'`.
+- Reachable boards record a concrete step transcript (`latency_transcript`,
+  `bitstream_pack`, or `sampler_smoke`); blocked boards record
+  `blocked_<resource>` plus one audit sentence.
+- `inference_substrate` is `hardware_smoke`.
+- `honest_verdict` starts with `blocked_kv260_ssh_unreachable` when KV260 SSH
+  is unreachable, otherwise with `complete:` once the attached-board audit is
+  written.
+
+**Implementation status:** Implemented (Exp 4451)
+
+---
+
+### SCENARIO-HW-4451
+
+**Scenario:** Exp 4451 checks all attached-board continuity without fabricating missing hardware.
+
+**Given:** KV260, GateMate, and PolarFire may each be reachable or blocked, and
+the conductor requires one forward step or one precondition-gated audit per
+attached board.
+**When:** Experiment 4451 runs the KV260 SSH precondition, the GateMate
+nextpnr-himbaechel plus DirtyJTAG preconditions, and the PolarFire SSH
+precondition, then runs only the reachable boards' next-step commands.
+**Then:** It writes `results/experiment_4451_hardware_continuity.json` with
+required field principles, `preconditions_checked`, `per_board_status`,
+`honest_verdict`, `inference_substrate="hardware_smoke"`, command transcripts,
+deterministic seed, checksum, prior Exp 4439 context, no speedup claim, no host
+SD-card precondition, and no `nextpnr-gatemate` command.
+
+**Implementation status:** Implemented (Exp 4451)
+
+---
+
 ### SCENARIO-HW-4439
 
 **Scenario:** Exp 4439 checks all attached-board continuity without fabricating missing hardware.
