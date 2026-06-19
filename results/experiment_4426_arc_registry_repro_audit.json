@@ -1,0 +1,504 @@
+{
+  "all_counted_entries_reproduced": true,
+  "counted_entries_audited": 18,
+  "duration_s": 3.39947,
+  "entries_downgraded_to_provisional": [],
+  "experiment": "experiment_4426_arc_registry_repro_audit",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed final audit state.",
+    "inference_substrate": "No LLM: CPU/offline ARC simulator plus arc_solver_kit.reproduce.",
+    "reproducible_total_levels": "Bare int: the single ARC progress metric is recomputed from offline reproduction evidence instead of trusted from the registry assertion."
+  },
+  "honest_verdict": "complete: registry_repro_audit_total_35_asserted_36_audited",
+  "inference_substrate": "offline_arc_registry_repro_audit_cpu_no_llm",
+  "metaharness": {
+    "artifact_path": "results/arc3_replay_aggregate_scorecard.json",
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc3_replay_scorecard_metaharness.py",
+    "games": 16,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "-06-19 04:52:05 | INFO | Successfully loaded game class Cd82 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/cd82/fb555c5d/cd82.py\n  cd82  replayed   5 actions -> levels_completed=1\n2026-06-19 04:52:05 | INFO | Found latest version of sp80: sp80-589a99af (downloaded: 2026-06-08 07:25:24.172393+00:00)\n2026-06-19 04:52:05 | INFO | Successfully loaded game class Sp80 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/sp80/589a99af/sp80.py\n  sp80  replayed   4 actions -> levels_completed=1\n2026-06-19 04:52:05 | INFO | Found latest version of su15: su15-1944f8ab (downloaded: 2026-06-08 07:25:24.919195+00:00)\n2026-06-19 04:52:05 | INFO | Successfully loaded game class Su15 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/su15/1944f8ab/su15.py\n  su15  replayed   7 actions -> levels_completed=1\n2026-06-19 04:52:05 | INFO | Found latest version of tu93: tu93-0768757b (downloaded: 2026-06-08 07:25:18.086006+00:00)\n2026-06-19 04:52:05 | INFO | Successfully loaded game class Tu93 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tu93/0768757b/tu93.py\n  tu93  replayed  47 actions -> levels_completed=3\n2026-06-19 04:52:06 | INFO | Found latest version of cn04: cn04-2fe56bfb (downloaded: 2026-06-08 07:25:21.406909+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Cn04 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/cn04/2fe56bfb/cn04.py\n  cn04  replayed  13 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of m0r0: m0r0-492f87ba (downloaded: 2026-06-08 07:25:20.521902+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class M0r0 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/m0r0/492f87ba/m0r0.py\n  m0r0  replayed  15 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of sk48: sk48-d8078629 (downloaded: 2026-06-08 07:25:17.742140+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Sk48 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/sk48/d8078629/sk48.py\n  sk48  replayed  14 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of tn36: tn36-ef4dde99 (downloaded: 2026-06-08 07:25:22.107920+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Tn36 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tn36/ef4dde99/tn36.py\n  tn36  replayed 102 actions -> levels_completed=7\n2026-06-19 04:52:06 | INFO | Found latest version of ar25: ar25-0c556536 (downloaded: 2026-06-08 07:25:25.608502+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Ar25 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25/0c556536/ar25.py\n  ar25  replayed  15 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of ka59: ka59-38d34dbb (downloaded: 2026-06-08 07:25:23.298190+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Ka59 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59/38d34dbb/ka59.py\n  ka59  replayed  11 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of tr87: tr87-cd924810 (downloaded: 2026-06-08 07:25:23.848054+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Tr87 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tr87/cd924810/tr87.py\n  tr87  replayed 127 actions -> levels_completed=6\n2026-06-19 04:52:06 | INFO | Closed scorecard: 58647658-9e84-4434-a715-dda8e301597c\n\n== AGGREGATE SCORECARD (the 'what we'd publish' card) ==\n  games: 16   total levels_completed: 32\n    r11l  L1\n    sc25  L1\n    lp85  L4\n    ls20  L1\n    wa30  L1\n    cd82  L1\n    sp80  L1\n    su15  L1\n    tu93  L3\n    cn04  L1\n    m0r0  L1\n    sk48  L1\n    tn36  L7\n    ar25  L1\n    ka59  L1\n    tr87  L6\n  scorecard object: EnvironmentScorecard  valid: True\n  OFFLINE \u2014 zero network/quota; nothing submitted.\n  wrote results/arc3_replay_aggregate_scorecard.json\n",
+    "total_levels": 32
+  },
+  "milestone_409_reproduction_gates": [
+    {
+      "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
+      "artifact_flagged_adversarial": true,
+      "artifact_present": true,
+      "experiment": "exp4421",
+      "gate_evidence_keys": [
+        "claimed_level",
+        "game",
+        "mode",
+        "reached_level",
+        "reproduced"
+      ],
+      "honest_verdict": "success_s5i5_L1_offline_reproduced",
+      "new_levels_counted": 1,
+      "offline_reproduced": true,
+      "reproduced_levels": 1,
+      "reproduction_gated": true
+    },
+    {
+      "artifact": "results/experiment_4422_glyph_rewrite_perception.json",
+      "artifact_flagged_adversarial": false,
+      "artifact_present": true,
+      "experiment": "exp4422",
+      "gate_evidence_keys": [
+        "claimed_level",
+        "game",
+        "mode",
+        "reached_level",
+        "reproduced"
+      ],
+      "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
+      "new_levels_counted": 0,
+      "offline_reproduced": true,
+      "reproduced_levels": 6,
+      "reproduction_gated": true
+    },
+    {
+      "artifact": "results/experiment_4423_generic_first_contact_breadth.json",
+      "artifact_flagged_adversarial": false,
+      "artifact_present": true,
+      "experiment": "exp4423",
+      "gate_evidence_keys": [
+        "command",
+        "game",
+        "general_gotchas",
+        "guidance",
+        "instruction",
+        "mode",
+        "returncode",
+        "status",
+        "stderr",
+        "stdout",
+        "transfer_recommendation"
+      ],
+      "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
+      "new_levels_counted": 0,
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gated": true
+    },
+    {
+      "artifact": "results/experiment_4424_deeper_solved_game.json",
+      "artifact_flagged_adversarial": false,
+      "artifact_present": true,
+      "experiment": "exp4424",
+      "gate_evidence_keys": [
+        "claimed_level",
+        "game",
+        "mode",
+        "prior_best_level",
+        "reached_level",
+        "reproduced",
+        "reproduction_scope",
+        "root",
+        "solution_labels"
+      ],
+      "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
+      "new_levels_counted": 0,
+      "offline_reproduced": false,
+      "reproduced_levels": 1,
+      "reproduction_gated": true
+    }
+  ],
+  "random_seed": 4426,
+  "registry_claimed_reproducible_total_games": 18,
+  "registry_claimed_reproducible_total_levels": 35,
+  "registry_entry_audits": [
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "r11l",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "r11l",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "ls20",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "ls20",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "wa30",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "wa30",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "s5i5",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "s5i5",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/experiment_4421_config_rule_solve_unseen.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 5,
+      "effective_reproducibility": "reproduced",
+      "game": "lp85",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 5,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 5,
+        "game": "lp85",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 5,
+        "reproduced": true,
+        "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "sc25",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "sc25",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "python/carnot/experiment_4341_e3_sc25_reproduction.py"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "cd82",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "cd82",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/arc_explore_trajectory_cd82.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "sp80",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "sp80",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/arc_explore_trajectory_sp80.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "su15",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "su15",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/arc_explore_trajectory_su15.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 4,
+      "effective_reproducibility": "reproduced",
+      "game": "tu93",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 4,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 4,
+        "game": "tu93",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 4,
+        "reproduced": true,
+        "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 7,
+      "effective_reproducibility": "reproduced",
+      "game": "tn36",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 7,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 7,
+        "game": "tn36",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 7,
+        "reproduced": true,
+        "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "cn04",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "cn04",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/arc_explore_trajectory_cn04.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "m0r0",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "m0r0",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/arc_explore_trajectory_m0r0.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "sk48",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "sk48",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/arc_explore_trajectory_sk48.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "ar25",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "ar25",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "ka59",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "ka59",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 1,
+      "effective_reproducibility": "reproduced",
+      "game": "ft09",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 1,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 1,
+        "game": "ft09",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true,
+        "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
+      }
+    },
+    {
+      "counted_by_registry": true,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 6,
+      "effective_reproducibility": "reproduced",
+      "game": "tr87",
+      "gate": "arc_solver_kit.reproduce",
+      "offline_reproduced_claim": true,
+      "registry_levels_reproduced": 6,
+      "registry_reproducibility": "reproduced",
+      "reproduction_result": {
+        "claimed_level": 6,
+        "game": "tr87",
+        "gate": "arc_solver_kit.reproduce",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 6,
+        "reproduced": true,
+        "source": "results/arc_loop_solve_tr87.json"
+      }
+    },
+    {
+      "counted_by_registry": false,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 0,
+      "effective_reproducibility": "unsolved",
+      "game": "vc33",
+      "gate": "not_counted",
+      "offline_reproduced_claim": false,
+      "registry_levels_reproduced": 0,
+      "registry_reproducibility": "unsolved",
+      "reproduction_result": {}
+    },
+    {
+      "counted_by_registry": false,
+      "downgraded_to_provisional": false,
+      "effective_levels_reproduced": 0,
+      "effective_reproducibility": "unsolved",
+      "game": "g50t",
+      "gate": "not_counted",
+      "offline_reproduced_claim": false,
+      "registry_levels_reproduced": 0,
+      "registry_reproducibility": "unsolved",
+      "reproduction_result": {}
+    }
+  ],
+  "reproducible_total_levels": 36,
+  "result_path": "results/experiment_4426_arc_registry_repro_audit.json",
+  "schema": "carnot.exp4426.arc_registry_repro_audit.v1",
+  "spec_refs": [
+    "REQ-REPORT-4426",
+    "SCENARIO-REPORT-4426"
+  ],
+  "submitted_to_leaderboard": false
+}
