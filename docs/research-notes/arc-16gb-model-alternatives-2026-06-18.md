@@ -59,6 +59,34 @@ tokenizer per the GGUF-tokenizer rule (load via `.gguf` path, never `AutoTokeniz
 standard chat template, no thinking knob. All fit 16 GB with KV headroom; Qwen3-8B / Qwen3.5-9B leave the
 most room for the long ARC-harness contexts.
 
+## Benchmark results (2026-06-18, Layer-B grounding harness, iGPU, ka59+tn36)
+
+Downloaded and ran Qwen3.5-9B, Qwen3-14B, Phi-4, Qwen2.5-Coder-14B through the SAME harness as gemma.
+
+| Model | Q4 size | grounded (fair) | best tok/s | wall-clock to ground | KV headroom (16 GB) |
+|---|---|---|---|---|---|
+| gemma-4-12B (baseline) | 6.7 GB | **2/2** | 4.79 | 122 s | ~9 GB |
+| **Qwen3.5-9B** | **5.7 GB** | 1/2 | **8.18** | **34.6 s** | **~10 GB** |
+| Qwen3-14B | 9.0 GB | 1/2 | 2.9 | 76 s | ~7 GB |
+| Phi-4 | 8.9 GB | 1/2 | 2.68 | **28.7 s** (52 tok) | ~7 GB |
+| Qwen2.5-Coder-14B | 9.0 GB | 0/2 | 3.06 | — | ~7 GB |
+
+**The decisive finding is a metric confound, not a model ranking.** ka59's reference region is NOT static
+(its colour-4 count drifts 32→30 between the digest snapshot and the win grid). gemma "grounds" 2/2 by
+**hardcoding the digest constant** (`count_4==32`, instance-specific, would NOT generalize); all four
+stronger candidates wrote the **more general dynamic relational rule** (`editable_count==reference_count`)
+which the non-static reference defeats → Tier 0. So the candidates are **not worse reasoners** — they
+found the right relation. With a fairness fix (treat digest counts as fixed constants), **3/4 ground ≥1
+game**. Qwen2.5-Coder went 0/2 — the task is rule-INDUCTION, not coding, so reasoners beat the dedicated
+coder.
+
+**Deployment axes (what matters for the 16 GB Kaggle box):** Qwen3.5-9B is the clear winner — **~2× the
+throughput and 3.5× faster wall-clock to a grounded predicate** (8.18 tok/s, 34.6 s vs gemma's 122 s),
+**smallest weights (5.7 GB → most KV headroom)** for the long ARC-harness contexts, Apache-2.0, and
+`/no_think` verified working (fixes the forced-CoT problem). Accuracy on this 2-game test is inconclusive
+(gemma 2/2 vs candidates ~1/2 — tiny + confounded sample); the real accuracy signal must come from the
+full pipeline / a larger generalization-aware benchmark.
+
 ## Recommendation
 
 Download and benchmark **Qwen3.5-9B (or Qwen3-14B), Qwen2.5-Coder-14B, and Phi-4** on the exact Layer-B
