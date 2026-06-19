@@ -2167,3 +2167,55 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high
 - movement: newly_logged
 <!-- exp4421-gap-4419-code-humaneval-steerconf-detector-chance:end -->
+
+<!-- exp4427-gap-4421-s5i5-marker-coverage:start -->
+### GAP-4421-S5I5-MARKER-COVERAGE: Exp 4427 .409 verifier gap hygiene
+- status: filled (exp4421_s5i5_marker_coverage)
+- evidence: results/experiment_4421_config_rule_solve_unseen.json; offline_reproduced=True; reproduced_levels=1; new_levels_reproduced=1
+- failure mode: s5i5 marker-coverage config rule is now grounded and offline reproduced
+- missing discriminator: grounded marker-coverage predicate
+- candidate design: reuse Exp 4421 marker-coverage verifier for related marker-toggle games
+- priority: medium
+- headroom: 0
+- build target for .410 planner: false
+- movement: filled
+<!-- exp4427-gap-4421-s5i5-marker-coverage:end -->
+
+<!-- exp4427-gap-4422-tr87-glyph-rewrite-perception:start -->
+### GAP-4422-TR87-GLYPH-REWRITE-PERCEPTION: Exp 4427 .409 verifier gap hygiene
+- status: filled (exp4422_tr87_glyph_rewrite_perception)
+- evidence: results/experiment_4422_glyph_rewrite_perception.json; offline_reproduced=True; reproduced_levels=6; fires_on_win=True; false_positive_rate=0.0
+- failure mode: tr87 glyph rewrite perception is now grounded through L6 replay
+- missing discriminator: glyph rewrite perception predicate
+- candidate design: reuse segmented glyph rewrite predicates for future rewrite games
+- priority: medium
+- headroom: 0
+- build target for .410 planner: false
+- movement: filled
+<!-- exp4427-gap-4422-tr87-glyph-rewrite-perception:end -->
+
+<!-- exp4427-gap-4423-g50t-unselectable-first-contact:start -->
+### GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT: Exp 4427 .409 verifier gap hygiene
+- status: open
+- evidence: results/experiment_4423_generic_first_contact_breadth.json; game=g50t; honest_verdict=partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged; offline_reproduced=False; reproduced_levels=0
+- failure mode: needs_per_game_RE
+- missing discriminator: selectable verifier that distinguishes the target's winning delta from the explored non-winning states
+- candidate design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
+- priority: high
+- headroom: 1
+- build target for .410 planner: true
+- movement: newly_logged
+<!-- exp4427-gap-4423-g50t-unselectable-first-contact:end -->
+
+<!-- exp4427-gap-4424-sc25-l2-route-search:start -->
+### GAP-4424-SC25-L2-ROUTE-SEARCH: Exp 4427 .409 verifier gap hygiene
+- status: open
+- evidence: results/experiment_4424_deeper_solved_game.json; game=sc25; target_level=2; offline_reproduced=False; reproduced_levels=1; residual=sc25_l2_route_search_still_missing_after_hud_cleanup
+- failure mode: sc25 L2 remains unreproduced after .409 HUD/mechanic cleanup
+- missing discriminator: sc25 route-search verifier that proves the complete L2 path after the recorded mechanic cleanup
+- candidate design: build an executable route-search verifier over the sc25 world model and count only arc_solver_kit.reproduce success
+- priority: medium
+- headroom: 1
+- build target for .410 planner: false
+- movement: newly_logged
+<!-- exp4427-gap-4424-sc25-l2-route-search:end -->

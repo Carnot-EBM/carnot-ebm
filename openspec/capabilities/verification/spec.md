@@ -19714,6 +19714,61 @@ verdict and stops without reconciliation.
 |---|---|---|
 | REQ-VERIFY-4421 | Implemented (`python/carnot/experiment_4421_registry_gaps_hygiene_gap4_guard.py`, `results/experiment_4421_registry_gaps_hygiene_gap4_guard.py`) | Implemented (`tests/python/test_experiment_4421_registry_gaps_hygiene_gap4_guard.py`) |
 
+### REQ-VERIFY-4427: Verifier-Gaps Hygiene For .409 ARC Solve Tasks
+
+The repository SHALL provide Exp 4427 at
+`python/carnot/experiment_4427_verifier_gaps_hygiene.py` to reconcile
+`ops/verifier_gaps.md` with the `missing_verifier_gaps` emitted by `.409` ARC
+solve tasks. The runner SHALL read the `.409` ARC artifacts from Exp 4421,
+Exp 4422, Exp 4423, Exp 4424, Exp 4425, and Exp 4426, SHALL run CPU-only over
+checked-in artifacts, SHALL NOT call an LLM or GPU, and SHALL NOT edit
+production verifier implementations or `scripts/research_conductor.py`.
+
+The runner SHALL append any present-but-unselectable missing-verifier gap that
+is emitted by the `.409` ARC solve tasks and absent from `ops/verifier_gaps.md`.
+Each appended gap SHALL include `status`, `evidence`, `failure mode`,
+`missing discriminator`, `candidate design`, and `priority`, where priority is
+derived from solve headroom: tasks with an unsolved game and zero reproduced
+levels are high priority; residual deeper-level failures are medium priority
+unless they expose more headroom than an unsolved game. The runner SHALL move
+any gap filled by `.409` offline reproduction evidence to `status: filled (...)`
+without pruning historical entries. The runner SHALL flag exactly one highest
+priority open gap as the `.410` planner build target.
+
+The terminal artifact SHALL write
+`results/experiment_4427_verifier_gaps_hygiene.json` with `honest_verdict`,
+`inference_substrate`, bare bool `verifier_gaps_reconciled`, `appended_gaps`,
+`filled_gaps`, `build_target_for_410`, `source_artifacts`, `preconditions_checked`,
+bare int `random_seed`, `reproducibility_checksum`, `field_principles`,
+`spec_refs`, and `duration_s`. Its `honest_verdict` SHALL be terminal-prefixed.
+Its `inference_substrate` SHALL equal
+`cpu_artifact_reconciliation_no_llm`. `verifier_gaps_reconciled` SHALL be true
+only when the markdown ledger is readable, every required source artifact is
+readable, every emitted gap is either present or appended, filled gaps are
+recorded with `status: filled (...)`, and exactly one open build target is
+selected for `.410`.
+
+### SCENARIO-VERIFY-4427: .409 Missing Gaps Become .410 Build Input
+
+Given `ops/verifier_gaps.md` is readable and the `.409` ARC solve artifacts are
+present, when Exp 4427 runs, then it records the Exp 4423 `g50t`
+present-but-unselectable first-contact failure in `ops/verifier_gaps.md` with a
+missing discriminator, candidate design, and headroom-derived priority; records
+the Exp 4421 `s5i5` and Exp 4422 `tr87` offline reproduction successes as
+filled `.409` hygiene updates where applicable; records the Exp 4424 `sc25`
+residual deeper-level route-search gap as open when it is still unreproduced;
+chooses the single highest-priority open gap as `build_target_for_410`; and
+writes a terminal-prefixed artifact with
+`inference_substrate="cpu_artifact_reconciliation_no_llm"`. If the ledger or a
+required source artifact cannot be read, then it writes a blocked terminal
+artifact and leaves the ledger unchanged.
+
+## Implementation Status (REQ-VERIFY-4427)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4427 | Implemented (`python/carnot/experiment_4427_verifier_gaps_hygiene.py`) | Implemented (`tests/python/test_experiment_4427_verifier_gaps_hygiene.py`) |
+
 ### REQ-VERIFY-4392: Verifiable Process Data First-Error Localizer
 
 The repository SHALL provide Exp 4392 at
