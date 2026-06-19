@@ -8773,3 +8773,4 @@ c |
 | 2026-06-19 02:35 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 104 passed, 1 warning in 7.80s |
 | 2026-06-19 03:58 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: tr(REPO_ROOT / |
 | 2026-06-19 04:05 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | cache hit: 89 passed, 1 warning in 5.93s |
+| 2026-06-19 04:18 UTC | PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic | OK | 87 passed, 1 warning in 6.53s |
