@@ -23,11 +23,15 @@
 > `langgraph.store.sqlite` error was a probe artifact of loading `agent.py` directly; the real
 > notebook's minimal `__init__.py` rewrite avoids it).
 
-**STATUS: FIRST SUBMISSION MADE 2026-06-19 22:54Z** (operator-directed, via the kernel API) —
-submission `ref 53862044` ("carnot v1"), kernel `iancblenke/carnot-arc-agi3-submission` v1,
-status PENDING (scored rerun against the hidden gateway, up to 12h). Today's 1/day slot used.
-Components were verified on the real Kaggle P100; the submission notebook is authored against the
-correct gateway contract; the first scored rerun is the end-to-end gateway validation.
+**STATUS: FIRST SCORED SUBMISSION — public score 0.08 (2026-06-19 23:40Z).** `ref 53862349`
+("carnot v1.1", kernel v3) COMPLETE. The full pipeline is validated end-to-end live: gateway
+handshake, agent plays games, verifier-routed cascade + local Qwen3.5-9B-MTP generator all run in
+the scored rerun. Leaderboard context: leaders ~0.66–1.21; 0.08 is modest-but-real (above random).
+- `ref 53862044` (v1) ERRORED — missing gateway `.env` (main.py hit localhost not the gateway);
+  fixed by writing the gateway `.env` in the rerun branch. The error did NOT consume the daily slot.
+- ITERATION PLAN (1/day, ~10 cycles to 06-30): the conductor banks more games/levels offline each
+  milestone; before each daily resubmit, re-version the `carnot-agent-code` dataset with the latest
+  `python/carnot` so the live agent picks up the new solvers/operators, then resubmit + watch the climb.
 
 **Submit API note:** the CLI `kaggle competitions submit -k ... -v ...` returned a 400; the working
 path is the Python API `api.competition_submit_code(file_name="submission.parquet",
