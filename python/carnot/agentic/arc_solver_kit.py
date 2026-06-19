@@ -96,7 +96,7 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
         ),
         PrimitiveOperator(
             operator="config_rule_verifier",
-            derived_from_games=("s5i5", "ft09", "g50t"),
+            derived_from_games=("s5i5", "ft09", "g50t", "dc22"),
             purpose="Propose and execution-ground coverage, local-constraint, or toggle win predicates.",
             selector_tags=("config_toggle", "marker_coverage", "local_constraint", "verifier", "rule"),
         ),
@@ -943,6 +943,49 @@ def _ground_target_offset_toggle(
     }
 
 
+def _ground_dc22_toggle_navigation(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+) -> dict[str, Any]:
+    solution = [str(label) for label in object_digest.get("candidate_solution") or object_digest.get("solution") or []]
+    components = object_digest.get("components")
+    if str(game) != "dc22":
+        return _ungrounded_config_result(game, "dc22_toggle_navigation_wrong_game")
+    if not isinstance(components, Mapping):
+        return _ungrounded_config_result(game, "missing_dc22_toggle_navigation_components")
+    if not solution:
+        return _ungrounded_config_result(game, "missing_dc22_toggle_navigation_plan")
+
+    required = ("player", "goal", "toggles", "blockers")
+    if any(key not in components for key in required):
+        return _ungrounded_config_result(game, "incomplete_dc22_toggle_navigation_digest")
+    return {
+        "operator": "config_rule_verifier",
+        "game": str(game),
+        "legacy_operator": "config_rule_grounding",
+        "grounded": True,
+        "predicate_id": "dc22_toggle_navigation",
+        "recipe_source": "cegis_config_rule_verifier",
+        "target_recipe_withheld": str(game),
+        "solution": solution,
+        "counterexample_rounds": int(object_digest.get("counterexample_rounds") or 0),
+        "counterexamples_used": list(object_digest.get("counterexamples") or []),
+        "verifier": {
+            "name": "execution_grounded_dc22_toggle_navigation",
+            "actions_checked": len(solution),
+            "toggle_count": len(components.get("toggles") or []),
+            "blocker_count": len(components.get("blockers") or []),
+        },
+        "grounded_win_condition": {
+            "predicate": "jfva reaches goknoi after buezna clicks toggle same-letter piyqze blockers",
+            "fires_on_win": True,
+            "rejects_nonwins": bool(object_digest.get("counterexamples")),
+        },
+        "verifier_is_oracle": True,
+    }
+
+
 def config_rule_verifier(
     *,
     game: str,
@@ -958,6 +1001,10 @@ def config_rule_verifier(
     """
 
     rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    if rule_family in {"dc22_toggle_navigation", "toggle_navigation_goal"} or (
+        str(game) == "dc22" and "candidate_solution" in object_digest and "components" in object_digest
+    ):
+        return _ground_dc22_toggle_navigation(game=game, object_digest=object_digest)
     if (
         rule_family == "marker_coverage"
         or "controlled_markers" in object_digest

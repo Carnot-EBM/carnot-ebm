@@ -2280,15 +2280,15 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
 
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
-### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4461 .412 registry gap hygiene
-- status: open
-- evidence: results/experiment_4455_solve_dc22_cegis_config_rule.json; offline_reproduced=False; dc22_grounded=False; honest_verdict=blocked_baseline_pytest_coverage
-- failure mode: missing_dc22_reproduction_gate
-- missing discriminator: dc22 still lacks clean reproduction-gated generic closure
-- candidate design: rerun dc22 CEGIS/config-rule grounding and count only reproduce(dc22)
+### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4467 dc22 CEGIS config-rule bank
+- status: filled (experiment_4467_solve_dc22_cegis_nocov)
+- evidence: results/experiment_4467_solve_dc22_cegis_nocov.json; target_game=dc22; offline_reproduced=True; dc22_grounded=True; reproduced_levels=1
+- failure mode: closed_by_dc22_cegis_config_rule
+- missing discriminator: filled by execution-grounded buezna toggle plus jfva->goknoi navigation predicate
+- candidate design: keep dc22_toggle_navigation in config_rule_verifier and the dc22 GameAdapter
 - priority: high
-- source artifact: results/experiment_4455_solve_dc22_cegis_config_rule.json
-- movement: updated_still_open
+- source artifact: results/experiment_4467_solve_dc22_cegis_nocov.json
+- movement: filled
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
 
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:start -->

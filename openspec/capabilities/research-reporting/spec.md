@@ -26051,6 +26051,76 @@ performs no production verifier edits.
 |---|---|---|
 | REQ-REPORT-4461 | Planned (`python/carnot/experiment_4461_registry_gaps_hygiene.py`, `results/experiment_4461_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4461_registry_gaps_hygiene.py`) |
 
+### REQ-REPORT-4467: dc22 CEGIS Config-Rule Grounding Banks The Last Open Toggle Maze
+
+The Exp 4467 workflow SHALL solve the remaining open config/toggle
+first-contact ARC game `dc22` by extending the generic
+`config_rule_verifier` with a bounded counterexample-guided grounding loop. The
+workflow SHALL first confirm that `environment_files/dc22/` is non-empty, that
+`carnot.agentic.arc_solver_kit` and `carnot.agentic.arc_solve_learning` import,
+that a non-3090 generator substrate exists through either cached
+`unsloth/Qwen3.5-9B-MTP-GGUF` files or an iGPU llama-server, and that the
+focused baseline command
+`.venv/bin/pytest -k "config_rule or arc_solver_kit" -q --no-cov` is green. If
+any precondition misses, the workflow SHALL write an honest terminal
+`complete: blocked_<resource>` artifact and SHALL NOT fabricate a grounding,
+reproduction, registry, or gap closure claim.
+
+The grounding loop SHALL call
+`arc_solve_learning.recommend_approach("dc22")`, gather at least three grounded
+config/toggle few-shot win-rules from the existing corpus (including the
+marker-coverage, local-color-cycle, support-clearance, or target-offset
+families when present), propose a dc22 toggle-plan/win predicate, ground the
+proposal against the offline environment, and feed any rejecting execution
+state back into the next induction round up to a small bounded budget. A
+grounded dc22 proposal SHALL produce action labels for toggling `buezna`
+sprites, clearing `piyqze` blockers, and navigating the `jfva` player sprite to
+the `goknoi` goal. The per-game delta SHALL be registered as a `dc22`
+`GameAdapter` in `python/carnot/agentic/arc_game_adapters.py`, and the
+resulting plan SHALL pass `arc_solver_kit.reproduce("dc22", ...)` before any
+level is counted.
+
+The workflow SHALL write
+`results/experiment_4467_solve_dc22_cegis_nocov.json` with required top-level
+fields `honest_verdict`, `inference_substrate`, `target_game`,
+`dc22_grounded`, `reproduced_levels`, `offline_reproduced`,
+`counterexample_rounds`, `baseline_pytest_nocov_green`,
+`few_shot_examples_used`, `missing_verifier_gaps`, `verifier_is_oracle`,
+`reproducible_total_levels`, `random_seed`, and
+`reproducibility_checksum`. Cached verifier-ensemble grounding SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` with
+`duration_s>=1.0`; a genuine live Qwen run SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard. A
+successful offline reproduction SHALL update `ops/arc_solve_registry.yaml`
+from 39/20 to 40/21 for dc22 and move
+`GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT` to filled in
+`ops/verifier_gaps.md`; an ungrounded but genuine CEGIS attempt SHALL finish
+terminal `complete:` with the residual in `missing_verifier_gaps`.
+
+#### SCENARIO-REPORT-4467: dc22 CEGIS Toggle-Plan Reproduces And Banks L1
+
+**Given** offline `dc22` environment files, the cached Qwen/iGPU generator
+precondition, a green `--no-cov` focused baseline, the transfer route for
+`dc22`, and at least three grounded config/toggle few-shot rules
+**When** Exp 4467 runs the bounded counterexample-guided grounding loop, rejects
+the first non-grounding candidate, induces a grounded toggle-navigation digest,
+solves level 1 through the `dc22` `GameAdapter`, replays the solution through
+`arc_solver_kit.reproduce()`, and writes the artifact
+**Then** the artifact is terminal-prefixed, sets `target_game=dc22`,
+`dc22_grounded=true`, `offline_reproduced=true`, bare-int
+`reproduced_levels>=1`, bare-int `counterexample_rounds>=1`,
+`baseline_pytest_nocov_green=true`, `verifier_is_oracle=true`,
+`missing_verifier_gaps=[]`, a deterministic checksum, and
+`reproducible_total_levels=40`; the registry records dc22 as reproduced L1 and
+the dc22 verifier gap is filled rather than left open.
+
+## Implementation Status (REQ-REPORT-4467)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4467 | Planned (`python/carnot/experiment_4467_solve_dc22_cegis_nocov.py`, `results/experiment_4467_solve_dc22_cegis_nocov.json`) | Planned (`tests/python/test_experiment_4467_solve_dc22_cegis_nocov.py`) |
+
 ### REQ-REPORT-4462: ARC Count-Integrity Lint Gates Provisional Inflation And Package Replay Claims
 
 The Exp 4462 workflow SHALL provide a count-integrity lint for
