@@ -2220,26 +2220,26 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4427-gap-4424-sc25-l2-route-search:end -->
 
 <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:start -->
-### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4449 .411 registry gap hygiene
-- status: open
-- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=tr87; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; retrieved_operator=config_rule_grounding; generic_loo_solve_count_v2=5
-- failure mode: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
-- missing discriminator: generic primitive/verifier still missing for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
+### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4461 .412 registry gap hygiene
+- status: filled (exp4456_generic_glyph_rewrite_operator)
+- evidence: results/experiment_4456_generic_glyph_rewrite_operator.json; tr87_resolved_generically=True; offline_reproduced=True; tr87_generic_level_reproduced=1
+- failure mode: prior missing_glyph_rewrite_rule_verifier residual is closed for tr87
+- missing discriminator: filled by generic glyph_rewrite_rule_verifier
+- candidate design: keep the glyph rewrite verifier in the generic leave-one-out loop
 - priority: high
-- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
-- movement: updated_still_open
+- source artifact: results/experiment_4456_generic_glyph_rewrite_operator.json
+- movement: filled
 <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:end -->
 
 <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:start -->
-### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4449 .411 registry gap hygiene
+### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4461 .412 registry gap hygiene
 - status: open
-- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=sc25; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; retrieved_operator=active_data_collection; generic_loo_solve_count_v2=5
+- evidence: results/experiment_4457_*.json; cast_grid_artifact_available=False; generic_loo_solve_count_v3=6; missing_verifier_gaps=[{'attempt_mode': 'v3_412_operator_remeasurement', 'game': 'sc25', 'residual_delta': 'missing_cast_grid_spell_shrink_tank_exit_verifier', 'retrieved_operator': 'active_data_collection'}]
 - failure mode: missing_cast_grid_spell_shrink_tank_exit_verifier
-- missing discriminator: generic primitive/verifier still missing for missing_cast_grid_spell_shrink_tank_exit_verifier
-- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
+- missing discriminator: generic cast-grid spell/shrink/tank-exit verifier still missing
+- candidate design: build cast_grid_phase_fsm_world_model and rerun LOO v4
 - priority: high
-- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
+- source artifact: results/experiment_4457_*.json
 - movement: updated_still_open
 <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:end -->
 
@@ -2280,14 +2280,14 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
 
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
-### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
+### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4461 .412 registry gap hygiene
 - status: open
-- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; dc22 reproduced_levels=0
-- failure mode: missing_config_rule_verifier_grounding
-- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest
-- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until reproduce(dc22) passes
+- evidence: results/experiment_4455_solve_dc22_cegis_config_rule.json; offline_reproduced=False; dc22_grounded=False; honest_verdict=blocked_baseline_pytest_coverage
+- failure mode: missing_dc22_reproduction_gate
+- missing discriminator: dc22 still lacks clean reproduction-gated generic closure
+- candidate design: rerun dc22 CEGIS/config-rule grounding and count only reproduce(dc22)
 - priority: high
-- source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
+- source artifact: results/experiment_4455_solve_dc22_cegis_config_rule.json
 - movement: updated_still_open
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
 
@@ -2304,12 +2304,13 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
 
 <!-- exp4458-gap-sb26-color-match-slot-sequence:start -->
-### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4458 first-contact new game
+### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4461 .412 registry gap hygiene
 - status: open
 - evidence: results/experiment_4458_first_contact_new_game.json; target_game=sb26; routed_to=s5i5; offline_reproduced=False; reproduced_levels=0
 - failure mode: missing_color_match_slot_sequence_verifier
 - missing discriminator: generic ordered color-match item-slot verifier with undo-aware grounding
 - candidate design: extend config_rule_verifier with color_match_slot_sequence digests
 - priority: high
-- movement: still_open
+- source artifact: results/experiment_4458_first_contact_new_game.json
+- movement: updated_still_open
 <!-- exp4458-gap-sb26-color-match-slot-sequence:end -->
