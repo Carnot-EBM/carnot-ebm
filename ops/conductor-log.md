@@ -8867,3 +8867,5 @@ c |
 | 2026-06-19 17:44 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | Deliverable already exists in repo |
 | 2026-06-19 17:44 UTC | PHASE D (SOTA-INGESTION; .411 bleeding-edge track) | OK | Deliverable already exists in repo |
 | 2026-06-19 17:44 UTC | PHASE E (CAPSTONE .411) -- the milestone scorecard | OK | Deliverable already exists in repo |
+| 2026-06-19 18:25 UTC | Plan milestone 2026.06.412 | OK | 12 tasks proposed |
+| 2026-06-19 18:27 UTC | Milestone 2026.06.412 activated | OK | 12 tasks queued |
