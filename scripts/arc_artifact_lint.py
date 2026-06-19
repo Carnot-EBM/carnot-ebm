@@ -22,8 +22,17 @@ from carnot.agentic.arc_solve_artifact_discipline import (
 )
 
 
-PATH_MARKERS = ("config_rule", "solve", "scoring")
+PATH_MARKERS = ("config_rule", "solve", "scoring", "world_model")
 METADATA_KEYS = ("experiment", "schema", "artifact_kind", "task_kind", "result_path", "tags")
+ARC_SOLVE_EVIDENCE_KEYS = (
+    "grounded_win_condition",
+    "object_centric_digest",
+    "offline_reproduced",
+    "qwen_generation",
+    "reproduced_levels",
+    "reproduction_result",
+    "solver",
+)
 
 
 @dataclass(frozen=True)
@@ -117,13 +126,20 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         help="Artifact path allowed to declare live_llm_inference.",
     )
+    parser.add_argument(
+        "--allow-live-file",
+        action="append",
+        default=[],
+        help="File containing live_llm_inference artifact paths, one per line.",
+    )
     parser.add_argument("--json", action="store_true", help="Emit a JSON report.")
     args = parser.parse_args(argv)
 
+    allow_live = [*args.allow_live, *_read_allow_live_files(args.allow_live_file)]
     if args.paths:
-        issues = lint_paths(args.paths, allow_live_artifacts=args.allow_live)
+        issues = lint_paths(args.paths, allow_live_artifacts=allow_live)
     else:
-        issues = lint_results_dir(args.results_dir, allow_live_artifacts=args.allow_live)
+        issues = lint_results_dir(args.results_dir, allow_live_artifacts=allow_live)
 
     report = {"ok": not issues, "issue_count": len(issues), "issues": [i.to_dict() for i in issues]}
     if args.json:
@@ -144,7 +160,10 @@ def _lint_issue(
     if kind == "NON_TERMINAL_HONEST_VERDICT" and _has_partial_verdict(payload):
         kind = "NON_TERMINAL_PARTIAL_VERDICT"
         detail = "partial verdicts are non-terminal for ARC solve/scoring artifacts."
-    if kind == "LIVE_LLM_NOT_ALLOWLISTED" and payload.get("inference_substrate") == LIVE_LLM_SUBSTRATE:
+    if (
+        kind == "LIVE_LLM_NOT_ALLOWLISTED"
+        and payload.get("inference_substrate") == LIVE_LLM_SUBSTRATE
+    ):
         detail = "live_llm_inference requires an explicit --allow-live artifact path."
     return ArcArtifactLintIssue(path=path, kind=kind, detail=detail)
 
@@ -160,7 +179,12 @@ def _metadata_marks_candidate(payload: Mapping[str, Any]) -> bool:
         value = payload.get(key)
         if _value_marks_candidate(value):
             return True
-    return False
+    return _looks_like_arc_solve_payload(payload)
+
+
+def _looks_like_arc_solve_payload(payload: Mapping[str, Any]) -> bool:
+    target_game = payload.get("target_game")
+    return isinstance(target_game, str) and any(key in payload for key in ARC_SOLVE_EVIDENCE_KEYS)
 
 
 def _value_marks_candidate(value: Any) -> bool:
@@ -181,7 +205,10 @@ def _has_partial_verdict(payload: Mapping[str, Any]) -> bool:
 
 
 def _has_arc_token(tokens: Iterable[str]) -> bool:
-    return any(token == "arc" or (token.startswith("arc") and not token.startswith("archive")) for token in tokens)
+    return any(
+        token == "arc" or (token.startswith("arc") and not token.startswith("archive"))
+        for token in tokens
+    )
 
 
 def _tokens(text: str) -> list[str]:
@@ -194,6 +221,21 @@ def _read_json_mapping(path: Path) -> dict[str, Any]:
     except (OSError, json.JSONDecodeError):  # pragma: no cover - corrupt files fail elsewhere.
         return {}
     return payload if isinstance(payload, dict) else {}
+
+
+def _read_allow_live_files(paths: Iterable[str]) -> list[str]:
+    allow_live: list[str] = []
+    for raw_path in paths:
+        path = Path(raw_path)
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            stripped = line.strip()
+            if stripped and not stripped.startswith("#"):
+                allow_live.append(stripped)
+    return allow_live
 
 
 def _normalize_path(path: Path | str) -> str:
