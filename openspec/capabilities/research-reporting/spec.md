@@ -26183,6 +26183,78 @@ the registry moves the banked sc25 levels from provisional to reproduced.
 |---|---|---|
 | REQ-REPORT-4468 | Planned (`python/carnot/experiment_4468_bank_sc25_provisional_levels.py`, `results/experiment_4468_bank_sc25_provisional_levels.json`) | Planned (`tests/python/test_experiment_4468_bank_sc25_provisional_levels.py`) |
 
+### REQ-REPORT-4469: Generic Cast-Grid Phase-FSM World Model Closes The sc25 LOO Residual
+
+The Exp 4469 workflow SHALL add a composable
+`cast_grid_phase_fsm_world_model` primitive to
+`python/carnot/agentic/arc_solver_kit.py`. The operator SHALL represent
+two-phase games as a phase FSM whose first phase solves a cast/config toggle CSP
+against a target 3x3 reference pattern and whose second phase navigates the
+shrunk player to an exit predicate. It SHALL condition induction on existing
+grounded world-model examples from `results/arc_e3/{sc25,ar25,ka59,ft09}/`,
+reject ungrounded candidates, expose a pure `engine(grid, action, data)` and
+`is_level_complete(grid)` for `WorldModelVerifier` / plan-and-execute grounding,
+record `counterexample_rounds` when an initially wrong phase transition is
+refuted and re-induced, and keep all existing sc25 hand-path reproduction
+routes backward-compatible.
+
+Before attempting sc25, the workflow SHALL check that `environment_files/sc25/`
+is non-empty, that `arc_solver_kit` and the executable-world-model verifier
+import, that a non-3090 generator substrate exists through either cached GGUF
+files or an iGPU HIP llama-server, and that the exact baseline command
+`.venv/bin/pytest -k "arc_solver_kit or world_model or sc25" -q --no-cov` is
+green. Missing resources SHALL write an honest terminal
+`complete: blocked_<resource>` artifact and SHALL NOT fabricate a generic solve,
+regression result, or gap closure.
+
+The workflow SHALL prove genericity by re-solving `sc25` level 1 through the
+generic operator without using sc25's hand world-model recipe as the solver
+source. The generic operator SHALL derive the toggle-cell labels from the cast
+grid digest, derive the navigation suffix from the exit predicate, ground the
+transition model with `WorldModelVerifier`, execute a model-grounded plan, and
+replay the generated labels through
+`arc_solver_kit.reproduce("sc25", ..., warmup_label="warmup", claimed_level=1)`.
+A successful closure SHALL set `sc25_resolved_generically=true`,
+`sc25_generic_level_reproduced>=1`, `offline_reproduced=true`,
+`no_regression=true`, `verifier_is_oracle=true`, and close
+`GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER` as a
+leave-one-out residual. A measured failure to generalize SHALL be a terminal
+`complete:` artifact with the residual listed in `missing_verifier_gaps`.
+
+The workflow SHALL write
+`results/experiment_4469_generic_cast_grid_fsm_operator.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`sc25_resolved_generically`, `sc25_generic_level_reproduced`,
+`counterexample_rounds`, `offline_reproduced`, `no_regression`,
+`missing_verifier_gaps`, `verifier_is_oracle`, `random_seed`, and
+`reproducibility_checksum`. Cached verifier-ensemble grounding SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` with
+`duration_s>=1.0`; live LLM induction, if used, SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+#### SCENARIO-REPORT-4469: sc25 L1 Re-solves Through The Generic Cast-Grid FSM
+
+**Given** offline sc25 environment files, a non-3090 generator substrate, a
+green exact `--no-cov` baseline, and grounded world-model few-shot examples
+**When** Exp 4469 induces `cast_grid_phase_fsm_world_model`, refutes the
+single-phase cast-grid-as-win candidate, re-induces the two-phase
+toggle-then-navigate FSM, grounds it with `WorldModelVerifier`, model-executes
+the plan, replays the generic labels through `arc_solver_kit.reproduce()`, and
+writes the artifact
+**Then** the artifact is terminal-prefixed, sets
+`sc25_resolved_generically=true`, bare-int
+`sc25_generic_level_reproduced>=1`, bare-int `counterexample_rounds>=1`,
+`offline_reproduced=true`, `no_regression=true`, `missing_verifier_gaps=[]`,
+`verifier_is_oracle=true`, and a deterministic checksum while preserving the
+existing sc25 L1 hand-path reproduction.
+
+## Implementation Status (REQ-REPORT-4469)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4469 | Planned (`python/carnot/experiment_4469_generic_cast_grid_fsm_operator.py`, `results/experiment_4469_generic_cast_grid_fsm_operator.json`) | Planned (`tests/python/test_experiment_4469_generic_cast_grid_fsm_operator.py`) |
+
 ### REQ-REPORT-4462: ARC Count-Integrity Lint Gates Provisional Inflation And Package Replay Claims
 
 The Exp 4462 workflow SHALL provide a count-integrity lint for

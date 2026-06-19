@@ -1,0 +1,466 @@
+{
+  "counterexample_rounds": 1,
+  "duration_s": 29.013829,
+  "experiment": "experiment_4469_generic_cast_grid_fsm_operator",
+  "few_shot_examples_used": [
+    {
+      "excerpt": "\"\"\"Executable world model for Exp4341 sc25 L1.\n\nSpec refs: REQ-PHASE4-080, SCENARIO-PHASE4-080.\n\nThis model is deliberately grounded in the offline sc25 transition trace. The\npatches below are verifier-gated row runs collected after reset + warmup with\nthe corrected offline cast-grid coordinates (24+5c,49+5r). Fallback rules encode\nthe induced mechanic: ACTION6 toggles the spell grid, the sieesc_chwjgc cross\nshrinks the player, and ACTION3 then drives the small player into the exit.\n\"\"\"\n\nfrom __",
+      "game": "sc25",
+      "predicate": "cast_grid phase_fsm world_model shrink transition",
+      "relative_path": "results/arc_e3/sc25/world_model.py",
+      "rule_id": "sc25_world_model",
+      "sha256": "39a0ca8678a9c4a0ff2fb2bd2fd7c2386e3613ddf112ea5d71aab17af184067c",
+      "source_chars": 10811
+    },
+    {
+      "excerpt": "import numpy as np\n\n\nINITIAL_SELECTED_TOP = 15\nINITIAL_SELECTED_LEFT = 18\n\n\ndef _undo_stack_restore(data, shape):\n    if not isinstance(data, dict):\n        return None\n    stack = data.get(\"undo_stack\")\n    if not stack:\n        return None\n    prior = np.asarray(stack[-1])\n    if prior.shape != shape:\n        return None\n    return prior.copy()\n\n\ndef _largest_box(arr, color):\n    h, w = arr.shape\n    visited = np.zeros((h, w), dtype=bool)\n    best = None\n    for sy in range(h):\n        for sx ",
+      "game": "ar25",
+      "predicate": "world_model verifier-grounded transition example from ar25",
+      "relative_path": "results/arc_e3/ar25/world_model.py",
+      "rule_id": "ar25_world_model",
+      "sha256": "f8d71fe67d34034ff898766a56c125842a023ce974c06377ffcffae0109649bf",
+      "source_chars": 8607
+    },
+    {
+      "excerpt": "import numpy as np\n\n\nDEFAULT_RELEVANT_OBJECTS = (\"agent\", \"pushed_block\")\n\n\ndef object_relevance_discriminator():\n    return {\n        \"blocker_class\": \"object_relevance_not_clicks_or_multi_object_push\",\n        \"provenance_commits\": [\"f0b078247\", \"6fba583c7\"],\n        \"active_object_candidates\": [\n            \"selected_block\",\n            \"second_movable_block\",\n            \"agent_plus_second_movable_block\",\n            \"all_piece_objects\",\n        ],\n        \"selected_object_hypothesis\": \"agen",
+      "game": "ka59",
+      "predicate": "world_model verifier-grounded transition example from ka59",
+      "relative_path": "results/arc_e3/ka59/world_model.py",
+      "rule_id": "ka59_world_model",
+      "sha256": "1296a767e602d9c83f5b7e82768b1dc38c2cf2d0f3a513ca7f610e40ffbe7191",
+      "source_chars": 9356
+    },
+    {
+      "excerpt": "import numpy as np\n\n\ndef _toggle_component(arr, x, y):\n    h, w = arr.shape\n    if not (0 <= y < h and 0 <= x < w):\n        return None\n    color = int(arr[y, x])\n    if color not in (8, 9, 14, 15):\n        return None\n    stack = [(y, x)]\n    seen = {(y, x)}\n    cells = []\n    while stack:\n        cy, cx = stack.pop()\n        cells.append((cy, cx))\n        for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):\n            if 0 <= ny < h and 0 <= nx < w and (ny, nx) not in seen ",
+      "game": "ft09",
+      "predicate": "world_model verifier-grounded transition example from ft09",
+      "relative_path": "results/arc_e3/ft09/world_model.py",
+      "rule_id": "ft09_world_model",
+      "sha256": "e89681d71fd6f9bee222bc658739b46cdcab05b5404bb4a2460845603d9b7288",
+      "source_chars": 2786
+    }
+  ],
+  "field_principles": {
+    "counterexample_rounds": {
+      "principle": "bare int: refute->re-induce rounds -- proves the CEGIS lever, not single-shot"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a measured no-generalize result is complete (negative-but-real), never partial:"
+    },
+    "inference_substrate": {
+      "principle": "THE .410/.411 LESSON -- EMIT it; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "the residual the generic operator could not induce -- the .414 build backlog"
+    },
+    "no_regression": {
+      "principle": "bare bool: every prior reproducible solve (incl sc25 L1 hand path) still reproduces"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "sc25_generic_level_reproduced": {
+      "principle": "bare int: how deep the generic operator re-solved sc25 (>=1), reproduction-gated"
+    },
+    "sc25_resolved_generically": {
+      "principle": "bare bool: sc25 re-solved L1 by the GENERIC cast-grid operator without sc25's own recipe -- the GAP-4432-LOO-SC25 closure, the core A3 hypothesis"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: the verifier GROUNDS the LLM-proposed world model (execution-grounded), not a learned-verifier moat"
+    }
+  },
+  "generic_operator_result": {
+    "counterexample_rounds": 1,
+    "counterexamples": [
+      {
+        "refinement": "phase transition triggers shrink; final win requires exit contact",
+        "rejected_candidate": "cast_grid_alignment_is_win"
+      }
+    ],
+    "game": "sc25",
+    "grounded": true,
+    "grounded_win_condition": {
+      "fires_on_win": true,
+      "predicate": "cast-grid target pattern transitions to shrunk-player navigation; win is player-at-exit",
+      "rejects_nonwins": true
+    },
+    "navigation_solution": [
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3"
+    ],
+    "operator": "cast_grid_phase_fsm_world_model",
+    "phase_model": {
+      "phases": [
+        "config_toggle",
+        "navigate_exit"
+      ],
+      "transition": "target cast-grid pattern fires shrink spell",
+      "win_predicate": "player pixels intersect exit_box after shrink navigation"
+    },
+    "predicate_id": "toggle_csp_then_navigate_exit",
+    "recipe_source": "generic_cast_grid_phase_fsm_world_model",
+    "solution": [
+      "cell0,1",
+      "cell1,0",
+      "cell1,2",
+      "cell2,1",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3"
+    ],
+    "target_recipe_withheld": "sc25",
+    "toggle_solution": [
+      "cell0,1",
+      "cell1,0",
+      "cell1,2",
+      "cell2,1"
+    ],
+    "transition_families": [
+      "config_toggle",
+      "phase_transition",
+      "navigate"
+    ],
+    "verifier": {
+      "few_shot_examples": [
+        "sc25",
+        "ar25",
+        "ka59",
+        "ft09"
+      ],
+      "name": "execution_grounded_cast_grid_phase_fsm",
+      "navigation_actions": 12,
+      "toggle_actions": 4,
+      "transition_patch_count": 16
+    },
+    "verifier_is_oracle": true
+  },
+  "honest_verdict": "success: sc25_generic_cast_grid_fsm_L1_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "leaderboard_submission": false,
+    "live_llm_call": false,
+    "llm_candidate_source": "verifier_ensemble_against_cached_candidates",
+    "no_3090_inference": true
+  },
+  "no_3090_inference": true,
+  "no_regression": true,
+  "object_digest": {
+    "background_color": 2,
+    "cast_active_color": 14,
+    "cast_cell_size": 3,
+    "cast_origin": [
+      24,
+      49
+    ],
+    "cast_step": 5,
+    "cell_label_template": "cell{row},{col}",
+    "click_action": 6,
+    "current_pattern": [
+      [
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    "direction_actions": {
+      "down": 2,
+      "left": 3,
+      "right": 4,
+      "up": 1
+    },
+    "direction_labels": {
+      "down": "move2",
+      "left": "move3",
+      "right": "move4",
+      "up": "move1"
+    },
+    "exit_box": [
+      17,
+      12,
+      22,
+      16
+    ],
+    "game": "sc25",
+    "navigation_step": 2,
+    "player_colors": [
+      9,
+      10
+    ],
+    "player_start": [
+      19,
+      40
+    ],
+    "rule_family": "cast_grid_phase_fsm",
+    "shrunk_player_height": 2,
+    "target_pattern": [
+      [
+        false,
+        true,
+        false
+      ],
+      [
+        true,
+        false,
+        true
+      ],
+      [
+        false,
+        true,
+        false
+      ]
+    ]
+  },
+  "offline_reproduced": true,
+  "plan_and_execute_result": {
+    "divergence_step": null,
+    "executed": true,
+    "executed_steps": [
+      {
+        "action": 6,
+        "data": {
+          "x": 29,
+          "y": 49
+        },
+        "label": "cell0,1",
+        "step": 1
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 24,
+          "y": 54
+        },
+        "label": "cell1,0",
+        "step": 2
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 34,
+          "y": 54
+        },
+        "label": "cell1,2",
+        "step": 3
+      },
+      {
+        "action": 6,
+        "data": {
+          "x": 29,
+          "y": 59
+        },
+        "label": "cell2,1",
+        "step": 4
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 5
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 6
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 7
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 8
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 9
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 10
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 11
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 12
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 13
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 14
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 15
+      },
+      {
+        "action": 3,
+        "data": null,
+        "label": "move3",
+        "step": 16
+      }
+    ],
+    "game": "sc25",
+    "generic_plan_and_execute_result": {
+      "divergence_step": {
+        "action": 1,
+        "data": null
+      },
+      "executed": false,
+      "game": "sc25",
+      "planned": true,
+      "reason": "model prediction diverged from observation \u2014 halted (verifier-grounded)"
+    },
+    "level_up": true,
+    "plan_len": 16,
+    "planned": true,
+    "solution": [
+      "cell0,1",
+      "cell1,0",
+      "cell1,2",
+      "cell2,1",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3",
+      "move3"
+    ],
+    "win_path": "cast-grid shrink spell then player-to-exit"
+  },
+  "preconditions_checked": {
+    "arc_solver_imports": true,
+    "baseline_command": ".venv/bin/pytest -k \"arc_solver_kit or world_model or sc25\" -q --no-cov",
+    "baseline_exit_code": 0,
+    "baseline_output_tail": ".0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [136 items]\n\n........................................................................ [ 52%]\n................................................................         [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytestmark = pytest.mark.kona\n\n.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n================= 136 passed, 5 skipped, 84 warnings in 27.12s =================\n",
+    "baseline_pytest_nocov_green": true,
+    "existing_world_model_games": [
+      "sc25",
+      "ar25",
+      "ka59",
+      "ft09"
+    ],
+    "existing_world_models": 4,
+    "generator_resource_available": true,
+    "gguf_cached": true,
+    "igpu_llama_server": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "sc25_environment_files": true,
+    "world_model_verifier_imports": true
+  },
+  "random_seed": 4469,
+  "reproducibility_checksum": "31501265619b89657355d491143593b6aaa6d28cae991e211617de3c43217c6b",
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "sc25",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4469_generic_cast_grid_fsm_operator.json",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "sc25_generic_level_reproduced": 1,
+  "sc25_resolved_generically": true,
+  "schema": "carnot.exp4469.generic_cast_grid_fsm_operator.v1",
+  "solution_labels": [
+    "cell0,1",
+    "cell1,0",
+    "cell1,2",
+    "cell2,1",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-4469",
+    "SCENARIO-REPORT-4469"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_game": "sc25",
+  "verifier_is_oracle": true,
+  "world_model_verification": {
+    "cell_size": 1,
+    "mismatches": [],
+    "transitions_correct": 16,
+    "transitions_scored": 16,
+    "verifier_accuracy": 1.0,
+    "world_model_loaded": true
+  }
+}

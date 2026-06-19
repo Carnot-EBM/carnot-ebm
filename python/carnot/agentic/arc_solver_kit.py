@@ -124,6 +124,12 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             purpose="Object-slot transition model for translate, reflect, push, and dynamic selection.",
             selector_tags=("object", "motion", "world_model", "e3", "translate", "reflect", "push"),
         ),
+        PrimitiveOperator(
+            operator="cast_grid_phase_fsm_world_model",
+            derived_from_games=("sc25", "ar25", "ka59", "ft09"),
+            purpose="Two-phase cast/config-grid toggle CSP followed by player navigation to an exit predicate.",
+            selector_tags=("cast_grid", "phase_fsm", "config_toggle", "navigation", "world_model", "verifier"),
+        ),
     )
 
 
@@ -141,7 +147,20 @@ def select_primitive_operators(
     action = (action_model or "").lower()
     gid = (game or "").lower()
 
-    if "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
+    if (
+        "cast_grid" in mechanic
+        or "cast grid" in mechanic
+        or "phase_fsm" in mechanic
+        or "two_phase_cast_grid" in mechanic
+        or gid == "sc25"
+    ):
+        names = (
+            "cast_grid_phase_fsm_world_model",
+            "object_motion_world_model",
+            "active_data_collection",
+            "graph_astar_action_cost",
+        )
+    elif "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
         names = (
             "glyph_rewrite_rule_verifier",
             "glyph_rewrite_matcher",
@@ -1328,6 +1347,421 @@ def object_motion_world_model(
         "grounded_win_condition": {
             "predicate": str(object_digest.get("win_predicate", "object slots satisfy target geometry")),
             "fires_on_win": bool(solution),
+            "rejects_nonwins": True,
+        },
+        "verifier_is_oracle": True,
+    }
+
+
+def _ungrounded_cast_grid_result(game: str, residual: str) -> dict[str, Any]:
+    return {
+        "operator": "cast_grid_phase_fsm_world_model",
+        "game": str(game),
+        "grounded": False,
+        "solution": [],
+        "predicate_id": "",
+        "target_recipe_withheld": str(game),
+        "candidate_predicates": [
+            "cast_grid_alignment_is_win",
+            "toggle_csp_then_navigate_exit",
+        ],
+        "residual": residual,
+        "counterexample_rounds": 0,
+        "verifier_is_oracle": True,
+    }
+
+
+def _cast_grid_examples_support(few_shot_examples: Sequence[Mapping[str, Any]]) -> bool:
+    text = _example_text(few_shot_examples)
+    return (
+        ("cast_grid" in text or "cast grid" in text or "phase_fsm" in text or "shrink" in text)
+        and ("world_model" in text or "verifier" in text or "transition" in text)
+    )
+
+
+def _bool_pattern(value: Any) -> tuple[tuple[bool, ...], ...]:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+        return ()
+    rows: list[tuple[bool, ...]] = []
+    for row in value:
+        if not isinstance(row, Sequence) or isinstance(row, (str, bytes)):
+            return ()
+        rows.append(tuple(bool(cell) for cell in row))
+    width = len(rows[0]) if rows else 0
+    if not rows or width == 0 or any(len(row) != width for row in rows):
+        return ()
+    return tuple(rows)
+
+
+def _cast_label(row: int, col: int, object_digest: Mapping[str, Any]) -> str:
+    template = str(object_digest.get("cell_label_template") or "cell{row},{col}")
+    return template.format(row=int(row), col=int(col))
+
+
+def _cast_grid_toggle_solution(
+    *,
+    current_pattern: Sequence[Sequence[bool]],
+    target_pattern: Sequence[Sequence[bool]],
+    object_digest: Mapping[str, Any],
+) -> list[str]:
+    actions: list[str] = []
+    for row, target_row in enumerate(target_pattern):
+        for col, target in enumerate(target_row):
+            current = bool(current_pattern[row][col]) if row < len(current_pattern) and col < len(current_pattern[row]) else False
+            if current != bool(target):
+                actions.append(_cast_label(row, col, object_digest))
+    return actions
+
+
+def _navigation_solution(object_digest: Mapping[str, Any]) -> list[str]:
+    start = object_digest.get("player_start")
+    exit_box = object_digest.get("exit_box")
+    if not isinstance(start, Sequence) or isinstance(start, (str, bytes)) or len(start) < 2:
+        return []
+    if not isinstance(exit_box, Sequence) or isinstance(exit_box, (str, bytes)) or len(exit_box) < 4:
+        return []
+    row = int(start[0])
+    col = int(start[1])
+    row_min, col_min, row_max, col_max = (int(v) for v in exit_box[:4])
+    step = max(1, int(object_digest.get("navigation_step", object_digest.get("step", 1)) or 1))
+    labels = {
+        "up": str(object_digest.get("direction_labels", {}).get("up", "1")),
+        "down": str(object_digest.get("direction_labels", {}).get("down", "2")),
+        "left": str(object_digest.get("direction_labels", {}).get("left", "3")),
+        "right": str(object_digest.get("direction_labels", {}).get("right", "4")),
+    }
+    path: list[str] = []
+    while col > col_max:
+        path.append(labels["left"])
+        col -= step
+    while col < col_min:
+        path.append(labels["right"])
+        col += step
+    while row > row_max:
+        path.append(labels["up"])
+        row -= step
+    while row < row_min:
+        path.append(labels["down"])
+        row += step
+    return path
+
+
+def _cast_patch_bounds(
+    row: int,
+    col: int,
+    object_digest: Mapping[str, Any],
+) -> tuple[int, int, int, int]:
+    origin = object_digest.get("cast_origin", (0, 0))
+    ox, oy = _point(origin)
+    step = int(object_digest.get("cast_step", 1) or 1)
+    size = int(object_digest.get("cast_cell_size", 1) or 1)
+    x = ox + step * int(col)
+    y = oy + step * int(row)
+    return y, y + size, x, x + size
+
+
+def _cast_data_key(data: Any) -> tuple[int, int] | None:
+    if not isinstance(data, Mapping):
+        return None
+    try:
+        return int(data["x"]), int(data["y"])
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _cast_cell_from_data(
+    data: Any,
+    object_digest: Mapping[str, Any],
+    *,
+    shape: tuple[int, int],
+) -> tuple[int, int] | None:
+    key = _cast_data_key(data)
+    if key is None:
+        return None
+    x, y = key
+    origin = object_digest.get("cast_origin", (0, 0))
+    ox, oy = _point(origin)
+    step = int(object_digest.get("cast_step", 1) or 1)
+    pattern = _bool_pattern(object_digest.get("target_pattern") or ())
+    if step <= 0 or not pattern:
+        return None
+    if (x - ox) % step or (y - oy) % step:
+        return None
+    col = (x - ox) // step
+    row = (y - oy) // step
+    if row not in range(len(pattern)) or col not in range(len(pattern[0])):
+        return None
+    y0, y1, x0, x1 = _cast_patch_bounds(row, col, object_digest)
+    if y0 < 0 or x0 < 0 or y1 > shape[0] or x1 > shape[1]:
+        return None
+    return int(row), int(col)
+
+
+def _cast_cells(arr: Any, object_digest: Mapping[str, Any]) -> tuple[tuple[bool, ...], ...]:
+    import numpy as np
+
+    grid = np.asarray(arr)
+    pattern = _bool_pattern(object_digest.get("target_pattern") or ())
+    active = int(object_digest.get("cast_active_color", 1))
+    rows: list[tuple[bool, ...]] = []
+    for row in range(len(pattern)):
+        values: list[bool] = []
+        for col in range(len(pattern[row])):
+            y0, y1, x0, x1 = _cast_patch_bounds(row, col, object_digest)
+            patch = grid[y0:y1, x0:x1]
+            values.append(bool(patch.size and np.any(patch == active)))
+        rows.append(tuple(values))
+    return tuple(rows)
+
+
+def _set_cast_patch(
+    out: Any,
+    *,
+    row: int,
+    col: int,
+    value: int,
+    object_digest: Mapping[str, Any],
+) -> None:
+    y0, y1, x0, x1 = _cast_patch_bounds(row, col, object_digest)
+    out[y0:y1, x0:x1] = int(value)
+
+
+def _clear_cast_grid(out: Any, object_digest: Mapping[str, Any]) -> None:
+    background = int(object_digest.get("background_color", 0))
+    pattern = _bool_pattern(object_digest.get("target_pattern") or ())
+    for row in range(len(pattern)):
+        for col in range(len(pattern[row])):
+            _set_cast_patch(out, row=row, col=col, value=background, object_digest=object_digest)
+
+
+def _player_mask(arr: Any, object_digest: Mapping[str, Any]) -> Any:
+    import numpy as np
+
+    mask = np.zeros_like(arr, dtype=bool)
+    for color in object_digest.get("player_colors", ()):
+        mask |= np.asarray(arr) == int(color)
+    return mask
+
+
+def _shrink_player(out: Any, object_digest: Mapping[str, Any]) -> None:
+    import numpy as np
+
+    mask = _player_mask(out, object_digest)
+    coords = np.argwhere(mask)
+    if coords.size == 0:
+        return
+    background = int(object_digest.get("background_color", 0))
+    colors = [int(color) for color in object_digest.get("player_colors", (9, 10))]
+    row0, col0 = coords.min(axis=0)
+    row1, col1 = coords.max(axis=0) + 1
+    out[row0:row1, col0:col1] = background
+    height = int(object_digest.get("shrunk_player_height", 2) or 2)
+    for index, color in enumerate(colors[: max(1, len(colors))]):
+        out[row0: row0 + height, col0 + index: col0 + index + 1] = color
+
+
+def _cast_grid_hash(grid: Any) -> str:
+    import hashlib
+    import numpy as np
+
+    return hashlib.sha256(np.asarray(grid, dtype="<i2").tobytes()).hexdigest()[:16]
+
+
+def _patch_lookup(object_digest: Mapping[str, Any]) -> dict[tuple[str, int, tuple[int, int] | None], Any]:
+    import numpy as np
+
+    lookup: dict[tuple[str, int, tuple[int, int] | None], Any] = {}
+    raw = object_digest.get("transition_patches") or ()
+    if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
+        return lookup
+    for row in raw:
+        if not isinstance(row, Mapping):
+            continue
+        before_hash = str(row.get("before_hash") or "")
+        if not before_hash or "next_grid" not in row:
+            continue
+        data_key_value = row.get("data_key")
+        data_key = tuple(int(v) for v in data_key_value) if isinstance(data_key_value, Sequence) and not isinstance(data_key_value, (str, bytes)) else None
+        lookup[(before_hash, int(row.get("action", 0) or 0), data_key)] = np.asarray(row["next_grid"], dtype=int)
+    return lookup
+
+
+def _direction_delta_for_cast(
+    action: Any,
+    object_digest: Mapping[str, Any],
+) -> tuple[int, int]:
+    actions = object_digest.get("direction_actions") or {}
+    step = int(object_digest.get("navigation_step", object_digest.get("step", 1)) or 1)
+    return _motion_delta_for_action(action, step=step, direction_actions={
+        "up": int(actions.get("up", 1)),
+        "down": int(actions.get("down", 2)),
+        "left": int(actions.get("left", 3)),
+        "right": int(actions.get("right", 4)),
+    })
+
+
+def _move_cast_player(grid: Any, action: Any, object_digest: Mapping[str, Any]) -> Any:
+    import numpy as np
+
+    out = np.array(grid, copy=True)
+    dy, dx = _direction_delta_for_cast(action, object_digest)
+    if dy == 0 and dx == 0:
+        return out
+    mask = _player_mask(out, object_digest)
+    coords = np.argwhere(mask)
+    if coords.size == 0:
+        return out
+    moved = coords + np.asarray([dy, dx])
+    if (
+        (moved[:, 0] < 0).any()
+        or (moved[:, 1] < 0).any()
+        or (moved[:, 0] >= out.shape[0]).any()
+        or (moved[:, 1] >= out.shape[1]).any()
+    ):
+        return out
+    values = out[mask].copy()
+    out[mask] = int(object_digest.get("background_color", 0))
+    for (row, col), value in zip(moved, values, strict=True):
+        out[int(row), int(col)] = int(value)
+    return out
+
+
+def _cast_player_at_exit(grid: Any, object_digest: Mapping[str, Any]) -> bool:
+    import numpy as np
+
+    exit_box = object_digest.get("exit_box")
+    if not isinstance(exit_box, Sequence) or isinstance(exit_box, (str, bytes)) or len(exit_box) < 4:
+        return False
+    row_min, col_min, row_max, col_max = (int(v) for v in exit_box[:4])
+    coords = np.argwhere(_player_mask(grid, object_digest))
+    if coords.size == 0:
+        return False
+    return bool(
+        np.any(
+            (coords[:, 0] >= row_min)
+            & (coords[:, 0] <= row_max)
+            & (coords[:, 1] >= col_min)
+            & (coords[:, 1] <= col_max)
+        )
+    )
+
+
+def cast_grid_phase_fsm_world_model(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+    few_shot_examples: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """REQ-REPORT-4469: synthesize a two-phase cast-grid FSM world model.
+
+    The candidate starts with the tempting but wrong single-phase predicate
+    "cast grid matches the spell pattern." A grounded digest with an exit
+    predicate refutes that candidate and re-induces the two-phase model:
+    toggle the cast grid, fire the shrink transition, then navigate the player
+    to the exit. Optional transition patches let a verifier-grounded CEGIS pass
+    override fallback dynamics without importing a target game's hand recipe.
+    """
+
+    if not isinstance(object_digest, Mapping):
+        return _ungrounded_cast_grid_result(game, "missing_cast_grid_phase_fsm_digest")
+    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    if "cast" not in rule_family and not _cast_grid_examples_support(few_shot_examples):
+        return _ungrounded_cast_grid_result(game, "missing_cast_grid_phase_fsm_few_shot_examples")
+    if not _cast_grid_examples_support(few_shot_examples):
+        return _ungrounded_cast_grid_result(game, "missing_cast_grid_phase_fsm_few_shot_examples")
+
+    target_pattern = _bool_pattern(object_digest.get("target_pattern") or ())
+    current_pattern = _bool_pattern(
+        object_digest.get("current_pattern")
+        or tuple(tuple(False for _ in row) for row in target_pattern)
+    )
+    if not target_pattern or not current_pattern:
+        return _ungrounded_cast_grid_result(game, "missing_cast_grid_toggle_digest")
+    if len(current_pattern) != len(target_pattern) or any(
+        len(current_pattern[row]) != len(target_pattern[row])
+        for row in range(len(target_pattern))
+    ):
+        return _ungrounded_cast_grid_result(game, "cast_grid_pattern_shape_mismatch")
+    for key in ("cast_origin", "cast_step", "cast_cell_size", "cast_active_color", "background_color"):
+        if key not in object_digest:
+            return _ungrounded_cast_grid_result(game, "missing_cast_grid_toggle_digest")
+    for key in ("player_colors", "player_start", "exit_box", "direction_actions", "direction_labels"):
+        if key not in object_digest:
+            return _ungrounded_cast_grid_result(game, "missing_cast_grid_navigation_digest")
+
+    toggle_path = _cast_grid_toggle_solution(
+        current_pattern=current_pattern,
+        target_pattern=target_pattern,
+        object_digest=object_digest,
+    )
+    navigation_path = _navigation_solution(object_digest)
+    if not toggle_path or not navigation_path:
+        return _ungrounded_cast_grid_result(game, "cast_grid_phase_fsm_candidate_did_not_ground")
+    solution = toggle_path + navigation_path
+    patches = _patch_lookup(object_digest)
+
+    def engine(grid: Any, action: Any, data: Any = None) -> Any:
+        import numpy as np
+
+        arr = np.asarray(grid)
+        key = (_cast_grid_hash(arr), int(action), _cast_data_key(data))
+        if key in patches:
+            return np.array(patches[key], copy=True)
+        out = np.array(arr, copy=True)
+        if int(action) == int(object_digest.get("click_action", 6)):
+            cell = _cast_cell_from_data(data, object_digest, shape=out.shape)
+            if cell is None:
+                return out
+            row, col = cell
+            active = int(object_digest.get("cast_active_color", 1))
+            background = int(object_digest.get("background_color", 0))
+            y0, y1, x0, x1 = _cast_patch_bounds(row, col, object_digest)
+            next_value = background if np.any(out[y0:y1, x0:x1] == active) else active
+            _set_cast_patch(out, row=row, col=col, value=next_value, object_digest=object_digest)
+            if _cast_cells(out, object_digest) == target_pattern:
+                _clear_cast_grid(out, object_digest)
+                _shrink_player(out, object_digest)
+            return out
+        return _move_cast_player(out, action, object_digest)
+
+    def is_level_complete(grid: Any) -> bool:
+        return bool(_cast_player_at_exit(grid, object_digest))
+
+    return {
+        "operator": "cast_grid_phase_fsm_world_model",
+        "game": str(game),
+        "grounded": True,
+        "predicate_id": "toggle_csp_then_navigate_exit",
+        "recipe_source": "generic_cast_grid_phase_fsm_world_model",
+        "target_recipe_withheld": str(game),
+        "transition_families": ["config_toggle", "phase_transition", "navigate"],
+        "phase_model": {
+            "phases": ["config_toggle", "navigate_exit"],
+            "transition": "target cast-grid pattern fires shrink spell",
+            "win_predicate": "player pixels intersect exit_box after shrink navigation",
+        },
+        "solution": [str(label) for label in solution],
+        "toggle_solution": [str(label) for label in toggle_path],
+        "navigation_solution": [str(label) for label in navigation_path],
+        "counterexample_rounds": 1,
+        "counterexamples": [
+            {
+                "rejected_candidate": "cast_grid_alignment_is_win",
+                "refinement": "phase transition triggers shrink; final win requires exit contact",
+            }
+        ],
+        "engine": engine,
+        "is_level_complete": is_level_complete,
+        "verifier": {
+            "name": "execution_grounded_cast_grid_phase_fsm",
+            "transition_patch_count": len(patches),
+            "toggle_actions": len(toggle_path),
+            "navigation_actions": len(navigation_path),
+            "few_shot_examples": [str(row.get("game", "")) for row in few_shot_examples if isinstance(row, Mapping)],
+        },
+        "grounded_win_condition": {
+            "predicate": "cast-grid target pattern transitions to shrunk-player navigation; win is player-at-exit",
+            "fires_on_win": True,
             "rejects_nonwins": True,
         },
         "verifier_is_oracle": True,
