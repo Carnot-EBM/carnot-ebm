@@ -1,0 +1,90 @@
+{
+  "board_state_transcript": [
+    {
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.614278,
+      "exit_code": 0,
+      "output_excerpt": "returncode=0",
+      "stage": "kv260_ssh_precondition"
+    },
+    {
+      "board": "kv260",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.766705,
+      "exit_code": 1,
+      "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
+      "stage": "kv260_xmutil_listapps"
+    },
+    {
+      "board": "kv260",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.433724,
+      "exit_code": 0,
+      "output_excerpt": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3",
+      "stage": "kv260_uio_device_presence"
+    }
+  ],
+  "duration_s": 5.815433,
+  "experiment": 4422,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_kv260_reachable_overlay_<name> or blocked_kv260_ssh_unreachable -- a clean documented skip is honest, not a fabrication).",
+    "kv260_reachable": "BARE bool: SSH-reachability (the ONLY valid KV260 precondition; never host SD-card presence).",
+    "loaded_overlay": "str|null: the xmutil listapps loaded overlay if reachable (the sovereignty-story continuity record).",
+    "preconditions_checked": "Records the SSH-reachability check (NOT a host SD-card check); pre-empts the retired-mechanism + fabrication modes.",
+    "uio_present": "bool|null: the carnot_ising bitstream UIO device present if reachable (the liveness check)."
+  },
+  "honest_verdict": "success_kv260_reachable_overlay_unknown",
+  "inference_substrate": "hardware_smoke",
+  "kv260_reachable": true,
+  "loaded_overlay": null,
+  "overlay_probe": {
+    "command": "ssh kria 'xmutil listapps'",
+    "exit_code": 1,
+    "loaded_overlay": null,
+    "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
+    "overlay_names": [],
+    "status": "overlay_returncode_1"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.614278,
+      "exit_code": 0,
+      "mechanism": "ssh",
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 4422,
+  "reproducibility_checksum": "9d5fc1d6c23846aedfb375783d733553ff250f55ddb1dc88b7ff9ec961b2b6c0",
+  "schema": "carnot.hardware_continuity_kv260_ssh_overlay.v2",
+  "source_context": {
+    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4411_hardware_continuity_kv260.json",
+    "previous_artifact_read": true,
+    "previous_experiment": 4411,
+    "previous_honest_verdict": "success_kv260_continuity_terminal_reached",
+    "previous_kv260_reachable": true
+  },
+  "spec_refs": [
+    "REQ-HW-4422",
+    "SCENARIO-HW-4422"
+  ],
+  "speedup_claim_made": false,
+  "uio_present": true,
+  "uio_probe": {
+    "command": "ssh kria 'ls /dev/uio*'",
+    "devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3"
+    ],
+    "exit_code": 0,
+    "output_excerpt": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3",
+    "status": "uio_devices_present",
+    "uio_present": true
+  }
+}

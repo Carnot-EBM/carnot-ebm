@@ -8726,6 +8726,90 @@ seed, checksum, no speedup claim, and no KV260 host SD-card precondition.
 
 ---
 
+### REQ-HW-4422
+
+**Title:** KV260 continuity check MUST report SSH reachability, loaded overlay, and UIO liveness as bare fields
+
+**Description:**
+Experiment 4422 MUST produce
+`results/experiment_4422_hardware_continuity_kv260.json` as an opportunistic
+KV260-only continuity artifact. Per north-star section 3, KV260 is the
+sovereignty-story board, but this experiment is a lightweight continuity check:
+SSH reachability first, then loaded-bitstream and UIO liveness only when SSH is
+reachable.
+
+The only valid KV260 precondition is:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card presence is NEVER a valid precondition for this task; host block
+device probes such as `/dev/mmcblk*` MUST NOT appear in the JSON artifact.
+
+If the SSH precondition fails, the experiment MUST write an honest
+`blocked_kv260_ssh_unreachable` verdict, set `kv260_reachable` to bare
+`false`, set `loaded_overlay` to `null`, set `uio_present` to `null`, populate
+`preconditions_checked` with the failed SSH command, and stop without running
+the overlay or UIO probes. If SSH succeeds, the experiment MUST record the
+loaded overlay with:
+
+`ssh kria 'xmutil listapps'`
+
+and the UIO device presence with:
+
+`ssh kria 'ls /dev/uio*'`
+
+The artifact MUST read the prior KV260 continuity context from
+`results/experiment_4411_hardware_continuity_kv260.json` when available and
+MUST NOT fabricate terminal status, speedup, or fabric acceleration claims.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `honest_verdict`: `Terminal-prefixed (success_kv260_reachable_overlay_<name> or blocked_kv260_ssh_unreachable -- a clean documented skip is honest, not a fabrication).`
+- `kv260_reachable`: `BARE bool: SSH-reachability (the ONLY valid KV260 precondition; never host SD-card presence).`
+- `loaded_overlay`: `str|null: the xmutil listapps loaded overlay if reachable (the sovereignty-story continuity record).`
+- `uio_present`: `bool|null: the carnot_ising bitstream UIO device present if reachable (the liveness check).`
+- `preconditions_checked`: `Records the SSH-reachability check (NOT a host SD-card check); pre-empts the retired-mechanism + fabrication modes.`
+
+**Acceptance criteria:**
+- `python3 results/experiment_4422_hardware_continuity_kv260.py` writes
+  `results/experiment_4422_hardware_continuity_kv260.json`.
+- If KV260 is unreachable, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, `kv260_reachable` is a bare boolean false,
+  `loaded_overlay` is null, `uio_present` is null, `preconditions_checked`
+  records the KV260 SSH command and exit code, and no overlay/UIO probe is run.
+- If KV260 is reachable, `kv260_reachable` is a bare boolean true,
+  `loaded_overlay` is the parsed `xmutil listapps` overlay string or null when
+  no overlay can be parsed, `uio_present` is a bare boolean derived from
+  `ssh kria 'ls /dev/uio*'`, and the overlay/UIO command transcripts are
+  retained for audit.
+- The JSON artifact includes the required `field_principles`, deterministic
+  seed, checksum, `hardware_smoke` substrate, prior Exp 4411 source context,
+  no fabric speedup claim, and no KV260 host SD-card precondition.
+- `honest_verdict` is either exactly `blocked_kv260_ssh_unreachable` or starts
+  with `success_kv260_reachable_overlay_`.
+
+**Implementation status:** Implemented (Exp 4422)
+
+---
+
+### SCENARIO-HW-4422
+
+**Scenario:** Exp 4422 records KV260 SSH reachability, loaded overlay, and UIO liveness.
+
+**Given:** KV260 is checked only through board SSH reachability and never
+through host SD-card presence.
+**When:** Experiment 4422 runs the KV260 SSH precondition and, only when it
+succeeds, runs `xmutil listapps` and `/dev/uio*` listing over SSH.
+**Then:** It writes `results/experiment_4422_hardware_continuity_kv260.json`
+with a terminal-prefixed verdict, bare `kv260_reachable`, `loaded_overlay` as
+`str|null`, `uio_present` as `bool|null`, `preconditions_checked`, command
+transcripts, prior Exp 4411 context, deterministic seed, checksum, no speedup
+claim, and no KV260 host SD-card precondition.
+
+**Implementation status:** Implemented (Exp 4422)
+
+---
+
 ### SCENARIO-HW-4334
 
 **Scenario:** Exp 4334 reports KV260, PolarFire, and GateMate continuity without milestone blocking.
