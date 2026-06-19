@@ -25906,6 +25906,72 @@ performs no production verifier edits.
 |---|---|---|
 | REQ-REPORT-4461 | Planned (`python/carnot/experiment_4461_registry_gaps_hygiene.py`, `results/experiment_4461_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4461_registry_gaps_hygiene.py`) |
 
+### REQ-REPORT-4462: ARC Count-Integrity Lint Gates Provisional Inflation And Package Replay Claims
+
+The Exp 4462 workflow SHALL provide a count-integrity lint for
+`ops/arc_solve_registry.yaml` and the A6 operator submission package artifact.
+The lint SHALL compute `reproducible_total_levels` only from the sum of per-game
+`levels_reproduced` rows, SHALL ignore `levels_live_recorded` and
+`provisional_total_levels` for that reproduced metric, and SHALL fail any
+registry where the top-level reproducible total includes provisional or
+non-replaying levels.
+
+The lint SHALL re-run a deterministic spot-check of banked registry replay
+sequences through `arc_solver_kit.reproduce()` or an injected equivalent. A
+game row SHALL fail if it claims `levels_reproduced` greater than the level
+re-derived by the reproduction gate. The submission-package guard SHALL also
+validate every counted A6 `per_game_replay_validation` row: no row may
+contribute packaged levels unless it has `replays_ok=true`, `env_matched=true`,
+a non-empty replay sequence, and a reproduction-gate result whose reached level
+is at least the counted reproduced levels. The package's
+`total_reproduced_levels_in_package` SHALL equal the sum of those replay-valid
+rows.
+
+The pre-commit configuration SHALL run this lint for staged changes to
+`ops/arc_solve_registry.yaml` and
+`results/experiment_4460_submission_package_prep.json`. The workflow SHALL NOT
+retroactively rewrite prior artifacts, SHALL NOT submit to a leaderboard, and
+SHALL NOT edit production verifier code.
+
+The workflow SHALL write
+`results/experiment_4462_provisional_reproduced_count_integrity_lint.json` with
+required top-level fields `honest_verdict`, `guard_shipped`,
+`catches_provisional_inflation`, `tests_pass`, `inference_substrate`,
+`duration_s`, `field_principles`, `spec_refs`, and
+`reproducibility_checksum`. Complete-path `honest_verdict` SHALL start with
+`complete:`, `success:`, `passed:`, or `shipped:`. The required field
+principles are:
+
+- `honest_verdict`: "terminal-prefixed"
+- `guard_shipped`: "bare bool: the count-integrity lint + replay guard + pre-commit hook landed green"
+- `catches_provisional_inflation`: "bare bool: the lint flags a registry where reproducible_total_levels counts a provisional/non-replaying level"
+- `tests_pass`: "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"
+- `inference_substrate`: "aggregation_from_upstream_artifacts -- this is a lint/test (CPU); 100us floor"
+
+#### SCENARIO-REPORT-4462: Registry Totals Count Reproduced Rows Only
+
+**Given** a registry where one game has `levels_reproduced=1` and
+`levels_live_recorded=5`
+**When** the count-integrity lint computes the authoritative reproduced total
+**Then** it accepts `reproducible_total_levels=1`, rejects
+`reproducible_total_levels=5`, reports a provisional-inflation issue, and does
+not count the live-recorded provisional levels as reproduced.
+
+#### SCENARIO-REPORT-4462-SUBMISSION: Packaged Counts Require Replay-Valid Rows
+
+**Given** an A6 submission-package artifact with per-game replay validation rows
+**When** the submission replay guard evaluates the package
+**Then** it accepts only rows whose replay sequence and reproduction result
+re-validate the counted levels, rejects totals that exceed the sum of valid
+rows, rejects rows with `replays_ok=false` or `env_matched=false`, and keeps
+`submitted_to_leaderboard=false`.
+
+## Implementation Status (REQ-REPORT-4462)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4462 | Implemented (`scripts/arc_count_integrity_lint.py`, `.pre-commit-config.yaml`, `python/carnot/experiment_4462_provisional_reproduced_count_integrity_lint.py`, `results/experiment_4462_provisional_reproduced_count_integrity_lint.json`) | Implemented (`tests/python/test_arc_count_integrity_lint.py`, `tests/python/test_experiment_4462_provisional_reproduced_count_integrity_lint.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
