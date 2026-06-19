@@ -2882,6 +2882,65 @@ Depth-Over-Breadth / progress-not-churn ethos (north-star §1).
 - results/arc3_win_condition_survey.json — the 6 non-spatial first-solve targets
 - `ops/north-star.md` §1 — the headline-progress / no-churn ethos this specializes
 
+## ARC-AGI-3 Submission Sprint Forcing Function (MANDATORY — through 2026-06-30)
+
+**Origin:** 2026-06-19 operator directive: "The next 2 weeks will be focused on solving these games live
+as we have until the end of this month to make our submissions for the challenge contest... keep claude in
+as the retro and planner as we want the quality and we do have claude quota if we keep the experiments
+using codex instead." Filed to keep the planner on the ARC-AGI-3 live-submission path across EVERY
+milestone until the deadline — not just the one pre-staged `.409 roadmap. The planner has a strong
+carry-forward / research-breadth bias (cf. the retired Depth-Over-Breadth Forcing Function and the
+Scope-Reduction-When-Flagged incident); a single pre-staged roadmap steers ONE milestone, but the
+ARC-AGI-3 Kaggle submission deadline is **2026-06-30**, so the priority must persist for ~2 weeks of
+milestones. This forcing function is the durable mechanism (the planner reads CLAUDE.md as required input
+every plan generation).
+
+**The rule.** Until **2026-06-30** (or until the operator records submissions made / lifts this), the
+planner MUST, every milestone:
+
+1. **Allocate the MAJORITY of each milestone to ARC-AGI-3 live-game-solving progress** — the generic
+   first-contact solver, verifier-grounded config-rule induction, glyph/rewrite perception, multi-level
+   deepening, and unseen-game transfer-routing. The operative metric is **`reproducible_total_levels`
+   must monotonically grow** (currently 34; see `ops/arc_solve_registry.yaml`). A milestone that produces
+   no new reproducible level AND no concrete unblock toward one is churn (north-star §1).
+
+2. **Every ARC SOLVE task is reproduction-gated and Incremental-Progress-scoped** — `+1..+n` levels on ONE
+   game, `offline_reproduced=true` via `arc_solver_kit.reproduce` (only reproduced levels count), and feeds
+   reusable scaffolding back into `arc_solver_kit` + `ops/arc_solve_registry.yaml` so the LIVE solver
+   applies it to games it has never seen (per ARC-AGI-3 Incremental-Progress Scoping + ARC Solve
+   Reproducibility, below).
+
+3. **Agent routing for the sprint (operator-fixed 2026-06-19):** ALL experiments stay `agent_type: codex`
+   / `gpt-5.5` (the quota-conserve bulk — `CODEX_FORCE_EXPERIMENTS=1`). The **planner and retro STAY on
+   Claude Opus 4.8** (`AGENT_TYPE_PLANNER`/`AGENT_TYPE_RETRO=claude`) — the operator's explicit choice:
+   "we want the quality and we do have claude quota if we keep the experiments using codex." Do NOT flip
+   planner/retro to codex during the sprint.
+
+4. **The live-submission stack is FROZEN** for the sprint: generator = **Qwen3.5-9B-MTP** on the iGPU
+   (NEVER the 3090s) + MTP + q8 KV + `n_predict>=2048` + `/no_think` ([[project_arc_live_generator]]);
+   Kaggle engine = the CUDA-12.8 `llama-server` binary (NOT a wheel — MTP is in libllama-common). Planner
+   tasks build ON this stack; do not re-litigate model selection (settled 2026-06-19).
+
+**Reserved slots still apply.** The 2 infra slots, 1-per-attached-board hardware-continuity slot, and the
+SOTA-ingestion slot are still reserved each milestone (those disciplines are not suspended) — the
+"majority" in rule 1 is of the REMAINING slots.
+
+**Retirement.** This forcing function retires on **2026-06-30**, OR when the operator records that the
+challenge submissions are made, OR when the operator explicitly lifts it. After retirement the planner
+resumes normal research breadth (the verifier-moat / cross-domain directions). Preserve per never-prune.
+
+**Why this is in CLAUDE.md, not just `research-roadmap-next.yaml`.** A pre-staged roadmap steers ONE
+milestone and then is consumed; the planner reads CLAUDE.md on EVERY plan generation. Putting the sprint
+priority here makes the planner reserve the majority for ARC live-solving at design time for all of `.410+`
+through the deadline, without the outer-loop re-staging each milestone. The matching per-milestone trigger
+is the `ops/known-issues.md` MANDATORY-NEXT-MILESTONE entry (backed by the Overdue-Priority Forcing
+Function), with this rule as the design-time authority.
+
+**Cross-references:** 2026-06-19 operator directive (origin) · `ops/north-star.md` §1 (no-churn ethos) ·
+CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" + "ARC Solve Reproducibility" (the per-task mechanics) ·
+CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precedent) · `[[project_arc_live_generator]]`
+(the frozen generator) · `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` (packaging).
+
 ## ARC Solve Reproducibility + Solver-Reuse Discipline (MANDATORY)
 
 **Origin:** 2026-06-16 operator directive after the outer-loop spent a long
