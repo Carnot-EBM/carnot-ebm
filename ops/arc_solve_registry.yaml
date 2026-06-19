@@ -472,33 +472,40 @@ games:
     index. Always inspect on the adapter''s exact path (replay the banked solution)
     when RE-ing a deeper level.'
 - game: vc33
-  reproducibility: unsolved
-  levels_reproduced: 0
-  solver: scripts/arc_loop_solve.py --game vc33
+  reproducibility: reproduced
+  levels_reproduced: 1
+  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes to s5i5 and applies
+    config_rule_verifier support-clearance-as-marker-coverage digest
   gotchas: []
   dead_ends:
   - gap_id: GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
-    status: open
+    status: filled
     game: vc33
     failure_mode: needs_per_game_RE
-    missing_discriminator: selectable verifier that distinguishes the target's winning
-      delta from the explored non-winning states
+    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the
+      explored non-winning states
     candidate_design: derive a selectable verifier from the routed solved-game delta
     routed_recipe:
       game: s5i5
-      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7
-        + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays
-        it through arc_solver_kit.reproduce.
-      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged
-        0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi.
-        L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].'
-      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal
-        controlled marker x by +3; v_extend click (22,47) increases the vertical controlled
-        marker y by +3.
+      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6
+        from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.
+      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must
+        occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial
+        controlled markers [(9,33),(30,9)].'
+      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker
+        x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.
     loop_result_summary:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
+    filled_by: experiment_4446_drive_generic_first_contact_bank
+    filled_artifact: results/experiment_4446_drive_generic_first_contact_bank.json
+    filled_summary: config_rule_verifier support-clearance digest reproduced vc33 L1 offline
+  mechanic_class: config_support_clearance
+  win_condition: 'L1 support-clearance config: lower click control shifts the paired supports until the
+    active piece clears the blocking goal color; next_level fires on replay.'
+  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.
+  reproduce: arc_solver_kit.reproduce(vc33, ['lower_click']*3, apply_vc33_label, claimed_level=1)
 - game: g50t
   reproducibility: reproduced
   levels_reproduced: 1
@@ -563,8 +570,8 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
-reproducible_total_levels: 38
-reproducible_total_games: 19
+reproducible_total_levels: 39
+reproducible_total_games: 20
 provisional_total_levels: 5
 live_submissions:
 - date: '2026-06-17'

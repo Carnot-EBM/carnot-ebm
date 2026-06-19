@@ -1,0 +1,416 @@
+{
+  "duration_s": 4.144094,
+  "experiment": "experiment_4446_drive_generic_first_contact_bank",
+  "few_shot_examples_used": [
+    {
+      "game": "s5i5",
+      "predicate": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
+      "rule_id": "config_toggle_marker_coverage"
+    },
+    {
+      "game": "sc25",
+      "predicate": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit.",
+      "rule_id": "sc25"
+    },
+    {
+      "game": "tn36",
+      "predicate": "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}.",
+      "rule_id": "program_editor"
+    },
+    {
+      "game": "ft09",
+      "predicate": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
+      "rule_id": "local_constraint_color_cycle"
+    },
+    {
+      "game": "tr87",
+      "predicate": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
+      "rule_id": "config_substitution"
+    },
+    {
+      "game": "g50t",
+      "predicate": "L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier grounds against execution state immediately before next_level.",
+      "rule_id": "config_toggle_target_offset"
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed complete:/success: -- a routed-no-level run is complete (not partial:, the .409 exp4423 FAIL-loop fix)"
+    },
+    "inference_substrate": {
+      "principle": "THE .410 LESSON -- EMIT it; live_llm_inference if induction runs live >60s, else verifier_ensemble_against_cached_candidates with duration_s >= 1s; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "if no bank, the residual mechanic -- the .412 build backlog"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "routed_to": {
+      "principle": "which solved game's recipe transfer-routing selected -- proves the corpus is the lever"
+    },
+    "target_game": {
+      "principle": "the unsolved game the generic solver attempted"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: execution-grounded"
+    }
+  },
+  "honest_verdict": "success: generic_first_contact_vc33_L1_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "no_3090_inference": true,
+  "object_centric_digest": {
+    "abstract_rule_family": "support_clearance_as_marker_coverage",
+    "click_points": {
+      "lower_click": {
+        "x": 61,
+        "y": 33
+      },
+      "upper_click": {
+        "x": 61,
+        "y": 25
+      }
+    },
+    "controlled_markers": [
+      [
+        -23,
+        0
+      ]
+    ],
+    "derived_from": "vc33 visible support-clearance delta routed from s5i5 marker coverage",
+    "display_coordinate_system": "arcengine ACTION6 display coordinates",
+    "game": "vc33",
+    "horizontal_label": "lower_click",
+    "predicate": "move the active support-clearance coordinate from -23 to -17; lower_click shifts the support pair by one 2-cell step",
+    "rule_family": "marker_coverage",
+    "step": 2,
+    "target_markers": [
+      [
+        -17,
+        0
+      ]
+    ],
+    "vertical_label": "upper_click"
+  },
+  "offline_reproduced": true,
+  "operator_result": {
+    "game": "vc33",
+    "grounded": true,
+    "grounded_win_condition": {
+      "fires_on_win": true,
+      "predicate": "all target marker coordinates are occupied by controlled markers",
+      "rejects_nonwins": true
+    },
+    "legacy_operator": "config_rule_grounding",
+    "operator": "config_rule_verifier",
+    "predicate_id": "marker_coverage",
+    "predicted_markers": [
+      [
+        -17,
+        0
+      ]
+    ],
+    "recipe_source": "generic_config_rule_verifier",
+    "solution": [
+      "lower_click",
+      "lower_click",
+      "lower_click"
+    ],
+    "target_markers": [
+      [
+        -17,
+        0
+      ]
+    ],
+    "target_recipe_withheld": "vc33",
+    "verifier": {
+      "actions_checked": 3,
+      "name": "execution_grounded_marker_coverage",
+      "predicate_satisfied": true
+    },
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "arc_solve_learning_importable": true,
+    "arc_solver_kit_importable": true,
+    "focused_exp4423_exact_command_blocker": "repo_addopts_package_wide_coverage_on_focused_file",
+    "focused_exp4423_exact_command_green": false,
+    "focused_exp4423_pytest_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_experiment_4423_generic_first_contact_breadth.py -q --no-cov",
+    "focused_exp4423_pytest_green": true,
+    "focused_exp4423_pytest_summary": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [6 items]\n\n......                                                                   [100%]\n============================== 6 passed in 2.46s ===============================\n",
+    "generator_resource_available": true,
+    "igpu_llama_server_available": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "qwen_gguf_cached": true,
+    "target_env_present": true
+  },
+  "random_seed": 4446,
+  "recommendation": {
+    "cautions": [
+      "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota.",
+      "level = frame.levels_completed; env._game has no levels_completed.",
+      "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset.",
+      "first env.step after reset is a no-op (sc25); warm up after reset.",
+      "live-coupled hardcoded coords miss the offline layout; discover from env.",
+      "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check.",
+      "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent.",
+      "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+    ],
+    "confident_transfer": true,
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      },
+      {
+        "derived_from_games": [
+          "tr87"
+        ],
+        "id": "primitive_glyph_rewrite_matcher",
+        "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436.",
+        "operator": "glyph_rewrite_matcher"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "id": "primitive_config_rule_grounding",
+        "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436.",
+        "operator": "config_rule_grounding"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t"
+        ],
+        "id": "primitive_config_rule_verifier",
+        "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe.",
+        "operator": "config_rule_verifier"
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "id": "primitive_graph_astar_action_cost",
+        "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436.",
+        "operator": "graph_astar_action_cost"
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "id": "primitive_object_centric_digest",
+        "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436.",
+        "operator": "object_centric_digest"
+      },
+      {
+        "derived_from_games": [
+          "ar25",
+          "ka59",
+          "ft09",
+          "sc25"
+        ],
+        "id": "primitive_active_data_collection",
+        "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436.",
+        "operator": "active_data_collection"
+      }
+    ],
+    "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "heuristic_policy": {
+      "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+      "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+      "feature": "per-action cell impact + bfs_expansions headroom probe",
+      "rule": {
+        "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+        "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+        "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+        "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+      },
+      "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+      "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+    },
+    "recommended": [
+      {
+        "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
+        "game": "s5i5",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
+        ],
+        "similarity": 6.0,
+        "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+        "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)]."
+      },
+      {
+        "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
+        "game": "ft09",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
+          "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
+        ],
+        "similarity": 6.0,
+        "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+        "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
+      },
+      {
+        "action_model": "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped.",
+        "game": "su15",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [],
+        "similarity": 5.5,
+        "solver": "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).",
+        "win_condition": "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along a diagonal line (x up, y down)."
+      }
+    ],
+    "routing_confidence": 1.0,
+    "selected_generic_operators": [
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "operator": "graph_astar_action_cost",
+        "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+        "selector_tags": [
+          "graph_explore",
+          "astar",
+          "action_cost",
+          "keyboard",
+          "click"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "operator": "object_centric_digest",
+        "purpose": "Connected-component object summary for routing, grounding, and active data.",
+        "selector_tags": [
+          "object",
+          "digest",
+          "program_editor",
+          "world_model"
+        ]
+      }
+    ],
+    "strategy": {
+      "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+      "game": "vc33",
+      "mechanic": "graph_explore",
+      "name": "graph_explore",
+      "needs": null,
+      "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+      "routed_mechanic": "graph_explore",
+      "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+      "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "uses_goal_distance_heuristic": true,
+      "wired": true
+    },
+    "target_features": {
+      "action_type": "click",
+      "difficulty": "hard",
+      "game": "vc33",
+      "spatial": true,
+      "win_kw": [
+        "align",
+        "goal",
+        "position"
+      ]
+    },
+    "target_game": "vc33",
+    "top_similarity": 6.0
+  },
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361",
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "vc33",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4446_drive_generic_first_contact_bank.json",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "routed_to": "s5i5",
+  "schema": "carnot.exp4446.drive_generic_first_contact_bank.v1",
+  "selected_operator": {
+    "operator": "config_rule_verifier",
+    "reason": "routed_recipe_contains_config_rule_markers",
+    "routed_to": "s5i5"
+  },
+  "solution_labels": [
+    "lower_click",
+    "lower_click",
+    "lower_click"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-4446",
+    "SCENARIO-REPORT-4446"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_game": "vc33",
+  "verifier_is_oracle": true
+}
