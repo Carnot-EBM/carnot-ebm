@@ -87,10 +87,14 @@ def main():
         # -j2 (not nproc): nvcc is memory-heavy; fewer parallel jobs avoids an OOM-kill on the builder.
         sh(f"cmake --build {SRC}/build --target llama-server -j 2")
         stage("built")
-        server = next(SRC.glob("build/**/llama-server"))
+        server = next(p for p in SRC.glob("build/**/llama-server") if p.is_file())
         shutil.copy2(server, OUT / "llama-server")
         n = 0
         for so in SRC.glob("build/**/*.so*"):
+            # the *.so* glob also matches dirs like node_modules/lodash.sortby (web-UI deps) -- skip
+            # non-files and anything under node_modules (v6 crashed here with IsADirectoryError).
+            if not so.is_file() or "node_modules" in so.parts:
+                continue
             shutil.copy2(so, OUT / so.name)
             n += 1
         # MTP self-verify: the symbol common_speculative_impl_draft_mtp MUST be present
