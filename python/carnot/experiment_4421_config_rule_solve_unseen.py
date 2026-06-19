@@ -91,6 +91,8 @@ def predicted_markers_after_path(
     controlled_markers: Sequence[tuple[int, int]],
     path: Sequence[str],
 ) -> list[tuple[int, int]]:
+    """Project marker positions through the generic config-rule path labels."""
+
     predicted = [tuple(marker) for marker in controlled_markers]
     for label in path:
         if label == H_EXTEND:
@@ -112,21 +114,17 @@ def derive_s5i5_l1_path(
 ) -> list[str]:
     """Derive the L1 click path by using the marker-coverage predicate as win-check."""
 
-    predicted = [tuple(marker) for marker in controlled_markers]
-    path: list[str] = []
-    for target_x, target_y in target_markers:
-        if any(y == target_y and x < target_x for x, y in predicted):
-            index = next(i for i, (x, y) in enumerate(predicted) if y == target_y and x < target_x)
-            steps = (target_x - predicted[index][0]) // 3
-            path.extend([H_EXTEND] * steps)
-            predicted[index] = (target_x, target_y)
-    for target_x, target_y in target_markers:
-        if any(x == target_x and y < target_y for x, y in predicted):
-            index = next(i for i, (x, y) in enumerate(predicted) if x == target_x and y < target_y)
-            steps = (target_y - predicted[index][1]) // 3
-            path.extend([V_EXTEND] * steps)
-            predicted[index] = (target_x, target_y)
-    if not is_win(predicted, target_markers):
+    from carnot.agentic import arc_solver_kit as kit
+
+    grounded = kit.ground_marker_coverage_rule(
+        controlled_markers=controlled_markers,
+        target_markers=target_markers,
+        step=3,
+        horizontal_label=H_EXTEND,
+        vertical_label=V_EXTEND,
+    )
+    path = list(grounded["solution"])
+    if not grounded["predicate_satisfied"]:
         raise ValueError("derived s5i5 path does not satisfy grounded predicate")
     return path
 

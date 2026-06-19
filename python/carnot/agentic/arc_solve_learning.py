@@ -128,12 +128,30 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
     reg = _registry()
     strategy = strat.route_for_game(target_game, mechanic=mechanic, reg=reg)
     if target_game not in feats:
+        from . import arc_solver_kit as kit
+
         return {
             "error": f"{target_game} not in survey",
             "strategy": strategy,
+            "selected_generic_operators": [
+                op.as_dict()
+                for op in kit.select_primitive_operators(
+                    mechanic_class=strategy.get("routed_mechanic", ""), game=target_game
+                )
+            ],
             "general_gotchas": reg.get("general_gotchas", []),
         }
     tf = feats[target_game]
+    from . import arc_solver_kit as kit
+
+    selected_generic_operators = [
+        op.as_dict()
+        for op in kit.select_primitive_operators(
+            mechanic_class=strategy.get("routed_mechanic", ""),
+            action_model=str(tf.get("action_type", "")),
+            game=target_game,
+        )
+    ]
     by_game = {g["game"]: g for g in reg.get("games", [])}
     ranked = []
     for solved in _solved_games(reg):
@@ -172,6 +190,7 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
         "target_game": target_game,
         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
         "strategy": strategy,
+        "selected_generic_operators": selected_generic_operators,
         "recommended": ranked[:3],
         "heuristic_policy": policy,
         "general_gotchas": reg.get("general_gotchas", []),

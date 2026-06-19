@@ -56,6 +56,12 @@ def solve_adaptered(game: str, target_level: int) -> dict:
     ad = adapters.get_adapter(game)
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
+    selected_generic_operators = [
+        op.as_dict()
+        for op in kit.select_primitive_operators(
+            mechanic_class=getattr(ad, "game", game), game=game
+        )
+    ]
 
     # warm-start the search with a saved LEARNED verifier if present, else hand verifier
     ckpt = _ckpt_path(game)
@@ -100,6 +106,7 @@ def solve_adaptered(game: str, target_level: int) -> dict:
         "states_expanded": total_states, "verifier_src": verifier_src,
         "offline_reproduced": bool(gate["reproduced"]), "reproduced_levels": cur,
         "learned_verifier_checkpoint": ckpt_written,
+        "selected_generic_operators": selected_generic_operators,
         "reproduction_gate": gate,
         # PERSIST the winning action path (not just the verdict) so it is replay-gateable by the
         # offline metaharness / a third party -- per the ARC Solve Reproducibility discipline
@@ -199,6 +206,7 @@ def needs_re(game: str) -> dict:
     return {
         "game": game, "status": "needs_per_game_RE",
         "transfer_recommendation": rec.get("recommended"),
+        "selected_generic_operators": rec.get("selected_generic_operators"),
         "general_gotchas": rec.get("general_gotchas"),
         "guidance": rec.get("guidance"),
         "instruction": ("Reverse-engineer this game's win/action/state DELTA reusing the routed "

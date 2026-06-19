@@ -25127,6 +25127,57 @@ is true for the reproduction gate, and no `partial:` verdict is accepted.
 |---|---|---|
 | REQ-REPORT-4435 | Planned (`python/carnot/experiment_4435_generic_first_contact_fixed.py`, `results/experiment_4435_generic_first_contact_fixed.json`) | Planned (`tests/python/test_experiment_4435_generic_first_contact_fixed.py`) |
 
+### REQ-REPORT-4436: Deepen One Reproduced ARC Game And Consolidate Solver Primitives
+
+The Exp 4436 workflow SHALL take exactly one already reproduced ARC-AGI-3 game
+one level deeper under the offline reproduction gate while preserving every
+pre-existing reproduced solve. It SHALL consolidate recurring per-game solver
+ideas into additive, composable generic operators in
+`python/carnot/agentic/arc_solver_kit.py`: a greedy glyph/rewrite matcher
+derived from tr87, a config-rule grounding helper, a graph-explore A* priority helper
+with the standing learned action-cost term, an object-centric digest helper, and an
+active-data collection planner. The standing loop SHALL expose the selected
+generic operators for a target so future solves compose these primitives before
+falling back to per-game reverse engineering.
+
+Before claiming success, the workflow SHALL confirm local `environment_files/`
+are present, SHALL replay the newly deepened game through
+`arc_solver_kit.reproduce()`, and SHALL replay every prior reproducible solve
+through the same reproduction gate or an injected equivalent. Missing offline
+resources SHALL stop with a terminal `blocked_` verdict rather than a fabricated
+solve. The workflow SHALL NOT use 3090 inference and SHALL NOT submit to a
+leaderboard.
+
+The workflow SHALL write
+`results/experiment_4436_deepen_plus_primitive_consolidation.json` with required
+top-level fields `honest_verdict`, bare int `reproduced_levels`, bare bool
+`offline_reproduced`, `primitives_consolidated`, bare bool `no_regression`,
+bare int `random_seed`, `reproducibility_checksum`, and
+`verifier_is_oracle=true`. `primitives_consolidated` SHALL be a list of
+`{operator, derived_from_games}` rows matching the generic operators now exposed
+by `arc_solver_kit`, and the ARC solve registry `general_gotchas` SHALL document
+each consolidated primitive and its source games.
+
+#### SCENARIO-REPORT-4436: Deepened Solve And Primitive Consolidation Are Reproduction-Gated
+
+**Given** offline ARC environment files, an already reproduced target game, prior
+reproducible solve rows, and importable ARC solver-kit primitives
+**When** the Exp 4436 workflow deepens the selected game, consolidates the
+primitive operators, records them in the registry gotchas, and runs the
+reproduction gates
+**Then** the artifact records `reproduced_levels>=1` for the +1 deeper level,
+`offline_reproduced=true`, `no_regression=true` for all prior reproduced solves,
+the required primitive operator rows with their derived-from games,
+`verifier_is_oracle=true`, no 3090 inference, no leaderboard submission, and a
+terminal honest verdict starting with `complete:`, `success:`, `passed:`, or
+`shipped:`.
+
+## Implementation Status (REQ-REPORT-4436)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4436 | Planned (`python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py`, `results/experiment_4436_deepen_plus_primitive_consolidation.json`) | Planned (`tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

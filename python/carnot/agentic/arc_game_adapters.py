@@ -174,6 +174,7 @@ def _tr87():
     win-animation frames stay distinct (the search reaches the level-up)."""
     from itertools import product as _product
 
+    from carnot.agentic import arc_solver_kit as kit
     from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
@@ -183,7 +184,7 @@ def _tr87():
         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
 
     def _cyc(a, b):
-        return min((b - a) % 7, (a - b) % 7)            # cyclic distance over the 7-value wheel
+        return kit.cyclic_distance(a, b, modulus=7)     # cyclic distance over the 7-value wheel
 
     def _level_flag(game, name):
         try:
@@ -206,25 +207,12 @@ def _tr87():
         # false claim). Returns None if any pass cannot match a position.
         rules = [([s.name for s in lhs], [s.name for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
 
-        def _rewrite(seq):
-            out, pos = [], 0
-            while pos < len(seq):
-                for lhs_names, rhs_names in rules:
-                    if seq[pos:pos + len(lhs_names)] == lhs_names:
-                        out.extend(rhs_names)
-                        pos += len(lhs_names)
-                        break
-                else:
-                    return None
-            return out
-
         seq = [s.name for s in game.zvojhrjxxm]
         passes = 2 if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation")) else 1
-        for _ in range(passes):
-            seq = _rewrite(seq)
-            if seq is None:
-                return None
-        return [int(n[-1]) for n in seq]
+        rewritten = kit.greedy_rewrite(seq, rules, passes=passes)
+        if rewritten is None:
+            return None
+        return [int(n[-1]) for n in rewritten]
 
     def _solve_rule_parse(structs, target, editable):
         # ALTER_RULES inverse puzzle: the RULES are editable, target+editable are FIXED. Find rule values
@@ -299,30 +287,17 @@ def _tr87():
             rhs = tuple((rser, ((rf - 1 + o) % 7) + 1) for o in roff)
             return lhs, rhs
 
-        def _greedy(rules, seq):
-            out: list = []
-            pos = 0
-            while pos < len(seq):
-                for lhs, rhs in rules:
-                    if seq[pos:pos + len(lhs)] == list(lhs):
-                        out.extend(rhs)
-                        pos += len(lhs)
-                        break
-                else:
-                    return None
-            return out
-
         first_map: dict = {}
         for fv in _product(range(1, 8), repeat=2 * len(first)):
             rules = [_build(first[k], fv[2 * k], fv[2 * k + 1]) for k in range(len(first))]
-            bint = _greedy(rules, list(target))
+            bint = kit.greedy_rewrite(list(target), rules)
             if bint is not None:
                 first_map.setdefault(tuple(bint), fv)
         result = None
         for sv in _product(range(1, 8), repeat=2 * len(second)):
             srules = [_build(second[k], sv[2 * k], sv[2 * k + 1]) for k in range(len(second))]
             for bint, fv in first_map.items():
-                if _greedy(srules, list(bint)) == list(editable):
+                if kit.greedy_rewrite(list(bint), srules) == tuple(editable):
                     req = [(0, 0)] * len(meta)
                     for k, i in enumerate(first):
                         req[i] = (fv[2 * k], fv[2 * k + 1])
@@ -384,7 +359,7 @@ def _tr87():
         # smooth gradient -- every ACTION1/2 toward target drops the score by 1, so the search walks
         # straight to the win (mismatch-count gave no gradient and exploded at L2's 7 glyphs). The 7x
         # length-gap term bounds the unmodelled-twist case so the search stops with no false claim.
-        return float(sum(_cyc(cur[i], req[i]) for i in range(n)) + 7 * abs(len(cur) - len(req)))
+        return kit.sequence_cyclic_distance(cur[:n], req[:n], modulus=7) + 7 * abs(len(cur) - len(req))
 
     def action_labels(env, frame=None, path=None):
         return [json.dumps({"action": a}) for a in (1, 2, 3, 4)]
@@ -409,7 +384,7 @@ def _tr87():
     return GameAdapter(
         game="tr87", action_labels=action_labels, apply=apply, state_key=state_key,
         featurize=None, hand_verifier=hand_verifier, warmup_label=None,
-        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90}, branch_mode="fresh_env",
+        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90, 6: 90, 7: 90}, branch_mode="fresh_env",
     )
 
 

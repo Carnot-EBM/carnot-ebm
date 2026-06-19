@@ -44,6 +44,7 @@ from __future__ import annotations
 import copy
 import heapq
 import itertools
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Hashable, Optional, Sequence
 
@@ -51,6 +52,268 @@ REPO = Path(__file__).resolve().parents[3]
 ENV_DIR = REPO / "environment_files"
 ARC_STANDING_PATH_COST_WEIGHT = 1.0
 ARC_BASELINE_PATH_COST_WEIGHT = 0.0
+
+
+@dataclass(frozen=True)
+class PrimitiveOperator:
+    """A reusable ARC solve operator learned from one or more reproduced games."""
+
+    operator: str
+    derived_from_games: tuple[str, ...]
+    purpose: str
+    selector_tags: tuple[str, ...] = ()
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "operator": self.operator,
+            "derived_from_games": list(self.derived_from_games),
+            "purpose": self.purpose,
+            "selector_tags": list(self.selector_tags),
+        }
+
+
+def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
+    """REQ-REPORT-4436: consolidated generic operators available to the standing loop."""
+
+    return (
+        PrimitiveOperator(
+            operator="glyph_rewrite_matcher",
+            derived_from_games=("tr87",),
+            purpose="Greedy multi-glyph LHS->RHS rewrite, including repeated passes.",
+            selector_tags=("config_substitution", "glyph", "rewrite", "tr87"),
+        ),
+        PrimitiveOperator(
+            operator="config_rule_grounding",
+            derived_from_games=("s5i5", "ft09", "tr87"),
+            purpose="Ground a proposed config rule against predicted object/register coverage.",
+            selector_tags=("config_toggle", "marker_coverage", "local_constraint", "rule"),
+        ),
+        PrimitiveOperator(
+            operator="graph_astar_action_cost",
+            derived_from_games=("tu93", "lp85", "cd82", "sp80", "cn04", "m0r0", "sk48", "su15"),
+            purpose="A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+            selector_tags=("graph_explore", "astar", "action_cost", "keyboard", "click"),
+        ),
+        PrimitiveOperator(
+            operator="object_centric_digest",
+            derived_from_games=("g50t", "lp85", "tn36", "ka59"),
+            purpose="Connected-component object summary for routing, grounding, and active data.",
+            selector_tags=("object", "digest", "program_editor", "world_model"),
+        ),
+        PrimitiveOperator(
+            operator="active_data_collection",
+            derived_from_games=("ar25", "ka59", "ft09", "sc25"),
+            purpose="Balanced action/object coverage plan for offline transition collection.",
+            selector_tags=("active_data", "world_model", "e3", "transition"),
+        ),
+    )
+
+
+def select_primitive_operators(
+    *, mechanic_class: Optional[str] = None, action_model: str = "", game: str = ""
+) -> tuple[PrimitiveOperator, ...]:
+    """Select generic operators before per-game reverse engineering.
+
+    This is intentionally conservative: it exposes reusable operators for the standing
+    loop without removing any per-game adapter path.
+    """
+
+    registry = {op.operator: op for op in primitive_operator_registry()}
+    mechanic = (mechanic_class or "").lower()
+    action = (action_model or "").lower()
+    gid = (game or "").lower()
+
+    if "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
+        names = ("glyph_rewrite_matcher", "graph_astar_action_cost", "object_centric_digest")
+    elif "config" in mechanic or "toggle" in mechanic or "constraint" in mechanic:
+        names = ("config_rule_grounding", "object_centric_digest", "graph_astar_action_cost")
+    elif "program_editor" in mechanic:
+        names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
+    elif "world_model" in mechanic or "e3" in mechanic:
+        names = ("active_data_collection", "object_centric_digest", "graph_astar_action_cost")
+    elif "keyboard" in action or "click" in action or "graph" in mechanic:
+        names = ("graph_astar_action_cost", "object_centric_digest")
+    else:
+        names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
+    return tuple(registry[name] for name in names)
+
+
+def cyclic_distance(current: int, target: int, *, modulus: int = 7) -> int:
+    """Shortest cyclic distance on an integer wheel, used by config/glyph solvers."""
+
+    if modulus <= 0:
+        raise ValueError("modulus must be positive")
+    return min((int(target) - int(current)) % modulus, (int(current) - int(target)) % modulus)
+
+
+def sequence_cyclic_distance(
+    current: Sequence[int],
+    required: Sequence[int],
+    *,
+    modulus: int = 7,
+    gap_cost: Optional[float] = None,
+) -> float:
+    """Sum cyclic distance over aligned values, with a bounded length-gap penalty."""
+
+    n = min(len(current), len(required))
+    gap = float(modulus if gap_cost is None else gap_cost)
+    return float(
+        sum(cyclic_distance(current[i], required[i], modulus=modulus) for i in range(n))
+        + gap * abs(len(current) - len(required))
+    )
+
+
+def greedy_rewrite(
+    sequence: Sequence[Hashable],
+    rules: Sequence[tuple[Sequence[Hashable], Sequence[Hashable]]],
+    *,
+    passes: int = 1,
+) -> tuple[Hashable, ...] | None:
+    """Greedy first-prefix LHS->RHS rewrite, repeated for tr87-style chains."""
+
+    normalized = [(tuple(lhs), tuple(rhs)) for lhs, rhs in rules]
+    out: tuple[Hashable, ...] = tuple(sequence)
+    for _ in range(max(0, int(passes))):
+        pos = 0
+        rewritten: list[Hashable] = []
+        while pos < len(out):
+            for lhs, rhs in normalized:
+                if out[pos:pos + len(lhs)] == lhs:
+                    rewritten.extend(rhs)
+                    pos += len(lhs)
+                    break
+            else:
+                return None
+        out = tuple(rewritten)
+    return out
+
+
+def ground_marker_coverage_rule(
+    *,
+    controlled_markers: Sequence[tuple[int, int]],
+    target_markers: Sequence[tuple[int, int]],
+    step: int,
+    horizontal_label: str,
+    vertical_label: str,
+) -> dict[str, Any]:
+    """Derive a config-toggle path from a grounded marker-coverage predicate."""
+
+    predicted = [tuple(marker) for marker in controlled_markers]
+    path: list[str] = []
+    for target_x, target_y in target_markers:
+        candidates = [(i, x, y) for i, (x, y) in enumerate(predicted) if y == target_y and x < target_x]
+        if candidates:
+            index, x, _ = candidates[0]
+            moves = (target_x - x) // int(step)
+            path.extend([horizontal_label] * moves)
+            predicted[index] = (target_x, target_y)
+    for target_x, target_y in target_markers:
+        candidates = [(i, x, y) for i, (x, y) in enumerate(predicted) if x == target_x and y < target_y]
+        if candidates:
+            index, _, y = candidates[0]
+            moves = (target_y - y) // int(step)
+            path.extend([vertical_label] * moves)
+            predicted[index] = (target_x, target_y)
+    satisfied = all(tuple(target) in predicted for target in target_markers)
+    return {
+        "operator": "config_rule_grounding",
+        "solution": path,
+        "predicted_markers": [tuple(marker) for marker in predicted],
+        "target_markers": [tuple(marker) for marker in target_markers],
+        "predicate_satisfied": satisfied,
+    }
+
+
+def object_centric_digest(grid: Any) -> dict[str, Any]:
+    """Connected-component digest for ARC frames or grids."""
+
+    import numpy as np
+
+    arr = np.asarray(grid)
+    if arr.ndim != 2:
+        raise ValueError("object_centric_digest expects a 2-D grid")
+    vals, counts = np.unique(arr, return_counts=True)
+    background = int(vals[counts.argmax()]) if len(vals) else 0
+    mask = arr != background
+    seen = np.zeros_like(mask, dtype=bool)
+    components: list[dict[str, Any]] = []
+    h, w = arr.shape
+    for y0 in range(h):
+        for x0 in range(w):
+            if not mask[y0, x0] or seen[y0, x0]:
+                continue
+            color = int(arr[y0, x0])
+            stack = [(y0, x0)]
+            seen[y0, x0] = True
+            cells: list[tuple[int, int]] = []
+            while stack:
+                y, x = stack.pop()
+                cells.append((y, x))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = y + dy, x + dx
+                    if (
+                        0 <= ny < h
+                        and 0 <= nx < w
+                        and mask[ny, nx]
+                        and not seen[ny, nx]
+                        and int(arr[ny, nx]) == color
+                    ):
+                        seen[ny, nx] = True
+                        stack.append((ny, nx))
+            ys = [y for y, _ in cells]
+            xs = [x for _, x in cells]
+            bbox = [min(ys), min(xs), max(ys), max(xs)]
+            area = len(cells)
+            signature = f"c{color}:a{area}:bbox{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}"
+            components.append(
+                {
+                    "color": color,
+                    "area": area,
+                    "bbox": bbox,
+                    "centroid": [sum(xs) / area, sum(ys) / area],
+                    "signature": signature,
+                }
+            )
+    components.sort(key=lambda row: (-int(row["area"]), int(row["color"]), row["bbox"]))
+    return {
+        "operator": "object_centric_digest",
+        "shape": [int(arr.shape[0]), int(arr.shape[1])],
+        "background_color": background,
+        "component_count": len(components),
+        "components": components,
+    }
+
+
+def active_data_collection_plan(
+    *,
+    action_labels: Sequence[str],
+    object_signatures: Sequence[str],
+    max_cases_per_action: int = 3,
+) -> list[dict[str, Any]]:
+    """Balanced action/object coverage rows for offline transition collection."""
+
+    signatures = list(object_signatures) or ["none"]
+    rows: list[dict[str, Any]] = []
+    for action in action_labels:
+        for case_index in range(max(0, int(max_cases_per_action))):
+            rows.append(
+                {
+                    "operator": "active_data_collection",
+                    "action": str(action),
+                    "object_signature": signatures[case_index % len(signatures)],
+                    "case_index": case_index,
+                    "selection_policy": "balanced_action_object_coverage",
+                }
+            )
+    return rows
+
+
+def astar_frontier_priority(
+    *, depth: int, heuristic: float, path_cost_weight: Optional[float] = None
+) -> float:
+    """Standing graph/A* priority shared by OfflineSolver and graph-explore users."""
+
+    return float(standing_path_cost_weight(path_cost_weight) * int(depth) + float(heuristic))
 
 
 def standing_path_cost_weight(path_cost_weight: Optional[float]) -> float:
@@ -149,7 +412,11 @@ class OfflineSolver:
 
     def _priority(self, env: Any, path: Sequence[str]) -> float:
         """Verifier score plus standing path cost. Pass 0.0 for legacy greedy routing."""
-        return float(self.path_cost_weight * len(path) + self._call_verifier(env))
+        return astar_frontier_priority(
+            depth=len(path),
+            heuristic=self._call_verifier(env),
+            path_cost_weight=self.path_cost_weight,
+        )
 
     def _call_action_labels(self, env: Any, path: Sequence[str]) -> Sequence[str]:
         try:

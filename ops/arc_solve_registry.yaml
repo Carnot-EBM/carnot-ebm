@@ -28,6 +28,51 @@ general_gotchas:
     the winning arrangement, so the returned frame is already the next level and the
     pre-win grid is not externally observable. Ground the win predicate on execution
     state immediately before next_level, then count only the reproduce() level advance.
+- id: primitive_glyph_rewrite_matcher
+  operator: glyph_rewrite_matcher
+  derived_from_games:
+  - tr87
+  note: Generic greedy multi-glyph LHS->RHS rewrite matcher in arc_solver_kit;
+    handles one-to-one, one-to-many, many-to-many, and repeated-pass config chains.
+- id: primitive_config_rule_grounding
+  operator: config_rule_grounding
+  derived_from_games:
+  - s5i5
+  - ft09
+  - tr87
+  note: Generic helper for grounding config/toggle rules against predicted object
+    or register coverage before the offline reproduce gate counts a solve.
+- id: primitive_graph_astar_action_cost
+  operator: graph_astar_action_cost
+  derived_from_games:
+  - tu93
+  - lp85
+  - cd82
+  - sp80
+  - cn04
+  - m0r0
+  - sk48
+  - su15
+  note: Generic A* priority operator that composes path cost with verifier/action-cost
+    heuristic; OfflineSolver uses it as the standing best-first priority.
+- id: primitive_object_centric_digest
+  operator: object_centric_digest
+  derived_from_games:
+  - g50t
+  - lp85
+  - tn36
+  - ka59
+  note: Generic connected-component object summary used for routing, candidate
+    generation, active-data signatures, and config grounding.
+- id: primitive_active_data_collection
+  operator: active_data_collection
+  derived_from_games:
+  - ar25
+  - ka59
+  - ft09
+  - sc25
+  note: Generic balanced action/object coverage planner for offline transition
+    collection before world-model induction or per-mechanic repair.
 games:
 - game: r11l
   reproducibility: reproduced
