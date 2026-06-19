@@ -26,7 +26,11 @@ from pathlib import Path
 WORK = Path("/kaggle/working")
 OUT = WORK / "llamacpp-cuda-mtp"  # <- save this dir as a Kaggle Dataset
 SRC = WORK / "llama.cpp"
-CUDA_ARCHS = "60;70;75;89"  # P100=60, V100=70, T4=75, L4=89 -- cover ALL Kaggle GPUs (probe got a P100!)
+# Real SASS for the GPUs Kaggle actually provides: P100=60, T4=75, L4=89 (RTX 6000 Ada is also sm_89;
+# Quadro RTX 6000 Turing is sm_75 -> both covered). 89-virtual embeds compute_89 PTX as a JIT fallback so
+# an unexpected/newer GPU (>=8.9) still runs (no-PTX SASS-only would hard-fail on an unlisted arch). V100=70
+# dropped: Kaggle does not offer V100. Extra archs cost only build time + binary size, never runtime speed.
+CUDA_ARCHS = "60;75;89;89-virtual"
 # Pin a known-good upstream commit for reproducibility; bump only after re-verifying the MTP smoke below.
 LLAMA_REPO = "https://github.com/ggml-org/llama.cpp"
 GGUF_REPO = "unsloth/Qwen3.5-9B-MTP-GGUF"

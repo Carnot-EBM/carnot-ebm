@@ -154,11 +154,14 @@ live agent at `python/carnot/agentic/arc_competition_agent.py:_proposer()` (E2E-
    Kaggle Dataset, and point the submission at it via **`CARNOT_LLAMA_SERVER=/kaggle/input/<dataset>/llama-server`**
    (env, resolved at import). The binary is **model-agnostic** — it loads Qwen3.5-9B-MTP at runtime via
    `-m` + the MTP/KV flags; nothing is baked in.
-   - **Build recipe (ahead of time, internet on):** `cmake -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="75;89"`
-     (75 = T4, 89 = L4) on a recent llama.cpp (≥ the build that merged `draft-mtp`; the repo's 9606 has it),
-     `--target llama-server`. **Build it inside a Kaggle notebook (internet on)** to guarantee the CUDA
-     toolkit + GPU-arch match, then save the build dir as a Kaggle Dataset output. (A local CUDA build works
-     only if its arch list covers the Kaggle GPU.)
+   - **Build recipe (ahead of time, internet on):** `cmake -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="60;75;89;89-virtual"`
+     (60 = P100, 75 = T4 / Quadro-RTX-6000-Turing, 89 = L4 / RTX-6000-Ada; `89-virtual` = compute_89 PTX as a
+     JIT fallback for any newer/unlisted GPU — without PTX a SASS-only binary hard-fails on an arch not in the
+     list). V100=70 omitted (Kaggle does not offer it). On a recent llama.cpp (≥ the build that merged
+     `draft-mtp`; release b9714 / repo 9606 has it), `--target llama-server`. **Build it inside a Kaggle
+     notebook (internet on)** to guarantee the CUDA toolkit + GPU-arch match, then save the build dir as a
+     Kaggle Dataset output. (A local CUDA build works only if its arch list covers the Kaggle GPU.) The ARC-AGI-3
+     pool is P100 / T4×2 standard + RTX 6000 (internet-disabled); 12h notebook runtime cap; offline eval.
    - **Wheel fallback (no MTP):** if bundling the binary proves fiddly, use the `llama-cpp-python` CUDA wheel
      and run **MTP-OFF** (`CARNOT_ARC_MTP=0`) — base Qwen3.5-9B still grounds, just ~6.6–8.2 tok/s vs ~13.
 3. Carnot's own code (the agent/solver/world-model) — already in-repo, MIT-0.
