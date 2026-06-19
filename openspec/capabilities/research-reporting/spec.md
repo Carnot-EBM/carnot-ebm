@@ -24976,6 +24976,52 @@ delta for every miss, `generic_loo_solve_count` is a bare integer, and
 |---|---|---|
 | REQ-REPORT-4432 | Planned (`python/carnot/experiment_4432_loo_generic_solve_benchmark.py`, `results/experiment_4432_loo_generic_solve_benchmark.json`) | Planned (`tests/python/test_experiment_4432_loo_generic_solve_benchmark.py`) |
 
+### REQ-REPORT-4433: Example-Conditioned Win Induction Gates A Held-Out Config Game Through Offline Reproduction
+
+The Exp 4433 workflow SHALL take exactly one held-out config/toggle ARC game that
+is not already reproduced in `ops/arc_solve_registry.yaml`, gather at least three
+already-grounded solved-game win-rule examples as few-shot conditioning, combine
+those examples with an object-centric digest of the held-out game, and ground the
+proposed `is_win(grid)` predicate through an execution verifier before any solve
+claim counts. The verifier SHALL be reported as an oracle because it grounds or
+rejects the proposed predicate by execution rather than learning the verifier.
+
+Before attempting induction, the workflow SHALL check for a non-empty cached
+Qwen3.5-9B-MTP GGUF directory or a local iGPU llama-server path, non-empty
+offline `environment_files/`, the held-out environment files, and at least three
+grounded registry/example win rules. Missing resources SHALL write an honest
+terminal-prefixed `complete: blocked_<resource>` artifact and SHALL NOT fabricate
+generation or reproduction. The workflow SHALL NOT use 3090 inference and SHALL
+NOT submit to a leaderboard.
+
+The workflow SHALL write
+`results/experiment_4433_example_conditioned_win_induction.json` with required
+top-level fields `honest_verdict`, `reproduced_levels`, `offline_reproduced`,
+`few_shot_examples_used`, `verifier_is_oracle`, `random_seed`, and
+`reproducibility_checksum`. `reproduced_levels` SHALL be a bare integer counting
+only levels reproduced through `arc_solver_kit.reproduce()`, and
+`honest_verdict` SHALL start with a terminal `complete:`, `success:`, `passed:`,
+or `shipped:` prefix even when a grounded predicate fails to reproduce a level.
+
+#### SCENARIO-REPORT-4433: Held-Out Win Proposal Grounds Before It Drives One Offline Level
+
+**Given** cached local generator resources, offline environment files, a held-out
+unreproduced config/toggle game, and at least three solved-game grounded
+win-rule examples
+**When** the Exp 4433 workflow builds the few-shot prompt, records the
+object-centric digest, grounds the proposed predicate with the execution
+verifier, and drives the held-out game's offline solver/reproduction gate
+**Then** the artifact records the example corpus used, the terminal honest
+verdict, `verifier_is_oracle=true`, a reproducibility checksum over the
+corpus/prompt payload, and counts a new level only when offline reproduction
+reports at least one reproduced level.
+
+## Implementation Status (REQ-REPORT-4433)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4433 | Planned (`python/carnot/experiment_4433_example_conditioned_win_induction.py`, `results/experiment_4433_example_conditioned_win_induction.json`) | Planned (`tests/python/test_experiment_4433_example_conditioned_win_induction.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
