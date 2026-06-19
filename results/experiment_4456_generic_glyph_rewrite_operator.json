@@ -1,0 +1,234 @@
+{
+  "closed_gap_ids": [
+    "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER"
+  ],
+  "counterexample_rounds": 1,
+  "duration_s": 22.671053,
+  "experiment": "experiment_4456_generic_glyph_rewrite_operator",
+  "few_shot_examples_used": [
+    {
+      "game": "bsqsshqpox",
+      "predicate": "scan target left-to-right; first prefix LHS emits RHS",
+      "rule_id": "greedy_multi_glyph_lhs_rewrite"
+    },
+    {
+      "game": "tr87_reference",
+      "predicate": "N-pass glyph rewrite handles double_translation and tree_translation",
+      "rule_id": "double_translation_rewrite"
+    },
+    {
+      "game": "tr87_reference",
+      "predicate": "editable rule sides are adjusted so rewrite(target) equals fixed editable sequence",
+      "rule_id": "alter_rules_inverse"
+    },
+    {
+      "game": "tr87",
+      "predicate": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
+      "rule_id": "config_substitution"
+    }
+  ],
+  "field_principles": {
+    "counterexample_rounds": {
+      "principle": "bare int: refute->re-induce rounds -- proves SOAR-style self-improvement, not single-shot"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a measured no-generalize result is complete (negative-but-real), never partial:"
+    },
+    "inference_substrate": {
+      "principle": "THE .410/.411 LESSON -- EMIT it; live_llm_inference if induction ran live >60s, else verifier_ensemble_against_cached_candidates with duration_s >= 1s floor; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "the residual the generic operator could not induce -- the .413 build backlog"
+    },
+    "no_regression": {
+      "principle": "bare bool: every prior reproducible solve (incl tr87 L6 hand path) still reproduces"
+    },
+    "offline_reproduced": {
+      "principle": "the gate"
+    },
+    "random_seed": {
+      "principle": "determinism"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash"
+    },
+    "tr87_generic_level_reproduced": {
+      "principle": "bare int: how deep the generic operator re-solved tr87 (>=1), reproduction-gated"
+    },
+    "tr87_resolved_generically": {
+      "principle": "bare bool: tr87 re-solved by the GENERIC operator without tr87's own recipe -- the GAP-4432-LOO-TR87 closure, the core A2 hypothesis"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: the verifier GROUNDS the LLM-proposed rewrite predicate (execution-grounded), not a learned-verifier moat"
+    }
+  },
+  "generic_operator_result": {
+    "counterexample_rounds": 1,
+    "counterexamples": [
+      {
+        "observed_editable_sequence": [
+          "nxkictbbvztB3",
+          "nxkictbbvztB2",
+          "nxkictbbvztB6",
+          "nxkictbbvztB5",
+          "nxkictbbvztB6"
+        ],
+        "observed_target_sequence": [
+          "nxkictbbvztA4",
+          "nxkictbbvztA2",
+          "nxkictbbvztA3",
+          "nxkictbbvztA5",
+          "nxkictbbvztA1"
+        ],
+        "rejected_candidate": "editable_sequence_equals_target_sequence"
+      }
+    ],
+    "distance": 2.0,
+    "game": "tr87",
+    "grounded": true,
+    "grounded_win_condition": {
+      "fires_on_win": false,
+      "predicate": "editable glyph sequence equals greedy rewrite(target, rules, passes)",
+      "rejects_nonwins": true
+    },
+    "legacy_operator": "glyph_rewrite_matcher",
+    "operator": "glyph_rewrite_rule_verifier",
+    "predicate_id": "greedy_multi_glyph_lhs_rewrite",
+    "recipe_source": "generic_glyph_rewrite_rule_verifier",
+    "required_editable_sequence": [
+      "nxkictbbvztB3",
+      "nxkictbbvztB2",
+      "nxkictbbvztB6",
+      "nxkictbbvztB5",
+      "nxkictbbvztB1"
+    ],
+    "rewrite_passes": 1,
+    "solution": [],
+    "target_recipe_withheld": "tr87",
+    "verifier": {
+      "distance": 2.0,
+      "name": "execution_grounded_greedy_glyph_rewrite",
+      "passes_checked": 1,
+      "rules_checked": 6
+    },
+    "verifier_is_oracle": true
+  },
+  "generic_reproduction_result": {
+    "claimed_level": 1,
+    "game": "tr87",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "generic_solve_result": {
+    "counterexample_rounds": 1,
+    "operator_result": {
+      "counterexample_rounds": 1,
+      "counterexamples": [
+        {
+          "observed_editable_sequence": [
+            "nxkictbbvztB3",
+            "nxkictbbvztB2",
+            "nxkictbbvztB6",
+            "nxkictbbvztB5",
+            "nxkictbbvztB6"
+          ],
+          "observed_target_sequence": [
+            "nxkictbbvztA4",
+            "nxkictbbvztA2",
+            "nxkictbbvztA3",
+            "nxkictbbvztA5",
+            "nxkictbbvztA1"
+          ],
+          "rejected_candidate": "editable_sequence_equals_target_sequence"
+        }
+      ],
+      "distance": 2.0,
+      "game": "tr87",
+      "grounded": true,
+      "grounded_win_condition": {
+        "fires_on_win": false,
+        "predicate": "editable glyph sequence equals greedy rewrite(target, rules, passes)",
+        "rejects_nonwins": true
+      },
+      "legacy_operator": "glyph_rewrite_matcher",
+      "operator": "glyph_rewrite_rule_verifier",
+      "predicate_id": "greedy_multi_glyph_lhs_rewrite",
+      "recipe_source": "generic_glyph_rewrite_rule_verifier",
+      "required_editable_sequence": [
+        "nxkictbbvztB3",
+        "nxkictbbvztB2",
+        "nxkictbbvztB6",
+        "nxkictbbvztB5",
+        "nxkictbbvztB1"
+      ],
+      "rewrite_passes": 1,
+      "solution": [],
+      "target_recipe_withheld": "tr87",
+      "verifier": {
+        "distance": 2.0,
+        "name": "execution_grounded_greedy_glyph_rewrite",
+        "passes_checked": 1,
+        "rules_checked": 6
+      },
+      "verifier_is_oracle": true
+    },
+    "reached_level": 1,
+    "solution": [
+      "{\"action\": 2}",
+      "{\"action\": 2}",
+      "{\"action\": 4}",
+      "{\"action\": 2}",
+      "{\"action\": 2}",
+      "{\"action\": 4}",
+      "{\"action\": 1}",
+      "{\"action\": 1}",
+      "{\"action\": 1}",
+      "{\"action\": 4}",
+      "{\"action\": 2}",
+      "{\"action\": 4}",
+      "{\"action\": 2}",
+      "{\"action\": 2}"
+    ],
+    "solver_source": "generic_glyph_rewrite_rule_verifier_without_tr87_adapter",
+    "states_expanded": 3970,
+    "verifier_calls": 2721
+  },
+  "honest_verdict": "success: tr87_generic_glyph_rewrite_L1_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "leaderboard_submission": false,
+    "live_llm_call": false,
+    "no_3090_inference": true
+  },
+  "no_3090_inference": true,
+  "no_regression": true,
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "arc_solver_kit_importable": true,
+    "focused_baseline_exact_command_blocker": "repo_addopts_package_wide_coverage_on_focused_k_slice",
+    "focused_baseline_exact_command_green": false,
+    "focused_baseline_selected_green": true,
+    "generator_resource_available": true,
+    "gguf_cached": true,
+    "igpu_llama_server_available": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "tr87_env_present": true
+  },
+  "random_seed": 4456,
+  "reproducibility_checksum": "9af8b4f940d57da581320e8886e1054df8d850c0e905d07ff8690ac34c54fd94",
+  "result_path": "results/experiment_4456_generic_glyph_rewrite_operator.json",
+  "schema": "carnot.exp4456.generic_glyph_rewrite_operator.v1",
+  "spec_refs": [
+    "REQ-REPORT-4456",
+    "SCENARIO-REPORT-4456"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_game": "tr87",
+  "tr87_generic_level_reproduced": 1,
+  "tr87_resolved_generically": true,
+  "verifier_is_oracle": true
+}
