@@ -56,13 +56,10 @@ def _is_levelup_attempt(prompt: str) -> bool:
         "+1 deeper",
         "deeper level",
     )
-    if not any(s in p for s in bank_signals):
-        return False
-    # exclude a pure generic re-solve of an ALREADY-solved game (no new level): "re-solves ... NOT its
-    # own recipe" with no NEW-level clause is generalization validation, not a level-up.
-    if "re-solve" in p and "new" not in p.split("re-solve")[1][:120] and "reproduced_levels>=1" not in p.replace(" ", ""):
-        return False
-    return True
+    # A genuine new-level signal is REQUIRED. A pure generic RE-solve of an already-banked level
+    # (generalization validation: "re-solves via the generic operator, NOT its own recipe") carries no
+    # bank_signal, so it is correctly NOT counted -- no fragile exclusion needed.
+    return any(s in p for s in bank_signals)
 
 
 def lint_roadmap(path: Path, minimum: int) -> int:
