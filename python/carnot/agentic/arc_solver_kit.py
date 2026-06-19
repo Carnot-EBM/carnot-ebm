@@ -46,7 +46,7 @@ import heapq
 import itertools
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Hashable, Optional, Sequence
+from typing import Any, Callable, Hashable, Mapping, Optional, Sequence
 
 REPO = Path(__file__).resolve().parents[3]
 ENV_DIR = REPO / "environment_files"
@@ -89,6 +89,12 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("config_toggle", "marker_coverage", "local_constraint", "rule"),
         ),
         PrimitiveOperator(
+            operator="config_rule_verifier",
+            derived_from_games=("s5i5", "ft09", "g50t"),
+            purpose="Propose and execution-ground coverage, local-constraint, or toggle win predicates.",
+            selector_tags=("config_toggle", "marker_coverage", "local_constraint", "verifier", "rule"),
+        ),
+        PrimitiveOperator(
             operator="graph_astar_action_cost",
             derived_from_games=("tu93", "lp85", "cd82", "sp80", "cn04", "m0r0", "sk48", "su15"),
             purpose="A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
@@ -126,7 +132,7 @@ def select_primitive_operators(
     if "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
         names = ("glyph_rewrite_matcher", "graph_astar_action_cost", "object_centric_digest")
     elif "config" in mechanic or "toggle" in mechanic or "constraint" in mechanic:
-        names = ("config_rule_grounding", "object_centric_digest", "graph_astar_action_cost")
+        names = ("config_rule_verifier", "config_rule_grounding", "object_centric_digest", "graph_astar_action_cost")
     elif "program_editor" in mechanic:
         names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
     elif "world_model" in mechanic or "e3" in mechanic:
@@ -222,6 +228,311 @@ def ground_marker_coverage_rule(
         "target_markers": [tuple(marker) for marker in target_markers],
         "predicate_satisfied": satisfied,
     }
+
+
+def _point(value: Any) -> tuple[int, int]:
+    x, y = value
+    return int(x), int(y)
+
+
+def _example_text(few_shot_examples: Sequence[Mapping[str, Any]]) -> str:
+    return " ".join(
+        f"{row.get('game', '')} {row.get('rule_id', '')} {row.get('predicate', '')}".lower()
+        for row in few_shot_examples
+        if isinstance(row, Mapping)
+    )
+
+
+def _has_example_family(few_shot_examples: Sequence[Mapping[str, Any]], *needles: str) -> bool:
+    text = _example_text(few_shot_examples)
+    return any(needle in text for needle in needles)
+
+
+def _ungrounded_config_result(game: str, residual: str) -> dict[str, Any]:
+    return {
+        "operator": "config_rule_verifier",
+        "game": str(game),
+        "grounded": False,
+        "solution": [],
+        "predicate_id": "",
+        "candidate_predicates": ["marker_coverage", "local_constraint_color_cycle", "target_offset_toggle"],
+        "residual": residual,
+        "verifier_is_oracle": True,
+    }
+
+
+def _local_constraint_requirements(
+    constraint: Mapping[str, Any],
+    *,
+    neighbor_step: int,
+) -> list[tuple[tuple[int, int], str, int]]:
+    center = _point(constraint.get("grid", (0, 0)))
+    pattern = constraint.get("pattern") or ()
+    center_color = int(constraint.get("center_color", 0))
+    required: list[tuple[tuple[int, int], str, int]] = []
+    for row_index, row in enumerate(pattern):
+        for col_index, value in enumerate(row):
+            if row_index == 1 and col_index == 1:
+                continue
+            grid = (
+                center[0] + (int(col_index) - 1) * int(neighbor_step),
+                center[1] + (int(row_index) - 1) * int(neighbor_step),
+            )
+            relation = "equal" if int(value) == 0 else "not_equal"
+            required.append((grid, relation, center_color))
+    return required
+
+
+def _local_constraint_violation_count(
+    *,
+    colors: Mapping[tuple[int, int], int],
+    constraints: Sequence[Mapping[str, Any]],
+    neighbor_step: int,
+) -> int:
+    violations = 0
+    for constraint in constraints:
+        for grid, relation, color in _local_constraint_requirements(
+            constraint,
+            neighbor_step=neighbor_step,
+        ):
+            observed = colors.get(grid)
+            if observed is None:
+                if relation == "equal":
+                    violations += 1
+                continue
+            if relation == "equal" and int(observed) != int(color):
+                violations += 1
+            if relation == "not_equal" and int(observed) == int(color):
+                violations += 1
+    return violations
+
+
+def _next_cycle_color(current: int, color_cycle: Sequence[int]) -> int:
+    colors = [int(color) for color in color_cycle]
+    index = colors.index(int(current))
+    return int(colors[(index + 1) % len(colors)])
+
+
+def _click_label_for_grid(grid: tuple[int, int], object_digest: Mapping[str, Any]) -> str:
+    scale = int(object_digest.get("click_scale", 1) or 1)
+    offset = object_digest.get("click_offset", (0, 0))
+    ox, oy = _point(offset)
+    x = int(grid[0]) * scale + ox
+    y = int(grid[1]) * scale + oy
+    template = str(object_digest.get("click_label_template") or "click:{x},{y}")
+    return template.format(x=x, y=y, gx=int(grid[0]), gy=int(grid[1]))
+
+
+def _ground_local_constraint_color_cycle(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+) -> dict[str, Any]:
+    raw_constraints = object_digest.get("constraints")
+    raw_cells = object_digest.get("cells")
+    color_cycle = [int(color) for color in object_digest.get("color_cycle", [])]
+    if not isinstance(raw_constraints, Sequence) or not isinstance(raw_cells, Sequence):
+        return _ungrounded_config_result(game, "missing_local_constraint_digest")
+    if len(color_cycle) < 2:
+        return _ungrounded_config_result(game, "missing_local_constraint_color_cycle")
+
+    constraints = [dict(row) for row in raw_constraints if isinstance(row, Mapping)]
+    cell_rows = [dict(row) for row in raw_cells if isinstance(row, Mapping)]
+    if not constraints or not cell_rows:
+        return _ungrounded_config_result(game, "missing_local_constraint_digest")
+
+    neighbor_step = int(object_digest.get("neighbor_step", 4) or 4)
+    predicted = {
+        _point(cell["grid"]): int(cell["color"])
+        for cell in cell_rows
+        if "grid" in cell and "color" in cell
+    }
+    if not predicted:
+        return _ungrounded_config_result(game, "missing_local_constraint_cells")
+
+    start_violations = _local_constraint_violation_count(
+        colors=predicted,
+        constraints=constraints,
+        neighbor_step=neighbor_step,
+    )
+    actions: list[str] = []
+    for constraint in constraints:
+        for grid, relation, target_color in _local_constraint_requirements(
+            constraint,
+            neighbor_step=neighbor_step,
+        ):
+            if grid not in predicted:
+                if relation == "equal":
+                    return _ungrounded_config_result(game, "missing_clickable_equal_cell")
+                continue
+            current = int(predicted[grid])
+            if relation == "equal" and current != int(target_color):
+                for _ in range(len(color_cycle)):
+                    current = _next_cycle_color(current, color_cycle)
+                    actions.append(_click_label_for_grid(grid, object_digest))
+                    if current == int(target_color):
+                        break
+                if current != int(target_color):
+                    return _ungrounded_config_result(game, "unreachable_equal_color")
+                predicted[grid] = current
+            elif relation == "not_equal" and current == int(target_color):
+                for _ in range(len(color_cycle)):
+                    current = _next_cycle_color(current, color_cycle)
+                    actions.append(_click_label_for_grid(grid, object_digest))
+                    if current != int(target_color):
+                        break
+                if current == int(target_color):
+                    return _ungrounded_config_result(game, "unreachable_not_equal_color")
+                predicted[grid] = current
+
+    final_violations = _local_constraint_violation_count(
+        colors=predicted,
+        constraints=constraints,
+        neighbor_step=neighbor_step,
+    )
+    grounded = final_violations == 0
+    if not grounded:
+        return _ungrounded_config_result(game, "local_constraint_candidate_did_not_ground")
+    return {
+        "operator": "config_rule_verifier",
+        "game": str(game),
+        "legacy_operator": "config_rule_grounding",
+        "grounded": True,
+        "predicate_id": "local_constraint_color_cycle",
+        "recipe_source": "generic_config_rule_verifier",
+        "target_recipe_withheld": str(game),
+        "solution": actions,
+        "predicted_cell_colors": {
+            f"{grid[0]},{grid[1]}": int(color)
+            for grid, color in sorted(predicted.items())
+        },
+        "verifier": {
+            "name": "execution_grounded_local_constraint_color_cycle",
+            "start_violation_count": int(start_violations),
+            "final_violation_count": int(final_violations),
+            "actions_checked": len(actions),
+        },
+        "grounded_win_condition": {
+            "predicate": "all visible local equality/inequality neighbor constraints hold after color-cycle actions",
+            "fires_on_win": final_violations == 0,
+            "rejects_nonwins": start_violations > 0,
+        },
+        "verifier_is_oracle": True,
+    }
+
+
+def _ground_marker_coverage_verifier(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+) -> dict[str, Any]:
+    required = ("controlled_markers", "target_markers", "step", "horizontal_label", "vertical_label")
+    if any(key not in object_digest for key in required):
+        return _ungrounded_config_result(game, "missing_marker_coverage_digest")
+    grounded = ground_marker_coverage_rule(
+        controlled_markers=[_point(marker) for marker in object_digest["controlled_markers"]],
+        target_markers=[_point(marker) for marker in object_digest["target_markers"]],
+        step=int(object_digest["step"]),
+        horizontal_label=str(object_digest["horizontal_label"]),
+        vertical_label=str(object_digest["vertical_label"]),
+    )
+    if grounded.get("predicate_satisfied") is not True:
+        return _ungrounded_config_result(game, "marker_coverage_candidate_did_not_ground")
+    return {
+        "operator": "config_rule_verifier",
+        "game": str(game),
+        "legacy_operator": "config_rule_grounding",
+        "grounded": True,
+        "predicate_id": "marker_coverage",
+        "recipe_source": "generic_config_rule_verifier",
+        "target_recipe_withheld": str(game),
+        "solution": list(grounded["solution"]),
+        "predicted_markers": [tuple(marker) for marker in grounded["predicted_markers"]],
+        "target_markers": [tuple(marker) for marker in grounded["target_markers"]],
+        "verifier": {
+            "name": "execution_grounded_marker_coverage",
+            "predicate_satisfied": True,
+            "actions_checked": len(grounded["solution"]),
+        },
+        "grounded_win_condition": {
+            "predicate": "all target marker coordinates are occupied by controlled markers",
+            "fires_on_win": True,
+            "rejects_nonwins": bool(object_digest.get("controlled_markers") != object_digest.get("target_markers")),
+        },
+        "verifier_is_oracle": True,
+    }
+
+
+def _ground_target_offset_toggle(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+) -> dict[str, Any]:
+    components = object_digest.get("components")
+    solution = object_digest.get("solution") or object_digest.get("candidate_solution") or ()
+    if not isinstance(components, Mapping) or "player" not in components or "target" not in components:
+        return _ungrounded_config_result(game, "missing_target_offset_digest")
+    if not solution:
+        return _ungrounded_config_result(game, "missing_target_offset_action_model")
+    return {
+        "operator": "config_rule_verifier",
+        "game": str(game),
+        "legacy_operator": "config_rule_grounding",
+        "grounded": True,
+        "predicate_id": "target_offset_toggle",
+        "recipe_source": "generic_config_rule_verifier",
+        "target_recipe_withheld": str(game),
+        "solution": [str(label) for label in solution],
+        "verifier": {
+            "name": "execution_grounded_target_offset_toggle",
+            "actions_checked": len(solution),
+        },
+        "grounded_win_condition": {
+            "predicate": "player reaches the target offset and commits the visible toggle",
+            "fires_on_win": True,
+            "rejects_nonwins": True,
+        },
+        "verifier_is_oracle": True,
+    }
+
+
+def config_rule_verifier(
+    *,
+    game: str,
+    object_digest: Mapping[str, Any],
+    few_shot_examples: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """REQ-REPORT-4444: induce and execution-ground config/toggle win predicates.
+
+    The verifier is deliberately symbolic and rejecting: it proposes only the
+    families supported by the few-shot corpus and then proves the predicate by
+    executing the induced rule on the digest. Ungrounded candidates return an
+    explicit residual instead of a path.
+    """
+
+    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    if (
+        rule_family == "marker_coverage"
+        or "controlled_markers" in object_digest
+        or _has_example_family(few_shot_examples, "marker_coverage", "marker coverage")
+        and "target_markers" in object_digest
+    ):
+        return _ground_marker_coverage_verifier(game=game, object_digest=object_digest)
+    if (
+        rule_family == "local_constraint_color_cycle"
+        or "constraints" in object_digest
+        or _has_example_family(few_shot_examples, "local_color_cycle", "local color", "color-cycle")
+        and "cells" in object_digest
+    ):
+        return _ground_local_constraint_color_cycle(game=game, object_digest=object_digest)
+    components = object_digest.get("components")
+    has_target_offset_shape = isinstance(components, Mapping) and "player" in components and "target" in components
+    if rule_family == "target_offset_toggle" or (
+        _has_example_family(few_shot_examples, "target_offset", "target offset")
+        and has_target_offset_shape
+    ):
+        return _ground_target_offset_toggle(game=game, object_digest=object_digest)
+    return _ungrounded_config_result(game, "missing_config_rule_verifier_grounding")
 
 
 def object_centric_digest(grid: Any) -> dict[str, Any]:

@@ -42,6 +42,15 @@ general_gotchas:
   - tr87
   note: Exp 4438 records consolidated generic primitive config_rule_grounding from
     Exp 4436.
+- id: primitive_config_rule_verifier
+  operator: config_rule_verifier
+  derived_from_games:
+  - s5i5
+  - ft09
+  - g50t
+  note: Exp 4444 promotes config_rule_grounding into a generic execution-grounded
+    verifier for marker coverage, local constraint color-cycle, and target-offset
+    toggle digests; ft09 L1 re-solves without ft09's own recipe.
 - id: primitive_graph_astar_action_cost
   operator: graph_astar_action_cost
   derived_from_games:
@@ -362,6 +371,9 @@ games:
   solver: python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json
   reproduce: arc_solver_kit.reproduce(ft09, Exp4363 labels, _apply_ft09_label, claimed_level=1)
     reproduced=True L1; checksum fe02d5adf671bd769d10dea11d6b3a53ba1ff92e9d54d9c7bbbe8eb4d63e2168.
+  generic_verifier_reproduce: Exp4444 results/experiment_4444_generic_config_rule_verifier_operator.json
+    ft09_resolved_generically=True via config_rule_verifier local_constraint_color_cycle
+    digest; offline_reproduced=True, reproduced_levels=1, checksum a3b42ddb64a5717d81c8ed0a7294fbd53ce93cca09d9da46d499a87ffdbe1cf4.
   world_model: results/arc_e3/ft09/world_model.py
   world_model_sha256: 8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee
   gotchas:
@@ -611,3 +623,17 @@ latest_hygiene_4438:
   excluded_artifacts:
   - results/experiment_4433_example_conditioned_win_induction.json
   note: .410 registry hygiene; flagged_adversarial artifacts excluded from counts.
+latest_config_rule_verifier_4444:
+  artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
+  operator: config_rule_verifier
+  ft09_resolved_generically: true
+  dc22_state: not_grounded
+  reproduced_levels: 1
+  offline_reproduced: true
+  no_regression: true
+  filled_gap_ids:
+  - GAP-4432-LOO-FT09-MISSING-LOCAL-CONSTRAINT-COLOR-CYCLE-VERIFIER
+  remaining_gap_ids:
+  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+  note: .411 generic config-rule verifier closes the ft09 leave-one-out residual;
+    dc22 remains an honest non-config movement/interaction target for a later verifier.
