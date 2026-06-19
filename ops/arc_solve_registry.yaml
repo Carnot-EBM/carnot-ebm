@@ -139,34 +139,41 @@ games:
     explodes (26k states -> fails).
 - game: sc25
   reproducibility: reproduced
-  levels_reproduced: 1
+  levels_reproduced: 5
   levels_live_recorded: 5
-  win_condition: 'MULTIPLE paths confirmed: (a) move player ''pluyoo'' to exit ''exydhv'';
-    (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc
-    cross on the 3x3 grid, shrinking the player, then moving left to the exit.'
-  action_model: ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r);
-    L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3',
-    'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3'];
-    ACTION1-4 remain tank-control moves with facing load-bearing.
-  solver: results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py
-  reproduce: arc_solver_kit.reproduce(sc25, ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1',
-    'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3',
-    'move3', 'move3', 'move3'], Exp4341 apply, warmup_label='warmup') reproduced=True
-    L1; checksum fb94af999655687f8f323de71c51be54838b6a39734652d654f4296b278b9e6f.
+  win_condition: 'Two-phase FSM per level: toggle corrected offline cast-grid cells until the visible
+    reference pattern/spell fires, then tank-control navigate the player to the visible exit.'
+  action_model: ACTION6 toggles cast cells at (24+5c,49+5r) or raw spell-select clicks; ACTION1-4 are
+    tank-control moves with facing load-bearing. Exp4468 banked L2-L5 cumulative replay plans.
+  solver: python/carnot/experiment_4468_bank_sc25_provisional_levels.py replays world-model-derived sc25
+    L1-L5 cumulative plans through arc_solver_kit.reproduce
+  reproduce: arc_solver_kit.reproduce(sc25, experiment_4468.SC25_PLANS_BY_LEVEL[5], apply_sc25_label,
+    warmup_label='warmup', claimed_level=5)
   world_model: results/arc_e3/sc25/world_model.py
   world_model_sha256: 091d7eb90d0f5e70aa15b9652491912efbf5d66b0d382173eae98d99e1cab4ac
   gotchas:
   - deepcopy-injection BROKEN -> replay-from-reset.
   - first step after reset consumed -> warm-up step.
   - 'tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.'
-  - live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c)
-    = (24+5c,49+5r).
+  - live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).
   - spell fire clears the cast pattern; multi-frame fireball animation must resolve.
   dead_ends:
-  - Plain replay-from-reset BFS stalled because it did not treat the cast-grid shrink
-    spell as the L1 win-mechanic precursor.
-  - E3 executable patch model cracked L1 by verifying the cast-pattern-clear transition
-    before planning the exit route.
+  - Plain replay-from-reset BFS stalled because it did not treat the cast-grid shrink spell as the L1
+    win-mechanic precursor.
+  - E3 executable patch model cracked L1 by verifying the cast-pattern-clear transition before planning
+    the exit route.
+  - gap_id: GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+    status: filled
+    filled_by: experiment_4468_bank_sc25_provisional_levels
+    filled_artifact: results/experiment_4468_bank_sc25_provisional_levels.json
+    filled_summary: sc25 L2-L5 reproduced offline through fresh-env reproduction gates
+  mechanic_class: two_phase_cast_grid_then_tank_exit
+  latest_exp4468_reproduce:
+    artifact: results/experiment_4468_bank_sc25_provisional_levels.json
+    offline_reproduced: true
+    new_sc25_levels_reproduced: 4
+    sc25_levels_reproduced_total: 5
+    reproducibility_checksum: 53d552175453c8d664753f601e598a3d39e5a2286efd0004813c67d3a8af0346
 - game: cd82
   reproducibility: reproduced
   levels_reproduced: 1
@@ -619,9 +626,9 @@ games:
         reason: routed_recipe_contains_config_or_slot_sequence
         source: closest_recipe
     artifact: results/experiment_4458_first_contact_new_game.json
-reproducible_total_levels: 40
+reproducible_total_levels: 44
 reproducible_total_games: 21
-provisional_total_levels: 5
+provisional_total_levels: 1
 live_submissions:
 - date: '2026-06-17'
   scorecard_id: 0f6273ce-cf0d-426c-83e5-d745e4d45ea2
