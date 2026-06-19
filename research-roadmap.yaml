@@ -1,64 +1,76 @@
-milestone: 2026.06.412
+milestone: 2026.06.413
 milestone_title: >-
-  CLOSE THE THREE OPEN ARC GENERIC-SOLVER GAPS with counterexample-guided induction, BANK sc25's
-  provisional levels, and PREP an updated operator submission package. .411 proved the example corpus +
-  generic operators take generic_loo_solve_count 2->5 and bank g50t + vc33 (registry 39/20), but
-  generic_solver_gap_state stayed PARTIAL: THREE gaps remain OPEN -- (1) GAP-4423-DC22 (the .411
-  config_rule_verifier resolved ft09 generically but did NOT ground dc22, the last open first-contact
-  game), (2) GAP-4432-LOO-TR87 (tr87 re-solves only via its hand adapter -- needs a GENERIC glyph-rewrite
-  operator), (3) GAP-4432-LOO-SC25 (sc25 re-solves only via its hand recipe -- a GENERIC cast-grid
-  phase-FSM world-model operator closes it AND can BANK sc25's 4 PROVISIONAL live-recorded levels L2-L5,
-  the biggest reproduced-level opportunity). All three are grounding/induction failures; the .412 fresh
-  lever is COUNTEREXAMPLE-GUIDED inductive synthesis (arXiv:2309.16436 / 2606.11521) -- re-induce from the
-  rejecting execution-state when a proposed predicate does not reproduce. Monotonically grow
-  reproducible_total_levels from 39/20 (target 40-44 via dc22 +1 and sc25 +1..+4). THE .410/.411 LESSON,
-  ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD on EVERY ARC solve/scoring task (the agent
-  must EMIT it). ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the
-  Claude planner is SKIPPED via this pre-staged roadmap; planner/retro stay Claude). The live generator is
-  Qwen3.5-9B-MTP ([[project_arc_live_generator]]); NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4)
-  is the FROZEN headline. NO leaderboard submission in-loop (operator-only; A6 PREPARES a package).
-milestone_doc: openspec/change-proposals/research-roadmap-v412.md
+  EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the
+  pytest-precondition infra bug that BLOCKED dc22 (it ran `pytest -k` which trips the global
+  --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411's successful solve exp4446 used
+  --no-cov), BANK sc25's 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+  reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact,
+  over-scoped), and finally GROW reproducible_total_levels off the 39 that .412 left FLAT (the
+  sprint's only headline metric did not move all milestone). .412 closed generic_solver_gap_state=PARTIAL:
+  it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised generic_loo_solve_count
+  5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+  levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on
+  the research. .413 turns that diagnosis into banked progress + ships the durable --no-cov precondition
+  fix so the dc22-class block never recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant
+  generic-transfer benchmark (25 games x N variants). THE .410/.411 LESSON, ENFORCED: inference_substrate
+  is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring task. ALL experiments
+  agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED via
+  this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP
+  ([[project_arc_live_generator]]); NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN
+  headline. NO leaderboard submission in-loop (operator-only; A7 PREPARES a refreshed package).
+milestone_doc: openspec/change-proposals/research-roadmap-v413.md
 milestone_overview: |
-  .411 attacked the generic gap with the example corpus + new operators and answered "partial": the count
-  rose 2->5 and g50t/vc33 banked, but THREE generic operators still cannot GROUND/INDUCE the rule for
-  dc22 (config/toggle), tr87 (glyph-rewrite, generically), and sc25 (cast-grid, generically). .412 turns
-  that diagnosis into banked progress with one unifying fresh lever -- counterexample-guided induction.
-  Every ARC SOLVE task is reproduction-gated (arc_solver_kit.reproduce -> only reproduced levels count),
-  Incremental-Progress-scoped (+1..+n levels on ONE game; never "solve them all"), EMITS inference_substrate
-  as a REQUIRED ARTIFACT FIELD, and uses a TERMINAL-prefixed honest_verdict (a routed-no-level run is
-  complete:, never partial:). Reserved: 2 infra slots, 1 per attached FPGA board (Hardware-Task Continuity),
-  1 SOTA-ingestion slot. The ARC submission sprint forcing function (CLAUDE.md, through 2026-06-30) mandates
-  the MAJORITY on ARC live-solving -- here 6 of 6 discretionary slots (A1-A6).
+  .412 designed the right approach (counterexample-guided induction to close the generic-solver gaps and
+  bank levels) but banked ZERO new reproduced levels: dc22 was BLOCKED by a brittle precondition (its
+  `pytest -k "config_rule or arc_solver_kit"` smoke check inherits the global --cov-fail-under=99 from
+  pyproject addopts; a -k subset = 26.71% coverage = exit 1, and the codex agent treated exit-1 as a hard
+  block -- the CEGIS solve never ran), sc25's deeper-bank produced NO artifact (over-scoped: it bundled
+  "generalize a generic operator" + "bank 4 levels" in one 150-turn task), and sb26 was an honest negative
+  (missing color-match-slot-sequence verifier). .413 EXECUTES what .412 designed: (A1) actually run the
+  dc22 CEGIS solve with the corrected --no-cov precondition; (A2) bank sc25's already-live-recorded L2-L5
+  via sc25's OWN cast-grid world model (split from the generic-operator generalization, which is A3);
+  (A4) build the specific missing sb26 operator; (A5) first-contact a NEW rotated game; (A6) the
+  operator-mandated 25-games x N-variants transfer benchmark; (A7) refresh the submission package. Every
+  ARC SOLVE task is reproduction-gated (arc_solver_kit.reproduce -> only reproduced levels count),
+  Incremental-Progress-scoped (+1..+n on ONE game; never "solve them all"), EMITS inference_substrate as a
+  REQUIRED ARTIFACT FIELD, uses a TERMINAL-prefixed honest_verdict, and (the .413 fix) uses `--no-cov` in
+  its pytest precondition. Reserved: 2 infra slots (one carrying the durable --no-cov lint), 1 per attached
+  FPGA board (Hardware-Task Continuity), 1 SOTA-ingestion slot. The ARC submission sprint forcing function
+  (CLAUDE.md, through 2026-06-30) mandates the MAJORITY on ARC live-solving -- here 7 of 7 discretionary
+  slots (A1-A7).
 
-    PHASE 0 -- TRANSITION: exp4454 archive .411 -> activate .412; record the TRUE .411 close-state.
+    PHASE 0 -- TRANSITION: exp4466 archive .412 -> activate .413; record the TRUE .412 close-state.
 
     PHASE A -- GENERIC LIVE SOLVING (operator MANDATORY; the headline; majority):
-      A1 (exp4455) SOLVE dc22 L1: extend the .411 config_rule_verifier with COUNTEREXAMPLE-GUIDED grounding
-        (re-induce from the rejecting execution-state), per-game RE the toggle/maze delta, register a
-        GameAdapter -> +1 game/level (39/20 -> 40/21); closes GAP-4423-DC22.
-      A2 (exp4456) GENERIC glyph-rewrite-rule verifier operator -> tr87 re-solves WITHOUT its hand adapter;
-        closes GAP-4432-LOO-TR87 (raises generic_loo_solve_count).
-      A3 (exp4457) GENERIC cast-grid phase-FSM world-model operator + BANK sc25 provisional L2-L5
-        (reproduction-gated) -> +1..+4 levels; closes GAP-4432-LOO-SC25.
-      A4 (exp4458) FIRST-CONTACT a NEW never-attempted survey game (sb26/bp35/lf52/re86) via the full
-        generic stack -> +1 game/level or a terminal complete: with the residual logged.
-      A5 (exp4459) LEAVE-ONE-OUT generic-solve benchmark v3 -- re-measure generic_loo_solve_count after
-        A2/A3 land (v2 was 5; target >=6). The falsifiable progress metric.
-      A6 (exp4460) SUBMISSION PACKAGE PREP (operator-only submit) -- validate + assemble the env-matched
-        offline-reproduced replay package (>=39 levels >> the 13-level prior baseline); does NOT submit.
-    PHASE B -- RESERVED INFRA (2 slots): exp4461 (registry/gaps hygiene + GAP-4 regression guard +
-      reconcile .412), exp4462 (provisional-vs-reproduced count-integrity lint + submission-replay env-match
-      guard so the monotonic metric cannot silently inflate).
-    PHASE C -- HARDWARE CONTINUITY (1 per attached board): exp4463 (KV260 SSH + GateMate + PolarFire).
-    PHASE D -- SOTA-INGESTION (.412 bleeding-edge track -- counterexample-guided generic rule/world-model
-      induction for interactive games): exp4464 (map the strongest methods onto the .413 roadmap).
-    PHASE E -- CAPSTONE: exp4465 (the .412 scorecard + the generic-solver-gap DECISION + the submission-
-      readiness decision: did A1-A3 close gaps, raise generic_loo_solve_count, and bank new levels?).
+      A1 (exp4467) SOLVE dc22 L1 with the CORRECTED --no-cov precondition + counterexample-guided
+        config-rule grounding (re-induce from the rejecting execution-state) -> +1 game/level (39/20 ->
+        40/21); closes GAP-4423-DC22. The .412 attempt was BLOCKED never run; this one runs.
+      A2 (exp4468) BANK sc25 provisional L2-L5 by driving sc25's OWN cast-grid world model deeper through
+        the reproduction gate (provisional -> reproduced) -> +1..+4 levels. The biggest opportunity.
+      A3 (exp4469) GENERIC cast-grid phase-FSM world-model operator -> sc25 re-solves L1 WITHOUT its hand
+        recipe; closes GAP-4432-LOO-SC25 (raises generic_loo_solve_count).
+      A4 (exp4470) BUILD the color_match_slot_sequence_verifier operator the .412 sb26 negative identified
+        + SOLVE sb26 L1 -> +1 game/level if banked, else terminal complete: with the residual.
+      A5 (exp4471) FIRST-CONTACT a NEW never-attempted ROTATED game (bp35/lf52/re86) via the full generic
+        stack -> +1 game/level or a terminal complete: with the residual logged.
+      A6 (exp4472) MANUFACTURED-variant generic-transfer benchmark v4 (operator-MANDATED 2026-06-19): score
+        the generic solver on 25 games x N variants + re-measure generic_loo_solve_count_v4 (v3 was 6).
+      A7 (exp4473) SUBMISSION PACKAGE PREP refresh (operator-only submit) -- re-validate + refresh the
+        env-matched replay package after the new levels bank; does NOT submit.
+    PHASE B -- RESERVED INFRA (2 slots): exp4474 (registry/gaps hygiene + GAP-4 regression guard +
+      reconcile .413), exp4475 (the DURABLE FIX: a shared --no-cov ARC precondition smoke helper + a lint
+      that FLAGS any ARC pytest precondition missing --no-cov, so the dc22-class block never recurs;
+      + extend the count-integrity lint for the sc25 provisional->reproduced transition).
+    PHASE C -- HARDWARE CONTINUITY (1 per attached board): exp4476 (KV260 SSH + GateMate + PolarFire).
+    PHASE D -- SOTA-INGESTION (.413 bleeding-edge track -- executing CEGIS induction at scale + the
+      program-induction precision/agreement frontier): exp4477 (map the strongest methods onto .414).
+    PHASE E -- CAPSTONE: exp4478 (the .413 scorecard + the DECISION: did reproducible_total_levels finally
+      GROW off 39? dc22 + sc25-deeper banked? generic_loo_solve_count rise? variant-transfer rate?).
 
 tasks:
-  - id: exp4454-archive-411-activate-412
-    milestone: 2026.06.412
-    title: "PHASE 0 (TRANSITION) -- archive .411 -> activate .412; assert YAML parses + smart-subset pre-test gate green; RECORD the TRUE .411 close-state."
+  - id: exp4466-archive-412-activate-413
+    milestone: 2026.06.413
+    title: "PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition residual)."
     priority: critical
     track: infra
     max_turns: 60
@@ -66,70 +78,75 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match vs prior archive-v* tasks; mechanical archive+activate, never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4454_archive_411_activate_412.json
+    deliverable: results/experiment_4466_archive_412_activate_413.json
     prompt: |
-      CONTEXT: All .411 tasks completed. You archive .411 into the research history and activate .412.
-      EXISTING CODE TO READ FIRST: research-complete.yaml (tail), research-roadmap.yaml (the .411
-      milestone), research-roadmap-next.yaml (this .412 file), ops/exclusion_manifest.yaml,
-      results/experiment_4453_capstone_v411.json (the .411 capstone), ops/arc_solve_registry.yaml.
-      TASK: Archive .411 into research-complete.yaml and activate .412. Assert research-complete.yaml +
+      CONTEXT: All .412 tasks completed. You archive .412 into the research history and activate .413.
+      EXISTING CODE TO READ FIRST: research-complete.yaml (tail), research-roadmap.yaml (the .412
+      milestone), research-roadmap-next.yaml (this .413 file), ops/exclusion_manifest.yaml,
+      results/experiment_4465_capstone_v412.json (the .412 capstone), ops/arc_solve_registry.yaml.
+      TASK: Archive .412 into research-complete.yaml and activate .413. Assert research-complete.yaml +
       ops/exclusion_manifest.yaml + research-roadmap-next.yaml all parse under yaml.safe_load; run the
-      smart-subset pre-test gate GREEN. RECORD the TRUE .411 close-state truthfully from exp4453:
-      generic_solver_gap_state=partial; generic_loo_solve_count=5 (v1 baseline 2); reproducible_total_levels=39,
-      reproducible_total_games=20; g50t L1 banked cleanly (exp4443, +1 game/level); ft09 closed generically
-      but dc22 NOT grounded (exp4444); ar25+ka59 closed generically + world-model accuracy 0.25->1.0 with
-      examples (exp4445); vc33 first-contact banked routed->s5i5 (exp4446); documented library coverage 1.0
-      (exp4447); LOO v2 5/7 beats v1 2 (exp4448); AND the THREE OPEN gaps that become the .412 backlog:
-      GAP-4423-DC22 (dc22 not grounded), GAP-4432-LOO-TR87 (missing generic glyph-rewrite operator),
-      GAP-4432-LOO-SC25 (missing generic cast-grid operator; sc25 has 4 PROVISIONAL live-recorded levels).
-      SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a circular/execution-grounded ARC
-      solve is NOT a moat headline).
+      smart-subset pre-test gate GREEN. RECORD the TRUE .412 close-state truthfully from exp4465:
+      generic_solver_gap_state=partial; generic_loo_solve_count_v3=6 (v2 baseline 5);
+      reproducible_total_levels=39, reproducible_total_games=20 (FLAT vs .411 -- ZERO new reproduced
+      levels); GAP-4432-LOO-TR87 CLOSED (tr87 re-solves generically, exp4456); submission_package_ready=true
+      (39 levels, exp4460, NOT submitted); paper_ready=true (FoVer 0.9131, G1-G4, FROZEN); AND the THREE
+      OPEN gaps that become the .413 backlog with their TRUE failure modes: GAP-4423-DC22 (exp4455 was
+      blocked_baseline_pytest_coverage -- the dc22 CEGIS solve NEVER RAN; a --no-cov precondition fix
+      unblocks it), GAP-4432-LOO-SC25 (exp4457 produced NO artifact -- sc25's 4 provisional L2-L5 are
+      UNBANKED; split bank-from-generalize + --no-cov fixes it), GAP-4458-SB26 (honest negative -- missing
+      color_match_slot_sequence_verifier). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle
+      (a circular/execution-grounded ARC solve is NOT a moat headline).
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "import yaml; [yaml.safe_load(open(p)) for p in ['research-complete.yaml','ops/exclusion_manifest.yaml','research-roadmap-next.yaml']]"` succeeds. If any fails, honest_verdict blocked_yaml_parse and STOP.
-        1. Append the .411 record to research-complete.yaml; set activation_recorded on the .411 row.
+        1. Append the .412 record to research-complete.yaml; set activation_recorded on the .412 row.
         2. Run the smart-subset pre-test gate; confirm green.
-        3. Write the artifact with the TRUE .411 close-state + the 3 open gap ids.
+        3. Write the artifact with the TRUE .412 close-state + the 3 open gap ids + each gap's failure mode.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed self-declared state lets the reconciler classify without re-running"}}
-        reproducible_total_levels: {{principle: "the bare authoritative count from ops/arc_solve_registry.yaml (39); the sprint's monotonic progress metric"}}
-        open_gap_ids: {{principle: "the 3 open generic-solver gaps that become the .412 build backlog (dc22, tr87-glyph-rewrite, sc25-cast-grid)"}}
+        reproducible_total_levels: {{principle: "the bare authoritative count from ops/arc_solve_registry.yaml (39, FLAT); the sprint's monotonic progress metric that .413 must finally move"}}
+        open_gap_ids: {{principle: "the 3 open generic-solver gaps that become the .413 build backlog (dc22-blocked-by-precondition, sc25-no-artifact, sb26-missing-operator)"}}
+        prior_milestone_churn_note: {{principle: "one honest string: .412 banked ZERO new reproduced levels because the level-up attempts failed OPERATIONALLY (dc22 precondition block, sc25 no-artifact), not on the research"}}
         inference_substrate: {{principle: "aggregation_from_upstream_artifacts -- this transition reads upstream YAML/JSON, declares the 100us floor, the .410-lesson default for non-solve ARC-adjacent tasks"}}
       honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.
       verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4454_archive_411_activate_412.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4466_archive_412_activate_413.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4455-solve-dc22-cegis-config-rule
-    milestone: 2026.06.412
-    title: "PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: extend the .411 config_rule_verifier with COUNTEREXAMPLE-GUIDED grounding (re-induce from the rejecting execution-state), per-game RE the toggle/maze delta, register a GameAdapter; +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22."
+  - id: exp4467-solve-dc22-cegis-nocov
+    milestone: 2026.06.413
+    title: "PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22."
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4455_solve_dc22_cegis_config_rule.json
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
     prior_failures:
-      - experiment_id: exp4444
-        verdict: complete_ft09_generic_resolved_dc22_not_grounded_gap_logged
-        addressed_by: "exp4444 (.411) built the GENERIC config_rule_verifier operator and re-solved ft09 generically, but dc22 stayed dc22_state=not_grounded -- the operator proposed a config/toggle predicate that did NOT ground on dc22's offline env (GAP-4423-DC22 open). This attempt is DIFFERENT: (1) it adds COUNTEREXAMPLE-GUIDED grounding (arXiv:2309.16436/2606.11521) -- when a proposed is_win() does not reproduce, feed the rejecting execution-state back to the Qwen induction as a counterexample and re-induce, instead of single-shot proposing; (2) it does per-game RE of dc22's specific toggle/maze delta (clickable buezna sprites toggle piyqze blockers; navigate jfva->goknoi) and registers a GameAdapter; (3) a banked offline-reproduced L1 is the gate, not just grounding. Root cause was single-shot grounding with no refutation feedback; fixed here."
+      - experiment_id: exp4455
+        verdict: blocked_baseline_pytest_coverage
+        addressed_by: "exp4455 (.412 A1) NEVER attempted the dc22 CEGIS solve -- its PRECONDITIONS ran `.venv/bin/pytest -k \"config_rule or arc_solver_kit\" -q`, which inherits the global --cov-fail-under=99 from pyproject addopts; a -k subset = 26.71% coverage = exit 1, and the codex agent treated exit-1 as a hard block (honest_verdict blocked_baseline_pytest_coverage, dc22_grounded=false, counterexample_rounds=0, inference_substrate=precondition_blocked_no_inference). The .411 SUCCESSFUL solve (exp4446) used `--no-cov` and ran clean. This attempt is DIFFERENT: (1) the PRECONDITIONS pytest command uses `--no-cov` (a smoke gate, not a coverage gate) so the counterexample-guided grounding loop ACTUALLY RUNS; (2) the durable B2 lint flags any ARC precondition missing --no-cov so this never recurs. The root cause was a brittle precondition design, NOT a dc22 research dead-end -- the CEGIS approach has never had a real attempt."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: dc22 is the LAST OPEN ARC first-contact game (GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT). It
-      is a config/toggle maze: navigate the player sprite (jfva) to the goal (goknoi); clickable buezna
-      sprites toggle piyqze blockers to open a path (is_spatial_planning=false per the survey, medium). The
-      .411 generic config_rule_verifier (exp4444) re-solved ft09 generically but proposed a predicate for
-      dc22 that did NOT ground (dc22_state=not_grounded). The .412 fresh lever is COUNTEREXAMPLE-GUIDED
-      induction: when a proposed predicate does not reproduce, feed the rejecting execution-state back and
-      re-induce.
-      EXISTING CODE TO READ FIRST: python/carnot/experiment_4444_generic_config_rule_verifier_operator.py +
-      results/experiment_4444_generic_config_rule_verifier_operator.json (the operator + the dc22 not-grounded
-      residual), python/carnot/agentic/arc_solver_kit.py (config_rule_verifier + reproduce),
-      python/carnot/agentic/arc_solve_learning.py (recommend_approach; dc22 routed_to sc25),
-      python/carnot/agentic/arc_game_adapters.py (GameAdapter pattern), ops/arc_solve_registry.yaml (dc22
-      entry is `unsolved`; the routed sc25 recipe; general_gotchas), ops/verifier_gaps.md (GAP-4423-DC22),
-      results/arc3_win_condition_survey.json (dc22 first_solve_recipe), CLAUDE.md "ARC Solve Reproducibility"
-      + "Inference-Substrate Declaration Discipline".
+      CONTEXT: dc22 is the LAST OPEN ARC config/toggle first-contact game (GAP-4423-DC22). It is a
+      config/toggle maze: navigate the player sprite (jfva) to the goal (goknoi); clickable buezna sprites
+      toggle piyqze blockers to open a path (is_spatial_planning=false per the survey, medium). The .411
+      generic config_rule_verifier (exp4444) re-solved ft09 generically but proposed a predicate for dc22
+      that did NOT ground (dc22_state=not_grounded). The .412 attempt (exp4455) DESIGNED a
+      counterexample-guided grounding loop but was BLOCKED at the pytest-coverage precondition and never
+      ran. .413 runs it with the corrected --no-cov precondition.
+      EXISTING CODE TO READ FIRST: results/experiment_4455_solve_dc22_cegis_config_rule.json (the .412
+      blocked artifact -- note baseline_exit_code=1, baseline_failure='Coverage failure ... 26.71% < 99%'),
+      python/carnot/experiment_4444_generic_config_rule_verifier_operator.py +
+      results/experiment_4444_generic_config_rule_verifier_operator.json (the operator + the dc22
+      not-grounded residual), python/carnot/experiment_4446_drive_generic_first_contact_bank.py (the
+      SUCCESSFUL .411 solve -- copy its `--no-cov` pytest precondition pattern, around line 220),
+      python/carnot/agentic/arc_solver_kit.py (config_rule_verifier + reproduce),
+      python/carnot/agentic/arc_solve_learning.py (recommend_approach), python/carnot/agentic/arc_game_adapters.py
+      (GameAdapter pattern), ops/arc_solve_registry.yaml (dc22 entry is `unsolved`; general_gotchas),
+      ops/verifier_gaps.md (GAP-4423-DC22), results/arc3_win_condition_survey.json (dc22 first_solve_recipe),
+      CLAUDE.md "ARC Solve Reproducibility" + "Inference-Substrate Declaration Discipline".
       TASK: SOLVE dc22 L1 and BANK it. Extend config_rule_verifier with a counterexample-guided grounding
       loop (propose is_win/toggle-plan with Qwen3.5-9B-MTP few-shot from the grounded config/toggle win-rules
       -> ground on the offline env -> on rejection, feed the rejecting execution-state back as a counterexample
@@ -142,10 +159,13 @@ tasks:
            `.venv/bin/python -c "import carnot.agentic.arc_solver_kit, carnot.agentic.arc_solve_learning"`
            succeeds; (c) the live generator reachable -- EITHER the cached GGUF
            (`ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/` non-empty) OR the local iGPU
-           llama-server (NEVER the 3090s -- conductor-sacrosanct); (d) `.venv/bin/pytest -k "config_rule or
-           arc_solver_kit"` GREEN baseline.
+           llama-server (NEVER the 3090s -- conductor-sacrosanct); (d) BASELINE SMOKE GATE WITH --no-cov
+           (THE .413 FIX): `.venv/bin/pytest -k "config_rule or arc_solver_kit" -q --no-cov` GREEN. DO NOT
+           run pytest without --no-cov for a -k subset -- it inherits --cov-fail-under=99 and ALWAYS fails
+           (this is exactly what blocked exp4455). If the --no-cov smoke is RED on real test failures
+           (not coverage), honest_verdict blocked_baseline_tests_red and STOP.
         1. recommend_approach(dc22) -> routed recipe; gather >=3 grounded config/toggle win-rules (s5i5
-           marker-coverage, ft09 local-color-cycle, vc33 support-clearance) as few-shot examples.
+           marker-coverage, ft09 local-color-cycle, vc33 support-clearance, g50t target-offset) as few-shot.
         2. Counterexample-guided grounding: Qwen proposes dc22 is_win()/toggle-plan; ground on the offline
            env; on rejection feed the rejecting state back + re-induce (bounded budget); register a dc22
            GameAdapter (toggle blockers, then navigate jfva->goknoi).
@@ -153,8 +173,9 @@ tasks:
         4. EMIT inference_substrate matching what step 2 did: live_llm_inference if the Qwen induction ran
            LIVE (>60s), else verifier_ensemble_against_cached_candidates AND ensure duration_s clears its 1s
            floor. NEVER inference_substrate=None. Update ops/arc_solve_registry.yaml dc22 -> reproduced,
-           levels_reproduced=1 (win_condition + action_model + reproduce checksum); move GAP-4423-DC22 to filled
-           in ops/verifier_gaps.md. `.venv/bin/pytest -k "config_rule or arc_solver_kit"` GREEN after.
+           levels_reproduced=1 (win_condition + action_model + reproduce checksum); move GAP-4423-DC22 to
+           filled in ops/verifier_gaps.md. `.venv/bin/pytest -k "config_rule or arc_solver_kit" -q --no-cov`
+           GREEN after.
       FALSIFIABLE GATE: offline_reproduced=true AND reproduced_levels>=1 on dc22 AND the artifact is NOT
       flagged_adversarial (re-check with adversarial_verify before finishing). If dc22 still cannot ground
       after a genuine counterexample-guided attempt, that is a terminal complete: with the residual logged as
@@ -162,193 +183,268 @@ tasks:
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed; a clean bank is success:/complete:; a grounded-no-bank run is complete (negative-but-real), NEVER partial:"}}
         inference_substrate: {{principle: "THE .410/.411 LESSON -- adversarial_verify reads this from the ARTIFACT; EMIT it matching what was done, or a real solve is DURATION_TOO_SHORT-quarantined"}}
-        target_game: {{principle: "dc22 -- the last open first-contact game"}}
+        target_game: {{principle: "dc22 -- the last open config/toggle first-contact game"}}
         dc22_grounded: {{principle: "bare bool: the counterexample-guided loop produced a GROUNDED is_win() that reproduces -- the GAP-4423-DC22 closure premise"}}
         reproduced_levels: {{principle: "bare int; only reproduction-gated levels count (ARC Solve Reproducibility)"}}
         offline_reproduced: {{principle: "the reproduction gate -- a live-only solve does not count"}}
-        counterexample_rounds: {{principle: "bare int: how many refute->re-induce rounds the grounding took -- proves the CEGIS lever, not single-shot luck"}}
+        counterexample_rounds: {{principle: "bare int: how many refute->re-induce rounds the grounding took -- proves the CEGIS lever ran (exp4455 had 0 because it was blocked)"}}
+        baseline_pytest_nocov_green: {{principle: "bare bool: the --no-cov smoke gate passed -- proves the .413 precondition fix (exp4455 was blocked here with --cov)"}}
         few_shot_examples_used: {{principle: "list of which grounded config/toggle win-rules conditioned the induction -- proves the example corpus is the lever"}}
-        missing_verifier_gaps: {{principle: "if no bank, the residual dc22 mechanic -- the .413 build backlog"}}
+        missing_verifier_gaps: {{principle: "if no bank, the residual dc22 mechanic -- the .414 build backlog"}}
         verifier_is_oracle: {{principle: "true: the verifier GROUNDS the LLM-proposed predicate (execution-grounded), NOT a learned-verifier moat (Circularity Discipline)"}}
         reproducible_total_levels: {{principle: "the new authoritative count after banking (target 40)"}}
         random_seed: {{principle: "determinism for re-run"}}
         reproducibility_checksum: {{principle: "content hash of corpus+prompt+plan for reproducibility"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4455_solve_dc22_cegis_config_rule.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4467_solve_dc22_cegis_nocov.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4456-generic-glyph-rewrite-operator
-    milestone: 2026.06.412
-    title: "PHASE A2 (ARC NORTH STAR) -- GENERIC glyph-rewrite-rule verifier operator: generalize tr87's hand glyph_rewrite_matcher into a composable operator so tr87 re-solves WITHOUT its own adapter. Closes GAP-4432-LOO-TR87 (raises generic_loo_solve_count); reproduction-gated."
+  - id: exp4468-bank-sc25-provisional-levels
+    milestone: 2026.06.413
+    title: "PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25's OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels (target up to 44). The .412 attempt produced NO artifact (over-scoped)."
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-19 operator direction (ARC submission sprint): convert the .411 LOO residual GAP-4432-LOO-TR87 into a composable generic operator so the live solver solves unseen config-substitution games. Versioned continuation of the .411 generic-operator line (config_rule_verifier exp4444, object_motion_world_model exp4445) with a STATED forward difference: a GENERIC glyph_rewrite_rule_verifier operator (SOAR-style self-improving rule synthesis, arXiv:2507.14172) in arc_solver_kit -- NOT tr87's single-game hand adapter -- tested by re-solving tr87 WITHOUT its own recipe. False-positive scope-match vs tr87's prior hand solve, which is a SUCCESS being generalized, not a doomed rerun."
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4456_generic_glyph_rewrite_operator.json
-    prompt: |
-      CONTEXT: The .411 LOO benchmark v2 (exp4448) found tr87 does NOT re-solve from the other games' recipes
-      -- residual delta "missing_glyph_rewrite_rule_verifier_without_tr87_adapter" (GAP-4432-LOO-TR87). tr87
-      (the deepest single-game solve, 6 levels, 5 distinct config-substitution mechanics) currently re-solves
-      ONLY via its hand GameAdapter _tr87. The win is a REWRITE-rule match: the editable glyph sequence must
-      equal the greedy multi-glyph-LHS->RHS rewrite of the target through the visible reference grid (with
-      double_translation / alter_rules variants at deeper levels). The consolidated glyph_rewrite_matcher
-      primitive (general_gotchas) exists but is NOT a generic operator that handles a new config-substitution
-      game.
-      EXISTING CODE TO READ FIRST: python/carnot/agentic/arc_game_adapters.py (the _tr87 adapter + verifier),
-      python/carnot/agentic/arc_solver_kit.py (the consolidated glyph_rewrite_matcher primitive + the .411
-      config_rule_verifier / object_motion_world_model operators -- mirror their generic-operator shape),
-      results/arc_loop_solve_tr87.json, ops/arc_solve_registry.yaml (tr87 entry + general_gotchas
-      primitive_glyph_rewrite_matcher), ops/verifier_gaps.md (GAP-4432-LOO-TR87), research-references.md
-      (.412 sweep: SOAR self-improving evolutionary program synthesis 2507.14172; neurally-guided induction
-      2411.17708).
-      TASK: build a GENERIC, composable `glyph_rewrite_rule_verifier` operator in arc_solver_kit that, given a
-      game's object-centric digest + the corpus of grounded config-substitution win-rules as few-shot examples,
-      INDUCES (propose-then-ground, verifier_is_oracle=true; SOAR-style self-improving rule synthesis with a
-      counterexample-guided refine on rejection) the greedy multi-glyph-LHS->RHS rewrite predicate (including
-      the N-pass / alter_rules variants), GROUNDS it, and drives the OfflineSolver. PROVE it generically by
-      re-solving tr87 (>=L1, ideally deeper) WITHOUT tr87's own hand recipe -- closing the LOO residual.
-      ADDITIVE + backward-compatible (tr87's existing reproduced L6 + all other solves must still reproduce).
-      This counts NO new levels (re-solves a known game); it RAISES generic capability.
-      CONCRETE STEPS:
-        0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP, no fabrication): `ls
-           environment_files/tr87/` non-empty; the live generator GGUF cached OR iGPU llama-server (NEVER
-           3090s); `.venv/bin/pytest -k "arc_solver_kit or glyph or tr87"` GREEN baseline.
-        1. Generalize glyph_rewrite_matcher -> a `glyph_rewrite_rule_verifier` operator (few-shot from the
-           grounded config-substitution win-rules; induce + ground the rewrite predicate; counterexample-guided
-           re-induce on rejection; reject non-grounding).
-        2. Re-solve tr87 via the GENERIC operator (NOT tr87's hand recipe) -> arc_solver_kit.reproduce.
-        3. EMIT inference_substrate matching what step 1 did (live_llm_inference if induction ran live >60s,
-           else verifier_ensemble_against_cached_candidates with duration_s >= 1s floor; never None).
-        4. `.venv/bin/pytest -k "arc_solver_kit or glyph or tr87"` GREEN after (backward-compat proof). Update
-           ops/arc_solve_registry.yaml + ops/verifier_gaps.md (close GAP-4432-LOO-TR87 if re-solved generically).
-      FALSIFIABLE GATE: tr87 re-solves via the GENERIC operator (offline_reproduced=true, NOT its own recipe)
-      -- closing the LOO residual -- AND no pre-existing solve regresses. A clean fails-to-generalize negative
-      is a REAL finding reported terminal complete: with the residual as a missing-verifier gap.
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {{principle: "terminal-prefixed; a measured no-generalize result is complete (negative-but-real), never partial:"}}
-        inference_substrate: {{principle: "THE .410/.411 LESSON -- EMIT it; never None"}}
-        tr87_resolved_generically: {{principle: "bare bool: tr87 re-solved by the GENERIC operator without tr87's own recipe -- the GAP-4432-LOO-TR87 closure, the core A2 hypothesis"}}
-        tr87_generic_level_reproduced: {{principle: "bare int: how deep the generic operator re-solved tr87 (>=1), reproduction-gated"}}
-        counterexample_rounds: {{principle: "bare int: refute->re-induce rounds -- proves SOAR-style self-improvement, not single-shot"}}
-        offline_reproduced: {{principle: "the gate"}}
-        no_regression: {{principle: "bare bool: every prior reproducible solve (incl tr87 L6 hand path) still reproduces"}}
-        missing_verifier_gaps: {{principle: "the residual the generic operator could not induce -- the .413 build backlog"}}
-        verifier_is_oracle: {{principle: "true: the verifier GROUNDS the LLM-proposed rewrite predicate (execution-grounded), not a learned-verifier moat"}}
-        random_seed: {{principle: "determinism"}}
-        reproducibility_checksum: {{principle: "content hash"}}
-      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4456_generic_glyph_rewrite_operator.py`
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4457-generic-cast-grid-fsm-bank-sc25
-    milestone: 2026.06.412
-    title: "PHASE A3 (ARC NORTH STAR; operator MANDATORY) -- GENERIC cast-grid phase-FSM world-model operator + BANK sc25 provisional L2-L5: generalize sc25's per-game world model into a two-phase-FSM operator and drive it to REPRODUCE sc25's live-recorded deeper levels (provisional -> reproduced). Closes GAP-4432-LOO-SC25; +1..+4 levels."
-    priority: critical
-    track: arc-north-star
-    max_turns: 150
-    agent_type: codex
-    model: gpt-5.5
-    operator_override: "2026-06-19 operator direction (ARC submission sprint): close GAP-4432-LOO-SC25 AND bank sc25's 4 provisional live-recorded levels (the biggest reproduced-level opportunity, provisional_total_levels=5). Versioned continuation of the .403/.411 sc25 E3 world-model line with a STATED forward difference: a GENERIC cast-grid phase-FSM world-model operator (Executable World Models arXiv:2605.05138 / Loop-OWM arXiv:2606.12316) with counterexample-guided grounding -- NOT sc25's single-game hand recipe, and NOT the prior plain replay-from-reset BFS that stalled on the cast-grid spell precursor. False-positive scope-match vs sc25's prior L1 hand solve, which is a SUCCESS being generalized + DEEPENED, not a doomed rerun."
-    inference_substrate: live_llm_inference
-    deliverable: results/experiment_4457_generic_cast_grid_fsm_bank_sc25.json
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    prior_failures:
+      - experiment_id: exp4457
+        verdict: no_artifact_produced_task_skipped
+        addressed_by: "exp4457 (.412 A3) bundled 'generalize a GENERIC cast-grid phase-FSM operator' AND 'bank sc25 L2-L5' into ONE 150-turn task and produced NO artifact at all (skipped -- likely the same --cov precondition block that hit exp4455, compounded by over-scope). This attempt is DIFFERENT and NARROWER: (1) it is SPLIT -- this task ONLY banks sc25's already-live-recorded provisional levels by driving sc25's OWN cast-grid world model (results/arc_e3/sc25/world_model.py) deeper through the reproduction gate; the generic-operator generalization is the SEPARATE A3 (exp4469); (2) Incremental-Progress scope -- bank L2 first (+1), then L3-L5 only if reachable, gate = >=1 NEW level; (3) the PRECONDITIONS pytest uses --no-cov (the .413 fix). Root cause was over-scope + the precondition block, NOT that sc25 is unbankable -- its L2-L5 are ALREADY live-recorded (levels_live_recorded=5), this just runs them through the offline reproduction gate."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT: sc25 reproduces ONLY L1 offline (levels_reproduced=1) but has levels_live_recorded=5 -- L2-L5
-      are PROVISIONAL (live-recorded, NOT offline-reproduced), so they do NOT count. The .411 LOO v2 (exp4448)
-      found sc25 does NOT re-solve from other games' recipes -- residual "missing_cast_grid_spell_shrink_tank_
-      exit_verifier" (GAP-4432-LOO-SC25). sc25 is a TWO-PHASE FSM: phase-1 = click the 3x3 cast-grid cells so
-      the clicked pattern equals the displayed reference pattern (toggle CSP); phase-2 = navigate the player
-      to the visible exit sprite (Manhattan descent) -> next_level. The per-game world model exists
-      (results/arc_e3/sc25/world_model.py) but is NOT a generic operator, and the prior plain replay-from-reset
-      BFS stalled because it did not treat the cast-grid shrink-spell as the L1 win precursor.
-      EXISTING CODE TO READ FIRST: results/arc_e3/sc25/world_model.py, results/experiment_4341_e3_sc25_reproduction.json,
+      are PROVISIONAL (live-recorded, NOT offline-reproduced), so they do NOT count toward
+      reproducible_total_levels. Banking them is the SINGLE BIGGEST reproduced-level opportunity in the corpus
+      (provisional_total_levels=5). sc25 is a TWO-PHASE FSM: phase-1 = click the 3x3 cast-grid cells so the
+      clicked pattern equals the displayed reference pattern (toggle CSP); phase-2 = navigate the player to
+      the visible exit sprite (Manhattan descent) -> next_level. The per-game world model EXISTS
+      (results/arc_e3/sc25/world_model.py) and L1 reproduces; this task drives it DEEPER. The .412 attempt
+      (exp4457) produced NO artifact (over-scoped). This task is narrow: bank L2 first, then deeper.
+      EXISTING CODE TO READ FIRST: results/arc_e3/sc25/world_model.py (the sc25 world model that reproduces
+      L1), results/experiment_4341_e3_sc25_reproduction.json (the L1 reproduction + the cast-grid plan),
       python/carnot/agentic/arc_executable_world_model.py (collect_transitions, WorldModelVerifier,
-      plan_and_execute), python/carnot/agentic/arc_solver_kit.py (the .411 object_motion_world_model +
-      config_rule_verifier operators -- mirror their generic shape + reproduce), ops/arc_solve_registry.yaml
-      (sc25 entry: levels_reproduced=1, levels_live_recorded=5, the corrected cell coords 24+5c,49+5r, the
-      gotchas + dead_ends), ops/verifier_gaps.md (GAP-4432-LOO-SC25), results/arc3_win_condition_survey.json
-      (sc25 two-phase recipe), research-references.md (.412 sweep: Executable World Models 2605.05138, Loop-OWM
-      2606.12316).
-      TASK: build a GENERIC, composable `cast_grid_phase_fsm_world_model` operator in arc_solver_kit that
-      represents a two-phase (config-toggle -> navigate) game as an FSM, synthesizes the phase transition +
-      win predicate CONDITIONED on the existing solved world models as few-shot examples (counterexample-guided
-      re-induce on a mis-predicted transition), the WorldModelVerifier grounds it, plan-and-execute. PROVE it by
-      (a) re-solving sc25 L1 via the GENERIC operator WITHOUT sc25's hand recipe (closing the LOO residual) AND
-      (b) DRIVING DEEPER: reproduce sc25 L2 (and L3-L5 if reachable) via the operator (provisional -> reproduced,
-      reproduction-gated). INCREMENTAL: +1..+4 levels (gate = >=1 NEW sc25 level reproduced). ADDITIVE +
-      backward-compatible.
+      plan_and_execute), python/carnot/agentic/arc_solver_kit.py (reproduce + OfflineSolver branch_mode),
+      python/carnot/experiment_4446_drive_generic_first_contact_bank.py (the --no-cov pytest precondition
+      pattern), ops/arc_solve_registry.yaml (sc25 entry: levels_reproduced=1, levels_live_recorded=5, the
+      corrected cell coords 24+5c/49+5r, the gotchas + dead_ends -- first step after reset consumed -> warm-up;
+      tank-control facing load-bearing; spell fire clears cast pattern), ops/verifier_gaps.md
+      (GAP-4432-LOO-SC25), CLAUDE.md "ARC Solve Reproducibility" + "ARC-AGI-3 Incremental-Progress Scoping".
+      TASK: BANK sc25's provisional deeper levels. Using sc25's OWN cast-grid world model + the
+      WorldModelVerifier, plan-and-execute through L1 then CONTINUE into L2 (and L3-L5 if reachable) on the
+      OFFLINE env, running arc_solver_kit.reproduce on each claimed level (fresh-env per the sc25 gotchas:
+      warm-up after reset; tank-control facing in the state-key; resolve the multi-frame fireball animation
+      before win-check). INCREMENTAL: bank L2 first (gate = >=1 NEW level reproduced, level > 1), then deeper.
+      Move banked levels from provisional -> reproduced in the registry. ADDITIVE + backward-compatible (sc25
+      L1 + all other solves must still reproduce). This is the +levels win; the GENERIC operator is A3.
       CONCRETE STEPS:
-        0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP, no fabrication): `ls
-           environment_files/sc25/` non-empty; the live generator GGUF cached OR iGPU llama-server (NEVER
-           3090s); `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25"` GREEN baseline; the existing
-           sc25 world_model.py present under results/arc_e3/.
-        1. Generalize the E3 sc25 world model -> a `cast_grid_phase_fsm_world_model` operator (phase-FSM +
-           toggle-CSP + navigate; few-shot from sc25/ar25/ka59/ft09 world models; counterexample-guided refine).
-        2. Re-synthesize + ground sc25's transition model via the GENERIC operator (NOT the hand recipe);
-           plan_and_execute through L1, then CONTINUE into L2+ on the offline env; arc_solver_kit.reproduce each
-           claimed level (fresh-env, per the sc25 gotchas: first step after reset consumed -> warm-up;
-           tank-control facing load-bearing).
-        3. EMIT inference_substrate matching what step 1 did (live_llm_inference if synthesis ran live >60s,
-           else verifier_ensemble_against_cached_candidates with duration_s >= 1s; never None).
-        4. `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25"` GREEN after. Update
+        0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP, no fabrication): (a)
+           `ls environment_files/sc25/` non-empty; (b) the existing sc25 world_model.py present under
+           results/arc_e3/; (c) the live generator GGUF cached OR iGPU llama-server (NEVER 3090s) IF
+           induction is needed (deepening may be pure planning over the existing world model -- if so, no LLM
+           call and inference_substrate=verifier_ensemble_against_cached_candidates); (d) BASELINE SMOKE GATE
+           WITH --no-cov: `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25" -q --no-cov` GREEN
+           (DO NOT omit --no-cov -- a -k subset trips --cov-fail-under=99, which is what skipped exp4457).
+        1. Load sc25's world model; plan_and_execute through L1; CONTINUE into L2 on the offline env.
+        2. arc_solver_kit.reproduce(sc25, <L2 plan>, ...) on a FRESH env (warm-up after reset; facing in
+           state-key). If L2 reproduces, attempt L3-L5 the same way. Each level reproduction-gated.
+        3. EMIT inference_substrate matching what was done (live_llm_inference only if a live Qwen induction
+           ran >60s; else verifier_ensemble_against_cached_candidates with duration_s >= 1s; never None).
+        4. `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25" -q --no-cov` GREEN after. Update
            ops/arc_solve_registry.yaml sc25 (levels_reproduced bumped to the new banked depth; reproduce
-           checksums; move provisional levels to reproduced) + ops/verifier_gaps.md (close GAP-4432-LOO-SC25 if
-           re-solved generically).
-      FALSIFIABLE GATE: >=1 NEW sc25 level reproduced (offline_reproduced=true, level > 1) OR sc25 L1 re-solves
-      via the GENERIC operator (not its own recipe) closing the LOO residual. A clean cannot-deepen negative is
-      a REAL finding reported terminal complete: with the residual as a missing-world-model gap.
+           checksums; provisional levels moved to reproduced; decrement provisional_total_levels accordingly).
+      FALSIFIABLE GATE: >=1 NEW sc25 level reproduced (offline_reproduced=true, level > 1) -> the +levels
+      win. A clean cannot-deepen negative (the world model does not predict the L2 transition) is a REAL
+      finding reported terminal complete: with the residual as a missing-world-model gap.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed; a measured cannot-deepen result is complete (negative-but-real), never partial:"}}
         inference_substrate: {{principle: "THE .410/.411 LESSON -- EMIT it; never None"}}
-        sc25_resolved_generically: {{principle: "bare bool: sc25 re-solved by the GENERIC cast-grid operator without sc25's own recipe -- the GAP-4432-LOO-SC25 closure"}}
+        target_game: {{principle: "sc25 -- the 4-provisional-level deepening, the biggest opportunity"}}
         new_sc25_levels_reproduced: {{principle: "bare int: NEW sc25 levels banked beyond L1 (provisional -> reproduced) -- the +levels win, reproduction-gated"}}
         sc25_levels_reproduced_total: {{principle: "bare int: total sc25 reproduced depth after this task (>=1)"}}
-        offline_reproduced: {{principle: "the gate"}}
-        no_regression: {{principle: "bare bool: every prior reproducible solve (incl sc25 L1 hand path) still reproduces"}}
-        missing_verifier_gaps: {{principle: "the residual mechanic the operator could not transfer/deepen -- the .413 build backlog"}}
+        reproduced_levels: {{principle: "bare int alias for the new-level count this task banked"}}
+        offline_reproduced: {{principle: "the reproduction gate -- a live-recorded provisional level does not count until it reproduces offline"}}
+        baseline_pytest_nocov_green: {{principle: "bare bool: the --no-cov smoke gate passed -- proves the .413 precondition fix (exp4457 produced no artifact partly from this block)"}}
+        no_regression: {{principle: "bare bool: every prior reproducible solve (incl sc25 L1) still reproduces"}}
+        missing_verifier_gaps: {{principle: "the residual mechanic the world model could not deepen -- the .414 build backlog"}}
         verifier_is_oracle: {{principle: "true: execution-grounded (the real env defines the win), not a learned-verifier moat"}}
-        reproducible_total_levels: {{principle: "the new authoritative count after banking sc25 deeper levels"}}
+        reproducible_total_levels: {{principle: "the new authoritative count after banking sc25 deeper levels (target up to 44)"}}
         random_seed: {{principle: "determinism"}}
         reproducibility_checksum: {{principle: "content hash"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4457_generic_cast_grid_fsm_bank_sc25.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4468_bank_sc25_provisional_levels.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4458-first-contact-new-game
-    milestone: 2026.06.412
-    title: "PHASE A4 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted survey game (sb26 / bp35 / lf52 / re86) via the full generic stack (transfer-routing + documented-library retrieval + the new operators); +1 game/level if solved, else terminal complete: with the residual logged."
+  - id: exp4469-generic-cast-grid-fsm-operator
+    milestone: 2026.06.413
+    title: "PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25's per-game world model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25 (raises generic_loo_solve_count); reproduction-gated; counts NO new levels."
+    priority: high
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-06-19 operator direction (ARC submission sprint): convert the LOO residual GAP-4432-LOO-SC25 into a composable generic operator. Versioned continuation of the .403/.411/.412 sc25 E3 world-model line with a STATED forward difference: a GENERIC cast_grid_phase_fsm_world_model operator (Executable World Models arXiv:2605.05138 / Loop-OWM arXiv:2606.12316) with counterexample-guided grounding, SPLIT from the level-banking (A2 exp4468). The .412 exp4457 bundled this with banking and produced NO artifact; this is the first real attempt at the generic operator alone, building on A2's banked levels + the --no-cov precondition. False-positive scope-match vs sc25's prior hand solve (a SUCCESS being generalized) -- not a doomed rerun."
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    prompt: |
+      CONTEXT: The .411/.412 LOO benchmarks found sc25 does NOT re-solve from other games' recipes --
+      residual "missing_cast_grid_spell_shrink_tank_exit_verifier" (GAP-4432-LOO-SC25). sc25 currently
+      re-solves ONLY via its hand world model. sc25 is a TWO-PHASE FSM: phase-1 = toggle the 3x3 cast-grid
+      to match the reference pattern (toggle CSP) which fires the shrink spell; phase-2 = navigate the
+      shrunk player to the exit. The per-game world model exists (results/arc_e3/sc25/world_model.py) but is
+      NOT a generic operator. The prior plain replay-from-reset BFS stalled because it did not treat the
+      cast-grid shrink-spell as the L1 win precursor.
+      EXISTING CODE TO READ FIRST: results/arc_e3/sc25/world_model.py, python/carnot/agentic/arc_solver_kit.py
+      (the .411 object_motion_world_model + .412 glyph_rewrite_rule_verifier operators -- MIRROR their generic
+      composable shape + reproduce), python/carnot/agentic/arc_executable_world_model.py (WorldModelVerifier,
+      plan_and_execute), python/carnot/experiment_4456_generic_glyph_rewrite_operator.py (the .412 generic
+      operator that CLOSED tr87's LOO residual -- the exemplar to mirror),
+      python/carnot/experiment_4446_drive_generic_first_contact_bank.py (the --no-cov precondition pattern),
+      ops/arc_solve_registry.yaml (sc25 entry + general_gotchas), ops/verifier_gaps.md (GAP-4432-LOO-SC25),
+      research-references.md (.412/.413 sweep: Executable World Models 2605.05138, Loop-OWM 2606.12316,
+      CEGIS 2606.11521).
+      TASK: build a GENERIC, composable `cast_grid_phase_fsm_world_model` operator in arc_solver_kit that
+      represents a two-phase (config-toggle -> navigate) game as an FSM, synthesizes the phase transition +
+      win predicate CONDITIONED on the existing solved world models as few-shot examples (counterexample-guided
+      re-induce on a mis-predicted transition; verifier_is_oracle=true), the WorldModelVerifier grounds it,
+      plan-and-execute. PROVE it by re-solving sc25 L1 via the GENERIC operator WITHOUT sc25's hand recipe
+      (closing the LOO residual). ADDITIVE + backward-compatible (sc25 L1 hand path + all other solves still
+      reproduce). This counts NO new levels (re-solves a known game) -- it RAISES generic capability.
+      CONCRETE STEPS:
+        0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP, no fabrication): `ls
+           environment_files/sc25/` non-empty; the live generator GGUF cached OR iGPU llama-server (NEVER
+           3090s); BASELINE SMOKE GATE WITH --no-cov: `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25" -q --no-cov`
+           GREEN (DO NOT omit --no-cov).
+        1. Generalize the E3 sc25 world model -> a `cast_grid_phase_fsm_world_model` operator (phase-FSM +
+           toggle-CSP + navigate; few-shot from sc25/ar25/ka59/ft09 world models; counterexample-guided refine
+           on rejection; reject non-grounding).
+        2. Re-synthesize + ground sc25's transition model via the GENERIC operator (NOT the hand recipe);
+           plan_and_execute through L1; arc_solver_kit.reproduce L1 (fresh-env, warm-up, facing).
+        3. EMIT inference_substrate matching what step 1 did (live_llm_inference if induction ran live >60s,
+           else verifier_ensemble_against_cached_candidates with duration_s >= 1s; never None).
+        4. `.venv/bin/pytest -k "arc_solver_kit or world_model or sc25" -q --no-cov` GREEN after (backward-compat
+           proof). Update ops/arc_solve_registry.yaml + ops/verifier_gaps.md (close GAP-4432-LOO-SC25 if
+           re-solved generically).
+      FALSIFIABLE GATE: sc25 re-solves L1 via the GENERIC operator (offline_reproduced=true, NOT its own
+      recipe) -- closing the LOO residual -- AND no pre-existing solve regresses. A clean fails-to-generalize
+      negative is a REAL finding reported terminal complete: with the residual as a missing-verifier gap.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: {{principle: "terminal-prefixed; a measured no-generalize result is complete (negative-but-real), never partial:"}}
+        inference_substrate: {{principle: "THE .410/.411 LESSON -- EMIT it; never None"}}
+        sc25_resolved_generically: {{principle: "bare bool: sc25 re-solved L1 by the GENERIC cast-grid operator without sc25's own recipe -- the GAP-4432-LOO-SC25 closure, the core A3 hypothesis"}}
+        sc25_generic_level_reproduced: {{principle: "bare int: how deep the generic operator re-solved sc25 (>=1), reproduction-gated"}}
+        counterexample_rounds: {{principle: "bare int: refute->re-induce rounds -- proves the CEGIS lever, not single-shot"}}
+        offline_reproduced: {{principle: "the gate"}}
+        no_regression: {{principle: "bare bool: every prior reproducible solve (incl sc25 L1 hand path) still reproduces"}}
+        missing_verifier_gaps: {{principle: "the residual the generic operator could not induce -- the .414 build backlog"}}
+        verifier_is_oracle: {{principle: "true: the verifier GROUNDS the LLM-proposed world model (execution-grounded), not a learned-verifier moat"}}
+        random_seed: {{principle: "determinism"}}
+        reproducibility_checksum: {{principle: "content hash"}}
+      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
+      Run command: `.venv/bin/python python/carnot/experiment_4469_generic_cast_grid_fsm_operator.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    milestone: 2026.06.413
+    title: "PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26."
     priority: high
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4458_first_contact_new_game.json
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
     prior_failures:
-      - experiment_id: exp4435
-        verdict: contract_fixed_no_routed_solve
-        addressed_by: "exp4435 (.410) fixed the generic first-contact solver's verdict-contract bug but routed dc22 and banked ZERO levels. The .411 exp4446 then SUCCEEDED at the SAME scope (banked vc33 L1 routed->s5i5), proving the fixed solver works. This attempt is DIFFERENT: it targets a NEW never-attempted game from the win-condition survey (sb26 the most config-amenable color-match-sequencing game, else bp35/lf52/re86), uses the FULL .411+.412 generic stack (recommend_approach + LILO documented-library retrieval + the new exp4456 glyph-rewrite + exp4457 cast-grid operators), and a real banked level is the gate. Building on a proven-successful solver + strictly-more operators, on a fresh target -- not a rerun of the no-bank failure."
+      - experiment_id: exp4458
+        verdict: complete_generic_first_contact_sb26_routed_no_new_level
+        addressed_by: "exp4458 (.412 A4) ran the generic first-contact solver on sb26, routed it to s5i5 / config_rule_verifier, and banked NO level -- it logged the residual GAP-4458-SB26 (missing_color_match_slot_sequence_verifier): config_rule_verifier does not fit sb26's ordered color-match-item-to-slot-with-undo mechanic. This attempt is DIFFERENT: it does NOT re-run the same routing -- it BUILDS the SPECIFIC missing operator the .412 negative named (a generic ordered color-match item-slot verifier with undo-aware counterexample-guided grounding), THEN drives the solve. Building the named missing primitive per Missing-Verifier Gap Logging, not re-running a failed route."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: 20 of the 25 offline games are reproduced. The 5 unsolved: dc22 (A1 targets it), bp35 (gravity
-      platformer), lf52 (unit positioning), re86 (pattern-match + sprite resize), sb26 (color-match slot
-      sequencing). The held-out Kaggle leaderboard tests solving a genuinely-novel game -- the exact capability
-      of the generic first-contact solver. .411 exp4446 banked config-routed vc33; .412 drives the SAME solver,
-      now armed with the new exp4456 glyph-rewrite + exp4457 cast-grid operators + LILO retrieval, to bank a
-      NEW game.
+      CONTEXT: sb26 is a color-match slot-sequence game: match colored items to colored slots left-to-right
+      with undo. The .412 first-contact (exp4458) routed it to s5i5/config_rule_verifier and banked no level,
+      logging GAP-4458-SB26 (missing_color_match_slot_sequence_verifier) -- config_rule_verifier's
+      marker-coverage/toggle digest does not capture sb26's ORDERED item->slot color matching with undo.
+      .413 BUILDS that missing operator.
+      EXISTING CODE TO READ FIRST: results/experiment_4458_first_contact_new_game.json (the sb26 routed-no-level
+      negative + the residual_delta + routed_recipe), python/carnot/agentic/arc_solver_kit.py (the
+      config_rule_verifier + glyph_rewrite_rule_verifier operators -- mirror their generic composable shape +
+      reproduce + counterexample-guided grounding), python/carnot/agentic/arc_solve_learning.py
+      (recommend_approach + retrieve_primitives), python/carnot/experiment_4446_drive_generic_first_contact_bank.py
+      (the --no-cov precondition pattern), ops/arc_solve_registry.yaml (sb26 entry: unsolved, dead_ends ->
+      GAP-4458-SB26 candidate_design 'add a generic ordered color-match item-slot verifier with undo-aware
+      grounding'), results/arc3_win_condition_survey.json (sb26 first_solve_recipe), ops/verifier_gaps.md
+      (GAP-4458-SB26).
+      TASK: build a GENERIC, composable `color_match_slot_sequence_verifier` operator in arc_solver_kit that
+      grounds an ordered color-match item->slot predicate (each colored item placed in its matching colored
+      slot, left-to-right, undo-aware), few-shot from the grounded config win-rules + counterexample-guided
+      grounding (propose -> ground on the offline env -> on rejection re-induce from the rejecting state).
+      Drive the OfflineSolver on sb26 and run arc_solver_kit.reproduce on L1. INCREMENTAL: +1 level (sb26 L1).
+      ADDITIVE + backward-compatible (existing solves still reproduce). If sb26 still cannot ground after a
+      genuine attempt, terminal complete: with the refined residual logged.
+      CONCRETE STEPS:
+        0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP, no fabrication): `ls
+           environment_files/sb26/` non-empty; the live generator GGUF cached OR iGPU llama-server (NEVER
+           3090s); BASELINE SMOKE GATE WITH --no-cov: `.venv/bin/pytest -k "arc_solver_kit or color_match or sb26" -q --no-cov`
+           GREEN (DO NOT omit --no-cov).
+        1. Build the color_match_slot_sequence_verifier operator (ordered item->slot color match, undo-aware;
+           counterexample-guided grounding).
+        2. recommend_approach(sb26) -> route to the new operator; drive the OfflineSolver; arc_solver_kit.reproduce L1.
+        3. EMIT inference_substrate matching what was done (live_llm_inference if induction ran live >60s, else
+           verifier_ensemble_against_cached_candidates with duration_s >= 1s; never None).
+        4. `.venv/bin/pytest -k "arc_solver_kit or color_match or sb26" -q --no-cov` GREEN after. Update
+           ops/arc_solve_registry.yaml (sb26 -> reproduced if banked, else refined dead-end) +
+           ops/verifier_gaps.md (close GAP-4458-SB26 if banked).
+      FALSIFIABLE GATE: offline_reproduced=true AND reproduced_levels>=1 on sb26 (a real +1 game/level via the
+      NEW operator), OR a terminal complete: with the refined residual logged (honest, not a FAIL-loop).
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: {{principle: "terminal-prefixed; a routed-no-level run is complete (NOT partial:), the exp4423 FAIL-loop fix"}}
+        inference_substrate: {{principle: "THE .410/.411 LESSON -- EMIT it; never None"}}
+        target_game: {{principle: "sb26 -- color-match slot-sequence"}}
+        color_match_operator_built: {{principle: "bare bool: the generic color_match_slot_sequence_verifier operator was built + grounded -- the GAP-4458-SB26 closure premise"}}
+        reproduced_levels: {{principle: "bare int; reproduction-gated; a real solve banks +1 level"}}
+        offline_reproduced: {{principle: "the gate"}}
+        counterexample_rounds: {{principle: "bare int: refute->re-induce rounds -- proves the CEGIS lever"}}
+        missing_verifier_gaps: {{principle: "if no bank, the refined sb26 residual -- the .414 build backlog"}}
+        verifier_is_oracle: {{principle: "true: execution-grounded"}}
+        reproducible_total_levels: {{principle: "the new authoritative count if banked"}}
+        random_seed: {{principle: "determinism"}}
+        reproducibility_checksum: {{principle: "content hash"}}
+      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
+      Run command: `.venv/bin/python python/carnot/experiment_4470_color_match_slot_operator_solve_sb26.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4471-first-contact-rotated-new-game
+    milestone: 2026.06.413
+    title: "PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52 unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level if solved, else terminal complete: with the residual logged."
+    priority: high
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    prior_failures:
+      - experiment_id: exp4458
+        verdict: complete_generic_first_contact_sb26_routed_no_new_level
+        addressed_by: "exp4458 (.412 A4) ran the generic first-contact solver on sb26 and banked no level. This attempt targets a NEW never-attempted game -- ROTATION per the ARC Level-Up Attempt Guarantee target-rotation discipline (bp35 gravity-platformer / lf52 unit-positioning / re86 pattern-match+resize; pick the best-fit by recommend_approach) -- and is armed with STRICTLY-MORE operators than exp4458 had: the A4 color_match_slot_sequence_verifier + the A3 generic cast_grid_phase_fsm_world_model + the .411/.412 config_rule_verifier / glyph_rewrite_rule_verifier / object_motion_world_model operators, all with counterexample-guided grounding. Different target + more operators on a proven solver, NOT a rerun of the sb26 no-level result. (sb26 itself is the separate A4.)"
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: 20 of the 25 offline games are reproduced. The 5 unsolved: dc22 (A1 targets it), sb26 (A4
+      targets it), bp35 (gravity platformer), lf52 (unit positioning), re86 (pattern-match + sprite resize).
+      The held-out Kaggle leaderboard tests solving a genuinely-novel game -- the exact capability of the
+      generic first-contact solver. Per the ARC Level-Up Attempt Guarantee target-ROTATION discipline, this
+      task sweeps a NEVER-ATTEMPTED game (bp35/lf52/re86), armed with the full .413 operator set.
       EXISTING CODE TO READ FIRST: python/carnot/experiment_4446_drive_generic_first_contact_bank.py (the
-      banking solver) + results/experiment_4446_drive_generic_first_contact_bank.json,
-      python/carnot/experiment_4423_generic_first_contact_breadth.py (the fixed breadth solver),
+      banking solver + the --no-cov precondition pattern) + results/experiment_4446_drive_generic_first_contact_bank.json,
+      python/carnot/experiment_4458_first_contact_new_game.py (the .412 first-contact driver),
       python/carnot/agentic/arc_solve_learning.py (recommend_approach + retrieve_primitives),
-      python/carnot/agentic/arc_solver_kit.py (the generic operators INCLUDING the new exp4456/exp4457 ones),
-      results/arc3_win_condition_survey.json (per-game first_solve_recipe for sb26/bp35/lf52/re86),
-      ops/arc_solve_registry.yaml, ops/verifier_gaps.md.
-      TASK: run the generic first-contact solver on ONE never-attempted game -- PREFER sb26 (a color-match
-      sequence game: match colored items to colored slots left-to-right with undo; config-amenable, so the
-      exp4456/config_rule operators apply) or, if sb26 routes to a mechanic with no fitting operator, the
-      best-fit of bp35/lf52/re86. Route it (recommend_approach + retrieve_primitives), apply the BEST-fitting
+      python/carnot/agentic/arc_solver_kit.py (the generic operators INCLUDING the new A3 cast-grid + A4
+      color-match ones), results/arc3_win_condition_survey.json (per-game first_solve_recipe for
+      bp35/lf52/re86), ops/arc_solve_registry.yaml, ops/verifier_gaps.md.
+      TASK: run the generic first-contact solver on ONE never-attempted game (bp35/lf52/re86 -- pick by
+      recommend_approach + retrieve_primitives best-fit to an existing operator). Apply the best-fitting
       generic operator (counterexample-guided grounding), and drive an ACTUAL solve to +1 reproducible level
       (arc_solver_kit.reproduce). INCREMENTAL: +1 level (L1). If the routed game still cannot be solved
       generically after a genuine attempt, that is a terminal complete: routed_no_new_level result WITH the
@@ -356,127 +452,140 @@ tasks:
       CONCRETE STEPS:
         0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP, no fabrication): offline env
            files for the chosen target exist (`ls environment_files/<game>/` non-empty); the live generator
-           GGUF cached OR iGPU llama-server (NEVER 3090s); `.venv/bin/pytest
-           tests/python/test_experiment_4423_generic_first_contact_breadth.py` GREEN (the contract fix intact).
+           GGUF cached OR iGPU llama-server (NEVER 3090s); BASELINE SMOKE GATE WITH --no-cov:
+           `.venv/bin/pytest -k "arc_solver_kit or first_contact" -q --no-cov` GREEN (DO NOT omit --no-cov).
         1. recommend_approach(target) + retrieve_primitives(digest) -> routed recipe + ranked applicable
            operators; select the generic operator that fits.
         2. Drive the generic solve (counterexample-guided grounding); arc_solver_kit.reproduce on L1.
         3. EMIT inference_substrate matching what was done (never None). Update ops/arc_solve_registry.yaml
            (target -> reproduced if banked, else a new dead-end with the residual); update ops/verifier_gaps.md.
       FALSIFIABLE GATE: reproduced_levels>=1 on the chosen never-attempted game (a REAL generic first-contact
-      bank, +1 game/level), OR a terminal complete: routed_no_new_level with the residual logged (honest, not a
-      FAIL-loop).
+      bank, +1 game/level), OR a terminal complete: routed_no_new_level with the residual logged (honest, not
+      a FAIL-loop).
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: {{principle: "terminal-prefixed complete:/success: -- a routed-no-level run is complete (NOT partial:, the exp4423 FAIL-loop fix)"}}
+        honest_verdict: {{principle: "terminal-prefixed complete:/success: -- a routed-no-level run is complete (NOT partial:), the exp4423 FAIL-loop fix"}}
         inference_substrate: {{principle: "THE .410/.411 LESSON -- EMIT it; never None"}}
-        target_game: {{principle: "the never-attempted game the generic solver attempted"}}
+        target_game: {{principle: "the never-attempted ROTATED game the generic solver attempted (bp35/lf52/re86)"}}
         routed_to: {{principle: "which solved game's recipe transfer-routing selected -- proves the corpus is the lever"}}
         retrieved_primitives: {{principle: "the ranked documented-library primitives retrieve_primitives returned -- proves the LILO library is in the loop"}}
         reproduced_levels: {{principle: "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"}}
         offline_reproduced: {{principle: "the gate"}}
-        missing_verifier_gaps: {{principle: "if no bank, the residual mechanic -- the .413 build backlog"}}
+        missing_verifier_gaps: {{principle: "if no bank, the residual mechanic -- the .414 build backlog"}}
         verifier_is_oracle: {{principle: "true: execution-grounded"}}
         reproducible_total_levels: {{principle: "the new authoritative count if banked"}}
         random_seed: {{principle: "determinism"}}
         reproducibility_checksum: {{principle: "content hash"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4458_first_contact_new_game.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4471_first_contact_rotated_new_game.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4459-loo-generic-solve-benchmark-v3
-    milestone: 2026.06.412
-    title: "PHASE A5 (ARC NORTH STAR) -- LEAVE-ONE-OUT generic-solve benchmark v3: re-measure generic_loo_solve_count after the new exp4456 (tr87 glyph-rewrite) + exp4457 (sc25 cast-grid) operators land. The falsifiable progress metric (v2 was 5)."
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    milestone: 2026.06.413
+    title: "PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4: wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target >=7 after A3 closes sc25)."
     priority: high
     track: arc-north-star
-    max_turns: 120
+    max_turns: 130
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-19 operator direction (ARC submission sprint): re-measure the falsifiable generic-capability metric after the .412 operators land, to prove the corpus + new operators moved the needle. Versioned continuation of the .411 exp4448 LOO benchmark (which SUCCEEDED at 5/7) with a STATED forward difference: the generic path now includes the exp4456 glyph_rewrite_rule_verifier operator (targets tr87) and the exp4457 cast_grid_phase_fsm_world_model operator (targets sc25) -- so the count should rise if those closures are real. False-positive scope-match vs the prior successful LOO benchmark, not a doomed rerun."
+    operator_override: "2026-06-19 operator directive (MANDATORY-NEXT-MILESTONE-for-.413, 'flag the variant for 413', ops/known-issues.md): wire the SHIPPED MANUFACTURED-variant generator (python/carnot/agentic/arc_variant_generator.py + scripts/arc_leaderboard_eval.py --variant N/--reflect; VariantEnv keeps the REAL win-logic) into the LOO/generic-transfer benchmark -- 25 games x N variants, the only rule-legal way to a bigger transfer benchmark (the held-out 110 are off-limits). Versioned continuation of the .411 exp4448 / .412 exp4459 LOO benchmark (both SUCCEEDED at 5 and 6) with a STATED forward difference: the operator-mandated --variant/--reflect upgrade + the .413 A3 cast-grid operator now in the path. False-positive scope-match vs the prior successful LOO benchmarks, not a doomed rerun."
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4459_loo_generic_solve_benchmark_v3.json
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
     prompt: |
-      CONTEXT: exp4448 (.411) ran a LEAVE-ONE-OUT generic-solve benchmark: for each of K solved games,
-      withhold its OWN recipe and try to re-solve from ONLY the generic loop + transfer-routing + the OTHER
-      games' recipes. Result: generic_loo_solve_count_v2=5 of 7, with 2 residual deltas (tr87, sc25). .412
-      added a generic glyph_rewrite_rule_verifier operator (exp4456, targets tr87) and a generic
-      cast_grid_phase_fsm_world_model operator (exp4457, targets sc25). This is the FALSIFIABLE
-      re-measurement: did the generic count rise from 5?
-      EXISTING CODE TO READ FIRST: results/experiment_4448_loo_generic_solve_benchmark_v2.json (the v2 method +
-      per_game results + the 2 open residuals), python/carnot/experiment_4448_loo_generic_solve_benchmark_v2.py,
-      python/carnot/agentic/arc_solver_kit.py (the new operators), arc_solve_learning.py,
-      ops/arc_solve_registry.yaml, results/experiment_4456_*.json + results/experiment_4457_*.json (the .412
-      closures).
-      TASK: re-run the LOO benchmark over the SAME K>=7 games as v2 (tr87, sc25, ka59, ar25, ft09 + the 2 that
-      re-solved earlier), using the SAME protocol (snapshot/restore so the target's own recipe is withheld;
-      reproduction-gated; only an offline-reproduced re-solve counts) but with the .412 operators now available.
-      Report generic_loo_solve_count_v3 vs the v2 baseline (5), and per-game which residuals the new operators
-      CLOSED vs which remain. This counts NO new levels (it re-solves known games) -- it is the BASELINE
-      re-measurement, not a level-banking task. Do NOT mutate the real registry during the test.
+      CONTEXT: The LOO benchmark (exp4448 v2=5, exp4459 v3=6) measured generic transfer on only a small
+      leave-one-out set. The operator SHIPPED a MANUFACTURED-variant generator (2026-06-19) and directed
+      (ops/known-issues.md MANDATORY-NEXT-MILESTONE-for-.413, "flag the variant for 413") that .413 wire it
+      into the benchmark: it manufactures mechanic-preserving HELD-OUT layout variants of the 25 public games
+      (color-permutation -> no action remap; optional reflection -> click remap) with GUARANTEED solvability
+      + gold solution per variant (inherited from the original game, judged by the REAL win-condition;
+      VariantEnv keeps the real win-logic so a solve is a real solve). A color-permuted variant forces the
+      LLM to RE-induce the win-rule in a new palette = a genuine generalization test, the closest legitimate
+      proxy to the held-out OOD eval. The held-out 110 games are OFF-LIMITS by design.
+      EXISTING CODE TO READ FIRST: python/carnot/agentic/arc_variant_generator.py (the SHIPPED variant
+      generator), scripts/arc_leaderboard_eval.py (the eval driver -- supports --variant N / --reflect),
+      results/experiment_4459_loo_generic_solve_benchmark_v3.json (the v3 method + per_game + the
+      generic_loo_solve_count_v3=6 baseline), python/carnot/experiment_4459_loo_generic_solve_benchmark_v3.py,
+      python/carnot/agentic/arc_solver_kit.py (the generic operators INCLUDING the new A3 cast-grid),
+      arc_solve_learning.py, ops/arc_solve_registry.yaml, ops/known-issues.md (the 2026-06-19 variant entry).
+      TASK: (1) score the generic solver on 25 games x N variants (use --variant/--reflect; pick a modest N
+      per game, e.g. 2-3 color-permutation variants + 1 reflection, so wall-clock stays bounded -- LOG the N
+      used and any games skipped). Each variant solve is reproduction-gated (VariantEnv real win-condition;
+      arc_solver_kit.reproduce). Report generic_transfer_rate_over_variants = (variants solved) / (variants
+      attempted), per-game and overall. (2) ALSO re-run the plain LOO benchmark (same protocol as v3) to
+      report generic_loo_solve_count_v4 vs the v3 baseline (6) -- did A3's cast-grid operator close the sc25
+      LOO residual (5->6->7)? This counts NO new reproduced levels (it re-solves known games / variants) --
+      it is the BASELINE generalization re-measurement. Do NOT mutate the real registry during the test.
       CONCRETE STEPS:
         0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP): offline env files exist;
-           `.venv/bin/python -c "import carnot.agentic.arc_solver_kit, carnot.agentic.arc_solve_learning"`
-           succeeds; the live generator GGUF cached OR iGPU llama-server (NEVER 3090s) if a game needs
-           induction (else mark that game blocked_model_not_cached and continue the rest).
-        1. For each target game: snapshot/restore (or route around its own entry in-memory) so its own recipe
-           is withheld; attempt the generic solve with the .412 operators + retrieval; arc_solver_kit.reproduce.
-        2. Tally generic_loo_solve_count_v3; record per-game solved_without_own_recipe + which operator closed
-           it + residual_delta if still open.
+           `.venv/bin/python -c "import carnot.agentic.arc_variant_generator, carnot.agentic.arc_solver_kit"`
+           succeeds; the live generator GGUF cached OR iGPU llama-server (NEVER 3090s) if induction is needed
+           (else mark that game/variant blocked_model_not_cached and continue the rest); BASELINE SMOKE GATE
+           WITH --no-cov: `.venv/bin/pytest -k "variant or arc_solver_kit or leaderboard_eval" -q --no-cov` GREEN.
+        1. Generate N variants per game (--variant/--reflect); for each, attempt the generic solve +
+           arc_solver_kit.reproduce (VariantEnv real win-condition). Tally generic_transfer_rate_over_variants.
+        2. Re-run the plain LOO benchmark; tally generic_loo_solve_count_v4 vs v3=6; per-game which residuals
+           the .413 operators closed.
         3. EMIT inference_substrate matching what was done (never None).
-      FALSIFIABLE GATE: generic_loo_solve_count_v3 > 5 (the v2 baseline) -- at least one MORE solved game is
-      now re-derivable from the corpus + the new operators alone. A flat or lower count is a REAL finding (the
-      operators did not generalize on LOO) reported terminal complete: with the residuals logged.
+      FALSIFIABLE GATE: generic_transfer_rate_over_variants is reported (a real measurement over >=25 variant
+      attempts) AND generic_loo_solve_count_v4 is reported vs the v3 baseline of 6. A flat/lower count or a
+      low transfer rate is a REAL finding (the operators did not generalize OOD) reported terminal complete:
+      with the residuals logged.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed (this benchmark ALWAYS completes with a measurement, so terminal, never partial:)"}}
         inference_substrate: {{principle: "THE .410/.411 LESSON -- EMIT it; never None"}}
-        generic_loo_solve_count_v3: {{principle: "bare int: the headline -- count of games re-solved from the corpus + .412 operators WITHOUT their own recipe"}}
-        generic_loo_solve_count_v2_baseline: {{principle: "bare int = 5; the .411 baseline this must beat to show progress"}}
-        per_game: {{principle: "list of {{game, solved_without_own_recipe, closed_by_operator, residual_delta}} -- shows EXACTLY which residuals the new operators closed"}}
-        offline_reproduced: {{principle: "every claimed re-solve is reproduction-gated"}}
-        missing_verifier_gaps: {{principle: "each still-open residual -- the .413 build backlog"}}
+        generic_transfer_rate_over_variants: {{principle: "bare float: the headline operator-mandated metric -- (variants solved)/(variants attempted) over 25 games x N manufactured variants, the OOD-proxy generalization test"}}
+        variants_attempted: {{principle: "bare int: total manufactured variants attempted (>=25); LOG N-per-game + any skipped"}}
+        variants_solved: {{principle: "bare int: reproduction-gated variant solves (VariantEnv real win-condition)"}}
+        generic_loo_solve_count_v4: {{principle: "bare int: the plain-LOO re-measurement after the .413 operators -- did it rise above the v3 baseline of 6?"}}
+        generic_loo_solve_count_v3_baseline: {{principle: "bare int = 6; the .412 baseline this must beat to show progress"}}
+        per_game: {{principle: "list of {{game, variant_transfer_rate, loo_solved_without_own_recipe, closed_by_operator, residual_delta}} -- shows EXACTLY which residuals the new operators closed"}}
+        offline_reproduced: {{principle: "every claimed re-solve/variant-solve is reproduction-gated"}}
+        missing_verifier_gaps: {{principle: "each still-open residual -- the .414 build backlog"}}
         verifier_is_oracle: {{principle: "true: execution-grounded reproduction"}}
-        random_seed: {{principle: "determinism for re-run"}}
-        reproducibility_checksum: {{principle: "content hash of the example-corpus snapshot used"}}
+        random_seed: {{principle: "determinism for re-run (variant generation seed)"}}
+        reproducibility_checksum: {{principle: "content hash of the variant set + example-corpus snapshot used"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4459_loo_generic_solve_benchmark_v3.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4472_variant_generic_transfer_benchmark_v4.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4460-submission-package-prep
-    milestone: 2026.06.412
-    title: "PHASE A6 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP: validate + assemble the env-matched offline-reproduced REPLAY package across all reproduced games/levels (>=39 levels >> the 13-level prior submitted baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit."
+  - id: exp4473-submission-package-prep-refresh
+    milestone: 2026.06.413
+    title: "PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit."
     priority: high
     track: arc-north-star
     max_turns: 120
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-19 operator directive (ARC submission sprint): the operator submits MULTIPLE times before 2026-06-30, improving each time; offline is now 39 reproduced levels vs the 13-level prior submitted baseline, so an updated package is high-value. This task PREPARES + VALIDATES the env-matched replay package (operator submits; the task NEVER submits, per Operator-Only External Publication Discipline). Submission-prep is allowed and encouraged; the actual submit is reserved for the operator. New scope (no prior submission-prep task in-loop)."
+    operator_override: "2026-06-19 operator directive (ARC submission sprint): the operator submits MULTIPLE times before 2026-06-30, improving each time; .413 banks new levels (dc22 + sc25 deeper) so a REFRESHED package is high-value. This task PREPARES + VALIDATES the env-matched replay package (operator submits; the task NEVER submits, per Operator-Only External Publication Discipline). Versioned continuation of the .412 exp4460 submission-prep (which SUCCEEDED at 39 levels, not submitted) with a STATED forward difference: refreshed after the .413 new banks. Submission-prep is allowed and encouraged; the actual submit is reserved for the operator."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4460_submission_package_prep.json
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
     prompt: |
-      CONTEXT: The FIRST live submission (2026-06-17, scorecard 0f6273ce, scripts/arc3_live_submit.py) banked
-      13 levels / 11 games via mode1_offline_reproduced_replay (env-matched). The gate for the next online play
-      (per feedback_arc3_online_gated_on_offline_beating_baselines + ops/arc_solve_registry.yaml) is to BEAT 13
-      levels. Offline is now 39 reproduced levels / 20 games -- far above the baseline. The operator will submit;
-      this task PREPARES + VALIDATES the updated package. PER Operator-Only External Publication Discipline:
+      CONTEXT: The FIRST live submission (2026-06-17, scorecard 0f6273ce) banked 13 levels / 11 games via
+      mode1_offline_reproduced_replay (env-matched). The gate for the next online play (per
+      feedback_arc3_online_gated_on_offline_beating_baselines) is to BEAT 13 levels. The .412 package
+      (exp4460) was 39 reproduced levels (ready, not submitted). .413 banks NEW levels (dc22 + sc25 deeper);
+      this task REFRESHES + VALIDATES the updated package. PER Operator-Only External Publication Discipline:
       DO NOT SUBMIT. No leaderboard/arxiv/network-publish calls. The task ends at "package validated + ready".
-      EXISTING CODE TO READ FIRST: scripts/arc3_live_submit.py (the live submission driver -- READ ONLY; do not
-      invoke its submit path), results/arc3_live_submit.json (the prior submission record),
-      ops/arc_solve_registry.yaml (the 20 reproduced games + per-game reproduce action sequences + checksums;
-      live_submissions; prior_submitted_baseline_levels=13), python/carnot/agentic/arc_solver_kit.py (reproduce
-      + env-matching), CLAUDE.md "Operator-Only External Publication" + "ARC Solve Reproducibility".
-      TASK: assemble + VALIDATE (offline, no submit) the env-matched replay package: for each reproduced game,
-      confirm its banked reproduce() action sequence still replays to the claimed level on the OFFLINE env, and
-      record env-matchability (which reproduced games map to a live env). Produce an operator submission
-      checklist + the package manifest (games, levels, action sequences, env-match status, total levels) so the
-      operator can run scripts/arc3_live_submit.py to beat 13. Report submission_package_ready (true = ready for
-      the OPERATOR to submit; the task itself never submits). Quarantine any game whose replay does NOT
-      re-validate (do NOT include unreproducible levels in the package count).
+      EXISTING CODE TO READ FIRST: scripts/arc3_live_submit.py (the live submission driver -- READ ONLY; do
+      NOT invoke its submit path), results/arc3_live_submit.json (the prior submission record),
+      results/experiment_4460_submission_package_prep.json (the .412 package this refreshes),
+      ops/arc_solve_registry.yaml (the reproduced games + per-game reproduce action sequences + checksums;
+      live_submissions; prior_submitted_baseline_levels=13), python/carnot/agentic/arc_solver_kit.py
+      (reproduce + env-matching), CLAUDE.md "Operator-Only External Publication" + "ARC Solve Reproducibility".
+      TASK: assemble + VALIDATE (offline, no submit) the refreshed env-matched replay package: for each
+      reproduced game (INCLUDING the .413 new banks dc22 + sc25-deeper + any A4/A5 banks), confirm its banked
+      reproduce() action sequence still replays to the claimed level on the OFFLINE env, and record
+      env-matchability. Produce an operator submission checklist + the package manifest (games, levels, action
+      sequences, env-match status, total levels) so the operator can run scripts/arc3_live_submit.py to beat
+      13. Report submission_package_ready (true = ready for the OPERATOR to submit; the task itself never
+      submits). Quarantine any game whose replay does NOT re-validate (do NOT include unreproducible levels).
       CONCRETE STEPS:
         0. PRECONDITIONS (on any miss honest_verdict blocked_<resource>, STOP): offline env files exist;
            `.venv/bin/python -c "import carnot.agentic.arc_solver_kit"` succeeds. Do NOT require network (no submit).
-        1. For each reproduced game in ops/arc_solve_registry.yaml: re-run arc_solver_kit.reproduce on the banked
-           action sequence; record replays_ok + reproduced depth + env-match status.
+        1. For each reproduced game in ops/arc_solve_registry.yaml (including .413 new banks): re-run
+           arc_solver_kit.reproduce on the banked action sequence; record replays_ok + reproduced depth +
+           env-match status.
         2. Assemble the package manifest + operator checklist; compute total_reproduced_levels_in_package and
-           beats_prior_baseline (= total > 13).
+           beats_prior_baseline (= total > 13) and grew_vs_412 (= total > 39).
         3. Write the artifact + a docs operator-action note. DO NOT call any submit/upload/network path.
       FALSIFIABLE GATE: total_reproduced_levels_in_package > 13 (beats the prior submitted baseline) AND every
       packaged level re-validates via arc_solver_kit.reproduce AND submitted_to_leaderboard=false.
@@ -484,7 +593,8 @@ tasks:
         honest_verdict: {{principle: "terminal-prefixed"}}
         inference_substrate: {{principle: "verifier_ensemble_against_cached_candidates -- re-validates cached reproduce sequences against the offline env (1s floor); never None, never live_llm_inference"}}
         submission_package_ready: {{principle: "bare bool: TRUE if the package is ready for the OPERATOR to submit; the task itself NEVER submits (Operator-Only External Publication)"}}
-        total_reproduced_levels_in_package: {{principle: "bare int: env-match-validated reproduced levels in the package (target >> 13)"}}
+        total_reproduced_levels_in_package: {{principle: "bare int: env-match-validated reproduced levels in the package (target > 39 after the .413 banks)"}}
+        grew_vs_412: {{principle: "bare bool: total > 39 -- the .413 package added levels over .412"}}
         prior_submitted_baseline_levels: {{principle: "bare int = 13; the baseline the package must beat"}}
         beats_prior_baseline: {{principle: "bare bool: total_reproduced_levels_in_package > 13"}}
         per_game_replay_validation: {{principle: "list of {{game, replays_ok, reproduced_levels, env_matched}} -- the audit trail; quarantined games excluded from the count"}}
@@ -493,12 +603,12 @@ tasks:
         random_seed: {{principle: "determinism"}}
         reproducibility_checksum: {{principle: "content hash of the package manifest"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission (operator-only). NO 3090 inference.
-      Run command: `.venv/bin/python python/carnot/experiment_4460_submission_package_prep.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4473_submission_package_prep_refresh.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4461-registry-gaps-hygiene-gap4-guard
-    milestone: 2026.06.412
-    title: "PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .412 outcomes; verify the capstone verifier_is_oracle stamping stays durable."
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    milestone: 2026.06.413
+    title: "PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping stays durable."
     priority: high
     track: infra
     max_turns: 90
@@ -506,88 +616,99 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing): reserved infrastructure slot; the standing per-milestone registry/gaps hygiene + regression guard, never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4461_registry_gaps_hygiene.json
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
     prompt: |
-      CONTEXT: standing per-milestone hygiene -- reconcile the registries with the .412 outcomes and guard
+      CONTEXT: standing per-milestone hygiene -- reconcile the registries with the .413 outcomes and guard
       against silent regression of the GAP-4 execution result.
-      EXISTING CODE TO READ FIRST: results/experiment_4449_registry_gaps_hygiene.json (the .411 hygiene analog),
-      ops/verifier_registry.yaml, ops/verifier_gaps.md, ops/arc_solve_registry.yaml,
+      EXISTING CODE TO READ FIRST: results/experiment_4461_registry_gaps_hygiene.json (the .412 hygiene
+      analog), ops/verifier_registry.yaml, ops/verifier_gaps.md, ops/arc_solve_registry.yaml,
       scripts/capstone_aggregate_available.py (the robust aggregate-available helper).
       TASK: reconcile ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the
-      .412 outcomes: the dc22 bank (exp4455 -> dc22 reproduced, GAP-4423-DC22 filled, +1 game/level); the tr87
-      glyph-rewrite closure (exp4456, GAP-4432-LOO-TR87); the sc25 cast-grid closure + deeper levels (exp4457,
-      GAP-4432-LOO-SC25, provisional -> reproduced); the new-game first-contact bank/gap (exp4458); the LOO v3
-      count (exp4459); the submission package (exp4460). Update reproducible_total_levels/games. Run the GAP-4
-      execution regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently regress);
-      emit regression_guard_passed BARE bool. Verify the capstone verifier_is_oracle stamping is STILL durable.
-      Use the robust aggregate-available helper (read available artifacts, report gaps -- do NOT hard-block
-      all-False if one is missing). SKIP any flagged_adversarial artifact. NO production verifier edits
-      (audit-only per Verifier Authenticity Discipline).
+      .413 outcomes: the dc22 bank (exp4467 -> dc22 reproduced, GAP-4423-DC22 filled, +1 game/level if banked);
+      the sc25 deeper bank (exp4468, provisional -> reproduced, decrement provisional_total_levels); the sc25
+      generic operator closure (exp4469, GAP-4432-LOO-SC25); the sb26 operator + bank/gap (exp4470,
+      GAP-4458-SB26); the new-game first-contact bank/gap (exp4471); the variant-transfer + LOO v4 (exp4472);
+      the refreshed submission package (exp4473). Update reproducible_total_levels/games. Run the GAP-4
+      execution regression guard (the ARC oracle-distinct verifier-beats-vote result must not silently
+      regress); emit regression_guard_passed BARE bool. Verify the capstone verifier_is_oracle stamping is
+      STILL durable. Use the robust aggregate-available helper (read available artifacts, report gaps -- do
+      NOT hard-block all-False if one is missing). SKIP any flagged_adversarial artifact. NO production
+      verifier edits (audit-only per Verifier Authenticity Discipline).
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "import scripts.capstone_aggregate_available"` succeeds.
-        1. Reconcile the three registries; update level/game totals.
+        1. Reconcile the three registries; update level/game totals + provisional_total_levels.
         2. Run the GAP-4 regression guard; emit the BARE bool.
         3. Write the hygiene artifact.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed"}}
         regression_guard_passed: {{principle: "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"}}
-        reproducible_total_levels: {{principle: "the reconciled authoritative count (target >= 40 after dc22 + sc25 deepening)"}}
+        reproducible_total_levels: {{principle: "the reconciled authoritative count (target > 39 after dc22 + sc25 deepening)"}}
         reproducible_total_games: {{principle: "the reconciled authoritative game count (target >= 21 after dc22)"}}
-        open_gap_ids: {{principle: "the still-open generic-solver gaps after .412 -- the .413 backlog"}}
+        provisional_total_levels: {{principle: "the reconciled provisional count (target < 5 after sc25 deeper levels move provisional -> reproduced)"}}
+        open_gap_ids: {{principle: "the still-open generic-solver gaps after .413 -- the .414 backlog"}}
         inference_substrate: {{principle: "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4461_registry_gaps_hygiene.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4474_registry_gaps_hygiene.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4462-provisional-reproduced-count-integrity-lint
-    milestone: 2026.06.412
-    title: "PHASE B2 (RESERVED INFRA) -- provisional-vs-reproduced count-integrity lint + submission-replay env-match guard: a CI/pre-commit guard that a level is never counted reproduced unless arc_solver_kit.reproduce passes, and the A6 replay package actions actually reproduce. Pins the sprint's monotonic metric against silent inflation."
+  - id: exp4475-arc-precondition-nocov-lint
+    milestone: 2026.06.413
+    title: "PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint: ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition."
     priority: high
     track: infra
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-19 operator directive (ARC submission sprint): reserved infrastructure slot directly protecting the sprint's monotonic reproducible_total_levels metric. sc25 holds 4 PROVISIONAL (live-recorded, NOT reproduced) levels and A3 banks them -- a count-integrity lint ensures provisional never silently counts as reproduced and the A6 submission package replays clean. Not an experiment rerun -- a planner/agent discipline tool; builds on the exp4450 .411 inference_substrate-emission lint template."
+    operator_override: "2026-06-19 operator direction (ARC submission sprint): reserved infrastructure slot shipping the durable fix for the .412 level-bank churn root cause. exp4455 (dc22) was blocked_baseline_pytest_coverage and exp4457 (sc25) produced no artifact because their pytest -k smoke preconditions inherited --cov-fail-under=99 (a -k subset = 26.71% coverage = exit 1); the .411 successful exp4446 used --no-cov. This ships a shared helper + lint so the class of bug cannot recur. Not an experiment rerun -- a planner/agent discipline tool; builds on the exp4450 inference_substrate-emission lint + exp4462 count-integrity lint templates."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4462_provisional_reproduced_count_integrity_lint.json
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
     prompt: |
-      CONTEXT: The sprint's metric is reproducible_total_levels (must grow monotonically). sc25 holds
-      provisional_total_levels (live-recorded L2-L5 that do NOT pass the offline reproduction gate); A3 (exp4457)
-      banks them provisional -> reproduced. The risk: a registry edit or a submission package silently counts a
-      provisional / non-replaying level as reproduced, inflating the metric. This task ships a count-integrity
-      lint + a submission-replay env-match guard.
-      EXISTING CODE TO READ FIRST: results/experiment_4450_inference_substrate_emission_lint_guard.json + the
-      lint it shipped (scripts/arc_artifact_lint.py or the helper), scripts/adversarial_verify.py,
-      ops/arc_solve_registry.yaml (reproducible_total_levels / provisional_total_levels / per-game
-      levels_reproduced vs levels_live_recorded), python/carnot/agentic/arc_solver_kit.py (reproduce),
-      .pre-commit-config.yaml, CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse Discipline".
-      TASK: (1) Add a lint that asserts ops/arc_solve_registry.yaml's reproducible_total_levels equals the SUM
-      of per-game levels_reproduced (NOT levels_live_recorded), and that no game claims levels_reproduced >
-      what arc_solver_kit.reproduce can re-derive for it (sample/spot-check the registry's banked sequences).
-      (2) Add a guard that the A6 submission package's per_game replay sequences re-validate via
-      arc_solver_kit.reproduce (no packaged level counts unless it replays). (3) Wire the lint as a pre-commit
-      hook (or extend the exp4450 hook) scoped to ops/arc_solve_registry.yaml + the submission-package artifact.
-      (4) Unit tests for the guard (every test asserts; no skips -- Tests-Must-Run-and-Assert). Do NOT
-      retroactively rewrite past artifacts. Do NOT edit any production verifier in python/carnot/verify/.
+      CONTEXT: The .412 level-bank churn root cause: ARC solve tasks ran `pytest -k "<subset>"` as a baseline
+      SMOKE precondition, but that command inherits the global `--cov-fail-under=99` from pyproject addopts.
+      A -k subset can never cover 99% of the package, so it exits 1 ("Coverage failure: total of 26.71% is
+      less than fail-under=99%") and the agent treats exit-1 as a hard block -- exactly what gave exp4455
+      (dc22) honest_verdict blocked_baseline_pytest_coverage, and likely contributed to exp4457 (sc25)
+      producing no artifact. The .411 SUCCESSFUL solve (exp4446) used `--no-cov`. This task ships the durable
+      fix so the class of bug cannot recur.
+      EXISTING CODE TO READ FIRST: results/experiment_4455_solve_dc22_cegis_config_rule.json (the blocked
+      artifact -- preconditions.baseline_failure is the smoking gun), pyproject.toml (addopts:
+      --cov-fail-under=99), python/carnot/experiment_4446_drive_generic_first_contact_bank.py (the --no-cov
+      pattern, ~line 220), results/experiment_4450_inference_substrate_emission_lint_guard.json + the lint it
+      shipped (scripts/arc_artifact_lint.py or the helper), results/experiment_4462_provisional_reproduced_count_integrity_lint.json
+      (the count-integrity lint), .pre-commit-config.yaml, CLAUDE.md "Pre-Launch Preconditions Discipline".
+      TASK: (1) Ship a shared `arc_precondition_smoke(selector)` helper (in scripts/ or
+      python/carnot/agentic/) that runs `pytest -k <selector> -q --no-cov` and returns (green, summary) -- a
+      smoke gate, NOT a coverage gate -- so every ARC solve task calls ONE correct helper instead of
+      hand-rolling a coverage-tripping command. (2) Add a lint that scans ARC experiment scripts
+      (python/carnot/experiment_*arc*/*solve*/*first_contact* + the registry-referenced solvers) and FLAGS
+      any pytest precondition invocation that lacks `--no-cov` (the dc22-class bug), with an allow-list for
+      legitimate full-suite coverage runs. (3) Extend the exp4462 count-integrity lint to verify the sc25
+      provisional->reproduced transition is clean (reproducible_total_levels == sum of per-game
+      levels_reproduced; provisional_total_levels never silently counted as reproduced). (4) Wire the lints as
+      a pre-commit hook (or extend the exp4450/exp4462 hooks). (5) Unit tests (every test asserts; no skips --
+      Tests-Must-Run-and-Assert). Do NOT retroactively rewrite past artifacts. Do NOT edit any production
+      verifier in python/carnot/verify/.
       CONCRETE STEPS:
-        0. PRECONDITIONS: `.venv/bin/python -c "import carnot.agentic.arc_solver_kit"` succeeds; the exp4450
-           helper/lint exists (else honest_verdict blocked_exp4450_template_missing and STOP).
-        1. Add the count-integrity lint (reproducible_total = sum of per-game levels_reproduced; provisional
-           never counts) + the submission-replay env-match guard.
-        2. Wire the pre-commit hook.
-        3. `.venv/bin/pytest -k "count_integrity or arc_artifact or reproduce_guard"` GREEN.
+        0. PRECONDITIONS: `.venv/bin/python -c "import carnot.agentic.arc_solver_kit"` succeeds; pyproject.toml
+           addopts confirms --cov-fail-under=99 (the thing being guarded).
+        1. Ship arc_precondition_smoke() helper (--no-cov) + the --no-cov-missing lint + the sc25
+           count-integrity extension.
+        2. Wire the pre-commit hook(s).
+        3. `.venv/bin/pytest -k "precondition_smoke or nocov_lint or count_integrity" -q --no-cov` GREEN.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed"}}
-        guard_shipped: {{principle: "bare bool: the count-integrity lint + replay guard + pre-commit hook landed green"}}
-        catches_provisional_inflation: {{principle: "bare bool: the lint flags a registry where reproducible_total_levels counts a provisional/non-replaying level"}}
+        smoke_helper_shipped: {{principle: "bare bool: arc_precondition_smoke(--no-cov) helper landed -- the durable fix for the dc22-class block"}}
+        nocov_lint_shipped: {{principle: "bare bool: the lint that flags any ARC pytest precondition missing --no-cov landed green"}}
+        catches_cov_gated_precondition: {{principle: "bare bool: the lint flags a precondition that runs pytest -k without --no-cov (reproduces the exp4455 block in a test)"}}
+        count_integrity_extended: {{principle: "bare bool: the count-integrity lint now covers the sc25 provisional->reproduced transition"}}
         tests_pass: {{principle: "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"}}
-        inference_substrate: {{principle: "aggregation_from_upstream_artifacts -- this is a lint/test (CPU); 100us floor"}}
+        inference_substrate: {{principle: "aggregation_from_upstream_artifacts -- this is a lint/test/helper (CPU); 100us floor"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4462_provisional_reproduced_count_integrity_lint.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4475_arc_precondition_nocov_lint.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4463-hardware-continuity
-    milestone: 2026.06.412
+  - id: exp4476-hardware-continuity
+    milestone: 2026.06.413
     title: "PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward step or audit; never forget the FPGAs."
     priority: medium
     track: hardware
@@ -596,14 +717,14 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task mandated by Hardware-Task Continuity Discipline until each board reaches terminal state; false-positive scope-match vs retired hardware exps, required forward work."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4463_hardware_continuity.json
+    deliverable: results/experiment_4476_hardware_continuity.json
     prompt: |
       CONTEXT: Hardware-Task Continuity Discipline -- one forward step (or documentation/audit if blocked on
       operator action) per attached board, every milestone, until each reaches terminal state. KV260 is the
       sovereignty story (drive to terminal, then freeze); GateMate + PolarFire are opportunistic.
       EXISTING CODE TO READ FIRST: ops/hardware-bringup-prep.md, ops/north-star.md section 3 (board decisions),
       CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions" (board rows),
-      results/experiment_4451_hardware_continuity.json (the .411 hardware analog).
+      results/experiment_4463_hardware_continuity.json (the .412 hardware analog).
       TASK: one forward step or audit per attached board.
       CONCRETE STEPS:
         0. PRECONDITIONS per board (SSH-reachability is the ONLY valid KV260 precondition; the retired host
@@ -622,55 +743,57 @@ tasks:
         honest_verdict: {{principle: "terminal-prefixed; a clean SSH-unreachable is blocked_, an audit-only step is complete_"}}
         inference_substrate: {{principle: "hardware_smoke -- SSH-attached board test; per-board floor"}}
       honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_/blocked_.
-      Run command: `.venv/bin/python python/carnot/experiment_4463_hardware_continuity.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4476_hardware_continuity.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4464-sota-ingestion-412
-    milestone: 2026.06.412
-    title: "PHASE D (SOTA-INGESTION; .412 bleeding-edge track) -- ingest SOTA for counterexample-guided generic rule / world-model induction for interactive games; map the strongest 3-5 methods onto the .413 roadmap."
+  - id: exp4477-sota-ingestion-413
+    milestone: 2026.06.413
+    title: "PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the .414 roadmap."
     priority: medium
     track: sota-ingestion
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-11 operator directive (standing): reserved SOTA-ingestion slot for the milestone's bleeding-edge headline (here: counterexample-guided generic rule/world-model induction for interactive games); RELIABLE channel only, never /deep-research."
+    operator_override: "2026-06-11 operator directive (standing): reserved SOTA-ingestion slot for the milestone's bleeding-edge headline (here: executing CEGIS induction at scale + the program-induction precision/agreement frontier for interactive games); RELIABLE channel only, never /deep-research."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4464_sota_ingestion_412.json
+    deliverable: results/experiment_4477_sota_ingestion_413.json
     prompt: |
-      CONTEXT: standing SOTA-ingestion slot. The .412 headline is closing the generic-solver gap via
-      counterexample-guided induction (re-induce from the rejecting execution-state). Ingest the freshest SOTA
-      and feed the single strongest method forward to the .413 planner.
+      CONTEXT: standing SOTA-ingestion slot. The .413 headline is EXECUTING counterexample-guided induction
+      (the lever .412 designed but could not run) + banking the sc25/dc22 levels + the program-induction
+      precision/agreement frontier (GAP-4 execution verifier, GAP-5 demo-underdetermination). Ingest the
+      freshest SOTA and feed the single strongest method forward to the .414 planner.
       EXISTING CODE TO READ FIRST: research-references.md (.412 sweep -- CEGIS arXiv:2309.16436 + 2606.11521,
       SOAR 2507.14172, neurally-guided induction 2411.17708, induction+transduction 2411.02272, Executable WM
       2605.05138, Loop-OWM 2606.12316, ARC survey 2603.13372), research-studying.md, scripts/sweep_clusters.py,
-      scripts/sweep_semscholar.py, results/experiment_4452_sota_ingestion_411.json (the .411 ingestion that
-      flagged LILO forward).
+      scripts/sweep_semscholar.py, results/experiment_4464_sota_ingestion_412.json (the .412 ingestion that
+      flagged CEGIS forward), ops/verifier_gaps.md (GAP-4 / GAP-5 frontier).
       TASK: a FOCUSED fresh pass via the RELIABLE channel only -- scripts/sweep_clusters.py /
-      sweep_semscholar.py (arXiv / Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top 5-8 papers
-      on: counterexample-guided / SMT-checked program & rule induction with LLMs, self-improving program
-      synthesis for grid/interactive puzzles, phase-FSM / object-centric world-model induction for interactive
-      games, and meta-solvers that generalize across ARC-AGI-3-style games. DO NOT invoke /deep-research
-      (banned from the autonomous loop). Every method MUST carry a real, VERIFIED arXiv ID/URL (no citation =
-      fabrication). Emit a SOTA->experiment mapping note (docs/research-notes/) + flag the single strongest
-      method for the .413 planner. Update research-studying.md (mark ingested).
+      sweep_semscholar.py (arXiv / Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top 5-8
+      papers on: counterexample-guided / SMT-checked program & rule induction at scale, demo-underdetermination
+      / ambiguity detection in program synthesis (the GAP-5 frontier), consistency-ensemble / agreement-gated
+      induction precision, phase-FSM / object-centric world-model induction for interactive games, and
+      meta-solvers that generalize across ARC-AGI-3-style games. DO NOT invoke /deep-research (banned from the
+      autonomous loop). Every method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication).
+      Emit a SOTA->experiment mapping note (docs/research-notes/) + flag the single strongest method for the
+      .414 planner. Update research-studying.md (mark ingested).
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python scripts/sweep_clusters.py --help` succeeds (else fall back to
            low-concurrency WebSearch/WebFetch only); network reachable (`curl -sf -o /dev/null
            https://arxiv.org` succeeds, else honest_verdict blocked_network and STOP).
         1. Run the focused sweep; WebFetch the top 5-8 abstracts; VERIFY each arXiv ID HTTP-200.
-        2. Write the mapping note + flag the strongest method for .413.
+        2. Write the mapping note + flag the strongest method for .414.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed"}}
         methods: {{principle: "list of {{name, arxiv_id, what_it_takes_over_our_stack, pitfalls}} -- each with a VERIFIED citation (no citation = fabrication)"}}
-        flagged_for_v413: {{principle: "the single strongest method fed forward so SOTA flows into the next milestone (discover->ingest->plan->experiment)"}}
+        flagged_for_v414: {{principle: "the single strongest method fed forward so SOTA flows into the next milestone (discover->ingest->plan->experiment)"}}
         inference_substrate: {{principle: "aggregation_from_upstream_artifacts -- CPU-only reliable-channel ingestion; no live solve claim"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4464_sota_ingestion_412.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4477_sota_ingestion_413.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4465-capstone-412
-    milestone: 2026.06.412
-    title: "PHASE E (CAPSTONE .412) -- the milestone scorecard + the GENERIC-SOLVER-GAP DECISION (did A1-A3 close gaps, raise generic_loo_solve_count, and bank new levels?) + the SUBMISSION-READINESS decision (is the operator package ready to beat 13?)."
+  - id: exp4478-capstone-413
+    milestone: 2026.06.413
+    title: "PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants, is the submission package refreshed > 39?"
     priority: critical
     track: infra
     max_turns: 120
@@ -678,22 +801,26 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing): routine capstone task -- false-positive scope-match vs prior capstone-v* tasks; mechanical aggregation of the milestone's artifacts, never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4465_capstone_v412.json
+    deliverable: results/experiment_4478_capstone_v413.json
     prompt: |
-      CONTEXT: the .412 capstone aggregates the milestone and answers the generic-solver-gap + submission-
-      readiness questions.
-      EXISTING CODE TO READ FIRST: results/experiment_4453_capstone_v411.json (the .411 capstone format),
+      CONTEXT: the .413 capstone aggregates the milestone and answers the level-growth + generic-capability +
+      submission-readiness questions. The .413 thesis was that .412's churn (0 new levels) was OPERATIONAL
+      (dc22 precondition block, sc25 no-artifact), so .413 should finally GROW the metric.
+      EXISTING CODE TO READ FIRST: results/experiment_4465_capstone_v412.json (the .412 capstone format),
       scripts/capstone_aggregate_available.py (robust aggregate-available helper), scripts/publication_gate.py,
-      scripts/summarize_artifact.py, all results/experiment_445{{5,6,7,8,9}}_*.json +
-      results/experiment_4460_*.json + results/experiment_4461_*.json.
-      TASK: aggregate the .412 milestone. HEADLINE QUESTIONS: (1) did exp4455 GROUND + BANK dc22 L1 (clean,
-      non-flagged, reproduced_levels>=1) -> +1 game/level, closing GAP-4423-DC22? (2) did exp4456 close
-      GAP-4432-LOO-TR87 (tr87 re-solved generically)? (3) did exp4457 close GAP-4432-LOO-SC25 AND bank >=1 new
-      sc25 level (provisional -> reproduced)? (4) did exp4458 bank a NEW never-attempted game? (5) did exp4459's
-      generic_loo_solve_count_v3 RISE above the v2 baseline of 5? (6) is exp4460's submission_package_ready=true
-      and total_reproduced_levels_in_package > 13? Emit generic_solver_gap_state (one honest string:
-      closing / partial / total-gap), reproducible_total_levels/games (the monotonic sprint metric), the
-      submission-readiness decision, and the .413 build backlog (the still-open residual_deltas + missing
+      scripts/summarize_artifact.py, all results/experiment_446{{7,8,9}}_*.json +
+      results/experiment_447{{0,1,2,3,4}}_*.json.
+      TASK: aggregate the .413 milestone. HEADLINE QUESTIONS: (1) did reproducible_total_levels finally GROW
+      off 39 (the .412-flat metric)? (2) did exp4467 GROUND + BANK dc22 L1 (clean, non-flagged,
+      reproduced_levels>=1) -> +1 game/level, closing GAP-4423-DC22 (and proving the --no-cov precondition
+      fix)? (3) did exp4468 BANK >=1 new sc25 level (provisional -> reproduced)? (4) did exp4469 close
+      GAP-4432-LOO-SC25 (sc25 re-solved generically)? (5) did exp4470 build the color-match operator + bank
+      sb26? (6) did exp4471 bank a NEW rotated game? (7) what is exp4472's generic_transfer_rate_over_variants
+      and did generic_loo_solve_count_v4 RISE above the v3 baseline of 6? (8) is exp4473's
+      submission_package_ready=true and total_reproduced_levels_in_package > 39? Emit
+      reproducible_total_levels_grew (BARE bool: > 39), generic_solver_gap_state (one honest string:
+      closing/partial/total-gap), reproducible_total_levels/games (the monotonic sprint metric), the
+      submission-readiness decision, and the .414 build backlog (the still-open residual_deltas + missing
       primitives). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (execution-grounded ARC
       solves are NOT moat headlines -- carry verifier_is_oracle correctly so the capstone does NOT trip
       CIRCULAR_MOAT_OVERCLAIM). Compute the G1-G4 publication gate via publication_gate.py (paper_ready stays
@@ -702,15 +829,17 @@ tasks:
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python scripts/publication_gate.py --json` runs; the robust helper imports.
         1. Aggregate the upstream artifacts (skip flagged); compute the headline answers + gap state +
-           submission-readiness.
+           submission-readiness + reproducible_total_levels_grew.
         2. Compute G1-G4; write the capstone with cited_upstream_artifacts (sha256 + fields_imported).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: {{principle: "terminal-prefixed"}}
-        generic_solver_gap_state: {{principle: "one honest string (closing/partial/total-gap) -- the .412 headline answer to 'is the example corpus + new operators closing the per-game-RE gap?'"}}
-        generic_loo_solve_count_v3: {{principle: "bare int from exp4459 -- did the falsifiable generic metric rise above 5?"}}
-        reproducible_total_levels: {{principle: "the authoritative monotonic sprint metric (target >= 40 after dc22 + sc25 deepening)"}}
-        submission_package_ready: {{principle: "bare bool from exp4460 -- is the operator package ready to beat the 13-level prior baseline?"}}
-        next_backlog: {{principle: "the still-open residual_deltas + missing primitives that become the .413 generic-solver build backlog"}}
+        reproducible_total_levels_grew: {{principle: "BARE bool: reproducible_total_levels > 39 -- the .413 headline answer to 'did we finally move the .412-flat metric?'"}}
+        generic_solver_gap_state: {{principle: "one honest string (closing/partial/total-gap) -- did dc22+sc25+sb26 close?"}}
+        generic_loo_solve_count_v4: {{principle: "bare int from exp4472 -- did the falsifiable generic metric rise above 6?"}}
+        generic_transfer_rate_over_variants: {{principle: "bare float from exp4472 -- the operator-mandated OOD-proxy generalization metric"}}
+        reproducible_total_levels: {{principle: "the authoritative monotonic sprint metric (target > 39 after dc22 + sc25 deepening)"}}
+        submission_package_ready: {{principle: "bare bool from exp4473 -- is the operator package ready to beat the 13-level prior baseline (now > 39)?"}}
+        next_backlog: {{principle: "the still-open residual_deltas + missing primitives that become the .414 generic-solver build backlog"}}
         publication_gate: {{principle: "the G1-G4 publication_gate.py --json output; paper_ready stays True (FoVer 0.9131, FROZEN)"}}
         verifier_is_oracle: {{principle: "BARE bool=false for the capstone itself; upstream execution-grounded ARC solves carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire"}}
         inference_substrate: {{principle: "aggregation_from_upstream_artifacts -- reads upstream JSON + publication_gate.py; 100us floor"}}
@@ -718,5 +847,5 @@ tasks:
         reproducibility_checksum: {{principle: "content hash for reproducibility"}}
       honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle handled per
       Circularity Discipline. NO leaderboard submission.
-      Run command: `.venv/bin/python python/carnot/experiment_4465_capstone_v412.py`
+      Run command: `.venv/bin/python python/carnot/experiment_4478_capstone_v413.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
