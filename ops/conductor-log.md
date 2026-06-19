@@ -8872,3 +8872,4 @@ c |
 | 2026-06-19 18:40 UTC | PHASE 0 (TRANSITION) -- archive .411 -> activate . | OK | 95 passed, 1 warning in 5.07s |
 | 2026-06-19 18:45 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | cache hit: 95 passed, 1 warning in 5.07s |
 | 2026-06-19 19:04 UTC | PHASE A2 (ARC NORTH STAR) -- GENERIC glyph-rewrite | OK | 117 passed, 1 warning in 7.17s |
+| 2026-06-19 19:10 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY) -- G | OK | cache hit: 81 passed, 1 warning in 4.25s |
