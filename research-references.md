@@ -1,3 +1,82 @@
+## 2026-06-19 — .411 planning sweep — CONTINUE CLOSING THE GENERIC-SOLVER GAP via library learning over the example corpus; the .410 LOO benchmark proved PARTIAL generic transfer (2/7) + a REAL example-conditioned win-induction solve (g50t L1, quarantined on an artifact-substrate bug)
+
+Added by the `.411 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-19). The `.410
+scorecard (exp4441 capstone, `generic_solver_gap_state: partial`, `generic_loo_solve_count: 2`
+of 7, `reproducible_total_levels: 37 / 18 games`, `paper_ready: true`). The .410 result is the
+hinge for .411: the example corpus DOES enable generic transfer (LOO re-solved 2/7 games from the
+OTHER games' recipes alone; example-conditioning lifted world-model accuracy +0.286 vs the cold
+control; example-conditioned WIN-induction SOLVED held-out g50t L1, offline-reproduced — the FIRST
+example-corpus generic-transfer solve) but (a) the g50t win was QUARANTINED DURATION_TOO_SHORT
+because the artifact wrote `inference_substrate: None`, and (b) the LOO surfaced 5 residual
+mechanic-class deltas the generic path cannot yet induce (tr87 glyph-rewrite verifier; sc25
+cast-grid/spell/shrink/tank-exit; ka59 push-block world-model + dynamic selection; ar25 reflection
+world-model + object-motion; ft09 local-constraint colour-cycle). The .410 SOTA-ingestion
+(exp4440) flagged **LILO documented library induction (arXiv:2310.19791)** as the single strongest
+`.411 method: turn the consolidated primitives + solved-game predicates into a documented,
+retrievable library the first-contact solver queries BEFORE calling the generator. This is the
+PRD's continuous-self-learning Tier 2 (constraint memory / reusable templates) made concrete —
+and is DISTINCT from the RETIRED learned-value cross-game transfer (exp4318/4331/4342, 3 nulls).
+
+**A. SELF-LEARNING — library learning over the ARC solve corpus (the .411 self-learning lever):**
+- **arXiv:2310.19791** (LILO: Learning Interpretable Libraries by Compressing and Documenting Code;
+  NeurIPS/ICLR; code github.com/gabegrand/lilo) — LLM-guided synthesis + Stitch symbolic compression
+  + an AutoDoc step that names/documents each abstraction so the synthesizer can RETRIEVE it. THE
+  `.411 self-learning backbone: compress the solved-game predicates / world-model snippets / the 5
+  consolidated primitives into named, documented library operators that the generic first-contact
+  solver retrieves. Pitfall (the SOTA note warns): library compression can encode game-specific
+  CONSTANTS → require held-out games, literal scans, and the reproduction gate before any primitive
+  counts. Verified this sweep (WebSearch 2026-06-19) + by exp4440 (HTTP-200).
+- **arXiv:2006.08381** (DreamCoder wake-sleep library learning) + **arXiv:2211.16605** (Stitch
+  top-down corpus compression) — the compression backbone LILO builds on; the abstraction-discovery
+  engine for the ARC solver corpus.
+- **arXiv:2405.15880** (HYSYNTH context-free LLM-approximation) + **arXiv:2503.23145** (CodeARC
+  differential-query program induction) — counterexample-guided induction: fit a task-local search
+  surrogate from LLM completions / refine candidate predicates from verifier-returned failures,
+  rather than trusting one in-context sample. Directly applicable to the config-rule / win-predicate
+  induction loop (A1/A2).
+
+**B. GENERIC OBJECT-CENTRIC WORLD-MODEL TRANSFER (the A3 LOO-residual closures — ar25/ka59):**
+- **arXiv:2606.12316** (Loop-OWM composable object-centric world-model transfer) — represent ARC
+  rules as object-centric slots + looped transitions so example-conditioned action models transfer
+  by STATE STRUCTURE, not prompt text. The .411 generic object-motion operator (reflection / push /
+  translation) is this idea applied to close the ar25 + ka59 LOO residuals. Pitfall: ARC-AGI-1/2
+  static-transition gains may not transfer to interactive ARC-AGI-3 without action-cost + goal-
+  inference tests → keep the reproduction gate + a cold-synthesis positive control.
+- **arXiv:2605.05138** (Executable World Models for ARC-AGI-3) — the live induce-verify-refactor-plan
+  harness (already built: `arc_executable_world_model.py`); .411 feeds it a documented primitive
+  library instead of only ad-hoc examples. Fresh-workspace discipline is load-bearing (no cross-game
+  file leakage, or the generic claim is invalid).
+- **arXiv:2603.05099** (ARC-TGI generator-backed held-out example families) — generate variant
+  task-families so library primitives are trained/tested on VARIATION, not one public level trace
+  (guards the LILO game-specific-constant pitfall).
+
+**C. ARC-AGI-3 framing + corroborators (verified this sweep, WebSearch 2026-06-19):**
+- **arXiv:2512.24156** (Graph-Based Exploration for ARC-AGI-3 — the open-source 3rd-place
+  no-induction explorer; our `graph_explore_solve_v2` lineage) and the ARC-AGI-3 toolkit
+  (`is_done`/`choose_action`, novel-environment exploration, NO natural-language instructions,
+  build-adaptable-world-models, learn-continuously) — confirms the .411 generic-solver framing:
+  the leaderboard is HELD-OUT games, so generic-from-examples is the entire competitive value.
+- **arXiv:2511.11079** (ARCTraj: human reasoning trajectories) — a candidate example-conditioning
+  corpus (lower-confidence; discovered this sweep, not yet a core experiment) for richer few-shot
+  win/action induction in a future milestone.
+
+**Bottom line for .411:** (A1) BANK the quarantined g50t win cleanly — EMIT `inference_substrate`
+correctly (the .410 loss was `inference_substrate: None` → DURATION_TOO_SHORT false-positive on a
+REAL solve). (A2) build a generic config-rule / local-constraint predicate-verifier operator
+(close the ft09 LOO residual + attack dc22). (A3) build a generic object-motion world-model operator
+(Loop-OWM-style; close the ar25 + ka59 LOO residuals). (A4) drive the .410-fixed generic
+first-contact solver to actually BANK a routed solve (vc33 / unseen). (A5) LILO-style documented
+primitive library (self-learning Tier 2). (A6) LOO benchmark v2 — re-measure the falsifiable
+`generic_loo_solve_count` after the new operators land. Monotonically grow reproducible_total_levels
+from 37/18. paper_ready=True (FoVer 0.9131, G1–G4) stays the FROZEN headline; NO leaderboard
+submission in-loop (operator-only).
+
+Sources (this sweep, WebSearch-verified 2026-06-19; arXiv IDs also HTTP-200-verified by exp4440
+2026-06-19): arxiv.org/abs/{2310.19791, 2006.08381, 2211.16605, 2405.15880, 2503.23145, 2606.12316,
+2605.05138, 2603.05099, 2512.24156, 2511.11079}.
+
+---
+
 ## 2026-06-18 — .408 planning sweep — the oracle-distinct first-error LOCALIZER is RETIRED (position-bound); PIVOT the ARC north star to verifier-grounded CONFIG-RULE INDUCTION (the operator's #1 lever, 9 toggle/config games); Agent2World adaptive E3 repair; falsify the localizer in hidden-state space; repair code-domain detection calibration
 
 Added by the `.408 planning sweep (Claude Opus 4.8, outer-loop planner). The `.407 scorecard
