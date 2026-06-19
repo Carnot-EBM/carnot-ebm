@@ -1,0 +1,1270 @@
+{
+  "arc_config_rule": {
+    "agent2world_adaptive_e3": {
+      "honest_verdict": "complete_e3_adaptive_partial",
+      "new_levels_reproduced": 0,
+      "per_target_scorecard": [
+        {
+          "adaptive_tests_passed": 1,
+          "adaptive_tests_total": 2,
+          "checkpoint_status": "honest_partial_adaptive_residual_behavior_remaining",
+          "game": "ar25",
+          "held_out_mechanic_test_pass": true,
+          "new_reproduced_level": 1,
+          "offline_reproduced": false,
+          "prior_best_level": 1,
+          "residual_failing_behavior": "ar25_l2_hidden_undo_stack_state_not_visible_in_rollout"
+        },
+        {
+          "adaptive_tests_passed": 1,
+          "adaptive_tests_total": 2,
+          "checkpoint_status": "honest_partial_adaptive_residual_behavior_remaining",
+          "game": "tn36",
+          "held_out_mechanic_test_pass": true,
+          "new_reproduced_level": 7,
+          "offline_reproduced": false,
+          "prior_best_level": 7,
+          "residual_failing_behavior": "tn36_l8_palette_population_or_later_program_state_still_wrong"
+        },
+        {
+          "adaptive_tests_passed": 1,
+          "adaptive_tests_total": 2,
+          "checkpoint_status": "honest_partial_adaptive_residual_behavior_remaining",
+          "game": "lp85",
+          "held_out_mechanic_test_pass": true,
+          "new_reproduced_level": 5,
+          "offline_reproduced": false,
+          "prior_best_level": 5,
+          "residual_failing_behavior": "lp85_l6_button_permutation_search_reproduction_still_wrong"
+        }
+      ],
+      "reproducible_total_levels_reported": 34,
+      "status": "partial",
+      "targets_with_residual_gaps": [
+        "ar25",
+        "tn36",
+        "lp85"
+      ],
+      "verifier_is_oracle": true
+    },
+    "config_rule_induction": {
+      "grounded_win_rules": [
+        {
+          "false_positive_rate": 0.0,
+          "fires_on_win": true,
+          "game": "ka59",
+          "literal_hardcode": false,
+          "predicate": "editable_count_4_equals_reference_count_4_32",
+          "tier": 2
+        }
+      ],
+      "grounded_win_rules_count": 1,
+      "honest_verdict": "complete_config_rule_partial",
+      "new_levels_reproduced": 0,
+      "per_target_scorecard": [
+        {
+          "game": "ka59",
+          "grounding_tier": 2,
+          "new_reproduced_level": 1,
+          "offline_reproduced": false,
+          "prior_best_level": 1,
+          "search_blocker": "no_registered_next_level_config_adapter",
+          "win_rule_predicate": "editable_count_4_equals_reference_count_4_32"
+        },
+        {
+          "game": "bp35",
+          "grounding_tier": 0,
+          "new_reproduced_level": 0,
+          "offline_reproduced": false,
+          "prior_best_level": 0,
+          "search_blocker": "blocked_local_model_unavailable",
+          "win_rule_predicate": null
+        },
+        {
+          "game": "dc22",
+          "grounding_tier": 0,
+          "new_reproduced_level": 0,
+          "offline_reproduced": false,
+          "prior_best_level": 0,
+          "search_blocker": "blocked_local_model_unavailable",
+          "win_rule_predicate": null
+        }
+      ],
+      "reproducible_total_levels_reported": 34,
+      "status": "grounded",
+      "verifier_is_oracle": true
+    },
+    "execution_grounded": true,
+    "grounded_win_rules": [
+      {
+        "false_positive_rate": 0.0,
+        "fires_on_win": true,
+        "game": "ka59",
+        "literal_hardcode": false,
+        "predicate": "editable_count_4_equals_reference_count_4_32",
+        "tier": 2
+      }
+    ],
+    "grounded_win_rules_count": 1,
+    "new_levels_reproduced_from_artifacts": 0,
+    "status": "grounded"
+  },
+  "arc_config_rule_state": "grounded_config_rules_no_new_reproducible_levels",
+  "arc_reproducible_progress": {
+    "new_games_since_prior": 0,
+    "new_levels_since_prior": 0,
+    "path": "ops/arc_solve_registry.yaml",
+    "prior_reproducible_total_games": 17,
+    "prior_reproducible_total_levels": 34,
+    "reproducible_total_games": 17,
+    "reproducible_total_levels": 34,
+    "status": "loaded"
+  },
+  "availability_report": {
+    "available_artifact_keys": [
+      "4412_prior_capstone",
+      "4414_config_rule",
+      "4415_agent2world",
+      "4416_hidden_state",
+      "4417_sovereign_gap4",
+      "4418_vocabulary",
+      "4419_detection"
+    ],
+    "axes": {
+      "arc_config_rule": {
+        "available_artifact_keys": [
+          "4414_config_rule",
+          "4415_agent2world"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "grounded"
+      },
+      "detection": {
+        "available_artifact_keys": [
+          "4419_detection"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "localizer_program": {
+        "available_artifact_keys": [
+          "4416_hidden_state"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "closed_position_bound_text_and_hidden"
+      },
+      "prior_capstone": {
+        "available_artifact_keys": [
+          "4412_prior_capstone"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 34
+      },
+      "sovereign_verifier": {
+        "available_artifact_keys": [
+          "4417_sovereign_gap4"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "sovereign_gap4_local_gate_holds_execution_grounded"
+      },
+      "vocabulary": {
+        "available_artifact_keys": [
+          "4418_vocabulary"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4412_prior_capstone",
+      "experiment_id": 4412,
+      "fields_imported": [
+        "localizer_state",
+        "localizer_compounds",
+        "detection_calibrated_multi_domain",
+        "reproducible_total_levels",
+        "publication_gate",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4412_capstone_v407.json",
+      "sha256": "afb26fc517208350e77197d4fc5e86ae3daa0bf666e6a764d77f17100f72c8df"
+    },
+    {
+      "artifact_key": "4414_config_rule",
+      "experiment_id": 4414,
+      "fields_imported": [
+        "new_levels_reproduced",
+        "reproducible_total_levels",
+        "config_win_rules_grounded",
+        "per_target_scorecard",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4414_config_rule_induction_solve.json",
+      "sha256": "9e67ba9610939e2019bddbb0cd304ce4232b7226d9dad684d1139ea839c49dbe"
+    },
+    {
+      "artifact_key": "4415_agent2world",
+      "experiment_id": 4415,
+      "fields_imported": [
+        "new_levels_reproduced",
+        "reproducible_total_levels",
+        "per_target_scorecard",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+      "sha256": "2f7a33727918fbaeb2dd6637f5626572649e533239c1042f26d6f9e4278398b1"
+    },
+    {
+      "artifact_key": "4416_hidden_state",
+      "experiment_id": 4416,
+      "fields_imported": [
+        "hidden_state_localizer_has_nonposition_signal",
+        "position_only_baseline_f1",
+        "localization_f1_comparison",
+        "missing_verifier_gaps",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+      "sha256": "ef380adab5b7bd0da4d3075ee25aeade252eae989fc799b42117e237cfb11407"
+    },
+    {
+      "artifact_key": "4417_sovereign_gap4",
+      "experiment_id": 4417,
+      "fields_imported": [
+        "sovereign_gap4_gate_holds",
+        "pass2_vs_vote",
+        "local_generator_coverage",
+        "k_consistency_details",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+      "sha256": "f30e5acbc17cd16a414c3695b165189b8ebe8e3015a02871c4771333517e59f2"
+    },
+    {
+      "artifact_key": "4418_vocabulary",
+      "experiment_id": 4418,
+      "fields_imported": [
+        "config_rule_vocabulary_transfers",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4418_config_rule_vocabulary_transfer.json",
+      "sha256": "ab87308c06633f67ac0813ee87cf38d2f909b612ffdb40857c472e3a96945b2c"
+    },
+    {
+      "artifact_key": "4419_detection",
+      "experiment_id": 4419,
+      "fields_imported": [
+        "detection_calibrated_multi_domain",
+        "detection_by_domain",
+        "domains_at_chance",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+      "sha256": "4df06c125867125546a7c19937a511fd12ac8fe1c830604a152f7772c8972b14"
+    }
+  ],
+  "config_rule_vocabulary": {
+    "config_rule_vocabulary_transfers": false,
+    "honest_verdict": "blocked_local_model_unavailable",
+    "reported_config_rule_vocabulary_transfers": false,
+    "status": "no_transfer",
+    "verifier_is_oracle": false
+  },
+  "config_rule_vocabulary_transfers": false,
+  "detection_calibrated_multi_domain": false,
+  "detection_calibration": {
+    "detection_by_domain": [
+      {
+        "auroc_ci95": [
+          0.48913,
+          0.70483
+        ],
+        "base_rate": 0.90167,
+        "baseline_verifier_auroc": 0.577374,
+        "claim_scope": "proper_pool_n>=300",
+        "detection_auroc": 0.60191,
+        "domain": "code_humaneval",
+        "ece_lodo_calibrated": 0.077816,
+        "ece_uncalibrated": 0.071429,
+        "feature_logistic_calibrator": {
+          "bias": -2.491845,
+          "feature_names": [
+            "verifier_score",
+            "conservative_confidence",
+            "optimistic_confidence",
+            "confidence_consistency",
+            "steer_width",
+            "task_rank_fraction",
+            "task_margin_confidence"
+          ],
+          "means": [
+            0.209395,
+            0.173916,
+            0.261688,
+            0.912228,
+            0.087772,
+            0.5,
+            0.13859
+          ],
+          "n_train": 38872,
+          "scales": [
+            0.353053,
+            0.312135,
+            0.385965,
+            0.102842,
+            0.102842,
+            0.226987,
+            0.23959
+          ],
+          "trained_on_domains": [
+            "fover",
+            "gap4_arc",
+            "gsm8k"
+          ],
+          "weights": [
+            0.975345,
+            1.101294,
+            0.8377,
+            0.198647,
+            -0.198647,
+            -0.356394,
+            0.314656
+          ]
+        },
+        "n": 539,
+        "random_score_control": {
+          "auroc": 0.496334,
+          "replicates": 128,
+          "seed": 4419
+        },
+        "risk_coverage": [
+          {
+            "accuracy": 0.90167,
+            "coverage": 1.0,
+            "n_kept": 539,
+            "risk": 0.09833,
+            "threshold": 0.892521
+          },
+          {
+            "accuracy": 0.946392,
+            "coverage": 0.9,
+            "n_kept": 485,
+            "risk": 0.053608,
+            "threshold": 0.976897
+          },
+          {
+            "accuracy": 0.935644,
+            "coverage": 0.75,
+            "n_kept": 404,
+            "risk": 0.064356,
+            "threshold": 0.980802
+          },
+          {
+            "accuracy": 0.903346,
+            "coverage": 0.5,
+            "n_kept": 269,
+            "risk": 0.096654,
+            "threshold": 0.982137
+          },
+          {
+            "accuracy": 0.835821,
+            "coverage": 0.25,
+            "n_kept": 134,
+            "risk": 0.164179,
+            "threshold": 0.983536
+          }
+        ],
+        "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+        "steered_confidence_added_auroc": 0.024536,
+        "steering_probe_summary": {
+          "conservative_mean": 0.905099,
+          "consistency_mean": 0.91288,
+          "optimistic_mean": 0.992218,
+          "steer_width_mean": 0.08712
+        }
+      },
+      {
+        "auroc_ci95": [
+          0.899975,
+          0.918452
+        ],
+        "base_rate": 0.812097,
+        "baseline_verifier_auroc": 0.918304,
+        "claim_scope": "proper_pool_n>=300",
+        "detection_auroc": 0.909196,
+        "domain": "fover",
+        "ece_lodo_calibrated": 0.11516,
+        "ece_uncalibrated": 0.122522,
+        "feature_logistic_calibrator": {
+          "bias": -3.876802,
+          "feature_names": [
+            "verifier_score",
+            "conservative_confidence",
+            "optimistic_confidence",
+            "confidence_consistency",
+            "steer_width",
+            "task_rank_fraction",
+            "task_margin_confidence"
+          ],
+          "means": [
+            0.055921,
+            0.044267,
+            0.089011,
+            0.955256,
+            0.044744,
+            0.5,
+            0.037364
+          ],
+          "n_train": 30582,
+          "scales": [
+            0.203627,
+            0.186688,
+            0.212992,
+            0.052966,
+            0.052966,
+            0.240041,
+            0.129252
+          ],
+          "trained_on_domains": [
+            "code_humaneval",
+            "gap4_arc",
+            "gsm8k"
+          ],
+          "weights": [
+            0.472412,
+            0.515459,
+            0.421142,
+            0.123291,
+            -0.123291,
+            -0.173925,
+            0.241224
+          ]
+        },
+        "n": 8829,
+        "random_score_control": {
+          "auroc": 0.498896,
+          "replicates": 128,
+          "seed": 4419
+        },
+        "risk_coverage": [
+          {
+            "accuracy": 0.812097,
+            "coverage": 1.0,
+            "n_kept": 8829,
+            "risk": 0.187903,
+            "threshold": 0.020864
+          },
+          {
+            "accuracy": 0.8778,
+            "coverage": 0.9,
+            "n_kept": 7946,
+            "risk": 0.1222,
+            "threshold": 0.18598
+          },
+          {
+            "accuracy": 0.967679,
+            "coverage": 0.75,
+            "n_kept": 6621,
+            "risk": 0.032321,
+            "threshold": 0.628157
+          },
+          {
+            "accuracy": 0.983235,
+            "coverage": 0.5,
+            "n_kept": 4414,
+            "risk": 0.016765,
+            "threshold": 0.860103
+          },
+          {
+            "accuracy": 0.971454,
+            "coverage": 0.25,
+            "n_kept": 2207,
+            "risk": 0.028546,
+            "threshold": 0.89096
+          }
+        ],
+        "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+        "steered_confidence_added_auroc": -0.009107,
+        "steering_probe_summary": {
+          "conservative_mean": 0.667633,
+          "consistency_mean": 0.763228,
+          "optimistic_mean": 0.904406,
+          "steer_width_mean": 0.236772
+        }
+      },
+      {
+        "auroc_ci95": [
+          0.772424,
+          0.948651
+        ],
+        "base_rate": 0.001688,
+        "baseline_verifier_auroc": 0.963006,
+        "claim_scope": "proper_pool_n>=300",
+        "detection_auroc": 0.865085,
+        "domain": "gap4_arc",
+        "ece_lodo_calibrated": 0.026287,
+        "ece_uncalibrated": 0.01145,
+        "feature_logistic_calibrator": {
+          "bias": 1.9105,
+          "feature_names": [
+            "verifier_score",
+            "conservative_confidence",
+            "optimistic_confidence",
+            "confidence_consistency",
+            "steer_width",
+            "task_rank_fraction",
+            "task_margin_confidence"
+          ],
+          "means": [
+            0.755874,
+            0.644317,
+            0.861791,
+            0.782526,
+            0.217474,
+            0.5,
+            0.490918
+          ],
+          "n_train": 10968,
+          "scales": [
+            0.240239,
+            0.261081,
+            0.2243,
+            0.092877,
+            0.092877,
+            0.185477,
+            0.182375
+          ],
+          "trained_on_domains": [
+            "code_humaneval",
+            "fover",
+            "gsm8k"
+          ],
+          "weights": [
+            0.721764,
+            0.717718,
+            0.727417,
+            0.2608,
+            -0.2608,
+            -0.188262,
+            0.000554
+          ]
+        },
+        "n": 28443,
+        "random_score_control": {
+          "auroc": 0.498272,
+          "replicates": 128,
+          "seed": 4419
+        },
+        "risk_coverage": [
+          {
+            "accuracy": 0.001688,
+            "coverage": 1.0,
+            "n_kept": 28443,
+            "risk": 0.998312,
+            "threshold": 0.012668
+          },
+          {
+            "accuracy": 0.001758,
+            "coverage": 0.9,
+            "n_kept": 25598,
+            "risk": 0.998242,
+            "threshold": 0.015365
+          },
+          {
+            "accuracy": 0.001969,
+            "coverage": 0.75,
+            "n_kept": 21332,
+            "risk": 0.998031,
+            "threshold": 0.019613
+          },
+          {
+            "accuracy": 0.002883,
+            "coverage": 0.5,
+            "n_kept": 14221,
+            "risk": 0.997117,
+            "threshold": 0.022605
+          },
+          {
+            "accuracy": 0.005626,
+            "coverage": 0.25,
+            "n_kept": 7110,
+            "risk": 0.994374,
+            "threshold": 0.02719
+          }
+        ],
+        "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+        "steered_confidence_added_auroc": -0.097921,
+        "steering_probe_summary": {
+          "conservative_mean": 0.006379,
+          "consistency_mean": 0.962255,
+          "optimistic_mean": 0.044124,
+          "steer_width_mean": 0.037745
+        }
+      },
+      {
+        "auroc_ci95": [
+          0.984466,
+          0.994912
+        ],
+        "base_rate": 0.51,
+        "baseline_verifier_auroc": 0.990196,
+        "claim_scope": "proper_pool_n>=300",
+        "detection_auroc": 0.990196,
+        "domain": "gsm8k",
+        "ece_lodo_calibrated": 0.022132,
+        "ece_uncalibrated": 0.0725,
+        "feature_logistic_calibrator": {
+          "bias": -2.529545,
+          "feature_names": [
+            "verifier_score",
+            "conservative_confidence",
+            "optimistic_confidence",
+            "confidence_consistency",
+            "steer_width",
+            "task_rank_fraction",
+            "task_margin_confidence"
+          ],
+          "means": [
+            0.207667,
+            0.173596,
+            0.258518,
+            0.915078,
+            0.084922,
+            0.5,
+            0.125814
+          ],
+          "n_train": 37811,
+          "scales": [
+            0.354006,
+            0.312435,
+            0.386346,
+            0.103372,
+            0.103372,
+            0.234042,
+            0.234054
+          ],
+          "trained_on_domains": [
+            "code_humaneval",
+            "fover",
+            "gap4_arc"
+          ],
+          "weights": [
+            0.940792,
+            1.059278,
+            0.808408,
+            0.180227,
+            -0.180227,
+            -0.368608,
+            0.323493
+          ]
+        },
+        "n": 1600,
+        "random_score_control": {
+          "auroc": 0.501502,
+          "replicates": 128,
+          "seed": 4419
+        },
+        "risk_coverage": [
+          {
+            "accuracy": 0.51,
+            "coverage": 1.0,
+            "n_kept": 1600,
+            "risk": 0.49,
+            "threshold": 0.032351
+          },
+          {
+            "accuracy": 0.564583,
+            "coverage": 0.9,
+            "n_kept": 1440,
+            "risk": 0.435417,
+            "threshold": 0.032351
+          },
+          {
+            "accuracy": 0.673333,
+            "coverage": 0.75,
+            "n_kept": 1200,
+            "risk": 0.326667,
+            "threshold": 0.035744
+          },
+          {
+            "accuracy": 1.0,
+            "coverage": 0.5,
+            "n_kept": 800,
+            "risk": 0.0,
+            "threshold": 0.961482
+          },
+          {
+            "accuracy": 1.0,
+            "coverage": 0.25,
+            "n_kept": 400,
+            "risk": 0.0,
+            "threshold": 0.978084
+          }
+        ],
+        "score_orientation": "higher_steered_calibrated_score_means_more_likely_correct",
+        "steered_confidence_added_auroc": 0.0,
+        "steering_probe_summary": {
+          "conservative_mean": 0.4278,
+          "consistency_mean": 0.8451,
+          "optimistic_mean": 0.5827,
+          "steer_width_mean": 0.1549
+        }
+      }
+    ],
+    "detection_calibrated_multi_domain": false,
+    "domains_at_chance": [
+      "code_humaneval"
+    ],
+    "honest_verdict": "complete: clean_null_steered_confidence_does_not_rescue_code_detector",
+    "reported_detection_calibrated_multi_domain": false,
+    "status": "domain_bound",
+    "verifier_is_oracle": false
+  },
+  "duration_s": 0.350798,
+  "experiment": 4423,
+  "field_principles": {
+    "arc_config_rule_state": "One honest string: did verifier-grounded config-rule induction + Agent2World adaptive E3 add reproducible levels / ground new config win-rules, or did the config/toggle class stay blocked (the logged search/world-model gaps)?",
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256} -- the audit trail that the capstone's numbers trace to real upstream measurements (G4 discipline).",
+    "config_rule_vocabulary_transfers": "BARE bool: the exp4418 self-learning result (does the config-rule vocabulary compound via transfer).",
+    "detection_calibrated_multi_domain": "BARE bool: the exp4419 result (did SteerConf rescue cross-domain code detection).",
+    "honest_verdict": "Terminal-prefixed; one honest summary string of the .408 outcome.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, the ARC registry, and publication_gate.py output.",
+    "localizer_program_state": "One honest string (closed_position_bound_text_and_hidden / off_text_signal_logged_gap): whether exp4416's hidden-state audit conclusively closed the first-error-localizer program or found an off-text signal.",
+    "preconditions_checked": "Records the .408 artifacts loaded (robust aggregate-available) + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "publication_gate": "The G1-G4 publication_gate.py output (paper_ready + unmet_gates) -- the FROZEN FoVer headline gate; do NOT redefine it to show progress.",
+    "random_seed": "Determinism precondition for the aggregation.",
+    "reproducibility_checksum": "Hash of the aggregated upstream artifacts + the gate output; lets a third party re-derive the scorecard.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after .408 (>= the prior 34) -- the monotonic north-star accuracy signal.",
+    "sovereign_verifier_state": "One honest string: did a LOCAL open-weight generator hold the GAP-4 execution gate (the decentralization tier), or is the moat still closed-generator-bound?",
+    "verifier_is_oracle": "BARE bool: carried correctly so the capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM (execution-grounded ARC/config/GAP-4 solves are NOT moat headlines).",
+    "verifier_thesis_state": "One honest string: where the verifier thesis stands after .408 (config-rule grounding moved/did-not-move ARC; localizer program closed/open; sovereign GAP-4 holds/null; vocabulary compounds/null; detection calibrated/domain-bound)."
+  },
+  "field_provenance": {
+    "arc_config_rule_state": {
+      "principle": "One honest string: did verifier-grounded config-rule induction + Agent2World adaptive E3 add reproducible levels / ground new config win-rules, or did the config/toggle class stay blocked (the logged search/world-model gaps)?",
+      "satisfied_by": "aggregation logic"
+    },
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail that the capstone's numbers trace to real upstream measurements (G4 discipline).",
+      "satisfied_by": "aggregation logic"
+    },
+    "config_rule_vocabulary_transfers": {
+      "principle": "BARE bool: the exp4418 self-learning result (does the config-rule vocabulary compound via transfer).",
+      "satisfied_by": "aggregation logic"
+    },
+    "detection_calibrated_multi_domain": {
+      "principle": "BARE bool: the exp4419 result (did SteerConf rescue cross-domain code detection).",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "Terminal-prefixed; one honest summary string of the .408 outcome.",
+      "satisfied_by": "aggregation logic"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- this capstone reads upstream JSON, the ARC registry, and publication_gate.py output.",
+      "satisfied_by": "aggregation logic"
+    },
+    "localizer_program_state": {
+      "principle": "One honest string (closed_position_bound_text_and_hidden / off_text_signal_logged_gap): whether exp4416's hidden-state audit conclusively closed the first-error-localizer program or found an off-text signal.",
+      "satisfied_by": "aggregation logic"
+    },
+    "preconditions_checked": {
+      "principle": "Records the .408 artifacts loaded (robust aggregate-available) + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+      "satisfied_by": "aggregation logic"
+    },
+    "publication_gate": {
+      "principle": "The G1-G4 publication_gate.py output (paper_ready + unmet_gates) -- the FROZEN FoVer headline gate; do NOT redefine it to show progress.",
+      "satisfied_by": "aggregation logic"
+    },
+    "random_seed": {
+      "principle": "Determinism precondition for the aggregation.",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hash of the aggregated upstream artifacts + the gate output; lets a third party re-derive the scorecard.",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducible_total_levels": {
+      "principle": "BARE int: the ARC reproducible-level count after .408 (>= the prior 34) -- the monotonic north-star accuracy signal.",
+      "satisfied_by": "aggregation logic"
+    },
+    "sovereign_verifier_state": {
+      "principle": "One honest string: did a LOCAL open-weight generator hold the GAP-4 execution gate (the decentralization tier), or is the moat still closed-generator-bound?",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle": {
+      "principle": "BARE bool: carried correctly so the capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM (execution-grounded ARC/config/GAP-4 solves are NOT moat headlines).",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_thesis_state": {
+      "principle": "One honest string: where the verifier thesis stands after .408 (config-rule grounding moved/did-not-move ARC; localizer program closed/open; sovereign GAP-4 holds/null; vocabulary compounds/null; detection calibrated/domain-bound).",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "flagged_artifacts_excluded": [],
+  "frozen_fover_auroc": 0.9131,
+  "honest_verdict": "complete: v408_config_rule_grounded_no_new_levels_localizer_closed_sovereign_gap4_holds_vocab_false_detection_false_arc_levels_34_publication_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "localizer_program": {
+    "hidden_state_localizer_has_nonposition_signal": false,
+    "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
+    "localization_f1_comparison": {
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_vs_position_only": 0.0,
+      "hidden_exact_match_count": 1000,
+      "hidden_state_probe_f1": 1.0,
+      "n_traces": 1000,
+      "position_exact_match_count": 1000,
+      "position_only_baseline_f1": 1.0,
+      "text_localizer_f1_exp4403": 1.0
+    },
+    "missing_verifier_gaps": [
+      {
+        "candidate_design": "Collect typed multi-step FoVer traces with non-first-position first errors before any localizer redeployment; do not revive the position-saturated text or hidden-state localizer line.",
+        "delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_vs_position_only": 0.0,
+        "evidence": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+        "failure_mode": "The hidden-state transport/margin probe tied the content-blind position-only first-error baseline; the available FoVer failed traces are position-saturated at first step.",
+        "gap_id": "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED",
+        "missing_discriminator": "A model-native signal that separates earliest causal error from position and downstream consequence under non-degenerate multi-step FoVer labels.",
+        "n_captured_traces": 1250,
+        "parent_gap": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+        "priority": "medium",
+        "status": "open"
+      }
+    ],
+    "position_only_baseline_f1": 1.0,
+    "reported_hidden_state_localizer_has_nonposition_signal": false,
+    "status": "closed_position_bound",
+    "verifier_is_oracle": false
+  },
+  "localizer_program_state": "closed_position_bound_text_and_hidden",
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "preconditions_checked": {
+    "arc_registry": {
+      "new_games_since_prior": 0,
+      "new_levels_since_prior": 0,
+      "path": "ops/arc_solve_registry.yaml",
+      "prior_reproducible_total_games": 17,
+      "prior_reproducible_total_levels": 34,
+      "reproducible_total_games": 17,
+      "reproducible_total_levels": 34,
+      "status": "loaded"
+    },
+    "publication_gate": {
+      "exists": true,
+      "paper_ready": true,
+      "path": "scripts/publication_gate.py",
+      "runnable": true,
+      "unmet_gates": []
+    },
+    "robust_aggregate_available_helper": "capstone_aggregate_available.aggregate_available_report_gaps",
+    "trm_training_by_artifact": [
+      {
+        "artifact_key": "4414_config_rule",
+        "experiment_id": 4414,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4415_agent2world",
+        "experiment_id": 4415,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4416_hidden_state",
+        "experiment_id": 4416,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4417_sovereign_gap4",
+        "experiment_id": 4417,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4418_vocabulary",
+        "experiment_id": 4418,
+        "trm_training_stood_down": true
+      },
+      {
+        "artifact_key": "4419_detection",
+        "experiment_id": 4419,
+        "trm_training_stood_down": true
+      }
+    ],
+    "trm_training_stood_down": true,
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4412_prior_capstone",
+        "exists": true,
+        "experiment_id": 4412,
+        "path": "results/experiment_4412_capstone_v407.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4414_config_rule",
+        "exists": true,
+        "experiment_id": 4414,
+        "path": "results/experiment_4414_config_rule_induction_solve.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4415_agent2world",
+        "exists": true,
+        "experiment_id": 4415,
+        "path": "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4416_hidden_state",
+        "exists": true,
+        "experiment_id": 4416,
+        "path": "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4417_sovereign_gap4",
+        "exists": true,
+        "experiment_id": 4417,
+        "path": "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4418_vocabulary",
+        "exists": true,
+        "experiment_id": 4418,
+        "path": "results/experiment_4418_config_rule_vocabulary_transfer.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4419_detection",
+        "exists": true,
+        "experiment_id": 4419,
+        "path": "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_gate_checksum": "7647fd5ba3275c5994bf046360095a1511d7a0b5abd8bcdcd8c367fa1db3f9ac",
+  "random_seed": 4423,
+  "reproducibility_checksum": "sha256:7bdbf050ff359f945e79a143dcf289c849ecfe406131c9d7509bd70685e4edaf",
+  "reproducible_total_levels": 34,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "verifier_thesis_state",
+    "arc_config_rule_state",
+    "localizer_program_state",
+    "sovereign_verifier_state",
+    "config_rule_vocabulary_transfers",
+    "detection_calibrated_multi_domain",
+    "reproducible_total_levels",
+    "publication_gate",
+    "verifier_is_oracle",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum",
+    "cited_upstream_artifacts",
+    "inference_substrate"
+  ],
+  "schema": "carnot.capstone_v408_4423.v1",
+  "sovereign_verifier": {
+    "honest_verdict": "complete: sovereign_gap4_local_gate_holds_flat_cov_0.2333_fires_0_lost_0",
+    "k_consistency_details": {
+      "demo_perfect_unique_tasks": 7,
+      "guard_block_count": 0,
+      "k_consistent_entries": 0,
+      "lost": 0,
+      "recovered": 0,
+      "unique_tasks": 30
+    },
+    "local_generator_coverage": 0.2333,
+    "pass2_vs_vote": {
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "gated_pass2": 0.4516,
+      "graded_gate_fires": 0,
+      "pass2_vote_wins_lost": 0,
+      "vote_pass2": 0.4516
+    },
+    "reported_sovereign_gap4_gate_holds": true,
+    "sovereign_gap4_gate_holds": true,
+    "status": "holds",
+    "verifier_is_oracle": true
+  },
+  "sovereign_verifier_state": "sovereign_gap4_local_gate_holds_execution_grounded",
+  "spec_refs": [
+    "REQ-CAPSTONE-4423",
+    "SCENARIO-CAPSTONE-4423"
+  ],
+  "unmet_gates": [],
+  "upstream_oracle_declarations": [
+    {
+      "artifact_key": "4412_prior_capstone",
+      "experiment_id": 4412,
+      "skipped": false,
+      "verifier_is_oracle": false
+    },
+    {
+      "artifact_key": "4414_config_rule",
+      "experiment_id": 4414,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4415_agent2world",
+      "experiment_id": 4415,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4416_hidden_state",
+      "experiment_id": 4416,
+      "skipped": false,
+      "verifier_is_oracle": false
+    },
+    {
+      "artifact_key": "4417_sovereign_gap4",
+      "experiment_id": 4417,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4418_vocabulary",
+      "experiment_id": 4418,
+      "skipped": false,
+      "verifier_is_oracle": false
+    },
+    {
+      "artifact_key": "4419_detection",
+      "experiment_id": 4419,
+      "skipped": false,
+      "verifier_is_oracle": false
+    }
+  ],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4412_prior_capstone",
+      "experiment_id": 4412,
+      "fields_imported": [
+        "localizer_state",
+        "localizer_compounds",
+        "detection_calibrated_multi_domain",
+        "reproducible_total_levels",
+        "publication_gate",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4412_capstone_v407.json",
+      "payload_reproducibility_checksum": "e800ffb660ffb9d6c9ba4eab6046d0d494855eaa65d6f7edaf61574c03341cc5",
+      "sha256": "afb26fc517208350e77197d4fc5e86ae3daa0bf666e6a764d77f17100f72c8df",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4414_config_rule",
+      "experiment_id": 4414,
+      "fields_imported": [
+        "new_levels_reproduced",
+        "reproducible_total_levels",
+        "config_win_rules_grounded",
+        "per_target_scorecard",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4414_config_rule_induction_solve.json",
+      "payload_reproducibility_checksum": "7a654b1b23beaa3c9eb3b471cde4e0ff04880e6da2ff3657da4e385f8d292979",
+      "sha256": "9e67ba9610939e2019bddbb0cd304ce4232b7226d9dad684d1139ea839c49dbe",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4415_agent2world",
+      "experiment_id": 4415,
+      "fields_imported": [
+        "new_levels_reproduced",
+        "reproducible_total_levels",
+        "per_target_scorecard",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4415_agent2world_adaptive_e3_repair.json",
+      "payload_reproducibility_checksum": "d2ed24b992dd8fe4736ea00b3789bae3e6147a44c3584670f1ae2e7beed98912",
+      "sha256": "2f7a33727918fbaeb2dd6637f5626572649e533239c1042f26d6f9e4278398b1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4416_hidden_state",
+      "experiment_id": 4416,
+      "fields_imported": [
+        "hidden_state_localizer_has_nonposition_signal",
+        "position_only_baseline_f1",
+        "localization_f1_comparison",
+        "missing_verifier_gaps",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4416_hidden_state_localizer_falsification_audit.json",
+      "payload_reproducibility_checksum": "3be67173672bf3f6793b9db1c3832968ebc7aadbe2e85573419c5df48ef9bfa4",
+      "sha256": "ef380adab5b7bd0da4d3075ee25aeade252eae989fc799b42117e237cfb11407",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4417_sovereign_gap4",
+      "experiment_id": 4417,
+      "fields_imported": [
+        "sovereign_gap4_gate_holds",
+        "pass2_vs_vote",
+        "local_generator_coverage",
+        "k_consistency_details",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4417_gap4_local_generator_sovereign_arm.json",
+      "payload_reproducibility_checksum": "7d5cc5b2a3cfda34f8d2fbb3488bae1df22a8211175e212d3231390cc9ef91d6",
+      "sha256": "f30e5acbc17cd16a414c3695b165189b8ebe8e3015a02871c4771333517e59f2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4418_vocabulary",
+      "experiment_id": 4418,
+      "fields_imported": [
+        "config_rule_vocabulary_transfers",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4418_config_rule_vocabulary_transfer.json",
+      "payload_reproducibility_checksum": "4b3dc6c500f8fe7529057ed82ed9b5a69a0635b01e2ec72e994f65ebcc12a6e6",
+      "sha256": "ab87308c06633f67ac0813ee87cf38d2f909b612ffdb40857c472e3a96945b2c",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4419_detection",
+      "experiment_id": 4419,
+      "fields_imported": [
+        "detection_calibrated_multi_domain",
+        "detection_by_domain",
+        "domains_at_chance",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4419_steerconf_code_detection_calibration_repair.json",
+      "payload_reproducibility_checksum": "1b5b5de632324ea3760e6377ec7bf8ec8d53ca76489bf428a479b300965d6e81",
+      "sha256": "4df06c125867125546a7c19937a511fd12ac8fe1c830604a152f7772c8972b14",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "2f7a33727918fbaeb2dd6637f5626572649e533239c1042f26d6f9e4278398b1",
+    "4df06c125867125546a7c19937a511fd12ac8fe1c830604a152f7772c8972b14",
+    "9e67ba9610939e2019bddbb0cd304ce4232b7226d9dad684d1139ea839c49dbe",
+    "ab87308c06633f67ac0813ee87cf38d2f909b612ffdb40857c472e3a96945b2c",
+    "afb26fc517208350e77197d4fc5e86ae3daa0bf666e6a764d77f17100f72c8df",
+    "ef380adab5b7bd0da4d3075ee25aeade252eae989fc799b42117e237cfb11407",
+    "f30e5acbc17cd16a414c3695b165189b8ebe8e3015a02871c4771333517e59f2"
+  ],
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_honored": true,
+  "verifier_thesis_state": "config_rule_grounded_no_new_levels_localizer_closed_sovereign_gap4_holds_vocab_no_transfer_detection_domain_bound_arc_levels_34"
+}
