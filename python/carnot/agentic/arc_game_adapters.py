@@ -388,7 +388,109 @@ def _tr87():
     )
 
 
-_BUILDERS = {"lp85": _lp85, "tu93": _tu93, "tr87": _tr87}
+def _dc22():
+    """dc22 -- config/toggle maze (RE'd 2026-06-19, frame + internal-state).
+
+    Mechanic: keyboard ACTION1/ACTION2/ACTION3/ACTION4 move the `jfva` player
+    by the game's two-pixel step; ACTION6 clicks visible `buezna` sprites, which
+    toggles same-letter blocker/support sprites such as `piyqze` and opens a
+    route to `goknoi`. The adapter keeps labels as compact JSON so
+    arc_solver_kit.reproduce can replay the exact offline click payloads.
+    """
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    click_labels = [
+        json.dumps(
+            {"action": 6, "grid": [48, 26], "sprite": "buezna-blrmbx", "x": 48, "y": 36},
+            sort_keys=True,
+            separators=(",", ":"),
+        ),
+        json.dumps(
+            {"action": 6, "grid": [48, 9], "sprite": "buezna-refgps", "x": 48, "y": 19},
+            sort_keys=True,
+            separators=(",", ":"),
+        ),
+    ]
+    move_labels = [
+        json.dumps({"action": action}, sort_keys=True, separators=(",", ":"))
+        for action in (1, 2, 3, 4)
+    ]
+
+    def action_labels(env, frame=None, path=None):
+        del env, frame, path
+        return [*move_labels, *click_labels]
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        action = int(row["action"])
+        data = {}
+        if action == 6:
+            data = {"x": int(row.get("x", 0)), "y": int(row.get("y", 0))}
+        return env.step(_game_action(GameAction, action), data=data)
+
+    def _sprite_rows(game, tag):
+        rows = []
+        try:
+            sprites = game.current_level.get_sprites_by_tag(tag)
+        except Exception:
+            return rows
+        for sprite in sprites:
+            rows.append(
+                (
+                    str(getattr(sprite, "name", "")),
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    str(getattr(sprite, "interaction", "")),
+                )
+            )
+        return rows
+
+    def state_key(game, frame=None):
+        level = int(getattr(frame, "levels_completed", 0) or 0) if frame is not None else 0
+        player = getattr(game, "qnnpcoyzd", None)
+        goal = getattr(game, "hfuqkxulm", None)
+        player_key = (
+            int(getattr(player, "x", -1)),
+            int(getattr(player, "y", -1)),
+        )
+        goal_key = (
+            int(getattr(goal, "x", -1)),
+            int(getattr(goal, "y", -1)),
+        )
+        blockers = tuple(
+            sorted(
+                _sprite_rows(game, "piyqze")
+                + _sprite_rows(game, "buezna")
+                + _sprite_rows(game, "tovemc")
+                + _sprite_rows(game, "refgps")
+            )
+        )
+        return level, player_key, goal_key, blockers
+
+    def hand_verifier(game, frame=None):
+        if frame is not None and int(getattr(frame, "levels_completed", 0) or 0) > 0:
+            return 0.0
+        player = getattr(game, "qnnpcoyzd", None)
+        goal = getattr(game, "hfuqkxulm", None)
+        if player is None or goal is None:
+            return 1000.0
+        return float(abs(int(player.x) - int(goal.x)) + abs(int(player.y) - int(goal.y)))
+
+    return GameAdapter(
+        game="dc22",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: 24, 2: 80, 3: 120, 4: 160, 5: 256, 6: 512},
+        branch_mode="replay",
+    )
+
+
+_BUILDERS = {"lp85": _lp85, "tu93": _tu93, "tr87": _tr87, "dc22": _dc22}
 
 
 def get_adapter(game: str) -> Optional[GameAdapter]:

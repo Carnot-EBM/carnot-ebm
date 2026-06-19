@@ -1,0 +1,780 @@
+{
+  "baseline_pytest_nocov_green": true,
+  "counterexample_rounds": 1,
+  "dc22_grounded": true,
+  "duration_s": 30.092467,
+  "experiment": "experiment_4467_solve_dc22_cegis_nocov",
+  "few_shot_examples_used": [
+    {
+      "game": "s5i5",
+      "predicate": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
+      "rule_id": "config_toggle_marker_coverage"
+    },
+    {
+      "game": "ft09",
+      "predicate": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
+      "rule_id": "local_constraint_color_cycle"
+    },
+    {
+      "game": "vc33",
+      "predicate": "L1 support-clearance config: lower click control shifts the paired supports until the active piece clears the blocking goal color; next_level fires on replay.",
+      "rule_id": "config_support_clearance"
+    },
+    {
+      "game": "g50t",
+      "predicate": "L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier grounds against execution state immediately before next_level.",
+      "rule_id": "config_toggle_target_offset"
+    }
+  ],
+  "field_principles": {
+    "baseline_pytest_nocov_green": {
+      "principle": "bare bool: the --no-cov smoke gate passed"
+    },
+    "counterexample_rounds": {
+      "principle": "bare int: how many refute->re-induce rounds the grounding took"
+    },
+    "dc22_grounded": {
+      "principle": "bare bool: the counterexample-guided loop produced a GROUNDED is_win() that reproduces"
+    },
+    "few_shot_examples_used": {
+      "principle": "list of grounded config/toggle win-rules conditioning the induction"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed; a clean bank is success:/complete:; a grounded-no-bank run is complete, never partial:"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference if Qwen induction ran live >60s, else verifier_ensemble_against_cached_candidates with duration_s >= 1s; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "if no bank, the residual dc22 mechanic"
+    },
+    "offline_reproduced": {
+      "principle": "the reproduction gate -- a live-only solve does not count"
+    },
+    "random_seed": {
+      "principle": "determinism for re-run"
+    },
+    "reproduced_levels": {
+      "principle": "bare int; only reproduction-gated levels count"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of corpus+prompt+plan"
+    },
+    "reproducible_total_levels": {
+      "principle": "the new authoritative count after banking"
+    },
+    "target_game": {
+      "principle": "dc22 -- the last open config/toggle first-contact game"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: the verifier GROUNDS the LLM-proposed predicate, not a learned-verifier moat"
+    }
+  },
+  "flagged_adversarial": false,
+  "grounding": {
+    "attempts": [
+      {
+        "result": {
+          "candidate_predicates": [
+            "marker_coverage",
+            "local_constraint_color_cycle",
+            "target_offset_toggle"
+          ],
+          "game": "dc22",
+          "grounded": false,
+          "operator": "config_rule_verifier",
+          "predicate_id": "",
+          "residual": "missing_config_rule_verifier_grounding",
+          "solution": [],
+          "verifier_is_oracle": true
+        },
+        "round": 0
+      },
+      {
+        "result": {
+          "counterexample_rounds": 1,
+          "counterexamples_used": [
+            {
+              "blocking_delta": "buezna clicks are needed before the jfva->goknoi route is replayable",
+              "goal": [
+                24,
+                10
+              ],
+              "player": [
+                10,
+                30
+              ],
+              "rejecting_state": "movement_target_goal_not_grounded",
+              "residual": "missing_config_rule_verifier_grounding",
+              "round": 0
+            }
+          ],
+          "game": "dc22",
+          "grounded": true,
+          "grounded_win_condition": {
+            "fires_on_win": true,
+            "predicate": "jfva reaches goknoi after buezna clicks toggle same-letter piyqze blockers",
+            "rejects_nonwins": true
+          },
+          "legacy_operator": "config_rule_grounding",
+          "operator": "config_rule_verifier",
+          "predicate_id": "dc22_toggle_navigation",
+          "recipe_source": "cegis_config_rule_verifier",
+          "solution": [
+            "{\"action\":1}",
+            "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+            "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":4}",
+            "{\"action\":4}"
+          ],
+          "target_recipe_withheld": "dc22",
+          "verifier": {
+            "actions_checked": 20,
+            "blocker_count": 2,
+            "name": "execution_grounded_dc22_toggle_navigation",
+            "toggle_count": 2
+          },
+          "verifier_is_oracle": true
+        },
+        "round": 1
+      }
+    ],
+    "counterexample_rounds": 1,
+    "counterexamples": [
+      {
+        "blocking_delta": "buezna clicks are needed before the jfva->goknoi route is replayable",
+        "goal": [
+          24,
+          10
+        ],
+        "player": [
+          10,
+          30
+        ],
+        "rejecting_state": "movement_target_goal_not_grounded",
+        "residual": "missing_config_rule_verifier_grounding",
+        "round": 0
+      }
+    ],
+    "operator_result": {
+      "counterexample_rounds": 1,
+      "counterexamples_used": [
+        {
+          "blocking_delta": "buezna clicks are needed before the jfva->goknoi route is replayable",
+          "goal": [
+            24,
+            10
+          ],
+          "player": [
+            10,
+            30
+          ],
+          "rejecting_state": "movement_target_goal_not_grounded",
+          "residual": "missing_config_rule_verifier_grounding",
+          "round": 0
+        }
+      ],
+      "game": "dc22",
+      "grounded": true,
+      "grounded_win_condition": {
+        "fires_on_win": true,
+        "predicate": "jfva reaches goknoi after buezna clicks toggle same-letter piyqze blockers",
+        "rejects_nonwins": true
+      },
+      "legacy_operator": "config_rule_grounding",
+      "operator": "config_rule_verifier",
+      "predicate_id": "dc22_toggle_navigation",
+      "recipe_source": "cegis_config_rule_verifier",
+      "solution": [
+        "{\"action\":1}",
+        "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+        "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":4}",
+        "{\"action\":4}"
+      ],
+      "target_recipe_withheld": "dc22",
+      "verifier": {
+        "actions_checked": 20,
+        "blocker_count": 2,
+        "name": "execution_grounded_dc22_toggle_navigation",
+        "toggle_count": 2
+      },
+      "verifier_is_oracle": true
+    }
+  },
+  "honest_verdict": "success: dc22_cegis_L1_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "leaderboard_submission": false,
+    "live_llm_call": false,
+    "llm_candidate_source": "cached_counterexample_guided_candidates_from_prior_dc22_residual",
+    "no_3090_inference": true,
+    "qwen_gguf_cache_available": true
+  },
+  "no_3090_inference": true,
+  "offline_reproduced": true,
+  "offline_solver_result": {
+    "reached_level": 1,
+    "solution": [
+      "{\"action\":1}",
+      "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+      "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":4}",
+      "{\"action\":4}"
+    ],
+    "solver": "OfflineSolver(dc22)",
+    "states_expanded": 20
+  },
+  "operator_result": {
+    "counterexample_rounds": 1,
+    "counterexamples_used": [
+      {
+        "blocking_delta": "buezna clicks are needed before the jfva->goknoi route is replayable",
+        "goal": [
+          24,
+          10
+        ],
+        "player": [
+          10,
+          30
+        ],
+        "rejecting_state": "movement_target_goal_not_grounded",
+        "residual": "missing_config_rule_verifier_grounding",
+        "round": 0
+      }
+    ],
+    "game": "dc22",
+    "grounded": true,
+    "grounded_win_condition": {
+      "fires_on_win": true,
+      "predicate": "jfva reaches goknoi after buezna clicks toggle same-letter piyqze blockers",
+      "rejects_nonwins": true
+    },
+    "legacy_operator": "config_rule_grounding",
+    "operator": "config_rule_verifier",
+    "predicate_id": "dc22_toggle_navigation",
+    "recipe_source": "cegis_config_rule_verifier",
+    "solution": [
+      "{\"action\":1}",
+      "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":4}",
+      "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+      "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":1}",
+      "{\"action\":4}",
+      "{\"action\":4}"
+    ],
+    "target_recipe_withheld": "dc22",
+    "verifier": {
+      "actions_checked": 20,
+      "blocker_count": 2,
+      "name": "execution_grounded_dc22_toggle_navigation",
+      "toggle_count": 2
+    },
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "arc_solver_imports": true,
+    "baseline_command": ".venv/bin/pytest -k \"config_rule or arc_solver_kit\" -q --no-cov",
+    "baseline_exit_code": 0,
+    "baseline_output_tail": "ile: pyproject.toml\ntestpaths: tests/python, tests/integration\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [28 items]\n\n............................                                             [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytestmark = pytest.mark.kona\n\n.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n================= 28 passed, 5 skipped, 84 warnings in 27.46s ==================\n",
+    "baseline_pytest_nocov_green": true,
+    "dc22_environment_files": true,
+    "generator_resource_available": true,
+    "igpu_llama_server": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "ok": true,
+    "qwen_gguf_cache": true
+  },
+  "random_seed": 4467,
+  "recommendation": {
+    "cautions": [
+      "Plain replay-from-reset BFS stalled because it did not treat the cast-grid shrink spell as the L1 win-mechanic precursor.",
+      "E3 executable patch model cracked L1 by verifying the cast-pattern-clear transition before planning the exit route.",
+      "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota.",
+      "level = frame.levels_completed; env._game has no levels_completed.",
+      "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset.",
+      "first env.step after reset is a no-op (sc25); warm up after reset.",
+      "live-coupled hardcoded coords miss the offline layout; discover from env.",
+      "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+    ],
+    "confident_transfer": true,
+    "general_gotchas": [
+      {
+        "id": "offline_is_a_simulator",
+        "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      },
+      {
+        "id": "level_on_frame_not_game",
+        "note": "level = frame.levels_completed; env._game has no levels_completed."
+      },
+      {
+        "id": "deepcopy_injection_unreliable",
+        "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      },
+      {
+        "id": "first_step_after_reset_consumed",
+        "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      },
+      {
+        "id": "discover_coords_never_hardcode",
+        "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      },
+      {
+        "id": "state_dependent_controls_and_animations",
+        "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      },
+      {
+        "id": "non_idempotent_reset",
+        "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      },
+      {
+        "id": "same_action_next_level",
+        "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      },
+      {
+        "derived_from_games": [
+          "tr87"
+        ],
+        "id": "primitive_glyph_rewrite_matcher",
+        "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436.",
+        "operator": "glyph_rewrite_matcher"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "id": "primitive_config_rule_grounding",
+        "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436.",
+        "operator": "config_rule_grounding"
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t"
+        ],
+        "id": "primitive_config_rule_verifier",
+        "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe.",
+        "operator": "config_rule_verifier"
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "id": "primitive_graph_astar_action_cost",
+        "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436.",
+        "operator": "graph_astar_action_cost"
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "id": "primitive_object_centric_digest",
+        "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436.",
+        "operator": "object_centric_digest"
+      },
+      {
+        "derived_from_games": [
+          "ar25",
+          "ka59",
+          "ft09",
+          "sc25"
+        ],
+        "id": "primitive_active_data_collection",
+        "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436.",
+        "operator": "active_data_collection"
+      }
+    ],
+    "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+    "heuristic_policy": {
+      "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
+      "default_if_unmeasured": "region_count \u2014 it NEVER regressed across the 8-game validation and wins the high-impact games; cell_count only when low-impact",
+      "feature": "per-action cell impact + bfs_expansions headroom probe",
+      "rule": {
+        "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+        "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
+        "low search headroom (BFS solves cheaply)": "BFS \u2014 no room for a heuristic to help",
+        "no_win_state_yet (first solve)": "pure BFS \u2014 a goal-distance heuristic needs a target"
+      },
+      "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) \u2014 runs the portfolio, banks the winner, records to the router ledger (online)",
+      "trained_router": "arc_router.route(features, arc_router.train()) \u2014 learned decision tree (thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); predicts approach + explore/exploit by novelty"
+    },
+    "recommended": [
+      {
+        "action_model": "ACTION6 click toggles corrected offline cast-grid cells at (24+5c,49+5r); L1 plan = ['cell0,1', 'cell1,0', 'cell1,2', 'cell2,1', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3', 'move3']; ACTION1-4 remain tank-control moves with facing load-bearing.",
+        "game": "sc25",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "deepcopy-injection BROKEN -> replay-from-reset.",
+          "first step after reset consumed -> warm-up step.",
+          "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
+          "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).",
+          "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+        ],
+        "similarity": 6.0,
+        "solver": "results/experiment_4341_e3_sc25_reproduction.json + results/arc_e3/sc25/world_model.py",
+        "win_condition": "MULTIPLE paths confirmed: (a) move player 'pluyoo' to exit 'exydhv'; (b) cast-grid alignment fires the active spell. L1 reproduced by setting the sieesc_chwjgc cross on the 3x3 grid, shrinking the player, then moving left to the exit."
+      },
+      {
+        "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+        "game": "cd82",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [],
+        "similarity": 6.0,
+        "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+        "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline."
+      },
+      {
+        "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
+        "game": "lp85",
+        "reproducibility": "reproduced",
+        "reusable_gotchas": [
+          "deepcopy-injection WORKS for lp85 (unlike sc25).",
+          "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
+        ],
+        "similarity": 5.0,
+        "solver": "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.",
+        "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations."
+      }
+    ],
+    "retrieved_primitives": [
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "g50t"
+        ],
+        "description": "Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.",
+        "matched_cues": [
+          "config",
+          "verifier",
+          "toggle",
+          "operator:config_rule_verifier"
+        ],
+        "mechanic_class": "config_rule",
+        "name": "config_rule_verifier",
+        "operator": "config_rule_verifier",
+        "retrieval_cues": [
+          "config",
+          "verifier",
+          "marker coverage",
+          "local constraint",
+          "target offset",
+          "toggle"
+        ],
+        "score": 7.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "s5i5",
+          "ft09",
+          "tr87"
+        ],
+        "description": "Converts grounded visible configuration rules into executable action labels.",
+        "matched_cues": [
+          "config",
+          "rule",
+          "toggle"
+        ],
+        "mechanic_class": "config_rule",
+        "name": "config_rule_grounding",
+        "operator": "config_rule_grounding",
+        "retrieval_cues": [
+          "config",
+          "rule",
+          "marker coverage",
+          "local constraint",
+          "toggle"
+        ],
+        "score": 6.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "config_rule",
+          "config_toggle_marker_coverage",
+          "config_support_clearance",
+          "config_toggle_target_offset",
+          "local_constraint_color_cycle",
+          "config_substitution"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "ka59"
+        ],
+        "description": "Models player or selector movement that pushes a block through target geometry.",
+        "matched_cues": [
+          "block",
+          "world model"
+        ],
+        "mechanic_class": "object_motion_push",
+        "name": "mechanic_object_motion_push",
+        "operator": "object_motion_world_model",
+        "retrieval_cues": [
+          "push",
+          "block",
+          "dynamic selection",
+          "object motion",
+          "world model"
+        ],
+        "score": 4.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "object_motion_push",
+          "object_motion_world_model",
+          "world_model"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "description": "Ranks graph-search frontiers by path cost plus verifier or distance heuristic.",
+        "matched_cues": [
+          "keyboard",
+          "click"
+        ],
+        "mechanic_class": "graph_explore_navigation",
+        "name": "graph_astar_action_cost",
+        "operator": "graph_astar_action_cost",
+        "retrieval_cues": [
+          "graph",
+          "astar",
+          "keyboard",
+          "click",
+          "goal distance",
+          "action cost"
+        ],
+        "score": 4.0,
+        "source": "consolidated_primitive",
+        "supported_mechanic_classes": [
+          "graph_explore_navigation",
+          "graph_explore",
+          "click_connect_line",
+          "action_sequence_replay"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "su15"
+        ],
+        "description": "Searches click-only line-connection mechanics using object click candidates.",
+        "matched_cues": [
+          "line",
+          "click only"
+        ],
+        "mechanic_class": "click_connect_line",
+        "name": "mechanic_click_connect_line",
+        "operator": "graph_astar_action_cost",
+        "retrieval_cues": [
+          "click connect",
+          "line",
+          "diagonal",
+          "click only",
+          "rich action candidates"
+        ],
+        "score": 3.0,
+        "source": "registry_mechanic",
+        "supported_mechanic_classes": [
+          "click_connect_line",
+          "graph_explore_navigation"
+        ]
+      }
+    ],
+    "routing_confidence": 1.0,
+    "selected_generic_operators": [
+      {
+        "derived_from_games": [
+          "tu93",
+          "lp85",
+          "cd82",
+          "sp80",
+          "cn04",
+          "m0r0",
+          "sk48",
+          "su15"
+        ],
+        "operator": "graph_astar_action_cost",
+        "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+        "selector_tags": [
+          "graph_explore",
+          "astar",
+          "action_cost",
+          "keyboard",
+          "click"
+        ]
+      },
+      {
+        "derived_from_games": [
+          "g50t",
+          "lp85",
+          "tn36",
+          "ka59"
+        ],
+        "operator": "object_centric_digest",
+        "purpose": "Connected-component object summary for routing, grounding, and active data.",
+        "selector_tags": [
+          "object",
+          "digest",
+          "program_editor",
+          "world_model"
+        ]
+      }
+    ],
+    "strategy": {
+      "applies_features": "clicks/keys move an avatar (large board change) toward a goal; no editor palette",
+      "game": "dc22",
+      "mechanic": "graph_explore",
+      "name": "graph_explore",
+      "needs": null,
+      "reason": "graph_explore \u2192 arc_graph_explore.graph_explore_solve_v2",
+      "routed_mechanic": "graph_explore",
+      "search_engine": "BFS / best-first over the induced frame graph; goal-distance heuristic from arc_router.route(features, arc_router.train())",
+      "solver": "arc_graph_explore.graph_explore_solve_v2 + arc_heuristic_select portfolio",
+      "uses_goal_distance_heuristic": true,
+      "wired": true
+    },
+    "target_features": {
+      "action_type": "mixed",
+      "difficulty": "medium",
+      "game": "dc22",
+      "spatial": false,
+      "win_kw": [
+        "goal",
+        "position"
+      ]
+    },
+    "target_game": "dc22",
+    "top_similarity": 6.0
+  },
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "6df9101a1d7d60168201b113fe14c235a13aa8bf54f81532ca46f0d5613c9037",
+  "reproducible_total_games": 21,
+  "reproducible_total_levels": 40,
+  "reproduction_result": {
+    "claimed_level": 1,
+    "game": "dc22",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4467_solve_dc22_cegis_nocov.json",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "schema": "carnot.exp4467.solve_dc22_cegis_nocov.v1",
+  "solution_labels": [
+    "{\"action\":1}",
+    "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
+    "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":4}",
+    "{\"action\":4}"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-4467",
+    "SCENARIO-REPORT-4467"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_game": "dc22",
+  "verifier_is_oracle": true
+}
