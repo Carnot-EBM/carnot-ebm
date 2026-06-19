@@ -24997,6 +24997,84 @@ archived successfully.
 |---|---|---|
 | REQ-REPORT-4431 | Planned (`python/carnot/reporting/archive_409_activate_410_4431.py`, `results/experiment_4431_archive_409_activate_410.json`) | Planned (`tests/python/test_experiment_4431_archive_409_activate_410.py`) |
 
+### REQ-REPORT-4442: Archive .410, Activate .411, And Preserve The Generic-Solver Close-State
+
+The Exp 4442 workflow SHALL archive milestone `2026.06.410`, confirm milestone
+`2026.06.411` is active, and write the record-only transition artifact
+`results/experiment_4442_archive_410_activate_411.json`. It SHALL run no TRM
+training and SHALL submit nothing to any leaderboard. Its `inference_substrate`
+SHALL equal `aggregation_from_upstream_artifacts`.
+
+Before writing a complete artifact, the workflow SHALL verify that
+`research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+`research-roadmap-next.yaml` parse under `yaml.safe_load`, that the active
+roadmap milestone is `2026.06.411`, and that the smart-subset pre-test gate is
+green. If any precondition fails, the workflow SHALL write a blocked artifact
+and SHALL NOT claim that `.410` was archived.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single top-level
+`.410` record with `activation_recorded: exp4442-archive-410-activate-411`.
+The canonical close-state SHALL be derived from the Exp 4441 `.410` capstone
+and `ops/arc_solve_registry.yaml`. It SHALL skip every upstream artifact stamped
+or reported as `flagged_adversarial`, SHALL record `generic_solver_gap_state`
+as `partial`, SHALL record `generic_loo_solve_count=2` of `7`, SHALL preserve
+the five LOO residual deltas for `tr87`, `sc25`, `ka59`, `ar25`, and `ft09`,
+SHALL record Exp 4434's example-conditioning world-model lift of `0.285714`
+with no banked level, SHALL record Exp 4435 as `verdict_contract_fixed=true`
+but no routed level banked, SHALL record Exp 4436 as `tu93` deepened by one
+level with five primitives consolidated and no regression, and SHALL record the
+Exp 4433 `g50t` L1 win as real but quarantined by a substrate-declaration
+`DURATION_TOO_SHORT` false positive rather than as a trusted banked level.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `reproducible_total_levels`, and `inference_substrate`.
+Complete-path `honest_verdict` SHALL start with one of `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_`. `reproducible_total_levels` SHALL be the bare integer `37` from
+the ARC solve registry. The artifact SHALL also record `reproducible_total_games`,
+`v410_close_state`, `preconditions_checked`, `verifier_is_oracle=true`,
+`trm_training_ran=false`, and `leaderboard_submission=false`.
+
+The required field principles are:
+
+- `honest_verdict`: "terminal-prefixed self-declared state lets the reconciler classify without re-running"
+- `reproducible_total_levels`: "the bare authoritative count from ops/arc_solve_registry.yaml (37); the sprint's monotonic progress metric"
+- `inference_substrate`: "aggregation_from_upstream_artifacts -- this transition reads upstream YAML/JSON, declares the 100us floor, and is the .410-lesson default for non-solve ARC-adjacent tasks"
+
+#### SCENARIO-REPORT-4442: The Archive Preserves The Honest .410 Generic-Solver Close-State
+
+**Given** the `.410` capstone records a partial generic-solver close-state,
+five residual LOO deltas, clean action-model, first-contact, and primitive
+outcomes, and one flagged Exp 4433 win-induction artifact excluded from direct
+aggregation
+**And** `research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
+`research-roadmap-next.yaml` parse; the smart-subset gate is green; and `.411`
+is active
+**When** the Exp 4442 archive workflow runs
+**Then** it archives `.410`, confirms `.411`, keeps the YAML history parseable
+with one `.410` record, writes
+`results/experiment_4442_archive_410_activate_411.json`, records the true
+generic-solver partial state, residual deltas, clean Exp 4434/4435/4436 facts,
+the real-but-quarantined Exp 4433 g50t outcome, the registry total of 37
+levels, `verifier_is_oracle=true`, `aggregation_from_upstream_artifacts`, and a
+terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4442-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required YAML parse, source artifact, active-roadmap, registry, or
+smart-subset precondition is absent or red
+**When** the Exp 4442 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, does not
+edit the `.410` history record as complete, and does not claim `.410` was
+archived successfully.
+
+## Implementation Status (REQ-REPORT-4442)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4442 | Planned (`python/carnot/reporting/archive_410_activate_411_4442.py`, `python/carnot/experiment_4442_archive_410_activate_411.py`) | Planned (`tests/python/test_experiment_4442_archive_410_activate_411.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a

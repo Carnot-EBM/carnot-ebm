@@ -1,0 +1,196 @@
+{
+  "activated_milestone": "2026.06.411",
+  "active_milestone_confirmed": "2026.06.411",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.410",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4441_capstone_v410.json",
+      "experiment_id": "4441",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "8c271a02275c03ea6984ed55bd2f79a6062b1cbe6e4428a196ca20dffc9ca79a"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "registry",
+      "required": true,
+      "sha256": "ba060621797fed859f013570468f6a85cc47faa5342ffa28cf8b4de4dbb8fccd"
+    }
+  ],
+  "duration_s": 13.582877,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4442,
+  "field_principles": {
+    "honest_verdict": "terminal-prefixed self-declared state lets the reconciler classify without re-running",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- this transition reads upstream YAML/JSON, declares the 100us floor, and is the .410-lesson default for non-solve ARC-adjacent tasks",
+    "reproducible_total_levels": "the bare authoritative count from ops/arc_solve_registry.yaml (37); the sprint's monotonic progress metric"
+  },
+  "honest_verdict": "complete: archived_v410_v411_active_generic_gap_partial_loo_2_of_7_levels_37_g50t_quarantined",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.411",
+      "expected": "2026.06.411",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "arc_solve_registry_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4442_archive_410_activate_411.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 75%]\n.......................                                                  [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n95 passed, 1 warning in 5.10s\n"
+    },
+    "v410_capstone": {
+      "exists": true,
+      "path": "results/experiment_4441_capstone_v410.json",
+      "sha256": "8c271a02275c03ea6984ed55bd2f79a6062b1cbe6e4428a196ca20dffc9ca79a"
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4442,
+  "reproducibility_checksum": "d90df2ece4484e0d4c48fb6a51e029b2cfef62ba3b76c824e907e5a6128226e3",
+  "reproducible_total_games": 18,
+  "reproducible_total_levels": 37,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "reproducible_total_levels",
+    "inference_substrate",
+    "reproducible_total_games",
+    "v410_close_state",
+    "preconditions_checked",
+    "verifier_is_oracle",
+    "trm_training_ran",
+    "leaderboard_submission",
+    "duration_s",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "research_complete_duplicates_removed": 1,
+  "research_complete_record_action": "deduped",
+  "research_complete_yaml_parses": true,
+  "research_roadmap_next_yaml_parses": true,
+  "schema": "carnot.archive_activation.v410_to_v411_4442.v1",
+  "spec_refs": [
+    "REQ-REPORT-4442",
+    "SCENARIO-REPORT-4442"
+  ],
+  "task_id": "exp4442-archive-410-activate-411",
+  "trm_training_ran": false,
+  "v410_close_state": {
+    "action_model": {
+      "accuracy_delta": 0.285714,
+      "helped_vs_cold_control": true,
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "state": "examples_helped_no_reproduced_level",
+      "world_model_accuracy_cold": 0.714286,
+      "world_model_accuracy_with_examples": 1.0
+    },
+    "circular_execution_grounded_arc_solve_not_moat_headline": true,
+    "first_contact": {
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "routed_solve_banked": false,
+      "state": "contract_fixed_no_routed_solve",
+      "target_game": "dc22",
+      "verdict_contract_fixed": true
+    },
+    "flagged_artifacts_skipped": [
+      4433
+    ],
+    "g50t_l1_quarantine": {
+      "duration_too_short": true,
+      "flagged_adversarial": true,
+      "game": "g50t",
+      "held_out_level_banked": false,
+      "level": 1,
+      "offline_reproduced": true,
+      "reason": "flagged_adversarial_DURATION_TOO_SHORT_inference_substrate_none",
+      "reproduced_levels": 1,
+      "substrate_declaration_false_positive": true,
+      "trusted_for_aggregation": false
+    },
+    "generic_loo_solve_count": 2,
+    "generic_loo_target_count": 7,
+    "generic_solver_gap_state": "partial",
+    "primitives": {
+      "count": 5,
+      "deepened_game": "tu93",
+      "new_levels_reproduced": 1,
+      "no_regression": true,
+      "state": "consolidated_no_regression"
+    },
+    "reproducible_total_games": 18,
+    "reproducible_total_levels": 37,
+    "residual_deltas": [
+      {
+        "game": "tr87",
+        "residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
+        "routed_to": "tu93",
+        "source_artifact": "results/experiment_4432_loo_generic_solve_benchmark.json"
+      },
+      {
+        "game": "sc25",
+        "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
+        "routed_to": "cd82",
+        "source_artifact": "results/experiment_4432_loo_generic_solve_benchmark.json"
+      },
+      {
+        "game": "ka59",
+        "residual_delta": "missing_push_block_world_model_and_dynamic_selection",
+        "routed_to": "sp80",
+        "source_artifact": "results/experiment_4432_loo_generic_solve_benchmark.json"
+      },
+      {
+        "game": "ar25",
+        "residual_delta": "missing_reflection_world_model_and_object_motion_plan",
+        "routed_to": "sp80",
+        "source_artifact": "results/experiment_4432_loo_generic_solve_benchmark.json"
+      },
+      {
+        "game": "ft09",
+        "residual_delta": "missing_local_constraint_color_cycle_verifier",
+        "routed_to": "s5i5",
+        "source_artifact": "results/experiment_4432_loo_generic_solve_benchmark.json"
+      }
+    ],
+    "verifier_is_oracle_honored": true
+  },
+  "verifier_is_oracle": true
+}
