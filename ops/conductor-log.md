@@ -8878,3 +8878,4 @@ c |
 | 2026-06-19 19:53 UTC | PHASE A6 (ARC NORTH STAR; operator-only submit) -- | OK | 107 passed, 1 warning in 5.97s |
 | 2026-06-19 20:11 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | 85 passed, 1 warning in 7.35s |
 | 2026-06-19 20:30 UTC | PHASE B2 (RESERVED INFRA) -- provisional-vs-reprod | OK | 96 passed, 1 warning in 8.80s |
+| 2026-06-19 20:42 UTC | PHASE C (HARDWARE CONTINUITY; one task per attache | OK | 88 passed, 1 warning in 6.02s |
