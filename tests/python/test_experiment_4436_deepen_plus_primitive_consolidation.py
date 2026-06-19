@@ -110,8 +110,8 @@ def test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready(
 
     selected = kit.select_primitive_operators(mechanic_class="config_substitution")
     assert [row.operator for row in selected][:2] == [
+        "glyph_rewrite_rule_verifier",
         "glyph_rewrite_matcher",
-        "graph_astar_action_cost",
     ]
 
 

@@ -25585,6 +25585,82 @@ terminal-prefixed honest verdict.
 |---|---|---|
 | REQ-REPORT-4448 | Planned (`python/carnot/experiment_4448_loo_generic_solve_benchmark_v2.py`, `results/experiment_4448_loo_generic_solve_benchmark_v2.json`) | Planned (`tests/python/test_experiment_4448_loo_generic_solve_benchmark_v2.py`) |
 
+### REQ-REPORT-4456: Generic Glyph-Rewrite Rule Verifier Closes The tr87 Leave-One-Out Residual
+
+The Exp 4456 workflow SHALL promote the consolidated
+`glyph_rewrite_matcher` primitive into a composable
+`glyph_rewrite_rule_verifier` operator in
+`python/carnot/agentic/arc_solver_kit.py`. The operator SHALL accept an
+object-centric glyph/config-substitution digest plus a grounded
+config-substitution few-shot corpus, induce a greedy multi-glyph LHS-to-RHS
+rewrite predicate, ground it with `verifier_is_oracle=true`, reject
+non-grounding candidates, and expose a verifier distance suitable for
+`OfflineSolver` without using the held-out game's hand `GameAdapter` recipe.
+The operator SHALL support one-pass direct rewrites, N-pass
+`double_translation` / `tree_translation` rewrites, one-pass `alter_rules`
+inverse rule editing, and two-pass `alter_rules` chain decomposition. The
+legacy `glyph_rewrite_matcher` primitive and tr87 hand-path reproduction SHALL
+remain backward-compatible.
+
+Before solving, the workflow SHALL check that `environment_files/tr87/` is
+non-empty, that `arc_solver_kit` imports, that a permitted non-3090 generator
+substrate exists through a cached GGUF or iGPU llama-server, and that the
+focused pre-refactor `arc_solver_kit or glyph or tr87` baseline has a green
+selected-test signal. If the exact focused command is blocked by package-wide
+coverage addopts, the workflow SHALL record that blocker honestly in the
+precondition payload rather than fabricating an exact-command pass. Missing
+resources SHALL write an honest terminal artifact whose `honest_verdict` starts
+with `complete: blocked_<resource>` and SHALL NOT fabricate generic tr87 or
+no-regression progress.
+
+The workflow SHALL prove genericity by re-solving `tr87` through
+`glyph_rewrite_rule_verifier` while withholding tr87's own hand adapter as the
+solver source. A valid closure SHALL set `tr87_resolved_generically=true`,
+replay the generated action labels through `arc_solver_kit.reproduce()`, reach
+at least level 1 offline, preserve the existing reproduced tr87 L6 hand path,
+and close
+`GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER`
+as a leave-one-out residual. A measured no-generalize result SHALL remain a
+terminal `complete:` artifact with the residual retained in
+`missing_verifier_gaps`.
+
+The artifact SHALL be written to
+`results/experiment_4456_generic_glyph_rewrite_operator.json` and SHALL include
+the required top-level fields `honest_verdict`, `inference_substrate`,
+`tr87_resolved_generically`, `tr87_generic_level_reproduced`,
+`counterexample_rounds`, `offline_reproduced`, `no_regression`,
+`missing_verifier_gaps`, `verifier_is_oracle`, `random_seed`, and
+`reproducibility_checksum`. Cached verifier-ensemble runs SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates` and
+`duration_s>=1.0`; live LLM induction SHALL declare
+`inference_substrate=live_llm_inference` with `duration_s>=60.0`. The workflow
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+#### SCENARIO-REPORT-4456: tr87 Re-Solves Through The Generic Glyph-Rewrite Verifier
+
+**Given** offline `tr87` environment files, a non-3090 generator substrate, the
+grounded config-substitution few-shot corpus, and a focused selected-test
+baseline
+**When** Exp 4456 builds `glyph_rewrite_rule_verifier`, grounds the greedy
+rewrite predicate from the digest and examples, drives `OfflineSolver` without
+tr87's hand adapter, replays the generic solution with `arc_solver_kit.reproduce()`,
+checks the existing tr87 L6 hand reproduction path for compatibility, runs the
+focused compatibility tests, and writes the artifact
+**Then** the artifact is terminal-prefixed, sets
+`tr87_resolved_generically=true` only for reproduction-gated generic progress,
+records bare-int `tr87_generic_level_reproduced` and `counterexample_rounds`,
+sets `offline_reproduced=true`, `verifier_is_oracle=true`, and
+`no_regression=true`, emits a non-null inference substrate, closes the tr87
+leave-one-out gap when generic reproduction succeeds, and logs any remaining
+glyph-rewrite residual as the next build backlog rather than using a `partial:`
+verdict.
+
+## Implementation Status (REQ-REPORT-4456)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4456 | Implemented (`python/carnot/experiment_4456_generic_glyph_rewrite_operator.py`, `results/experiment_4456_generic_glyph_rewrite_operator.json`) | Implemented (`tests/python/test_experiment_4456_generic_glyph_rewrite_operator.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
