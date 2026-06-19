@@ -23898,3 +23898,65 @@ blocked-mechanic L2s (exp4362), mechanic-limited tails (exp4363). (C) Deploy + c
 
 Sources (this sweep, WebSearch/WebFetch-verified 2026-06-17): arxiv.org/abs/{2602.01842, 2604.06260, 2602.22871,
 2602.01849, 2509.25604, 2606.08501, 2605.05138, 2605.25931, 2512.22336, 2503.18809, 2606.13565, 2502.01384}.
+
+## .412 planning sweep (2026-06-19, outer-loop Claude Opus 4.8 — reliable channel, all arXiv-verified) — CLOSE the 3 OPEN ARC generic-solver gaps (dc22 first-contact, tr87 glyph-rewrite, sc25 cast-grid) + BANK sc25's provisional levels + PREP an updated operator submission package
+
+Added by the `.412 planning sweep. `.411 closed at `generic_solver_gap_state: partial`
+(`results/experiment_4453_capstone_v411.json`): the example corpus + new generic operators took
+`generic_loo_solve_count` 2→5, banked g50t + vc33 (registry **39 levels / 20 games**, up from 37/18), shipped a
+LILO documented library (coverage 1.0), and closed the ft09/ar25/ka59 LOO residuals — but THREE generic gaps stay
+OPEN and become the `.412 build backlog (capstone `next_backlog.open_gap_ids`):
+
+- **GAP-4423-DC22** — dc22 config/toggle first-contact: the `.411 generic `config_rule_verifier` operator (exp4444)
+  resolved ft09 generically but did NOT ground dc22 (`dc22_state: not_grounded`). The last OPEN first-contact game;
+  a +1 game/level opportunity (39/20 → 40/21).
+- **GAP-4432-LOO-TR87** — tr87 re-solves only via its hand adapter; a GENERIC `glyph_rewrite_rule_verifier` operator
+  would let unseen config-substitution games be solved (raises `generic_loo_solve_count` 5→6).
+- **GAP-4432-LOO-SC25** — sc25 re-solves only via its hand recipe; a GENERIC cast-grid/spell world-model operator
+  would close the residual AND can BANK sc25's **4 PROVISIONAL** live-recorded levels (L2-L5; the single biggest
+  reproduced-level opportunity, `provisional_total_levels: 5`).
+
+The fresh sweep (WebSearch-verified 2026-06-19) confirms the strongest SOTA directions for each gap; most map onto the
+generic-operator + documented-library track the `.411 SOTA-ingestion (exp4452) already flagged forward (LILO,
+arXiv:2310.19791):
+
+**A. dc22 config/toggle grounding — COUNTEREXAMPLE-GUIDED predicate induction (the missing grounding the .411 operator lacked):**
+- **arXiv:2309.16436** (Neuro-Symbolic Reasoning for Planning: **Counterexample-Guided Inductive Synthesis using LLMs
+  + Satisfiability Solving**) — LLM is the learner, an SMT/exec check is the verifier; failed groundings return a
+  COUNTEREXAMPLE into the next prompt. The exact loop the `.411 config_rule_verifier missed: dc22 didn't ground on the
+  first proposal, so feed the rejecting execution-state back as a counterexample and re-induce (propose→ground→refute→re-propose).
+- **arXiv:2606.11521** (Counterexample-Guided Learning in the Large using Reasoning Agents) — structured-failure feedback
+  moves an LLM agent beyond example-fitting toward reliable iterative refinement in verifiable domains (dc22's win
+  predicate IS verifiable via the offline env). Corroborates the CEGIS-for-grounding direction.
+
+**B. tr87 glyph-rewrite GENERIC operator — evolutionary / neurally-guided program induction (rewrite-rule synthesis):**
+- **arXiv:2507.14172** (SOAR — Self-Improving LMs for Evolutionary Program Synthesis on ARC; already in references) — the
+  self-improving evolutionary loop maps directly onto a GENERIC glyph_rewrite_rule synthesizer that improves across the
+  config-substitution corpus rather than re-deriving tr87's hand adapter.
+- **arXiv:2411.17708** (Towards Efficient Neurally-Guided Program Induction for ARC-AGI) — a Grid-DSL neurally-guided
+  induction; the rewrite-matcher (greedy multi-glyph-LHS→RHS) is a program over a small rule grammar, the regime this targets.
+- **arXiv:2411.02272** (Combining Induction and Transduction for Abstract Reasoning; already in references) — ensemble the
+  program-induction operator (B) with the direct world-model prediction operator (C); the two are complementary on different mechanic classes.
+
+**C. sc25 cast-grid GENERIC world-model operator + PROVISIONAL-level deepening (FSM/phase world model):**
+- **arXiv:2605.05138** (Executable World Models for ARC-AGI-3; already in references) — codex induces a Python world model,
+  the consistency-energy verifier grounds it (no oracle), plan to the win. sc25 is a TWO-PHASE FSM (toggle cast-grid →
+  navigate to exit); generalize the per-game sc25 world_model into a phase-FSM operator and drive it to reproduce L2-L5.
+- **arXiv:2606.12316** (Loop-OWM composable object-centric world-model transfer; already in references) — object-centric
+  slots + looped transitions; the structural backbone for transferring the cast-grid/spell mechanic by analogy.
+
+**D. ARC-AGI-3 context (the benchmark we attack; frontier LLMs <1% human efficiency):**
+- **arXiv:2603.24621** (ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence; already in references) — the
+  benchmark; RHAE efficiency scoring (actions + cost) is why the verifier-routed/pruned solver is the venue.
+- **arXiv:2603.13372** (The ARC of Progress towards AGI: A Living Survey of Abstraction and Reasoning) — 2026 living survey;
+  situates the induction-vs-transduction + library-learning families above in the current ARC landscape.
+
+**Bottom line for .412:** the three OPEN gaps are all "the generic operator could not GROUND/INDUCE the rule." The unifying
+fresh lever is COUNTEREXACT-guided induction (A, arXiv:2309.16436/2606.11521) — when a generic operator proposes a predicate
+that does not reproduce, feed the rejecting state back and re-induce — wired into the dc22 config-rule operator, the tr87
+glyph-rewrite operator (SOAR-style self-improvement, B), and the sc25 phase-FSM world model (C). Then re-measure
+`generic_loo_solve_count` (target 6-7/7) and PREP an updated operator submission package (offline 39 levels ≫ the 13-level
+prior submitted baseline — operator-only submit). The `.412 SOTA-ingestion slot does the deeper fresh sweep in-loop.
+
+Sources (this sweep, WebSearch-verified 2026-06-19): arxiv.org/abs/{2309.16436, 2606.11521, 2507.14172, 2411.17708,
+2411.02272, 2605.05138, 2606.12316, 2310.19791, 2603.24621, 2603.13372}.
