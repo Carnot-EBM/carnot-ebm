@@ -431,6 +431,29 @@ games:
       offline_reproduced: false
       reproduced_levels: 0
       mode: standing_arc_loop_routing_only
+- game: g50t
+  reproducibility: unsolved
+  levels_reproduced: 0
+  solver: scripts/arc_loop_solve.py --game g50t
+  gotchas: []
+  dead_ends:
+  - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
+    status: open
+    game: g50t
+    failure_mode: needs_per_game_RE
+    missing_discriminator: selectable verifier that distinguishes the target's winning
+      delta from the explored non-winning states
+    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's
+      visible toggles
+    routed_recipe:
+      game: ls20
+      solver: results/experiment_4285 solve_trace.actions.
+      win_condition: first-solve L1; ACTION + kind sequence replays offline.
+      action_model: null
+    loop_result_summary:
+      offline_reproduced: false
+      reproduced_levels: 0
+      mode: standing_arc_loop_routing_only
 reproducible_total_levels: 35
 reproducible_total_games: 18
 provisional_total_levels: 5
