@@ -49,9 +49,16 @@ def build():
         sh(f"cd {SRC} && git fetch origin pull/{PR}/head && git checkout FETCH_HEAD")
     # CUDA toolkit (nvcc) + cmake are present on Kaggle GPU images; install cmake if missing.
     sh("cmake --version || pip install -q cmake", check=False)
+    # Kaggle/Colab CUDA quirk: FindCUDAToolkit cannot locate the driver stub libcuda.so, so the
+    # CUDA::cuda_driver IMPORTED target is missing and ggml-cuda fails at GENERATE. Point CMAKE_LIBRARY_PATH
+    # at the stubs dir (auto-detect the cuda root). EXAMPLES/TESTS OFF: smaller configure + skips the
+    # diffusion-example targets we do not need (llama-server lives in tools/, still built).
+    stubs = "/usr/local/cuda/lib64/stubs"
     sh(
         f"cmake -S {SRC} -B {SRC}/build -DGGML_CUDA=ON "
-        f'-DCMAKE_CUDA_ARCHITECTURES="{CUDA_ARCHS}" -DLLAMA_CURL=OFF -DCMAKE_BUILD_TYPE=Release'
+        f'-DCMAKE_CUDA_ARCHITECTURES="{CUDA_ARCHS}" -DLLAMA_CURL=OFF -DCMAKE_BUILD_TYPE=Release '
+        f"-DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_SERVER=ON "
+        f'-DCMAKE_LIBRARY_PATH="{stubs}" -DCUDA_cuda_driver_LIBRARY="{stubs}/libcuda.so"'
     )
     sh(f"cmake --build {SRC}/build --target llama-server -j $(nproc)")
     # collect the binary + EVERY shared lib it needs (incl. libllama-common, where MTP lives)
