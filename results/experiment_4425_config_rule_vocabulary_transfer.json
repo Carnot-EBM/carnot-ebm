@@ -1,0 +1,173 @@
+{
+  "config_rule_vocabulary": [
+    {
+      "description": "Editable colour/object count must equal a reference count.",
+      "name": "editable_count==reference_count",
+      "prompt_hint": "Look for count equality between editable cells and reference features.",
+      "source_count": 1,
+      "source_games": [
+        "ka59"
+      ]
+    },
+    {
+      "description": "Editable state directly matches a reference value, object, or relation.",
+      "name": "match-reference",
+      "prompt_hint": "Use the reference digest as the source of constants and relations.",
+      "source_count": 2,
+      "source_games": [
+        "ka59",
+        "tr87"
+      ]
+    },
+    {
+      "description": "A controlled marker/region advances until it reaches a target extent.",
+      "name": "progress-fill",
+      "prompt_hint": "Detect monotone progress toward a target marker, edge, or fill boundary.",
+      "source_count": 3,
+      "source_games": [
+        "lp85",
+        "s5i5"
+      ]
+    },
+    {
+      "description": "Editable glyphs or sequences are rewritten through an LHS/RHS map.",
+      "name": "glyph-rewrite",
+      "prompt_hint": "Infer symbolic glyph rewrites instead of literal editable arrays.",
+      "source_count": 8,
+      "source_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "sk48",
+        "tn36",
+        "tr87",
+        "wa30"
+      ]
+    },
+    {
+      "description": "A win fires when controlled markers cover all target markers.",
+      "name": "marker-coverage",
+      "prompt_hint": "Check target marker coverage, not incidental path length.",
+      "source_count": 2,
+      "source_games": [
+        "s5i5"
+      ]
+    },
+    {
+      "description": "Editable shape, cross, or cast-grid pattern must match a reference pattern.",
+      "name": "shape-pattern-match",
+      "prompt_hint": "Compare shape topology and small pattern layout.",
+      "source_count": 4,
+      "source_games": [
+        "ar25",
+        "ka59",
+        "sc25",
+        "tn36"
+      ]
+    },
+    {
+      "description": "Mirror or rotational symmetry constrains the winning editable region.",
+      "name": "symmetry",
+      "prompt_hint": "Check reflection/rotation invariants before literal constants.",
+      "source_count": 3,
+      "source_games": [
+        "ar25",
+        "lp85",
+        "tn36"
+      ]
+    },
+    {
+      "description": "Program commands or action labels map objects to target attributes.",
+      "name": "program-command-map",
+      "prompt_hint": "Ground command semantics against target object attributes.",
+      "source_count": 1,
+      "source_games": [
+        "tn36"
+      ]
+    }
+  ],
+  "config_rule_vocabulary_transfers": false,
+  "duration_s": 0.001,
+  "experiment": "experiment_4425_config_rule_vocabulary_transfer",
+  "field_principles": {
+    "config_rule_vocabulary_transfers": "BARE bool := held-out grounding-rate lift CI-excl-0; principle: a transferable vocabulary is the self-learning compounding signal.",
+    "honest_verdict": "Terminal-prefixed honest outcome.",
+    "random_seed": "Bare integer; fixes split order and bootstrap reproducibility.",
+    "verifier_is_oracle": "false; the verifier grounds proposed predicates, it does not define correctness for the transfer claim."
+  },
+  "honest_verdict": "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing",
+  "logged_gaps": [
+    "missing_vocabulary_seeded_observations:ka59",
+    "missing_vocabulary_seeded_observations:tn36",
+    "missing_vocabulary_seeded_repeat_bench"
+  ],
+  "model_specs": {
+    "cold_repeat_bench": "results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_mtp.json",
+    "device": "iGPU",
+    "generator": "Qwen3.5-9B-MTP",
+    "mtp": true,
+    "no_think": true,
+    "repeat_bench": "arc3_layerb_repeat_bench.py",
+    "seed_count": 4,
+    "seeded_repeat_bench": "results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_vocabseed_mtp.json"
+  },
+  "overall_grounding_rate_lift": null,
+  "overall_lift_ci95": null,
+  "preconditions_checked": {
+    "cold_repeat_bench_available": true,
+    "grounded_rule_source_count": 20,
+    "grounded_rule_source_games": [
+      "ar25",
+      "cd82",
+      "cn04",
+      "ft09",
+      "ka59",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "s5i5",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "wa30"
+    ],
+    "seeded_repeat_bench_available": false
+  },
+  "random_seed": 4425,
+  "reproducibility_checksum": "cb2e084037ca9edcd986884649545065d589988f1ef5cc6e6025453be829e0c1",
+  "schema": "carnot.exp4425.config_rule_vocabulary_transfer.v1",
+  "spec_refs": [
+    "REQ-LEARN-4425",
+    "SCENARIO-LEARN-4425"
+  ],
+  "transfer_learning_curve": [
+    {
+      "cold_grounded_count": 3,
+      "cold_start_grounding_rate": 0.75,
+      "held_out_game": "ka59",
+      "lift": null,
+      "lift_ci95": null,
+      "seed_count": 4,
+      "seeded_grounded_count": null,
+      "seeded_grounding_rate": null
+    },
+    {
+      "cold_grounded_count": 2,
+      "cold_start_grounding_rate": 0.5,
+      "held_out_game": "tn36",
+      "lift": null,
+      "lift_ci95": null,
+      "seed_count": 4,
+      "seeded_grounded_count": null,
+      "seeded_grounding_rate": null
+    }
+  ],
+  "verifier_is_oracle": false,
+  "vocabulary_seeded_prompt": "/no_think\nRELATIONAL WIN-RULE VOCABULARY\nGenerator: Qwen3.5-9B-MTP, iGPU, /no_think, MTP, four seeds\n- editable_count==reference_count: Editable colour/object count must equal a reference count. Hint: Look for count equality between editable cells and reference features. Source games: ka59.\n- match-reference: Editable state directly matches a reference value, object, or relation. Hint: Use the reference digest as the source of constants and relations. Source games: ka59, tr87.\n- progress-fill: A controlled marker/region advances until it reaches a target extent. Hint: Detect monotone progress toward a target marker, edge, or fill boundary. Source games: lp85, s5i5.\n- glyph-rewrite: Editable glyphs or sequences are rewritten through an LHS/RHS map. Hint: Infer symbolic glyph rewrites instead of literal editable arrays. Source games: cd82, cn04, ls20, m0r0, sk48, tn36, tr87, wa30.\n- marker-coverage: A win fires when controlled markers cover all target markers. Hint: Check target marker coverage, not incidental path length. Source games: s5i5.\n- shape-pattern-match: Editable shape, cross, or cast-grid pattern must match a reference pattern. Hint: Compare shape topology and small pattern layout. Source games: ar25, ka59, sc25, tn36.\n- symmetry: Mirror or rotational symmetry constrains the winning editable region. Hint: Check reflection/rotation invariants before literal constants. Source games: ar25, lp85, tn36.\n- program-command-map: Program commands or action labels map objects to target attributes. Hint: Ground command semantics against target object attributes. Source games: tn36.\n\nYou are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle. Use the extracted editable region, non-wins, and reference digest to write a relational Python is_win(grid) predicate."
+}
