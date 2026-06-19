@@ -1,0 +1,45 @@
+{
+  "experiment": "arc3_layerb_ar_model_test",
+  "model_key": "qwopus-q3km",
+  "gguf": "Qwopus3.6-27B-Coder-MTP-Q3_K_M.gguf",
+  "no_think": true,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 2.8,
+      "tokens": 129,
+      "dur_s": 46.1,
+      "coherent": true,
+      "raw_sample": "import numpy as np\ndef is_win(grid):\n    e = grid[63:64, 26:64]\n    # The reference region has colour 4 with total_cells=32.\n    # The winning editable region has exactly 32 cells of colour 4.\n    # Non-winning configurations have different counts of colour 4.\n    # The rule is: the editable region must have exactly as many colour-4 cells\n    # as the reference region's colour-4 total_cells.\n    r",
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 2.32,
+      "tokens": 1086,
+      "dur_s": 468.2,
+      "coherent": true,
+      "raw_sample": "import numpy as np\n\ndef is_win(grid):\n    e = grid[1:2, 2:62]\n    # The reference region contains a 9x9 block of colour 9 (69 cells) at r43-51,c19-27.\n    # The editable region has 60 cells. The winning configuration has 54 cells of colour 9\n    # and 6 cells of colour 3.\n    # The ratio 54/60 = 0.9 matches 69/77 (the 9-block is 9x9=81 cells, but only 69 are colour 9).\n    # Actually, 69/77 \u2248 0.89",
+      "verification": {
+        "fires_on_win": false,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": false,
+      "literal": false,
+      "tier": "TIER0_COHERENT_NOT_GROUNDED"
+    }
+  ],
+  "grounded_games": [
+    "ka59"
+  ],
+  "honest_verdict": "complete_layerb_qwopus_q3km_grounded_1",
+  "inference_substrate": "offline_arc_agi3_qwopus-q3km_iGPU_port8921"
+}
