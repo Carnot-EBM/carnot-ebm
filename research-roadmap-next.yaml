@@ -1,0 +1,307 @@
+milestone: 2026.06.415
+milestone_title: 'TURN THE 2026-06-20 STRATEGY INTO EXECUTION: lead with the HUMAN-REPLAY frame-change
+  predictor + action prior (A1 -- the #1 score lever; the 14,672-example action-effect corpus is CONFIRMED
+  ready; the leaderboard leader''s core technique; attacks action efficiency, the scoring metric we have
+  NONE of at 0.08), the world-model TRUST ENERGY for hidden-state games (A2 -- the oracle-distinct moat),
+  the ENERGY-AUGMENTATION GATE (A3 -- does energy over the v3 structural features now transfer cross-game,
+  LOO>0.6? the load-bearing test of the whole differentiator), and re-scoped goal/HUD deepen + an adapter
+  deepen (A4/A5 -- the level-up guarantee). Reserved: human-replay corpus staging + submitted-agent scoreboard
+  (infra), hardware continuity, SOTA imitation-learning ingestion, capstone. ALL experiments codex/gpt-5.5;
+  planner/retro stay Claude Opus 4.8. reproducible_total_levels is NOT the headline -- generic held-out
+  solve-rate + action efficiency are. Live generator Qwen3.5-9B-MTP, never the 3090s. NO leaderboard submission
+  in-loop (operator-only).'
+milestone_doc: openspec/change-proposals/research-roadmap-v415.md
+milestone_overview: '.414 closed the public-25 (re86+bp35+lf52 first-contacted -> 25/25) + wired the stronger
+  generic stack into the submitted agent (A1 integration, parity-gated) + built features v3 + the discriminative
+  head. .415 executes the score-drivers the session validated: the human replays are a CONFIRMED ready
+  supervised corpus (14,672 examples; humans change the frame 97% of actions) -> bootstrap the frame-change
+  predictor (A1, the leaderboard''s proven action-efficiency technique); the trust energy is the oracle-distinct
+  moat (A2); the energy-augmentation thesis lives or dies on whether energy over structural features transfers
+  (A3 LOO gate). The wall is GENERALIZATION (human 100% is first-contact; ours is not) -- every task is
+  measured by held-out solve-rate + variant transfer, not banked levels.'
+tasks:
+- id: exp4490-a1
+  milestone: 2026.06.415
+  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; SCORE-LEVER) -- HUMAN-REPLAY frame-change
+    predictor + action prior (the #1 score lever; data CONFIRMED ready)'
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4490_human_replay_frame_change_predictor.json
+  prompt: "CONTEXT (GAP-ARCH-FRAME-CHANGE-PREDICTOR; the leaderboard leader's core idea = StochasticGoose\
+    \ CNN). The ARC Public Demo human replays give a READY supervised corpus -- 14,672 examples across\
+    \ all 25 games of (state, action_id, click x/y) -> frame_delta, level_progress (humans changed the\
+    \ frame on 97% of actions = the action-efficiency the score rewards). Source: OFFICIAL arcprize Public\
+    \ Demo (arcprize.org/blog/arc-agi-3-human-dataset -> dub.link/vfwCqvb); format-reference mirror jihangli1121/arc-agi-3-replays-v1\
+    \ action_effect_dict.npz (CC BY 4.0 -- understand/format ONLY, do NOT bundle its best.pth; verify\
+    \ the official source is CC0/MIT-0 before bundling any weights). DO: (1) build a small torch CNN predict(frame)->(click_heatmap,\
+    \ directional_change) trained on the human corpus -- RECOMPUTE features OUR way from the raw replay\
+    \ frames (frame-only/live-legal, no env._game); (2) also emit the behavior-cloning ACTION PRIOR (marginal\
+    \ + state-conditioned) to order the frontier; (3) wire both into rich_action_candidates (arc_graph_explore.py:44)\
+    \ ranking. MEASURE held-out median actions-to-first-levelup BEFORE vs AFTER (frame-only, env._game\
+    \ blocked) + the implied (human/agent)^2 efficiency delta. FALSE_NEGATIVE_RISK: positive control +\
+    \ report honest null if no reduction; must NOT drop solve-rate. Full spec: docs/research-notes/arc-human-replay-application-spec.md\
+    \ + arc-frame-change-predictor-spec.md.\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n\
+    \     a. import smoke: `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"\
+    ` (exit 0).\n     b. torch present: `.venv/bin/python -c \"import torch; print(torch.__version__)\"\
+    `.\n     Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run pytest as\
+    \ a precondition.\n\nREQUIRED ARTIFACT FIELDS (each principle-annotated):\n  honest_verdict: principle\
+    \ \"MUST start with terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ (Verdict Terminal-Prefix Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference\
+    \ | verifier_ensemble_against_cached_candidates\n    | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right duration floor.\"\n  preconditions_checked: principle \"records WHICH resources\
+    \ were verified; pre-empts silent-missing-resource fabrication.\"\n"
+  operator_override: '2026-06-20 operator directive (ARC sprint): versioned-lineage continuation / level-up
+    attempt -- false-positive scope-match vs prior ARC exps; forward difference stated in the prompt.'
+- id: exp4491-a2
+  milestone: 2026.06.415
+  title: PHASE A2 (ARC NORTH STAR; operator MANDATORY; SCORE-LEVER) -- TRUST ENERGY for hidden-state world-models
+    (the oracle-distinct moat)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4491_world_model_trust_energy.json
+  prompt: "CONTEXT (GAP-ARCH-WORLD-MODEL-TRUST-ENERGY). Replace the live agent's binary WorldModelVerifier.accuracy<0.5\
+    \ trust gate (arc_competition_agent.py:779-780) with a LEARNED energy that RANKS candidate induced\
+    \ world-models by HELD-OUT generalization, specifically for the ~11 hidden-state games (ka59 step-counter,\
+    \ ar25 undo-stack) where execution is NO oracle. Falsifiable: verifier_is_oracle=false (a circular\
+    \ win does NOT count); the trust energy picks the best-held-out- generalizing candidate above the\
+    \ first-clears-0.5 baseline, with a Markov positive control + FALSE_NEGATIVE_RISK null guard. Full\
+    \ spec: docs/research-notes/arc-world-model-trust-energy-spec.md.\nCONCRETE STEPS:\n  0. PRECONDITIONS\
+    \ (BEFORE any other step):\n     a. import smoke: `.venv/bin/python -c \"from carnot.agentic import\
+    \ arc_solver_kit as k; k.offline_arcade()\"` (exit 0).\n     b. torch present: `.venv/bin/python -c\
+    \ \"import torch; print(torch.__version__)\"`.\n     Missing -> honest_verdict blocked_<resource>,\
+    \ EXIT (no fabrication). Do NOT run pytest as a precondition.\n\nREQUIRED ARTIFACT FIELDS (each principle-annotated):\n\
+    \  honest_verdict: principle \"MUST start with terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).\"\n  inference_substrate:\
+    \ principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n    | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right duration floor.\"\n  preconditions_checked: principle \"\
+    records WHICH resources were verified; pre-empts silent-missing-resource fabrication.\"\n"
+  operator_override: '2026-06-20 operator directive (ARC sprint): versioned-lineage continuation / level-up
+    attempt -- false-positive scope-match vs prior ARC exps; forward difference stated in the prompt.'
+- id: exp4492-a3
+  milestone: 2026.06.415
+  title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; SCORE-LEVER) -- ENERGY-AUGMENTATION GATE: does
+    energy over the v3 STRUCTURAL features now transfer cross-game (LOO>0.6)?'
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4492_energy_augmentation_loo_gate.json
+  prompt: "CONTEXT (the energy-augmented strategy's load-bearing gate, arc-energy-augmented-strategy.md).\
+    \ .414 A2 built cross_game_features_v3 (relational/Δframe/action-conditioned). The whole differentiator\
+    \ -- objective energy that GENERALIZES where learned-from-success value cannot -- holds ONLY if energy\
+    \ over STRUCTURAL features transfers. MEASURE: re-run `scripts/arc_cross_game_verifier_train.py --discriminative`\
+    \ with the v3 features and report the leave-one-game-out AUROC vs the 0.503 baseline. If LOO>0.6,\
+    \ the energy-augmentation thesis is validated -> wire the structural-feature energy into the frame-change\
+    \ ranking (P(change)*(-ΔE)). If still ~chance, report which feature class moved it and which did not\
+    \ (honest null is a real finding). inference_substrate=verifier_ensemble_against_cached_candidates.\n\
+    CONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. import smoke: `.venv/bin/python\
+    \ -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` (exit 0).\n     b. torch\
+    \ present: `.venv/bin/python -c \"import torch; print(torch.__version__)\"`.\n     Missing -> honest_verdict\
+    \ blocked_<resource>, EXIT (no fabrication). Do NOT run pytest as a precondition.\n\nREQUIRED ARTIFACT\
+    \ FIELDS (each principle-annotated):\n  honest_verdict: principle \"MUST start with terminal prefix\
+    \ complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix\
+    \ Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n\
+    \    | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.\"\
+    \n  preconditions_checked: principle \"records WHICH resources were verified; pre-empts silent-missing-resource\
+    \ fabrication.\"\n"
+  operator_override: '2026-06-20 operator directive (ARC sprint): versioned-lineage continuation / level-up
+    attempt -- false-positive scope-match vs prior ARC exps; forward difference stated in the prompt.'
+- id: exp4493-a4
+  milestone: 2026.06.415
+  title: PHASE A4 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- GOAL-predicate verify + (grid,registers)
+    HUD state -> DEEPEN ar25/ka59 to L2 (re-scope of .414 A4)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4493_hud_register_deepen.json
+  prompt: "CONTEXT (.414 A4 3-fail-SKIPPED, over-scoped; GAP-ARCH-GOAL-NOT-VERIFIED + GAP-ARCH-GRID-ONLY-STATE).\
+    \ Re-scoped SMALLER: (1) extend the E3 state to (grid, registers) with the induced HUD scalar that\
+    \ the ar25/ka59 L2 stall needs (ka59 already extracts hud_count in its lemmas; ar25 undo-stack), and\
+    \ let is_level_complete read it; (2) hold the world-model accountable on the GOAL predicate (held-out\
+    \ score is_level_complete vs recorded level-up transitions), not just dynamics. Bank a +1 deepen on\
+    \ ar25 OR ka59 to L2 if the register fixes it. INCREMENTAL: ONE game to L2. ACCEPTANCE GATE: offline_reproduced=true\
+    \ AND reproduced_levels >= 1 (a NEW reproduced level beyond L1, i.e. L2). If still blocked, emit the\
+    \ residual (no fabrication).\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a.\
+    \ import smoke: `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"\
+    ` (exit 0).\n     b. torch present: `.venv/bin/python -c \"import torch; print(torch.__version__)\"\
+    `.\n     Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run pytest as\
+    \ a precondition.\n\nREQUIRED ARTIFACT FIELDS (each principle-annotated):\n  honest_verdict: principle\
+    \ \"MUST start with terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ (Verdict Terminal-Prefix Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference\
+    \ | verifier_ensemble_against_cached_candidates\n    | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right duration floor.\"\n  preconditions_checked: principle \"records WHICH resources\
+    \ were verified; pre-empts silent-missing-resource fabrication.\"\n"
+  operator_override: '2026-06-20 operator directive (ARC sprint): versioned-lineage continuation / level-up
+    attempt -- false-positive scope-match vs prior ARC exps; forward difference stated in the prompt.'
+- id: exp4494-a5
+  milestone: 2026.06.415
+  title: PHASE A5 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- DEEPEN a shallow game to L2 via a
+    derive-from-env GameAdapter (per-game RE map target)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4494_adapter_deepen_l2.json
+  prompt: "CONTEXT (the 2026-06-20 deepen sweep's per-game L2 RE-delta map, arc-deepen-variant-sweep-2026-06-20.md).\
+    \ Most L1 solves are FROZEN trajectories with no GameAdapter, so generic search re-confirms but cannot\
+    \ deepen. Pick ONE tractable game (cd82 / lf52 / r11l / ls20 -- empty gotchas, clean L1) and register\
+    \ a GameAdapter in python/carnot/agentic/arc_game_adapters.py that DERIVES the win-predicate + action-model\
+    \ from the offline env (NEVER hardcode coords), then drive verifier-routed deepening to L2 + the reproduction\
+    \ gate. INCREMENTAL: ONE game L1->L2. ACCEPTANCE GATE: offline_reproduced=true AND reproduced_levels\
+    \ >= 1 (a NEW reproduced level beyond L1). If no L2 mechanic is reverse-engineerable, emit the RE\
+    \ delta.\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. import smoke: `.venv/bin/python\
+    \ -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` (exit 0).\n     b. torch\
+    \ present: `.venv/bin/python -c \"import torch; print(torch.__version__)\"`.\n     Missing -> honest_verdict\
+    \ blocked_<resource>, EXIT (no fabrication). Do NOT run pytest as a precondition.\n\nREQUIRED ARTIFACT\
+    \ FIELDS (each principle-annotated):\n  honest_verdict: principle \"MUST start with terminal prefix\
+    \ complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix\
+    \ Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n\
+    \    | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.\"\
+    \n  preconditions_checked: principle \"records WHICH resources were verified; pre-empts silent-missing-resource\
+    \ fabrication.\"\n"
+  operator_override: '2026-06-20 operator directive (ARC sprint): versioned-lineage continuation / level-up
+    attempt -- false-positive scope-match vs prior ARC exps; forward difference stated in the prompt.'
+- id: exp4495-b1
+  milestone: 2026.06.415
+  title: PHASE B1 (INFRA; operator MANDATORY) -- Stage the human-replay corpus as a versioned, license-clean
+    local asset for the frame-change predictor
+  priority: high
+  track: infra
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4495_human_replay_corpus_staging.json
+  prompt: "CONTEXT: A1 needs the human replays without a cold 182MB download per run. DO: fetch the OFFICIAL\
+    \ ARC Public Demo replays (verify license CC0/MIT-0; if only the CC BY mirror is reachable, stage\
+    \ the format + document the attribution + do NOT commit weights), extract OUR-featurized (frame, action\
+    \ -> frame_delta, level_progress) training shards under a gitignored data dir, and write a loader\
+    \ + a tiny smoke test. Record provenance + license in the artifact. inference_substrate=aggregation_from_upstream_artifacts.\n\
+    CONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. import smoke: `.venv/bin/python\
+    \ -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` (exit 0).\n     b. torch\
+    \ present: `.venv/bin/python -c \"import torch; print(torch.__version__)\"`.\n     Missing -> honest_verdict\
+    \ blocked_<resource>, EXIT (no fabrication). Do NOT run pytest as a precondition.\n\nREQUIRED ARTIFACT\
+    \ FIELDS (each principle-annotated):\n  honest_verdict: principle \"MUST start with terminal prefix\
+    \ complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix\
+    \ Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n\
+    \    | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.\"\
+    \n  preconditions_checked: principle \"records WHICH resources were verified; pre-empts silent-missing-resource\
+    \ fabrication.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone/hardware/SOTA)
+    -- false-positive scope-match; required forward work.'
+- id: exp4496-b2
+  milestone: 2026.06.415
+  title: PHASE B2 (INFRA; operator MANDATORY) -- Submitted-agent parity + held-out solve-rate dashboard
+    (track the REAL score signal, not levels)
+  priority: high
+  track: infra
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4496_submitted_agent_scoreboard.json
+  prompt: "CONTEXT (the 0.08 incident + SUBMITTED_AGENT_CONFIG parity gate). Ship a small dashboard/report\
+    \ that, each milestone, records the EXACT submitted-default agent's held-out generic solve-rate (frame-only,\
+    \ env._game blocked) + the variant-transfer rate (currently 7/25) -- the real leaderboard signal --\
+    \ so reproducible_total_levels is never mistaken for the headline. Verify test_arc_submitted_agent_parity.py\
+    \ still green. inference_substrate=verifier_ensemble_against_cached_candidates.\nCONCRETE STEPS:\n\
+    \  0. PRECONDITIONS (BEFORE any other step):\n     a. import smoke: `.venv/bin/python -c \"from carnot.agentic\
+    \ import arc_solver_kit as k; k.offline_arcade()\"` (exit 0).\n     b. torch present: `.venv/bin/python\
+    \ -c \"import torch; print(torch.__version__)\"`.\n     Missing -> honest_verdict blocked_<resource>,\
+    \ EXIT (no fabrication). Do NOT run pytest as a precondition.\n\nREQUIRED ARTIFACT FIELDS (each principle-annotated):\n\
+    \  honest_verdict: principle \"MUST start with terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).\"\n  inference_substrate:\
+    \ principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n    | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right duration floor.\"\n  preconditions_checked: principle \"\
+    records WHICH resources were verified; pre-empts silent-missing-resource fabrication.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone/hardware/SOTA)
+    -- false-positive scope-match; required forward work.'
+- id: exp4497-c
+  milestone: 2026.06.415
+  title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY) -- Per-board continuity audit: KV260 (SSH
+    reachability only), GateMate (USB detect), PolarFire (SSH)'
+  priority: medium
+  track: hardware
+  max_turns: 90
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: hardware_smoke
+  deliverable: results/experiment_4497_hardware_continuity_audit.json
+  prompt: "CONTEXT: Hardware-Task Continuity Discipline. AUDIT all three boards: KV260 via `ssh -o ConnectTimeout=5\
+    \ -o BatchMode=yes kria 'true'` (SSH reachability ONLY -- the retired host SD-card device path is\
+    \ the WRONG mechanism per the KV260 SSH-Not-SD-Card discipline; do not reference it), GateMate via\
+    \ `openFPGALoader -c dirtyJtag --detect`, PolarFire via `ssh -o ConnectTimeout=5 polarfire 'true'`.\
+    \ Record reachability + next forward step per board (or blocked_<board>_unreachable). Audit task,\
+    \ no fabrication. inference_substrate=hardware_smoke.\n\nREQUIRED ARTIFACT FIELDS (each principle-annotated):\n\
+    \  honest_verdict: principle \"MUST start with terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).\"\n  inference_substrate:\
+    \ principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n    | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right duration floor.\"\n  preconditions_checked: principle \"\
+    records WHICH resources were verified; pre-empts silent-missing-resource fabrication.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone/hardware/SOTA)
+    -- false-positive scope-match; required forward work.'
+- id: exp4498-d
+  milestone: 2026.06.415
+  title: 'PHASE D (SOTA-INGESTION; reserved) -- Ingest SOTA: imitation/behavior-cloning + expert-injection
+    for sparse-reward interactive agents -> mapping'
+  priority: medium
+  track: sota-ingestion
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: docs/research-notes/arc-imitation-sota-415.md
+  prompt: "CONTEXT: SOTA-Ingestion Cycle Discipline; the human-replay direction is now active. Read research-studying.md/research-references.md\
+    \ filtered to imitation learning / behavior cloning / offline RL from human demonstrations / prioritized-replay\
+    \ expert injection, PLUS a FOCUSED fresh pass via scripts/sweep_clusters.py + low-concurrency WebSearch/WebFetch\
+    \ of the top 5-8 (NOT /deep-research). Map onto: bootstrapping the frame-change predictor + value/energy\
+    \ heads from the 14,672-example human corpus, and the leaderboard DQN's expert-injection. Cite REAL\
+    \ arXiv IDs; flag the strongest for .416. inference_substrate=aggregation_from_upstream_artifacts.\n\
+    \nREQUIRED ARTIFACT FIELDS (each principle-annotated):\n  honest_verdict: principle \"MUST start with\
+    \ terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ (Verdict\
+    \ Terminal-Prefix Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference\
+    \ | verifier_ensemble_against_cached_candidates\n    | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right duration floor.\"\n  preconditions_checked: principle \"records WHICH resources\
+    \ were verified; pre-empts silent-missing-resource fabrication.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone/hardware/SOTA)
+    -- false-positive scope-match; required forward work.'
+- id: exp4499-e
+  milestone: 2026.06.415
+  title: 'PHASE E (CAPSTONE .415) -- Capstone v415: frame-change efficiency delta, trust-energy verdict,
+    energy-augmentation LOO, deepen status'
+  priority: high
+  track: capstone
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4499_capstone_v415.json
+  prompt: "CONTEXT: aggregate .415. Report the HEADLINE signals (NOT reproducible_total_levels): A1 held-out\
+    \ actions-to-first-levelup reduction (the human-replay predictor's efficiency win), A2 trust-energy\
+    \ oracle-distinct verdict, A3 energy-augmentation cross-game LOO-AUROC vs 0.503, A4/A5 any L2 banked,\
+    \ the variant-transfer rate. SKIP flagged_adversarial=true artifacts (Fabrication gate); read each\
+    \ via scripts/summarize_artifact.py (Reading-Results Discipline); declare verifier_is_oracle for any\
+    \ verifier claim (Circularity). inference_substrate=aggregation_from_upstream_artifacts.\n\nREQUIRED\
+    \ ARTIFACT FIELDS (each principle-annotated):\n  honest_verdict: principle \"MUST start with terminal\
+    \ prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix\
+    \ Discipline).\"\n  inference_substrate: principle \"explicit (live_llm_inference | verifier_ensemble_against_cached_candidates\n\
+    \    | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.\"\
+    \n  preconditions_checked: principle \"records WHICH resources were verified; pre-empts silent-missing-resource\
+    \ fabrication.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone/hardware/SOTA)
+    -- false-positive scope-match; required forward work.'
