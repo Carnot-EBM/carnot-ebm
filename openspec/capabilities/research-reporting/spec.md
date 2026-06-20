@@ -27163,11 +27163,14 @@ The Exp 4475 live-integration workflow SHALL make the submitted
 stack rather than an opt-in evaluation flag. The submitted `E3AgentPolicy`
 SHALL route first-contact play through `arc_strategy_router.route_for_game`,
 SHALL keep the frame-only world-model DSL importable and instantiated on the
-policy path, SHALL give the live explorer a nonzero value-routing weight, SHALL
-target more than one level so a cracked game can harvest its level chain, and
-SHALL prefer the existing `_shortest_path` forward-edge walk before falling back
-to RESET replay. `SUBMITTED_AGENT_CONFIG` SHALL declare the same values and
-wiring flags that the submitted default actually uses.
+policy path, SHALL give the live explorer the measured value-routing weight
+declared by `SUBMITTED_AGENT_CONFIG`, SHALL target more than one level so a
+cracked game can harvest its level chain, and SHALL prefer the existing
+`_shortest_path` forward-edge walk before falling back to RESET replay. Nonzero
+value-routing weight SHALL ship only after a submitted-default frame-only sweep
+shows it beats the zero-weight control on held-out solve-rate while staying
+inside the eval wall-time budget. `SUBMITTED_AGENT_CONFIG` SHALL declare the
+same values and wiring flags that the submitted default actually uses.
 
 The workflow SHALL write
 `results/experiment_4475_wire_stronger_generic_stack.json` with required
@@ -27204,6 +27207,77 @@ frontier state with an untested action
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4475-LIVE-STACK | Planned (`python/carnot/agentic/arc_competition_agent.py`, `python/carnot/experiment_4475_wire_stronger_generic_stack.py`, `results/experiment_4475_wire_stronger_generic_stack.json`) | Planned (`tests/python/test_arc_submitted_agent_parity.py`, `tests/python/test_experiment_4475_wire_stronger_generic_stack.py`) |
+
+### REQ-REPORT-4500: ARC Submitted Value-Weight Sweep Gates The Shipped Default
+
+The Exp 4500 workflow SHALL measure the exact submitted-default ARC agent path
+(`E3AgentPolicy`, frame-only observations, `env._game` blocked, local proposer
+disabled for cached-candidate scoring) across value weights
+`0.0`, `0.5`, `1.0`, `2.0`, and `5.0`. The zero-weight run SHALL be included as
+the control. For each weight, the artifact SHALL report held-out solve-rate,
+solved-game count, attempted-game count, median actions to first level-up, median
+per-game wall seconds, and per-game rows. The submitted value weight SHALL be
+raised only when a positive weight strictly beats the zero-weight control on
+held-out solve-rate and keeps median per-game wall seconds within the eval
+budget of approximately 390 seconds. Otherwise the workflow SHALL keep the
+submitted value weight at `0.0` and report the honest null verdict.
+
+The workflow SHALL write
+`results/experiment_4500_value_weight_remeasure.json` with required top-level
+fields `honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`value_weights_tested`, `control_value_weight`, `eval_budget_median_wall_s`,
+`heldout_games`, `per_weight`, `selected_value_weight`,
+`submitted_value_weight_before`, `submitted_value_weight_after`,
+`submitted_agent_config`, `field_principles`, `spec_refs`, and
+`reproducibility_checksum`. Complete-path `honest_verdict` SHALL start with
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`. The artifact SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates`, SHALL record
+which resources were checked before launch, and SHALL NOT claim a leaderboard
+submission.
+
+The required field principles SHALL include:
+
+- `honest_verdict`: "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_."
+- `inference_substrate`: "explicit substrate so adversarial_verify applies the right duration floor."
+- `preconditions_checked`: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+- `value_weights_tested`: "records every tested value_weight, including the zero-weight control."
+- `control_value_weight`: "bare float: the zero-weight control required to avoid false negatives."
+- `eval_budget_median_wall_s`: "bare float: positive weights must fit the approximate 390-second eval budget."
+- `heldout_games`: "the held-out ARC games used for the submitted-default frame-only sweep."
+- `per_weight`: "per-weight summaries with solve-rate, first-level-up actions, wall time, and rows."
+- `selected_value_weight`: "bare float: raised only when a positive weight beats control within budget."
+- `submitted_value_weight_before`: "bare float: the value_weight in code before the sweep decision."
+- `submitted_value_weight_after`: "bare float: the value_weight that remains or ships after the sweep decision."
+- `submitted_agent_config`: "must match SUBMITTED_AGENT_CONFIG after any allowed value_weight update."
+- `field_principles`: "schema self-description so artifact review checks field intent."
+- `spec_refs`: "OpenSpec anchors that the tests and artifact claim to satisfy."
+- `reproducibility_checksum`: "sha256 over the stable measurement, selection, and config payload."
+
+#### SCENARIO-REPORT-4500-CONTROL: Positive Weights Must Beat The Zero-Weight Control
+
+**Given** the submitted-default frame-only agent is evaluated on the held-out ARC
+games with `env._game` blocked
+**When** Exp 4500 compares the value-weight sweep
+**Then** only a positive weight whose solve-rate is strictly higher than the
+`0.0` control and whose median per-game wall seconds is within budget may become
+`selected_value_weight`; otherwise `selected_value_weight`,
+`submitted_value_weight_before`, and `submitted_value_weight_after` remain `0.0`.
+
+#### SCENARIO-REPORT-4500-SCHEMA: Sweep Artifacts Are Principle-Annotated
+
+**Given** Exp 4500 writes its result artifact
+**When** the schema validator checks it
+**Then** the required principle-annotated fields are present, the terminal
+verdict prefix is valid, the inference substrate is explicit, the control
+weight is included, every tested weight has a per-weight summary and per-game
+rows, and `SUBMITTED_AGENT_CONFIG` matches the code default.
+
+## Implementation Status (REQ-REPORT-4500)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4500 | Implemented (`python/carnot/experiment_4500_value_weight_remeasure.py`, `results/experiment_4500_value_weight_remeasure.json`) | Implemented (`tests/python/test_experiment_4500_value_weight_remeasure.py`, `tests/python/test_arc_submitted_agent_parity.py`) |
 
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 

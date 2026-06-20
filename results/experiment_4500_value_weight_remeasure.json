@@ -1,0 +1,663 @@
+{
+  "action_budget": 400,
+  "control_value_weight": 0.0,
+  "eval_budget_median_wall_s": 390.0,
+  "experiment": "experiment_4500_value_weight_remeasure",
+  "field_principles": {
+    "control_value_weight": {
+      "principle": "bare float: the zero-weight control required to avoid false negatives."
+    },
+    "eval_budget_median_wall_s": {
+      "principle": "bare float: positive weights must fit the approximate 390-second eval budget."
+    },
+    "field_principles": {
+      "principle": "schema self-description so artifact review checks field intent."
+    },
+    "heldout_games": {
+      "principle": "the held-out ARC games used for the submitted-default frame-only sweep."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_."
+    },
+    "inference_substrate": {
+      "principle": "explicit substrate so adversarial_verify applies the right duration floor."
+    },
+    "per_weight": {
+      "principle": "per-weight summaries with solve-rate, first-level-up actions, wall time, and rows."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    },
+    "reproducibility_checksum": {
+      "principle": "sha256 over the stable measurement, selection, and config payload."
+    },
+    "selected_value_weight": {
+      "principle": "bare float: raised only when a positive weight beats control within budget."
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors that the tests and artifact claim to satisfy."
+    },
+    "submitted_agent_config": {
+      "principle": "must match SUBMITTED_AGENT_CONFIG after any allowed value_weight update."
+    },
+    "submitted_value_weight_after": {
+      "principle": "bare float: the value_weight that remains or ships after the sweep decision."
+    },
+    "submitted_value_weight_before": {
+      "principle": "bare float: the value_weight in code before the sweep decision."
+    },
+    "value_weights_tested": {
+      "principle": "records every tested value_weight, including the zero-weight control."
+    }
+  },
+  "heldout_game_source": "results/experiment_4475_wire_stronger_generic_stack.json benchmark.games",
+  "heldout_games": [
+    "tr87",
+    "tu93",
+    "lp85",
+    "sc25",
+    "ka59",
+    "ar25",
+    "ft09"
+  ],
+  "honest_verdict": "complete: value_weight_remeasure_null_keep_0_1_of_7",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "per_weight": [
+    {
+      "attempted_games": 7,
+      "heldout_solve_rate": 0.1428571429,
+      "median_actions_to_first_levelup": 20,
+      "median_per_game_wall_seconds": 1.303081,
+      "per_game": [
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tr87",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 2.969246
+        },
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tu93",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 0.765974
+        },
+        {
+          "actions": 397,
+          "actions_to_first_levelup": 20,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "lp85",
+          "levels_delta": 1,
+          "reached_level": 1,
+          "solved": true,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 0.915235
+        },
+        {
+          "actions": 392,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "sc25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 1.454696
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ka59",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 1.31583
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ar25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 1.303081
+        },
+        {
+          "actions": 399,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ft09",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.0,
+          "wall_seconds": 0.638074
+        }
+      ],
+      "solved_games": 1,
+      "timed_out_games": 0,
+      "value_weight": 0.0
+    },
+    {
+      "attempted_games": 7,
+      "heldout_solve_rate": 0.1428571429,
+      "median_actions_to_first_levelup": 20,
+      "median_per_game_wall_seconds": 1.223315,
+      "per_game": [
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tr87",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 2.526837
+        },
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tu93",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 0.729207
+        },
+        {
+          "actions": 397,
+          "actions_to_first_levelup": 20,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "lp85",
+          "levels_delta": 1,
+          "reached_level": 1,
+          "solved": true,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 1.233615
+        },
+        {
+          "actions": 392,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "sc25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 1.223315
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ka59",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 1.30222
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ar25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 1.134159
+        },
+        {
+          "actions": 399,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ft09",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 0.5,
+          "wall_seconds": 0.609732
+        }
+      ],
+      "solved_games": 1,
+      "timed_out_games": 0,
+      "value_weight": 0.5
+    },
+    {
+      "attempted_games": 7,
+      "heldout_solve_rate": 0.1428571429,
+      "median_actions_to_first_levelup": 20,
+      "median_per_game_wall_seconds": 1.0682,
+      "per_game": [
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tr87",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 2.356012
+        },
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tu93",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 0.820539
+        },
+        {
+          "actions": 397,
+          "actions_to_first_levelup": 20,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "lp85",
+          "levels_delta": 1,
+          "reached_level": 1,
+          "solved": true,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 1.0682
+        },
+        {
+          "actions": 392,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "sc25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 1.421211
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ka59",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 1.243012
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ar25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 0.98838
+        },
+        {
+          "actions": 399,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ft09",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 1.0,
+          "wall_seconds": 0.377216
+        }
+      ],
+      "solved_games": 1,
+      "timed_out_games": 0,
+      "value_weight": 1.0
+    },
+    {
+      "attempted_games": 7,
+      "heldout_solve_rate": 0.1428571429,
+      "median_actions_to_first_levelup": 20,
+      "median_per_game_wall_seconds": 1.218929,
+      "per_game": [
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tr87",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 2.572306
+        },
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tu93",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 0.990174
+        },
+        {
+          "actions": 397,
+          "actions_to_first_levelup": 20,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "lp85",
+          "levels_delta": 1,
+          "reached_level": 1,
+          "solved": true,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 1.103767
+        },
+        {
+          "actions": 392,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "sc25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 1.360468
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ka59",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 1.230531
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ar25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 1.218929
+        },
+        {
+          "actions": 399,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ft09",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 2.0,
+          "wall_seconds": 0.414835
+        }
+      ],
+      "solved_games": 1,
+      "timed_out_games": 0,
+      "value_weight": 2.0
+    },
+    {
+      "attempted_games": 7,
+      "heldout_solve_rate": 0.1428571429,
+      "median_actions_to_first_levelup": 20,
+      "median_per_game_wall_seconds": 1.257197,
+      "per_game": [
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tr87",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 2.552758
+        },
+        {
+          "actions": 391,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "tu93",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 0.922265
+        },
+        {
+          "actions": 397,
+          "actions_to_first_levelup": 20,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "lp85",
+          "levels_delta": 1,
+          "reached_level": 1,
+          "solved": true,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 0.984661
+        },
+        {
+          "actions": 392,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "sc25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 1.257197
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ka59",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 1.430596
+        },
+        {
+          "actions": 393,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ar25",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 1.320017
+        },
+        {
+          "actions": 399,
+          "actions_to_first_levelup": null,
+          "env_game_access_blocked": true,
+          "frame_only": true,
+          "game": "ft09",
+          "levels_delta": 0,
+          "reached_level": 0,
+          "solved": false,
+          "start_level": 0,
+          "timed_out": false,
+          "value_weight": 5.0,
+          "wall_seconds": 0.597252
+        }
+      ],
+      "solved_games": 1,
+      "timed_out_games": 0,
+      "value_weight": 5.0
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "env_game_blocked": true,
+    "offline_arcade_import_smoke": true,
+    "parity_test_target": "tests/python/test_arc_submitted_agent_parity.py",
+    "torch_import": true,
+    "torch_version": "2.11.0+cu128",
+    "value_head_v3_model_present": true
+  },
+  "reproducibility_checksum": "3b7f339a3f0754687933951fc13a331bcb34d45254da2fa2fe5adf91c4547663",
+  "result_path": "results/experiment_4500_value_weight_remeasure.json",
+  "schema": "carnot.exp4500.value_weight_remeasure.v1",
+  "selected_value_weight": 0.0,
+  "selection": {
+    "beats_control": false,
+    "control_solve_rate": 0.1428571429,
+    "reason": "no_positive_weight_beats_control_within_budget",
+    "selected_solve_rate": 0.1428571429,
+    "selected_value_weight": 0.0,
+    "should_raise_submitted_value_weight": false,
+    "within_wall_budget": true
+  },
+  "spec_refs": [
+    "REQ-REPORT-4500",
+    "SCENARIO-REPORT-4500-CONTROL",
+    "SCENARIO-REPORT-4500-SCHEMA"
+  ],
+  "submitted_agent_config": {
+    "cascade": true,
+    "graph_explore_budget": 80,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 5,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "submitted_value_weight_after": 0.0,
+  "submitted_value_weight_before": 0.0,
+  "value_weights_tested": [
+    0.0,
+    0.5,
+    1.0,
+    2.0,
+    5.0
+  ],
+  "wall_budget_s": 390.0
+}
