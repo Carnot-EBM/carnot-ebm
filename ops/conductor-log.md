@@ -8934,3 +8934,4 @@ c |
 | 2026-06-20 08:01 UTC | PHASE D (SOTA-INGESTION; reserved -- ARC search/ve | OK | 104 passed, 1 warning in 4.69s |
 | 2026-06-20 08:21 UTC | PHASE E (CAPSTONE .414) -- Capstone v414: integrat | OK | 87 passed, 1 warning in 7.49s |
 | 2026-06-20 08:23 UTC | Milestone 2026.06.415 activated | OK | 10 tasks queued |
+| 2026-06-20 08:40 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 113 passed, 1 warning in 10.61s |
