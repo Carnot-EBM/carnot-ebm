@@ -1,0 +1,893 @@
+{
+  "a1_actions_to_first_levelup_reduction": {
+    "actions_reduction": null,
+    "efficiency_win": false,
+    "heldout_median_actions_after": null,
+    "heldout_median_actions_before": null,
+    "honest_verdict": "complete: blocked_human_replay_corpus_not_cached",
+    "implied_efficiency_delta": null,
+    "positive_control": {
+      "actions_reduced": true,
+      "baseline_actions_to_first_levelup": 3,
+      "baseline_efficiency": 0.1111111111111111,
+      "implied_efficiency_delta": 0.8888888888888888,
+      "ranked_actions_to_first_levelup": 1,
+      "ranked_efficiency": 1.0
+    },
+    "solve_rate_after": null,
+    "solve_rate_before": null,
+    "solve_rate_dropped": false,
+    "state": "heldout_not_measured",
+    "trained_on_human_corpus": false
+  },
+  "a2_trust_energy_oracle_distinct_verdict": {
+    "baseline_pick_rate": 0.0,
+    "hidden_state_games_n": 11,
+    "honest_verdict": "success: world_model_trust_energy_beats_first_clears_baseline",
+    "oracle_distinct": true,
+    "positive_control_passed": true,
+    "selected_candidate_count": 11,
+    "state": "trust_energy_oracle_distinct_pass",
+    "trust_energy_pick_rate": 1.0,
+    "verifier_is_oracle": false
+  },
+  "a3_energy_augmentation_loo_auroc": {
+    "baseline_loo_auroc": 0.503,
+    "beats_0503_baseline": true,
+    "feature_class_deltas": {
+      "v2_plus_action_conditioned": 0.0034436915531507184,
+      "v2_plus_frame_delta": 0.17671272828496043,
+      "v2_plus_object_relational": 0.1283628783246189,
+      "v2_plus_predicate_distance": 0.016203876622393087,
+      "v3_full": 0.1713695635007898
+    },
+    "feature_class_loo_auroc": {
+      "v2": 0.503096152732577,
+      "v2_plus_action_conditioned": 0.5065398442857277,
+      "v2_plus_frame_delta": 0.6798088810175374,
+      "v2_plus_object_relational": 0.6314590310571959,
+      "v2_plus_predicate_distance": 0.5193000293549701,
+      "v3_full": 0.6744657162333668
+    },
+    "honest_verdict": "success: energy_augmentation_validated_v3_loo_auroc_0.674",
+    "loo_auroc_delta": 0.17146571623336682,
+    "loo_gate_passed": true,
+    "state": "energy_aug_beats_0503",
+    "target_loo_auroc": 0.6,
+    "v2_baseline_loo_auroc": 0.503096152732577,
+    "v3_loo_auroc": 0.6744657162333668
+  },
+  "a4_a5_l2_banked": false,
+  "a4_a5_l2_details": {
+    "adapter_l2": {
+      "attempt": {
+        "claimed_level": 2,
+        "game": "cd82",
+        "l2_banked": false,
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "honest_verdict": "complete: cd82_adapter_deepen_l2_honest_residual",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "residual_blockers": [
+        "cd82_solver_reached_level_1",
+        "cd82_l2_not_reproduced"
+      ],
+      "skipped": false
+    },
+    "any_l2_banked": false,
+    "hud_register": {
+      "attempts": [
+        {
+          "claimed_level": 2,
+          "game": "ar25",
+          "l2_banked": false,
+          "reached_level": 1,
+          "reproduced": false
+        },
+        {
+          "claimed_level": 2,
+          "game": "ka59",
+          "l2_banked": false,
+          "reached_level": 1,
+          "reproduced": false
+        }
+      ],
+      "honest_verdict": "complete: hud_register_deepen_honest_residual_l2_not_reproduced",
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "residual_blockers": [
+        "ar25_l2_not_reproduced",
+        "ka59_l2_not_reproduced"
+      ],
+      "skipped": false
+    },
+    "state": "l2_not_banked"
+  },
+  "availability_report": {
+    "available_artifact_keys": [
+      "4490_a1_human_replay",
+      "4491_a2_trust_energy",
+      "4492_a3_energy_loo",
+      "4493_a4_hud_register",
+      "4494_a5_adapter_l2",
+      "4495_replay_corpus",
+      "4496_scoreboard",
+      "4497_hardware",
+      "4498_sota"
+    ],
+    "axes": {
+      "a1_actions_to_first_levelup_reduction": {
+        "available_artifact_keys": [
+          "4490_a1_human_replay"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "a2_trust_energy_oracle_distinct_verdict": {
+        "available_artifact_keys": [
+          "4491_a2_trust_energy"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "a3_energy_augmentation_loo_auroc": {
+        "available_artifact_keys": [
+          "4492_a3_energy_loo"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "a4_a5_l2_banked": {
+        "available_artifact_keys": [
+          "4493_a4_hud_register",
+          "4494_a5_adapter_l2"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "operational_context": {
+        "available_artifact_keys": [
+          "4495_replay_corpus",
+          "4497_hardware",
+          "4498_sota"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": [
+          "4495_replay_corpus",
+          "4497_hardware",
+          "4498_sota"
+        ]
+      },
+      "variant_transfer_rate": {
+        "available_artifact_keys": [
+          "4496_scoreboard"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 0.28
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4490_a1_human_replay",
+      "experiment_id": 4490,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_median_actions_before",
+        "heldout_median_actions_after",
+        "implied_efficiency_delta",
+        "solve_rate_before",
+        "solve_rate_after",
+        "solve_rate_dropped",
+        "trained_on_human_corpus",
+        "positive_control",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4490_human_replay_frame_change_predictor.json",
+      "sha256": "539bcbd182469c5b48aa778a7246ad64b4870e8ee5eddbf199680c600c0eccb4"
+    },
+    {
+      "artifact_key": "4491_a2_trust_energy",
+      "experiment_id": 4491,
+      "fields_imported": [
+        "honest_verdict",
+        "baseline_pick_rate",
+        "trust_energy_pick_rate",
+        "positive_control_passed",
+        "hidden_state_games_n",
+        "selected_candidates",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4491_world_model_trust_energy.json",
+      "sha256": "0650813f55b812e414c17d0ccbef627130679dd4aca60f586c14cf494c7f3f9f"
+    },
+    {
+      "artifact_key": "4492_a3_energy_loo",
+      "experiment_id": 4492,
+      "fields_imported": [
+        "honest_verdict",
+        "baseline_loo_auroc",
+        "v2_baseline_loo_auroc",
+        "v3_loo_auroc",
+        "target_loo_auroc",
+        "loo_gate_passed",
+        "feature_class_deltas",
+        "feature_class_loo_auroc",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4492_energy_augmentation_loo_gate.json",
+      "sha256": "e34cba81de2de65d41976069e21cf92edbeb2ed467d22b5c3c03c534b4da51d3"
+    },
+    {
+      "artifact_key": "4493_a4_hud_register",
+      "experiment_id": 4493,
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "reproduced_levels",
+        "candidate_reproduction_attempts",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4493_hud_register_deepen.json",
+      "sha256": "5d0534672edd6addba1e20600a49fafa7ceac7066c80ff1e025340edc73cabd1"
+    },
+    {
+      "artifact_key": "4494_a5_adapter_l2",
+      "experiment_id": 4494,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4494_adapter_deepen_l2.json",
+      "sha256": "70060db70289783b9e15239188dba2a3313f86e3423299fb8c3ba01ad7a3843b"
+    },
+    {
+      "artifact_key": "4495_replay_corpus",
+      "experiment_id": 4495,
+      "fields_imported": [
+        "honest_verdict",
+        "training_example_count",
+        "training_shard_count",
+        "weights_committed",
+        "official_license_verified",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4495_human_replay_corpus_staging.json",
+      "sha256": "6733f9a6a605f08c2d9807dad1ff383ec68161401ea825b33fddf3233cae10aa"
+    },
+    {
+      "artifact_key": "4496_scoreboard",
+      "experiment_id": 4496,
+      "fields_imported": [
+        "honest_verdict",
+        "headline_metrics",
+        "leaderboard_submission",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4496_submitted_agent_scoreboard.json",
+      "sha256": "7cd818a3c68e854af231618381d0ba9938b90cd3751687f4cb3faf15ce681dd1"
+    },
+    {
+      "artifact_key": "4497_hardware",
+      "experiment_id": 4497,
+      "fields_imported": [
+        "honest_verdict",
+        "per_board_reachability",
+        "per_board_status",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4497_hardware_continuity_audit.json",
+      "sha256": "c7bb6ca56b1c0d9ec4a0e84350221d489b04d27e76f4e64fcba57ebccbe35103"
+    },
+    {
+      "artifact_key": "4498_sota",
+      "experiment_id": 4498,
+      "fields_imported": [
+        "honest_verdict",
+        "strongest_for_v416",
+        "source_ids",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4498_arc_imitation_sota_415.json",
+      "sha256": "0e069b5890a2d238b04c276df914a201222db723ca7312a855cfde379ae91de1"
+    }
+  ],
+  "duration_s": 0.38655,
+  "experiment": 4499,
+  "field_principles": {
+    "a1_actions_to_first_levelup_reduction": "the real A1 signal is held-out actions-to-first-level-up reduction, not reproducible_total_levels.",
+    "a2_trust_energy_oracle_distinct_verdict": "reports trust-energy oracle-distinct status and declares verifier_is_oracle for the claim.",
+    "a3_energy_augmentation_loo_auroc": "reports cross-game LOO-AUROC versus the 0.503 baseline.",
+    "a4_a5_l2_banked": "reports whether any A4/A5 L2 banked only from clean offline reproduction gates.",
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields.",
+    "flagged_artifacts_skipped": "stamped or live-critical artifacts import no fields.",
+    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.",
+    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication.",
+    "reproducibility_checksum": "content hash for reproducibility",
+    "variant_transfer_rate": "bare float from the submitted-agent scoreboard headline, separate from reproducible_total_levels context.",
+    "verifier_claims": "each verifier claim declares verifier_is_oracle so circularity is explicit.",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; verifier-derived upstream claims declare their own circularity."
+  },
+  "flagged_artifacts_skipped": [],
+  "honest_verdict": "complete: v415_a1_no_heldout_win_a2_oracle_distinct_a3_beats_0503_l2_not_banked_variant_transfer_0.28",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "operational_context": {
+    "exp4495_replay_corpus": {
+      "honest_verdict": "complete: staged_attributed_mirror_no_weights",
+      "official_license_verified": false,
+      "per_board_reachability": {},
+      "source_ids": [],
+      "state": "available",
+      "strongest_for_v416": "",
+      "training_example_count": 10000,
+      "training_shard_count": 3,
+      "weights_committed": false
+    },
+    "exp4497_hardware": {
+      "honest_verdict": "complete: hardware_continuity_audit_4497_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh",
+      "official_license_verified": null,
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "source_ids": [],
+      "state": "available",
+      "strongest_for_v416": "",
+      "training_example_count": 0,
+      "training_shard_count": 0,
+      "weights_committed": null
+    },
+    "exp4498_sota": {
+      "honest_verdict": "complete: arc_imitation_sota_415_mapped_for_v416",
+      "official_license_verified": null,
+      "per_board_reachability": {},
+      "source_ids": [
+        "1704.03732",
+        "1511.05952",
+        "2206.11795",
+        "2110.06169",
+        "1905.11108",
+        "2302.02948",
+        "2407.15007",
+        "2405.17476"
+      ],
+      "state": "available",
+      "strongest_for_v416": "flagged_for_v416: DQfD/PER-style human-replay expert-injection for the ARC frame-change predictor and value/energy heads, anchored by arXiv:1704.03732, arXiv:1511.05952, and arXiv:2206.11795",
+      "training_example_count": 0,
+      "training_shard_count": 0,
+      "weights_committed": null
+    }
+  },
+  "per_axis_gaps": [],
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "reading_results_discipline": true,
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4490_a1_human_replay",
+        "exists": true,
+        "experiment_id": 4490,
+        "path": "results/experiment_4490_human_replay_frame_change_predictor.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "action_effect_npz_paths": [],
+          "agents_md_read": true,
+          "codex_md_read": true,
+          "env_game_access_blocked": true,
+          "human_replay_corpus_paths": [],
+          "human_replay_corpus_present": false,
+          "leaderboard_submission": false,
+          "official_license_verified_for_bundled_weights": false,
+          "offline_arcade_import": true,
+          "ok": false,
+          "raw_replay_json_count": 0,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128",
+          "weights_input_present": false
+        }
+      },
+      {
+        "artifact_key": "4491_a2_trust_energy",
+        "exists": true,
+        "experiment_id": 4491,
+        "path": "results/experiment_4491_world_model_trust_energy.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "offline_arcade_import_smoke": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4492_a3_energy_loo",
+        "exists": true,
+        "experiment_id": 4492,
+        "path": "results/experiment_4492_energy_augmentation_loo_gate.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "arc_solver_kit_offline_arcade_smoke": true,
+          "banked_trajectories": true,
+          "feature_names": "cross_game_features_v3",
+          "neg_per_game": 14,
+          "rerun_command": "scripts/arc_cross_game_verifier_train.py --discriminative",
+          "seed": 0,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4493_a4_hud_register",
+        "exists": true,
+        "experiment_id": 4493,
+        "path": "results/experiment_4493_hud_register_deepen.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "offline_arcade_import_smoke": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4494_a5_adapter_l2",
+        "exists": true,
+        "experiment_id": 4494,
+        "path": "results/experiment_4494_adapter_deepen_l2.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "offline_arcade_import_smoke": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4495_replay_corpus",
+        "exists": true,
+        "experiment_id": 4495,
+        "path": "results/experiment_4495_human_replay_corpus_staging.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "codex_md_read": true,
+          "hf_mirror_reachable": true,
+          "hf_mirror_status": {
+            "reachable": true,
+            "status_code": 200,
+            "url": "https://huggingface.co/api/datasets/magic-sword/arc_agi_3_public_demo_human_testing"
+          },
+          "official_arc_shortlink_reachable": false,
+          "official_arc_shortlink_status": {
+            "error": "HTTP Error 403: Forbidden",
+            "reachable": false,
+            "status_code": 403,
+            "url": "https://dub.link/vfwCqvb"
+          },
+          "offline_arcade_import_smoke": true,
+          "source_shards_cached": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128",
+          "training_shards_present": true
+        }
+      },
+      {
+        "artifact_key": "4496_scoreboard",
+        "exists": true,
+        "experiment_id": 4496,
+        "path": "results/experiment_4496_submitted_agent_scoreboard.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "codex_md_read": true,
+          "env_game_access_blocked": true,
+          "offline_arcade_import_smoke": true,
+          "parity_test_target": "tests/python/test_arc_submitted_agent_parity.py",
+          "submitted_benchmark_artifact_present": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128",
+          "variant_context_artifact_present": true
+        }
+      },
+      {
+        "artifact_key": "4497_hardware",
+        "exists": true,
+        "experiment_id": 4497,
+        "path": "results/experiment_4497_hardware_continuity_audit.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": [
+          {
+            "available": true,
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "duration_s": 4.593185,
+            "exit_code": 0,
+            "observed": "returncode=0",
+            "resource": "kv260_ssh"
+          },
+          {
+            "available": false,
+            "command": "openFPGALoader -c dirtyJtag --detect",
+            "duration_s": 0.020396,
+            "exit_code": 0,
+            "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+            "resource": "gatemate_dirtyjtag_detect"
+          },
+          {
+            "available": true,
+            "command": "ssh -o ConnectTimeout=5 polarfire true",
+            "duration_s": 0.867843,
+            "exit_code": 0,
+            "observed": "returncode=0",
+            "resource": "polarfire_ssh"
+          }
+        ]
+      },
+      {
+        "artifact_key": "4498_sota",
+        "exists": true,
+        "experiment_id": 4498,
+        "path": "results/experiment_4498_arc_imitation_sota_415.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "arc_human_replay_notes_read": [
+            "docs/research-notes/arc-human-baseline-and-replay-signal.md",
+            "docs/research-notes/arc-human-replay-application-spec.md",
+            "docs/research-notes/arc-frame-change-predictor-spec.md",
+            "docs/research-notes/arc-world-model-trust-energy-spec.md",
+            "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md"
+          ],
+          "arxiv_http_200_verified_ids": [
+            "1704.03732",
+            "1511.05952",
+            "2206.11795",
+            "2110.06169",
+            "1905.11108",
+            "2302.02948",
+            "2407.15007",
+            "2405.17476"
+          ],
+          "codex_md_read": true,
+          "deep_research_invoked": false,
+          "leaderboard_submission": false,
+          "live_llm_inference": false,
+          "live_solve_claim": false,
+          "ops_docs_modified": false,
+          "research_references_filtered": true,
+          "research_studying_filtered": true,
+          "sweep_clusters_help_succeeded": true,
+          "sweep_clusters_urls": [
+            "http://export.arxiv.org/api/query?search_query=(abs:\"verifier+ensemble\"+OR+abs:\"verifier+ensembles\"+OR+abs:\"null+space\"+OR+abs:\"specification+gaming\"+OR+abs:\"process+reward+model\"+OR+abs:\"deliberative+alignment\"+OR+abs:\"reward+hacking\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+            "http://export.arxiv.org/api/query?search_query=(abs:\"active+inference\"+OR+abs:\"free+energy\"+OR+abs:\"free+energy+principle\"+OR+abs:\"predictive+coding\"+OR+abs:\"world+model\")+AND+(abs:\"LLM\"+OR+abs:\"language+model\"+OR+abs:\"reasoning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+          ],
+          "training_launched": false,
+          "websearch_webfetch_top_sources": [
+            "https://arxiv.org/abs/1704.03732",
+            "https://arxiv.org/abs/1511.05952",
+            "https://arxiv.org/abs/2206.11795",
+            "https://arxiv.org/abs/2110.06169",
+            "https://arxiv.org/abs/1905.11108",
+            "https://arxiv.org/abs/2302.02948",
+            "https://arxiv.org/abs/2407.15007",
+            "https://arxiv.org/abs/2405.17476"
+          ]
+        }
+      }
+    ]
+  },
+  "random_seed": 4499,
+  "reproducibility_checksum": "sha256:21e198bdaaf65396f1b507b1265606f91844253b085546d32a2582ab90d658f5",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "inference_substrate",
+    "preconditions_checked",
+    "a1_actions_to_first_levelup_reduction",
+    "a2_trust_energy_oracle_distinct_verdict",
+    "a3_energy_augmentation_loo_auroc",
+    "a4_a5_l2_banked",
+    "variant_transfer_rate",
+    "verifier_is_oracle",
+    "verifier_claims",
+    "flagged_artifacts_skipped",
+    "cited_upstream_artifacts",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v415_4499.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4499",
+    "SCENARIO-CAPSTONE-4499"
+  ],
+  "submitted_to_leaderboard": false,
+  "upstream_provenance": [
+    {
+      "artifact_key": "4490_a1_human_replay",
+      "experiment_id": 4490,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_median_actions_before",
+        "heldout_median_actions_after",
+        "implied_efficiency_delta",
+        "solve_rate_before",
+        "solve_rate_after",
+        "solve_rate_dropped",
+        "trained_on_human_corpus",
+        "positive_control",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4490_human_replay_frame_change_predictor.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "539bcbd182469c5b48aa778a7246ad64b4870e8ee5eddbf199680c600c0eccb4",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4491_a2_trust_energy",
+      "experiment_id": 4491,
+      "fields_imported": [
+        "honest_verdict",
+        "baseline_pick_rate",
+        "trust_energy_pick_rate",
+        "positive_control_passed",
+        "hidden_state_games_n",
+        "selected_candidates",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4491_world_model_trust_energy.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "0650813f55b812e414c17d0ccbef627130679dd4aca60f586c14cf494c7f3f9f",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4492_a3_energy_loo",
+      "experiment_id": 4492,
+      "fields_imported": [
+        "honest_verdict",
+        "baseline_loo_auroc",
+        "v2_baseline_loo_auroc",
+        "v3_loo_auroc",
+        "target_loo_auroc",
+        "loo_gate_passed",
+        "feature_class_deltas",
+        "feature_class_loo_auroc",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4492_energy_augmentation_loo_gate.json",
+      "payload_reproducibility_checksum": "95b9511b92aa5e7d0614e0938f96cfb5ad65dbdd2e0a4db4dc8638b2b9f8c813",
+      "sha256": "e34cba81de2de65d41976069e21cf92edbeb2ed467d22b5c3c03c534b4da51d3",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4493_a4_hud_register",
+      "experiment_id": 4493,
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "reproduced_levels",
+        "candidate_reproduction_attempts",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4493_hud_register_deepen.json",
+      "payload_reproducibility_checksum": "836fab2c6345bc421769538ba530d8655e39bd871dc26150707e5f5898da90b3",
+      "sha256": "5d0534672edd6addba1e20600a49fafa7ceac7066c80ff1e025340edc73cabd1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4494_a5_adapter_l2",
+      "experiment_id": 4494,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4494_adapter_deepen_l2.json",
+      "payload_reproducibility_checksum": "5ec7f0236eddd05751c64ad755859648bb37d7d9f706f7d591bf1d22ee97d3ab",
+      "sha256": "70060db70289783b9e15239188dba2a3313f86e3423299fb8c3ba01ad7a3843b",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4495_replay_corpus",
+      "experiment_id": 4495,
+      "fields_imported": [
+        "honest_verdict",
+        "training_example_count",
+        "training_shard_count",
+        "weights_committed",
+        "official_license_verified",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4495_human_replay_corpus_staging.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "6733f9a6a605f08c2d9807dad1ff383ec68161401ea825b33fddf3233cae10aa",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4496_scoreboard",
+      "experiment_id": 4496,
+      "fields_imported": [
+        "honest_verdict",
+        "headline_metrics",
+        "leaderboard_submission",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4496_submitted_agent_scoreboard.json",
+      "payload_reproducibility_checksum": "8e3d242fb64c767db7b4fcbbbd525236187cd65fe070b19db587ae7e0cabf78c",
+      "sha256": "7cd818a3c68e854af231618381d0ba9938b90cd3751687f4cb3faf15ce681dd1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4497_hardware",
+      "experiment_id": 4497,
+      "fields_imported": [
+        "honest_verdict",
+        "per_board_reachability",
+        "per_board_status",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4497_hardware_continuity_audit.json",
+      "payload_reproducibility_checksum": "8badc0fe81c59fe56658dc436e4401a14b3f8f772493bceba587811a8b595ab6",
+      "sha256": "c7bb6ca56b1c0d9ec4a0e84350221d489b04d27e76f4e64fcba57ebccbe35103",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4498_sota",
+      "experiment_id": 4498,
+      "fields_imported": [
+        "honest_verdict",
+        "strongest_for_v416",
+        "source_ids",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4498_arc_imitation_sota_415.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "0e069b5890a2d238b04c276df914a201222db723ca7312a855cfde379ae91de1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "0650813f55b812e414c17d0ccbef627130679dd4aca60f586c14cf494c7f3f9f",
+    "0e069b5890a2d238b04c276df914a201222db723ca7312a855cfde379ae91de1",
+    "539bcbd182469c5b48aa778a7246ad64b4870e8ee5eddbf199680c600c0eccb4",
+    "5d0534672edd6addba1e20600a49fafa7ceac7066c80ff1e025340edc73cabd1",
+    "6733f9a6a605f08c2d9807dad1ff383ec68161401ea825b33fddf3233cae10aa",
+    "70060db70289783b9e15239188dba2a3313f86e3423299fb8c3ba01ad7a3843b",
+    "7cd818a3c68e854af231618381d0ba9938b90cd3751687f4cb3faf15ce681dd1",
+    "c7bb6ca56b1c0d9ec4a0e84350221d489b04d27e76f4e64fcba57ebccbe35103",
+    "e34cba81de2de65d41976069e21cf92edbeb2ed467d22b5c3c03c534b4da51d3"
+  ],
+  "variant_transfer_rate": 0.28,
+  "variant_transfer_scoreboard": {
+    "heldout_generic_attempted": 7,
+    "heldout_generic_solve_rate": 0.1428571429,
+    "heldout_generic_solved": 1,
+    "honest_verdict": "complete: submitted_agent_scoreboard_generic_1_of_7_variant_7_of_25",
+    "leaderboard_submission": false,
+    "state": "variant_transfer_measured",
+    "variant_transfer_attempted": 25,
+    "variant_transfer_rate": 0.28,
+    "variant_transfer_solved": 7
+  },
+  "verifier_claims": [
+    {
+      "claim": "a1_actions_to_first_levelup_reduction",
+      "skipped": false,
+      "source": "exp4490",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a2_trust_energy_oracle_distinct_verdict",
+      "skipped": false,
+      "source": "exp4491",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a3_energy_augmentation_loo_auroc",
+      "skipped": false,
+      "source": "exp4492",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a4_a5_l2_banked",
+      "skipped": false,
+      "source": "exp4493+exp4494",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a4_a5_l2_gate_is_execution_grounded",
+      "skipped": false,
+      "source": "l2_not_banked",
+      "verifier_is_oracle": false
+    }
+  ],
+  "verifier_is_oracle": false
+}
