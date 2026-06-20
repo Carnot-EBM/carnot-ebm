@@ -8975,3 +8975,7 @@ c |
 | 2026-06-20 20:47 UTC | PHASE B2 (RESERVED INFRA) -- canonicalize the acti | OK | 96 passed, 1 warning in 5.75s |
 | 2026-06-20 20:58 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.74s |
 | 2026-06-20 21:14 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 104 passed, 1 warning in 7.73s |
+| 2026-06-20 21:35 UTC | PHASE E (CAPSTONE .417) -- the ACTION-EFFICIENCY s | OK | 87 passed, 1 warning in 7.49s |
+| 2026-06-20 21:37 UTC | Activation REFUSED: milestone 2026.06.418 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-20 21:39 UTC | Activation REFUSED: milestone 2026.06.418 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-20 21:41 UTC | Milestone 2026.06.418 activated | OK | 10 tasks queued |
