@@ -80,6 +80,34 @@ A success artifact SHALL require
 `offline_reproduced=true` and `reproduced_levels >= 1`; otherwise the artifact
 SHALL report a terminal honest residual without fabricating an L2 reproduction.
 
+### REQ-ARC-WMTE-4503: Incremental HUD/Register L2 Deepening
+
+Experiment 4503 SHALL carry the 4493 HUD/register contract forward into the
+E3 planner state. The planner state SHALL be explicit `(grid, registers)`,
+candidate `is_level_complete` checks SHALL receive that registered state, and
+the ka59 state SHALL include an induced `hud_count` scalar while ar25 MAY carry
+`undo_stack_depth` when replay data exposes it. The experiment SHALL attempt
+one incremental deepening for ar25 or ka59 from the prior L1 reproduction to
+L2, and SHALL count only newly reproduced levels beyond L1 as progress.
+
+Experiment 4503 SHALL write
+`results/experiment_4503_hud_register_deepen_l2.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`offline_reproduced`, `reproduced_levels`, `target_game`,
+`register_state_contract`, `goal_predicate_heldout_score`,
+`grid_only_goal_predicate_heldout_score`, `reproduction_gate`,
+`solution_labels`, and `residual_blockers`. Required field principles SHALL be
+included for:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.
+- `inference_substrate`: explicit substrate so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
+A success artifact SHALL require `offline_reproduced=true` and
+`reproduced_levels >= 1`, where `reproduced_levels` counts a new reproduced
+level beyond L1. If the L2 gate remains blocked, the artifact SHALL emit the
+residual blocker instead of fabricating an L2 reproduction.
+
 ### REQ-ARC-WMTE-4496: Adapter-Routed L1 to L2 Deepening
 
 Experiment 4494 SHALL register one tractable game adapter for a clean L1 game
@@ -145,6 +173,17 @@ Then the registered `(grid, registers)` predicate is compared with recorded
 level-up transitions, the grid-only baseline score is reported separately, and
 the artifact only claims a deepened L2 reproduction when offline replay reaches
 at least one new level beyond L1.
+
+### SCENARIO-ARC-WMTE-4503: HUD/Register State Gates One New L2 Level
+
+Given an ar25 or ka59 L1 trajectory and a candidate L2 tail whose completion
+predicate depends on a latent register
+When experiment 4503 evaluates the registered state and runs the offline
+reproduction gate for target level 2
+Then `is_level_complete` reads `(grid, registers)`, the artifact records the
+selected `target_game`, `solution_labels`, and `reproduction_gate`, and success
+is reported only when offline replay reproduces at least one new level beyond
+L1.
 
 ### SCENARIO-ARC-WMTE-4495: One Adapter Deepens a Frozen L1 Trajectory to L2
 
