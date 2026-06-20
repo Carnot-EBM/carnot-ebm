@@ -40,14 +40,19 @@ tasks:
     \ is generic OOD solve-rate + efficiency. DO: (1) wire arc_strategy_router.route_for_game (+ the world-model-DSL\
     \ / frame-only mechanic detector) into E3AgentPolicy so first-contact routes by mechanic instead of\
     \ blind BFS; (2) raise target_levels so a cracked game harvests its level chain; (3) replace RESET-replay\
-    \ navigation with the existing _shortest_path forward-edge walk. MEASURE the held-out generic solve-rate\
-    \ BEFORE vs AFTER on the offline arcade with env._game access BLOCKED (frame-only, live-legal) --\
-    \ report the delta. This is INTEGRATION, not modeling. inference_substrate=verifier_ensemble_against_cached_candidates.\n\
-    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
-    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
-    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate:\
-    \ principle \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates\
-    \ | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
+    \ navigation with the existing _shortest_path forward-edge walk. These must become the SUBMITTED DEFAULT,\
+    \ not an opt-in eval flag (the 0.08 incident: stronger configs lived opt-in while bare BFS shipped).\
+    \ PREVENTION (mandatory): update arc_competition_agent.py:SUBMITTED_AGENT_CONFIG (value_weight/target_levels/router_wired/world_model_dsl_wired)\
+    \ in the SAME change and make tests/python/test_arc_submitted_agent_parity.py pass (it fails if the\
+    \ wiring and the declared shipped config diverge). MEASURE the held-out generic solve-rate of the\
+    \ EXACT submitted default BEFORE vs AFTER on the offline arcade with env._game BLOCKED (frame-only,\
+    \ live-legal) and report THAT delta as the headline (NOT reproducible_total_levels). This is INTEGRATION,\
+    \ not modeling. inference_substrate=verifier_ensemble_against_cached_candidates.\n\nREQUIRED ARTIFACT\
+    \ FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start with a terminal\
+    \ prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ so the reconciler\
+    \ classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate: principle\
+    \ \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates |\
+    \ aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
     \ principle \"a solve not reproducible offline is wasted effort -- only reproduced levels\n    count\
     \ (ARC Solve Reproducibility).\"\n  reproduced_levels: principle \"headline metric reproducible_total_levels\
     \ grows monotonically; report the\n    count banked, real-env-confirmed.\"\n  preconditions_checked:\

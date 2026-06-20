@@ -1,0 +1,130 @@
+{
+  "closed_residuals_by_413_operator": [],
+  "duration_s": 115.489523,
+  "experiment": "experiment_4472_variant_generic_transfer_benchmark_v4",
+  "field_principles": {
+    "generic_loo_solve_count_v3_baseline": {
+      "principle": "bare int = 6; the .412 baseline this must beat to show progress"
+    },
+    "generic_loo_solve_count_v4": {
+      "principle": "bare int: the plain-LOO re-measurement after the .413 operators -- did it rise above the v3 baseline of 6?"
+    },
+    "generic_transfer_rate_over_variants": {
+      "principle": "bare float: the headline operator-mandated metric -- (variants solved)/(variants attempted) over 25 games x N manufactured variants, the OOD-proxy generalization test"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed (this benchmark ALWAYS completes with a measurement, so terminal, never partial:)"
+    },
+    "inference_substrate": {
+      "principle": "THE .410/.411 LESSON -- EMIT it; never None"
+    },
+    "missing_verifier_gaps": {
+      "principle": "each still-open residual -- the .414 build backlog"
+    },
+    "offline_reproduced": {
+      "principle": "every claimed re-solve/variant-solve is reproduction-gated"
+    },
+    "per_game": {
+      "principle": "list of {game, variant_transfer_rate, loo_solved_without_own_recipe, closed_by_operator, residual_delta} -- shows EXACTLY which residuals the new operators closed"
+    },
+    "random_seed": {
+      "principle": "determinism for re-run (variant generation seed)"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of the variant set + example-corpus snapshot used"
+    },
+    "variants_attempted": {
+      "principle": "bare int: total manufactured variants attempted (>=25); LOG N-per-game + any skipped"
+    },
+    "variants_solved": {
+      "principle": "bare int: reproduction-gated variant solves (VariantEnv real win-condition)"
+    },
+    "verifier_is_oracle": {
+      "principle": "true: execution-grounded reproduction"
+    }
+  },
+  "generic_loo_solve_count_v3_baseline": 6,
+  "generic_loo_solve_count_v4": 0,
+  "generic_transfer_rate_over_variants": 0.0,
+  "heldout_games": [],
+  "honest_verdict": "complete: blocked_baseline_smoke",
+  "inference_substrate": "precondition_check_no_inference",
+  "leaderboard_submission": false,
+  "missing_verifier_gaps": [],
+  "no_3090_inference": true,
+  "offline_reproduced": false,
+  "per_game": [],
+  "preconditions_checked": {
+    "arc_solve_learning_import": true,
+    "arc_solver_kit_import": true,
+    "arc_variant_generator_import": true,
+    "baseline_smoke_command": ".venv/bin/pytest -k \"variant or arc_solver_kit or leaderboard_eval\" -q --no-cov",
+    "baseline_smoke_exit_code": 1,
+    "baseline_smoke_green": false,
+    "baseline_smoke_output_tail": "; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytestmark = pytest.mark.kona\n\n.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\ntests/python/test_experiment_3494.py:138\ntests/python/test_experiment_3494.py:138\ntests/python/test_experiment_3494.py:138\ntests/python/test_experiment_3494.py:138\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_3494.py:138: PytestUnknownMarkWarning: Unknown pytest.mark.memory_watchdog_skip - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytest.param(\"parallel_tempering\", 50, 1, marks=pytest.mark.memory_watchdog_skip),\n\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_3494.py::test_optimize_board_v2_variant_smoke[random_restarts-50-2]\n======= 185 passed, 5 skipped, 88 warnings, 1 error in 114.29s (0:01:54) =======\n",
+    "igpu_llama_server_available": false,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "offline_env_files_present": true,
+    "offline_env_games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "ok": false,
+    "qwen_gguf_cached": true
+  },
+  "random_seed": 4472,
+  "reproducibility_checksum": "f8807cb33b1c7f25368ef816533091e7d1cdd015ce53455fffe5f7b0ed4f88ab",
+  "result_path": "results/experiment_4472_variant_generic_transfer_benchmark_v4.json",
+  "schema": "carnot.exp4472.variant_generic_transfer_benchmark_v4.v1",
+  "spec_refs": [
+    "REQ-REPORT-4472",
+    "SCENARIO-REPORT-4472"
+  ],
+  "upstream_artifacts": {
+    "source_hashes": {
+      "ops/arc_solve_registry.yaml": "2cfb3675df1adb7a114f9a5574f19838846f60874ecd851006e51aea3cdbb1b5",
+      "python/carnot/agentic/arc_solver_kit.py": "741ed58956bea182286899a04b2c67dc29683f1f83dffbb42ba96e0a5d9532c1",
+      "python/carnot/agentic/arc_variant_generator.py": "5f450162e522b19cf4d9d7bd6083b688eb027df350affb628371c57eaa5c944d",
+      "results/experiment_4459_loo_generic_solve_benchmark_v3.json": "d9578e5d0eb8c950b498487f7b682d59046a4afbaa2d9be976bb16dcf5de0e86",
+      "results/experiment_4469_generic_cast_grid_fsm_operator.json": "a125f7bb1713c320c9e9f7609611b88400c6aaded5bb68171bc55cb7f28cdea4"
+    }
+  },
+  "variant_attempts": [],
+  "variant_plan": {
+    "budget": 200,
+    "color_variants": [
+      1
+    ],
+    "n_per_game": 1,
+    "reflection_axis": 1,
+    "reflection_variants": [],
+    "skipped": []
+  },
+  "variants_attempted": 0,
+  "variants_solved": 0,
+  "verifier_is_oracle": true
+}
