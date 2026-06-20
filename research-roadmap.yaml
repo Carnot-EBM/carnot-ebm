@@ -249,9 +249,9 @@ tasks:
          a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
          Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on any focused pytest.)
       1. Compute a cheap per-frame "ambiguity" score from existing signals: value-head margin (top-1 vs top-2), predicted-no-op fraction, frame-novelty (state-hash unseen).
-      2. Gate the per-step budget: ambiguity below threshold -> commit the single top candidate (budget 1); above -> expand to the normal width. Sweep the threshold.
-      3. Measure median actions-to-first-levelup WITH vs WITHOUT the adaptive gate on the 8-game gate; report per-game + median + solve-rate.
-      4. POSITIVE CONTROL + FALSE_NEGATIVE_RISK guard: if the gate does not save actions (or drops solve-rate), report the HONEST NULL.
+      2. SOLVE-RATE-PRESERVING LEVER CONTRACT (outer-loop 2026-06-20, MANDATORY -- this OVERRIDES any "commit the single candidate / filter / budget 1" phrasing): the adaptive budget MUST be a DEFER, not a DELETE. On a low-ambiguity ("commit") frame, move the top candidate to the FRONT of node['untested'] and KEEP THE TAIL in the list -- never remove a candidate from node['untested'] nor a node from the graph. `apply_adaptive_budget` returning [rows[0]] is a destructive filter that reproduces the A1/A2 knife-edge failure (a 5%-recall prune still dropped m0r0); return the FULL REORDERED list. Commit ONLY on re-VISITED frames (frame_is_novel=False), never novel frames. Solve-rate is then preserved BY CONSTRUCTION; the only question the experiment answers is whether front-loading cuts actions.
+      3. Measure median actions-to-first-levelup WITH vs WITHOUT the adaptive gate on the 8-game gate; report per-game + median + solve-rate. GATE = CORE set-containment over {lp85,m0r0,sp80,vc33} (NOT raw solved-count): report median_actions_on_core (median over the 4 CORE games, +inf for any CORE game not solved) and core_solves_preserved:bool. New solves outside CORE are a reported BONUS, never netted against a CORE loss. (The gate `_verdict` already implements this -- scripts/kaggle/arc_local_submission_gate.py.)
+      4. POSITIVE CONTROL + FALSE_NEGATIVE_RISK guard: if the gate does not save actions, report the HONEST NULL. Add committed_frame_fraction_on_winning_path -- if ~0 the lever is architecturally inert (it acts on per-frame fan-out width, the axis A1 proved moves actions <=0.3%); report the honest null, do NOT chase a 4<->3 flip.
       5. Solves stay offline-reproduced via arc_solver_kit.reproduce.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -315,10 +315,10 @@ tasks:
          a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
          b. `.venv/bin/python -c "import torch; print(torch.__version__)"`.
          Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on any focused pytest.)
-      1. Wire best_first over the value head with the LAZY eval (top-K / frame-hash cache from exp4506).
-      2. Sweep value_weight in {0.0, 0.5, 1.0, 2.0, 5.0}; per weight report (held-out solve-rate, median actions-to-first-levelup, median per-game wall-seconds).
+      1. SOLVE-RATE-PRESERVING LEVER CONTRACT (outer-loop 2026-06-20, MANDATORY): keep `depth` the PRIMARY sort key in _frontier -- use the existing blend (depth + w*value, depth, -on_path); value_weight=0 is the provable no-regression CONTROL. The lazy top-K eval (exp4506) decides only WHICH candidates get the EXPENSIVE value score -- the tail keeps its CHEAP priority and REMAINS expandable. Wiring top-K as a FILTER (dropping the tail) is FORBIDDEN: it re-introduces the A1/A2 knife-edge failure. best_first reorders node expansion but still explores the whole reachable set, so it is solve-rate-preserving by construction. Wire best_first over the value head with the LAZY eval (top-K / frame-hash cache from exp4506).
+      2. Sweep value_weight in {0.0, 0.5, 1.0, 2.0} -- DROP w=5 (the explorer's own comment at arc_competition_agent.py ~line 495 documents a value-override regressed the baseline; do not re-run the known regression). Per weight report (held-out solve-rate, median_actions_on_core, median per-game wall-seconds).
       3. value_weight=0 is the explicit CONTROL (FALSE_NEGATIVE_RISK).
-      4. If a weight>0 beats 0 on solve-rate AND stays within the ~6.5 min/game budget AND does not raise median actions -> raise SUBMITTED_VALUE_WEIGHT + update test_arc_submitted_agent_parity.py consistently. Else keep 0 + honest null.
+      4. GATE = CORE set-containment over {lp85,m0r0,sp80,vc33} (scripts/kaggle/arc_local_submission_gate.py already implements it). A weight WINS only if core_solves_preserved AND median_actions_on_core < the w=0 control AND median per-game wall-time stays in the ~6.5 min/game budget -> raise SUBMITTED_VALUE_WEIGHT + update test_arc_submitted_agent_parity.py consistently. Else keep 0 + honest null. A weight that wins on actions but blows wall-time is NOT submittable.
       5. Solves stay offline-reproduced via arc_solver_kit.reproduce.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -436,11 +436,11 @@ tasks:
       0. PRECONDITIONS (BEFORE any other step):
          a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
          Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on any focused pytest.)
-      1. Read A1-A4 artifacts; select the levers that beat 7760 at equal-or-better solve-rate (note any that compose vs conflict).
-      2. Investigate forward-edge nav: is _shortest_path actually used, or does replay still dominate? Fix so a known edge shortcuts replay.
-      3. Wire the winners into SUBMITTED_AGENT_CONFIG; update test_arc_submitted_agent_parity.py consistently.
-      4. Re-measure median actions-to-first-levelup end-to-end on the 8-game gate (the headline) + solve-rate + held-out solve-rate.
-      5. If NO lever (and no nav fix) beats 7760, keep the bare explorer + report the honest null. Solves stay offline-reproduced.
+      1. Read A1-A4 artifacts; select ONLY levers that pass the CORE set-containment gate (core_solves_preserved over {lp85,m0r0,sp80,vc33} AND median_actions_on_core < the w=0/no-lever control). value_weight=0 / no-lever (the honest null) is an ACCEPTABLE outcome -- do NOT raise SUBMITTED_VALUE_WEIGHT or wire a lever that only "wins" via a fringe-solve BONUS while losing/risking a CORE solve.
+      2. NAV-TAX DIAGNOSIS (the real 97%-of-cost axis -- the ~7800 actions are dominated by RESET-replay-from-root navigation, NOT candidate fan-out). The .416 nav-edge fix half-engaged: _serve now sets `awaiting` on replay steps, but _ingest still gates edge-recording on h != origin. MEASURE forward_walk_hit_rate (frontier picks served by _shortest_path vs RESET-replay). If ~0, densify `adj` (record forward edges along replayed paths; consider a partial forward-walk to the deepest forward-reachable ancestor, replaying only the suffix). This lever is solve-rate-preserving by construction (it changes HOW you reach a node, not WHICH nodes are reachable). Keep the RESET-replay fallback as the provable floor (degenerate adj -> today's behavior; must not corrupt node['path'] reconstruction).
+      3. Wire the winners into SUBMITTED_AGENT_CONFIG; update test_arc_submitted_agent_parity.py consistently. Do NOT aggregate any artifact carrying flagged_adversarial: true.
+      4. Re-measure median_actions_on_core end-to-end on the 8-game gate (the headline) + solve-rate + held-out solve-rate.
+      5. If NO lever and no nav fix passes the CORE-containment gate, keep the bare explorer + report the honest null. Solves stay offline-reproduced.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict: principle "terminal prefix; e.g. success: integrated_median_actions_<n>_below_7760 OR complete: no_lever_beats_7760_honest_null."
@@ -537,15 +537,21 @@ tasks:
     TASK: canonicalize the gate (fixed 8-game set + baseline + median definition), add per-lever
     attribution + a CI guard that the baseline is not silently moved, and a positive-control self-test.
 
+    ALREADY SHIPPED BY THE OUTER-LOOP (2026-06-20, commit eefd3b15a -- B2 CANONICALIZES, does not re-implement):
+    the CORE set-containment _verdict + measure() solved_games/actions_by_game keys + four+ regression
+    fixtures (tests/python/test_arc_submission_gate_verdict.py: A1->FAIL lost m0r0, A2->FAIL lost CORE,
+    positive->PASS IMPROVED, neutral->PASS non-inferior, bonus reported, legacy fallback). The raw
+    solved-COUNT verdict that false-failed A1/A2 on knife-edge noise is GONE; CORE={lp85,m0r0,sp80,vc33}.
+
     CONCRETE STEPS:
       0. PRECONDITIONS (BEFORE any other step):
          a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
          b. `.venv/bin/python {project_root}/scripts/kaggle/arc_local_submission_gate.py --help` exits 0 (the gate runs).
          Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on focused pytest.)
-      1. Fix the canonical 8-game set + baseline (7760) + median definition in the gate; expose a --lever <name> attribution slot.
-      2. Add a CI/pre-commit guard that flags any silent change to the baseline or game set (the cherry-pick guard).
-      3. Add a positive-control self-test: a config known to reduce actions registers a reduction (harness-not-broken).
-      4. Asserting tests (--no-cov). Emit a sample dashboard row so A1-A4 can report identically.
+      1. Pin CORE from the baseline + expose a --lever <name> attribution slot. Do NOT revert to a raw solved-count verdict (that is the bug B2 protects against).
+      2. CI-guard the four fixtures (A1->FAIL, A2->FAIL, POS->PASS, NEUTRAL->PASS) so the CORE-containment property can never silently regress; guard the baseline + game set against silent movement (cherry-pick guard).
+      3. MEASURE the headroom budget B* (smallest budget where baseline solved_set(B) == solved_set(1.5B) across {8000,12000,16000,24000}) and set it as the canonical --budget default -- do NOT guess a value (a blind cap raise can mask a real slowdown). Until measured, the default stays 8000.
+      4. Asserting tests (--no-cov). Emit a sample dashboard row (median_actions_on_core + core_solves_preserved + bonus) so A1-A6 report identically.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict: principle "terminal prefix; e.g. shipped: metric_harness_canonical_ci_guarded OR complete: metric_harness_partial_<reason>."
