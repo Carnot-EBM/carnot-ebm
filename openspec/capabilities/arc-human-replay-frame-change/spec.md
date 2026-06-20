@@ -80,6 +80,31 @@ Required field principles:
 - `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
 - `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
 
+### REQ-ARC-FCP-4495: Human Replay Corpus Staging
+
+Experiment 4495 SHALL stage ARC Public Demo replay training shards under a
+gitignored data directory so A1 loaders can reuse them without repeating a
+cold upstream download. Each staged example SHALL be derived from replay
+frames and actions and expose the local training contract
+`frame`, `action`, `frame_delta`, and `level_progress`. The staging artifact at
+`results/experiment_4495_human_replay_corpus_staging.json` SHALL record the
+upstream URL, reachable mirror URL, source checksum metadata, shard checksums,
+license status, attribution text when a CC BY mirror is used, and whether any
+weights were committed.
+
+If an official ARC source with CC0/MIT-0-compatible terms is reachable, the
+artifact MAY record `official_license_verified=true`. If only the CC BY mirror
+or an otherwise non-CC0/MIT-0 mirror is reachable, the artifact SHALL still
+stage the format and attribution but SHALL record `weights_committed=false`,
+`official_license_verified=false`, and a terminal-prefixed honest verdict that
+does not imply bundled weights.
+
+Required field principles:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -106,3 +131,13 @@ When experiment 4492 writes its terminal artifact
 Then `honest_verdict` is terminal-prefixed, `loo_gate_passed=true`, the feature
 classes that materially moved AUROC are recorded, and frame-change ranking can
 rank candidates by `P(change) * (-delta_E)` with stable ties.
+
+### SCENARIO-ARC-FCP-4495: Attributed Mirror Shards Load Without Cold Download
+
+Given the official ARC Public Demo short link is not directly reachable from
+the staging machine but an attributed mirror is reachable
+When experiment 4495 writes replay-derived training shards under the gitignored
+data directory
+Then the loader reads rows containing `frame`, `action`, `frame_delta`, and
+`level_progress`, the artifact records provenance and attribution, and
+`weights_committed=false`.
