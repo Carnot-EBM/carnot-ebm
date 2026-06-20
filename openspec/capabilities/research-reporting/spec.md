@@ -26395,6 +26395,72 @@ emits a specific `missing_verifier_gaps` residual and no fabricated level.
 |---|---|---|
 | REQ-REPORT-4479 | Planned (`python/carnot/experiment_4479_solve_re86.py`, `results/experiment_4479_solve_re86.json`) | Planned (`tests/python/test_experiment_4479_solve_re86.py`) |
 
+### REQ-REPORT-4480: Goal-Directed bp35 Navigation Solver Reproduces L1 Or Emits RE Delta
+
+The Exp 4480 workflow SHALL solve exactly `bp35` with a goal-directed
+navigation solver rather than re-running the untargeted generic graph-explore
+sweep. Before attempting the solve it SHALL verify that
+`arc_solver_kit.offline_arcade()` imports and can load the local offline arcade,
+that local `environment_files/bp35` content exists, that no 3090 inference is
+used, and that no leaderboard submission is made. Missing resources SHALL write
+a terminal-prefixed `complete: blocked_<resource>` artifact and SHALL NOT
+fabricate solution labels, reproduction, registry progress, or leaderboard
+progress.
+
+The solver SHALL identify the L1 goal region from the bp35 board as the
+goal-colored/special goal tile (`fjlzdjxhant`, rendered in the color-14 goal
+family), score states with a Manhattan/BFS-style distance from the avatar to
+that goal, and encode the shape-changing avatar in the state key, including
+position, facing/image, shape offsets, gravity direction, camera-relative move
+phase, and local removable blockers. The workflow MAY use `ACTION6` only as a
+camera-grounded local obstacle clear for tiles that the bp35 source marks as
+removable blockers under or adjacent to the avatar; it SHALL NOT reuse the
+incorrect s5i5 marker-coverage transfer hypothesis or count marker-coverage
+clicks as progress.
+
+The workflow SHALL count bp35 progress only when the solver-produced action
+labels replay through `arc_solver_kit.reproduce("bp35", ...)` and reach L1 in
+the offline environment. If the gate reaches L1, the workflow SHALL bank exactly
+one incremental bp35 level in `ops/arc_solve_registry.yaml`; if the gate does
+not advance, it SHALL write a terminal complete artifact with
+`missing_verifier_gaps` describing the remaining goal/heuristic reverse
+engineering delta. The workflow SHALL write
+`results/experiment_4480_solve_bp35_goal_directed.json` with required top-level
+fields `honest_verdict`, `inference_substrate`, `target_game`,
+`goal_region_identified`, `goal_directed_solver_built`, `shape_aware_state_key`,
+`offline_reproduced`, `reproduced_levels`, `reproducible_total_levels`,
+`preconditions_checked`, `missing_verifier_gaps`, `verifier_is_oracle`,
+`solution_labels`, `reproduction_result`, `field_principles`, `random_seed`,
+and `reproducibility_checksum`. The required field principles are:
+
+- `honest_verdict`: "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+- `inference_substrate`: "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+- `offline_reproduced`: "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+- `reproduced_levels`: "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed."
+- `preconditions_checked`: "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4480: bp35 L1 Is Banked Only Through Goal-Directed Offline Reproduction
+
+**Given** local offline `bp35` environment files, an importable
+`arc_solver_kit`, the bp35 goal-directed navigation solver, and no leaderboard
+submission
+**When** Exp 4480 extracts the bp35 goal tile, scores and plans local navigation
+with shape-aware state keys, replays the resulting labels through
+`arc_solver_kit.reproduce()`, writes the artifact, and updates the ARC solve
+registry
+**Then** the artifact is terminal-prefixed, records `target_game=bp35`,
+`goal_region_identified=true`, `goal_directed_solver_built=true`,
+`shape_aware_state_key=true`, bare-bool `offline_reproduced`, bare-int
+`reproduced_levels`, and a deterministic checksum; a reproduced L1 run banks
+exactly one bp35 level with `missing_verifier_gaps=[]`, while a no-bank run
+emits a specific goal/heuristic residual and no fabricated level.
+
+## Implementation Status (REQ-REPORT-4480)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4480 | Implemented (`python/carnot/experiment_4480_solve_bp35_goal_directed.py`, `results/experiment_4480_solve_bp35_goal_directed.json`) | Implemented (`tests/python/test_experiment_4480_solve_bp35_goal_directed.py`) |
+
 ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
 
 The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
