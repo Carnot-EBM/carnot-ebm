@@ -10104,3 +10104,72 @@ per-board next steps, distinct per-board durations, precondition evidence,
 checksum, deterministic seed, and no host SD-card precondition.
 
 **Implementation status:** Pending (Exp 4017)
+
+---
+
+### REQ-HW-4484
+
+**Title:** Hardware continuity audit MUST record live reachability for KV260, GateMate, and PolarFire
+
+**Description:**
+Experiment 4484 MUST produce
+`results/experiment_4484_hardware_continuity_audit.json` as an audit-only
+hardware-continuity artifact for the three attached board tracks. It MUST run
+exactly the board reachability preconditions requested by the operator and MUST
+record one reachability plus next-forward-step row per board. The audit MUST NOT
+claim fabric acceleration, speedup, flashing, latency transcript, sampler smoke,
+or ARC solve progress; it records only the precondition result and the next
+concrete step, or `blocked_<board>_unreachable` when the board is not reachable.
+
+The only valid preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; this is an
+  SSH-only continuity check and host storage probing is out of scope.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`; reachability requires a
+  successful command and a GateMate/GM1Ax/IDCODE-style observation.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline).`
+- `inference_substrate`: `explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.`
+- `offline_reproduced`: `a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility).`
+- `reproduced_levels`: `headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed.`
+- `preconditions_checked`: `records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode.`
+
+**Acceptance criteria:**
+- `results/experiment_4484_hardware_continuity_audit.json` is generated.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `offline_reproduced` is `false` and `reproduced_levels` is `0` because this
+  audit does not reproduce ARC levels.
+- `preconditions_checked` records exactly the KV260 SSH BatchMode command,
+  GateMate DirtyJTAG detect command, and PolarFire SSH command listed above.
+- `per_board_status` is keyed by `kv260`, `gatemate`, and `polarfire`; each row
+  records `reachable`, `status`, `next_forward_step`, `precondition_resource`,
+  `precondition_command`, and a bounded command transcript.
+- Any unreachable board row uses `blocked_<board>_unreachable`.
+- `honest_verdict` starts with one of the terminal prefixes listed in the field
+  principle and remains terminal even when individual board rows are blocked.
+- The artifact includes `random_seed=4484`, `spec_refs`, `field_principles`,
+  `duration_s`, and a stable `reproducibility_checksum`.
+
+**Implementation status:** Pending (Exp 4484)
+
+---
+
+### SCENARIO-HW-4484
+
+**Scenario:** Exp 4484 audits board reachability without fabricating progress.
+
+**Given:** The hardware-continuity task requires KV260 SSH reachability only,
+GateMate DirtyJTAG detect, and PolarFire SSH reachability.
+**When:** Experiment 4484 runs the three required commands and builds the
+artifact.
+**Then:** It writes `results/experiment_4484_hardware_continuity_audit.json`
+with terminal-prefixed `honest_verdict`, `inference_substrate="hardware_smoke"`,
+principle-annotated required fields, one reachability/next-step row per board,
+`blocked_<board>_unreachable` for unavailable boards, and no unsupported hardware
+progress claims.
+
+**Implementation status:** Pending (Exp 4484)
