@@ -1045,6 +1045,28 @@ verifiers:
     exp4461_generic_loo_solve_count_v3: 6
     exp4461_submission_package_ready: true
     exp4461_submission_package_levels: 39
+    eval_exp_4474: results/experiment_4474_registry_gaps_hygiene.json
+    exp4474_regression_guard_passed: true
+    exp4474_arc_oracle_distinct_verifier_beats_vote: true
+    exp4474_arc1_rule_exec_vote_pass2: 0.4516
+    exp4474_arc1_rule_exec_gated_pass2: 0.5806
+    exp4474_arc1_headroom_recovered: 4
+    exp4474_arc1_vote_wins_lost: 0
+    exp4474_capstone_stamp_fix_durable: true
+    exp4474_reproducible_total_levels: 45
+    exp4474_reproducible_total_games: 22
+    exp4474_provisional_total_levels: 1
+    exp4474_filled_gap_ids: &id020
+    - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
+    - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+    - GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE
+    exp4474_open_gap_ids: &id021
+    - GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
+    exp4474_flagged_artifacts_excluded: &id022 []
+    exp4474_sc25_new_levels_banked: 4
+    exp4474_generic_loo_solve_count_v4: 0
+    exp4474_submission_package_ready: true
+    exp4474_submission_package_levels: 45
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -5121,6 +5143,17 @@ verifiers:
     open_gap_ids: *id018
     excluded_artifacts: *id019
     eval_exp_4461: results/experiment_4461_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v413_registry_gaps_hygiene_4474
+    experiment: results/experiment_4474_registry_gaps_hygiene.json
+    role: registry_gaps_arc_hygiene_v413
+    status: v413_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    reproducible_total_levels: 45
+    reproducible_total_games: 22
+    provisional_total_levels: 1
+    filled_gap_ids: *id020
+    open_gap_ids: *id021
+    excluded_artifacts: *id022
+    eval_exp_4474: results/experiment_4474_registry_gaps_hygiene.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1
