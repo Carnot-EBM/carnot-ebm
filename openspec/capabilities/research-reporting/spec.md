@@ -27574,6 +27574,87 @@ leaderboard submission or production verifier edits.
 |---|---|---|
 | REQ-REPORT-4449 | Planned (`python/carnot/experiment_4449_registry_gaps_hygiene.py`, `results/experiment_4449_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4449_registry_gaps_hygiene.py`) |
 
+### REQ-REPORT-4498: Ingest Human-Replay Imitation SOTA Into The .416 Plan
+
+The Exp 4498 workflow SHALL write
+`docs/research-notes/arc-imitation-sota-415.md` with a machine-readable JSON
+artifact block followed by a concise research note. It SHALL read
+`research-studying.md` and `research-references.md` filtered to imitation
+learning, behavior cloning, offline RL from human demonstrations, and
+prioritized-replay expert injection; it SHALL also use `scripts/sweep_clusters.py`
+plus low-concurrency WebSearch/WebFetch over five to eight top sources. It
+SHALL NOT invoke `/deep-research`, SHALL NOT launch live LLM inference, SHALL
+NOT launch training, SHALL NOT submit to the leaderboard, SHALL NOT claim a new
+ARC solve, and SHALL NOT modify `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The required runner SHALL be
+`results/experiment_4498_arc_imitation_sota_415.py` delegating to
+`python/carnot/experiment_4498_arc_imitation_sota_415.py`, and the workflow
+SHALL also write `results/experiment_4498_arc_imitation_sota_415.json`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `preconditions_checked`, `source_ids`, `methods`,
+`human_corpus`, `leaderboard_dqn_mapping`, `arc_mapping`, `strongest_for_v416`,
+`research_note_path`, `random_seed`, and `field_principles`. The complete-path
+`honest_verdict` SHALL equal
+`complete: arc_imitation_sota_415_mapped_for_v416` and SHALL start with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+`preconditions_checked` SHALL record which files, helpers, HTTP checks, and
+WebSearch/WebFetch sources were verified. It SHALL record
+`research-studying.md`, `research-references.md`, `scripts/sweep_clusters.py`,
+`docs/research-notes/arc-human-replay-application-spec.md`,
+`docs/research-notes/arc-frame-change-predictor-spec.md`,
+`docs/research-notes/arc-world-model-trust-energy-spec.md`,
+`docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md`, and the
+arXiv abs-page HTTP-200 checks for source IDs `1704.03732`, `1511.05952`,
+`2206.11795`, `2110.06169`, `1905.11108`, `2302.02948`, `2407.15007`, and
+`2405.17476`.
+
+`human_corpus` SHALL record the verified ARC human-replay facts used by the
+mapping: 14,672 public-demo examples, 14,243 frame-changing human actions, 132
+level-progress positives, 25 public games, and public-game-only caveats. The
+workflow SHALL map those facts onto bootstrapping the frame-change/clickability
+predictor, the behavior-cloning action prior, and value/energy heads without
+claiming that public-game replay memorization transfers to hidden games.
+
+`leaderboard_dqn_mapping` SHALL record that the public leaderboard DQN pattern
+uses prioritized replay plus expert-injection with imitation demos seeded at
+5x priority. `arc_mapping` SHALL cover `GAP-ARCH-FRAME-CHANGE-PREDICTOR`,
+`GAP-ARCH-VALUE-ENERGY-HEADS`, and `GAP-ARCH-EXPERT-INJECTION-REPLAY`.
+`strongest_for_v416` SHALL flag the DQfD/PER-style human-replay expert-injection
+package anchored by `arXiv:1704.03732` and `arXiv:1511.05952`, with VPT-style
+frame-action behavior pretraining from `arXiv:2206.11795`.
+
+`field_principles` SHALL include one-line principles for every top-level
+artifact field, including the required terminal-prefix `honest_verdict`
+principle, the explicit `inference_substrate` principle, and the
+resource-listing `preconditions_checked` principle.
+
+#### SCENARIO-REPORT-4498: Human Replay Imitation SOTA Maps To .416 Training Decisions
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`, and the ARC human-replay
+notes are readable
+**And** `scripts/sweep_clusters.py --help` succeeds
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4498 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps imitation
+learning, behavior cloning, offline RL, prioritized replay, and expert
+injection onto the 14,672-example ARC human corpus, flags the strongest `.416`
+package, declares `aggregation_from_upstream_artifacts`, and records no
+`/deep-research`, live inference, training, leaderboard submission, solve claim,
+or ops/status/traceability edits.
+
+## Implementation Status (REQ-REPORT-4498)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4498 | Planned (`python/carnot/experiment_4498_arc_imitation_sota_415.py`) | Planned (`tests/python/test_experiment_4498_arc_imitation_sota_415.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
