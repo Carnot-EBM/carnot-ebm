@@ -2448,3 +2448,20 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   docs/research-notes/arc-world-model-trust-energy-spec.md.
 - priority: medium (real oracle-distinct MOAT work; sequence AFTER the .414 integration/feature
   score-drivers — the EBM thesis's one genuinely load-bearing ARC slot, verifier_is_oracle: false)
+
+### GAP-ARCH-FRAME-CHANGE-PREDICTOR: learned CNN action-effect / clickability model for action efficiency
+- status: open
+- evidence: leaderboard competitive intel 2026-06-20 -- the leader (Tufa StochasticGoose, 1.21) + 2nd
+  (Blind Squirrel ResNet18) win on a CNN that predicts which actions cause a frame change; the 30-day
+  report shows StochasticGoose wasted ~350 no-op clicks before learning clickability. Our explorer
+  (`arc_graph_explore.py:44 rich_action_candidates`) enumerates centroid-clicks + keys with NO effect
+  prioritization -> action-inefficient (the scoring lever min(human/agent,1)^2; we are at 0.08).
+- failure mode: every candidate action is equally likely to be a no-op; the explorer burns its action
+  budget on no-effect actions, collapsing the squared efficiency term even on solved levels.
+- missing discriminator: a CNN predict(frame) -> (click-heatmap, directional-change-probs) that ranks
+  candidates by predicted frame-change; trained self-supervised on the (frame, action, next_frame)
+  transitions we already generate, pooled across games (the PersistentAEM cross-game idea).
+- candidate design: small conv net over 64x64 color-onehot (CBAM attention only if plain CNN underperforms);
+  rank rich_action_candidates by predicted change. Full spec: docs/research-notes/arc-frame-change-predictor-spec.md.
+- priority: high (action efficiency is the score metric and we have NONE; the most direct steal from the
+  leaderboard leader; complements -- does not replace -- the verifier-energy thesis)

@@ -11,6 +11,23 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-20 (MANDATORY-NEXT-MILESTONE .415/.416, operator leaderboard dive): CNN FRAME-CHANGE / clickability predictor (action efficiency = the score lever)
+
+**Operator 2026-06-20** asked what the top ARC leaderboard players do; the code says the leader (Tufa
+StochasticGoose, 1.21) + 2nd (Blind Squirrel, ResNet18) win on a **CNN action-effect / clickability
+predictor** -> action efficiency (the scoring metric min(human/agent,1)^2). Our 0.08 agent is effect-blind
+(centroid-click + RESET-replay, GAP-ARCH-FRAME-CHANGE-PREDICTOR). **Task:** train a small CNN
+predict(frame) -> (click-heatmap, directional-change) self-supervised on the (frame, action, next_frame)
+transitions we already generate (pooled across games), wired into `rich_action_candidates` to rank by
+predicted change. Falsifiable gate: held-out median actions-to-first-levelup STRICTLY lower than blind BFS
+(+ positive control + FALSE_NEGATIVE_RISK null guard); must NOT drop solve-rate. **Secondary (cheaper):**
+hidden-field probing in the state hash (the competitor's solved version of our ka59/ar25 L2 stall,
+GAP-ARCH-GRID-ONLY-STATE). Sequence AFTER .414 A1 (integration), alongside/before the .415 trust-energy.
+Full spec: `docs/research-notes/arc-frame-change-predictor-spec.md`; intel:
+`docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md`.
+
+---
+
 ### 2026-06-20 (MANDATORY-NEXT-MILESTONE .415, operator "can the Carnot EBM help ARC?" → yes): learned world-model TRUST ENERGY for hidden-state games
 
 **Operator 2026-06-20** asked whether the Carnot EBM can help ARC; the audit answer: the FoVer/TEXT
@@ -8181,6 +8198,10 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
