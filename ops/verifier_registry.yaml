@@ -5201,3 +5201,19 @@ verifiers:
   status: candidate
   notes: 'Oracle-distinct learned action-cost heuristic: reduces held-out lp85 L3
     actions from 25 to 16 under reproduction gate.'
+- verifier_id: sprite_overlay_resize_verifier
+  domain: arc_agi3_interactive
+  version: 1
+  kind: execution_grounded_symbolic_operator
+  code_commit: HEAD
+  code_path: python/carnot/agentic/arc_solver_kit.py
+  label_source: offline_arcade_reproduction_gate
+  eval:
+    metric: re86_l1_reproduced_levels
+    value: 1
+    eval_artifact: results/experiment_4479_solve_re86.json
+    offline_reproduced: true
+    verifier_is_oracle: true
+    gap_id: GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
+  status: active
+  notes: Generic transparent sprite-overlay pattern matcher with explicit resize variants; ARC progress is counted only by the offline reproduce gate.

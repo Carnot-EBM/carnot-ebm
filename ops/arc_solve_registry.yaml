@@ -667,17 +667,17 @@ games:
     operator: color_match_slot_sequence_verifier
   gotchas: []
 - game: re86
-  reproducibility: unsolved
-  levels_reproduced: 0
+  reproducibility: reproduced
+  levels_reproduced: 1
   mechanic_class: pattern_match_sprite_resize
-  solver: python/carnot/experiment_4471_first_contact_rotated_new_game.py --game re86
+  solver: python/carnot/experiment_4479_solve_re86.py
   dead_ends:
   - gap_id: GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
     game: re86
     routed_to: tu93
     operator: graph_astar_action_cost
     residual_delta: missing_pattern_match_sprite_resize_verifier
-    status: open
+    status: filled
     candidate_design: add a generic sprite-overlay pattern-match and resize/transformation
       verifier
     routed_recipe:
@@ -688,13 +688,25 @@ games:
         reason: retrieved_graph_primitive_matches_re86_keyboard_pattern_route
         source: retrieved_primitives
     artifact: results/experiment_4471_first_contact_rotated_new_game.json
+    filled_by: experiment_4479_solve_re86
+    filled_artifact: results/experiment_4479_solve_re86.json
+    filled_summary: sprite_overlay_resize_verifier reproduced re86 L1 offline
   latest_exp4471_first_contact:
     artifact: results/experiment_4471_first_contact_rotated_new_game.json
     offline_reproduced: false
     reproduced_levels: 0
     gap_id: GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
-reproducible_total_levels: 45
-reproducible_total_games: 22
+  win_condition: sprite-overlay pattern match against target colored pixels
+  action_model: ACTION1-4 move active overlay source; ACTION5 cycles active source
+  reproduce: arc_solver_kit.reproduce(re86, solution_labels, apply_re86_label, claimed_level=1)
+  latest_exp4479_solve_re86:
+    artifact: results/experiment_4479_solve_re86.json
+    offline_reproduced: true
+    reproduced_levels: 1
+    operator: sprite_overlay_resize_verifier
+    reproducibility_checksum: 4f45118ce85a9d339538ff28ece2bb25a4c2aad2e5afc2885b916bf6bd222673
+reproducible_total_levels: 46
+reproducible_total_games: 23
 provisional_total_levels: 1
 live_submissions:
 - date: '2026-06-17'

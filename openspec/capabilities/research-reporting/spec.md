@@ -26329,6 +26329,72 @@ writes the required JSON artifact, and performs no production verifier edits.
 |---|---|---|
 | REQ-REPORT-4474 | Planned (`python/carnot/experiment_4474_registry_gaps_hygiene.py`, `results/experiment_4474_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4474_registry_gaps_hygiene.py`) |
 
+### REQ-REPORT-4479: Sprite Overlay Resize Verifier Reproduces re86 L1 Or Emits Residual Gaps
+
+The Exp 4479 workflow SHALL build a generic
+`sprite_overlay_resize_verifier` operator for ARC sprite-overlay tasks where
+transparent source sprites are translated, optionally transformed through
+explicit resize variants, and overlaid onto a target mask. The verifier SHALL
+match required target-colored pixels while respecting transparent pixels and
+target wildcard/background colors, SHALL derive movement/cycle action labels
+only when the needed translations are executable by the supplied action model,
+and SHALL return an ungrounded residual rather than claiming a solve when any
+required pixel remains uncovered.
+
+The workflow SHALL register the generic verifier in
+`ops/verifier_registry.yaml`, SHALL expose it through
+`arc_solver_kit.primitive_operator_registry()` and
+`select_primitive_operators(mechanic_class="pattern_match_sprite_resize")`,
+and SHALL wire it into a focused re86 L1 solve attempt. Before attempting the
+solve it SHALL confirm that `arc_solver_kit.offline_arcade()` imports and can
+load the offline arcade, that local `environment_files/re86` content exists,
+that no 3090 inference is used, and that no leaderboard submission is made.
+Any missing precondition SHALL write a terminal-prefixed
+`complete: blocked_<resource>` artifact and SHALL NOT fabricate routing,
+solution labels, reproduction, registry closure, or leaderboard progress.
+
+The workflow SHALL count re86 progress only when the verifier-produced action
+labels replay through `arc_solver_kit.reproduce("re86", ...)` and reach L1 in
+the offline environment. If the gate reaches L1, the workflow SHALL bank exactly
+one incremental re86 level and mark GAP-4471 filled in the solve/gap ledgers; if
+the gate does not advance, it SHALL write a terminal complete artifact with
+`missing_verifier_gaps` describing the remaining residual. The workflow SHALL
+write `results/experiment_4479_solve_re86.json` with required top-level fields
+`honest_verdict`, `inference_substrate`, `target_game`,
+`sprite_overlay_verifier_built`, `registered_verifier_operator`,
+`offline_reproduced`, `reproduced_levels`, `reproducible_total_levels`,
+`preconditions_checked`, `missing_verifier_gaps`, `verifier_is_oracle`,
+`solution_labels`, `reproduction_result`, `field_principles`, `random_seed`,
+and `reproducibility_checksum`. The required field principles are:
+
+- `honest_verdict`: "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+- `inference_substrate`: "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+- `offline_reproduced`: "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+- `reproduced_levels`: "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed."
+- `preconditions_checked`: "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4479: re86 L1 Is Banked Only Through Sprite Overlay Reproduction
+
+**Given** local offline `re86` environment files, an importable
+`arc_solver_kit`, the generic sprite-overlay resize verifier, and no
+leaderboard submission
+**When** Exp 4479 extracts the re86 overlay sources and target mask, derives the
+movement/cycle labels with `sprite_overlay_resize_verifier`, replays those
+labels through `arc_solver_kit.reproduce()`, writes the artifact, and registers
+the operator
+**Then** the artifact is terminal-prefixed, records `target_game=re86`,
+`sprite_overlay_verifier_built=true`, a non-empty
+`registered_verifier_operator`, bare-bool `offline_reproduced`, bare-int
+`reproduced_levels`, and a deterministic checksum; a reproduced L1 run banks
+exactly one re86 level with `missing_verifier_gaps=[]`, while a no-bank run
+emits a specific `missing_verifier_gaps` residual and no fabricated level.
+
+## Implementation Status (REQ-REPORT-4479)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4479 | Planned (`python/carnot/experiment_4479_solve_re86.py`, `results/experiment_4479_solve_re86.json`) | Planned (`tests/python/test_experiment_4479_solve_re86.py`) |
+
 ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
 
 The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
