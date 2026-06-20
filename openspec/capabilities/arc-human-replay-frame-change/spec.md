@@ -161,6 +161,36 @@ Required field principles:
 - `solve_rate_dropped`: guardrail bool; efficiency wins must not come from reducing solve rate.
 - `false_negative_risk_guard`: records whether the null is interpretable because the positive control passed.
 
+### REQ-ARC-FCP-4502: Energy-Augmented Candidate Ranking Measurement
+
+Experiment 4502 SHALL write
+`results/experiment_4502_energy_augmented_ranking.json` after the structural
+energy gate has passed. The experiment SHALL combine the A2 frame-change
+predictor score with an objective candidate energy over the v3 structural
+feature classes and SHALL rank held-out cached candidates by
+`P(frame_change) * (-delta_E)`. The predictor-only baseline SHALL rank the
+same cached candidates by `P(frame_change)` alone, using the previous stable
+candidate order as the tie-break.
+
+The measurement SHALL report held-out solve-rate and action-efficiency for
+both arms on the same candidate groups. If the energy-augmented arm does not
+improve over predictor-only, the artifact SHALL report an honest null without
+fabricating a gain. The artifact SHALL identify the v3 feature classes used for
+energy, including the frame-delta and object-relational classes that moved the
+4492 leave-one-game-out AUROC.
+
+Required field principles:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit verifier_ensemble_against_cached_candidates declaration so adversarial_verify applies the cached-candidate duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+- `predictor_only_solve_rate`: held-out solve-rate for the same cached candidates ranked by P(frame_change) alone.
+- `energy_augmented_solve_rate`: held-out solve-rate for the same cached candidates ranked by P(frame_change) * (-delta_E).
+- `predictor_only_median_actions`: median actions-to-first-heldout-solve under predictor-only ranking.
+- `energy_augmented_median_actions`: median actions-to-first-heldout-solve under energy-augmented ranking.
+- `efficiency_delta_vs_predictor_only`: difference in min(human/agent,1)^2 efficiency versus predictor-only, never inferred from mismatched candidate groups.
+- `energy_term_added_value`: bare bool indicating whether the energy term improved solve-rate or efficiency without reducing solve-rate.
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -220,3 +250,15 @@ prior, keeps `solve_rate_dropped=false`, reports before/after held-out action
 metrics from the same candidate-order harness, and marks
 `false_negative_risk_guard=positive_control_passed_null_interpretable` when the
 positive control detects a known ranking win.
+
+### SCENARIO-ARC-FCP-4502: Energy-Augmented Ranking Is Measured Against Predictor-Only
+
+Given the 4492 structural energy gate passed and the 4501 frame-change
+predictor/prior can rank held-out cached candidates
+When experiment 4502 scores each candidate with both `P(frame_change)` and the
+v3 structural `delta_E`
+Then the artifact compares predictor-only and energy-augmented held-out
+solve-rate and action-efficiency on identical candidate groups, records
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and uses a
+terminal-prefixed honest verdict that reports either an added-value win or an
+honest null over predictor-only.
