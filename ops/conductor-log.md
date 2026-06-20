@@ -8967,3 +8967,4 @@ c |
 | 2026-06-20 17:34 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 109 passed, 1 warning in 8.73s |
 | 2026-06-20 17:36 UTC | PHASE 0 (TRANSITION) -- archive .416 -> activate . | OK | Deliverable already exists in repo |
 | 2026-06-20 18:31 UTC | PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- imitatio | OK | 112 passed, 1 warning in 6.89s |
+| 2026-06-20 19:02 UTC | PHASE A3 (ARC NORTH STAR; SCORE-LEVER) -- verifier | OK | 111 passed, 1 warning in 6.73s |
