@@ -163,6 +163,40 @@ levels beyond the prior L1 solve. If no L2 mechanic is reverse-engineerable, the
 artifact SHALL report the reverse-engineering delta in `residual_blockers`
 without fabricating an L2 reproduction.
 
+### REQ-ARC-WMTE-4515: Graph-Explore L1 to L2 Level-Up Attempt Guarantee
+
+Every ARC-sprint roadmap SHALL include at least one level-up attempt that banks
+a new reproducible level. Experiment 4515 SHALL pick exactly one graph-explore
+family L1 game from `su15`, `sp80`, `cn04`, `m0r0`, or `sk48`, SHALL NOT target
+the HUD-register-stall games `ka59` or `ar25`, and SHALL derive the target L2
+win-predicate from visible offline environment state before any success claim.
+The selected game SHALL register or extend a `GameAdapter` using
+`branch_mode='fresh_env'` so verifier-routed candidate paths are evaluated under
+the same fresh reset semantics used by the reproduction gate.
+
+Experiment 4515 SHALL write
+`results/experiment_4515_deepen_graph_explore_l2.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`,
+`preconditions_checked`, `offline_reproduced`, `reproduced_levels`,
+`target_game`, `reproducibility_checksum`, `adapter_registered`,
+`reproduction_gate`, `solution_labels`, and `residual_blockers`. Required field
+principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: <game>_L2_offline_reproduced OR complete: <game>_l2_honest_residual."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade reproduce, no LLM load (1s floor)."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+- `reproduced_levels`: principle "the banked level count for the game (must be 2 for a successful deepen)."
+- `target_game`: principle "the deepen target -- a NEW graph-explore game, not the HUD-register-stall ka59/ar25."
+- `reproducibility_checksum`: principle "content-addressed hash of the reproduced replay -- the integrity gate against count inflation."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require `target_game=m0r0`,
+`offline_reproduced=true`, `reproduced_levels=2`, a registered adapter with
+`branch_mode='fresh_env'`, a reproduction gate whose `reached_level` is at least
+2, and a content-addressed `reproducibility_checksum`. If L2 does not reproduce,
+the artifact SHALL report `complete: m0r0_l2_honest_residual` and record the
+dead-end in `residual_blockers` without incrementing the banked level count.
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-4491: Held-Out Ranking Beats First-Clears Baseline
@@ -232,3 +266,16 @@ Then the adapter-produced labels are replayed by the offline reproduction gate,
 the terminal artifact records `target_game=cd82`, `adapter_registered=true`,
 `offline_reproduced=true`, and `reproduced_levels >= 1`, and success is not
 reported unless the gate reaches a new level beyond L1.
+
+### SCENARIO-ARC-WMTE-4515: m0r0 Adapter Banks L2 Offline
+
+Given the prior reproduced m0r0 L1 trajectory and visible L2 environment state
+with two `pikgci` player sprites, `wahtyt` blockers, and `spswjz` hazard cells
+When experiment 4515 registers the m0r0 `GameAdapter`, derives the coalescence
+win-predicate from those visible sprites, and runs `OfflineSolver.solve_level`
+from the prior L1 prefix
+Then the full L1+L2 label plan is replayed through `arc_solver_kit.reproduce`,
+the terminal artifact records `target_game=m0r0`,
+`offline_reproduced=true`, `reproduced_levels=2`, and a stable
+`reproducibility_checksum`, and success is not reported unless the offline
+reproduction gate reaches level 2.

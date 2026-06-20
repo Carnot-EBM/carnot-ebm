@@ -511,7 +511,35 @@ def _cd82():
     )
 
 
-_BUILDERS = {"lp85": _lp85, "tu93": _tu93, "tr87": _tr87, "dc22": _dc22, "cd82": _cd82}
+def _m0r0():
+    from carnot.agentic.arc_m0r0_adapter_logic import (
+        m0r0_action_labels,
+        m0r0_apply,
+        m0r0_hand_verifier,
+        m0r0_state_key,
+    )
+
+    return GameAdapter(
+        game="m0r0",
+        action_labels=m0r0_action_labels,
+        apply=m0r0_apply,
+        state_key=m0r0_state_key,
+        featurize=None,
+        hand_verifier=m0r0_hand_verifier,
+        warmup_label=None,
+        depth_caps={1: 40, 2: 80, 3: 120},
+        branch_mode="fresh_env",
+    )
+
+
+_BUILDERS = {
+    "lp85": _lp85,
+    "tu93": _tu93,
+    "tr87": _tr87,
+    "dc22": _dc22,
+    "cd82": _cd82,
+    "m0r0": _m0r0,
+}
 
 
 def get_adapter(game: str) -> Optional[GameAdapter]:
