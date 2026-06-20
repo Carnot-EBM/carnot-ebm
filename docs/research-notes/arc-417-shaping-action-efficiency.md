@@ -17,6 +17,9 @@ The live agent's wall is **action efficiency**, not solve-rate and not config tu
   induction-skip, nav-edges) restored SPEED + solve-rate (1->4 solved, 6->0 timeouts) but left action
   efficiency UNCHANGED (median ~7760). The gap is the explorer's EXPLORATION STRATEGY, architectural.
 
+
+> **UNBLOCKED 2026-06-20:** the frame-change predictor's "corpus shortfall" is RESOLVED — the FULL human-replay corpus is now staged locally (14,797 examples vs the truncated 10,000; 97% frame-changed; 14,020 normalize to a valid action_id; behavior/imitation prior builds). Source: ARC Public Demo via Kaggle mirror jihangli1121/arc-agi-3-replays-v1 (CC BY 4.0, attribution; LOCAL training only, gitignored, NOT bundled). `.417` A2 (re-train the predictor) + A3 (imitation prior) can now run on real/full data.
+
 ## The metric (already instrumented)
 
 The local submission gate (`scripts/kaggle/arc_local_submission_gate.py`) tracks **median
