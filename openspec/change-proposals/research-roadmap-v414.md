@@ -5,33 +5,35 @@ Pre-Staged Roadmap Convention. All experiments `agent_type: codex / gpt-5.5` (AR
 planner/retro stay Claude). Live generator Qwen3.5-9B-MTP, never the 3090s. No leaderboard submission
 in-loop (operator-only).
 
-## Why this milestone
+## Why this milestone (REVISED 2026-06-19 — lead with the score-drivers)
 
-.413 banked dc22 + sc25 (L2–L5) + sb26 (39 → 45 reproducible levels, **22 of 25** public games
-first-contacted). Three asks from the 2026-06-19 step-back analysis drive .414:
+The 2026-06-19 step-back gap audit (`ops/verifier_gaps.md` GAP-LIVE-INTEGRATION + GAP-ARCH-*) found the
+0.08 first live score's ceiling is the **submitted agent**, not the solver research — and that
+`reproducible_total_levels` (what the sprint optimizes) is largely a **mirage** for the leaderboard. So
+.414 leads with the things that actually move the score, then closes the public-25 for the level-up
+guarantee:
 
-1. **Close the breadth gap (the 3 remaining unsolved public games).**
-   - `re86` (A1): blocked on a **missing** pattern-match-sprite-resize verifier (GAP-4471) — build it, then solve.
-   - `bp35` (A2) + `lf52` (A3): never first-contacted (no registry entry) — adapter-free `graph_explore_solve_v2`.
-   - Plus `A4`: deepen one shallow L1 game by +1. ≥4 level-up attempts (ARC Level-Up Attempt Guarantee).
+**Score-drivers (lead):**
+- **A1 — GAP-LIVE-INTEGRATION (the #1 lever):** the submitted `make_carnot_agent → E3AgentPolicy` ships
+  bare BFS (8/32 in-distribution, ~0 OOD) + a 0/6-value LLM tier, `target_levels=1`, `value_weight=0.0`.
+  The stronger `arc_strategy_router` + `arc_world_model_dsl` exist but aren't imported. Wire them in; raise
+  `target_levels`; forward-edge nav; measure held-out generic solve-rate before/after (frame-only). Integration, not modeling.
+- **A2 — GAP-ARCH-FEATURES:** the verifier features are frame-only order-1 → the discriminative head shipped
+  this session is in-sample AUROC 0.726 but **LOO 0.503 == chance**. Build `cross_game_features_v3`
+  (relational + Δframe + action-conditioned + predicate-distance); re-run the `--discriminative` LOO-AUROC gate.
+- **A3 — per-game discriminative lever (shipped):** wire the `DiscriminativeVerifier` + off-path negatives to
+  train online per game during exploration and prune traps the steps-to-go value head misses.
+- **A4 — GAP-ARCH-GOAL-NOT-VERIFIED + GRID-ONLY-STATE:** verify the E3 goal predicate (not just dynamics);
+  add HUD registers to the state — the root cause of the ar25/ka59/ft09 L2 deepening stall.
 
-2. **Throughput fixes** the .412/.413 diagnosis identified (whole-day stalls):
-   - `B1`: make `--no-cov` the **default** for ARC solve preconditions as a durable lint — the dc22-class
-     `baseline_pytest_coverage` block (a whole .412 milestone lost) becomes structurally impossible.
-   - `B2`: decouple independent solve tasks from `gated_on` cascades; reconcile `reproducible_total_levels`
-     (stale 39 vs authoritative 45).
+**Public-25 closeout (level-up guarantee):** A5 re86 (sprite-resize verifier, GAP-4471), A6 bp35+lf52
+first-contact → 25/25; A7 variant transfer benchmark.
 
-3. **Variant/verifier training boost** (consume the bridge built 2026-06-19):
-   - `A5`: wire + **measure** the reflection-augmented v2 cross-game verifier vs un-augmented (honest null
-     allowed) — validated this session: reflection regularizes an overfit position-specific weight 214 → 42
-     toward the reflection-invariance the held-out 110 eval games reward. Color-permutation is a no-op for
-     the color-agnostic features (validated); reflection + v2 is the augmentation that adds signal.
-   - `A6`: build the variant transfer benchmark (the `exp4472` test exists, the module does not) — the
-     cheapest dev-side proxy for the unseen eval games, since the 25 public games are all there are.
-   - `A7`: generic-operator LOO consolidation (amortize the per-game RE delta, the core bottleneck).
+**Throughput / reserved:** B1 `--no-cov` default lint (the dc22-class block), B2 gated_on decouple +
+registry reconcile, C hardware-continuity, D SOTA-ingestion, E capstone.
 
-Reserved slots: 2 infra (B1/B2), 1 hardware-continuity (C: KV260/GateMate/PolarFire), 1 SOTA-ingestion
-(D: neural-guided / induced-world-model search literature), capstone (E).
+`reproducible_total_levels` is reported but is explicitly **not** the headline; generic OOD solve-rate +
+action efficiency are.
 
 ## Provenance
 
