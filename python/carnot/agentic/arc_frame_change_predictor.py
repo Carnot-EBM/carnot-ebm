@@ -615,6 +615,71 @@ def rank_arc_actions(
     return [candidate for _score, _index, candidate in scored]
 
 
+def prune_arc_actions(
+    frame: Any,
+    candidates: Sequence[Any],
+    *,
+    scorer: Any | None,
+    threshold: float | None,
+    min_candidates: int = 1,
+) -> tuple[list[Any], dict[str, Any]]:
+    """REQ-ARC-FCP-4511: drop predicted no-op candidates before expansion.
+
+    The pruning gate is deliberately opt-in and conservative. A missing scorer
+    or threshold returns the legacy candidate list unchanged. If every candidate
+    scores below threshold, the best-scoring legacy candidate is retained so the
+    explorer never mistakes an uncertain model for proof that no action exists.
+    """
+
+    rows = list(candidates)
+    diagnostics: dict[str, Any] = {
+        "enabled": bool(scorer is not None and threshold is not None),
+        "threshold": None if threshold is None else float(threshold),
+        "candidate_count": int(len(rows)),
+        "kept_count": int(len(rows)),
+        "pruned_count": 0,
+        "forced_keep_count": 0,
+    }
+    if scorer is None or threshold is None or not rows:
+        return rows, diagnostics
+
+    scored: list[tuple[float, int, Any]] = [
+        (_scorer_value(frame, candidate, scorer), index, candidate)
+        for index, candidate in enumerate(rows)
+    ]
+    kept = [candidate for score, _index, candidate in scored if score >= float(threshold)]
+    forced_keep_count = 0
+    if not kept and min_candidates > 0:
+        forced_keep_count = min(int(min_candidates), len(scored))
+        kept = [
+            candidate
+            for _score, _index, candidate in sorted(
+                scored,
+                key=lambda row: (-row[0], row[1]),
+            )[:forced_keep_count]
+        ]
+    diagnostics.update(
+        {
+            "kept_count": int(len(kept)),
+            "pruned_count": int(len(rows) - len(kept)),
+            "forced_keep_count": int(forced_keep_count),
+            "min_score_kept": min(
+                (_scorer_value(frame, candidate, scorer) for candidate in kept),
+                default=None,
+            ),
+            "max_score_pruned": max(
+                (
+                    score
+                    for score, _index, candidate in scored
+                    if candidate not in kept
+                ),
+                default=None,
+            ),
+        }
+    )
+    return kept, diagnostics
+
+
 def efficiency_score(human_actions: int, agent_actions: int) -> float:
     if human_actions <= 0 or agent_actions <= 0:
         return 0.0

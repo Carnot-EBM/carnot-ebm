@@ -173,6 +173,8 @@ class StepwiseExplorer:
         discriminative_fit_iters: int = 120,
         discriminative_refit_every: int = 4,
         discriminative_prune_threshold: float = 0.12,
+        frame_change_scorer: Any | None = None,
+        frame_change_prune_threshold: float | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -182,6 +184,8 @@ class StepwiseExplorer:
         # toward predicted-closer states (the A* routing that unlocked cn04 in graph_explore_solve_v2).
         self.value_head = value_head
         self.value_weight = float(value_weight)
+        self.frame_change_scorer = frame_change_scorer
+        self.frame_change_prune_threshold = frame_change_prune_threshold
         self.online_discriminative = bool(online_discriminative)
         self.discriminative_featurizer = discriminative_featurizer
         self.discriminative_min_positives = max(1, int(discriminative_min_positives))
@@ -334,11 +338,17 @@ class StepwiseExplorer:
             g[self.hud_mask] = 0  # collapse counter/timer cells so equal game states dedup
         return frame_hash(g)
 
-    @staticmethod
-    def _candidates(frame) -> list[dict]:
+    def _candidates(self, frame) -> list[dict]:
         from carnot.agentic.arc_graph_explore import rich_action_candidates
 
-        return [{"action": int(c.action_id), "data": c.data} for c in rich_action_candidates(frame)]
+        return [
+            {"action": int(c.action_id), "data": c.data}
+            for c in rich_action_candidates(
+                frame,
+                frame_change_scorer=self.frame_change_scorer,
+                frame_change_prune_threshold=self.frame_change_prune_threshold,
+            )
+        ]
 
     @staticmethod
     def _game_over(frame) -> bool:
@@ -603,6 +613,8 @@ class CarnotAgentPolicy:
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
+        frame_change_scorer: Any | None = None,
+        frame_change_prune_threshold: float | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -621,6 +633,8 @@ class CarnotAgentPolicy:
                 value_head=value_head,
                 value_weight=value_weight,
                 search_mode=search_mode,
+                frame_change_scorer=frame_change_scorer,
+                frame_change_prune_threshold=frame_change_prune_threshold,
             )
         )
 
@@ -668,6 +682,8 @@ class E3AgentPolicy:
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
         search_mode: str = SUBMITTED_SEARCH_MODE,
         mechanic_detector=None,
+        frame_change_scorer: Any | None = None,
+        frame_change_prune_threshold: float | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         if value_head is _DEFAULT_VALUE_HEAD:
@@ -683,6 +699,8 @@ class E3AgentPolicy:
             value_head=value_head,
             value_weight=value_weight,
             search_mode=search_mode,
+            frame_change_scorer=frame_change_scorer,
+            frame_change_prune_threshold=frame_change_prune_threshold,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
