@@ -45950,3 +45950,246 @@ milestones:
       ranking, deepen status'
     deliverable: results/experiment_4509_capstone_v416.json
     result: OK (conductor)
+- id: 2026.06.417
+  title: 'ACTION EFFICIENCY -- the ARC live wall (score = min(human/agent,1)^2; the explorer uses ~7760 actions for ~21-action
+    solutions -> ~0.08). .416 closed the RANKING era: value_weight, frame-change predictor, and energy-augmented ranking ALL
+    returned honest NULLs because the explorer still EXPANDS every salient candidate per node. The lesson: PRUNE don''t rank,
+    and don''t expand on easy frames. .417 drives median actions-to-first-levelup DOWN off the 7760 baseline four ways --
+    a WORKING (self-supervised, offline-arcade) frame-change predictor that PRUNES no-ops (A1), a human- imitation action
+    prior (A2), an ACT/PonderNet adaptive per-step budget (A3, LoopWM citable), and best-first over the now-cheap lazy value
+    head (A4, .416 B2 232x) -- then WIRES the winners into the submitted agent + re-measures the 8-game gate (A6). Plus a
+    level-up deepen (A5, guarantee). Reserved: timing-detector repair (overdue infra) + metric-harness canonicalization (infra),
+    hardware continuity, action-efficiency SOTA ingestion, capstone. ALL experiments codex/gpt-5.5; planner/retro stay Claude
+    Opus 4.8. Metric = median actions-to-solve (baseline 7760), NOT reproducible_total_levels. NO leaderboard submission in-loop
+    (operator-only).'
+  doc: openspec/change-proposals/research-roadmap-v417.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4510-phase0
+    title: PHASE 0 (TRANSITION) -- archive .416 -> activate .417; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .416 close-state.
+    deliverable: results/experiment_4510_archive_416_activate_417.json
+    result: OK (conductor)
+  - id: exp4511-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; SCORE-LEVER) -- frame-change / clickability predictor that
+      PRUNES no-op candidates (the StochasticGoose lever). Self-supervised offline-arcade corpus. Gate: median actions-to-first-levelup
+      STRICTLY < 7760 at equal solve-rate.'
+    deliverable: results/experiment_4511_frame_change_prune_predictor.json
+    result: OK (conductor)
+  - id: exp4512-a2
+    title: 'PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- imitation / behavior-cloning ACTION PRIOR from the 342 human replays
+      (+ self-supervised marginal fallback): try human-like efficient actions FIRST. Gate: actions saved at equal solve-rate.'
+    deliverable: results/experiment_4512_imitation_action_prior.json
+    result: OK (conductor)
+  - id: exp4513-a3
+    title: 'PHASE A3 (ARC NORTH STAR; SCORE-LEVER) -- verifier-grounded ADAPTIVE per-step budget (ACT/PonderNet; LoopWM arXiv:2606.18208
+      citable): easy frame -> commit 1 candidate, ambiguous -> expand. Cuts actions by NOT expanding when the frame is easy.'
+    deliverable: results/experiment_4513_adaptive_per_step_budget.json
+    result: OK (conductor)
+  - id: exp4514-a4
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE-LEVER) -- best-first with the LAZY value head (.416 B2, 232x): re-measure value_weight
+      in {0,0.5,1,2,5} with the CHEAP eval; the .416 null was at FULL per-node cost.'
+    deliverable: results/experiment_4514_lazy_best_first_value_weight.json
+    result: OK (conductor)
+  - id: exp4515-a5
+    title: PHASE A5 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP GUARANTEE) -- DEEPEN a shallow (L1) graph-explore game to
+      L2 via a derive-from-env GameAdapter; BANK +1 offline-reproduced level (offline_reproduced=true, new deeper level).
+    deliverable: results/experiment_4515_deepen_graph_explore_l2.json
+    result: OK (conductor)
+  - id: exp4516-a6
+    title: PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whichever of A1-A4 beat 7760
+      into the SUBMITTED agent, close the forward-edge nav loop, and re-measure the 8-game gate end-to-end. If NONE beat 7760,
+      keep the bare explorer + honest null.
+    deliverable: results/experiment_4516_integration_8game_gate.json
+    result: OK (conductor)
+  - id: exp4517-b1
+    title: 'PHASE B1 (RESERVED INFRA; OVERDUE -- .363->.416) -- repair the milestone-scoped timing detector: mtime scan +
+      ops/changelog-window fallback + detector_gap_suspected emission + write-time duration_s/compute_bound stamping. The
+      recurring false-zero observability gap is THE retro bottleneck.'
+    deliverable: results/experiment_4517_timing_detector_repair.json
+    result: OK (conductor)
+  - id: exp4518-b2
+    title: 'PHASE B2 (RESERVED INFRA) -- canonicalize the action-efficiency metric harness: arc_local_submission_gate.py as
+      the CI-guarded median-actions-to-solve dashboard across the 8 games + PER-LEVER attribution (so A1-A4/A6 report against
+      one baseline, no cherry-picked controls).'
+    deliverable: results/experiment_4518_metric_harness_canonical.json
+    result: OK (conductor)
+  - id: exp4519-c
+    title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH reachability, NOT
+      SD-card) + GateMate (USB detect) + PolarFire (SSH): per-board reachability + next forward step. Never forget the FPGAs.'
+    deliverable: results/experiment_4519_hardware_continuity_audit.json
+    result: OK (conductor)
+  - id: exp4520-d
+    title: PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = action efficiency) -- ingest SOTA for learned action-effect
+      models / affordance learning / experience-replay-for-search (StochasticGoose CNN, PersistentAEM, prioritized replay,
+      IDA*); map the strongest 3-5 onto the .418 roadmap.
+    deliverable: results/experiment_4520_sota_ingestion_417.json
+    result: OK (conductor)
+  - id: exp4521-e
+    title: 'PHASE E (CAPSTONE .417) -- the ACTION-EFFICIENCY scorecard: did median actions-to-solve drop off 7760? which lever
+      moved it? held-out solve-rate + variant transfer + submission-readiness (>13 levels, operator-only submit).'
+    deliverable: results/experiment_4521_capstone_v417.json
+    result: OK (conductor)
+- id: 2026.06.417
+  title: 'ACTION EFFICIENCY -- the ARC live wall (score = min(human/agent,1)^2; the explorer uses ~7760 actions for ~21-action
+    solutions -> ~0.08). .416 closed the RANKING era: value_weight, frame-change predictor, and energy-augmented ranking ALL
+    returned honest NULLs because the explorer still EXPANDS every salient candidate per node. The lesson: PRUNE don''t rank,
+    and don''t expand on easy frames. .417 drives median actions-to-first-levelup DOWN off the 7760 baseline four ways --
+    a WORKING (self-supervised, offline-arcade) frame-change predictor that PRUNES no-ops (A1), a human- imitation action
+    prior (A2), an ACT/PonderNet adaptive per-step budget (A3, LoopWM citable), and best-first over the now-cheap lazy value
+    head (A4, .416 B2 232x) -- then WIRES the winners into the submitted agent + re-measures the 8-game gate (A6). Plus a
+    level-up deepen (A5, guarantee). Reserved: timing-detector repair (overdue infra) + metric-harness canonicalization (infra),
+    hardware continuity, action-efficiency SOTA ingestion, capstone. ALL experiments codex/gpt-5.5; planner/retro stay Claude
+    Opus 4.8. Metric = median actions-to-solve (baseline 7760), NOT reproducible_total_levels. NO leaderboard submission in-loop
+    (operator-only).'
+  doc: openspec/change-proposals/research-roadmap-v417.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4510-phase0
+    title: PHASE 0 (TRANSITION) -- archive .416 -> activate .417; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .416 close-state.
+    deliverable: results/experiment_4510_archive_416_activate_417.json
+    result: OK (conductor)
+  - id: exp4511-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; SCORE-LEVER) -- frame-change / clickability predictor that
+      PRUNES no-op candidates (the StochasticGoose lever). Self-supervised offline-arcade corpus. Gate: median actions-to-first-levelup
+      STRICTLY < 7760 at equal solve-rate.'
+    deliverable: results/experiment_4511_frame_change_prune_predictor.json
+    result: OK (conductor)
+  - id: exp4512-a2
+    title: 'PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- imitation / behavior-cloning ACTION PRIOR from the 342 human replays
+      (+ self-supervised marginal fallback): try human-like efficient actions FIRST. Gate: actions saved at equal solve-rate.'
+    deliverable: results/experiment_4512_imitation_action_prior.json
+    result: OK (conductor)
+  - id: exp4513-a3
+    title: 'PHASE A3 (ARC NORTH STAR; SCORE-LEVER) -- verifier-grounded ADAPTIVE per-step budget (ACT/PonderNet; LoopWM arXiv:2606.18208
+      citable): easy frame -> commit 1 candidate, ambiguous -> expand. Cuts actions by NOT expanding when the frame is easy.'
+    deliverable: results/experiment_4513_adaptive_per_step_budget.json
+    result: OK (conductor)
+  - id: exp4514-a4
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE-LEVER) -- best-first with the LAZY value head (.416 B2, 232x): re-measure value_weight
+      in {0,0.5,1,2,5} with the CHEAP eval; the .416 null was at FULL per-node cost.'
+    deliverable: results/experiment_4514_lazy_best_first_value_weight.json
+    result: OK (conductor)
+  - id: exp4515-a5
+    title: PHASE A5 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP GUARANTEE) -- DEEPEN a shallow (L1) graph-explore game to
+      L2 via a derive-from-env GameAdapter; BANK +1 offline-reproduced level (offline_reproduced=true, new deeper level).
+    deliverable: results/experiment_4515_deepen_graph_explore_l2.json
+    result: OK (conductor)
+  - id: exp4516-a6
+    title: PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whichever of A1-A4 beat 7760
+      into the SUBMITTED agent, close the forward-edge nav loop, and re-measure the 8-game gate end-to-end. If NONE beat 7760,
+      keep the bare explorer + honest null.
+    deliverable: results/experiment_4516_integration_8game_gate.json
+    result: OK (conductor)
+  - id: exp4517-b1
+    title: 'PHASE B1 (RESERVED INFRA; OVERDUE -- .363->.416) -- repair the milestone-scoped timing detector: mtime scan +
+      ops/changelog-window fallback + detector_gap_suspected emission + write-time duration_s/compute_bound stamping. The
+      recurring false-zero observability gap is THE retro bottleneck.'
+    deliverable: results/experiment_4517_timing_detector_repair.json
+    result: OK (conductor)
+  - id: exp4518-b2
+    title: 'PHASE B2 (RESERVED INFRA) -- canonicalize the action-efficiency metric harness: arc_local_submission_gate.py as
+      the CI-guarded median-actions-to-solve dashboard across the 8 games + PER-LEVER attribution (so A1-A4/A6 report against
+      one baseline, no cherry-picked controls).'
+    deliverable: results/experiment_4518_metric_harness_canonical.json
+    result: OK (conductor)
+  - id: exp4519-c
+    title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH reachability, NOT
+      SD-card) + GateMate (USB detect) + PolarFire (SSH): per-board reachability + next forward step. Never forget the FPGAs.'
+    deliverable: results/experiment_4519_hardware_continuity_audit.json
+    result: OK (conductor)
+  - id: exp4520-d
+    title: PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = action efficiency) -- ingest SOTA for learned action-effect
+      models / affordance learning / experience-replay-for-search (StochasticGoose CNN, PersistentAEM, prioritized replay,
+      IDA*); map the strongest 3-5 onto the .418 roadmap.
+    deliverable: results/experiment_4520_sota_ingestion_417.json
+    result: OK (conductor)
+  - id: exp4521-e
+    title: 'PHASE E (CAPSTONE .417) -- the ACTION-EFFICIENCY scorecard: did median actions-to-solve drop off 7760? which lever
+      moved it? held-out solve-rate + variant transfer + submission-readiness (>13 levels, operator-only submit).'
+    deliverable: results/experiment_4521_capstone_v417.json
+    result: OK (conductor)
+- id: 2026.06.417
+  title: 'ACTION EFFICIENCY -- the ARC live wall (score = min(human/agent,1)^2; the explorer uses ~7760 actions for ~21-action
+    solutions -> ~0.08). .416 closed the RANKING era: value_weight, frame-change predictor, and energy-augmented ranking ALL
+    returned honest NULLs because the explorer still EXPANDS every salient candidate per node. The lesson: PRUNE don''t rank,
+    and don''t expand on easy frames. .417 drives median actions-to-first-levelup DOWN off the 7760 baseline four ways --
+    a WORKING (self-supervised, offline-arcade) frame-change predictor that PRUNES no-ops (A1), a human- imitation action
+    prior (A2), an ACT/PonderNet adaptive per-step budget (A3, LoopWM citable), and best-first over the now-cheap lazy value
+    head (A4, .416 B2 232x) -- then WIRES the winners into the submitted agent + re-measures the 8-game gate (A6). Plus a
+    level-up deepen (A5, guarantee). Reserved: timing-detector repair (overdue infra) + metric-harness canonicalization (infra),
+    hardware continuity, action-efficiency SOTA ingestion, capstone. ALL experiments codex/gpt-5.5; planner/retro stay Claude
+    Opus 4.8. Metric = median actions-to-solve (baseline 7760), NOT reproducible_total_levels. NO leaderboard submission in-loop
+    (operator-only).'
+  doc: openspec/change-proposals/research-roadmap-v417.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4510-phase0
+    title: PHASE 0 (TRANSITION) -- archive .416 -> activate .417; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .416 close-state.
+    deliverable: results/experiment_4510_archive_416_activate_417.json
+    result: OK (conductor)
+  - id: exp4511-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; SCORE-LEVER) -- frame-change / clickability predictor that
+      PRUNES no-op candidates (the StochasticGoose lever). Self-supervised offline-arcade corpus. Gate: median actions-to-first-levelup
+      STRICTLY < 7760 at equal solve-rate.'
+    deliverable: results/experiment_4511_frame_change_prune_predictor.json
+    result: OK (conductor)
+  - id: exp4512-a2
+    title: 'PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- imitation / behavior-cloning ACTION PRIOR from the 342 human replays
+      (+ self-supervised marginal fallback): try human-like efficient actions FIRST. Gate: actions saved at equal solve-rate.'
+    deliverable: results/experiment_4512_imitation_action_prior.json
+    result: OK (conductor)
+  - id: exp4513-a3
+    title: 'PHASE A3 (ARC NORTH STAR; SCORE-LEVER) -- verifier-grounded ADAPTIVE per-step budget (ACT/PonderNet; LoopWM arXiv:2606.18208
+      citable): easy frame -> commit 1 candidate, ambiguous -> expand. Cuts actions by NOT expanding when the frame is easy.'
+    deliverable: results/experiment_4513_adaptive_per_step_budget.json
+    result: OK (conductor)
+  - id: exp4514-a4
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE-LEVER) -- best-first with the LAZY value head (.416 B2, 232x): re-measure value_weight
+      in {0,0.5,1,2,5} with the CHEAP eval; the .416 null was at FULL per-node cost.'
+    deliverable: results/experiment_4514_lazy_best_first_value_weight.json
+    result: OK (conductor)
+  - id: exp4515-a5
+    title: PHASE A5 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP GUARANTEE) -- DEEPEN a shallow (L1) graph-explore game to
+      L2 via a derive-from-env GameAdapter; BANK +1 offline-reproduced level (offline_reproduced=true, new deeper level).
+    deliverable: results/experiment_4515_deepen_graph_explore_l2.json
+    result: OK (conductor)
+  - id: exp4516-a6
+    title: PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whichever of A1-A4 beat 7760
+      into the SUBMITTED agent, close the forward-edge nav loop, and re-measure the 8-game gate end-to-end. If NONE beat 7760,
+      keep the bare explorer + honest null.
+    deliverable: results/experiment_4516_integration_8game_gate.json
+    result: OK (conductor)
+  - id: exp4517-b1
+    title: 'PHASE B1 (RESERVED INFRA; OVERDUE -- .363->.416) -- repair the milestone-scoped timing detector: mtime scan +
+      ops/changelog-window fallback + detector_gap_suspected emission + write-time duration_s/compute_bound stamping. The
+      recurring false-zero observability gap is THE retro bottleneck.'
+    deliverable: results/experiment_4517_timing_detector_repair.json
+    result: OK (conductor)
+  - id: exp4518-b2
+    title: 'PHASE B2 (RESERVED INFRA) -- canonicalize the action-efficiency metric harness: arc_local_submission_gate.py as
+      the CI-guarded median-actions-to-solve dashboard across the 8 games + PER-LEVER attribution (so A1-A4/A6 report against
+      one baseline, no cherry-picked controls).'
+    deliverable: results/experiment_4518_metric_harness_canonical.json
+    result: OK (conductor)
+  - id: exp4519-c
+    title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH reachability, NOT
+      SD-card) + GateMate (USB detect) + PolarFire (SSH): per-board reachability + next forward step. Never forget the FPGAs.'
+    deliverable: results/experiment_4519_hardware_continuity_audit.json
+    result: OK (conductor)
+  - id: exp4520-d
+    title: PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = action efficiency) -- ingest SOTA for learned action-effect
+      models / affordance learning / experience-replay-for-search (StochasticGoose CNN, PersistentAEM, prioritized replay,
+      IDA*); map the strongest 3-5 onto the .418 roadmap.
+    deliverable: results/experiment_4520_sota_ingestion_417.json
+    result: OK (conductor)
+  - id: exp4521-e
+    title: 'PHASE E (CAPSTONE .417) -- the ACTION-EFFICIENCY scorecard: did median actions-to-solve drop off 7760? which lever
+      moved it? held-out solve-rate + variant transfer + submission-readiness (>13 levels, operator-only submit).'
+    deliverable: results/experiment_4521_capstone_v417.json
+    result: OK (conductor)
