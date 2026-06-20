@@ -37,10 +37,16 @@ EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a re
 
 
 def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
+    import os
+
     cmd = [str(REPO / ".venv" / "bin" / "python"), str(EVAL), "--policy", policy,
            "--games", "oracle", "--only", game, "--budget", str(budget)]
+    # Measure the SEARCH/efficiency of the tier-1 explorer cleanly: disable the LLM induction tier so the
+    # gate doesn't pay the local llama-server spawn (irrelevant to a search regression; a one-time cost
+    # under the real 12h eval). Production submission does NOT set this -> induction runs normally there.
+    env = {**os.environ, "CARNOT_ARC_DISABLE_INDUCTION": "1"}
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=cap, cwd=str(REPO))
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=cap, cwd=str(REPO), env=env)
         m = None
         for ln in p.stdout.splitlines():
             if game in ln and "live=L" in ln:

@@ -351,8 +351,13 @@ class StepwiseExplorer:
 
     def _value(self, frame) -> float:
         """Frame-only learned progress score (predicted steps-to-next-level-up; LOWER == closer).
-        0.0 when no value head -> the frontier falls back to shallowest-first. Never crashes the loop."""
-        if self.value_head is None:
+        0.0 when no value head -> the frontier falls back to shallowest-first. Never crashes the loop.
+        Also 0.0 when value_weight==0: at weight 0 the value term is multiplied by 0 in the frontier
+        priority (ordering is depth-primary + on-path tiebreak, identical with or without the value), so
+        computing the expensive v3 featurizer per node would be pure dead cost (the 2026-06-20 regression:
+        it made the weight-0 submitted default slower than bare BFS for ZERO routing benefit). The v3 head
+        stays fully wired and fires unchanged whenever value_weight>0."""
+        if self.value_head is None or self.value_weight == 0.0:
             return 0.0
         try:
             return float(self.value_head(frame))
@@ -481,10 +486,18 @@ class StepwiseExplorer:
 
     def _serve(self) -> tuple:
         item = self.pending.pop(0)
+        if item["kind"] == "RESET":
+            self.awaiting = None  # RESET has no forward edge to attribute
+            return ("RESET", None)
         if item.get("probe"):
             self.awaiting = {"origin": item["origin"], "action": item["kind"], "data": item["data"]}
-        if item["kind"] == "RESET":
-            return ("RESET", None)
+        else:
+            # nav / RESET-replay step (probe:False): attribute its forward edge from the CURRENT state so
+            # adj FILLS IN the replayed path. Previously only probe steps recorded edges, so replayed paths
+            # were never learned -> _shortest_path returned None -> every backtrack RESET-replayed from root,
+            # burning actions (the 2026-06-20 regression: lp85 7792 actions vs bare BFS's 21). Recording
+            # these edges lets future navigation use _shortest_path (forward-walk) instead of RESET-replay.
+            self.awaiting = {"origin": self.cur, "action": item["kind"], "data": item["data"]}
         return (item["kind"], item["data"])
 
     def next_move(self, frames, latest) -> tuple:
@@ -811,7 +824,18 @@ class E3AgentPolicy:
         return self.explorer.next_move(frames, latest)
 
     def _induce_and_plan(self):
+        import os
+
         from carnot.agentic import arc_executable_world_model as e3
+
+        # Production-safe escape hatch (default OFF): when CARNOT_ARC_DISABLE_INDUCTION=1, skip the LLM
+        # world-model induction tier entirely and stay in the (fast) tier-1 explorer. The local submission
+        # GATE sets this so it measures the explorer's SEARCH/efficiency cleanly + fast, without paying the
+        # ~30s+ llama-server spawn (a one-time, acceptable cost under the real 12h eval, but it dominates a
+        # bounded local gate run and is irrelevant to detecting a SEARCH regression). Unset in production
+        # (Kaggle) -> induction runs exactly as before.
+        if os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") == "1":
+            return
 
         try:
             self._fit_dsl_model()
