@@ -328,6 +328,46 @@ Required field principles:
 - `reproducibility_checksum`: principle "catches silent drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4514: Lazy Best-First Value-Weight Remeasure
+
+Experiment 4514 SHALL write
+`results/experiment_4514_lazy_best_first_value_weight.json` by sweeping the
+submitted-default E3 explorer with `search_mode="best_first"` and lazy
+frame-hash-cached value-head scoring at `value_weight` in `{0.0, 0.5, 1.0,
+2.0}`. The sweep SHALL keep `value_weight=0.0` as the explicit control and
+SHALL NOT rerun the known-regressed `value_weight=5.0` arm.
+
+The live `StepwiseExplorer` SHALL preserve the full frontier: lazy top-K
+selection MAY decide which candidate nodes pay the expensive value-head cost,
+but SHALL NOT drop unscored tail nodes. Frontier ordering SHALL remain
+depth-primary using the existing `depth + value_weight * value, depth,
+-on_path` blend for nodes with value scores, while unscored tail nodes retain
+their cheap priority and remain expandable. Value scores SHALL be cached by
+frame hash.
+
+The experiment SHALL measure the local submission-gate game set, report
+held-out solve-rate, median actions-to-first-level-up on the fixed core
+`{lp85,m0r0,sp80,vc33}`, and median per-game wall seconds for every swept
+weight. A positive weight SHALL be selected only when it preserves every core
+solve, reduces median core actions versus the `0.0` control, and keeps median
+per-game wall time within the approximately 390-second budget. Otherwise the
+artifact SHALL report an honest null and keep `SUBMITTED_VALUE_WEIGHT=0.0`.
+Solved first-level-up segments SHALL be checked through
+`arc_solver_kit.reproduce()`.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: lazy_value_weight_<w>_beats_0 OR complete: lazy_value_weight_null_keep_0."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, no GGUF load (1s floor)."
+- `per_weight_results`: principle "the full {weight -> (solve_rate, median_actions, median_wall_s) table so the decision is auditable, not asserted."
+- `control_value_weight_0`: principle "the explicit baseline -- a weight only wins if it BEATS 0 (guards the FALSE_NEGATIVE_RISK null)."
+- `chosen_submitted_value_weight`: principle "the new SUBMITTED_VALUE_WEIGHT (0 if null); must keep test_arc_submitted_agent_parity.py consistent."
+- `lazy_eval_speedup_confirmed`: principle "confirms the cheap-eval cost regime that distinguishes this from the .416 full-cost null."
+- `false_negative_risk_checked`: principle "a null is valid only with the value_weight=0 control present."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -446,3 +486,15 @@ diagnostic, and the experiment 4513 artifact records the 7760 baseline,
 adaptive median action measurement, threshold sweep, per-game solve-rate guard,
 ambiguity signal components, positive control status, false negative risk check,
 random seed, and reproducibility checksum.
+
+### SCENARIO-ARC-FCP-4514: Lazy Value Scores Reorder Without Filtering
+
+Given a live `StepwiseExplorer` frontier with more expandable nodes than the
+lazy top-K value-scoring budget
+When the explorer chooses a best-first frontier node with `value_weight>0`
+Then only the top-K cheap-priority nodes pay the value-head cost, repeated frame
+hashes reuse cached scores, unscored tail nodes remain in the frontier, and the
+experiment 4514 artifact reports every swept weight, the explicit
+`value_weight=0.0` control, the chosen submitted value weight, lazy-eval speedup
+confirmation, false-negative-risk check, random seed, and reproducibility
+checksum.
