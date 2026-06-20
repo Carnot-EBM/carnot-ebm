@@ -26,6 +26,9 @@ import importlib.util
 from pathlib import Path
 from typing import Any, Optional
 
+import carnot.agentic.arc_strategy_router as arc_strategy_router
+from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
+
 REPO = Path(__file__).resolve().parents[3]
 
 # the 11 reproduced games and their target (offline-reproduced) level
@@ -43,6 +46,12 @@ CLAIMED = {
     "sk48": 1,
 }
 MAX_ACTIONS = 200
+SUBMITTED_VALUE_WEIGHT = 5.0
+SUBMITTED_TARGET_LEVELS = 5
+SUBMITTED_SEARCH_MODE = "depth_first_ride"
+SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
+SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
+_DEFAULT_VALUE_HEAD = object()
 
 
 def load_solutions() -> dict[str, list[dict]]:
@@ -76,6 +85,52 @@ def _level_of(frame: Any) -> int:
         return _levels_completed(frame)
     except Exception:
         return 0
+
+
+def _action_key(action_id: int, data: Any) -> tuple:
+    if int(action_id) == 6 and isinstance(data, dict) and "x" in data and "y" in data:
+        return (6, int(data["x"]), int(data["y"]))
+    return (int(action_id),)
+
+
+def _frame_only_mechanic_hint(frame: Any) -> Optional[str]:
+    """Cheap frame-only mechanic hint used when the live route has no registry class.
+
+    The full probe-based detector lives at the I/O edge (`scripts/arc3_frame_induction.py`).
+    The submitted policy cannot touch `env._game`, so this hint only inspects the rendered
+    grid and returns a positive class when a dense lower-board editor palette is visible.
+    Unknown frames return None and keep the registry/default route.
+    """
+    if frame is None:
+        return None
+    try:
+        import numpy as np
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        grid = grid_of(frame)
+        if getattr(grid, "shape", None) is None or grid.ndim != 2:
+            return None
+        h, w = grid.shape
+        lower = grid[int(h * 0.55):, :]
+        if lower.size == 0:
+            return None
+        vals, counts = np.unique(lower, return_counts=True)
+        bg = int(vals[counts.argmax()])
+        active = lower != bg
+        density = float(active.mean())
+        columns = int(np.count_nonzero(active.any(axis=0)))
+        rows = int(np.count_nonzero(active.any(axis=1)))
+        if density >= 0.08 and columns >= max(12, w // 5) and rows >= 5:
+            return "program_editor"
+    except Exception:
+        return None
+    return None
+
+
+def _route_explore_budget(route: dict[str, Any]) -> int:
+    if route.get("uses_goal_distance_heuristic") is False:
+        return SUBMITTED_ROUTED_EXPLORE_BUDGET
+    return SUBMITTED_GRAPH_EXPLORE_BUDGET
 
 
 class StepwiseExplorer:
@@ -401,14 +456,34 @@ class E3AgentPolicy:
         self,
         game_id: str,
         proposer=None,
-        explore_budget: int = 80,
-        target_levels: int = 1,
-        value_head=None,
+        explore_budget: Optional[int] = None,
+        target_levels: int = SUBMITTED_TARGET_LEVELS,
+        value_head: Any = _DEFAULT_VALUE_HEAD,
+        value_weight: float = SUBMITTED_VALUE_WEIGHT,
+        search_mode: str = SUBMITTED_SEARCH_MODE,
+        mechanic_detector=None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
-        self.explorer = StepwiseExplorer(target_levels=target_levels, value_head=value_head)
+        if value_head is _DEFAULT_VALUE_HEAD:
+            value_head = load_cross_game_value_head()
+        self.strategy_route = arc_strategy_router.route_for_game(self.short)
+        self._route_from_frame_checked = False
+        self.mechanic_detector = mechanic_detector or _frame_only_mechanic_hint
+        self.dsl_model = ObjectDeltaModel(self.short)
+        self.dsl_energy: Optional[dict[str, Any]] = None
+        self._dsl_transitions: list[tuple[Any, tuple, Any]] = []
+        self.explorer = StepwiseExplorer(
+            target_levels=target_levels,
+            value_head=value_head,
+            value_weight=value_weight,
+            search_mode=search_mode,
+        )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
-        self.explore_budget = explore_budget
+        self.explore_budget = (
+            int(explore_budget)
+            if explore_budget is not None
+            else _route_explore_budget(self.strategy_route)
+        )
         self.proposer = proposer  # default set lazily to LocalGGUFProposer
         self.phase = "explore"
         self.plan: list = []
@@ -417,6 +492,32 @@ class E3AgentPolicy:
         self.cell = 1
         self.induced = False
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
+
+    def _maybe_route_from_frame(self, latest: Any) -> None:
+        if self._route_from_frame_checked or latest is None:
+            return
+        self._route_from_frame_checked = True
+        try:
+            mechanic = self.mechanic_detector(latest) if self.mechanic_detector else None
+        except Exception:
+            mechanic = None
+        if isinstance(mechanic, dict):
+            mechanic = mechanic.get("mechanic")
+        if not mechanic or mechanic == "unknown":
+            return
+        routed = arc_strategy_router.route_for_game(self.short, mechanic=str(mechanic))
+        if routed.get("name") != self.strategy_route.get("name"):
+            self.strategy_route = routed
+            self.explore_budget = min(self.explore_budget, _route_explore_budget(routed))
+
+    def _fit_dsl_model(self) -> None:
+        if not self._dsl_transitions:
+            return
+        try:
+            self.dsl_model = ObjectDeltaModel(self.short).fit(self._dsl_transitions)
+            self.dsl_energy = self.dsl_model.consistency_energy(self._dsl_transitions)
+        except Exception:
+            self.dsl_energy = {"energy": None, "n_heldout": len(self._dsl_transitions)}
 
     def _proposer(self):
         if self.proposer is None:
@@ -440,17 +541,20 @@ class E3AgentPolicy:
     def next_move(self, frames, latest):
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
 
+        self._maybe_route_from_frame(latest)
         # collect a transition from the last action's outcome
         if self._prev is not None and latest is not None:
             from carnot.agentic.arc_agi3_world_model import grid_of
             from carnot.agentic.arc_executable_world_model import Transition
 
             g0, aid, data = self._prev
+            g1 = to_logical(grid_of(latest), self.cell)
             self.transitions.append(
                 Transition(
-                    g0, aid, data, to_logical(grid_of(latest), self.cell), 0, _level_of(latest)
+                    g0, aid, data, g1, 0, _level_of(latest)
                 )
             )
+            self._dsl_transitions.append((g0, _action_key(aid, data), g1))
         if self.phase == "explore":
             mv = self.explorer.next_move(frames, latest)
             if latest is not None:
@@ -491,6 +595,7 @@ class E3AgentPolicy:
         from carnot.agentic import arc_executable_world_model as e3
 
         try:
+            self._fit_dsl_model()
             ok, _ = self._proposer().induce(self.short, self.transitions, self.cell)
             if not ok or self.root_grid is None:
                 return
@@ -521,13 +626,14 @@ class E3AgentPolicy:
 SUBMITTED_AGENT_CONFIG = {
     "policy": "E3AgentPolicy",          # the verifier-routed cascade (NOT cascade=False banked-replay)
     "cascade": True,
-    # explorer config the live agent actually runs. UPDATE THIS (one place) when A1 wires the stronger
-    # generic stack (router/world-model-DSL) + raises target_levels; the parity test will then enforce it.
-    "value_weight": 0.0,                # TODO(.414 A1): raise once the value head routes net-positive
-    "target_levels": 1,                 # TODO(.414 A1): raise so a cracked game harvests its level chain
-    "search_mode": "depth_first_ride",
-    "router_wired": False,              # TODO(.414 A1): True once arc_strategy_router is imported here
-    "world_model_dsl_wired": False,     # TODO(.414 A1): True once arc_world_model_dsl is imported here
+    # explorer config the live agent actually runs.
+    "value_weight": SUBMITTED_VALUE_WEIGHT,
+    "target_levels": SUBMITTED_TARGET_LEVELS,
+    "search_mode": SUBMITTED_SEARCH_MODE,
+    "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
+    "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
+    "router_wired": True,
+    "world_model_dsl_wired": True,
 }
 
 
@@ -560,7 +666,13 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
             super().__init__(*args, **kwargs)
             gid = getattr(self, "game_id", "")
             self._policy = (
-                E3AgentPolicy(gid, proposer=proposer)
+                E3AgentPolicy(
+                    gid,
+                    proposer=proposer,
+                    target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
+                    value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
+                    search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),
+                )
                 if cascade
                 else CarnotAgentPolicy(gid, load_solutions())
             )

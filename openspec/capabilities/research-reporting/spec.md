@@ -26797,6 +26797,55 @@ some have replayed through the offline reproduction gate
 |---|---|---|
 | REQ-REPORT-4475 | Planned (`python/carnot/agentic/arc_precondition_smoke.py`, `scripts/arc_precondition_nocov_lint.py`, `python/carnot/experiment_4475_arc_precondition_nocov_lint.py`, `results/experiment_4475_arc_precondition_nocov_lint.json`) | Planned (`tests/python/test_arc_precondition_smoke.py`, `tests/python/test_arc_precondition_nocov_lint.py`, `tests/python/test_experiment_4475_arc_precondition_nocov_lint.py`) |
 
+### REQ-REPORT-4475-LIVE-STACK: Submitted ARC Agent Ships The Stronger Generic Stack
+
+The Exp 4475 live-integration workflow SHALL make the submitted
+`arc_competition_agent.make_carnot_agent` default use the stronger generic ARC
+stack rather than an opt-in evaluation flag. The submitted `E3AgentPolicy`
+SHALL route first-contact play through `arc_strategy_router.route_for_game`,
+SHALL keep the frame-only world-model DSL importable and instantiated on the
+policy path, SHALL give the live explorer a nonzero value-routing weight, SHALL
+target more than one level so a cracked game can harvest its level chain, and
+SHALL prefer the existing `_shortest_path` forward-edge walk before falling back
+to RESET replay. `SUBMITTED_AGENT_CONFIG` SHALL declare the same values and
+wiring flags that the submitted default actually uses.
+
+The workflow SHALL write
+`results/experiment_4475_wire_stronger_generic_stack.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`offline_reproduced`, `reproduced_levels`, `preconditions_checked`,
+`before_generic_solve_rate`, `after_generic_solve_rate`,
+`generic_solve_rate_delta`, `submitted_agent_config`, `tests_pass`,
+`field_principles`, `spec_refs`, and `reproducibility_checksum`. Complete-path
+`honest_verdict` SHALL start with `complete:`, `complete_`, `success:`,
+`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`. The headline
+measurement SHALL be the held-out generic solve-rate delta of the exact
+submitted default on the offline arcade with game internals blocked, not
+`reproducible_total_levels`.
+
+#### SCENARIO-REPORT-4475-LIVE-STACK-PARITY: Submitted Config Matches The Wired Policy
+
+**Given** the submitted agent is constructed through
+`make_carnot_agent(Agent)` with default arguments
+**When** `E3AgentPolicy` initializes its live explorer
+**Then** the explorer target level count, value-routing weight, search mode,
+router wiring flag, and world-model-DSL wiring flag match
+`SUBMITTED_AGENT_CONFIG`, and any divergence fails the parity tests.
+
+#### SCENARIO-REPORT-4475-LIVE-STACK-FORWARD-NAV: Forward Edges Beat RESET Replay
+
+**Given** the live explorer knows a forward edge from its current state to a
+frontier state with an untested action
+**When** the frontier is selected
+**Then** the next navigation action SHALL walk the known forward edge via
+`_shortest_path` rather than issuing RESET and replaying from root.
+
+## Implementation Status (REQ-REPORT-4475-LIVE-STACK)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4475-LIVE-STACK | Planned (`python/carnot/agentic/arc_competition_agent.py`, `python/carnot/experiment_4475_wire_stronger_generic_stack.py`, `results/experiment_4475_wire_stronger_generic_stack.json`) | Planned (`tests/python/test_arc_submitted_agent_parity.py`, `tests/python/test_experiment_4475_wire_stronger_generic_stack.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a

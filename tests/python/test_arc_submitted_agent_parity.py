@@ -14,7 +14,7 @@ import pytest
 
 from carnot.agentic import arc_competition_agent as m
 from carnot.agentic.arc_competition_agent import (
-    E3AgentPolicy, SUBMITTED_AGENT_CONFIG, make_carnot_agent)
+    E3AgentPolicy, SUBMITTED_AGENT_CONFIG, StepwiseExplorer, make_carnot_agent)
 
 
 def _imports(module_name: str, src: str) -> bool:
@@ -32,16 +32,20 @@ def test_submission_defaults_to_e3_cascade_not_banked_replay():
 
 
 def test_shipped_explorer_config_matches_single_source_of_truth():
+    """REQ-REPORT-4475-LIVE-STACK: shipped explorer config is the declared default."""
     # the live explorer config must equal the declared SUBMITTED_AGENT_CONFIG; any silent change to the
     # E3AgentPolicy/StepwiseExplorer defaults fails here until SUBMITTED_AGENT_CONFIG is consciously updated.
-    pol = E3AgentPolicy("paritytest", proposer=None)
+    pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     exp = pol.explorer
     assert exp.value_weight == SUBMITTED_AGENT_CONFIG["value_weight"]
     assert exp.target_levels == SUBMITTED_AGENT_CONFIG["target_levels"]
     assert exp.search_mode == SUBMITTED_AGENT_CONFIG["search_mode"]
+    assert exp.value_weight > 0.0
+    assert exp.target_levels > 1
 
 
 def test_wired_flags_reflect_actual_imports():
+    """REQ-REPORT-4475-LIVE-STACK: shipped config declares real router/DSL imports."""
     # router_wired / world_model_dsl_wired must match whether the modules are ACTUALLY referenced in the
     # submission module -- catches BOTH "wired the module but left the flag stale" AND "flag claims wired
     # but the import is missing". This is the exact gap that shipped bare BFS at 0.08.
@@ -50,3 +54,35 @@ def test_wired_flags_reflect_actual_imports():
         "router_wired flag disagrees with whether arc_strategy_router is imported in the submission path")
     assert SUBMITTED_AGENT_CONFIG["world_model_dsl_wired"] == _imports("arc_world_model_dsl", src), (
         "world_model_dsl_wired flag disagrees with whether arc_world_model_dsl is imported")
+
+
+def test_e3_policy_builds_strategy_route_and_world_model_dsl():
+    """SCENARIO-REPORT-4475-LIVE-STACK-PARITY: E3 first contact has router + DSL state."""
+    pol = E3AgentPolicy("tn36", proposer=None, value_head=lambda _frame: 0.0)
+    assert pol.strategy_route["game"] == "tn36"
+    assert pol.strategy_route["name"] == "program_editor"
+    assert pol.strategy_route["uses_goal_distance_heuristic"] is False
+    assert pol.dsl_model.game_id == "tn36"
+    assert pol.explore_budget < SUBMITTED_AGENT_CONFIG["graph_explore_budget"]
+
+
+def test_stepwise_explorer_prefers_forward_shortest_path_over_reset():
+    """SCENARIO-REPORT-4475-LIVE-STACK-FORWARD-NAV: forward edges beat RESET replay."""
+    exp = StepwiseExplorer()
+    exp.root = "A"
+    exp.cur = "A"
+    exp.start_level = 0
+    exp.best_level = 0
+    exp.graph = {
+        "A": {"path": [], "untested": [], "value": 0.0},
+        "B": {
+            "path": [{"action": 7, "data": None}],
+            "untested": [{"action": 2, "data": {"x": 1, "y": 2}}],
+            "value": 0.0,
+        },
+    }
+    exp.adj = {"A": [({"action": 7, "data": None}, "B")]}
+
+    assert exp.next_move([], None) == (7, None)
+    assert exp.next_move([], None) == (2, {"x": 1, "y": 2})
+    assert exp.awaiting == {"origin": "B", "action": 2, "data": {"x": 1, "y": 2}}
