@@ -8932,3 +8932,5 @@ c |
 | 2026-06-20 07:05 UTC | PHASE B2 (INFRA -- throughput + hygiene) -- Decoup | OK | 84 passed, 1 warning in 6.30s |
 | 2026-06-20 07:16 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY)  | OK | 86 passed, 1 warning in 5.45s |
 | 2026-06-20 08:01 UTC | PHASE D (SOTA-INGESTION; reserved -- ARC search/ve | OK | 104 passed, 1 warning in 4.69s |
+| 2026-06-20 08:21 UTC | PHASE E (CAPSTONE .414) -- Capstone v414: integrat | OK | 87 passed, 1 warning in 7.49s |
+| 2026-06-20 08:23 UTC | Milestone 2026.06.415 activated | OK | 10 tasks queued |
