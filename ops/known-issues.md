@@ -8634,3 +8634,16 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
 Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+
+### CORRIGENDUM 2026-06-20: .416 A1 (exp4500 value_weight re-measure) TAUTOLOGY flag is a FALSE POSITIVE — conclusion stands
+
+`.416 A1` (the operator-requested value_weight re-measurement) was FLAGGED adversarial_verify CRITICAL
+TAUTOLOGY and quarantined. The flag is a FALSE POSITIVE: `eval_budget_median_wall_s=390.0` ==
+`wall_budget_s=390.0` are trivially equal because the value-weighted search SATURATES the 390s (~6.5
+min)/game budget cap on every game (median wall == the cap), not two coincidentally-equal distinct
+measurements. The HONEST VERDICT stands and is CORRECT: `value_weight_remeasure_null_keep_0` — NO
+value_weight>0 beats value_weight=0 within budget (1/7 solve-rate across {0,0.5,1,2,5}). This CONFIRMS
+the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is already 0 (correct, no
+action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
+quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
+value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
