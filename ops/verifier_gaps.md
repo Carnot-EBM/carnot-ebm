@@ -2333,3 +2333,98 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high
 - movement: still_open
 <!-- exp4471-gap-re86-pattern-match-sprite-resize:end -->
+
+---
+
+## Architecture/discovery gaps from the 2026-06-19 step-back audit (parallel codebase mine)
+
+These came from a systematic gap audit (not a single experiment), grounded in code+artifacts. They are
+the *structural* verifier/solver gaps behind the 0.08 first live score. Several are inter-dependent.
+
+### GAP-ARCH-VERIFIER-REGRESSION-ONLY: no discriminative win/loss classifier (PARTIALLY ADDRESSED 2026-06-19)
+- status: building (per-game lever shipped; cross-game blocked on GAP-ARCH-FEATURES)
+- evidence: `arc_value_learner.py:98-104` (LearnedVerifier = lstsq steps-to-go regression); `arc_value_net.py:1-7`
+  docstring admits the linear head is "actively misleading when given control". NEW: built
+  `DiscriminativeVerifier` + off-path-negatives (results/arc_discriminative_verifier.json) — in-sample AUROC
+  0.726 but **leave-one-game-out AUROC 0.503 == chance**.
+- failure mode: a distance-along-the-gold-path value cannot tell an off-path TRAP from a near-win (identical
+  marginal features + value). A classifier separates them PER-GAME (0.726) but does NOT transfer cross-game.
+- missing discriminator: a win-reachability classifier — usable when trained ONLINE per game during
+  exploration (the off-path negatives the solver already produces); a cross-game pre-trained head is not.
+- candidate design: SHIPPED DiscriminativeVerifier (logistic, off-path negatives). .414 A-task: wire the
+  per-game online-trained head into the live explorer to prune traps the value head misses.
+- priority: high
+
+### GAP-ARCH-FEATURES: frame-only order-1 features (the real cross-game blocker)
+- status: open
+- evidence: `arc_value_learner.py:26-70` (5 scalars + 6x6 occupancy, all single-frame marginals). The
+  LOO-chance result above + the value-head's inertness (value_weight=0.0) both trace here.
+- failure mode: linear-over-marginals provably can't represent relational/XOR/counting win-rules; one-action-
+  off-path states are near-identical to on-path in these features (mean feature gap 1.73 over standardized);
+  nothing transfers cross-game.
+- missing discriminator: object-relational (pairwise correspondence + manhattan displacement), frame-DELTA
+  (Δ between consecutive frames = progress signal), action-conditioned (v(frame|action)), symmetry-invariant,
+  and predicate-distance (tied to the adapter win condition) features.
+- candidate design: add the above feature classes to cross_game_features_v3; re-run the LOO-AUROC gate (the
+  harness exists: `arc_cross_game_verifier_train.py --discriminative`). THIS is the highest-leverage verifier
+  research item — it unblocks both the value head and the discriminative head cross-game.
+- priority: high
+
+### GAP-ARCH-DEADENDS-AS-PROSE: recorded dead-ends used as LLM prose, never as negative labels (ADDRESSED 2026-06-19)
+- status: building (off-path negatives shipped; true game-over negatives still unused)
+- evidence: `arc_solve_learning.py:121-147` (dead-ends -> prose briefing); `arc_competition_agent.py:172-187`
+  (game-over frame skipped, never emitted as a negative pair).
+- failure mode: a free, growing corpus of true negatives the verifier never sees.
+- missing discriminator: emit registry/explorer game-over states as (features, 0) negatives (stronger than the
+  one-action-off-path negatives already shipped, which the LOO result shows are weak).
+- candidate design: persist explorer game-over frames during solve; feed to DiscriminativeVerifier.
+- priority: medium
+
+### GAP-ARCH-GOAL-NOT-VERIFIED: world-model verifier scores DYNAMICS but never the GOAL predicate
+- status: open
+- evidence: `arc_executable_world_model.py:155-184` (WorldModelVerifier.score = grid-transition accuracy only);
+  `is_level_complete` is loaded (line 198) but graded by nothing; refactor loop feeds back only transition
+  mismatches. exp4020 induces `is_goal` at held-out precision 1.0 but is NOT wired into the E3 verifier.
+- failure mode: a 99%-dynamics model with a wrong win-predicate is "trusted" -> the planner plans confidently
+  toward the wrong win state. The deep-research-named goal-vs-dynamics gap.
+- missing discriminator: held-out scoring of `is_level_complete` against recorded level-up transitions, as a
+  first-class refactor signal separate from dynamics.
+- candidate design: wire exp4020's goal-induction-and-verification into the E3 path.
+- priority: high
+
+### GAP-ARCH-GRID-ONLY-STATE: E3 state is grid-only; hidden HUD registers unrepresentable (deepening-tail root cause)
+- status: open
+- evidence: induce prompt fixes state as "HxW integer grid" (`arc_executable_world_model.py:276-292`); the
+  L2-stall artifacts are register failures: ka59 `hud_count` diverges (exp4384, fidelity 0.112), ar25
+  `action7_undo_stack` hidden (exp4395, fidelity 0.733), ft09 residual mismatch.
+- failure mode: the lookahead-fidelity gate (0.73-0.875) is a SYMPTOM — the model predicts win-relevant
+  behavior from a state that physically omits the deciding variable. ar25/ka59/ft09 stall at L2 on state
+  representation, NOT search/depth.
+- missing discriminator: extend E3 state to (grid, registers) with induced HUD/counter scalars; let
+  is_level_complete read them.
+- priority: high
+
+### GAP-ARCH-NO-HIERARCHICAL-SEARCH: no subgoal/landmark/MCTS engine wired (deep-research's "single biggest lever")
+- status: open
+- evidence: production search is flat BFS / weighted-A* (`arc_graph_explore.py:239-307`, OfflineSolver
+  best-first); hierarchical search exists only as the single-game `arc_vc33_hierarchical_search.py` (vc33 still
+  L1). `search-layer-literature-2026-06-11.md:42` names subgoal decomposition as the single biggest lever.
+- failure mode: no within-level subgoal decomposition; combinatorial config spaces (the OOD-dominant class)
+  are intractable to flat search.
+- candidate design: promote the vc33 hierarchical best-first into a generic, router-selectable engine for
+  `is_spatial_planning:true` games.
+- priority: medium
+
+### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
+- status: open
+- evidence: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer` is bare BFS (measured 8/32 in-distribution,
+  ~0 OOD — `results/arc_offline_to_live_bridge_v2.json:5,18`) + an LLM tier with 0/6 measured value-added
+  (:13); `target_levels=1` (stops at first level), `value_weight=0.0` (value head inert). The stronger
+  `arc_strategy_router.py` / `arc_world_model_dsl.py` are NOT imported by `arc_competition_agent.py` (grep
+  empty). The "45 reproduced levels" are mostly banked replays of KNOWN games (≈0 on the hidden eval) or
+  depend on `env._game` internal-state absent live.
+- failure mode: `reproducible_total_levels` (what the sprint optimizes) is largely a MIRAGE for the leaderboard;
+  the score is driven by generic OOD solve-rate + action efficiency, which the submitted agent barely has.
+- missing discriminator: n/a — this is INTEGRATION, not modeling. Wire the router + world-model-DSL into the
+  submitted agent; raise target_levels; replace RESET-replay nav with forward-edge `_shortest_path`.
+- priority: high (the most direct move on 0.08)
