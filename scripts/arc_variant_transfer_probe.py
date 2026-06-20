@@ -39,7 +39,9 @@ def main() -> int:
                 env = VariantEnv(arc.make(g, scorecard_id=arc.open_scorecard()), g, **kw)
                 env.reset()
                 t = time.time()
-                traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=8000, max_depth=80)
+                # bounded so the overnight sweep finishes; a solve within this budget == EASILY re-derived
+                # (robust), a no-solve == the variant is harder for the generic solver (layout-sensitive).
+                traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=3000, max_depth=40)
                 res[label] = {"solved": bool(traj and lvl >= 1), "level": int(lvl),
                               "moves": len(traj) if traj else 0, "s": round(time.time() - t, 1)}
             except Exception as e:
