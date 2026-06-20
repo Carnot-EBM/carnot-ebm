@@ -27801,6 +27801,81 @@ or ops/status/traceability edits.
 |---|---|---|
 | REQ-REPORT-4498 | Planned (`python/carnot/experiment_4498_arc_imitation_sota_415.py`) | Planned (`tests/python/test_experiment_4498_arc_imitation_sota_415.py`) |
 
+### REQ-REPORT-4508: Ingest Affordance And Action-Effect SOTA Into The .417 Plan
+
+The Exp 4508 workflow SHALL write
+`docs/research-notes/arc-affordance-sota-416.md` with a machine-readable JSON
+artifact block followed by a concise research note. It SHALL read
+`research-studying.md` and `research-references.md` filtered to affordance
+learning, action-effect models, and efficient exploration in sparse-reward
+interactive environments; it SHALL also use `scripts/sweep_clusters.py` plus
+low-concurrency WebSearch/WebFetch over five to eight top arXiv sources. It
+SHALL NOT invoke `/deep-research`, SHALL NOT launch live LLM inference, SHALL
+NOT launch training, SHALL NOT submit to the leaderboard, SHALL NOT claim a new
+ARC solve, and SHALL NOT modify `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The required runner SHALL be
+`results/experiment_4508_arc_affordance_sota_416.py` delegating to
+`python/carnot/experiment_4508_arc_affordance_sota_416.py`, and the workflow
+SHALL also write `results/experiment_4508_arc_affordance_sota_416.json`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `preconditions_checked`, `source_ids`, `methods`,
+`frame_change_mapping`, `energy_augmented_mapping`, `strongest_for_v417`,
+`research_note_path`, `random_seed`, and `field_principles`. The complete-path
+`honest_verdict` SHALL equal
+`complete: arc_affordance_sota_416_mapped_for_v417` and SHALL start with one of
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+`preconditions_checked` SHALL record which files, helpers, HTTP checks, and
+WebSearch/WebFetch sources were verified. It SHALL record `AGENTS.md`,
+`CODEX.md`, `research-studying.md`, `research-references.md`,
+`scripts/sweep_clusters.py`, `docs/research-notes/arc-frame-change-predictor-spec.md`,
+`docs/research-notes/arc-energy-augmented-strategy.md`,
+`docs/research-notes/arc-417-shaping-action-efficiency.md`, and arXiv abs-page
+HTTP-200 checks for source IDs `2006.15085`, `2008.09241`, `2404.15648`,
+`2407.10341`, `2501.06047`, `2601.07060`, `2602.00460`, and `2602.03201`.
+
+`methods` SHALL map each source to one concrete ARC action-efficiency decision
+and one caveat. `frame_change_mapping` SHALL map affordance learning and
+action-effect models onto the frame-change/clickability predictor and candidate
+pruning. `energy_augmented_mapping` SHALL map progress-aware affordances,
+frontier exploration, and optimistic potential landscapes onto the
+energy-augmented ranking formula `P(frame_change) * (-delta_E)`.
+`strongest_for_v417` SHALL flag the affordance-pruned frame-change predictor
+with SLOPE-style optimistic energy progress shaping, anchored by
+`arXiv:2008.09241`, `arXiv:2006.15085`, and `arXiv:2602.03201`.
+
+`field_principles` SHALL include one-line principles for every top-level
+artifact field, including the required terminal-prefix `honest_verdict`
+principle, the explicit `inference_substrate` principle, and the
+resource-listing `preconditions_checked` principle.
+
+#### SCENARIO-REPORT-4508: Affordance SOTA Maps To .417 Action-Efficiency Work
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`, and the ARC
+frame-change/energy strategy notes are readable
+**And** `scripts/sweep_clusters.py --help` succeeds
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4508 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps
+affordance learning and action-effect models onto frame-change predictor
+candidate pruning, maps progress-aware/potential-landscape methods onto
+energy-augmented ranking, flags the strongest `.417` package, declares
+`aggregation_from_upstream_artifacts`, and records no `/deep-research`, live
+inference, training, leaderboard submission, solve claim, or
+ops/status/traceability edits.
+
+## Implementation Status (REQ-REPORT-4508)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4508 | Planned (`python/carnot/experiment_4508_arc_affordance_sota_416.py`) | Planned (`tests/python/test_experiment_4508_arc_affordance_sota_416.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

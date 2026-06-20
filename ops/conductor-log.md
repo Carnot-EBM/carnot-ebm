@@ -8954,3 +8954,7 @@ c |
 | 2026-06-20 14:15 UTC | PHASE B1 (INFRA; operator MANDATORY) -- Submitted- | OK | 86 passed, 1 warning in 6.26s |
 | 2026-06-20 14:31 UTC | PHASE B2 (INFRA; operator MANDATORY) -- Lazy/cheap | OK | 87 passed, 1 warning in 8.77s |
 | 2026-06-20 14:44 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY)  | OK | 86 passed, 1 warning in 8.05s |
+| 2026-06-20 16:06 UTC | PHASE D (SOTA-INGESTION; reserved) -- Ingest SOTA: | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: H).exists()
++
+ |
+| 2026-06-20 16:08 UTC | PHASE D (SOTA-INGESTION; reserved) -- Ingest SOTA: | OK | Deliverable already exists in repo |
