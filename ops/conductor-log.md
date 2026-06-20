@@ -8943,3 +8943,4 @@ c |
 | 2026-06-20 10:21 UTC | PHASE B2 (INFRA; operator MANDATORY) -- Submitted- | OK | 86 passed, 1 warning in 6.42s |
 | 2026-06-20 10:32 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY)  | OK | 86 passed, 1 warning in 6.71s |
 | 2026-06-20 10:45 UTC | PHASE D (SOTA-INGESTION; reserved) -- Ingest SOTA: | OK | 104 passed, 1 warning in 4.76s |
+| 2026-06-20 11:03 UTC | PHASE E (CAPSTONE .415) -- Capstone v415: frame-ch | OK | 88 passed, 1 warning in 6.97s |
