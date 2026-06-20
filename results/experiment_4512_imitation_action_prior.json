@@ -1,0 +1,286 @@
+{
+  "duration_s": 110.50337469496299,
+  "experiment": "experiment_4512_imitation_action_prior",
+  "false_negative_risk_checked": true,
+  "false_negative_risk_guard": "positive_control_passed_null_interpretable",
+  "field_principles": {
+    "false_negative_risk_checked": "principle \"a null is valid only if the positive control passed.\"",
+    "honest_verdict": "principle \"terminal prefix; e.g. success: imitation_prior_median_actions_<n>_below_7760 OR complete: imitation_prior_no_reduction_honest_null.\"",
+    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).\"",
+    "median_actions_baseline": "principle \"the 7760 control, fixed.\"",
+    "median_actions_with_prior": "principle \"the headline -- did the human prior cut exploration.\"",
+    "positive_control_passed": "principle \"proves the harness detects a real reduction.\"",
+    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\"",
+    "prior_source": "principle \"honest declaration of whether the human replays or the self-supervised fallback supplied the prior (no silent corpus dependency).\"",
+    "random_seed": "principle \"determinism precondition for reproducibility.\"",
+    "reproducibility_checksum": "principle \"catches silent corpus/model drift on replay.\"",
+    "solve_rate_baseline": "principle \"no-regression reference.\"",
+    "solve_rate_with_prior": "principle \"the prior must not drop solve-rate.\""
+  },
+  "honest_verdict": "complete: imitation_prior_solve_rate_guard_failed",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor).",
+  "local_gate_metrics": {
+    "baseline": {
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_solved": 7760.0,
+      "note": "verified baseline (update only after a real improvement + successful submit)",
+      "per_game": [
+        {
+          "actions": 7792,
+          "game": "lp85",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7789,
+          "game": "m0r0",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7724,
+          "game": "sp80",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7731,
+          "game": "vc33",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7799,
+          "game": "cd82",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7963,
+          "game": "ft09",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7786,
+          "game": "su15",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7821,
+          "game": "ls20",
+          "solved": false,
+          "timed_out": false
+        }
+      ],
+      "policy": "e3",
+      "solved_count": 4,
+      "timed_out_count": 0,
+      "total_actions_on_solved": 31036
+    },
+    "measurement_script": "scripts/kaggle/arc_local_submission_gate.py",
+    "with_prior": {
+      "budget": 8000,
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_solved": 7733.0,
+      "per_game": [
+        {
+          "actions": 28,
+          "actions_to_first_levelup": null,
+          "game": "lp85",
+          "levels": 0,
+          "reached": 0,
+          "reproduced": null,
+          "reproduction": null,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7837,
+          "actions_to_first_levelup": null,
+          "game": "m0r0",
+          "levels": 0,
+          "reached": 0,
+          "reproduced": null,
+          "reproduction": null,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7455,
+          "actions_to_first_levelup": null,
+          "game": "sp80",
+          "levels": 0,
+          "reached": 0,
+          "reproduced": null,
+          "reproduction": null,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7733,
+          "actions_to_first_levelup": 1398,
+          "game": "vc33",
+          "levels": 1,
+          "reached": 1,
+          "reproduced": true,
+          "reproduction": {
+            "claimed_level": 1,
+            "game": "vc33",
+            "mode": "offline_reproduction_gate_no_quota",
+            "reached_level": 1,
+            "reproduced": true
+          },
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7787,
+          "actions_to_first_levelup": null,
+          "game": "cd82",
+          "levels": 0,
+          "reached": 0,
+          "reproduced": null,
+          "reproduction": null,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7899,
+          "actions_to_first_levelup": null,
+          "game": "ft09",
+          "levels": 0,
+          "reached": 0,
+          "reproduced": null,
+          "reproduction": null,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7858,
+          "actions_to_first_levelup": 3269,
+          "game": "su15",
+          "levels": 1,
+          "reached": 1,
+          "reproduced": true,
+          "reproduction": {
+            "claimed_level": 1,
+            "game": "su15",
+            "mode": "offline_reproduction_gate_no_quota",
+            "reached_level": 1,
+            "reproduced": true
+          },
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7700,
+          "actions_to_first_levelup": 5731,
+          "game": "ls20",
+          "levels": 1,
+          "reached": 1,
+          "reproduced": true,
+          "reproduction": {
+            "claimed_level": 1,
+            "game": "ls20",
+            "mode": "offline_reproduction_gate_no_quota",
+            "reached_level": 1,
+            "reproduced": true
+          },
+          "solved": true,
+          "timed_out": false
+        }
+      ],
+      "policy": "e3_imitation_action_prior",
+      "prior_prune_quantile": 0.25,
+      "solved_count": 3,
+      "timed_out_count": 0,
+      "total_actions_on_solved": 23291
+    }
+  },
+  "median_actions_baseline": 7760.0,
+  "median_actions_with_prior": 7733.0,
+  "offline_reproduction_gate": "kit.reproduce_on_first_levelup_segment_for_solved_rows",
+  "positive_control": {
+    "actions_reduced": true,
+    "baseline_actions_to_first_levelup": 3,
+    "prune_diagnostics": {
+      "candidate_count": 3,
+      "enabled": true,
+      "forced_keep_count": 0,
+      "kept_count": 2,
+      "max_score_pruned": 0.08564631245043618,
+      "min_score_kept": 0.08564631245043618,
+      "prune_quantile": 0.3333333333333333,
+      "pruned_count": 1
+    },
+    "ranked_actions_to_first_levelup": 1
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "baseline_file_present": true,
+    "codex_md_read": true,
+    "env_game_access_blocked": true,
+    "human_replay_manifest_present": true,
+    "local_gate_script_present": true,
+    "median_actions_baseline_control": 7760,
+    "offline_arcade_import": true,
+    "ok": true
+  },
+  "prior_prune_quantile": 0.25,
+  "prior_source": "human_replay_corpus",
+  "prior_summary": {
+    "changed_count": 13553,
+    "examples_loaded": 14020,
+    "frame_class_count": 11,
+    "human_examples_loaded": 14020,
+    "human_manifest_examples": 14797,
+    "human_manifest_present": true,
+    "human_shard_count": 4,
+    "marginal_action_counts": {
+      "0": 123.0,
+      "1": 2240.0,
+      "2": 1932.0,
+      "3": 2417.0,
+      "4": 2547.0,
+      "5": 268.0,
+      "6": 4014.0,
+      "7": 12.0
+    },
+    "prior_examples_used": 13553,
+    "prior_source": "human_replay_corpus",
+    "sequence_context_count": 8
+  },
+  "random_seed": 4512,
+  "reproducibility_checksum": "sha256:984d004d19ca9e621c9329b371a4d898d8e62a5dba538ebbf27d0e2a641ef017",
+  "requirements": [
+    "REQ-ARC-FCP-4512"
+  ],
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4512"
+  ],
+  "schema": "carnot.arc_imitation_action_prior_4512.v1",
+  "solve_rate_baseline": 4,
+  "solve_rate_denominator": 8,
+  "solve_rate_with_prior": 3
+}

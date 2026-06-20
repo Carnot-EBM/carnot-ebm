@@ -48,6 +48,7 @@ def rich_action_candidates(
     frame_change_scorer: Any | None = None,
     frame_change_prune_threshold: float | None = None,
     action_prior: Any | None = None,
+    action_prior_prune_quantile: float | None = None,
     structural_energy_scorer: Any | None = None,
 ) -> list:
     """Every detected object is a click candidate (no 12-click cap — the winning
@@ -67,7 +68,11 @@ def rich_action_candidates(
 
     REQ-ARC-FCP-4511: when ``frame_change_prune_threshold`` is supplied with a
     frame-change scorer, predicted no-op candidates are removed before the
-    explorer ever expands them."""
+    explorer ever expands them.
+
+    REQ-ARC-FCP-4512: when ``action_prior_prune_quantile`` is supplied with an
+    action prior, the bottom prior-likelihood quantile is removed before
+    expansion while retaining at least one candidate."""
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
@@ -98,6 +103,15 @@ def rich_action_candidates(
             out,
             scorer=frame_change_scorer,
             threshold=frame_change_prune_threshold,
+        )
+    if action_prior is not None and action_prior_prune_quantile is not None:
+        from carnot.agentic.arc_frame_change_predictor import prune_arc_actions_by_prior_quantile
+
+        out, _diagnostics = prune_arc_actions_by_prior_quantile(
+            frame,
+            out,
+            prior=action_prior,
+            prune_quantile=action_prior_prune_quantile,
         )
     if frame_change_scorer is not None or action_prior is not None or structural_energy_scorer is not None:
         from carnot.agentic.arc_frame_change_predictor import rank_arc_actions

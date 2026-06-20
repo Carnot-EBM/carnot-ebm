@@ -175,6 +175,8 @@ class StepwiseExplorer:
         discriminative_prune_threshold: float = 0.12,
         frame_change_scorer: Any | None = None,
         frame_change_prune_threshold: float | None = None,
+        action_prior: Any | None = None,
+        action_prior_prune_quantile: float | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -186,6 +188,8 @@ class StepwiseExplorer:
         self.value_weight = float(value_weight)
         self.frame_change_scorer = frame_change_scorer
         self.frame_change_prune_threshold = frame_change_prune_threshold
+        self.action_prior = action_prior
+        self.action_prior_prune_quantile = action_prior_prune_quantile
         self.online_discriminative = bool(online_discriminative)
         self.discriminative_featurizer = discriminative_featurizer
         self.discriminative_min_positives = max(1, int(discriminative_min_positives))
@@ -338,15 +342,20 @@ class StepwiseExplorer:
             g[self.hud_mask] = 0  # collapse counter/timer cells so equal game states dedup
         return frame_hash(g)
 
-    def _candidates(self, frame) -> list[dict]:
+    def _candidates(self, frame, path: Sequence[dict] | None = None) -> list[dict]:
         from carnot.agentic.arc_graph_explore import rich_action_candidates
 
+        action_prior = self.action_prior
+        if action_prior is not None and hasattr(action_prior, "for_path"):
+            action_prior = action_prior.for_path(path or [])
         return [
             {"action": int(c.action_id), "data": c.data}
             for c in rich_action_candidates(
                 frame,
                 frame_change_scorer=self.frame_change_scorer,
                 frame_change_prune_threshold=self.frame_change_prune_threshold,
+                action_prior=action_prior,
+                action_prior_prune_quantile=self.action_prior_prune_quantile,
             )
         ]
 
@@ -408,9 +417,10 @@ class StepwiseExplorer:
                         source="alive_frontier",
                         node_hash=h,
                     )
+                    new_path = opath + [act]
                     self.graph[h] = {
-                        "path": opath + [act],
-                        "untested": self._candidates(latest),
+                        "path": new_path,
+                        "untested": self._candidates(latest, path=new_path),
                         "value": self._value(latest),
                         "discriminative_features": features,
                     }
@@ -427,7 +437,7 @@ class StepwiseExplorer:
                 h,
                 {
                     "path": [],
-                    "untested": self._candidates(latest),
+                    "untested": self._candidates(latest, path=[]),
                     "value": self._value(latest),
                     "discriminative_features": features,
                 },
@@ -615,6 +625,8 @@ class CarnotAgentPolicy:
         search_mode: str = "depth_first_ride",
         frame_change_scorer: Any | None = None,
         frame_change_prune_threshold: float | None = None,
+        action_prior: Any | None = None,
+        action_prior_prune_quantile: float | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -635,6 +647,8 @@ class CarnotAgentPolicy:
                 search_mode=search_mode,
                 frame_change_scorer=frame_change_scorer,
                 frame_change_prune_threshold=frame_change_prune_threshold,
+                action_prior=action_prior,
+                action_prior_prune_quantile=action_prior_prune_quantile,
             )
         )
 
@@ -684,6 +698,8 @@ class E3AgentPolicy:
         mechanic_detector=None,
         frame_change_scorer: Any | None = None,
         frame_change_prune_threshold: float | None = None,
+        action_prior: Any | None = None,
+        action_prior_prune_quantile: float | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         if value_head is _DEFAULT_VALUE_HEAD:
@@ -701,6 +717,8 @@ class E3AgentPolicy:
             search_mode=search_mode,
             frame_change_scorer=frame_change_scorer,
             frame_change_prune_threshold=frame_change_prune_threshold,
+            action_prior=action_prior,
+            action_prior_prune_quantile=action_prior_prune_quantile,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (

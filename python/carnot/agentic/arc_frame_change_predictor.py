@@ -574,6 +574,16 @@ def _scorer_value(frame: Any, candidate: Any, scorer: Any) -> float:
     raise TypeError("scorer must expose candidate_score(frame, candidate) or be callable")
 
 
+def _prior_value(frame: Any, candidate: Any, prior: Any) -> float:
+    if prior is None:
+        return 0.0
+    if hasattr(prior, "score"):
+        return float(prior.score(frame, candidate))
+    if isinstance(prior, Callable):
+        return float(prior(frame, candidate))
+    raise TypeError("prior must expose score(frame, candidate) or be callable")
+
+
 def _delta_energy_value(frame: Any, candidate: Any, structural_energy_scorer: Any) -> float:
     if structural_energy_scorer is None:
         return 0.0
@@ -609,7 +619,7 @@ def rank_arc_actions(
             p_for_energy = p_change if scorer is not None else 1.0
             score = p_for_energy * (-delta_energy)
         if prior is not None:
-            score += prior.score(frame, candidate)
+            score += _prior_value(frame, candidate, prior)
         scored.append((float(score), index, candidate))
     scored.sort(key=lambda row: (-row[0], row[1]))
     return [candidate for _score, _index, candidate in scored]
@@ -672,6 +682,77 @@ def prune_arc_actions(
                     score
                     for score, _index, candidate in scored
                     if candidate not in kept
+                ),
+                default=None,
+            ),
+        }
+    )
+    return kept, diagnostics
+
+
+def prune_arc_actions_by_prior_quantile(
+    frame: Any,
+    candidates: Sequence[Any],
+    *,
+    prior: Any | None,
+    prune_quantile: float | None,
+    min_candidates: int = 1,
+) -> tuple[list[Any], dict[str, Any]]:
+    """REQ-ARC-FCP-4512: drop the bottom prior-likelihood quantile before expansion."""
+
+    rows = list(candidates)
+    diagnostics: dict[str, Any] = {
+        "enabled": bool(prior is not None and prune_quantile is not None),
+        "prune_quantile": None if prune_quantile is None else float(prune_quantile),
+        "candidate_count": int(len(rows)),
+        "kept_count": int(len(rows)),
+        "pruned_count": 0,
+        "forced_keep_count": 0,
+    }
+    if prior is None or prune_quantile is None or not rows:
+        return rows, diagnostics
+
+    quantile = max(0.0, min(1.0, float(prune_quantile)))
+    max_prunable = max(0, len(rows) - max(0, int(min_candidates)))
+    prune_count = min(max_prunable, int(len(rows) * quantile))
+    if prune_count <= 0:
+        return rows, diagnostics
+
+    scored: list[tuple[float, int, Any]] = [
+        (_prior_value(frame, candidate, prior), index, candidate)
+        for index, candidate in enumerate(rows)
+    ]
+    prune_indexes = {
+        index
+        for _score, index, _candidate in sorted(scored, key=lambda row: (row[0], row[1]))[
+            :prune_count
+        ]
+    }
+    kept = [candidate for _score, index, candidate in scored if index not in prune_indexes]
+    forced_keep_count = 0
+    if not kept and min_candidates > 0:
+        forced_keep_count = min(int(min_candidates), len(scored))
+        kept = [
+            candidate
+            for _score, _index, candidate in sorted(
+                scored,
+                key=lambda row: (-row[0], row[1]),
+            )[:forced_keep_count]
+        ]
+    diagnostics.update(
+        {
+            "kept_count": int(len(kept)),
+            "pruned_count": int(len(rows) - len(kept)),
+            "forced_keep_count": int(forced_keep_count),
+            "min_score_kept": min(
+                (_prior_value(frame, candidate, prior) for candidate in kept),
+                default=None,
+            ),
+            "max_score_pruned": max(
+                (
+                    score
+                    for score, index, _candidate in scored
+                    if index in prune_indexes
                 ),
                 default=None,
             ),

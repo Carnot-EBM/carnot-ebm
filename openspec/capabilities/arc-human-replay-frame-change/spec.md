@@ -249,6 +249,42 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
 - `preconditions_checked`: principle "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
 
+### REQ-ARC-FCP-4512: Imitation Action-Type and Sequence Prior
+
+Experiment 4512 SHALL write
+`results/experiment_4512_imitation_action_prior.json` from a behavior-cloning
+prior over action types and action sequences. The prior SHALL estimate
+`P(action | frame-class)` from the locally staged human replay corpus when it is
+loadable. If the human replay corpus is absent or empty, the experiment SHALL
+fall back to a self-supervised marginal derived from offline-arcade
+`(frame, action, next_frame)` transitions, so the prior cannot null merely
+because the replay corpus is unavailable.
+
+The explorer SHALL accept the action prior as an expansion-ordering signal and
+an opt-in low-likelihood pruning gate. Candidate expansion SHALL preserve the
+legacy candidate order as the stable tie-break, SHALL drop only the bottom
+quantile requested by the prior-prune setting, and SHALL retain at least one
+candidate. Experiment 4512 SHALL compare the fixed 8-game local submission-gate
+baseline of 7760 median actions against the prior-guided measurement on the
+same gate games, report per-game rows, solve-rate, and median
+actions-to-first-level-up, and use an honest null if the prior does not reduce
+actions or reduces solve-rate.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: imitation_prior_median_actions_<n>_below_7760 OR complete: imitation_prior_no_reduction_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
+- `median_actions_baseline`: principle "the 7760 control, fixed."
+- `median_actions_with_prior`: principle "the headline -- did the human prior cut exploration."
+- `solve_rate_baseline`: principle "no-regression reference."
+- `solve_rate_with_prior`: principle "the prior must not drop solve-rate."
+- `prior_source`: principle "honest declaration of whether the human replays or the self-supervised fallback supplied the prior (no silent corpus dependency)."
+- `positive_control_passed`: principle "proves the harness detects a real reduction."
+- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -341,3 +377,15 @@ at least one candidate is retained, and the experiment 4511 artifact records
 the baseline 7760 control, pruned median action measurement, solve-rate guard,
 held-out no-op precision, positive control status, random seed, and
 reproducibility checksum.
+
+### SCENARIO-ARC-FCP-4512: Imitation Prior Orders and Prunes Expansion
+
+Given a frame, a legacy candidate list, and an imitation prior that assigns
+higher likelihood to the human-like action sequence for that frame class
+When the explorer builds candidates with an action prior and bottom-quantile
+prune setting
+Then the high-likelihood action is expanded before low-likelihood candidates,
+the bottom quantile is pruned while retaining at least one candidate, and the
+experiment 4512 artifact records the 7760 baseline, prior-guided median action
+measurement, solve-rate guard, prior source, positive control status, false
+negative risk check, random seed, and reproducibility checksum.
