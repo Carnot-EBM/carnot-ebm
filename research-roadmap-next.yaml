@@ -1,1 +1,419 @@
-research-roadmap.yaml
+milestone: 2026.06.414
+milestone_title: 'CLOSE the 25 public games to 25/25 first-contact (re86 sprite-resize verifier + bp35/lf52
+  adapter-free first-contact -- the 3 remaining unsolved) + DEEPEN a shallow game, SHIP the durable --no-cov
+  precondition lint so the dc22-class throughput block (a whole .412 milestone lost) is structurally impossible,
+  DECOUPLE solve tasks from gated_on cascades, and BOOST the verifier training pipeline with REFLECTION-augmented
+  v2 data (validated this session: regularizes an overfit position-specific weight 214->42 toward the
+  reflection-invariance the held-out 110 eval games reward) + BUILD the variant transfer benchmark (exp4472
+  test exists, module unbuilt). ALL experiments agent_type=codex/gpt-5.5 (ARC sprint quota-conserve; planner/retro
+  stay Claude). Reserved: 2 infra + 1 hardware-continuity (KV260/GateMate/PolarFire) + 1 SOTA-ingestion.
+  >=4 LEVEL-UP attempts (re86, bp35, lf52, deepen) per the ARC Level-Up Attempt Guarantee. Live generator
+  Qwen3.5-9B-MTP, NEVER the 3090s. NO leaderboard submission in-loop (operator-only).'
+milestone_doc: openspec/change-proposals/research-roadmap-v414.md
+milestone_overview: '.413 banked dc22+sc25(L2-L5)+sb26 (39->45 reproducible levels, 22/25 games first-contacted).
+  .414 closes the breadth gap: the 3 remaining unsolved public games (re86 needs a sprite-resize verifier;
+  bp35/lf52 never first-contacted) + one deepen, while shipping the throughput fixes the .412/.413 diagnosis
+  identified (the --no-cov precondition default as a durable lint; gated_on decoupling) and consuming
+  the reflection-augmentation verifier bridge built 2026-06-19 (wire+measure vs un-augmented; honest null
+  allowed). Variant work targets the generalization the hidden eval rewards, the cheapest way to manufacture
+  unseen-but-known-correct data since the 25 public games are all there are.'
+tasks:
+- id: exp4475-a1 (arc north star; primary; operator mandatory; level-up)
+  milestone: 2026.06.414
+  title: PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; LEVEL-UP) -- SOLVE re86 L1 -- BUILD the
+    missing pattern-match-sprite-resize verifier (GAP-4471) then solve
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4475_solve_re86_sprite_resize_verifier.json
+  prompt: "CONTEXT: re86 is one of the 3 remaining unsolved public games and is blocked NOT on search\
+    \ but on a\nMISSING VERIFIER: GAP-4471 residual_delta=missing_pattern_match_sprite_resize_verifier.\
+    \ The router\nroutes it (tu93/graph_astar) but no discriminator distinguishes the sprite-overlay/resize\
+    \ win-delta.\nBUILD a generic sprite-overlay pattern-match + resize/transform verifier operator (register\
+    \ it in the\noperator library + ops/verifier_registry.yaml), wire it into the solve, run the reproduction\
+    \ gate, and\nbank re86 L1 if it advances. INCREMENTAL: +1 level on re86 ONLY. If it does not advance,\
+    \ emit the\nmissing_verifier_gaps characterization (do NOT fabricate). Close GAP-4471 if banked.\n\
+    CONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE any solve step):\n     a. Smoke-import the kit WITHOUT\
+    \ the coverage gate -- run\n        `.venv/bin/pytest tests/python/test_arc_solver_kit.py -q --no-cov`\
+    \ (the global\n        --cov-fail-under=99 from pyproject addopts makes any -k subset exit 1; --no-cov\
+    \ makes this a\n        smoke gate, NOT a coverage gate -- the dc22-class block that lost a whole\
+    \ .412 milestone).\n        If this fails for a REAL reason (import error), write honest_verdict blocked_kit_import\
+    \ and exit.\n     b. offline arcade reachable: `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit\
+    \ as k; k.offline_arcade()\"`.\n     If a precondition is missing, write honest_verdict blocked_<resource>\
+    \ and EXIT -- do NOT fabricate.\n\nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict:\
+    \ principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive\
+    \ text follows the prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference\
+    \ | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right\n    duration floor and we never mistake a fast aggregation for a fabrication.\"\
+    \n  offline_reproduced: principle \"a solve not reproducible offline is wasted effort -- only reproduced\n\
+    \    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\
+    \n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing monotonically;\n\
+    \    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle\
+    \ \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode\
+    \ where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-06-19 operator directive (standing ARC sprint): versioned-lineage continuation
+    / routine level-up attempt -- false-positive scope-match vs prior ARC solve exps; forward difference
+    stated in the prompt (new game / new level / new verifier).'
+- id: exp4476-a2 (arc north star; operator mandatory; level-up)
+  milestone: 2026.06.414
+  title: PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- FIRST-CONTACT bp35 L1 -- adapter-free
+    graph_explore_solve_v2 (never first-contacted)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4476_first_contact_bp35.json
+  prompt: "CONTEXT: bp35 is in the 25-game survey but has NO registry entry -- never first-contacted.\
+    \ FIRST call\narc_solve_learning.recommend_approach('bp35') for the transfer recipe + general_gotchas,\
+    \ then attempt\nadapter-free first contact with graph_explore_solve_v2 (solved 6 games with zero bespoke\
+    \ code). Run the\nreproduction gate; bank bp35 L1 if it advances; register the GameAdapter seed +\
+    \ mechanic in\nops/arc_solve_registry.yaml. INCREMENTAL: +1 level on bp35 ONLY. If no advance, emit\
+    \ the routing\nrecommendation + the per-game RE delta as the next attempt's starting point (do NOT\
+    \ fabricate).\nCONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE any solve step):\n     a. Smoke-import\
+    \ the kit WITHOUT the coverage gate -- run\n        `.venv/bin/pytest tests/python/test_arc_solver_kit.py\
+    \ -q --no-cov` (the global\n        --cov-fail-under=99 from pyproject addopts makes any -k subset\
+    \ exit 1; --no-cov makes this a\n        smoke gate, NOT a coverage gate -- the dc22-class block that\
+    \ lost a whole .412 milestone).\n        If this fails for a REAL reason (import error), write honest_verdict\
+    \ blocked_kit_import and exit.\n     b. offline arcade reachable: `.venv/bin/python -c \"from carnot.agentic\
+    \ import arc_solver_kit as k; k.offline_arcade()\"`.\n     If a precondition is missing, write honest_verdict\
+    \ blocked_<resource> and EXIT -- do NOT fabricate.\n\nREQUIRED ARTIFACT FIELDS (each with a one-line\
+    \ principle):\n  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline); descriptive text follows the prefix.\"\n  inference_substrate: principle \"explicit\
+    \ declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right\n    duration floor and we never mistake a fast aggregation\
+    \ for a fabrication.\"\n  offline_reproduced: principle \"a solve not reproducible offline is wasted\
+    \ effort -- only reproduced\n    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce\
+    \ passes.\"\n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing\
+    \ monotonically;\n    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked:\
+    \ principle \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication\
+    \ mode where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-06-19 operator directive (standing ARC sprint): versioned-lineage continuation
+    / routine level-up attempt -- false-positive scope-match vs prior ARC solve exps; forward difference
+    stated in the prompt (new game / new level / new verifier).'
+- id: exp4477-a3 (arc north star; operator mandatory; level-up)
+  milestone: 2026.06.414
+  title: PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- FIRST-CONTACT lf52 L1 -- adapter-free
+    graph_explore_solve_v2 (never first-contacted)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4477_first_contact_lf52.json
+  prompt: "CONTEXT: lf52 is the LAST of the 3 remaining unsolved public games with no registry entry.\
+    \ Same loop\nas bp35: recommend_approach('lf52') -> adapter-free graph_explore_solve_v2 -> reproduction\
+    \ gate ->\nregister. INCREMENTAL: +1 level on lf52 ONLY. Banking lf52 + bp35 + re86 closes the 25\
+    \ public games to\n25/25 first-contact. If no advance, emit the RE delta (do NOT fabricate).\nCONCRETE\
+    \ STEPS:\n  0. PRECONDITIONS (check BEFORE any solve step):\n     a. Smoke-import the kit WITHOUT\
+    \ the coverage gate -- run\n        `.venv/bin/pytest tests/python/test_arc_solver_kit.py -q --no-cov`\
+    \ (the global\n        --cov-fail-under=99 from pyproject addopts makes any -k subset exit 1; --no-cov\
+    \ makes this a\n        smoke gate, NOT a coverage gate -- the dc22-class block that lost a whole\
+    \ .412 milestone).\n        If this fails for a REAL reason (import error), write honest_verdict blocked_kit_import\
+    \ and exit.\n     b. offline arcade reachable: `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit\
+    \ as k; k.offline_arcade()\"`.\n     If a precondition is missing, write honest_verdict blocked_<resource>\
+    \ and EXIT -- do NOT fabricate.\n\nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict:\
+    \ principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive\
+    \ text follows the prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference\
+    \ | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right\n    duration floor and we never mistake a fast aggregation for a fabrication.\"\
+    \n  offline_reproduced: principle \"a solve not reproducible offline is wasted effort -- only reproduced\n\
+    \    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\
+    \n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing monotonically;\n\
+    \    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle\
+    \ \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode\
+    \ where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-06-19 operator directive (standing ARC sprint): versioned-lineage continuation
+    / routine level-up attempt -- false-positive scope-match vs prior ARC solve exps; forward difference
+    stated in the prompt (new game / new level / new verifier).'
+- id: exp4478-a4 (arc north star; operator mandatory; level-up)
+  milestone: 2026.06.414
+  title: PHASE A4 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- DEEPEN one shallow L1 game by +1 level
+    (rotate target across cd82/sp80/su15/cn04/m0r0/sk48)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4478_deepen_shallow_game_l2.json
+  prompt: "CONTEXT: many reproduced games sit at L1. Pick ONE shallow game not deepened recently (rotate:\n\
+    cd82/sp80/su15/cn04/m0r0/sk48), reverse-engineer its L2 delta, and bank +1 level via the\nverifier-routed\
+    \ solver (arc_loop_solve --game <g>) + reproduction gate. INCREMENTAL: ONE game, +1\nlevel (L1->L2).\
+    \ Record dead-ends in the registry for the next attempt. If no advance, emit the L2 RE\ndelta (do\
+    \ NOT fabricate).\nCONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE any solve step):\n     a. Smoke-import\
+    \ the kit WITHOUT the coverage gate -- run\n        `.venv/bin/pytest tests/python/test_arc_solver_kit.py\
+    \ -q --no-cov` (the global\n        --cov-fail-under=99 from pyproject addopts makes any -k subset\
+    \ exit 1; --no-cov makes this a\n        smoke gate, NOT a coverage gate -- the dc22-class block that\
+    \ lost a whole .412 milestone).\n        If this fails for a REAL reason (import error), write honest_verdict\
+    \ blocked_kit_import and exit.\n     b. offline arcade reachable: `.venv/bin/python -c \"from carnot.agentic\
+    \ import arc_solver_kit as k; k.offline_arcade()\"`.\n     If a precondition is missing, write honest_verdict\
+    \ blocked_<resource> and EXIT -- do NOT fabricate.\n\nREQUIRED ARTIFACT FIELDS (each with a one-line\
+    \ principle):\n  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline); descriptive text follows the prefix.\"\n  inference_substrate: principle \"explicit\
+    \ declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right\n    duration floor and we never mistake a fast aggregation\
+    \ for a fabrication.\"\n  offline_reproduced: principle \"a solve not reproducible offline is wasted\
+    \ effort -- only reproduced\n    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce\
+    \ passes.\"\n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing\
+    \ monotonically;\n    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked:\
+    \ principle \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication\
+    \ mode where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-06-19 operator directive (standing ARC sprint): versioned-lineage continuation
+    / routine level-up attempt -- false-positive scope-match vs prior ARC solve exps; forward difference
+    stated in the prompt (new game / new level / new verifier).'
+- id: exp4479-a5 (arc north star; operator mandatory)
+  milestone: 2026.06.414
+  title: PHASE A5 (ARC NORTH STAR; operator MANDATORY) -- WIRE + MEASURE the reflection-augmented v2 cross-game
+    verifier vs un-augmented (does it improve routing?)
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4479_aug_verifier_routing_measure.json
+  prompt: "CONTEXT: scripts/arc_cross_game_verifier_train.py now supports REFLECTION augmentation (--variants\
+    \ K,\nv2 features) -- validated this session: it regularizes an overfit position-specific weight (214->42)\n\
+    toward reflection-invariance. The checkpoint is models/arc_verifier_cross_game_v2_aug2.json. MEASURE\n\
+    whether it actually improves the live explorer's frontier routing on a HELD-OUT game vs the\nun-augmented\
+    \ v2 head: run graph_explore_solve_v3 on a held-out deep game (e.g. wa30 or a not-yet-deep\ngame)\
+    \ with each verifier, compare best-level-reached + expansions-to-first-levelup (n>=3 seeds). HONEST\n\
+    NULL is a valid finding: if augmentation does NOT help routing, say so (FALSE_NEGATIVE_RISK: include\
+    \ a\npositive control where the verifier DOES change the search). Only wire aug2 into\narc_competition_agent\
+    \ load_cross_game_value_head if it measurably helps. inference_substrate=\nverifier_ensemble_against_cached_candidates\
+    \ (offline replay + search; no LLM).\n\nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n\
+    \  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline); descriptive text follows the prefix.\"\n  inference_substrate: principle \"explicit\
+    \ declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right\n    duration floor and we never mistake a fast aggregation\
+    \ for a fabrication.\"\n  offline_reproduced: principle \"a solve not reproducible offline is wasted\
+    \ effort -- only reproduced\n    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce\
+    \ passes.\"\n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing\
+    \ monotonically;\n    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked:\
+    \ principle \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication\
+    \ mode where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+- id: exp4480-a6 (arc north star; operator mandatory)
+  milestone: 2026.06.414
+  title: 'PHASE A6 (ARC NORTH STAR; operator MANDATORY) -- BUILD the variant transfer benchmark (exp4472
+    has a TEST but no implementation): agent on N reflection variants'
+  priority: critical
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4480_variant_transfer_benchmark.json
+  prompt: "CONTEXT: tests/python/test_experiment_4472_variant_generic_transfer_benchmark_v4.py asserts\
+    \ a variant\ntransfer contract but there is NO experiment_4472 module -- the report builder is unbuilt.\
+    \ BUILD it:\nfor each SOLVED game, run the agent/solver against N reflection variants (VariantEnv\
+    \ reflect axis;\ncolor-permutation is a NO-OP for our color-agnostic features so use REFLECTION) and\
+    \ report\ntransfer-solve-rate = (variants still solved)/(N) per game -- a far bigger generalization\
+    \ signal than\ntoday's 2/7 leave-one-out. Make the 4472 test pass. This is the dev-side proxy for\
+    \ the held-out 110\neval games (re-laid-out, unseen). inference_substrate=verifier_ensemble_against_cached_candidates.\n\
+    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
+    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive\
+    \ text follows the prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference\
+    \ | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right\n    duration floor and we never mistake a fast aggregation for a fabrication.\"\
+    \n  offline_reproduced: principle \"a solve not reproducible offline is wasted effort -- only reproduced\n\
+    \    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\
+    \n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing monotonically;\n\
+    \    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle\
+    \ \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode\
+    \ where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+- id: exp4481-a7 (arc north star)
+  milestone: 2026.06.414
+  title: 'PHASE A7 (ARC NORTH STAR) -- GENERIC-operator LOO consolidation: raise generic_loo_solve_count
+    (re-solve a hand-recipe game generically)'
+  priority: high
+  track: arc-north-star
+  max_turns: 150
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4481_generic_loo_consolidation.json
+  prompt: "CONTEXT: the generic-operator library lets games re-solve WITHOUT their bespoke recipe (generic_loo_\n\
+    solve_count climbed 2->5->6). Pick a hand-adapter game (lp85/tu93/tr87/dc22) and demonstrate a generic\n\
+    operator re-solves its L1 without the hand recipe (leave-one-out), via the reproduction gate. This\n\
+    amortizes the per-game RE delta -- the core bottleneck. Counts NO new levels by design; raises\ngeneric_loo_solve_count.\
+    \ inference_substrate=verifier_ensemble_against_cached_candidates.\n\nREQUIRED ARTIFACT FIELDS (each\
+    \ with a one-line principle):\n  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline); descriptive text follows the prefix.\"\n  inference_substrate: principle \"explicit\
+    \ declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right\n    duration floor and we never mistake a fast aggregation\
+    \ for a fabrication.\"\n  offline_reproduced: principle \"a solve not reproducible offline is wasted\
+    \ effort -- only reproduced\n    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce\
+    \ passes.\"\n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing\
+    \ monotonically;\n    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked:\
+    \ principle \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication\
+    \ mode where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone
+    / hardware-continuity / SOTA-ingestion / generic-LOO) -- false-positive scope-match vs prior same-class
+    exps; this is required forward work, not a doomed rerun.'
+- id: exp4482-b1 (infra; operator mandatory -- throughput)
+  milestone: 2026.06.414
+  title: PHASE B1 (INFRA; operator MANDATORY -- throughput) -- Make --no-cov the DEFAULT for ALL ARC solve
+    preconditions + a durable lint that flags any missing it
+  priority: high
+  track: infra
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4482_nocov_default_lint.json
+  prompt: "CONTEXT: the #1 throughput killer is the baseline_pytest_coverage gate -- exp4455 lost a whole\
+    \ .412\nmilestone's dc22 solve because its precondition pytest inherited --cov-fail-under=99. The\
+    \ conductor\nburns ~3.7 hr/milestone on pre-tests. SHIP a durable lint (scripts/arc_nocov_precondition_lint.py)\n\
+    that scans the roadmap YAML and FAILS any task whose track=arc-* PRECONDITIONS run pytest WITHOUT\n\
+    --no-cov; wire it as a pre-commit hook + an activation-guard check. Add a test. This makes the\ndc22-class\
+    \ block structurally impossible. inference_substrate=aggregation_from_upstream_artifacts.\n\nREQUIRED\
+    \ ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start with\
+    \ a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive\
+    \ text follows the prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference\
+    \ | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right\n    duration floor and we never mistake a fast aggregation for a fabrication.\"\
+    \n  offline_reproduced: principle \"a solve not reproducible offline is wasted effort -- only reproduced\n\
+    \    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\
+    \n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing monotonically;\n\
+    \    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle\
+    \ \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode\
+    \ where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+- id: exp4483-b2 (infra -- throughput + hygiene)
+  milestone: 2026.06.414
+  title: PHASE B2 (INFRA -- throughput + hygiene) -- Decouple ARC solve tasks from gated_on chains + reconcile
+    reproducible_total_levels (stale 39 vs 45)
+  priority: high
+  track: infra
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4483_gate_decouple_registry_reconcile.json
+  prompt: "CONTEXT: (1) the dominant stall is GATE_BLOCK cascades on gated_on chains (3-retry-then-skip);\
+    \ ARC solve\nattempts on INDEPENDENT games must not be gated_on a fragile upstream -- audit the roadmap\
+    \ and remove\ngated_on from independent solve tasks. (2) ops/arc_solve_registry.yaml has a STALE hygiene\
+    \ block reading\n39/20 while the header + per-game sum read 45/22 -- reconcile to the authoritative\
+    \ count. Emit the\ncorrected reproducible_total_levels/games. inference_substrate=aggregation_from_upstream_artifacts.\n\
+    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
+    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive\
+    \ text follows the prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference\
+    \ | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right\n    duration floor and we never mistake a fast aggregation for a fabrication.\"\
+    \n  offline_reproduced: principle \"a solve not reproducible offline is wasted effort -- only reproduced\n\
+    \    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\
+    \n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing monotonically;\n\
+    \    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle\
+    \ \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode\
+    \ where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+- id: exp4484-c (hardware continuity; operator mandatory)
+  milestone: 2026.06.414
+  title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY) -- Per-board continuity audit: KV260 (SSH),
+    GateMate (USB), PolarFire (SSH) -- reachability + next step'
+  priority: medium
+  track: hardware
+  max_turns: 90
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: hardware_smoke
+  deliverable: results/experiment_4484_hardware_continuity_audit.json
+  prompt: "CONTEXT: Hardware-Task Continuity Discipline -- each attached board needs one task/milestone\
+    \ until\nterminal. AUDIT all three: KV260 via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`\
+    \ (NEVER\n/dev/mmcblk -- SSH-not-SD-card), GateMate via `openFPGALoader -c dirtyJtag --detect`, PolarFire\
+    \ via\n`ssh -o ConnectTimeout=5 polarfire 'true'`. For each: record reachability + the next concrete\
+    \ forward\nstep (or blocked_<board>_unreachable). Documentation/audit task -- no fabrication. track=hardware.\n\
+    inference_substrate=hardware_smoke.\n\nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n\
+    \  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline); descriptive text follows the prefix.\"\n  inference_substrate: principle \"explicit\
+    \ declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts)\
+    \ so adversarial_verify applies the right\n    duration floor and we never mistake a fast aggregation\
+    \ for a fabrication.\"\n  offline_reproduced: principle \"a solve not reproducible offline is wasted\
+    \ effort -- only reproduced\n    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce\
+    \ passes.\"\n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing\
+    \ monotonically;\n    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked:\
+    \ principle \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication\
+    \ mode where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone
+    / hardware-continuity / SOTA-ingestion / generic-LOO) -- false-positive scope-match vs prior same-class
+    exps; this is required forward work, not a doomed rerun.'
+- id: exp4485-d (sota-ingestion; reserved -- arc search/verifier track)
+  milestone: 2026.06.414
+  title: PHASE D (SOTA-INGESTION; reserved -- ARC search/verifier track) -- Ingest SOTA on neural-guided
+    search + induced-world-model planning for sparse-reward puzzles -> mapping
+  priority: medium
+  track: sota-ingestion
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: docs/research-notes/arc-search-verifier-sota-414.md
+  prompt: "CONTEXT: SOTA-Ingestion Cycle Discipline -- one ingestion task/milestone when the headline\
+    \ is a\nbleeding-edge track (ARC live-solving IS). Read the already-discovered corpus (research-studying.md\
+    \ /\nresearch-references.md) filtered to ARC search/verifier, PLUS a FOCUSED fresh pass via\nscripts/sweep_clusters.py\
+    \ / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8\npapers (NOT /deep-research\
+    \ -- it is banned from the autonomous loop). Emit a SOTA->experiment mapping\nnote (docs/research-notes/)\
+    \ for neural-guided/learned-heuristic search + goal-induction + planning\nwith imperfect world models,\
+    \ mapped onto our verifier-routed solver. Cite REAL arXiv IDs. Flag the\nstrongest method for the\
+    \ .415 roadmap. inference_substrate=aggregation_from_upstream_artifacts.\n\nREQUIRED ARTIFACT FIELDS\
+    \ (each with a one-line principle):\n  honest_verdict: principle \"MUST start with a terminal prefix\
+    \ complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ so the reconciler\
+    \ classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive text follows the\
+    \ prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n\
+    \    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right\n\
+    \    duration floor and we never mistake a fast aggregation for a fabrication.\"\n  offline_reproduced:\
+    \ principle \"a solve not reproducible offline is wasted effort -- only reproduced\n    levels count\
+    \ (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\n  reproduced_levels:\
+    \ principle \"the headline metric is reproducible_total_levels growing monotonically;\n    report\
+    \ the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle \"records\
+    \ WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode where the\
+    \ agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone
+    / hardware-continuity / SOTA-ingestion / generic-LOO) -- false-positive scope-match vs prior same-class
+    exps; this is required forward work, not a doomed rerun.'
+- id: exp4486-e (capstone .414)
+  milestone: 2026.06.414
+  title: 'PHASE E (CAPSTONE .414) -- Capstone v414 scorecard: reproducible_total_levels delta, 25-game
+    closeout status, variant-boost verdict'
+  priority: high
+  track: capstone
+  max_turns: 120
+  agent_type: codex
+  model: gpt-5.5
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4486_capstone_v414.json
+  prompt: "CONTEXT: aggregate .414. Report: reproducible_total_levels/games before->after (target: close\
+    \ toward\n25/25 first-contact via re86+bp35+lf52), which level-up attempts banked, the variant-augmented-verifier\n\
+    routing verdict (helped / null), the throughput-fix status (--no-cov lint shipped), and the variant\n\
+    transfer benchmark result. SKIP any artifact carrying flagged_adversarial=true (Fabrication gate).\
+    \ Read\nevery cited artifact via scripts/summarize_artifact.py (Reading-Results Discipline). Declare\n\
+    verifier_is_oracle for any verifier-value claim (Circularity Discipline). inference_substrate=\naggregation_from_upstream_artifacts.\n\
+    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
+    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline); descriptive\
+    \ text follows the prefix.\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference\
+    \ | verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right\n    duration floor and we never mistake a fast aggregation for a fabrication.\"\
+    \n  offline_reproduced: principle \"a solve not reproducible offline is wasted effort -- only reproduced\n\
+    \    levels count (ARC Solve Reproducibility); set true only after arc_solver_kit.reproduce passes.\"\
+    \n  reproduced_levels: principle \"the headline metric is reproducible_total_levels growing monotonically;\n\
+    \    report the count this task banked, real-env-confirmed.\"\n  preconditions_checked: principle\
+    \ \"records WHICH resources the agent verified before launching; pre-empts\n    the fabrication mode\
+    \ where the agent silently lacked a resource and synthesized a passing artifact.\"\n"
+  operator_override: '2026-05-29 operator directive (standing): routine reserved-slot continuation (capstone
+    / hardware-continuity / SOTA-ingestion / generic-LOO) -- false-positive scope-match vs prior same-class
+    exps; this is required forward work, not a doomed rerun.'
