@@ -1,0 +1,92 @@
+{
+  "duration_s": 5.481646,
+  "experiment": 4497,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.",
+    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+  },
+  "honest_verdict": "complete: hardware_continuity_audit_4497_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh",
+  "inference_substrate": "hardware_smoke",
+  "per_board_reachability": {
+    "gatemate": false,
+    "kv260": true,
+    "polarfire": true
+  },
+  "per_board_status": {
+    "gatemate": {
+      "board": "gatemate",
+      "next_forward_step": "blocked_gatemate_unreachable",
+      "precondition_command": "openFPGALoader -c dirtyJtag --detect",
+      "precondition_resource": "gatemate_dirtyjtag_detect",
+      "reachability_transcript": {
+        "duration_s": 0.020396,
+        "exit_code": 0,
+        "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz"
+      },
+      "reachable": false,
+      "status": "blocked_gatemate_unreachable"
+    },
+    "kv260": {
+      "board": "kv260",
+      "next_forward_step": "Keep KV260 continuity on SSH-only confirmation, then run any board-level latency or overlay transcript in a separate hardware task.",
+      "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "precondition_resource": "kv260_ssh",
+      "reachability_transcript": {
+        "duration_s": 4.593185,
+        "exit_code": 0,
+        "observed": "returncode=0"
+      },
+      "reachable": true,
+      "status": "kv260_reachable_ssh"
+    },
+    "polarfire": {
+      "board": "polarfire",
+      "next_forward_step": "Run an end-to-end Carnot dispatch hash-match smoke over SSH in a separate PolarFire hardware task.",
+      "precondition_command": "ssh -o ConnectTimeout=5 polarfire true",
+      "precondition_resource": "polarfire_ssh",
+      "reachability_transcript": {
+        "duration_s": 0.867843,
+        "exit_code": 0,
+        "observed": "returncode=0"
+      },
+      "reachable": true,
+      "status": "polarfire_reachable_ssh"
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.593185,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.020396,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_dirtyjtag_detect"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.867843,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4497,
+  "reproducibility_checksum": "8badc0fe81c59fe56658dc436e4401a14b3f8f772493bceba587811a8b595ab6",
+  "schema": "carnot.hardware_continuity_audit.v1",
+  "spec_refs": [
+    "REQ-HW-4497",
+    "SCENARIO-HW-4497"
+  ],
+  "speedup_claim_made": false
+}
