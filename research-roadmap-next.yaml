@@ -324,9 +324,10 @@ tasks:
   inference_substrate: hardware_smoke
   deliverable: results/experiment_4484_hardware_continuity_audit.json
   prompt: "CONTEXT: Hardware-Task Continuity Discipline. AUDIT all three: KV260 `ssh -o ConnectTimeout=5\
-    \ -o BatchMode=yes kria 'true'` (NEVER /dev/mmcblk), GateMate `openFPGALoader -c dirtyJtag --detect`,\
-    \ PolarFire `ssh -o ConnectTimeout=5 polarfire 'true'`. Record reachability + next forward step per\
-    \ board (or blocked_<board>_unreachable). Audit task, no fabrication. inference_substrate=hardware_smoke.\n\
+    \ -o BatchMode=yes kria 'true'` (SSH reachability ONLY -- the retired host SD-card device path is\
+    \ the WRONG mechanism per the KV260 SSH-Not-SD-Card discipline; do not reference it), GateMate `openFPGALoader\
+    \ -c dirtyJtag --detect`, PolarFire `ssh -o ConnectTimeout=5 polarfire 'true'`. Record reachability\
+    \ + next forward step per board (or blocked_<board>_unreachable). Audit task, no fabrication. inference_substrate=hardware_smoke.\n\
     \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
     \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
     \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate:\
