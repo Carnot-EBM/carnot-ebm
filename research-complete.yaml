@@ -43694,7 +43694,10 @@ milestones:
     A6 PREPARES a package).'
   doc: openspec/change-proposals/research-roadmap-v412.md
   completed: '2026-06-19'
-  finding: '.412 close-state: generic_solver_gap_state=partial; generic_loo_solve_count_v3=6 (v2 baseline 5); registry=39/20 FLAT vs .411; ZERO new reproduced levels; GAP-4432-LOO-TR87 closed generically by exp4456; submission_package_ready=true (39 levels, not submitted); paper_ready=true (FoVer 0.9131, G1-G4 frozen); open gaps: GAP-4423-DC22 blocked_baseline_pytest_coverage, GAP-4432-LOO-SC25 no artifact with L2-L5 unbanked, GAP-4458-SB26 missing_color_match_slot_sequence_verifier.'
+  finding: '.412 close-state: generic_solver_gap_state=partial; generic_loo_solve_count_v3=6 (v2 baseline 5); registry=39/20
+    FLAT vs .411; ZERO new reproduced levels; GAP-4432-LOO-TR87 closed generically by exp4456; submission_package_ready=true
+    (39 levels, not submitted); paper_ready=true (FoVer 0.9131, G1-G4 frozen); open gaps: GAP-4423-DC22 blocked_baseline_pytest_coverage,
+    GAP-4432-LOO-SC25 no artifact with L2-L5 unbanked, GAP-4458-SB26 missing_color_match_slot_sequence_verifier.'
   activation_recorded: exp4466-archive-412-activate-413
   tasks:
   - id: exp4454-archive-411-activate-412
@@ -43764,4 +43767,1984 @@ milestones:
       generic_loo_solve_count, and bank new levels?) + the SUBMISSION-READINESS decision (is the operator package ready to
       beat 13?).
     deliverable: results/experiment_4465_capstone_v412.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
+    result: OK (conductor)
+- id: 2026.06.413
+  title: 'EXECUTE the counterexample-guided induction .412 DESIGNED BUT COULD NOT RUN: fix the pytest-precondition infra bug
+    that BLOCKED dc22 (it ran `pytest -k` which trips the global --cov-fail-under=99 gate -> exit 1 -> the agent bailed; .411''s
+    successful solve exp4446 used --no-cov), BANK sc25''s 4 PROVISIONAL live-recorded levels (L2-L5 -- the single biggest
+    reproduced-level opportunity, provisional_total_levels=5; .412 exp4457 produced NO artifact, over-scoped), and finally
+    GROW reproducible_total_levels off the 39 that .412 left FLAT (the sprint''s only headline metric did not move all milestone).
+    .412 closed generic_solver_gap_state=PARTIAL: it CLOSED GAP-4432-LOO-TR87 (tr87 re-solves generically, exp4456) and raised
+    generic_loo_solve_count 5->6 (exp4459) and shipped a 39-level submission package (exp4460) -- but banked ZERO new reproduced
+    levels because the two level-up attempts FAILED OPERATIONALLY (dc22 blocked, sc25 no-artifact), not on the research. .413
+    turns that diagnosis into banked progress + ships the durable --no-cov precondition fix so the dc22-class block never
+    recurs. PLUS the operator-MANDATED (2026-06-19) MANUFACTURED-variant generic-transfer benchmark (25 games x N variants).
+    THE .410/.411 LESSON, ENFORCED: inference_substrate is a REQUIRED ARTIFACT FIELD the agent must EMIT on EVERY ARC solve/scoring
+    task. ALL experiments agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19 sprint; the Claude planner is SKIPPED
+    via this pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP ([[project_arc_live_generator]]);
+    NEVER the 3090s. paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline. NO leaderboard submission in-loop (operator-only;
+    A7 PREPARES a refreshed package).'
+  doc: openspec/change-proposals/research-roadmap-v413.md
+  completed: '2026-06-20'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4466-archive-412-activate-413
+    title: PHASE 0 (TRANSITION) -- archive .412 -> activate .413; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .412 close-state (39/20 FLAT, gap partial, LOO v3=6, paper_ready frozen, the 3 open gaps + the dc22 precondition
+      residual).
+    deliverable: results/experiment_4466_archive_412_activate_413.json
+    result: OK (conductor)
+  - id: exp4467-solve-dc22-cegis-nocov
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- SOLVE dc22 L1: run the counterexample-guided config-rule
+      grounding loop the .412 attempt DESIGNED BUT NEVER RAN, with the CORRECTED --no-cov pytest precondition (the .412 attempt
+      was blocked_baseline_pytest_coverage). +1 reproducible game/level (39/20 -> 40/21). Closes GAP-4423-DC22.'
+    deliverable: results/experiment_4467_solve_dc22_cegis_nocov.json
+    result: OK (conductor)
+  - id: exp4468-bank-sc25-provisional-levels
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGGEST OPPORTUNITY) -- BANK sc25 provisional L2-L5: drive sc25''s
+      OWN cast-grid world model deeper through the reproduction gate (provisional -> reproduced). +1..+4 reproducible levels
+      (target up to 44). The .412 attempt produced NO artifact (over-scoped).'
+    deliverable: results/experiment_4468_bank_sc25_provisional_levels.json
+    result: OK (conductor)
+  - id: exp4469-generic-cast-grid-fsm-operator
+    title: 'PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid phase-FSM world-model operator: generalize sc25''s per-game world
+      model into a composable two-phase-FSM operator so sc25 re-solves L1 WITHOUT its own hand recipe. Closes GAP-4432-LOO-SC25
+      (raises generic_loo_solve_count); reproduction-gated; counts NO new levels.'
+    deliverable: results/experiment_4469_generic_cast_grid_fsm_operator.json
+    result: OK (conductor)
+  - id: exp4470-color-match-slot-operator-solve-sb26
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- BUILD the color_match_slot_sequence_verifier operator + SOLVE
+      sb26 L1: build the specific missing operator the .412 sb26 negative identified (ordered color-match item-to-slot with
+      undo), then drive the solve. +1 game/level if banked. Closes GAP-4458-SB26.'
+    deliverable: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+    result: OK (conductor)
+  - id: exp4471-first-contact-rotated-new-game
+    title: 'PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW never-attempted ROTATED game (bp35 gravity-platformer / lf52
+      unit-positioning / re86 pattern-match+resize) via the full generic stack + counterexample-guided grounding; +1 game/level
+      if solved, else terminal complete: with the residual logged.'
+    deliverable: results/experiment_4471_first_contact_rotated_new_game.json
+    result: OK (conductor)
+  - id: exp4472-variant-generic-transfer-benchmark-v4
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-06-19) -- MANUFACTURED-variant generic-transfer benchmark v4:
+      wire the SHIPPED variant generator into the LOO/generic-transfer benchmark -- score the generic solver on 25 games x
+      N variants, report generic_transfer_rate_over_variants, AND re-measure generic_loo_solve_count_v4 (v3 was 6; target
+      >=7 after A3 closes sc25).'
+    deliverable: results/experiment_4472_variant_generic_transfer_benchmark_v4.json
+    result: OK (conductor)
+  - id: exp4473-submission-package-prep-refresh
+    title: 'PHASE A7 (ARC NORTH STAR; operator-only submit) -- SUBMISSION PACKAGE PREP refresh: re-validate + refresh the
+      env-matched offline-reproduced REPLAY package after the .413 new levels bank (target > 39 >> the 13-level prior submitted
+      baseline) so the operator can submit to beat it. submission_package_ready: bool; does NOT submit.'
+    deliverable: results/experiment_4473_submission_package_prep_refresh.json
+    result: OK (conductor)
+  - id: exp4474-registry-gaps-hygiene-gap4-guard
+    title: PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .413 outcomes
+      (dc22 + sc25-deeper banks, sb26/new-game, LOO v4, variant-transfer); verify the capstone verifier_is_oracle stamping
+      stays durable.
+    deliverable: results/experiment_4474_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4475-arc-precondition-nocov-lint
+    title: 'PHASE B2 (RESERVED INFRA; the DURABLE FIX for the .412 churn) -- ARC precondition smoke helper + --no-cov lint:
+      ship a shared arc_precondition_smoke() that runs the focused pytest with --no-cov (the exp4446 pattern), and a lint
+      that FLAGS any ARC experiment whose pytest precondition lacks --no-cov, so the dc22-class coverage block (exp4455) never
+      recurs. + extend the count-integrity lint for the sc25 provisional->reproduced transition.'
+    deliverable: results/experiment_4475_arc_precondition_nocov_lint.json
+    result: OK (conductor)
+  - id: exp4476-hardware-continuity
+    title: PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward
+      step or audit; never forget the FPGAs.
+    deliverable: results/experiment_4476_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4477-sota-ingestion-413
+    title: PHASE D (SOTA-INGESTION; .413 bleeding-edge track) -- ingest SOTA for executing counterexample-guided induction
+      at scale + the program-induction precision/agreement frontier (GAP-4/GAP-5); map the strongest 3-5 methods onto the
+      .414 roadmap.
+    deliverable: results/experiment_4477_sota_ingestion_413.json
+    result: OK (conductor)
+  - id: exp4478-capstone-413
+    title: 'PHASE E (CAPSTONE .413) -- the milestone scorecard + the DECISION: did reproducible_total_levels finally GROW
+      off 39 (dc22 banked? sc25 deeper banked?), did generic_loo_solve_count rise (v3=6), what is generic_transfer_rate_over_variants,
+      is the submission package refreshed > 39?'
+    deliverable: results/experiment_4478_capstone_v413.json
     result: OK (conductor)
