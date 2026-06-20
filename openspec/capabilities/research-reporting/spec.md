@@ -18965,6 +18965,64 @@ observed false-zero timing data.
 |---|---|---|
 | REQ-REPORT-4161 | Implemented (`python/carnot/reporting/observability_timing_detector_4161.py`, `python/carnot/experiment_4161_observability_timing_detector_fix.py`) | Implemented (`tests/python/test_experiment_4161_observability_timing_detector_fix.py`) |
 
+### REQ-REPORT-4517: Operational Retro Timing Detector Mtime And Changelog Repair
+
+The Exp 4517 workflow SHALL repair the operational-retro timing detector
+without modifying `scripts/research_conductor.py`. It SHALL reproduce the
+current false-zero by reading `results/operational_retro_2026_06_415.json` and
+`results/operational_retro_2026_06_416.json`, both of which report
+`experiments_completed=0` while on-disk milestone artifacts exist.
+
+The repaired detector SHALL scan `results/experiment_<digits>_*.json` file
+mtimes inside a milestone window and SHALL also parse the corresponding dated
+`ops/changelog.md` lines for terminal experiment artifact paths. The corrected
+count SHALL use the union of the mtime and changelog artifact sets so a later
+artifact touch does not erase a milestone task and a missing changelog line
+does not hide an on-disk artifact. When the mtime and changelog sets disagree,
+the detector SHALL emit `detector_gap_suspected=true` with the per-source
+counts and differing paths.
+
+For milestones `2026.06.415` and `2026.06.416`, the repaired detector SHALL
+report `detector_true_count_415=10` and `detector_true_count_416=10`. It SHALL
+write `results/experiment_4517_timing_detector_repair.json` with terminal
+`honest_verdict`, `inference_substrate`, `detector_true_count_415`,
+`detector_true_count_416`, `tests_added_pass`, `preconditions_checked`,
+`duration_s`, and `compute_bound=false`. The `duration_s` and `compute_bound`
+fields SHALL be stamped by the artifact write helper immediately before the
+JSON is persisted so downstream retros can read durable timing metadata.
+
+#### SCENARIO-REPORT-4517-FALSE-ZERO: Mtime And Changelog Recover .415 And .416
+
+**Given** `.415` and `.416` operational-retro artifacts report zero completed
+experiments
+**And** `results/` contains terminal artifacts for `exp4490` through `exp4499`
+and `exp4500` through `exp4509`
+**When** the Exp 4517 detector evaluates both milestone windows
+**Then** it SHALL report corrected true counts of `10` for both milestones
+**And** it SHALL record the source artifacts used as evidence.
+
+#### SCENARIO-REPORT-4517-DISAGREEMENT: Source Mismatch Emits A Gap Flag
+
+**Given** the `results/` mtime set and the `ops/changelog.md` dated-line set
+do not contain exactly the same terminal artifact paths for a milestone
+**When** the repaired detector builds the milestone summary
+**Then** it SHALL set `detector_gap_suspected=true`
+**And** it SHALL expose the mtime count, changelog count, corrected union
+count, and source-only path lists.
+
+#### SCENARIO-REPORT-4517-WRITE-STAMP: Artifact Writes Stamp Durable Timing Fields
+
+**Given** an Exp 4517 payload is ready to persist
+**When** the write helper writes the JSON artifact
+**Then** it SHALL stamp bare numeric `duration_s` and bare boolean
+`compute_bound=false` at write time before saving the file.
+
+## Implementation Status (REQ-REPORT-4517)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4517 | Implemented (`python/carnot/reporting/timing_detector_repair_4517.py`, `python/carnot/experiment_4517_timing_detector_repair.py`) | Implemented (`tests/python/test_experiment_4517_timing_detector_repair.py`) |
+
 ### REQ-REPORT-3986: Archive .368 And Activate .369 GAP-4 Follow-Up Milestone
 
 The Exp 3986 workflow SHALL archive milestone `2026.06.368`, confirm

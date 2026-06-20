@@ -1,0 +1,130 @@
+{
+  "compute_bound": false,
+  "detector_gap_suspected": true,
+  "detector_true_count_415": 10,
+  "detector_true_count_416": 10,
+  "duration_s": 0.288026,
+  "experiment": "experiment_4517_timing_detector_repair",
+  "field_principles": {
+    "detector_true_count_415": "proves the fix: the repaired detector reads 10 for .415, not 0.",
+    "detector_true_count_416": "the repaired detector reads 10 for .416, not 0.",
+    "honest_verdict": "terminal prefix; e.g. shipped: timing_detector_repaired_true_counts OR complete: timing_detector_partial_<reason>.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads logs/mtimes/changelog, no compute (100us floor).",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "tests_added_pass": "Tests Must Run and Assert -- a regression test pins the false-zero closed."
+  },
+  "honest_verdict": "shipped: timing_detector_repaired_true_counts",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_detections": {
+    "2026.06.415": {
+      "changelog_count": 10,
+      "changelog_only_paths": [
+        "results/experiment_4494_adapter_deepen_l2.json"
+      ],
+      "changelog_paths": [
+        "results/experiment_4490_human_replay_frame_change_predictor.json",
+        "results/experiment_4491_world_model_trust_energy.json",
+        "results/experiment_4492_energy_augmentation_loo_gate.json",
+        "results/experiment_4493_hud_register_deepen.json",
+        "results/experiment_4494_adapter_deepen_l2.json",
+        "results/experiment_4495_human_replay_corpus_staging.json",
+        "results/experiment_4496_submitted_agent_scoreboard.json",
+        "results/experiment_4497_hardware_continuity_audit.json",
+        "results/experiment_4498_arc_imitation_sota_415.json",
+        "results/experiment_4499_capstone_v415.json"
+      ],
+      "corrected_count": 10,
+      "corrected_paths": [
+        "results/experiment_4490_human_replay_frame_change_predictor.json",
+        "results/experiment_4491_world_model_trust_energy.json",
+        "results/experiment_4492_energy_augmentation_loo_gate.json",
+        "results/experiment_4493_hud_register_deepen.json",
+        "results/experiment_4494_adapter_deepen_l2.json",
+        "results/experiment_4495_human_replay_corpus_staging.json",
+        "results/experiment_4496_submitted_agent_scoreboard.json",
+        "results/experiment_4497_hardware_continuity_audit.json",
+        "results/experiment_4498_arc_imitation_sota_415.json",
+        "results/experiment_4499_capstone_v415.json"
+      ],
+      "detector_gap_suspected": true,
+      "fallback_used": true,
+      "legacy_false_zero": true,
+      "legacy_reported_count": 0,
+      "milestone": "2026.06.415",
+      "mtime_count": 9,
+      "mtime_only_paths": [],
+      "mtime_paths": [
+        "results/experiment_4490_human_replay_frame_change_predictor.json",
+        "results/experiment_4491_world_model_trust_energy.json",
+        "results/experiment_4492_energy_augmentation_loo_gate.json",
+        "results/experiment_4493_hud_register_deepen.json",
+        "results/experiment_4495_human_replay_corpus_staging.json",
+        "results/experiment_4496_submitted_agent_scoreboard.json",
+        "results/experiment_4497_hardware_continuity_audit.json",
+        "results/experiment_4498_arc_imitation_sota_415.json",
+        "results/experiment_4499_capstone_v415.json"
+      ]
+    },
+    "2026.06.416": {
+      "changelog_count": 9,
+      "changelog_only_paths": [],
+      "changelog_paths": [
+        "results/experiment_4500_value_weight_remeasure.json",
+        "results/experiment_4501_frame_change_predictor_rerun.json",
+        "results/experiment_4502_energy_augmented_ranking.json",
+        "results/experiment_4503_hud_register_deepen_l2.json",
+        "results/experiment_4504_adapter_deepen_l2.json",
+        "results/experiment_4505_submitted_agent_scoreboard.json",
+        "results/experiment_4506_lazy_value_eval_prototype.json",
+        "results/experiment_4507_hardware_continuity_audit.json",
+        "results/experiment_4509_capstone_v416.json"
+      ],
+      "corrected_count": 10,
+      "corrected_paths": [
+        "results/experiment_4500_value_weight_remeasure.json",
+        "results/experiment_4501_frame_change_predictor_rerun.json",
+        "results/experiment_4502_energy_augmented_ranking.json",
+        "results/experiment_4503_hud_register_deepen_l2.json",
+        "results/experiment_4504_adapter_deepen_l2.json",
+        "results/experiment_4505_submitted_agent_scoreboard.json",
+        "results/experiment_4506_lazy_value_eval_prototype.json",
+        "results/experiment_4507_hardware_continuity_audit.json",
+        "results/experiment_4508_arc_affordance_sota_416.json",
+        "results/experiment_4509_capstone_v416.json"
+      ],
+      "detector_gap_suspected": true,
+      "fallback_used": false,
+      "legacy_false_zero": true,
+      "legacy_reported_count": 0,
+      "milestone": "2026.06.416",
+      "mtime_count": 10,
+      "mtime_only_paths": [
+        "results/experiment_4508_arc_affordance_sota_416.json"
+      ],
+      "mtime_paths": [
+        "results/experiment_4500_value_weight_remeasure.json",
+        "results/experiment_4501_frame_change_predictor_rerun.json",
+        "results/experiment_4502_energy_augmented_ranking.json",
+        "results/experiment_4503_hud_register_deepen_l2.json",
+        "results/experiment_4504_adapter_deepen_l2.json",
+        "results/experiment_4505_submitted_agent_scoreboard.json",
+        "results/experiment_4506_lazy_value_eval_prototype.json",
+        "results/experiment_4507_hardware_continuity_audit.json",
+        "results/experiment_4508_arc_affordance_sota_416.json",
+        "results/experiment_4509_capstone_v416.json"
+      ]
+    }
+  },
+  "preconditions_checked": {
+    "ops_changelog_exists": true,
+    "results_dir_exists": true,
+    "retro_415_exists": true,
+    "retro_416_exists": true,
+    "retro_glob_count": 65,
+    "scripts_research_conductor_modified": false
+  },
+  "research_conductor_touched": false,
+  "schema": "carnot.timing_detector_repair.v1",
+  "tests_added_pass": true,
+  "write_time_stamping": "duration_s and compute_bound are stamped immediately before JSON write."
+}
