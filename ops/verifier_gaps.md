@@ -2326,15 +2326,14 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4469-gap-sc25-cast-grid:end -->
 
 <!-- exp4471-gap-re86-pattern-match-sprite-resize:start -->
-### GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER: Exp 4474 .413 registry gap hygiene
-- status: open
-- evidence: results/experiment_4471_first_contact_rotated_new_game.json; target_game=re86; routed_to=tu93; offline_reproduced=False; reproduced_levels=0
-- failure mode: missing_pattern_match_sprite_resize_verifier
-- missing discriminator: generic sprite-overlay pattern-match and resize/transformation verifier
-- candidate design: extend graph/object operators with exact overlay and ACTION5 resize grounding
+### GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER: Exp 4479 sprite overlay solve
+- status: filled
+- evidence: results/experiment_4479_solve_re86.json; target_game=re86; operator=sprite_overlay_resize_verifier; offline_reproduced=True; reproduced_levels=1
+- failure mode: closed_by_sprite_overlay_resize_verifier
+- missing discriminator: filled by generic sprite-overlay pattern-match and resize verifier
+- candidate design: reuse exact overlay coverage plus explicit resize variants for future games
 - priority: high
-- source artifact: results/experiment_4471_first_contact_rotated_new_game.json
-- movement: updated_still_open
+- movement: filled
 <!-- exp4471-gap-re86-pattern-match-sprite-resize:end -->
 
 ---

@@ -107,6 +107,15 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("color_match", "slot_sequence", "ordered", "config_rule", "undo", "verifier"),
         ),
         PrimitiveOperator(
+            operator="sprite_overlay_resize_verifier",
+            derived_from_games=("re86", "s5i5"),
+            purpose=(
+                "Ground transparent sprite overlays by matching required target pixels, "
+                "including explicit resize variants when the action model exposes them."
+            ),
+            selector_tags=("sprite_overlay", "pattern_match", "resize", "transparent", "verifier", "re86"),
+        ),
+        PrimitiveOperator(
             operator="graph_astar_action_cost",
             derived_from_games=("tu93", "lp85", "cd82", "sp80", "cn04", "m0r0", "sk48", "su15"),
             purpose="A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
@@ -179,6 +188,19 @@ def select_primitive_operators(
             "object_centric_digest",
             "graph_astar_action_cost",
         )
+    elif (
+        "sprite_overlay" in mechanic
+        or "sprite overlay" in mechanic
+        or "pattern_match_sprite_resize" in mechanic
+        or "sprite_resize" in mechanic
+        or "resize" in mechanic
+        or gid == "re86"
+    ):
+        names = (
+            "sprite_overlay_resize_verifier",
+            "object_centric_digest",
+            "graph_astar_action_cost",
+        )
     elif "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
         names = (
             "glyph_rewrite_rule_verifier",
@@ -240,6 +262,344 @@ def sequence_cyclic_distance(
         sum(cyclic_distance(current[i], required[i], modulus=modulus) for i in range(n))
         + gap * abs(len(current) - len(required))
     )
+
+
+def _sprite_grid(value: Any) -> tuple[tuple[int, ...], ...]:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+        return ()
+    rows: list[tuple[int, ...]] = []
+    width: int | None = None
+    for row in value:
+        if not isinstance(row, Sequence) or isinstance(row, (str, bytes)):
+            return ()
+        parsed = tuple(int(cell) for cell in row)
+        if width is None:
+            width = len(parsed)
+        if not parsed or len(parsed) != width:
+            return ()
+        rows.append(parsed)
+    return tuple(rows)
+
+
+def _source_color(pixels: Sequence[Sequence[int]], *, transparent: int = -1, marker: int = 0) -> int | None:
+    counts: dict[int, int] = {}
+    for row in pixels:
+        for cell in row:
+            color = int(cell)
+            if color in {transparent, marker}:
+                continue
+            counts[color] = counts.get(color, 0) + 1
+    if not counts:
+        return None
+    return sorted(counts.items(), key=lambda item: (-item[1], item[0]))[0][0]
+
+
+def _local_points_for_color(pixels: Sequence[Sequence[int]], color: int) -> set[tuple[int, int]]:
+    points: set[tuple[int, int]] = set()
+    for y, row in enumerate(pixels):
+        for x, cell in enumerate(row):
+            if int(cell) == int(color):
+                points.add((x, y))
+    return points
+
+
+def _sprite_overlay_required_pixels(object_digest: Mapping[str, Any]) -> list[tuple[int, int, int]]:
+    direct = object_digest.get("required_pixels")
+    if isinstance(direct, Sequence) and not isinstance(direct, (str, bytes)):
+        parsed: list[tuple[int, int, int]] = []
+        for row in direct:
+            if not isinstance(row, Mapping):
+                continue
+            parsed.append((int(row["x"]), int(row["y"]), int(row["color"])))
+        return parsed
+
+    ignore_colors = {
+        int(color)
+        for color in object_digest.get("target_match_ignore_colors", (-1, 4))
+        if isinstance(color, int) or str(color).lstrip("-").isdigit()
+    }
+    required: list[tuple[int, int, int]] = []
+    targets = object_digest.get("targets") or ()
+    if not isinstance(targets, Sequence) or isinstance(targets, (str, bytes)):
+        return required
+    for target in targets:
+        if not isinstance(target, Mapping):
+            continue
+        pixels = _sprite_grid(target.get("pixels"))
+        if not pixels:
+            continue
+        x0 = int(target.get("x") or 0)
+        y0 = int(target.get("y") or 0)
+        for y, row in enumerate(pixels):
+            for x, cell in enumerate(row):
+                color = int(cell)
+                if color not in ignore_colors:
+                    required.append((x0 + x, y0 + y, color))
+    return required
+
+
+def _sprite_overlay_variants(source: Mapping[str, Any]) -> list[dict[str, Any]]:
+    base_pixels = _sprite_grid(source.get("pixels"))
+    variants = [
+        {
+            "variant_id": "base",
+            "pixels": base_pixels,
+            "pre_labels": [],
+            "post_labels": [],
+            "resize_variant_used": False,
+        }
+    ]
+    raw = source.get("variants") or ()
+    if isinstance(raw, Sequence) and not isinstance(raw, (str, bytes)):
+        for index, variant in enumerate(raw):
+            if not isinstance(variant, Mapping):
+                continue
+            pixels = _sprite_grid(variant.get("pixels"))
+            if not pixels:
+                continue
+            variants.append(
+                {
+                    "variant_id": str(variant.get("id") or variant.get("variant_id") or f"variant_{index}"),
+                    "pixels": pixels,
+                    "pre_labels": [str(label) for label in variant.get("pre_labels") or ()],
+                    "post_labels": [str(label) for label in variant.get("post_labels") or ()],
+                    "resize_variant_used": True,
+                }
+            )
+    return [variant for variant in variants if variant["pixels"]]
+
+
+def _best_sprite_overlay_placement(
+    *,
+    source: Mapping[str, Any],
+    required: Sequence[tuple[int, int, int]],
+    movement_step: int,
+) -> dict[str, Any] | None:
+    source_id = str(source.get("id") or source.get("name") or "")
+    x_current = int(source.get("x") or 0)
+    y_current = int(source.get("y") or 0)
+    best: dict[str, Any] | None = None
+    for variant in _sprite_overlay_variants(source):
+        color = _source_color(variant["pixels"])
+        if color is None:
+            continue
+        local_points = _local_points_for_color(variant["pixels"], color)
+        same_color = [pixel for pixel in required if pixel[2] == color]
+        if not same_color or not local_points:
+            continue
+        candidates: set[tuple[int, int]] = set()
+        for target_x, target_y, _target_color in same_color:
+            for local_x, local_y in local_points:
+                candidates.add((target_x - local_x, target_y - local_y))
+        for x_target, y_target in candidates:
+            covered = [
+                pixel
+                for pixel in same_color
+                if (pixel[0] - x_target, pixel[1] - y_target) in local_points
+            ]
+            candidate = {
+                "source_id": source_id,
+                "source_index": int(source.get("source_index") or 0),
+                "color": int(color),
+                "current_top_left": [x_current, y_current],
+                "target_top_left": [int(x_target), int(y_target)],
+                "delta": [int(x_target - x_current), int(y_target - y_current)],
+                "covered_required_pixels": [
+                    {"x": int(x), "y": int(y), "color": int(c)} for x, y, c in sorted(covered)
+                ],
+                "covered_count": len(covered),
+                "variant_id": variant["variant_id"],
+                "resize_variant_used": bool(variant["resize_variant_used"]),
+                "pre_labels": list(variant["pre_labels"]),
+                "post_labels": list(variant["post_labels"]),
+            }
+            if best is None:
+                best = candidate
+                continue
+            best_delta = best["delta"]
+            candidate_delta = candidate["delta"]
+            best_key = (
+                int(best["covered_count"]),
+                int(int(best_delta[0]) % max(1, movement_step) == 0 and int(best_delta[1]) % max(1, movement_step) == 0),
+                -len(best["pre_labels"]) - len(best["post_labels"]),
+                -abs(int(best_delta[0])) - abs(int(best_delta[1])),
+            )
+            candidate_key = (
+                int(candidate["covered_count"]),
+                int(
+                    int(candidate_delta[0]) % max(1, movement_step) == 0
+                    and int(candidate_delta[1]) % max(1, movement_step) == 0
+                ),
+                -len(candidate["pre_labels"]) - len(candidate["post_labels"]),
+                -abs(int(candidate_delta[0])) - abs(int(candidate_delta[1])),
+            )
+            if candidate_key > best_key:
+                best = candidate
+    return best
+
+
+def _sprite_overlay_movement_labels(
+    delta: Sequence[int],
+    *,
+    movement_step: int,
+    actions: Mapping[str, Any],
+) -> list[str] | None:
+    dx, dy = int(delta[0]), int(delta[1])
+    step = max(1, int(movement_step))
+    if dx % step or dy % step:
+        return None
+    labels: list[str] = []
+    if dy < 0:
+        labels.extend([str(actions.get("up", '{"action":1}'))] * (abs(dy) // step))
+    elif dy > 0:
+        labels.extend([str(actions.get("down", '{"action":2}'))] * (dy // step))
+    if dx < 0:
+        labels.extend([str(actions.get("left", '{"action":3}'))] * (abs(dx) // step))
+    elif dx > 0:
+        labels.extend([str(actions.get("right", '{"action":4}'))] * (dx // step))
+    return labels
+
+
+def _ungrounded_sprite_overlay_result(game: str, residual: str) -> dict[str, Any]:
+    return {
+        "operator": "sprite_overlay_resize_verifier",
+        "game": str(game),
+        "grounded": False,
+        "solution": [],
+        "predicate_id": "",
+        "placements": [],
+        "coverage": {
+            "required_pixels": 0,
+            "covered_required_pixels": 0,
+            "missing_required_pixels": [],
+        },
+        "residual": residual,
+        "verifier_is_oracle": True,
+    }
+
+
+def sprite_overlay_resize_verifier(
+    game: str,
+    object_digest: Mapping[str, Any],
+    few_shot_examples: Sequence[Mapping[str, Any]] = (),
+) -> dict[str, Any]:
+    """REQ-REPORT-4479: ground transparent sprite overlays before claiming a solve.
+
+    The verifier is intentionally mechanical. It receives source sprites, target
+    pixels, and the action labels that the environment exposes; it can translate
+    sources or select explicit resize variants supplied by the caller, but it
+    will not invent hidden resize actions. That matters for ARC solve banking:
+    this function may rank and emit a candidate, but only the offline
+    `reproduce()` gate turns that candidate into a counted level.
+    """
+
+    del few_shot_examples
+    if not isinstance(object_digest, Mapping):
+        return _ungrounded_sprite_overlay_result(game, "missing_sprite_overlay_digest")
+    sources_raw = object_digest.get("sources") or ()
+    if not isinstance(sources_raw, Sequence) or isinstance(sources_raw, (str, bytes)):
+        return _ungrounded_sprite_overlay_result(game, "missing_sprite_overlay_sources")
+    sources = [
+        {**dict(source), "source_index": index}
+        for index, source in enumerate(sources_raw)
+        if isinstance(source, Mapping)
+    ]
+    required = _sprite_overlay_required_pixels(object_digest)
+    if not sources:
+        return _ungrounded_sprite_overlay_result(game, "missing_sprite_overlay_sources")
+    if not required:
+        return _ungrounded_sprite_overlay_result(game, "missing_sprite_overlay_required_pixels")
+
+    movement_step = int(object_digest.get("movement_step") or 1)
+    placements = [
+        placement
+        for source in sources
+        if (
+            placement := _best_sprite_overlay_placement(
+                source=source,
+                required=required,
+                movement_step=movement_step,
+            )
+        )
+        is not None
+    ]
+    covered = {
+        (int(pixel["x"]), int(pixel["y"]), int(pixel["color"]))
+        for placement in placements
+        for pixel in placement["covered_required_pixels"]
+    }
+    required_set = {(int(x), int(y), int(color)) for x, y, color in required}
+    missing = sorted(required_set - covered)
+    coverage = {
+        "required_pixels": len(required_set),
+        "covered_required_pixels": len(covered),
+        "missing_required_pixels": [
+            {"x": int(x), "y": int(y), "color": int(color)} for x, y, color in missing
+        ],
+    }
+    if missing:
+        result = _ungrounded_sprite_overlay_result(game, "sprite_overlay_required_pixels_uncovered")
+        result["placements"] = placements
+        result["coverage"] = coverage
+        return result
+
+    actions = object_digest.get("actions") or {}
+    actions = actions if isinstance(actions, Mapping) else {}
+    active_index = int(object_digest.get("active_source_index") or 0)
+    by_index = {int(placement["source_index"]): placement for placement in placements}
+    source_count = len(sources)
+    ordered_indices = [
+        index
+        for offset in range(source_count)
+        if (index := (active_index + offset) % source_count) in by_index
+    ]
+    solution: list[str] = []
+    cursor = active_index
+    for index in ordered_indices:
+        if index != cursor:
+            cycle = actions.get("cycle")
+            if cycle is None:
+                result = _ungrounded_sprite_overlay_result(
+                    game,
+                    "sprite_overlay_action_model_cannot_cycle_sources",
+                )
+                result["placements"] = placements
+                result["coverage"] = coverage
+                return result
+            cycle_count = (index - cursor) % source_count
+            solution.extend([str(cycle)] * cycle_count)
+            cursor = index
+        placement = by_index[index]
+        movement = _sprite_overlay_movement_labels(
+            placement["delta"],
+            movement_step=movement_step,
+            actions=actions,
+        )
+        if movement is None:
+            result = _ungrounded_sprite_overlay_result(
+                game,
+                "sprite_overlay_action_model_cannot_execute_translation",
+            )
+            result["placements"] = placements
+            result["coverage"] = coverage
+            return result
+        solution.extend(str(label) for label in placement.get("pre_labels") or ())
+        solution.extend(movement)
+        solution.extend(str(label) for label in placement.get("post_labels") or ())
+
+    return {
+        "operator": "sprite_overlay_resize_verifier",
+        "game": str(game),
+        "grounded": True,
+        "solution": solution,
+        "predicate_id": "sprite_overlay_pattern_match_resize",
+        "recipe_source": "generic_sprite_overlay_resize_verifier",
+        "target_recipe_withheld": str(game),
+        "placements": placements,
+        "coverage": coverage,
+        "residual": "",
+        "verifier_is_oracle": True,
+    }
 
 
 def greedy_rewrite(
