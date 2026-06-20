@@ -24004,3 +24004,41 @@ Loop-OWM 2606.12316 / ARC survey 2603.13372) already maps onto the EXECUTE
 milestone; exp4477 (`.413 SOTA-ingestion) does the deeper fresh sweep in-loop,
 focused on executing CEGIS at scale + the program-induction precision/agreement
 frontier (GAP-4 / GAP-5).
+
+---
+
+## .417 inputs (ACTION-EFFICIENCY sprint, 2026-06-20)
+
+`.417 attacks the ARC live wall identified by 3 converging measurements: **action
+efficiency**, not solve-rate or config tuning. The score is `min(human/agent,1)^2`,
+so the live explorer's ~7760 actions for ~21-action solutions score ~0.08. Two SOTA
+inputs (reliable-channel ingestion, real arXiv IDs):
+
+- **Looped World Models (LoopWM), arXiv:2606.18208** (2026-06-16). Verdict: **cite,
+  one pickup.** The learned-simulator path is a structural non-starter for first-contact
+  ARC (offline-pretraining-required; Family-B's exact symbolic transition model is
+  strictly better). The ONE sprint pickup: a **verifier-grounded adaptive per-step
+  search budget** (really ACT/PonderNet, Graves 2016; LoopWM is the citable instance) —
+  spend compute only on hard frames. Zero new model/training, 16GB/offline-safe →
+  `.417 candidate 6 (A3). Phase-3 note-and-file: energy verifier as the HALT signal for
+  a looped refiner ("loop until E<tau"). Full ingestion:
+  `docs/research-notes/loopwm-2606.18208-ingestion-2026-06-20.md`.
+
+- **ARC-AGI-3 leaderboard competitive intel** (Kaggle public kernels + ARC Prize 30-day
+  report, 2026-06-20). The leader (Tufa StochasticGoose, 1.21) wins on a **CNN
+  frame-change / clickability predictor** trained as RL — pure exploration efficiency
+  ("learn what's clickable, stop wasting actions"). 2nd (Blind Squirrel, ResNet18 value
+  + state-graph loop-pruning); a 0.46 public notebook uses **PersistentAEM** (action-effect
+  memory persisted across games) + prioritized experience replay + expert injection +
+  IDA*/BFS. All winners <13%; generalization is the unsolved part. The highest-leverage
+  import = a frame-change predictor that PRUNES no-op candidates (→ `.417 A1), paired with
+  hidden-field state-hash probing (the ka59/ar25 deepening-tail fix). These slot into our
+  offline-search + value-head architecture without abandoning the verifier-energy thesis.
+  Full intel: `docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md`.
+
+The `.417 program (6 candidates) is shaped in
+`docs/research-notes/arc-417-shaping-action-efficiency.md`. Metric = median
+actions-to-solve on the 8-game gate (`scripts/kaggle/arc_local_submission_gate.py`),
+baseline 7760, driven down WITHOUT dropping solve-rate. No NEW arXiv refs beyond the
+above were required — the action-efficiency levers are engineering on the existing
+offline-search + lazy-value-head (.416 B2, 232x) + human-replay corpus stack.
