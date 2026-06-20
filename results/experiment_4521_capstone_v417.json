@@ -1,0 +1,544 @@
+{
+  "action_efficiency_decision": {
+    "baseline_median_actions": 7760.0,
+    "beats_7760_at_equal_solve_rate": false,
+    "decision": "no_clean_lever_beat_7760_at_equal_or_better_solve_rate",
+    "integrated_metric_used": false,
+    "integrated_status": "excluded_flagged_adversarial",
+    "winning_lever": null
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "A1_prune",
+      "experiment_id": 4511,
+      "fields_imported": [
+        "honest_verdict",
+        "median_actions_baseline",
+        "median_actions_with_prune",
+        "solve_rate_baseline",
+        "solve_rate_with_prune",
+        "solve_rate_denominator",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4511_frame_change_prune_predictor.json",
+      "sha256": "60ba4e7d501fd72f273cc4bcfb92e61408d9634e3092c60575dc3e70d72943b4"
+    },
+    {
+      "artifact_key": "A2_imitation",
+      "experiment_id": 4512,
+      "fields_imported": [
+        "honest_verdict",
+        "median_actions_baseline",
+        "median_actions_with_prior",
+        "solve_rate_baseline",
+        "solve_rate_with_prior",
+        "solve_rate_denominator",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4512_imitation_action_prior.json",
+      "sha256": "a2d8129807e520e51ebb350ad11016efd0be41a154c5e65f5f90a99baf5e7445"
+    },
+    {
+      "artifact_key": "A3_adaptive_budget",
+      "experiment_id": 4513,
+      "fields_imported": [],
+      "path": "results/experiment_4513_adaptive_per_step_budget.json",
+      "sha256": "f4e579a4ce201517fc2b8b90b5911078b3cc804bdfbcc5bd7c64286299261464"
+    },
+    {
+      "artifact_key": "A4_lazy_best_first",
+      "experiment_id": 4514,
+      "fields_imported": [
+        "honest_verdict",
+        "per_weight_results",
+        "control_value_weight_0",
+        "chosen_submitted_value_weight",
+        "decision",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4514_lazy_best_first_value_weight.json",
+      "sha256": "4f213326952764497c8ac0a7d8232b513278bf1a5c40617a892aed3a30166871"
+    },
+    {
+      "artifact_key": "A5_level_up",
+      "experiment_id": 4515,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4515_deepen_graph_explore_l2.json",
+      "sha256": "989a7128ee1e641662169f0783e6141e88dd1a1fa317e9bdfd93152c78f612c2"
+    },
+    {
+      "artifact_key": "A6_integration",
+      "experiment_id": 4516,
+      "fields_imported": [],
+      "path": "results/experiment_4516_integration_8game_gate.json",
+      "sha256": "26668d9537f841c1c17f347afc49ffabc7886e54b0afec6ead62a21e160aa264"
+    },
+    {
+      "artifact_key": "scoreboard_context",
+      "experiment_id": 4505,
+      "fields_imported": [
+        "honest_verdict",
+        "headline_metrics",
+        "scoreboard_row",
+        "leaderboard_submission",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4505_submitted_agent_scoreboard.json",
+      "sha256": "10f18794605a41dd59e815d1d31a679c06e56e31689f36a3ea0bad6d9c9ab8f2"
+    }
+  ],
+  "duration_s": 0.340734,
+  "experiment": 4521,
+  "field_principles": {
+    "flagged_artifacts_excluded": "the list of flagged_adversarial artifacts skipped (never aggregate a fabricated number).",
+    "heldout_solve_rate": "the real transfer signal (was 0.143); the moat-track number.",
+    "honest_verdict": "terminal prefix; e.g. complete: v417_<lever>_median_actions_<n>_vs_7760_heldout_<r>.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream JSON, no compute (100us floor).",
+    "median_actions_baseline": "7760, so the delta is auditable.",
+    "median_actions_best_lever": "the headline -- the lowest median achieved + which lever, vs the 7760 baseline.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "reproducibility_checksum": "content hash for reproducibility",
+    "reproducible_total_levels": "bare int from ops/arc_solve_registry.yaml for the submission gate vs 13.",
+    "submission_package_ready": "True if the package > 13 levels is ready for the OPERATOR to submit; the capstone never submits.",
+    "variant_transfer_rate": "bare float from the clean submitted-agent scoreboard context.",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; upstream claims declare circularity separately."
+  },
+  "flagged_artifacts_excluded": [
+    {
+      "artifact_key": "A3_adaptive_budget",
+      "experiment_id": 4513,
+      "live_critical": false,
+      "live_critical_flags": [],
+      "parse_error": "",
+      "path": "results/experiment_4513_adaptive_per_step_budget.json",
+      "reason": "flagged_adversarial",
+      "sha256": "f4e579a4ce201517fc2b8b90b5911078b3cc804bdfbcc5bd7c64286299261464",
+      "stamped_flagged_adversarial": true
+    },
+    {
+      "artifact_key": "A6_integration",
+      "experiment_id": 4516,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "heldout_solve_rate=0.5 and solve_rate_integrated=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "parse_error": "",
+      "path": "results/experiment_4516_integration_8game_gate.json",
+      "reason": "flagged_adversarial",
+      "sha256": "26668d9537f841c1c17f347afc49ffabc7886e54b0afec6ead62a21e160aa264",
+      "stamped_flagged_adversarial": true
+    }
+  ],
+  "heldout_solve_rate": 0.1428571429,
+  "honest_verdict": "complete: v417_none_clean_equal_solve_rate_median_actions_7760_vs_7760_heldout_0.143",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "integrated_scorecard": {
+    "action_efficiency_win": false,
+    "heldout_solve_rate": null,
+    "lever": "A6_integration",
+    "median_actions": null,
+    "status": "excluded_flagged_adversarial"
+  },
+  "leaderboard_submission": false,
+  "level_up_context": {
+    "level_up_banked": true,
+    "offline_reproduced": true,
+    "reproduced_levels": 2,
+    "status": "level_up_context",
+    "target_game": "m0r0",
+    "verifier_is_oracle": false
+  },
+  "median_actions_baseline": 7760.0,
+  "median_actions_best_lever": {
+    "action_reduction_vs_baseline": 0.0,
+    "heldout_solve_rate": 0.1428571429,
+    "lever": "none_clean_equal_solve_rate",
+    "median_actions": 7760.0,
+    "median_actions_delta_vs_baseline": 0.0,
+    "reason": "no_clean_lever_beat_7760_at_equal_or_better_solve_rate"
+  },
+  "per_lever_scorecard": [
+    {
+      "action_efficiency_win": false,
+      "action_reduction_vs_baseline": -6.0,
+      "baseline_solve_rate": 0.5,
+      "baseline_solve_rate_count": 4.0,
+      "equal_or_better_solve_rate": false,
+      "heldout_solve_rate": 0.375,
+      "honest_verdict": "complete: frame_change_prune_solve_rate_guard_failed",
+      "lever": "A1_prune",
+      "median_actions": 7766.0,
+      "median_actions_delta_vs_baseline": 6.0,
+      "solve_rate_count": 3.0,
+      "solve_rate_denominator": 8.0,
+      "status": "no_clean_equal_solve_win",
+      "verifier_is_oracle": false
+    },
+    {
+      "action_efficiency_win": false,
+      "action_reduction_vs_baseline": 27.0,
+      "baseline_solve_rate": 0.5,
+      "baseline_solve_rate_count": 4.0,
+      "equal_or_better_solve_rate": false,
+      "heldout_solve_rate": 0.375,
+      "honest_verdict": "complete: imitation_prior_solve_rate_guard_failed",
+      "lever": "A2_imitation",
+      "median_actions": 7733.0,
+      "median_actions_delta_vs_baseline": -27.0,
+      "solve_rate_count": 3.0,
+      "solve_rate_denominator": 8.0,
+      "status": "no_clean_equal_solve_win",
+      "verifier_is_oracle": false
+    },
+    {
+      "action_efficiency_win": false,
+      "baseline_solve_rate": null,
+      "equal_or_better_solve_rate": false,
+      "heldout_solve_rate": null,
+      "lever": "A3_adaptive_budget",
+      "median_actions": null,
+      "status": "excluded_flagged_adversarial"
+    },
+    {
+      "action_efficiency_win": false,
+      "action_reduction_vs_baseline": 6727.5,
+      "baseline_solve_rate": 0.375,
+      "control_median_actions": 1032.5,
+      "core_solves_preserved": false,
+      "equal_or_better_solve_rate": false,
+      "heldout_solve_rate": 0.375,
+      "honest_verdict": "complete: lazy_value_weight_null_keep_0",
+      "lever": "A4_lazy_best_first",
+      "median_actions": 1032.5,
+      "median_actions_delta_vs_baseline": -6727.5,
+      "selected_value_weight": 0.0,
+      "status": "no_clean_equal_solve_win",
+      "verifier_is_oracle": false
+    }
+  ],
+  "preconditions_checked": {
+    "a6_clean_for_aggregation": false,
+    "a6_integration_artifact_present": true,
+    "a6_summarize_exit_code": 2,
+    "leaderboard_submission": false,
+    "reading_results_discipline": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_present": true,
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "A1_prune",
+        "exists": true,
+        "experiment_id": 4511,
+        "path": "results/experiment_4511_frame_change_prune_predictor.json",
+        "skipped": false,
+        "summarize_exit_code": 1
+      },
+      {
+        "artifact_key": "A2_imitation",
+        "exists": true,
+        "experiment_id": 4512,
+        "path": "results/experiment_4512_imitation_action_prior.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A3_adaptive_budget",
+        "exists": true,
+        "experiment_id": 4513,
+        "path": "results/experiment_4513_adaptive_per_step_budget.json",
+        "skipped": true,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A4_lazy_best_first",
+        "exists": true,
+        "experiment_id": 4514,
+        "path": "results/experiment_4514_lazy_best_first_value_weight.json",
+        "skipped": false,
+        "summarize_exit_code": 1
+      },
+      {
+        "artifact_key": "A5_level_up",
+        "exists": true,
+        "experiment_id": 4515,
+        "path": "results/experiment_4515_deepen_graph_explore_l2.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A6_integration",
+        "exists": true,
+        "experiment_id": 4516,
+        "path": "results/experiment_4516_integration_8game_gate.json",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "scoreboard_context",
+        "exists": true,
+        "experiment_id": 4505,
+        "path": "results/experiment_4505_submitted_agent_scoreboard.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "prior_submitted_baseline_levels": 13,
+  "random_seed": 4521,
+  "reproducibility_checksum": "sha256:6ecf5457f17951bb6c2d094d31ca99d3b425d3fa0ff01bfa2f20fbd1a7a51e71",
+  "reproducible_total_levels": 48,
+  "result_path": "results/experiment_4521_capstone_v417.json",
+  "schema": "carnot.capstone_v417_4521.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4521",
+    "SCENARIO-CAPSTONE-4521"
+  ],
+  "submission_package_ready": true,
+  "submission_readiness_decision": {
+    "decision": "ready_for_operator_submit",
+    "operator_only": true,
+    "submission_package_ready": true,
+    "submitted_to_leaderboard": false
+  },
+  "submitted_to_leaderboard": false,
+  "upstream_provenance": [
+    {
+      "artifact_key": "A1_prune",
+      "experiment_id": 4511,
+      "fields_imported": [
+        "honest_verdict",
+        "median_actions_baseline",
+        "median_actions_with_prune",
+        "solve_rate_baseline",
+        "solve_rate_with_prune",
+        "solve_rate_denominator",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4511_frame_change_prune_predictor.json",
+      "payload_reproducibility_checksum": "60483b476b5d975d4384e2bd8357bd9753a223a2258991e8ee9a4a4b05b57dc5",
+      "sha256": "60ba4e7d501fd72f273cc4bcfb92e61408d9634e3092c60575dc3e70d72943b4",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 1
+    },
+    {
+      "artifact_key": "A2_imitation",
+      "experiment_id": 4512,
+      "fields_imported": [
+        "honest_verdict",
+        "median_actions_baseline",
+        "median_actions_with_prior",
+        "solve_rate_baseline",
+        "solve_rate_with_prior",
+        "solve_rate_denominator",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4512_imitation_action_prior.json",
+      "payload_reproducibility_checksum": "984d004d19ca9e621c9329b371a4d898d8e62a5dba538ebbf27d0e2a641ef017",
+      "sha256": "a2d8129807e520e51ebb350ad11016efd0be41a154c5e65f5f90a99baf5e7445",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "A3_adaptive_budget",
+      "experiment_id": 4513,
+      "fields_imported": [],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4513_adaptive_per_step_budget.json",
+      "payload_reproducibility_checksum": "2709176e9d302efb7b6e44fb5fa301d49cfdcd238fb7581b431343df4721db5d",
+      "sha256": "f4e579a4ce201517fc2b8b90b5911078b3cc804bdfbcc5bd7c64286299261464",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "A4_lazy_best_first",
+      "experiment_id": 4514,
+      "fields_imported": [
+        "honest_verdict",
+        "per_weight_results",
+        "control_value_weight_0",
+        "chosen_submitted_value_weight",
+        "decision",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4514_lazy_best_first_value_weight.json",
+      "payload_reproducibility_checksum": "186ee1efb889533c974364c4cb16b85ce89be0a2dba3ab75a2305930413890d4",
+      "sha256": "4f213326952764497c8ac0a7d8232b513278bf1a5c40617a892aed3a30166871",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 1
+    },
+    {
+      "artifact_key": "A5_level_up",
+      "experiment_id": 4515,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4515_deepen_graph_explore_l2.json",
+      "payload_reproducibility_checksum": "e28e4e26efc7b2aac4651f35ca7c191141c4808a7416029ae2870c40d25cb04c",
+      "sha256": "989a7128ee1e641662169f0783e6141e88dd1a1fa317e9bdfd93152c78f612c2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "A6_integration",
+      "experiment_id": 4516,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "heldout_solve_rate=0.5 and solve_rate_integrated=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4516_integration_8game_gate.json",
+      "payload_reproducibility_checksum": "b8f41750dcbc811a8dba3c092f561c54cd26772a53f187930778dd15bc4d3ec2",
+      "sha256": "26668d9537f841c1c17f347afc49ffabc7886e54b0afec6ead62a21e160aa264",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "artifact_key": "scoreboard_context",
+      "experiment_id": 4505,
+      "fields_imported": [
+        "honest_verdict",
+        "headline_metrics",
+        "scoreboard_row",
+        "leaderboard_submission",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4505_submitted_agent_scoreboard.json",
+      "payload_reproducibility_checksum": "13fa737934ed814e0f94dbf4fe9ed99f0f9c3dd620f3cfd227f35d2aa3f93e7c",
+      "sha256": "10f18794605a41dd59e815d1d31a679c06e56e31689f36a3ea0bad6d9c9ab8f2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "10f18794605a41dd59e815d1d31a679c06e56e31689f36a3ea0bad6d9c9ab8f2",
+    "26668d9537f841c1c17f347afc49ffabc7886e54b0afec6ead62a21e160aa264",
+    "4f213326952764497c8ac0a7d8232b513278bf1a5c40617a892aed3a30166871",
+    "60ba4e7d501fd72f273cc4bcfb92e61408d9634e3092c60575dc3e70d72943b4",
+    "989a7128ee1e641662169f0783e6141e88dd1a1fa317e9bdfd93152c78f612c2",
+    "a2d8129807e520e51ebb350ad11016efd0be41a154c5e65f5f90a99baf5e7445",
+    "f4e579a4ce201517fc2b8b90b5911078b3cc804bdfbcc5bd7c64286299261464"
+  ],
+  "variant_transfer_context": {
+    "heldout_attempted": 7,
+    "heldout_solve_rate": 0.1428571429,
+    "heldout_solved": 1,
+    "honest_verdict": "complete: submitted_agent_scoreboard_refresh_generic_1_of_7_variant_7_of_25_value_weight_0",
+    "leaderboard_submission": false,
+    "status": "scoreboard_context",
+    "variant_transfer_attempted": 25,
+    "variant_transfer_rate": 0.28,
+    "variant_transfer_solved": 7,
+    "verifier_is_oracle": false
+  },
+  "variant_transfer_rate": 0.28,
+  "verifier_claims": [
+    {
+      "experiment_id": 4511,
+      "skipped": false,
+      "source": "A1_prune",
+      "verifier_is_oracle": false
+    },
+    {
+      "experiment_id": 4512,
+      "skipped": false,
+      "source": "A2_imitation",
+      "verifier_is_oracle": false
+    },
+    {
+      "experiment_id": 4513,
+      "skipped": true,
+      "source": "A3_adaptive_budget",
+      "verifier_is_oracle": false
+    },
+    {
+      "experiment_id": 4514,
+      "skipped": false,
+      "source": "A4_lazy_best_first",
+      "verifier_is_oracle": false
+    },
+    {
+      "experiment_id": 4515,
+      "skipped": false,
+      "source": "A5_level_up",
+      "verifier_is_oracle": false
+    },
+    {
+      "experiment_id": 4516,
+      "skipped": true,
+      "source": "A6_integration",
+      "verifier_is_oracle": false
+    },
+    {
+      "experiment_id": 4505,
+      "skipped": false,
+      "source": "scoreboard_context",
+      "verifier_is_oracle": false
+    }
+  ],
+  "verifier_is_oracle": false
+}
