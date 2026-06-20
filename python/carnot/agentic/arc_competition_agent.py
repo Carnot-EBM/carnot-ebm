@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Sequence
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
@@ -111,7 +111,7 @@ def _frame_only_mechanic_hint(frame: Any) -> Optional[str]:
         if getattr(grid, "shape", None) is None or grid.ndim != 2:
             return None
         h, w = grid.shape
-        lower = grid[int(h * 0.55):, :]
+        lower = grid[int(h * 0.55) :, :]
         if lower.size == 0:
             return None
         vals, counts = np.unique(lower, return_counts=True)
@@ -153,6 +153,13 @@ class StepwiseExplorer:
         value_head=None,
         value_weight: float = 0.0,
         search_mode: str = "depth_first_ride",
+        online_discriminative: bool = True,
+        discriminative_featurizer=None,
+        discriminative_min_positives: int = 3,
+        discriminative_min_negatives: int = 3,
+        discriminative_fit_iters: int = 120,
+        discriminative_refit_every: int = 4,
+        discriminative_prune_threshold: float = 0.12,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -162,6 +169,21 @@ class StepwiseExplorer:
         # toward predicted-closer states (the A* routing that unlocked cn04 in graph_explore_solve_v2).
         self.value_head = value_head
         self.value_weight = float(value_weight)
+        self.online_discriminative = bool(online_discriminative)
+        self.discriminative_featurizer = discriminative_featurizer
+        self.discriminative_min_positives = max(1, int(discriminative_min_positives))
+        self.discriminative_min_negatives = max(1, int(discriminative_min_negatives))
+        self.discriminative_fit_iters = max(1, int(discriminative_fit_iters))
+        self.discriminative_refit_every = max(1, int(discriminative_refit_every))
+        self.discriminative_prune_threshold = float(discriminative_prune_threshold)
+        self.online_discriminator = None
+        self._disc_X: list[list[float]] = []
+        self._disc_y: list[float] = []
+        self._disc_seen: set[tuple[int, str]] = set()
+        self._disc_samples_since_fit = 0
+        self._disc_negative_sources: dict[str, int] = {}
+        self._disc_fit_count = 0
+        self._disc_frontier_pruned = 0
         # SEARCH MODE: "depth_first_ride" (default, proven) rides the current branch depth-first (action-
         # efficient; load-bearing for the deep wins lp85/sp80). "best_first" ALWAYS expands the globally-
         # best A*-value frontier (depth + value_weight*value) -- this is the graph_explore_solve_v2 search
@@ -181,6 +203,114 @@ class StepwiseExplorer:
         self.awaiting: Optional[dict] = None  # last probe, to attribute its result
         self.explored_out = False
         self.adj: dict[str, list] = {}  # known forward edges: hash -> [(action_dict, next_hash)]
+
+    def _disc_features(self, frame) -> Optional[list[float]]:
+        if not self.online_discriminative:
+            return None
+        try:
+            if self.discriminative_featurizer is None:
+                from carnot.agentic.arc_value_learner import cross_game_features_v2
+
+                self.discriminative_featurizer = cross_game_features_v2
+            return [float(v) for v in self.discriminative_featurizer(frame)]
+        except Exception:
+            return None
+
+    def _record_discriminative_sample(
+        self,
+        frame,
+        *,
+        label: int,
+        source: str,
+        node_hash: Optional[str] = None,
+    ) -> Optional[list[float]]:
+        features = self._disc_features(frame)
+        if features is None:
+            return None
+        self._record_discriminative_features(
+            features,
+            label=label,
+            source=source,
+            node_hash=node_hash or self._hash(frame),
+        )
+        return features
+
+    def _record_discriminative_features(
+        self,
+        features: Sequence[float] | None,
+        *,
+        label: int,
+        source: str,
+        node_hash: str,
+    ) -> None:
+        if features is None:
+            return
+        key = (int(label), node_hash)
+        if key in self._disc_seen:
+            return
+        self._disc_seen.add(key)
+        self._disc_X.append([float(v) for v in features])
+        self._disc_y.append(float(label))
+        self._disc_samples_since_fit += 1
+        if int(label) == 0:
+            self._disc_negative_sources[source] = self._disc_negative_sources.get(source, 0) + 1
+        self._maybe_fit_discriminator()
+
+    def _maybe_fit_discriminator(self) -> None:
+        if not self.online_discriminative or not self._disc_y:
+            return
+        positives = int(sum(1 for y in self._disc_y if y >= 0.5))
+        negatives = len(self._disc_y) - positives
+        if positives < self.discriminative_min_positives:
+            return
+        if negatives < self.discriminative_min_negatives:
+            return
+        if (
+            self.online_discriminator is not None
+            and self._disc_samples_since_fit < self.discriminative_refit_every
+        ):
+            return
+        try:
+            from carnot.agentic.arc_value_learner import DiscriminativeVerifier
+
+            verifier = DiscriminativeVerifier(lambda frame: self._disc_features(frame) or [])
+            verifier.fit(
+                self._disc_X,
+                self._disc_y,
+                iters=self.discriminative_fit_iters,
+                lr=0.3,
+                l2=1e-3,
+            )
+            self.online_discriminator = verifier
+            self._disc_fit_count += 1
+            self._disc_samples_since_fit = 0
+        except Exception:
+            return
+
+    def _node_on_path_proba(self, node: dict) -> float:
+        if self.online_discriminator is None:
+            return 1.0
+        features = node.get("discriminative_features")
+        if features is None:
+            return 1.0
+        try:
+            return float(self.online_discriminator.proba_features(features))
+        except Exception:
+            return 1.0
+
+    def online_discriminator_diagnostics(self) -> dict[str, Any]:
+        positives = int(sum(1 for y in self._disc_y if y >= 0.5))
+        negatives = len(self._disc_y) - positives
+        return {
+            "enabled": bool(self.online_discriminative),
+            "trained": self.online_discriminator is not None,
+            "positive_samples": positives,
+            "negative_samples": negatives,
+            "negative_sources": dict(self._disc_negative_sources),
+            "fit_count": int(self._disc_fit_count),
+            "frontier_pruned": int(self._disc_frontier_pruned),
+            "prune_threshold": float(self.discriminative_prune_threshold),
+        }
 
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
@@ -221,13 +351,22 @@ class StepwiseExplorer:
             return
         h = self._hash(latest)
         lvl = _level_of(latest)
+        over = self._game_over(latest)
         if self.start_level is None:
             self.start_level = lvl
         self.best_level = max(self.best_level, lvl)
+        features = None
         if self.awaiting is not None:
             o = self.awaiting
             self.awaiting = None
-            if not self._game_over(latest):
+            if over:
+                self._record_discriminative_sample(
+                    latest,
+                    label=0,
+                    source="game_over",
+                    node_hash=h,
+                )
+            else:
                 act = {"action": o["action"], "data": o["data"]}
                 # record the forward edge for frontier-distance navigation (only if the
                 # action actually CHANGED state — a no-op self-edge is useless to navigate)
@@ -235,16 +374,35 @@ class StepwiseExplorer:
                     self.adj.setdefault(o["origin"], []).append((act, h))
                 if h not in self.graph:
                     opath = self.graph.get(o["origin"], {}).get("path", [])
+                    features = self._record_discriminative_sample(
+                        latest,
+                        label=1,
+                        source="alive_frontier",
+                        node_hash=h,
+                    )
                     self.graph[h] = {
                         "path": opath + [act],
                         "untested": self._candidates(latest),
                         "value": self._value(latest),
+                        "discriminative_features": features,
                     }
         self.cur = h
-        if self.root is None:
+        if self.root is None and not over:
             self.root = h
+            features = self._record_discriminative_sample(
+                latest,
+                label=1,
+                source="root",
+                node_hash=h,
+            )
             self.graph.setdefault(
-                h, {"path": [], "untested": self._candidates(latest), "value": self._value(latest)}
+                h,
+                {
+                    "path": [],
+                    "untested": self._candidates(latest),
+                    "value": self._value(latest),
+                    "discriminative_features": features,
+                },
             )
 
     def _frontier(self) -> Optional[str]:
@@ -259,12 +417,29 @@ class StepwiseExplorer:
         best_key = None
         for h, node in self.graph.items():
             if not node["untested"]:
+                self._record_discriminative_features(
+                    node.get("discriminative_features"),
+                    label=0,
+                    source="frontier_exhausted",
+                    node_hash=h,
+                )
                 continue
+            on_path = self._node_on_path_proba(node)
+            node["on_path_proba"] = on_path
+            if (
+                self.online_discriminator is not None
+                and on_path < self.discriminative_prune_threshold
+            ):
+                if node.get("discriminative_pruned") is not True:
+                    self._disc_frontier_pruned += 1
+                node["discriminative_pruned"] = True
+                continue
+            node["discriminative_pruned"] = False
             depth = len(node["path"])
             if use_value:
-                key = (depth + w * node.get("value", 0.0), depth)
+                key = (depth + w * node.get("value", 0.0), depth, -on_path)
             else:
-                key = (depth,)
+                key = (depth, -on_path)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
@@ -554,11 +729,7 @@ class E3AgentPolicy:
 
             g0, aid, data = self._prev
             g1 = to_logical(grid_of(latest), self.cell)
-            self.transitions.append(
-                Transition(
-                    g0, aid, data, g1, 0, _level_of(latest)
-                )
-            )
+            self.transitions.append(Transition(g0, aid, data, g1, 0, _level_of(latest)))
             self._dsl_transitions.append((g0, _action_key(aid, data), g1))
         if self.phase == "explore":
             mv = self.explorer.next_move(frames, latest)
@@ -629,7 +800,7 @@ class E3AgentPolicy:
 # an opt-in-only eval flag. The eval's submission-baseline + the parity test both read this dict, so
 # the shipped agent and the measured baseline can never silently diverge again.
 SUBMITTED_AGENT_CONFIG = {
-    "policy": "E3AgentPolicy",          # the verifier-routed cascade (NOT cascade=False banked-replay)
+    "policy": "E3AgentPolicy",  # the verifier-routed cascade (NOT cascade=False banked-replay)
     "cascade": True,
     # explorer config the live agent actually runs.
     "value_weight": SUBMITTED_VALUE_WEIGHT,
@@ -639,6 +810,7 @@ SUBMITTED_AGENT_CONFIG = {
     "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
     "router_wired": True,
     "world_model_dsl_wired": True,
+    "online_discriminative": True,
 }
 
 
