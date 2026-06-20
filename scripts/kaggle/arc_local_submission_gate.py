@@ -173,21 +173,30 @@ def validate_canonical_baseline(base: dict) -> dict:
     core = sorted(_baseline_core(base))
     computed_median = median([base_acts.get(game, BIG_ACTIONS) for game in CANONICAL_CORE_GAMES])
     reported_median = base.get("median_actions_on_solved")
+    # Game-set + CORE-set are metric-agnostic (the cherry-pick guard): always enforced.
     if games != list(CANONICAL_GAME_SET):
         errors.append(f"baseline games must equal the fixed 8-game set {list(CANONICAL_GAME_SET)}")
-    if _action_metric_field(base) != CANONICAL_ACTION_FIELD:
-        errors.append("baseline action metric must use total actions")
     if core != sorted(CANONICAL_CORE_GAMES):
         errors.append(f"baseline CORE must equal {sorted(CANONICAL_CORE_GAMES)}")
-    if {
-        game: base_acts.get(game)
-        for game in CANONICAL_CORE_GAMES
-    } != CANONICAL_BASELINE_ACTIONS_BY_GAME:
-        errors.append("baseline CORE action map moved from the verified 7760 control")
-    if float(computed_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
-        errors.append("computed baseline CORE median must remain 7760")
-    if reported_median is None or float(reported_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
-        errors.append("reported baseline median_actions_on_solved must remain 7760")
+    if _efficiency_by_game(base):
+        # NEW per-level efficiency baseline (the real metric, 2026-06-20): the retired total-actions 7760
+        # control no longer applies (re-baselining with the per-level eval legitimately moves total
+        # actions). The cherry-pick guard here is "efficiency present for every CORE game" so the baseline
+        # cannot silently drop the real metric. Do NOT assert the 7760 total-actions control.
+        eff = _efficiency_by_game(base)
+        missing = [g for g in CANONICAL_CORE_GAMES if g not in eff]
+        if missing:
+            errors.append(f"baseline missing per-level efficiency for CORE games {missing}")
+    else:
+        # LEGACY total-actions baseline (no efficiency, e.g. unit fixtures): keep the 7760 cherry-pick guard.
+        if _action_metric_field(base) != CANONICAL_ACTION_FIELD:
+            errors.append("baseline action metric must use total actions")
+        if {game: base_acts.get(game) for game in CANONICAL_CORE_GAMES} != CANONICAL_BASELINE_ACTIONS_BY_GAME:
+            errors.append("baseline CORE action map moved from the verified 7760 control")
+        if float(computed_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
+            errors.append("computed baseline CORE median must remain 7760")
+        if reported_median is None or float(reported_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
+            errors.append("reported baseline median_actions_on_solved must remain 7760")
     return {
         "ok": not errors,
         "errors": errors,
@@ -239,12 +248,28 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
     # said 0; per-level metric says 0.72 and the over-run is a wall-clock cost, not a score cost).
     base_eff = _efficiency_by_game(base)
     cur_eff = _efficiency_by_game(cur)
+    if base_eff and not cur_eff:
+        # The baseline uses the real per-level metric but the treatment emitted no efficiency (broken
+        # eval / missing eff=). Refuse -- do NOT silently fall back to the retired total-actions metric,
+        # which could PASS a real efficiency regression (adversarial review SF-2, 2026-06-20).
+        return False, ("REGRESSION: could not measure per-level efficiency for the current config "
+                       "(baseline has it, treatment does not); refusing to judge on the retired "
+                       "total-actions fallback")
     if base_eff and cur_eff:
         bce = round(sum(base_eff.get(g, 0.0) for g in core), 4)
         cce = round(sum(cur_eff.get(g, 0.0) for g in core), 4)
+        # PER-GAME non-inferiority (SF-3, adversarial review): the CORE efficiency sum is lopsided (one
+        # game ~ 100% of it), so a sum-only check lets a regression on the dominant game hide behind a
+        # tiny gain elsewhere. Guard each CORE game whose baseline efficiency is non-trivial (>0.01).
+        regressed = [g for g in core
+                     if base_eff.get(g, 0.0) > 0.01
+                     and cur_eff.get(g, 0.0) < base_eff.get(g, 0.0) * EFFICIENCY_DROP_SLACK]
+        if regressed:
+            return False, (f"REGRESSION: CORE games lost per-level efficiency {regressed} "
+                           f"(per-game non-inferiority; the REAL leaderboard metric)")
         if bce > 0 and cce < bce * EFFICIENCY_DROP_SLACK:
-            return False, (f"REGRESSION: CORE per-level efficiency {cce} < baseline {bce} "
-                           f"(the REAL leaderboard metric: sum min(human/agent_per_level,1)^2)")
+            return False, (f"REGRESSION: CORE per-level efficiency sum {cce} < baseline {bce} "
+                           f"(the REAL leaderboard metric: min((human/agent)^2*100,115), index-weighted)")
         tag = "IMPROVED" if (cce > bce or bonus) else "non-inferior"
         msg = f"PASS ({tag}): CORE per-level efficiency {cce} vs baseline {bce}"
         if bonus:

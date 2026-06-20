@@ -74,6 +74,33 @@ def test_lost_core_solve_still_fails():
     assert ok is False and "m0r0" in msg
 
 
+def test_sf2_missing_cur_efficiency_hard_fails():
+    """SF-2 (adversarial review): if the baseline has per-level efficiency but the treatment emits none
+    (broken eval), HARD FAIL -- do NOT silently fall back to the retired total-actions metric (which
+    could PASS a real efficiency regression)."""
+    cur = {"solved_count": 4, "solved_games": CORE,
+           "action_metric": dict(gate.CANONICAL_ACTION_METRIC),
+           "actions_by_game": {g: 50 for g in CORE}}  # no efficiency_by_game
+    ok, msg = gate._verdict(cur, _baseline())
+    assert ok is False and "could not measure per-level efficiency" in msg
+
+
+def test_mf1_efficiency_baseline_passes_canonical_guard():
+    """MF-1 (adversarial review): an efficiency-bearing baseline must PASS validate_canonical_baseline
+    (the retired total-actions 7760 control must NOT block it). Re-baselining legitimately moves total
+    actions, so the guard now checks per-level efficiency presence, not the 7760 control."""
+    eff_base = {"games": list(gate.CANONICAL_GAME_SET),
+                "action_metric": dict(gate.CANONICAL_ACTION_METRIC),
+                "solved_games": list(CORE),
+                "actions_by_game": {"lp85": 20, "m0r0": 3891, "sp80": 7218, "vc33": 1758},
+                "efficiency_by_game": {"lp85": 2.0069, "m0r0": 0.0, "sp80": 0.0, "vc33": 0.0}}
+    v = gate.validate_canonical_baseline(eff_base)
+    assert v["ok"] is True and v["errors"] == []
+    # but a baseline missing efficiency for a CORE game must still FAIL the guard
+    bad = {**eff_base, "efficiency_by_game": {"lp85": 2.0069}}
+    assert gate.validate_canonical_baseline(bad)["ok"] is False
+
+
 def test_fallback_to_median_actions_when_no_efficiency():
     """Legacy baseline/fixtures WITHOUT efficiency data -> fall back to the median-actions wall-clock
     proxy (so B2's fixtures and an un-re-baselined gate keep working)."""
