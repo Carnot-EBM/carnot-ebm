@@ -193,6 +193,18 @@ games:
   solver: results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).
   reproduce: re-gated reproduced=True L1 (arc_solver_kit.reproduce).
   gotchas: []
+- game: lf52
+  reproducibility: reproduced
+  levels_reproduced: 1
+  win_condition: first-solve L1 adapter-free (outer-loop generic sweep 2026-06-20); previously one of
+    the 3 unsolved public games. 8 ACTION6 clicks advance level 0->1.
+  action_model: ACTION6 click-only; clicks (18,19),(30,19)x2,(42,19)x2,(42,31)x2,(42,43) -- a
+    unit-positioning placement sequence (survey class = unit-positioning).
+  solver: results/arc_explore_trajectory_lf52.json (graph_explore_solve_v2 adapter-free, 8 actions);
+    verifier seed models/arc_verifier_lf52.json (heuristic cell_count).
+  reproduce: re-gated reproduced=True L1 (arc_solver_kit.reproduce inside arc_loop_solve + independent
+    ground-truth replay level 0->1 on a fresh env, 2026-06-20).
+  gotchas: []
 - game: sp80
   reproducibility: reproduced
   levels_reproduced: 1
