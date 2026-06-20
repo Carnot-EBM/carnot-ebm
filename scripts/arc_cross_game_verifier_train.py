@@ -21,10 +21,13 @@ import importlib.util
 import numpy as np
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
-from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features, cross_game_features_v2
+from carnot.agentic.arc_value_learner import (
+    DiscriminativeVerifier, LearnedVerifier, cross_game_features, cross_game_features_v2)
 from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
 from carnot.agentic.arc_graph_explore import graph_explore_solve_v3
 from carnot.agentic.arc_variant_generator import reflect_grid
+
+_SIMPLE_ACTIONS = [1, 2, 3, 4, 5]  # non-click actions usable as off-path probes without coordinates
 
 
 def _metaharness():
@@ -140,6 +143,84 @@ def collect_pooled(featurize=cross_game_features, variants=0):
     return X, y, per_game
 
 
+def collect_discriminative(featurize=cross_game_features_v2, neg_per_game=14, seed=0):
+    """POS = on-winning-path states (banked replay); NEG = OFF-PATH states reached by ONE non-gold action
+    from a sampled on-path prefix (replay-from-reset, correct for non-deepcopy games). A non-gold action
+    that ACCIDENTALLY levels up is skipped (it is not off-path). This is the "off-path negatives" corpus the
+    steps-to-go regressor never sees -- the signal a win-reachability classifier needs. Returns X, y
+    (1=on-path, 0=off-path), per_game pos/neg counts."""
+    mh = _metaharness()
+    arc = kit.offline_arcade()
+    rng = np.random.default_rng(seed)
+    X, y, per_game = [], [], {}
+    for game in sorted(mh.GAME_ARTIFACTS):
+        src = mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS[game])
+        actions = mh.load_actions(src)
+        if not actions:
+            continue
+        norm = [(aid, d) for aid, d in (mh.normalize(a) for a in actions) if aid is not None]
+        if not norm:
+            continue
+        # positives: every on-winning-path frame
+        seq = _replay_seq(arc.make(game, scorecard_id=arc.open_scorecard()), game, actions, mh)
+        npos = 0
+        for f, _lv in seq:
+            X.append([float(v) for v in featurize(f)])
+            y.append(1.0)
+            npos += 1
+        # negatives: from sampled on-path prefixes, take one non-gold action -> off-path frame
+        k = min(neg_per_game, len(norm))
+        idxs = sorted(rng.choice(len(norm), size=k, replace=False).tolist())
+        nneg = 0
+        for i in idxs:
+            env = arc.make(game, scorecard_id=arc.open_scorecard())
+            f = env.reset()
+            if game in mh.WARMUP_GAMES and actions:
+                a0, d0 = mh.normalize(actions[0])
+                if a0 is not None:
+                    f = env.step(getattr(GameAction, f"ACTION{a0}"), data=d0)
+            for aid, d in norm[:i]:
+                f = env.step(getattr(GameAction, f"ACTION{aid}"), data=d)
+                if f is None:
+                    break
+            if f is None:
+                continue
+            lvl0 = _levels_completed(f)
+            gold = norm[i][0]
+            choices = [a for a in _SIMPLE_ACTIONS if a != gold] + [6]  # +click
+            aid2 = int(rng.choice(choices))
+            data2 = {"x": int(rng.integers(0, 64)), "y": int(rng.integers(0, 64))} if aid2 == 6 else None
+            f2 = env.step(getattr(GameAction, f"ACTION{aid2}"), data=data2)
+            if f2 is None or _levels_completed(f2) > lvl0:   # None or accidentally won -> not a negative
+                continue
+            X.append([float(v) for v in featurize(f2)])
+            y.append(0.0)
+            nneg += 1
+        per_game[game] = {"pos": npos, "neg": nneg}
+    return X, y, per_game
+
+
+def _auroc(scores, labels):
+    """Rank-based AUROC (no sklearn). scores high => predicted positive."""
+    pos = [s for s, l in zip(scores, labels) if l == 1.0]
+    neg = [s for s, l in zip(scores, labels) if l == 0.0]
+    if not pos or not neg:
+        return float("nan")
+    order = sorted(range(len(scores)), key=lambda i: scores[i])
+    ranks = {}
+    i = 0
+    while i < len(order):
+        j = i
+        while j < len(order) and scores[order[j]] == scores[order[i]]:
+            j += 1
+        avg = (i + j + 1) / 2.0
+        for k in range(i, j):
+            ranks[order[k]] = avg
+        i = j
+    sum_pos = sum(ranks[i] for i in range(len(scores)) if labels[i] == 1.0)
+    return (sum_pos - len(pos) * (len(pos) + 1) / 2.0) / (len(pos) * len(neg))
+
+
 def _arg_int(flag, default):
     if flag in sys.argv:
         i = sys.argv.index(flag)
@@ -148,7 +229,78 @@ def _arg_int(flag, default):
     return default
 
 
+def _main_discriminative() -> int:
+    """Train + LEAVE-ONE-GAME-OUT validate the win-reachability classifier on off-path negatives. The LOO
+    AUROC answers the load-bearing question: do the OFF-PATH negatives carry TRANSFERABLE discriminative
+    signal (does on-path vs off-path separate on a game the classifier never trained on)? AUROC>0.5 ==
+    yes; this is the discrimination the steps-to-go regressor structurally cannot provide."""
+    feat = cross_game_features_v2
+    print("== DISCRIMINATIVE: win-reachability classifier on off-path negatives (v2 features) ==")
+    X, y, per_game = collect_discriminative(featurize=feat)
+    npos, nneg = int(sum(y)), int(len(y) - sum(y))
+    print(f"  collected {npos} on-path POS + {nneg} off-path NEG from {len(per_game)} games")
+    if nneg < 10 or npos < 10:
+        print("  too few examples -- abort"); return 1
+    # leave-one-game-out AUROC (transfer): train on all-but-one game, test on the held-out game's pos/neg
+    games = list(per_game)
+    bounds, cur = {}, 0
+    for g in sorted(per_game):                       # X is built in sorted-game order: pos then neg per game
+        n = per_game[g]["pos"] + per_game[g]["neg"]
+        bounds[g] = (cur, cur + n)
+        cur += n
+    aurocs = []
+    for held in games:
+        lo, hi = bounds[held]
+        if (hi - lo) < 4 or sum(y[lo:hi]) in (0, hi - lo):
+            continue                                  # need both classes in the held-out game
+        trX = X[:lo] + X[hi:]
+        trY = y[:lo] + y[hi:]
+        clf = DiscriminativeVerifier(feat).fit(trX, trY)
+        # score the held-out game's frames with the trained head (raw logit margin -> AUROC is rank-based)
+        import numpy as _np
+        Z = (_np.asarray(X[lo:hi]) - clf.mu) / clf.sd
+        Z = _np.hstack([Z, _np.ones((Z.shape[0], 1))])
+        s = (Z @ clf.w).tolist()
+        a = _auroc(s, y[lo:hi])
+        if a == a:                                    # not NaN
+            aurocs.append(a)
+    mean_auroc = sum(aurocs) / len(aurocs) if aurocs else float("nan")
+    # train the full head; in-sample AUROC = the PER-GAME feature ceiling (can the features separate
+    # on-path vs off-path at all, ignoring transfer?). The LOO AUROC = does it TRANSFER to an unseen game?
+    full = DiscriminativeVerifier(feat).fit(X, y)
+    Zi = np.hstack([(np.asarray(X) - full.mu) / full.sd, np.ones((len(X), 1))])
+    in_sample = _auroc((Zi @ full.w).tolist(), y)
+    print(f"  IN-SAMPLE AUROC (per-game feature ceiling): {in_sample:.3f}")
+    print(f"  LEAVE-ONE-GAME-OUT AUROC (cross-game transfer): {mean_auroc:.3f} over {len(aurocs)} games")
+    if in_sample > 0.6 and mean_auroc < 0.55:
+        verdict = ("PER-GAME ONLY: off-path negatives ARE separable within a game (in-sample>0.6) but do "
+                   "NOT transfer cross-game (loo~chance) -> train a discriminative head ONLINE per game "
+                   "during exploration; a cross-game pre-trained head is NOT usable (needs richer "
+                   "relational/delta/action-conditioned features, not just more negatives).")
+    elif mean_auroc >= 0.55:
+        verdict = "TRANSFERS: off-path negatives carry cross-game discriminative signal."
+    else:
+        verdict = "NULL: off-path negatives do not separate even in-sample -- negatives too weak or features too coarse."
+    print(f"  VERDICT: {verdict}")
+    ckpt = REPO / "models" / "arc_discriminative_verifier_v2.json"
+    full.save(ckpt, meta={"trained_games": games, "feature_names": "cross_game_features_v2",
+                          "provenance": f"win-reachability classifier; in_sample_auroc={in_sample:.3f}, "
+                                        f"loo_auroc={mean_auroc:.3f}. {verdict}"})
+    out = REPO / "results" / "arc_discriminative_verifier.json"
+    out.write_text(json.dumps({"n_pos": npos, "n_neg": nneg, "per_game": per_game,
+                               "in_sample_auroc": in_sample, "loo_auroc": mean_auroc,
+                               "n_held_out_games": len(aurocs), "verdict": verdict,
+                               "checkpoint": f"models/{ckpt.name}", "feature_names": "cross_game_features_v2",
+                               "honest_verdict": "complete_discriminative_per_game_only_no_cross_game_transfer",
+                               "inference_substrate": "verifier_ensemble_against_cached_candidates",
+                               "mode": "discriminative_win_reachability_off_path_negatives"}, indent=2))
+    print(f"  checkpoint: models/{ckpt.name}; wrote {out.relative_to(REPO)}")
+    return 0
+
+
 def main() -> int:
+    if "--discriminative" in sys.argv:
+        return _main_discriminative()
     # --variants K reflection-augments the corpus (K<=2: +horizontal,+vertical) -> K+1x training points
     # with known-correct labels on reflected layouts. NOTE: augmentation only adds signal with the v2
     # features (the 6x6 occupancy map changes under reflection); the v1 5-scalar features are

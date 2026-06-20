@@ -73,3 +73,25 @@ def test_featurize_reflected_identity_is_noop():
         np.array(m._featurize_reflected(f, cross_game_features_v2, None)),
         np.array(cross_game_features_v2(f)),
     )
+
+
+def test_auroc_helper():
+    m = _train_mod()
+    assert m._auroc([0.1, 0.2, 0.9, 0.8], [0.0, 0.0, 1.0, 1.0]) == pytest.approx(1.0)  # perfect
+    assert m._auroc([0.9, 0.8, 0.1, 0.2], [0.0, 0.0, 1.0, 1.0]) == pytest.approx(0.0)  # inverted
+    assert m._auroc([0.5, 0.5, 0.5, 0.5], [0.0, 0.0, 1.0, 1.0]) == pytest.approx(0.5)  # ties
+
+
+def test_discriminative_verifier_separates_synthetic():
+    # the win-reachability classifier must actually learn a separable boundary (the per-game
+    # discrimination the steps-to-go regressor lacks). Identity featurize over raw vectors.
+    from carnot.agentic.arc_value_learner import DiscriminativeVerifier
+
+    rng = np.random.default_rng(0)
+    pos = rng.normal(2.0, 0.5, size=(60, 4))
+    neg = rng.normal(-2.0, 0.5, size=(60, 4))
+    X = np.vstack([pos, neg]).tolist()
+    y = [1.0] * 60 + [0.0] * 60
+    clf = DiscriminativeVerifier(lambda v: v).fit(X, y)
+    assert clf.proba(pos[0].tolist()) > 0.7   # confidently on-path
+    assert clf.proba(neg[0].tolist()) < 0.3   # confidently off-path

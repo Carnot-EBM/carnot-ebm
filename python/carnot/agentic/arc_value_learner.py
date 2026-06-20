@@ -136,3 +136,76 @@ class LearnedVerifier:
         v.w = np.asarray(d["weights"], dtype=float)
         v.n_samples = int(d.get("n_samples", 0))
         return v
+
+
+class DiscriminativeVerifier:
+    """A logistic WIN-REACHABILITY classifier: P(this state is on a winning path).
+
+    DISTINCT from LearnedVerifier (which regresses steps-to-go along the ONE banked winning path). A
+    distance-along-the-gold-path value cannot tell an off-path TRAP from a near-win: a state 3 steps from a
+    dead-end and a state 3 steps from the win can carry identical marginal features and identical regressed
+    value, yet one can no longer win. That is the discrimination the regression head structurally lacks
+    (and the reason the linear value head is too weak to route with weight>0). This head learns it directly
+    from the negatives the solver already produces (off-path / game-over states) -- the "off-path negatives"
+    the corpus builder was always supposed to add.
+
+    Logistic regression with standardized features + L2, numpy gradient descent (no sklearn dep). Returns a
+    probability in [0,1]; the search can prune low-P(on-path) states the steps-to-go value would miss."""
+
+    def __init__(self, featurize: Callable[[Any], Sequence[float]]) -> None:
+        self.featurize = featurize
+        self.w: np.ndarray | None = None
+        self.mu: np.ndarray | None = None
+        self.sd: np.ndarray | None = None
+        self.n_samples = 0
+
+    def fit(self, X: Sequence[Sequence[float]], y: Sequence[float],
+            iters: int = 800, lr: float = 0.5, l2: float = 1e-3) -> "DiscriminativeVerifier":
+        A = np.asarray(X, dtype=float)
+        b = np.asarray(y, dtype=float)              # 1 = on winning path, 0 = off-path / dead-end
+        self.mu = A.mean(axis=0)
+        self.sd = A.std(axis=0) + 1e-8
+        Z = np.hstack([(A - self.mu) / self.sd, np.ones((A.shape[0], 1))])  # standardized + bias
+        w = np.zeros(Z.shape[1])
+        for _ in range(iters):
+            p = 1.0 / (1.0 + np.exp(-(Z @ w)))
+            grad = Z.T @ (p - b) / len(b) + l2 * np.r_[w[:-1], 0.0]
+            w -= lr * grad
+        self.w = w
+        self.n_samples = len(b)
+        return self
+
+    def proba(self, frame: Any) -> float:
+        if self.w is None:
+            return 0.5
+        z = (np.asarray([float(v) for v in self.featurize(frame)]) - self.mu) / self.sd
+        z = np.r_[z, 1.0]
+        return float(1.0 / (1.0 + np.exp(-(z @ self.w))))
+
+    def save(self, path: str | Path, meta: dict | None = None) -> Path:
+        if self.w is None:
+            raise ValueError("nothing to save: classifier is untrained")
+        p = Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps({
+            "schema": "carnot_arc_discriminative_verifier_v1",
+            "kind": "logistic_win_reachability",
+            "weights": self.w.tolist(),
+            "mu": self.mu.tolist(),
+            "sd": self.sd.tolist(),
+            "feature_names": (meta or {}).get("feature_names"),
+            "trained_games": (meta or {}).get("trained_games"),
+            "n_samples": self.n_samples,
+            "provenance": (meta or {}).get("provenance"),
+        }, indent=2))
+        return p
+
+    @classmethod
+    def load(cls, path: str | Path, featurize: Callable[[Any], Sequence[float]]) -> "DiscriminativeVerifier":
+        d = json.loads(Path(path).read_text())
+        v = cls(featurize)
+        v.w = np.asarray(d["weights"], dtype=float)
+        v.mu = np.asarray(d["mu"], dtype=float)
+        v.sd = np.asarray(d["sd"], dtype=float)
+        v.n_samples = int(d.get("n_samples", 0))
+        return v
