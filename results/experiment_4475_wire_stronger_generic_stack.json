@@ -1,0 +1,221 @@
+{
+  "after_generic_solve_rate": 0.1428571429,
+  "after_solved": 1,
+  "attempted_games": 7,
+  "before_generic_solve_rate": 0.1428571429,
+  "before_solved": 1,
+  "benchmark": {
+    "after_generic_solve_rate": 0.1428571429,
+    "after_rows": [
+      {
+        "actions": 391,
+        "game": "tr87",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 391,
+        "game": "tu93",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 397,
+        "game": "lp85",
+        "levels_delta": 1,
+        "reached_level": 1,
+        "solved": true,
+        "start_level": 0
+      },
+      {
+        "actions": 392,
+        "game": "sc25",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 393,
+        "game": "ka59",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 393,
+        "game": "ar25",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 399,
+        "game": "ft09",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      }
+    ],
+    "after_solved": 1,
+    "attempted_games": 7,
+    "before_generic_solve_rate": 0.1428571429,
+    "before_rows": [
+      {
+        "actions": 391,
+        "game": "tr87",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 391,
+        "game": "tu93",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 20,
+        "game": "lp85",
+        "levels_delta": 1,
+        "reached_level": 1,
+        "solved": true,
+        "start_level": 0
+      },
+      {
+        "actions": 392,
+        "game": "sc25",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 393,
+        "game": "ka59",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 393,
+        "game": "ar25",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      },
+      {
+        "actions": 399,
+        "game": "ft09",
+        "levels_delta": 0,
+        "reached_level": 0,
+        "solved": false,
+        "start_level": 0
+      }
+    ],
+    "before_solved": 1,
+    "budget": 400,
+    "games": [
+      "tr87",
+      "tu93",
+      "lp85",
+      "sc25",
+      "ka59",
+      "ar25",
+      "ft09"
+    ],
+    "measurement": "heldout_loo_generic_set_exact_submitted_default_env_game_blocked"
+  },
+  "duration_s": 0.0,
+  "experiment": "experiment_4475_wire_stronger_generic_stack",
+  "field_principles": {
+    "after_generic_solve_rate": {
+      "principle": "bare float: held-out generic solve-rate for the exact submitted default."
+    },
+    "before_generic_solve_rate": {
+      "principle": "bare float: held-out generic solve-rate for the old bare submitted stack."
+    },
+    "field_principles": {
+      "principle": "schema self-description so artifact review checks field intent."
+    },
+    "generic_solve_rate_delta": {
+      "principle": "bare float: after-before solve-rate delta; this is the headline, not replay levels."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+    },
+    "inference_substrate": {
+      "principle": "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+    },
+    "offline_reproduced": {
+      "principle": "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+    },
+    "reproduced_levels": {
+      "principle": "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed."
+    },
+    "reproducibility_checksum": {
+      "principle": "sha256 over the stable measurement/config payload."
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors that the tests and artifact claim to satisfy."
+    },
+    "submitted_agent_config": {
+      "principle": "the single source of truth for what ships in make_carnot_agent."
+    },
+    "tests_pass": {
+      "principle": "bare bool: the focused tests backing this integration passed."
+    }
+  },
+  "generic_solve_rate_delta": 0.0,
+  "honest_verdict": "complete: submitted_default_stronger_generic_stack_wired",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md_read": true,
+    "CODEX.md_read": true,
+    "coverage_run_blocked_by_absl_settimezone_abort": true,
+    "env_game_blocked": true,
+    "focused_tests_passed": true,
+    "heldout_games_loaded_from_exp4459": true,
+    "offline_arcade_available": true,
+    "openspec_req_present": true,
+    "submitted_agent_config_loaded": true
+  },
+  "reproduced_levels": 45,
+  "reproducibility_checksum": "6826dc8488a6f704b6fd65ec8ef75d3c8472df72569fa11fc202f6e333603315",
+  "result_path": "results/experiment_4475_wire_stronger_generic_stack.json",
+  "schema": "carnot.exp4475.wire_stronger_generic_stack.v1",
+  "spec_refs": [
+    "REQ-REPORT-4475-LIVE-STACK",
+    "SCENARIO-REPORT-4475-LIVE-STACK-PARITY",
+    "SCENARIO-REPORT-4475-LIVE-STACK-FORWARD-NAV"
+  ],
+  "submitted_agent_config": {
+    "cascade": true,
+    "graph_explore_budget": 80,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 5,
+    "value_weight": 5.0,
+    "world_model_dsl_wired": true
+  },
+  "tests_pass": true
+}
