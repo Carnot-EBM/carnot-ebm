@@ -56,7 +56,7 @@ open-source eligible — the project is MIT-0 ✅).
 3. **Watch:** the [Submissions page](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/submissions);
    the scored rerun takes up to 12h.
 
-Scheduling: **durable systemd user timer `carnot-arc-daily-prep.timer`** (daily 09:37 EDT, `Persistent=true`
+Scheduling: **[DISABLED 2026-06-20 per operator — re-enable with `systemctl --user enable --now carnot-arc-daily-prep.timer` once the submitted config is no longer a regression]** durable systemd user timer `carnot-arc-daily-prep.timer` (daily 09:37 EDT, `Persistent=true`
 — survives session end + reboots; validated end-to-end 2026-06-19). It runs the prep `--default` (refresh +
 re-push + validate, NEVER submits) and writes `ops/arc-daily-prep-status.json` (`{kernel_version, ready,
 submit_command}`). The timer cannot push-notify or submit (agent-only / operator-only), so the in-session
