@@ -70,6 +70,8 @@ SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
 SUBMITTED_LAZY_VALUE_TOP_K = 4
+SUBMITTED_FRONTIER_BATCH_SIZE: int | str = 1
+SUBMITTED_NAVIGATION_COST_TIEBREAK = False
 _DEFAULT_VALUE_HEAD = object()
 
 
@@ -188,6 +190,8 @@ class StepwiseExplorer:
         adaptive_budget_noop_threshold: float = 0.5,
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
         early_stop_grace: Optional[int] = None,
+        frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
+        navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -245,6 +249,8 @@ class StepwiseExplorer:
         self.pending: list[dict] = []  # queued nav/probe actions
         self.awaiting: Optional[dict] = None  # last probe, to attribute its result
         self.explored_out = False
+        self.frontier_batch_size = self._normalize_frontier_batch_size(frontier_batch_size)
+        self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
         # Smart grace-period early-stop (does NOT cap levels). After reaching >=1 level, keep searching
         # for the next; stop only if no NEW level within `early_stop_grace` moves of the last level-up.
         # Consecutive level-ups reset the window, so multi-level games are NOT capped -- only the fruitless
@@ -262,6 +268,16 @@ class StepwiseExplorer:
         self._nav_edges_recorded = 0
         self._nav_forward_steps = 0
         self._nav_reset_replay_steps = 0
+
+    @staticmethod
+    def _normalize_frontier_batch_size(value: int | str | None) -> int | None:
+        """REQ-ARC-FCP-4523: normalize k for the opt-in frontier batch sweep."""
+
+        if value is None:
+            return 1
+        if isinstance(value, str) and value.lower() == "all":
+            return None
+        return max(1, int(value))
 
     def _disc_features(self, frame) -> Optional[list[float]]:
         if not self.online_discriminative:
@@ -629,16 +645,32 @@ class StepwiseExplorer:
         best = None
         best_key = None
         for h, node, depth, on_path in eligible:
-            if use_value:
+            nav_key = self._frontier_navigation_cost_key(h) if self.navigation_cost_tiebreak else ()
+            if self.navigation_cost_tiebreak and use_value:
+                value = node.get("value", 0.0)
+                if value is None:
+                    value = 0.0
+                key = (depth, w * float(value), *nav_key, -on_path)
+            elif use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
                 key = (depth + w * float(value), depth, -on_path)
+            elif self.navigation_cost_tiebreak:
+                key = (depth, *nav_key, -on_path)
             else:
                 key = (depth, -on_path)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
+
+    def _frontier_navigation_cost_key(self, node_hash: str) -> tuple[int, int]:
+        """SCENARIO-ARC-FCP-4523: prefer cheap navigation only within equal depth."""
+
+        fwd = self._shortest_path(self.cur, node_hash)
+        if fwd is not None:
+            return (0, len(fwd))
+        return (1, len(self.graph.get(node_hash, {}).get("path", [])))
 
     def _shortest_path(self, src: Optional[str], dst: str) -> Optional[list]:
         """Frontier-distance navigation: BFS over the KNOWN forward edges from src to dst.
@@ -696,7 +728,10 @@ class StepwiseExplorer:
             self.awaiting = None  # RESET has no forward edge to attribute
             return ("RESET", None)
         if item.get("probe"):
-            self.awaiting = {"origin": item["origin"], "action": item["kind"], "data": item["data"]}
+            origin = item.get("origin", self.cur)
+            if "origin" not in item:
+                self._drop_queued_action_from_current_frontier(origin, item)
+            self.awaiting = {"origin": origin, "action": item["kind"], "data": item["data"]}
         else:
             # nav / RESET-replay step (probe:False): attribute its forward edge from the CURRENT state so
             # adj FILLS IN the replayed path. Previously only probe steps recorded edges, so replayed paths
@@ -705,6 +740,25 @@ class StepwiseExplorer:
             # these edges lets future navigation use _shortest_path (forward-walk) instead of RESET-replay.
             self.awaiting = {"origin": self.cur, "action": item["kind"], "data": item["data"]}
         return (item["kind"], item["data"])
+
+    def _drop_queued_action_from_current_frontier(self, origin: Optional[str], item: Mapping[str, Any]) -> None:
+        if origin is None:
+            return
+        node = self.graph.get(origin)
+        if not node:
+            return
+        act = {"action": int(item["kind"]), "data": item.get("data")}
+        for idx, candidate in enumerate(list(node.get("untested") or [])):
+            if self._same_path_step(candidate, act):
+                del node["untested"][idx]
+                return
+
+    def _pop_frontier_batch(self, node: dict) -> list[dict]:
+        limit = len(node["untested"]) if self.frontier_batch_size is None else self.frontier_batch_size
+        count = min(int(limit), len(node["untested"]))
+        actions = node["untested"][:count]
+        del node["untested"][:count]
+        return actions
 
     def next_move(self, frames, latest) -> tuple:
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
@@ -734,12 +788,13 @@ class StepwiseExplorer:
             self.explored_out = True
             return (None, None)
         node = self.graph[th]
-        a = node["untested"].pop(0)
         if (
             th == self.cur and not over
         ):  # best frontier IS the current state -> expand in place (no nav)
+            a = node["untested"].pop(0)
             self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
             return (a["action"], a["data"])
+        batch = self._pop_frontier_batch(node)
         self._nav_attempts += 1
         fwd = self._shortest_path(self.cur, th) if not over else None
         if fwd is not None:
@@ -761,7 +816,11 @@ class StepwiseExplorer:
                 self.pending += [
                     {"kind": s["action"], "data": s["data"], "probe": False} for s in node["path"]
                 ]
-        self.pending.append({"kind": a["action"], "data": a["data"], "probe": True, "origin": th})
+        for idx, action in enumerate(batch):
+            item = {"kind": action["action"], "data": action["data"], "probe": True}
+            if idx == 0:
+                item["origin"] = th
+            self.pending.append(item)
         return self._serve()
 
     def is_done(self, frames, latest) -> bool:
@@ -846,6 +905,8 @@ class CarnotAgentPolicy:
         adaptive_budget_value_head: Any | None = None,
         adaptive_budget_noop_threshold: float = 0.5,
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
+        frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
+        navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -872,6 +933,8 @@ class CarnotAgentPolicy:
                 adaptive_budget_value_head=adaptive_budget_value_head,
                 adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
                 lazy_value_top_k=lazy_value_top_k,
+                frontier_batch_size=frontier_batch_size,
+                navigation_cost_tiebreak=navigation_cost_tiebreak,
             )
         )
 
@@ -927,6 +990,8 @@ class E3AgentPolicy:
         adaptive_budget_value_head: Any | None = None,
         adaptive_budget_noop_threshold: float = 0.5,
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
+        frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
+        navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         if value_head is _DEFAULT_VALUE_HEAD:
@@ -950,6 +1015,8 @@ class E3AgentPolicy:
             adaptive_budget_value_head=adaptive_budget_value_head,
             adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
             lazy_value_top_k=lazy_value_top_k,
+            frontier_batch_size=frontier_batch_size,
+            navigation_cost_tiebreak=navigation_cost_tiebreak,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -1154,6 +1221,8 @@ SUBMITTED_AGENT_CONFIG = {
     "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
     "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
     "lazy_value_top_k": SUBMITTED_LAZY_VALUE_TOP_K,
+    "frontier_batch_size": SUBMITTED_FRONTIER_BATCH_SIZE,
+    "navigation_cost_tiebreak": SUBMITTED_NAVIGATION_COST_TIEBREAK,
     "router_wired": True,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
