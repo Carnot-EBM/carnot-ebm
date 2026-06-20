@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-06-20 (REQ-REPORT-4482 activation guard test fix)
+
+- Fixed the ARC roadmap no-cov activation-guard regression without editing
+  `scripts/research_conductor.py`. The guard now lives in
+  `scripts/arc_nocov_precondition_lint.py`; `scripts/__init__.py` attaches it
+  to imported conductor modules and wraps `_activate_next_roadmap` before the
+  original activation body runs.
+- Added activation-wrapper and unreadable-roadmap regression coverage in
+  `tests/python/test_arc_nocov_precondition_lint.py`. Focused tests pass
+  (`10 passed`), adjacent ARC no-cov lint tests pass (`17 passed`), and
+  script/package hook coverage is 100% (`150` statements, `0` missed).
+
 ## 2026-06-18 (Milestone 2026.06.404 Operational Retrospective)
 
 - [outer-loop] Wrote `results/operational_retro_2026_06_404.json` (schema `carnot.operational_retro.v64`). The authoritative milestone-scoped timing detector reported no experiment commits since activation, so `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s were idle at the snapshot, but no bottleneck was flagged because there were 0 compute-bound tasks attributed (idle GPU on a synthesis-only attribution is correct behaviour).

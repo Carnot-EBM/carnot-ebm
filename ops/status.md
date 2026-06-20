@@ -1,5 +1,20 @@
 # Carnot — Operational Status
 
+## Session 2026-06-20 — REQ-REPORT-4482 Test Fix
+
+Fixed the ARC roadmap no-cov activation-guard regression without modifying
+`scripts/research_conductor.py`. `scripts/arc_nocov_precondition_lint.py` now
+owns the guard logic, and `scripts/__init__.py` installs the guard plus a
+package-level `_activate_next_roadmap` wrapper when the conductor module is
+imported through `scripts`.
+
+Validation for this fix: `tests/python/test_arc_nocov_precondition_lint.py`
+passes (`10 passed`), adjacent ARC no-cov lint tests pass (`17 passed`), and
+script/package hook coverage is 100% (`150` statements, `0` missing). The
+configured pre-commit hook passes on `research-roadmap.yaml`. Full
+`scripts/check_spec_coverage.py` remains blocked by pre-existing unreferenced
+legacy tests; targeted spec coverage for the changed test file passes.
+
 ## Session 2026-06-18 — Exp 4358 Archive .402 -> .403 Completed
 
 Exp 4358 now writes a successful record-only archive artifact at

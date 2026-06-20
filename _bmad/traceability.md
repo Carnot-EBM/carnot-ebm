@@ -1,5 +1,14 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-06-20 REQ-REPORT-4482 regression fix exposed the
+ARC roadmap no-cov activation guard through `scripts/arc_nocov_precondition_lint.py`
+and the `scripts/__init__.py` package hook, without modifying
+`scripts/research_conductor.py`. Targeted tests:
+`tests/python/test_arc_nocov_precondition_lint.py`; changed-code coverage:
+100% for `scripts/arc_nocov_precondition_lint.py` and `scripts/__init__.py`.
+The full spec-coverage audit is still blocked by pre-existing unreferenced
+legacy tests.
+
 **Last Updated:** 2026-05-27 (Milestone 2026.05.294 operational retrospective recorded; artifact/status-only update, no new REQ-/SCENARIO-* items or implementation status changes)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.

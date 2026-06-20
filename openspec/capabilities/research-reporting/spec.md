@@ -26990,6 +26990,58 @@ some have replayed through the offline reproduction gate
 |---|---|---|
 | REQ-REPORT-4475 | Planned (`python/carnot/agentic/arc_precondition_smoke.py`, `scripts/arc_precondition_nocov_lint.py`, `python/carnot/experiment_4475_arc_precondition_nocov_lint.py`, `results/experiment_4475_arc_precondition_nocov_lint.json`) | Planned (`tests/python/test_arc_precondition_smoke.py`, `tests/python/test_arc_precondition_nocov_lint.py`, `tests/python/test_experiment_4475_arc_precondition_nocov_lint.py`) |
 
+### REQ-REPORT-4482: ARC Roadmap Preconditions Cannot Re-Enable Coverage Gates
+
+The repository SHALL provide `scripts/arc_nocov_precondition_lint.py` to scan
+roadmap YAML files before milestone activation. For every task whose `track`
+starts with `arc-`, any pytest command in a `PRECONDITIONS` section SHALL
+include `--no-cov`. This catches the Exp 4455 failure mode where an ARC solve
+task spent its launch budget on repository coverage enforcement instead of the
+intended focused smoke check.
+
+The lint SHALL parse the roadmap with `yaml.safe_load`, report task id, track,
+line, command text, and reason for every violation, and exit non-zero when any
+violation is present. It SHALL ignore non-ARC tracks, accept ARC precondition
+pytest commands that include `--no-cov`, and accept pytest commands outside a
+preconditions section.
+
+The pre-commit configuration SHALL run the lint on `research-roadmap.yaml` and
+`research-roadmap-next.yaml`. The conductor activation guard SHALL call the
+same lint on `research-roadmap-next.yaml` before copying it to
+`research-roadmap.yaml`; any violation SHALL block activation and leave the
+pre-staged roadmap in place for operator inspection.
+
+The Exp 4482 workflow SHALL write
+`results/experiment_4482_nocov_default_lint.json` with the required top-level
+fields `honest_verdict`, `inference_substrate`, `offline_reproduced`,
+`reproduced_levels`, `preconditions_checked`, `roadmap_lint_shipped`,
+`precommit_hook_wired`, `activation_guard_wired`, `tests_added_pass`,
+`coverage_new_code_100`, `field_principles`, `spec_refs`, and
+`reproducibility_checksum`. Complete-path `honest_verdict` SHALL start with a
+terminal prefix such as `complete:` or `shipped:`.
+
+#### SCENARIO-REPORT-4482-ROADMAP-LINT: ARC Preconditions Missing No-Cov Fail
+
+**Given** a roadmap task with `track: arc-north-star` and a `PRECONDITIONS`
+section that runs `.venv/bin/pytest -k "arc_solver_kit" -q`
+**When** `scripts/arc_nocov_precondition_lint.py` scans the roadmap
+**Then** it reports a `PYTEST_PRECONDITION_MISSING_NO_COV` violation and exits
+non-zero; the same task passes when the command includes `--no-cov`.
+
+#### SCENARIO-REPORT-4482-ACTIVATION-GUARD: Bad ARC Roadmaps Do Not Activate
+
+**Given** `research-roadmap-next.yaml` contains an ARC-track task whose
+preconditions run pytest without `--no-cov`
+**When** the conductor attempts to activate the next roadmap
+**Then** it refuses activation before copying the file, logs the first
+violation, and keeps `research-roadmap-next.yaml` available for repair.
+
+## Implementation Status (REQ-REPORT-4482)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4482 | Implemented (`scripts/arc_nocov_precondition_lint.py`, `scripts/__init__.py`, `.pre-commit-config.yaml`, `results/experiment_4482_nocov_default_lint.json`) | Implemented (`tests/python/test_arc_nocov_precondition_lint.py`) |
+
 ### REQ-REPORT-4475-LIVE-STACK: Submitted ARC Agent Ships The Stronger Generic Stack
 
 The Exp 4475 live-integration workflow SHALL make the submitted
