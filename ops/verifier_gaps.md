@@ -2232,15 +2232,15 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:end -->
 
 <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:start -->
-### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4461 .412 registry gap hygiene
-- status: open
-- evidence: results/experiment_4457_*.json; cast_grid_artifact_available=False; generic_loo_solve_count_v3=6; missing_verifier_gaps=[{'attempt_mode': 'v3_412_operator_remeasurement', 'game': 'sc25', 'residual_delta': 'missing_cast_grid_spell_shrink_tank_exit_verifier', 'retrieved_operator': 'active_data_collection'}]
-- failure mode: missing_cast_grid_spell_shrink_tank_exit_verifier
-- missing discriminator: generic cast-grid spell/shrink/tank-exit verifier still missing
-- candidate design: build cast_grid_phase_fsm_world_model and rerun LOO v4
+### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4474 .413 registry gap hygiene
+- status: filled (experiment_4469_generic_cast_grid_fsm_operator)
+- evidence: results/experiment_4469_generic_cast_grid_fsm_operator.json; sc25_resolved_generically=True; sc25_generic_level_reproduced=1; offline_reproduced=True
+- failure mode: closed_by_cast_grid_phase_fsm_world_model
+- missing discriminator: filled by execution-grounded cast_grid_phase_fsm_world_model
+- candidate design: reuse two-phase cast/config toggle then navigation FSMs for future cast-grid games
 - priority: high
-- source artifact: results/experiment_4457_*.json
-- movement: updated_still_open
+- source artifact: results/experiment_4469_generic_cast_grid_fsm_operator.json
+- movement: filled
 <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:end -->
 
 <!-- exp4438-gap-4432-loo-ka59-missing-push-block-world-model-and-dynamic-selection:start -->
@@ -2280,7 +2280,7 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
 
 <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
-### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4467 dc22 CEGIS config-rule bank
+### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4474 .413 registry gap hygiene
 - status: filled (experiment_4467_solve_dc22_cegis_nocov)
 - evidence: results/experiment_4467_solve_dc22_cegis_nocov.json; target_game=dc22; offline_reproduced=True; dc22_grounded=True; reproduced_levels=1
 - failure mode: closed_by_dc22_cegis_config_rule
@@ -2304,13 +2304,15 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
 
 <!-- exp4458-gap-sb26-color-match-slot-sequence:start -->
-### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4470 generic color-match slot sequence
-- status: filled
+### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4474 .413 registry gap hygiene
+- status: filled (experiment_4470_color_match_slot_operator_solve_sb26)
 - evidence: results/experiment_4470_color_match_slot_operator_solve_sb26.json; color_match_operator_built=True; offline_reproduced=True; reproduced_levels=1; counterexample_rounds=2
 - failure mode: closed_by_color_match_slot_sequence_verifier
 - missing discriminator: filled by execution-grounded ordered color-match item-slot verifier with undo-aware grounding
 - candidate design: reuse color_match_slot_sequence_verifier for ordered item-slot color puzzles
 - priority: high
+- source artifact: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+- movement: filled
 <!-- exp4458-gap-sb26-color-match-slot-sequence:end -->
 
 <!-- exp4469-gap-sc25-cast-grid:start -->
@@ -2324,14 +2326,15 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 <!-- exp4469-gap-sc25-cast-grid:end -->
 
 <!-- exp4471-gap-re86-pattern-match-sprite-resize:start -->
-### GAP-4471-RE86-PATTERN-MATCH-SPRITE-RESIZE: Exp 4471 rotated first-contact
+### GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER: Exp 4474 .413 registry gap hygiene
 - status: open
 - evidence: results/experiment_4471_first_contact_rotated_new_game.json; target_game=re86; routed_to=tu93; offline_reproduced=False; reproduced_levels=0
 - failure mode: missing_pattern_match_sprite_resize_verifier
 - missing discriminator: generic sprite-overlay pattern-match and resize/transformation verifier
 - candidate design: extend graph/object operators with exact overlay and ACTION5 resize grounding
 - priority: high
-- movement: still_open
+- source artifact: results/experiment_4471_first_contact_rotated_new_game.json
+- movement: updated_still_open
 <!-- exp4471-gap-re86-pattern-match-sprite-resize:end -->
 
 ---

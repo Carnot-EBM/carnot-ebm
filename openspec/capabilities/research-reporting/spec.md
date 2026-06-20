@@ -26193,6 +26193,76 @@ total is greater than `39`, keeps `submitted_to_leaderboard=false`, keeps
 |---|---|---|
 | REQ-REPORT-4473 | Planned (`python/carnot/experiment_4473_submission_package_prep_refresh.py`, `results/experiment_4473_submission_package_prep_refresh.json`) | Planned (`tests/python/test_experiment_4473_submission_package_prep_refresh.py`) |
 
+### REQ-REPORT-4474: Registry And Gap Hygiene Reconciles .413 Outcomes Without Verifier Edits
+
+The Exp 4474 workflow SHALL reconcile `ops/verifier_registry.yaml`,
+`ops/verifier_gaps.md`, and `ops/arc_solve_registry.yaml` with the `.413`
+outcome artifacts from Exp 4467 through Exp 4473. The workflow SHALL satisfy
+the compatibility precondition that `import scripts.capstone_aggregate_available`
+succeeds, SHALL use the robust aggregate-available helper so missing or flagged
+artifacts report per-axis gaps without forcing every axis false, SHALL exclude
+any upstream artifact stamped `flagged_adversarial=true`, and SHALL NOT edit
+production verifier code.
+
+The reconciliation SHALL record the dc22 bank from Exp 4467, fill
+`GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT` from clean offline reproduction
+evidence, record the sc25 deeper bank from Exp 4468 as provisional levels moving
+to reproduced levels while decrementing `provisional_total_levels`, fill
+`GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER` from Exp
+4469 generic cast-grid evidence, fill the sb26 color-match gap from Exp 4470
+when the generic operator reproduces sb26, record the first-contact new-game
+residual from Exp 4471 as an open `.414` backlog gap when it does not reproduce,
+import the Exp 4472 variant-transfer and LOO v4 measurement, and import the Exp
+4473 refreshed operator-only submission package without leaderboard submission.
+The ARC solve registry SHALL update authoritative
+`reproducible_total_levels`, `reproducible_total_games`, and
+`provisional_total_levels` from reproduced and provisional game rows after
+applying trusted `.413` outcomes; the complete-path targets are more than `39`
+reproduced levels, at least `21` reproduced games, and fewer than `5`
+provisional levels.
+
+The workflow SHALL run the GAP-4 execution regression guard and SHALL emit bare
+bool `regression_guard_passed=true` only when the ARC oracle-distinct
+verifier-beats-vote result has not regressed. It SHALL verify that the capstone
+`verifier_is_oracle` stamping fix remains durable. The workflow SHALL write
+`results/experiment_4474_registry_gaps_hygiene.json` with required fields
+`honest_verdict`, `regression_guard_passed`, `reproducible_total_levels`,
+`reproducible_total_games`, `provisional_total_levels`, `open_gap_ids`,
+`inference_substrate`, `registry_reconciliation`, `availability_report`,
+`capstone_stamp_fix_durable`, `random_seed`, `reproducibility_checksum`,
+`field_principles`, and `submitted_to_leaderboard=false`. Complete-path
+`honest_verdict` SHALL start with `complete:`, `success:`, `passed:`, or
+`shipped:`. The required field principles are:
+
+- `honest_verdict`: "terminal-prefixed"
+- `regression_guard_passed`: "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
+- `reproducible_total_levels`: "the reconciled authoritative count (target > 39 after dc22 + sc25 deepening)"
+- `reproducible_total_games`: "the reconciled authoritative game count (target >= 21 after dc22)"
+- `provisional_total_levels`: "the reconciled provisional count (target < 5 after sc25 deeper levels move provisional -> reproduced)"
+- `open_gap_ids`: "the still-open generic-solver gaps after .413 -- the .414 backlog"
+- `inference_substrate`: "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
+
+#### SCENARIO-REPORT-4474: .413 Hygiene Logs Closures, Updates Counts, And Guards GAP-4
+
+**Given** the verifier registry, verifier-gaps ledger, ARC solve registry, and
+some subset of Exp 4467 through Exp 4473 artifacts are locally available
+**When** the Exp 4474 workflow runs
+**Then** it excludes flagged-adversarial artifacts, reports missing or flagged
+inputs in the aggregate availability report, records dc22, sc25, and sb26
+closures only when trusted reproduction evidence is present, records the re86
+first-contact residual as the open `.414` backlog when no new game is banked,
+imports the LOO v4 and refreshed package measurements without submitting to the
+leaderboard, updates reproduced and provisional ARC totals from registry rows,
+records a verifier-registry role for the hygiene pass, emits bare bool
+`regression_guard_passed`, verifies the capstone stamp fix remains durable,
+writes the required JSON artifact, and performs no production verifier edits.
+
+## Implementation Status (REQ-REPORT-4474)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4474 | Planned (`python/carnot/experiment_4474_registry_gaps_hygiene.py`, `results/experiment_4474_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4474_registry_gaps_hygiene.py`) |
+
 ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
 
 The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
