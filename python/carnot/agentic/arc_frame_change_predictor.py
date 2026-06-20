@@ -193,21 +193,40 @@ def _scorer_value(frame: Any, candidate: Any, scorer: Any) -> float:
     raise TypeError("scorer must expose candidate_score(frame, candidate) or be callable")
 
 
+def _delta_energy_value(frame: Any, candidate: Any, structural_energy_scorer: Any) -> float:
+    if structural_energy_scorer is None:
+        return 0.0
+    if hasattr(structural_energy_scorer, "candidate_delta_energy"):
+        return float(structural_energy_scorer.candidate_delta_energy(frame, candidate))
+    if isinstance(structural_energy_scorer, Callable):
+        return float(structural_energy_scorer(frame, candidate))
+    raise TypeError(
+        "structural_energy_scorer must expose candidate_delta_energy(frame, candidate) "
+        "or be callable"
+    )
+
+
 def rank_arc_actions(
     frame: Any,
     candidates: Sequence[Any],
     *,
     scorer: Any | None = None,
     prior: BehaviorActionPrior | None = None,
+    structural_energy_scorer: Any | None = None,
 ) -> list[Any]:
-    """REQ-ARC-FCP-4491: rank candidates by learned score + prior with stable ties."""
+    """REQ-ARC-FCP-4491/4493: rank candidates by effect, prior, and optional energy."""
 
-    if scorer is None and prior is None:
+    if scorer is None and prior is None and structural_energy_scorer is None:
         return list(candidates)
 
     scored: list[tuple[float, int, Any]] = []
     for index, candidate in enumerate(candidates):
-        score = _scorer_value(frame, candidate, scorer)
+        p_change = _scorer_value(frame, candidate, scorer)
+        score = p_change
+        if structural_energy_scorer is not None:
+            delta_energy = _delta_energy_value(frame, candidate, structural_energy_scorer)
+            p_for_energy = p_change if scorer is not None else 1.0
+            score = p_for_energy * (-delta_energy)
         if prior is not None:
             score += prior.score(frame, candidate)
         scored.append((float(score), index, candidate))

@@ -47,6 +47,7 @@ def rich_action_candidates(
     by_salience: bool = True,
     frame_change_scorer: Any | None = None,
     action_prior: Any | None = None,
+    structural_energy_scorer: Any | None = None,
 ) -> list:
     """Every detected object is a click candidate (no 12-click cap — the winning
     clicks for e.g. r11l are objects #15/#27 that the cap dropped). Keyboard actions
@@ -59,9 +60,9 @@ def rich_action_candidates(
     records is still a valid deterministic replay; it just reaches the win within a
     smaller budget. Set False for the legacy raster order.
 
-    REQ-ARC-FCP-4491: when a frame-change scorer or human behavior prior is supplied,
-    rank the same candidate set by predicted action effect while preserving this
-    salience/raster order as the stable tie-break."""
+    REQ-ARC-FCP-4491/4493: when a frame-change scorer, human behavior prior, or
+    structural energy scorer is supplied, rank the same candidate set by predicted
+    action effect while preserving this salience/raster order as the stable tie-break."""
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
@@ -84,10 +85,20 @@ def rich_action_candidates(
                 continue
             seen.add(p)
             out.append(ArcAction(6, {"x": p[0], "y": p[1]}, "object_click"))
-    if frame_change_scorer is not None or action_prior is not None:
+    if (
+        frame_change_scorer is not None
+        or action_prior is not None
+        or structural_energy_scorer is not None
+    ):
         from carnot.agentic.arc_frame_change_predictor import rank_arc_actions
 
-        out = rank_arc_actions(frame, out, scorer=frame_change_scorer, prior=action_prior)
+        out = rank_arc_actions(
+            frame,
+            out,
+            scorer=frame_change_scorer,
+            prior=action_prior,
+            structural_energy_scorer=structural_energy_scorer,
+        )
     return out
 
 
