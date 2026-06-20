@@ -8892,3 +8892,4 @@ c |
 | 2026-06-20 01:03 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-0 | FAIL | Post-tests failed: 106 passed, 1 warning, 1 error in 637.79s (0:10:37) |
 | 2026-06-20 01:05 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-0 | OK | Deliverable already exists in repo |
 | 2026-06-20 01:36 UTC | PHASE A7 (ARC NORTH STAR; operator-only submit) -- | OK | 119 passed, 1 warning in 636.78s (0:10:36) |
+| 2026-06-20 01:54 UTC | PHASE B1 (RESERVED INFRA) -- registry/gaps hygiene | OK | 85 passed, 1 warning in 8.35s |
