@@ -103,6 +103,8 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
     base = _baseline_actions(env, game)
     frames, latest, actions = [], None, 0
     start = None
+    best = None
+    level_up_actions: list[int] = []  # cumulative `actions` count at each level-up (for per-level cost)
     for _ in range(budget):
         if policy.is_done(frames, latest):
             break
@@ -116,24 +118,47 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             actions += 1
         if start is None:
             start = _level_of(latest)
+            best = start
+        lvl = _level_of(latest)
+        if best is not None and lvl > best:
+            for _lv in range(best, lvl):  # record the action count for each new level (handles jumps)
+                level_up_actions.append(actions)
+            best = lvl
         frames.append(latest)
         if latest is None:
             break
     reached = _level_of(latest)
     levels = max(0, reached - (start or 0))
-    # leaderboard efficiency: min(baseline/agent,1)^2 per solved level (1.0 if no baseline)
-    eff = 0.0
-    if levels > 0:
-        b = base.get(0)
-        ratio = min((b / actions), 1.0) if b else 1.0
-        eff = round(levels * ratio * ratio, 4)
+    # REAL leaderboard efficiency is PER-LEVEL, not whole-game (docs/research-notes/
+    # arc-agi3-kaggle-submission-requirements-2026-06-17.md: "per-level score =
+    # min(human_actions/agent_actions, 1.0), squared"). agent_actions for a level = actions spent BETWEEN
+    # consecutive level-ups, NOT the total run. The OLD formula `levels * min(baseline[0]/TOTAL_actions,1)^2`
+    # was wrong: it scored an efficient-but-over-running solve at ~0 (lp85 solved L1 in 20 actions but ran
+    # to 7792 hunting unreachable deeper levels -> old eff ~0). Under the correct per-level metric L1 scores
+    # min(17/20,1)^2 = 0.72 and the over-run does NOT touch it (the over-run is a WALL-CLOCK cost, not a
+    # score cost). This is the metric the local submission gate must judge configs on.
+    per_level = []
+    per_level_eff = 0.0
+    prev = 0
+    for k, lu in enumerate(level_up_actions):
+        lvl_actions = lu - prev
+        prev = lu
+        human = base.get((start or 0) + k)
+        ratio = min(human / lvl_actions, 1.0) if (human and lvl_actions > 0) else 1.0
+        term = round(ratio * ratio, 4)
+        per_level_eff += term
+        per_level.append({"level": (start or 0) + k, "agent_actions": lvl_actions,
+                          "human_actions": human, "efficiency": term})
+    eff = round(per_level_eff, 4)
     gap = None
     if reached <= (start or 0):
         gap = {"game": game, "stuck_at_level": reached, "actions_spent": actions,
                "signature": "no_level_up_within_budget",
                "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"}
     return {"game": game, "levels": levels, "reached": reached, "actions": actions,
-            "efficiency": eff, "gap": gap}
+            "efficiency": eff, "per_level": per_level,
+            "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
+            "gap": gap}
 
 
 def _arg(argv, flag, default):
@@ -181,8 +206,8 @@ def main() -> int:
         if r["gap"]:
             gaps.append(r["gap"])
         extra = (f" vs oracle L{r['oracle_levels']} (gap {r['gap_vs_oracle']})" if games_mode == "oracle" else "")
-        print(f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5}"
-              f"{extra}  [{time.time()-t0:.0f}s]", flush=True)
+        print(f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5} "
+              f"eff={r['efficiency']:.4f}{extra}  [{time.time()-t0:.0f}s]", flush=True)
     if games_mode == "oracle":
         print(f"\n  LIVE-vs-ORACLE GAP: frame-only live path reaches {live_levels_sum}/{oracle_sum} "
               f"oracle levels (gap {gap_sum}). Closed: "

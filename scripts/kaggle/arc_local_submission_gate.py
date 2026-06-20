@@ -43,8 +43,9 @@ HEADROOM_BUDGET_CANDIDATES = (8000, 12000, 16000, 24000)
 DEFAULT_BUDGET = 8000
 # 4 reliably-solvable games (the bare-BFS solves) + 4 controls. Small so the gate runs in a couple minutes.
 GATE_GAMES = list(CANONICAL_GAME_SET)
-_LINE = re.compile(r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)")
-EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a regression
+_LINE = re.compile(r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)(?:\s*eff=([\d.]+))?")
+EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a regression (FALLBACK metric)
+EFFICIENCY_DROP_SLACK = 0.97  # PRIMARY: fail if CORE per-level efficiency drops below 97% of baseline
 BIG_ACTIONS = 10 ** 9
 
 
@@ -64,11 +65,13 @@ def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
             if game in ln and "live=L" in ln:
                 m = _LINE.search(ln)
         if not m:
-            return {"game": game, "timed_out": False, "solved": False, "actions": None}
+            return {"game": game, "timed_out": False, "solved": False, "actions": None, "efficiency": None}
         levels, actions = int(m.group(2)), int(m.group(3))
-        return {"game": game, "timed_out": False, "solved": levels >= 1, "actions": actions}
+        eff = float(m.group(4)) if m.group(4) is not None else None
+        return {"game": game, "timed_out": False, "solved": levels >= 1, "actions": actions,
+                "efficiency": eff}
     except subprocess.TimeoutExpired:
-        return {"game": game, "timed_out": True, "solved": False, "actions": None}
+        return {"game": game, "timed_out": True, "solved": False, "actions": None, "efficiency": None}
 
 
 def measure(policy: str, budget: int, cap: int) -> dict:
@@ -97,7 +100,25 @@ def measure(policy: str, budget: int, cap: int) -> dict:
         # non-regression by set, not by count) and cut median actions ON THAT FIXED SET.
         "solved_games": sorted(r["game"] for r in solved),
         "actions_by_game": {r["game"]: r["actions"] for r in solved if r["actions"] is not None},
+        # PER-LEVEL efficiency (2026-06-20): the REAL leaderboard score is per-level
+        # sum(min(human/agent_per_level,1)^2), NOT total actions. The eval now emits it (eff=); this is the
+        # PRIMARY metric the verdict judges (median actions is demoted to a wall-clock/compute-budget proxy).
+        "efficiency_by_game": {r["game"]: r["efficiency"] for r in solved if r.get("efficiency") is not None},
+        "core_efficiency": round(sum(
+            r["efficiency"] for r in rows
+            if r["game"] in CANONICAL_CORE_GAMES and r.get("efficiency") is not None), 4),
     }
+
+
+def _efficiency_by_game(measurement: dict) -> dict[str, float]:
+    eff = measurement.get("efficiency_by_game")
+    if isinstance(eff, dict) and eff:
+        return {str(g): float(v) for g, v in eff.items() if v is not None}
+    out: dict[str, float] = {}
+    for row in measurement.get("per_game", []) or []:
+        if isinstance(row, dict) and row.get("efficiency") is not None:
+            out[str(row["game"])] = float(row["efficiency"])
+    return out
 
 
 def _action_metric_field(measurement: dict) -> str:
@@ -209,13 +230,36 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
     lost = sorted(core - cur_solved)
     if lost:
         return False, f"REGRESSION: lost CORE solves {lost} (core={sorted(core)})"
+    bonus = sorted(cur_solved - core)  # extra solves: reported, NEVER netted against a core loss
+
+    # PRIMARY metric: per-level efficiency on CORE -- the REAL leaderboard score, sum over solved levels of
+    # min(human_actions/agent_actions_for_level, 1)^2 (HIGHER is better). This replaces the median-actions
+    # check, which measured TOTAL actions and scored an efficient-but-over-running solve at ~0 (the lp85
+    # bug: solved L1 in 20 actions == human-class but ran to 7792 hunting unreachable levels -> old metric
+    # said 0; per-level metric says 0.72 and the over-run is a wall-clock cost, not a score cost).
+    base_eff = _efficiency_by_game(base)
+    cur_eff = _efficiency_by_game(cur)
+    if base_eff and cur_eff:
+        bce = round(sum(base_eff.get(g, 0.0) for g in core), 4)
+        cce = round(sum(cur_eff.get(g, 0.0) for g in core), 4)
+        if bce > 0 and cce < bce * EFFICIENCY_DROP_SLACK:
+            return False, (f"REGRESSION: CORE per-level efficiency {cce} < baseline {bce} "
+                           f"(the REAL leaderboard metric: sum min(human/agent_per_level,1)^2)")
+        tag = "IMPROVED" if (cce > bce or bonus) else "non-inferior"
+        msg = f"PASS ({tag}): CORE per-level efficiency {cce} vs baseline {bce}"
+        if bonus:
+            msg += f"; BONUS solves {bonus}"
+        return True, msg
+
+    # FALLBACK (no per-level efficiency in cur+base -- legacy baseline / unit fixtures): median TOTAL
+    # actions, a wall-clock proxy. `--update-baseline` re-measures with the new eval and persists
+    # efficiency, which activates the primary metric above.
     cur_acts = _actions_by_game(cur)
     cm = median([cur_acts.get(g, BIG_ACTIONS) for g in core])
     bm = median([base_acts.get(g, BIG_ACTIONS) for g in core])
     if cm > bm * EFFICIENCY_SLACK:
         return False, (f"REGRESSION: CORE median actions {cm} > baseline {bm} x{EFFICIENCY_SLACK} "
-                       f"(action efficiency is the scoring metric)")
-    bonus = sorted(cur_solved - core)  # extra solves: reported, NEVER netted against a core loss
+                       f"(wall-clock fallback; re-run --update-baseline to use per-level efficiency)")
     tag = "IMPROVED" if (cm < bm or bonus) else "non-inferior"
     msg = f"PASS ({tag}): CORE {sorted(core)} median actions {cm} vs baseline {bm}"
     if bonus:

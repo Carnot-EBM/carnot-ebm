@@ -40,6 +40,8 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert exp.value_weight == SUBMITTED_AGENT_CONFIG["value_weight"]
     assert exp.target_levels == SUBMITTED_AGENT_CONFIG["target_levels"]
     assert exp.search_mode == SUBMITTED_AGENT_CONFIG["search_mode"]
+    assert exp.frontier_batch_size == SUBMITTED_AGENT_CONFIG["frontier_batch_size"]
+    assert exp.navigation_cost_tiebreak == SUBMITTED_AGENT_CONFIG["navigation_cost_tiebreak"]
     # value_weight reverted to 0.0 (2026-06-20): the v3 head is loaded + used as a tiebreaker, but
     # weight>0 was a measured regression (per-node v3 eval too slow). Pin it to 0 until .416 shows a
     # weight>0 beats bare-BFS live AND finishes in budget. (NOT `> 0` — that asserted the regression.)
