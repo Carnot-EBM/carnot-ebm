@@ -1,0 +1,583 @@
+milestone: 2026.06.418
+planned_by: outer-loop (operator-directed 2026-06-20 "shape a focused .418 task" -> the forward-walk
+  navigation fix, the one lever A6/exp4516 proved is on the 97%-of-cost RESET-replay axis)
+theme: ACTION EFFICIENCY via NAVIGATION -- collapse the RESET-replay tax (1546 reset-replays vs 6
+  forward-walk hits in .417 A6). The .417 candidate-level score-levers (prune/prior/adaptive/value)
+  all nulled because they act on per-frame fan-out (<=0.3% of cost); the ~7760 actions are dominated
+  by RESET-replay-from-root navigation. This milestone attacks THAT axis.
+sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC;
+  >=1 level-up attempt (ARC Level-Up Attempt Guarantee); 2 reserved infra; 1 per-board hardware; 1
+  SOTA-ingestion. All experiments codex/gpt-5.5; planner/retro stay Claude Opus."
+
+tasks:
+  - id: exp4522-phase0
+    milestone: 2026.06.418
+    title: 'PHASE 0 (TRANSITION) -- archive .417 -> activate .418; assert YAML parses + smart-subset
+      pre-test gate green; RECORD the TRUE .417 close-state (the score-lever scorecard).'
+    priority: critical
+    track: transition
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4522_archive_417_activate_418.json
+    operator_override: '2026-06-20 operator directive (ARC sprint, standing): routine
+      archive-v417-activate-v418 milestone-transition task -- false-positive scope-match vs every prior
+      archive/activate task; structurally never a doomed rerun (the activation guard is a SCRIPT, not the
+      agent). Mechanical YAML archive + next-milestone activation.'
+    prompt: |
+      CONTEXT ({date}). Milestone 2026.06.417 has completed. This task mechanically transitions to
+      2026.06.418 and RECORDS the true .417 close-state so the record is honest. Routine (codex).
+
+      IMPORTANT (lesson from the .417 PHASE 0 cascade): the conductor may have ALREADY archived/activated
+      at its own level. If so, the archive step is a no-op -- that is EXPECTED, not a failure. You MUST
+      still WRITE the deliverable artifact (the close-state record). Do NOT exit with "no file changes":
+      the deliverable IS the file change.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/research-roadmap.yaml (the .417 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .418 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels)
+        - {project_root}/results/experiment_4521_capstone_v417.json (the .417 scorecard, if present)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
+        1. Archive the .417 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .418 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        3. WRITE the deliverable recording the TRUE .417 close-state: the score-lever scorecard (A1 prune null, A2 prior null, A3 adaptive FALSE-WIN flagged [lever inert, commit_count=0, metric-mismatch], A4 value-weight null keep 0, A5 m0r0_L2 banked, A6 integration null [no lever beat 7760; nav-tax confirmed: 1546 reset-replays vs 6 forward-walk hits]), reproducible_total_levels from the registry, and the .417 net: solve CAPABILITY grew (+ banked levels) but action-EFFICIENCY did NOT move (submitted config unchanged, gate baseline 7760).
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+        preconditions_checked:
+          principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+        close_state_417:
+          principle: "the honest .417 numbers (score-lever scorecard + reproducible_total_levels) carried forward so the record does not drift."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4522_archive_417_activate_418.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4523-a1
+    milestone: 2026.06.418
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- FORWARD-WALK NAVIGATION
+      fix: collapse the RESET-replay tax. Batch-expand a frontier node''s untested actions per visit +
+      nav-cost frontier tie-break. Gate: CORE median actions STRICTLY < baseline at preserved solve-rate.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 160
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4523_forward_walk_navigation.json
+    prior_failures:
+      - experiment_id: exp4516-a6
+        verdict: 'complete: no_lever_beats_7760_honest_null (nav fix half-engaged: 6 exact + 20 partial forward-walk hits vs 1546 reset-replay fallbacks)'
+        addressed_by: 'A6 PROVED the RESET-replay tax is the 97%-of-cost axis but only built the forward-walk
+          SKELETON (_shortest_path/_partial_forward_path/_record_forward_edge). It barely engaged because
+          forward edges in adj are parent->child only, while the depth-primary _frontier selects SHALLOW
+          nodes elsewhere in the tree -> navigating deep-cur -> shallow-frontier needs to go BACKWARD, and
+          the only backward op is RESET-to-root -> _shortest_path returns None -> RESET-replay. This task
+          attacks the cost DIRECTLY (amortize replay via batch-expansion + nav-cost tie-break), not by
+          adding more forward edges (which cannot express backward moves). Different mechanism, falsifiable
+          gate.'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint HEADLINE). The ~7760 actions-to-solve are dominated by RESET-replay
+      navigation, NOT candidate fan-out (which is why .417 A1-A4 candidate-levers all nulled at <=0.3%).
+      A6 (exp4516) MEASURED it: 1546 reset_replay_fallbacks vs 6 exact + 20 partial forward-walk hits.
+
+      ROOT CAUSE (verified in python/carnot/agentic/arc_competition_agent.py):
+        - Forward edges in self.adj are PARENT->CHILD only (_record_forward_edge, ~line 497).
+        - _frontier (~line 568) is depth-primary (BFS): it picks the globally-SHALLOWEST unexpanded node,
+          which is usually NOT a descendant of the deep current node.
+        - To navigate deep-cur -> shallow-frontier you must go BACKWARD; the ONLY backward op live is
+          RESET-to-root then replay-from-root (next_move ~line 743-748). _shortest_path (forward BFS over
+          adj, ~line 628) therefore returns None almost always -> RESET-replay of node["path"] steps.
+        - After arriving at a frontier th, next_move expands ONE untested action (~line 722) then rides;
+          taking th's OTHER untested actions later requires another full RESET-replay to th.
+
+      THE FIX (two levers that change navigation COST and expansion BATCHING, NOT the reachable set).
+      CAUTION (do NOT trust "by construction"): the run terminates on a FIXED explore_budget (transition
+      count: arc_competition_agent.py stalled = len(self.transitions) >= explore_budget), NOT on exhausting
+      the reachable set. So reordering/batching changes WHICH states are explored before the budget is
+      spent -- it CAN drop a knife-edge CORE solve via the exact order-perturbation mechanism that dropped
+      m0r0 in .417 A1. Therefore core_solves_preserved is a HARD EMPIRICAL GATE measured on
+      {lp85,m0r0,sp80,vc33}, NOT a formality: a dropped CORE solve FAILS the lever regardless of action
+      savings. Investigate any dropped CORE solve; do not dismiss it as noise. The two levers:
+        1. BATCH-EXPAND PER VISIT: when navigation pays to reach a frontier node th (RESET-replay OR
+           forward-walk), expand ALL (or up to a bounded k) of th's untested SALIENT actions in that one
+           visit -- queue them as a batch -- BEFORE the search is allowed to jump elsewhere. This amortizes
+           the one expensive replay-to-th over k expansions instead of paying a fresh replay per action.
+        2. NAV-COST FRONTIER TIE-BREAK: among eligible frontiers of EQUAL depth-priority (depth MUST stay
+           the primary key -- it is the provable no-regression control; do NOT let nav-cost override depth),
+           prefer the one with the smallest navigation cost from cur: forward-reachable via _shortest_path
+           (cost = path len) > shorter node["path"] for replay. Pure tie-break -> reachable set unchanged.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (next_move ~694, _frontier ~568, _serve ~678, _ingest ~507, _shortest_path ~628, _partial_forward_path ~650, _record_forward_edge ~497, _navigation_diagnostics ~380)
+        - {project_root}/scripts/kaggle/arc_local_submission_gate.py (THE gate: CORE set-containment, baseline 7760)
+        - {project_root}/results/experiment_4516_integration_8game_gate.json (A6 nav_loop_finding -- the 1546 vs 6)
+        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green if SUBMITTED config changes)
+        - {project_root}/tests/python/test_arc_submission_gate_verdict.py (the CORE-containment gate fixtures -- the metric to report against)
+
+      TASK: implement BOTH levers in the StepwiseExplorer; measure CORE median actions + nav diagnostics
+      WITH vs WITHOUT; wire into SUBMITTED_AGENT_CONFIG only if it passes the CORE-containment gate.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on any focused pytest.)
+        1. Implement BATCH-EXPAND-PER-VISIT: when next_move navigates to a frontier th (the nav branch ~line 728-749), queue up to k of th's untested salient actions to expand at th before jumping. k is a bounded sweep param (try k in {1(control),3,8,all}). Keep the depth-ride behavior for the arrival subtree.
+        2. Implement NAV-COST TIE-BREAK in _frontier: keep depth PRIMARY; among equal-depth eligible nodes, tie-break by navigation cost from cur (forward-reachable shortest_path len, else node["path"] replay len). k=1 + no-tie-break is the CONTROL == today's behavior.
+        3. Measure on the 8-game gate: per config report median_actions_on_core, core_solves_preserved, AND the nav diagnostics (reset_replay_fallbacks, reset_replay_steps, forward_walk_hit_rate). The WIN condition: core_solves_preserved=True AND median_actions_on_core STRICTLY < the k=1/no-tie-break control AND reset_replay_steps materially down.
+        4. METRIC DISCIPLINE (A3 false-win lesson): measure BOTH conditions on the SAME action field. The gate's canonical metric is TOTAL actions on solved games (per .417 B2). Do NOT compare a treatment's actions_to_first_levelup against a baseline's total-actions -- that produced A3's flagged false win.
+        5. POSITIVE CONTROL + FALSE_NEGATIVE_RISK guard: a config known to reduce replay (e.g. batch-all on a game with many backtracks) must register a reduction; if no config beats the control, report the HONEST NULL.
+        6. WIRE ONLY ON A STRICT IMPROVEMENT: the gate's PASS includes "non-inferior" (cm <= baseline x 1.10, i.e. up to 10% WORSE still passes). Do NOT wire a non-inferior config -- wire into SUBMITTED_AGENT_CONFIG ONLY if the gate verdict tag is IMPROVED (median_actions_on_core STRICTLY < the k=1/no-tie-break control) AND core_solves_preserved=True; then update test_arc_submitted_agent_parity.py consistently. Else keep the bare explorer + honest null. Solves stay offline-reproduced via arc_solver_kit.reproduce.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; e.g. success: forward_walk_median_actions_on_core_<n>_below_<control> OR complete: forward_walk_no_reduction_honest_null."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade search, no GGUF/LLM load (1s floor)."
+        median_actions_on_core_control:
+          principle: "the k=1/no-tie-break baseline measured the SAME way -- the apples-to-apples control (A3 false-win guard)."
+        median_actions_on_core_best:
+          principle: "the headline -- did amortizing the replay cut TOTAL actions on the CORE games."
+        core_solves_preserved:
+          principle: "HARD empirical gate on {lp85,m0r0,sp80,vc33} -- under the fixed explore_budget, batch/reorder CAN drop a knife-edge solve (the .417 m0r0 mechanism); a dropped CORE solve FAILS the lever regardless of action savings."
+        nav_diagnostics_before_after:
+          principle: "reset_replay_fallbacks + reset_replay_steps + forward_walk_hit_rate WITH vs WITHOUT -- the causal mechanism witness (did replay actually drop, or is any action change incidental)."
+        action_field_used:
+          principle: "names the SINGLE action field both conditions were measured on (total actions on solved) -- the A3 metric-mismatch guard."
+        config_sweep:
+          principle: "the full {k, tie_break -> (median_actions_on_core, core_solves_preserved, reset_replay_steps)} table so the decision is auditable, not asserted."
+        chosen_submitted_config:
+          principle: "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); must keep test_arc_submitted_agent_parity.py consistent."
+        positive_control_passed:
+          principle: "proves the harness can detect a real replay reduction (guards a silently-broken metric)."
+        false_negative_risk_checked:
+          principle: "a null is valid only if the positive control passed."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent corpus/model drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4523_forward_walk_navigation.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4524-a2
+    milestone: 2026.06.418
+    title: 'PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- STOP-after-target-levelup: the explorer runs to
+      ~7760 even after reaching levelups. If the run can stop once target_levels is reached, total actions
+      collapse. Measure actions-to-target-levelup vs total-run. Gate: CORE actions down, solve-rate preserved.'
+    priority: high
+    track: arc-north-star
+    max_turns: 130
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4524_stop_after_levelup.json
+    prompt: |
+      CONTEXT ({date}, ARC sprint SCORE-LEVER). .417 A3 forensics revealed actions_to_first_levelup
+      (lp85=20, near the offline-BFS optimum of 21) is FAR below the total run length (7792): the explorer
+      keeps exploring long after reaching levelups. is_done (~line 752) stops when best_level >= start_level
+      + target_levels OR explored_out. If the agent over-runs past the target, total actions (the scored
+      metric) are inflated. This task measures whether the explorer can STOP earlier WITHOUT losing levels.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (is_done ~752, target_levels, best_level, next_move)
+        - {project_root}/scripts/kaggle/arc_local_submission_gate.py (CORE-containment gate, baseline 7760)
+        - {project_root}/results/experiment_4513_adaptive_per_step_budget.json (the A3 corrigendum: actions_to_first_levelup << total run)
+
+      TASK: characterize the gap between actions-to-reach-target-levels and total-run actions on the 8-game
+      gate; if the explorer over-runs, make is_done / the run loop stop once the SCORED target is reached
+      (preserving every CORE solve). Honest null if stopping earlier drops a CORE solve.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Per CORE game, log actions-to-reach-each-level vs total-run actions. Quantify the over-run.
+        2. If a stop-at-target policy cuts total actions while preserving every CORE solve AND every game's banked LEVEL DEPTH -> apply it. CRITICAL: ARC games are multi-level and the competition scores total solved LEVELS; the CORE-containment gate checks the game SET only, NOT levels-per-game, so stopping early could cut actions, keep the CORE set, and silently SHED deeper levels while the gate PASSES. Guard against this explicitly (levels_per_game_preserved below). The target must match the competition's scored objective (all reachable levels), not just first-levelup.
+        3. Measure on the gate with CORE-containment; report BOTH conditions on the SAME action field (A3 metric-mismatch guard). Record per-game best_level before vs after.
+        4. Honest null + FALSE_NEGATIVE_RISK control if stopping earlier loses a CORE solve or no over-run exists.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: stop_after_levelup_core_actions_<n>_below_control OR complete: no_overrun_or_drops_solve_honest_null."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
+        core_solves_preserved:
+          principle: "stopping earlier MUST NOT drop a CORE solve (set-containment over {lp85,m0r0,sp80,vc33})."
+        levels_per_game_preserved:
+          principle: "HARD gate: per-game best_level before vs after -- stopping early MUST NOT shed any game's banked level depth (the CORE gate checks the game set only; the competition scores total LEVELS, so a level-depth regression that the gate would PASS must be caught here)."
+        median_actions_on_core_control:
+          principle: "the run-to-completion baseline, same action field."
+        median_actions_on_core_best:
+          principle: "the headline -- did stopping at the scored target cut total actions."
+        action_field_used:
+          principle: "single action field both conditions measured on (A3 metric-mismatch guard)."
+        positive_control_passed:
+          principle: "proves the harness detects a real reduction."
+        false_negative_risk_checked:
+          principle: "a null is valid only with the control present."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4524_stop_after_levelup.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4525-a3
+    milestone: 2026.06.418
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank +1 NEW
+      reproducible level: first-contact on an UNSOLVED public game (re86/sb26/bp35/lf52) via the standing
+      arc_loop_solve loop, OR deepen a shallow solved game. Gate: offline_reproduced new level.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4525_levelup_attempt.json
+    prompt: |
+      CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE -- CLAUDE.md mandates >=1 task per roadmap
+      that actually BANKS a new reproducible level). reproducible_total_levels must grow monotonically.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible levels; UNSOLVED public games; general_gotchas)
+        - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> registry update)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate)
+        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -> route a NEW game to the closest solved recipe)
+
+      TASK: bank a NEW level -- gate: offline_reproduced=true AND reproduced_levels>=1. Either first-contact
+      an UNSOLVED public game (a new-level attempt), or +1 deeper on a solved one. For an un-adaptered game,
+      call recommend_approach first, reverse-engineer ONLY the win/action/state DELTA, register a GameAdapter,
+      then run arc_loop_solve. For an adaptered game, +1 deeper. Only OFFLINE-REPRODUCED levels count.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Pick the target (prefer an UNSOLVED public game per the rotation; else deepen a shallow one). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto).
+        2. For a new game: recommend_approach -> RE only the delta -> register GameAdapter -> re-run the loop.
+        3. Run the reproduction gate (arc_solver_kit.reproduce). Only on reproduced=True, update ops/arc_solve_registry.yaml (win condition, action model, gotchas, dead-ends, solver module) + bump reproducible_total_levels.
+        4. Record DEAD-ENDS (a search approach that stalled + why) in the registry entry so the next attempt skips them.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_routing_recommendation_delta_identified (un-adaptered: honest progress, not a bank)."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load."
+        offline_reproduced:
+          principle: "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+        reproduced_levels:
+          principle: "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank)."
+        registry_updated:
+          principle: "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4525_levelup_attempt.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4526-a4
+    milestone: 2026.06.418
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- compose the
+      nav fix (A1) + stop-after-levelup (A2) into the SUBMITTED agent, re-measure the 8-game gate
+      end-to-end on the CORE-containment metric. If NONE pass, keep the bare explorer + honest null.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 130
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4526_integration_8game_gate.json
+    prompt: |
+      CONTEXT ({date}, operator MANDATORY, ARC sprint INTEGRATION). The score moves only when a lever is
+      wired into the SUBMITTED agent and the 8-game gate CORE median actions actually drops. Compose
+      whichever of A1 (forward-walk nav) and A2 (stop-after-levelup) passed their CORE-containment gate;
+      re-measure end-to-end on the SUBMITTED config. If none passed, keep the bare explorer + honest null.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4523_forward_walk_navigation.json (A1 delta + chosen config)
+        - {project_root}/results/experiment_4524_stop_after_levelup.json (A2 delta)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy / SUBMITTED_AGENT_CONFIG)
+        - {project_root}/scripts/kaggle/arc_local_submission_gate.py (CORE-containment gate, baseline 7760)
+        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green after wiring)
+
+      TASK: wire the CORE-containment-passing levers into SUBMITTED_AGENT_CONFIG, re-measure the gate
+      end-to-end on the CANONICAL action field, keep parity green. Honest null if nothing passes.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Read A1/A2 artifacts; select ONLY levers with core_solves_preserved=True AND median_actions_on_core STRICTLY < their control (the gate's "non-inferior" PASS allows up to 10% WORSE -- that is NOT a win; require the IMPROVED tag). CHECK ADDITIVITY: batch-expand (A1) front-loads exploration while stop-after-levelup (A2) truncates it, so composed they may interact destructively -- report integrated CORE median vs the naive sum of the isolated A1+A2 deltas.
+        2. Wire winners into SUBMITTED_AGENT_CONFIG; update test_arc_submitted_agent_parity.py consistently. Do NOT aggregate any artifact carrying flagged_adversarial: true.
+        3. Re-measure median_actions_on_core end-to-end on the 8-game gate (the HEADLINE) + solve-rate + held-out solve-rate + nav diagnostics, all on the canonical action field.
+        4. If the integrated config beats the baseline AND a leaderboard resubmission is warranted, leave SUBMITTED ready -- but DO NOT submit (operator-only). If nothing passes, keep bare explorer + honest null.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: integrated_median_actions_on_core_<n>_below_7760 OR complete: no_lever_passes_honest_null."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor)."
+        median_actions_on_core_baseline:
+          principle: "the 7760 control, same action field."
+        median_actions_on_core_integrated:
+          principle: "the HEADLINE -- the SUBMITTED-config CORE median after wiring the winners."
+        core_solves_preserved:
+          principle: "integration must preserve every CORE solve (set-containment)."
+        levers_integrated:
+          principle: "names which of A1/A2 were wired -- traceable to their measured deltas; [] is an honest null."
+        additivity_checked:
+          principle: "integrated CORE median vs the naive sum of isolated A1+A2 deltas -- surfaces a destructive batch-expand x stop-after-levelup interaction instead of burying it."
+        heldout_solve_rate:
+          principle: "the real transfer signal; integration should not regress it."
+        nav_diagnostics:
+          principle: "reset_replay_steps end-to-end -- did the integrated config actually cut the replay tax."
+        ready_for_operator_submit:
+          principle: "True if the integrated config is a CORE-preserved improvement worth a 1/day submission slot; the task NEVER submits (operator-only)."
+        false_negative_risk_checked:
+          principle: "an honest null only valid with the 7760 baseline measured the same way."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4526_integration_8game_gate.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4527-b1
+    milestone: 2026.06.418
+    title: 'PHASE B1 (RESERVED INFRA) -- promote nav diagnostics to a FIRST-CLASS gate metric: the
+      submission gate tracks reset_replay_steps / forward_walk_hit_rate per game alongside actions, so a
+      nav regression is caught mechanically (not just total actions). CI-guarded.'
+    priority: high
+    track: infra
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4527_nav_metric_harness.json
+    prompt: |
+      CONTEXT ({date}, RESERVED INFRA). The nav tax (reset_replay_steps) is the dominant action cost but
+      the gate only tracks total actions. Promote the nav diagnostics (_navigation_diagnostics) to a
+      first-class, per-game gate metric so a nav regression is visible and CI-guarded.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/kaggle/arc_local_submission_gate.py (the gate)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (_navigation_diagnostics ~380)
+        - {project_root}/tests/python/test_arc_submission_gate_verdict.py (the CORE-containment fixtures to extend)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python {project_root}/scripts/kaggle/arc_local_submission_gate.py --help` exits 0. Missing -> blocked, EXIT.
+        1. measure() captures per-game reset_replay_steps + forward_walk_hit_rate from _navigation_diagnostics.
+        2. Add a nav-regression fixture (a config with MORE reset_replay_steps at equal actions -> WARN) to test_arc_submission_gate_verdict.py.
+        3. Asserting tests (--no-cov). Keep the CORE-containment _verdict unchanged (do NOT revert to raw solved-count).
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; shipped: nav_metric_first_class_ci_guarded OR complete: nav_metric_partial_<reason>."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
+        nav_metric_added:
+          principle: "names the per-game nav fields the gate now tracks -- the nav-regression early warning."
+        tests_added_pass:
+          principle: "Tests Must Run and Assert."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4527_nav_metric_harness.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4528-b2
+    milestone: 2026.06.418
+    title: 'PHASE B2 (RESERVED INFRA; OVERDUE) -- carry-forward any unfinished .417 B-track infra
+      (metric-harness canonicalization / timing detector) and the headroom-budget B* measurement if .417
+      B2 did not complete it. Audit-only if already done.'
+    priority: medium
+    track: infra
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4528_infra_carryforward.json
+    prompt: |
+      CONTEXT ({date}, RESERVED INFRA). Reconcile the .417 B-track: confirm the CORE-containment gate is
+      canonical, the four+ fixtures CI-guarded, and the headroom-budget B* measured (the smallest budget
+      where baseline solved_set(B)==solved_set(1.5B)). If .417 B2 (exp4518) already did these, this is an
+      AUDIT (confirm + record); else complete the missing piece. No blind budget raise.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/kaggle/arc_local_submission_gate.py
+        - {project_root}/results/experiment_4518_metric_harness_canonical.json (the .417 B2 outcome, if present)
+        - {project_root}/tests/python/test_arc_submission_gate_verdict.py
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python {project_root}/scripts/kaggle/arc_local_submission_gate.py --help` exits 0. Missing -> blocked, EXIT.
+        1. Read the .417 B2 artifact. Confirm what landed (canonical gate, fixtures, B*). Record gaps.
+        2. Complete any missing piece (e.g. measure B* if not done; CI-guard the fixtures if not wired). Do NOT revert CORE-containment.
+        3. Asserting tests (--no-cov) for anything added.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; shipped: infra_carryforward_complete OR complete: infra_audit_already_done."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts (reads the .417 B2 artifact) unless it measures B* live (then verifier_ensemble_against_cached_candidates)."
+        b_track_status:
+          principle: "what landed in .417 B2 vs what this task completed -- the audit trail."
+        cited_upstream_artifacts:
+          principle: "traceability of the .417 B2 numbers this reconciles."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4528_infra_carryforward.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4529-c
+    milestone: 2026.06.418
+    title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH
+      reachability only, NEVER host SD card), GateMate (USB detect), PolarFire (SSH). Per-board continuity
+      audit; honest blocked_<board>_<reason> if a board is unreachable.'
+    priority: medium
+    track: hardware
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: hardware_smoke
+    operator_override: '2026-06-20 operator directive (standing): active hardware-continuity task mandated
+      by the Hardware-Task Continuity Discipline; scope-matches retired hardware exps but is required
+      forward per-board audit until each board reaches its terminal state.'
+    prompt: |
+      CONTEXT ({date}, HARDWARE CONTINUITY -- CLAUDE.md mandates >=1 task per attached board per milestone).
+      Per-board reachability audit. KV260: SSH ONLY (NEVER /dev/mmcblk -- that is the retired host-SD-card
+      mechanism). GateMate: USB detect. PolarFire: SSH.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS / per-board checks (each independent; a board being down is an honest blocked_<board>, not a failure):
+           a. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exit 0 -> reachable; else blocked_kv260_ssh_unreachable.
+           b. GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE; else blocked_gatemate_usb_undetected.
+           c. PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exit 0; else blocked_polarfire_ssh_timeout.
+        1. For each reachable board, record its state (KV260: xmutil listapps; GateMate: IDCODE; PolarFire: uptime). NO new bitstream build this milestone unless a board is mid-bringup.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; complete: hardware_continuity_audit_<n>_boards_reachable (blocked_<board> per-board is honest, not terminal failure)."
+        inference_substrate:
+          principle: "hardware_smoke -- SSH/USB board checks, per-board duration floors."
+        per_board_status:
+          principle: "each board's reachability + state -- keeps every attached board visible in the milestone retro (the forget-pattern guard)."
+        preconditions_checked:
+          principle: "records WHICH board resources were verified; SSH-not-SD-card for KV260."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4529_hardware_continuity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4530-d
+    milestone: 2026.06.418
+    title: 'PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = action-efficient navigation/search)
+      -- ingest SOTA on RESET-free / backtrack-efficient tree search + frontier navigation in interactive
+      RL agents; map onto the forward-walk nav fix. Emit a SOTA->experiment mapping note with real arXiv IDs.'
+    priority: medium
+    track: sota-ingestion
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    prompt: |
+      CONTEXT ({date}, SOTA-INGESTION reserved slot; headline = action efficiency via navigation). Ingest
+      SOTA mapped onto the .418 forward-walk nav fix: backtrack-efficient / RESET-free tree search,
+      frontier navigation cost in interactive environments, amortized search in agents that cannot
+      teleport (must physically navigate). RELIABLE channel only (scripts/sweep_clusters.py cluster 5/6 +
+      sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8). /deep-research is BANNED
+      in the autonomous loop.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python {project_root}/scripts/sweep_clusters.py --help` exits 0 AND arXiv reachable (`curl -sf -o /dev/null https://export.arxiv.org/api/query?search_query=all:test`). Missing -> blocked_network, EXIT.
+        1. Read the already-discovered corpus (research-studying.md / research-references.md) filtered to ARC navigation/search; run a focused fresh pass (cluster 5/6 + semscholar + WebFetch top 5-8).
+        2. Synthesize a SOTA->experiment mapping note (docs/research-notes/): the strongest 3-5 methods, what each takes over the CURRENT explorer, and where each fails. Cite REAL arXiv IDs for every method claim (no fabrication).
+        3. Update research-studying.md (mark ingested) + flag the strongest method as a candidate for .419.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; complete: sota_ingestion_navigation_search_mapped."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- literature synthesis, no model load."
+        methods_mapped:
+          principle: "the 3-5 strongest methods with REAL arXiv IDs -- the shoulders-of-giants anti-rederivation check."
+        citations_verified:
+          principle: "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as any results artifact)."
+        flagged_for_next_roadmap:
+          principle: "the strongest method flagged as a .419 candidate -- closes the discover->ingest->plan loop."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: this task primarily WRITES a research note + updates research-studying.md; emit the artifact JSON recording the mapping.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4531-e
+    milestone: 2026.06.418
+    title: 'PHASE E (CAPSTONE .418) -- the NAVIGATION-EFFICIENCY scorecard: did the forward-walk nav fix
+      (A1) + stop-after-levelup (A2) cut CORE median actions below 7760 at preserved solve-rate, and did
+      reproducible_total_levels grow (A3)? Skip any flagged_adversarial artifact.'
+    priority: high
+    track: capstone
+    max_turns: 110
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4531_capstone_v418.json
+    prompt: |
+      CONTEXT ({date}, CAPSTONE .418). Aggregate the milestone honestly. HEADLINE QUESTION: did action
+      efficiency finally move? (CORE median actions below 7760 at preserved solve-rate via the nav fix.)
+      Plus: did reproducible_total_levels grow (A3 level-up)?
+
+      MANDATORY: skip ANY artifact carrying flagged_adversarial: true (do NOT aggregate its numbers).
+      Measure all action numbers on the CANONICAL action field (the A3 false-win lesson). A FAILED
+      acceptance gate overrides a celebratory verdict.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4523_forward_walk_navigation.json (A1)
+        - {project_root}/results/experiment_4524_stop_after_levelup.json (A2)
+        - {project_root}/results/experiment_4525_levelup_attempt.json (A3)
+        - {project_root}/results/experiment_4526_integration_8game_gate.json (A4 integration HEADLINE)
+        - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: the upstream artifacts exist. Missing -> aggregate what exists + note gaps.
+        1. Read each upstream artifact via scripts/summarize_artifact.py (the reading-results discipline). Skip flagged_adversarial:true.
+        2. Build the scorecard: nav fix delta (CORE median actions before/after, reset_replay_steps before/after), stop-after-levelup delta, integration HEADLINE (did SUBMITTED config improve), reproducible_total_levels growth.
+        3. State the honest milestone verdict: did EFFICIENCY move (the .417 it did NOT), and is a resubmission warranted (operator-only).
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: nav_fix_core_actions_<n>_below_7760 OR complete: nav_fix_null_efficiency_unmoved."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+        efficiency_moved:
+          principle: "the bottom line -- did CORE median actions drop STRICTLY below 7760 (the IMPROVED tag, not merely non-inferior within the 10% slack) at preserved solve-rate (the thing .417 did not achieve)."
+        reproducible_total_levels_delta:
+          principle: "did solve CAPABILITY grow this milestone (A3 level-up)."
+        flagged_artifacts_skipped:
+          principle: "names any flagged_adversarial artifact excluded from aggregation -- the fabrication-gate compliance."
+        cited_upstream_artifacts:
+          principle: "every headline number traces to a real upstream measurement (the audit trail)."
+        ready_for_operator_submit:
+          principle: "True only if the integrated config is a CORE-preserved efficiency improvement worth a 1/day slot; never submits."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4531_capstone_v418.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
