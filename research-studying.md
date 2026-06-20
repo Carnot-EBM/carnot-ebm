@@ -5,8 +5,10 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
-**Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+**Updated:** 2026-06-20 (ARC-AGI-3 submission-sprint pivot; discovery clusters re-pointed).
+**Current Focus:** ARC-AGI-3 Kaggle submission sprint through the 2026-06-30 Milestone #1 deadline (CLAUDE.md "ARC-AGI-3 Submission Sprint Forcing Function"). The headline is **action efficiency** — the leaderboard scores `(human_actions/agent_actions)^2`, so the live wall is "explore with FEWER actions," not solve-rate or config tuning. Active research directions: affordance / clickability / frame-change prediction (the StochasticGoose lever), neural-guided / value-guided search to prune the explorer, imitation prior from the 342 human replays, and goal/world-model induction (Family-A/Family-B winning architectures). The verifier-moat / FoVer / paper-v6 program is now SUPPORTING, not the headline. Discovery machinery re-pointed 2026-06-20: `scripts/sweep_clusters.py` clusters 5 (ARC interactive-agent exploration/affordance) + 6 (neural-guided search / goal-world-model induction) added alongside the pre-pivot clusters 0-4. NOTE: the per-milestone SOTA-ingestion slot (the actual ingestion path) has been ARC-aligned since the pivot — `.414`/`.415`/`.416` ingested search/imitation/affordance SOTA with real arXiv IDs; this header refresh + the new clusters bring the upstream DISCOVERY side in line.
+
+**Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
 ## 2026-06-20 Exp 4477 - .413 SOTA ingestion ingested
 
