@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.416",
+  "generated_at": "2026-06-20T16:29:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation of 2026.06.416, so the locked fields (0 experiments, 0 wall-time, gpu null) reflect that zero. But this is the recurring false-zero detector gap documented across .363-.415, now extending to .416: on-disk ground truth read this turn shows .416 actually ran exp4500-exp4509 (10 artifacts) over a ~4h26m window (mtimes 2026-06-20T07:56:16Z -> 12:21:48Z). All were ARC synthesis / verifier-ensemble-against-cached-candidates / aggregation tasks with NO genuine compute-bound path (exp4504's lone 'cuda' grep hit is vestigial principle-annotation text; its inference_substrate is verifier_ensemble_against_cached_candidates), so 0 compute-bound tasks ran. Both RTX 3090s idle at the 16:29Z GPU snapshot is therefore correct behaviour and gpu_idle_on_compute_bound_tasks=null. The operational failure is observability, not execution speed.",
+  "bottlenecks_identified": [
+    "Recurring false-zero timing-detector gap (the only real operational bottleneck): the authoritative milestone-scoped detector reported 0 commits since activation, but on-disk ground truth shows 10 artifacts (exp4500-exp4509, ~4h26m window 07:56:16Z->12:21:48Z). This has now recurred every milestone .363 through .416 — the failure is observability, not execution. It is why the locked retro fields (0/null) disagree with on-disk reality.",
+    "GPU idle is explicitly NOT flagged as a bottleneck: 0 compute-bound tasks ran (all .416 work was ARC synthesis / verifier-ensemble-against-cached-candidates / aggregation; exp4504's 'cuda' marker is vestigial principle-annotation text, inference_substrate=verifier_ensemble_against_cached_candidates). Idle 3090s are correct and gpu_idle_on_compute_bound_tasks is null. Secondary observability note: the GPU snapshot (16:29Z) was taken ~4h AFTER the .416 execution window closed (12:21Z), so it is not concurrent with execution and could not detect mid-run idle even if a compute-bound task had run."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: add an mtime scan of results/experiment_*.json plus an ops/changelog-window fallback so artifacts that exist on disk are attributed to the active milestone — this ends the .363-.416 false-zero streak that forces every retro to hand-reconcile on-disk ground truth.",
+    "Stamp duration_s and a compute_bound boolean into every artifact at write time (from scripts/experiment_template.py), so the retro reads per-task execution cost directly instead of inferring it from commit timestamps.",
+    "Emit a detector_gap_suspected flag whenever the detector reports 0 commits but results/ contains artifacts newer than the prior milestone's window, so the false-zero self-announces in-band rather than silently propagating into the locked 0/null retro fields.",
+    "Sample the GPU snapshot during the execution window (or periodically through the milestone), not ~4h after it closes — the current post-hoc snapshot cannot detect mid-run GPU idle even on a genuinely compute-bound task."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the timing detector (mtime scan + ops/changelog-window fallback) — this single fix ends the recurring false-zero that has degraded every retro since .363 and is the root cause of the locked 0/null fields disagreeing with the 10 on-disk artifacts.",
+    "Add write-time duration_s + compute_bound stamping in the experiment template, so future retros have authoritative per-task cost without a commit-timestamp inference step.",
+    "Emit detector_gap_suspected whenever artifacts exist on disk but the detector reports 0, so the gap is flagged in-band instead of being silently encoded as a zero."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The locked retro fields reflect the authoritative timing detector, which again false-zeroed; on-disk ground truth read this turn (results/ ls + ops/changelog.md) shows .416 executed normally — exp4500-exp4509 over ~4h26m, all GPU-light ARC / verifier-ensemble / aggregation work. The research scorecard was mostly honest nulls on the value_weight / frame-change-predictor / energy-augmented-ranking score-levers, offset by A5 banking a new offline-reproduced cd82 L2 level (exp4504, reproduced_levels=1) and B2 shipping a 232.69x lazy value-eval speedup (exp4506). estimated_time_savings_pct=5 reflects observability/analysis overhead removed (the per-milestone manual on-disk reconciliation), not experiment wall-time — execution was not slow and the GPUs were correctly idle. The single recurring operational failure is the timing detector: false-zeroed every milestone since .363, fixable via mtime + changelog-window detection, write-time duration_s/compute_bound stamping, and a detector_gap_suspected flag. No numbers here were recalled from training — the detector-zero comes from the authoritative block and every on-disk figure was read this turn from committed results/ and ops/changelog.md."
+}
