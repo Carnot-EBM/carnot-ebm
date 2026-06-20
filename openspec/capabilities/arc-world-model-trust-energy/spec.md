@@ -80,6 +80,34 @@ A success artifact SHALL require
 `offline_reproduced=true` and `reproduced_levels >= 1`; otherwise the artifact
 SHALL report a terminal honest residual without fabricating an L2 reproduction.
 
+### REQ-ARC-WMTE-4496: Adapter-Routed L1 to L2 Deepening
+
+Experiment 4494 SHALL register one tractable game adapter for a clean L1 game
+from `cd82`, `lf52`, `r11l`, or `ls20`. The adapter SHALL derive its
+win-predicate and action model from the offline environment state, including
+palette/action coordinates when applicable, and SHALL NOT hardcode level
+coordinates as the mechanic. The verifier-routed offline solver SHALL use that
+adapter to attempt one incremental deepening from the prior L1 reproduction to
+L2, and the reproduction gate SHALL replay the adapter labels against the
+offline environment before any success claim.
+
+Experiment 4494 SHALL write
+`results/experiment_4494_adapter_deepen_l2.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`offline_reproduced`, `reproduced_levels`, `adapter_registered`,
+`target_game`, `reproduction_gate`, `solution_labels`, and
+`residual_blockers`. Required field principles SHALL be included for:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
+A success artifact SHALL require `offline_reproduced=true` and
+`reproduced_levels >= 1`, where `reproduced_levels` counts newly reproduced
+levels beyond the prior L1 solve. If no L2 mechanic is reverse-engineerable, the
+artifact SHALL report the reverse-engineering delta in `residual_blockers`
+without fabricating an L2 reproduction.
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-4491: Held-Out Ranking Beats First-Clears Baseline
@@ -117,3 +145,14 @@ Then the registered `(grid, registers)` predicate is compared with recorded
 level-up transitions, the grid-only baseline score is reported separately, and
 the artifact only claims a deepened L2 reproduction when offline replay reaches
 at least one new level beyond L1.
+
+### SCENARIO-ARC-WMTE-4495: One Adapter Deepens a Frozen L1 Trajectory to L2
+
+Given a clean L1 trajectory for a selected tractable game and an offline
+environment exposing the game's target state and available action controls
+When experiment 4494 registers the game adapter and runs verifier-routed
+deepening to target level 2
+Then the terminal artifact records explicit preconditions, the selected
+`target_game`, a registered adapter, the adapter-produced `solution_labels`, and
+only reports success when the offline reproduction gate reaches at least one new
+level beyond L1.
