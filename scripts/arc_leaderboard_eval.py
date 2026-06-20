@@ -129,27 +129,41 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             break
     reached = _level_of(latest)
     levels = max(0, reached - (start or 0))
-    # REAL leaderboard efficiency is PER-LEVEL, not whole-game (docs/research-notes/
-    # arc-agi3-kaggle-submission-requirements-2026-06-17.md: "per-level score =
-    # min(human_actions/agent_actions, 1.0), squared"). agent_actions for a level = actions spent BETWEEN
-    # consecutive level-ups, NOT the total run. The OLD formula `levels * min(baseline[0]/TOTAL_actions,1)^2`
-    # was wrong: it scored an efficient-but-over-running solve at ~0 (lp85 solved L1 in 20 actions but ran
-    # to 7792 hunting unreachable deeper levels -> old eff ~0). Under the correct per-level metric L1 scores
-    # min(17/20,1)^2 = 0.72 and the over-run does NOT touch it (the over-run is a WALL-CLOCK cost, not a
-    # score cost). This is the metric the local submission gate must judge configs on.
+    # REAL per-game score via the AUTHORITATIVE scorer (arc_agi.scorecard.EnvironmentScoreCalculator,
+    # package arc-agi 0.9.8). A 2026-06-20 adversarial review caught that reimplementing the formula from a
+    # doc paraphrase was WRONG on three counts: the real per-level score is min((human/agent)^2 * 100, 115)
+    # -- a 115 cap that REWARDS superhuman solves, NOT min(human/agent,1)^2 capped at 1; the per-game
+    # aggregation is an INDEX-WEIGHTED MEAN over ALL the game's levels (deeper levels weigh more, and
+    # UNSOLVED levels score 0 and drag the mean down -> solving MORE/DEEPER levels is the real lever); and a
+    # missing/zero baseline scores 0.0, NOT 1.0 (the old code's inverse was a gameable hole). We now DRIVE
+    # the installed scorer exactly as arc_agi/scorecard.py:474-491 does, so the gate cannot drift from the
+    # leaderboard. lp85 (1 of 8 levels solved) -> ~2.007. Missing baselines -> 0.0 (matches the real scorer).
+    eff = 0.0
     per_level = []
-    per_level_eff = 0.0
-    prev = 0
-    for k, lu in enumerate(level_up_actions):
-        lvl_actions = lu - prev
-        prev = lu
-        human = base.get((start or 0) + k)
-        ratio = min(human / lvl_actions, 1.0) if (human and lvl_actions > 0) else 1.0
-        term = round(ratio * ratio, 4)
-        per_level_eff += term
-        per_level.append({"level": (start or 0) + k, "agent_actions": lvl_actions,
-                          "human_actions": human, "efficiency": term})
-    eff = round(per_level_eff, 4)
+    try:
+        from arc_agi.scorecard import EnvironmentScoreCalculator
+
+        baseline_list = [base[i] for i in sorted(base)] if base else []
+        if baseline_list:
+            calc = EnvironmentScoreCalculator()
+            prev = 0
+            for li in range(len(baseline_list)):
+                if li < len(level_up_actions):
+                    at = level_up_actions[li]
+                    lvl_actions = at - prev
+                    done = True
+                    prev = at
+                else:
+                    done = False
+                    lvl_actions = actions - prev
+                    prev = actions
+                calc.add_level(level_index=li + 1, completed=done,
+                               actions_taken=lvl_actions, baseline_actions=baseline_list[li])
+                per_level.append({"level": li, "agent_actions": lvl_actions,
+                                  "human_actions": baseline_list[li], "completed": done})
+            eff = round(float(calc.to_score(include_levels=False).score), 4)
+    except Exception:
+        eff = 0.0  # no baselines / scorer unavailable -> 0.0 (matches the real scorer; NEVER 1.0)
     gap = None
     if reached <= (start or 0):
         gap = {"game": game, "stuck_at_level": reached, "actions_spent": actions,
