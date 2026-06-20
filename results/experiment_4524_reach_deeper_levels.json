@@ -1310,5 +1310,18 @@
     "SCENARIO-ARC-WMTE-4524"
   ],
   "schema": "carnot.arc_reach_deeper_levels_4524.v1",
-  "target_game": "lp85"
+  "target_game": "lp85",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }
