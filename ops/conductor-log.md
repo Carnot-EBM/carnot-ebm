@@ -8931,3 +8931,4 @@ c |
 | 2026-06-20 06:54 UTC | PHASE B1 (INFRA; operator MANDATORY -- throughput) | OK | 91 passed, 1 warning in 5.48s |
 | 2026-06-20 07:05 UTC | PHASE B2 (INFRA -- throughput + hygiene) -- Decoup | OK | 84 passed, 1 warning in 6.30s |
 | 2026-06-20 07:16 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY)  | OK | 86 passed, 1 warning in 5.45s |
+| 2026-06-20 08:01 UTC | PHASE D (SOTA-INGESTION; reserved -- ARC search/ve | OK | 104 passed, 1 warning in 4.69s |
