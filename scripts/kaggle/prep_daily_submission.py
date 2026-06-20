@@ -159,8 +159,27 @@ def prep() -> None:
     sys.exit(0 if ready else 1)
 
 
-def submit_only(kver: str, message: str) -> None:
-    """OPERATOR-APPROVED submit of the current latest kernel version. No re-prep."""
+def submit_only(kver: str, message: str, force: bool = False) -> None:
+    """OPERATOR-APPROVED submit of the current latest kernel version. No re-prep.
+
+    GATED (operator directive 2026-06-20): before submitting, run the LOCAL SUBMISSION GATE
+    (scripts/kaggle/arc_local_submission_gate.py) -- it measures the current submitted-default config and
+    REFUSES the submit if it is a local regression vs the verified baseline (solve-rate or action
+    efficiency). This prevents wasting a 1/day slot on a regression (the value_weight=5 / E3-cascade
+    lesson). Bypass only with --force (logged) when you knowingly accept the risk."""
+    import subprocess
+
+    gate = Path(__file__).resolve().parent / "arc_local_submission_gate.py"
+    if force:
+        print("[submit] --force: SKIPPING the local submission gate (operator override).")
+    else:
+        print("[submit] running the local submission gate (refuses on regression)...")
+        rc = subprocess.run([sys.executable, str(gate), "--check"], cwd=str(REPO)).returncode
+        if rc != 0:
+            sys.exit(f"[submit] BLOCKED by the local gate (exit {rc}) -- the current config is a local "
+                     f"regression. Fix it (or re-run with --force to override). NOT submitting.")
+        print("[submit] gate PASSED -- proceeding to submit.")
+
     from kaggle import api
 
     api.authenticate()
@@ -172,6 +191,8 @@ def submit_only(kver: str, message: str) -> None:
         kernel_version=str(kver),
     )
     print("SUBMITTED:", res)
+    print("[submit] reminder: on a CONFIRMED leaderboard improvement, refresh the gate baseline with "
+          "`.venv/bin/python scripts/kaggle/arc_local_submission_gate.py --update-baseline`.")
 
 
 def main() -> None:
@@ -180,6 +201,8 @@ def main() -> None:
     ap.add_argument("--submit-only", action="store_true", help="operator-approved submit of latest kernel")
     ap.add_argument("--kver", default=None, help="kernel version to submit (with --submit-only)")
     ap.add_argument("--message", default=None, help="submission message")
+    ap.add_argument("--force", action="store_true",
+                    help="bypass the local submission gate (only when knowingly accepting a regression)")
     a = ap.parse_args()
 
     if a.dry_run:
@@ -190,7 +213,7 @@ def main() -> None:
         if not a.kver:
             sys.exit("--submit-only requires --kver N")
         msg = a.message or f"carnot daily {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
-        submit_only(a.kver, msg)
+        submit_only(a.kver, msg, force=a.force)
         return
     prep()
 
