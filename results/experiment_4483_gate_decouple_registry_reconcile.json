@@ -1,0 +1,98 @@
+{
+  "duration_s": 0.068355,
+  "experiment": "experiment_4483_gate_decouple_registry_reconcile",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+    },
+    "inference_substrate": {
+      "principle": "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+    },
+    "offline_reproduced": {
+      "principle": "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+    },
+    "reproduced_levels": {
+      "principle": "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed."
+    }
+  },
+  "gate_decoupling": {
+    "advisory_text_task_ids": [
+      "exp4483-b2"
+    ],
+    "removed_gate_task_ids": [],
+    "roadmap_path": "research-roadmap.yaml",
+    "structured_gate_count_after": 0,
+    "structured_gate_count_before": 0,
+    "structured_gate_fields_removed": 0
+  },
+  "honest_verdict": "complete: gate_decoupled_registry_reconciled_4483",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "files": {
+      "active_roadmap": {
+        "error": "",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "readable": true,
+        "yaml_safe_load": true
+      },
+      "arc_solve_registry": {
+        "error": "",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+        "readable": true,
+        "yaml_safe_load": true
+      }
+    },
+    "ok": true
+  },
+  "random_seed": 4483,
+  "registry_reconciliation": {
+    "arc_registry_path": "ops/arc_solve_registry.yaml",
+    "authoritative_header": {
+      "reproducible_total_games": 24,
+      "reproducible_total_levels": 47
+    },
+    "computed_from_game_rows": {
+      "reproducible_total_games": 25,
+      "reproducible_total_levels": 48
+    },
+    "latest_reconciliation_key": "latest_gate_decouple_registry_reconcile_4483",
+    "reconciliation_block": {
+      "artifact": "results/experiment_4483_gate_decouple_registry_reconcile.json",
+      "note": "Exp 4483 gate-decouple registry reconciliation; historical hygiene snapshots remain immutable, current consumers should use the authoritative header.",
+      "provisional_total_levels": 1,
+      "reproducible_total_games": 24,
+      "reproducible_total_levels": 47,
+      "supersedes_stale_hygiene_keys": [
+        "latest_hygiene_4388",
+        "latest_hygiene_4399",
+        "latest_hygiene_4421",
+        "latest_hygiene_4438",
+        "latest_hygiene_4449",
+        "latest_hygiene_4461",
+        "latest_hygiene_4474"
+      ]
+    },
+    "reproduced_counts_match_header": false,
+    "stale_hygiene_keys": [
+      "latest_hygiene_4388",
+      "latest_hygiene_4399",
+      "latest_hygiene_4421",
+      "latest_hygiene_4438",
+      "latest_hygiene_4449",
+      "latest_hygiene_4461",
+      "latest_hygiene_4474"
+    ]
+  },
+  "reproduced_levels": 47,
+  "reproducibility_checksum": "982d7b3b507fec36321c39fc81f83d11259e1ad401d17004e27e2a74a1cd5b7b",
+  "result_path": "results/experiment_4483_gate_decouple_registry_reconcile.json",
+  "schema": "carnot.exp4483.gate_decouple_registry_reconcile.v1",
+  "spec_refs": [
+    "REQ-REPORT-4483",
+    "SCENARIO-REPORT-4483"
+  ]
+}

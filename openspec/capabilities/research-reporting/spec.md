@@ -27042,6 +27042,54 @@ violation, and keeps `research-roadmap-next.yaml` available for repair.
 |---|---|---|
 | REQ-REPORT-4482 | Implemented (`scripts/arc_nocov_precondition_lint.py`, `scripts/__init__.py`, `.pre-commit-config.yaml`, `results/experiment_4482_nocov_default_lint.json`) | Implemented (`tests/python/test_arc_nocov_precondition_lint.py`) |
 
+### REQ-REPORT-4483: ARC Solve Tasks Are Decoupled From Fragile Gates And Registry Counts Reconcile
+
+The Exp 4483 workflow SHALL audit the active roadmap for ARC solve tasks whose
+structured `gated_on` dependencies can cascade into `GATE_BLOCK` stalls. Tasks
+with `track` beginning `arc-` SHALL be treated as independent solve tasks unless
+they explicitly declare a non-solve dependency class. For independent solve
+tasks, the workflow SHALL remove structured `gated_on` fields and SHALL record
+which task ids were changed. The workflow SHALL also report prompt or title
+mentions of `gated_on` as advisory text references without treating them as
+structured gates.
+
+The workflow SHALL reconcile `ops/arc_solve_registry.yaml` by reading the
+authoritative top-level `reproducible_total_levels` and
+`reproducible_total_games`, detecting stale hygiene snapshots such as historical
+`39/20` or prior `45/22` rows, and writing a current Exp 4483 reconciliation
+block that points at the authoritative header rather than rewriting historical
+snapshot facts. The reconciliation SHALL not decrease reproduced counts.
+
+The workflow SHALL write
+`results/experiment_4483_gate_decouple_registry_reconcile.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`offline_reproduced`, `reproduced_levels`, `preconditions_checked`,
+`gate_decoupling`, `registry_reconciliation`, `field_principles`, `spec_refs`,
+`random_seed`, and `reproducibility_checksum`. Complete-path `honest_verdict`
+SHALL start with one of `complete:`, `complete_`, `success:`, `success_`,
+`passed:`, `passed_`, `shipped:`, or `shipped_`. The field principles SHALL
+match the Exp 4483 required artifact-field discipline: terminal-prefix verdict,
+explicit inference substrate, offline reproducibility, monotonic reproduced
+levels, and precondition resource checks.
+
+#### SCENARIO-REPORT-4483: Independent ARC Solve Gates Are Removed And Counts Reconcile
+
+**Given** an active roadmap with independent ARC solve tasks, some of which
+carry structured `gated_on` dependencies, and an ARC solve registry whose
+top-level reproduced header is newer than one or more hygiene snapshots
+**When** the Exp 4483 workflow runs
+**Then** it removes the structured gates from those independent solve tasks,
+records advisory-only `gated_on` text mentions separately, appends or refreshes
+an Exp 4483 registry reconciliation block with the authoritative top-level
+counts, writes the required JSON artifact, and declares
+`aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-4483)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4483 | Planned (`python/carnot/experiment_4483_gate_decouple_registry_reconcile.py`, `results/experiment_4483_gate_decouple_registry_reconcile.json`) | Planned (`tests/python/test_experiment_4483_gate_decouple_registry_reconcile.py`) |
+
 ### REQ-REPORT-4475-LIVE-STACK: Submitted ARC Agent Ships The Stronger Generic Stack
 
 The Exp 4475 live-integration workflow SHALL make the submitted
