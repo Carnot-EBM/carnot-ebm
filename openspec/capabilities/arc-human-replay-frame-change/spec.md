@@ -216,6 +216,39 @@ Required field principles:
 - `efficiency_delta_vs_predictor_only`: difference in min(human/agent,1)^2 efficiency versus predictor-only, never inferred from mismatched candidate groups.
 - `energy_term_added_value`: bare bool indicating whether the energy term improved solve-rate or efficiency without reducing solve-rate.
 
+### REQ-ARC-FCP-4511: Self-Supervised No-Op Pruning From Offline Arcade Transitions
+
+Experiment 4511 SHALL write
+`results/experiment_4511_frame_change_prune_predictor.json` from a
+self-supervised offline-arcade corpus. The corpus SHALL be collected from
+locally executed `(frame, action, next_frame)` transitions across the 25 public
+offline games, deriving `changed` and `magnitude` only from rendered frame
+differences. The optional human-replay corpus MAY bootstrap counts, but the
+experiment SHALL remain complete without network or external quota.
+
+The frame-change predictor SHALL train a small torch action-effect model and
+wire it into `rich_action_candidates` as a PRUNING gate. Candidates with
+`P(frame_change)` below the swept threshold SHALL be dropped before explorer
+expansion, while default behavior without a threshold SHALL preserve the legacy
+candidate set. The experiment SHALL compare the fixed local submission-gate
+baseline of 7760 median actions against the pruned measurement and SHALL report
+an honest null if pruning does not reduce median actions or reduces solve-rate.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix complete:/success:/passed:/shipped_; e.g. success: frame_change_prune_median_actions_<n>_below_7760 OR complete: prune_no_action_reduction_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade search + small-predictor scoring, NO GGUF/LLM load (1s floor)."
+- `median_actions_baseline`: principle "the 7760 control so the delta is auditable, not a moving baseline."
+- `median_actions_with_prune`: principle "the headline -- pruning's whole point is to cut this number."
+- `solve_rate_baseline`: principle "pruning MUST NOT drop solve-rate; a faster agent that solves less is not a win."
+- `solve_rate_with_prune`: principle "the no-regression check on solve-rate."
+- `heldout_noop_precision`: principle "the predictor must generalize cross-game (pooled training) -- the StochasticGoose persist-across-games idea, measured held-out."
+- `positive_control_passed`: principle "proves the harness can detect a real reduction (guards against a silently-broken metric)."
+- `false_negative_risk_checked`: principle "a null result is only valid if a positive control passed -- per CLAUDE.md FALSE_NEGATIVE_RISK."
+- `random_seed`: principle "determinism is the precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -297,3 +330,14 @@ solve-rate and action-efficiency on identical candidate groups, records
 `inference_substrate=verifier_ensemble_against_cached_candidates`, and uses a
 terminal-prefixed honest verdict that reports either an added-value win or an
 honest null over predictor-only.
+
+### SCENARIO-ARC-FCP-4511: Predicted No-Ops Are Pruned Before Expansion
+
+Given a frame, legacy candidate actions, and a frame-change scorer that assigns
+low probability to no-op candidates
+When `rich_action_candidates` is called with a pruning threshold
+Then candidates below the threshold are removed before ranking or expansion,
+at least one candidate is retained, and the experiment 4511 artifact records
+the baseline 7760 control, pruned median action measurement, solve-rate guard,
+held-out no-op precision, positive control status, random seed, and
+reproducibility checksum.

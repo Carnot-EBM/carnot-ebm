@@ -1,0 +1,280 @@
+{
+  "corpus_summary": {
+    "changed_count": 198,
+    "collection_errors": [],
+    "corpus_source": "self_supervised_offline_arcade_transitions",
+    "game_count": 25,
+    "max_candidates_per_game": 16,
+    "noop_count": 109,
+    "offline_environment_count": 25,
+    "transition_count": 307
+  },
+  "duration_s": 151.05874145706184,
+  "experiment": "experiment_4511_frame_change_prune_predictor",
+  "false_negative_risk_checked": true,
+  "false_negative_risk_guard": "positive_control_passed_null_interpretable",
+  "field_principles": {
+    "false_negative_risk_checked": "principle \"a null result is only valid if a positive control passed -- per CLAUDE.md FALSE_NEGATIVE_RISK.\"",
+    "heldout_noop_precision": "principle \"the predictor must generalize cross-game (pooled training) -- the StochasticGoose persist-across-games idea, measured held-out.\"",
+    "honest_verdict": "principle \"terminal prefix complete:/success:/passed:/shipped_; e.g. success: frame_change_prune_median_actions_<n>_below_7760 OR complete: prune_no_action_reduction_honest_null.\"",
+    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- offline arcade search + small-predictor scoring, NO GGUF/LLM load (1s floor).\"",
+    "median_actions_baseline": "principle \"the 7760 control so the delta is auditable, not a moving baseline.\"",
+    "median_actions_with_prune": "principle \"the headline -- pruning's whole point is to cut this number.\"",
+    "positive_control_passed": "principle \"proves the harness can detect a real reduction (guards against a silently-broken metric).\"",
+    "preconditions_checked": "principle \"records WHICH resources were verified; pre-empts silent-missing-resource fabrication.\"",
+    "random_seed": "principle \"determinism is the precondition for reproducibility.\"",
+    "reproducibility_checksum": "principle \"content-addressed hash catches silent corpus/model drift on replay.\"",
+    "solve_rate_baseline": "principle \"pruning MUST NOT drop solve-rate; a faster agent that solves less is not a win.\"",
+    "solve_rate_with_prune": "principle \"the no-regression check on solve-rate.\""
+  },
+  "heldout_noop_precision": 1.0,
+  "heldout_noop_recall": 0.05263157894736842,
+  "heldout_transition_count": 68,
+  "honest_verdict": "complete: frame_change_prune_solve_rate_guard_failed",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade search + small-predictor scoring, NO GGUF/LLM load (1s floor).",
+  "local_gate_metrics": {
+    "baseline": {
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_solved": 7760.0,
+      "note": "verified baseline (update only after a real improvement + successful submit)",
+      "per_game": [
+        {
+          "actions": 7792,
+          "game": "lp85",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7789,
+          "game": "m0r0",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7724,
+          "game": "sp80",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7731,
+          "game": "vc33",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7799,
+          "game": "cd82",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7963,
+          "game": "ft09",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7786,
+          "game": "su15",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7821,
+          "game": "ls20",
+          "solved": false,
+          "timed_out": false
+        }
+      ],
+      "policy": "e3",
+      "solved_count": 4,
+      "timed_out_count": 0,
+      "total_actions_on_solved": 31036
+    },
+    "measurement_script": "scripts/kaggle/arc_local_submission_gate.py",
+    "with_prune": {
+      "budget": 8000,
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_solved": 7766.0,
+      "per_game": [
+        {
+          "actions": 7905,
+          "game": "lp85",
+          "levels": 2,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7803,
+          "game": "m0r0",
+          "levels": 0,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7766,
+          "game": "sp80",
+          "levels": 1,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7726,
+          "game": "vc33",
+          "levels": 1,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7789,
+          "game": "cd82",
+          "levels": 0,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7986,
+          "game": "ft09",
+          "levels": 0,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7758,
+          "game": "su15",
+          "levels": 0,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7818,
+          "game": "ls20",
+          "levels": 0,
+          "solved": false,
+          "timed_out": false
+        }
+      ],
+      "policy": "e3_frame_change_prune",
+      "prune_threshold": 0.5,
+      "solved_count": 3,
+      "timed_out_count": 0,
+      "total_actions_on_solved": 23397
+    }
+  },
+  "median_actions_baseline": 7760.0,
+  "median_actions_with_prune": 7766.0,
+  "offline_reproduction_gate": "direct_offline_arcade_execution_no_banked_solution_claimed",
+  "positive_control": {
+    "actions_reduced": true,
+    "baseline_actions_to_first_levelup": 3,
+    "baseline_efficiency": 0.1111111111111111,
+    "implied_efficiency_delta": 0.8888888888888888,
+    "ranked_actions_to_first_levelup": 1,
+    "ranked_efficiency": 1.0
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "baseline_file_present": true,
+    "codex_md_read": true,
+    "env_game_access_blocked": true,
+    "local_gate_script_present": true,
+    "median_actions_baseline_control": 7760,
+    "offline_arcade_import": true,
+    "ok": true,
+    "torch_import": true,
+    "torch_version": "2.11.0+cu128"
+  },
+  "prune_threshold": 0.5,
+  "random_seed": 4511,
+  "reproducibility_checksum": "sha256:60483b476b5d975d4384e2bd8357bd9753a223a2258991e8ee9a4a4b05b57dc5",
+  "requirements": [
+    "REQ-ARC-FCP-4511"
+  ],
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4511"
+  ],
+  "schema": "carnot.arc_frame_change_prune_predictor_4511.v1",
+  "solve_rate_baseline": 4,
+  "solve_rate_denominator": 8,
+  "solve_rate_with_prune": 3,
+  "threshold_sweep": [
+    {
+      "heldout_noop_count": 38,
+      "heldout_noop_precision": 1.0,
+      "heldout_noop_recall": 0.05263157894736842,
+      "heldout_predicted_noop_count": 2,
+      "heldout_transition_count": 68,
+      "heldout_true_predicted_noop_count": 2,
+      "threshold": 0.25
+    },
+    {
+      "heldout_noop_count": 38,
+      "heldout_noop_precision": 1.0,
+      "heldout_noop_recall": 0.05263157894736842,
+      "heldout_predicted_noop_count": 2,
+      "heldout_transition_count": 68,
+      "heldout_true_predicted_noop_count": 2,
+      "threshold": 0.35
+    },
+    {
+      "heldout_noop_count": 38,
+      "heldout_noop_precision": 1.0,
+      "heldout_noop_recall": 0.05263157894736842,
+      "heldout_predicted_noop_count": 2,
+      "heldout_transition_count": 68,
+      "heldout_true_predicted_noop_count": 2,
+      "threshold": 0.5
+    },
+    {
+      "heldout_noop_count": 38,
+      "heldout_noop_precision": 0.4117647058823529,
+      "heldout_noop_recall": 0.18421052631578946,
+      "heldout_predicted_noop_count": 17,
+      "heldout_transition_count": 68,
+      "heldout_true_predicted_noop_count": 7,
+      "threshold": 0.65
+    },
+    {
+      "heldout_noop_count": 38,
+      "heldout_noop_precision": 0.6585365853658537,
+      "heldout_noop_recall": 0.7105263157894737,
+      "heldout_predicted_noop_count": 41,
+      "heldout_transition_count": 68,
+      "heldout_true_predicted_noop_count": 27,
+      "threshold": 0.75
+    }
+  ],
+  "training_summary": {
+    "batch_size": 32,
+    "batches_trained": 16,
+    "epochs": 2,
+    "examples_seen": 239,
+    "examples_used": 235,
+    "final_loss": 0.5666811838746071,
+    "frame_size": 64,
+    "hidden_channels": 12,
+    "initial_loss": 0.6727316007018089,
+    "learning_rate": 0.01,
+    "num_colors": 16
+  }
+}

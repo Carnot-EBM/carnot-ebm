@@ -46,6 +46,7 @@ def rich_action_candidates(
     max_click: int = 48,
     by_salience: bool = True,
     frame_change_scorer: Any | None = None,
+    frame_change_prune_threshold: float | None = None,
     action_prior: Any | None = None,
     structural_energy_scorer: Any | None = None,
 ) -> list:
@@ -62,7 +63,11 @@ def rich_action_candidates(
 
     REQ-ARC-FCP-4491/4493: when a frame-change scorer, human behavior prior, or
     structural energy scorer is supplied, rank the same candidate set by predicted
-    action effect while preserving this salience/raster order as the stable tie-break."""
+    action effect while preserving this salience/raster order as the stable tie-break.
+
+    REQ-ARC-FCP-4511: when ``frame_change_prune_threshold`` is supplied with a
+    frame-change scorer, predicted no-op candidates are removed before the
+    explorer ever expands them."""
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
@@ -85,11 +90,16 @@ def rich_action_candidates(
                 continue
             seen.add(p)
             out.append(ArcAction(6, {"x": p[0], "y": p[1]}, "object_click"))
-    if (
-        frame_change_scorer is not None
-        or action_prior is not None
-        or structural_energy_scorer is not None
-    ):
+    if frame_change_scorer is not None and frame_change_prune_threshold is not None:
+        from carnot.agentic.arc_frame_change_predictor import prune_arc_actions
+
+        out, _diagnostics = prune_arc_actions(
+            frame,
+            out,
+            scorer=frame_change_scorer,
+            threshold=frame_change_prune_threshold,
+        )
+    if frame_change_scorer is not None or action_prior is not None or structural_energy_scorer is not None:
         from carnot.agentic.arc_frame_change_predictor import rank_arc_actions
 
         out = rank_arc_actions(
