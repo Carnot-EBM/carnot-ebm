@@ -368,6 +368,52 @@ Required field principles:
 - `reproducibility_checksum`: principle "catches silent drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4516: Submitted Integration Gate And Forward Navigation Loop
+
+Experiment 4516 SHALL write
+`results/experiment_4516_integration_8game_gate.json` by reading the landed
+A1-A4 artifacts (`experiment_4511` through `experiment_4514`) and integrating
+only non-flagged levers that pass the CORE set-containment gate: every baseline
+core solve in `{lp85,m0r0,sp80,vc33}` SHALL be preserved and
+`median_actions_on_core` SHALL be lower than the no-lever/value-weight-0
+control. Any artifact carrying `flagged_adversarial: true` SHALL be skipped.
+If no A1-A4 lever passes, the submitted configuration SHALL keep the bare
+explorer and report an honest null for those levers.
+
+The live `StepwiseExplorer` SHALL expose forward-navigation diagnostics that
+count frontier navigation attempts, exact `_shortest_path` hits, partial
+forward-walk hits, RESET replay fallbacks, recorded forward edges, and the
+resulting `forward_walk_hit_rate`. When exact forward navigation to a selected
+frontier node is unavailable, the explorer MAY walk forward to the deepest
+known reachable ancestor of that node and replay only the suffix; if no
+ancestor is reachable, it SHALL retain the existing RESET-replay fallback. This
+navigation change SHALL NOT alter which frontier nodes are reachable and SHALL
+NOT corrupt the stored `node["path"]` reconstruction. The artifact SHALL
+separately call out the deepest known reachable ancestor behavior in its
+nav-loop finding when that partial walk engages.
+
+Experiment 4516 SHALL remeasure the fixed 8-game local submission gate
+end-to-end on the submitted configuration after the accepted levers and
+navigation fix are wired. The artifact SHALL report median actions, solve-rate,
+held-out solve-rate, and an explicit finding that explains why the prior
+forward-edge fix did or did not move actions. An honest null is valid only when
+the same 7760 baseline is present and measured on the same gate.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: integrated_median_actions_<n>_below_7760 OR complete: no_lever_beats_7760_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor)."
+- `median_actions_baseline`: principle "the 7760 control."
+- `median_actions_integrated`: principle "the HEADLINE -- the SUBMITTED-config median after wiring the winners + the nav fix."
+- `levers_integrated`: principle "names which of A1-A4 (and the nav fix) were wired -- traceable to their measured deltas."
+- `solve_rate_integrated`: principle "integration must not drop solve-rate (and ideally keeps >13 reproducible levels for the submission gate)."
+- `heldout_solve_rate`: principle "the real transfer signal (was 0.143); integration should not regress it."
+- `nav_loop_finding`: principle "the answer to why the .416 nav-edge fix did not move actions (closes candidate 5)."
+- `false_negative_risk_checked`: principle "an honest null only valid with the 7760 baseline measured the same way."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -498,3 +544,26 @@ experiment 4514 artifact reports every swept weight, the explicit
 `value_weight=0.0` control, the chosen submitted value weight, lazy-eval speedup
 confirmation, false-negative-risk check, random seed, and reproducibility
 checksum.
+
+### SCENARIO-ARC-FCP-4516: Integrated Submission Gate Reports Null Or Win Honestly
+
+Given the A1-A4 artifacts, the submitted agent config, and the fixed 8-game
+local submission gate
+When experiment 4516 selects integration levers
+Then flagged artifacts are skipped, non-flagged levers are accepted only when
+they preserve the core solve set and reduce core median actions versus the
+no-lever control, and the submitted config keeps `value_weight=0.0` when no
+positive value weight wins.
+
+Given a live `StepwiseExplorer` with known forward edges from the current node
+to an ancestor of a selected frontier node but no exact path to the frontier
+When the explorer serves navigation for that frontier
+Then it walks forward to the deepest reachable ancestor, replays only the
+suffix before probing the frontier action, records navigation diagnostics, and
+falls back to RESET replay only when no forward ancestor is reachable.
+
+Given the integrated submitted config is measured on the fixed 8-game gate
+When the artifact is written
+Then it records the 7760 baseline, integrated median actions, integrated
+solve-rate, held-out solve-rate, nav-loop finding, false-negative-risk check,
+random seed, reproducibility checksum, and the exact levers integrated.

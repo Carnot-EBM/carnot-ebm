@@ -1,0 +1,539 @@
+{
+  "core_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33"
+  ],
+  "duration_s": 132.36020158499014,
+  "experiment": "experiment_4516_integration_8game_gate",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "false_negative_risk_checked": "principle \"an honest null only valid with the 7760 baseline measured the same way.\"",
+    "heldout_solve_rate": "principle \"the real transfer signal (was 0.143); integration should not regress it.\"",
+    "honest_verdict": "principle \"terminal prefix; e.g. success: integrated_median_actions_<n>_below_7760 OR complete: no_lever_beats_7760_honest_null.\"",
+    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor).\"",
+    "levers_integrated": "principle \"names which of A1-A4 (and the nav fix) were wired -- traceable to their measured deltas.\"",
+    "median_actions_baseline": "principle \"the 7760 control.\"",
+    "median_actions_integrated": "principle \"the HEADLINE -- the SUBMITTED-config median after wiring the winners + the nav fix.\"",
+    "nav_loop_finding": "principle \"the answer to why the .416 nav-edge fix did not move actions (closes candidate 5).\"",
+    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\"",
+    "random_seed": "principle \"determinism precondition for reproducibility.\"",
+    "reproducibility_checksum": "principle \"catches silent drift on replay.\"",
+    "solve_rate_integrated": "principle \"integration must not drop solve-rate (and ideally keeps >13 reproducible levels for the submission gate).\""
+  },
+  "gate_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33",
+    "cd82",
+    "ft09",
+    "su15",
+    "ls20"
+  ],
+  "heldout_solve_rate": 0.5,
+  "honest_verdict": "complete: no_lever_beats_7760_honest_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor).",
+  "integrated_measurement": {
+    "actions_by_game": {
+      "lp85": 7792,
+      "m0r0": 7810,
+      "sp80": 7724,
+      "vc33": 7731
+    },
+    "budget": 8000,
+    "games": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33",
+      "cd82",
+      "ft09",
+      "su15",
+      "ls20"
+    ],
+    "heldout_solve_rate": 0.5,
+    "median_actions_on_core": 7761.5,
+    "median_actions_on_solved": 7761.5,
+    "median_actions_to_first_levelup": 2824.5,
+    "navigation_diagnostics": {
+      "exact_shortest_path_hits": 6,
+      "forward_edges_recorded": 40376,
+      "forward_navigation_steps": 9,
+      "forward_walk_hit_rate": 0.01653944020356234,
+      "forward_walk_hits": 26,
+      "navigation_attempts": 1572,
+      "partial_forward_walk_hits": 20,
+      "reset_replay_fallbacks": 1546,
+      "reset_replay_steps": 4576
+    },
+    "per_game": [
+      {
+        "actions": 7792,
+        "actions_to_first_levelup": 20,
+        "game": "lp85",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 1,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 1,
+          "forward_edges_recorded": 1977,
+          "forward_navigation_steps": 1,
+          "forward_walk_hit_rate": 0.004807692307692308,
+          "forward_walk_hits": 1,
+          "navigation_attempts": 208,
+          "partial_forward_walk_hits": 0,
+          "reset_replay_fallbacks": 207,
+          "reset_replay_steps": 581
+        },
+        "reached": 1,
+        "reproduced": true,
+        "reproduction": {
+          "claimed_level": 1,
+          "game": "lp85",
+          "mode": "offline_reproduction_gate_no_quota",
+          "reached_level": 1,
+          "reproduced": true
+        },
+        "solved": true,
+        "timed_out": false,
+        "wall_seconds": 104.64208
+      },
+      {
+        "actions": 7810,
+        "actions_to_first_levelup": 3891,
+        "game": "m0r0",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 1,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 3,
+          "forward_edges_recorded": 5286,
+          "forward_navigation_steps": 6,
+          "forward_walk_hit_rate": 0.045454545454545456,
+          "forward_walk_hits": 9,
+          "navigation_attempts": 198,
+          "partial_forward_walk_hits": 6,
+          "reset_replay_fallbacks": 189,
+          "reset_replay_steps": 503
+        },
+        "reached": 1,
+        "reproduced": true,
+        "reproduction": {
+          "claimed_level": 1,
+          "game": "m0r0",
+          "mode": "offline_reproduction_gate_no_quota",
+          "reached_level": 1,
+          "reproduced": true
+        },
+        "solved": true,
+        "timed_out": false,
+        "wall_seconds": 117.952942
+      },
+      {
+        "actions": 7724,
+        "actions_to_first_levelup": 7218,
+        "game": "sp80",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 1,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 0,
+          "forward_edges_recorded": 6855,
+          "forward_navigation_steps": 0,
+          "forward_walk_hit_rate": 0.0,
+          "forward_walk_hits": 0,
+          "navigation_attempts": 275,
+          "partial_forward_walk_hits": 0,
+          "reset_replay_fallbacks": 275,
+          "reset_replay_steps": 598
+        },
+        "reached": 1,
+        "reproduced": true,
+        "reproduction": {
+          "claimed_level": 1,
+          "game": "sp80",
+          "mode": "offline_reproduction_gate_no_quota",
+          "reached_level": 1,
+          "reproduced": true
+        },
+        "solved": true,
+        "timed_out": false,
+        "wall_seconds": 105.773226
+      },
+      {
+        "actions": 7731,
+        "actions_to_first_levelup": 1758,
+        "game": "vc33",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 1,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 0,
+          "forward_edges_recorded": 6443,
+          "forward_navigation_steps": 0,
+          "forward_walk_hit_rate": 0.0,
+          "forward_walk_hits": 0,
+          "navigation_attempts": 268,
+          "partial_forward_walk_hits": 0,
+          "reset_replay_fallbacks": 268,
+          "reset_replay_steps": 1324
+        },
+        "reached": 1,
+        "reproduced": true,
+        "reproduction": {
+          "claimed_level": 1,
+          "game": "vc33",
+          "mode": "offline_reproduction_gate_no_quota",
+          "reached_level": 1,
+          "reproduced": true
+        },
+        "solved": true,
+        "timed_out": false,
+        "wall_seconds": 74.701397
+      },
+      {
+        "actions": 7819,
+        "actions_to_first_levelup": null,
+        "game": "cd82",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 0,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 1,
+          "forward_edges_recorded": 5835,
+          "forward_navigation_steps": 1,
+          "forward_walk_hit_rate": 0.07692307692307693,
+          "forward_walk_hits": 15,
+          "navigation_attempts": 195,
+          "partial_forward_walk_hits": 14,
+          "reset_replay_fallbacks": 180,
+          "reset_replay_steps": 325
+        },
+        "reached": 0,
+        "reproduced": null,
+        "reproduction": null,
+        "solved": false,
+        "timed_out": false,
+        "wall_seconds": 124.375579
+      },
+      {
+        "actions": 7963,
+        "actions_to_first_levelup": null,
+        "game": "ft09",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 0,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 1,
+          "forward_edges_recorded": 1021,
+          "forward_navigation_steps": 1,
+          "forward_walk_hit_rate": 0.02702702702702703,
+          "forward_walk_hits": 1,
+          "navigation_attempts": 37,
+          "partial_forward_walk_hits": 0,
+          "reset_replay_fallbacks": 36,
+          "reset_replay_steps": 28
+        },
+        "reached": 0,
+        "reproduced": null,
+        "reproduction": null,
+        "solved": false,
+        "timed_out": false,
+        "wall_seconds": 96.060434
+      },
+      {
+        "actions": 7786,
+        "actions_to_first_levelup": null,
+        "game": "su15",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 0,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 0,
+          "forward_edges_recorded": 6058,
+          "forward_navigation_steps": 0,
+          "forward_walk_hit_rate": 0.0,
+          "forward_walk_hits": 0,
+          "navigation_attempts": 213,
+          "partial_forward_walk_hits": 0,
+          "reset_replay_fallbacks": 213,
+          "reset_replay_steps": 335
+        },
+        "reached": 0,
+        "reproduced": null,
+        "reproduction": null,
+        "solved": false,
+        "timed_out": false,
+        "wall_seconds": 129.92662
+      },
+      {
+        "actions": 7821,
+        "actions_to_first_levelup": null,
+        "game": "ls20",
+        "lazy_value_diagnostics": {
+          "cache_by_frame_hash": true,
+          "cache_hits": 0,
+          "cached_frame_hashes": 0,
+          "enabled": false,
+          "lazy_top_k": 4,
+          "value_head_evals": 0
+        },
+        "levels": 0,
+        "navigation_diagnostics": {
+          "exact_shortest_path_hits": 0,
+          "forward_edges_recorded": 6901,
+          "forward_navigation_steps": 0,
+          "forward_walk_hit_rate": 0.0,
+          "forward_walk_hits": 0,
+          "navigation_attempts": 178,
+          "partial_forward_walk_hits": 0,
+          "reset_replay_fallbacks": 178,
+          "reset_replay_steps": 882
+        },
+        "reached": 0,
+        "reproduced": null,
+        "reproduction": null,
+        "solved": false,
+        "timed_out": false,
+        "wall_seconds": 131.844084
+      }
+    ],
+    "policy": "e3",
+    "solved_count": 4,
+    "solved_games": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33"
+    ],
+    "timed_out_count": 0,
+    "total_actions_on_solved": 31057
+  },
+  "leaderboard_submission": false,
+  "levers_integrated": [],
+  "local_gate_budget": 8000,
+  "median_actions_baseline": 7760.0,
+  "median_actions_integrated": 7761.5,
+  "nav_loop_finding": "partial_forward_walk_engaged_20_times_with_6_exact_hits; reset_replay_fallbacks_remained_1546",
+  "preconditions_checked": {
+    "a1_a4_artifacts_present": true,
+    "agents_md_read": true,
+    "baseline_file_present": true,
+    "codex_md_read": true,
+    "offline_arcade_import": true,
+    "ok": true
+  },
+  "random_seed": 4516,
+  "reproducibility_checksum": "sha256:b8f41750dcbc811a8dba3c092f561c54cd26772a53f187930778dd15bc4d3ec2",
+  "requirements": [
+    "REQ-ARC-FCP-4516"
+  ],
+  "result_path": "results/experiment_4516_integration_8game_gate.json",
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4516"
+  ],
+  "schema": "carnot.arc_integration_8game_gate_4516.v1",
+  "solve_rate_integrated": 0.5,
+  "submitted_agent_config": {
+    "cascade": true,
+    "graph_explore_budget": 80,
+    "lazy_value_top_k": 4,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 5,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "upstream_decision": {
+    "accepted_a1_a4_levers": [],
+    "control_median_actions_on_core": 7760.0,
+    "rejected_a1_a4_levers": {
+      "A1_prune_predictor": {
+        "actions_by_game": {
+          "lp85": 7905,
+          "sp80": 7766,
+          "vc33": 7726
+        },
+        "chosen_submitted_value_weight": null,
+        "core_solves_preserved": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: frame_change_prune_solve_rate_guard_failed",
+        "median_actions_on_core": 7835.5,
+        "name": "A1_prune_predictor",
+        "reason": "core_gate_failed",
+        "solved_games": [
+          "lp85",
+          "sp80",
+          "vc33"
+        ]
+      },
+      "A2_imitation_prior": {
+        "actions_by_game": {
+          "ls20": 5731,
+          "su15": 3269,
+          "vc33": 1398
+        },
+        "chosen_submitted_value_weight": null,
+        "core_solves_preserved": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: imitation_prior_solve_rate_guard_failed",
+        "median_actions_on_core": 1000000000.0,
+        "name": "A2_imitation_prior",
+        "reason": "core_gate_failed",
+        "solved_games": [
+          "ls20",
+          "su15",
+          "vc33"
+        ]
+      },
+      "A3_adaptive_budget": {
+        "actions_by_game": {
+          "lp85": 20,
+          "m0r0": 4210,
+          "sp80": 7218,
+          "vc33": 1758
+        },
+        "chosen_submitted_value_weight": null,
+        "core_solves_preserved": true,
+        "flagged_adversarial": true,
+        "honest_verdict": "success: adaptive_budget_median_actions_2984_below_7760",
+        "median_actions_on_core": 2984.0,
+        "name": "A3_adaptive_budget",
+        "reason": "flagged_adversarial",
+        "solved_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ]
+      },
+      "A4_lazy_best_first": {
+        "actions_by_game": {},
+        "chosen_submitted_value_weight": 0.0,
+        "core_solves_preserved": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: lazy_value_weight_null_keep_0",
+        "median_actions_on_core": 1000000000.0,
+        "name": "A4_lazy_best_first",
+        "reason": "selected_value_weight_0_honest_null",
+        "solved_games": []
+      }
+    },
+    "selected_value_weight": 0.0,
+    "upstream_summaries": {
+      "A1_prune_predictor": {
+        "actions_by_game": {
+          "lp85": 7905,
+          "sp80": 7766,
+          "vc33": 7726
+        },
+        "chosen_submitted_value_weight": null,
+        "core_solves_preserved": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: frame_change_prune_solve_rate_guard_failed",
+        "median_actions_on_core": 7835.5,
+        "name": "A1_prune_predictor",
+        "solved_games": [
+          "lp85",
+          "sp80",
+          "vc33"
+        ]
+      },
+      "A2_imitation_prior": {
+        "actions_by_game": {
+          "ls20": 5731,
+          "su15": 3269,
+          "vc33": 1398
+        },
+        "chosen_submitted_value_weight": null,
+        "core_solves_preserved": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: imitation_prior_solve_rate_guard_failed",
+        "median_actions_on_core": 1000000000.0,
+        "name": "A2_imitation_prior",
+        "solved_games": [
+          "ls20",
+          "su15",
+          "vc33"
+        ]
+      },
+      "A3_adaptive_budget": {
+        "actions_by_game": {
+          "lp85": 20,
+          "m0r0": 4210,
+          "sp80": 7218,
+          "vc33": 1758
+        },
+        "chosen_submitted_value_weight": null,
+        "core_solves_preserved": true,
+        "flagged_adversarial": true,
+        "honest_verdict": "success: adaptive_budget_median_actions_2984_below_7760",
+        "median_actions_on_core": 2984.0,
+        "name": "A3_adaptive_budget",
+        "solved_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ]
+      },
+      "A4_lazy_best_first": {
+        "actions_by_game": {},
+        "chosen_submitted_value_weight": 0.0,
+        "core_solves_preserved": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: lazy_value_weight_null_keep_0",
+        "median_actions_on_core": 1000000000.0,
+        "name": "A4_lazy_best_first",
+        "solved_games": []
+      }
+    }
+  }
+}
