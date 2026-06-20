@@ -5,8 +5,10 @@ Spec refs: REQ-ARC-FCP-4490, REQ-ARC-FCP-4491, SCENARIO-ARC-FCP-4490.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
+from pathlib import Path
+from statistics import median
 from typing import Any
 
 import numpy as np
@@ -14,6 +16,7 @@ import torch
 from torch import nn
 from torch.nn import functional
 
+from carnot.agentic.arc_agi3_live_adapter import ArcAction
 from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
 
 
@@ -158,15 +161,26 @@ class FrameChangeScorer:
     num_colors: int = DEFAULT_NUM_COLORS
     size: int = DEFAULT_FRAME_SIZE
     device: str = "cpu"
+    _cache: dict[str, tuple[torch.Tensor, torch.Tensor]] = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+    )
 
     def _predict(self, frame: Any) -> tuple[torch.Tensor, torch.Tensor]:
+        key = frame_state_key(frame)
+        cached = self._cache.get(key)
+        if cached is not None:
+            return cached
         tensor = frame_to_tensor(frame, num_colors=self.num_colors, size=self.size)
         self.model.eval()
         with torch.no_grad():
             click_heatmap, directional_change = self.model(
                 tensor.unsqueeze(0).to(torch.device(self.device))
             )
-        return click_heatmap[0, 0].detach().cpu(), directional_change[0].detach().cpu()
+        result = click_heatmap[0, 0].detach().cpu(), directional_change[0].detach().cpu()
+        self._cache[key] = result
+        return result
 
     def candidate_score(self, frame: Any, candidate: Any) -> float:
         click_heatmap, directional_change = self._predict(frame)
@@ -181,6 +195,373 @@ class FrameChangeScorer:
         if action_id in TERMINAL_ACTION_IDS:
             return float(directional_change[action_id - 1].item())
         return 0.0
+
+
+@dataclass(frozen=True)
+class FrameActionEffectExample:
+    """REQ-ARC-FCP-4501: one replay-derived action-effect row from raw frame pixels.
+
+    The staged mirror can contain useful frame/action/delta rows without the
+    separate 14,672-row `action_effect_dict.npz`. This object is the live-legal
+    contract the predictor consumes: rendered frame pixels, normalized action
+    id, optional click coordinates, and labels derived from frame deltas.
+    """
+
+    frame: Any
+    action_id: int
+    frame_delta: float
+    level_progress: float
+    state_key: str
+    x: int | None = None
+    y: int | None = None
+    env: str = ""
+    guid: str = ""
+    step_index: int = 0
+    feature_source: str = "raw_frame_shard_recomputed"
+
+    @property
+    def changed(self) -> bool:
+        return bool(float(self.frame_delta) > 0.0)
+
+    def to_prior_row(self) -> dict[str, Any]:
+        row: dict[str, Any] = {
+            "state_key": self.state_key,
+            "action_id": int(self.action_id),
+        }
+        if self.x is not None and self.y is not None:
+            row["x"] = int(self.x)
+            row["y"] = int(self.y)
+        return row
+
+
+def normalize_action(action: Any) -> tuple[int | None, int | None, int | None]:
+    """REQ-ARC-FCP-4501: normalize replay action encodings into action id and click."""
+
+    data: Any = {}
+    raw_id: Any = None
+    if isinstance(action, Mapping):
+        raw_id = (
+            action.get("id")
+            if action.get("id") is not None
+            else action.get("action_id", action.get("action"))
+        )
+        data = action.get("data") or action
+    else:
+        raw_id = action
+
+    try:
+        action_id = int(raw_id)
+    except (TypeError, ValueError):
+        return None, None, None
+
+    x_value = None
+    y_value = None
+    if isinstance(data, Mapping):
+        x_value = data.get("x", data.get("click_x"))
+        y_value = data.get("y", data.get("click_y"))
+    try:
+        x = None if x_value is None else int(x_value)
+        y = None if y_value is None else int(y_value)
+    except (TypeError, ValueError):
+        x = None
+        y = None
+    return action_id, x, y
+
+
+def normalize_frame_action_effect_row(row: Mapping[str, Any]) -> FrameActionEffectExample | None:
+    """REQ-ARC-FCP-4501: build one frame-only training row from a staged shard row."""
+
+    if "feature_keys" in row:
+        raise ValueError("mirror feature_keys are not a frame-only input")
+    if "frame" not in row:
+        return None
+    action_id, x, y = normalize_action(row.get("action"))
+    if action_id is None:
+        return None
+    frame = row["frame"]
+    return FrameActionEffectExample(
+        frame=frame,
+        action_id=int(action_id),
+        x=x,
+        y=y,
+        frame_delta=float(row.get("frame_delta") or 0.0),
+        level_progress=float(row.get("level_progress") or 0.0),
+        state_key=frame_state_key(frame),
+        env=str(row.get("env") or ""),
+        guid=str(row.get("guid") or ""),
+        step_index=int(row.get("step_index") or 0),
+    )
+
+
+def normalize_frame_action_effect_rows(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    limit: int | None = None,
+) -> Iterator[FrameActionEffectExample]:
+    """REQ-ARC-FCP-4501: stream normalized examples without mirror state vectors."""
+
+    emitted = 0
+    for row in rows:
+        example = normalize_frame_action_effect_row(row)
+        if example is None:
+            continue
+        yield example
+        emitted += 1
+        if limit is not None and emitted >= int(limit):
+            return
+
+
+def load_frame_action_effect_examples(
+    data_dir: Path | str,
+    *,
+    limit: int | None = None,
+) -> list[FrameActionEffectExample]:
+    """REQ-ARC-FCP-4501: load staged frame/action/delta shards from the local cache."""
+
+    from carnot.agentic import arc_human_replay_corpus
+
+    rows = arc_human_replay_corpus.load_training_shards(data_dir, limit=limit)
+    return list(normalize_frame_action_effect_rows(rows, limit=limit))
+
+
+def build_behavior_prior_from_effect_examples(
+    examples: Sequence[FrameActionEffectExample],
+) -> BehaviorActionPrior:
+    """REQ-ARC-FCP-4501: emit the behavior-cloning prior from normalized examples."""
+
+    return BehaviorActionPrior.from_examples([example.to_prior_row() for example in examples])
+
+
+def _model_cell_for_example(example: FrameActionEffectExample, size: int) -> tuple[int, int] | None:
+    if example.x is None or example.y is None:
+        return None
+    grid = grid_of(example.frame)
+    h, w = grid.shape
+    y = round((int(example.y) / max(1, h - 1)) * (int(size) - 1))
+    x = round((int(example.x) / max(1, w - 1)) * (int(size) - 1))
+    return int(y), int(x)
+
+
+def _effect_loss_for_batch(
+    model: nn.Module,
+    examples: Sequence[FrameActionEffectExample],
+    *,
+    num_colors: int,
+    size: int,
+    device: torch.device,
+) -> torch.Tensor | None:
+    tensors = [
+        frame_to_tensor(example.frame, num_colors=num_colors, size=size)
+        for example in examples
+        if _example_has_trainable_head(example)
+    ]
+    trainable = [example for example in examples if _example_has_trainable_head(example)]
+    if not trainable:
+        return None
+
+    batch = torch.stack(tensors).to(device)
+    click_heatmap, directional_change = model(batch)
+    losses: list[torch.Tensor] = []
+    for index, example in enumerate(trainable):
+        target = torch.tensor(float(example.changed), dtype=torch.float32, device=device)
+        if example.action_id == 6:
+            cell = _model_cell_for_example(example, size)
+            if cell is None:
+                continue
+            y, x = cell
+            losses.append(functional.binary_cross_entropy(click_heatmap[index, 0, y, x], target))
+        elif example.action_id in TERMINAL_ACTION_IDS:
+            losses.append(
+                functional.binary_cross_entropy(
+                    directional_change[index, int(example.action_id) - 1],
+                    target,
+                )
+            )
+    if not losses:
+        return None
+    return torch.stack(losses).mean()
+
+
+def _example_has_trainable_head(example: FrameActionEffectExample) -> bool:
+    if example.action_id in TERMINAL_ACTION_IDS:
+        return True
+    return bool(example.action_id == 6 and example.x is not None and example.y is not None)
+
+
+def _mean_effect_loss(
+    model: nn.Module,
+    examples: Sequence[FrameActionEffectExample],
+    *,
+    num_colors: int,
+    size: int,
+    batch_size: int,
+    device: torch.device,
+) -> float | None:
+    losses: list[float] = []
+    model.eval()
+    with torch.no_grad():
+        for start in range(0, len(examples), int(batch_size)):
+            loss = _effect_loss_for_batch(
+                model,
+                examples[start : start + int(batch_size)],
+                num_colors=num_colors,
+                size=size,
+                device=device,
+            )
+            if loss is not None:
+                losses.append(float(loss.detach().cpu().item()))
+    if not losses:
+        return None
+    return float(sum(losses) / len(losses))
+
+
+def train_frame_change_model(
+    examples: Sequence[FrameActionEffectExample],
+    *,
+    num_colors: int = DEFAULT_NUM_COLORS,
+    size: int = DEFAULT_FRAME_SIZE,
+    hidden_channels: int = 24,
+    epochs: int = 1,
+    batch_size: int = 32,
+    learning_rate: float = 0.01,
+    seed: int = 4501,
+    device: str = "cpu",
+) -> tuple[SmallFrameChangeCNN, dict[str, Any]]:
+    """REQ-ARC-FCP-4501: train the small CNN on frame/action/frame-delta rows."""
+
+    torch.manual_seed(int(seed))
+    torch_device = torch.device(device)
+    model = SmallFrameChangeCNN(num_colors=num_colors, hidden_channels=hidden_channels).to(torch_device)
+    trainable = [example for example in examples if _example_has_trainable_head(example)]
+    initial_loss = _mean_effect_loss(
+        model,
+        trainable,
+        num_colors=num_colors,
+        size=size,
+        batch_size=batch_size,
+        device=torch_device,
+    )
+    optimizer = torch.optim.Adam(model.parameters(), lr=float(learning_rate))
+    batches_trained = 0
+
+    for _epoch in range(max(0, int(epochs))):
+        model.train()
+        for start in range(0, len(trainable), int(batch_size)):
+            batch = trainable[start : start + int(batch_size)]
+            loss = _effect_loss_for_batch(
+                model,
+                batch,
+                num_colors=num_colors,
+                size=size,
+                device=torch_device,
+            )
+            if loss is None:
+                continue
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            optimizer.step()
+            batches_trained += 1
+
+    final_loss = _mean_effect_loss(
+        model,
+        trainable,
+        num_colors=num_colors,
+        size=size,
+        batch_size=batch_size,
+        device=torch_device,
+    )
+    return model.cpu(), {
+        "examples_seen": int(len(examples)),
+        "examples_used": int(len(trainable)),
+        "epochs": int(epochs),
+        "batch_size": int(batch_size),
+        "hidden_channels": int(hidden_channels),
+        "num_colors": int(num_colors),
+        "frame_size": int(size),
+        "learning_rate": float(learning_rate),
+        "batches_trained": int(batches_trained),
+        "initial_loss": initial_loss,
+        "final_loss": final_loss,
+    }
+
+
+def _candidate_from_effect_example(index: int, example: FrameActionEffectExample) -> ArcAction:
+    data = (
+        {"x": int(example.x), "y": int(example.y)}
+        if example.action_id == 6 and example.x is not None and example.y is not None
+        else None
+    )
+    label = "target" if (example.level_progress > 0.0 or example.changed) else "noop"
+    return ArcAction(int(example.action_id), data, f"heldout_{index}_{label}")
+
+
+def _actions_to_first_target(candidates: Sequence[Any]) -> int | None:
+    for index, candidate in enumerate(candidates, start=1):
+        if str(getattr(candidate, "source", "")).endswith("_target"):
+            return int(index)
+    return None
+
+
+def evaluate_replay_candidate_order(
+    examples: Sequence[FrameActionEffectExample],
+    *,
+    scorer: Any | None = None,
+    prior: BehaviorActionPrior | None = None,
+    min_candidates: int = 2,
+) -> dict[str, Any]:
+    """REQ-ARC-FCP-4501: measure before/after rank to first replay-effective action."""
+
+    by_state: dict[str, list[FrameActionEffectExample]] = {}
+    for example in examples:
+        by_state.setdefault(example.state_key, []).append(example)
+
+    before_ranks: list[int] = []
+    after_ranks: list[int] = []
+    solved_before = 0
+    solved_after = 0
+    group_count = 0
+    for state_examples in by_state.values():
+        if len(state_examples) < int(min_candidates):
+            continue
+        candidates = [
+            _candidate_from_effect_example(index, example)
+            for index, example in enumerate(state_examples)
+            if _example_has_trainable_head(example)
+        ]
+        if len(candidates) < int(min_candidates):
+            continue
+        if not any(str(candidate.source).endswith("_target") for candidate in candidates):
+            continue
+        group_count += 1
+        before = _actions_to_first_target(candidates)
+        ranked = rank_arc_actions(state_examples[0].frame, candidates, scorer=scorer, prior=prior)
+        after = _actions_to_first_target(ranked)
+        if before is not None:
+            solved_before += 1
+            before_ranks.append(before)
+        if after is not None:
+            solved_after += 1
+            after_ranks.append(after)
+
+    before_median = float(median(before_ranks)) if before_ranks else None
+    after_median = float(median(after_ranks)) if after_ranks else None
+    before_rate = float(solved_before / group_count) if group_count else 0.0
+    after_rate = float(solved_after / group_count) if group_count else 0.0
+    delta = (
+        efficiency_score(1, int(after_median)) - efficiency_score(1, int(before_median))
+        if before_median is not None and after_median is not None
+        else None
+    )
+    return {
+        "heldout_group_count": int(group_count),
+        "heldout_median_actions_before": before_median,
+        "heldout_median_actions_after": after_median,
+        "solve_rate_before": before_rate,
+        "solve_rate_after": after_rate,
+        "solve_rate_dropped": bool(after_rate < before_rate),
+        "implied_efficiency_delta": delta,
+        "measurement_kind": "frame_only_replay_candidate_order_proxy",
+    }
 
 
 def _scorer_value(frame: Any, candidate: Any, scorer: Any) -> float:
