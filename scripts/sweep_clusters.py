@@ -86,6 +86,36 @@ BROADENED_CLUSTERS: dict[int, str] = {
         '(abs:"sampling"+OR+abs:"verification"+OR+abs:"inference"+OR+'
         'abs:"LLM"+OR+abs:"reasoning")'
     ),
+    # Cluster 5 — ARC-AGI-3 interactive-agent action efficiency (added
+    # 2026-06-20, outer-loop, for the ARC-AGI-3 submission-sprint pivot).
+    # The leaderboard scoring metric is action efficiency
+    # ((human_actions/agent_actions)^2), so the live wall is "explore with
+    # FEWER actions": affordance / clickability / frame-change prediction
+    # (the StochasticGoose lever) + directed/novelty-seeking exploration.
+    # The original 5 clusters had NO ARC / interactive-agent coverage —
+    # they fed the pre-pivot verifier-moat / EBM / paper-v6 program.
+    # Constraint: AND with agent / RL / exploration / interactive env so
+    # this surfaces interactive-agent work, not generic vision affordances.
+    5: (
+        '(abs:"affordance"+OR+abs:"action+effect"+OR+abs:"clickability"+OR+'
+        'abs:"frame+prediction"+OR+abs:"intrinsic+motivation"+OR+'
+        'abs:"directed+exploration"+OR+abs:"novelty+search")+AND+'
+        '(abs:"reinforcement+learning"+OR+abs:"agent"+OR+abs:"exploration"+OR+'
+        'abs:"interactive+environment"+OR+abs:"ARC")'
+    ),
+    # Cluster 6 — neural-guided search / learned heuristics + goal/world-model
+    # induction for agents (added 2026-06-20, outer-loop). The other ARC
+    # lever besides affordance: prune/guide the explorer's search with a
+    # learned heuristic (value-guided best-first), and induce the game's
+    # goal / transition model (the Family-A/Family-B winning architectures).
+    # Constraint: AND with planning / agent / reasoning / RL.
+    6: (
+        '(abs:"neural+guided+search"+OR+abs:"learned+heuristic"+OR+'
+        'abs:"value+guided+search"+OR+abs:"program+induction"+OR+'
+        'abs:"world+model"+OR+abs:"goal+induction")+AND+'
+        '(abs:"planning"+OR+abs:"agent"+OR+abs:"reasoning"+OR+'
+        'abs:"reinforcement+learning")'
+    ),
 }
 
 API_BASE = "http://export.arxiv.org/api/query"
@@ -93,7 +123,7 @@ API_BASE = "http://export.arxiv.org/api/query"
 
 def cluster_url(cluster: int, start: int, max_results: int) -> str:
     if cluster not in BROADENED_CLUSTERS:
-        raise ValueError(f"cluster must be 0-4, got {cluster}")
+        raise ValueError(f"cluster must be 0-6, got {cluster}")
     return (
         f"{API_BASE}?search_query={BROADENED_CLUSTERS[cluster]}"
         f"&start={start}&max_results={max_results}"
@@ -105,7 +135,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Emit broadened cluster URLs for the /study-sweep cron."
     )
-    parser.add_argument("cluster", help="0|1|2|3|4 or 'all'")
+    parser.add_argument("cluster", help="0|1|2|3|4|5|6 or 'all'")
     parser.add_argument("--start", type=int, default=0)
     parser.add_argument(
         "--max-results",
@@ -117,7 +147,7 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.cluster == "all":
-        clusters = [0, 1, 2, 3, 4]
+        clusters = [0, 1, 2, 3, 4, 5, 6]
     else:
         try:
             clusters = [int(args.cluster)]
