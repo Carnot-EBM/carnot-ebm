@@ -27934,6 +27934,88 @@ ops/status/traceability edits.
 |---|---|---|
 | REQ-REPORT-4508 | Planned (`python/carnot/experiment_4508_arc_affordance_sota_416.py`) | Planned (`tests/python/test_experiment_4508_arc_affordance_sota_416.py`) |
 
+### REQ-REPORT-4520: Ingest Action-Efficient Exploration SOTA Into The .418 Plan
+
+The Exp 4520 workflow SHALL write
+`docs/research-notes/arc-action-efficiency-sota-417.md` with a machine-readable
+JSON artifact block followed by a concise SOTA-to-experiment mapping note. It
+SHALL read `research-studying.md`, `research-references.md`,
+`docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md`,
+`docs/research-notes/arc-417-shaping-action-efficiency.md`, and
+`docs/research-notes/arc-imitation-sota-415.md`, then use the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, and
+low-concurrency WebSearch/WebFetch over five to eight top arXiv sources. It
+SHALL verify that `curl -sf -o /dev/null https://huggingface.co/api/models`
+exits zero before promoting citations. It SHALL NOT invoke `/deep-research`,
+SHALL NOT launch live LLM inference, SHALL NOT launch training, SHALL NOT submit
+to the leaderboard, SHALL NOT claim a new ARC solve, SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The required runner SHALL be
+`results/experiment_4520_sota_ingestion_417.py` delegating to
+`python/carnot/experiment_4520_sota_ingestion_417.py`, and the workflow SHALL
+also write `results/experiment_4520_sota_ingestion_417.json`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `preconditions_checked`, `source_ids`, `methods_mapped`,
+`citations`, `v418_flagged_candidates`, `research_note_path`, `random_seed`,
+and `field_principles`. The complete-path `honest_verdict` SHALL equal
+`complete: action_efficiency_sota_417_mapped_for_v418` and SHALL start with one
+of `complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+`preconditions_checked` SHALL record which files, helpers, network checks, HTTP
+checks, and WebSearch/WebFetch sources were verified. It SHALL record
+`AGENTS.md`, `CODEX.md`, `research-studying.md`, `research-references.md`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, the three required
+ARC research notes, the Hugging Face API network precondition, the focused
+cluster and Semantic Scholar sweep outcomes, and arXiv abs-page HTTP-200 checks
+for source IDs `2008.09241`, `2501.06047`, `2602.00460`, `2602.03201`,
+`1511.05952`, `1704.03732`, `1901.10995`, and `2602.05832`.
+
+`methods_mapped` SHALL contain three to five strongest methods, each with real
+arXiv-backed `source_ids`, a `takes_over_current_stack` field mapping onto the
+current offline-search plus lazy value head plus frame-change predictor stack,
+and a `fails_when` caveat. `citations` SHALL provide one verified arXiv URL and
+title for every source ID used by those methods. `v418_flagged_candidates`
+SHALL flag the strongest `.418` candidate inputs, including affordance-pruned
+frame-change/clickability (`arXiv:2008.09241`, `arXiv:2501.06047`),
+SIERL/Go-Explore-style frontier control (`arXiv:2602.00460`,
+`arXiv:1901.10995`), PER/DQfD replay seeding (`arXiv:1511.05952`,
+`arXiv:1704.03732`), UI-Mem-style persistent action memory
+(`arXiv:2602.05832`), and SLOPE-style potential shaping
+(`arXiv:2602.03201`). `field_principles` SHALL include one-line principles for
+every top-level artifact field, including the required terminal-prefix
+`honest_verdict`, aggregation-only `inference_substrate`, verifiable-citation
+`methods_mapped` and `citations`, roadmap-closing
+`v418_flagged_candidates`, and network-recording `preconditions_checked`
+principles.
+
+#### SCENARIO-REPORT-4520: Action-Efficient Exploration SOTA Maps To .418 Inputs
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, and the required ARC action-efficiency notes are
+readable
+**And** the Hugging Face network precondition succeeds
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4520 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps
+action-effect/clickability models, affordance learning, experience replay for
+search, persistent cross-game action memory, and potential-shaped frontier
+control onto the current ARC stack, flags the strongest `.418` inputs, declares
+`aggregation_from_upstream_artifacts`, and records no `/deep-research`, live
+inference, training, leaderboard submission, solve claim, ops/status/traceability
+edits, or `scripts/research_conductor.py` edit.
+
+## Implementation Status (REQ-REPORT-4520)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4520 | Planned (`python/carnot/experiment_4520_sota_ingestion_417.py`) | Planned (`tests/python/test_experiment_4520_sota_ingestion_417.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

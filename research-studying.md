@@ -4096,3 +4096,31 @@ cost-normalized verifier proof, not as a claim that energy scoring replaces
 generative reasoning.
 
 **Next experiments:** ProcessBench full-benchmark head-to-head: run the landed cheap-energy verifier and the competent GenRM/ThinkPRM-style judge on the full held-out benchmark with cost-normalized parity/Pareto reporting; ARC-AGI-3 real agentic run / real ARC-AGI-3 agentic run: move from synthetic action-pruning to an official interactive harness run, reporting action efficiency only under the benchmark protocol.
+
+<!-- EXP4520-ACTION-EFFICIENCY-SOTA-START -->
+## 2026-06-20 Exp 4520 - .417 action-efficiency SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/arc-action-efficiency-sota-417.md`
+and `results/experiment_4520_sota_ingestion_417.json`.
+
+**Preconditions:** Hugging Face API reachability succeeded; `scripts/sweep_clusters.py`
+clusters 5 and 6 emitted focused URLs; `scripts/sweep_semscholar.py` produced
+seven arXiv candidates and HTTP 429 on replay/memory queries; top sources were
+verified by arXiv abs-page HTTP 200 and low-concurrency WebSearch/WebFetch.
+`/deep-research` was not invoked. No live solve, training run, leaderboard
+submission, ops/status/traceability edit, or `scripts/research_conductor.py`
+edit occurred.
+
+**Methods marked ingested:** affordance-landscape clickability pruning
+(arXiv:2008.09241, arXiv:2501.06047), SIERL/Go-Explore frontier control
+(arXiv:2602.00460, arXiv:1901.10995), PER/DQfD replay seeding
+(arXiv:1511.05952, arXiv:1704.03732), UI-Mem-style persistent action memory
+(arXiv:2602.05832), and SLOPE-style optimistic potential shaping
+(arXiv:2602.03201).
+
+flagged_for_v418: affordance-pruned frame-change/clickability plus
+SIERL/Go-Explore frontier control over replayable offline-search states; use
+PER/DQfD replay seeding for predictor/value training, add UI-Mem-style
+persistent action memory behind similarity-gated retrieval, and keep SLOPE as
+ranking-only until it reduces actions-to-first-levelup at equal solve-rate.
+<!-- EXP4520-ACTION-EFFICIENCY-SOTA-END -->
