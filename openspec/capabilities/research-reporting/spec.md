@@ -26134,6 +26134,65 @@ and a terminal-prefixed honest verdict with residual gaps preserved.
 |---|---|---|
 | REQ-REPORT-4472 | Planned (`python/carnot/experiment_4472_variant_generic_transfer_benchmark_v4.py`, `results/experiment_4472_variant_generic_transfer_benchmark_v4.json`) | Planned (`tests/python/test_experiment_4472_variant_generic_transfer_benchmark_v4.py`) |
 
+### REQ-REPORT-4473: Refreshed Operator-Only ARC Submission Package Revalidates .413 Replays
+
+The Exp 4473 workflow SHALL refresh the operator-only ARC-AGI-3 replay package
+without submitting it. It SHALL read `ops/arc_solve_registry.yaml`, the prior
+live submission record `results/arc3_live_submit.json`, and the Exp 4460 package
+baseline, then re-run every registry row with `reproducibility: reproduced` and
+`levels_reproduced > 0` through `arc_solver_kit.reproduce()` against the local
+OFFLINE ARC environment. The refresh SHALL include .413 additions and deepening
+rows such as dc22, sc25 L5, sb26, and any other reproduced A4/A5 banks present
+in the registry. Games whose banked action sequence does not replay to the
+claimed reproduced level SHALL be quarantined and SHALL NOT contribute to the
+package count.
+
+Before replay validation, the workflow SHALL check that local offline
+environment files are present and that `carnot.agentic.arc_solver_kit` imports.
+It SHALL NOT require network access, open or close a live scorecard, call a
+leaderboard, invoke the submit path of `scripts/arc3_live_submit.py`, or use
+3090 inference. Operator-only external publication discipline SHALL be
+represented by `submitted_to_leaderboard=false`, an operator checklist, and a
+docs operator-action note rather than any autonomous submission action.
+
+The workflow SHALL write
+`results/experiment_4473_submission_package_prep_refresh.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`submission_package_ready`, `total_reproduced_levels_in_package`,
+`grew_vs_412`, `prior_submitted_baseline_levels`, `beats_prior_baseline`,
+`per_game_replay_validation`, `submitted_to_leaderboard`,
+`verifier_is_oracle`, `random_seed`, and `reproducibility_checksum`.
+`inference_substrate` SHALL equal
+`verifier_ensemble_against_cached_candidates -- re-validates cached reproduce
+sequences against the offline env (1s floor); never None, never
+live_llm_inference`. `grew_vs_412` SHALL be a bare boolean defined as
+`total_reproduced_levels_in_package > 39`. The falsifiable ready gate SHALL pass
+only when every packaged row replays successfully, `submitted_to_leaderboard` is
+false, `total_reproduced_levels_in_package > 13`, and the operator package is
+ready for the operator, not the agent, to submit.
+
+#### SCENARIO-REPORT-4473: Refresh Counts Only Env-Matched Offline-Replayed .413 Rows
+
+**Given** the ARC solve registry contains reproduced games, including .413 banks
+that extend the Exp 4460 package, the prior live submission artifact records the
+13-level submitted baseline, the Exp 4460 package records 39 reproduced levels,
+local offline environment files are present, and `arc_solver_kit` imports
+**When** Exp 4473 prepares the refreshed operator package
+**Then** it replays each reproduced registry row through
+`arc_solver_kit.reproduce()`, excludes any row whose replay fails, records the
+env-match status for each game, writes the operator checklist and package
+manifest with action sequences, reports bare integer
+`total_reproduced_levels_in_package`, reports `beats_prior_baseline=true` only
+when that total is greater than `13`, reports `grew_vs_412=true` only when that
+total is greater than `39`, keeps `submitted_to_leaderboard=false`, keeps
+`verifier_is_oracle=true`, and emits a terminal-prefixed honest verdict.
+
+## Implementation Status (REQ-REPORT-4473)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4473 | Planned (`python/carnot/experiment_4473_submission_package_prep_refresh.py`, `results/experiment_4473_submission_package_prep_refresh.json`) | Planned (`tests/python/test_experiment_4473_submission_package_prep_refresh.py`) |
+
 ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
 
 The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
