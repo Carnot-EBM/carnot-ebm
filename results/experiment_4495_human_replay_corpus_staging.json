@@ -1,13 +1,13 @@
 {
   "attribution": "Replay data provenance: ARC Prize Foundation ARC-AGI-3 Public Demo human testing dataset (https://arcprize.org/blog/arc-agi-3-human-dataset); reachable Hugging Face mirror magic-sword/arc_agi_3_public_demo_human_testing; CC BY 4.0 format/license reference from https://www.kaggle.com/datasets/jihangli1121/arc-agi-3-replays-v1. No model weights are bundled or committed.",
   "data_relative_dir": "data/arc_public_demo_human_replay_corpus",
-  "duration_s": 66.13132982794195,
+  "duration_s": 23.387579581933096,
   "field_principles": {
     "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
     "inference_substrate": "explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.",
     "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
   },
-  "honest_verdict": "complete: blocked_human_replay_shards_missing",
+  "honest_verdict": "complete: staged_attributed_mirror_no_weights",
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "license_name": "not CC0/MIT-0 verified; staged with attribution and no weights",
   "license_status": "mirror_attribution_required",
@@ -32,7 +32,7 @@
     "source_shards_cached": true,
     "torch_import": true,
     "torch_version": "2.11.0+cu128",
-    "training_shards_present": false
+    "training_shards_present": true
   },
   "requirements": [
     "REQ-ARC-FCP-4495"
@@ -40,20 +40,209 @@
   "scenarios": [
     "SCENARIO-ARC-FCP-4495"
   ],
-  "shard_checksums": [],
+  "shard_checksums": [
+    {
+      "path": "shards/train-00000.jsonl",
+      "rows": 4096,
+      "sha256": "ab201b50cef5494eedc6f202cd90b228fce50c94baa579fc62ab22c6c4bf2aa5"
+    },
+    {
+      "path": "shards/train-00001.jsonl",
+      "rows": 4096,
+      "sha256": "abd0e7eb24cd393e360b60bc59931d0643a117cad1a2af97cecc8717cbb2bfd0"
+    },
+    {
+      "path": "shards/train-00002.jsonl",
+      "rows": 1808,
+      "sha256": "7633510cc37396ae0e3f7ffdcafc0d48cb888df8ab1bc9c9fe04f01004c2fef3"
+    }
+  ],
   "source_provenance": {
     "download_manifest": {
-      "error": "<HTTPError 408: 'Request Time-out'>",
-      "source_kind": "blocked"
+      "dataset_sha": "455b7c58eaa9d5ea05f91cd1b5b603121599e758",
+      "downloaded_files": [
+        {
+          "oid": "db22be9f20126373f3f5e654214e6c93f14e8610",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00000.parquet",
+          "size_bytes": 110727680,
+          "source_path": "data/train-00000.parquet"
+        },
+        {
+          "oid": "7c3c57a81cc3f24fe963885635be403bfdd78108",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00001.parquet",
+          "size_bytes": 76502640,
+          "source_path": "data/train-00001.parquet"
+        },
+        {
+          "oid": "db8fcbf71aed97dc02a19b19099db5d017b07884",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00002.parquet",
+          "size_bytes": 14062017,
+          "source_path": "data/train-00002.parquet"
+        },
+        {
+          "oid": "78dfd92c1e6bbe510b884819b8a3b502662b874c",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00003.parquet",
+          "size_bytes": 95153406,
+          "source_path": "data/train-00003.parquet"
+        },
+        {
+          "oid": "96741d08fe25c6fcb525f0d77fb7ef30baa4e4a8",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00004.parquet",
+          "size_bytes": 64456353,
+          "source_path": "data/train-00004.parquet"
+        },
+        {
+          "oid": "4ede8d2ad2bf2787db97aa51f4f572cd7fd2effb",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00005.parquet",
+          "size_bytes": 39275328,
+          "source_path": "data/train-00005.parquet"
+        },
+        {
+          "oid": "f28728e58060dbfc544f241a3f8a4b4edef749b3",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00006.parquet",
+          "size_bytes": 74592860,
+          "source_path": "data/train-00006.parquet"
+        }
+      ],
+      "license_name": "not CC0/MIT-0 verified; staged with attribution and no weights",
+      "license_status": "mirror_attribution_required",
+      "mirror_url": "https://huggingface.co/datasets/magic-sword/arc_agi_3_public_demo_human_testing",
+      "official_license_verified": false,
+      "source_kind": "hf_mirror",
+      "staged_manifest": {
+        "example_count": 10000,
+        "schema": "carnot.arc_human_replay.frame_action_delta.v1",
+        "shard_count": 3,
+        "shards": [
+          {
+            "path": "shards/train-00000.jsonl",
+            "rows": 4096,
+            "sha256": "ab201b50cef5494eedc6f202cd90b228fce50c94baa579fc62ab22c6c4bf2aa5"
+          },
+          {
+            "path": "shards/train-00001.jsonl",
+            "rows": 4096,
+            "sha256": "abd0e7eb24cd393e360b60bc59931d0643a117cad1a2af97cecc8717cbb2bfd0"
+          },
+          {
+            "path": "shards/train-00002.jsonl",
+            "rows": 1808,
+            "sha256": "7633510cc37396ae0e3f7ffdcafc0d48cb888df8ab1bc9c9fe04f01004c2fef3"
+          }
+        ],
+        "source_metadata": {
+          "dataset_sha": "455b7c58eaa9d5ea05f91cd1b5b603121599e758",
+          "downloaded_files": [
+            {
+              "oid": "db22be9f20126373f3f5e654214e6c93f14e8610",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00000.parquet",
+              "size_bytes": 110727680,
+              "source_path": "data/train-00000.parquet"
+            },
+            {
+              "oid": "7c3c57a81cc3f24fe963885635be403bfdd78108",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00001.parquet",
+              "size_bytes": 76502640,
+              "source_path": "data/train-00001.parquet"
+            },
+            {
+              "oid": "db8fcbf71aed97dc02a19b19099db5d017b07884",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00002.parquet",
+              "size_bytes": 14062017,
+              "source_path": "data/train-00002.parquet"
+            },
+            {
+              "oid": "78dfd92c1e6bbe510b884819b8a3b502662b874c",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00003.parquet",
+              "size_bytes": 95153406,
+              "source_path": "data/train-00003.parquet"
+            },
+            {
+              "oid": "96741d08fe25c6fcb525f0d77fb7ef30baa4e4a8",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00004.parquet",
+              "size_bytes": 64456353,
+              "source_path": "data/train-00004.parquet"
+            },
+            {
+              "oid": "4ede8d2ad2bf2787db97aa51f4f572cd7fd2effb",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00005.parquet",
+              "size_bytes": 39275328,
+              "source_path": "data/train-00005.parquet"
+            },
+            {
+              "oid": "f28728e58060dbfc544f241a3f8a4b4edef749b3",
+              "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00006.parquet",
+              "size_bytes": 74592860,
+              "source_path": "data/train-00006.parquet"
+            }
+          ],
+          "license_name": "not CC0/MIT-0 verified; staged with attribution and no weights",
+          "license_status": "mirror_attribution_required",
+          "mirror_url": "https://huggingface.co/datasets/magic-sword/arc_agi_3_public_demo_human_testing",
+          "official_license_verified": false,
+          "source_kind": "hf_mirror"
+        }
+      }
     },
     "hf_mirror_url": "https://huggingface.co/datasets/magic-sword/arc_agi_3_public_demo_human_testing",
     "kaggle_cc_by_format_reference_url": "https://www.kaggle.com/datasets/jihangli1121/arc-agi-3-replays-v1",
     "official_blog_url": "https://arcprize.org/blog/arc-agi-3-human-dataset",
     "official_data_shortlink": "https://dub.link/vfwCqvb",
-    "shard_source_metadata": {}
+    "shard_source_metadata": {
+      "dataset_sha": "455b7c58eaa9d5ea05f91cd1b5b603121599e758",
+      "downloaded_files": [
+        {
+          "oid": "db22be9f20126373f3f5e654214e6c93f14e8610",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00000.parquet",
+          "size_bytes": 110727680,
+          "source_path": "data/train-00000.parquet"
+        },
+        {
+          "oid": "7c3c57a81cc3f24fe963885635be403bfdd78108",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00001.parquet",
+          "size_bytes": 76502640,
+          "source_path": "data/train-00001.parquet"
+        },
+        {
+          "oid": "db8fcbf71aed97dc02a19b19099db5d017b07884",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00002.parquet",
+          "size_bytes": 14062017,
+          "source_path": "data/train-00002.parquet"
+        },
+        {
+          "oid": "78dfd92c1e6bbe510b884819b8a3b502662b874c",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00003.parquet",
+          "size_bytes": 95153406,
+          "source_path": "data/train-00003.parquet"
+        },
+        {
+          "oid": "96741d08fe25c6fcb525f0d77fb7ef30baa4e4a8",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00004.parquet",
+          "size_bytes": 64456353,
+          "source_path": "data/train-00004.parquet"
+        },
+        {
+          "oid": "4ede8d2ad2bf2787db97aa51f4f572cd7fd2effb",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00005.parquet",
+          "size_bytes": 39275328,
+          "source_path": "data/train-00005.parquet"
+        },
+        {
+          "oid": "f28728e58060dbfc544f241a3f8a4b4edef749b3",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00006.parquet",
+          "size_bytes": 74592860,
+          "source_path": "data/train-00006.parquet"
+        }
+      ],
+      "license_name": "not CC0/MIT-0 verified; staged with attribution and no weights",
+      "license_status": "mirror_attribution_required",
+      "mirror_url": "https://huggingface.co/datasets/magic-sword/arc_agi_3_public_demo_human_testing",
+      "official_license_verified": false,
+      "source_kind": "hf_mirror"
+    }
   },
-  "training_example_count": 0,
-  "training_shard_count": 0,
+  "training_example_count": 10000,
+  "training_shard_count": 3,
   "weights_commit_policy": "Do not commit weights unless official CC0/MIT-0-compatible licensing is verified.",
   "weights_committed": false
 }
