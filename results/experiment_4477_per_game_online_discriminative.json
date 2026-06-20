@@ -1,0 +1,124 @@
+{
+  "actions_to_first_levelup_delta": 0,
+  "baseline_actions_to_first_levelup": 58,
+  "baseline_solve_rate": 0.3333333333,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+    },
+    "inference_substrate": {
+      "principle": "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+    },
+    "offline_reproduced": {
+      "principle": "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+    },
+    "reproduced_levels": {
+      "principle": "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed."
+    }
+  },
+  "honest_verdict": "complete: per_game_online_discriminative_no_solve_rate_gain",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": false,
+  "online_actions_to_first_levelup": 58,
+  "online_solve_rate": 0.3333333333,
+  "online_verifier": {
+    "frontier_pruned": 0,
+    "negative_samples": 3,
+    "per_game_head": "DiscriminativeVerifier",
+    "positive_samples": 100,
+    "trained_games": 1,
+    "training_scope": "per_game_online_only"
+  },
+  "per_game_results": [
+    {
+      "baseline_actions_spent": 75,
+      "baseline_actions_to_first_levelup": null,
+      "baseline_reached_level": 0,
+      "baseline_solved": false,
+      "game": "bp35",
+      "online_actions_spent": 75,
+      "online_actions_to_first_levelup": null,
+      "online_reached_level": 0,
+      "online_solved": false,
+      "online_verifier": {
+        "enabled": true,
+        "fit_count": 9,
+        "frontier_pruned": 0,
+        "negative_samples": 3,
+        "negative_sources": {
+          "game_over": 3
+        },
+        "positive_samples": 49,
+        "prune_threshold": 0.12,
+        "trained": true
+      }
+    },
+    {
+      "baseline_actions_spent": 20,
+      "baseline_actions_to_first_levelup": 20,
+      "baseline_reached_level": 1,
+      "baseline_solved": true,
+      "game": "lp85",
+      "online_actions_spent": 20,
+      "online_actions_to_first_levelup": 20,
+      "online_reached_level": 1,
+      "online_solved": true,
+      "online_verifier": {
+        "enabled": true,
+        "fit_count": 0,
+        "frontier_pruned": 0,
+        "negative_samples": 0,
+        "negative_sources": {},
+        "positive_samples": 5,
+        "prune_threshold": 0.12,
+        "trained": false
+      }
+    },
+    {
+      "baseline_actions_spent": 78,
+      "baseline_actions_to_first_levelup": null,
+      "baseline_reached_level": 0,
+      "baseline_solved": false,
+      "game": "tu93",
+      "online_actions_spent": 78,
+      "online_actions_to_first_levelup": null,
+      "online_reached_level": 0,
+      "online_solved": false,
+      "online_verifier": {
+        "enabled": true,
+        "fit_count": 0,
+        "frontier_pruned": 0,
+        "negative_samples": 0,
+        "negative_sources": {},
+        "positive_samples": 46,
+        "prune_threshold": 0.12,
+        "trained": false
+      }
+    }
+  ],
+  "preconditions_checked": {
+    "action_budget": 80,
+    "arc_solver_kit_importable": true,
+    "arcengine_importable": true,
+    "blocker": "",
+    "held_out_games": [
+      "bp35",
+      "lp85",
+      "tu93"
+    ],
+    "offline_fixtures_present": true,
+    "submitted_to_leaderboard": false
+  },
+  "random_seed": 4477,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "f04bfc8d8157d99bdfd9c0dc18c96fd66e5bda04c5e6259aa094f335b928bdac",
+  "solve_rate_delta": 0.0,
+  "spec_refs": [
+    "REQ-PHASE4-4477",
+    "SCENARIO-PHASE4-4477"
+  ],
+  "submitted_to_leaderboard": false
+}

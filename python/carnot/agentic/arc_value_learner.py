@@ -14,6 +14,7 @@ value is trained by least-squares on (features, steps_remaining) collected from
 solved trajectories. `LearnedVerifier.__call__(game)` returns predicted
 steps-to-go (LOWER = closer to win), the score OfflineSolver descends.
 """
+
 from __future__ import annotations
 
 import json
@@ -31,6 +32,7 @@ def cross_game_features(frame: Any) -> list[float]:
     search heuristic before it has its own solved trajectory."""
     from collections import Counter
     from carnot.agentic.arc_agi3_world_model import grid_of, objects
+
     g = grid_of(frame)
     total = max(1, g.size)
     flat = g.flatten().tolist()
@@ -38,10 +40,10 @@ def cross_game_features(frame: Any) -> list[float]:
     n_nonzero = total - cnt.get(0, 0)
     n_colors = len([c for c in cnt if c != 0])
     n_objects = len(objects(g))
-    nz = (g != 0)
+    nz = g != 0
     ys, xs = np.where(nz)
     spread = float((np.std(xs) + np.std(ys)) / max(1, max(g.shape))) if len(xs) else 0.0
-    dom = (max((v for k, v in cnt.items() if k != 0), default=0) / max(1, n_nonzero))
+    dom = max((v for k, v in cnt.items() if k != 0), default=0) / max(1, n_nonzero)
     return [n_nonzero / total, float(n_colors), float(n_objects) / 32.0, spread, float(dom)]
 
 
@@ -52,10 +54,11 @@ def cross_game_features_v2(frame: Any) -> list[float]:
     a small spatial signature (41 features) while staying game-agnostic + cheap. Frame-only (live-legal)."""
     import numpy as np
     from carnot.agentic.arc_agi3_world_model import grid_of
+
     base = cross_game_features(frame)
     g = np.asarray(grid_of(frame))
     if g.ndim == 1:
-        s = int(round(g.size ** 0.5))
+        s = int(round(g.size**0.5))
         g = g.reshape(s, s) if s * s == g.size else g.reshape(1, -1)
     nz = (g != 0).astype(float)
     h, w = nz.shape
@@ -152,7 +155,7 @@ def _grid2d(frame: Any) -> np.ndarray:
 
     g = np.asarray(grid_of(frame), dtype=float)
     if g.ndim == 1:
-        side = int(round(g.size ** 0.5))
+        side = int(round(g.size**0.5))
         g = g.reshape(side, side) if side * side == g.size else g.reshape(1, -1)
     return g
 
@@ -185,16 +188,18 @@ def _component_stats_from_grid(g: np.ndarray) -> list[dict[str, float]]:
             xs = [c[1] for c in cells]
             colors = [float(g[y, x]) for y, x in cells]
             vals2, counts2 = np.unique(colors, return_counts=True)
-            comps.append({
-                "cy": float(np.mean(ys)),
-                "cx": float(np.mean(xs)),
-                "area": float(len(cells)),
-                "color": float(vals2[counts2.argmax()]),
-                "y0": float(min(ys)),
-                "y1": float(max(ys)),
-                "x0": float(min(xs)),
-                "x1": float(max(xs)),
-            })
+            comps.append(
+                {
+                    "cy": float(np.mean(ys)),
+                    "cx": float(np.mean(xs)),
+                    "area": float(len(cells)),
+                    "color": float(vals2[counts2.argmax()]),
+                    "y0": float(min(ys)),
+                    "y1": float(max(ys)),
+                    "x0": float(min(xs)),
+                    "x1": float(max(xs)),
+                }
+            )
     return comps
 
 
@@ -213,7 +218,9 @@ def _pairwise_manhattan(comps: Sequence[dict[str, float]], norm: float) -> list[
     ds = []
     for i in range(len(comps)):
         for j in range(i + 1, len(comps)):
-            ds.append((abs(comps[i]["cy"] - comps[j]["cy"]) + abs(comps[i]["cx"] - comps[j]["cx"])) / norm)
+            ds.append(
+                (abs(comps[i]["cy"] - comps[j]["cy"]) + abs(comps[i]["cx"] - comps[j]["cx"])) / norm
+            )
     return ds
 
 
@@ -305,7 +312,9 @@ def _frame_delta_features(g: np.ndarray, frame: Any, previous_frame: Any | None)
     if cur_cent is None or prev_cent is None:
         centroid_shift = 0.0
     else:
-        centroid_shift = (abs(cur_cent[0] - prev_cent[0]) + abs(cur_cent[1] - prev_cent[1])) / _safe_norm(g)
+        centroid_shift = (
+            abs(cur_cent[0] - prev_cent[0]) + abs(cur_cent[1] - prev_cent[1])
+        ) / _safe_norm(g)
     return [
         1.0,
         changed,
@@ -350,7 +359,9 @@ def _predicate_distance_features(g: np.ndarray, goal_frame: Any | None) -> list[
     else:
         mismatch = 1.0
         hist = 1.0
-    nz_delta = abs(float((goal != 0).sum()) - float((g != 0).sum())) / max(1, max(goal.size, g.size))
+    nz_delta = abs(float((goal != 0).sum()) - float((g != 0).sum())) / max(
+        1, max(goal.size, g.size)
+    )
     comps = _component_stats_from_grid(g)
     goal_comps = _component_stats_from_grid(goal)
     obj_delta = abs(len(goal_comps) - len(comps)) / 32.0
@@ -359,7 +370,9 @@ def _predicate_distance_features(g: np.ndarray, goal_frame: Any | None) -> list[
     if cur_cent is None or goal_cent is None:
         centroid = 0.0
     else:
-        centroid = (abs(cur_cent[0] - goal_cent[0]) + abs(cur_cent[1] - goal_cent[1])) / _safe_norm(g)
+        centroid = (abs(cur_cent[0] - goal_cent[0]) + abs(cur_cent[1] - goal_cent[1])) / _safe_norm(
+            g
+        )
     cur_pairs = _pairwise_manhattan(comps, _safe_norm(g))
     goal_pairs = _pairwise_manhattan(goal_comps, _safe_norm(goal))
     cur_mean = float(np.mean(cur_pairs)) if cur_pairs else 0.0
@@ -401,8 +414,13 @@ def cross_game_features_v3(
     ]
 
 
-def collect_trajectory_data(env: Any, solver: Any, prefix: Sequence[str],
-                            level_path: Sequence[str], featurize: Callable[[Any], Sequence[float]]):
+def collect_trajectory_data(
+    env: Any,
+    solver: Any,
+    prefix: Sequence[str],
+    level_path: Sequence[str],
+    featurize: Callable[[Any], Sequence[float]],
+):
     """Replay a solved LEVEL path and emit (features, steps_remaining) per state —
     the supervision: states near the level-up are low-cost, far ones high-cost."""
     X, y = [], []
@@ -449,19 +467,26 @@ class LearnedVerifier:
             raise ValueError("nothing to save: verifier is untrained")
         p = Path(path)
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(json.dumps({
-            "schema": "carnot_arc_learned_verifier_v1",
-            "kind": "linear_value_head",
-            "weights": self.w.tolist(),          # [feature weights..., bias]
-            "feature_names": (meta or {}).get("feature_names"),
-            "trained_games": (meta or {}).get("trained_games"),
-            "n_samples": self.n_samples,
-            "provenance": (meta or {}).get("provenance"),
-        }, indent=2))
+        p.write_text(
+            json.dumps(
+                {
+                    "schema": "carnot_arc_learned_verifier_v1",
+                    "kind": "linear_value_head",
+                    "weights": self.w.tolist(),  # [feature weights..., bias]
+                    "feature_names": (meta or {}).get("feature_names"),
+                    "trained_games": (meta or {}).get("trained_games"),
+                    "n_samples": self.n_samples,
+                    "provenance": (meta or {}).get("provenance"),
+                },
+                indent=2,
+            )
+        )
         return p
 
     @classmethod
-    def load(cls, path: str | Path, featurize: Callable[[Any], Sequence[float]]) -> "LearnedVerifier":
+    def load(
+        cls, path: str | Path, featurize: Callable[[Any], Sequence[float]]
+    ) -> "LearnedVerifier":
         d = json.loads(Path(path).read_text())
         v = cls(featurize)
         v.w = np.asarray(d["weights"], dtype=float)
@@ -490,10 +515,16 @@ class DiscriminativeVerifier:
         self.sd: np.ndarray | None = None
         self.n_samples = 0
 
-    def fit(self, X: Sequence[Sequence[float]], y: Sequence[float],
-            iters: int = 800, lr: float = 0.5, l2: float = 1e-3) -> "DiscriminativeVerifier":
+    def fit(
+        self,
+        X: Sequence[Sequence[float]],
+        y: Sequence[float],
+        iters: int = 800,
+        lr: float = 0.5,
+        l2: float = 1e-3,
+    ) -> "DiscriminativeVerifier":
         A = np.asarray(X, dtype=float)
-        b = np.asarray(y, dtype=float)              # 1 = on winning path, 0 = off-path / dead-end
+        b = np.asarray(y, dtype=float)  # 1 = on winning path, 0 = off-path / dead-end
         self.mu = A.mean(axis=0)
         self.sd = A.std(axis=0) + 1e-8
         Z = np.hstack([(A - self.mu) / self.sd, np.ones((A.shape[0], 1))])  # standardized + bias
@@ -509,7 +540,19 @@ class DiscriminativeVerifier:
     def proba(self, frame: Any) -> float:
         if self.w is None:
             return 0.5
-        z = (np.asarray([float(v) for v in self.featurize(frame)]) - self.mu) / self.sd
+        return self.proba_features(self.featurize(frame))
+
+    def proba_features(self, features: Sequence[float]) -> float:
+        """Score a cached feature vector without needing to keep the original frame.
+
+        The step-wise live explorer stores compact frame-only feature vectors on
+        frontier nodes. Re-scoring those cached vectors after an online refit is
+        cheaper and less fragile than keeping full rendered frames around just so
+        the logistic head can call its featurizer again.
+        """
+        if self.w is None or self.mu is None or self.sd is None:
+            return 0.5
+        z = (np.asarray([float(v) for v in features], dtype=float) - self.mu) / self.sd
         z = np.r_[z, 1.0]
         return float(1.0 / (1.0 + np.exp(-(z @ self.w))))
 
@@ -518,21 +561,28 @@ class DiscriminativeVerifier:
             raise ValueError("nothing to save: classifier is untrained")
         p = Path(path)
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(json.dumps({
-            "schema": "carnot_arc_discriminative_verifier_v1",
-            "kind": "logistic_win_reachability",
-            "weights": self.w.tolist(),
-            "mu": self.mu.tolist(),
-            "sd": self.sd.tolist(),
-            "feature_names": (meta or {}).get("feature_names"),
-            "trained_games": (meta or {}).get("trained_games"),
-            "n_samples": self.n_samples,
-            "provenance": (meta or {}).get("provenance"),
-        }, indent=2))
+        p.write_text(
+            json.dumps(
+                {
+                    "schema": "carnot_arc_discriminative_verifier_v1",
+                    "kind": "logistic_win_reachability",
+                    "weights": self.w.tolist(),
+                    "mu": self.mu.tolist(),
+                    "sd": self.sd.tolist(),
+                    "feature_names": (meta or {}).get("feature_names"),
+                    "trained_games": (meta or {}).get("trained_games"),
+                    "n_samples": self.n_samples,
+                    "provenance": (meta or {}).get("provenance"),
+                },
+                indent=2,
+            )
+        )
         return p
 
     @classmethod
-    def load(cls, path: str | Path, featurize: Callable[[Any], Sequence[float]]) -> "DiscriminativeVerifier":
+    def load(
+        cls, path: str | Path, featurize: Callable[[Any], Sequence[float]]
+    ) -> "DiscriminativeVerifier":
         d = json.loads(Path(path).read_text())
         v = cls(featurize)
         v.w = np.asarray(d["weights"], dtype=float)
