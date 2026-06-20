@@ -2430,3 +2430,21 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - missing discriminator: n/a — this is INTEGRATION, not modeling. Wire the router + world-model-DSL into the
   submitted agent; raise target_levels; replace RESET-replay nav with forward-edge `_shortest_path`.
 - priority: high (the most direct move on 0.08)
+
+### GAP-ARCH-WORLD-MODEL-TRUST-ENERGY: learned oracle-distinct energy for hidden-state world-model trust
+- status: open
+- evidence: the live agent gates planning on a BINARY `WorldModelVerifier(...).score(engine).accuracy <
+  0.5` cutoff (`arc_competition_agent.py:779-780`) + `consistency_energy` (`:698`,
+  `arc_world_model_dsl.py:305`). `results/arc3_m2_world_model.json` shows the energy already SEPARATES
+  hidden-state from Markov games (0.88 vs 0.75, separation 0.8) but the agent uses only the hard
+  threshold, not a ranking.
+- failure mode: when the E3 proposer emits several candidate world-models, the agent trusts the FIRST to
+  clear 0.5, not the one that GENERALIZES on held-out transitions; and it pays no energy benefit on the
+  ~11 hidden-state games where there is NO cheap execution oracle (the moat slot).
+- missing discriminator: a learned/calibrated trust energy `E(transitions, engine) -> trust` that ranks
+  candidates by held-out (not prefix) misprediction, discriminating specifically on hidden-state games.
+- candidate design: prefix-vs-held-out energy gap features -> logistic/isotonic ranking; replace the 0.5
+  cutoff behind a flag for hidden-state games only (keep execution check for Markov). Full spec:
+  docs/research-notes/arc-world-model-trust-energy-spec.md.
+- priority: medium (real oracle-distinct MOAT work; sequence AFTER the .414 integration/feature
+  score-drivers — the EBM thesis's one genuinely load-bearing ARC slot, verifier_is_oracle: false)
