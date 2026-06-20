@@ -60,11 +60,11 @@ MAX_ACTIONS = 200
 # default solve-rate with the v3 head at weight>0 (+ a possible lazy/cheap eval); raise value_weight ONLY
 # if it beats bare-BFS on solve-rate AND finishes in budget. Until then: v3 head loaded, weight 0 (cheap).
 SUBMITTED_VALUE_WEIGHT = 0.0
-SUBMITTED_TARGET_LEVELS = 5
+# Exp 4524 measured the fixed 8-game local gate and found the run-to-completion control banks only L1 on
+# every CORE solve; target 1 stops at the scored gate target instead of burning the post-level-up tail.
+SUBMITTED_TARGET_LEVELS = 1
 # Smart grace-period early-stop: stop this many moves after the LAST level-up if no new level appears
-# (cuts the fruitless post-solve tail that destroys the (human/agent_actions)^2 efficiency score, WITHOUT
-# capping levels -- consecutive level-ups reset the window). None = DISABLED (current live default until a
-# K is measured + operator-approved; see the .418 action-efficiency work 2026-06-20).
+# (cuts the fruitless post-solve tail, WITHOUT capping the configured scored target). None = disabled.
 SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
@@ -824,6 +824,11 @@ class StepwiseExplorer:
         return self._serve()
 
     def is_done(self, frames, latest) -> bool:
+        if latest is not None:
+            lvl = _level_of(latest)
+            if self.start_level is None:
+                self.start_level = lvl
+            self.best_level = max(self.best_level, lvl)
         if (
             self.start_level is not None
             and self.best_level >= self.start_level + self.target_levels

@@ -65,3 +65,17 @@ def test_target_levels_still_short_circuits():
     e.start_level = 0
     e.best_level = 1  # reached start+target -> done regardless of grace
     assert e.is_done([], None) is True
+
+
+def test_is_done_observes_latest_frame_level_before_next_move():
+    """REQ-ARC-FCP-4524: stop at the target as soon as the latest frame shows it."""
+
+    class Frame:
+        levels_completed = 1
+
+    e = StepwiseExplorer(target_levels=1)
+    e.start_level = 0
+    e.best_level = 0
+
+    assert e.is_done([], Frame()) is True
+    assert e.best_level == 1
