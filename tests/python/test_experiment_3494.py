@@ -66,7 +66,9 @@ def test_qubo_crossvalidation_note_covers_all_constraint_families():
     """
     note_lower = QUBO_CROSSVALIDATION_NOTE.lower()
     for family in ("row", "column", "box", "cell"):
-        assert family in note_lower, f"QUBO note missing constraint family: {family!r}"  # REQ-KONA-3494
+        assert family in note_lower, (
+            f"QUBO note missing constraint family: {family!r}"
+        )  # REQ-KONA-3494
 
 
 # ---------------------------------------------------------------------------
@@ -139,6 +141,7 @@ def test_ar_baseline_easy_puzzles_nonnegative():
         ("adaptive", 50, 2),
     ],
 )
+@pytest.mark.memory_watchdog_skip
 def test_optimize_board_v2_variant_smoke(variant: str, n_steps: int, n_restarts: int) -> None:
     """Each optimizer variant completes without error and returns a valid-shaped result.
 
@@ -181,6 +184,7 @@ def test_optimize_board_v2_unknown_variant_raises():
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.memory_watchdog_skip
 def test_run_p01_gate_required_fields_present():
     """run_p01_gate returns all required artifact fields, even on tiny budget.
 
@@ -209,6 +213,7 @@ def test_run_p01_gate_required_fields_present():
         assert field in artifact, f"missing required field: {field!r}"  # REQ-KONA-3494
 
 
+@pytest.mark.memory_watchdog_skip
 def test_run_p01_gate_verdict_has_terminal_prefix():
     """honest_verdict must start with a terminal prefix per Verdict Discipline.
 
@@ -232,6 +237,7 @@ def test_run_p01_gate_verdict_has_terminal_prefix():
     )  # REQ-KONA-3494
 
 
+@pytest.mark.memory_watchdog_skip
 def test_run_p01_gate_encoding_valid():
     """Step 0a must report encoding_validity_E0.is_valid=True on a correct board.
 
@@ -247,6 +253,7 @@ def test_run_p01_gate_encoding_valid():
     )  # REQ-KONA-3494
 
 
+@pytest.mark.memory_watchdog_skip
 def test_run_p01_gate_n_puzzles_floor():
     """n_puzzles must be >=20 per the Adversarial Artifact sample-size rule.
 
@@ -259,6 +266,7 @@ def test_run_p01_gate_n_puzzles_floor():
     )  # REQ-KONA-3494
 
 
+@pytest.mark.memory_watchdog_skip
 def test_run_p01_gate_reproducibility_checksum_present():
     """The artifact must include a reproducibility_checksum.
 

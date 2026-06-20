@@ -26064,6 +26064,76 @@ verdict.
 |---|---|---|
 | REQ-REPORT-4459 | Planned (`python/carnot/experiment_4459_loo_generic_solve_benchmark_v3.py`, `results/experiment_4459_loo_generic_solve_benchmark_v3.json`) | Planned (`tests/python/test_experiment_4459_loo_generic_solve_benchmark_v3.py`) |
 
+### REQ-REPORT-4472: Manufactured-Variant Generic-Transfer Benchmark V4 Re-Measures Operator Generalization
+
+The Exp 4472 workflow SHALL wire the shipped manufactured ARC variant generator
+into the generic-transfer benchmark without touching held-out eval games or
+mutating `ops/arc_solve_registry.yaml`. It SHALL manufacture deterministic
+mechanic-preserving variants of the 25 public `environment_files/` games using
+color permutations and, when configured, reflection variants through
+`arc_variant_generator.VariantEnv` / the `--variant` and `--reflect` semantics.
+The workflow SHALL log the exact N-per-game variant plan, any skipped games or
+blocked variants, the policy budget used, and the deterministic random seed.
+
+Before measuring, the workflow SHALL confirm that offline environment files
+exist, that `carnot.agentic.arc_variant_generator` and
+`carnot.agentic.arc_solver_kit` import, that no 3090 inference or leaderboard
+submission is used, and that the focused no-coverage smoke command
+`.venv/bin/pytest -k "variant or arc_solver_kit or leaderboard_eval" -q --no-cov`
+is green or is recorded as the blocker. If a variant requires live induction and
+the permitted non-3090 generator is unavailable, that variant SHALL be marked
+`blocked_model_not_cached` while the benchmark continues over the rest.
+
+The workflow SHALL attempt at least 25 manufactured variants, using the generic
+frame-only solver path without banked target recipes. A variant SHALL count as
+solved only when the variant run advances the real wrapped environment and the
+same action trace is replayed through `arc_solver_kit.reproduce()` against the
+real offline win condition. The headline
+`generic_transfer_rate_over_variants` SHALL equal
+`variants_solved / variants_attempted` as a bare float.
+
+The workflow SHALL also re-run the plain LOO generic-solver measurement using
+the same protocol as Exp 4459 v3, compare it to the v3 baseline count of `6`,
+and count the `.413` cast-grid operator for `sc25` only when the Exp 4469
+artifact records grounded operator evidence plus reproduced offline replay
+evidence. A flat or lower count SHALL still be a terminal complete measurement
+with residuals logged.
+
+The workflow SHALL write
+`results/experiment_4472_variant_generic_transfer_benchmark_v4.json` with
+required top-level fields `honest_verdict`, `inference_substrate`,
+`generic_transfer_rate_over_variants`, `variants_attempted`, `variants_solved`,
+`generic_loo_solve_count_v4`, `generic_loo_solve_count_v3_baseline`,
+`per_game`, `offline_reproduced`, `missing_verifier_gaps`,
+`verifier_is_oracle`, `random_seed`, and `reproducibility_checksum`. `per_game`
+SHALL be a list of `{game, variant_transfer_rate,
+loo_solved_without_own_recipe, closed_by_operator, residual_delta}` rows.
+Complete-path `honest_verdict` SHALL start with `complete:`, `success:`,
+`passed:`, or `shipped:`; `inference_substrate` SHALL never be null; the run
+SHALL NOT use 3090 inference and SHALL NOT submit to a leaderboard.
+
+#### SCENARIO-REPORT-4472: V4 Reports Manufactured-Variant Transfer And Plain LOO Delta
+
+**Given** the 25 public offline ARC environments, the shipped variant generator,
+importable ARC solver kit, the Exp 4459 v3 LOO artifact, the Exp 4469 cast-grid
+operator artifact when available, and a green focused no-coverage smoke command
+**When** Exp 4472 manufactures the configured variants, runs the generic solver
+over each variant, reproduction-gates every claimed solve, re-measures the plain
+LOO count against the v3 baseline of `6`, and writes the artifact
+**Then** the artifact reports bare `variants_attempted >= 25`, bare
+`variants_solved`, bare-float `generic_transfer_rate_over_variants`, bare-int
+`generic_loo_solve_count_v4`, bare-int `generic_loo_solve_count_v3_baseline=6`,
+per-game variant transfer and LOO rows, `offline_reproduced=true` only when
+every counted variant and LOO solve has execution-grounded evidence,
+`verifier_is_oracle=true`, no 3090 or leaderboard use, a deterministic checksum,
+and a terminal-prefixed honest verdict with residual gaps preserved.
+
+## Implementation Status (REQ-REPORT-4472)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4472 | Planned (`python/carnot/experiment_4472_variant_generic_transfer_benchmark_v4.py`, `results/experiment_4472_variant_generic_transfer_benchmark_v4.json`) | Planned (`tests/python/test_experiment_4472_variant_generic_transfer_benchmark_v4.py`) |
+
 ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
 
 The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3

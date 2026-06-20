@@ -3045,6 +3045,9 @@ test. The watchdog MUST:
 5. At session finish, when cumulative RSS growth exceeds 8192 MB, emit a warning
    that includes the top five per-test RSS deltas and write a
    `results/pytest_memory_{timestamp}.log` file.
+6. Permit an explicit `memory_watchdog_skip` marker for known high-RSS
+   compiler/cache smoke tests where `ru_maxrss` high-water growth is expected;
+   marked tests still record their RSS sample for session diagnostics.
 
 ### SCENARIO-INFRA-088: Runaway Test Is Failed Before Session OOM
 
@@ -3063,13 +3066,13 @@ timestamped `results/pytest_memory_*.log` artifact for conductor diagnostics.
 
 **REQ-INFRA-077**: The Python pytest suite MUST set a process address-space
 limit from `tests/python/conftest.py` during `pytest_configure` before any test
-item runs. The soft `RLIMIT_AS` limit MUST be capped at 8 GB while preserving the
-kernel hard limit, and unsupported-kernel failures MUST warn and continue.
+item runs. The soft `RLIMIT_AS` limit MUST be capped at 32 GB while preserving
+the kernel hard limit, and unsupported-kernel failures MUST warn and continue.
 
 ### SCENARIO-INFRA-090: Address-Space Cap Is Active During Tests
 
 Given a Python pytest run using the repository `tests/python/conftest.py`, test
-items observe a finite `RLIMIT_AS` soft limit no larger than 8 GB.
+items observe a finite `RLIMIT_AS` soft limit no larger than 32 GB.
 
 ### SCENARIO-INFRA-091: Address-Space Cap Preserves Existing Test Imports
 

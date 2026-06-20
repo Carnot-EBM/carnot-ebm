@@ -8889,3 +8889,5 @@ c |
 | 2026-06-19 23:10 UTC | PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid pha | OK | 107 passed, 1 warning in 5.93s |
 | 2026-06-19 23:28 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- B | OK | 108 passed, 1 warning in 7.29s |
 | 2026-06-19 23:47 UTC | PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW n | OK | 96 passed, 1 warning in 7.75s |
+| 2026-06-20 01:03 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-0 | FAIL | Post-tests failed: 106 passed, 1 warning, 1 error in 637.79s (0:10:37) |
+| 2026-06-20 01:05 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATED 2026-0 | OK | Deliverable already exists in repo |

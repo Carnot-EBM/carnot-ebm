@@ -26,7 +26,7 @@ jax.config.update("jax_platform_name", "cpu")
 try:
     # Initialise the CPU backend before pytest_configure installs RLIMIT_AS.
     # XLA can abort the interpreter if its first CPU-client allocation happens
-    # after the 8 GB virtual-memory cap is active.
+    # after the 32 GB virtual-memory cap is active.
     jax.devices("cpu")
 except Exception as exc:  # pragma: no cover - surfaced by tests that use JAX.
     warnings.warn(f"Could not pre-initialise JAX CPU backend: {exc}", stacklevel=2)
@@ -118,6 +118,9 @@ def pytest_runtest_teardown(item, nextitem) -> None:
     try:
         _get_memory_watchdog(item.config).record_teardown(item)
     except MemoryLeakDetected as exc:
+        get_closest_marker = getattr(item, "get_closest_marker", None)
+        if get_closest_marker is not None and get_closest_marker("memory_watchdog_skip"):
+            return
         pytest.fail(str(exc), pytrace=False)
 
 

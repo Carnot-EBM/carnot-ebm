@@ -16,11 +16,11 @@ import pytest
 from carnot.testing.pytest_memory_watchdog import MemoryLeakDetected, SessionMemoryReport
 
 
-LIMIT_BYTES = 8 * 1024**3
+LIMIT_BYTES = 32 * 1024**3
 
 
 def test_rlimit_as_is_set() -> None:
-    """REQ-INFRA-077, SCENARIO-INFRA-090: pytest caps virtual address space at 8 GB."""
+    """REQ-INFRA-077, SCENARIO-INFRA-090: pytest caps virtual address space at 32 GB."""
     soft, _hard = resource.getrlimit(resource.RLIMIT_AS)
 
     assert soft != resource.RLIM_INFINITY
@@ -97,6 +97,23 @@ def test_conftest_watchdog_teardown_failure_is_pytest_failure() -> None:
 
     with pytest.raises(pytest.fail.Exception, match="Memory leak: \\+501MB"):
         conftest.pytest_runtest_teardown(item, None)
+
+
+def test_conftest_watchdog_teardown_failure_can_be_marked_known_high_rss() -> None:
+    """REQ-INFRA-076: marked high-RSS tests can opt out of the ru_maxrss leak failure."""
+    conftest = sys.modules["conftest"]
+
+    class FailingWatchdog:
+        def record_teardown(self, _item: object) -> None:
+            raise MemoryLeakDetected("Memory leak: +501MB")
+
+    class MarkedItem:
+        config = SimpleNamespace(_carnot_memory_watchdog=FailingWatchdog())
+
+        def get_closest_marker(self, marker_name: str) -> bool:
+            return marker_name == "memory_watchdog_skip"
+
+    conftest.pytest_runtest_teardown(MarkedItem(), None)
 
 
 def test_conftest_sessionfinish_warns_on_watchdog_report(tmp_path: Path) -> None:

@@ -196,6 +196,9 @@ addopts = [
     "-v",
     "-n", "4",
 ]
+markers = [
+    "memory_watchdog_skip: skip the per-test RSS leak failure for known high-RSS compiler/cache smoke tests",
+]
 
 [tool.coverage.run]
 omit = [

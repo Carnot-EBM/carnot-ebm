@@ -221,6 +221,14 @@
       "root_cause_identified": "pure_loss_anti_correlation",
       "resolution_path": "Audit contrastive pair construction \u2014 verify positive/negative pair labels before v17 retrain"
     },
+    "RETRO-DISTILLATION": {
+      "description": "KAN distillation duration invariant confirmed: teacher_s >= corpus_size * 0.5",
+      "status": "confirmed",
+      "experiment": 690,
+      "teacher_inference_duration_s": 6256.2,
+      "corpus_size": 200,
+      "resolution_path": "Keep the duration invariant as a confirmed guardrail for future distillation cycles"
+    },
     "RETRO-MANIFEST-SCOPE": {
       "description": "Exclusion manifest scope ambiguity \u2014 preflight confirms cycle-level coverage, not full 550-experiment milestone",
       "status": "open",

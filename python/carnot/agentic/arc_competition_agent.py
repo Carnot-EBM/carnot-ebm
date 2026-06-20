@@ -510,6 +510,27 @@ class E3AgentPolicy:
         return self.explorer.is_done(frames, latest) and self.phase == "explore"
 
 
+# ============================================================================================
+# SINGLE SOURCE OF TRUTH for WHAT SHIPS. The 0.08 incident (2026-06-19): the offline eval measured
+# STRONGER opt-in configs (explorer_bf unlocked cn04) while the SUBMITTED default shipped bare BFS,
+# and nobody caught it because "better" was opt-in-only and the headline metric was banked-replay
+# levels, not the submitted path. RULE (enforced by test_arc_submitted_agent_parity.py): the
+# STRONGEST measured config MUST be this declared submitted config -- improvements go HERE, never to
+# an opt-in-only eval flag. The eval's submission-baseline + the parity test both read this dict, so
+# the shipped agent and the measured baseline can never silently diverge again.
+SUBMITTED_AGENT_CONFIG = {
+    "policy": "E3AgentPolicy",          # the verifier-routed cascade (NOT cascade=False banked-replay)
+    "cascade": True,
+    # explorer config the live agent actually runs. UPDATE THIS (one place) when A1 wires the stronger
+    # generic stack (router/world-model-DSL) + raises target_levels; the parity test will then enforce it.
+    "value_weight": 0.0,                # TODO(.414 A1): raise once the value head routes net-positive
+    "target_levels": 1,                 # TODO(.414 A1): raise so a cracked game harvests its level chain
+    "search_mode": "depth_first_ride",
+    "router_wired": False,              # TODO(.414 A1): True once arc_strategy_router is imported here
+    "world_model_dsl_wired": False,     # TODO(.414 A1): True once arc_world_model_dsl is imported here
+}
+
+
 def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
@@ -518,7 +539,11 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
     (E3AgentPolicy) — tier-1 training-free explorer; on STALL escalate to tier-3 E3
     induction with the bundled open proposer (the verifier routes + grounds). This is the
     unified choose_action the hard eval needs. cascade=False: pure recognize-and-replay
-    (dev/known games only — useless on the hidden eval)."""
+    (dev/known games only — useless on the hidden eval).
+
+    The exact shipped config is declared in SUBMITTED_AGENT_CONFIG (single source of truth);
+    test_arc_submitted_agent_parity.py asserts this function's default policy matches it, so a
+    silent divergence between what we measure and what we ship cannot recur (the 0.08 incident)."""
 
     class CarnotAgent(base_cls):  # type: ignore
         # The framework's Agent.MAX_ACTIONS default is 80 ("avoid looping forever"),
