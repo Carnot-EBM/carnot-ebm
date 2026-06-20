@@ -41,7 +41,7 @@ def main() -> int:
                 t = time.time()
                 # bounded so the overnight sweep finishes; a solve within this budget == EASILY re-derived
                 # (robust), a no-solve == the variant is harder for the generic solver (layout-sensitive).
-                traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=3000, max_depth=40)
+                traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=1200, max_depth=30)
                 res[label] = {"solved": bool(traj and lvl >= 1), "level": int(lvl),
                               "moves": len(traj) if traj else 0, "s": round(time.time() - t, 1)}
             except Exception as e:
