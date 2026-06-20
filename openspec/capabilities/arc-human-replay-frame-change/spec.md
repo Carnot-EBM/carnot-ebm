@@ -105,6 +105,28 @@ Required field principles:
 - `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
 - `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
 
+### REQ-ARC-FCP-4496: Submitted-Agent Scoreboard Tracks Headline Signals
+
+Experiment 4496 SHALL write
+`results/experiment_4496_submitted_agent_scoreboard.json` as a milestone
+scoreboard for the exact submitted-default ARC agent. Each scoreboard row SHALL
+record the `SUBMITTED_AGENT_CONFIG` snapshot, the frame-only held-out generic
+solve-rate with `env._game` blocked, and the variant-transfer rate. The artifact
+SHALL keep `reproducible_total_levels` only as context and SHALL explicitly mark
+it as not the headline signal.
+
+Required field principles:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
+The artifact SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates`, record the
+precondition smoke checks for `arc_solver_kit.offline_arcade()` and Torch, and
+reference the submitted-agent parity test so the reported generic solve-rate
+cannot silently drift away from what ships.
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -141,3 +163,13 @@ data directory
 Then the loader reads rows containing `frame`, `action`, `frame_delta`, and
 `level_progress`, the artifact records provenance and attribution, and
 `weights_committed=false`.
+
+### SCENARIO-ARC-FCP-4496: Scoreboard Separates Headline From Banked Levels
+
+Given a cached submitted-default benchmark artifact and the current
+variant-transfer signal
+When experiment 4496 writes its scoreboard artifact
+Then the row reports the exact submitted-default held-out generic solve-rate and
+variant-transfer rate as headline metrics, preserves source provenance for both
+measurements, keeps `reproducible_total_levels` in a context-only field, and
+records that `test_arc_submitted_agent_parity.py` is the focused parity gate.
