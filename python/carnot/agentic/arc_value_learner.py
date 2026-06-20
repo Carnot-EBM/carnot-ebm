@@ -70,6 +70,337 @@ def cross_game_features_v2(frame: Any) -> list[float]:
     return base + grid
 
 
+_V3_V2_LEN = 41
+_V3_OBJECT_RELATIONAL_NAMES = [
+    "pair_count_norm",
+    "pair_manhattan_min_norm",
+    "pair_manhattan_mean_norm",
+    "pair_manhattan_max_norm",
+    "pair_manhattan_std_norm",
+    "correspondence_known",
+    "correspondence_match_fraction",
+    "correspondence_unmatched_prev_fraction",
+    "correspondence_unmatched_cur_fraction",
+    "correspondence_displacement_min_norm",
+    "correspondence_displacement_mean_norm",
+    "correspondence_displacement_max_norm",
+    "correspondence_displacement_std_norm",
+    "correspondence_area_delta_mean_norm",
+]
+_V3_FRAME_DELTA_NAMES = [
+    "delta_known",
+    "changed_fraction",
+    "nonzero_delta_signed_fraction",
+    "nonzero_delta_abs_fraction",
+    "color_hist_l1_delta",
+    "object_count_delta_signed_norm",
+    "centroid_shift_norm",
+    "level_delta_norm",
+    "shape_changed",
+]
+_V3_ACTION_CONDITIONED_NAMES = [
+    "action_known",
+    "action_1",
+    "action_2",
+    "action_3",
+    "action_4",
+    "action_5",
+    "action_6",
+]
+_V3_PREDICATE_DISTANCE_NAMES = [
+    "goal_known",
+    "goal_grid_mismatch_fraction",
+    "goal_nonzero_delta_abs_fraction",
+    "goal_color_hist_l1",
+    "goal_object_count_delta_abs_norm",
+    "goal_centroid_distance_norm",
+    "goal_pairwise_mean_delta_abs_norm",
+    "goal_pairwise_max_delta_abs_norm",
+]
+
+
+def cross_game_feature_slices_v3() -> dict[str, tuple[int, int]]:
+    """REQ-LEARN-4476: stable feature-class slices for v3 ablations."""
+    lengths = {
+        "v2": _V3_V2_LEN,
+        "object_relational": len(_V3_OBJECT_RELATIONAL_NAMES),
+        "frame_delta": len(_V3_FRAME_DELTA_NAMES),
+        "action_conditioned": len(_V3_ACTION_CONDITIONED_NAMES),
+        "predicate_distance": len(_V3_PREDICATE_DISTANCE_NAMES),
+    }
+    out: dict[str, tuple[int, int]] = {}
+    cur = 0
+    for name, n in lengths.items():
+        out[name] = (cur, cur + n)
+        cur += n
+    return out
+
+
+def cross_game_feature_names_v3() -> list[str]:
+    """REQ-LEARN-4476: human-readable v3 feature names for artifacts."""
+    return (
+        [f"v2_{i}" for i in range(_V3_V2_LEN)]
+        + [f"object_relational_{n}" for n in _V3_OBJECT_RELATIONAL_NAMES]
+        + [f"frame_delta_{n}" for n in _V3_FRAME_DELTA_NAMES]
+        + [f"action_conditioned_{n}" for n in _V3_ACTION_CONDITIONED_NAMES]
+        + [f"predicate_distance_{n}" for n in _V3_PREDICATE_DISTANCE_NAMES]
+    )
+
+
+def _grid2d(frame: Any) -> np.ndarray:
+    from carnot.agentic.arc_agi3_world_model import grid_of
+
+    g = np.asarray(grid_of(frame), dtype=float)
+    if g.ndim == 1:
+        side = int(round(g.size ** 0.5))
+        g = g.reshape(side, side) if side * side == g.size else g.reshape(1, -1)
+    return g
+
+
+def _component_stats_from_grid(g: np.ndarray) -> list[dict[str, float]]:
+    vals, counts = np.unique(g, return_counts=True)
+    bg = float(vals[counts.argmax()]) if vals.size else 0.0
+    mask = g != bg
+    if not mask.any():
+        return []
+    h, w = g.shape
+    seen = np.zeros_like(mask, dtype=bool)
+    comps: list[dict[str, float]] = []
+    for i in range(h):
+        for j in range(w):
+            if not mask[i, j] or seen[i, j]:
+                continue
+            stack = [(i, j)]
+            seen[i, j] = True
+            cells = []
+            while stack:
+                y, x = stack.pop()
+                cells.append((y, x))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
+                        seen[ny, nx] = True
+                        stack.append((ny, nx))
+            ys = [c[0] for c in cells]
+            xs = [c[1] for c in cells]
+            colors = [float(g[y, x]) for y, x in cells]
+            vals2, counts2 = np.unique(colors, return_counts=True)
+            comps.append({
+                "cy": float(np.mean(ys)),
+                "cx": float(np.mean(xs)),
+                "area": float(len(cells)),
+                "color": float(vals2[counts2.argmax()]),
+                "y0": float(min(ys)),
+                "y1": float(max(ys)),
+                "x0": float(min(xs)),
+                "x1": float(max(xs)),
+            })
+    return comps
+
+
+def _safe_norm(g: np.ndarray) -> float:
+    return float(max(1, g.shape[0] + g.shape[1] - 2))
+
+
+def _summary4(values: Sequence[float]) -> list[float]:
+    if not values:
+        return [0.0, 0.0, 0.0, 0.0]
+    arr = np.asarray(values, dtype=float)
+    return [float(arr.min()), float(arr.mean()), float(arr.max()), float(arr.std())]
+
+
+def _pairwise_manhattan(comps: Sequence[dict[str, float]], norm: float) -> list[float]:
+    ds = []
+    for i in range(len(comps)):
+        for j in range(i + 1, len(comps)):
+            ds.append((abs(comps[i]["cy"] - comps[j]["cy"]) + abs(comps[i]["cx"] - comps[j]["cx"])) / norm)
+    return ds
+
+
+def _weighted_centroid(comps: Sequence[dict[str, float]]) -> tuple[float, float] | None:
+    total = sum(c["area"] for c in comps)
+    if total <= 0:
+        return None
+    cy = sum(c["cy"] * c["area"] for c in comps) / total
+    cx = sum(c["cx"] * c["area"] for c in comps) / total
+    return float(cy), float(cx)
+
+
+def _color_hist_l1(a: np.ndarray, b: np.ndarray) -> float:
+    vals = sorted(set(a.flatten().tolist()) | set(b.flatten().tolist()))
+    if not vals:
+        return 0.0
+    aa = {v: float((a == v).sum()) / max(1, a.size) for v in vals}
+    bb = {v: float((b == v).sum()) / max(1, b.size) for v in vals}
+    return float(sum(abs(aa[v] - bb[v]) for v in vals) / 2.0)
+
+
+def _level(frame: Any) -> float:
+    return float(getattr(frame, "levels_completed", 0) or 0)
+
+
+def _object_relational_features(g: np.ndarray, previous_frame: Any | None) -> list[float]:
+    comps = _component_stats_from_grid(g)
+    norm = _safe_norm(g)
+    pair_ds = _pairwise_manhattan(comps, norm)
+    pair = _summary4(pair_ds)
+    pair_count_norm = float(min(len(pair_ds), 64) / 64.0)
+    if previous_frame is None:
+        return [pair_count_norm, *pair, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+    prev_g = _grid2d(previous_frame)
+    prev = _component_stats_from_grid(prev_g)
+    if not prev and not comps:
+        return [pair_count_norm, *pair, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+    unused = set(range(len(prev)))
+    disp: list[float] = []
+    area_delta: list[float] = []
+    for cur in comps:
+        if not unused:
+            break
+        same_color = [i for i in unused if prev[i]["color"] == cur["color"]]
+        candidates = same_color or list(unused)
+        best = min(
+            candidates,
+            key=lambda i: abs(prev[i]["cy"] - cur["cy"]) + abs(prev[i]["cx"] - cur["cx"]),
+        )
+        unused.remove(best)
+        disp.append((abs(prev[best]["cy"] - cur["cy"]) + abs(prev[best]["cx"] - cur["cx"])) / norm)
+        area_delta.append(abs(prev[best]["area"] - cur["area"]) / max(1.0, g.size))
+
+    denom = float(max(1, max(len(prev), len(comps))))
+    unmatched_prev = len(unused) / denom
+    unmatched_cur = max(0, len(comps) - len(disp)) / denom
+    disp_stats = _summary4(disp)
+    return [
+        pair_count_norm,
+        *pair,
+        1.0,
+        float(len(disp) / denom),
+        float(unmatched_prev),
+        float(unmatched_cur),
+        *disp_stats,
+        float(np.mean(area_delta)) if area_delta else 0.0,
+    ]
+
+
+def _frame_delta_features(g: np.ndarray, frame: Any, previous_frame: Any | None) -> list[float]:
+    if previous_frame is None:
+        return [0.0] * len(_V3_FRAME_DELTA_NAMES)
+    prev = _grid2d(previous_frame)
+    shape_changed = float(prev.shape != g.shape)
+    if prev.shape == g.shape:
+        changed = float((prev != g).sum()) / max(1, g.size)
+        hist = _color_hist_l1(prev, g)
+    else:
+        changed = 1.0
+        hist = 1.0
+    nz_cur = float((g != 0).sum())
+    nz_prev = float((prev != 0).sum())
+    cur_comps = _component_stats_from_grid(g)
+    prev_comps = _component_stats_from_grid(prev)
+    cur_cent = _weighted_centroid(cur_comps)
+    prev_cent = _weighted_centroid(prev_comps)
+    if cur_cent is None or prev_cent is None:
+        centroid_shift = 0.0
+    else:
+        centroid_shift = (abs(cur_cent[0] - prev_cent[0]) + abs(cur_cent[1] - prev_cent[1])) / _safe_norm(g)
+    return [
+        1.0,
+        changed,
+        float((nz_cur - nz_prev) / max(1, g.size)),
+        float(abs(nz_cur - nz_prev) / max(1, g.size)),
+        hist,
+        float((len(cur_comps) - len(prev_comps)) / 32.0),
+        float(centroid_shift),
+        float((_level(frame) - _level(previous_frame)) / 32.0),
+        shape_changed,
+    ]
+
+
+def _action_features(action_id: Any | None) -> list[float]:
+    out = [0.0] * len(_V3_ACTION_CONDITIONED_NAMES)
+    if action_id is None:
+        return out
+    try:
+        if isinstance(action_id, (tuple, list)):
+            aid = int(action_id[0])
+        elif hasattr(action_id, "name") and str(action_id.name).startswith("ACTION"):
+            aid = int(str(action_id.name).replace("ACTION", ""))
+        elif isinstance(action_id, str) and action_id.startswith("ACTION"):
+            aid = int(action_id.replace("ACTION", ""))
+        else:
+            aid = int(action_id)
+    except (TypeError, ValueError):
+        return out
+    out[0] = 1.0
+    if 1 <= aid <= 6:
+        out[aid] = 1.0
+    return out
+
+
+def _predicate_distance_features(g: np.ndarray, goal_frame: Any | None) -> list[float]:
+    if goal_frame is None:
+        return [0.0] * len(_V3_PREDICATE_DISTANCE_NAMES)
+    goal = _grid2d(goal_frame)
+    if goal.shape == g.shape:
+        mismatch = float((goal != g).sum()) / max(1, g.size)
+        hist = _color_hist_l1(g, goal)
+    else:
+        mismatch = 1.0
+        hist = 1.0
+    nz_delta = abs(float((goal != 0).sum()) - float((g != 0).sum())) / max(1, max(goal.size, g.size))
+    comps = _component_stats_from_grid(g)
+    goal_comps = _component_stats_from_grid(goal)
+    obj_delta = abs(len(goal_comps) - len(comps)) / 32.0
+    cur_cent = _weighted_centroid(comps)
+    goal_cent = _weighted_centroid(goal_comps)
+    if cur_cent is None or goal_cent is None:
+        centroid = 0.0
+    else:
+        centroid = (abs(cur_cent[0] - goal_cent[0]) + abs(cur_cent[1] - goal_cent[1])) / _safe_norm(g)
+    cur_pairs = _pairwise_manhattan(comps, _safe_norm(g))
+    goal_pairs = _pairwise_manhattan(goal_comps, _safe_norm(goal))
+    cur_mean = float(np.mean(cur_pairs)) if cur_pairs else 0.0
+    cur_max = float(np.max(cur_pairs)) if cur_pairs else 0.0
+    goal_mean = float(np.mean(goal_pairs)) if goal_pairs else 0.0
+    goal_max = float(np.max(goal_pairs)) if goal_pairs else 0.0
+    return [
+        1.0,
+        mismatch,
+        float(nz_delta),
+        hist,
+        float(obj_delta),
+        float(centroid),
+        abs(cur_mean - goal_mean),
+        abs(cur_max - goal_max),
+    ]
+
+
+def cross_game_features_v3(
+    frame: Any,
+    previous_frame: Any | None = None,
+    action_id: Any | None = None,
+    goal_frame: Any | None = None,
+) -> list[float]:
+    """REQ-LEARN-4476: v2 plus relational, delta, action, and predicate-distance context.
+
+    The optional context is used by the offline trainer. With only `frame`, the
+    function still emits a stable vector so existing live loaders degrade to a
+    frame-only v3 view instead of breaking.
+    """
+    g = _grid2d(frame)
+    v2 = cross_game_features_v2(frame)
+    return [
+        *v2,
+        *_object_relational_features(g, previous_frame),
+        *_frame_delta_features(g, frame, previous_frame),
+        *_action_features(action_id),
+        *_predicate_distance_features(g, goal_frame),
+    ]
+
+
 def collect_trajectory_data(env: Any, solver: Any, prefix: Sequence[str],
                             level_path: Sequence[str], featurize: Callable[[Any], Sequence[float]]):
     """Replay a solved LEVEL path and emit (features, steps_remaining) per state —

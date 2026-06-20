@@ -366,8 +366,13 @@ def load_cross_game_value_head():
             LearnedVerifier,
             cross_game_features,
             cross_game_features_v2,
+            cross_game_features_v3,
         )
 
+        v3 = models / "arc_verifier_cross_game_v3.json"
+        if v3.exists():
+            v = LearnedVerifier.load(v3, cross_game_features_v3)
+            return lambda frame: v(frame)
         # prefer the RICHER v2 head (spatial occupancy; it routed cn04 where v1's 5 scalars could not)
         v2 = models / "arc_verifier_cross_game_v2.json"
         if v2.exists():
