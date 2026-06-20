@@ -1,0 +1,125 @@
+{
+  "a1_value_weight_verdict": {
+    "current_submitted_value_weight": 0.0,
+    "selected_value_weight": 0.0,
+    "selection_reason": "no_positive_weight_beats_control_within_budget",
+    "source_artifact": "results/experiment_4500_value_weight_remeasure.json",
+    "source_flagged_adversarial": true,
+    "source_honest_verdict": "complete: value_weight_remeasure_null_keep_0_1_of_7",
+    "state": "keep_zero_value_weight",
+    "submitted_value_weight_after": 0.0,
+    "value_weight_equals_zero": true
+  },
+  "context_metrics": {
+    "leaderboard_signal": [
+      "submitted_default_heldout_generic_solve_rate",
+      "variant_transfer_rate"
+    ],
+    "reproducible_total_levels_context_only": 47,
+    "reproducible_total_levels_is_headline": false
+  },
+  "experiment": "experiment_4505_submitted_agent_scoreboard",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_."
+    },
+    "inference_substrate": {
+      "principle": "explicit substrate so adversarial_verify applies the right duration floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    }
+  },
+  "headline_metrics": {
+    "submitted_default_heldout_generic_attempted": 7,
+    "submitted_default_heldout_generic_solve_rate": 0.1428571429,
+    "submitted_default_heldout_generic_solved": 1,
+    "variant_transfer_attempted": 25,
+    "variant_transfer_rate": 0.28,
+    "variant_transfer_solved": 7
+  },
+  "honest_verdict": "complete: submitted_agent_scoreboard_refresh_generic_1_of_7_variant_7_of_25_value_weight_0",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "parity_gate": {
+    "command": ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q",
+    "expected_green": true,
+    "purpose": "guards SUBMITTED_AGENT_CONFIG parity with make_carnot_agent default",
+    "test_path": "tests/python/test_arc_submitted_agent_parity.py",
+    "value_weight_assertion": "value_weight==0.0",
+    "verified_green": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "env_game_access_blocked": true,
+    "offline_arcade_import_smoke": true,
+    "parity_test_target": "tests/python/test_arc_submitted_agent_parity.py",
+    "registry_context_present": true,
+    "torch_import": true,
+    "torch_version": "2.11.0+cu128",
+    "value_weight_source_artifact_present": true,
+    "variant_source_artifact_present": true
+  },
+  "reproducibility_checksum": "13fa737934ed814e0f94dbf4fe9ed99f0f9c3dd620f3cfd227f35d2aa3f93e7c",
+  "requirements": [
+    "REQ-ARC-FCP-4505"
+  ],
+  "result_path": "results/experiment_4505_submitted_agent_scoreboard.json",
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4505"
+  ],
+  "schema": "carnot.exp4505.submitted_agent_scoreboard.v1",
+  "scoreboard_row": {
+    "headline_note": "Real leaderboard signal is submitted-default generic solve-rate plus variant transfer; reproducible_total_levels is context only.",
+    "heldout_generic_measurement": {
+      "attempted": 7,
+      "env_game_access_blocked": true,
+      "frame_only": true,
+      "games": [
+        "tr87",
+        "tu93",
+        "lp85",
+        "sc25",
+        "ka59",
+        "ar25",
+        "ft09"
+      ],
+      "measurement": "heldout_value_weight_zero_frame_only_env_game_blocked",
+      "median_actions_to_first_levelup": 20,
+      "median_per_game_wall_seconds": 1.303081,
+      "rate": 0.1428571429,
+      "solved": 1,
+      "source_artifact": "results/experiment_4500_value_weight_remeasure.json",
+      "source_config_matches_current": true,
+      "source_flagged_adversarial": true,
+      "source_honest_verdict": "complete: value_weight_remeasure_null_keep_0_1_of_7"
+    },
+    "milestone": "2026.06.415-B2",
+    "submitted_agent_config": {
+      "cascade": true,
+      "graph_explore_budget": 80,
+      "online_discriminative": true,
+      "policy": "E3AgentPolicy",
+      "routed_explore_budget": 24,
+      "router_wired": true,
+      "search_mode": "depth_first_ride",
+      "target_levels": 5,
+      "value_weight": 0.0,
+      "world_model_dsl_wired": true
+    },
+    "variant_transfer_measurement": {
+      "attempted": 25,
+      "rate": 0.28,
+      "solved": 7,
+      "source_artifact": "results/experiment_4499_capstone_v415.json",
+      "source_honest_verdict": "complete: submitted_agent_scoreboard_generic_1_of_7_variant_7_of_25",
+      "source_state": "variant_transfer_measured"
+    }
+  },
+  "source_provenance": {
+    "heldout_generic_source_artifact": "results/experiment_4500_value_weight_remeasure.json",
+    "reproducible_total_levels_context_source": "ops/arc_solve_registry.yaml",
+    "variant_transfer_source_artifact": "results/experiment_4499_capstone_v415.json"
+  }
+}

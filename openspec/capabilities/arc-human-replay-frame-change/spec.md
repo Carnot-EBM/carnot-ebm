@@ -127,6 +127,31 @@ precondition smoke checks for `arc_solver_kit.offline_arcade()` and Torch, and
 reference the submitted-agent parity test so the reported generic solve-rate
 cannot silently drift away from what ships.
 
+### REQ-ARC-FCP-4505: Submitted-Agent Scoreboard Refresh Tracks Real Leaderboard Signal
+
+Experiment 4505 SHALL write
+`results/experiment_4505_submitted_agent_scoreboard.json` as the refreshed
+.415 B2 submitted-default ARC scoreboard. The artifact SHALL report the current
+`SUBMITTED_AGENT_CONFIG` snapshot, the frame-only held-out generic solve-rate
+with `env._game` blocked, the variant-transfer solve-rate, and the A1
+value-weight verdict. The artifact SHALL keep `reproducible_total_levels` only
+as context and SHALL explicitly mark it as not the leaderboard headline.
+
+Required field principles:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.
+- `inference_substrate`: explicit substrate so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
+The artifact SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates`, record the
+precondition smoke checks for `arc_solver_kit.offline_arcade()` and Torch,
+include a focused parity gate for
+`tests/python/test_arc_submitted_agent_parity.py` with `value_weight==0.0`, and
+make the real leaderboard signal the pair
+`submitted_default_heldout_generic_solve_rate` plus `variant_transfer_rate`
+rather than `reproducible_total_levels`.
+
 ### REQ-ARC-FCP-4501: Frame-Only Predictor Rerun From Staged Replay Shards
 
 Experiment 4501 SHALL write
@@ -237,6 +262,16 @@ Then the row reports the exact submitted-default held-out generic solve-rate and
 variant-transfer rate as headline metrics, preserves source provenance for both
 measurements, keeps `reproducible_total_levels` in a context-only field, and
 records that `test_arc_submitted_agent_parity.py` is the focused parity gate.
+
+### SCENARIO-ARC-FCP-4505: Refreshed Scoreboard Pins Submitted Defaults
+
+Given the refreshed submitted-default held-out benchmark, the current
+variant-transfer signal, and the value-weight remeasurement verdict
+When experiment 4505 writes its scoreboard artifact
+Then the artifact reports the current submitted-default config with
+`value_weight==0.0`, records the parity test as green, reports the generic
+solve-rate and variant-transfer rate as headline metrics, and leaves
+`reproducible_total_levels` in context-only metadata.
 
 ### SCENARIO-ARC-FCP-4501: Staged Frame-Only Rerun Has Interpretable Null Guard
 
