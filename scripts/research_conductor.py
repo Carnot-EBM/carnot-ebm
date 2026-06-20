@@ -61,7 +61,14 @@ AGENT_BIN_BY_TYPE = {
     "codex": os.environ.get("CODEX_BIN", "codex"),
 }
 DEFAULT_MODEL_BY_TYPE = {
-    "claude": "sonnet",
+    # 2026-06-20 operator directive: the claude -p bridge uses Opus 4.8 (the ultracode
+    # tier) for EVERY claude call. Planner/retro already pin claude-opus-4-8 via the
+    # systemd AGENT_MODEL_PLANNER/RETRO env; this makes the DEFAULT for any other
+    # claude-typed call (e.g. requires_claude_verified experiments, the adversarial
+    # audits' own default) Opus 4.8 too, instead of Sonnet. Effort is hard-coded
+    # --effort max on the claude argv below (max is the CLI ceiling, >= ultracode's
+    # xhigh effort; 'ultracode' is not itself an --effort value, per claude --help).
+    "claude": "claude-opus-4-8",
     "gemini": "gemini-3.1-pro-preview",
     "opencode": "opencode/big-pickle",
     "codex": "gpt-5.5",
