@@ -136,6 +136,33 @@ levels beyond the prior L1 solve. If no L2 mechanic is reverse-engineerable, the
 artifact SHALL report the reverse-engineering delta in `residual_blockers`
 without fabricating an L2 reproduction.
 
+### REQ-ARC-WMTE-4504: Adapter-Routed L2 Result Refresh
+
+Experiment 4504 SHALL pick exactly one tractable L1 game from `cd82`, `lf52`,
+`r11l`, or `ls20`, use its registered `GameAdapter`, and run the
+verifier-routed offline solver plus reproduction gate to deepen from the prior
+L1 solve to target level 2. The selected adapter SHALL derive its action labels,
+win-predicate distance, and state key from the current offline environment
+state, including palette/action coordinates when applicable, and SHALL NOT
+hardcode level coordinates as the mechanic.
+
+Experiment 4504 SHALL write
+`results/experiment_4504_adapter_deepen_l2.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`offline_reproduced`, `reproduced_levels`, `adapter_registered`,
+`target_game`, `reproduction_gate`, `solution_labels`, and
+`residual_blockers`. Required field principles SHALL be included for:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
+A success artifact SHALL require `offline_reproduced=true` and
+`reproduced_levels >= 1`, where `reproduced_levels` counts newly reproduced
+levels beyond the prior L1 solve. If no L2 mechanic is reverse-engineerable, the
+artifact SHALL report the reverse-engineering delta in `residual_blockers`
+without fabricating an L2 reproduction.
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-4491: Held-Out Ranking Beats First-Clears Baseline
@@ -195,3 +222,13 @@ Then the terminal artifact records explicit preconditions, the selected
 `target_game`, a registered adapter, the adapter-produced `solution_labels`, and
 only reports success when the offline reproduction gate reaches at least one new
 level beyond L1.
+
+### SCENARIO-ARC-WMTE-4504: cd82 Adapter Reproduces One New L2 Level
+
+Given the registered cd82 adapter and an offline environment exposing palette
+sprites, the canvas, and the target sprite
+When experiment 4504 runs verifier-routed deepening to target level 2
+Then the adapter-produced labels are replayed by the offline reproduction gate,
+the terminal artifact records `target_game=cd82`, `adapter_registered=true`,
+`offline_reproduced=true`, and `reproduced_levels >= 1`, and success is not
+reported unless the gate reaches a new level beyond L1.
