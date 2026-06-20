@@ -70,23 +70,62 @@ def measure(policy: str, budget: int, cap: int) -> dict:
         "median_actions_on_solved": (median(acts) if acts else None),
         "total_actions_on_solved": (sum(acts) if acts else None),
         "timed_out_count": sum(1 for r in rows if r["timed_out"]),
+        # CORE set-containment keys (2026-06-20): the verdict compares the SAME games across
+        # baseline/treatment, so a knife-edge marginal solve flipping due to order-perturbation
+        # noise (A1/A2 lesson: a 5%-recall prune that removes ~nothing still reshuffled the chaotic
+        # ~7800-action trajectory and dropped m0r0) is NOT counted as a regression. The CORE is the
+        # set of games the BASELINE solves; a lever must preserve every CORE solve (solve-rate
+        # non-regression by set, not by count) and cut median actions ON THAT FIXED SET.
+        "solved_games": sorted(r["game"] for r in solved),
+        "actions_by_game": {r["game"]: r["actions"] for r in solved if r["actions"] is not None},
     }
 
 
 def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
-    bs, cs = base.get("solved_count", 0), cur["solved_count"]
-    if cs < bs:
-        return False, f"REGRESSION: solved {cs} < baseline {bs}"
-    bm = base.get("median_actions_on_solved")
-    cm = cur["median_actions_on_solved"]
-    if cs == 0:
-        return False, "REGRESSION: solved 0 games"
-    if bm is not None and cm is not None and cm > bm * EFFICIENCY_SLACK:
-        return False, (f"REGRESSION: median actions/solve {cm} > baseline {bm} x{EFFICIENCY_SLACK} "
+    """CORE set-containment verdict (2026-06-20 redesign).
+
+    The OLD verdict compared raw solved_COUNT, so a lever that merely reordered the chaotic
+    near-budget search and flipped one knife-edge solve 4<->3 FAILed automatically regardless of
+    merit (A1/A2 both died this way with their positive_control passing -> the metric, not the
+    lever, was broken). The NEW verdict:
+      * CORE := the games the BASELINE solves. A lever must preserve EVERY core solve (set
+        containment, not count) -- this is the only relaxation that still FAILs a config that
+        trades core solves for fringe ones (e.g. A2 swapping 3 core for 2 fringe).
+      * median actions is measured on the FIXED CORE denominator (+inf for any core game the
+        treatment failed to solve), so savings are credited on the same games, never gamed by
+        dropping a hard one.
+      * new solves OUTSIDE core are a reported BONUS, NEVER netted against a core loss.
+    A legacy fallback (raw count) keeps the gate working against an old baseline JSON until the
+    next `--update-baseline` persists the CORE keys.
+    """
+    BIG = 10 ** 9
+    # Reconstruct baseline per-game actions from the new key, else from the legacy per_game rows.
+    base_acts = base.get("actions_by_game") or {
+        r["game"]: r["actions"] for r in base.get("per_game", [])
+        if r.get("solved") and r.get("actions") is not None
+    }
+    core = set(base.get("solved_games") or base_acts.keys())
+    if not core:
+        # No baseline solves recorded at all -> fall back to the legacy count check.
+        bs, cs = base.get("solved_count", 0), cur["solved_count"]
+        return (cs >= bs and cs > 0,
+                f"legacy count check: solved {cs} vs baseline {bs} (run --update-baseline for CORE)")
+    cur_solved = set(cur.get("solved_games") or [])
+    lost = sorted(core - cur_solved)
+    if lost:
+        return False, f"REGRESSION: lost CORE solves {lost} (core={sorted(core)})"
+    cur_acts = cur.get("actions_by_game") or {}
+    cm = median([cur_acts.get(g, BIG) for g in core])
+    bm = median([base_acts.get(g, BIG) for g in core])
+    if cm > bm * EFFICIENCY_SLACK:
+        return False, (f"REGRESSION: CORE median actions {cm} > baseline {bm} x{EFFICIENCY_SLACK} "
                        f"(action efficiency is the scoring metric)")
-    better = cs > bs or (cm is not None and bm is not None and cm < bm)
-    return True, (f"PASS ({'IMPROVED' if better else 'non-inferior'}): solved {cs}>={bs}, "
-                  f"median actions/solve {cm} vs baseline {bm}")
+    bonus = sorted(cur_solved - core)  # extra solves: reported, NEVER netted against a core loss
+    tag = "IMPROVED" if (cm < bm or bonus) else "non-inferior"
+    msg = f"PASS ({tag}): CORE {sorted(core)} median actions {cm} vs baseline {bm}"
+    if bonus:
+        msg += f"; BONUS solves {bonus}"
+    return True, msg
 
 
 def main() -> int:
