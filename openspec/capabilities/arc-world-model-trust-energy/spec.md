@@ -53,6 +53,33 @@ gate. Markov/non-hidden-state games MAY retain the cheap execution-grounded
 accuracy check. A one-candidate hidden-state pool SHALL still pass through the
 same selector so the live path and offline experiment share one ranking rule.
 
+### REQ-ARC-WMTE-4495: HUD/Register State and GOAL Predicate Accountability
+
+Experiment 4493 SHALL extend the E3 hidden-state contract from a grid-only
+snapshot to an explicit `(grid, registers)` state. The register payload SHALL
+carry the induced scalar needed by the held-out L2 stalls, including
+`hud_count` for ka59 and the ar25 undo-stack depth when that hidden stack is
+available. Candidate `is_level_complete` checks SHALL be allowed to read the
+registered state, and the experiment SHALL separately report
+`goal_predicate_heldout_score` by comparing the registered GOAL predicate
+against recorded level-up transitions rather than scoring dynamics alone.
+
+Experiment 4493 SHALL write
+`results/experiment_4493_hud_register_deepen.json` with bare top-level fields
+for `honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`offline_reproduced`, `reproduced_levels`, `goal_predicate_heldout_score`,
+`grid_only_goal_predicate_heldout_score`, `register_state_contract`,
+`candidate_reproduction_attempts`, and `residual_blockers`. Required field
+principles SHALL be included for:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+
+A success artifact SHALL require
+`offline_reproduced=true` and `reproduced_levels >= 1`; otherwise the artifact
+SHALL report a terminal honest residual without fabricating an L2 reproduction.
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-4491: Held-Out Ranking Beats First-Clears Baseline
@@ -80,3 +107,13 @@ baseline
 When experiment 4491 writes its terminal artifact
 Then it reports a complete null verdict, keeps `verifier_is_oracle=false`, and
 sets `false_negative_risk_guard` to the positive-control-backed null state.
+
+### SCENARIO-ARC-WMTE-4494: Registered GOAL Predicate Is Scored Against Level-Ups
+
+Given held-out ka59 or ar25 states whose visible grid dynamics can be predicted
+but whose completion condition depends on a latent register
+When experiment 4493 scores the candidate GOAL predicate
+Then the registered `(grid, registers)` predicate is compared with recorded
+level-up transitions, the grid-only baseline score is reported separately, and
+the artifact only claims a deepened L2 reproduction when offline replay reaches
+at least one new level beyond L1.
