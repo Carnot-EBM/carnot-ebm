@@ -208,3 +208,9 @@ data/arc_public_demo_human_replay_corpus/
 .tmp-pytest/
 recordings/arc_live_submit/
 recordings/arc_live_probe/
+
+# Large binary model checkpoints never belong in git (2026-06-20 operator directive). All *.ckpt are
+# the retired nano-TRM Sudoku run (~1.4GB, val-0.63, DO_NOT_RELAUNCH, grafted=chance). Use `git add -f`
+# to deliberately track a specific small checkpoint if ever needed. (Legitimate SMALL models in models/
+# *.safetensors / *.pt stay tracked -- not ignored here.)
+*.ckpt
