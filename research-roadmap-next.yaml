@@ -5,11 +5,11 @@ milestone_title: 'LEAD with the SCORE-DRIVERS the 2026-06-19 step-back gap audit
   the 0.08 (reproducible_total_levels is a MIRAGE for the leaderboard); (A2) VERIFIER FEATURES v3 (relational/Δframe/action-conditioned)
   to fix the cross-game transfer the LOO-AUROC=0.503 chance result exposed; (A3) wire the SHIPPED per-game
   online discriminative head to prune traps; (A4) E3 goal-predicate verification + (grid,registers) state
-  for the ar25/ka59/ft09 HUD deepening tail. THEN close the public-25 (re86 sprite-resize verifier + bp35/lf52
-  first-contact -- the level-up guarantee) + the variant transfer benchmark + the durable --no-cov throughput
-  lint + gated_on decouple. ALL experiments agent_type=codex/gpt-5.5; planner/retro stay Claude. Reserved:
-  2 infra + 1 hardware + 1 SOTA + capstone. >=3 LEVEL-UP attempts (re86/bp35/lf52). Live generator Qwen3.5-9B-MTP,
-  never the 3090s. NO leaderboard submission in-loop (operator-only).'
+  for the ar25/ka59/ft09 HUD deepening tail. THEN close the public-25 (re86 sprite-resize verifier + bp35
+  GOAL-DIRECTED navigation; lf52 SOLVED 2026-06-20) + the variant transfer benchmark + the durable --no-cov
+  throughput lint + gated_on decouple. ALL experiments agent_type=codex/gpt-5.5; planner/retro stay Claude.
+  Reserved: 2 infra + 1 hardware + 1 SOTA + capstone. >=2 LEVEL-UP attempts (re86, bp35; lf52 solved).
+  Live generator Qwen3.5-9B-MTP, never the 3090s. NO leaderboard submission in-loop (operator-only).'
 milestone_doc: openspec/change-proposals/research-roadmap-v414.md
 milestone_overview: 'The step-back audit (ops/verifier_gaps.md GAP-LIVE-INTEGRATION + GAP-ARCH-*) found
   the 0.08 score''s ceiling is the SUBMITTED agent, not the solver research: it ships bare BFS + a 0/6-value
@@ -199,28 +199,34 @@ tasks:
     stated.'
 - id: exp4480-a6
   milestone: 2026.06.414
-  title: PHASE A6 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- FIRST-CONTACT bp35 + lf52 L1 -- adapter-free
-    graph_explore_solve_v2 (the last 2 never-contacted)
+  title: PHASE A6 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP) -- SOLVE bp35 L1 -- GOAL-DIRECTED navigation
+    solver (lf52 already solved + registered 2026-06-20)
   priority: critical
   track: arc-north-star
   max_turns: 150
   agent_type: codex
   model: gpt-5.5
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4480_first_contact_bp35_lf52.json
-  prompt: "CONTEXT: bp35 + lf52 are the last 2 public games with NO registry entry. For EACH: recommend_approach\
-    \ -> adapter-free graph_explore_solve_v2 (now via the A1-wired router) -> reproduction gate -> register.\
-    \ INCREMENTAL +1 per game. Banking re86+bp35+lf52 closes the 25 public games to 25/25 first-contact.\
-    \ If no advance, emit the RE delta (no fabrication).\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE\
-    \ any other step):\n     a. `.venv/bin/pytest tests/python/test_arc_solver_kit.py -q --no-cov` (NEVER\
-    \ inherit the global\n        --cov-fail-under=99 -- the dc22-class block that lost a whole .412 milestone).\
-    \ Real failure ->\n        honest_verdict blocked_kit_import, exit.\n     b. offline arcade reachable.\
-    \ Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\nREQUIRED ARTIFACT FIELDS\
-    \ (each with a one-line principle):\n  honest_verdict: principle \"MUST start with a terminal prefix\
-    \ complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_ so the reconciler\
-    \ classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate: principle\
-    \ \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates |\
-    \ aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
+  deliverable: results/experiment_4480_solve_bp35_goal_directed.json
+  prompt: "CONTEXT: lf52 was SOLVED 2026-06-20 by the outer-loop generic sweep (graph_explore adapter-free,\
+    \ 8 clicks, reproduced + REGISTERED in ops/arc_solve_registry.yaml) -- do NOT re-attempt it. bp35\
+    \ is the last first-contact game besides re86. CRITICAL RE finding (docs/research-notes/arc-bp35-re-2026-06-20.md):\
+    \ bp35 is a DIRECTIONAL-NAVIGATION game (ACTION1-4 move a shape-changing avatar; ACTION6 clicks only\
+    \ hit a HUD counter at (0,63)), NOT the s5i5 marker-coverage that recommend_approach FALSELY transfers\
+    \ to (0.83 confidence -- a GAP-ARCH-FEATURES false positive). Adapter-free graph_explore_solve_v2\
+    \ at 40k expansions TIMES OUT (>280s, untargeted). DO NOT repeat it. Build a GOAL-DIRECTED solver:\
+    \ identify the goal region (color 3 or 14), give the explorer a manhattan/BFS-distance-to-goal heuristic,\
+    \ and encode the avatar shape-change in the state key. Reproduction-gate + register. INCREMENTAL +1\
+    \ on bp35 ONLY. If still blocked, emit the goal/heuristic RE delta (no fabrication).\nCONCRETE STEPS:\n\
+    \  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/pytest tests/python/test_arc_solver_kit.py\
+    \ -q --no-cov` (NEVER inherit the global\n        --cov-fail-under=99 -- the dc22-class block that\
+    \ lost a whole .412 milestone). Real failure ->\n        honest_verdict blocked_kit_import, exit.\n\
+    \     b. offline arcade reachable. Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\
+    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
+    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate:\
+    \ principle \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates\
+    \ | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
     \ principle \"a solve not reproducible offline is wasted effort -- only reproduced levels\n    count\
     \ (ARC Solve Reproducibility).\"\n  reproduced_levels: principle \"headline metric reproducible_total_levels\
     \ grows monotonically; report the\n    count banked, real-env-confirmed.\"\n  preconditions_checked:\
