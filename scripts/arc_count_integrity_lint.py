@@ -98,6 +98,7 @@ def lint_registry_payload(
                 ),
             )
         )
+    issues.extend(_sc25_transition_issues(registry_path, entries, actual_total, expected_total))
 
     if replay_entry_fn is None:
         replay_entry_fn = _default_registry_replay
@@ -412,6 +413,38 @@ def _looks_like_provisional_inflation(
         for entry in entries
     )
     return actual_total == live_augmented_total and live_augmented_total > expected_total
+
+
+def _sc25_transition_issues(
+    path: Path,
+    entries: Sequence[Mapping[str, Any]],
+    actual_total: int,
+    expected_total: int,
+) -> list[ArcCountIntegrityIssue]:
+    sc25_remaining = 0
+    for entry in entries:
+        if str(entry.get("game") or "") != "sc25":
+            continue
+        live_recorded = _as_int(entry.get("levels_live_recorded"))
+        reproduced = _as_int(entry.get("levels_reproduced"))
+        sc25_remaining += max(0, live_recorded - reproduced)
+    if sc25_remaining <= 0:
+        return []
+    if actual_total != expected_total + sc25_remaining:
+        return []
+    return [
+        ArcCountIntegrityIssue(
+            path=path,
+            kind="SC25_PROVISIONAL_COUNTED_AS_REPRODUCED",
+            game="sc25",
+            detail=(
+                "sc25 has "
+                f"{sc25_remaining} remaining live-recorded provisional levels; "
+                "reproducible_total_levels must stay at "
+                f"sum(levels_reproduced)={expected_total}, got {actual_total}."
+            ),
+        )
+    ]
 
 
 def _registry_replay_sample(

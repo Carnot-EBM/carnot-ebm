@@ -117,6 +117,65 @@ def test_scenario_report_4462_accepts_reproduced_sum_without_counting_live_recor
     assert issues == []
 
 
+def test_scenario_report_4475_sc25_transition_rejects_remaining_provisional_in_total(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-4475-SC25-COUNT: sc25 provisional suffix cannot inflate totals."""
+
+    registry = _write_yaml(
+        tmp_path / "ops" / "arc_solve_registry.yaml",
+        {
+            "schema_version": 1,
+            "reproducible_total_levels": 6,
+            "provisional_total_levels": 4,
+            "games": [
+                {
+                    "game": "sc25",
+                    "reproducibility": "reproduced",
+                    "levels_reproduced": 1,
+                    "levels_live_recorded": 5,
+                },
+                {
+                    "game": "alpha",
+                    "reproducibility": "reproduced",
+                    "levels_reproduced": 1,
+                },
+            ],
+        },
+    )
+
+    issues = lint.lint_registry_path(registry, replay_entry_fn=lambda _entry, _root: None)
+    kinds = {issue.kind for issue in issues}
+
+    assert "PROVISIONAL_INFLATION" in kinds
+    assert "SC25_PROVISIONAL_COUNTED_AS_REPRODUCED" in kinds
+    assert any("sc25" in issue.detail for issue in issues)
+
+    fixed_registry = _write_yaml(
+        tmp_path / "ops" / "arc_solve_registry.yaml",
+        {
+            "schema_version": 1,
+            "reproducible_total_levels": 2,
+            "provisional_total_levels": 4,
+            "games": [
+                {
+                    "game": "sc25",
+                    "reproducibility": "reproduced",
+                    "levels_reproduced": 1,
+                    "levels_live_recorded": 5,
+                },
+                {
+                    "game": "alpha",
+                    "reproducibility": "reproduced",
+                    "levels_reproduced": 1,
+                },
+            ],
+        },
+    )
+
+    assert lint.lint_registry_path(fixed_registry, replay_entry_fn=lambda _entry, _root: None) == []
+
+
 def test_req_report_4462_flags_registry_replay_overclaim(tmp_path: Path) -> None:
     """REQ-REPORT-4462: sampled registry rows cannot claim beyond reproduce()."""
 
@@ -379,8 +438,11 @@ def test_req_report_4462_cli_reports_json_issues(tmp_path: Path, capsys) -> None
 
     assert exit_code == 1
     assert report["ok"] is False
-    assert report["issue_count"] == 1
-    assert report["issues"][0]["kind"] == "PROVISIONAL_INFLATION"
+    assert report["issue_count"] == 2
+    assert {issue["kind"] for issue in report["issues"]} == {
+        "PROVISIONAL_INFLATION",
+        "SC25_PROVISIONAL_COUNTED_AS_REPRODUCED",
+    }
 
 
 def test_req_report_4462_cli_default_paths_and_package_path_assert(

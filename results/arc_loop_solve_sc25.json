@@ -1,59 +1,71 @@
 {
-  "game": "tn36",
+  "game": "sc25",
   "status": "needs_per_game_RE",
   "transfer_recommendation": [
     {
+      "game": "cd82",
+      "similarity": 8.0,
+      "reproducibility": "reproduced",
+      "solver": "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).",
+      "win_condition": "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline.",
+      "action_model": "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.",
+      "reusable_gotchas": []
+    },
+    {
+      "game": "dc22",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "python/carnot/experiment_4467_solve_dc22_cegis_nocov.py",
+      "win_condition": "L1 toggle-navigation predicate: click buezna-blrmbx / buezna-refgps to toggle same-letter blockers, then navigate jfva to the goknoi coordinate; next_level fires only when the offline env level counter advances.",
+      "action_model": "Keyboard ACTION1-4 move jfva; ACTION6 click payloads at (48,36) and (48,19) toggle the L1 buezna blockers. Reproduced 20-label L1 plan from Exp4467.",
+      "reusable_gotchas": []
+    },
+    {
       "game": "r11l",
-      "similarity": 7.0,
+      "similarity": 5.0,
       "reproducibility": "reproduced",
       "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
       "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1).",
       "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
       "reusable_gotchas": []
-    },
-    {
-      "game": "lp85",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.",
-      "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations.",
-      "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
-      "reusable_gotchas": [
-        "deepcopy-injection WORKS for lp85 (unlike sc25).",
-        "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
-      ]
-    },
-    {
-      "game": "sc25",
-      "similarity": 5.0,
-      "reproducibility": "reproduced",
-      "solver": "python/carnot/experiment_4468_bank_sc25_provisional_levels.py",
-      "win_condition": "Two-phase FSM per level: toggle corrected offline cast-grid cells until the visible reference pattern/spell fires, then tank-control navigate the player to the visible exit.",
-      "action_model": "ACTION6 toggles cast cells at (24+5c,49+5r) or raw spell-select clicks; ACTION1-4 are tank-control moves with facing load-bearing. Exp4468 banked L2-L5 cumulative replay plans.",
-      "reusable_gotchas": [
-        "deepcopy-injection BROKEN -> replay-from-reset.",
-        "first step after reset consumed -> warm-up step.",
-        "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
-        "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).",
-        "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
-      ]
     }
   ],
   "selected_generic_operators": [
     {
-      "operator": "object_centric_digest",
+      "operator": "cast_grid_phase_fsm_world_model",
       "derived_from_games": [
-        "g50t",
-        "lp85",
-        "tn36",
-        "ka59"
+        "sc25",
+        "ar25",
+        "ka59",
+        "ft09"
       ],
-      "purpose": "Connected-component object summary for routing, grounding, and active data.",
+      "purpose": "Two-phase cast/config-grid toggle CSP followed by player navigation to an exit predicate.",
+      "selector_tags": [
+        "cast_grid",
+        "phase_fsm",
+        "config_toggle",
+        "navigation",
+        "world_model",
+        "verifier"
+      ]
+    },
+    {
+      "operator": "object_motion_world_model",
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "sc25",
+        "ft09"
+      ],
+      "purpose": "Object-slot transition model for translate, reflect, push, and dynamic selection.",
       "selector_tags": [
         "object",
-        "digest",
-        "program_editor",
-        "world_model"
+        "motion",
+        "world_model",
+        "e3",
+        "translate",
+        "reflect",
+        "push"
       ]
     },
     {

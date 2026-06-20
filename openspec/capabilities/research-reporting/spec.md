@@ -26600,6 +26600,10 @@ The lint SHALL compute `reproducible_total_levels` only from the sum of per-game
 `provisional_total_levels` for that reproduced metric, and SHALL fail any
 registry where the top-level reproducible total includes provisional or
 non-replaying levels.
+For the `sc25` provisional-to-reproduced transition, the lint SHALL also fail a
+registry where the remaining `sc25` live-recorded provisional suffix is silently
+added to `reproducible_total_levels`; the reproduced total remains exactly the
+sum of per-game `levels_reproduced`.
 
 The lint SHALL re-run a deterministic spot-check of banked registry replay
 sequences through `arc_solver_kit.reproduce()` or an injected equivalent. A
@@ -26656,6 +26660,76 @@ rows, rejects rows with `replays_ok=false` or `env_matched=false`, and keeps
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4462 | Implemented (`scripts/arc_count_integrity_lint.py`, `.pre-commit-config.yaml`, `python/carnot/experiment_4462_provisional_reproduced_count_integrity_lint.py`, `results/experiment_4462_provisional_reproduced_count_integrity_lint.json`) | Implemented (`tests/python/test_arc_count_integrity_lint.py`, `tests/python/test_experiment_4462_provisional_reproduced_count_integrity_lint.py`) |
+
+### REQ-REPORT-4475: ARC Focused Pytest Preconditions Are No-Coverage Smoke Gates
+
+ARC solve workflows SHALL use a shared `arc_precondition_smoke(selector)`
+helper for focused pytest preconditions. The helper SHALL run
+`.venv/bin/pytest -k <selector> -q --no-cov` from the repository root and SHALL
+return a bare boolean green signal plus a bounded textual summary. This smoke
+gate SHALL NOT inherit repository-wide coverage fail-under settings and SHALL
+NOT be treated as a coverage gate.
+
+The repository SHALL provide a static lint for ARC experiment scripts and
+registry-referenced solver scripts that detects focused pytest precondition
+commands missing `--no-cov`, including the Exp 4455 class of
+`.venv/bin/pytest -k "config_rule or arc_solver_kit" -q` baseline command. The
+lint SHALL accept commands using the shared helper and SHALL accept legacy
+focused pytest command lists only when they include `--no-cov`. Legitimate
+full-suite coverage runs SHALL be allow-listed separately from focused ARC
+smoke gates. The pre-commit configuration SHALL run the lint on ARC experiment
+script edits and the ARC solve registry.
+
+The Exp 4475 workflow SHALL write
+`results/experiment_4475_arc_precondition_nocov_lint.json` with required
+top-level fields `honest_verdict`, `smoke_helper_shipped`,
+`nocov_lint_shipped`, `catches_cov_gated_precondition`,
+`count_integrity_extended`, `tests_pass`, `inference_substrate`, `duration_s`,
+`field_principles`, `spec_refs`, and `reproducibility_checksum`. Complete-path
+`honest_verdict` SHALL start with `complete:`, `success:`, `passed:`, or
+`shipped:`. The workflow SHALL NOT retroactively rewrite prior artifacts, SHALL
+NOT submit to a leaderboard, and SHALL NOT edit production verifier code.
+
+The required field principles are:
+
+- `honest_verdict`: "terminal-prefixed"
+- `smoke_helper_shipped`: "bare bool: arc_precondition_smoke(--no-cov) helper landed -- the durable fix for the dc22-class block"
+- `nocov_lint_shipped`: "bare bool: the lint that flags any ARC pytest precondition missing --no-cov landed green"
+- `catches_cov_gated_precondition`: "bare bool: the lint flags a precondition that runs pytest -k without --no-cov (reproduces the exp4455 block in a test)"
+- `count_integrity_extended`: "bare bool: the count-integrity lint now covers the sc25 provisional->reproduced transition"
+- `tests_pass`: "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"
+- `inference_substrate`: "aggregation_from_upstream_artifacts -- this is a lint/test/helper (CPU); 100us floor"
+
+#### SCENARIO-REPORT-4475-SMOKE: Focused ARC Preconditions Bypass Coverage Gates
+
+**Given** repository pytest addopts include `--cov-fail-under=99`
+**When** an ARC solve workflow calls `arc_precondition_smoke("config_rule or arc_solver_kit")`
+**Then** the helper invokes pytest with `-k "config_rule or arc_solver_kit" -q --no-cov`,
+returns `(green, summary)`, and treats the result as a smoke gate rather than a
+package coverage gate.
+
+#### SCENARIO-REPORT-4475-NOCOV-LINT: Missing No-Cov Focused Preconditions Fail Static Lint
+
+**Given** an ARC experiment precondition command equivalent to the Exp 4455
+blocked baseline `.venv/bin/pytest -k "config_rule or arc_solver_kit" -q`
+**When** the no-cov lint scans the script
+**Then** it reports an error for the missing `--no-cov`; the same focused smoke
+command passes when `--no-cov` is present or when the shared helper is used.
+
+#### SCENARIO-REPORT-4475-SC25-COUNT: sc25 Provisional Levels Cannot Inflate Reproduced Totals
+
+**Given** a registry where `sc25` has live-recorded provisional levels and only
+some have replayed through the offline reproduction gate
+**When** the count-integrity lint computes reproduced totals
+**Then** it rejects any `reproducible_total_levels` that includes the remaining
+`sc25` provisional suffix and accepts only the sum of per-game
+`levels_reproduced`.
+
+## Implementation Status (REQ-REPORT-4475)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4475 | Planned (`python/carnot/agentic/arc_precondition_smoke.py`, `scripts/arc_precondition_nocov_lint.py`, `python/carnot/experiment_4475_arc_precondition_nocov_lint.py`, `results/experiment_4475_arc_precondition_nocov_lint.json`) | Planned (`tests/python/test_arc_precondition_smoke.py`, `tests/python/test_arc_precondition_nocov_lint.py`, `tests/python/test_experiment_4475_arc_precondition_nocov_lint.py`) |
 
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 

@@ -1,19 +1,10 @@
 {
-  "game": "g50t",
+  "game": "wa30",
   "status": "needs_per_game_RE",
   "transfer_recommendation": [
     {
-      "game": "ls20",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "results/experiment_4285 solve_trace.actions.",
-      "win_condition": "first-solve L1; ACTION + kind sequence replays offline.",
-      "action_model": null,
-      "reusable_gotchas": []
-    },
-    {
       "game": "tu93",
-      "similarity": 6.0,
+      "similarity": 5.5,
       "reproducibility": "reproduced",
       "solver": "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json + results/experiment_4361_e3_deeper_high_headroom_games.json.",
       "win_condition": "L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan).",
@@ -25,7 +16,7 @@
     },
     {
       "game": "tr87",
-      "similarity": 6.0,
+      "similarity": 5.5,
       "reproducibility": "reproduced",
       "solver": "GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode='fresh_env'). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.",
       "win_condition": "EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.",
@@ -41,6 +32,15 @@
         "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level).",
         "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
       ]
+    },
+    {
+      "game": "g50t",
+      "similarity": 5.5,
+      "reproducibility": "reproduced",
+      "solver": "python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py execution-grounds the target-offset predicate and replays OfflineSolver.",
+      "win_condition": "L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier grounds against execution state immediately before next_level.",
+      "action_model": "Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves right, ACTION2 moves down, ACTION5 commits the trigger clone.",
+      "reusable_gotchas": []
     }
   ],
   "selected_generic_operators": [

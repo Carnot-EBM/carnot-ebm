@@ -1,77 +1,41 @@
 {
-  "game": "tn36",
+  "game": "bp35",
   "status": "needs_per_game_RE",
   "transfer_recommendation": [
     {
-      "game": "r11l",
-      "similarity": 7.0,
-      "reproducibility": "reproduced",
-      "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
-      "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1).",
-      "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
-      "reusable_gotchas": []
-    },
-    {
-      "game": "lp85",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py.",
-      "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations.",
-      "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
-      "reusable_gotchas": [
-        "deepcopy-injection WORKS for lp85 (unlike sc25).",
-        "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
-      ]
-    },
-    {
-      "game": "sc25",
+      "game": "s5i5",
       "similarity": 5.0,
       "reproducibility": "reproduced",
-      "solver": "python/carnot/experiment_4468_bank_sc25_provisional_levels.py",
-      "win_condition": "Two-phase FSM per level: toggle corrected offline cast-grid cells until the visible reference pattern/spell fires, then tank-control navigate the player to the visible exit.",
-      "action_model": "ACTION6 toggles cast cells at (24+5c,49+5r) or raw spell-select clicks; ACTION1-4 are tank-control moves with facing load-bearing. Exp4468 banked L2-L5 cumulative replay plans.",
+      "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
+      "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
+      "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
       "reusable_gotchas": [
-        "deepcopy-injection BROKEN -> replay-from-reset.",
-        "first step after reset consumed -> warm-up step.",
-        "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
-        "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c,49+5r).",
-        "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+        "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
       ]
+    },
+    {
+      "game": "ft09",
+      "similarity": 5.0,
+      "reproducibility": "reproduced",
+      "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+      "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
+      "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
+      "reusable_gotchas": [
+        "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
+        "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
+      ]
+    },
+    {
+      "game": "vc33",
+      "similarity": 5.0,
+      "reproducibility": "reproduced",
+      "solver": "python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes first contact through a generic config-rule verifier.",
+      "win_condition": "L1 support-clearance config: lower click control shifts the paired supports until the active piece clears the blocking goal color; next_level fires on replay.",
+      "action_model": "ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.",
+      "reusable_gotchas": []
     }
   ],
   "selected_generic_operators": [
-    {
-      "operator": "object_centric_digest",
-      "derived_from_games": [
-        "g50t",
-        "lp85",
-        "tn36",
-        "ka59"
-      ],
-      "purpose": "Connected-component object summary for routing, grounding, and active data.",
-      "selector_tags": [
-        "object",
-        "digest",
-        "program_editor",
-        "world_model"
-      ]
-    },
-    {
-      "operator": "active_data_collection",
-      "derived_from_games": [
-        "ar25",
-        "ka59",
-        "ft09",
-        "sc25"
-      ],
-      "purpose": "Balanced action/object coverage plan for offline transition collection.",
-      "selector_tags": [
-        "active_data",
-        "world_model",
-        "e3",
-        "transition"
-      ]
-    },
     {
       "operator": "graph_astar_action_cost",
       "derived_from_games": [
@@ -91,6 +55,22 @@
         "action_cost",
         "keyboard",
         "click"
+      ]
+    },
+    {
+      "operator": "object_centric_digest",
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "purpose": "Connected-component object summary for routing, grounding, and active data.",
+      "selector_tags": [
+        "object",
+        "digest",
+        "program_editor",
+        "world_model"
       ]
     }
   ],
