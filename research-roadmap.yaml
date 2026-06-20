@@ -148,20 +148,20 @@ tasks:
     \ transitions as a first-class refactor signal separate from dynamics; (2) extend the E3 state to\
     \ (grid, registers) with induced HUD/counter scalars (ka59 already extracts hud_count in its lemmas)\
     \ and let is_level_complete read them. Bank a +1 deepen on ar25/ka59/ft09 if the register fixes it.\n\
-    CONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/pytest tests/python/test_arc_solver_kit.py\
-    \ -q --no-cov` (NEVER inherit the global\n        --cov-fail-under=99 -- the dc22-class block that\
-    \ lost a whole .412 milestone). Real failure ->\n        honest_verdict blocked_kit_import, exit.\n\
-    \     b. offline arcade reachable. Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\
-    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
-    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
-    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate:\
-    \ principle \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates\
-    \ | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
-    \ principle \"a solve not reproducible offline is wasted effort -- only reproduced levels\n    count\
-    \ (ARC Solve Reproducibility).\"\n  reproduced_levels: principle \"headline metric reproducible_total_levels\
-    \ grows monotonically; report the\n    count banked, real-env-confirmed.\"\n  preconditions_checked:\
-    \ principle \"records WHICH resources were verified before launching; pre-empts the\n    silent-missing-resource\
-    \ fabrication mode.\"\n"
+    CONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from\
+    \ carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` (NEVER inherit the global\n   \
+    \     --cov-fail-under=99 -- the dc22-class block that lost a whole .412 milestone). Real failure\
+    \ ->\n        honest_verdict blocked_kit_import, exit.\n     b. offline arcade reachable. Missing\
+    \ -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\nREQUIRED ARTIFACT FIELDS (each with\
+    \ a one-line principle):\n  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline).\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference |\
+    \ verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right floor.\"\n  offline_reproduced: principle \"a solve not reproducible offline is\
+    \ wasted effort -- only reproduced levels\n    count (ARC Solve Reproducibility).\"\n  reproduced_levels:\
+    \ principle \"headline metric reproducible_total_levels grows monotonically; report the\n    count\
+    \ banked, real-env-confirmed.\"\n  preconditions_checked: principle \"records WHICH resources were\
+    \ verified before launching; pre-empts the\n    silent-missing-resource fabrication mode.\"\n"
   operator_override: '2026-06-19 operator directive (standing ARC sprint): versioned-lineage continuation
     / routine level-up attempt -- false-positive scope-match vs prior ARC solve exps; forward difference
     stated.'
@@ -180,20 +180,20 @@ tasks:
     \ (GAP-4471 sprite-overlay/resize). Build a generic sprite-overlay pattern-match + resize verifier\
     \ (register in ops/verifier_registry.yaml), wire into the solve, run the reproduction gate, bank re86\
     \ L1 if it advances. INCREMENTAL +1 on re86 ONLY. If no advance, emit missing_verifier_gaps (no fabrication).\n\
-    CONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/pytest tests/python/test_arc_solver_kit.py\
-    \ -q --no-cov` (NEVER inherit the global\n        --cov-fail-under=99 -- the dc22-class block that\
-    \ lost a whole .412 milestone). Real failure ->\n        honest_verdict blocked_kit_import, exit.\n\
-    \     b. offline arcade reachable. Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\
-    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
-    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
-    \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate:\
-    \ principle \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates\
-    \ | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
-    \ principle \"a solve not reproducible offline is wasted effort -- only reproduced levels\n    count\
-    \ (ARC Solve Reproducibility).\"\n  reproduced_levels: principle \"headline metric reproducible_total_levels\
-    \ grows monotonically; report the\n    count banked, real-env-confirmed.\"\n  preconditions_checked:\
-    \ principle \"records WHICH resources were verified before launching; pre-empts the\n    silent-missing-resource\
-    \ fabrication mode.\"\n"
+    CONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from\
+    \ carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` (NEVER inherit the global\n   \
+    \     --cov-fail-under=99 -- the dc22-class block that lost a whole .412 milestone). Real failure\
+    \ ->\n        honest_verdict blocked_kit_import, exit.\n     b. offline arcade reachable. Missing\
+    \ -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\nREQUIRED ARTIFACT FIELDS (each with\
+    \ a one-line principle):\n  honest_verdict: principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n\
+    \    passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n\
+    \    Discipline).\"\n  inference_substrate: principle \"explicit declaration (live_llm_inference |\
+    \ verifier_ensemble_against_\n    cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify\
+    \ applies the right floor.\"\n  offline_reproduced: principle \"a solve not reproducible offline is\
+    \ wasted effort -- only reproduced levels\n    count (ARC Solve Reproducibility).\"\n  reproduced_levels:\
+    \ principle \"headline metric reproducible_total_levels grows monotonically; report the\n    count\
+    \ banked, real-env-confirmed.\"\n  preconditions_checked: principle \"records WHICH resources were\
+    \ verified before launching; pre-empts the\n    silent-missing-resource fabrication mode.\"\n"
   operator_override: '2026-06-19 operator directive (standing ARC sprint): versioned-lineage continuation
     / routine level-up attempt -- false-positive scope-match vs prior ARC solve exps; forward difference
     stated.'
@@ -218,12 +218,12 @@ tasks:
     \ identify the goal region (color 3 or 14), give the explorer a manhattan/BFS-distance-to-goal heuristic,\
     \ and encode the avatar shape-change in the state key. Reproduction-gate + register. INCREMENTAL +1\
     \ on bp35 ONLY. If still blocked, emit the goal/heuristic RE delta (no fabrication).\nCONCRETE STEPS:\n\
-    \  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/pytest tests/python/test_arc_solver_kit.py\
-    \ -q --no-cov` (NEVER inherit the global\n        --cov-fail-under=99 -- the dc22-class block that\
-    \ lost a whole .412 milestone). Real failure ->\n        honest_verdict blocked_kit_import, exit.\n\
-    \     b. offline arcade reachable. Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication).\n\
-    \nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict: principle \"MUST start\
-    \ with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
+    \  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from carnot.agentic import\
+    \ arc_solver_kit as k; k.offline_arcade()\"` (NEVER inherit the global\n        --cov-fail-under=99\
+    \ -- the dc22-class block that lost a whole .412 milestone). Real failure ->\n        honest_verdict\
+    \ blocked_kit_import, exit.\n     b. offline arcade reachable. Missing -> honest_verdict blocked_<resource>,\
+    \ EXIT (no fabrication).\n\nREQUIRED ARTIFACT FIELDS (each with a one-line principle):\n  honest_verdict:\
+    \ principle \"MUST start with a terminal prefix complete:/complete_/success:/success_/\n    passed:/passed_/shipped:/shipped_\
     \ so the reconciler classifies it as terminal (Verdict Terminal-Prefix\n    Discipline).\"\n  inference_substrate:\
     \ principle \"explicit declaration (live_llm_inference | verifier_ensemble_against_\n    cached_candidates\
     \ | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.\"\n  offline_reproduced:\
