@@ -45,6 +45,16 @@ target). Every .417 task is measured by actions-to-first-levelup reduction WITHO
    value_weight>0 with the lazy eval (the .416 A1 null was at full per-node cost).
 5. **Forward-edge navigation hardening** (my .416 nav-edge fix recorded edges but did not move actions):
    investigate WHY -- is _shortest_path actually used, or does replay still dominate? Close that loop.
+6. **Verifier-grounded ADAPTIVE per-step budget** (new 2026-06-20, from the LoopWM/arXiv:2606.18208
+   ingestion -- really ACT/PonderNet, Graves 2016; LoopWM is just the citable instance). The explorer
+   currently spends the SAME search width/depth on every frame. Add a cheap per-step gate from
+   ALREADY-computed signals (energy/value-head margin + predicted-no-op-under-the-induced-model + frame
+   novelty): easy/unambiguous frame -> commit 1 candidate immediately; ambiguous frame -> expand the
+   budget. This is the "spend compute only on hard frames" idea, and unlike candidate 1 (prune) it cuts
+   actions by NOT expanding when the frame is easy. Zero new model, zero training, 16GB/offline-safe.
+   Metric = actions-to-solve at equal solve-rate, offline-reproduced via `arc_solver_kit.reproduce`.
+   Frame it as "ACT-style adaptive budget for our explorer," NOT "implementing LoopWM." Cross-ref:
+   docs/research-notes/loopwm-2606.18208-ingestion-2026-06-20.md.
 
 ## What .417 is NOT
 
