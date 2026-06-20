@@ -26461,6 +26461,67 @@ emits a specific goal/heuristic residual and no fabricated level.
 |---|---|---|
 | REQ-REPORT-4480 | Implemented (`python/carnot/experiment_4480_solve_bp35_goal_directed.py`, `results/experiment_4480_solve_bp35_goal_directed.json`) | Implemented (`tests/python/test_experiment_4480_solve_bp35_goal_directed.py`) |
 
+### REQ-REPORT-4481: Reflection Variant Transfer Benchmark Reports Per-Solved-Game Transfer
+
+The Exp 4481 workflow SHALL build the reflection-variant transfer benchmark for
+the current solved public ARC games. It SHALL read `ops/arc_solve_registry.yaml`,
+select every game whose registry row is reproduced or has
+`levels_reproduced > 0`, verify the local `environment_files/<game>` directory
+exists for each measured game, and manufacture deterministic reflection variants
+through the shipped `arc_variant_generator.VariantEnv` / `--reflect` semantics.
+Color-permutation variants SHALL NOT be part of the headline Exp 4481 plan
+because the current features are color-agnostic and color permutation has already
+been validated as a no-op for this benchmark.
+
+Before measuring, the workflow SHALL confirm that local offline environment
+files exist for the solved games, that `carnot.agentic.arc_variant_generator` and
+`carnot.agentic.arc_solver_kit` import, that the ARC solve registry parses, that
+no 3090 inference is used, and that no leaderboard submission is made. Missing
+resources SHALL write a terminal-prefixed `complete: blocked_<resource>`
+artifact, SHALL NOT call the variant runner, and SHALL NOT fabricate transfer
+solves.
+
+For each solved game and each configured reflection variant, the workflow SHALL
+run the agent through the real offline wrapped environment and count a variant
+as solved only when the run advances the real environment and the same action
+trace is reproduced offline. It SHALL report per-game
+`transfer_solve_rate = variants_solved / variants_attempted` and the aggregate
+`transfer_solve_rate` over all attempted reflection variants. The workflow SHALL
+write `results/experiment_4481_variant_transfer_benchmark.json` with required
+top-level fields `honest_verdict`, `inference_substrate`,
+`offline_reproduced`, `reproduced_levels`, `preconditions_checked`,
+`solved_games`, `per_game`, `variant_plan`, `variant_attempts`,
+`variants_attempted`, `variants_solved`, `transfer_solve_rate`,
+`reproducible_total_levels`, `field_principles`, `verifier_is_oracle`,
+`random_seed`, and `reproducibility_checksum`. The required field principles
+are:
+
+- `honest_verdict`: "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+- `inference_substrate`: "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+- `offline_reproduced`: "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility)."
+- `reproduced_levels`: "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed."
+- `preconditions_checked`: "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4481: Reflection Variants Are Tallied Per Solved Game
+
+**Given** the ARC solve registry has reproduced public games, their local offline
+environment files exist, the variant generator and solver kit import, and no
+leaderboard or 3090 inference is used
+**When** Exp 4481 manufactures the configured reflection variants, runs the agent
+for each solved game, reproduction-gates every claimed reflection solve, and
+writes the benchmark artifact
+**Then** the artifact reports bare-int `variants_attempted`, bare-int
+`variants_solved`, bare-float aggregate `transfer_solve_rate`, per-game
+reflection transfer rows, `offline_reproduced=true` only when every counted
+variant solve has offline reproduction evidence, the exact required field
+principles, and a terminal-prefixed honest verdict.
+
+## Implementation Status (REQ-REPORT-4481)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4481 | Planned (`python/carnot/experiment_4481_variant_transfer_benchmark.py`, `results/experiment_4481_variant_transfer_benchmark.json`) | Planned (`tests/python/test_experiment_4481_variant_transfer_benchmark.py`) |
+
 ### REQ-REPORT-4460: Operator-Only ARC Submission Package Revalidates Cached Replays
 
 The Exp 4460 workflow SHALL prepare, but SHALL NOT submit, the next ARC-AGI-3
