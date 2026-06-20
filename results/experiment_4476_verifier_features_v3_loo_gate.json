@@ -1,0 +1,53 @@
+{
+  "honest_verdict": "success: cross_game_features_v3_loo_auroc_0.674_passes_gate",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "reproduced_levels": 51,
+  "preconditions_checked": {
+    "banked_trajectories": true,
+    "offline_arcade": true,
+    "feature_names": "cross_game_features_v3",
+    "neg_per_game": 14,
+    "seed": 0
+  },
+  "v2_baseline_loo_auroc": 0.503096152732577,
+  "v2_baseline_in_sample_auroc": 0.7256356865855809,
+  "v3_loo_auroc": 0.6744657162333668,
+  "v3_in_sample_auroc": 0.8710834214701216,
+  "target_loo_auroc": 0.6,
+  "loo_gate_passed": true,
+  "feature_class_loo_auroc": {
+    "v2": 0.503096152732577,
+    "v2_plus_action_conditioned": 0.5065398442857277,
+    "v2_plus_frame_delta": 0.6798088810175374,
+    "v2_plus_object_relational": 0.6314590310571959,
+    "v2_plus_predicate_distance": 0.5193000293549701,
+    "v3_full": 0.6744657162333668
+  },
+  "feature_class_deltas": {
+    "v2_plus_action_conditioned": 0.0034436915531507184,
+    "v2_plus_frame_delta": 0.17671272828496043,
+    "v2_plus_object_relational": 0.1283628783246189,
+    "v2_plus_predicate_distance": 0.016203876622393087,
+    "v3_full": 0.1713695635007898
+  },
+  "value_head_routing_measure": {
+    "ran": false,
+    "artifact": "results/arc3_value_routing_v2.json",
+    "note": "existing value-head routing gate is run separately; Exp4476 records this handle"
+  },
+  "tests_pass": false,
+  "field_principles": {
+    "honest_verdict": "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility).",
+    "reproduced_levels": "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed.",
+    "preconditions_checked": "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+  },
+  "spec_refs": [
+    "REQ-LEARN-4476",
+    "SCENARIO-LEARN-4476-FEATURES",
+    "SCENARIO-LEARN-4476-GATE"
+  ],
+  "reproducibility_checksum": "c78265f82a77f079bfd4648ad70a6671f8adebdba13447dd17992d76da58f86e"
+}

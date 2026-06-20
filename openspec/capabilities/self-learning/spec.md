@@ -14178,6 +14178,67 @@ bare bool, `cross_game_state_reduction` as a bare float,
 
 ---
 
+## REQ-LEARN-4476: ARC Cross-Game Verifier Features V3 LOO Gate
+
+The cross-game verifier trainer SHALL expose `cross_game_features_v3` as a
+game-agnostic feature vector that extends v2's frame-only scalar and occupancy
+features with object-relational, frame-delta, action-conditioned, and
+predicate-distance feature classes. V3 feature extraction SHALL accept optional
+`previous_frame`, `action_id`, and `goal_frame` context while remaining callable
+with only the current frame for existing live routes.
+
+The Exp 4476 workflow SHALL run the existing discriminative
+leave-one-game-out gate with v3 features, compare it to the v2 baseline, and
+write `results/experiment_4476_verifier_features_v3_loo_gate.json` with
+top-level fields `honest_verdict`, `inference_substrate`,
+`offline_reproduced`, `reproduced_levels`, `preconditions_checked`,
+`v2_baseline_loo_auroc`, `v3_loo_auroc`, `target_loo_auroc`,
+`loo_gate_passed`, `feature_class_loo_auroc`, `feature_class_deltas`,
+`value_head_routing_measure`, `tests_pass`, `field_principles`, `spec_refs`,
+and `reproducibility_checksum`.
+
+### REQ-LEARN-4476 Sub-requirements
+
+- REQ-LEARN-4476-1: Object-relational features SHALL include within-frame
+  pairwise object Manhattan-distance summaries and cross-frame object
+  correspondence displacement summaries.
+- REQ-LEARN-4476-2: Frame-delta features SHALL measure current-vs-previous
+  changed cells, nonzero-count movement, color-histogram movement, object-count
+  movement, centroid movement, level movement, and shape changes.
+- REQ-LEARN-4476-3: Action-conditioned features SHALL encode the action that
+  produced the current state without making the feature vector game-specific.
+- REQ-LEARN-4476-4: Predicate-distance features SHALL compare the current frame
+  against the next banked level-up or supplied goal frame by grid, color,
+  object-count, centroid, and pairwise-distance distance.
+- REQ-LEARN-4476-5: The trainer SHALL report feature-class leave-one-game-out
+  AUROCs so an honest null can identify which v3 class moved transfer and which
+  did not.
+
+### SCENARIO-LEARN-4476-FEATURES: V3 Uses Relational, Delta, Action, And Predicate Context
+
+**Given** a previous frame, a current frame, an action id, and a goal frame
+**When** `cross_game_features_v3` featurizes the current frame
+**Then** the returned vector is longer than v2, has stable named slices for the
+object-relational, frame-delta, action-conditioned, and predicate-distance
+classes, and each class changes when its corresponding context changes.
+
+### SCENARIO-LEARN-4476-GATE: V3 LOO Artifact Reports Transfer Or Honest Null
+
+**Given** the banked ARC trajectories are replayable offline
+**When** the Exp 4476 discriminative gate trains v3 against held-out games
+**Then** the artifact records v2 and v3 leave-one-game-out AUROC, the target
+threshold `0.6`, whether the gate passed, the feature-class AUROC deltas, the
+existing value-head routing measure, and required field principles with a
+terminal-prefix `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-4476)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4476 | Planned (`python/carnot/agentic/arc_value_learner.py`, `scripts/arc_cross_game_verifier_train.py`, `results/experiment_4476_verifier_features_v3_loo_gate.json`) | Planned (`tests/python/test_arc_verifier_variant_augmentation.py`) |
+
+---
+
 ## REQ-LEARN-4353: ARC Learned Action-Cost Heuristic Improves Held-Out Actions-To-Solve
 
 **Given** at least five reproduced ARC-AGI-3 solved levels with loadable action

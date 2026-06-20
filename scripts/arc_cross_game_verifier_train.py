@@ -10,6 +10,9 @@ measures whether it actually helps wa30 vs novelty-only. Zero quota.
 from __future__ import annotations
 
 import json
+import hashlib
+import inspect
+import re
 import sys
 from pathlib import Path
 
@@ -22,7 +25,13 @@ import numpy as np
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic.arc_value_learner import (
-    DiscriminativeVerifier, LearnedVerifier, cross_game_features, cross_game_features_v2)
+    DiscriminativeVerifier,
+    LearnedVerifier,
+    cross_game_feature_slices_v3,
+    cross_game_features,
+    cross_game_features_v2,
+    cross_game_features_v3,
+)
 from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
 from carnot.agentic.arc_graph_explore import graph_explore_solve_v3
 from carnot.agentic.arc_variant_generator import reflect_grid
@@ -91,18 +100,53 @@ def _steps_to_next_up(levels):
     return next_up
 
 
-def _featurize_reflected(frame, featurize, axis):
-    """Featurize `frame` with its grid stack reflected on `axis` (None = identity). Reflection moves
-    positions, so the v2 occupancy map + spatial features genuinely change while colors/counts are kept."""
+def _reflect_frame(frame, axis):
+    if frame is None or axis is None:
+        return frame
     if axis is None:
-        return featurize(frame)
+        return frame
     stack = np.array(frame.frame)
     if stack.ndim == 2:
         stack = stack[None, ...]
     out = np.stack([reflect_grid(stack[i], axis=axis) for i in range(stack.shape[0])])
     f2 = frame.model_copy() if hasattr(frame, "model_copy") else frame.copy()
     object.__setattr__(f2, "frame", out.tolist())
-    return featurize(f2)
+    return f2
+
+
+def _featurize_with_context(featurize, frame, previous_frame=None, action_id=None, goal_frame=None):
+    params = inspect.signature(featurize).parameters
+    kwargs = {}
+    if "previous_frame" in params:
+        kwargs["previous_frame"] = previous_frame
+    if "action_id" in params:
+        kwargs["action_id"] = action_id
+    if "goal_frame" in params:
+        kwargs["goal_frame"] = goal_frame
+    return featurize(frame, **kwargs)
+
+
+def _featurize_reflected(frame, featurize, axis, previous_frame=None, action_id=None, goal_frame=None):
+    """Featurize `frame` with reflected context on `axis` (None = identity)."""
+    f2 = _reflect_frame(frame, axis)
+    prev2 = _reflect_frame(previous_frame, axis)
+    goal2 = _reflect_frame(goal_frame, axis)
+    return _featurize_with_context(featurize, f2, previous_frame=prev2, action_id=action_id, goal_frame=goal2)
+
+
+def _goal_frame_for_index(seq, next_up, i):
+    if not seq:
+        return None
+    if i < len(next_up) and next_up[i] is not None and next_up[i][0] is not None:
+        target = min(len(seq) - 1, i + int(next_up[i][0]) + 1)
+        return seq[target][0]
+    return seq[-1][0]
+
+
+def _previous_context(seq, norm, i):
+    prev = seq[i - 1][0] if i > 0 else None
+    action = norm[i - 1][0] if 0 < i <= len(norm) else None
+    return prev, action
 
 
 def collect_pooled(featurize=cross_game_features, variants=0):
@@ -128,6 +172,7 @@ def collect_pooled(featurize=cross_game_features, variants=0):
         actions = mh.load_actions(src)
         if not actions:
             continue
+        norm = [(aid, d) for aid, d in (mh.normalize(a) for a in actions) if aid is not None]
         seq = _replay_seq(arc.make(game, scorecard_id=arc.open_scorecard()), game, actions, mh)
         next_up = _steps_to_next_up([lv for _, lv in seq])
         cnt = 0
@@ -136,7 +181,10 @@ def collect_pooled(featurize=cross_game_features, variants=0):
                 if next_up[i] is None or next_up[i][0] is None:
                     continue                               # tail after the last level-up: no label
                 dist, seg = next_up[i]
-                X.append(_featurize_reflected(seq[i][0], featurize, axis))
+                prev, action = _previous_context(seq, norm, i)
+                goal = _goal_frame_for_index(seq, next_up, i)
+                X.append(_featurize_reflected(
+                    seq[i][0], featurize, axis, previous_frame=prev, action_id=action, goal_frame=goal))
                 y.append(dist / max(1, seg))               # normalized steps-to-next-level-up in [0,1]
                 cnt += 1
         per_game[game] = cnt
@@ -163,9 +211,13 @@ def collect_discriminative(featurize=cross_game_features_v2, neg_per_game=14, se
             continue
         # positives: every on-winning-path frame
         seq = _replay_seq(arc.make(game, scorecard_id=arc.open_scorecard()), game, actions, mh)
+        next_up = _steps_to_next_up([lv for _, lv in seq])
         npos = 0
-        for f, _lv in seq:
-            X.append([float(v) for v in featurize(f)])
+        for j, (f, _lv) in enumerate(seq):
+            prev, action = _previous_context(seq, norm, j)
+            goal = _goal_frame_for_index(seq, next_up, j)
+            X.append([float(v) for v in _featurize_with_context(
+                featurize, f, previous_frame=prev, action_id=action, goal_frame=goal)])
             y.append(1.0)
             npos += 1
         # negatives: from sampled on-path prefixes, take one non-gold action -> off-path frame
@@ -193,7 +245,9 @@ def collect_discriminative(featurize=cross_game_features_v2, neg_per_game=14, se
             f2 = env.step(getattr(GameAction, f"ACTION{aid2}"), data=data2)
             if f2 is None or _levels_completed(f2) > lvl0:   # None or accidentally won -> not a negative
                 continue
-            X.append([float(v) for v in featurize(f2)])
+            goal = _goal_frame_for_index(seq, next_up, min(i, len(seq) - 1))
+            X.append([float(v) for v in _featurize_with_context(
+                featurize, f2, previous_frame=f, action_id=aid2, goal_frame=goal)])
             y.append(0.0)
             nneg += 1
         per_game[game] = {"pos": npos, "neg": nneg}
@@ -229,49 +283,182 @@ def _arg_int(flag, default):
     return default
 
 
+def _subset_rows(X, ranges):
+    out = []
+    for row in X:
+        vals = []
+        for lo, hi in ranges:
+            vals.extend(row[lo:hi])
+        out.append(vals)
+    return out
+
+
+def _discriminative_metrics(X, y, per_game):
+    games = list(per_game)
+    bounds, cur = {}, 0
+    for g in sorted(per_game):
+        n = per_game[g]["pos"] + per_game[g]["neg"]
+        bounds[g] = (cur, cur + n)
+        cur += n
+
+    aurocs = []
+    for held in games:
+        lo, hi = bounds[held]
+        if (hi - lo) < 4 or sum(y[lo:hi]) in (0, hi - lo):
+            continue
+        trX = X[:lo] + X[hi:]
+        trY = y[:lo] + y[hi:]
+        clf = DiscriminativeVerifier(lambda v: v).fit(trX, trY)
+        Z = (np.asarray(X[lo:hi]) - clf.mu) / clf.sd
+        Z = np.hstack([Z, np.ones((Z.shape[0], 1))])
+        a = _auroc((Z @ clf.w).tolist(), y[lo:hi])
+        if a == a:
+            aurocs.append(a)
+
+    mean_auroc = sum(aurocs) / len(aurocs) if aurocs else float("nan")
+    full = DiscriminativeVerifier(lambda v: v).fit(X, y)
+    Zi = np.hstack([(np.asarray(X) - full.mu) / full.sd, np.ones((len(X), 1))])
+    in_sample = _auroc((Zi @ full.w).tolist(), y)
+    return {
+        "in_sample_auroc": in_sample,
+        "loo_auroc": mean_auroc,
+        "n_held_out_games": len(aurocs),
+        "n_pos": int(sum(y)),
+        "n_neg": int(len(y) - sum(y)),
+    }
+
+
+def _v3_feature_class_metrics(X, y, per_game):
+    slices = cross_game_feature_slices_v3()
+    v2_range = [slices["v2"]]
+    v2_metrics = _discriminative_metrics(_subset_rows(X, v2_range), y, per_game)
+    out = {"v2": v2_metrics["loo_auroc"], "v3_full": _discriminative_metrics(X, y, per_game)["loo_auroc"]}
+    for name in ("object_relational", "frame_delta", "action_conditioned", "predicate_distance"):
+        rows = _subset_rows(X, [slices["v2"], slices[name]])
+        out[f"v2_plus_{name}"] = _discriminative_metrics(rows, y, per_game)["loo_auroc"]
+    return out
+
+
+def _reproduced_levels_from_registry():
+    p = REPO / "ops" / "arc_solve_registry.yaml"
+    if not p.exists():
+        return 0
+    return sum(int(m.group(1)) for m in re.finditer(r"levels_reproduced:\s*(\d+)", p.read_text()))
+
+
+def _clean_float(v):
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return f if f == f else None
+
+
+_EXP4476_FIELD_PRINCIPLES = {
+    "honest_verdict": (
+        "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/"
+        "shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline)."
+    ),
+    "inference_substrate": (
+        "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | "
+        "aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor."
+    ),
+    "offline_reproduced": (
+        "a solve not reproducible offline is wasted effort -- only reproduced levels count "
+        "(ARC Solve Reproducibility)."
+    ),
+    "reproduced_levels": (
+        "headline metric reproducible_total_levels grows monotonically; report the count banked, "
+        "real-env-confirmed."
+    ),
+    "preconditions_checked": (
+        "records WHICH resources were verified before launching; pre-empts the silent-missing-resource "
+        "fabrication mode."
+    ),
+}
+
+
+def _checksum_payload(payload):
+    clean = {k: v for k, v in payload.items() if k != "reproducibility_checksum"}
+    return hashlib.sha256(json.dumps(clean, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def _build_exp4476_artifact(
+    v2_metrics,
+    v3_metrics,
+    feature_class_loo_auroc,
+    value_head_routing_measure,
+    tests_pass,
+    preconditions_checked,
+    reproduced_levels,
+):
+    target = 0.6
+    v2 = _clean_float(v2_metrics.get("loo_auroc"))
+    v3 = _clean_float(v3_metrics.get("loo_auroc"))
+    loo_gate_passed = bool(v3 is not None and v3 >= target)
+    if loo_gate_passed:
+        honest_verdict = f"success: cross_game_features_v3_loo_auroc_{v3:.3f}_passes_gate"
+    elif v2 is not None and v3 is not None and v3 > v2:
+        honest_verdict = f"complete: cross_game_features_v3_honest_null_improved_{v2:.3f}_to_{v3:.3f}_below_gate"
+    else:
+        suffix = "nan" if v3 is None else f"{v3:.3f}"
+        honest_verdict = f"complete: cross_game_features_v3_honest_null_no_transfer_{suffix}"
+
+    feature_class_loo_auroc = {
+        k: _clean_float(v) for k, v in sorted(feature_class_loo_auroc.items())
+    }
+    feature_class_deltas = {
+        k: (None if v is None or v2 is None else float(v - v2))
+        for k, v in feature_class_loo_auroc.items()
+        if k != "v2"
+    }
+    payload = {
+        "honest_verdict": honest_verdict,
+        "inference_substrate": "verifier_ensemble_against_cached_candidates",
+        "offline_reproduced": bool(reproduced_levels > 0),
+        "reproduced_levels": int(reproduced_levels),
+        "preconditions_checked": dict(preconditions_checked),
+        "v2_baseline_loo_auroc": v2,
+        "v2_baseline_in_sample_auroc": _clean_float(v2_metrics.get("in_sample_auroc")),
+        "v3_loo_auroc": v3,
+        "v3_in_sample_auroc": _clean_float(v3_metrics.get("in_sample_auroc")),
+        "target_loo_auroc": target,
+        "loo_gate_passed": loo_gate_passed,
+        "feature_class_loo_auroc": feature_class_loo_auroc,
+        "feature_class_deltas": feature_class_deltas,
+        "value_head_routing_measure": dict(value_head_routing_measure),
+        "tests_pass": bool(tests_pass),
+        "field_principles": dict(_EXP4476_FIELD_PRINCIPLES),
+        "spec_refs": ["REQ-LEARN-4476", "SCENARIO-LEARN-4476-FEATURES", "SCENARIO-LEARN-4476-GATE"],
+    }
+    payload["reproducibility_checksum"] = _checksum_payload(payload)
+    return payload
+
+
 def _main_discriminative() -> int:
     """Train + LEAVE-ONE-GAME-OUT validate the win-reachability classifier on off-path negatives. The LOO
     AUROC answers the load-bearing question: do the OFF-PATH negatives carry TRANSFERABLE discriminative
     signal (does on-path vs off-path separate on a game the classifier never trained on)? AUROC>0.5 ==
     yes; this is the discrimination the steps-to-go regressor structurally cannot provide."""
-    feat = cross_game_features_v2
-    print("== DISCRIMINATIVE: win-reachability classifier on off-path negatives (v2 features) ==")
-    X, y, per_game = collect_discriminative(featurize=feat)
+    use_v2 = "--v2" in sys.argv
+    feat = cross_game_features_v2 if use_v2 else cross_game_features_v3
+    fname = "cross_game_features_v2" if use_v2 else "cross_game_features_v3"
+    neg_per_game = _arg_int("--neg-per-game", 14)
+    seed = _arg_int("--seed", 0)
+    print(f"== DISCRIMINATIVE: win-reachability classifier on off-path negatives ({fname}) ==")
+    X, y, per_game = collect_discriminative(featurize=feat, neg_per_game=neg_per_game, seed=seed)
     npos, nneg = int(sum(y)), int(len(y) - sum(y))
     print(f"  collected {npos} on-path POS + {nneg} off-path NEG from {len(per_game)} games")
     if nneg < 10 or npos < 10:
         print("  too few examples -- abort"); return 1
-    # leave-one-game-out AUROC (transfer): train on all-but-one game, test on the held-out game's pos/neg
-    games = list(per_game)
-    bounds, cur = {}, 0
-    for g in sorted(per_game):                       # X is built in sorted-game order: pos then neg per game
-        n = per_game[g]["pos"] + per_game[g]["neg"]
-        bounds[g] = (cur, cur + n)
-        cur += n
-    aurocs = []
-    for held in games:
-        lo, hi = bounds[held]
-        if (hi - lo) < 4 or sum(y[lo:hi]) in (0, hi - lo):
-            continue                                  # need both classes in the held-out game
-        trX = X[:lo] + X[hi:]
-        trY = y[:lo] + y[hi:]
-        clf = DiscriminativeVerifier(feat).fit(trX, trY)
-        # score the held-out game's frames with the trained head (raw logit margin -> AUROC is rank-based)
-        import numpy as _np
-        Z = (_np.asarray(X[lo:hi]) - clf.mu) / clf.sd
-        Z = _np.hstack([Z, _np.ones((Z.shape[0], 1))])
-        s = (Z @ clf.w).tolist()
-        a = _auroc(s, y[lo:hi])
-        if a == a:                                    # not NaN
-            aurocs.append(a)
-    mean_auroc = sum(aurocs) / len(aurocs) if aurocs else float("nan")
-    # train the full head; in-sample AUROC = the PER-GAME feature ceiling (can the features separate
-    # on-path vs off-path at all, ignoring transfer?). The LOO AUROC = does it TRANSFER to an unseen game?
+
+    metrics = _discriminative_metrics(X, y, per_game)
+    mean_auroc = metrics["loo_auroc"]
     full = DiscriminativeVerifier(feat).fit(X, y)
-    Zi = np.hstack([(np.asarray(X) - full.mu) / full.sd, np.ones((len(X), 1))])
-    in_sample = _auroc((Zi @ full.w).tolist(), y)
+    in_sample = metrics["in_sample_auroc"]
     print(f"  IN-SAMPLE AUROC (per-game feature ceiling): {in_sample:.3f}")
-    print(f"  LEAVE-ONE-GAME-OUT AUROC (cross-game transfer): {mean_auroc:.3f} over {len(aurocs)} games")
+    print(f"  LEAVE-ONE-GAME-OUT AUROC (cross-game transfer): {mean_auroc:.3f} "
+          f"over {metrics['n_held_out_games']} games")
     if in_sample > 0.6 and mean_auroc < 0.55:
         verdict = ("PER-GAME ONLY: off-path negatives ARE separable within a game (in-sample>0.6) but do "
                    "NOT transfer cross-game (loo~chance) -> train a discriminative head ONLINE per game "
@@ -282,18 +469,51 @@ def _main_discriminative() -> int:
     else:
         verdict = "NULL: off-path negatives do not separate even in-sample -- negatives too weak or features too coarse."
     print(f"  VERDICT: {verdict}")
-    ckpt = REPO / "models" / "arc_discriminative_verifier_v2.json"
-    full.save(ckpt, meta={"trained_games": games, "feature_names": "cross_game_features_v2",
+    ckpt = REPO / "models" / ("arc_discriminative_verifier_v2.json" if use_v2 else
+                              "arc_discriminative_verifier_v3.json")
+    games = list(per_game)
+    full.save(ckpt, meta={"trained_games": games, "feature_names": fname,
                           "provenance": f"win-reachability classifier; in_sample_auroc={in_sample:.3f}, "
                                         f"loo_auroc={mean_auroc:.3f}. {verdict}"})
-    out = REPO / "results" / "arc_discriminative_verifier.json"
-    out.write_text(json.dumps({"n_pos": npos, "n_neg": nneg, "per_game": per_game,
-                               "in_sample_auroc": in_sample, "loo_auroc": mean_auroc,
-                               "n_held_out_games": len(aurocs), "verdict": verdict,
-                               "checkpoint": f"models/{ckpt.name}", "feature_names": "cross_game_features_v2",
-                               "honest_verdict": "complete_discriminative_per_game_only_no_cross_game_transfer",
-                               "inference_substrate": "verifier_ensemble_against_cached_candidates",
-                               "mode": "discriminative_win_reachability_off_path_negatives"}, indent=2))
+    out = REPO / "results" / ("arc_discriminative_verifier_v2.json" if use_v2 else
+                              "arc_discriminative_verifier_v3.json")
+    payload = {"n_pos": npos, "n_neg": nneg, "per_game": per_game,
+               "in_sample_auroc": in_sample, "loo_auroc": mean_auroc,
+               "n_held_out_games": metrics["n_held_out_games"], "verdict": verdict,
+               "checkpoint": f"models/{ckpt.name}", "feature_names": fname,
+               "honest_verdict": "complete_discriminative_cross_game_transfer_measured",
+               "inference_substrate": "verifier_ensemble_against_cached_candidates",
+               "mode": "discriminative_win_reachability_off_path_negatives"}
+    out.write_text(json.dumps(payload, indent=2))
+    (REPO / "results" / "arc_discriminative_verifier.json").write_text(json.dumps(payload, indent=2))
+
+    if not use_v2:
+        slices = cross_game_feature_slices_v3()
+        v2_metrics = _discriminative_metrics(_subset_rows(X, [slices["v2"]]), y, per_game)
+        feature_class_loo = _v3_feature_class_metrics(X, y, per_game)
+        value_head_routing = {
+            "ran": False,
+            "artifact": "results/arc3_value_routing_v2.json",
+            "note": "existing value-head routing gate is run separately; Exp4476 records this handle",
+        }
+        exp4476 = _build_exp4476_artifact(
+            v2_metrics=v2_metrics,
+            v3_metrics=metrics,
+            feature_class_loo_auroc=feature_class_loo,
+            value_head_routing_measure=value_head_routing,
+            tests_pass=False,
+            preconditions_checked={
+                "banked_trajectories": bool(per_game),
+                "offline_arcade": True,
+                "feature_names": fname,
+                "neg_per_game": neg_per_game,
+                "seed": seed,
+            },
+            reproduced_levels=_reproduced_levels_from_registry(),
+        )
+        exp_out = REPO / "results" / "experiment_4476_verifier_features_v3_loo_gate.json"
+        exp_out.write_text(json.dumps(exp4476, indent=2))
+        print(f"  wrote {exp_out.relative_to(REPO)}")
     print(f"  checkpoint: models/{ckpt.name}; wrote {out.relative_to(REPO)}")
     return 0
 
