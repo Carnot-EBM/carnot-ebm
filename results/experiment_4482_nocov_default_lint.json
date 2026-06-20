@@ -1,0 +1,102 @@
+{
+  "schema_version": "carnot.arc_nocov_precondition_lint.v1",
+  "experiment_id": 4482,
+  "task_id": "exp4482-b1",
+  "created_utc": "2026-06-20T06:37:47Z",
+  "honest_verdict": "shipped: arc roadmap no-cov precondition lint, pre-commit hook, and package-level activation guard landed; focused tests pass; full spec coverage remains blocked by pre-existing legacy traceability gaps",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "offline_reproduced": false,
+  "offline_reproduction_scope": "not_applicable_infra_lint_no_arc_solve",
+  "reproduced_levels": 0,
+  "preconditions_checked": {
+    "AGENTS_md_read": true,
+    "CODEX_md_read": true,
+    "CLAUDE_md_startup_rules_read": true,
+    "openspec_req_report_4482_present": true,
+    "active_roadmap_yaml_parsed_and_lint_clean": true,
+    "precommit_hook_exercised_on_research_roadmap_yaml": true,
+    "focused_tests_passed": true,
+    "new_lint_module_coverage_100_percent": true,
+    "full_pytest_tests_python_q_attempted": true,
+    "full_pytest_tests_python_q_clean": false
+  },
+  "roadmap_lint_shipped": true,
+  "precommit_hook_wired": true,
+  "activation_guard_wired": true,
+  "tests_added_pass": true,
+  "coverage_new_code_100": true,
+  "roadmap_scan": {
+    "command": ".venv/bin/python scripts/arc_nocov_precondition_lint.py --json research-roadmap.yaml",
+    "ok": true,
+    "issue_count": 0
+  },
+  "verification": {
+    "focused_test": {
+      "command": ".venv/bin/pytest tests/python/test_arc_nocov_precondition_lint.py -q --no-cov",
+      "passed": true,
+      "summary": "10 passed"
+    },
+    "adjacent_no_cov_tests": {
+      "command": ".venv/bin/pytest tests/python/test_arc_precondition_nocov_lint.py tests/python/test_arc_nocov_precondition_lint.py -q --no-cov",
+      "passed": true,
+      "summary": "17 passed"
+    },
+    "new_module_coverage": {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='scripts/arc_nocov_precondition_lint.py,scripts/__init__.py' -m pytest tests/python/test_arc_nocov_precondition_lint.py -q -n 0 --no-cov && .venv/bin/coverage report --rcfile=/dev/null --include='scripts/arc_nocov_precondition_lint.py,scripts/__init__.py' --fail-under=100 -m",
+      "passed": true,
+      "summary": "scripts/arc_nocov_precondition_lint.py + scripts/__init__.py: 150 statements, 0 missed, 100% coverage"
+    },
+    "ruff_check": {
+      "command": ".venv/bin/ruff check scripts/arc_nocov_precondition_lint.py scripts/__init__.py tests/python/test_arc_nocov_precondition_lint.py",
+      "passed": true,
+      "summary": "All checks passed"
+    },
+    "ruff_format_check": {
+      "command": ".venv/bin/ruff format --check scripts/arc_nocov_precondition_lint.py scripts/__init__.py tests/python/test_arc_nocov_precondition_lint.py",
+      "passed": true,
+      "summary": "3 files already formatted"
+    },
+    "spec_coverage": {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_arc_nocov_precondition_lint.py",
+      "passed": true,
+      "summary": "OK: All tests reference specification requirements"
+    },
+    "precommit_hook": {
+      "command": "pre-commit run arc-nocov-precondition-lint --files research-roadmap.yaml",
+      "passed": true,
+      "summary": "ARC roadmap precondition pytest no-cov lint Passed"
+    },
+    "full_tests_python": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "passed": false,
+      "summary": "Not completed during the regression fix; a broad tests/python collection was stopped after it expanded to roughly 39k tests. Focused REQ-REPORT-4482 and adjacent ARC no-cov suites pass."
+    }
+  },
+  "artifacts_changed": {
+    "spec": "openspec/capabilities/research-reporting/spec.md",
+    "lint_module": "scripts/arc_nocov_precondition_lint.py",
+    "package_hook": "scripts/__init__.py",
+    "tests": "tests/python/test_arc_nocov_precondition_lint.py",
+    "precommit": ".pre-commit-config.yaml"
+  },
+  "file_hashes_sha256": {
+    "scripts/arc_nocov_precondition_lint.py": "f7939551c762064a0899ddd8d625fb4d80d9e1aa5d78df54af9347dae6975e3b",
+    "scripts/__init__.py": "13d4c70bdead43f0de9faeb10757b5057c26fe0ce66616764c13ba5237e8c9eb",
+    "tests/python/test_arc_nocov_precondition_lint.py": "a9ccdc20c93085963e99d75e06a50b5c3b6c9b28d8958da9f8eae34a9cc59fd4",
+    ".pre-commit-config.yaml": "dc9849288e082f421d76777c14eeca947eac59cf817645bb84c7b8c67928c9cb",
+    "openspec/capabilities/research-reporting/spec.md": "c5d46e5999e74550254f01d9af1d2c151c866feab90a4a4029c3af003862a04c"
+  },
+  "field_principles": {
+    "honest_verdict": "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility).",
+    "reproduced_levels": "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed.",
+    "preconditions_checked": "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode."
+  },
+  "spec_refs": [
+    "REQ-REPORT-4482",
+    "SCENARIO-REPORT-4482-ROADMAP-LINT",
+    "SCENARIO-REPORT-4482-ACTIVATION-GUARD"
+  ],
+  "reproducibility_checksum": "c96dc95efdf193f2b07e770881da9e9bc522326d843efaa7604c5448dc6ae4d1"
+}
