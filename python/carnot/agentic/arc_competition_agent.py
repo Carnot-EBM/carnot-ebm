@@ -61,6 +61,11 @@ MAX_ACTIONS = 200
 # if it beats bare-BFS on solve-rate AND finishes in budget. Until then: v3 head loaded, weight 0 (cheap).
 SUBMITTED_VALUE_WEIGHT = 0.0
 SUBMITTED_TARGET_LEVELS = 5
+# Smart grace-period early-stop: stop this many moves after the LAST level-up if no new level appears
+# (cuts the fruitless post-solve tail that destroys the (human/agent_actions)^2 efficiency score, WITHOUT
+# capping levels -- consecutive level-ups reset the window). None = DISABLED (current live default until a
+# K is measured + operator-approved; see the .418 action-efficiency work 2026-06-20).
+SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
@@ -182,6 +187,7 @@ class StepwiseExplorer:
         adaptive_budget_value_head: Any | None = None,
         adaptive_budget_noop_threshold: float = 0.5,
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
+        early_stop_grace: Optional[int] = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -239,6 +245,15 @@ class StepwiseExplorer:
         self.pending: list[dict] = []  # queued nav/probe actions
         self.awaiting: Optional[dict] = None  # last probe, to attribute its result
         self.explored_out = False
+        # Smart grace-period early-stop (does NOT cap levels). After reaching >=1 level, keep searching
+        # for the next; stop only if no NEW level within `early_stop_grace` moves of the last level-up.
+        # Consecutive level-ups reset the window, so multi-level games are NOT capped -- only the fruitless
+        # tail after the last findable level is cut (that tail destroys the (human/actions)^2 score: e.g.
+        # lp85 reaches L1 at action 20 but ran to 7792 hunting unreachable deeper levels). None = disabled.
+        self.early_stop_grace = early_stop_grace
+        self._early_stop_level_mark = 0
+        self._early_stop_frame_mark = 0
+        self.early_stopped = False
         self.adj: dict[str, list] = {}  # known forward edges: hash -> [(action_dict, next_hash)]
         self._nav_attempts = 0
         self._nav_exact_hits = 0
@@ -755,6 +770,22 @@ class StepwiseExplorer:
             and self.best_level >= self.start_level + self.target_levels
         ):
             return True
+        # Smart grace-period early-stop: cut the fruitless post-solve tail WITHOUT capping levels. Once at
+        # least one level is reached, a new level-up resets the window; if no new level appears within
+        # `early_stop_grace` moves, stop (the agent is churning on unreachable deeper levels, and every
+        # extra action quadratically erodes the (human/agent_actions)^2 efficiency score). Riding
+        # consecutive level-ups keeps the window alive, so reachable deeper levels are still solved.
+        if (
+            self.early_stop_grace is not None
+            and self.start_level is not None
+            and self.best_level > self.start_level
+        ):
+            if self.best_level > self._early_stop_level_mark:
+                self._early_stop_level_mark = self.best_level
+                self._early_stop_frame_mark = len(frames)
+            elif (len(frames) - self._early_stop_frame_mark) > self.early_stop_grace:
+                self.early_stopped = True
+                return True
         return self.explored_out
 
 
