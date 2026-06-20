@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.415",
+  "generated_at": "2026-06-20T11:08:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector attributed 0 experiment commits, 0 wall-minutes, and 0 compute-bound tasks to 2026.06.415, so gpu_idle_on_compute_bound_tasks is null (there was no compute-bound task to assess). On-disk ground truth read this turn (ops/changelog + results/experiment_4490..4499_*.json mtimes, a ~2h23m window 04:37-07:00Z) shows the milestone actually ran exp4490-exp4499 -- all synthesis/aggregation tasks with no GGUF/CUDA markers -- so the zero is the recurring false-zero detector gap (documented across .363-.412, now extending to .415), not idle execution.",
+  "bottlenecks_identified": [
+    "Observability, not speed, is the only real bottleneck: the milestone-scoped timing detector reported 0 experiment commits since activation, yet on-disk artifacts (exp4490-exp4499) and the ops/changelog window show 10 tasks executed over a ~2h23m span. This recurring false-zero gap (.363-.412, now .415) is what blocks per-experiment efficiency analysis -- there is no slow-experiment signal to flag because the timing rows never reached the retro.",
+    "GPU idle is NOT a bottleneck this milestone: a grep of the .415 window (results/experiment_449[0-9]_*.json) found no GGUF / CUDA / requires_gpu markers, so every task was synthesis/aggregation with no GPU code path. Both RTX 3090s reading 0% is correct behaviour; gpu_idle_on_compute_bound_tasks is null because compute_bound_experiments_count is 0."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector with a fallback: when the git-commit-attribution path returns 0 commits since activation, scan results/experiment_*.json mtimes within the activation->HEAD window and parse the ops/changelog window, so retros stop false-zeroing real work.",
+    "Emit a detector_gap_suspected=true flag whenever the commit detector reports 0 but on-disk artifacts exist in the milestone window -- convert the silent false-zero into an explicit signal the retro can branch on instead of reporting an empty milestone.",
+    "Stamp duration_s and compute_bound at artifact write-time inside the experiment template, so per-experiment timing is artifact-intrinsic and survives even when the commit-window detector misses -- removing the retro's dependence on brittle git-commit attribution.",
+    "No GPU or DualGPURunner change is warranted: 0 compute-bound and 0 multi-model-parallel tasks ran this milestone, so single-GPU and idle-GPU states are both correct."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector (mtime + ops/changelog-window fallback) -- it is the recurring single point of failure across .363-.415 and is what prevents any per-experiment efficiency analysis from reaching the retro.",
+    "Add write-time duration_s / compute_bound stamping in the experiment template so timing is intrinsic to each artifact rather than derived from git commits, making future retros robust to the detector gap.",
+    "Emit detector_gap_suspected=true when the detector reports 0 while on-disk artifacts exist in the window, so future retros honestly diagnose an observability gap instead of silently reporting a zero-experiment milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The HOW-was-it-executed question is answerable from on-disk evidence and the answer is healthy: 10 tasks (exp4490-exp4499) ran over ~2h23m, all synthesis/aggregation, with the GPUs correctly idle. The single operational defect is observability -- the timing detector false-zeroed again, the recurring failure across .363-.415 -- so the loop's weak point is measuring its own work, not doing it; making timing artifact-intrinsic is the durable fix."
+}
