@@ -8964,3 +8964,5 @@ c |
 | 2026-06-20 17:12 UTC | PHASE 0 (TRANSITION) -- archive .416 -> activate . | FAIL | No file changes produced |
 | 2026-06-20 17:14 UTC | PHASE 0 (TRANSITION) -- archive .416 -> activate . | FAIL | No file changes produced |
 | 2026-06-20 17:17 UTC | PHASE 0 (TRANSITION) -- archive .416 -> activate . | FAIL | No file changes produced |
+| 2026-06-20 17:34 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 109 passed, 1 warning in 8.73s |
+| 2026-06-20 17:36 UTC | PHASE 0 (TRANSITION) -- archive .416 -> activate . | OK | Deliverable already exists in repo |
