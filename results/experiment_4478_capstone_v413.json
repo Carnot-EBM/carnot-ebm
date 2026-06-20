@@ -1,0 +1,1199 @@
+{
+  "availability_report": {
+    "available_artifact_keys": [
+      "4467_dc22",
+      "4468_sc25_deep",
+      "4469_sc25_operator",
+      "4470_sb26",
+      "4471_first_contact",
+      "4472_variant_loo_v4",
+      "4473_submission",
+      "4474_hygiene"
+    ],
+    "axes": {
+      "dc22_bank": {
+        "available_artifact_keys": [
+          "4467_dc22"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "first_contact_new_game": {
+        "available_artifact_keys": [
+          "4471_first_contact"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": {
+          "banked": false,
+          "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+          "target_game": "re86"
+        }
+      },
+      "registry_hygiene": {
+        "available_artifact_keys": [
+          "4474_hygiene"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 45
+      },
+      "sb26_bank": {
+        "available_artifact_keys": [
+          "4470_sb26"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "sc25_deeper_bank": {
+        "available_artifact_keys": [
+          "4468_sc25_deep"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": {
+          "moved_from_provisional": true,
+          "new_levels": 4,
+          "total_levels": 5
+        }
+      },
+      "sc25_generic_operator": {
+        "available_artifact_keys": [
+          "4469_sc25_operator"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "submission_package": {
+        "available_artifact_keys": [
+          "4473_submission"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": {
+          "levels": 45,
+          "ready": true,
+          "submitted_to_leaderboard": false
+        }
+      },
+      "variant_transfer_loo_v4": {
+        "available_artifact_keys": [
+          "4472_variant_loo_v4"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": {
+          "generic_loo_solve_count_v4": 0,
+          "variants_attempted": 0,
+          "variants_solved": 0
+        }
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4467_dc22",
+      "experiment_id": 4467,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "dc22_grounded",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "reproducible_total_games",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4467_solve_dc22_cegis_nocov.json",
+      "sha256": "fa339e66a669a7cd4cec222f33b08363ce1a02c6716f51bfdfb1a5602207bf8e"
+    },
+    {
+      "artifact_key": "4468_sc25_deep",
+      "experiment_id": 4468,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "new_sc25_levels_reproduced",
+        "prior_sc25_levels_reproduced",
+        "sc25_levels_reproduced_total",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "sha256": "70dade80adc347aca50e4b5718fdfe1db5934e10a3c01d3093cbaf8c1152f330"
+    },
+    {
+      "artifact_key": "4469_sc25_operator",
+      "experiment_id": 4469,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "sc25_resolved_generically",
+        "sc25_generic_level_reproduced",
+        "offline_reproduced",
+        "missing_verifier_gaps",
+        "no_regression",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4469_generic_cast_grid_fsm_operator.json",
+      "sha256": "a125f7bb1713c320c9e9f7609611b88400c6aaded5bb68171bc55cb7f28cdea4"
+    },
+    {
+      "artifact_key": "4470_sb26",
+      "experiment_id": 4470,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "color_match_operator_built",
+        "selected_operator",
+        "operator_result",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4470_color_match_slot_operator_solve_sb26.json",
+      "sha256": "20cc7dc49fa4756345c2d9de1fee7639c623df8d88f1870288fe0c4354543973"
+    },
+    {
+      "artifact_key": "4471_first_contact",
+      "experiment_id": 4471,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "target_selection",
+        "routed_to",
+        "selected_operator",
+        "offline_reproduced",
+        "reproduced_levels",
+        "missing_verifier_gaps",
+        "submitted_to_leaderboard",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4471_first_contact_rotated_new_game.json",
+      "sha256": "80260b33c0875912d2d61110dfb3c3af3a9c6ec35b6787327e500eda12a16033"
+    },
+    {
+      "artifact_key": "4472_variant_loo_v4",
+      "experiment_id": 4472,
+      "fields_imported": [
+        "honest_verdict",
+        "generic_loo_solve_count_v3_baseline",
+        "generic_loo_solve_count_v4",
+        "generic_transfer_rate_over_variants",
+        "variants_attempted",
+        "variants_solved",
+        "closed_residuals_by_413_operator",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4472_variant_generic_transfer_benchmark_v4.json",
+      "sha256": "8acf61a358910d337f594ccd8d67003bd98dc62866a0733d3538adc638ce5e96"
+    },
+    {
+      "artifact_key": "4473_submission",
+      "experiment_id": 4473,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "total_reproduced_levels_in_package",
+        "prior_submitted_baseline_levels",
+        "prior_package_412_levels",
+        "beats_prior_baseline",
+        "grew_vs_412",
+        "submitted_to_leaderboard",
+        "quarantined_games",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4473_submission_package_prep_refresh.json",
+      "sha256": "3201a8937665ba503b7866df5680c115ab742c2bee62f255759b40fd80bab263"
+    },
+    {
+      "artifact_key": "4474_hygiene",
+      "experiment_id": 4474,
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_games",
+        "reproducible_total_levels",
+        "regression_guard_passed",
+        "availability_report",
+        "open_gap_ids",
+        "registry_reconciliation"
+      ],
+      "path": "results/experiment_4474_registry_gaps_hygiene.json",
+      "sha256": "4575e909b15ee853a090398d14faeaa072fcd0a5aa854b30ebc627344ce834cd"
+    }
+  ],
+  "dc22_bank": {
+    "dc22_grounded": true,
+    "dc22_l1_cleanly_banked": true,
+    "gap_closed": true,
+    "honest_verdict": "success: dc22_cegis_L1_offline_reproduced",
+    "missing_verifier_gaps": [],
+    "reproduced_levels": 1,
+    "reproducible_total_games": 21,
+    "reproducible_total_levels": 40,
+    "residual_deltas": [],
+    "state": "dc22_grounded_l1_banked",
+    "target_game": "dc22",
+    "verifier_is_oracle": true
+  },
+  "duration_s": 0.398488,
+  "experiment": 4478,
+  "field_principles": {
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields",
+    "generic_loo_solve_count_v4": "bare int from exp4472 -- did the falsifiable generic metric rise above 6?",
+    "generic_solver_gap_state": "one honest string (closing/partial/total-gap) -- did dc22+sc25+sb26 close?",
+    "generic_transfer_rate_over_variants": "bare float from exp4472 -- the operator-mandated OOD-proxy generalization metric",
+    "honest_verdict": "terminal-prefixed",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream JSON + publication_gate.py; 100us floor",
+    "next_backlog": "the still-open residual_deltas + missing primitives that become the .414 generic-solver build backlog",
+    "publication_gate": "the G1-G4 publication_gate.py --json output; paper_ready stays True (FoVer 0.9131, FROZEN)",
+    "reproducibility_checksum": "content hash for reproducibility",
+    "reproducible_total_levels": "the authoritative monotonic sprint metric (target > 39 after dc22 + sc25 deepening)",
+    "reproducible_total_levels_grew": "BARE bool: reproducible_total_levels > 39 -- the .413 headline answer to 'did we finally move the .412-flat metric?'",
+    "submission_package_ready": "bare bool from exp4473 -- is the operator package ready to beat the 13-level prior baseline (now > 39)?",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; upstream execution-grounded ARC solves carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire"
+  },
+  "field_provenance": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_loo_solve_count_v4": {
+      "principle": "bare int from exp4472 -- did the falsifiable generic metric rise above 6?",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_solver_gap_state": {
+      "principle": "one honest string (closing/partial/total-gap) -- did dc22+sc25+sb26 close?",
+      "satisfied_by": "aggregation logic"
+    },
+    "generic_transfer_rate_over_variants": {
+      "principle": "bare float from exp4472 -- the operator-mandated OOD-proxy generalization metric",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed",
+      "satisfied_by": "aggregation logic"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream JSON + publication_gate.py; 100us floor",
+      "satisfied_by": "aggregation logic"
+    },
+    "next_backlog": {
+      "principle": "the still-open residual_deltas + missing primitives that become the .414 generic-solver build backlog",
+      "satisfied_by": "aggregation logic"
+    },
+    "publication_gate": {
+      "principle": "the G1-G4 publication_gate.py --json output; paper_ready stays True (FoVer 0.9131, FROZEN)",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash for reproducibility",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative monotonic sprint metric (target > 39 after dc22 + sc25 deepening)",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducible_total_levels_grew": {
+      "principle": "BARE bool: reproducible_total_levels > 39 -- the .413 headline answer to 'did we finally move the .412-flat metric?'",
+      "satisfied_by": "aggregation logic"
+    },
+    "submission_package_ready": {
+      "principle": "bare bool from exp4473 -- is the operator package ready to beat the 13-level prior baseline (now > 39)?",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle": {
+      "principle": "BARE bool=false for the capstone itself; upstream execution-grounded ARC solves carried separately so CIRCULAR_MOAT_OVERCLAIM does not fire",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "first_contact_rotated_game": {
+    "banked_new_rotated_game": false,
+    "honest_verdict": "complete: generic_first_contact_re86_routed_no_new_level",
+    "missing_verifier_gaps": [
+      {
+        "candidate_design": "add a generic sprite-overlay pattern-match and resize/transformation verifier",
+        "game": "re86",
+        "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+        "operator": "graph_astar_action_cost",
+        "residual_delta": "missing_pattern_match_sprite_resize_verifier",
+        "routed_to": "tu93",
+        "status": "open"
+      }
+    ],
+    "offline_reproduced": false,
+    "reproduced_levels": 0,
+    "residual_deltas": [
+      {
+        "candidate_design": "add a generic sprite-overlay pattern-match and resize/transformation verifier",
+        "game": "re86",
+        "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+        "operator": "graph_astar_action_cost",
+        "residual_delta": "missing_pattern_match_sprite_resize_verifier",
+        "routed_to": "tu93",
+        "source_artifact": "results/experiment_4471_first_contact_rotated_new_game.json",
+        "status": "open"
+      }
+    ],
+    "routed_to": "tu93",
+    "state": "rotated_game_open",
+    "submitted_to_leaderboard": false,
+    "target_game": "re86",
+    "verifier_is_oracle": true
+  },
+  "flagged_artifacts_excluded": [],
+  "generic_loo_solve_count_v4": 0,
+  "generic_loo_v4": {
+    "closed_residuals_by_413_operator": [],
+    "generic_loo_solve_count_v3_baseline": 6,
+    "generic_loo_solve_count_v4": 0,
+    "generic_transfer_rate_over_variants": 0.0,
+    "honest_verdict": "complete: blocked_baseline_smoke",
+    "preconditions_checked": {
+      "arc_solve_learning_import": true,
+      "arc_solver_kit_import": true,
+      "arc_variant_generator_import": true,
+      "baseline_smoke_command": ".venv/bin/pytest -k \"variant or arc_solver_kit or leaderboard_eval\" -q --no-cov",
+      "baseline_smoke_exit_code": 1,
+      "baseline_smoke_green": false,
+      "baseline_smoke_output_tail": "; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\npython/carnot/autoresearch/transpile.py:58\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\npython/carnot/autoresearch/transpile.py:75\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\ntests/python/test_energy_premise_v3_3437.py:26\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytestmark = pytest.mark.kona\n\n.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 56 warnings\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\ntests/python/test_experiment_3494.py:138\ntests/python/test_experiment_3494.py:138\ntests/python/test_experiment_3494.py:138\ntests/python/test_experiment_3494.py:138\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_3494.py:138: PytestUnknownMarkWarning: Unknown pytest.mark.memory_watchdog_skip - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytest.param(\"parallel_tempering\", 50, 1, marks=pytest.mark.memory_watchdog_skip),\n\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\ntests/python/test_respawn_queue.py:68\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_3494.py::test_optimize_board_v2_variant_smoke[random_restarts-50-2]\n======= 185 passed, 5 skipped, 88 warnings, 1 error in 114.29s (0:01:54) =======\n",
+      "igpu_llama_server_available": false,
+      "leaderboard_submission": false,
+      "no_3090_inference": true,
+      "offline_env_files_present": true,
+      "offline_env_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "ok": false,
+      "qwen_gguf_cached": true
+    },
+    "residual_deltas": [],
+    "state": "blocked_baseline_smoke",
+    "v4_rose_above_baseline": false,
+    "variants_attempted": 0,
+    "variants_solved": 0,
+    "verifier_is_oracle": true
+  },
+  "generic_solver_gap_state": "partial",
+  "generic_transfer_rate_over_variants": 0.0,
+  "headline_question_answers": {
+    "exp4467": {
+      "dc22_l1_cleanly_banked": true,
+      "gap_closed": true,
+      "residual_deltas": [],
+      "state": "dc22_grounded_l1_banked"
+    },
+    "exp4468": {
+      "new_sc25_level_banked": true,
+      "new_sc25_levels_reproduced": 4,
+      "sc25_levels_reproduced_total": 5,
+      "state": "sc25_deepened_banked"
+    },
+    "exp4469": {
+      "gap_closed": true,
+      "residual_deltas": [],
+      "sc25_resolved_generically": true,
+      "state": "sc25_generic_gap_closed"
+    },
+    "exp4470": {
+      "color_match_operator_built": true,
+      "reproduced_levels": 1,
+      "sb26_banked": true,
+      "state": "sb26_banked"
+    },
+    "exp4471": {
+      "banked_new_rotated_game": false,
+      "residual_deltas": [
+        {
+          "candidate_design": "add a generic sprite-overlay pattern-match and resize/transformation verifier",
+          "game": "re86",
+          "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+          "operator": "graph_astar_action_cost",
+          "residual_delta": "missing_pattern_match_sprite_resize_verifier",
+          "routed_to": "tu93",
+          "source_artifact": "results/experiment_4471_first_contact_rotated_new_game.json",
+          "status": "open"
+        }
+      ],
+      "state": "rotated_game_open",
+      "target_game": "re86"
+    },
+    "exp4472": {
+      "generic_loo_solve_count_v3_baseline": 6,
+      "generic_loo_solve_count_v4": 0,
+      "generic_transfer_rate_over_variants": 0.0,
+      "state": "blocked_baseline_smoke",
+      "v4_rose_above_baseline": false
+    },
+    "exp4473": {
+      "prior_package_412_levels": 39,
+      "state": "ready_beats_412_flat_metric",
+      "submission_package_ready": true,
+      "total_reproduced_levels_in_package": 45
+    }
+  },
+  "honest_verdict": "complete: v413_generic_solver_partial_levels_grew_loo_v4_0_transfer_bp_0_levels_45_games_22_submission_ready_publication_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "next_backlog": {
+    "closed_residuals_by_413_operator": [],
+    "filled_gap_ids": [
+      "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+      "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
+      "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
+    ],
+    "missing_primitives": [
+      "pattern_match_sprite_resize_verifier"
+    ],
+    "open_gap_ids": [
+      "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER"
+    ],
+    "operational_residuals": [
+      "variant_transfer_baseline_smoke_failed"
+    ],
+    "residual_deltas": [
+      {
+        "candidate_design": "add a generic sprite-overlay pattern-match and resize/transformation verifier",
+        "game": "re86",
+        "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+        "operator": "graph_astar_action_cost",
+        "residual_delta": "missing_pattern_match_sprite_resize_verifier",
+        "routed_to": "tu93",
+        "source_artifact": "results/experiment_4471_first_contact_rotated_new_game.json",
+        "status": "open"
+      }
+    ]
+  },
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "publication_gate": {
+      "exists": true,
+      "paper_ready": true,
+      "path": "scripts/publication_gate.py",
+      "runnable": true,
+      "unmet_gates": []
+    },
+    "registry_hygiene": {
+      "availability_report": {
+        "available_artifact_keys": [
+          "4467_dc22",
+          "4468_sc25_deep",
+          "4469_sc25_operator",
+          "4470_sb26",
+          "4471_first_contact",
+          "4472_variant_loo_v4",
+          "4473_submission"
+        ],
+        "axes": {
+          "dc22_bank": {
+            "available_artifact_keys": [
+              "4467_dc22"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": true
+          },
+          "first_contact_new_game": {
+            "available_artifact_keys": [
+              "4471_first_contact"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": {
+              "banked": false,
+              "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+              "target_game": "re86"
+            }
+          },
+          "sb26_bank": {
+            "available_artifact_keys": [
+              "4470_sb26"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": true
+          },
+          "sc25_deeper_bank": {
+            "available_artifact_keys": [
+              "4468_sc25_deep"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": {
+              "moved_from_provisional": true,
+              "new_levels": 4,
+              "total_levels": 5
+            }
+          },
+          "sc25_generic_operator": {
+            "available_artifact_keys": [
+              "4469_sc25_operator"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": true
+          },
+          "submission_package": {
+            "available_artifact_keys": [
+              "4473_submission"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": {
+              "levels": 45,
+              "ready": true,
+              "submitted_to_leaderboard": false
+            }
+          },
+          "variant_transfer_loo_v4": {
+            "available_artifact_keys": [
+              "4472_variant_loo_v4"
+            ],
+            "flagged_artifacts": [],
+            "missing_artifacts": [],
+            "verdict": {
+              "generic_loo_solve_count_v4": 0,
+              "variants_attempted": 0,
+              "variants_solved": 0
+            }
+          }
+        },
+        "flagged_artifacts_excluded": [],
+        "missing_upstream_artifacts": []
+      },
+      "filled_gap_ids": [
+        "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+        "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
+        "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
+      ],
+      "honest_verdict": "complete: registry_gaps_hygiene_4474_guard_passed",
+      "open_gap_ids": [
+        "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER"
+      ],
+      "registry_reconciliation": {
+        "arc_solve_registry_reconciled": true,
+        "excluded_artifacts": [],
+        "filled_gap_ids": [
+          "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+          "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
+          "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
+        ],
+        "open_gap_ids": [
+          "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER"
+        ],
+        "production_verifier_edits": false,
+        "provisional_total_levels": 1,
+        "registries_reconciled": true,
+        "reproducible_total_games": 22,
+        "reproducible_total_levels": 45,
+        "verifier_gaps_reconciled": true,
+        "verifier_registry_reconciled": true
+      },
+      "regression_guard_passed": true,
+      "reproducible_total_games": 22,
+      "reproducible_total_levels": 45,
+      "state": "reconciled"
+    },
+    "robust_aggregate_available_helper": "capstone_aggregate_available.aggregate_available_report_gaps",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4467_dc22",
+        "exists": true,
+        "experiment_id": 4467,
+        "path": "results/experiment_4467_solve_dc22_cegis_nocov.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4468_sc25_deep",
+        "exists": true,
+        "experiment_id": 4468,
+        "path": "results/experiment_4468_bank_sc25_provisional_levels.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4469_sc25_operator",
+        "exists": true,
+        "experiment_id": 4469,
+        "path": "results/experiment_4469_generic_cast_grid_fsm_operator.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4470_sb26",
+        "exists": true,
+        "experiment_id": 4470,
+        "path": "results/experiment_4470_color_match_slot_operator_solve_sb26.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4471_first_contact",
+        "exists": true,
+        "experiment_id": 4471,
+        "path": "results/experiment_4471_first_contact_rotated_new_game.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4472_variant_loo_v4",
+        "exists": true,
+        "experiment_id": 4472,
+        "path": "results/experiment_4472_variant_generic_transfer_benchmark_v4.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4473_submission",
+        "exists": true,
+        "experiment_id": 4473,
+        "path": "results/experiment_4473_submission_package_prep_refresh.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "4474_hygiene",
+        "exists": true,
+        "experiment_id": 4474,
+        "path": "results/experiment_4474_registry_gaps_hygiene.json",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_gate_checksum": "7647fd5ba3275c5994bf046360095a1511d7a0b5abd8bcdcd8c367fa1db3f9ac",
+  "random_seed": 4478,
+  "registry_hygiene": {
+    "availability_report": {
+      "available_artifact_keys": [
+        "4467_dc22",
+        "4468_sc25_deep",
+        "4469_sc25_operator",
+        "4470_sb26",
+        "4471_first_contact",
+        "4472_variant_loo_v4",
+        "4473_submission"
+      ],
+      "axes": {
+        "dc22_bank": {
+          "available_artifact_keys": [
+            "4467_dc22"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        },
+        "first_contact_new_game": {
+          "available_artifact_keys": [
+            "4471_first_contact"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": {
+            "banked": false,
+            "gap_id": "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER",
+            "target_game": "re86"
+          }
+        },
+        "sb26_bank": {
+          "available_artifact_keys": [
+            "4470_sb26"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        },
+        "sc25_deeper_bank": {
+          "available_artifact_keys": [
+            "4468_sc25_deep"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": {
+            "moved_from_provisional": true,
+            "new_levels": 4,
+            "total_levels": 5
+          }
+        },
+        "sc25_generic_operator": {
+          "available_artifact_keys": [
+            "4469_sc25_operator"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": true
+        },
+        "submission_package": {
+          "available_artifact_keys": [
+            "4473_submission"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": {
+            "levels": 45,
+            "ready": true,
+            "submitted_to_leaderboard": false
+          }
+        },
+        "variant_transfer_loo_v4": {
+          "available_artifact_keys": [
+            "4472_variant_loo_v4"
+          ],
+          "flagged_artifacts": [],
+          "missing_artifacts": [],
+          "verdict": {
+            "generic_loo_solve_count_v4": 0,
+            "variants_attempted": 0,
+            "variants_solved": 0
+          }
+        }
+      },
+      "flagged_artifacts_excluded": [],
+      "missing_upstream_artifacts": []
+    },
+    "filled_gap_ids": [
+      "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+      "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
+      "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
+    ],
+    "honest_verdict": "complete: registry_gaps_hygiene_4474_guard_passed",
+    "open_gap_ids": [
+      "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER"
+    ],
+    "registry_reconciliation": {
+      "arc_solve_registry_reconciled": true,
+      "excluded_artifacts": [],
+      "filled_gap_ids": [
+        "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
+        "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
+        "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
+      ],
+      "open_gap_ids": [
+        "GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER"
+      ],
+      "production_verifier_edits": false,
+      "provisional_total_levels": 1,
+      "registries_reconciled": true,
+      "reproducible_total_games": 22,
+      "reproducible_total_levels": 45,
+      "verifier_gaps_reconciled": true,
+      "verifier_registry_reconciled": true
+    },
+    "regression_guard_passed": true,
+    "reproducible_total_games": 22,
+    "reproducible_total_levels": 45,
+    "state": "reconciled"
+  },
+  "reproducibility_checksum": "sha256:eb4b703eeb016c10d48991508a6f6bd1aac6c28d0313ec8a4d6a4d573b086c56",
+  "reproducible_total_games": 22,
+  "reproducible_total_levels": 45,
+  "reproducible_total_levels_grew": true,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "reproducible_total_levels_grew",
+    "generic_solver_gap_state",
+    "generic_loo_solve_count_v4",
+    "generic_transfer_rate_over_variants",
+    "reproducible_total_levels",
+    "reproducible_total_games",
+    "submission_package_ready",
+    "next_backlog",
+    "publication_gate",
+    "verifier_is_oracle",
+    "inference_substrate",
+    "cited_upstream_artifacts",
+    "preconditions_checked",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "sb26_bank": {
+    "color_match_operator_built": true,
+    "honest_verdict": "success: sb26_color_match_slot_sequence_L1_offline_reproduced",
+    "missing_verifier_gaps": [],
+    "reproduced_levels": 1,
+    "reproducible_total_levels": 45,
+    "residual_deltas": [],
+    "sb26_banked": true,
+    "state": "sb26_banked",
+    "target_game": "sb26",
+    "verifier_is_oracle": true
+  },
+  "sc25_deeper_bank": {
+    "honest_verdict": "success: sc25_L5_offline_reproduced_banked_4_new_levels",
+    "missing_verifier_gaps": [],
+    "new_sc25_level_banked": true,
+    "new_sc25_levels_reproduced": 4,
+    "prior_sc25_levels_reproduced": 1,
+    "reproduced_levels": 4,
+    "residual_deltas": [],
+    "sc25_levels_reproduced_total": 5,
+    "state": "sc25_deepened_banked",
+    "verifier_is_oracle": true
+  },
+  "sc25_generic_operator": {
+    "gap_closed": true,
+    "honest_verdict": "success: sc25_generic_cast_grid_fsm_L1_offline_reproduced",
+    "missing_verifier_gaps": [],
+    "no_regression": true,
+    "residual_deltas": [],
+    "sc25_generic_level_reproduced": 1,
+    "sc25_resolved_generically": true,
+    "state": "sc25_generic_gap_closed",
+    "verifier_is_oracle": true
+  },
+  "schema": "carnot.capstone_v413_4478.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4478",
+    "SCENARIO-CAPSTONE-4478"
+  ],
+  "submission_package": {
+    "beats_prior_baseline": true,
+    "grew_vs_412": true,
+    "honest_verdict": "success: submission_package_ready_45_levels_beats_13_grew_vs_412_quarantined_0",
+    "prior_package_412_levels": 39,
+    "prior_submitted_baseline_levels": 13,
+    "quarantined_games": [],
+    "state": "ready_beats_412_flat_metric",
+    "submission_package_ready": true,
+    "submitted_to_leaderboard": false,
+    "total_reproduced_levels_in_package": 45,
+    "verifier_is_oracle": true
+  },
+  "submission_package_ready": true,
+  "submission_readiness_decision": "ready_beats_412_flat_metric",
+  "submitted_to_leaderboard": false,
+  "total_reproduced_levels_in_package": 45,
+  "unmet_gates": [],
+  "upstream_oracle_declarations": [
+    {
+      "artifact_key": "4467_dc22",
+      "experiment_id": 4467,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4468_sc25_deep",
+      "experiment_id": 4468,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4469_sc25_operator",
+      "experiment_id": 4469,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4470_sb26",
+      "experiment_id": 4470,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4471_first_contact",
+      "experiment_id": 4471,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4472_variant_loo_v4",
+      "experiment_id": 4472,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4473_submission",
+      "experiment_id": 4473,
+      "skipped": false,
+      "verifier_is_oracle": true
+    },
+    {
+      "artifact_key": "4474_hygiene",
+      "experiment_id": 4474,
+      "skipped": false,
+      "verifier_is_oracle": null
+    }
+  ],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4467_dc22",
+      "experiment_id": 4467,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "dc22_grounded",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "reproducible_total_games",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4467_solve_dc22_cegis_nocov.json",
+      "payload_reproducibility_checksum": "6df9101a1d7d60168201b113fe14c235a13aa8bf54f81532ca46f0d5613c9037",
+      "sha256": "fa339e66a669a7cd4cec222f33b08363ce1a02c6716f51bfdfb1a5602207bf8e",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4468_sc25_deep",
+      "experiment_id": 4468,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "new_sc25_levels_reproduced",
+        "prior_sc25_levels_reproduced",
+        "sc25_levels_reproduced_total",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "payload_reproducibility_checksum": "53d552175453c8d664753f601e598a3d39e5a2286efd0004813c67d3a8af0346",
+      "sha256": "70dade80adc347aca50e4b5718fdfe1db5934e10a3c01d3093cbaf8c1152f330",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4469_sc25_operator",
+      "experiment_id": 4469,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "sc25_resolved_generically",
+        "sc25_generic_level_reproduced",
+        "offline_reproduced",
+        "missing_verifier_gaps",
+        "no_regression",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4469_generic_cast_grid_fsm_operator.json",
+      "payload_reproducibility_checksum": "31501265619b89657355d491143593b6aaa6d28cae991e211617de3c43217c6b",
+      "sha256": "a125f7bb1713c320c9e9f7609611b88400c6aaded5bb68171bc55cb7f28cdea4",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4470_sb26",
+      "experiment_id": 4470,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "color_match_operator_built",
+        "selected_operator",
+        "operator_result",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "missing_verifier_gaps",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4470_color_match_slot_operator_solve_sb26.json",
+      "payload_reproducibility_checksum": "70d1253b011f3cce0d3552cf59abb2a93791e0859c71e8c27529c249bf8a0ca1",
+      "sha256": "20cc7dc49fa4756345c2d9de1fee7639c623df8d88f1870288fe0c4354543973",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4471_first_contact",
+      "experiment_id": 4471,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "target_selection",
+        "routed_to",
+        "selected_operator",
+        "offline_reproduced",
+        "reproduced_levels",
+        "missing_verifier_gaps",
+        "submitted_to_leaderboard",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4471_first_contact_rotated_new_game.json",
+      "payload_reproducibility_checksum": "1fe1cf3ae67f70533488a7dc74363899734c60bcec3ecbd167f2424093def341",
+      "sha256": "80260b33c0875912d2d61110dfb3c3af3a9c6ec35b6787327e500eda12a16033",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4472_variant_loo_v4",
+      "experiment_id": 4472,
+      "fields_imported": [
+        "honest_verdict",
+        "generic_loo_solve_count_v3_baseline",
+        "generic_loo_solve_count_v4",
+        "generic_transfer_rate_over_variants",
+        "variants_attempted",
+        "variants_solved",
+        "closed_residuals_by_413_operator",
+        "preconditions_checked",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4472_variant_generic_transfer_benchmark_v4.json",
+      "payload_reproducibility_checksum": "f8807cb33b1c7f25368ef816533091e7d1cdd015ce53455fffe5f7b0ed4f88ab",
+      "sha256": "8acf61a358910d337f594ccd8d67003bd98dc62866a0733d3538adc638ce5e96",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4473_submission",
+      "experiment_id": 4473,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "total_reproduced_levels_in_package",
+        "prior_submitted_baseline_levels",
+        "prior_package_412_levels",
+        "beats_prior_baseline",
+        "grew_vs_412",
+        "submitted_to_leaderboard",
+        "quarantined_games",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4473_submission_package_prep_refresh.json",
+      "payload_reproducibility_checksum": "ec0d019f968a577e478e928979bf06b0ab46af64ec7aae7bce3b627815beb324",
+      "sha256": "3201a8937665ba503b7866df5680c115ab742c2bee62f255759b40fd80bab263",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4474_hygiene",
+      "experiment_id": 4474,
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_games",
+        "reproducible_total_levels",
+        "regression_guard_passed",
+        "availability_report",
+        "open_gap_ids",
+        "registry_reconciliation"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4474_registry_gaps_hygiene.json",
+      "payload_reproducibility_checksum": "3a6e6076e8edb17ed4d561db42bacf46e99458b028121f80acc6ce2c847c2d22",
+      "sha256": "4575e909b15ee853a090398d14faeaa072fcd0a5aa854b30ebc627344ce834cd",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "20cc7dc49fa4756345c2d9de1fee7639c623df8d88f1870288fe0c4354543973",
+    "3201a8937665ba503b7866df5680c115ab742c2bee62f255759b40fd80bab263",
+    "4575e909b15ee853a090398d14faeaa072fcd0a5aa854b30ebc627344ce834cd",
+    "70dade80adc347aca50e4b5718fdfe1db5934e10a3c01d3093cbaf8c1152f330",
+    "80260b33c0875912d2d61110dfb3c3af3a9c6ec35b6787327e500eda12a16033",
+    "8acf61a358910d337f594ccd8d67003bd98dc62866a0733d3538adc638ce5e96",
+    "a125f7bb1713c320c9e9f7609611b88400c6aaded5bb68171bc55cb7f28cdea4",
+    "fa339e66a669a7cd4cec222f33b08363ce1a02c6716f51bfdfb1a5602207bf8e"
+  ],
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_honored": true
+}
