@@ -1,0 +1,62 @@
+{
+  "artifact_kind": "arc_precondition_nocov_lint_guard",
+  "catches_cov_gated_precondition": true,
+  "count_integrity_extended": true,
+  "count_integrity_issue_count": 0,
+  "count_integrity_issues": [],
+  "duration_s": 0.705437,
+  "experiment": "experiment_4475_arc_precondition_nocov_lint",
+  "field_principles": {
+    "catches_cov_gated_precondition": {
+      "principle": "bare bool: the lint flags a precondition that runs pytest -k without --no-cov (reproduces the exp4455 block in a test)"
+    },
+    "count_integrity_extended": {
+      "principle": "bare bool: the count-integrity lint now covers the sc25 provisional->reproduced transition"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- this is a lint/test/helper (CPU); 100us floor"
+    },
+    "nocov_lint_shipped": {
+      "principle": "bare bool: the lint that flags any ARC pytest precondition missing --no-cov landed green"
+    },
+    "smoke_helper_shipped": {
+      "principle": "bare bool: arc_precondition_smoke(--no-cov) helper landed -- the durable fix for the dc22-class block"
+    },
+    "tests_pass": {
+      "principle": "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"
+    }
+  },
+  "honest_verdict": "shipped: arc_precondition_nocov_lint_guard",
+  "implemented_paths": [
+    "python/carnot/agentic/arc_precondition_smoke.py",
+    "scripts/arc_precondition_nocov_lint.py",
+    "scripts/arc_count_integrity_lint.py",
+    ".pre-commit-config.yaml",
+    "python/carnot/experiment_4475_arc_precondition_nocov_lint.py",
+    "tests/python/test_arc_precondition_smoke.py",
+    "tests/python/test_arc_precondition_nocov_lint.py",
+    "tests/python/test_arc_count_integrity_lint.py",
+    "tests/python/test_experiment_4475_arc_precondition_nocov_lint.py"
+  ],
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nocov_lint_issue_count": 0,
+  "nocov_lint_issues": [],
+  "nocov_lint_shipped": true,
+  "precommit_hook_configured": true,
+  "production_verifier_edits": false,
+  "reproducibility_checksum": "d6e8a139de14f8677c7b59ec04ae465a2a9a5d0584bf338a353d6b6a34929155",
+  "retroactively_rewrote_past_artifacts": false,
+  "schema": "carnot.exp4475.arc_precondition_nocov_lint.v1",
+  "smoke_helper_shipped": true,
+  "spec_refs": [
+    "REQ-REPORT-4475",
+    "SCENARIO-REPORT-4475-SMOKE",
+    "SCENARIO-REPORT-4475-NOCOV-LINT",
+    "SCENARIO-REPORT-4475-SC25-COUNT"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_pass": true
+}
