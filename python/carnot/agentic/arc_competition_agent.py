@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
-from typing import Any, Optional, Sequence
+from typing import Any, Mapping, Optional, Sequence
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
@@ -240,6 +240,13 @@ class StepwiseExplorer:
         self.awaiting: Optional[dict] = None  # last probe, to attribute its result
         self.explored_out = False
         self.adj: dict[str, list] = {}  # known forward edges: hash -> [(action_dict, next_hash)]
+        self._nav_attempts = 0
+        self._nav_exact_hits = 0
+        self._nav_partial_hits = 0
+        self._nav_reset_fallbacks = 0
+        self._nav_edges_recorded = 0
+        self._nav_forward_steps = 0
+        self._nav_reset_replay_steps = 0
 
     def _disc_features(self, frame) -> Optional[list[float]]:
         if not self.online_discriminative:
@@ -369,6 +376,23 @@ class StepwiseExplorer:
             "cached_frame_hashes": int(len(self._value_cache)),
         }
 
+    def navigation_diagnostics(self) -> dict[str, Any]:
+        """SCENARIO-ARC-FCP-4516: expose whether frontier navigation avoids RESET replay."""
+
+        hits = int(self._nav_exact_hits + self._nav_partial_hits)
+        attempts = int(self._nav_attempts)
+        return {
+            "navigation_attempts": attempts,
+            "exact_shortest_path_hits": int(self._nav_exact_hits),
+            "partial_forward_walk_hits": int(self._nav_partial_hits),
+            "forward_walk_hits": hits,
+            "reset_replay_fallbacks": int(self._nav_reset_fallbacks),
+            "forward_edges_recorded": int(self._nav_edges_recorded),
+            "forward_navigation_steps": int(self._nav_forward_steps),
+            "reset_replay_steps": int(self._nav_reset_replay_steps),
+            "forward_walk_hit_rate": float(hits / attempts) if attempts else 0.0,
+        }
+
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
 
@@ -460,6 +484,26 @@ class StepwiseExplorer:
             return 0.0, None
         return None, frame
 
+    @staticmethod
+    def _same_path_step(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
+        return int(left.get("action")) == int(right.get("action")) and left.get("data") == right.get("data")
+
+    @classmethod
+    def _path_is_prefix(cls, prefix: Sequence[Mapping[str, Any]], path: Sequence[Mapping[str, Any]]) -> bool:
+        if len(prefix) > len(path):
+            return False
+        return all(cls._same_path_step(left, right) for left, right in zip(prefix, path))
+
+    def _record_forward_edge(self, origin: Optional[str], action: Mapping[str, Any], next_hash: str) -> None:
+        if origin is None or next_hash == origin:
+            return
+        act = {"action": int(action["action"]), "data": action.get("data")}
+        edges = self.adj.setdefault(origin, [])
+        if any(existing == act and nxt == next_hash for existing, nxt in edges):
+            return
+        edges.append((act, next_hash))
+        self._nav_edges_recorded += 1
+
     def _ingest(self, latest) -> None:
         if latest is None:
             return
@@ -484,8 +528,7 @@ class StepwiseExplorer:
                 act = {"action": o["action"], "data": o["data"]}
                 # record the forward edge for frontier-distance navigation (only if the
                 # action actually CHANGED state — a no-op self-edge is useless to navigate)
-                if h != o["origin"]:
-                    self.adj.setdefault(o["origin"], []).append((act, h))
+                self._record_forward_edge(o["origin"], act, h)
                 if h not in self.graph:
                     opath = self.graph.get(o["origin"], {}).get("path", [])
                     features = self._record_discriminative_sample(
@@ -604,6 +647,34 @@ class StepwiseExplorer:
                 q.append((nxt, npath))
         return None
 
+    def _partial_forward_path(self, src: Optional[str], dst: str) -> Optional[list]:
+        """Walk to the deepest reachable ancestor of dst, then replay only the suffix."""
+
+        if src is None or dst not in self.graph:
+            return None
+        target_path = self.graph.get(dst, {}).get("path", [])
+        best_depth = -1
+        best_plan = None
+        for ancestor, node in self.graph.items():
+            if ancestor == dst:
+                continue
+            ancestor_path = node.get("path", [])
+            if not self._path_is_prefix(ancestor_path, target_path):
+                continue
+            forward = self._shortest_path(src, ancestor)
+            if forward is None:
+                continue
+            depth = len(ancestor_path)
+            if depth <= best_depth:
+                continue
+            suffix = [
+                {"action": int(step["action"]), "data": step.get("data")}
+                for step in target_path[depth:]
+            ]
+            best_depth = depth
+            best_plan = list(forward) + suffix
+        return best_plan
+
     def _serve(self) -> tuple:
         item = self.pending.pop(0)
         if item["kind"] == "RESET":
@@ -654,14 +725,27 @@ class StepwiseExplorer:
         ):  # best frontier IS the current state -> expand in place (no nav)
             self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
             return (a["action"], a["data"])
+        self._nav_attempts += 1
         fwd = self._shortest_path(self.cur, th) if not over else None
         if fwd is not None:
+            self._nav_exact_hits += 1
+            self._nav_forward_steps += len(fwd)
             self.pending = [{"kind": s["action"], "data": s["data"], "probe": False} for s in fwd]
         else:
-            self.pending = [{"kind": "RESET", "data": None, "probe": False}]
-            self.pending += [
-                {"kind": s["action"], "data": s["data"], "probe": False} for s in node["path"]
-            ]
+            partial = self._partial_forward_path(self.cur, th) if not over else None
+            if partial is not None:
+                self._nav_partial_hits += 1
+                self._nav_forward_steps += len(partial)
+                self.pending = [
+                    {"kind": s["action"], "data": s["data"], "probe": False} for s in partial
+                ]
+            else:
+                self._nav_reset_fallbacks += 1
+                self._nav_reset_replay_steps += len(node["path"])
+                self.pending = [{"kind": "RESET", "data": None, "probe": False}]
+                self.pending += [
+                    {"kind": s["action"], "data": s["data"], "probe": False} for s in node["path"]
+                ]
         self.pending.append({"kind": a["action"], "data": a["data"], "probe": True, "origin": th})
         return self._serve()
 
