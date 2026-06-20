@@ -11,6 +11,33 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-19 (MANDATORY-NEXT-MILESTONE, operator "all three" — step-back gap audit): integration + verifier-discrimination > banking more known-game levels
+
+**Operator 2026-06-19 ("can you find any other training or solve discovery gaps?" → "all three"):** a
+parallel codebase audit found the **0.08 score's real ceiling is the SUBMITTED agent, not the solver
+research**. Full backlog in `ops/verifier_gaps.md` (GAP-LIVE-INTEGRATION, GAP-ARCH-*). The score-movers,
+in priority order:
+
+1. **GAP-LIVE-INTEGRATION (highest):** `make_carnot_agent → E3AgentPolicy` ships **bare BFS** (8/32
+   in-distribution, ~0 OOD) + an LLM tier with **0/6 measured value**, `target_levels=1`, `value_weight=0.0`.
+   The stronger `arc_strategy_router` / `arc_world_model_dsl` are **not imported** by the submitted agent.
+   `reproducible_total_levels` (the sprint metric) is largely a **mirage** for the leaderboard — most of the
+   45 are banked replays of KNOWN games (≈0 on the hidden eval) or depend on `env._game` absent live. Wire
+   the stronger generic stack into the submitted agent; raise `target_levels`; forward-edge nav. INTEGRATION,
+   not modeling.
+2. **GAP-ARCH-FEATURES:** the verifier features are frame-only order-1 → no cross-game transfer (the
+   discriminative head built 2026-06-19 is in-sample 0.726 but LOO 0.503 == chance). Add relational/Δframe/
+   action-conditioned/predicate-distance features (cross_game_features_v3); re-run the `--discriminative`
+   LOO-AUROC gate. Highest-leverage verifier research item.
+3. **GAP-ARCH-GOAL-NOT-VERIFIED** + **GAP-ARCH-GRID-ONLY-STATE:** the E3 verifier scores dynamics but never
+   the goal predicate; grid-only state omits HUD registers (the deepening-tail root cause, ar25/ka59/ft09).
+
+The DiscriminativeVerifier + off-path-negatives + LOO-AUROC harness are SHIPPED
+(`arc_value_learner.py:DiscriminativeVerifier`, `arc_cross_game_verifier_train.py --discriminative`); the
+honest result (per-game-only) sharpens #2 as the blocker. The pre-staged `.414` roadmap leads with #1+#2.
+
+---
+
 ### 2026-06-19 (MANDATORY-NEXT-MILESTONE for .413, operator-directed): wire MANUFACTURED variants into the LOO/generic-transfer benchmark
 
 **Operator 2026-06-19 ("flag the variant for 413"):** the variant generator is SHIPPED + wired into
