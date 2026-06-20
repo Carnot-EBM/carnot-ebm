@@ -285,6 +285,49 @@ Required field principles:
 - `reproducibility_checksum`: principle "catches silent corpus/model drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4513: ACT-Style Adaptive Per-Step Explorer Budget
+
+Experiment 4513 SHALL write
+`results/experiment_4513_adaptive_per_step_budget.json` from an ACT-style
+adaptive budget gate for the live `StepwiseExplorer`. The gate SHALL use only
+already-computed, frame-local signals: value-head/candidate margin when
+available, predicted no-op fraction from an already-wired frame-change or
+induced-model scorer when available, and frame novelty from the rendered-state
+hash. It SHALL NOT train a new model, load an LLM, submit to the leaderboard, or
+claim to implement LoopWM; it SHALL frame the method as an ACT/PonderNet-style
+budget controller applied to the existing explorer.
+
+The explorer SHALL preserve legacy behavior when no adaptive threshold is
+configured. When configured, each newly materialized frame SHALL compute an
+ambiguity score from those signal components; scores below the swept threshold
+SHALL commit the single top-ranked candidate as budget 1, while scores at or
+above threshold SHALL retain the normal candidate width. The gate SHALL retain
+at least one candidate and SHALL record diagnostics sufficient to audit how many
+frames committed versus expanded.
+
+Experiment 4513 SHALL sweep thresholds on the fixed 8-game local submission
+gate, compare against the fixed 7760 median-actions baseline, report per-game
+rows, solve-rate, and median actions-to-first-level-up, and reproduce solved
+first-level-up action segments through `arc_solver_kit.reproduce`. If no swept
+threshold reduces median actions without dropping solve-rate, the artifact SHALL
+report an honest null. A positive control SHALL prove the harness can detect a
+known reduction before a null may be interpreted.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: adaptive_budget_median_actions_<n>_below_7760 OR complete: adaptive_budget_no_reduction_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
+- `median_actions_baseline`: principle "the 7760 control, fixed."
+- `median_actions_with_adaptive`: principle "the headline -- did skipping expansion on easy frames cut actions."
+- `solve_rate_baseline`: principle "no-regression reference."
+- `solve_rate_with_adaptive`: principle "the gate must not drop solve-rate."
+- `ambiguity_signal_components`: principle "names the already-computed signals used (no new model/training) -- the zero-cost claim is auditable."
+- `positive_control_passed`: principle "proves the harness detects a real reduction."
+- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -389,3 +432,17 @@ the bottom quantile is pruned while retaining at least one candidate, and the
 experiment 4512 artifact records the 7760 baseline, prior-guided median action
 measurement, solve-rate guard, prior source, positive control status, false
 negative risk check, random seed, and reproducibility checksum.
+
+### SCENARIO-ARC-FCP-4513: Easy Frames Commit One Candidate, Ambiguous Frames Expand
+
+Given a frame, a legacy ranked candidate list, value-margin/no-op/novelty
+signals, and an adaptive budget threshold
+When the ambiguity score is below the threshold
+Then the explorer retains only the top candidate for that frame and records a
+budget-1 commit diagnostic.
+When the ambiguity score is at or above the threshold
+Then the explorer retains the normal candidate width, records an expanded
+diagnostic, and the experiment 4513 artifact records the 7760 baseline,
+adaptive median action measurement, threshold sweep, per-game solve-rate guard,
+ambiguity signal components, positive control status, false negative risk check,
+random seed, and reproducibility checksum.

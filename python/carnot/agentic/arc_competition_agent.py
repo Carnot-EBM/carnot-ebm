@@ -177,6 +177,9 @@ class StepwiseExplorer:
         frame_change_prune_threshold: float | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
+        adaptive_budget_threshold: float | None = None,
+        adaptive_budget_value_head: Any | None = None,
+        adaptive_budget_noop_threshold: float = 0.5,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -190,6 +193,13 @@ class StepwiseExplorer:
         self.frame_change_prune_threshold = frame_change_prune_threshold
         self.action_prior = action_prior
         self.action_prior_prune_quantile = action_prior_prune_quantile
+        self.adaptive_budget_threshold = adaptive_budget_threshold
+        self.adaptive_budget_value_head = adaptive_budget_value_head
+        self.adaptive_budget_noop_threshold = float(adaptive_budget_noop_threshold)
+        self._adaptive_budget_history: list[dict[str, Any]] = []
+        self._adaptive_budget_commit_count = 0
+        self._adaptive_budget_expanded_count = 0
+        self._adaptive_budget_candidates_skipped = 0
         self.online_discriminative = bool(online_discriminative)
         self.discriminative_featurizer = discriminative_featurizer
         self.discriminative_min_positives = max(1, int(discriminative_min_positives))
@@ -333,6 +343,16 @@ class StepwiseExplorer:
             "prune_threshold": float(self.discriminative_prune_threshold),
         }
 
+    def adaptive_budget_diagnostics(self) -> dict[str, Any]:
+        return {
+            "enabled": self.adaptive_budget_threshold is not None,
+            "threshold": self.adaptive_budget_threshold,
+            "commit_count": int(self._adaptive_budget_commit_count),
+            "expanded_count": int(self._adaptive_budget_expanded_count),
+            "candidates_skipped": int(self._adaptive_budget_candidates_skipped),
+            "history": list(self._adaptive_budget_history[-64:]),
+        }
+
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
 
@@ -348,16 +368,41 @@ class StepwiseExplorer:
         action_prior = self.action_prior
         if action_prior is not None and hasattr(action_prior, "for_path"):
             action_prior = action_prior.for_path(path or [])
-        return [
-            {"action": int(c.action_id), "data": c.data}
-            for c in rich_action_candidates(
+        candidates = rich_action_candidates(
+            frame,
+            frame_change_scorer=self.frame_change_scorer,
+            frame_change_prune_threshold=self.frame_change_prune_threshold,
+            action_prior=action_prior,
+            action_prior_prune_quantile=self.action_prior_prune_quantile,
+        )
+        if self.adaptive_budget_threshold is not None and candidates:
+            from carnot.agentic.arc_adaptive_budget import apply_adaptive_budget
+
+            try:
+                frame_hash = self._hash(frame)
+                frame_is_novel = frame_hash not in self.graph
+            except Exception:
+                frame_is_novel = True
+            gated, decision = apply_adaptive_budget(
                 frame,
+                candidates,
+                threshold=self.adaptive_budget_threshold,
+                value_head=self.adaptive_budget_value_head or self.value_head,
                 frame_change_scorer=self.frame_change_scorer,
-                frame_change_prune_threshold=self.frame_change_prune_threshold,
-                action_prior=action_prior,
-                action_prior_prune_quantile=self.action_prior_prune_quantile,
+                frame_is_novel=frame_is_novel,
+                change_threshold=self.adaptive_budget_noop_threshold,
             )
-        ]
+            if decision.committed_single_candidate:
+                self._adaptive_budget_commit_count += 1
+                self._adaptive_budget_candidates_skipped += max(
+                    0,
+                    int(decision.normal_width) - int(decision.budget),
+                )
+            else:
+                self._adaptive_budget_expanded_count += 1
+            self._adaptive_budget_history.append(decision.as_dict())
+            candidates = gated
+        return [{"action": int(c.action_id), "data": c.data} for c in candidates]
 
     @staticmethod
     def _game_over(frame) -> bool:
@@ -627,6 +672,9 @@ class CarnotAgentPolicy:
         frame_change_prune_threshold: float | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
+        adaptive_budget_threshold: float | None = None,
+        adaptive_budget_value_head: Any | None = None,
+        adaptive_budget_noop_threshold: float = 0.5,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -649,6 +697,9 @@ class CarnotAgentPolicy:
                 frame_change_prune_threshold=frame_change_prune_threshold,
                 action_prior=action_prior,
                 action_prior_prune_quantile=action_prior_prune_quantile,
+                adaptive_budget_threshold=adaptive_budget_threshold,
+                adaptive_budget_value_head=adaptive_budget_value_head,
+                adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
             )
         )
 
@@ -700,6 +751,9 @@ class E3AgentPolicy:
         frame_change_prune_threshold: float | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
+        adaptive_budget_threshold: float | None = None,
+        adaptive_budget_value_head: Any | None = None,
+        adaptive_budget_noop_threshold: float = 0.5,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         if value_head is _DEFAULT_VALUE_HEAD:
@@ -719,6 +773,9 @@ class E3AgentPolicy:
             frame_change_prune_threshold=frame_change_prune_threshold,
             action_prior=action_prior,
             action_prior_prune_quantile=action_prior_prune_quantile,
+            adaptive_budget_threshold=adaptive_budget_threshold,
+            adaptive_budget_value_head=adaptive_budget_value_head,
+            adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
