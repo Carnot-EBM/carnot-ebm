@@ -27279,6 +27279,78 @@ rows, and `SUBMITTED_AGENT_CONFIG` matches the code default.
 |---|---|---|
 | REQ-REPORT-4500 | Implemented (`python/carnot/experiment_4500_value_weight_remeasure.py`, `results/experiment_4500_value_weight_remeasure.json`) | Implemented (`tests/python/test_experiment_4500_value_weight_remeasure.py`, `tests/python/test_arc_submitted_agent_parity.py`) |
 
+### REQ-REPORT-4506: Lazy ARC Value-Head Evaluation Preserves Routing With Lower Cost
+
+The Exp 4506 workflow SHALL prototype the ARC submitted-agent value-head routing
+cost fix by comparing eager v3 value-head evaluation against a lazy frontier
+selector. The eager control SHALL score every cached frontier candidate with the
+expensive value head. The lazy selector SHALL first sort by the cheap frontier
+priority, score only the top-K candidates with the v3-style value head, cache
+value scores by frame hash, and choose the best scored candidate inside that
+top-K slice. The workflow SHALL measure both value-head call reduction and wall
+clock speedup while reporting whether lazy routing preserves the eager selected
+candidate on the cached candidate frontier.
+
+The workflow SHALL write
+`results/experiment_4506_lazy_value_eval_prototype.json` with required top-level
+fields `honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`lazy_top_k`, `frontier_width`, `trial_count`, `value_weight`,
+`cache_by_frame_hash`, `eager`, `lazy`, `speedup_factor`,
+`value_head_call_reduction_factor`, `routing_quality_match_rate`,
+`routing_quality_preserved`, `per_trial`, `field_principles`, `spec_refs`, and
+`reproducibility_checksum`. Complete-path `honest_verdict` SHALL start with
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, or `shipped_`. The artifact SHALL declare
+`inference_substrate=verifier_ensemble_against_cached_candidates`, SHALL record
+which resources were checked before launch, and SHALL NOT claim a leaderboard
+submission.
+
+The required field principles SHALL include:
+
+- `honest_verdict`: "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_."
+- `inference_substrate`: "explicit substrate so adversarial_verify applies the right duration floor."
+- `preconditions_checked`: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+- `lazy_top_k`: "bare int: number of cheap-frontier candidates allowed to call the expensive v3 value head."
+- `frontier_width`: "bare int: cached-candidate frontier width used by each trial."
+- `trial_count`: "bare int: number of cached frontier trials measured."
+- `value_weight`: "bare float: the positive routing weight whose cost the lazy path is intended to unblock."
+- `cache_by_frame_hash`: "bare bool: records whether repeated frame hashes reuse a prior v3 value score."
+- `eager`: "control summary where every candidate pays the v3 value-head cost."
+- `lazy`: "lazy summary where only top-K candidates pay the v3 value-head cost."
+- `speedup_factor`: "bare float: eager wall seconds divided by lazy wall seconds."
+- `value_head_call_reduction_factor`: "bare float: eager value-head calls divided by lazy cache-miss calls."
+- `routing_quality_match_rate`: "bare float: fraction of trials where lazy selected the same candidate as eager."
+- `routing_quality_preserved`: "bare bool: true only when lazy keeps the required routing match threshold."
+- `per_trial`: "per-frontier evidence for selected candidates, score gaps, value calls, and cache hits."
+- `field_principles`: "schema self-description so artifact review checks field intent."
+- `spec_refs`: "OpenSpec anchors that the tests and artifact claim to satisfy."
+- `reproducibility_checksum`: "sha256 over the stable lazy/eager measurement payload."
+
+#### SCENARIO-REPORT-4506-LAZY-TOPK: Lazy Scoring Calls The Value Head Only For Top-K Frontier Candidates
+
+**Given** a cached ARC frontier with many candidate frame hashes and a positive
+`value_weight`
+**When** Exp 4506 ranks the frontier lazily with `lazy_top_k=K`
+**Then** the expensive v3-style value head is called only for the cheap-priority
+top-K candidates not already present in the frame-hash cache
+**And** the selected candidate matches the eager all-candidate selection whenever
+the eager winner is inside that top-K slice.
+
+#### SCENARIO-REPORT-4506-SCHEMA: Lazy Evaluation Artifacts Are Principle-Annotated
+
+**Given** Exp 4506 writes its result artifact
+**When** the schema validator checks it
+**Then** the required principle-annotated fields are present, the terminal
+verdict prefix is valid, the inference substrate is explicit, preconditions name
+the import smoke and torch checks, eager and lazy summaries contain call and wall
+time measurements, and routing quality is reported without a leaderboard claim.
+
+## Implementation Status (REQ-REPORT-4506)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4506 | Planned (`python/carnot/experiment_4506_lazy_value_eval_prototype.py`, `results/experiment_4506_lazy_value_eval_prototype.json`) | Planned (`tests/python/test_experiment_4506_lazy_value_eval_prototype.py`) |
+
 ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
 
 The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
