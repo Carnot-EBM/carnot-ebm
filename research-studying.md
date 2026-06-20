@@ -10,6 +10,21 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-20 LoopWM (arXiv:2606.18208) - operator-directed ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/loopwm-2606.18208-ingestion-2026-06-20.md` (operator asked
+"what can we learn"). Looped World Models = weight-tied recurrent-depth transformer (Universal-Transformer
++ PonderNet halt) applied to text-state world modeling; non-peer-reviewed tech report, no code, "100x" is
+a 1B-vs->100B-API gap not a looped-vs-fixed ablation.
+
+**Verdict:** CITE, do NOT build. The learned-simulator path is a STRUCTURAL non-starter for first-contact
+ARC (offline-pretraining-required, zero-shot absent; Family-B's exact symbolic transition model is
+strictly better). ONE sprint pickup -> `.417` candidate 6: a **verifier-grounded adaptive per-step budget**
+for the explorer (really ACT/PonderNet; spend search compute only on hard frames -> attacks action
+efficiency; zero new model/training). Phase-3 note-and-file: Carnot's energy verifier as the HALT signal
+for a looped refiner ("loop until E<tau") -- the one original idea LoopWM implies. Conceptual reuse only;
+does NOT revive the retired nano-TRM training.
+
 ## 2026-06-20 Exp 4477 - .413 SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4477_sota_ingestion_413.json` and
