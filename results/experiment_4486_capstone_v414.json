@@ -1,0 +1,984 @@
+{
+  "a1_generic_solve_rate": {
+    "after_generic_solve_rate": 0.1428571429,
+    "after_solved": 1,
+    "attempted_games": 7,
+    "before_generic_solve_rate": 0.1428571429,
+    "before_solved": 1,
+    "generic_solve_rate_delta": 0.0,
+    "honest_verdict": "complete: submitted_default_stronger_generic_stack_wired",
+    "measurement": "heldout_loo_generic_set_exact_submitted_default_env_game_blocked",
+    "offline_reproduced": true,
+    "reproduced_levels": 45,
+    "signal": "flat",
+    "state": "heldout_generic_solve_rate_flat"
+  },
+  "a2_cross_game_loo_auroc_v3": {
+    "feature_class_deltas": {
+      "v2_plus_action_conditioned": 0.0034436915531507184,
+      "v2_plus_frame_delta": 0.17671272828496043,
+      "v2_plus_object_relational": 0.1283628783246189,
+      "v2_plus_predicate_distance": 0.016203876622393087,
+      "v3_full": 0.1713695635007898
+    },
+    "feature_class_loo_auroc": {
+      "v2": 0.503096152732577,
+      "v2_plus_action_conditioned": 0.5065398442857277,
+      "v2_plus_frame_delta": 0.6798088810175374,
+      "v2_plus_object_relational": 0.6314590310571959,
+      "v2_plus_predicate_distance": 0.5193000293549701,
+      "v3_full": 0.6744657162333668
+    },
+    "honest_verdict": "success: cross_game_features_v3_loo_auroc_0.674_passes_gate",
+    "loo_auroc_delta": 0.1713695635007898,
+    "loo_gate_passed": true,
+    "offline_reproduced": true,
+    "reproduced_levels": 51,
+    "richer_features_beat_baseline": true,
+    "state": "richer_features_beat_baseline",
+    "target_loo_auroc": 0.6,
+    "v2_baseline_loo_auroc": 0.503096152732577,
+    "v3_in_sample_auroc": 0.8710834214701216,
+    "v3_loo_auroc": 0.6744657162333668
+  },
+  "a3_per_game_discriminative_delta": {
+    "actions_to_first_levelup_delta": 0,
+    "baseline_actions_to_first_levelup": 58,
+    "baseline_solve_rate": 0.3333333333,
+    "honest_verdict": "complete: per_game_online_discriminative_no_solve_rate_gain",
+    "offline_reproduced": false,
+    "online_actions_to_first_levelup": 58,
+    "online_solve_rate": 0.3333333333,
+    "online_verifier": {
+      "frontier_pruned": 0,
+      "negative_samples": 3,
+      "per_game_head": "DiscriminativeVerifier",
+      "positive_samples": 100,
+      "trained_games": 1,
+      "training_scope": "per_game_online_only"
+    },
+    "per_game_count": 3,
+    "reproduced_levels": 0,
+    "routing_helped": false,
+    "solve_rate_delta": 0.0,
+    "state": "per_game_routing_flat"
+  },
+  "a4_goal_state_deepen": {
+    "bp35": {
+      "honest_verdict": "success: bp35_L1_goal_directed_offline_reproduced",
+      "offline_reproduced": true,
+      "operator_built": true,
+      "operator_key": "goal_directed_solver_built",
+      "reproduced_levels": 1,
+      "reproducible_total_levels": 47,
+      "state": "bp35_offline_reproduced",
+      "target_game": "bp35",
+      "verifier_is_oracle": true
+    },
+    "new_reproduced_levels": 2,
+    "offline_reproduced": true,
+    "re86": {
+      "honest_verdict": "success: re86_L1_sprite_overlay_resize_offline_reproduced",
+      "offline_reproduced": true,
+      "operator_built": true,
+      "operator_key": "sprite_overlay_verifier_built",
+      "reproduced_levels": 1,
+      "reproducible_total_levels": 46,
+      "state": "re86_offline_reproduced",
+      "target_game": "re86",
+      "verifier_is_oracle": true
+    },
+    "state": "goal_state_deepen_banked"
+  },
+  "availability_report": {
+    "available_artifact_keys": [
+      "4475_a1_stack",
+      "4476_a2_features",
+      "4477_a3_routing",
+      "4479_a4_re86",
+      "4480_a4_bp35",
+      "4481_closeout",
+      "4482_lint",
+      "4483_registry",
+      "4484_hardware"
+    ],
+    "axes": {
+      "a1_generic_solve_rate": {
+        "available_artifact_keys": [
+          "4475_a1_stack"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": "flat"
+      },
+      "a2_cross_game_loo_auroc_v3": {
+        "available_artifact_keys": [
+          "4476_a2_features"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "a3_per_game_discriminative_delta": {
+        "available_artifact_keys": [
+          "4477_a3_routing"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "a4_goal_state_deepen": {
+        "available_artifact_keys": [
+          "4479_a4_re86",
+          "4480_a4_bp35"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 2
+      },
+      "operational_context": {
+        "available_artifact_keys": [
+          "4482_lint",
+          "4484_hardware"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": [
+          "4482_lint",
+          "4484_hardware"
+        ]
+      },
+      "twenty_five_game_closeout": {
+        "available_artifact_keys": [
+          "4481_closeout",
+          "4483_registry"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": {
+          "registry_authoritative_total_levels": 47,
+          "solved_games_count": 25
+        }
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4475_a1_stack",
+      "experiment_id": 4475,
+      "fields_imported": [
+        "honest_verdict",
+        "before_generic_solve_rate",
+        "after_generic_solve_rate",
+        "generic_solve_rate_delta",
+        "before_solved",
+        "after_solved",
+        "attempted_games",
+        "benchmark",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4475_wire_stronger_generic_stack.json",
+      "sha256": "9f39b068bcc265e4f88694f58ea473df4c7cc921ffea31acc39e554f5296e87b"
+    },
+    {
+      "artifact_key": "4476_a2_features",
+      "experiment_id": 4476,
+      "fields_imported": [
+        "honest_verdict",
+        "v2_baseline_loo_auroc",
+        "v3_loo_auroc",
+        "v3_in_sample_auroc",
+        "target_loo_auroc",
+        "loo_gate_passed",
+        "feature_class_loo_auroc",
+        "feature_class_deltas",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4476_verifier_features_v3_loo_gate.json",
+      "sha256": "354feed52ec44f0f9de51662c9c9a54b64d57e201c14b317e0657e205455aab0"
+    },
+    {
+      "artifact_key": "4477_a3_routing",
+      "experiment_id": 4477,
+      "fields_imported": [
+        "honest_verdict",
+        "baseline_solve_rate",
+        "online_solve_rate",
+        "solve_rate_delta",
+        "baseline_actions_to_first_levelup",
+        "online_actions_to_first_levelup",
+        "actions_to_first_levelup_delta",
+        "per_game_results",
+        "online_verifier",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4477_per_game_online_discriminative.json",
+      "sha256": "2b1dde34f4fc06e4311a78f2b50b567fc05c878936bc31ba7519f970c87dc9e1"
+    },
+    {
+      "artifact_key": "4479_a4_re86",
+      "experiment_id": 4479,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "registered_verifier_operator",
+        "sprite_overlay_verifier_built",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4479_solve_re86.json",
+      "sha256": "5cf6dc9c28cc342b960ca238d1933a378d4a8d3ba6c663027495ea4e734e891c"
+    },
+    {
+      "artifact_key": "4480_a4_bp35",
+      "experiment_id": 4480,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "goal_directed_solver_built",
+        "goal_region_identified",
+        "shape_aware_state_key",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4480_solve_bp35_goal_directed.json",
+      "sha256": "f493a181dcdfae80a9d752ff40ab75db4fbe305e38d1e1f652be8ebe9fa2c1bf"
+    },
+    {
+      "artifact_key": "4481_closeout",
+      "experiment_id": 4481,
+      "fields_imported": [
+        "honest_verdict",
+        "solved_games",
+        "variants_attempted",
+        "variants_solved",
+        "transfer_solve_rate",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4481_variant_transfer_benchmark.json",
+      "sha256": "3fac2b2257e4c2672fb7e6b12457669b2767ea326e354938ea93271bc36b489b"
+    },
+    {
+      "artifact_key": "4482_lint",
+      "experiment_id": 4482,
+      "fields_imported": [
+        "honest_verdict",
+        "roadmap_lint_shipped",
+        "precommit_hook_wired",
+        "activation_guard_wired",
+        "coverage_new_code_100",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4482_nocov_default_lint.json",
+      "sha256": "3f8953436137c5a42846c8d3313e9ed9c054b500d58654eb91437eb92f9c642f"
+    },
+    {
+      "artifact_key": "4483_registry",
+      "experiment_id": 4483,
+      "fields_imported": [
+        "honest_verdict",
+        "registry_reconciliation",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4483_gate_decouple_registry_reconcile.json",
+      "sha256": "a76aa737689c242bb0e92f7d366ea9501b59151b0c5b6db20bab9eb16bd495bb"
+    },
+    {
+      "artifact_key": "4484_hardware",
+      "experiment_id": 4484,
+      "fields_imported": [
+        "honest_verdict",
+        "per_board_reachability",
+        "per_board_status",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4484_hardware_continuity_audit.json",
+      "sha256": "80a071b74292d6399da3f0746f24ef5d94640ba2675da4d9081737ddd1c0da10"
+    }
+  ],
+  "duration_s": 0.384737,
+  "experiment": 4486,
+  "field_principles": {
+    "a1_generic_solve_rate": "the real A1 score signal is held-out generic-solve-rate BEFORE->AFTER, not reproducible_total_levels.",
+    "a2_cross_game_loo_auroc_v3": "reports whether richer features beat the 0.503 LOO-AUROC v2 baseline.",
+    "a3_per_game_discriminative_delta": "reports the per-game online discriminative routing delta without converting a null delta into a success.",
+    "a4_goal_state_deepen": "reports clean re86/bp35 goal-state deepening only when offline reproduced.",
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields.",
+    "flagged_artifacts_skipped": "stamped or live-critical artifacts import no fields.",
+    "honest_verdict": "MUST start with a terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it as terminal (Verdict Terminal-Prefix Discipline).",
+    "inference_substrate": "explicit declaration (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right floor.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count (ARC Solve Reproducibility).",
+    "preconditions_checked": "records WHICH resources were verified before launching; pre-empts the silent-missing-resource fabrication mode.",
+    "reproduced_levels": "headline metric reproducible_total_levels grows monotonically; report the count banked, real-env-confirmed.",
+    "reproducibility_checksum": "content hash for reproducibility",
+    "twenty_five_game_closeout": "reports the clean 25-game closeout from registry/variant-transfer evidence while recording stale registry mismatches.",
+    "verifier_claims": "each verifier claim declares verifier_is_oracle so circularity is explicit.",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; verifier-derived upstream claims declare their own circular/execution-grounded status."
+  },
+  "flagged_artifacts_skipped": [],
+  "honest_verdict": "complete: v414_a1_flat_a2_beats_0503_a3_no_delta_a4_2_levels_closeout_25_games_total_47",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "offline_reproduced": true,
+  "operational_context": {
+    "exp4482_nocov_default_lint": {
+      "coverage_new_code_100": true,
+      "honest_verdict": "shipped: arc roadmap no-cov precondition lint, pre-commit hook, and package-level activation guard landed; focused tests pass; full spec coverage remains blocked by pre-existing legacy traceability gaps",
+      "per_board_reachability": {},
+      "roadmap_lint_shipped": true,
+      "state": "available"
+    },
+    "exp4484_hardware_continuity": {
+      "coverage_new_code_100": false,
+      "honest_verdict": "complete: hardware_continuity_audit_4484_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh",
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "roadmap_lint_shipped": false,
+      "state": "available"
+    }
+  },
+  "per_axis_gaps": [],
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "robust_aggregate_available_helper": "capstone_aggregate_available.aggregate_available_report_gaps",
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4475_a1_stack",
+        "exists": true,
+        "experiment_id": 4475,
+        "path": "results/experiment_4475_wire_stronger_generic_stack.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "AGENTS.md_read": true,
+          "CODEX.md_read": true,
+          "coverage_run_blocked_by_absl_settimezone_abort": true,
+          "env_game_blocked": true,
+          "focused_tests_passed": true,
+          "heldout_games_loaded_from_exp4459": true,
+          "offline_arcade_available": true,
+          "openspec_req_present": true,
+          "submitted_agent_config_loaded": true
+        }
+      },
+      {
+        "artifact_key": "4476_a2_features",
+        "exists": true,
+        "experiment_id": 4476,
+        "path": "results/experiment_4476_verifier_features_v3_loo_gate.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "banked_trajectories": true,
+          "feature_names": "cross_game_features_v3",
+          "neg_per_game": 14,
+          "offline_arcade": true,
+          "seed": 0
+        }
+      },
+      {
+        "artifact_key": "4477_a3_routing",
+        "exists": true,
+        "experiment_id": 4477,
+        "path": "results/experiment_4477_per_game_online_discriminative.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "action_budget": 80,
+          "arc_solver_kit_importable": true,
+          "arcengine_importable": true,
+          "blocker": "",
+          "held_out_games": [
+            "bp35",
+            "lp85",
+            "tu93"
+          ],
+          "offline_fixtures_present": true,
+          "submitted_to_leaderboard": false
+        }
+      },
+      {
+        "artifact_key": "4479_a4_re86",
+        "exists": true,
+        "experiment_id": 4479,
+        "path": "results/experiment_4479_solve_re86.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "arc_solver_kit_importable": true,
+          "leaderboard_submission": false,
+          "no_3090_inference": true,
+          "offline_arcade_error": "",
+          "offline_arcade_reachable": true,
+          "ok": true,
+          "target_env_present": true
+        }
+      },
+      {
+        "artifact_key": "4480_a4_bp35",
+        "exists": true,
+        "experiment_id": 4480,
+        "path": "results/experiment_4480_solve_bp35_goal_directed.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "arc_solver_kit_importable": true,
+          "leaderboard_submission": false,
+          "no_3090_inference": true,
+          "offline_arcade_error": "",
+          "offline_arcade_reachable": true,
+          "ok": true,
+          "target_env_present": true
+        }
+      },
+      {
+        "artifact_key": "4481_closeout",
+        "exists": true,
+        "experiment_id": 4481,
+        "path": "results/experiment_4481_variant_transfer_benchmark.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "arc_solver_kit_import": true,
+          "arc_variant_generator_import": true,
+          "leaderboard_submission": false,
+          "no_3090_inference": true,
+          "offline_env_files_present": true,
+          "offline_env_games": [
+            "ar25",
+            "bp35",
+            "cd82",
+            "cn04",
+            "dc22",
+            "ft09",
+            "g50t",
+            "ka59",
+            "lf52",
+            "lp85",
+            "ls20",
+            "m0r0",
+            "r11l",
+            "re86",
+            "s5i5",
+            "sb26",
+            "sc25",
+            "sk48",
+            "sp80",
+            "su15",
+            "tn36",
+            "tr87",
+            "tu93",
+            "vc33",
+            "wa30"
+          ],
+          "ok": true,
+          "registry_parseable": true,
+          "solved_games": [
+            "ar25",
+            "bp35",
+            "cd82",
+            "cn04",
+            "dc22",
+            "ft09",
+            "g50t",
+            "ka59",
+            "lf52",
+            "lp85",
+            "ls20",
+            "m0r0",
+            "r11l",
+            "re86",
+            "s5i5",
+            "sb26",
+            "sc25",
+            "sk48",
+            "sp80",
+            "su15",
+            "tn36",
+            "tr87",
+            "tu93",
+            "vc33",
+            "wa30"
+          ]
+        }
+      },
+      {
+        "artifact_key": "4482_lint",
+        "exists": true,
+        "experiment_id": 4482,
+        "path": "results/experiment_4482_nocov_default_lint.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "AGENTS_md_read": true,
+          "CLAUDE_md_startup_rules_read": true,
+          "CODEX_md_read": true,
+          "active_roadmap_yaml_parsed_and_lint_clean": true,
+          "focused_tests_passed": true,
+          "full_pytest_tests_python_q_attempted": true,
+          "full_pytest_tests_python_q_clean": false,
+          "new_lint_module_coverage_100_percent": true,
+          "openspec_req_report_4482_present": true,
+          "precommit_hook_exercised_on_research_roadmap_yaml": true
+        }
+      },
+      {
+        "artifact_key": "4483_registry",
+        "exists": true,
+        "experiment_id": 4483,
+        "path": "results/experiment_4483_gate_decouple_registry_reconcile.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "files": {
+            "active_roadmap": {
+              "error": "",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+              "readable": true,
+              "yaml_safe_load": true
+            },
+            "arc_solve_registry": {
+              "error": "",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+              "readable": true,
+              "yaml_safe_load": true
+            }
+          },
+          "ok": true
+        }
+      },
+      {
+        "artifact_key": "4484_hardware",
+        "exists": true,
+        "experiment_id": 4484,
+        "path": "results/experiment_4484_hardware_continuity_audit.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": [
+          {
+            "available": true,
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "duration_s": 4.62101,
+            "exit_code": 0,
+            "observed": "returncode=0",
+            "resource": "kv260_ssh"
+          },
+          {
+            "available": false,
+            "command": "openFPGALoader -c dirtyJtag --detect",
+            "duration_s": 0.019636,
+            "exit_code": 0,
+            "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+            "resource": "gatemate_dirtyjtag_detect"
+          },
+          {
+            "available": true,
+            "command": "ssh -o ConnectTimeout=5 polarfire true",
+            "duration_s": 0.89636,
+            "exit_code": 0,
+            "observed": "returncode=0",
+            "resource": "polarfire_ssh"
+          }
+        ]
+      }
+    ]
+  },
+  "random_seed": 4486,
+  "reproduced_levels": 47,
+  "reproducibility_checksum": "sha256:c9e9b9bfc8188a12b2f0dd4fb1d6892975d0320ef271a6e7a84b007ef945e164",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "inference_substrate",
+    "offline_reproduced",
+    "reproduced_levels",
+    "preconditions_checked",
+    "a1_generic_solve_rate",
+    "a2_cross_game_loo_auroc_v3",
+    "a3_per_game_discriminative_delta",
+    "a4_goal_state_deepen",
+    "twenty_five_game_closeout",
+    "verifier_is_oracle",
+    "verifier_claims",
+    "flagged_artifacts_skipped",
+    "cited_upstream_artifacts",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v414_4486.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4486",
+    "SCENARIO-CAPSTONE-4486"
+  ],
+  "submitted_to_leaderboard": false,
+  "twenty_five_game_closeout": {
+    "honest_verdict": "complete: gate_decoupled_registry_reconciled_4483",
+    "offline_reproduced": true,
+    "registry_authoritative_total_games": 24,
+    "registry_authoritative_total_levels": 47,
+    "registry_computed_total_games": 25,
+    "registry_computed_total_levels": 48,
+    "registry_stale_mismatch": true,
+    "reproduced_levels": 47,
+    "reproducible_total_levels": 47,
+    "solved_games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "solved_games_count": 25,
+    "state": "registry_reconciled",
+    "transfer_solve_rate": 0.04,
+    "variants_attempted": 25,
+    "variants_solved": 1,
+    "verifier_is_oracle": true
+  },
+  "upstream_provenance": [
+    {
+      "artifact_key": "4475_a1_stack",
+      "experiment_id": 4475,
+      "fields_imported": [
+        "honest_verdict",
+        "before_generic_solve_rate",
+        "after_generic_solve_rate",
+        "generic_solve_rate_delta",
+        "before_solved",
+        "after_solved",
+        "attempted_games",
+        "benchmark",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [
+        {
+          "detail": "generic_solve_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4475_wire_stronger_generic_stack.json",
+      "payload_reproducibility_checksum": "6826dc8488a6f704b6fd65ec8ef75d3c8472df72569fa11fc202f6e333603315",
+      "sha256": "9f39b068bcc265e4f88694f58ea473df4c7cc921ffea31acc39e554f5296e87b",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4476_a2_features",
+      "experiment_id": 4476,
+      "fields_imported": [
+        "honest_verdict",
+        "v2_baseline_loo_auroc",
+        "v3_loo_auroc",
+        "v3_in_sample_auroc",
+        "target_loo_auroc",
+        "loo_gate_passed",
+        "feature_class_loo_auroc",
+        "feature_class_deltas",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4476_verifier_features_v3_loo_gate.json",
+      "payload_reproducibility_checksum": "c78265f82a77f079bfd4648ad70a6671f8adebdba13447dd17992d76da58f86e",
+      "sha256": "354feed52ec44f0f9de51662c9c9a54b64d57e201c14b317e0657e205455aab0",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4477_a3_routing",
+      "experiment_id": 4477,
+      "fields_imported": [
+        "honest_verdict",
+        "baseline_solve_rate",
+        "online_solve_rate",
+        "solve_rate_delta",
+        "baseline_actions_to_first_levelup",
+        "online_actions_to_first_levelup",
+        "actions_to_first_levelup_delta",
+        "per_game_results",
+        "online_verifier",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [
+        {
+          "detail": "actions_to_first_levelup_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "solve_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4477_per_game_online_discriminative.json",
+      "payload_reproducibility_checksum": "f04bfc8d8157d99bdfd9c0dc18c96fd66e5bda04c5e6259aa094f335b928bdac",
+      "sha256": "2b1dde34f4fc06e4311a78f2b50b567fc05c878936bc31ba7519f970c87dc9e1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4479_a4_re86",
+      "experiment_id": 4479,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "registered_verifier_operator",
+        "sprite_overlay_verifier_built",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4479_solve_re86.json",
+      "payload_reproducibility_checksum": "4f45118ce85a9d339538ff28ece2bb25a4c2aad2e5afc2885b916bf6bd222673",
+      "sha256": "5cf6dc9c28cc342b960ca238d1933a378d4a8d3ba6c663027495ea4e734e891c",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4480_a4_bp35",
+      "experiment_id": 4480,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "goal_directed_solver_built",
+        "goal_region_identified",
+        "shape_aware_state_key",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4480_solve_bp35_goal_directed.json",
+      "payload_reproducibility_checksum": "523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38",
+      "sha256": "f493a181dcdfae80a9d752ff40ab75db4fbe305e38d1e1f652be8ebe9fa2c1bf",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4481_closeout",
+      "experiment_id": 4481,
+      "fields_imported": [
+        "honest_verdict",
+        "solved_games",
+        "variants_attempted",
+        "variants_solved",
+        "transfer_solve_rate",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "verifier_is_oracle",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4481_variant_transfer_benchmark.json",
+      "payload_reproducibility_checksum": "59731157da67089e5c81d44f490b6f98112efdc4114abad4944e0a5702ed7e34",
+      "sha256": "3fac2b2257e4c2672fb7e6b12457669b2767ea326e354938ea93271bc36b489b",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4482_lint",
+      "experiment_id": 4482,
+      "fields_imported": [
+        "honest_verdict",
+        "roadmap_lint_shipped",
+        "precommit_hook_wired",
+        "activation_guard_wired",
+        "coverage_new_code_100",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4482_nocov_default_lint.json",
+      "payload_reproducibility_checksum": "c96dc95efdf193f2b07e770881da9e9bc522326d843efaa7604c5448dc6ae4d1",
+      "sha256": "3f8953436137c5a42846c8d3313e9ed9c054b500d58654eb91437eb92f9c642f",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4483_registry",
+      "experiment_id": 4483,
+      "fields_imported": [
+        "honest_verdict",
+        "registry_reconciliation",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4483_gate_decouple_registry_reconcile.json",
+      "payload_reproducibility_checksum": "982d7b3b507fec36321c39fc81f83d11259e1ad401d17004e27e2a74a1cd5b7b",
+      "sha256": "a76aa737689c242bb0e92f7d366ea9501b59151b0c5b6db20bab9eb16bd495bb",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4484_hardware",
+      "experiment_id": 4484,
+      "fields_imported": [
+        "honest_verdict",
+        "per_board_reachability",
+        "per_board_status",
+        "offline_reproduced",
+        "reproduced_levels",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4484_hardware_continuity_audit.json",
+      "payload_reproducibility_checksum": "905ed12d5d38c9ad05274352925fa017e32f3da54a2945099363a9809d01aff4",
+      "sha256": "80a071b74292d6399da3f0746f24ef5d94640ba2675da4d9081737ddd1c0da10",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "2b1dde34f4fc06e4311a78f2b50b567fc05c878936bc31ba7519f970c87dc9e1",
+    "354feed52ec44f0f9de51662c9c9a54b64d57e201c14b317e0657e205455aab0",
+    "3f8953436137c5a42846c8d3313e9ed9c054b500d58654eb91437eb92f9c642f",
+    "3fac2b2257e4c2672fb7e6b12457669b2767ea326e354938ea93271bc36b489b",
+    "5cf6dc9c28cc342b960ca238d1933a378d4a8d3ba6c663027495ea4e734e891c",
+    "80a071b74292d6399da3f0746f24ef5d94640ba2675da4d9081737ddd1c0da10",
+    "9f39b068bcc265e4f88694f58ea473df4c7cc921ffea31acc39e554f5296e87b",
+    "a76aa737689c242bb0e92f7d366ea9501b59151b0c5b6db20bab9eb16bd495bb",
+    "f493a181dcdfae80a9d752ff40ab75db4fbe305e38d1e1f652be8ebe9fa2c1bf"
+  ],
+  "verifier_claims": [
+    {
+      "claim": "a1_generic_solve_rate",
+      "skipped": false,
+      "source": "exp4475",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a2_cross_game_loo_auroc_v3",
+      "skipped": false,
+      "source": "exp4476",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a3_per_game_discriminative_delta",
+      "skipped": false,
+      "source": "exp4477",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a4_re86_sprite_overlay_resize",
+      "skipped": false,
+      "source": "exp4479",
+      "verifier_is_oracle": true
+    },
+    {
+      "claim": "a4_bp35_goal_state_deepen",
+      "skipped": false,
+      "source": "exp4480",
+      "verifier_is_oracle": true
+    },
+    {
+      "claim": "twenty_five_game_variant_transfer_closeout",
+      "skipped": false,
+      "source": "exp4481",
+      "verifier_is_oracle": true
+    }
+  ],
+  "verifier_is_oracle": false
+}
