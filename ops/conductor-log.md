@@ -8918,3 +8918,4 @@ c |
 | 2026-06-20 03:36 UTC | Activation REFUSED: milestone 2026.06.414 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-20 03:39 UTC | Milestone 2026.06.414 activated | OK | 12 tasks queued |
 | 2026-06-20 03:53 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 109 passed, 1 warning in 6.97s |
+| 2026-06-20 04:09 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; SCOR | OK | 114 passed, 1 warning in 6.25s |
