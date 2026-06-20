@@ -22714,6 +22714,72 @@ solve, and no training run.
 |---|---|---|
 | REQ-REPORT-4477 | Planned (`python/carnot/experiment_4477_sota_ingestion_413.py`) | Planned (`tests/python/test_experiment_4477_sota_ingestion_413.py`) |
 
+### REQ-REPORT-4478: Ingest ARC Search And Verifier SOTA Into The .415 Plan
+
+The Exp 4478 workflow SHALL write
+`docs/research-notes/arc-search-verifier-sota-414.md` with a machine-readable
+JSON artifact block plus a concise research note. It SHALL use only
+`research-studying.md`, `research-references.md`, `scripts/sweep_clusters.py`,
+arXiv HTTP-200 checks, and low-concurrency WebSearch/WebFetch of five to eight
+top ARC search/verifier sources. It SHALL NOT invoke `/deep-research`, SHALL
+NOT launch live LLM inference, SHALL NOT launch training, SHALL NOT claim a new
+ARC solve, and SHALL NOT modify `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The required runner SHALL be
+`results/experiment_4478_arc_search_verifier_sota_414.py` delegating to
+`python/carnot/experiment_4478_arc_search_verifier_sota_414.py`, and the
+workflow SHALL also write
+`results/experiment_4478_arc_search_verifier_sota_414.json`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `offline_reproduced`, `reproduced_levels`,
+`preconditions_checked`, `source_ids`, `methods`, `gap_mapping`,
+`strongest_for_v415`, `research_note_path`, `random_seed`, and
+`field_principles`. `honest_verdict` SHALL start with one of `complete:`,
+`complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or
+`shipped_` and, on the complete path, equal
+`complete: arc_search_verifier_sota_414_mapped_for_v415`.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`offline_reproduced` SHALL be a bare bool and `reproduced_levels` SHALL be a
+bare int; this SOTA-ingestion artifact SHALL report `offline_reproduced=false`
+and `reproduced_levels=0` because it banks no new solve. `source_ids` SHALL
+contain five to eight unique arXiv IDs whose abs pages were HTTP-200 checked.
+The complete-path source set SHALL include `2512.24156`, `2603.24621`,
+`2605.05138`, `2606.12316`, `2512.22336`, `2605.25931`, `2604.08792`, and
+`2402.08147`. `gap_mapping` SHALL include mappings for `GAP-ARCH-FEATURES`,
+`GAP-ARCH-GOAL`, and `GAP-ARCH-NO-HIERARCHICAL-SEARCH`.
+`strongest_for_v415` SHALL flag the graph-state/delta-feature verifier plus
+hierarchical verified search package anchored by `arXiv:2512.24156`,
+`arXiv:2606.12316`, and `arXiv:2402.08147`.
+
+`field_principles` SHALL include one-line principles for `honest_verdict`,
+`inference_substrate`, `offline_reproduced`, `reproduced_levels`, and
+`preconditions_checked`; the text SHALL preserve the terminal-prefix,
+inference-substrate, ARC solve reproducibility, monotonic reproduced-level,
+and precondition-resource principles.
+
+#### SCENARIO-REPORT-4478: ARC Search-Verifier SOTA Maps To .415 Gaps
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, and `scripts/sweep_clusters.py` are readable
+**And** `scripts/sweep_clusters.py --help` succeeds
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4478 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps the
+sources onto relational/delta verifier features, goal-vs-dynamics induction,
+and hierarchical/MCTS-style verifier-guided search, flags the strongest `.415`
+package, declares `aggregation_from_upstream_artifacts`, records
+`offline_reproduced=false` and `reproduced_levels=0`, and records no
+`/deep-research`, live inference, training, leaderboard submission, or solve
+claim.
+
+## Implementation Status (REQ-REPORT-4478)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4478 | Planned (`python/carnot/experiment_4478_arc_search_verifier_sota_414.py`) | Planned (`tests/python/test_experiment_4478_arc_search_verifier_sota_414.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
