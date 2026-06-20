@@ -45579,5 +45579,15 @@
     0.35,
     0.55,
     0.75
-  ]
+  ],
+  "flagged_adversarial": true,
+  "corrigendum": {
+    "flagged_by": "outer-loop manual adversarial review 2026-06-20",
+    "class": "BASELINE_METRIC_MISMATCH_FALSE_WIN",
+    "finding": "The honest_verdict 'success: adaptive_budget_median_actions_2984_below_7760' is NOT a valid win. The 2984 is the adaptive condition's median ACTIONS_TO_FIRST_LEVELUP; the 7760 baseline is median TOTAL ACTIONS. The baseline never recorded actions_to_first_levelup (None), so the comparison is apples-to-oranges (two different metrics across the two conditions).",
+    "proof": "local_gate_metrics: baseline total-actions == with_adaptive total-actions BYTE-IDENTICAL (lp85=7792,m0r0=7789,sp80=7724,vc33=7731); aggregate adaptive_budget_diagnostics across all 8 games = commit_count:0, candidates_skipped:0 -> the adaptive lever NEVER FIRED on the real games, so it had zero causal effect. Solve-rate 4->4 was preserved only because the lever was inert (not by design). A3 ran with the original 'commit single candidate (budget 1)' DELETE prompt; the outer-loop's defer-not-delete contract (commit e0af579a1) landed ~2 min after the A3 artifact was written, so it applies to A4/A6, not A3.",
+    "honest_verdict_corrected": "complete: adaptive_budget_inert_commit_count_0_no_action_change_false_win_retracted",
+    "genuine_insight": "actions_to_first_levelup (lp85=20, near the offline-BFS optimum of 21) is FAR below total run length (7792): the explorer reaches first levelup early but over-explores to ~7760. The honest baseline actions-to-first-levelup median is ~2984 (identical for both conditions). Implication: the gate should measure actions-to-first-levelup (the scoring metric), the baseline must be re-measured on that same metric, and the real lever is STOP/measure-AT-first-levelup + the A6 nav tax -- not candidate pruning.",
+    "capstone_directive": "PHASE E (.417 capstone) MUST NOT aggregate the 2984-below-7760 number as a win."
+  }
 }
