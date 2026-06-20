@@ -22648,6 +22648,72 @@ leaderboard submission, no live solve, and no training run.
 |---|---|---|
 | REQ-REPORT-4464 | Planned (`python/carnot/experiment_4464_sota_ingestion_412.py`) | Planned (`tests/python/test_experiment_4464_sota_ingestion_412.py`) |
 
+### REQ-REPORT-4477: Ingest Fresh .413 Precision And Underdetermination SOTA Into The .414 Plan
+
+The Exp 4477 workflow SHALL ingest a focused fresh state-of-the-art pass for
+the `.413` close-state: counterexample-guided induction has now executed,
+dc22/sc25 levels are banked, and the remaining planning frontier is
+program-induction precision, agreement-gated acceptance, and GAP-5
+demo-underdetermination detection. It SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, arXiv abs-page
+HTTP-200 checks, and low-concurrency WebSearch/WebFetch of the top five to
+eight abstracts on counterexample-guided or SMT-checked program/rule induction
+at scale, ambiguity or underdetermination detection in program synthesis,
+consistency-ensemble or agreement-gated induction precision, phase-FSM or
+object-centric world-model induction for interactive games, and ARC-AGI-3-style
+meta-solvers. It SHALL NOT invoke `/deep-research`, SHALL NOT submit to a
+leaderboard, SHALL NOT launch a live solve or training run, and SHALL NOT
+modify `scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The workflow SHALL write `results/experiment_4477_sota_ingestion_413.json`, and
+the required runner SHALL be `results/experiment_4477_sota_ingestion_413.py`
+delegating to `python/carnot/experiment_4477_sota_ingestion_413.py`. It SHALL
+also write `docs/research-notes/sota-ingestion-413-2026-06-20.md` and update
+`research-studying.md` idempotently to mark Exp 4477 ingested.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`inference_substrate`, `methods`, `flagged_for_v414`,
+`sota_to_experiment_mapping_note`, `preconditions_checked`, `random_seed`,
+`research_note_path`, and `field_principles`. `honest_verdict` SHALL start with
+one of `complete:`, `success:`, `passed:`, or `shipped:` and, on the complete
+path, equal `complete: sota_ingestion_413_mapped_for_v414`.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`methods` SHALL contain five to eight dicts with exactly `name`, `arxiv_id`,
+`what_it_takes_over_our_stack`, and `pitfalls`; every `arxiv_id` SHALL map to a
+verified arXiv HTTP-200 URL. `flagged_for_v414` SHALL be a bare, non-empty
+string naming the single strongest method fed forward to `.414`; on the
+complete path it SHALL flag Socrates-style multiple-choice query synthesis for
+program disambiguation (`arXiv:2604.08792`) as the strongest GAP-5 handoff.
+`field_principles` SHALL include the required principle strings for
+`honest_verdict`, `methods`, `flagged_for_v414`, and `inference_substrate`,
+including `aggregation_from_upstream_artifacts -- CPU-only reliable-channel
+ingestion; no live solve claim` for the inference substrate principle.
+
+#### SCENARIO-REPORT-4477: The .413 Fresh Pass Feeds A Single .414 Method
+
+**Given** `scripts/sweep_clusters.py --help` succeeds
+**And** arXiv is reachable
+**And** Exp 4467 banked dc22, Exp 4468 banked sc25 L2-L5, Exp 4469 banked a
+generic sc25 cast-grid FSM operator, Exp 4470 banked sb26, and Exp 4474 keeps
+GAP-4 regression guarded while GAP-5 remains open
+**And** the focused reliable-channel sweep has checked counterexample-guided
+and SMT-checked induction, ambiguity detection, consistency-filtered induction,
+object-centric world models, and ARC-AGI-3 meta-solver papers
+**When** the Exp 4477 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact, maps five to eight verified
+arXiv sources to concrete `.414` experiment targets, flags Socrates-style
+program-disambiguation query synthesis (`arXiv:2604.08792`) as the strongest
+`.414` hand-off, emits the research note, marks `research-studying.md`
+ingested, and records no `/deep-research`, no leaderboard submission, no live
+solve, and no training run.
+
+## Implementation Status (REQ-REPORT-4477)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4477 | Planned (`python/carnot/experiment_4477_sota_ingestion_413.py`) | Planned (`tests/python/test_experiment_4477_sota_ingestion_413.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

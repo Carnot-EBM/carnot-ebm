@@ -8,6 +8,45 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-20 Exp 4477 - .413 SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4477_sota_ingestion_413.json` and
+`docs/research-notes/sota-ingestion-413-2026-06-20.md`.
+
+**Preconditions:** reliable channel reachable on CPU. The command
+`.venv/bin/python scripts/sweep_clusters.py --help` succeeded; the arXiv
+reachability check succeeded. `scripts/sweep_clusters.py` emitted focused
+verifier and world-model cluster URLs. `scripts/sweep_semscholar.py` ran five
+focused queries; Semantic Scholar returned six unique arXiv IDs and HTTP 429 on
+two queries, so no S2-only non-arXiv source was promoted. Low-concurrency
+WebSearch/WebFetch plus arXiv abs-page HTTP 200 checks verified
+arXiv:2606.11521, arXiv:2605.27051, arXiv:2604.08792, arXiv:2307.03966,
+arXiv:2604.02434, arXiv:2605.05138, arXiv:2606.12316, and arXiv:2512.24156.
+The banned `/deep-research` channel was not invoked. No leaderboard submission,
+live solve, or training run was launched.
+
+**.413 outcome conditioning:** Exp 4467 banked dc22, Exp 4468 banked sc25 L2-L5,
+Exp 4469 banked generic sc25 cast-grid L1, Exp 4470 banked sb26, and Exp 4474
+kept the GAP-4 regression guard green. GAP-5 demo-underdetermination remains
+the program-induction precision frontier for `.414`.
+
+**Fresh-pass candidates marked ingested:** Counterexample Guided Learning
+(arXiv:2606.11521), ConVer CEGAR-CEGIS verification (arXiv:2605.27051),
+Choose, Don't Label program disambiguation (arXiv:2604.08792), PBE multi-intent
+detection (arXiv:2307.03966), compositional neuro-symbolic consistency filtering
+(arXiv:2604.02434), Executable World Models (arXiv:2605.05138), Loop-OWM
+(arXiv:2606.12316), and graph-based ARC-AGI-3 exploration (arXiv:2512.24156).
+
+flagged_for_v414: Socrates-style multiple-choice query synthesis for GAP-5 demo-underdetermination (arXiv:2604.08792)
+
+random_seed=4477
+
+**SOTA->experiment mapping note:** Build a GAP-5-aware tiered acceptance
+harness: independent program induction plus cross-example consistency; when
+programs agree on one target but diverge on sibling inputs, synthesize a
+discriminating query and accept only if replayable executable evidence resolves
+the ambiguity. Otherwise abstain.
+
 ## 2026-06-19 Exp 4464 - .412 SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4464_sota_ingestion_412.json` and

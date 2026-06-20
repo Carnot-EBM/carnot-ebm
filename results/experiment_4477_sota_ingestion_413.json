@@ -1,0 +1,132 @@
+{
+  "field_principles": {
+    "flagged_for_v414": {
+      "principle": "the single strongest method fed forward so SOTA flows into the next milestone (discover->ingest->plan->experiment)"
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed"
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- CPU-only reliable-channel ingestion; no live solve claim"
+    },
+    "methods": {
+      "principle": "list of {name, arxiv_id, what_it_takes_over_our_stack, pitfalls} -- each with a VERIFIED citation (no citation = fabrication)"
+    },
+    "preconditions_checked": {
+      "principle": "Reliable-channel, no-deep-research, no-leaderboard provenance."
+    },
+    "random_seed": {
+      "principle": "Deterministic focused sweep seed."
+    },
+    "research_note_path": {
+      "principle": "Repo-relative SOTA mapping note emitted with artifact."
+    },
+    "sota_to_experiment_mapping_note": {
+      "principle": "Concrete SOTA->experiment mapping for the `.414` planner."
+    }
+  },
+  "flagged_for_v414": "Socrates-style multiple-choice query synthesis for GAP-5 demo-underdetermination (arXiv:2604.08792)",
+  "honest_verdict": "complete: sota_ingestion_413_mapped_for_v414",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods": [
+    {
+      "arxiv_id": "2606.11521",
+      "name": "Counterexample Guided Learning in the Large using Reasoning Agents",
+      "pitfalls": "The reported domain is regex induction, not ARC-AGI-3 games; use it as a feedback protocol only, and keep all solve claims behind the offline reproduction gate.",
+      "what_it_takes_over_our_stack": "Keep the .413 CEGIS loop as a reusable primitive: every rejected rule must emit a compact execution counterexample, a failure cluster, and a re-induction prompt for the next operator attempt."
+    },
+    {
+      "arxiv_id": "2605.27051",
+      "name": "ConVer contract and loop-invariant CEGAR-CEGIS verification",
+      "pitfalls": "C programs with assertions differ from grid games; over-specific contracts can launder per-game constants unless held-out variants and literal scans stay in the gate.",
+      "what_it_takes_over_our_stack": "Lift the verifier from single predicate checks to compositional contracts: generate a candidate rule contract, check it against the execution trace, and refine only the failed contract fragment."
+    },
+    {
+      "arxiv_id": "2604.08792",
+      "name": "Choose, Don't Label multiple-choice query synthesis",
+      "pitfalls": "The original loop assumes a human can answer high-level queries; Carnot must replace that answerer with replayable env evidence, or mark the rule underdetermined instead of guessing.",
+      "what_it_takes_over_our_stack": "Convert GAP-5 into an active disambiguation step: synthesize a small set of candidate behaviors over sibling inputs or replayable states, then require the execution verifier to choose or abstain."
+    },
+    {
+      "arxiv_id": "2307.03966",
+      "name": "Multi-intent detection for programming-by-example ambiguity",
+      "pitfalls": "The paper targets string/data-mapping PBE; ARC demos need object, palette, and action-state features rather than only input-output string properties.",
+      "what_it_takes_over_our_stack": "Add a pre-acceptance ambiguity tripwire that detects whether the demo examples admit multiple structurally distinct programs before the agreement gate promotes a candidate."
+    },
+    {
+      "arxiv_id": "2604.02434",
+      "name": "Compositional neuro-symbolic cross-example consistency filtering",
+      "pitfalls": "ARC-AGI-2 static grids are not interactive games; the filter must also inspect action transitions and sibling-input disagreement for GAP-5.",
+      "what_it_takes_over_our_stack": "Use object-level representations plus symbolic cross-example consistency as the precision filter for independent induced rules before any candidate reaches the reproduction gate."
+    },
+    {
+      "arxiv_id": "2605.05138",
+      "name": "Executable World Models for ARC-AGI-3",
+      "pitfalls": "Published agent results are not Carnot evidence; fresh workspaces, leakage audits, and no-leaderboard discipline remain mandatory.",
+      "what_it_takes_over_our_stack": "Keep the executable Python world model as the phase-FSM substrate for sc25-style operators and for replayable disambiguation queries."
+    },
+    {
+      "arxiv_id": "2606.12316",
+      "name": "Loop-OWM object-centric composable world models",
+      "pitfalls": "ARC-1/2 visual-symbolic transitions do not include action cost or goal discovery; integrate with executable replay before treating it as an ARC-AGI-3 method.",
+      "what_it_takes_over_our_stack": "Represent cast-grid, color-match, and sprite-resize mechanics as slots plus looped transitions, so .414 can test rule transfer by state structure rather than prompt similarity."
+    },
+    {
+      "arxiv_id": "2512.24156",
+      "name": "Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning",
+      "pitfalls": "The paper reports a training-free exploration baseline, not a rule induction verifier; it can guide query selection but cannot certify a learned rule by itself.",
+      "what_it_takes_over_our_stack": "Use explicit state-action graphs as the baseline meta-solver and as the source of discriminating untested transitions for GAP-5 queries."
+    }
+  ],
+  "preconditions_checked": {
+    "arxiv_http_200_verified_ids": [
+      "2307.03966",
+      "2512.24156",
+      "2604.02434",
+      "2604.08792",
+      "2605.05138",
+      "2605.27051",
+      "2606.11521",
+      "2606.12316"
+    ],
+    "arxiv_http_200_verified_urls": [
+      "https://arxiv.org/abs/2307.03966",
+      "https://arxiv.org/abs/2512.24156",
+      "https://arxiv.org/abs/2604.02434",
+      "https://arxiv.org/abs/2604.08792",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2605.27051",
+      "https://arxiv.org/abs/2606.11521",
+      "https://arxiv.org/abs/2606.12316"
+    ],
+    "arxiv_reachable": true,
+    "cpu_only": true,
+    "deep_research_invoked": false,
+    "leaderboard_submission": false,
+    "live_solve_claim": false,
+    "research_conductor_modified": false,
+    "sweep_clusters_help_succeeded": true,
+    "sweep_clusters_ran": true,
+    "sweep_clusters_urls": [
+      "scripts/sweep_clusters.py 0 --max-results 8",
+      "scripts/sweep_clusters.py 3 --max-results 8"
+    ],
+    "sweep_semscholar_ran": true,
+    "sweep_semscholar_status": "five focused queries ran; Semantic Scholar returned six unique arXiv IDs and HTTP 429 on two queries, so no S2-only non-arXiv source was promoted",
+    "top_abstracts_webfetched": [
+      "https://arxiv.org/abs/2307.03966",
+      "https://arxiv.org/abs/2512.24156",
+      "https://arxiv.org/abs/2604.02434",
+      "https://arxiv.org/abs/2604.08792",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2605.27051",
+      "https://arxiv.org/abs/2606.11521",
+      "https://arxiv.org/abs/2606.12316"
+    ],
+    "training_launched": false,
+    "websearch_webfetch_reachable": true
+  },
+  "random_seed": 4477,
+  "research_note_path": "docs/research-notes/sota-ingestion-413-2026-06-20.md",
+  "sota_to_experiment_mapping_note": "SOTA->experiment map for .414: promote Socrates-style multiple-choice query synthesis for program disambiguation (arXiv:2604.08792) as the strongest handoff, because .413 already executed the CEGIS lever and GAP-5 demo-underdetermination is now the load-bearing precision frontier. Turn sibling inputs, verifier-rejected states, and candidate program clusters into discriminating queries; accept a program only when the execution verifier, cross-example consistency, and the disambiguation query agree, otherwise abstain. Keep CGL (arXiv:2606.11521) and ConVer (arXiv:2605.27051) as the refute->repair loop templates, use multi-intent detection (arXiv:2307.03966) for the ambiguity tripwire, use compositional neuro-symbolic consistency filtering (arXiv:2604.02434) for agreement-gated precision, and keep Executable World Models (arXiv:2605.05138), Loop-OWM (arXiv:2606.12316), and graph exploration (arXiv:2512.24156) as the ARC-AGI-3 world-model and meta-solver baselines."
+}
