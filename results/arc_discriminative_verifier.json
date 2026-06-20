@@ -1,0 +1,79 @@
+{
+  "n_pos": 496,
+  "n_neg": 183,
+  "per_game": {
+    "ar25": {
+      "pos": 16,
+      "neg": 14
+    },
+    "cd82": {
+      "pos": 6,
+      "neg": 5
+    },
+    "cn04": {
+      "pos": 14,
+      "neg": 13
+    },
+    "ka59": {
+      "pos": 12,
+      "neg": 11
+    },
+    "lp85": {
+      "pos": 55,
+      "neg": 14
+    },
+    "ls20": {
+      "pos": 14,
+      "neg": 13
+    },
+    "m0r0": {
+      "pos": 16,
+      "neg": 14
+    },
+    "r11l": {
+      "pos": 5,
+      "neg": 4
+    },
+    "sc25": {
+      "pos": 17,
+      "neg": 14
+    },
+    "sk48": {
+      "pos": 15,
+      "neg": 14
+    },
+    "sp80": {
+      "pos": 5,
+      "neg": 4
+    },
+    "su15": {
+      "pos": 8,
+      "neg": 7
+    },
+    "tn36": {
+      "pos": 103,
+      "neg": 14
+    },
+    "tr87": {
+      "pos": 128,
+      "neg": 14
+    },
+    "tu93": {
+      "pos": 48,
+      "neg": 14
+    },
+    "wa30": {
+      "pos": 34,
+      "neg": 14
+    }
+  },
+  "in_sample_auroc": 0.7256356865855809,
+  "loo_auroc": 0.503096152732577,
+  "n_held_out_games": 16,
+  "verdict": "PER-GAME ONLY: off-path negatives ARE separable within a game (in-sample>0.6) but do NOT transfer cross-game (loo~chance) -> train a discriminative head ONLINE per game during exploration; a cross-game pre-trained head is NOT usable (needs richer relational/delta/action-conditioned features, not just more negatives).",
+  "checkpoint": "models/arc_discriminative_verifier_v2.json",
+  "feature_names": "cross_game_features_v2",
+  "honest_verdict": "complete_discriminative_per_game_only_no_cross_game_transfer",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "mode": "discriminative_win_reachability_off_path_negatives"
+}
