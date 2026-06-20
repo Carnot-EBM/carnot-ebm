@@ -64,6 +64,7 @@ SUBMITTED_TARGET_LEVELS = 5
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
+SUBMITTED_LAZY_VALUE_TOP_K = 4
 _DEFAULT_VALUE_HEAD = object()
 
 
@@ -180,6 +181,7 @@ class StepwiseExplorer:
         adaptive_budget_threshold: float | None = None,
         adaptive_budget_value_head: Any | None = None,
         adaptive_budget_noop_threshold: float = 0.5,
+        lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -189,6 +191,10 @@ class StepwiseExplorer:
         # toward predicted-closer states (the A* routing that unlocked cn04 in graph_explore_solve_v2).
         self.value_head = value_head
         self.value_weight = float(value_weight)
+        self.lazy_value_top_k = max(1, int(lazy_value_top_k))
+        self._value_cache: dict[str, float] = {}
+        self._value_head_evals = 0
+        self._value_cache_hits = 0
         self.frame_change_scorer = frame_change_scorer
         self.frame_change_prune_threshold = frame_change_prune_threshold
         self.action_prior = action_prior
@@ -353,6 +359,16 @@ class StepwiseExplorer:
             "history": list(self._adaptive_budget_history[-64:]),
         }
 
+    def lazy_value_diagnostics(self) -> dict[str, Any]:
+        return {
+            "enabled": self.value_head is not None and self.value_weight != 0.0,
+            "lazy_top_k": int(self.lazy_value_top_k),
+            "cache_by_frame_hash": True,
+            "value_head_evals": int(self._value_head_evals),
+            "cache_hits": int(self._value_cache_hits),
+            "cached_frame_hashes": int(len(self._value_cache)),
+        }
+
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
 
@@ -413,20 +429,36 @@ class StepwiseExplorer:
         except Exception:
             return False
 
-    def _value(self, frame) -> float:
+    def _value(self, frame, node_hash: str | None = None) -> float:
         """Frame-only learned progress score (predicted steps-to-next-level-up; LOWER == closer).
         0.0 when no value head -> the frontier falls back to shallowest-first. Never crashes the loop.
         Also 0.0 when value_weight==0: at weight 0 the value term is multiplied by 0 in the frontier
         priority (ordering is depth-primary + on-path tiebreak, identical with or without the value), so
         computing the expensive v3 featurizer per node would be pure dead cost (the 2026-06-20 regression:
         it made the weight-0 submitted default slower than bare BFS for ZERO routing benefit). The v3 head
-        stays fully wired and fires unchanged whenever value_weight>0."""
+        stays fully wired and fires unchanged whenever value_weight>0.
+
+        Positive weights use a frame-hash cache so repeated frontier visits do
+        not re-run the expensive v3 featurizer.
+        """
         if self.value_head is None or self.value_weight == 0.0:
             return 0.0
+        if node_hash is not None and node_hash in self._value_cache:
+            self._value_cache_hits += 1
+            return self._value_cache[node_hash]
         try:
-            return float(self.value_head(frame))
+            value = float(self.value_head(frame))
         except Exception:
-            return 0.0
+            value = 0.0
+        self._value_head_evals += 1
+        if node_hash is not None:
+            self._value_cache[node_hash] = value
+        return value
+
+    def _initial_value(self, frame) -> tuple[float | None, Any | None]:
+        if self.value_head is None or self.value_weight == 0.0:
+            return 0.0, None
+        return None, frame
 
     def _ingest(self, latest) -> None:
         if latest is None:
@@ -466,7 +498,8 @@ class StepwiseExplorer:
                     self.graph[h] = {
                         "path": new_path,
                         "untested": self._candidates(latest, path=new_path),
-                        "value": self._value(latest),
+                        "value": self._initial_value(latest)[0],
+                        "frame": self._initial_value(latest)[1],
                         "discriminative_features": features,
                     }
         self.cur = h
@@ -483,7 +516,8 @@ class StepwiseExplorer:
                 {
                     "path": [],
                     "untested": self._candidates(latest, path=[]),
-                    "value": self._value(latest),
+                    "value": self._initial_value(latest)[0],
+                    "frame": self._initial_value(latest)[1],
                     "discriminative_features": features,
                 },
             )
@@ -494,10 +528,9 @@ class StepwiseExplorer:
         # lets the value head NUDGE toward predicted-closer states (the routing that unlocked cn04 in
         # graph_explore at weight 5). A full value-OVERRIDE (ignoring depth) measurably REGRESSED the
         # baseline (the weak head misroutes from shallow wins), so the blend keeps depth load-bearing.
-        use_value = self.value_head is not None
+        use_value = self.value_head is not None and self.value_weight != 0.0
         w = self.value_weight
-        best = None
-        best_key = None
+        eligible: list[tuple[str, dict, int, float]] = []
         for h, node in self.graph.items():
             if not node["untested"]:
                 self._record_discriminative_features(
@@ -519,8 +552,30 @@ class StepwiseExplorer:
                 continue
             node["discriminative_pruned"] = False
             depth = len(node["path"])
+            eligible.append((h, node, depth, on_path))
+
+        if use_value and eligible:
+            cheap_ranked = sorted(
+                eligible,
+                key=lambda item: (
+                    item[2],
+                    -item[3],
+                    item[0],
+                ),
+            )[: self.lazy_value_top_k]
+            for h, node, _depth, _on_path in cheap_ranked:
+                if node.get("value") is None:
+                    node["value"] = self._value(node.get("frame"), node_hash=h)
+                    node["frame"] = None
+
+        best = None
+        best_key = None
+        for h, node, depth, on_path in eligible:
             if use_value:
-                key = (depth + w * node.get("value", 0.0), depth, -on_path)
+                value = node.get("value", 0.0)
+                if value is None:
+                    value = 0.0
+                key = (depth + w * float(value), depth, -on_path)
             else:
                 key = (depth, -on_path)
             if best is None or key < best_key:
@@ -675,6 +730,7 @@ class CarnotAgentPolicy:
         adaptive_budget_threshold: float | None = None,
         adaptive_budget_value_head: Any | None = None,
         adaptive_budget_noop_threshold: float = 0.5,
+        lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -700,6 +756,7 @@ class CarnotAgentPolicy:
                 adaptive_budget_threshold=adaptive_budget_threshold,
                 adaptive_budget_value_head=adaptive_budget_value_head,
                 adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
+                lazy_value_top_k=lazy_value_top_k,
             )
         )
 
@@ -754,6 +811,7 @@ class E3AgentPolicy:
         adaptive_budget_threshold: float | None = None,
         adaptive_budget_value_head: Any | None = None,
         adaptive_budget_noop_threshold: float = 0.5,
+        lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         if value_head is _DEFAULT_VALUE_HEAD:
@@ -776,6 +834,7 @@ class E3AgentPolicy:
             adaptive_budget_threshold=adaptive_budget_threshold,
             adaptive_budget_value_head=adaptive_budget_value_head,
             adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
+            lazy_value_top_k=lazy_value_top_k,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -979,6 +1038,7 @@ SUBMITTED_AGENT_CONFIG = {
     "search_mode": SUBMITTED_SEARCH_MODE,
     "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
     "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
+    "lazy_value_top_k": SUBMITTED_LAZY_VALUE_TOP_K,
     "router_wired": True,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
@@ -1020,6 +1080,7 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
                     search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),
+                    lazy_value_top_k=int(SUBMITTED_AGENT_CONFIG["lazy_value_top_k"]),
                 )
                 if cascade
                 else CarnotAgentPolicy(gid, load_solutions())
