@@ -1,0 +1,758 @@
+{
+  "canonical_baseline": {
+    "action_metric_field": "actions",
+    "core_games": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33"
+    ],
+    "guard": {
+      "action_metric_field": "actions",
+      "canonical_baseline_median_actions": 7760.0,
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "errors": [],
+      "ok": true
+    },
+    "median_actions_on_core": 7760.0,
+    "source": "ops/arc-submission-baseline.json"
+  },
+  "canonical_default_budget": 8000,
+  "canonical_game_set": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33",
+    "cd82",
+    "ft09",
+    "su15",
+    "ls20"
+  ],
+  "duration_s": 420.92578155500814,
+  "experiment": "experiment_4518_metric_harness_canonical",
+  "field_principles": {
+    "canonical_baseline": "principle \"7760, guarded against silent movement (raising-a-cap-to-hide-drift is forbidden).\"",
+    "canonical_game_set": "principle \"the fixed 8 games -- pins the metric so no A-task can cherry-pick an easier subset.\"",
+    "honest_verdict": "principle \"terminal prefix; e.g. shipped: metric_harness_canonical_ci_guarded OR complete: metric_harness_partial_<reason>.\"",
+    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).\"",
+    "positive_control_passed": "principle \"proves the harness can detect a real reduction (guards a silently-broken metric).\"",
+    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\"",
+    "tests_added_pass": "principle \"Tests Must Run and Assert.\""
+  },
+  "headroom_budget_measurement": {
+    "measured": true,
+    "measurements_by_budget": {
+      "12000": {
+        "action_metric": {
+          "definition": "total_actions_on_solved_games",
+          "field": "actions"
+        },
+        "actions_by_game": {
+          "lp85": 11761,
+          "ls20": 11617,
+          "m0r0": 11702,
+          "sp80": 11634,
+          "su15": 11671,
+          "vc33": 11601
+        },
+        "games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "median_actions_on_core": 11668.0,
+        "median_actions_on_solved": 11652.5,
+        "per_game": [
+          {
+            "actions": 11761,
+            "game": "lp85",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 11702,
+            "game": "m0r0",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 11634,
+            "game": "sp80",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 11601,
+            "game": "vc33",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 11685,
+            "game": "cd82",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 11926,
+            "game": "ft09",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 11671,
+            "game": "su15",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 11617,
+            "game": "ls20",
+            "solved": true,
+            "timed_out": false
+          }
+        ],
+        "policy": "e3",
+        "solved_count": 6,
+        "solved_games": [
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "timed_out_count": 0,
+        "total_actions_on_solved": 69986
+      },
+      "16000": {
+        "action_metric": {
+          "definition": "total_actions_on_solved_games",
+          "field": "actions"
+        },
+        "actions_by_game": {
+          "lp85": 15731,
+          "ls20": 15393,
+          "m0r0": 15577,
+          "sp80": 15537,
+          "su15": 15604,
+          "vc33": 15493
+        },
+        "games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "median_actions_on_core": 15557.0,
+        "median_actions_on_solved": 15557.0,
+        "per_game": [
+          {
+            "actions": 15731,
+            "game": "lp85",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 15577,
+            "game": "m0r0",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 15537,
+            "game": "sp80",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 15493,
+            "game": "vc33",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 15576,
+            "game": "cd82",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 15911,
+            "game": "ft09",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 15604,
+            "game": "su15",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 15393,
+            "game": "ls20",
+            "solved": true,
+            "timed_out": false
+          }
+        ],
+        "policy": "e3",
+        "solved_count": 6,
+        "solved_games": [
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "timed_out_count": 0,
+        "total_actions_on_solved": 93335
+      },
+      "18000": {
+        "action_metric": {
+          "definition": "total_actions_on_solved_games",
+          "field": "actions"
+        },
+        "actions_by_game": {
+          "cd82": 17530,
+          "lp85": 17715,
+          "ls20": 17291,
+          "m0r0": 17422,
+          "sp80": 17488,
+          "su15": 17550,
+          "vc33": 17423
+        },
+        "games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "median_actions_on_core": 17455.5,
+        "median_actions_on_solved": 17488,
+        "per_game": [
+          {
+            "actions": 17715,
+            "game": "lp85",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 17422,
+            "game": "m0r0",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 17488,
+            "game": "sp80",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 17423,
+            "game": "vc33",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 17530,
+            "game": "cd82",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 17902,
+            "game": "ft09",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 17550,
+            "game": "su15",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 17291,
+            "game": "ls20",
+            "solved": true,
+            "timed_out": false
+          }
+        ],
+        "policy": "e3",
+        "solved_count": 7,
+        "solved_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "timed_out_count": 0,
+        "total_actions_on_solved": 122419
+      },
+      "24000": {
+        "action_metric": {
+          "definition": "total_actions_on_solved_games",
+          "field": "actions"
+        },
+        "actions_by_game": {
+          "cd82": 23415,
+          "lp85": 23669,
+          "ls20": 23010,
+          "m0r0": 23063,
+          "sp80": 23352,
+          "su15": 23397,
+          "vc33": 23250
+        },
+        "games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "median_actions_on_core": 23301.0,
+        "median_actions_on_solved": 23352,
+        "per_game": [
+          {
+            "actions": 23669,
+            "game": "lp85",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 23063,
+            "game": "m0r0",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 23352,
+            "game": "sp80",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 23250,
+            "game": "vc33",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 23415,
+            "game": "cd82",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 23857,
+            "game": "ft09",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 23397,
+            "game": "su15",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 23010,
+            "game": "ls20",
+            "solved": true,
+            "timed_out": false
+          }
+        ],
+        "policy": "e3",
+        "solved_count": 7,
+        "solved_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "timed_out_count": 0,
+        "total_actions_on_solved": 163156
+      },
+      "36000": {
+        "action_metric": {
+          "definition": "total_actions_on_solved_games",
+          "field": "actions"
+        },
+        "actions_by_game": {
+          "ls20": 34567,
+          "m0r0": 34467,
+          "vc33": 34738
+        },
+        "games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "median_actions_on_core": 500017369.0,
+        "median_actions_on_solved": 34567,
+        "per_game": [
+          {
+            "actions": null,
+            "game": "lp85",
+            "solved": false,
+            "timed_out": true
+          },
+          {
+            "actions": 34467,
+            "game": "m0r0",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": null,
+            "game": "sp80",
+            "solved": false,
+            "timed_out": true
+          },
+          {
+            "actions": 34738,
+            "game": "vc33",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": null,
+            "game": "cd82",
+            "solved": false,
+            "timed_out": true
+          },
+          {
+            "actions": 35717,
+            "game": "ft09",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": null,
+            "game": "su15",
+            "solved": false,
+            "timed_out": true
+          },
+          {
+            "actions": 34567,
+            "game": "ls20",
+            "solved": true,
+            "timed_out": false
+          }
+        ],
+        "policy": "e3",
+        "solved_count": 3,
+        "solved_games": [
+          "ls20",
+          "m0r0",
+          "vc33"
+        ],
+        "timed_out_count": 4,
+        "total_actions_on_solved": 103772
+      },
+      "8000": {
+        "action_metric": {
+          "definition": "total_actions_on_solved_games",
+          "field": "actions"
+        },
+        "actions_by_game": {
+          "lp85": 7792,
+          "m0r0": 7810,
+          "sp80": 7724,
+          "vc33": 7731
+        },
+        "games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "median_actions_on_core": 7761.5,
+        "median_actions_on_solved": 7761.5,
+        "per_game": [
+          {
+            "actions": 7792,
+            "game": "lp85",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 7810,
+            "game": "m0r0",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 7724,
+            "game": "sp80",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 7731,
+            "game": "vc33",
+            "solved": true,
+            "timed_out": false
+          },
+          {
+            "actions": 7819,
+            "game": "cd82",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 7963,
+            "game": "ft09",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 7786,
+            "game": "su15",
+            "solved": false,
+            "timed_out": false
+          },
+          {
+            "actions": 7821,
+            "game": "ls20",
+            "solved": false,
+            "timed_out": false
+          }
+        ],
+        "policy": "e3",
+        "solved_count": 4,
+        "solved_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ],
+        "timed_out_count": 0,
+        "total_actions_on_solved": 31057
+      }
+    },
+    "rows": [
+      {
+        "budget": 8000,
+        "comparison_budget": 12000,
+        "comparison_solved_games": [
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "solved_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ],
+        "stable_vs_1_5x": false
+      },
+      {
+        "budget": 12000,
+        "comparison_budget": 18000,
+        "comparison_solved_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "solved_games": [
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "stable_vs_1_5x": false
+      },
+      {
+        "budget": 16000,
+        "comparison_budget": 24000,
+        "comparison_solved_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "solved_games": [
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "stable_vs_1_5x": false
+      },
+      {
+        "budget": 24000,
+        "comparison_budget": 36000,
+        "comparison_solved_games": [
+          "ls20",
+          "m0r0",
+          "vc33"
+        ],
+        "solved_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sp80",
+          "su15",
+          "vc33"
+        ],
+        "stable_vs_1_5x": false
+      }
+    ],
+    "selected_default_budget": 8000
+  },
+  "honest_verdict": "shipped: metric_harness_canonical_ci_guarded",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
+  "leaderboard_submission": false,
+  "positive_control": {
+    "dashboard_row": {
+      "actions_saved_vs_baseline": 1000.0,
+      "baseline_median_actions_on_core": 7760.0,
+      "bonus_solves": [],
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "core_solves_preserved": true,
+      "lever": "positive_control",
+      "lost_core_solves": [],
+      "median_actions_on_core": 6760.0,
+      "metric_action_field": "actions",
+      "verdict": "PASS (IMPROVED): CORE ['lp85', 'm0r0', 'sp80', 'vc33'] median actions 6760.0 vs baseline 7760.0",
+      "verdict_pass": true
+    },
+    "passed": true
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "baseline_file_present": true,
+    "codex_md_read": true,
+    "gate_help_precondition": true,
+    "offline_arcade_precondition": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "sha256:78fa7a44bef022cc084db04ca2539d9c59547ff359614ab8f5e5d5b38d1d39de",
+  "requirements": [
+    "REQ-ARC-FCP-4518"
+  ],
+  "result_path": "results/experiment_4518_metric_harness_canonical.json",
+  "sample_dashboard_row": {
+    "actions_saved_vs_baseline": 0.0,
+    "baseline_median_actions_on_core": 7760.0,
+    "bonus_solves": [
+      "ft09"
+    ],
+    "canonical_game_set": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33",
+      "cd82",
+      "ft09",
+      "su15",
+      "ls20"
+    ],
+    "core_games": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33"
+    ],
+    "core_solves_preserved": true,
+    "lever": "sample_dashboard",
+    "lost_core_solves": [],
+    "median_actions_on_core": 7760.0,
+    "metric_action_field": "actions",
+    "verdict": "PASS (IMPROVED): CORE ['lp85', 'm0r0', 'sp80', 'vc33'] median actions 7760.0 vs baseline 7760.0; BONUS solves ['ft09']",
+    "verdict_pass": true
+  },
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4518"
+  ],
+  "schema": "carnot.arc_metric_harness_canonical_4518.v1",
+  "tests_added_pass": {
+    "command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [15 items]\n\n...............                                                          [100%]\n============================== 15 passed in 3.29s ==============================\n"
+  }
+}

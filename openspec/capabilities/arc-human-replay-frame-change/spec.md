@@ -414,6 +414,45 @@ Required field principles:
 - `reproducibility_checksum`: principle "catches silent drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4518: Canonical Local Submission Metric Harness
+
+Experiment 4518 SHALL write
+`results/experiment_4518_metric_harness_canonical.json` and make
+`scripts/kaggle/arc_local_submission_gate.py` the canonical A1-A4/A6 local
+metric dashboard. The gate SHALL pin the fixed eight-game set
+`{lp85,m0r0,sp80,vc33,cd82,ft09,su15,ls20}`, derive CORE from the verified
+baseline solves `{lp85,m0r0,sp80,vc33}`, and guard the baseline median of
+`7760.0` against silent movement. The canonical action metric SHALL be total
+`actions` on solved CORE games for both baseline and treatment; a treatment
+that reports a different action field than the baseline SHALL fail the guard
+instead of mixing `actions_to_first_levelup` with total actions.
+
+The gate SHALL expose `--lever <name>` and include a per-lever attribution row
+with `median_actions_on_core`, `core_solves_preserved`, `bonus_solves`, and
+the uniform delta versus the fixed baseline. The CORE set-containment verdict
+SHALL be retained: every baseline CORE solve must be preserved, fringe bonus
+solves SHALL be reported but never netted against a CORE loss, and the old raw
+solved-count verdict SHALL NOT return. The fixture suite SHALL keep the A1
+lost-CORE failure, A2 CORE-for-fringe failure, positive-control improvement,
+neutral non-inferior pass, bonus reporting, and legacy baseline fallback.
+
+The harness SHALL measure the headroom budget `B*` as the smallest candidate
+budget in `{8000,12000,16000,24000}` whose baseline solved set equals the
+baseline solved set at `1.5B`. The CLI default budget SHALL remain `8000`
+until that measurement is available, and after measurement SHALL use `B*` as
+the canonical default. The experiment artifact SHALL record the measured
+headroom table and the selected default so cap changes cannot hide a slowdown.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; e.g. shipped: metric_harness_canonical_ci_guarded OR complete: metric_harness_partial_<reason>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
+- `canonical_game_set`: principle "the fixed 8 games -- pins the metric so no A-task can cherry-pick an easier subset."
+- `canonical_baseline`: principle "7760, guarded against silent movement (raising-a-cap-to-hide-drift is forbidden)."
+- `positive_control_passed`: principle "proves the harness can detect a real reduction (guards a silently-broken metric)."
+- `tests_added_pass`: principle "Tests Must Run and Assert."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -567,3 +606,24 @@ When the artifact is written
 Then it records the 7760 baseline, integrated median actions, integrated
 solve-rate, held-out solve-rate, nav-loop finding, false-negative-risk check,
 random seed, reproducibility checksum, and the exact levers integrated.
+
+### SCENARIO-ARC-FCP-4518: Canonical Gate Guards The Fixed Metric
+
+Given the verified 7760 baseline and the fixed eight-game local submission
+gate
+When the gate builds a dashboard row for a named lever
+Then the row uses total `actions` for both baseline and treatment, preserves
+the CORE set-containment verdict, reports bonus solves separately, and fails a
+treatment that reports a different action field than the baseline.
+
+Given the gate's regression fixtures
+When the focused gate tests run
+Then the A1 and A2 CORE-loss fixtures fail, the positive-control and neutral
+fixtures pass, bonus solves are reported, the legacy baseline fallback remains
+covered, and the fixed game set plus 7760 baseline guard cannot move silently.
+
+Given candidate budgets `{8000,12000,16000,24000}`
+When experiment 4518 measures baseline headroom
+Then it selects the smallest `B*` whose solved set matches the solved set at
+`1.5B`, keeps `8000` only if the measurement is unavailable, and writes the
+terminal artifact with the required field principles.
