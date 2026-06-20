@@ -8635,6 +8635,21 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 ### NEW Phase 4 Canonical Metric MANDATORY
 Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
+### 2026-06-20 (MANDATORY-NEXT-MILESTONE .417, operator "start shaping .417"): ACTION EFFICIENCY is the bottleneck
+
+**Operator 2026-06-20.** Three independent measurements this session converge: the live agent's wall is
+ACTION EFFICIENCY (the scoring metric (human/agent)^2), not solve-rate or config tuning. The live
+explorer explores ~7760 actions to find ~21-action solutions; the value head / frame-change predictor /
+energy-ranking all came back NULL in .415/.416 (they did not reduce actions); config tuning is exhausted
+(value_weight kept 0; the 3 cascade fixes restored speed+solve-rate but left actions unchanged). .417's
+single question: **make the live explorer find solutions with FEWER actions.** Candidate program (full:
+`docs/research-notes/arc-417-shaping-action-efficiency.md`): (1) PRUNE candidates with the structural
+energy + a working predictor (not just rank -- A3's ranking was null); (2) make the frame-change predictor
+actually work (full human-replay corpus -- A2's null was a corpus shortfall); (3) imitation prior from the
+342 human replays; (4) best-first with the LAZY value head (.416 B2); (5) close the forward-edge nav loop.
+Metric: median actions-to-solve (gate baseline 7760) must drop materially without losing solve-rate.
+Finalize the .417 roadmap from this draft + the .416 capstone when .416 closes.
+
 ### CORRIGENDUM 2026-06-20: .416 A1 (exp4500 value_weight re-measure) TAUTOLOGY flag is a FALSE POSITIVE — conclusion stands
 
 `.416 A1` (the operator-requested value_weight re-measurement) was FLAGGED adversarial_verify CRITICAL
