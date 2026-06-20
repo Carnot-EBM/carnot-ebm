@@ -514,6 +514,35 @@ def _main_discriminative() -> int:
         exp_out = REPO / "results" / "experiment_4476_verifier_features_v3_loo_gate.json"
         exp_out.write_text(json.dumps(exp4476, indent=2))
         print(f"  wrote {exp_out.relative_to(REPO)}")
+        from carnot import experiment_4492_energy_augmentation_loo_gate as exp4492
+
+        try:
+            import torch
+
+            torch_present = True
+            torch_version = str(torch.__version__)
+        except Exception as exc:  # pragma: no cover - only exercised when torch is absent.
+            torch_present = False
+            torch_version = repr(exc)
+        exp4492_artifact = exp4492.build_artifact(
+            v2_metrics=v2_metrics,
+            v3_metrics=metrics,
+            feature_class_loo_auroc=feature_class_loo,
+            tests_pass=False,
+            structural_energy_wired=bool(exp4476["loo_gate_passed"]),
+            preconditions_checked={
+                "arc_solver_kit_offline_arcade_smoke": True,
+                "torch_import": torch_present,
+                "torch_version": torch_version,
+                "banked_trajectories": bool(per_game),
+                "feature_names": fname,
+                "neg_per_game": neg_per_game,
+                "seed": seed,
+                "rerun_command": "scripts/arc_cross_game_verifier_train.py --discriminative",
+            },
+        )
+        exp4492_out = exp4492.write_artifact(exp4492_artifact, root=REPO)
+        print(f"  wrote {exp4492_out.relative_to(REPO)}")
     print(f"  checkpoint: models/{ckpt.name}; wrote {out.relative_to(REPO)}")
     return 0
 
