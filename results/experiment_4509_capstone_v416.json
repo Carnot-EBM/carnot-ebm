@@ -1,0 +1,926 @@
+{
+  "a1_value_weight_verdict": {
+    "headline_eligible": false,
+    "positive_weight_beats_zero_within_budget": false,
+    "scoreboard_source_flagged_adversarial": true,
+    "scoreboard_state": "keep_zero_value_weight",
+    "selected_value_weight": 0.0,
+    "state": "excluded_flagged_adversarial",
+    "submitted_value_weight_after": 0.0
+  },
+  "a2_frame_change_predictor_efficiency_delta": {
+    "efficiency_delta": 0.0,
+    "efficiency_win": false,
+    "heldout_median_actions_after": 1.0,
+    "heldout_median_actions_before": 1.0,
+    "honest_verdict": "complete: frame_change_predictor_rerun_staged_corpus_shortfall_null_guard",
+    "median_actions_delta": 0.0,
+    "positive_control_actions_reduced": true,
+    "solve_rate_after": 1.0,
+    "solve_rate_before": 1.0,
+    "solve_rate_dropped": false,
+    "state": "efficiency_null"
+  },
+  "a3_energy_augmented_ranking": {
+    "efficiency_delta": 0.0,
+    "efficiency_win": false,
+    "energy_augmented_median_actions": 1.0,
+    "energy_augmented_solve_rate": 1.0,
+    "energy_term_added_value": false,
+    "gate_artifact_summary": {
+      "feature_classes_moved": [
+        "v2_plus_frame_delta",
+        "v2_plus_object_relational",
+        "v3_full"
+      ],
+      "honest_verdict": "success: energy_augmentation_validated_v3_loo_auroc_0.674",
+      "loo_gate_passed": true,
+      "v3_loo_auroc": 0.6744657162333668
+    },
+    "honest_verdict": "complete: energy_augmented_ranking_honest_null",
+    "predictor_only_median_actions": 1.0,
+    "predictor_only_solve_rate": 1.0,
+    "ranking_formula": "P(frame_change)*(-delta_E)",
+    "solve_rate_delta": 0.0,
+    "solve_rate_dropped": false,
+    "state": "energy_augmented_null"
+  },
+  "a4_a5_l2_banked": true,
+  "a4_a5_l2_details": {
+    "adapter_l2": {
+      "game": "cd82",
+      "honest_verdict": "success: cd82_adapter_deepen_l2_offline_reproduced",
+      "l2_banked": true,
+      "offline_reproduced": true,
+      "reproduced_levels": 1,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "cd82",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 2,
+        "reproduced": true
+      },
+      "residual_blockers": [],
+      "skipped": false,
+      "state": "l2_banked"
+    },
+    "any_l2_banked": true,
+    "hud_register": {
+      "game": "ka59",
+      "honest_verdict": "complete: ka59_hud_register_deepen_l2_honest_residual",
+      "l2_banked": false,
+      "offline_reproduced": false,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_blockers": [
+        "ka59_l2_not_reproduced"
+      ],
+      "skipped": false,
+      "state": "l2_not_banked"
+    },
+    "state": "l2_banked"
+  },
+  "availability_report": {
+    "available_artifact_keys": [
+      "4501_frame_change",
+      "4502_energy_ranking",
+      "4503_hud_l2",
+      "4504_adapter_l2",
+      "4505_scoreboard",
+      "4506_lazy_value",
+      "4507_hardware",
+      "4508_sota"
+    ],
+    "axes": {
+      "a1_value_weight_verdict": {
+        "available_artifact_keys": [],
+        "flagged_artifacts": [
+          {
+            "artifact_key": "4500_value_weight",
+            "axis": "a1_value_weight_verdict",
+            "experiment_id": 4500,
+            "reason": "flagged_adversarial"
+          }
+        ],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "a2_frame_change_predictor_efficiency_delta": {
+        "available_artifact_keys": [
+          "4501_frame_change"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "a3_energy_augmented_ranking": {
+        "available_artifact_keys": [
+          "4502_energy_ranking"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "a4_a5_l2_banked": {
+        "available_artifact_keys": [
+          "4503_hud_l2",
+          "4504_adapter_l2"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "operational_context": {
+        "available_artifact_keys": [
+          "4506_lazy_value",
+          "4507_hardware",
+          "4508_sota"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": [
+          "4506_lazy_value",
+          "4507_hardware",
+          "4508_sota"
+        ]
+      },
+      "submitted_agent_scoreboard": {
+        "available_artifact_keys": [
+          "4505_scoreboard"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": 0.1428571429
+      }
+    },
+    "flagged_artifacts_excluded": [
+      {
+        "artifact_key": "4500_value_weight",
+        "axis": "a1_value_weight_verdict",
+        "experiment_id": 4500,
+        "reason": "flagged_adversarial"
+      }
+    ],
+    "missing_upstream_artifacts": []
+  },
+  "capstone_live_adversarial_recheck": {
+    "circular_moat_overclaim": false,
+    "flags": [],
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "4500_value_weight",
+      "experiment_id": 4500,
+      "fields_imported": [],
+      "path": "results/experiment_4500_value_weight_remeasure.json",
+      "sha256": "52f2cbb2a12544274b63def4730acb86292906f79655bc90ebc67779671a38d9"
+    },
+    {
+      "artifact_key": "4501_frame_change",
+      "experiment_id": 4501,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_median_actions_before",
+        "heldout_median_actions_after",
+        "implied_efficiency_delta",
+        "solve_rate_before",
+        "solve_rate_after",
+        "solve_rate_dropped",
+        "positive_control",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4501_frame_change_predictor_rerun.json",
+      "sha256": "efb990693ab53bbe91f6349b1f40dfe99302b388d1e79a776bb1c0bf7dd57a37"
+    },
+    {
+      "artifact_key": "4502_energy_ranking",
+      "experiment_id": 4502,
+      "fields_imported": [
+        "honest_verdict",
+        "predictor_only_median_actions",
+        "energy_augmented_median_actions",
+        "efficiency_delta_vs_predictor_only",
+        "predictor_only_solve_rate",
+        "energy_augmented_solve_rate",
+        "solve_rate_delta_vs_predictor_only",
+        "solve_rate_dropped",
+        "energy_term_added_value",
+        "ranking_formula",
+        "gate_artifact_summary",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4502_energy_augmented_ranking.json",
+      "sha256": "b8223183b614e4800c09758b024b2682fe99ec7ea0b4a680db6eb9fce6c93f58"
+    },
+    {
+      "artifact_key": "4503_hud_l2",
+      "experiment_id": 4503,
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4503_hud_register_deepen_l2.json",
+      "sha256": "d366738c5a93da23e7e48e3524dca1a0e2487d44a6536e502194ccc796065f7a"
+    },
+    {
+      "artifact_key": "4504_adapter_l2",
+      "experiment_id": 4504,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4504_adapter_deepen_l2.json",
+      "sha256": "9c624f5f7d2611b613c8293ddc5ea49e2b6a1bbf4aa280f6b32f87f9da97e29e"
+    },
+    {
+      "artifact_key": "4505_scoreboard",
+      "experiment_id": 4505,
+      "fields_imported": [
+        "honest_verdict",
+        "a1_value_weight_verdict",
+        "headline_metrics",
+        "scoreboard_row",
+        "parity_gate",
+        "leaderboard_submission",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4505_submitted_agent_scoreboard.json",
+      "sha256": "10f18794605a41dd59e815d1d31a679c06e56e31689f36a3ea0bad6d9c9ab8f2"
+    },
+    {
+      "artifact_key": "4506_lazy_value",
+      "experiment_id": 4506,
+      "fields_imported": [
+        "honest_verdict",
+        "speedup_factor",
+        "routing_quality_preserved",
+        "routing_quality_match_rate",
+        "value_head_call_reduction_factor",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4506_lazy_value_eval_prototype.json",
+      "sha256": "79b2409de04ebdef921c09cb71b793f040e53af7ebd6b7d4569a08145fe72b2d"
+    },
+    {
+      "artifact_key": "4507_hardware",
+      "experiment_id": 4507,
+      "fields_imported": [
+        "honest_verdict",
+        "per_board_reachability",
+        "per_board_status",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4507_hardware_continuity_audit.json",
+      "sha256": "ff91f63fb54c903e2adc8dc420ac0103eb3efd0dfb771682ec2b43902d1e935a"
+    },
+    {
+      "artifact_key": "4508_sota",
+      "experiment_id": 4508,
+      "fields_imported": [
+        "honest_verdict",
+        "strongest_for_v417",
+        "source_ids",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4508_arc_affordance_sota_416.json",
+      "sha256": "bf796dd4ff091ba75a8cd8e19b7c98d2e6a17cf8de2ea6cac07512aa9d73c049"
+    }
+  ],
+  "duration_s": 0.368255,
+  "experiment": 4509,
+  "field_principles": {
+    "a1_value_weight_verdict": "reports whether a positive v3-head value_weight beats zero within budget, but imports no metric from an adversarial-stamped source.",
+    "a2_frame_change_predictor_efficiency_delta": "reports held-out median actions before/after, efficiency delta, and solve-rate guard for the frame-change predictor.",
+    "a3_energy_augmented_ranking": "reports energy-augmented ranking solve-rate and efficiency deltas without turning a null delta into a win.",
+    "a4_a5_l2_banked": "bare bool from clean offline reproduction gates: true only when any A4/A5 L2 reproduction is banked.",
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256}; skipped flagged artifacts import no fields.",
+    "flagged_artifacts_skipped": "stamped or live-critical artifacts import no fields.",
+    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.",
+    "inference_substrate": "explicit substrate so adversarial_verify applies the right duration floor.",
+    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication.",
+    "reproducibility_checksum": "content hash for reproducibility",
+    "submitted_agent_heldout_solve_rate": "bare float from the submitted-agent scoreboard, with nested source provenance kept explicit.",
+    "variant_transfer_rate": "bare float from the submitted-agent scoreboard variant-transfer headline.",
+    "verifier_claims": "each verifier claim declares verifier_is_oracle so circularity is explicit.",
+    "verifier_is_oracle": "BARE bool=false for the capstone itself; verifier-derived upstream claims declare their own circularity."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "artifact_key": "4500_value_weight",
+      "experiment_id": 4500,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "eval_budget_median_wall_s=390.0 and wall_budget_s=390.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "parse_error": "",
+      "path": "results/experiment_4500_value_weight_remeasure.json",
+      "reason": "flagged_adversarial",
+      "sha256": "52f2cbb2a12544274b63def4730acb86292906f79655bc90ebc67779671a38d9",
+      "stamped_flagged_adversarial": true
+    }
+  ],
+  "honest_verdict": "complete: v416_a1_no_clean_positive_weight_win_a2_null_delta_a3_null_delta_l2_banked_heldout_0.143_variant_0.28",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "operational_context": {
+    "exp4506_lazy_value": {
+      "honest_verdict": "complete: lazy_value_eval_speedup_232.69x_quality_preserved_80_of_80",
+      "per_board_reachability": {},
+      "routing_quality_match_rate": 1.0,
+      "routing_quality_preserved": true,
+      "source_ids": [],
+      "speedup_factor": 232.6933168708,
+      "state": "available",
+      "strongest_for_v417": "",
+      "value_head_call_reduction_factor": 320.0
+    },
+    "exp4507_hardware": {
+      "honest_verdict": "complete: hardware_continuity_audit_4507_kv260_kv260_reachable_ssh_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_reachable_ssh",
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "routing_quality_match_rate": null,
+      "routing_quality_preserved": null,
+      "source_ids": [],
+      "speedup_factor": null,
+      "state": "available",
+      "strongest_for_v417": "",
+      "value_head_call_reduction_factor": null
+    },
+    "exp4508_sota": {
+      "honest_verdict": "complete: arc_affordance_sota_416_mapped_for_v417",
+      "per_board_reachability": {},
+      "routing_quality_match_rate": null,
+      "routing_quality_preserved": null,
+      "source_ids": [
+        "2006.15085",
+        "2008.09241",
+        "2404.15648",
+        "2407.10341",
+        "2501.06047",
+        "2601.07060",
+        "2602.00460",
+        "2602.03201"
+      ],
+      "speedup_factor": null,
+      "state": "available",
+      "strongest_for_v417": "flagged_for_v417: affordance-pruned frame-change predictor with SLOPE-style optimistic energy progress shaping, anchored by arXiv:2008.09241, arXiv:2006.15085, and arXiv:2602.03201",
+      "value_head_call_reduction_factor": null
+    }
+  },
+  "per_axis_gaps": [
+    {
+      "artifact_key": "4500_value_weight",
+      "axis": "a1_value_weight_verdict",
+      "experiment_id": 4500,
+      "reason": "flagged_adversarial"
+    }
+  ],
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "reading_results_discipline": true,
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "4500_value_weight",
+        "exists": true,
+        "experiment_id": 4500,
+        "path": "results/experiment_4500_value_weight_remeasure.json",
+        "skipped": true,
+        "summarize_exit_code": 2,
+        "upstream_preconditions": null
+      },
+      {
+        "artifact_key": "4501_frame_change",
+        "exists": true,
+        "experiment_id": 4501,
+        "path": "results/experiment_4501_frame_change_predictor_rerun.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "action_effect_npz_present": false,
+          "agents_md_read": true,
+          "cached_raw_parquet_present": true,
+          "codex_md_read": true,
+          "env_game_access_blocked": true,
+          "expected_action_effect_examples": 14672,
+          "official_license_verified_for_bundled_weights": false,
+          "offline_arcade_import": true,
+          "ok": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128",
+          "training_manifest_examples": 10000,
+          "training_shard_count": 3,
+          "training_shards_present": true
+        }
+      },
+      {
+        "artifact_key": "4502_energy_ranking",
+        "exists": true,
+        "experiment_id": 4502,
+        "path": "results/experiment_4502_energy_augmented_ranking.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "codex_md_read": true,
+          "energy_gate_artifact_present": true,
+          "energy_gate_passed": true,
+          "inference_substrate": "verifier_ensemble_against_cached_candidates",
+          "offline_arcade_import": true,
+          "ok": true,
+          "predictor_artifact_present": true,
+          "predictor_corpus_examples_loaded": 10000,
+          "predictor_prior_emitted": true,
+          "staged_candidate_cache_present": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4503_hud_l2",
+        "exists": true,
+        "experiment_id": 4503,
+        "path": "results/experiment_4503_hud_register_deepen_l2.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "offline_arcade_import_smoke": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4504_adapter_l2",
+        "exists": true,
+        "experiment_id": 4504,
+        "path": "results/experiment_4504_adapter_deepen_l2.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "offline_arcade_import_smoke": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4505_scoreboard",
+        "exists": true,
+        "experiment_id": 4505,
+        "path": "results/experiment_4505_submitted_agent_scoreboard.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "codex_md_read": true,
+          "env_game_access_blocked": true,
+          "offline_arcade_import_smoke": true,
+          "parity_test_target": "tests/python/test_arc_submitted_agent_parity.py",
+          "registry_context_present": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128",
+          "value_weight_source_artifact_present": true,
+          "variant_source_artifact_present": true
+        }
+      },
+      {
+        "artifact_key": "4506_lazy_value",
+        "exists": true,
+        "experiment_id": 4506,
+        "path": "results/experiment_4506_lazy_value_eval_prototype.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "cached_candidate_frontiers_built": true,
+          "codex_md_read": true,
+          "offline_arcade_import_smoke": true,
+          "torch_import": true,
+          "torch_version": "2.11.0+cu128"
+        }
+      },
+      {
+        "artifact_key": "4507_hardware",
+        "exists": true,
+        "experiment_id": 4507,
+        "path": "results/experiment_4507_hardware_continuity_audit.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": [
+          {
+            "available": true,
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "duration_s": 4.602539,
+            "exit_code": 0,
+            "observed": "returncode=0",
+            "resource": "kv260_ssh"
+          },
+          {
+            "available": false,
+            "command": "openFPGALoader -c dirtyJtag --detect",
+            "duration_s": 0.019083,
+            "exit_code": 0,
+            "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+            "resource": "gatemate_dirtyjtag_detect"
+          },
+          {
+            "available": true,
+            "command": "ssh -o ConnectTimeout=5 polarfire true",
+            "duration_s": 0.891711,
+            "exit_code": 0,
+            "observed": "returncode=0",
+            "resource": "polarfire_ssh"
+          }
+        ]
+      },
+      {
+        "artifact_key": "4508_sota",
+        "exists": true,
+        "experiment_id": 4508,
+        "path": "results/experiment_4508_arc_affordance_sota_416.json",
+        "skipped": false,
+        "summarize_exit_code": 0,
+        "upstream_preconditions": {
+          "agents_md_read": true,
+          "arxiv_http_200_verified_ids": [
+            "2006.15085",
+            "2008.09241",
+            "2404.15648",
+            "2407.10341",
+            "2501.06047",
+            "2601.07060",
+            "2602.00460",
+            "2602.03201"
+          ],
+          "codex_md_read": true,
+          "deep_research_invoked": false,
+          "frame_change_notes_read": [
+            "docs/research-notes/arc-frame-change-predictor-spec.md",
+            "docs/research-notes/arc-energy-augmented-strategy.md",
+            "docs/research-notes/arc-417-shaping-action-efficiency.md",
+            "docs/research-notes/arc-imitation-sota-415.md"
+          ],
+          "leaderboard_submission": false,
+          "live_llm_inference": false,
+          "live_solve_claim": false,
+          "ops_docs_modified": false,
+          "research_references_filtered": true,
+          "research_studying_filtered": true,
+          "sweep_clusters_help_succeeded": true,
+          "sweep_clusters_urls": [
+            "http://export.arxiv.org/api/query?search_query=(abs:\"active+inference\"+OR+abs:\"free+energy\"+OR+abs:\"free+energy+principle\"+OR+abs:\"predictive+coding\"+OR+abs:\"world+model\")+AND+(abs:\"LLM\"+OR+abs:\"language+model\"+OR+abs:\"reasoning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+            "http://export.arxiv.org/api/query?search_query=(abs:\"verifier+ensemble\"+OR+abs:\"verifier+ensembles\"+OR+abs:\"null+space\"+OR+abs:\"specification+gaming\"+OR+abs:\"process+reward+model\"+OR+abs:\"deliberative+alignment\"+OR+abs:\"reward+hacking\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+          ],
+          "training_launched": false,
+          "websearch_webfetch_top_sources": [
+            "https://arxiv.org/abs/2006.15085",
+            "https://arxiv.org/abs/2008.09241",
+            "https://arxiv.org/abs/2404.15648",
+            "https://arxiv.org/abs/2407.10341",
+            "https://arxiv.org/abs/2501.06047",
+            "https://arxiv.org/abs/2601.07060",
+            "https://arxiv.org/abs/2602.00460",
+            "https://arxiv.org/abs/2602.03201"
+          ]
+        }
+      }
+    ]
+  },
+  "random_seed": 4509,
+  "reproducibility_checksum": "sha256:2d7c7ae9a35d2204666e1deb141761b10a9a8fd5634ec782e26030c0848a8d25",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "inference_substrate",
+    "preconditions_checked",
+    "a1_value_weight_verdict",
+    "a2_frame_change_predictor_efficiency_delta",
+    "a3_energy_augmented_ranking",
+    "a4_a5_l2_banked",
+    "submitted_agent_heldout_solve_rate",
+    "variant_transfer_rate",
+    "verifier_is_oracle",
+    "verifier_claims",
+    "flagged_artifacts_skipped",
+    "cited_upstream_artifacts",
+    "random_seed",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v416_4509.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4509",
+    "SCENARIO-CAPSTONE-4509"
+  ],
+  "submitted_agent_heldout_solve_rate": 0.1428571429,
+  "submitted_agent_scoreboard": {
+    "heldout_attempted": 7,
+    "heldout_median_actions_to_first_levelup": 20.0,
+    "heldout_solve_rate": 0.1428571429,
+    "heldout_solved": 1,
+    "heldout_source_flagged_adversarial": true,
+    "honest_verdict": "complete: submitted_agent_scoreboard_refresh_generic_1_of_7_variant_7_of_25_value_weight_0",
+    "leaderboard_submission": false,
+    "parity_gate": {
+      "command": ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q",
+      "expected_green": true,
+      "purpose": "guards SUBMITTED_AGENT_CONFIG parity with make_carnot_agent default",
+      "test_path": "tests/python/test_arc_submitted_agent_parity.py",
+      "value_weight_assertion": "value_weight==0.0",
+      "verified_green": true
+    },
+    "state": "submitted_agent_scoreboard_measured",
+    "variant_transfer_attempted": 25,
+    "variant_transfer_rate": 0.28,
+    "variant_transfer_solved": 7,
+    "variant_transfer_source_artifact": "results/experiment_4499_capstone_v415.json"
+  },
+  "submitted_to_leaderboard": false,
+  "upstream_provenance": [
+    {
+      "artifact_key": "4500_value_weight",
+      "experiment_id": 4500,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "eval_budget_median_wall_s=390.0 and wall_budget_s=390.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4500_value_weight_remeasure.json",
+      "payload_reproducibility_checksum": "3b7f339a3f0754687933951fc13a331bcb34d45254da2fa2fe5adf91c4547663",
+      "sha256": "52f2cbb2a12544274b63def4730acb86292906f79655bc90ebc67779671a38d9",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "artifact_key": "4501_frame_change",
+      "experiment_id": 4501,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_median_actions_before",
+        "heldout_median_actions_after",
+        "implied_efficiency_delta",
+        "solve_rate_before",
+        "solve_rate_after",
+        "solve_rate_dropped",
+        "positive_control",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [
+        {
+          "detail": "implied_efficiency_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4501_frame_change_predictor_rerun.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "efb990693ab53bbe91f6349b1f40dfe99302b388d1e79a776bb1c0bf7dd57a37",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4502_energy_ranking",
+      "experiment_id": 4502,
+      "fields_imported": [
+        "honest_verdict",
+        "predictor_only_median_actions",
+        "energy_augmented_median_actions",
+        "efficiency_delta_vs_predictor_only",
+        "predictor_only_solve_rate",
+        "energy_augmented_solve_rate",
+        "solve_rate_delta_vs_predictor_only",
+        "solve_rate_dropped",
+        "energy_term_added_value",
+        "ranking_formula",
+        "gate_artifact_summary",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [
+        {
+          "detail": "efficiency_delta_vs_predictor_only=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "solve_rate_delta_vs_predictor_only=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4502_energy_augmented_ranking.json",
+      "payload_reproducibility_checksum": "9a56780be5f9839374b9cf0442ed3e641358fa85dffef4df100434a9473a72fc",
+      "sha256": "b8223183b614e4800c09758b024b2682fe99ec7ea0b4a680db6eb9fce6c93f58",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4503_hud_l2",
+      "experiment_id": 4503,
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4503_hud_register_deepen_l2.json",
+      "payload_reproducibility_checksum": "8a3d7c2f1cb641b27ca45c41a47e446af53a034dd28121a5356f826042c77cc8",
+      "sha256": "d366738c5a93da23e7e48e3524dca1a0e2487d44a6536e502194ccc796065f7a",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4504_adapter_l2",
+      "experiment_id": 4504,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "residual_blockers",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4504_adapter_deepen_l2.json",
+      "payload_reproducibility_checksum": "453c0eb727d4d217e6e91168f8f93b8f10db3da4ed2c42052fae3765082dc1f9",
+      "sha256": "9c624f5f7d2611b613c8293ddc5ea49e2b6a1bbf4aa280f6b32f87f9da97e29e",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4505_scoreboard",
+      "experiment_id": 4505,
+      "fields_imported": [
+        "honest_verdict",
+        "a1_value_weight_verdict",
+        "headline_metrics",
+        "scoreboard_row",
+        "parity_gate",
+        "leaderboard_submission",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4505_submitted_agent_scoreboard.json",
+      "payload_reproducibility_checksum": "13fa737934ed814e0f94dbf4fe9ed99f0f9c3dd620f3cfd227f35d2aa3f93e7c",
+      "sha256": "10f18794605a41dd59e815d1d31a679c06e56e31689f36a3ea0bad6d9c9ab8f2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4506_lazy_value",
+      "experiment_id": 4506,
+      "fields_imported": [
+        "honest_verdict",
+        "speedup_factor",
+        "routing_quality_preserved",
+        "routing_quality_match_rate",
+        "value_head_call_reduction_factor",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4506_lazy_value_eval_prototype.json",
+      "payload_reproducibility_checksum": "057d76585432ccb1590cdbd19ec419bed83a6a0332cc0766772069c1999256a9",
+      "sha256": "79b2409de04ebdef921c09cb71b793f040e53af7ebd6b7d4569a08145fe72b2d",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4507_hardware",
+      "experiment_id": 4507,
+      "fields_imported": [
+        "honest_verdict",
+        "per_board_reachability",
+        "per_board_status",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4507_hardware_continuity_audit.json",
+      "payload_reproducibility_checksum": "3e634a978ee81c1ef483948c4283c56f57433fad78967320719e50dc9dc71aac",
+      "sha256": "ff91f63fb54c903e2adc8dc420ac0103eb3efd0dfb771682ec2b43902d1e935a",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4508_sota",
+      "experiment_id": 4508,
+      "fields_imported": [
+        "honest_verdict",
+        "strongest_for_v417",
+        "source_ids",
+        "preconditions_checked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4508_arc_affordance_sota_416.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "bf796dd4ff091ba75a8cd8e19b7c98d2e6a17cf8de2ea6cac07512aa9d73c049",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "10f18794605a41dd59e815d1d31a679c06e56e31689f36a3ea0bad6d9c9ab8f2",
+    "52f2cbb2a12544274b63def4730acb86292906f79655bc90ebc67779671a38d9",
+    "79b2409de04ebdef921c09cb71b793f040e53af7ebd6b7d4569a08145fe72b2d",
+    "9c624f5f7d2611b613c8293ddc5ea49e2b6a1bbf4aa280f6b32f87f9da97e29e",
+    "b8223183b614e4800c09758b024b2682fe99ec7ea0b4a680db6eb9fce6c93f58",
+    "bf796dd4ff091ba75a8cd8e19b7c98d2e6a17cf8de2ea6cac07512aa9d73c049",
+    "d366738c5a93da23e7e48e3524dca1a0e2487d44a6536e502194ccc796065f7a",
+    "efb990693ab53bbe91f6349b1f40dfe99302b388d1e79a776bb1c0bf7dd57a37",
+    "ff91f63fb54c903e2adc8dc420ac0103eb3efd0dfb771682ec2b43902d1e935a"
+  ],
+  "variant_transfer_rate": 0.28,
+  "verifier_claims": [
+    {
+      "claim": "a1_value_weight_verdict",
+      "skipped": true,
+      "source": "exp4500",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a2_frame_change_predictor_efficiency_delta",
+      "skipped": false,
+      "source": "exp4501",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a3_energy_augmented_ranking",
+      "skipped": false,
+      "source": "exp4502",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "a4_a5_l2_banked",
+      "skipped": false,
+      "source": "exp4503+exp4504",
+      "verifier_is_oracle": false
+    },
+    {
+      "claim": "submitted_agent_scoreboard",
+      "skipped": false,
+      "source": "exp4505",
+      "verifier_is_oracle": false
+    }
+  ],
+  "verifier_is_oracle": false
+}

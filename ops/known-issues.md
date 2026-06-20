@@ -8662,3 +8662,7 @@ the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is alr
 action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
