@@ -8951,3 +8951,4 @@ c |
 | 2026-06-20 12:33 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; SCOR | OK | 88 passed, 1 warning in 5.83s |
 | 2026-06-20 12:46 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 88 passed, 1 warning in 6.46s |
 | 2026-06-20 14:00 UTC | PHASE A5 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 108 passed, 1 warning in 6.51s |
+| 2026-06-20 14:15 UTC | PHASE B1 (INFRA; operator MANDATORY) -- Submitted- | OK | 86 passed, 1 warning in 6.26s |
