@@ -59,6 +59,18 @@ explorer's node-identity key (currently grid + `hud_mask`, `arc_competition_agen
 and include induced hidden scalars, so deduplication distinguishes states that differ only in hidden
 fields. Smaller, surgical, and directly unblocks the deepening tail.
 
+## ENERGY-AUGMENTATION (operator directive 2026-06-20 — the differentiator, not a pure copy)
+
+The pure StochasticGoose CNN predicts WHICH actions change the frame (exploration). Carnot's version adds
+an energy layer that scores whether the change is PROGRESS: rank the explorer frontier by
+`P(frame_change) · (−ΔE)`, where ΔE is the change in an objective energy (goal-consistency / constraint
+satisfaction) between frame and predicted-next-frame. Their predictor finds the dynamics; our energy says
+which dynamics are good — exploration × exploitation in one ranking. This is the graft that targets the
+field's generalization wall (see `arc-energy-augmented-strategy.md`): the frame-change CNN is game-specific,
+but an energy over STRUCTURAL features is the candidate that transfers. NOTE: the energy term is only
+additive value once the features are structural (GAP-ARCH-FEATURES / `.414` A2); ship the predictor first
+(it stands alone on efficiency), then add the energy progress-score once A2 lands.
+
 ## Honest read (paradigm + sequencing)
 
 - This is a LEARNED action-model — a DIFFERENT paradigm from Carnot's verifier-energy thesis. It
