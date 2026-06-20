@@ -25,6 +25,8 @@ probability that each click cell / each ACTION1-5 changes the frame; wired into 
 `rich_action_candidates` by predicted change (try high-change actions first), measurably reducing
 actions-to-first-level-up on held-out games.
 
+**HUMAN REPLAYS (confirmed available 2026-06-20):** beyond self-generated transitions, the ARC Public Demo human replays give 14,672 labeled (state, action, click, frame_delta, level_progress) examples across all 25 games (action_effect_dict.npz; humans changed the frame on 97% of actions = the efficiency target). Bootstrap the predictor from these. Recompute features OUR way from the raw replay frames (frame-only/live-legal). See arc-human-replay-application-spec.md. 
+
 **Training data (free, self-supervised, offline, zero LLM/quota):** every `(frame, action, next_frame)`
 the explorer already generates during a sweep IS a labeled example — label = did the frame change
 (binary) + change magnitude. Pool across ALL games (the StochasticGoose/PersistentAEM "persist

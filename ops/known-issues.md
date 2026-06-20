@@ -39,7 +39,7 @@ predicted change. Falsifiable gate: held-out median actions-to-first-levelup STR
 (+ positive control + FALSE_NEGATIVE_RISK null guard); must NOT drop solve-rate. **Secondary (cheaper):**
 hidden-field probing in the state hash (the competitor's solved version of our ka59/ar25 L2 stall,
 GAP-ARCH-GRID-ONLY-STATE). Sequence AFTER .414 A1 (integration), alongside/before the .415 trust-energy.
-Full spec: `docs/research-notes/arc-frame-change-predictor-spec.md`; intel:
+Full spec: `docs/research-notes/arc-frame-change-predictor-spec.md` (training data CONFIRMED available: the ARC Public Demo human replays = 14,672 labeled (state,action,frame_delta) examples, action_effect_dict.npz; see arc-human-replay-application-spec.md); intel:
 `docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md`.
 
 ---
