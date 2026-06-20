@@ -8946,3 +8946,4 @@ c |
 | 2026-06-20 11:03 UTC | PHASE E (CAPSTONE .415) -- Capstone v415: frame-ch | OK | 88 passed, 1 warning in 6.97s |
 | 2026-06-20 11:35 UTC | Plan milestone 2026.06.416 | OK | 10 tasks proposed |
 | 2026-06-20 11:37 UTC | Milestone 2026.06.416 activated | OK | 10 tasks queued |
+| 2026-06-20 11:56 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
