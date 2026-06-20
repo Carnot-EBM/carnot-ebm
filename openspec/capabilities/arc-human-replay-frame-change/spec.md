@@ -499,6 +499,40 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4524: Stop After Scored Target Level-Up
+
+Experiment 4524 SHALL write
+`results/experiment_4524_stop_after_levelup.json` by measuring the fixed
+eight-game local submission gate under a run-to-completion control and a
+stop-at-scored-target treatment. The control SHALL use the submitted
+run-to-completion target, log actions to reach each observed level-up for every
+gate game, and report the total run actions on the same `actions` field used by
+the local submission gate. The treatment SHALL stop through `is_done` once the
+measured scored target is reached; it SHALL NOT compare
+`actions_to_first_levelup` from one arm against total `actions` from another.
+
+The treatment SHALL be accepted only when every baseline CORE solve in
+`{lp85,m0r0,sp80,vc33}` is preserved, every gate game's banked level depth is
+preserved (`best_level` before versus after), and median CORE `actions` is
+strictly lower than the measured control. If the treatment drops a CORE solve,
+sheds any game's banked level depth, or shows no total-action overrun, the
+artifact SHALL report an honest null and leave the submitted target unchanged.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: stop_after_levelup_core_actions_<n>_below_control OR complete: no_overrun_or_drops_solve_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
+- `core_solves_preserved`: principle "stopping earlier MUST NOT drop a CORE solve (set-containment over {lp85,m0r0,sp80,vc33})."
+- `levels_per_game_preserved`: principle "HARD gate: per-game best_level before vs after -- stopping early MUST NOT shed any game's banked level depth (the CORE gate checks the game set only; the competition scores total LEVELS, so a level-depth regression that the gate would PASS must be caught here)."
+- `median_actions_on_core_control`: principle "the run-to-completion baseline, same action field."
+- `median_actions_on_core_best`: principle "the headline -- did stopping at the scored target cut total actions."
+- `action_field_used`: principle "single action field both conditions measured on (A3 metric-mismatch guard)."
+- `positive_control_passed`: principle "proves the harness detects a real reduction."
+- `false_negative_risk_checked`: principle "a null is valid only with the control present."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -555,6 +589,17 @@ Then the artifact reports the current submitted-default config with
 `value_weight==0.0`, records the parity test as green, reports the generic
 solve-rate and variant-transfer rate as headline metrics, and leaves
 `reproducible_total_levels` in context-only metadata.
+
+### SCENARIO-ARC-FCP-4524: Stop Policy Preserves CORE Level Depth
+
+Given the fixed eight-game local submission gate has a measured
+run-to-completion control
+When experiment 4524 compares that control with a stop-at-scored-target run
+Then the artifact records actions-to-reach-each-level versus total actions per
+game, uses `action_field_used="actions"` for both arms, preserves every CORE
+solve, preserves every game's before/after `best_level`, and only reports
+success when the treatment's median CORE total actions is strictly lower than
+the measured control.
 
 ### SCENARIO-ARC-FCP-4501: Staged Frame-Only Rerun Has Interpretable Null Guard
 

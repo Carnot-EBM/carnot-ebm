@@ -46,7 +46,7 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     # weight>0 was a measured regression (per-node v3 eval too slow). Pin it to 0 until .416 shows a
     # weight>0 beats bare-BFS live AND finishes in budget. (NOT `> 0` — that asserted the regression.)
     assert exp.value_weight == 0.0
-    assert exp.target_levels > 1
+    assert exp.target_levels == 1
 
 
 def test_wired_flags_reflect_actual_imports():
