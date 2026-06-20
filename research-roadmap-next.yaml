@@ -107,7 +107,7 @@ tasks:
       the reachable set. So reordering/batching changes WHICH states are explored before the budget is
       spent -- it CAN drop a knife-edge CORE solve via the exact order-perturbation mechanism that dropped
       m0r0 in .417 A1. Therefore core_solves_preserved is a HARD EMPIRICAL GATE measured on
-      {lp85,m0r0,sp80,vc33}, NOT a formality: a dropped CORE solve FAILS the lever regardless of action
+      {{lp85,m0r0,sp80,vc33}}, NOT a formality: a dropped CORE solve FAILS the lever regardless of action
       savings. Investigate any dropped CORE solve; do not dismiss it as noise. The two levers:
         1. BATCH-EXPAND PER VISIT: when navigation pays to reach a frontier node th (RESET-replay OR
            forward-walk), expand ALL (or up to a bounded k) of th's untested SALIENT actions in that one
@@ -132,7 +132,7 @@ tasks:
         0. PRECONDITIONS (BEFORE any other step):
            a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
            Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on any focused pytest.)
-        1. Implement BATCH-EXPAND-PER-VISIT: when next_move navigates to a frontier th (the nav branch ~line 728-749), queue up to k of th's untested salient actions to expand at th before jumping. k is a bounded sweep param (try k in {1(control),3,8,all}). Keep the depth-ride behavior for the arrival subtree.
+        1. Implement BATCH-EXPAND-PER-VISIT: when next_move navigates to a frontier th (the nav branch ~line 728-749), queue up to k of th's untested salient actions to expand at th before jumping. k is a bounded sweep param (try k in {{1(control),3,8,all}}). Keep the depth-ride behavior for the arrival subtree.
         2. Implement NAV-COST TIE-BREAK in _frontier: keep depth PRIMARY; among equal-depth eligible nodes, tie-break by navigation cost from cur (forward-reachable shortest_path len, else node["path"] replay len). k=1 + no-tie-break is the CONTROL == today's behavior.
         3. Measure on the 8-game gate: per config report median_actions_on_core, core_solves_preserved, AND the nav diagnostics (reset_replay_fallbacks, reset_replay_steps, forward_walk_hit_rate). The WIN condition: core_solves_preserved=True AND median_actions_on_core STRICTLY < the k=1/no-tie-break control AND reset_replay_steps materially down.
         4. METRIC DISCIPLINE (A3 false-win lesson): measure BOTH conditions on the SAME action field. The gate's canonical metric is TOTAL actions on solved games (per .417 B2). Do NOT compare a treatment's actions_to_first_levelup against a baseline's total-actions -- that produced A3's flagged false win.
@@ -149,13 +149,13 @@ tasks:
         median_actions_on_core_best:
           principle: "the headline -- did amortizing the replay cut TOTAL actions on the CORE games."
         core_solves_preserved:
-          principle: "HARD empirical gate on {lp85,m0r0,sp80,vc33} -- under the fixed explore_budget, batch/reorder CAN drop a knife-edge solve (the .417 m0r0 mechanism); a dropped CORE solve FAILS the lever regardless of action savings."
+          principle: "HARD empirical gate on {{lp85,m0r0,sp80,vc33}} -- under the fixed explore_budget, batch/reorder CAN drop a knife-edge solve (the .417 m0r0 mechanism); a dropped CORE solve FAILS the lever regardless of action savings."
         nav_diagnostics_before_after:
           principle: "reset_replay_fallbacks + reset_replay_steps + forward_walk_hit_rate WITH vs WITHOUT -- the causal mechanism witness (did replay actually drop, or is any action change incidental)."
         action_field_used:
           principle: "names the SINGLE action field both conditions were measured on (total actions on solved) -- the A3 metric-mismatch guard."
         config_sweep:
-          principle: "the full {k, tie_break -> (median_actions_on_core, core_solves_preserved, reset_replay_steps)} table so the decision is auditable, not asserted."
+          principle: "the full {{k, tie_break -> (median_actions_on_core, core_solves_preserved, reset_replay_steps)}} table so the decision is auditable, not asserted."
         chosen_submitted_config:
           principle: "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); must keep test_arc_submitted_agent_parity.py consistent."
         positive_control_passed:
@@ -213,7 +213,7 @@ tasks:
         inference_substrate:
           principle: "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
         core_solves_preserved:
-          principle: "stopping earlier MUST NOT drop a CORE solve (set-containment over {lp85,m0r0,sp80,vc33})."
+          principle: "stopping earlier MUST NOT drop a CORE solve (set-containment over {{lp85,m0r0,sp80,vc33}})."
         levels_per_game_preserved:
           principle: "HARD gate: per-game best_level before vs after -- stopping early MUST NOT shed any game's banked level depth (the CORE gate checks the game set only; the competition scores total LEVELS, so a level-depth regression that the gate would PASS must be caught here)."
         median_actions_on_core_control:
