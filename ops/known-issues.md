@@ -11,6 +11,25 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-20 (MANDATORY-NEXT-MILESTONE .415, operator "can the Carnot EBM help ARC?" → yes): learned world-model TRUST ENERGY for hidden-state games
+
+**Operator 2026-06-20** asked whether the Carnot EBM can help ARC; the audit answer: the FoVer/TEXT
+energy ensemble is a DISTRACTION for ARC (its only ARC contact is a circular synthetic-grid demo), but
+the **world-model consistency energy** (`energy = 1 − dynamics_accuracy`) is ALREADY LIVE in the
+submitted agent (`arc_competition_agent.py:698,779-780`) and is the ONE oracle-distinct EBM slot on the
+ARC critical path. **Task (.415+):** replace the binary `WorldModelVerifier.accuracy < 0.5` trust gate
+with a LEARNED energy that RANKS candidate induced world-models by HELD-OUT generalization, specifically
+for the ~11 hidden-state games (ka59 step counter, ar25 undo stack) where there is NO cheap execution
+oracle. Falsifiable gate: `verifier_is_oracle: false` (a circular win does not count); the learned trust
+energy must pick the best-held-out-generalizing candidate above the "first-clears-0.5" baseline, with a
+Markov positive control + FALSE_NEGATIVE_RISK honest-null guard. inference_substrate=
+verifier_ensemble_against_cached_candidates (offline). **Sequence AFTER the .414 integration/feature
+score-drivers** (those move 0.08 directly; this is real moat work, lower immediate score-delta). Full
+spec: `docs/research-notes/arc-world-model-trust-energy-spec.md`; backlog entry:
+`ops/verifier_gaps.md` GAP-ARCH-WORLD-MODEL-TRUST-ENERGY.
+
+---
+
 ### 2026-06-19 (MANDATORY-NEXT-MILESTONE, operator "all three" — step-back gap audit): integration + verifier-discrimination > banking more known-game levels
 
 **Operator 2026-06-19 ("can you find any other training or solve discovery gaps?" → "all three"):** a
