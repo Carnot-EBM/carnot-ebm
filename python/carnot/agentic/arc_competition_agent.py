@@ -28,6 +28,11 @@ from typing import Any, Optional, Sequence
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
+from carnot.agentic.arc_world_model_trust_energy import (
+    HIDDEN_STATE_GAME_IDS,
+    WorldModelCandidate,
+    select_trusted_world_model,
+)
 
 REPO = Path(__file__).resolve().parents[3]
 
@@ -672,6 +677,7 @@ class E3AgentPolicy:
         self.cell = 1
         self.induced = False
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
+        self.world_model_trust_selection = None
 
     def _maybe_route_from_frame(self, latest: Any) -> None:
         if self._route_from_frame_checked or latest is None:
@@ -717,6 +723,35 @@ class E3AgentPolicy:
                 max_tokens=2560,
             )
         return self.proposer
+
+    def _world_model_candidates(self, engine, is_done) -> list[WorldModelCandidate]:
+        candidates = [WorldModelCandidate("loaded_world_model.py", engine, is_done)]
+        provider = getattr(self.proposer, "world_model_candidates", None)
+        if provider is None:
+            provider = getattr(self.proposer, "candidate_engines", None)
+        if not callable(provider):
+            return candidates
+        for i, row in enumerate(provider(self.short)):
+            if isinstance(row, WorldModelCandidate):
+                candidates.append(row)
+            elif isinstance(row, dict):
+                candidates.append(
+                    WorldModelCandidate(
+                        str(row.get("name") or f"candidate_{i}"),
+                        row["engine"],
+                        row.get("is_level_complete"),
+                    )
+                )
+            else:
+                name, candidate_engine, *rest = row
+                candidates.append(
+                    WorldModelCandidate(
+                        str(name),
+                        candidate_engine,
+                        rest[0] if rest else None,
+                    )
+                )
+        return candidates
 
     def next_move(self, frames, latest):
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
@@ -776,9 +811,20 @@ class E3AgentPolicy:
             if not ok or self.root_grid is None:
                 return
             engine, is_done = e3.load_engine(self.short)
-            vr = e3.WorldModelVerifier(self.transitions).score(engine)
-            if vr.accuracy < 0.5:  # too weak to trust for planning
-                return
+            if self.short in HIDDEN_STATE_GAME_IDS:
+                self.world_model_trust_selection = select_trusted_world_model(
+                    self.transitions,
+                    self._world_model_candidates(engine, is_done),
+                    hidden_state=True,
+                )
+                if self.world_model_trust_selection.selected_score.heldout_accuracy < 0.5:
+                    return
+                engine = self.world_model_trust_selection.selected.engine
+                is_done = self.world_model_trust_selection.selected.is_level_complete or is_done
+            else:
+                vr = e3.WorldModelVerifier(self.transitions).score(engine)
+                if vr.accuracy < 0.5:  # too weak to trust for execution-grounded planning
+                    return
             # plan ENTIRELY in the model (zero real actions); execute phase RESETs then
             # replays this plan in the real env, halting on divergence.
             plan = e3.plan_in_model(engine, is_done, self.root_grid)
