@@ -453,6 +453,52 @@ Required field principles:
 - `tests_added_pass`: principle "Tests Must Run and Assert."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4523: Forward-Walk Navigation Cost And Frontier Batch Sweep
+
+Experiment 4523 SHALL write
+`results/experiment_4523_forward_walk_navigation.json` by sweeping the live
+`StepwiseExplorer` over frontier batch sizes `{1,3,8,all}` and the
+navigation-cost frontier tie-break `{false,true}` on the fixed eight-game local
+submission gate. The control SHALL be exactly `k=1` with no navigation-cost
+tie-break and SHALL measure the same canonical total `actions` field as every
+treatment.
+
+The live `StepwiseExplorer` SHALL expose opt-in controls for both levers while
+preserving the submitted default when those controls are left at their control
+values. Frontier ordering SHALL keep depth as the primary priority; navigation
+cost MAY only break ties among equal-depth eligible frontier nodes and SHALL
+score exact forward reachability by `_shortest_path` length before falling back
+to root replay path length. When the explorer has already paid navigation to a
+frontier node, the frontier batch lever MAY queue up to `k` of that node's
+untested salient actions before global frontier selection is allowed to move
+elsewhere; `k=1` SHALL remain byte-for-byte equivalent to the previous single
+probe behavior.
+
+Experiment 4523 SHALL report, for every swept config,
+`median_actions_on_core`, `core_solves_preserved`, `reset_replay_fallbacks`,
+`reset_replay_steps`, and `forward_walk_hit_rate`. The submitted config SHALL
+be wired only if the gate verdict tag is `IMPROVED`, every baseline CORE solve
+in `{lp85,m0r0,sp80,vc33}` is preserved, and the treatment median actions on
+CORE is strictly lower than the `k=1`/no-tie-break control. Otherwise the
+artifact SHALL report an honest null and leave the submitted config unchanged.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: forward_walk_median_actions_on_core_<n>_below_<control> OR complete: forward_walk_no_reduction_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade search, no GGUF/LLM load (1s floor)."
+- `median_actions_on_core_control`: principle "the k=1/no-tie-break baseline measured the SAME way -- the apples-to-apples control (A3 false-win guard)."
+- `median_actions_on_core_best`: principle "the headline -- did amortizing the replay cut TOTAL actions on the CORE games."
+- `core_solves_preserved`: principle "HARD empirical gate on {lp85,m0r0,sp80,vc33} -- under the fixed explore_budget, batch/reorder CAN drop a knife-edge solve (the .417 m0r0 mechanism); a dropped CORE solve FAILS the lever regardless of action savings."
+- `nav_diagnostics_before_after`: principle "reset_replay_fallbacks + reset_replay_steps + forward_walk_hit_rate WITH vs WITHOUT -- the causal mechanism witness (did replay actually drop, or is any action change incidental)."
+- `action_field_used`: principle "names the SINGLE action field both conditions were measured on (total actions on solved) -- the A3 metric-mismatch guard."
+- `config_sweep`: principle "the full {k, tie_break -> (median_actions_on_core, core_solves_preserved, reset_replay_steps)} table so the decision is auditable, not asserted."
+- `chosen_submitted_config`: principle "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); must keep test_arc_submitted_agent_parity.py consistent."
+- `positive_control_passed`: principle "proves the harness can detect a real replay reduction (guards a silently-broken metric)."
+- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -627,3 +673,25 @@ When experiment 4518 measures baseline headroom
 Then it selects the smallest `B*` whose solved set matches the solved set at
 `1.5B`, keeps `8000` only if the measurement is unavailable, and writes the
 terminal artifact with the required field principles.
+
+### SCENARIO-ARC-FCP-4523: Batch And Navigation Tie-Break Are Swept Against CORE
+
+Given a live `StepwiseExplorer` with multiple equal-depth frontier nodes
+When navigation-cost tie-break is enabled
+Then the selected frontier still comes from the shallowest eligible depth, but
+equal-depth ties prefer exact forward walks from the current node before
+shorter RESET replay paths.
+
+Given a selected frontier node with several untested salient actions
+When the explorer navigates to that node with frontier batch size greater than
+one
+Then up to `k` actions from that node are queued before global frontier
+selection moves elsewhere, while `k=1` preserves the prior single-probe
+control behavior.
+
+Given experiment 4523 measures the fixed eight-game gate
+When it compares the sweep against the `k=1`/no-tie-break control
+Then every row uses the same total `actions` field, reports CORE preservation
+and navigation diagnostics, passes the positive-control reduction guard, and
+wires `SUBMITTED_AGENT_CONFIG` only for a strict `IMPROVED` CORE median action
+reduction.
