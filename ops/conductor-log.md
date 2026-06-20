@@ -8930,3 +8930,4 @@ c |
 | 2026-06-20 05:56 UTC | PHASE A7 (ARC NORTH STAR) -- BUILD the variant tra | OK | 86 passed, 1 warning in 6.28s |
 | 2026-06-20 06:54 UTC | PHASE B1 (INFRA; operator MANDATORY -- throughput) | OK | 91 passed, 1 warning in 5.48s |
 | 2026-06-20 07:05 UTC | PHASE B2 (INFRA -- throughput + hygiene) -- Decoup | OK | 84 passed, 1 warning in 6.30s |
+| 2026-06-20 07:16 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY)  | OK | 86 passed, 1 warning in 5.45s |
