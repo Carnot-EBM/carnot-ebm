@@ -10303,3 +10303,77 @@ principle-annotated required fields, one reachability/next-step row per board,
 progress claims.
 
 **Implementation status:** Pending (Exp 4484)
+
+---
+
+### REQ-HW-4519
+
+**Title:** Hardware-task continuity audit MUST record per-board reachability and next forward steps
+
+**Description:**
+Experiment 4519 MUST produce
+`results/experiment_4519_hardware_continuity_audit.json` as an audit-only
+hardware-continuity artifact for KV260, GateMate, and PolarFire. It MUST run
+only the operator-requested reachability preconditions and MUST record one
+reachability plus next-forward-step row per board. The audit MUST NOT claim
+fabric acceleration, speedup, flashing, latency transcript, sampler smoke, or
+ARC solve progress; it records only the precondition result and the next
+concrete step, or `blocked_<board>_unreachable` when the board is not reachable.
+
+The only valid preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; this is the
+  only valid KV260 precondition because the SD-card mechanism is retired.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`; reachability requires a
+  successful command and a colognechip GateMate/GM1Ax/IDCODE-style observation.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; e.g. complete: hardware_continuity_audit_<per-board summary> (a board blocked is an honest non-terminal state, not a task failure).`
+- `inference_substrate`: `hardware_smoke -- SSH/USB reachability, per-board duration floor.`
+- `kv260_reachable`: `SSH-reachability is the ONLY valid KV260 precondition (SD-card mechanism retired).`
+- `gatemate_detected`: `honest USB-detect result -- DirtyJTAG-unreachable is recorded, never fabricated.`
+- `polarfire_reachable`: `SSH reachability of the board.`
+- `preconditions_checked`: `records WHICH boards were probed and how; the audit IS the precondition set.`
+
+**Acceptance criteria:**
+- `results/experiment_4519_hardware_continuity_audit.json` is generated.
+- `inference_substrate` is exactly `hardware_smoke`.
+- Top-level `kv260_reachable`, `gatemate_detected`, and
+  `polarfire_reachable` are bare booleans matching per-board reachability.
+- `preconditions_checked` records exactly the KV260 SSH BatchMode command,
+  GateMate DirtyJTAG detect command, and PolarFire SSH command listed above.
+- `per_board_status` is keyed by `kv260`, `gatemate`, and `polarfire`; each row
+  records `reachable`, `status`, `next_forward_step`, `precondition_resource`,
+  `precondition_command`, and a bounded command transcript.
+- KV260 reachable records the latency transcript / bitstream next step;
+  PolarFire reachable records the sampler smoke next step.
+- Any unreachable board row uses `blocked_<board>_unreachable`.
+- `honest_verdict` starts with one of the terminal prefixes listed in the field
+  principle and remains terminal even when individual board rows are blocked.
+- The artifact includes `random_seed=4519`, `spec_refs`, `field_principles`,
+  `duration_s`, and a stable `reproducibility_checksum`.
+- The artifact contains no host SD-card device-path precondition such as
+  `mmcblk`.
+
+**Implementation status:** Pending (Exp 4519)
+
+---
+
+### SCENARIO-HW-4519
+
+**Scenario:** Exp 4519 audits board reachability without fabricating progress.
+
+**Given:** The hardware-continuity task requires KV260 SSH reachability only,
+GateMate DirtyJTAG detect, and PolarFire SSH reachability.
+**When:** Experiment 4519 runs the three required commands and builds the
+artifact.
+**Then:** It writes `results/experiment_4519_hardware_continuity_audit.json`
+with terminal-prefixed `honest_verdict`, `inference_substrate="hardware_smoke"`,
+principle-annotated required reachability fields, one reachability/next-step row
+per board, `blocked_<board>_unreachable` for unavailable boards, and no
+unsupported hardware progress claims.
+
+**Implementation status:** Pending (Exp 4519)
