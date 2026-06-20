@@ -127,6 +127,40 @@ precondition smoke checks for `arc_solver_kit.offline_arcade()` and Torch, and
 reference the submitted-agent parity test so the reported generic solve-rate
 cannot silently drift away from what ships.
 
+### REQ-ARC-FCP-4501: Frame-Only Predictor Rerun From Staged Replay Shards
+
+Experiment 4501 SHALL write
+`results/experiment_4501_frame_change_predictor_rerun.json` from the locally
+staged ARC Public Demo human replay corpus. The rerun SHALL consume only
+raw-frame shard fields (`frame`, normalized `action_id`, optional click
+coordinates, `frame_delta`, and `level_progress`) and SHALL NOT consume mirror
+`feature_keys`, opaque state vectors, bundled third-party weights, or
+`env._game` internals.
+
+The rerun SHALL train or smoke-train the repository's small torch CNN action
+effect model and emit a behavior-cloning action prior that can be passed to
+`rich_action_candidates`. It SHALL record how many local examples were actually
+loaded versus the 14,672-example `action_effect_dict.npz` target. If the exact
+14,672-example NPZ corpus is absent but staged frame-only shards are available,
+the artifact SHALL keep the run complete but mark the corpus shortfall and use
+the FALSE_NEGATIVE_RISK null guard instead of fabricating a headline efficiency
+win.
+
+Required field principles:
+
+- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
+- `inference_substrate`: explicit verifier_ensemble_against_cached_candidates declaration so adversarial_verify applies the cached-candidate duration floor.
+- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
+- `expected_action_effect_examples`: the external action-effect corpus target count, fixed at 14,672 for this rerun.
+- `corpus_examples_loaded`: the exact number of frame-only shard examples loaded locally for this run.
+- `feature_source`: proves features were recomputed from raw frames, not mirror feature vectors.
+- `behavior_prior_emitted`: bare bool showing the behavior-cloning prior was built and can rank candidates.
+- `heldout_median_actions_before`: baseline median actions-to-first-level-up on held-out frame-only evaluation.
+- `heldout_median_actions_after`: predictor/prior-ranked median actions-to-first-level-up on the same held-out frame-only evaluation.
+- `implied_efficiency_delta`: score-relevant delta in min(human/agent,1)^2 efficiency.
+- `solve_rate_dropped`: guardrail bool; efficiency wins must not come from reducing solve rate.
+- `false_negative_risk_guard`: records whether the null is interpretable because the positive control passed.
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -173,3 +207,16 @@ Then the row reports the exact submitted-default held-out generic solve-rate and
 variant-transfer rate as headline metrics, preserves source provenance for both
 measurements, keeps `reproducible_total_levels` in a context-only field, and
 records that `test_arc_submitted_agent_parity.py` is the focused parity gate.
+
+### SCENARIO-ARC-FCP-4501: Staged Frame-Only Rerun Has Interpretable Null Guard
+
+Given locally staged replay shards but no bundled 14,672-example
+`action_effect_dict.npz`
+When experiment 4501 trains or smoke-trains the frame-only predictor and writes
+its terminal artifact
+Then the artifact is valid JSON with terminal-prefixed `honest_verdict`,
+records the staged corpus count and the missing NPZ target, emits a behavior
+prior, keeps `solve_rate_dropped=false`, reports before/after held-out action
+metrics from the same candidate-order harness, and marks
+`false_negative_risk_guard=positive_control_passed_null_interpretable` when the
+positive control detects a known ranking win.

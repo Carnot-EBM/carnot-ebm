@@ -1,0 +1,171 @@
+{
+  "behavior_prior_emitted": true,
+  "behavior_prior_summary": {
+    "click_cell_count": 193,
+    "marginal_action_counts": {
+      "0": 36.0,
+      "1": 1548.0,
+      "2": 1462.0,
+      "3": 2176.0,
+      "4": 2445.0,
+      "6": 294.0,
+      "7": 19.0
+    },
+    "state_action_count": 6597,
+    "state_click_count": 166
+  },
+  "corpus_examples_loaded": 10000,
+  "corpus_manifest": {
+    "example_count": 10000,
+    "schema": "carnot.arc_human_replay.frame_action_delta.v1",
+    "shard_count": 3,
+    "shards": [
+      {
+        "path": "shards/train-00000.jsonl",
+        "rows": 4096,
+        "sha256": "ab201b50cef5494eedc6f202cd90b228fce50c94baa579fc62ab22c6c4bf2aa5"
+      },
+      {
+        "path": "shards/train-00001.jsonl",
+        "rows": 4096,
+        "sha256": "abd0e7eb24cd393e360b60bc59931d0643a117cad1a2af97cecc8717cbb2bfd0"
+      },
+      {
+        "path": "shards/train-00002.jsonl",
+        "rows": 1808,
+        "sha256": "7633510cc37396ae0e3f7ffdcafc0d48cb888df8ab1bc9c9fe04f01004c2fef3"
+      }
+    ],
+    "source_metadata": {
+      "dataset_sha": "455b7c58eaa9d5ea05f91cd1b5b603121599e758",
+      "downloaded_files": [
+        {
+          "oid": "db22be9f20126373f3f5e654214e6c93f14e8610",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00000.parquet",
+          "size_bytes": 110727680,
+          "source_path": "data/train-00000.parquet"
+        },
+        {
+          "oid": "7c3c57a81cc3f24fe963885635be403bfdd78108",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00001.parquet",
+          "size_bytes": 76502640,
+          "source_path": "data/train-00001.parquet"
+        },
+        {
+          "oid": "db8fcbf71aed97dc02a19b19099db5d017b07884",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00002.parquet",
+          "size_bytes": 14062017,
+          "source_path": "data/train-00002.parquet"
+        },
+        {
+          "oid": "78dfd92c1e6bbe510b884819b8a3b502662b874c",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00003.parquet",
+          "size_bytes": 95153406,
+          "source_path": "data/train-00003.parquet"
+        },
+        {
+          "oid": "96741d08fe25c6fcb525f0d77fb7ef30baa4e4a8",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00004.parquet",
+          "size_bytes": 64456353,
+          "source_path": "data/train-00004.parquet"
+        },
+        {
+          "oid": "4ede8d2ad2bf2787db97aa51f4f572cd7fd2effb",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00005.parquet",
+          "size_bytes": 39275328,
+          "source_path": "data/train-00005.parquet"
+        },
+        {
+          "oid": "f28728e58060dbfc544f241a3f8a4b4edef749b3",
+          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00006.parquet",
+          "size_bytes": 74592860,
+          "source_path": "data/train-00006.parquet"
+        }
+      ],
+      "license_name": "not CC0/MIT-0 verified; staged with attribution and no weights",
+      "license_status": "mirror_attribution_required",
+      "mirror_url": "https://huggingface.co/datasets/magic-sword/arc_agi_3_public_demo_human_testing",
+      "official_license_verified": false,
+      "source_kind": "hf_mirror"
+    }
+  },
+  "duration_s": 16.648489519022405,
+  "expected_action_effect_examples": 14672,
+  "false_negative_risk_guard": "positive_control_passed_null_interpretable",
+  "feature_source": "raw_frame_shard_recomputed",
+  "field_principles": {
+    "behavior_prior_emitted": "bare bool showing the behavior-cloning prior was built and can rank candidates.",
+    "corpus_examples_loaded": "the exact number of frame-only shard examples loaded locally for this run.",
+    "expected_action_effect_examples": "the external action-effect corpus target count, fixed at 14,672 for this rerun.",
+    "false_negative_risk_guard": "records whether the null is interpretable because the positive control passed.",
+    "feature_source": "proves features were recomputed from raw frames, not mirror feature vectors.",
+    "heldout_median_actions_after": "predictor/prior-ranked median actions-to-first-level-up on the same held-out frame-only evaluation.",
+    "heldout_median_actions_before": "baseline median actions-to-first-level-up on held-out frame-only evaluation.",
+    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
+    "implied_efficiency_delta": "score-relevant delta in min(human/agent,1)^2 efficiency.",
+    "inference_substrate": "explicit verifier_ensemble_against_cached_candidates declaration so adversarial_verify applies the cached-candidate duration floor.",
+    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication.",
+    "solve_rate_dropped": "guardrail bool; efficiency wins must not come from reducing solve rate."
+  },
+  "heldout_group_count": 176,
+  "heldout_measurement_kind": "frame_only_replay_candidate_order_proxy",
+  "heldout_median_actions_after": 1.0,
+  "heldout_median_actions_before": 1.0,
+  "honest_verdict": "complete: frame_change_predictor_rerun_staged_corpus_shortfall_null_guard",
+  "implied_efficiency_delta": 0.0,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "positive_control": {
+    "actions_reduced": true,
+    "baseline_actions_to_first_levelup": 3,
+    "baseline_efficiency": 0.1111111111111111,
+    "implied_efficiency_delta": 0.8888888888888888,
+    "ranked_actions_to_first_levelup": 1,
+    "ranked_efficiency": 1.0
+  },
+  "preconditions_checked": {
+    "action_effect_npz_present": false,
+    "agents_md_read": true,
+    "cached_raw_parquet_present": true,
+    "codex_md_read": true,
+    "env_game_access_blocked": true,
+    "expected_action_effect_examples": 14672,
+    "official_license_verified_for_bundled_weights": false,
+    "offline_arcade_import": true,
+    "ok": true,
+    "torch_import": true,
+    "torch_version": "2.11.0+cu128",
+    "training_manifest_examples": 10000,
+    "training_shard_count": 3,
+    "training_shards_present": true
+  },
+  "requirements": [
+    "REQ-ARC-FCP-4490",
+    "REQ-ARC-FCP-4491",
+    "REQ-ARC-FCP-4492",
+    "REQ-ARC-FCP-4501"
+  ],
+  "rich_action_candidates_wired": true,
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4490",
+    "SCENARIO-ARC-FCP-4501"
+  ],
+  "small_cnn_trained": true,
+  "solve_rate_after": 1.0,
+  "solve_rate_before": 1.0,
+  "solve_rate_dropped": false,
+  "training_summary": {
+    "batch_size": 32,
+    "batches_trained": 248,
+    "epochs": 1,
+    "examples_seen": 7980,
+    "examples_used": 7925,
+    "final_loss": 0.27963333285879344,
+    "frame_size": 64,
+    "hidden_channels": 12,
+    "initial_loss": 0.6862733438611031,
+    "learning_rate": 0.01,
+    "num_colors": 16
+  },
+  "weights_bundled": false,
+  "weights_bundling_policy": "No replay-derived weights are bundled without official CC0/MIT-0-compatible license verification."
+}
