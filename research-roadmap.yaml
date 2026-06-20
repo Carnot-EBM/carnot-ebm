@@ -174,58 +174,67 @@ tasks:
 
   - id: exp4524-a2
     milestone: 2026.06.418
-    title: 'PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- STOP-after-target-levelup: the explorer runs to
-      ~7760 even after reaching levelups. If the run can stop once target_levels is reached, total actions
-      collapse. Measure actions-to-target-levelup vs total-run. Gate: CORE actions down, solve-rate preserved.'
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- REACH DEEPER LEVELS (the
+      REAL per-level score lever). The agent solves only 1 of 8 levels on lp85; the leaderboard scores
+      per-level min((human/agent)^2*100,115) index-weighted, so the score lever is solving MORE/DEEPER
+      levels, NOT trimming actions. Diagnose + attack the L1->L2 barrier on a CORE game. Gate: a CORE game
+      reaches L2 (core_efficiency up) OR a measured, actionable diagnosis of the barrier.'
     priority: high
     track: arc-north-star
     max_turns: 130
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4524_stop_after_levelup.json
+    deliverable: results/experiment_4524_reach_deeper_levels.json
     prompt: |
-      CONTEXT ({date}, ARC sprint SCORE-LEVER). .417 A3 forensics revealed actions_to_first_levelup
-      (lp85=20, near the offline-BFS optimum of 21) is FAR below the total run length (7792): the explorer
-      keeps exploring long after reaching levelups. is_done (~line 752) stops when best_level >= start_level
-      + target_levels OR explored_out. If the agent over-runs past the target, total actions (the scored
-      metric) are inflated. This task measures whether the explorer can STOP earlier WITHOUT losing levels.
+      CONTEXT ({date}, ARC sprint HEADLINE -- the REAL score lever). The submission gate now measures the
+      AUTHORITATIVE per-level metric (arc_agi.scorecard: per-level min((human/agent)^2*100,115), aggregated
+      as an INDEX-WEIGHTED MEAN over ALL the game's levels -- unsolved levels score 0 and DRAG IT DOWN, and
+      deeper levels carry MORE weight). lp85 has 8 levels (human baselines 17,38,31,16,41,60,26,159) but the
+      agent solves only L0->L1 and scores ~2.0 of a possible ~100. So the score lever is NOT trimming
+      actions (every .417/.418 action-lever nulled, and per the per-level metric the over-run does not even
+      hurt the score) -- it is REACHING DEEPER LEVELS. This task diagnoses and attacks the L1->L2 barrier on
+      a CORE game. Trimming actions / stopping early is RETIRED as a score lever (it is at most a wall-clock
+      tool; SUBMITTED_EARLY_STOP_GRACE is shipped OFF for that).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (is_done ~752, target_levels, best_level, next_move)
-        - {project_root}/scripts/kaggle/arc_local_submission_gate.py (CORE-containment gate, baseline 7760)
-        - {project_root}/results/experiment_4513_adaptive_per_step_budget.json (the A3 corrigendum: actions_to_first_levelup << total run)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (StepwiseExplorer: next_move, _frontier, max_depth=45, explored_out; the E3 cascade tier-3 world-model induction; ObjectDeltaModel)
+        - {project_root}/python/carnot/agentic/arc_world_model_dsl.py + arc_world_model_trust_energy.py (the induced transition/win model + trust energy -- the Family-B lever)
+        - {project_root}/scripts/arc_leaderboard_eval.py (the eval now drives the REAL scorer; eff= is per-level, core baseline core_efficiency=2.0074)
+        - {project_root}/scripts/kaggle/arc_local_submission_gate.py (per-level efficiency is the PRIMARY metric now, NOT median actions)
 
-      TASK: characterize the gap between actions-to-reach-target-levels and total-run actions on the 8-game
-      gate; if the explorer over-runs, make is_done / the run loop stop once the SCORED target is reached
-      (preserving every CORE solve). Honest null if stopping earlier drops a CORE solve.
+      TASK: pick a CORE game with known deeper levels (lp85 = 8 levels is the canonical target). (1) DIAGNOSE
+      why the explorer stalls at L1: instrument the explored_out reason -- is L2 beyond max_depth(45)? is the
+      L2 mechanic absent from the salience candidates? does the L2 win-condition differ from L1 (a new
+      mechanic the world-model never induced)? (2) ATTACK it with the available levers: deeper/targeted
+      search past the current frontier, the world-model DSL induction (induce the L2 transition + route the
+      search toward it -- the Family-B approach), and the energy verifier as a next-level distance signal.
+      (3) MEASURE on the per-level gate: does ANY CORE game now reach L2 (core_efficiency > 2.0074)?
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Per CORE game, log actions-to-reach-each-level vs total-run actions. Quantify the over-run.
-        2. If a stop-at-target policy cuts total actions while preserving every CORE solve AND every game's banked LEVEL DEPTH -> apply it. CRITICAL: ARC games are multi-level and the competition scores total solved LEVELS; the CORE-containment gate checks the game SET only, NOT levels-per-game, so stopping early could cut actions, keep the CORE set, and silently SHED deeper levels while the gate PASSES. Guard against this explicitly (levels_per_game_preserved below). The target must match the competition's scored objective (all reachable levels), not just first-levelup.
-        3. Measure on the gate with CORE-containment; report BOTH conditions on the SAME action field (A3 metric-mismatch guard). Record per-game best_level before vs after.
-        4. Honest null + FALSE_NEGATIVE_RISK control if stopping earlier loses a CORE solve or no over-run exists.
+        1. On lp85 (and 1-2 other CORE games), run the explorer to explored_out and INSTRUMENT the L1->L2 barrier: best_level reached, why it stopped (explored_out vs depth-cap vs budget), the candidate/frontier state at the last L1 node, whether the L2 win-condition is a new mechanic. Emit a concrete barrier_diagnosis.
+        2. ATTACK: try (a) raising/targeting depth past the L1 plateau, (b) world-model DSL induction of the L2 transition + verifier-routed search toward predicted-L2 states, (c) the energy verifier as a next-level-distance heuristic in _frontier. Each lever is measured, not assumed.
+        3. MEASURE on the per-level gate (scripts/kaggle/arc_local_submission_gate.py / arc_leaderboard_eval.py): report core_efficiency WITH vs WITHOUT each lever. A WIN = a CORE game reaches L2 (its per-level score rises) AND no CORE game loses a level. Offline-reproduce any new level via arc_solver_kit.reproduce.
+        4. HONEST NULL is acceptable IF it ships a CONCRETE, ACTIONABLE barrier_diagnosis (what specifically blocks L2 and what to build next) -- a measured diagnosis of the real bottleneck is the deliverable when L2 is not reached. Do NOT chase action-count reductions (retired lever).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: stop_after_levelup_core_actions_<n>_below_control OR complete: no_overrun_or_drops_solve_honest_null."
+          principle: "terminal prefix; success: <game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: l1_l2_barrier_diagnosed_<root_cause>_honest_null."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
-        core_solves_preserved:
-          principle: "stopping earlier MUST NOT drop a CORE solve (set-containment over {{lp85,m0r0,sp80,vc33}})."
-        levels_per_game_preserved:
-          principle: "HARD gate: per-game best_level before vs after -- stopping early MUST NOT shed any game's banked level depth (the CORE gate checks the game set only; the competition scores total LEVELS, so a level-depth regression that the gate would PASS must be caught here)."
-        median_actions_on_core_control:
-          principle: "the run-to-completion baseline, same action field."
-        median_actions_on_core_best:
-          principle: "the headline -- did stopping at the scored target cut total actions."
-        action_field_used:
-          principle: "single action field both conditions measured on (A3 metric-mismatch guard)."
-        positive_control_passed:
-          principle: "proves the harness detects a real reduction."
-        false_negative_risk_checked:
-          principle: "a null is valid only with the control present."
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade search + world-model/verifier routing (no headline GGUF load); if the LLM induction tier is invoked, declare live_llm_inference + add the model precondition."
+        core_efficiency_baseline:
+          principle: "2.0074 -- the REAL per-level metric control (NOT median actions, which is retired as a score lever)."
+        core_efficiency_best:
+          principle: "the HEADLINE -- did any lever raise per-level efficiency by reaching a deeper level."
+        deepest_level_reached_per_core_game:
+          principle: "best_level per CORE game WITH each lever -- the direct evidence of solving MORE levels (the score lever)."
+        barrier_diagnosis:
+          principle: "the concrete, actionable root cause of the L1->L2 stall (depth-cap / missing mechanic / new win-condition / induction-not-engaged) -- the deliverable when L2 is not reached, and the input to the next milestone."
+        levers_tried:
+          principle: "each L1->L2 lever (deeper search / world-model induction / verifier routing) with its measured effect -- no assumed wins."
+        offline_reproduced:
+          principle: "any new level reached must offline-reproduce (arc_solver_kit.reproduce) to count -- not a one-off live fluke."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -233,7 +242,7 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4524_stop_after_levelup.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4524_reach_deeper_levels.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp4525-a3
@@ -293,9 +302,10 @@ tasks:
 
   - id: exp4526-a4
     milestone: 2026.06.418
-    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- compose the
-      nav fix (A1) + stop-after-levelup (A2) into the SUBMITTED agent, re-measure the 8-game gate
-      end-to-end on the CORE-containment metric. If NONE pass, keep the bare explorer + honest null.'
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whatever
+      raised PER-LEVEL EFFICIENCY (A2 deeper-levels) into the SUBMITTED agent; re-measure end-to-end on
+      core_efficiency (the REAL metric, baseline 2.0074), NOT median actions. If NONE raise it, keep the
+      bare explorer + honest null.'
     priority: critical
     track: arc-north-star
     max_turns: 130
@@ -305,9 +315,11 @@ tasks:
     deliverable: results/experiment_4526_integration_8game_gate.json
     prompt: |
       CONTEXT ({date}, operator MANDATORY, ARC sprint INTEGRATION). The score moves only when a lever is
-      wired into the SUBMITTED agent and the 8-game gate CORE median actions actually drops. Compose
-      whichever of A1 (forward-walk nav) and A2 (stop-after-levelup) passed their CORE-containment gate;
-      re-measure end-to-end on the SUBMITTED config. If none passed, keep the bare explorer + honest null.
+      wired into the SUBMITTED agent and core_efficiency (the REAL per-level metric -- arc_agi.scorecard,
+      baseline 2.0074) actually RISES, i.e. the agent solves MORE/DEEPER levels. Median actions is RETIRED
+      as a score lever (every action-trimming lever nulled; A1 forward-walk nulled too). Wire whatever A2
+      (reach-deeper-levels) showed raised core_efficiency; re-measure end-to-end. If none raised it, keep
+      the bare explorer + honest null. Do NOT wire an action-trimming lever (it does not move the score).
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/results/experiment_4523_forward_walk_navigation.json (A1 delta + chosen config)
@@ -316,25 +328,27 @@ tasks:
         - {project_root}/scripts/kaggle/arc_local_submission_gate.py (CORE-containment gate, baseline 7760)
         - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green after wiring)
 
-      TASK: wire the CORE-containment-passing levers into SUBMITTED_AGENT_CONFIG, re-measure the gate
-      end-to-end on the CANONICAL action field, keep parity green. Honest null if nothing passes.
+      TASK: wire whatever A2 (reach-deeper-levels) showed RAISED core_efficiency (solved a deeper level)
+      into SUBMITTED_AGENT_CONFIG, re-measure end-to-end on the per-level metric, keep parity green. Honest
+      null if nothing raised core_efficiency. Do NOT wire an action-trimming lever (retired -- it does not
+      move the per-level score).
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Read A1/A2 artifacts; select ONLY levers with core_solves_preserved=True AND median_actions_on_core STRICTLY < their control (the gate's "non-inferior" PASS allows up to 10% WORSE -- that is NOT a win; require the IMPROVED tag). CHECK ADDITIVITY: batch-expand (A1) front-loads exploration while stop-after-levelup (A2) truncates it, so composed they may interact destructively -- report integrated CORE median vs the naive sum of the isolated A1+A2 deltas.
+        1. Read the A2 artifact; select ONLY a lever that RAISED core_efficiency (a CORE game reached a deeper level) with no CORE game losing a level. Per-level efficiency (arc_agi.scorecard, baseline 2.0074) is the metric -- NOT median actions.
         2. Wire winners into SUBMITTED_AGENT_CONFIG; update test_arc_submitted_agent_parity.py consistently. Do NOT aggregate any artifact carrying flagged_adversarial: true.
-        3. Re-measure median_actions_on_core end-to-end on the 8-game gate (the HEADLINE) + solve-rate + held-out solve-rate + nav diagnostics, all on the canonical action field.
-        4. If the integrated config beats the baseline AND a leaderboard resubmission is warranted, leave SUBMITTED ready -- but DO NOT submit (operator-only). If nothing passes, keep bare explorer + honest null.
+        3. Re-measure core_efficiency end-to-end on the 8-game gate (the HEADLINE) + per-game deepest level reached + held-out, via the per-level gate (scripts/kaggle/arc_local_submission_gate.py --check).
+        4. If the integrated config RAISES core_efficiency above 2.0074 AND a leaderboard resubmission is warranted, leave SUBMITTED ready -- but DO NOT submit (operator-only). If nothing raised it, keep bare explorer + honest null.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: integrated_median_actions_on_core_<n>_below_7760 OR complete: no_lever_passes_honest_null."
+          principle: "terminal prefix; success: integrated_core_efficiency_<n>_above_2.0074 OR complete: no_lever_raises_core_efficiency_honest_null."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load (1s floor)."
-        median_actions_on_core_baseline:
-          principle: "the 7760 control, same action field."
-        median_actions_on_core_integrated:
-          principle: "the HEADLINE -- the SUBMITTED-config CORE median after wiring the winners."
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked)."
+        core_efficiency_baseline:
+          principle: "2.0074 -- the REAL per-level metric control (NOT median actions, retired as a score lever)."
+        core_efficiency_integrated:
+          principle: "the HEADLINE -- the SUBMITTED-config per-level efficiency after wiring the winners (did it solve MORE levels)."
         core_solves_preserved:
           principle: "integration must preserve every CORE solve (set-containment)."
         levers_integrated:
@@ -361,9 +375,10 @@ tasks:
 
   - id: exp4527-b1
     milestone: 2026.06.418
-    title: 'PHASE B1 (RESERVED INFRA) -- promote nav diagnostics to a FIRST-CLASS gate metric: the
-      submission gate tracks reset_replay_steps / forward_walk_hit_rate per game alongside actions, so a
-      nav regression is caught mechanically (not just total actions). CI-guarded.'
+    title: 'PHASE B1 (RESERVED INFRA) -- harden the PER-LEVEL EFFICIENCY gate (the real metric, shipped
+      2026-06-20): track deepest-level-reached + per-level-efficiency PER GAME as first-class, CI-guard it,
+      and wire validate_canonical_baseline into --update-baseline (re-review caveat: an lp85 efficiency
+      floor on persist, so a deflated baseline cannot disarm the per-game guard).'
     priority: high
     track: infra
     max_turns: 100
@@ -372,9 +387,14 @@ tasks:
     inference_substrate: verifier_ensemble_against_cached_candidates
     deliverable: results/experiment_4527_nav_metric_harness.json
     prompt: |
-      CONTEXT ({date}, RESERVED INFRA). The nav tax (reset_replay_steps) is the dominant action cost but
-      the gate only tracks total actions. Promote the nav diagnostics (_navigation_diagnostics) to a
-      first-class, per-game gate metric so a nav regression is visible and CI-guarded.
+      CONTEXT ({date}, RESERVED INFRA). The submission gate now judges configs on the AUTHORITATIVE
+      per-level efficiency metric (arc_agi.scorecard; shipped + adversarially re-reviewed 2026-06-20,
+      baseline core_efficiency=2.0074). Harden it: (1) track deepest-level-reached + per-level-efficiency
+      PER GAME as first-class CI-guarded fields (the real score lever is solving MORE/DEEPER levels);
+      (2) fix the one MINOR re-review caveat -- `--update-baseline` persists WITHOUT validation, so a
+      deflated baseline could later disarm the SF-3 per-game guard: wire validate_canonical_baseline into
+      the --update-baseline path + assert an lp85 per-level-efficiency floor on persist. Nav diagnostics
+      stay as a wall-clock SECONDARY signal, not the score metric.
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/scripts/kaggle/arc_local_submission_gate.py (the gate)
@@ -530,9 +550,9 @@ tasks:
 
   - id: exp4531-e
     milestone: 2026.06.418
-    title: 'PHASE E (CAPSTONE .418) -- the NAVIGATION-EFFICIENCY scorecard: did the forward-walk nav fix
-      (A1) + stop-after-levelup (A2) cut CORE median actions below 7760 at preserved solve-rate, and did
-      reproducible_total_levels grow (A3)? Skip any flagged_adversarial artifact.'
+    title: 'PHASE E (CAPSTONE .418) -- the PER-LEVEL EFFICIENCY scorecard: did any lever RAISE
+      core_efficiency above 2.0074 (solve a deeper level -- the REAL metric), what is the L1->L2 barrier
+      diagnosis (A2), and did reproducible_total_levels grow (A3)? Skip any flagged_adversarial artifact.'
     priority: high
     track: capstone
     max_turns: 110
@@ -541,17 +561,18 @@ tasks:
     inference_substrate: aggregation_from_upstream_artifacts
     deliverable: results/experiment_4531_capstone_v418.json
     prompt: |
-      CONTEXT ({date}, CAPSTONE .418). Aggregate the milestone honestly. HEADLINE QUESTION: did action
-      efficiency finally move? (CORE median actions below 7760 at preserved solve-rate via the nav fix.)
-      Plus: did reproducible_total_levels grow (A3 level-up)?
+      CONTEXT ({date}, CAPSTONE .418). Aggregate the milestone honestly. HEADLINE QUESTION: did the agent
+      solve MORE/DEEPER levels -- did core_efficiency (the REAL per-level metric, arc_agi.scorecard,
+      baseline 2.0074) RISE? Median actions is RETIRED as a score lever (A1 forward-walk nulled; per the
+      per-level metric, action-trimming does not move the score). Report the A2 L1->L2 barrier diagnosis
+      (what blocks deeper levels + what to build next) and whether reproducible_total_levels grew (A3).
 
-      MANDATORY: skip ANY artifact carrying flagged_adversarial: true (do NOT aggregate its numbers).
-      Measure all action numbers on the CANONICAL action field (the A3 false-win lesson). A FAILED
-      acceptance gate overrides a celebratory verdict.
+      MANDATORY: skip ANY artifact carrying flagged_adversarial: true (do NOT aggregate its numbers). A
+      FAILED acceptance gate overrides a celebratory verdict.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4523_forward_walk_navigation.json (A1)
-        - {project_root}/results/experiment_4524_stop_after_levelup.json (A2)
+        - {project_root}/results/experiment_4523_forward_walk_navigation.json (A1 -- nav fix, nulled)
+        - {project_root}/results/experiment_4524_reach_deeper_levels.json (A2 -- the L1->L2 barrier + any deeper level)
         - {project_root}/results/experiment_4525_levelup_attempt.json (A3)
         - {project_root}/results/experiment_4526_integration_8game_gate.json (A4 integration HEADLINE)
         - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels)
