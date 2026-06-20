@@ -51,7 +51,15 @@ CLAIMED = {
     "sk48": 1,
 }
 MAX_ACTIONS = 200
-SUBMITTED_VALUE_WEIGHT = 5.0
+# value_weight=0.0 (reverted from 5.0, 2026-06-20): the v3 cross-game value head (LOO-AUROC 0.674,
+# loaded by load_cross_game_value_head) IS wired and used as a frontier TIEBREAKER. But weight>0 makes
+# the search pay the (now richer/more-expensive v3) value eval on EVERY node -> measured REGRESSION:
+# value_weight=5 was slower than bare BFS and solved fewer games in bounded time (the 25-game sim timed
+# out 20/25; A1's own benchmark delta=0.0; bridge w5 regressed 8->6). The head's offline LOO of 0.674 is
+# NOT yet shown to help LIVE routing enough to justify the per-node cost. .416 re-measures the submitted-
+# default solve-rate with the v3 head at weight>0 (+ a possible lazy/cheap eval); raise value_weight ONLY
+# if it beats bare-BFS on solve-rate AND finishes in budget. Until then: v3 head loaded, weight 0 (cheap).
+SUBMITTED_VALUE_WEIGHT = 0.0
 SUBMITTED_TARGET_LEVELS = 5
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
