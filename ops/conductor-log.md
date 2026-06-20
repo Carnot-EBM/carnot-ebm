@@ -8935,3 +8935,4 @@ c |
 | 2026-06-20 08:21 UTC | PHASE E (CAPSTONE .414) -- Capstone v414: integrat | OK | 87 passed, 1 warning in 7.49s |
 | 2026-06-20 08:23 UTC | Milestone 2026.06.415 activated | OK | 10 tasks queued |
 | 2026-06-20 08:40 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 113 passed, 1 warning in 10.61s |
+| 2026-06-20 08:56 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; SCOR | OK | 109 passed, 1 warning in 6.29s |
