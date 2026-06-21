@@ -11,6 +11,9 @@ SCENARIO-LIVESUBMIT-2: when a game in the package has NO replayable banked traje
                        dropped (not silently claimed with zero actions).
 SCENARIO-LIVESUBMIT-3: with no package available, the driver falls back to the preserved
                        2026-06-17 hardcoded set (never an empty replay set).
+SCENARIO-LIVESUBMIT-4: a game whose package depth exceeds its flat-replay-reachable depth (deeper
+                       levels reproduced but not flat-banked) is CAPPED to the offline-reached
+                       level, so the driver never over-claims at submit time.
 """
 import importlib.util
 from pathlib import Path
@@ -44,9 +47,12 @@ def test_scenario_livesubmit_1_sources_from_package(monkeypatch) -> None:
         {"game": "lp85", "env_matched": True, "levels": 5},
         {"game": "tn36", "env_matched": True, "levels": 7},
     ]})
-    claimed, source = drv._build_claimed(_FakeMH({"lp85", "tn36"}))
+    # offline aggregate confirms both reach their package depth -> no cap
+    monkeypatch.setattr(drv, "_offline_reached", lambda: {"lp85": 5, "tn36": 7})
+    claimed, info = drv._build_claimed(_FakeMH({"lp85", "tn36"}))
     assert claimed == {"lp85": 5, "tn36": 7}
-    assert source == "package:pkg.json"
+    assert info["source"] == "package:pkg.json"
+    assert info["capped"] == []
 
 
 def test_scenario_livesubmit_2_drops_unmatched_and_unloadable(monkeypatch) -> None:
@@ -57,7 +63,8 @@ def test_scenario_livesubmit_2_drops_unmatched_and_unloadable(monkeypatch) -> No
         {"game": "vc33", "env_matched": True, "levels": 1},   # dropped: no banked trajectory
         {"game": "zz99", "env_matched": False, "levels": 9},  # dropped: not env-matched
     ]})
-    claimed, source = drv._build_claimed(_FakeMH({"lp85"}))  # only lp85 loadable
+    monkeypatch.setattr(drv, "_offline_reached", lambda: {"lp85": 5})
+    claimed, info = drv._build_claimed(_FakeMH({"lp85"}))  # only lp85 loadable
     assert claimed == {"lp85": 5}
     assert "vc33" not in claimed and "zz99" not in claimed
 
@@ -66,7 +73,22 @@ def test_scenario_livesubmit_3_fallback_when_no_package(monkeypatch) -> None:
     """SCENARIO-LIVESUBMIT-3: absent package -> preserved 2026-06-17 hardcoded set, never empty."""
     drv = _load_driver()
     monkeypatch.setattr(drv, "_latest_package", lambda: None)
-    claimed, source = drv._build_claimed(_FakeMH(set()))
+    claimed, info = drv._build_claimed(_FakeMH(set()))
     assert claimed == drv.CLAIMED_FALLBACK
     assert sum(claimed.values()) == 13  # the 13 levels of the first submission
-    assert source == "hardcoded_fallback_2026_06_17"
+    assert info["source"] == "hardcoded_fallback_2026_06_17"
+
+
+def test_scenario_livesubmit_4_caps_to_flat_replay_depth(monkeypatch) -> None:
+    """SCENARIO-LIVESUBMIT-4: package depth > flat-banked depth -> claim is capped, never over-claims."""
+    drv = _load_driver()
+    monkeypatch.setattr(drv, "_latest_package", lambda: {"path": "pkg.json", "manifest": [
+        {"game": "sc25", "env_matched": True, "levels": 5},   # reproduced L5...
+        {"game": "tn36", "env_matched": True, "levels": 7},   # ...but flat-banked only to L7 (match)
+    ]})
+    # flat replay reaches sc25=1 (deeper not flat-banked), tn36=7 (full)
+    monkeypatch.setattr(drv, "_offline_reached", lambda: {"sc25": 1, "tn36": 7})
+    claimed, info = drv._build_claimed(_FakeMH({"sc25", "tn36"}))
+    assert claimed == {"sc25": 1, "tn36": 7}  # sc25 capped 5 -> 1
+    assert info["uncapped_package_total"] == 12 and info["capped_total"] == 8
+    assert info["capped"] == [{"game": "sc25", "package_levels": 5, "offline_reached": 1}]
