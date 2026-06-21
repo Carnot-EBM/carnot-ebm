@@ -2464,5 +2464,28 @@
         "variant_signature": "wa30~color01"
       }
     ]
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "generic_transfer_baseline_reference=0.04 and generic_transfer_rate_baseline=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "generic_transfer_baseline_reference=0.04 and generic_transfer_rate_with_verifier=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "generic_transfer_rate_baseline=0.04 and generic_transfer_rate_with_verifier=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "generic_transfer_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
