@@ -1,16 +1,29 @@
-"""LIVE ARC-AGI-3 multi-game run: replay our 11 OFFLINE-reproduced game solutions
-(13 levels) against the LIVE scored env under ONE scorecard. Mode-1 pure action
-replay (env-match confirmed for r11l; this validates the other 10 live).
+"""LIVE ARC-AGI-3 multi-game run: replay our OFFLINE-reproduced game solutions against
+the LIVE scored env under ONE scorecard. Mode-1 pure action replay (no re-solving, no
+verifier needed at submit-time).
 
-TWO-PHASE per the operator's choice (2026-06-17 "validate all 11 live, then submit"):
-  DEFAULT (no --submit): VALIDATE — open a scorecard, play all 11 live, read the level
-    each reaches, and DO NOT close it (an unclosed scorecard is NOT submitted; no
-    leaderboard record). Reports which games env-match live.
-  --submit: SUBMIT — same play-through, then CLOSE the scorecard (records the score on
-    the leaderboard). Operator-gated, irreversible. External Publication is operator-only.
+The replay set is sourced DYNAMICALLY from the latest validated submission package
+(`results/experiment_*submission_package*.json`, the conductor-prepared + env-match-validated
+manifest), intersected with the games the metaharness banked-trajectory loader can actually
+replay. This keeps the live-submit driver from going stale as `reproducible_total_levels`
+grows: when the conductor reproduces a new game / deeper level and refreshes the package, the
+driver picks it up automatically. The prior hardcoded 11-game/13-level set (the 2026-06-17
+FIRST submission) is preserved as CLAIMED_FALLBACK and used only if no package is found.
 
-Reuses the metaharness's banked-trajectory loader so the live replay uses EXACTLY the
-offline-reproduced action sequences (no re-solving, no verifier needed at submit-time).
+  As of the 2026-06-21 outer-loop refresh: the latest package (exp4473, 22 env-matched games /
+  45 levels) yields 16 metaharness-loadable games / 39 claimed levels — a large jump over the
+  13 levels actually submitted on 2026-06-17. The 6 package games with no replayable banked
+  action sequence (graph-explore solves: dc22/ft09/g50t/s5i5/sb26/vc33) are skipped here; they
+  need a banked action trajectory before they can be live-replayed.
+
+TWO-PHASE (per the operator's choice 2026-06-17 "validate all live, then submit"):
+  DEFAULT (no --submit): VALIDATE — open a scorecard, play every game live, read the level
+    each reaches, and DO NOT close it (an unclosed scorecard is NOT submitted; no leaderboard
+    record). Reports which games env-match live. ALWAYS run this first: a game that reproduces
+    OFFLINE is not guaranteed to env-match LIVE; validate surfaces mismatches before any submit.
+  --submit: SUBMIT — same play-through, then CLOSE the scorecard (records the score on the
+    leaderboard). Operator-gated, irreversible. External Publication is operator-only.
+
 Usage:
   .venv/bin/python scripts/arc3_live_submit.py            # VALIDATE live (no submission)
   .venv/bin/python scripts/arc3_live_submit.py --submit   # SUBMIT (close scorecard) — operator-gated
@@ -29,10 +42,53 @@ sys.path.insert(0, str(REPO / "python"))
 
 from arcengine import GameAction
 
-# the 11 reproduced games + their claimed (offline-reproduced) level. sc25 excluded
-# (reproduces to L0 offline — would only waste live calls).
-CLAIMED = {"r11l": 1, "lp85": 3, "ls20": 1, "wa30": 1, "cd82": 1, "sp80": 1,
-           "su15": 1, "tu93": 1, "cn04": 1, "m0r0": 1, "sk48": 1}
+# the 11 reproduced games + their claimed level as of the FIRST live submission (2026-06-17,
+# 13 levels). Preserved as the fallback used only when no validated package is found.
+CLAIMED_FALLBACK = {"r11l": 1, "lp85": 3, "ls20": 1, "wa30": 1, "cd82": 1, "sp80": 1,
+                    "su15": 1, "tu93": 1, "cn04": 1, "m0r0": 1, "sk48": 1}
+
+
+def _latest_package() -> dict | None:
+    """Return the package_manifest of the newest conductor-prepared submission package, or None.
+
+    Globs the submission-package-prep artifacts and picks the most recently modified one so the
+    driver auto-tracks conductor refreshes (exp4460 -> exp4473 -> ...) without a code edit."""
+    cands = sorted(
+        (REPO / "results").glob("experiment_*submission_package*.json"),
+        key=lambda p: p.stat().st_mtime, reverse=True)
+    for p in cands:
+        try:
+            d = json.loads(p.read_text())
+        except Exception:
+            continue
+        manifest = d.get("package_manifest")
+        if isinstance(manifest, list) and manifest:
+            return {"path": p.name, "manifest": manifest}
+    return None
+
+
+def _build_claimed(mh) -> tuple[dict, str]:
+    """Build {game: claimed_levels} from the latest validated package, intersected with the
+    games the metaharness can actually replay (non-empty banked action sequence). Falls back to
+    the 2026-06-17 hardcoded set if no package or no loadable game is found.
+
+    Returns (claimed_dict, source_label) so the run artifact records provenance."""
+    pkg = _latest_package()
+    if pkg is None:
+        return dict(CLAIMED_FALLBACK), "hardcoded_fallback_2026_06_17"
+    claimed: dict[str, int] = {}
+    for row in pkg["manifest"]:
+        game = row.get("game")
+        if not game or not row.get("env_matched"):
+            continue
+        src = mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS.get(game))
+        actions = mh.load_actions(src) if src else []
+        if not actions:
+            continue  # no replayable banked trajectory (e.g. graph-explore solve) -> skip
+        claimed[game] = int(row.get("levels", 1) or 1)
+    if not claimed:
+        return dict(CLAIMED_FALLBACK), "hardcoded_fallback_2026_06_17"
+    return claimed, f"package:{pkg['path']}"
 
 
 def _load_metaharness():
@@ -84,16 +140,18 @@ def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh) 
 def main(argv) -> int:
     submit = "--submit" in argv
     mh = _load_metaharness()
+    claimed_set, claimed_source = _build_claimed(mh)
     mode = "SUBMIT (will CLOSE scorecard — leaderboard record)" if submit else "VALIDATE (no close, no submission)"
     print(f"== LIVE ARC-AGI-3 multi-game replay — mode: {mode} ==", flush=True)
-    print(f"  games: {len(CLAIMED)}  claimed levels: {sum(CLAIMED.values())}", flush=True)
+    print(f"  replay set source: {claimed_source}", flush=True)
+    print(f"  games: {len(claimed_set)}  claimed levels: {sum(claimed_set.values())}", flush=True)
 
     arcade = online_arcade()
     scorecard_id = arcade.open_scorecard()
     print(f"  opened LIVE scorecard: {scorecard_id}", flush=True)
 
     rows, total, matched = [], 0, 0
-    for short, claimed in CLAIMED.items():
+    for short, claimed in claimed_set.items():
         src = mh.RESOLVED_ARTIFACTS.get(short, mh.GAME_ARTIFACTS.get(short))
         actions = mh.load_actions(src) if src else []
         if not actions:
@@ -113,7 +171,7 @@ def main(argv) -> int:
         rows.append({"game": short, "claimed": claimed, "live_level": lvl, "env_match": ok})
         print(f"    {short:5} claimed L{claimed} -> LIVE L{lvl}  {'MATCH' if ok else 'MISMATCH'}  [{time.time()-t0:.0f}s]", flush=True)
 
-    print(f"\n  LIVE TOTAL: {total} levels; {matched}/{len(CLAIMED)} games env-matched", flush=True)
+    print(f"\n  LIVE TOTAL: {total} levels; {matched}/{len(claimed_set)} games env-matched", flush=True)
 
     submitted = False
     if submit:
@@ -127,9 +185,11 @@ def main(argv) -> int:
     out.write_text(json.dumps({
         "experiment": "arc3_live_submit", "mode": "submit" if submit else "validate",
         "scorecard_id": scorecard_id, "live_total_levels": total,
-        "games_env_matched": matched, "games": len(CLAIMED),
-        "claimed_total_levels": sum(CLAIMED.values()), "per_game": rows,
-        "leaderboard_submitted": submitted, "run_date": "2026-06-17",
+        "games_env_matched": matched, "games": len(claimed_set),
+        "claimed_total_levels": sum(claimed_set.values()), "per_game": rows,
+        "replay_set_source": claimed_source,
+        "leaderboard_submitted": submitted,
+        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "inference_substrate": "live_arc_agi3_env_multi_game_replay",
     }, indent=2))
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
