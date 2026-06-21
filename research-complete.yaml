@@ -46259,3 +46259,81 @@ milestones:
       grow (A3)? Skip any flagged_adversarial artifact.'
     deliverable: results/experiment_4531_capstone_v418.json
     result: OK (conductor)
+- id: 2026.06.419
+  title: REACH DEEPER LEVELS via per-level GOAL RE-INDUCTION -- the real score lever
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-21'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4532-phase0
+    title: PHASE 0 (TRANSITION) -- archive .418 -> activate .419; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .418 close-state (nav/trim is a dead score lever; A2 diagnosed the L1->L2 barrier as per-level goal re-induction;
+      A3 banked cd82 L2; reproducible_total_levels=50; efficiency_moved=false).
+    deliverable: results/experiment_4532_archive_418_activate_419.json
+    result: OK (conductor)
+  - id: exp4533-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- BUILD per-level GOAL RE-INDUCTION: on a level-up,
+      re-induce the L_{{n+1}} win-predicate from post-transition frames + route the frontier toward it + raise target_levels
+      past 1. Gate: a CORE game reaches L2 (core_efficiency STRICTLY > 2.0074) at preserved CORE solves, OR a measured actionable
+      barrier refinement.'
+    deliverable: results/experiment_4533_per_level_goal_reinduction.json
+    result: OK (conductor)
+  - id: exp4534-a2
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE; ORACLE-DISTINCT MOAT) -- ENERGY-VERIFIER next-level-distance
+      routing: use the world-model TRUST ENERGY (verifier_is_oracle: false) to route the frontier toward predicted-deeper
+      states satisfying the re-induced L_{{n+1}} predicate. Test lp85 + sp80 with a matched no-energy control. Gate: an energy-routed
+      config reaches a deeper level OR a measured null with the energy signal characterized.'
+    deliverable: results/experiment_4534_energy_trust_next_level_routing.json
+    result: OK (conductor)
+  - id: exp4535-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank +1 NEW reproducible level: deepen
+      a shallow solved game (sp80/su15/cn04 L1->L2) via the standing arc_loop_solve loop, OR first-contact rotation. Gate:
+      offline_reproduced new level.'
+    deliverable: results/experiment_4535_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4536-a4
+    title: PHASE A4 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whatever RAISED core_efficiency
+      (A1 re-induction + raised target_levels; A2 energy routing) into the SUBMITTED agent; re-measure end-to-end on core_efficiency
+      (baseline 2.0074). If NONE raise it, keep the bare explorer + honest null.
+    deliverable: results/experiment_4536_integration_8game_gate.json
+    result: OK (conductor)
+  - id: exp4537-a5
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the per-level GOAL RE-INDUCTION
+      primitive + routing recipe to arc_solver_kit / arc_solve_registry (Tier-2 constraint memory; ARC Solve Reproducibility
+      + Solver-Reuse Discipline), and measure CROSS-GAME TRANSFER: does the primitive reach a deeper level on a game it was
+      NOT tuned on?'
+    deliverable: results/experiment_4537_reinduction_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4538-b1
+    title: PHASE B1 (RESERVED INFRA; OVERDUE .363->.418) -- wire the .417 timing-detector repair into the RETRO timing-data
+      path. The .418 retro proved the repair reached the standalone detector but NOT the path feeding the retro TIMING DATA
+      block (still false-zeroed). Add a regression assert (injected count == on-disk in-window count) + detector_gap_suspected
+      emission.
+    deliverable: results/experiment_4538_retro_timing_detector_wire.json
+    result: OK (conductor)
+  - id: exp4539-b2
+    title: 'PHASE B2 (RESERVED INFRA) -- make capstone/aggregation ROBUST to known-false-positive flags: when an artifact''s
+      ONLY critical flag is a control==treatment null-delta TAUTOLOGY (the .418 pattern that LOST the A2 barrier diagnosis),
+      the capstone/summarize must still read its diagnosis fields (with a corrigendum note); ARC efficiency artifacts emit
+      explicit efficiency_delta + null-delta note. Asserting tests.'
+    deliverable: results/experiment_4539_null_delta_robustness.json
+    result: OK (conductor)
+  - id: exp4540-c
+    title: PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH reachability only,
+      NEVER host SD card), GateMate (USB detect), PolarFire (SSH). Per-board continuity audit; honest blocked_<board>_<reason>
+      if a board is unreachable.
+    deliverable: results/experiment_4540_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4541-d
+    title: PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = per-level GOAL ACQUISITION) -- ingest SOTA on per-level
+      / intra-episode GOAL induction + goal-shift detection + program/world-model induction for ARC-AGI-3 (Family-B) + refinement-loop
+      program synthesis; map onto the per-level re-induction headline. Emit a SOTA->experiment mapping note with real arXiv
+      IDs.
+    deliverable: results/experiment_4541_sota_ingestion_goal_acquisition.json
+    result: OK (conductor)
+  - id: exp4542-e
+    title: 'PHASE E (CAPSTONE .419) -- the PER-LEVEL EFFICIENCY scorecard: did per-level GOAL RE-INDUCTION RAISE core_efficiency
+      above 2.0074 (reach a deeper level on a CORE game)? Did the energy routing / primitive transfer generalize? Did reproducible_total_levels
+      grow (A3/A5)? Skip flagged_adversarial -- BUT do not lose a real diagnosis to a null-delta false-positive (per B2).'
+    deliverable: results/experiment_4542_capstone_v419.json
+    result: OK (conductor)
