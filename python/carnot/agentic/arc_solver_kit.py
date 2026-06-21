@@ -122,6 +122,23 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("graph_explore", "astar", "action_cost", "keyboard", "click"),
         ),
         PrimitiveOperator(
+            operator="verifier_router_candidate_ranking_operator",
+            derived_from_games=("exp4556_cached_generic_transfer",),
+            purpose=(
+                "Rank compatible cached action/plan candidates by verifier score with stable "
+                "tie-breaking and report ordering gain before any solve claim."
+            ),
+            selector_tags=(
+                "verifier_router",
+                "candidate_ranking",
+                "trust_energy",
+                "graph_explore",
+                "config_toggle",
+                "program_editor",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="per_level_reinduction_operator",
             derived_from_games=("lp85", "m0r0", "sp80", "vc33"),
             purpose=(
@@ -198,6 +215,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "verifier_router_candidate_ranking_operator",
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
             "active_data_collection",
@@ -235,6 +253,7 @@ def select_primitive_operators(
             "glyph_rewrite_matcher",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "verifier_router_candidate_ranking_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -244,6 +263,7 @@ def select_primitive_operators(
             "config_rule_grounding",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "verifier_router_candidate_ranking_operator",
             "object_centric_digest",
             "graph_astar_action_cost",
         )
@@ -251,6 +271,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "verifier_router_candidate_ranking_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -279,6 +300,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "verifier_router_candidate_ranking_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -286,11 +308,106 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "verifier_router_candidate_ranking_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
         )
     return tuple(registry[name] for name in names)
+
+
+def _candidate_field(candidate: Any, key: str, default: Any = None) -> Any:
+    if isinstance(candidate, Mapping):
+        return candidate.get(key, default)
+    return getattr(candidate, key, default)
+
+
+def _candidate_identifier(candidate: Any, index: int) -> str:
+    for key in ("candidate_id", "id", "name", "router_mode", "action_id", "key"):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return str(value)
+    return str(index)
+
+
+def _candidate_score(candidate: Any, score_key: str) -> float:
+    for key in (score_key, "verifier_score", "score"):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return 0.0
+    trust_energy = _candidate_field(candidate, "trust_energy")
+    if trust_energy is not None:
+        try:
+            return -float(trust_energy)
+        except (TypeError, ValueError):
+            return 0.0
+    return 0.0
+
+
+def verifier_router_candidate_ranking_operator(
+    candidates: Sequence[Any],
+    *,
+    score_fn: Optional[Callable[[Any, Mapping[str, Any]], float]] = None,
+    score_key: str = "verifier_score",
+    target_key: str = "reaches_goal",
+    higher_is_better: bool = True,
+    context: Optional[Mapping[str, Any]] = None,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4561: generic verifier-router candidate ranking primitive."""
+
+    ctx = dict(context or {})
+    rows: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates):
+        if isinstance(candidate, Mapping):
+            row = dict(candidate)
+        else:
+            row = {"candidate": repr(candidate)}
+        score = (
+            float(score_fn(candidate, ctx))
+            if score_fn is not None
+            else _candidate_score(candidate, score_key)
+        )
+        row["candidate_id"] = str(row.get("candidate_id") or _candidate_identifier(candidate, index))
+        row["verifier_score"] = score
+        row["original_index"] = index
+        row["target"] = bool(_candidate_field(candidate, target_key, False))
+        rows.append(row)
+
+    def rank_key(row: Mapping[str, Any]) -> tuple[float, int]:
+        score = float(row.get("verifier_score") or 0.0)
+        return ((-score if higher_is_better else score), int(row.get("original_index") or 0))
+
+    ranked = sorted(rows, key=rank_key)
+
+    def first_target_rank(items: Sequence[Mapping[str, Any]]) -> Optional[int]:
+        for idx, row in enumerate(items):
+            if row.get("target") is True:
+                return idx
+        return None
+
+    target_before = first_target_rank(rows)
+    target_after = first_target_rank(ranked)
+    ordering_gain = (
+        int(target_before) - int(target_after)
+        if target_before is not None and target_after is not None
+        else 0
+    )
+    return {
+        "operator": "verifier_router_candidate_ranking_operator",
+        "score_key": score_key,
+        "higher_is_better": bool(higher_is_better),
+        "candidate_count": len(rows),
+        "incoming_candidates": rows,
+        "ranked_candidates": ranked,
+        "best_candidate_id": str(ranked[0]["candidate_id"]) if ranked else "",
+        "target_rank_before": target_before,
+        "target_rank_after": target_after,
+        "ordering_gain": ordering_gain,
+        "value_added": ordering_gain > 0,
+    }
 
 
 def _observation_level(observation: Any) -> int:

@@ -1,0 +1,398 @@
+{
+  "duration_s": 0.4937296970747411,
+  "experiment": "experiment_4561_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates for the offline-verifier transfer; live_llm_inference + model_specs if the executable proposer is invoked in the transfer runs.",
+    "offline_reproduced": "only offline-reproduced new levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "primitive_persisted": "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives.",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "transfer_games": "the games the primitive was applied to (NOT tuned on) -- the generalization test.",
+    "transfer_value_per_game": "the per-game value-add (verifier-router ordering gain / executable-proposer reachable plan) -- the cross-game evidence the primitive generalizes."
+  },
+  "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "new_levels_banked": 0,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade_import_smoke": true,
+    "ok": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4561": true
+  },
+  "primitive_persisted": {
+    "derived_from_artifacts": [
+      "results/experiment_4556_verifier_router_generic_transfer.json",
+      "results/experiment_4557_executable_world_model_proposer.json"
+    ],
+    "operator": "verifier_router_candidate_ranking_operator",
+    "registry_general_gotcha_id": "primitive_verifier_router_candidate_ranking_operator",
+    "source": "A1_verifier_router"
+  },
+  "random_seed": 4561,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:f1c10ae6ef48bea64e09289c40ec22ec3c89cc3ae3befa4a0005822621585d78",
+  "requirements": [
+    "REQ-ARC-WMTE-4561"
+  ],
+  "result_path": "results/experiment_4561_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4561"
+  ],
+  "schema": "carnot.arc_primitive_persist_transfer_4561.v1",
+  "transfer_dead_ends": {
+    "sc25": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+    "tr87": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+    "tu93": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null."
+  },
+  "transfer_games": [
+    "tu93",
+    "tr87",
+    "sc25"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+      "game": "tu93",
+      "offline_reproduced_new_level": false,
+      "ranking": {
+        "best_candidate_id": "verifier",
+        "candidate_count": 3,
+        "higher_is_better": true,
+        "incoming_candidates": [
+          {
+            "actions": 195,
+            "candidate_id": "baseline",
+            "original_index": 0,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "baseline",
+            "target": false,
+            "variant_signature": "tu93~color01",
+            "verifier_score": 0.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "verifier",
+            "original_index": 1,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "verifier",
+            "target": false,
+            "variant_signature": "tu93~color01",
+            "verifier_score": 1.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "random",
+            "original_index": 2,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "random",
+            "target": false,
+            "variant_signature": "tu93~color01",
+            "verifier_score": -1.0
+          }
+        ],
+        "operator": "verifier_router_candidate_ranking_operator",
+        "ordering_gain": 0,
+        "ranked_candidates": [
+          {
+            "actions": 195,
+            "candidate_id": "verifier",
+            "original_index": 1,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "verifier",
+            "target": false,
+            "variant_signature": "tu93~color01",
+            "verifier_score": 1.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "baseline",
+            "original_index": 0,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "baseline",
+            "target": false,
+            "variant_signature": "tu93~color01",
+            "verifier_score": 0.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "random",
+            "original_index": 2,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "random",
+            "target": false,
+            "variant_signature": "tu93~color01",
+            "verifier_score": -1.0
+          }
+        ],
+        "score_key": "verifier_score",
+        "target_rank_after": null,
+        "target_rank_before": null,
+        "value_added": false
+      },
+      "transfer_value": {
+        "best_candidate_id": "verifier",
+        "candidate_count": 3,
+        "operator": "verifier_router_candidate_ranking_operator",
+        "ordering_gain": 0,
+        "target_rank_after": null,
+        "target_rank_before": null,
+        "value_added": false
+      },
+      "value_added": false
+    },
+    {
+      "dead_end": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+      "game": "tr87",
+      "offline_reproduced_new_level": false,
+      "ranking": {
+        "best_candidate_id": "verifier",
+        "candidate_count": 3,
+        "higher_is_better": true,
+        "incoming_candidates": [
+          {
+            "actions": 195,
+            "candidate_id": "baseline",
+            "original_index": 0,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "baseline",
+            "target": false,
+            "variant_signature": "tr87~color01",
+            "verifier_score": 0.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "verifier",
+            "original_index": 1,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "verifier",
+            "target": false,
+            "variant_signature": "tr87~color01",
+            "verifier_score": 1.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "random",
+            "original_index": 2,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "random",
+            "target": false,
+            "variant_signature": "tr87~color01",
+            "verifier_score": -1.0
+          }
+        ],
+        "operator": "verifier_router_candidate_ranking_operator",
+        "ordering_gain": 0,
+        "ranked_candidates": [
+          {
+            "actions": 195,
+            "candidate_id": "verifier",
+            "original_index": 1,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "verifier",
+            "target": false,
+            "variant_signature": "tr87~color01",
+            "verifier_score": 1.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "baseline",
+            "original_index": 0,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "baseline",
+            "target": false,
+            "variant_signature": "tr87~color01",
+            "verifier_score": 0.0
+          },
+          {
+            "actions": 195,
+            "candidate_id": "random",
+            "original_index": 2,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "random",
+            "target": false,
+            "variant_signature": "tr87~color01",
+            "verifier_score": -1.0
+          }
+        ],
+        "score_key": "verifier_score",
+        "target_rank_after": null,
+        "target_rank_before": null,
+        "value_added": false
+      },
+      "transfer_value": {
+        "best_candidate_id": "verifier",
+        "candidate_count": 3,
+        "operator": "verifier_router_candidate_ranking_operator",
+        "ordering_gain": 0,
+        "target_rank_after": null,
+        "target_rank_before": null,
+        "value_added": false
+      },
+      "value_added": false
+    },
+    {
+      "dead_end": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+      "game": "sc25",
+      "offline_reproduced_new_level": false,
+      "ranking": {
+        "best_candidate_id": "verifier",
+        "candidate_count": 3,
+        "higher_is_better": true,
+        "incoming_candidates": [
+          {
+            "actions": 196,
+            "candidate_id": "baseline",
+            "original_index": 0,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "baseline",
+            "target": false,
+            "variant_signature": "sc25~color01",
+            "verifier_score": 0.0
+          },
+          {
+            "actions": 196,
+            "candidate_id": "verifier",
+            "original_index": 1,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "verifier",
+            "target": false,
+            "variant_signature": "sc25~color01",
+            "verifier_score": 1.0
+          },
+          {
+            "actions": 197,
+            "candidate_id": "random",
+            "original_index": 2,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "random",
+            "target": false,
+            "variant_signature": "sc25~color01",
+            "verifier_score": -1.0
+          }
+        ],
+        "operator": "verifier_router_candidate_ranking_operator",
+        "ordering_gain": 0,
+        "ranked_candidates": [
+          {
+            "actions": 196,
+            "candidate_id": "verifier",
+            "original_index": 1,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "verifier",
+            "target": false,
+            "variant_signature": "sc25~color01",
+            "verifier_score": 1.0
+          },
+          {
+            "actions": 196,
+            "candidate_id": "baseline",
+            "original_index": 0,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "baseline",
+            "target": false,
+            "variant_signature": "sc25~color01",
+            "verifier_score": 0.0
+          },
+          {
+            "actions": 197,
+            "candidate_id": "random",
+            "original_index": 2,
+            "reached_level": 0,
+            "reaches_goal": false,
+            "router_mode": "random",
+            "target": false,
+            "variant_signature": "sc25~color01",
+            "verifier_score": -1.0
+          }
+        ],
+        "score_key": "verifier_score",
+        "target_rank_after": null,
+        "target_rank_before": null,
+        "value_added": false
+      },
+      "transfer_value": {
+        "best_candidate_id": "verifier",
+        "candidate_count": 3,
+        "operator": "verifier_router_candidate_ranking_operator",
+        "ordering_gain": 0,
+        "target_rank_after": null,
+        "target_rank_before": null,
+        "value_added": false
+      },
+      "value_added": false
+    }
+  ],
+  "transfer_value_per_game": {
+    "sc25": {
+      "best_candidate_id": "verifier",
+      "candidate_count": 3,
+      "operator": "verifier_router_candidate_ranking_operator",
+      "ordering_gain": 0,
+      "target_rank_after": null,
+      "target_rank_before": null,
+      "value_added": false
+    },
+    "tr87": {
+      "best_candidate_id": "verifier",
+      "candidate_count": 3,
+      "operator": "verifier_router_candidate_ranking_operator",
+      "ordering_gain": 0,
+      "target_rank_after": null,
+      "target_rank_before": null,
+      "value_added": false
+    },
+    "tu93": {
+      "best_candidate_id": "verifier",
+      "candidate_count": 3,
+      "operator": "verifier_router_candidate_ranking_operator",
+      "ordering_gain": 0,
+      "target_rank_after": null,
+      "target_rank_before": null,
+      "value_added": false
+    }
+  },
+  "upstream_decision": {
+    "inference_substrate": "verifier_ensemble_against_cached_candidates",
+    "measured_signal": 0.0,
+    "operator": "verifier_router_candidate_ranking_operator",
+    "persisted_as_best_characterized_null": true,
+    "registry_general_gotcha_id": "primitive_verifier_router_candidate_ranking_operator",
+    "selection_rationale": "A1 is the best-characterized reusable primitive-as-built: cached verifier-router transfer ran to completion, while A2's executable proposer positive control did not produce a reachable verified model.",
+    "source": "A1_verifier_router"
+  },
+  "upstream_summaries": {
+    "a1_verifier_router": {
+      "artifact": "results/experiment_4556_verifier_router_generic_transfer.json",
+      "selected": true
+    },
+    "a2_executable_world_model_proposer": {
+      "artifact": "results/experiment_4557_executable_world_model_proposer.json",
+      "selected": false
+    }
+  }
+}
