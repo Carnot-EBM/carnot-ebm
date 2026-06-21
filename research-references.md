@@ -24086,3 +24086,46 @@ the load-bearing input; the `.419 A1 builds the re-induction the diagnosis presc
 `target_levels`), A2 adds the oracle-distinct energy-trust routing toward predicted-deeper
 states, A5 persists the per-level induction primitive as reusable scaffolding (Tier-2
 self-learning + the ARC reuse discipline).
+
+## .420 planning ingestion (2026-06-21, Opus planner) — the PROPOSER/GENERATOR is the bottleneck
+
+The `.419 capstone (exp4542) is an honest null on the headline: per-level GOAL RE-INDUCTION
+*triggers* on a level-up but `core_efficiency` stayed 2.0074. The refined barrier (exp4533 A1):
+`post_level_reinduction_triggered_but_no_reachable_l2_plan; offline_dsl_attempt_outcomes=
+['proposer_failed_or_missing_root']` — the agent reaches L1 then takes 0 actions at L1 because the
+OFFLINE DSL-only induction (`model_specs=offline_dsl_induction_no_llm`) cannot induce a reachable
+L_{n+1} plan. This converges with the 2026-06-19 GAP-LIVE-INTEGRATION operator audit (the score's
+real ceiling is the SUBMITTED agent: bare BFS, `target_levels=1`, `value_weight=0.0`, and an
+**LLM tier with 0/6 measured value**). The `.420 headline: bring the FROZEN sprint generator
+(Qwen3.5-9B-MTP, the already-wired `LocalGGUFProposer`) into the per-level re-induction loop as the
+L_{n+1} goal-predicate + plan proposer and MEASURE its value vs the offline-DSL baseline — the
+hybrid architecture (LLM generates/induces, energy verifier routes/verifies) on the ARC critical path.
+
+- **Executable World Models for ARC-AGI-3 in the Era of Coding Agents (arXiv:2605.05138).** SOTA
+  Family-B: a coding agent induces a Python transition model AND verifies transitions against
+  observed frames. This is the Carnot hybrid thesis exactly (generator induces, energy/execution
+  verifies). The reference architecture for the `.420 A1 LLM-proposer-as-world-model-inducer.
+- **ARC-AGI-3 Technical Report (arXiv:2603.24621).** Names the required capabilities: exploration,
+  **goal acquisition** ("identify desirable future states without explicit instructions"), world
+  modeling, planning. Per-level GOAL RE-INDUCTION is the goal-acquisition capability scoped to the
+  level boundary — the `.420 headline maps directly onto the benchmark's named gap.
+- **ALGO: Synthesizing Algorithmic Programs with LLM-Generated Oracle Verifiers (arXiv:2305.14591).**
+  Coder+verifier loop: the coder generates a program using the verifier's results from its last
+  generation; the verifier is a reference oracle. The proposer-refinement-loop shape for A1
+  (LLM proposes the L_{n+1} plan, the world-model trust energy / execution verifier scores it).
+- **LLM Priors for ERM over Programs (arXiv:2510.14331).** Pretrained LLM as a proposal distribution
+  over executable-program hypotheses; each verified by execution; final chosen by validation-based
+  model selection. The exact LLM-proposer + verifier-selection architecture for A1 (the LLM supplies
+  the proposal distribution the offline DSL could not).
+- **Procedural Refinement by LLM-driven Algorithmic Debugging for ARC-AGI-2 (arXiv:2603.20334)** +
+  **Counterexample-Guided Learning in the Large using Reasoning Agents (arXiv:2606.11521).** Both
+  iterate an LLM hypothesis under verifier/counterexample feedback (neuro-symbolic refinement /
+  oracle-guided symbolic generation). The feedback-loop pattern for refining a failed L_{n+1} plan
+  rather than abandoning it (0 actions at L1).
+
+`.420 also picks up the standing 2026-06-19/20 operator ARC priorities: GAP-ARCH-FEATURES (the
+DiscriminativeVerifier LOO-AUROC=0.503==chance -> relational/Δframe/action-conditioned/predicate-
+distance features, the oracle-distinct verifier-moat item) and GAP-ARCH-FRAME-CHANGE-PREDICTOR (a
+small CNN action-effect/clickability predictor trained on the 14,672 cached human-replay
+transitions -> action efficiency = the score metric). Full `.420 program in
+`openspec/change-proposals/research-roadmap-vNEXT.md`.
