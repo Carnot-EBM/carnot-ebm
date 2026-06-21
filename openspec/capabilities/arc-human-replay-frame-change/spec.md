@@ -625,6 +625,56 @@ Required field principles:
 - `reproducibility_checksum`: principle "catches silent corpus/model drift on replay."
 - `preconditions_checked`: principle "records resources verified (offline arcade, human-replay corpus cached); pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4568: Pooled Clickability Action-Effect Predictor
+
+Experiment 4568 SHALL write
+`results/experiment_4568_clickability_action_effect_predictor.json` after
+loading the local ARC Public Demo human replay shards and the local
+`data/arc_transition_corpus/*.npz` self-captured transitions into a pooled
+frame/action/frame-change corpus. The training path SHALL use the small
+frame-only CNN action-effect model, CPU or integrated-device inference, rendered
+frames only, and SHALL NOT depend on mirror feature vectors, third-party
+weights, live LLM calls, or `env._game` internals.
+
+The experiment SHALL expose the trained model through `FrameChangeScorer` and
+wire that scorer into `rich_action_candidates` so candidate clicks and
+ACTION1-5 are ordered by predicted frame-change probability with the existing
+salience order as the no-regression tie-break. It SHALL compare the
+predictor-ranked arm against the matched blind-BFS order on held-out games or
+cached candidate groups, report median actions-to-first-level-up for both arms,
+emit `actions_delta = baseline - with_predictor`, and gate any success verdict
+on a strictly positive action delta, a bootstrap CI excluding zero, and no
+solve-rate drop.
+
+The artifact SHALL include the generic-transfer measurement shape, the
+leaderboard efficiency term `min(human/agent,1)^2` from replay-derived human
+action counts, a positive-control clickability check, `verifier_is_oracle=false`,
+`offline_reproduced`, `chosen_submitted_config`, a `null_delta_methodology_note`
+when the action delta is exactly zero, and a checksum over corpus/model/metric
+inputs.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: clickability_predictor_actions_to_levelup_<n>_below_blind OR complete: clickability_predictor_no_efficiency_gain_honest_null_gap_sharpened."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- the CNN trains/scores against cached transitions (no LLM load, 1s floor); fast CPU forward pass declared."
+- `verifier_is_oracle`: principle "MUST be false -- learned action-effect model is oracle-DISTINCT from executable win-check."
+- `median_actions_to_first_levelup_with_predictor`: principle "the HEADLINE -- held-out median actions-to-first-levelup with the predictor-ranked explorer."
+- `median_actions_to_first_levelup_baseline`: principle "the blind-BFS baseline, measured the SAME way."
+- `actions_delta`: principle "baseline - with_predictor; positive = fewer actions."
+- `actions_delta_ci`: principle "bootstrap CI on the actions delta; efficiency claim requires the CI to exclude zero."
+- `efficiency_score_min_human_agent_sq`: principle "min(human/agent,1)^2 with the human baseline from replay corpus."
+- `generic_transfer_rate_with_predictor`: principle "held-out variant transfer WITH the predictor vs the 0.04 baseline."
+- `solve_rate_preserved`: principle "HARD gate -- efficiency win must NOT drop solve-rate."
+- `positive_control_passed`: principle "learnable-clickability control where predictor-ranking must beat blind."
+- `false_negative_risk_checked`: principle "a no-value null is valid only if the positive control passed."
+- `null_delta_methodology_note`: principle "present when actions_delta==0.0 -- honest no-gain null, not a measurement bug."
+- `chosen_submitted_config`: principle "recommend enable predictor-ranker when successful; unchanged if null."
+- `missing_verifier_gaps`: principle "if no gain, record residual generation/ranking gap."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, torch, LOCAL corpora)."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -709,6 +759,24 @@ When the held-out transition-delta AUROC is above the trivial baseline
 Then the artifact reports `complete: frame_change_cnn_no_action_reduction_honest_null`,
 sets `false_negative_risk_checked=true`, and records hidden-field probing for
 the `ka59`/`ar25` L2 stall as the secondary input.
+
+### SCENARIO-ARC-FCP-4568: Pooled Clickability Predictor Emits Honest Efficiency Delta
+
+Given the local human replay shards and local transition corpus are present
+When experiment 4568 trains the small frame-only action-effect CNN and measures
+predictor-ranked candidates against the matched blind order
+Then the artifact records the required median actions, explicit action delta,
+bootstrap CI, efficiency score, generic-transfer fields, non-oracle verifier
+flag, positive control, null note when needed, checksum, and preconditions, and
+emits a success verdict only when the action delta is positive with no
+solve-rate drop.
+
+Given the predictor does not reduce held-out median actions
+When the positive control passes
+Then the artifact reports
+`complete: clickability_predictor_no_efficiency_gain_honest_null_gap_sharpened`,
+sets `false_negative_risk_checked=true`, keeps `chosen_submitted_config` as
+`unchanged`, and records the residual missing-verifier gaps.
 
 ### SCENARIO-ARC-FCP-4501: Staged Frame-Only Rerun Has Interpretable Null Guard
 
