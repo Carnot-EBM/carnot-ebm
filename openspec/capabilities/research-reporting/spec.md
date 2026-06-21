@@ -28308,6 +28308,86 @@ ops/status/traceability edits, or `scripts/research_conductor.py` edit.
 |---|---|---|
 | REQ-REPORT-4553 | Implemented (`python/carnot/experiment_4553_sota_ingestion_llm_inducer.py`) | Implemented (`tests/python/test_experiment_4553_sota_ingestion_llm_inducer.py`) |
 
+### REQ-REPORT-4565: Ingest Verifier-Router SOTA Into The .422 Plan
+
+The Exp 4565 workflow SHALL write
+`docs/research-notes/sota-ingestion-verifier-router-421-2026-06-21.md` with a
+machine-readable JSON artifact block followed by a concise SOTA-to-experiment
+mapping note. It SHALL read `AGENTS.md`, `CODEX.md`,
+`research-studying.md`, `research-references.md`, the current verifier-router
+mechanism in `REQ-CAPSTONE-4556`, and
+`results/experiment_4556_verifier_router_generic_transfer.json`. It SHALL
+filter the already-discovered corpus to learned-verifier/process-reward
+cross-task transfer, verifier-guided candidate routing and best-first search,
+executable ARC world-model induction, and counterexample-guided refinement. It
+SHALL run the reliable channel only: `scripts/sweep_clusters.py 0
+--max-results 8`, `scripts/sweep_clusters.py 6 --max-results 8`,
+`scripts/sweep_semscholar.py` on focused learned-verifier/router queries, and
+low-concurrency WebSearch/WebFetch over five to eight top arXiv sources. It
+SHALL verify `.venv/bin/python scripts/sweep_clusters.py --help` exits zero
+and `curl -sf -o /dev/null
+https://export.arxiv.org/api/query?search_query=all:test` exits zero before
+promoting citations. It SHALL NOT invoke `/deep-research`, SHALL NOT launch
+live LLM inference, SHALL NOT launch training, SHALL NOT submit to the
+leaderboard, SHALL NOT claim a new ARC solve, SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The required runner SHALL be
+`results/experiment_4565_sota_ingestion_verifier_router.py` delegating to
+`python/carnot/experiment_4565_sota_ingestion_verifier_router.py`, and the
+workflow SHALL also write
+`results/experiment_4565_sota_ingestion_verifier_router.json`.
+
+The artifact SHALL include the required top-level fields `honest_verdict`,
+`inference_substrate`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `preconditions_checked`, `research_note_path`,
+`random_seed`, and `field_principles`. `honest_verdict` SHALL be
+terminal-prefixed and equal
+`complete: sota_ingestion_verifier_router_mapped` on the complete path.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`methods_mapped` SHALL contain three to five strongest methods with real
+arXiv-backed `source_ids`, a `takes_over_current_a1_verifier_router` field
+mapping onto the current Exp 4556 `DiscriminativeVerifier` router mechanism,
+and a `fails_when` caveat. `citations_verified` SHALL provide one verified
+arXiv URL and title for every source ID used by the method claims and SHALL
+include arXiv IDs from the set `2601.22607`, `2505.24760`, `2602.01070`,
+`2510.14913`, `2601.09692`, `2606.06098`, `2605.05138`, and `2606.11521`.
+`flagged_for_next_roadmap` SHALL flag the strongest `.422` candidate and
+`research-studying.md` SHALL mark the ingested methods with
+`flagged_for_v422`. `field_principles` SHALL include one-line principles for
+every top-level artifact field, including the required terminal-prefix
+`honest_verdict`, aggregation-only `inference_substrate`, verifiable-citation
+`methods_mapped` and `citations_verified`, roadmap-closing
+`flagged_for_next_roadmap`, and resource-recording `preconditions_checked`
+principles.
+
+#### SCENARIO-REPORT-4565: Verifier-Router SOTA Maps To .422 Inputs
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, `REQ-CAPSTONE-4556`, and the Exp 4556
+verifier-router generic-transfer artifact are readable
+**And** `scripts/sweep_clusters.py --help` and the arXiv API reachability check
+succeed
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4565 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps
+self-evolving verifier-based RL, RLVR cross-domain environment transfer,
+adaptive PRM-guided candidate expansion, budget-aware discriminative
+verification, generated-data/domain-expert routing, executable world models,
+and counterexample-guided refinement onto the current Exp 4556
+`DiscriminativeVerifier` router mechanism, flags the strongest `.422` input,
+declares `aggregation_from_upstream_artifacts`, and records no
+`/deep-research`, live inference, training, leaderboard submission, solve
+claim, ops/status/traceability edits, or `scripts/research_conductor.py` edit.
+
+## Implementation Status (REQ-REPORT-4565)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4565 | Implemented (`python/carnot/experiment_4565_sota_ingestion_verifier_router.py`) | Implemented (`tests/python/test_experiment_4565_sota_ingestion_verifier_router.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

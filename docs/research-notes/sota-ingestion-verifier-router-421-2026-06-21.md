@@ -1,0 +1,236 @@
+# Verifier-router SOTA ingestion .421 - 2026-06-21
+
+```json
+{
+  "citations_verified": {
+    "2505.24760": {
+      "http_status": 200,
+      "title": "REASONING GYM: Reasoning Environments for Reinforcement Learning with Verifiable Rewards",
+      "url": "https://arxiv.org/abs/2505.24760"
+    },
+    "2510.14913": {
+      "http_status": 200,
+      "title": "Budget-aware Test-time Scaling via Discriminative Verification",
+      "url": "https://arxiv.org/abs/2510.14913"
+    },
+    "2601.09692": {
+      "http_status": 200,
+      "title": "Routing with Generated Data: Annotation-Free LLM Skill Estimation and Expert Selection",
+      "url": "https://arxiv.org/abs/2601.09692"
+    },
+    "2601.22607": {
+      "http_status": 200,
+      "title": "From Self-Evolving Synthetic Data to Verifiable-Reward RL: Post-Training Multi-turn Interactive Tool-Using Agents",
+      "url": "https://arxiv.org/abs/2601.22607"
+    },
+    "2602.01070": {
+      "http_status": 200,
+      "title": "What If We Allocate Test-Time Compute Adaptively?",
+      "url": "https://arxiv.org/abs/2602.01070"
+    },
+    "2605.05138": {
+      "http_status": 200,
+      "title": "Executable World Models for ARC-AGI-3 in the Era of Coding Agents",
+      "url": "https://arxiv.org/abs/2605.05138"
+    },
+    "2606.06098": {
+      "http_status": 200,
+      "title": "IR3DE: A Linear Router for Large Language Models",
+      "url": "https://arxiv.org/abs/2606.06098"
+    },
+    "2606.11521": {
+      "http_status": 200,
+      "title": "Counterexample Guided Learning in the Large using Reasoning Agents",
+      "url": "https://arxiv.org/abs/2606.11521"
+    }
+  },
+  "field_principles": {
+    "citations_verified": "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as any results artifact).",
+    "field_principles": "principle annotations for every top-level artifact field.",
+    "flagged_for_next_roadmap": "the strongest method flagged as a .422 candidate -- closes the discover->ingest->plan loop.",
+    "honest_verdict": "terminal prefix; complete: sota_ingestion_verifier_router_mapped.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- literature synthesis, no model load.",
+    "methods_mapped": "the 3-5 strongest methods with REAL arXiv IDs -- the shoulders-of-giants anti-rederivation check.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "bare integer seed for reproducible artifact generation.",
+    "research_note_path": "repo-relative markdown path for deterministic parsing."
+  },
+  "flagged_for_next_roadmap": "flagged_for_v422: adaptive PRM-guided candidate expansion over the Exp 4556 DiscriminativeVerifier, trained and refreshed with self-evolving verifiable-reward data (arXiv:2602.01070 + arXiv:2601.22607)",
+  "honest_verdict": "complete: sota_ingestion_verifier_router_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "generated tasks leak game identity or target actions, the user or environment simulator is not checked by execution, or transfer is claimed on the same games used to evolve the verifier data.",
+      "method": "self-evolving verifiable-reward RL for cross-game verifier transfer",
+      "source_ids": [
+        "2601.22607",
+        "2505.24760"
+      ],
+      "takes_over_current_a1_verifier_router": "Exp 4556 has a learned DiscriminativeVerifier ranking cached rich_action_candidates, but its training signal is fixed. This method turns public-game variants and generated ARC-style tasks into verifier-scored RLVR data, using executable checks and held-out games to refresh the router without treating the win checker as the ranking signal.",
+      "v422_candidate": "flagged_for_v422: self-evolving verifiable-reward data for the Exp 4556 DiscriminativeVerifier router"
+    },
+    {
+      "fails_when": "the verifier only reranks after generation, branch expansion is not tied to a fixed action budget, or process scores are allowed to override the exact offline reproduction gate.",
+      "method": "adaptive PRM-guided candidate expansion for best-first search",
+      "source_ids": [
+        "2602.01070"
+      ],
+      "takes_over_current_a1_verifier_router": "Exp 4556 uses the DiscriminativeVerifier as a final candidate ranker. Adaptive PRM-guided allocation promotes it into the live best-first controller: prune low-score branches, expand high-score branches, and spend action budget only where the learned process reward predicts useful progress.",
+      "v422_candidate": "flagged_for_v422: PRM-guided adaptive expansion over Exp 4556 DiscriminativeVerifier scores"
+    },
+    {
+      "fails_when": "self-consistency counts near-duplicate replay actions, the router is compared against a weaker budget than the baseline, or the hybrid is used after the first-contact action budget has already been spent.",
+      "method": "budget-aware discriminative verification hybrid",
+      "source_ids": [
+        "2510.14913"
+      ],
+      "takes_over_current_a1_verifier_router": "Exp 4556 showed that a cheap DiscriminativeVerifier router can be oracle-distinct but still null on live transfer. The budget-aware hybrid keeps the cheap score, combines it with agreement among candidate families, and reserves costly expansion for uncertain or high-upside frames.",
+      "v422_candidate": "flagged_for_v422: budget-aware verifier plus agreement gate for Exp 4556 candidate routing"
+    },
+    {
+      "fails_when": "generated variants do not create performance differentiation, the route feature is a disguised game ID, or the router requires retraining from scratch when a new public-game family is added.",
+      "method": "generated-data and linear domain-expert routing",
+      "source_ids": [
+        "2601.09692",
+        "2606.06098"
+      ],
+      "takes_over_current_a1_verifier_router": "Exp 4556 has one cross-game DiscriminativeVerifier head. RGD, CASCAL, and IR3DE suggest splitting by mechanic fingerprints: use generated variants to discover which router head or feature slice is reliable, then dispatch with a cheap linear or query-only router before ranking actions.",
+      "v422_candidate": "flagged_for_v422: mechanic-fingerprint router heads around the Exp 4556 DiscriminativeVerifier"
+    },
+    {
+      "fails_when": "the induced model is trusted as an oracle, counterexamples are pasted as unstructured prompt text, or repair loops continue after the fixed first-contact action budget is exhausted.",
+      "method": "executable world-model induction with counterexample-guided repair",
+      "source_ids": [
+        "2605.05138",
+        "2606.11521"
+      ],
+      "takes_over_current_a1_verifier_router": "Exp 4556 ranks primitive action candidates, but it lacks a richer candidate source when the fixed action set is uninformative. The world-model branch induces executable GOAL and DYNAMICS code, feeds its plan branches to the DiscriminativeVerifier, and uses verifier-rejected states as counterexamples for the next bounded repair round.",
+      "v422_candidate": "flagged_for_v422: executable branch candidates plus counterexample repair for Exp 4556 routing"
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_api_reachable": true,
+    "arxiv_http_200_verified_ids": [
+      "2601.22607",
+      "2505.24760",
+      "2602.01070",
+      "2510.14913",
+      "2601.09692",
+      "2606.06098",
+      "2605.05138",
+      "2606.11521"
+    ],
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "exp4556_artifact_read": true,
+    "exp4556_spec_read": true,
+    "leaderboard_submission": false,
+    "live_llm_inference": false,
+    "live_solve_claim": false,
+    "ops_docs_modified": false,
+    "research_conductor_modified": false,
+    "research_references_filtered": true,
+    "research_studying_filtered": true,
+    "research_studying_updated": true,
+    "sweep_clusters_help_exit_0": true,
+    "sweep_clusters_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"verifier+ensemble\"+OR+abs:\"verifier+ensembles\"+OR+abs:\"null+space\"+OR+abs:\"specification+gaming\"+OR+abs:\"process+reward+model\"+OR+abs:\"deliberative+alignment\"+OR+abs:\"reward+hacking\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_arxiv_ids": [],
+    "sweep_semscholar_queries": [
+      "learned verifier process reward model cross task transfer tool use agent",
+      "verifier guided candidate routing learned ranker best first search reasoning",
+      "verifiable reward reinforcement learning cross domain generalization",
+      "executable world model ARC-AGI-3 counterexample guided learning",
+      "budget aware discriminative cascade router learned verifier"
+    ],
+    "sweep_semscholar_rate_limited_queries": [
+      "learned verifier process reward model cross task transfer tool use agent",
+      "verifier guided candidate routing learned ranker best first search reasoning",
+      "verifiable reward reinforcement learning cross domain generalization",
+      "executable world model ARC-AGI-3 counterexample guided learning",
+      "budget aware discriminative cascade router learned verifier"
+    ],
+    "sweep_semscholar_used": true,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/2601.22607",
+      "https://arxiv.org/abs/2505.24760",
+      "https://arxiv.org/abs/2602.01070",
+      "https://arxiv.org/abs/2510.14913",
+      "https://arxiv.org/abs/2601.09692",
+      "https://arxiv.org/abs/2606.06098",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2606.11521"
+    ]
+  },
+  "random_seed": 4565,
+  "research_note_path": "docs/research-notes/sota-ingestion-verifier-router-421-2026-06-21.md"
+}
+```
+
+Reliable channel only: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
+arXiv abs-page HTTP-200 checks, and low-concurrency WebSearch/WebFetch of eight
+top learned-verifier / PRM-routing / generated-router / world-model sources.
+Preconditions passed before any claim was promoted:
+`.venv/bin/python scripts/sweep_clusters.py --help` exited zero and
+`curl -sf -o /dev/null https://export.arxiv.org/api/query?search_query=all:test`
+confirmed arXiv API reachability. `scripts/sweep_clusters.py 0 --max-results 8`
+and `scripts/sweep_clusters.py 6 --max-results 8` emitted the focused verifier
+and learned-search cluster URLs. `scripts/sweep_semscholar.py` ran five focused
+queries and returned HTTP 429 on all five, so no S2-only claim was promoted. No
+`/deep-research` call was made. No training, live LLM inference, leaderboard
+submission, or live solve was launched. No ops/status/traceability files or
+`scripts/research_conductor.py` were modified.
+
+Already-discovered corpus read through a learned-verifier cross-task transfer /
+verifier-guided routing filter: `research-studying.md`, `research-references.md`,
+`openspec/capabilities/capstone/spec.md` at `REQ-CAPSTONE-4556`, and
+`results/experiment_4556_verifier_router_generic_transfer.json`. The current
+mechanism this maps onto is Exp 4556: a trained cross-game `DiscriminativeVerifier`
+ranks `rich_action_candidates` by learned `cross_game_features_v3` scores without
+using executable win-checks as the ranking signal. The 2026-06-21 artifact was
+an honest live-transfer null, so .422 should turn the same learned signal into a
+budget-aware live controller rather than merely reranking a fixed candidate list.
+
+Sources checked: arXiv:2601.22607, arXiv:2505.24760, arXiv:2602.01070, arXiv:2510.14913, arXiv:2601.09692, arXiv:2606.06098, arXiv:2605.05138, arXiv:2606.11521.
+
+## Per-Method Mapping
+
+- **Self-evolving verifiable-reward RL** (arXiv:2601.22607, arXiv:2505.24760):
+  take over the Exp 4556 verifier-training substrate by generating verifier-
+  checked ARC-style variants and refreshing the learned router on held-out
+  games. This carries the cross-task transfer lesson: exact checkers create the
+  reward substrate, but held-out games must remain untouched.
+- **Adaptive PRM-guided candidate expansion** (arXiv:2602.01070): take over the
+  live Exp 4556 candidate router by using the DiscriminativeVerifier as a
+  process-reward controller for best-first prune/expand decisions, not just as a
+  final sorter.
+- **Budget-aware discriminative verification** (arXiv:2510.14913): keep the
+  cheap learned verifier score, add agreement among candidate families, and
+  spend expensive expansion only on uncertain or high-upside frames.
+- **CASCAL / IR3DE generated-data routing** (arXiv:2601.09692, arXiv:2606.06098):
+  split the current single Exp 4556 verifier head into cheap mechanic-fingerprint
+  dispatch over router heads, trained from generated variants that actually
+  differentiate candidate performance.
+- **Executable World Models plus Counterexample Guided Learning**
+  (arXiv:2605.05138, arXiv:2606.11521): add richer executable branch candidates
+  when primitive action candidates are weak, then feed verifier-rejected states
+  back as bounded counterexamples.
+
+## .422 Candidate
+
+flagged_for_v422: adaptive PRM-guided candidate expansion over the Exp 4556 DiscriminativeVerifier, trained and refreshed with self-evolving verifiable-reward data (arXiv:2602.01070 + arXiv:2601.22607)
+
+The practical next experiment should keep Exp 4556's oracle-distinct learned
+score, same manufactured-variant measurement, random-router control, and offline
+reproduction gate. The change is where the score acts: it should drive adaptive
+best-first expansion and budget allocation before actions are spent. Self-
+evolving verifiable-reward data supplies the retraining stream, budget-aware
+discriminative verification supplies the cheap hybrid scoring rule, CASCAL/IR3DE
+supplies mechanic dispatch, and executable world models plus Counterexample
+Guided Learning supply fallback branches and repair when the primitive candidate
+set is too weak.
