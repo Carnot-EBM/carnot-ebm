@@ -583,6 +583,48 @@ Required field principles:
 - `reproducibility_checksum`: principle "catches silent drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4547: Cached Human-Replay CNN Ranker Measurement
+
+Experiment 4547 SHALL write
+`results/experiment_4547_frame_change_predictor.json` after training the
+repository's small frame-only CNN on the locally cached ARC Public Demo human
+replay `(frame, action, frame_delta)` corpus. The training and scoring path
+SHALL use CPU or integrated-device execution only, recompute features from
+rendered frames, and SHALL NOT consume mirror `feature_keys`, bundled third
+party weights, `env._game` internals, network resources, or 3090-class GPUs.
+
+The trained CNN SHALL be exposed through `FrameChangeScorer` and passed into
+`rich_action_candidates`/`StepwiseExplorer` as an ordering signal that ranks
+candidate clicks and ACTION1-5 by predicted frame change while preserving the
+legacy blind-BFS/salience order as the stable fallback tie-break. Experiment
+4547 SHALL compare the CNN-ranked arm against the matched blind-BFS control on
+the same held-out games or cached candidate groups, reporting median
+actions-to-first-level-up and solve-rate for both arms. A success verdict is
+allowed only when the CNN median is strictly lower than the blind median and
+solve-rate is not dropped; otherwise the artifact SHALL report an honest null.
+
+The experiment SHALL also compute a held-out transition-delta AUROC for the CNN
+against the trivial `0.5` baseline. A median-actions null SHALL be considered
+interpretable only when this positive control passes; otherwise the artifact
+SHALL mark the false-negative risk as unchecked instead of claiming that the
+ranker was fairly ruled out. If no action reduction is found after the positive
+control passes, the artifact SHALL include the secondary recommended input:
+hidden-field probing in the state hash for the `ka59`/`ar25` L2 stall.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: frame_change_cnn_median_actions_reduced_<n> OR complete: frame_change_cnn_no_action_reduction_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- CNN trains on cached transitions + scores offline candidates, no headline LLM load."
+- `median_actions_to_first_levelup_cnn`: principle "the HEADLINE -- held-out median actions-to-first-levelup with the CNN ranker (the score-metric lever)."
+- `median_actions_to_first_levelup_blind`: principle "the matched blind-BFS control measured the SAME way -- the apples-to-apples comparison."
+- `solve_rate_preserved`: principle "HARD gate -- the action-efficiency win must NOT drop solve-rate (a faster agent that solves fewer games is worse)."
+- `cnn_held_out_delta_auroc`: principle "the POSITIVE CONTROL -- the CNN predicts held-out transition deltas above a trivial baseline; guards a silently-broken predictor."
+- `positive_control_passed`: principle "the CNN learned the action-effect signal; a median-actions null is valid only if this passed."
+- `false_negative_risk_checked`: principle "a null is valid only with the positive control passed."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, human-replay corpus cached); pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -650,6 +692,23 @@ game, uses `action_field_used="actions"` for both arms, preserves every CORE
 solve, preserves every game's before/after `best_level`, and only reports
 success when the treatment's median CORE total actions is strictly lower than
 the measured control.
+
+### SCENARIO-ARC-FCP-4547: CNN Ranker Beats Only With Positive Control
+
+Given the cached ARC Public Demo human replay shards are present and
+`arc_solver_kit.offline_arcade()` imports successfully
+When experiment 4547 trains the small CNN on frame-only action-effect rows and
+measures CNN-ranked candidates against the matched blind-BFS order
+Then the artifact records the required median action, solve-rate, AUROC,
+positive-control, random-seed, checksum, and precondition fields, and a success
+verdict is emitted only when the CNN median actions-to-first-level-up is
+strictly lower than blind BFS while preserving solve-rate.
+
+Given the CNN does not reduce held-out median actions
+When the held-out transition-delta AUROC is above the trivial baseline
+Then the artifact reports `complete: frame_change_cnn_no_action_reduction_honest_null`,
+sets `false_negative_risk_checked=true`, and records hidden-field probing for
+the `ka59`/`ar25` L2 stall as the secondary input.
 
 ### SCENARIO-ARC-FCP-4501: Staged Frame-Only Rerun Has Interpretable Null Guard
 
