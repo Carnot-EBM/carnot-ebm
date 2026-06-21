@@ -239,6 +239,36 @@ def _delta(g0: np.ndarray, g1: np.ndarray, cap: int = 80) -> list:
     return [(int(r), int(c), int(g0[r, c]), int(g1[r, c])) for r, c in diff[:cap]]
 
 
+def _rle_delta(g0: np.ndarray, g1: np.ndarray) -> str:
+    """LOSSLESS run-length delta for the induce prompt: every changed cell, encoded as maximal
+    horizontal runs 'r<row>c<col0>:<new,values>' (values comma-separated so colors >=10 stay
+    unambiguous). This REPLACES the old cap=80 raw-tuple delta in the induction evidence, which
+    silently TRUNCATED large changes — a 293-cell re-render showed only the first 80 cells (27%),
+    starving the model of the very evidence it needs to induce the rule. RLE shows the FULL change
+    at ~1/4 the tokens of raw per-cell tuples, so the whole change fits the local model's context
+    with no truncation. (The verifier's mismatch examples still use the capped _delta on purpose —
+    those are illustrative, not the load-bearing induction evidence.)"""
+    g0 = np.asarray(g0)
+    g1 = np.asarray(g1)
+    if g0.shape != g1.shape:
+        return ""
+    diff = g0 != g1
+    h, w = g0.shape
+    runs = []
+    for r in range(h):
+        c = 0
+        while c < w:
+            if diff[r, c]:
+                c0 = c
+                while c < w and diff[r, c]:
+                    c += 1
+                vals = ",".join(str(int(v)) for v in g1[r, c0:c])
+                runs.append(f"r{r}c{c0}:{vals}")
+            else:
+                c += 1
+    return " ".join(runs) if runs else "(no change)"
+
+
 def _transitions_block(trans: list[Transition], k: int = 8) -> str:
     """Compact transition encoding for the induce prompt: ONE full grid (the layout) +
     per-transition DELTAS (changed cells), + the full WIN state if observed. Prefers
@@ -257,7 +287,7 @@ def _transitions_block(trans: list[Transition], k: int = 8) -> str:
         click = f" data={t.data}" if t.data else ""
         out.append(
             f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
-            f"changed cells (row,col,from,to) = {_delta(t.grid, t.next_grid)}"
+            f"changed cells (FULL, run-length) = {_rle_delta(t.grid, t.next_grid)}"
         )
     win = next((t for t in trans if t.level_after > t.level_before), None)
     if win is not None:
@@ -275,9 +305,12 @@ def induce_prompt(game: str, trans: list[Transition], cell: int) -> str:
 
 The game state is a {h}x{w} integer grid (logical resolution; colors {colors}). You are
 given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
-transition the action and its DELTA = the list of changed cells (row, col, from_value,
-to_value). Apply a transition's delta to the prior grid to get the next grid. A full WIN
-STATE grid is shown if a level was completed. Actions are integers 1-7; ACTION6 is a click
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col>:<v0,v1,...> — each run is a horizontal span of changed cells starting at
+(row, col), and the values are the NEW cell values left-to-right (comma-separated). To apply a
+transition's delta to the prior grid, for each run set grid[row, col+i] = the i-th run value;
+all other cells are unchanged. The delta is COMPLETE (not truncated). A full WIN STATE grid is
+shown if a level was completed. Actions are integers 1-7; ACTION6 is a click
 with data={{'x':px,'y':py}} in PIXEL coords (pixel = logical*{cell}); others are
 keyboard/directional with data=None.
 
