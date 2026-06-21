@@ -12,7 +12,7 @@ theme: >-
   7761.5 under a fixed transition-budget termination). The .418 A2 diagnosis -- after clearing L1
   the agent never re-induces the (different) L2 win-predicate -- l2_win_condition_differs_from_l1=true,
   known_l2_transition_in_salience=null, induction engages only on stall-and-not-won, and
-  SUBMITTED_TARGET_LEVELS=1 halts the agent. .419 builds -- re-induce the L_{n+1} predicate after a
+  SUBMITTED_TARGET_LEVELS=1 halts the agent. .419 builds -- re-induce the L_{{n+1}} predicate after a
   level-up + route the frontier toward it + raise target_levels + persist the primitive as reusable
   scaffolding + the oracle-distinct world-model trust energy as a next-level-distance heuristic.
 sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC;
@@ -78,7 +78,7 @@ tasks:
   - id: exp4533-a1
     milestone: 2026.06.419
     title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- BUILD per-level GOAL
-      RE-INDUCTION: on a level-up, re-induce the L_{n+1} win-predicate from post-transition frames +
+      RE-INDUCTION: on a level-up, re-induce the L_{{n+1}} win-predicate from post-transition frames +
       route the frontier toward it + raise target_levels past 1. Gate: a CORE game reaches L2
       (core_efficiency STRICTLY > 2.0074) at preserved CORE solves, OR a measured actionable barrier
       refinement.'
@@ -97,7 +97,7 @@ tasks:
           barrier is NOT depth (cap 45->90 just exhausted budget, still L1) but per-level GOAL
           RE-INDUCTION: l2_win_condition_differs_from_l1=true, known_l2_transition_in_salience=null,
           induction engages only on stall-and-not-won, SUBMITTED_TARGET_LEVELS=1 halts the agent. This
-          task BUILDS the mechanism A2 prescribed (detect the level boundary -> re-induce the L_{n+1}
+          task BUILDS the mechanism A2 prescribed (detect the level boundary -> re-induce the L_{{n+1}}
           predicate -> route the frontier toward it -> raise target_levels), NOT another depth raise.
           Different mechanism, falsifiable gate, and it emits model_specs/inference_substrate/
           efficiency_delta + a null-delta methodology note so a genuine null is not lost to the
@@ -124,13 +124,13 @@ tasks:
         1. DETECT the level boundary: when levels_completed bumps (the explorer wins a level), treat it
            as a NEW goal-acquisition episode rather than terminating. (level = frame.levels_completed;
            see registry general_gotcha level_on_frame_not_game.)
-        2. RE-INDUCE the L_{n+1} win-predicate from the post-transition frames (the new level presents a
+        2. RE-INDUCE the L_{{n+1}} win-predicate from the post-transition frames (the new level presents a
            DIFFERENT goal). Reuse the Family-B executable-world-model / DSL induction
            (arc_world_model_dsl, arc_executable_world_model) but TRIGGER it on the level-up, not only on
-           stall. The induced L_{n+1} predicate is the new search target.
-        3. ROUTE the frontier toward states satisfying the re-induced L_{n+1} predicate (level-conditioned
+           stall. The induced L_{{n+1}} predicate is the new search target.
+        3. ROUTE the frontier toward states satisfying the re-induced L_{{n+1}} predicate (level-conditioned
            goal). Keep depth as the no-regression primary key; the re-induced predicate is the goal bias.
-        4. RAISE target_levels past 1 (sweep target_levels in {1(control),2,3,8}) so the agent keeps going.
+        4. RAISE target_levels past 1 (sweep target_levels in {{1(control),2,3,8}}) so the agent keeps going.
       CAUTION: the run terminates on a FIXED explore_budget (transition count). Raising target_levels +
       re-routing changes WHICH states are explored before budget is spent -- it CAN drop a knife-edge CORE
       solve (the order-perturbation mechanism). So core_solves_preserved on {{lp85,m0r0,sp80,vc33}} is a
@@ -145,7 +145,7 @@ tasks:
         - {project_root}/scripts/arc_leaderboard_eval.py (the eval that drives the real scorer; eff= is per-level)
         - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green if SUBMITTED config changes)
 
-      TASK: implement per-level goal re-induction (detect level-up -> re-induce L_{n+1} predicate ->
+      TASK: implement per-level goal re-induction (detect level-up -> re-induce L_{{n+1}} predicate ->
       route -> raise target_levels); measure core_efficiency + deepest level per CORE game WITH vs
       WITHOUT on lp85 + m0r0; wire into SUBMITTED_AGENT_CONFIG only if a CORE game reaches L2 with no
       CORE solve lost.
@@ -205,7 +205,7 @@ tasks:
     milestone: 2026.06.419
     title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE; ORACLE-DISTINCT MOAT) --
       ENERGY-VERIFIER next-level-distance routing: use the world-model TRUST ENERGY (verifier_is_oracle:
-      false) to route the frontier toward predicted-deeper states satisfying the re-induced L_{n+1}
+      false) to route the frontier toward predicted-deeper states satisfying the re-induced L_{{n+1}}
       predicate. Test lp85 + sp80 with a matched no-energy control. Gate: an energy-routed config reaches
       a deeper level OR a measured null with the energy signal characterized.'
     priority: high
@@ -221,7 +221,7 @@ tasks:
         addressed_by: 'A2 tried energy_verifier_frontier_routing as ONE of several levers and it stayed
           at L1 (and even dropped m0r0 to 0) because it routed in the SAME L1-goal frame with NO
           re-induced L2 predicate to aim at. This task pairs the energy routing with the A1 re-induced
-          L_{n+1} predicate as the TARGET (route toward states the energy says are closer to the NEW
+          L_{{n+1}} predicate as the TARGET (route toward states the energy says are closer to the NEW
           goal), adds a MATCHED no-energy control + FALSE_NEGATIVE_RISK guard, and sets
           verifier_is_oracle:false per the Circularity discipline. Different mechanism (energy as a
           next-LEVEL-distance heuristic toward a re-induced goal, not a within-L1 tie-break), falsifiable
@@ -233,26 +233,26 @@ tasks:
       models that AUGMENT others' approaches"). The oracle-distinct EBM slot on the ARC critical path is
       the world-model TRUST ENERGY (energy = 1 - dynamics_accuracy; ALREADY live in the submitted agent).
       This task uses it as a NEXT-LEVEL-DISTANCE heuristic: route the frontier toward states the energy
-      predicts are closer to the re-induced L_{n+1} goal (from A1), so the search crosses into deeper
+      predicts are closer to the re-induced L_{{n+1}} goal (from A1), so the search crosses into deeper
       levels. verifier_is_oracle MUST be false (a circular win does not count; CLAUDE.md Circularity /
       Oracle-Distinctness Discipline).
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/python/carnot/agentic/arc_world_model_trust_energy.py (select_trusted_world_model, the trust energy)
         - {project_root}/python/carnot/agentic/arc_competition_agent.py (_frontier, _induce_and_plan, world_model_trust_selection, HIDDEN_STATE_GAME_IDS)
-        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induced L_{n+1} predicate + any winning config -- the TARGET this routes toward; degrade gracefully if A1 nulled)
+        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induced L_{{n+1}} predicate + any winning config -- the TARGET this routes toward; degrade gracefully if A1 nulled)
         - {project_root}/results/experiment_4524_reach_deeper_levels.json (A2 .418: the energy_verifier_frontier_routing lever that stayed L1 -- the prior failure this addresses)
         - {project_root}/scripts/kaggle/arc_local_submission_gate.py (per-level efficiency gate, baseline 2.0074)
 
       TASK: route the frontier toward predicted-deeper states using the world-model trust energy as a
-      next-level-distance heuristic toward the re-induced L_{n+1} predicate; measure on lp85 + sp80 with
+      next-level-distance heuristic toward the re-induced L_{{n+1}} predicate; measure on lp85 + sp80 with
       a MATCHED no-energy control. verifier_is_oracle:false. If A1 produced a re-induced predicate, route
       toward it; if A1 nulled, characterize the energy signal independently (does the trust energy
       separate deeper-progress states from L1-stuck states at all?).
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Read the A1 artifact for the re-induced L_{n+1} predicate + winning config (if any). Implement energy-routed frontier selection: among eligible frontier nodes, bias toward those the trust energy ranks closer to the re-induced goal. Depth stays the no-regression primary key; energy is the goal bias.
+        1. Read the A1 artifact for the re-induced L_{{n+1}} predicate + winning config (if any). Implement energy-routed frontier selection: among eligible frontier nodes, bias toward those the trust energy ranks closer to the re-induced goal. Depth stays the no-regression primary key; energy is the goal bias.
         2. Measure WITH energy routing vs a MATCHED no-energy control on lp85 + sp80: core_efficiency, deepest_level_reached, core_solves_preserved. The WIN: an energy-routed config reaches a deeper level (deepest_level_reached >= 2 on a CORE game) the no-energy control does not, core_solves_preserved=True, verifier_is_oracle:false.
         3. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: a state set where the trust energy SHOULD separate deeper-progress from stuck (e.g. a game with a known L2 the energy was trained on) must register separation; a null is valid only if this control passed. Characterize the energy signal (AUROC of energy separating deeper-progress vs L1-stuck states) even when no solve.
         4. HONEST NULL is acceptable IF it characterizes the energy signal + states why it does not yet cross levels (the actionable input to .420). Do NOT claim a circular win (verifier_is_oracle stays false).
@@ -455,23 +455,23 @@ tasks:
       reusable scaffolding, verified by transfer, compounding across games.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induction primitive built; the L_{n+1} predicate + routing recipe to persist)
+        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induction primitive built; the L_{{n+1}} predicate + routing recipe to persist)
         - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate -- where the primitive is persisted)
         - {project_root}/ops/arc_solve_registry.yaml (general_gotchas + per-game entries -- where the recipe + gotchas are recorded)
         - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -- the routing this primitive feeds)
 
-      TASK: (1) PERSIST the per-level re-induction primitive (detect level-up -> re-induce L_{n+1}
+      TASK: (1) PERSIST the per-level re-induction primitive (detect level-up -> re-induce L_{{n+1}}
       predicate -> route) into arc_solver_kit as a generic operator + a general_gotcha in
       arc_solve_registry (so it is a reusable asset, not buried in the A1 experiment). (2) Measure
       CROSS-GAME TRANSFER: apply the persisted primitive to 2-3 deeper games it was NOT tuned on
       (tn36 L7+, tr87 L6+, tu93 L5+, or sc25 L5+) -- does it reach a deeper level, or at least re-induce a
-      DIFFERENT (representation-correct) L_{n+1} predicate? Degrade gracefully: if A1 nulled, persist the
+      DIFFERENT (representation-correct) L_{{n+1}} predicate? Degrade gracefully: if A1 nulled, persist the
       primitive-as-built and report the transfer null + what the primitive would need to cross levels.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
         1. Read the A1 artifact for the re-induction primitive + recipe. Persist it: add a generic operator/helper to arc_solver_kit (the detect-level-up -> re-induce -> route loop) + a general_gotcha entry to ops/arc_solve_registry.yaml documenting it.
-        2. Measure transfer on 2-3 deeper games NOT tuned in A1: run the persisted primitive; report deepest_level_reached + whether a DIFFERENT L_{n+1} predicate was re-induced (representation transfer) even when no solve. Offline-reproduce any new level (arc_solver_kit.reproduce); only reproduced levels count.
+        2. Measure transfer on 2-3 deeper games NOT tuned in A1: run the persisted primitive; report deepest_level_reached + whether a DIFFERENT L_{{n+1}} predicate was re-induced (representation transfer) even when no solve. Offline-reproduce any new level (arc_solver_kit.reproduce); only reproduced levels count.
         3. Record the transfer result + dead-ends in the registry. If a new deeper level was banked, bump reproducible_total_levels.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -486,7 +486,7 @@ tasks:
         transfer_deepest_level_per_game:
           principle: "best_level reached per transfer game -- the cross-game evidence the primitive generalizes."
         representation_transfer:
-          principle: "whether the primitive re-induced a DIFFERENT (correct) L_{n+1} predicate even without a full solve -- a representation win short of a bank."
+          principle: "whether the primitive re-induced a DIFFERENT (correct) L_{{n+1}} predicate even without a full solve -- a representation win short of a bank."
         offline_reproduced:
           principle: "only offline-reproduced new levels count toward reproducible_total_levels."
         registry_updated:

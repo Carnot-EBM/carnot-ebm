@@ -1,0 +1,211 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "efficiency_moved",
+        "scorecard",
+        "reproducible_total_levels_delta"
+      ],
+      "path": "results/experiment_4531_capstone_v418.json",
+      "sha256": "ffd9abf81dd3c6a2a438ce822a01ebc4cdca22080de4664a49d08f674dfe2f98",
+      "source": "experiment_4531_capstone_v418"
+    },
+    {
+      "fields_imported": [
+        "median_actions_on_core_control",
+        "median_actions_on_core_best",
+        "local_gate_budget",
+        "chosen_submitted_config"
+      ],
+      "path": "results/experiment_4523_forward_walk_navigation.json",
+      "sha256": "2706415488d6539c92b727ba8f6fe0f4e224859a9ed6c82ecf5ca6684c719a9b",
+      "source": "experiment_4523_forward_walk_navigation"
+    },
+    {
+      "fields_imported": [
+        "barrier_diagnosis.l2_win_condition_differs_from_l1",
+        "barrier_diagnosis.induction_not_engaged",
+        "barrier_diagnosis.actionable_next_step"
+      ],
+      "path": "results/experiment_4524_reach_deeper_levels.json",
+      "sha256": "28aaf8e0266e6a938aec7dd02090cd52e1c3b080b3d02d4ba47bbdaf74c8473f",
+      "source": "experiment_4524_reach_deeper_levels"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "target_game",
+        "target_level",
+        "registry_update"
+      ],
+      "path": "results/experiment_4525_levelup_attempt.json",
+      "sha256": "4688690173042d0beaf27ce7c7630411eec1b42db7168a300155556df4776b83",
+      "source": "experiment_4525_levelup_attempt"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "0cc95248910cc7c1a7d1d31bffb259a6bc8fc9694dfad5e346b74694a8a73ac2",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_418": {
+    "a1_forward_walk": {
+      "chosen_submitted_config": "unchanged",
+      "control_equals_best": true,
+      "fixed_transition_budget": 8000,
+      "flagged_on_false_positive_null_delta_tautology": true,
+      "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
+      "median_actions_on_core_best": 7761.5,
+      "median_actions_on_core_control": 7761.5,
+      "score_lever_dead": true
+    },
+    "a2_barrier_diagnosis": {
+      "actionable_next_step": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate.",
+      "barrier": "per_level_goal_reinduction",
+      "flagged_on_false_positive_null_delta_tautology": true,
+      "induction_once_on_stall": true,
+      "known_l2_transition_in_salience": null,
+      "l2_win_condition_differs_from_l1": true,
+      "root_cause_reported_by_source": "depth_cap",
+      "source_honest_verdict": "complete: l1_l2_barrier_diagnosed_depth_cap_honest_null",
+      "target_levels": 1
+    },
+    "a3_levelup": {
+      "banked": true,
+      "banked_levels": 1,
+      "offline_reproduced": true,
+      "source_honest_verdict": "success: cd82_L2_offline_reproduced",
+      "target_game": "cd82",
+      "target_level": 2
+    },
+    "action_trimming_context": {
+      "median_actions_best": 2825.5,
+      "median_actions_control": 7761.5,
+      "moves_score": false,
+      "reason": "median_actions_retired_as_score_lever",
+      "status": "retired_action_trimming_context"
+    },
+    "capstone_reported_efficiency_moved": false,
+    "capstone_reported_reproducible_total_levels_delta": {
+      "banked_levels": 1,
+      "capability_grew": true,
+      "current_total": 50,
+      "delta": 2,
+      "prior_total": 48,
+      "source": "A3_levelup_attempt+ops/arc_solve_registry.yaml"
+    },
+    "core_efficiency_baseline": 2.0074,
+    "core_efficiency_integrated": null,
+    "efficiency_moved": false,
+    "nav_action_trimming_dead_score_lever": true,
+    "net_418": {
+      "action_efficiency_moved": false,
+      "efficiency_reason": "no lever raised core_efficiency above 2.0074",
+      "score_lever_to_build_next": "per_level_goal_reinduction",
+      "solve_capability_grew": true,
+      "submitted_config": "unchanged"
+    },
+    "reproducible_total_levels": 50,
+    "source_capstone_honest_verdict": "complete: nav_fix_null_efficiency_unmoved"
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4532_archive_418_activate_419",
+  "experiment_id": 4532,
+  "field_provenance": {
+    "close_state_418": {
+      "principle": "the honest .418 numbers (nav-is-dead; A2 barrier=per-level goal re-induction; A3 cd82 L2; reproducible_total_levels; efficiency_moved=false) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    }
+  },
+  "honest_verdict": "complete: archive_418_activate_419_true_close_state_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "a1_forward_walk_navigation": {
+      "available": true,
+      "path": "results/experiment_4523_forward_walk_navigation.json"
+    },
+    "a2_reach_deeper_levels": {
+      "available": true,
+      "path": "results/experiment_4524_reach_deeper_levels.json"
+    },
+    "a3_levelup_attempt": {
+      "available": true,
+      "path": "results/experiment_4525_levelup_attempt.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.419",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "capstone_4531": {
+      "available": true,
+      "path": "results/experiment_4531_capstone_v418.json"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 50
+    },
+    "research_complete_yaml": {
+      "available": true,
+      "contains_2026_06_418": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "available": false,
+      "milestone": null,
+      "note": "literal precondition failed; accepted only when active research-roadmap.yaml is parseable at 2026.06.419",
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4532_archive_418_activate_419.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n88 passed, 1 warning in 5.76s\n"
+    }
+  },
+  "random_seed": 4532,
+  "reproducibility_checksum": "sha256:c0fab06711abe4ed882a48754dd3631b5a07bbd45c9b718a4ef0247bcdb9b892",
+  "schema": "carnot.archive_activation.v418_to_v419_4532.v1",
+  "transition": {
+    "activated_milestone": "2026.06.419",
+    "activation_state": "already_active_roadmap_next_consumed",
+    "active_milestone_confirmed": true,
+    "archive_state": "research_complete_contains_2026.06.418",
+    "archived_milestone": "2026.06.418"
+  }
+}
