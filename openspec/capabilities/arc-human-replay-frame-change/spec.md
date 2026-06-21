@@ -526,6 +526,29 @@ Required field principles:
 - `tests_added_pass`: principle "Tests Must Run and Assert."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4528: .417 B-Track Infra Carryforward Audit
+
+Experiment 4528 SHALL write
+`results/experiment_4528_infra_carryforward.json` by reading the upstream
+`.417 B2` artifact
+`results/experiment_4518_metric_harness_canonical.json` and reconciling the
+canonical local submission-gate state without rerunning the live headroom
+measurement unless the upstream artifact is missing required evidence. The
+audit SHALL confirm whether the CORE set-containment verdict is canonical,
+whether the four-or-more verdict fixtures are CI-guarded, and whether the
+headroom-budget table measured `B*` as the smallest candidate whose baseline
+solved set equals the baseline solved set at `1.5B`. If no candidate plateau is
+present in the upstream table, the audit SHALL record `b_star_measured=false`
+and keep the default budget unchanged instead of raising it blindly.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; shipped: infra_carryforward_complete OR complete: infra_audit_already_done."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (reads the .417 B2 artifact) unless it measures B* live (then verifier_ensemble_against_cached_candidates)."
+- `b_track_status`: principle "what landed in .417 B2 vs what this task completed -- the audit trail."
+- `cited_upstream_artifacts`: principle "traceability of the .417 B2 numbers this reconciles."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ### REQ-ARC-FCP-4524: Stop After Scored Target Level-Up
 
 Experiment 4524 SHALL write
@@ -783,3 +806,12 @@ When the measured candidate baseline is missing CORE efficiency or drops `lp85`
 below the canonical per-level efficiency floor
 Then the baseline is not persisted and the command reports the canonical
 baseline guard failure.
+
+### SCENARIO-ARC-FCP-4528: .417 B-Track Audit Records No Blind Budget Raise
+
+Given the upstream `.417 B2` canonical metric harness artifact
+When experiment 4528 audits the artifact
+Then it records the CORE containment gate, fixture CI guard, and measured
+headroom table in `b_track_status`, cites the upstream artifact fields it
+imports, and reports a complete audit if the headroom table has no stable `B*`
+candidate instead of raising the local submission-gate default blindly.
