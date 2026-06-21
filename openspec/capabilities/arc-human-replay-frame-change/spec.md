@@ -499,6 +499,33 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4527: Nav Metric First-Class Submission Gate Guard
+
+Experiment 4527 SHALL write
+`results/experiment_4527_nav_metric_harness.json` after validating that the
+local submission gate records the authoritative per-game score levers and the
+secondary navigation diagnostics as first-class fields. The gate SHALL keep
+CORE set-containment and per-level efficiency as the verdict metric; it SHALL
+track each game's deepest level reached and per-level efficiency, because
+solving more or deeper levels is the real score lever. The gate SHALL also
+track each game's `reset_replay_steps` and `forward_walk_hit_rate` from the
+live navigation diagnostics, but these diagnostics SHALL only produce a
+wall-clock warning and SHALL NOT replace or demote the per-level score verdict.
+
+The `--update-baseline` path SHALL validate the candidate baseline with
+`validate_canonical_baseline` before persisting it. An efficiency-bearing
+baseline SHALL include per-level efficiency for every CORE game and SHALL keep
+the `lp85` per-level efficiency at or above the canonical floor, so a deflated
+baseline cannot later disarm the SF-3 per-game efficiency guard.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; shipped: nav_metric_first_class_ci_guarded OR complete: nav_metric_partial_<reason>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
+- `nav_metric_added`: principle "names the per-game nav fields the gate now tracks -- the nav-regression early warning."
+- `tests_added_pass`: principle "Tests Must Run and Assert."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ### REQ-ARC-FCP-4524: Stop After Scored Target Level-Up
 
 Experiment 4524 SHALL write
@@ -740,3 +767,19 @@ Then every row uses the same total `actions` field, reports CORE preservation
 and navigation diagnostics, passes the positive-control reduction guard, and
 wires `SUBMITTED_AGENT_CONFIG` only for a strict `IMPROVED` CORE median action
 reduction.
+
+### SCENARIO-ARC-FCP-4527: Nav Metrics Are CI-Guarded But Secondary
+
+Given the local submission gate measures the fixed eight-game set with the
+authoritative per-level scorecard
+When a measured config preserves CORE solves and per-level efficiency but has
+more `reset_replay_steps` at equal total actions
+Then the verdict remains non-inferior, the dashboard emits a navigation
+regression warning, and the per-game rows expose `deepest_level_reached`,
+`per_level_efficiency`, `reset_replay_steps`, and `forward_walk_hit_rate`.
+
+Given the gate is invoked with `--update-baseline`
+When the measured candidate baseline is missing CORE efficiency or drops `lp85`
+below the canonical per-level efficiency floor
+Then the baseline is not persisted and the command reports the canonical
+baseline guard failure.

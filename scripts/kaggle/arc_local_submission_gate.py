@@ -34,6 +34,7 @@ CANONICAL_GAME_SET = ("lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "l
 CANONICAL_BASELINE_ACTIONS_BY_GAME = {"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}
 CANONICAL_CORE_GAMES = tuple(CANONICAL_BASELINE_ACTIONS_BY_GAME)
 CANONICAL_BASELINE_MEDIAN_ACTIONS = 7760.0
+CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR = 2.0069
 CANONICAL_ACTION_FIELD = "actions"
 CANONICAL_ACTION_METRIC = {
     "field": CANONICAL_ACTION_FIELD,
@@ -43,7 +44,11 @@ HEADROOM_BUDGET_CANDIDATES = (8000, 12000, 16000, 24000)
 DEFAULT_BUDGET = 8000
 # 4 reliably-solvable games (the bare-BFS solves) + 4 controls. Small so the gate runs in a couple minutes.
 GATE_GAMES = list(CANONICAL_GAME_SET)
-_LINE = re.compile(r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)(?:\s*eff=([\d.]+))?")
+_LINE = re.compile(
+    r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)"
+    r"(?:\s*eff=([\d.]+))?"
+    r"(?:\s*nav_reset=(\d+)\s*nav_fwhr=([\d.]+))?"
+)
 EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a regression (FALLBACK metric)
 EFFICIENCY_DROP_SLACK = 0.97  # PRIMARY: fail if CORE per-level efficiency drops below 97% of baseline
 BIG_ACTIONS = 10 ** 9
@@ -65,20 +70,77 @@ def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
             if game in ln and "live=L" in ln:
                 m = _LINE.search(ln)
         if not m:
-            return {"game": game, "timed_out": False, "solved": False, "actions": None, "efficiency": None}
-        levels, actions = int(m.group(2)), int(m.group(3))
+            return {
+                "game": game,
+                "timed_out": False,
+                "solved": False,
+                "actions": None,
+                "efficiency": None,
+                "per_level_efficiency": None,
+                "levels": 0,
+                "deepest_level_reached": 0,
+                "reset_replay_steps": 0,
+                "forward_walk_hit_rate": 0.0,
+            }
+        reached, levels, actions = int(m.group(1)), int(m.group(2)), int(m.group(3))
         eff = float(m.group(4)) if m.group(4) is not None else None
-        return {"game": game, "timed_out": False, "solved": levels >= 1, "actions": actions,
-                "efficiency": eff}
+        reset_steps = int(m.group(5)) if m.group(5) is not None else 0
+        hit_rate = float(m.group(6)) if m.group(6) is not None else 0.0
+        return {
+            "game": game,
+            "timed_out": False,
+            "solved": levels >= 1,
+            "actions": actions,
+            "efficiency": eff,
+            "per_level_efficiency": eff,
+            "levels": levels,
+            "deepest_level_reached": reached,
+            "reset_replay_steps": reset_steps,
+            "forward_walk_hit_rate": hit_rate,
+        }
     except subprocess.TimeoutExpired:
-        return {"game": game, "timed_out": True, "solved": False, "actions": None, "efficiency": None}
+        return {
+            "game": game,
+            "timed_out": True,
+            "solved": False,
+            "actions": None,
+            "efficiency": None,
+            "per_level_efficiency": None,
+            "levels": 0,
+            "deepest_level_reached": 0,
+            "reset_replay_steps": 0,
+            "forward_walk_hit_rate": 0.0,
+        }
+
+
+def _normalize_game_row(row: dict) -> dict:
+    out = dict(row)
+    if out.get("per_level_efficiency") is None and out.get("efficiency") is not None:
+        out["per_level_efficiency"] = float(out["efficiency"])
+    if out.get("deepest_level_reached") is None:
+        out["deepest_level_reached"] = int(out.get("reached", out.get("levels") or 0) or 0)
+    out["reset_replay_steps"] = int(out.get("reset_replay_steps") or 0)
+    out["forward_walk_hit_rate"] = float(out.get("forward_walk_hit_rate") or 0.0)
+    return out
 
 
 def measure(policy: str, budget: int, cap: int) -> dict:
     with ThreadPoolExecutor(max_workers=8) as ex:
-        rows = list(ex.map(lambda g: _measure_game(g, policy, budget, cap), GATE_GAMES))
+        rows = [_normalize_game_row(row) for row in ex.map(lambda g: _measure_game(g, policy, budget, cap), GATE_GAMES)]
     solved = [r for r in rows if r["solved"]]
     acts = [r["actions"] for r in solved if r["actions"] is not None]
+    per_level_efficiency_by_game = {
+        r["game"]: float(r["per_level_efficiency"])
+        for r in rows
+        if r.get("per_level_efficiency") is not None
+    }
+    navigation_by_game = {
+        r["game"]: {
+            "reset_replay_steps": int(r.get("reset_replay_steps") or 0),
+            "forward_walk_hit_rate": float(r.get("forward_walk_hit_rate") or 0.0),
+        }
+        for r in rows
+    }
     return {
         "policy": policy, "games": GATE_GAMES, "per_game": rows,
         "action_metric": dict(CANONICAL_ACTION_METRIC),
@@ -104,6 +166,9 @@ def measure(policy: str, budget: int, cap: int) -> dict:
         # sum(min(human/agent_per_level,1)^2), NOT total actions. The eval now emits it (eff=); this is the
         # PRIMARY metric the verdict judges (median actions is demoted to a wall-clock/compute-budget proxy).
         "efficiency_by_game": {r["game"]: r["efficiency"] for r in solved if r.get("efficiency") is not None},
+        "per_level_efficiency_by_game": per_level_efficiency_by_game,
+        "deepest_level_by_game": {r["game"]: int(r.get("deepest_level_reached") or 0) for r in rows},
+        "navigation_by_game": navigation_by_game,
         "core_efficiency": round(sum(
             r["efficiency"] for r in rows
             if r["game"] in CANONICAL_CORE_GAMES and r.get("efficiency") is not None), 4),
@@ -114,10 +179,40 @@ def _efficiency_by_game(measurement: dict) -> dict[str, float]:
     eff = measurement.get("efficiency_by_game")
     if isinstance(eff, dict) and eff:
         return {str(g): float(v) for g, v in eff.items() if v is not None}
+    per_level = measurement.get("per_level_efficiency_by_game")
+    if isinstance(per_level, dict) and per_level:
+        return {str(g): float(v) for g, v in per_level.items() if v is not None}
     out: dict[str, float] = {}
     for row in measurement.get("per_game", []) or []:
         if isinstance(row, dict) and row.get("efficiency") is not None:
             out[str(row["game"])] = float(row["efficiency"])
+        elif isinstance(row, dict) and row.get("per_level_efficiency") is not None:
+            out[str(row["game"])] = float(row["per_level_efficiency"])
+    return out
+
+
+def _navigation_by_game(measurement: dict) -> dict[str, dict[str, float]]:
+    nav = measurement.get("navigation_by_game")
+    if isinstance(nav, dict) and nav:
+        return {
+            str(game): {
+                "reset_replay_steps": int((value or {}).get("reset_replay_steps") or 0),
+                "forward_walk_hit_rate": float((value or {}).get("forward_walk_hit_rate") or 0.0),
+            }
+            for game, value in nav.items()
+            if isinstance(value, dict)
+        }
+    out: dict[str, dict[str, float]] = {}
+    for row in measurement.get("per_game", []) or []:
+        if not isinstance(row, dict) or row.get("game") is None:
+            continue
+        diagnostics = row.get("navigation_diagnostics")
+        if not isinstance(diagnostics, dict):
+            diagnostics = row
+        out[str(row["game"])] = {
+            "reset_replay_steps": int(diagnostics.get("reset_replay_steps") or 0),
+            "forward_walk_hit_rate": float(diagnostics.get("forward_walk_hit_rate") or 0.0),
+        }
     return out
 
 
@@ -187,6 +282,16 @@ def validate_canonical_baseline(base: dict) -> dict:
         missing = [g for g in CANONICAL_CORE_GAMES if g not in eff]
         if missing:
             errors.append(f"baseline missing per-level efficiency for CORE games {missing}")
+        lp85_efficiency = eff.get("lp85")
+        if (
+            lp85_efficiency is not None
+            and float(lp85_efficiency) < CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR
+        ):
+            errors.append(
+                "baseline lp85 per-level efficiency "
+                f"{float(lp85_efficiency):.4f} below floor "
+                f"{CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR:.4f}"
+            )
     else:
         # LEGACY total-actions baseline (no efficiency, e.g. unit fixtures): keep the 7760 cherry-pick guard.
         if _action_metric_field(base) != CANONICAL_ACTION_FIELD:
@@ -202,6 +307,7 @@ def validate_canonical_baseline(base: dict) -> dict:
         "errors": errors,
         "canonical_game_set": list(CANONICAL_GAME_SET),
         "canonical_baseline_median_actions": CANONICAL_BASELINE_MEDIAN_ACTIONS,
+        "canonical_lp85_per_level_efficiency_floor": CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR,
         "core_games": sorted(CANONICAL_CORE_GAMES),
         "action_metric_field": CANONICAL_ACTION_FIELD,
     }
@@ -301,6 +407,7 @@ def dashboard_row(cur: dict, base: dict, *, lever: str) -> dict:
     cur_median = median([cur_acts.get(game, BIG_ACTIONS) for game in core]) if core else None
     base_median = median([base_acts.get(game, BIG_ACTIONS) for game in core]) if core else None
     bonus = sorted(cur_solved - core)
+    nav_warning = _nav_regression_warning(cur, base, core=core)
     return {
         "lever": lever,
         "metric_action_field": _action_metric_field(cur),
@@ -316,6 +423,10 @@ def dashboard_row(cur: dict, base: dict, *, lever: str) -> dict:
         "bonus_solves": bonus,
         "verdict_pass": ok,
         "verdict": msg,
+        "navigation_by_game": _navigation_by_game(cur),
+        "baseline_navigation_by_game": _navigation_by_game(base),
+        "nav_regression_warning": nav_warning,
+        "nav_metric_role": "secondary_wall_clock_warning_not_score_metric",
     }
 
 
@@ -323,6 +434,16 @@ def positive_control(base: dict) -> dict:
     base_acts = _actions_by_game(base)
     core = _baseline_core(base)
     improved = {game: max(1, int(base_acts[game]) - 1000) for game in core}
+    base_eff = _efficiency_by_game(base)
+    improved_eff = None
+    if base_eff:
+        improved_eff = {game: float(base_eff.get(game, 0.0)) for game in core}
+        for game in sorted(core):
+            if game != "lp85":
+                improved_eff[game] = round(improved_eff.get(game, 0.0) + 0.1, 4)
+                break
+        else:
+            improved_eff["lp85"] = round(improved_eff.get("lp85", 0.0) + 0.1, 4)
     cur = {
         "games": list(CANONICAL_GAME_SET),
         "action_metric": dict(CANONICAL_ACTION_METRIC),
@@ -331,11 +452,38 @@ def positive_control(base: dict) -> dict:
         "actions_by_game": improved,
         "median_actions_on_solved": median(improved.values()),
     }
+    if improved_eff is not None:
+        cur["efficiency_by_game"] = improved_eff
+        cur["per_level_efficiency_by_game"] = improved_eff
+        cur["core_efficiency"] = round(sum(improved_eff.values()), 4)
     row = dashboard_row(cur, base, lever="positive_control")
     return {
         "passed": bool(row["verdict_pass"] and row["median_actions_on_core"] < row["baseline_median_actions_on_core"]),
         "dashboard_row": row,
     }
+
+
+def _nav_regression_warning(cur: dict, base: dict, *, core: set[str] | None = None) -> str:
+    cur_nav = _navigation_by_game(cur)
+    base_nav = _navigation_by_game(base)
+    if not cur_nav or not base_nav:
+        return ""
+    cur_actions = _actions_by_game(cur)
+    base_actions = _actions_by_game(base)
+    games = sorted(core or set(base_nav))
+    regressed = [
+        game
+        for game in games
+        if cur_actions.get(game) == base_actions.get(game)
+        and cur_nav.get(game, {}).get("reset_replay_steps", 0)
+        > base_nav.get(game, {}).get("reset_replay_steps", 0)
+    ]
+    if not regressed:
+        return ""
+    return (
+        f"WARN: reset_replay_steps increased for {regressed} at equal actions "
+        "(secondary wall-clock signal; per-level efficiency remains the score metric)"
+    )
 
 
 def _solved_set(measurement: dict) -> set[str]:
@@ -410,8 +558,22 @@ def main() -> int:
     cur = measure(a.policy, a.budget, a.cap)
 
     if a.update_baseline:
-        BASELINE.write_text(json.dumps({**cur, "note": "verified baseline (update only after a real "
-                                        "improvement + successful submit)"}, indent=2))
+        candidate = {
+            **cur,
+            "note": "verified baseline (update only after a real improvement + successful submit)",
+        }
+        guard = validate_canonical_baseline(candidate)
+        if not guard["ok"]:
+            print(f"[gate] REFUSED baseline update: canonical baseline guard failed {guard['errors']}")
+            if a.json:
+                print(json.dumps({
+                    "pass": False,
+                    "verdict": f"REGRESSION: canonical baseline guard failed {guard['errors']}",
+                    "baseline_guard": guard,
+                    "current": cur,
+                }, indent=2))
+            return 1
+        BASELINE.write_text(json.dumps(candidate, indent=2))
         print(f"[gate] baseline UPDATED: solved {cur['solved_count']}, "
               f"median actions/solve {cur['median_actions_on_solved']}")
         return 0

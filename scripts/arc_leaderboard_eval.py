@@ -89,6 +89,22 @@ def _baseline_actions(env, game: str) -> dict:
     return {}
 
 
+def _navigation_diagnostics(policy) -> dict:
+    """Expose the live explorer replay tax without making it a score metric."""
+
+    explorer = getattr(policy, "explorer", None)
+    if explorer is None or not hasattr(explorer, "navigation_diagnostics"):
+        return {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0}
+    try:
+        diagnostics = explorer.navigation_diagnostics()
+    except Exception:
+        return {"reset_replay_steps": 0, "forward_walk_hit_rate": 0.0}
+    return {
+        "reset_replay_steps": int(diagnostics.get("reset_replay_steps") or 0),
+        "forward_walk_hit_rate": float(diagnostics.get("forward_walk_hit_rate") or 0.0),
+    }
+
+
 def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -169,8 +185,13 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         gap = {"game": game, "stuck_at_level": reached, "actions_spent": actions,
                "signature": "no_level_up_within_budget",
                "needs": "richer exploration (salience tiers / frontier-dist nav) OR E3 world-model induction"}
+    nav = _navigation_diagnostics(policy)
     return {"game": game, "levels": levels, "reached": reached, "actions": actions,
-            "efficiency": eff, "per_level": per_level,
+            "efficiency": eff, "per_level_efficiency": eff, "per_level": per_level,
+            "deepest_level_reached": reached,
+            "navigation_diagnostics": nav,
+            "reset_replay_steps": nav["reset_replay_steps"],
+            "forward_walk_hit_rate": nav["forward_walk_hit_rate"],
             "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
             "gap": gap}
 
@@ -221,7 +242,8 @@ def main() -> int:
             gaps.append(r["gap"])
         extra = (f" vs oracle L{r['oracle_levels']} (gap {r['gap_vs_oracle']})" if games_mode == "oracle" else "")
         print(f"  {game:5} live=L{r['reached']} (+{r['levels']}) actions={r['actions']:5} "
-              f"eff={r['efficiency']:.4f}{extra}  [{time.time()-t0:.0f}s]", flush=True)
+              f"eff={r['efficiency']:.4f} nav_reset={r['reset_replay_steps']} "
+              f"nav_fwhr={r['forward_walk_hit_rate']:.4f}{extra}  [{time.time()-t0:.0f}s]", flush=True)
     if games_mode == "oracle":
         print(f"\n  LIVE-vs-ORACLE GAP: frame-only live path reaches {live_levels_sum}/{oracle_sum} "
               f"oracle levels (gap {gap_sum}). Closed: "
