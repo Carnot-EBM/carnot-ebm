@@ -37,7 +37,10 @@ Scope-Reduction-When-Flagged · Hardware-Task Continuity (see north-star §3 for
 the recommended KV260-focus relaxation) · KV260 SSH-Not-SD-Card ·
 Operator-Only External Publication · Never-Stash-Commit-First ·
 Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention ·
-Documentation Update Rules · Tests Must Run and Assert.
+Documentation Update Rules · Tests Must Run and Assert ·
+ARC-AGI-3 IS a Live Hidden-Game Discovery Agent (foundational framing — read FIRST for any
+ARC work; the deliverable is the live runtime discovery loop, NOT trained weights or offline
+public-game replays; an offline null may be a corpus artifact).
 
 **Publication readiness — `publication_blocker_count` is DEPRECATED.** It was
 redefinable (moved 105→10 by recount between capstones v303/v304) and could not
@@ -2830,6 +2833,65 @@ routine breadth.
 - `ops/known-issues.md` — P0.1 (exp3312) + Kona solve-rate gate + the corrigendum trail
 - CLAUDE.md "Scope-Reduction-When-Flagged" — the sibling rule for explicit
   scope-reduction directives; this one is the standing depth-vs-breadth default
+
+## ARC-AGI-3 IS a Live Hidden-Game Discovery Agent — Foundational Framing (MANDATORY)
+
+**Origin:** 2026-06-21 operator, after the SAME framing was re-learned across multiple
+sessions:
+
+> "This has happened multiple times now. How do we capture the ask here so that we aren't
+>  constantly re-learning that we are working on a live agent that is responsible for an
+>  agent local loop that can discover how to solve hidden games given to it at challenge
+>  submission time?"
+
+Filed because sessions (and the conductor) repeatedly re-derive — and then contradict — WHAT
+IS BEING BUILT. The triggering instance: this session's offline TTT solve-test concluded
+"goal-induction is the bottleneck" from `n_win_states=0`, which was a STATIC-CORPUS ARTIFACT
+(the captured corpus has `level_before=level_after=0` everywhere), NOT a property of the LIVE
+process, which streams `level_progress` per frame. The immediately-prior correction ("the value
+is the PROCESS, not the trained weights") was the same class of error. This rule exists so the
+framing is read as required input every session and stops being rediscovered.
+
+**The framing (settled — do NOT re-derive it).** The ARC-AGI-3 deliverable is a **LIVE AGENT
+running a LOCAL LOOP that, at challenge-submission time, is handed games it has NEVER SEEN and
+must DISCOVER how to solve them on the fly** — inducing each unseen game's perception
+(glyph/grid encoding), its dynamics (action→next-state), AND its goal (win/level-up condition)
+AT RUNTIME from its own exploration. The scored Kaggle games are HIDDEN/OOD by design; the agent
+gets zero prior exposure to them.
+
+**What is therefore NOT the deliverable (the recurring errors this rule kills):**
+
+1. **Trained model weights are not the live mechanism.** A model (CNN dynamics prior, TRM, etc.)
+   trained on the 25 PUBLIC games does not transfer its weights to a hidden game's specific
+   mechanics. Weights are an incidental artifact; the reusable METHOD/loop is the asset.
+   (See `feedback_arc_value_is_process_not_weights` memory.)
+2. **Public-game solves / offline replays are not the scored deliverable.** Banked replays of
+   public games score ~0 on the hidden Kaggle leaderboard. The registry's reproduced-level count
+   is a development proxy, not the scored target.
+3. **Offline measurements are PROXIES for the live process — an offline null may be a
+   HARNESS/CORPUS ARTIFACT, not a true limitation.** Before concluding "the agent can't do X"
+   from an offline run, verify the offline harness/corpus faithfully reproduces what the LIVE
+   agent sees. The `n_win_states=0` trap (the corpus dropped `level_progress`) is the canonical
+   example: the live env exposes the signal the static corpus lacked.
+
+**How to apply (every ARC session — planner, agents, outer-loop):**
+
+- Evaluate ARC work by whether the **live PROCESS discovers + solves a FRESH unseen game**, not
+  by a weight-transfer metric or a public-game replay count.
+- Build/capture reusable **methods** (runtime dynamics induction, runtime goal induction,
+  verifier-routed search, the reproduction gate) into `arc_solver_kit.py` +
+  `ops/arc_solve_registry.yaml`, applied fresh to each new game — never a per-game trained weight
+  as the live mechanism.
+- When an offline result is null/negative, FIRST rule out that it is an artifact of the static
+  offline setup (missing signal, dropped field, corpus≠live) before reporting it as a capability
+  limit.
+
+**Cross-references:** 2026-06-21 operator directives (origin) ·
+`feedback_arc_value_is_process_not_weights` + `project_arc_agi3_north_star` (memory) ·
+`ops/north-star.md` §0 · CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse Discipline" (the
+reusable-scaffolding mechanism this framing mandates) · "ARC-AGI-3 Submission Sprint Forcing
+Function" · `docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md` (the corpus-artifact
+incident).
 
 ## ARC-AGI-3 Incremental-Progress Scoping (MANDATORY)
 
