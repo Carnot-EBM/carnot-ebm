@@ -6,7 +6,32 @@ milestone) scores the GENERIC agent on a HIDDEN/OOD game set — banked replays 
 ~0 there. Per-level score = `min(human_actions/agent_actions, 1)²`, averaged over ALL eval levels
 (unsolved=0). v3 = **0.08**.
 
-## Verdict: the 0.08 cause is NOT yet known — measure first
+## RESOLVED (2026-06-21 PM): the LLM tier is GREEN — 0.08 is a generalization wall, not compute
+
+Measured on the real Kaggle P100 (16GB) via two retrievable probe kernels (the competition rerun log
+is NOT retrievable, so the submission-kernel diagnostic prints where nobody can read it — probe kernels
+whose SAVE-RUN output IS retrievable are the right channel):
+
+- **carnot-arc-binary-smoke** (server load, 3 configs): the OOM hypothesis is REFUTED. The exact frozen
+  submission config (ctx=16384 + MTP) LOADS and generates — 11.8GB used / **4.5GB free**, 25.3 tok/s.
+  MTP-off: 5.9GB / **10.3GB free**, 27.5 tok/s (slightly FASTER). ctx=4096 control: 11.5GB. The MTP
+  self-draft loads a 2nd ~5.9GB model copy for NO throughput gain on this GPU → pure VRAM cost.
+- **carnot-arc-agent-smoke** (FULL agent path): `agent_import_ok=true` (jax + ~83 modules, 3.8s),
+  `proposer_ran=true`, output `def is_win(grid): return grid[0][0] == 1` (correct), 6.0GB used /
+  **10.2GB free** at MTP=0. The carnot→binary→Qwen path works end-to-end in the full agent context.
+
+**Action taken:** `CARNOT_ARC_MTP=0` set in the submission kernel (frees ~5.8GB, ~same speed, quality
+unchanged — speculative decoding is exact). Weight-offload to system RAM is NOT needed (the model fits
+with headroom). 
+
+**Conclusion (triangulated 3 ways):** the 0.08 is NOT a Carnot-side load/OOM/wiring problem — (1) the
+model loads + generates correctly on the eval GPU, (2) v5 scored the same 0.08 WITH the conductor's
+2.7x action-efficiency gain, (3) held-out solve-rate was ~0. The score is **solve-rate-bound on hidden
+OOD games** = the conductor's A1/A2 generalization lane. One real infra cost confirmed: the proposer is
+slow (41s incl server cold-start), so the cross-game wall-clock allocator (below) is the load-bearing
+infra lever so slow early-game induction does not leave the ~110-game tail unplayed=0.
+
+## (historical) Verdict: the 0.08 cause is NOT yet known — measure first
 
 The v3 run is a COMPLETE scored run (gateway handshake + imports correct for the current image). But
 **whether the Qwen3.5-9B-MTP generator tier actually engaged is unrecoverable from the logs**:
