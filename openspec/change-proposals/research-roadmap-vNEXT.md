@@ -1,217 +1,149 @@
-# Research Roadmap — Milestone 2026.06.420
+# Research Roadmap 2026.06.421 — OPERATIONALIZE THE VERIFIER WIN + ATTACK THE FIRST-CONTACT CEILING
 
-**Theme: TEACH THE PROPOSER TO INDUCE — bring the LLM generator into per-level
-GOAL RE-INDUCTION. The proposer, not the trigger, is the bottleneck.**
-
-Planned by: outer-loop planner (Claude Opus 4.8), 2026-06-21.
-Sprint: ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md "ARC-AGI-3 Submission
-Sprint Forcing Function"). Majority ARC; >=1 level-up attempt (ARC Level-Up Attempt
-Guarantee); 2 reserved infra; 1 per-board hardware; 1 SOTA-ingestion. ALL experiments
-`agent_type: codex` / `gpt-5.5`; planner + retro stay Claude Opus (operator quality choice).
+**Milestone:** 2026.06.421
+**Planned by:** outer-loop (Claude Opus 4.8 planner, 2026-06-21)
+**Sprint:** ARC-AGI-3 submission sprint through **2026-06-30** (CLAUDE.md forcing function; 9 days out)
+**Prior milestone doc:** this file supersedes the .420 design doc in place.
 
 ---
 
-## What .419 proved (and the pivot that makes .420)
+## 1. What the previous milestone (2026.06.420) proved
 
-`.419 BUILT the per-level GOAL RE-INDUCTION the `.418 A2 diagnosis prescribed (detect the
-level boundary -> re-induce the L_{n+1} win-predicate -> route the frontier toward it ->
-raise `target_levels` past 1). It NULLED on the headline, and in nulling it located the next
-barrier down — precisely.
+.420 brought the FROZEN sprint LLM (Qwen3.5-9B-MTP) into per-level GOAL RE-INDUCTION as the
+proposer, with a verifier-guided refinement loop. The honest scorecard (capstone exp4554:
+`complete: llm_proposer_null_efficiency_unmoved_barrier_refined`):
 
-| `.419 phase | result | what it means for `.420 |
+| Phase | Result | Bottom line |
 |---|---|---|
-| A1 per-level re-induction | NULL: `core_efficiency` stayed 2.0074 | The re-induction MECHANISM is correctly wired (it triggers on a level-up), **but the OFFLINE DSL-only proposer cannot induce a reachable L_{n+1} plan.** The load-bearing finding (below). |
-| A2 energy-trust next-level routing | NULL (flagged DURATION_TOO_SHORT, characterized) | Routed in the L1 frame with no reachable L2 plan to aim at — same root cause as A1: nothing to route toward. |
-| A3 level-up attempt | **SUCCESS: sp80 L2 offline-reproduced** | `reproducible_total_levels` 50 -> 51. The Level-Up Guarantee was met (via a per-game GameAdapter, NOT the generic agent). |
-| A4 integration | NULL (`efficiency_moved: false`) | No lever raised `core_efficiency`; submitted config unchanged. |
-| A5 primitive transfer | representation generalized, 0 levels banked | The re-induction primitive re-induces a DIFFERENT L_{n+1} predicate on sc25/tr87/tu93 (representation transfers) but still produces no reachable PLAN. Same barrier. |
+| **A1** LLM-proposer re-induction (HEADLINE) | **NULL — positive_control FAILED** (exp4544) | The live Qwen proposer produced **ZERO reachable plans** (`llm_proposer_value.count=0`, `rate=0.0`), even on a fixture with a KNOWN reachable plan. `false_negative_risk_checked: false`. This is a **broken-integration** signal, not an exhausted idea. `core_efficiency` unchanged at 2.0074. |
+| **A2** cross-game verifier discrimination | **WIN** (exp4545) | **LOO-AUROC 0.674, CI [0.606, 0.745] — excludes 0.5.** In-sample 0.871, positive control passed. The **first oracle-distinct verifier-moat result**: the DiscriminativeVerifier beats chance on a game it never saw (`verifier_is_oracle: false`). |
+| **A3** level-up bank | **WIN** (exp4546) | su15 L1→L2 offline-reproduced. `reproducible_total_levels` 51→**52**. |
+| **A4** frame-change CNN (action efficiency) | **NULL** (exp4547) | Held-out median-actions-to-first-levelup already at the **floor (1.0 == 1.0)**; the CNN learned the signal (positive control passed) but the metric had no headroom. Solve-rate preserved. |
+| **A5** integration | **NULL** (exp4548) | No lever raised `core_efficiency`. SUBMITTED config unchanged. |
+| **A6** primitive persist + transfer | **NULL** (exp4549) | Transfer re-induced predicates on sc25/tr87/tu93 but produced **no reachable deeper-level plan** (all `reachable_plan_produced: False`); no new bank. |
+| **B1** honest sprint metric (SHIPPED) | exp4550 | **`generic_transfer_rate_over_variants = 0.04`.** The 52 banked levels are mostly **known-game replays (~0 on the hidden eval)** — the bank count is largely a mirage; generic transfer is the real leaderboard signal. |
 
-### The .419 A1 barrier refinement (exp4533) — the load-bearing finding
+**The three load-bearing facts for .421:**
 
-> `barrier_refinement`: **"post_level_reinduction_triggered_but_no_reachable_l2_plan;
-> offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root']."**
-> `model_specs`: **"offline_dsl_induction_no_llm"**
+1. **`core_efficiency` has been stuck at 2.0074 for THREE consecutive milestones (.418, .419, .420).**
+   The "reach a deeper CORE level via per-level re-induction" lever has not moved. The .420 failure
+   mode is specific and informative: the proposer's **free-form plan output is unreachable** (positive
+   control failed). This is a 4th-attempt doomed-rerun risk unless the proposer mechanism is changed.
 
-The per-level trace tells the whole story: on lp85 the agent completes L0 (20 actions vs human
-17), arrives at L1, then takes **0 actions at L1** — `induction_attempts: []`,
-`reinduction_events: []`, `barrier_hint: "reinduction registered but offline DSL-only
-induction did not produce a reachable post-L1 plan"`. **The trigger fires; the PROPOSER comes
-up empty.** A1 ran the offline DSL inducer with NO LLM, and the DSL grammar cannot induce the
-L2 goal/transition rule from the post-transition frames.
+2. **A2 is the one genuine breakthrough — and it is unexploited.** A cross-game verifier that beats
+   LOO chance is exactly the oracle-distinct moat north-star §5 is built around. But it is still a
+   **bench result**: it has never been wired into the LIVE solver to prove it adds VALUE. That is the
+   highest-leverage move available.
 
-### This converges with the 2026-06-19 GAP-LIVE-INTEGRATION operator audit
+3. **The honest leaderboard ceiling is `generic_transfer_rate = 0.04`, not the bank count.** Confirmed
+   independently this sweep: the ARC-AGI-3 leaderboard metric is **first-contact action efficiency on
+   UNSEEN environments** (frontier models sit at 0.37%; arXiv:2603.24621). Banking more KNOWN-game
+   levels barely moves it. The score-movers are GAP-LIVE-INTEGRATION (the submitted agent) and
+   GAP-ARCH-FEATURES (cross-game verifier transfer — which A2 just cracked).
 
-The operator's step-back audit found the 0.08 score's real ceiling is the **SUBMITTED agent,
-not the solver research**: it ships **bare BFS, `target_levels=1`, `value_weight=0.0`, and an
-LLM tier with 0/6 measured value** (`make_carnot_agent -> E3AgentPolicy`). The local gate even
-sets `CARNOT_ARC_DISABLE_INDUCTION=1`, so per-level efficiency is measured on the BARE explorer
-with no L2 mechanic at all. The LLM proposer (`LocalGGUFProposer(repo_substr="Qwen3.5-9B-MTP")`,
-already wired in `_proposer()`) is the one component that could supply the proposal distribution
-the offline DSL lacks — and its value has never been measured. **The .419 barrier and the
-operator audit name the same gap.**
+## 2. The .421 pivot (in one sentence)
 
-### The .419 SOTA-ingestion (PHASE D) already flagged the fix for .420
+**Stop billing "reach a deeper CORE level via re-induction" as the headline (3× null); instead
+OPERATIONALIZE the now-above-chance cross-game discriminative verifier (A2's win) inside the LIVE
+generic solver and measure it against the honest `generic_transfer_rate` ceiling (0.04) — turning the
+oracle-distinct moat into a live first-contact capability — while keeping ONE re-scoped executable-
+world-model proposer attempt (Family-B, gated on its positive control passing first, retire-if-same)
+and the reliable level-up bank engine.**
 
-`research-studying.md:flagged_for_v420` reads: *"Family-B executable re-induction loop for each
-level-up, with separate GOAL-vs-dynamics candidates, adaptive behavior tests for goal-shift
-detection, and a bounded refinement loop around exp4533."* The discover->ingest->plan loop
-closed: the literature pass points exactly at the LLM-proposer headline below.
+This respects every standing discipline: ARC stays the majority; `reproducible_total_levels` grows
+monotonically (A3 + A4 banks); ≥1 level-up attempt (A3); 2 reserved infra; 1 hardware-continuity;
+1 SOTA-ingestion; all experiments codex/gpt-5.5 (planner/retro stay Claude Opus); live stack frozen.
 
----
-
-## The .420 bet: the GENERATOR does the induction; the energy VERIFIER routes/verifies
-
-This is the project's HYBRID architecture (north-star §0/§5) applied to the ARC critical path.
-Energy-as-generator is closed-negative; the GENERATOR is the learned model (here the FROZEN
-sprint LLM, Qwen3.5-9B-MTP). The energy ensemble is the VERIFIER. The .419 null is the predicted
-failure of DSL/energy-as-generator; the fix is to bring the LLM generator in as the proposer and
-keep the energy as the oracle-distinct router/verifier.
+## 3. Architecture — where each .421 task plugs in
 
 ```
-   level-up detected (levels_completed bumps)
-            |
-            v
-   [GENERATOR]  Qwen3.5-9B-MTP proposes, from post-transition frames:
-                (a) the L_{n+1} GOAL predicate         (separate GOAL candidate)
-                (b) the L_{n+1} transition/world-model (separate DYNAMICS candidate)
-                (c) a candidate action PLAN toward the goal
-            |
-            v
-   [VERIFIER]  world-model TRUST ENERGY (verifier_is_oracle: false) ranks the
-               induced candidates by held-out generalization; the execution
-               check scores whether the plan reaches the goal
-            |
-       plan reaches L_{n+1}?  --no-->  bounded refinement loop (<=K rounds):
-            |  yes                      feed the verifier's counterexample back
-            v                           to the LLM (ALGO / counterexample-guided)
-   advance into L_{n+1}  ==>  core_efficiency rises above 2.0074
+                         ARC-AGI-3 first-contact solver (the SUBMITTED agent)
+                         make_carnot_agent -> E3AgentPolicy
+   +----------------------------------------------------------------------------------+
+   |  perception        candidate gen          ROUTING / RANKING        induction      |
+   |  (frame->features)  rich_action_candidates  +-------------------+  _induce_and_plan|
+   |  cross_game_features_v3 ------------------>  | A1: Discriminative|  +-------------+ |
+   |  (arc_value_learner)  graph_explore_solve_v2 | Verifier as the   |  | A2: Family-B| |
+   |       ^              (arc_graph_explore)     | LIVE candidate    |  | executable  | |
+   |  A4: hidden-field ---+                       | ROUTER (oracle-   |  | world-model | |
+   |  state-hash probe                            | distinct moat)    |  | proposer +  | |
+   |  (deepen ka59/ar25/ft09 L2)                  +---------+---------+  | CEGIS loop  | |
+   +-----------------------------------------------------+--------------+------+-------+ |
+                                                         |                     |         |
+                       measured against ----------> generic_transfer_rate_over_variants  |
+                       (B1 metric, baseline 0.04) + core_efficiency (baseline 2.0074)    |
+                                                         |                     |         |
+            A5 integration: wire winners into SUBMITTED_AGENT_CONFIG ----------+         |
+            A6 self-learning: persist the winning primitive -> arc_solver_kit + registry |
+            A3 level-up bank: rotate-deepen one game (offline_reproduced gate)           |
 ```
 
-Literature anchors (filed in research-references.md this milestone): Executable World Models for
-ARC-AGI-3 (arXiv:2605.05138, the SOTA Family-B inducer+verifier), ARC-AGI-3 Tech Report
-(arXiv:2603.24621, names goal-acquisition as the gap), ALGO (arXiv:2305.14591) and LLM Priors
-for ERM over Programs (arXiv:2510.14331, LLM-as-proposal-distribution + execution selection),
-Procedural Refinement / Counterexample-Guided Learning (arXiv:2603.20334, 2606.11521, the
-bounded verifier-feedback refinement loop).
+- **A1 (HEADLINE):** the A2 DiscriminativeVerifier (`arc_value_learner.py:497`, features `:394`)
+  becomes a **LIVE candidate router** inside `rich_action_candidates` / `graph_explore_solve_v2`.
+  Oracle-distinct (`verifier_is_oracle: false`). Measured on `generic_transfer_rate_over_variants`.
+- **A2:** the failed re-induction proposer is re-built as a **Family-B executable Python world-model
+  inducer** (arXiv:2605.05138) with held-out transition verification + bounded counterexample-guided
+  refinement (arXiv:2606.11521), **gated first on positive_control_passed=True** (the .420 break).
+- **A4:** hidden-field state-hash probing (GAP-ARCH-GRID-ONLY-STATE) to deepen the L2-stalled
+  hidden-state games (ka59 step counter / ar25 undo stack / ft09) — a different bank source.
+- **A3:** rotate-deepen one game; the Level-Up Attempt Guarantee anchor.
+- **A5/A6:** integration + self-learning reuse.
 
----
+## 4. Phases & tasks (12)
 
-## The three biggest gaps this milestone attacks
+| # | id | Phase | What | Gate |
+|---|---|---|---|---|
+| 0 | exp4555 | Transition | archive .420 -> activate .421; record true close-state | YAML parses + pre-test green |
+| 1 | exp4556 | **A1 HEADLINE** | DiscriminativeVerifier as LIVE candidate router; measure on generic_transfer (0.04) | generic_transfer up w/ CI **OR** measured no-value char. + positive control; `verifier_is_oracle: false` |
+| 2 | exp4557 | A2 | Family-B executable world-model proposer (re-scope of 3x null re-induction) | **positive_control_passed=True FIRST**, then deeper CORE level / efficiency; retire-if-same |
+| 3 | exp4558 | A3 | rotate-deepen one game (level-up bank) | `offline_reproduced` new level |
+| 4 | exp4559 | A4 | hidden-field state-hash probe (deepen ka59/ar25/ft09 L2) | new L2 reproduced **OR** sharpened hidden-field gap + positive control |
+| 5 | exp4560 | A5 | integration: wire winners into SUBMITTED agent; re-measure | core_efficiency + generic_transfer end-to-end; parity green |
+| 6 | exp4561 | A6 | persist winning primitive + cross-game transfer | transfer measured; reproduced levels count |
+| 7 | exp4562 | B1 infra | make `generic_transfer_rate` the co-headline capstone metric + harden variant CI | asserting tests |
+| 8 | exp4563 | B2 infra | guard: positive_control_FAILED proposer task != valid null (false-neg-risk-open) | asserting tests |
+| 9 | exp4564 | C hardware | per-board continuity audit (KV260 SSH / GateMate USB / PolarFire SSH) | per-board reachability |
+| 10 | exp4565 | D SOTA | ingest verifier-as-cross-task-router + executable-inducer SOTA; flag for .422 | real arXiv IDs, no fabrication |
+| 11 | exp4566 | E capstone | scorecard: did A1 raise generic_transfer? did A2 pass its control? both metrics | aggregation; skip flagged |
 
-1. **The proposer/generator gap (HEADLINE, A1).** The generic per-level re-induction proposer is
-   offline-DSL-only and produces empty plans. Bring the LLM generator in; MEASURE its value
-   (turn the "0/6 measured value LLM tier" into a measured proposer); bounded verifier-guided
-   refinement. Score lever: `core_efficiency` > 2.0074 on a CORE game.
-
-2. **The oracle-distinct verifier-moat gap (A2).** The cross-game DiscriminativeVerifier is
-   in-sample 0.726 but **LOO-AUROC 0.503 == chance** (GAP-ARCH-FEATURES, 2026-06-19). Frame-only
-   order-1 features do not transfer. Add relational / Δframe / action-conditioned / predicate-
-   distance features and re-run the LOO gate. This is the verifier's open, oracle-distinct claim
-   (north-star §5): can it discriminate above chance on a game it never saw?
-
-3. **The action-efficiency gap (A4).** Our agent is effect-blind (centroid-click + RESET-replay);
-   the leaderboard leaders win on a CNN action-effect/clickability predictor
-   (GAP-ARCH-FRAME-CHANGE-PREDICTOR, 2026-06-20). The 14,672 labeled human-replay transitions are
-   now cached (`.416 B1 exp4495). Train the CNN; wire into `rich_action_candidates`; gate on
-   held-out median actions-to-first-levelup STRICTLY below blind BFS at preserved solve-rate.
-
----
-
-## Phases
-
-### PHASE 0 — TRANSITION (exp4543)
-Archive .419 -> activate .420; assert the YAML parses + the smart-subset pre-test gate is green;
-RECORD the true .419 close-state (proposer is the bottleneck; A3 banked sp80 L2;
-`reproducible_total_levels`=51; `efficiency_moved`=false).
-
-### PHASE A — ARC NORTH STAR (majority; operator MANDATORY)
-- **A1 (exp4544, HEADLINE):** LLM-generator-as-L_{n+1}-proposer + bounded verifier-guided
-  refinement. Qwen3.5-9B-MTP proposes the GOAL predicate + DYNAMICS + plan on a level-up; the
-  world-model trust energy ranks candidates; a bounded refinement loop retries on a verifier
-  counterexample. Measure WITH the LLM proposer vs the offline-DSL baseline (the .419 A1
-  control). `live_llm_inference` (iGPU, NEVER the 3090s). Gate: a CORE game reaches L2
-  (`core_efficiency` STRICTLY > 2.0074) at preserved CORE solves, OR a measured proposer-value
-  characterization (the LLM produces a reachable L2 plan/predicate the DSL could not).
-- **A2 (exp4545, ORACLE-DISTINCT MOAT):** richer cross-game verifier features -> re-run the
-  DiscriminativeVerifier LOO-AUROC gate. `verifier_is_oracle: false`. Gate: LOO-AUROC STRICTLY
-  > 0.5 with CI excluding 0.5 + positive control + FALSE_NEGATIVE_RISK.
-- **A3 (exp4546, LEVEL-UP GUARANTEE):** bank +1 NEW reproducible level — deepen a shallow game
-  (su15/cn04/sk48 L1->L2) or first-contact rotation, via `arc_loop_solve`. `offline_reproduced`.
-- **A4 (exp4547, ACTION EFFICIENCY):** train the CNN frame-change/clickability predictor on the
-  cached human-replay corpus; wire into `rich_action_candidates`. Gate: held-out median
-  actions-to-first-levelup STRICTLY lower than blind BFS at preserved solve-rate.
-- **A5 (exp4548, INTEGRATION + HEADLINE METRIC):** wire whatever RAISED `core_efficiency` (A1 LLM
-  proposer / A4 CNN ranker) into `SUBMITTED_AGENT_CONFIG`; re-measure end-to-end on the per-level
-  gate; keep parity green. Honest null if nothing raised it.
-- **A6 (exp4549, SELF-LEARNING + transfer):** persist the LLM-proposer re-induction +
-  bounded-refinement primitive to `arc_solver_kit` / registry; measure cross-game transfer
-  (Tier-2 constraint memory; ARC reuse discipline).
-
-### PHASE B — RESERVED INFRA (2 slots)
-- **B1 (exp4550):** honest sprint-metric reporting — wire the SHIPPED variant benchmark
-  (`arc_leaderboard_eval --variant/--reflect`) into the capstone metric so
-  `reproducible_total_levels` is reported ALONGSIDE `generic_transfer_rate_over_variants`,
-  surfacing the "mirage" (banked replays of known games ~0 on the hidden eval). Asserting tests.
-- **B2 (exp4551):** offline-eval / live-submission PROPOSER PARITY guard — a regression assert
-  that the offline `core_efficiency` harness measures the SAME proposer/config the SUBMITTED
-  agent ships (or explicitly flags the `CARNOT_ARC_DISABLE_INDUCTION` discrepancy), so the
-  offline measurement never silently understates the real agent (the .419 gap: offline ran
-  no-LLM while the live agent has the LLM proposer). Asserting tests.
-
-### PHASE C — HARDWARE CONTINUITY (exp4552)
-Per-board reachability audit: KV260 (SSH ONLY, never host SD card), GateMate (USB detect),
-PolarFire (SSH). Honest `blocked_<board>_<reason>` per board.
-
-### PHASE D — SOTA-INGESTION (exp4553)
-Ingest SOTA on LLM-as-world-model-inducer + verifier-guided refinement loops + intra-episode
-goal-shift detection for ARC; map onto the A1 LLM-proposer headline; emit a SOTA->experiment note
-with real arXiv IDs + flag the strongest method for .421.
-
-### PHASE E — CAPSTONE (exp4554)
-The per-level efficiency scorecard: did the LLM proposer raise `core_efficiency` above 2.0074 (a
-CORE game reach a deeper level)? Did verifier discrimination beat chance (A2)? Did action
-efficiency improve (A4)? Did `reproducible_total_levels` grow (A3/A6)? Skip `flagged_adversarial`
-EXCEPT the annotated control-vs-treatment null-delta carve-out (the .419 B2 robustness).
-
----
-
-## Dependency graph
+## 5. Dependency graph
 
 ```
-exp4543 (transition)
-   |
-   +--> exp4544 (A1 LLM proposer) ----+--> exp4548 (A5 integration) --+
-   +--> exp4545 (A2 discrimination)   |                               |
-   +--> exp4546 (A3 level-up)         |                               |
-   +--> exp4547 (A4 frame-change) ----+                               |
-   +--> exp4544 (A1) --> exp4549 (A6 self-learning transfer) ---------+
-   +--> exp4550 (B1 metric), exp4551 (B2 parity), exp4552 (C hw), exp4553 (D sota)
-                                                                       |
-                                                                       v
-                                                              exp4554 (E capstone)
+exp4555 (transition)
+   |-> exp4556 (A1 verifier-router) ----------+
+   |-> exp4557 (A2 executable proposer) -------+
+   |-> exp4558 (A3 level-up bank)              +-> exp4560 (A5 integration; gated on A1/A2/A4 deltas)
+   |-> exp4559 (A4 hidden-state probe) --------+                |
+   |                                                            +-> exp4561 (A6 persist+transfer; gated on A1/A2)
+   |-> exp4562 (B1 metric)                                      |
+   |-> exp4563 (B2 guard)                                       |
+   |-> exp4564 (C hardware)                                     |
+   |-> exp4565 (D SOTA) ----------------------------------------+-> exp4566 (E capstone, reads all)
 ```
 
-## Hardware requirements
+A1/A2/A3/A4 are independent (parallel-safe). A5 gates on A1/A2/A4 producing a positive delta; A6 gates
+on A1/A2 producing a persistable primitive. The capstone reads everything.
 
-- **A1 (exp4544) + A5 (exp4548):** live LLM inference — Qwen3.5-9B-MTP GGUF (cached:
-  `unsloth/Qwen3.5-9B-MTP-GGUF`) on the **iGPU (Radeon 890M), NEVER the RTX 3090s** (per
-  [[project_arc_live_generator]] + the 16GB Kaggle constraint); llama_cpp 0.3.29 (present).
-- **A4 (exp4547):** the cached human-replay corpus (`data/arc_public_demo_human_replay_corpus`,
-  staged license-clean by `.416 exp4495); CPU/iGPU CNN training.
-- **C (exp4552):** KV260 (`ssh kria`), GateMate (DirtyJTAG USB), PolarFire (`ssh polarfire`).
-- All other phases: CPU / offline arcade (`arc_solver_kit.offline_arcade()`), zero quota.
+## 6. Hardware requirements
 
-## Discipline compliance
+- **iGPU (Radeon 890M)** for the Qwen3.5-9B-MTP generator in A2 (NEVER the RTX 3090s — frozen
+  live-generator selection, project_arc_live_generator).
+- **CPU / offline arcade** for A1/A3/A4 (verifier scoring + offline-reproduction; no LLM load).
+- **Attached boards** (C): KV260 (`ssh kria`), GateMate (`openFPGALoader -c dirtyJtag --detect`),
+  PolarFire (`ssh polarfire`) — SSH/USB reachability only; KV260 SSH-not-SD-card.
 
-- **Codex-Default-v2:** all experiments `agent_type: codex` / `gpt-5.5`; planner/retro stay Opus.
-- **Verdict Terminal-Prefix:** every `honest_verdict` starts `complete:`/`success:`/`shipped:`.
-- **Principle-Annotated Fields + Inference-Substrate + Pre-Launch Preconditions:** every task.
-- **Failed-Experiment Rerun:** A1 carries `prior_failures` vs exp4533 (offline-DSL proposer ->
-  LLM proposer); A4 carries `prior_failures` vs exp4490 (corpus-not-cached -> now staged).
-- **Exclusion-Manifest Cross-Check:** A2/A3/A5/A6 + transition/infra/hw/sota/capstone carry
-  `operator_override` for false-positive scope-matches against retired exps (cross-game VALUE
-  transfer exp4318/4331/4342 etc. — A2/A6 are DISCRIMINATION / primitive-reuse, not value transfer).
-- **Circularity / Oracle-Distinctness:** A2 declares `verifier_is_oracle: false`.
-- **ARC Level-Up Attempt Guarantee:** A3 banks a NEW reproducible level (offline-reproduced).
-- **ARC Solve Reproducibility + Reuse:** A3/A6 update `ops/arc_solve_registry.yaml`; only
-  offline-reproduced levels count toward `reproducible_total_levels`.
+## 7. Discipline compliance
+
+- **Failed-Experiment Rerun:** A2 carries `prior_failures` (exp4544 + exp4533, all four sub-fields,
+  `retire_if_same_verdict: true`) — the 4th and final re-induction attempt unless its positive control
+  passes. The mechanism is genuinely different (executable Python world-model + held-out verification
+  vs free-form plan) and the gate is tightened (positive-control-first).
+- **Circularity / Oracle-Distinctness:** A1 sets `verifier_is_oracle: false` (a learned ranking signal,
+  NOT the executable win-check) — a circular win does not count.
+- **Operator-override** (false-positive scope-match classes only) on the routine transition (0),
+  versioned-lineage continuations (A1/A3/A5/A6), hardware (C), and SOTA-ingestion (D).
+- **Adversarial rigor:** every ARC efficiency/transfer claim emits an explicit delta + null-delta note
+  (TAUTOLOGY carve-out), a positive control, and FALSE_NEGATIVE_RISK guard; `inference_substrate` is a
+  REQUIRED ARTIFACT FIELD on every task; SOTA cites real arXiv IDs.
+- **Sprint compliance:** ARC majority (A1-A6 + capstone); monotonic `reproducible_total_levels`
+  (A3 + A4); >=1 level-up attempt (A3); 2 infra (B1/B2); 1 hardware (C); 1 SOTA (D); codex/gpt-5.5.
