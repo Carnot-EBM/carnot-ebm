@@ -1,0 +1,658 @@
+{
+  "a1_summary": {
+    "barrier_refinement": "positive_control_failed: live Qwen proposer did not produce the known reachable fixture plan.",
+    "honest_verdict": "complete: llm_proposer_positive_control_failed_false_negative_risk_open",
+    "inference_substrate": "live_llm_inference",
+    "live_invocation": {
+      "dsl_reachable_plan": false,
+      "duration_s": 45.052136,
+      "invoked": false,
+      "message": "local gguf (GPU server) failed: TimeoutError('timed out')",
+      "reachable_plan": false
+    },
+    "llm_proposer_value": {
+      "count": 0,
+      "events": [],
+      "opportunities": 1,
+      "rate": 0.0
+    },
+    "positive_control_passed": false
+  },
+  "duration_s": 2.243560164934024,
+  "experiment": "experiment_4549_llm_proposer_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: llm_proposer_primitive_persisted_transfer_<game>_L<n> OR complete: llm_proposer_primitive_persisted_transfer_null_characterized.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates for the DSL-fallback transfer; live_llm_inference + model_specs if the LLM proposer is invoked in the transfer runs.",
+    "offline_reproduced": "only offline-reproduced new levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "primitive_persisted": "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1 effort is wasted per the ARC reuse rule.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reachable_plan_produced": "whether the persisted primitive produced a REACHABLE deeper-level plan on a transfer game (the A1-barrier-clearing evidence), distinct from mere representation re-induction.",
+    "registry_updated": "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives.",
+    "representation_transfer": "whether the primitive re-induced a DIFFERENT (correct) L_{n+1} predicate even without a full solve -- a representation win short of a bank.",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "transfer_deepest_level_per_game": "best_level reached per transfer game -- the cross-game evidence the primitive generalizes.",
+    "transfer_games": "the deeper games the primitive was applied to (NOT tuned on) -- the generalization test."
+  },
+  "honest_verdict": "complete: llm_proposer_primitive_persisted_transfer_null_characterized",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": "offline_dsl_fallback_no_live_llm",
+  "new_levels_banked": 0,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade_import_smoke": true,
+    "ok": true,
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen3_5_9b_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "registry_has_extended_primitive_gotcha": true,
+    "spec_has_req_4549": true
+  },
+  "primitive_persisted": {
+    "base_operator": "per_level_reinduction_operator",
+    "derived_from_a1_artifact": "results/experiment_4544_llm_proposer_reinduction.json",
+    "operator": "llm_proposer_reinduction_operator",
+    "registry_general_gotcha_id": "primitive_per_level_reinduction_operator"
+  },
+  "random_seed": 4549,
+  "reachable_plan_produced": {
+    "sc25": false,
+    "tr87": false,
+    "tu93": false
+  },
+  "registry_updated": true,
+  "representation_transfer": {
+    "sc25": true,
+    "tr87": true,
+    "tu93": true
+  },
+  "reproducibility_checksum": "sha256:12fee49df1b0c962933e18fa1a11474a71561bd170a2bbe2824beddb25a498db",
+  "requirements": [
+    "REQ-ARC-WMTE-4549"
+  ],
+  "result_path": "results/experiment_4549_llm_proposer_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4549"
+  ],
+  "schema": "carnot.arc_llm_proposer_primitive_transfer_4549.v1",
+  "transfer_deepest_level_per_game": {
+    "sc25": 5,
+    "tr87": 6,
+    "tu93": 5
+  },
+  "transfer_games": [
+    "tu93",
+    "tr87",
+    "sc25"
+  ],
+  "transfer_results": [
+    {
+      "current_depth_reproduced": true,
+      "dead_end": "A1 live proposer was null/unavailable, so the persisted primitive used the DSL/verifier fallback to re-induce the next-level representation; no executable deeper plan reproduced beyond the current registry depth.",
+      "deepest_level_reached": 5,
+      "game": "tu93",
+      "new_level_banked": false,
+      "operator_events": [
+        {
+          "from_level": 1,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 2,
+          "predicate": {
+            "description": "fresh-env keyboard navigation to the next color-14 goal",
+            "mechanic_class": "graph_explore",
+            "predicate_id": "tu93_L2_goal_distance_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tu93:L2:goal_distance:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tu93_L2_goal_distance_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 2,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 3,
+          "predicate": {
+            "description": "fresh-env keyboard navigation to the next color-14 goal",
+            "mechanic_class": "graph_explore",
+            "predicate_id": "tu93_L3_goal_distance_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tu93:L3:goal_distance:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tu93_L3_goal_distance_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 3,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 4,
+          "predicate": {
+            "description": "fresh-env keyboard navigation to the next color-14 goal",
+            "mechanic_class": "graph_explore",
+            "predicate_id": "tu93_L4_goal_distance_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tu93:L4:goal_distance:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tu93_L4_goal_distance_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 4,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 5,
+          "predicate": {
+            "description": "fresh-env keyboard navigation to the next color-14 goal",
+            "mechanic_class": "graph_explore",
+            "predicate_id": "tu93_L5_goal_distance_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tu93:L5:goal_distance:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tu93_L5_goal_distance_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 5,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 6,
+          "predicate": {
+            "description": "fresh-env keyboard navigation to the next color-14 goal",
+            "mechanic_class": "graph_explore",
+            "predicate_id": "tu93_L6_goal_distance_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tu93:L6:goal_distance:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tu93_L6_goal_distance_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        }
+      ],
+      "predicate": {
+        "description": "fresh-env keyboard navigation to the next color-14 goal",
+        "mechanic_class": "graph_explore",
+        "predicate_id": "tu93_L6_goal_distance_llm_reinduction_predicate",
+        "representation_correct": true,
+        "signature": "tu93:L6:goal_distance:llm_reinduction",
+        "source": "dsl_fallback_transfer_from_a1_null"
+      },
+      "prior_reproduced_level": 5,
+      "reachable_plan_produced": false,
+      "representation_transfer": true,
+      "reproduction": {
+        "claimed_level": 5,
+        "deepened_suffix_action_count": 29,
+        "game": "tu93",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 5,
+        "reproduced": true,
+        "solution_action_count": 93,
+        "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
+      },
+      "route": {
+        "depth_primary": true,
+        "goal_bias_label": "tu93_L6_goal_distance_llm_reinduction_predicate",
+        "operator": "llm_proposer_reinduction_operator",
+        "route": "depth_primary_goal_bias"
+      }
+    },
+    {
+      "current_depth_reproduced": true,
+      "dead_end": "A1 live proposer was null/unavailable, so the persisted primitive used the DSL/verifier fallback to re-induce the next-level representation; no executable deeper plan reproduced beyond the current registry depth.",
+      "deepest_level_reached": 6,
+      "game": "tr87",
+      "new_level_banked": false,
+      "operator_events": [
+        {
+          "from_level": 1,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 2,
+          "predicate": {
+            "description": "path-conditioned glyph rewrite predicate for the next config",
+            "mechanic_class": "config_substitution",
+            "predicate_id": "tr87_L2_glyph_rewrite_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tr87:L2:glyph_rewrite:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tr87_L2_glyph_rewrite_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 2,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 3,
+          "predicate": {
+            "description": "path-conditioned glyph rewrite predicate for the next config",
+            "mechanic_class": "config_substitution",
+            "predicate_id": "tr87_L3_glyph_rewrite_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tr87:L3:glyph_rewrite:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tr87_L3_glyph_rewrite_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 3,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 4,
+          "predicate": {
+            "description": "path-conditioned glyph rewrite predicate for the next config",
+            "mechanic_class": "config_substitution",
+            "predicate_id": "tr87_L4_glyph_rewrite_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tr87:L4:glyph_rewrite:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tr87_L4_glyph_rewrite_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 4,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 5,
+          "predicate": {
+            "description": "path-conditioned glyph rewrite predicate for the next config",
+            "mechanic_class": "config_substitution",
+            "predicate_id": "tr87_L5_glyph_rewrite_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tr87:L5:glyph_rewrite:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tr87_L5_glyph_rewrite_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 5,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 6,
+          "predicate": {
+            "description": "path-conditioned glyph rewrite predicate for the next config",
+            "mechanic_class": "config_substitution",
+            "predicate_id": "tr87_L6_glyph_rewrite_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tr87:L6:glyph_rewrite:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tr87_L6_glyph_rewrite_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 6,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 7,
+          "predicate": {
+            "description": "path-conditioned glyph rewrite predicate for the next config",
+            "mechanic_class": "config_substitution",
+            "predicate_id": "tr87_L7_glyph_rewrite_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "tr87:L7:glyph_rewrite:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "tr87_L7_glyph_rewrite_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        }
+      ],
+      "predicate": {
+        "description": "path-conditioned glyph rewrite predicate for the next config",
+        "mechanic_class": "config_substitution",
+        "predicate_id": "tr87_L7_glyph_rewrite_llm_reinduction_predicate",
+        "representation_correct": true,
+        "signature": "tr87:L7:glyph_rewrite:llm_reinduction",
+        "source": "dsl_fallback_transfer_from_a1_null"
+      },
+      "prior_reproduced_level": 6,
+      "reachable_plan_produced": false,
+      "representation_transfer": true,
+      "reproduction": {
+        "claimed_level": 6,
+        "game": "tr87",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 6,
+        "reproduced": true
+      },
+      "route": {
+        "depth_primary": true,
+        "goal_bias_label": "tr87_L7_glyph_rewrite_llm_reinduction_predicate",
+        "operator": "llm_proposer_reinduction_operator",
+        "route": "depth_primary_goal_bias"
+      }
+    },
+    {
+      "current_depth_reproduced": true,
+      "dead_end": "A1 live proposer was null/unavailable, so the persisted primitive used the DSL/verifier fallback to re-induce the next-level representation; no executable deeper plan reproduced beyond the current registry depth.",
+      "deepest_level_reached": 5,
+      "game": "sc25",
+      "new_level_banked": false,
+      "operator_events": [
+        {
+          "from_level": 1,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 2,
+          "predicate": {
+            "description": "next cast-grid spell predicate followed by tank exit",
+            "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+            "predicate_id": "sc25_L2_cast_grid_exit_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "sc25:L2:cast_grid_exit:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "sc25_L2_cast_grid_exit_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 2,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 3,
+          "predicate": {
+            "description": "next cast-grid spell predicate followed by tank exit",
+            "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+            "predicate_id": "sc25_L3_cast_grid_exit_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "sc25:L3:cast_grid_exit:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "sc25_L3_cast_grid_exit_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 3,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 4,
+          "predicate": {
+            "description": "next cast-grid spell predicate followed by tank exit",
+            "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+            "predicate_id": "sc25_L4_cast_grid_exit_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "sc25:L4:cast_grid_exit:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "sc25_L4_cast_grid_exit_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 4,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 5,
+          "predicate": {
+            "description": "next cast-grid spell predicate followed by tank exit",
+            "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+            "predicate_id": "sc25_L5_cast_grid_exit_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "sc25:L5:cast_grid_exit:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "sc25_L5_cast_grid_exit_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        },
+        {
+          "from_level": 5,
+          "llm_proposer_invoked": false,
+          "model_specs": "",
+          "next_goal_level": 6,
+          "predicate": {
+            "description": "next cast-grid spell predicate followed by tank exit",
+            "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+            "predicate_id": "sc25_L6_cast_grid_exit_llm_reinduction_predicate",
+            "representation_correct": true,
+            "signature": "sc25:L6:cast_grid_exit:llm_reinduction",
+            "source": "dsl_fallback_transfer_from_a1_null"
+          },
+          "proposal_mode": "dsl_fallback",
+          "reachable_plan_produced": false,
+          "refinement_rounds": [],
+          "refinement_rounds_used": 0,
+          "representation_transfer": true,
+          "route": {
+            "depth_primary": true,
+            "goal_bias_label": "sc25_L6_cast_grid_exit_llm_reinduction_predicate",
+            "operator": "llm_proposer_reinduction_operator",
+            "route": "depth_primary_goal_bias"
+          },
+          "selected_candidate_name": "",
+          "stale_state_cleared": true,
+          "trigger": "level_up",
+          "trust_energy_ranked": false
+        }
+      ],
+      "predicate": {
+        "description": "next cast-grid spell predicate followed by tank exit",
+        "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+        "predicate_id": "sc25_L6_cast_grid_exit_llm_reinduction_predicate",
+        "representation_correct": true,
+        "signature": "sc25:L6:cast_grid_exit:llm_reinduction",
+        "source": "dsl_fallback_transfer_from_a1_null"
+      },
+      "prior_reproduced_level": 5,
+      "reachable_plan_produced": false,
+      "representation_transfer": true,
+      "reproduction": {
+        "claimed_level": 5,
+        "game": "sc25",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 5,
+        "reproduced": true
+      },
+      "route": {
+        "depth_primary": true,
+        "goal_bias_label": "sc25_L6_cast_grid_exit_llm_reinduction_predicate",
+        "operator": "llm_proposer_reinduction_operator",
+        "route": "depth_primary_goal_bias"
+      }
+    }
+  ]
+}

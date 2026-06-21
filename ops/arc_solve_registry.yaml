@@ -71,10 +71,16 @@ general_gotchas:
   - m0r0
   - sp80
   - vc33
-  note: Exp 4537 persists the A1 loop as a reusable operator; detect level-up
-    from frame.levels_completed, clear stale induction, re-induce the L_{n+1}
-    predicate from the post-transition representation, and route with depth-primary
-    goal bias. New levels still count only through arc_solver_kit.reproduce().
+  note: >-
+    Exp 4537 persists the A1 loop as a reusable operator; detect level-up from
+    frame.levels_completed, clear stale induction, re-induce the L_{n+1}
+    predicate from the post-transition representation, and route with
+    depth-primary goal bias. Exp 4549 extends the same primitive family with
+    arc_solver_kit.llm_proposer_reinduction_operator: detect level-up, request
+    GOAL+DYNAMICS+plan candidates from the LLM proposer when available,
+    trust-energy-rank them, run at most 3 bounded refinement rounds, and degrade
+    to the DSL/verifier predicate inducer when A1's live proposer is null. New
+    levels still count only through arc_solver_kit.reproduce().
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
@@ -203,6 +209,18 @@ games:
     offline_reproduced_new_level: false
     residual_dead_end: Re-induced sc25 L6 cast-grid/tank-exit predicate, but no
       executable L6 planner/replay reproduced beyond the current L5 registry depth.
+  latest_exp4549_llm_proposer_primitive_transfer:
+    artifact: results/experiment_4549_llm_proposer_primitive_persist_transfer.json
+    operator: llm_proposer_reinduction_operator
+    base_operator: per_level_reinduction_operator
+    deepest_level_reached: 5
+    reachable_plan_produced: false
+    representation_transfer: true
+    offline_reproduced_new_level: false
+    residual_dead_end: A1 live proposer was null/unavailable, so the persisted
+      primitive used the DSL/verifier fallback to re-induce the sc25 L6 cast-grid/tank-exit
+      predicate; no executable L6 planner/replay reproduced beyond the current
+      L5 registry depth.
 - game: cd82
   reproducibility: reproduced
   levels_reproduced: 2
@@ -330,6 +348,18 @@ games:
     residual_dead_end: Re-induced tu93 L6 goal-distance/navigation predicate after
       replaying the reproduced L5 path, but no fresh-env executable route reproduced
       beyond the current L5 registry depth.
+  latest_exp4549_llm_proposer_primitive_transfer:
+    artifact: results/experiment_4549_llm_proposer_primitive_persist_transfer.json
+    operator: llm_proposer_reinduction_operator
+    base_operator: per_level_reinduction_operator
+    deepest_level_reached: 5
+    reachable_plan_produced: false
+    representation_transfer: true
+    offline_reproduced_new_level: false
+    residual_dead_end: A1 live proposer was null/unavailable, so the persisted
+      primitive used the DSL/verifier fallback to re-induce the tu93 L6 goal-distance/navigation
+      predicate; no fresh-env executable route reproduced beyond the current L5
+      registry depth.
 - game: tn36
   reproducibility: reproduced
   mechanic_class: program_editor
@@ -598,6 +628,18 @@ games:
     residual_dead_end: Re-induced tr87 L7 path-conditioned glyph-rewrite predicate
       after replaying the reproduced L6 path, but no offline L7 config/route is
       available beyond the current registry depth.
+  latest_exp4549_llm_proposer_primitive_transfer:
+    artifact: results/experiment_4549_llm_proposer_primitive_persist_transfer.json
+    operator: llm_proposer_reinduction_operator
+    base_operator: per_level_reinduction_operator
+    deepest_level_reached: 6
+    reachable_plan_produced: false
+    representation_transfer: true
+    offline_reproduced_new_level: false
+    residual_dead_end: A1 live proposer was null/unavailable, so the persisted
+      primitive used the DSL/verifier fallback to re-induce the tr87 L7 path-conditioned
+      glyph-rewrite predicate; no offline L7 config/route is available beyond
+      the current registry depth.
 - game: vc33
   reproducibility: reproduced
   levels_reproduced: 1

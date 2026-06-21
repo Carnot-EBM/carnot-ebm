@@ -131,6 +131,23 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("reinduction", "level_up", "deepening", "goal_bias", "transfer"),
         ),
         PrimitiveOperator(
+            operator="llm_proposer_reinduction_operator",
+            derived_from_games=("lp85", "m0r0", "sp80", "vc33"),
+            purpose=(
+                "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, "
+                "rank them by trust energy, and fall back to DSL/verifier re-induction when live "
+                "proposal is unavailable."
+            ),
+            selector_tags=(
+                "reinduction",
+                "level_up",
+                "llm_proposer",
+                "bounded_refinement",
+                "trust_energy",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="object_centric_digest",
             derived_from_games=("g50t", "lp85", "tn36", "ka59"),
             purpose="Connected-component object summary for routing, grounding, and active data.",
@@ -180,6 +197,7 @@ def select_primitive_operators(
     ):
         names = (
             "per_level_reinduction_operator",
+            "llm_proposer_reinduction_operator",
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
             "active_data_collection",
@@ -216,6 +234,7 @@ def select_primitive_operators(
             "glyph_rewrite_rule_verifier",
             "glyph_rewrite_matcher",
             "per_level_reinduction_operator",
+            "llm_proposer_reinduction_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -224,12 +243,14 @@ def select_primitive_operators(
             "config_rule_verifier",
             "config_rule_grounding",
             "per_level_reinduction_operator",
+            "llm_proposer_reinduction_operator",
             "object_centric_digest",
             "graph_astar_action_cost",
         )
     elif "program_editor" in mechanic:
         names = (
             "per_level_reinduction_operator",
+            "llm_proposer_reinduction_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -255,10 +276,16 @@ def select_primitive_operators(
             "graph_astar_action_cost",
         )
     elif "keyboard" in action or "click" in action or "graph" in mechanic:
-        names = ("per_level_reinduction_operator", "graph_astar_action_cost", "object_centric_digest")
+        names = (
+            "per_level_reinduction_operator",
+            "llm_proposer_reinduction_operator",
+            "graph_astar_action_cost",
+            "object_centric_digest",
+        )
     else:
         names = (
             "per_level_reinduction_operator",
+            "llm_proposer_reinduction_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -363,6 +390,234 @@ def per_level_reinduction_operator(
         "events": events,
         "latest_predicate": events[-1]["predicate"] if events else None,
         "latest_route": events[-1]["route"] if events else None,
+        "representation_transfer": any(bool(event["representation_transfer"]) for event in events),
+    }
+
+
+def _normalise_llm_proposer_candidates(raw: Any) -> list[dict[str, Any]]:
+    if raw is None:
+        return []
+    if isinstance(raw, Mapping):
+        nested = raw.get("candidates")
+        if isinstance(nested, Sequence) and not isinstance(nested, (str, bytes)):
+            return [dict(row) if isinstance(row, Mapping) else {"name": str(row)} for row in nested]
+        return [dict(raw)]
+    if isinstance(raw, Sequence) and not isinstance(raw, (str, bytes)):
+        return [dict(row) if isinstance(row, Mapping) else {"name": str(row)} for row in raw]
+    return [{"name": str(raw), "goal_predicate": str(raw), "representation_correct": True}]
+
+
+def _rank_llm_proposer_candidates(candidates: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    rows = [dict(candidate) for candidate in candidates]
+
+    def key(row: Mapping[str, Any]) -> tuple[float, float, str]:
+        trust_energy = row.get("trust_energy")
+        heldout = row.get("heldout_accuracy")
+        return (
+            float("inf") if trust_energy is None else float(trust_energy),
+            -float(heldout or 0.0),
+            str(row.get("name") or row.get("candidate_name") or ""),
+        )
+
+    return sorted(rows, key=key)
+
+
+def _candidate_reaches_goal(candidate: Mapping[str, Any]) -> bool:
+    return bool(
+        candidate.get("reachable_plan") is True
+        or candidate.get("plan_reaches_goal") is True
+        or candidate.get("planned") is True
+    )
+
+
+def _predicate_from_llm_candidate(next_goal_level: int, candidate: Mapping[str, Any]) -> dict[str, Any]:
+    name = str(candidate.get("name") or candidate.get("candidate_name") or f"L{next_goal_level}_candidate")
+    signature = str(candidate.get("signature") or candidate.get("goal_predicate") or name)
+    return {
+        "predicate_id": str(candidate.get("predicate_id") or candidate.get("goal_predicate") or name),
+        "signature": signature,
+        "representation_correct": bool(candidate.get("representation_correct") is True),
+        "goal_predicate": candidate.get("goal_predicate"),
+        "dynamics_model": candidate.get("dynamics_model"),
+        "source": "llm_proposer",
+    }
+
+
+def llm_proposer_reinduction_operator(
+    observations: Sequence[Any],
+    *,
+    proposal_provider: Optional[
+        Callable[[int, dict[str, Any]], Mapping[str, Any] | Sequence[Mapping[str, Any]] | str | None]
+    ] = None,
+    fallback_predicate_inducer: Optional[
+        Callable[[int, dict[str, Any]], Mapping[str, Any] | str | None]
+    ] = None,
+    route_builder: Optional[Callable[[dict[str, Any]], Mapping[str, Any]]] = None,
+    initial_predicate: Mapping[str, Any] | str | None = None,
+    initial_level: Optional[int] = None,
+    max_refinement_rounds: int = 3,
+    model_specs: str = "",
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4549: reusable LLM-proposer re-induction with DSL fallback."""
+
+    if route_builder is None:
+        route_builder = lambda event: {
+            "route": "depth_primary_goal_bias",
+            "depth_primary": True,
+            "goal_bias_label": str((event.get("predicate") or {}).get("predicate_id") or ""),
+            "operator": "llm_proposer_reinduction_operator",
+        }
+    if fallback_predicate_inducer is None:
+        fallback_predicate_inducer = lambda goal_level, _context: {
+            "predicate_id": f"L{goal_level}_predicate_unavailable",
+            "signature": "",
+            "representation_correct": False,
+            "source": "dsl_fallback",
+        }
+
+    current_level = int(initial_level) if initial_level is not None else None
+    prior_signature = (
+        str(initial_predicate.get("signature") or initial_predicate.get("predicate_id"))
+        if isinstance(initial_predicate, Mapping)
+        else (str(initial_predicate) if initial_predicate is not None else "")
+    )
+    events: list[dict[str, Any]] = []
+    round_limit = max(0, min(int(max_refinement_rounds), 3))
+
+    for index, observation in enumerate(observations):
+        level = _observation_level(observation)
+        if current_level is None:
+            current_level = level
+            continue
+        if level <= current_level:
+            continue
+        for won_level in range(current_level + 1, level + 1):
+            next_goal_level = won_level + 1
+            base_context = {
+                "from_level": won_level,
+                "next_goal_level": next_goal_level,
+                "observation_index": index,
+                "observation": observation,
+                "prior_predicate_signature": prior_signature,
+                "clear_stale_induction": True,
+            }
+            rounds: list[dict[str, Any]] = []
+            selected: dict[str, Any] | None = None
+            counterexample: dict[str, Any] = {"kind": "initial_induction"}
+            proposal_invoked = proposal_provider is not None and round_limit > 0
+            if proposal_invoked:
+                for round_no in range(1, round_limit + 1):
+                    context = {
+                        **base_context,
+                        "refinement_round": round_no,
+                        "counterexample": dict(counterexample),
+                    }
+                    raw = proposal_provider(next_goal_level, context)
+                    candidates = _rank_llm_proposer_candidates(
+                        _normalise_llm_proposer_candidates(raw)
+                    )
+                    selected = candidates[0] if candidates else None
+                    row = {
+                        "round": round_no,
+                        "action": "induce" if round_no == 1 else "refactor",
+                        "candidate_names": [
+                            str(candidate.get("name") or candidate.get("candidate_name") or "")
+                            for candidate in candidates
+                        ],
+                        "trust_energy_ranked": bool(candidates),
+                    }
+                    if selected is None:
+                        counterexample = {"kind": "no_candidate"}
+                        row["counterexample"] = dict(counterexample)
+                        rounds.append(row)
+                        continue
+                    reachable = _candidate_reaches_goal(selected)
+                    row.update(
+                        {
+                            "selected_candidate_name": str(
+                                selected.get("name") or selected.get("candidate_name") or ""
+                            ),
+                            "trust_energy": selected.get("trust_energy"),
+                            "heldout_accuracy": selected.get("heldout_accuracy"),
+                            "plan_length": len(selected.get("plan") or []),
+                            "reachable_plan": bool(reachable),
+                        }
+                    )
+                    rounds.append(row)
+                    if reachable:
+                        break
+                    counterexample = {
+                        "kind": "no_reachable_plan",
+                        "selected_candidate_name": row["selected_candidate_name"],
+                    }
+                    row["counterexample"] = dict(counterexample)
+
+            if selected is not None:
+                predicate = _predicate_from_llm_candidate(next_goal_level, selected)
+                proposal_mode = "llm_proposer"
+                reachable_plan = _candidate_reaches_goal(selected)
+                selected_name = str(selected.get("name") or selected.get("candidate_name") or "")
+            else:
+                raw_predicate = fallback_predicate_inducer(next_goal_level, dict(base_context))
+                if isinstance(raw_predicate, Mapping):
+                    predicate = dict(raw_predicate)
+                elif raw_predicate is None:
+                    predicate = {
+                        "predicate_id": f"L{next_goal_level}_predicate_unavailable",
+                        "signature": "",
+                        "representation_correct": False,
+                    }
+                else:
+                    predicate = {
+                        "predicate_id": str(raw_predicate),
+                        "signature": str(raw_predicate),
+                        "representation_correct": True,
+                    }
+                predicate.setdefault("predicate_id", f"L{next_goal_level}_predicate")
+                predicate.setdefault("signature", str(predicate.get("predicate_id") or ""))
+                predicate.setdefault("representation_correct", False)
+                predicate.setdefault("source", "dsl_fallback")
+                proposal_mode = "dsl_fallback"
+                reachable_plan = False
+                selected_name = ""
+
+            signature = str(predicate.get("signature") or predicate.get("predicate_id") or "")
+            representation_transfer = bool(
+                predicate.get("representation_correct") is True
+                and signature
+                and (not prior_signature or signature != prior_signature)
+            )
+            event = {
+                "trigger": "level_up",
+                "from_level": won_level,
+                "next_goal_level": next_goal_level,
+                "stale_state_cleared": True,
+                "predicate": predicate,
+                "representation_transfer": representation_transfer,
+                "reachable_plan_produced": bool(reachable_plan),
+                "proposal_mode": proposal_mode,
+                "llm_proposer_invoked": bool(proposal_invoked),
+                "trust_energy_ranked": any(bool(row.get("trust_energy_ranked")) for row in rounds),
+                "refinement_rounds": rounds,
+                "refinement_rounds_used": len(rounds),
+                "selected_candidate_name": selected_name,
+                "model_specs": str(model_specs),
+            }
+            event["route"] = dict(route_builder(event))
+            events.append(event)
+            prior_signature = signature
+        current_level = level
+
+    return {
+        "operator": "llm_proposer_reinduction_operator",
+        "base_operator": "per_level_reinduction_operator",
+        "level_ups_detected": len(events),
+        "stale_state_cleared": bool(events),
+        "current_level": int(current_level or 0),
+        "events": events,
+        "latest_predicate": events[-1]["predicate"] if events else None,
+        "latest_route": events[-1]["route"] if events else None,
+        "reachable_plan_produced": any(bool(event["reachable_plan_produced"]) for event in events),
         "representation_transfer": any(bool(event["representation_transfer"]) for event in events),
     }
 
