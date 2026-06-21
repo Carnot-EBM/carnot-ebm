@@ -20,6 +20,15 @@ Discipline). Numbers here trace to primary artifacts, not prose.
 > **"Solving ARC-AGI-3 is our new north star, as accurately and efficiently as
 > possible."** — operator, 2026-06-08.
 
+**WHAT WE ARE BUILDING (settled framing — operator 2026-06-21, do NOT re-derive).** A **LIVE
+AGENT running a LOCAL LOOP that, at challenge-submission time, is handed games it has NEVER SEEN
+and must DISCOVER how to solve them on the fly** — inducing each unseen game's perception,
+dynamics, AND goal at RUNTIME. The deliverable is the reusable runtime discovery PROCESS, NOT
+trained weights (a public-games model does not transfer to hidden games) and NOT offline
+public-game replays (they score ~0 on the hidden leaderboard). An offline null may be a
+corpus/harness artifact, not a live limitation — verify before concluding. Full rule: CLAUDE.md
+"ARC-AGI-3 IS a Live Hidden-Game Discovery Agent — Foundational Framing (MANDATORY)".
+
 This is the project's **destination**. Everything below (§1 the FoVer headline,
 §2 the publication gate, §3 hardware, §5 the verifier-moat + agentic harness)
 is now **in service of this goal**, not a parallel track. The reframe is not a
