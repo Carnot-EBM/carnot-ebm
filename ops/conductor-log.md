@@ -8999,3 +8999,4 @@ c |
 | 2026-06-21 06:19 UTC | PHASE 0 (TRANSITION) -- archive .418 -> activate . | FAIL | No file changes produced |
 | 2026-06-21 06:34 UTC | PHASE 0 (TRANSITION) -- archive .418 -> activate . | OK | 88 passed, 1 warning in 6.53s |
 | 2026-06-21 07:02 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-06-21 07:17 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
