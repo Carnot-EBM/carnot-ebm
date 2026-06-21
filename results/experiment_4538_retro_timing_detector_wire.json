@@ -1,0 +1,264 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "exists": true,
+      "fields_imported": [
+        "honest_verdict",
+        "detector_true_count_415",
+        "detector_true_count_416"
+      ],
+      "path": "results/experiment_4517_timing_detector_repair.json",
+      "sha256": "sha256:745433550cb5ef4b9b9551a8c810a441472b72640c517c9125e401567149efd3"
+    },
+    {
+      "exists": true,
+      "fields_imported": [
+        "experiments_completed",
+        "summary",
+        "bottlenecks_identified"
+      ],
+      "path": "results/operational_retro_2026_06_418.json",
+      "sha256": "sha256:7195c2b48dc1468eee6223f60b272557c369c569d2b6218919f0b41bd0364e24"
+    },
+    {
+      "exists": true,
+      "fields_imported": [
+        "honest_verdict",
+        "b_track_status",
+        "preconditions_checked"
+      ],
+      "path": "results/experiment_4528_infra_carryforward.json",
+      "sha256": "sha256:d877fa4b7120b58a0da8116b788339a87f364533270ba9fbb9279786fc28a2ef"
+    }
+  ],
+  "compute_bound": false,
+  "duration_s": 0.182129,
+  "experiment": "experiment_4538_retro_timing_detector_wire",
+  "field_principles": {
+    "cited_upstream_artifacts": "traceability of the .417 repair + .418 retro gap this continues.",
+    "honest_verdict": "terminal prefix; shipped: retro_timing_detector_wired_regression_asserted OR complete: retro_timing_partial_<reason>.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads the .417/.418 artifacts + wires the retro path, no model load (100us floor).",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "regression_assert_added": "the injected==on-disk count assert + detector_gap_suspected emission -- catches a future false-zero mechanically.",
+    "retro_path_wired": "names the retro timing-data path now using the repaired detector -- the fix that closes the .363->.418 false-zero gap.",
+    "tests_added_pass": "Tests Must Run and Assert."
+  },
+  "honest_verdict": "shipped: retro_timing_detector_wired_regression_asserted",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "carnot_import_ok": true,
+    "ops_changelog_exists": true,
+    "results_dir_exists": true,
+    "retro_timing_data_path_located": true,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_4538": true,
+    "upstream_418_retro_exists": true,
+    "upstream_4517_exists": true,
+    "upstream_4528_exists": true
+  },
+  "regression_assert_added": {
+    "assert_passed": true,
+    "assertion": "reported_in_window_count == on_disk_in_window_count",
+    "detector_gap_suspected_emitted": true,
+    "legacy_reported_count": 0,
+    "on_disk_in_window_count": 10,
+    "repaired_reported_count": 10,
+    "reported_in_window_count": 10
+  },
+  "requirements": [
+    "REQ-REPORT-4538"
+  ],
+  "result_path": "results/experiment_4538_retro_timing_detector_wire.json",
+  "retro_path_wired": {
+    "consumer_path": "scripts/research_conductor.py::_run_operational_retrospective TIMING DATA",
+    "helper": "carnot.reporting.retro_timing_detector_wire_4538.build_retro_timing_data",
+    "protected_research_conductor_modified": false,
+    "repaired_detector_functions": [
+      "scan_results_mtimes",
+      "extract_changelog_dated_artifacts"
+    ],
+    "repaired_detector_module": "carnot.reporting.timing_detector_repair_4517",
+    "wired": true
+  },
+  "retro_timing_data": {
+    "compute_bound_experiments_count": 0,
+    "consumer_path": "scripts/research_conductor.py::_run_operational_retrospective TIMING DATA",
+    "detector_gap_suspected": true,
+    "experiment_times": [
+      {
+        "compute_bound": false,
+        "duration_min": 22.717,
+        "duration_s": 1363.0177692399593,
+        "experiment": "experiment_4523_forward_walk_navigation",
+        "path": "results/experiment_4523_forward_walk_navigation.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 5.335,
+        "duration_s": 320.1113609840395,
+        "experiment": "experiment_4524_reach_deeper_levels",
+        "path": "results/experiment_4524_reach_deeper_levels.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 3.57,
+        "duration_s": 214.229777020053,
+        "experiment": "experiment_4524_stop_after_levelup",
+        "path": "results/experiment_4524_stop_after_levelup.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.0,
+        "duration_s": 0.0001,
+        "experiment": "experiment_4525_levelup_attempt",
+        "path": "results/experiment_4525_levelup_attempt.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.375,
+        "duration_s": 22.52119164809119,
+        "experiment": "experiment_4526_integration_8game_gate",
+        "path": "results/experiment_4526_integration_8game_gate.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.751,
+        "duration_s": 45.062343818019144,
+        "experiment": "experiment_4527_nav_metric_harness",
+        "path": "results/experiment_4527_nav_metric_harness.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.063,
+        "duration_s": 3.7782628120621666,
+        "experiment": "experiment_4528_infra_carryforward",
+        "path": "results/experiment_4528_infra_carryforward.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.116,
+        "duration_s": 6.989392,
+        "experiment": "4529",
+        "path": "results/experiment_4529_hardware_continuity.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.0,
+        "duration_s": 0.0001,
+        "experiment": "experiment_4530_sota_ingestion_navigation_search",
+        "path": "results/experiment_4530_sota_ingestion_navigation_search.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.004,
+        "duration_s": 0.210517,
+        "experiment": "4531",
+        "path": "results/experiment_4531_capstone_v418.json"
+      }
+    ],
+    "experiments_completed": 10,
+    "legacy_reported_count": 0,
+    "milestone": "2026.06.418",
+    "on_disk_in_window_count": 10,
+    "regression_assert_passed": true,
+    "repaired_detection": {
+      "changelog_count": 10,
+      "changelog_only_paths": [],
+      "changelog_paths": [
+        "results/experiment_4523_forward_walk_navigation.json",
+        "results/experiment_4524_reach_deeper_levels.json",
+        "results/experiment_4524_stop_after_levelup.json",
+        "results/experiment_4525_levelup_attempt.json",
+        "results/experiment_4526_integration_8game_gate.json",
+        "results/experiment_4527_nav_metric_harness.json",
+        "results/experiment_4528_infra_carryforward.json",
+        "results/experiment_4529_hardware_continuity.json",
+        "results/experiment_4530_sota_ingestion_navigation_search.json",
+        "results/experiment_4531_capstone_v418.json"
+      ],
+      "corrected_count": 10,
+      "corrected_paths": [
+        "results/experiment_4523_forward_walk_navigation.json",
+        "results/experiment_4524_reach_deeper_levels.json",
+        "results/experiment_4524_stop_after_levelup.json",
+        "results/experiment_4525_levelup_attempt.json",
+        "results/experiment_4526_integration_8game_gate.json",
+        "results/experiment_4527_nav_metric_harness.json",
+        "results/experiment_4528_infra_carryforward.json",
+        "results/experiment_4529_hardware_continuity.json",
+        "results/experiment_4530_sota_ingestion_navigation_search.json",
+        "results/experiment_4531_capstone_v418.json"
+      ],
+      "detector_gap_suspected": true,
+      "fallback_used": false,
+      "legacy_reported_count": 0,
+      "milestone": "2026.06.418",
+      "mtime_count": 10,
+      "mtime_only_paths": [],
+      "mtime_paths": [
+        "results/experiment_4523_forward_walk_navigation.json",
+        "results/experiment_4524_reach_deeper_levels.json",
+        "results/experiment_4524_stop_after_levelup.json",
+        "results/experiment_4525_levelup_attempt.json",
+        "results/experiment_4526_integration_8game_gate.json",
+        "results/experiment_4527_nav_metric_harness.json",
+        "results/experiment_4528_infra_carryforward.json",
+        "results/experiment_4529_hardware_continuity.json",
+        "results/experiment_4530_sota_ingestion_navigation_search.json",
+        "results/experiment_4531_capstone_v418.json"
+      ],
+      "source_disagreement": false,
+      "uses_repaired_detector": "carnot.reporting.timing_detector_repair_4517"
+    },
+    "reported_in_window_count": 10,
+    "slowest_experiments": [
+      {
+        "compute_bound": false,
+        "duration_min": 22.717,
+        "duration_s": 1363.0177692399593,
+        "experiment": "experiment_4523_forward_walk_navigation",
+        "path": "results/experiment_4523_forward_walk_navigation.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 5.335,
+        "duration_s": 320.1113609840395,
+        "experiment": "experiment_4524_reach_deeper_levels",
+        "path": "results/experiment_4524_reach_deeper_levels.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 3.57,
+        "duration_s": 214.229777020053,
+        "experiment": "experiment_4524_stop_after_levelup",
+        "path": "results/experiment_4524_stop_after_levelup.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.751,
+        "duration_s": 45.062343818019144,
+        "experiment": "experiment_4527_nav_metric_harness",
+        "path": "results/experiment_4527_nav_metric_harness.json"
+      },
+      {
+        "compute_bound": false,
+        "duration_min": 0.375,
+        "duration_s": 22.52119164809119,
+        "experiment": "experiment_4526_integration_8game_gate",
+        "path": "results/experiment_4526_integration_8game_gate.json"
+      }
+    ],
+    "timing_summary": "MILESTONE-SCOPED DATA (repaired detector for scripts/research_conductor.py::_run_operational_retrospective TIMING DATA):\nTotal milestone wall time: 32.9 minutes\nExperiments completed: 10\nCompute-bound experiments (GGUF/CUDA/requires_gpu): 0\nSynthesis-only experiments: 10\nRegression assert: reported_in_window_count == on_disk_in_window_count (10 == 10)\ndetector_gap_suspected=true\nSlowest experiments (compute_bound flag in [..]):\n  - 22.717min [synthesis_only]: results/experiment_4523_forward_walk_navigation.json\n  - 5.335min [synthesis_only]: results/experiment_4524_reach_deeper_levels.json\n  - 3.570min [synthesis_only]: results/experiment_4524_stop_after_levelup.json\n  - 0.751min [synthesis_only]: results/experiment_4527_nav_metric_harness.json\n  - 0.375min [synthesis_only]: results/experiment_4526_integration_8game_gate.json\n",
+    "total_wall_time_minutes": 32.9
+  },
+  "scenarios": [
+    "SCENARIO-REPORT-4538-RETRO-PATH",
+    "SCENARIO-REPORT-4538-FALLBACK",
+    "SCENARIO-REPORT-4538-ARTIFACT"
+  ],
+  "schema": "carnot.retro_timing_detector_wire_4538.v1",
+  "tests_added_pass": {
+    "command": ".venv/bin/pytest tests/python/test_experiment_4538_retro_timing_detector_wire.py -q --no-cov",
+    "passed": true
+  }
+}
