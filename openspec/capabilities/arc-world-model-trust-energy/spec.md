@@ -450,6 +450,55 @@ per-level efficiency without a CORE level loss, the artifact SHALL report
 `levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
 NOT submit to the leaderboard.
 
+### REQ-ARC-WMTE-4548: Submitted A1/A4 Integration Gate
+
+Experiment 4548 SHALL read the A1 live LLM-proposer re-induction artifact from
+`results/experiment_4544_llm_proposer_reinduction.json` and the A4 cached
+CNN frame-change ranker artifact from
+`results/experiment_4547_frame_change_predictor.json`. The workflow SHALL
+select only levers that strictly raise CORE per-level efficiency above the
+canonical `2.0074` baseline by reaching a deeper CORE level, or by reaching a
+CORE level within budget that the matched bare explorer missed, while preserving
+every CORE solve. Median-actions effects SHALL NOT count as score levers unless
+the per-level gate shows a CORE efficiency increase. An upstream artifact with
+`flagged_adversarial: true` SHALL be rejected unless its only flag is the
+control-equals-best null-delta tautology: it MUST include explicit
+`efficiency_delta: 0.0`, a non-empty `null_delta_methodology_note`, matching
+baseline/best core efficiency, and no other corrigendum flags. Such an artifact
+MAY be recorded only as a valid null and SHALL NOT be treated as an improvement.
+
+Experiment 4548 SHALL re-measure the submitted-default configuration
+end-to-end through `scripts/kaggle/arc_local_submission_gate.py --check` and
+write `results/experiment_4548_integration_8game_gate.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`,
+`core_efficiency_baseline`, `core_efficiency_integrated`,
+`core_solves_preserved`, `levers_integrated`, `additivity_checked`,
+`heldout_solve_rate`, `ready_for_operator_submit`,
+`false_negative_risk_checked`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_core_efficiency_<n>_above_2.0074 OR complete: no_lever_raises_core_efficiency_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition)."
+- `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control (NOT median actions, retired)."
+- `core_efficiency_integrated`: principle "the HEADLINE -- the SUBMITTED-config per-level efficiency after wiring the winners (did it solve MORE/DEEPER levels)."
+- `core_solves_preserved`: principle "integration must preserve every CORE solve (set-containment)."
+- `levers_integrated`: principle "names which of A1/A4 were wired -- traceable to their measured deltas; [] is an honest null."
+- `additivity_checked`: principle "integrated CORE core_efficiency vs the naive sum of isolated A1+A4 deltas -- surfaces a destructive LLM-proposer x CNN-ranker interaction instead of burying it."
+- `heldout_solve_rate`: principle "the real transfer signal; integration should not regress it."
+- `ready_for_operator_submit`: principle "True if the integrated config is a CORE-preserved core_efficiency improvement worth a 1/day submission slot; the task NEVER submits (operator-only)."
+- `false_negative_risk_checked`: principle "an honest null only valid with the 2.0074 baseline measured the same way."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require `core_efficiency_integrated > 2.0074`,
+`core_solves_preserved=true`, at least one integrated A1/A4 core-efficiency
+lever, and `ready_for_operator_submit=true`. If neither A1 nor A4 raised CORE
+per-level efficiency without a CORE level loss, the artifact SHALL report
+`complete: no_lever_raises_core_efficiency_honest_null`, keep
+`levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
+NOT submit to the leaderboard.
+
 ### REQ-ARC-WMTE-4537: Reusable Per-Level Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the per-level re-induction loop from experiment
@@ -803,6 +852,19 @@ Then no lever is wired, `core_efficiency_integrated` is measured on the current
 submitted default, CORE solve preservation is reported, and the artifact uses
 `complete: no_lever_raises_core_efficiency_honest_null` unless the submitted
 configuration strictly raises CORE per-level efficiency above `2.0074`.
+
+### SCENARIO-ARC-WMTE-4548: A1/A4 Integration Keeps Honest Null
+
+Given A1's live LLM-proposer artifact is flagged with more than the permitted
+null-delta tautology and A4's CNN ranker artifact reports no CORE efficiency
+increase
+When experiment 4548 selects integration levers and runs the 8-game per-level
+submission gate
+Then no lever is wired, `core_efficiency_integrated` is measured on the current
+submitted default, CORE solve preservation and held-out solve rate are reported,
+and the artifact uses `complete: no_lever_raises_core_efficiency_honest_null`
+unless the submitted configuration strictly raises CORE per-level efficiency
+above `2.0074` with an accepted A1/A4 lever.
 
 ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
 
