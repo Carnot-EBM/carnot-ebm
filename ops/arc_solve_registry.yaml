@@ -186,13 +186,29 @@ games:
     reproducibility_checksum: 31501265619b89657355d491143593b6aaa6d28cae991e211617de3c43217c6b
 - game: cd82
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: first-solve L1 adapter-free; keyboard directional + confirm sequence
-    replays offline.
-  action_model: keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit.
-  solver: results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions).
-  reproduce: re-gated reproduced=True L1 (arc_solver_kit.reproduce).
-  gotchas: []
+  levels_reproduced: 2
+  mechanic_class: palette_region_fill
+  win_condition: 'L1 keyboard basket commit plus L2 palette-region fill: canvas
+    sprite xytrjjbyib must match target eoqnvkspoa-* under cd82_goal_mask.'
+  action_model: Mixed keyboard+click. ACTION1-4 move the basket/selector among
+    eight regions; ACTION5 commits a region fill; ACTION6 clicks palette
+    pqkenviek colors discovered from live sprite centers; the adapter settles
+    animation flags edjesyzxk/yfobpcuef after actions.
+  solver: GameAdapter _cd82 in python/carnot/agentic/arc_game_adapters.py via
+    python/carnot/agentic/arc_cd82_adapter_logic.py + scripts/arc_loop_solve.py;
+    results/arc_loop_solve_cd82.json 20-label L2 gate.
+  reproduce: Exp4525 results/experiment_4525_levelup_attempt.json re-gated results/arc_loop_solve_cd82.json
+    offline_reproduced=True, reached_level=2, banked +1 over the current L1
+    registry row, checksum c895c4d33839b1dcc996e287071fb10f4733aa9e2958d661989ac9c2856a034b. Prior Exp4504 also recorded this L2 before
+    registry reconciliation.
+  gotchas:
+  - Palette click coordinates must be discovered from live pqkenviek sprite centers;
+    hardcoded coordinates drift.
+  - Fill predicate is masked by cd82_goal_mask(), not full-canvas equality.
+  - Settle animation flags edjesyzxk/yfobpcuef before hashing or verifier checks.
+  dead_ends:
+  - Exp4525 arc_loop_solve --game cd82 --target-level 3 replays to L2 only; the
+    current adapter has no grounded L3 delta.
 - game: lf52
   reproducibility: reproduced
   levels_reproduced: 1
@@ -733,7 +749,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 48
+reproducible_total_levels: 50
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
