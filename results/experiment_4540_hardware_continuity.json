@@ -1,0 +1,115 @@
+{
+  "bitstream_build_attempted": false,
+  "duration_s": 7.195354,
+  "experiment": 4540,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "honest_verdict": "terminal prefix; complete: hardware_continuity_audit_<n>_boards_reachable (blocked_<board> per-board is honest, not terminal failure).",
+    "inference_substrate": "hardware_smoke -- SSH/USB board checks, per-board duration floors.",
+    "per_board_status": "each board's reachability + state -- keeps every attached board visible in the milestone retro (the forget-pattern guard).",
+    "preconditions_checked": "records WHICH board resources were verified; SSH-not-SD-card for KV260."
+  },
+  "honest_verdict": "complete: hardware_continuity_audit_2_boards_reachable",
+  "inference_substrate": "hardware_smoke",
+  "per_board_reachability": {
+    "gatemate": false,
+    "kv260": true,
+    "polarfire": true
+  },
+  "per_board_status": {
+    "gatemate": {
+      "board": "gatemate",
+      "duration_s": 0.01965,
+      "precondition_command": "openFPGALoader -c dirtyJtag --detect",
+      "precondition_resource": "gatemate_usb_detect",
+      "reachability_transcript": {
+        "duration_s": 0.01965,
+        "exit_code": 0,
+        "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz"
+      },
+      "reachable": false,
+      "state": {
+        "captured": false,
+        "reason": "blocked_gatemate_usb_undetected"
+      },
+      "status": "blocked_gatemate_usb_undetected"
+    },
+    "kv260": {
+      "board": "kv260",
+      "duration_s": 5.511558,
+      "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "precondition_resource": "kv260_ssh",
+      "reachability_transcript": {
+        "duration_s": 4.57957,
+        "exit_code": 0,
+        "observed": "returncode=0"
+      },
+      "reachable": true,
+      "state": {
+        "captured": true,
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'sudo -n xmutil listapps'",
+        "duration_s": 0.931988,
+        "exit_code": 0,
+        "observed": "Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64 ",
+        "state_type": "xmutil_listapps"
+      },
+      "status": "kv260_reachable_state_recorded"
+    },
+    "polarfire": {
+      "board": "polarfire",
+      "duration_s": 1.663737,
+      "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "precondition_resource": "polarfire_ssh",
+      "reachability_transcript": {
+        "duration_s": 0.897698,
+        "exit_code": 0,
+        "observed": "returncode=0"
+      },
+      "reachable": true,
+      "state": {
+        "captured": true,
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire uptime",
+        "duration_s": 0.766039,
+        "exit_code": 0,
+        "observed": "10:27:49 up 8 days, 17:40,  0 user,  load average: 0.00, 0.00, 0.00",
+        "state_type": "uptime"
+      },
+      "status": "polarfire_reachable_state_recorded"
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.57957,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.01965,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_usb_detect"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.897698,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4540,
+  "reachable_board_count": 2,
+  "reproducibility_checksum": "5ca4ce2c92accee1ca2a3c7b765a671de8253491f33f63533f1a0a51e674fcfe",
+  "schema": "carnot.hardware_continuity_state_audit.v2",
+  "spec_refs": [
+    "REQ-HW-4540",
+    "SCENARIO-HW-4540"
+  ],
+  "speedup_claim_made": false
+}
