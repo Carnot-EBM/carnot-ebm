@@ -2465,3 +2465,34 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
   rank rich_action_candidates by predicted change. Full spec: docs/research-notes/arc-frame-change-predictor-spec.md.
 - priority: high (action efficiency is the score metric and we have NONE; the most direct steal from the
   leaderboard leader; complements -- does not replace -- the verifier-energy thesis)
+
+---
+
+## GAP-WM-TRUST-GATE: world-model trust gate gameable by identity on no-op-heavy corpora (2026-06-21)
+
+### GAP-WM-TRUST-GATE: change-weighted world-model verification
+- status: open
+- evidence: outer-loop induction-quality investigation 2026-06-21
+  (docs/research-notes/arc-l1-l2-barrier-diagnosis-2026-06-20.md UPDATE). lp85 L1 exploration via
+  `collect_transitions("lp85", n=120, seed=0)` yields 120 transitions, ALL ACTION6 clicks, 87 no-ops /
+  33 grid-changing. An IDENTITY engine (`return grid`) scores 0.725 on `WorldModelVerifier.score` and
+  PASSES the `accuracy >= 0.5` trust gate in `arc_competition_agent.py:_induce_and_plan`.
+- failure mode: the WorldModelVerifier counts the fraction of ALL transitions reproduced; on a
+  click-driven game where most candidate clicks are no-ops, a do-nothing engine reproduces every no-op
+  and clears 0.5 — but it predicts no change, so `plan_in_model` finds no path to a win state and the
+  induction tier contributes nothing. The gate trusts a useless model. (Both Qwen3.5-9B and
+  Qwen2.5-Coder-14B in fact score 0.0 here by OVER-transforming every click, the opposite failure — but
+  the gate's blind spot is the identity direction: a model that learns "clicks usually do nothing" would
+  be trusted while being unable to plan.)
+- missing discriminator: a CHANGE-WEIGHTED world-model score — accuracy restricted to (or up-weighted on)
+  the grid-CHANGING transitions, plus a minimum count of correctly-predicted CHANGES, so the gate measures
+  whether the engine models the MECHANIC rather than reproducing inaction. Equivalently: require the engine
+  to be non-degenerate (predict >=1 real change correctly) before it is trusted for planning.
+- candidate design: extend `WorldModelVerifier` to return `change_accuracy` (n_correct over the
+  grid-changing transitions only) and `n_changes_correct`; the `_induce_and_plan` trust gate becomes
+  `change_accuracy >= T AND n_changes_correct >= k` instead of overall `accuracy >= 0.5`. Cheap, pure
+  Python, no model. NOTE: needs adversarial review before landing (standing rule) — changing a trust gate
+  can mask or unmask induced engines in the live path.
+- priority: medium (does not by itself unlock L2 — induction quality (GAP not here) is the binding
+  constraint — but it removes a false-trust hole that would let a degenerate identity engine through, and
+  it gives the induction loop an honest non-degeneracy signal to optimize against)
