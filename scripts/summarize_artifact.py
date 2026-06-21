@@ -203,6 +203,9 @@ def summarize(path: Path) -> int:
     crit = [f for f in flags if _sev(f) == "critical"]
     warn = [f for f in flags if _sev(f) == "warn"]
     fnr = [f for f in flags if f.get("kind") == "FALSE_NEGATIVE_RISK"]
+    fnr_open = [
+        f for f in fnr if "false_negative_risk_open" in str(f.get("detail", ""))
+    ]
 
     print("=" * 78)
     print(f"ARTIFACT  {path.name}")
@@ -265,6 +268,9 @@ def summarize(path: Path) -> int:
 
     # FALSE-NEGATIVE prominence — a null claim is not a finding without control
     if fnr:
+        if fnr_open:
+            print("  !! false_negative_risk_open — positive control failed or was unchecked.")
+            print("     Treat this as a broken-test signal, not a clean null.")
         print("  !! FALSE_NEGATIVE_RISK — this NULL/negative claim may be a")
         print("     degenerate test, not real evidence the method fails:")
         for f in fnr:

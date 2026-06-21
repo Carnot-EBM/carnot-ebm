@@ -174,6 +174,46 @@ def test_fnr_does_not_fire_when_oracle_exceeds_baseline_even_if_null():
     assert "FALSE_NEGATIVE_RISK" not in _kinds(flags)
 
 
+def test_req_capstone_4563_positive_control_failed_efficiency_null_fires():
+    """REQ-CAPSTONE-4563: exp4544 is a broken positive-control null, not evidence."""
+    fixture = (
+        Path(__file__).resolve().parents[2]
+        / "results"
+        / "experiment_4544_llm_proposer_reinduction.json"
+    )
+    payload = json.loads(fixture.read_text(encoding="utf-8"))
+
+    assert payload["positive_control_passed"] is False
+    assert payload["false_negative_risk_checked"] is False
+
+    flags = []
+    av.check_false_negative_risk(payload, flags)
+    matching = [
+        flag
+        for flag in flags
+        if flag.kind == "FALSE_NEGATIVE_RISK" and "false_negative_risk_open" in flag.detail
+    ]
+    assert matching, "positive-control-failed efficiency null must open false-negative risk"
+
+
+def test_req_capstone_4563_passed_positive_control_null_does_not_fire():
+    """REQ-CAPSTONE-4563: a null with a passed positive control remains a valid null."""
+    flags = []
+    av.check_false_negative_risk(
+        {
+            "honest_verdict": "complete: llm_proposer_no_deeper_level_honest_null",
+            "positive_control_passed": True,
+            "false_negative_risk_checked": True,
+            "core_efficiency_baseline": 2.0074,
+            "core_efficiency_best": 2.0074,
+            "efficiency_delta": 0.0,
+            "null_delta_methodology_note": "matched measurement; no deeper level reached.",
+        },
+        flags,
+    )
+    assert "FALSE_NEGATIVE_RISK" not in _kinds(flags)
+
+
 # --- 4. DEGENERATE_SEPARATION catches wrong-majority synthetic wins --------
 
 def test_degenerate_separation_flags_vote_zero_delta_one_arcgen_win():

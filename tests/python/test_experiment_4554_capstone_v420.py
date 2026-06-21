@@ -52,6 +52,14 @@ def _live_flags_for_current_fixture(path: Path) -> list[dict[str, Any]]:
                 "severity": "info",
                 "detail": "efficiency_delta=0.0",
             },
+            {
+                "kind": "FALSE_NEGATIVE_RISK",
+                "severity": "warn",
+                "detail": (
+                    "false_negative_risk_open: positive_control_passed=False on "
+                    "a null efficiency/proposer artifact."
+                ),
+            },
         ]
     if path.name == "experiment_4548_integration_8game_gate.json":
         return [
@@ -61,6 +69,21 @@ def _live_flags_for_current_fixture(path: Path) -> list[dict[str, Any]]:
                 "detail": (
                     "core_efficiency_baseline=2.0074 and "
                     "core_efficiency_integrated=2.0074 agree to >5 sig figs."
+                ),
+            }
+        ]
+    return []
+
+
+def _positive_control_failed_live_flags(path: Path) -> list[dict[str, Any]]:
+    if path.name == "experiment_4544_llm_proposer_reinduction.json":
+        return [
+            {
+                "kind": "FALSE_NEGATIVE_RISK",
+                "severity": "warn",
+                "detail": (
+                    "false_negative_risk_open: positive_control_passed=False on "
+                    "a null efficiency/proposer artifact."
                 ),
             }
         ]
@@ -310,7 +333,7 @@ def test_scenario_capstone_4554_current_read_is_honest_null_with_capability_grow
     assert artifact["efficiency_moved"] is False
     assert artifact["ready_for_operator_submit"] is False
     assert artifact["leaderboard_submission"] is False
-    assert artifact["llm_proposer_value_summary"]["status"] == "diagnosis_only_null_delta_carve_out"
+    assert artifact["llm_proposer_value_summary"]["status"] == "false_negative_risk_open"
     assert artifact["llm_proposer_value_summary"]["headline_numbers_aggregated"] is False
     assert artifact["llm_proposer_value_summary"]["value"] == {
         "count": None,
@@ -368,6 +391,40 @@ def test_scenario_capstone_4554_current_read_is_honest_null_with_capability_grow
     assert cited["A3_levelup_attempt"]["fields_imported"]
     assert cited["B1_honest_sprint_metric"]["fields_imported"]
     assert artifact["preconditions_checked"]["registry"]["reproducible_total_levels"] == 52
+
+
+def test_req_capstone_4563_false_negative_risk_open_not_aggregated(
+    tmp_path: Path,
+) -> None:
+    """REQ-CAPSTONE-4563: warning-level false_negative_risk_open excludes A1 headlines."""
+
+    _write_payloads(tmp_path, _payloads(default_flags=False))
+
+    artifact = mod.build_artifact(
+        tmp_path,
+        started_s=12.0,
+        now_s=13.0,
+        live_flag_runner=_positive_control_failed_live_flags,
+        summarize_runner=_summary_codes({"experiment_4544_llm_proposer_reinduction.json": 1}),
+    )
+
+    a1 = artifact["llm_proposer_value_summary"]
+    assert a1["status"] == "false_negative_risk_open"
+    assert a1["headline_numbers_aggregated"] is False
+    assert a1["positive_control_passed"] is False
+    assert artifact["deepest_level_gains_per_core_game"]["headline_numbers_aggregated"] is False
+    assert artifact["efficiency_moved"] is False
+    assert artifact["ready_for_operator_submit"] is False
+
+    row = {
+        item["artifact_key"]: item
+        for item in artifact["upstream_provenance"]
+    }["A1_llm_proposer"]
+    assert row["skipped"] is True
+    assert row["skip_reason"] == "false_negative_risk_open"
+    assert row["fields_imported"] == []
+    assert row["false_negative_risk_open"] is True
+    assert artifact["cited_upstream_artifacts"][0]["fields_imported"] == []
 
 
 def test_req_capstone_4554_clean_success_requires_llm_depth_and_integration(

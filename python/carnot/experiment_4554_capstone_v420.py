@@ -281,7 +281,10 @@ def _skip_reason(
     parse_error: str,
     acceptance_gate_failed: bool,
     diagnosis_context_read: bool,
+    false_negative_risk_open: bool,
 ) -> str:
+    if false_negative_risk_open:
+        return "false_negative_risk_open"
     if diagnosis_context_read:
         return "null_delta_carve_out_diagnosis_only"
     if stamped or critical or parse_error:
@@ -289,6 +292,14 @@ def _skip_reason(
     if acceptance_gate_failed:
         return "failed_acceptance_gate"
     return ""
+
+
+def _false_negative_risk_open(flags: list[dict[str, Any]]) -> bool:
+    return any(
+        flag.get("kind") == "FALSE_NEGATIVE_RISK"
+        and "false_negative_risk_open" in str(flag.get("detail", ""))
+        for flag in flags
+    )
 
 
 def _read_inputs(
@@ -329,13 +340,22 @@ def _read_inputs(
         diagnosis_context_read = diagnosis_context is not None
         stamped = payload.get("flagged_adversarial") is True if payload is not None else False
         gate_failed = _acceptance_gate_failed(payload)
-        skipped = stamped or critical or payload is None or bool(parse_error) or gate_failed
+        fnr_open = _false_negative_risk_open(live_flags)
+        skipped = (
+            stamped
+            or critical
+            or fnr_open
+            or payload is None
+            or bool(parse_error)
+            or gate_failed
+        )
         reason = _skip_reason(
             stamped=stamped,
             critical=critical,
             parse_error=parse_error,
             acceptance_gate_failed=gate_failed,
             diagnosis_context_read=diagnosis_context_read,
+            false_negative_risk_open=fnr_open,
         )
         row = {
             "artifact_key": key,
@@ -348,6 +368,7 @@ def _read_inputs(
             "live_adversarial_flags": live_flags,
             "stamped_flagged_adversarial": stamped,
             "live_critical": critical,
+            "false_negative_risk_open": fnr_open,
             "acceptance_gate_failed": gate_failed,
             "parse_error": parse_error,
             "skipped": skipped,
@@ -359,7 +380,7 @@ def _read_inputs(
         raw_artifacts[key] = payload
         provenance.append(row)
 
-        if stamped or critical:
+        if stamped or critical or fnr_open:
             handled["excluded"].append(
                 {
                     "artifact_key": key,
@@ -368,6 +389,7 @@ def _read_inputs(
                     "sha256": sha,
                     "stamped_flagged_adversarial": stamped,
                     "live_critical": critical,
+                    "false_negative_risk_open": fnr_open,
                     "reason": reason,
                 }
             )
@@ -421,6 +443,8 @@ def load_registry_totals(root: Path | str = REPO_ROOT) -> JsonDict:
 
 
 def _payload_status(row: Mapping[str, Any]) -> str:
+    if row.get("false_negative_risk_open"):
+        return "false_negative_risk_open"
     if row.get("acceptance_gate_failed"):
         return "failed_acceptance_gate"
     if row.get("skipped"):
@@ -475,6 +499,21 @@ def _null_llm_value() -> JsonDict:
 
 def _llm_proposer_summary(payload: JsonDict | None, row: Mapping[str, Any]) -> JsonDict:
     if payload is None:
+        if row.get("false_negative_risk_open"):
+            return {
+                "status": "false_negative_risk_open",
+                "headline_numbers_aggregated": False,
+                "core_efficiency_baseline": CORE_EFFICIENCY_BASELINE,
+                "core_efficiency_best": None,
+                "core_efficiency_delta": None,
+                "core_solves_preserved": False,
+                "positive_control_passed": False,
+                "offline_reproduced": False,
+                "verifier_is_oracle": None,
+                "value": _null_llm_value(),
+                "moved": False,
+                "diagnosis": _diagnosis_from_row(row),
+            }
         if row.get("diagnosis_context_read"):
             return {
                 "status": "diagnosis_only_null_delta_carve_out",

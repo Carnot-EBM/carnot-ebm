@@ -296,6 +296,90 @@ def _is_identifier_field(k: str) -> bool:
     return kl.endswith("_seed") or kl.endswith("_id") or kl.endswith("_seed_used")
 
 
+_POSITIVE_CONTROL_NULL_VERDICT_MARKERS = (
+    "honest_null",
+    "null",
+    "no_deeper",
+    "no_value",
+    "no_value_added",
+    "no_lever",
+    "no_lift",
+    "no_gain",
+    "no_delta",
+    "unmoved",
+    "unchanged",
+    "positive_control_failed",
+)
+_POSITIVE_CONTROL_NULL_DOMAIN_MARKERS = (
+    "efficiency",
+    "transfer",
+    "proposer",
+    "reinduction",
+    "llm_proposer",
+    "core_efficiency",
+    "generic_transfer",
+)
+_POSITIVE_CONTROL_NULL_DELTA_KEYS = (
+    "efficiency_delta",
+    "core_efficiency_delta",
+    "generic_transfer_delta",
+    "transfer_delta",
+)
+
+
+def _finite_float(d: dict[str, Any], key: str) -> float | None:
+    value = d.get(key)
+    return float(value) if _is_finite_number(value) else None
+
+
+def _metric_pair_equal(d: dict[str, Any], left: str, right: str) -> bool:
+    left_value = _finite_float(d, left)
+    right_value = _finite_float(d, right)
+    if left_value is None or right_value is None:
+        return False
+    return math.isclose(left_value, right_value, rel_tol=0.0, abs_tol=1e-12)
+
+
+def _has_positive_control_null_metric(d: dict[str, Any]) -> bool:
+    for key in _POSITIVE_CONTROL_NULL_DELTA_KEYS:
+        value = _finite_float(d, key)
+        if value is not None and math.isclose(value, 0.0, rel_tol=0.0, abs_tol=1e-12):
+            return True
+    return any(
+        _metric_pair_equal(d, left, right)
+        for left, right in (
+            ("core_efficiency_baseline", "core_efficiency_best"),
+            ("core_efficiency_baseline", "core_efficiency_integrated"),
+            ("generic_transfer_rate_baseline", "generic_transfer_rate_with_verifier"),
+            ("generic_transfer_rate_baseline", "generic_transfer_rate_integrated"),
+        )
+    )
+
+
+def _is_positive_control_null_claim(d: dict[str, Any], verdict: str) -> bool:
+    """True for efficiency/proposer/transfer nulls that require a positive control."""
+    if not (
+        "positive_control_passed" in d
+        or "false_negative_risk_checked" in d
+        or "positive_control" in verdict
+    ):
+        return False
+    text = " ".join([verdict, " ".join(str(key).lower() for key in d)])
+    if not any(marker in text for marker in _POSITIVE_CONTROL_NULL_DOMAIN_MARKERS):
+        return False
+    verdict_declares_null = any(
+        marker in verdict for marker in _POSITIVE_CONTROL_NULL_VERDICT_MARKERS
+    )
+    return verdict_declares_null or _has_positive_control_null_metric(d)
+
+
+def _positive_control_failed_or_unchecked(d: dict[str, Any]) -> bool:
+    """A null is informative only when the positive control and FNR check passed."""
+    return d.get("positive_control_passed") is not True or d.get(
+        "false_negative_risk_checked"
+    ) is not True
+
+
 def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect NULL/negative claims that lack a valid positive control or that
     rest on a degenerate (un-exercised) method — the false-negative trap.
@@ -327,6 +411,22 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
         "not_better", "no_headroom",
     )
     is_null_claim = any(m in verdict for m in null_markers)
+    if _is_positive_control_null_claim(d, verdict) and _positive_control_failed_or_unchecked(d):
+        flags.append(
+            Flag(
+                kind="FALSE_NEGATIVE_RISK",
+                severity="warn",
+                detail=(
+                    "false_negative_risk_open: null efficiency/proposer/transfer "
+                    f"claim ({verdict[:64]!r}) lacks a passed positive control "
+                    "and completed false-negative-risk check "
+                    f"(positive_control_passed={d.get('positive_control_passed')!r}, "
+                    "false_negative_risk_checked="
+                    f"{d.get('false_negative_risk_checked')!r}). Treat this as a "
+                    "broken-test signal, not as evidence for a clean null."
+                ),
+            )
+        )
     if not is_null_claim:
         return
 

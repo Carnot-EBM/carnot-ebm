@@ -1,0 +1,72 @@
+{
+  "clean_null_not_flagged": true,
+  "duration_s": 0.0,
+  "experiment": "experiment_4563_positive_control_failed_guard",
+  "field_principles": {
+    "clean_null_not_flagged": {
+      "principle": "a null WITH a passed positive control is NOT flagged -- guards against over-firing (a valid null stays valid)."
+    },
+    "guard_mechanism": {
+      "principle": "names the guard + where it fires -- the fix that stops a broken positive control being read as a clean efficiency null."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; shipped: positive_control_failed_guard_added OR complete: positive_control_failed_guard_partial_<reason>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "tests_added_pass": {
+      "principle": "Tests Must Run and Assert -- both the fires-on-broken and clean-on-passed cases."
+    },
+    "trap_exemplar_flagged": {
+      "principle": "whether the exp4544 fixture (positive_control_passed=False) is correctly classified false_negative_risk_open -- the concrete bug this catches."
+    }
+  },
+  "guard_mechanism": {
+    "adversarial_verify_guard": "FALSE_NEGATIVE_RISK:false_negative_risk_open",
+    "capstone_skip_reason": "false_negative_risk_open",
+    "fires_in": [
+      "scripts/adversarial_verify.py:check_false_negative_risk",
+      "scripts/summarize_artifact.py:summarize",
+      "python/carnot/experiment_4554_capstone_v420.py:_read_inputs"
+    ],
+    "headline_numbers_aggregated": false
+  },
+  "honest_verdict": "shipped: positive_control_failed_guard_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "adversarial_verify_help_exits_0": true,
+    "adversarial_verify_import_ok": true,
+    "exp4544_false_negative_risk_checked": false,
+    "exp4544_fixture": "results/experiment_4544_llm_proposer_reinduction.json",
+    "exp4544_fixture_exists": true,
+    "exp4544_positive_control_passed": false,
+    "model_load": false,
+    "scripts_research_conductor_modified": false
+  },
+  "random_seed": 4563,
+  "reproducibility_checksum": "sha256:dafbfe1a54402868d9cc4060caa71d9cba9c120b4a4b67dc64b06ddfc2cc22e5",
+  "result_path": "results/experiment_4563_positive_control_failed_guard.json",
+  "schema": "carnot.exp4563.positive_control_failed_guard.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4563",
+    "SCENARIO-CAPSTONE-4563",
+    "SCENARIO-CAPSTONE-4563-FIELD-PRINCIPLES"
+  ],
+  "tests_added_pass": {
+    "assertions": [
+      "exp4544 positive-control-failed efficiency null fires false_negative_risk_open",
+      "matched passed-positive-control null does not fire",
+      "capstone excludes false_negative_risk_open from headline aggregation"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_guards.py tests/python/test_experiment_4554_capstone_v420.py tests/python/test_experiment_4563_positive_control_failed_guard.py -q --no-cov"
+    ],
+    "passed": true
+  },
+  "trap_exemplar_flagged": true
+}
