@@ -1,13 +1,262 @@
 {
   "game": "su15",
-  "method": "graph_explore_adapter_free",
-  "reached_level": 1,
-  "moves": 7,
+  "reached_level": 2,
+  "moves": 21,
+  "states_expanded": 21,
+  "verifier_src": "hand_verifier_cold_start",
   "offline_reproduced": true,
-  "reproduced_levels": 1,
-  "trajectory_seed": "results/arc_explore_trajectory_su15.json",
-  "verifier_seed_checkpoint": "models/arc_verifier_su15.json",
-  "heuristic_learned": "cell_count",
-  "next": "register a GameAdapter from the seed for verifier-routed re-solving",
-  "mode": "standing_arc_loop_graph_explore_no_quota"
+  "reproduced_levels": 2,
+  "learned_verifier_checkpoint": null,
+  "selected_generic_operators": [
+    {
+      "operator": "per_level_reinduction_operator",
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "deepening",
+        "goal_bias",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "object_centric_digest",
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "purpose": "Connected-component object summary for routing, grounding, and active data.",
+      "selector_tags": [
+        "object",
+        "digest",
+        "program_editor",
+        "world_model"
+      ]
+    },
+    {
+      "operator": "active_data_collection",
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "ft09",
+        "sc25"
+      ],
+      "purpose": "Balanced action/object coverage plan for offline transition collection.",
+      "selector_tags": [
+        "active_data",
+        "world_model",
+        "e3",
+        "transition"
+      ]
+    },
+    {
+      "operator": "graph_astar_action_cost",
+      "derived_from_games": [
+        "tu93",
+        "lp85",
+        "cd82",
+        "sp80",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "su15"
+      ],
+      "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+      "selector_tags": [
+        "graph_explore",
+        "astar",
+        "action_cost",
+        "keyboard",
+        "click"
+      ]
+    }
+  ],
+  "reproduction_gate": {
+    "game": "su15",
+    "reached_level": 2,
+    "claimed_level": 2,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota"
+  },
+  "solution_labels": [
+    "{\"action\":6,\"data\":{\"x\":10,\"y\":53}}",
+    "{\"action\":6,\"data\":{\"x\":16,\"y\":47}}",
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":41}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":35}}",
+    "{\"action\":6,\"data\":{\"x\":34,\"y\":29}}",
+    "{\"action\":6,\"data\":{\"x\":40,\"y\":23}}",
+    "{\"action\":6,\"data\":{\"x\":46,\"y\":17}}",
+    "{\"action\":6,\"data\":{\"x\":40,\"y\":40}}",
+    "{\"action\":6,\"data\":{\"x\":17,\"y\":40}}",
+    "{\"action\":6,\"data\":{\"x\":15,\"y\":56}}",
+    "{\"action\":6,\"data\":{\"x\":48,\"y\":55}}",
+    "{\"action\":6,\"data\":{\"x\":31,\"y\":39}}",
+    "{\"action\":6,\"data\":{\"x\":24,\"y\":39}}",
+    "{\"action\":6,\"data\":{\"x\":39,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":31,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":23,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":16,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":47}}",
+    "{\"action\":6,\"data\":{\"x\":27,\"y\":40}}",
+    "{\"action\":6,\"data\":{\"x\":33,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":33,\"y\":27}}"
+  ],
+  "solution": [
+    {
+      "action": 6,
+      "data": {
+        "x": 10,
+        "y": 53
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 16,
+        "y": 47
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 41
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 28,
+        "y": 35
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 34,
+        "y": 29
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 40,
+        "y": 23
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 46,
+        "y": 17
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 40,
+        "y": 40
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 40
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 15,
+        "y": 56
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 48,
+        "y": 55
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 31,
+        "y": 39
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 39
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 54
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 31,
+        "y": 54
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 23,
+        "y": 54
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 16,
+        "y": 54
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 47
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 27,
+        "y": 40
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 33
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 33,
+        "y": 27
+      }
+    }
+  ],
+  "mode": "standing_arc_loop_offline_no_quota"
 }

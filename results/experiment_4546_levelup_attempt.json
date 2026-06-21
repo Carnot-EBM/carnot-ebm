@@ -1,0 +1,98 @@
+{
+  "arc_loop_result_path": "results/arc_loop_solve_su15.json",
+  "dead_ends": [
+    {
+      "attempt": "arc_loop_solve --game su15 before adapter registration",
+      "game": "su15",
+      "result": "reproduced_L1_only",
+      "why": "Adapter-free standing loop reproduced the already registered L1 seed but did not expose the L2 drag/merge delta."
+    },
+    {
+      "attempt": "unbounded fruit-relative best-first search from L2",
+      "game": "su15",
+      "result": "stalled_before_gate",
+      "why": "Fresh-env replay per candidate was too noisy/expensive; constructive reverse engineering of the drag/merge radius and staged merges produced the reproducible L2 tail."
+    },
+    {
+      "attempt": "arc_loop_solve --game su15 --target-level 3",
+      "game": "su15",
+      "result": "stopped_at_L2",
+      "why": "The registered adapter banks L2 only; L3 has a new fruit/target delta and remains unmodelled."
+    }
+  ],
+  "experiment": "experiment_4546_levelup_attempt",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank).",
+    "reproducibility_checksum": "catches silent drift on replay."
+  },
+  "honest_verdict": "success: su15_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4546,
+  "registry_update": {
+    "banked_levels": 1,
+    "new_game_levels": 2,
+    "new_total_declared": 52,
+    "new_total_row_sum": 52,
+    "path": "ops/arc_solve_registry.yaml",
+    "prior_game_levels": 1,
+    "prior_total_declared": 51,
+    "prior_total_row_sum": 51,
+    "reconciled_total_delta": 1,
+    "target_game": "su15",
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "6fdbf3729d83286316909e8a3753857ec15f9dac1e38a13c6e6cd3f3de4e1867",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "su15",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.arc_levelup_attempt_4546.v1",
+  "schema_errors": [],
+  "solution_labels": [
+    "{\"action\":6,\"data\":{\"x\":10,\"y\":53}}",
+    "{\"action\":6,\"data\":{\"x\":16,\"y\":47}}",
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":41}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":35}}",
+    "{\"action\":6,\"data\":{\"x\":34,\"y\":29}}",
+    "{\"action\":6,\"data\":{\"x\":40,\"y\":23}}",
+    "{\"action\":6,\"data\":{\"x\":46,\"y\":17}}",
+    "{\"action\":6,\"data\":{\"x\":40,\"y\":40}}",
+    "{\"action\":6,\"data\":{\"x\":17,\"y\":40}}",
+    "{\"action\":6,\"data\":{\"x\":15,\"y\":56}}",
+    "{\"action\":6,\"data\":{\"x\":48,\"y\":55}}",
+    "{\"action\":6,\"data\":{\"x\":31,\"y\":39}}",
+    "{\"action\":6,\"data\":{\"x\":24,\"y\":39}}",
+    "{\"action\":6,\"data\":{\"x\":39,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":31,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":23,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":16,\"y\":54}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":47}}",
+    "{\"action\":6,\"data\":{\"x\":27,\"y\":40}}",
+    "{\"action\":6,\"data\":{\"x\":33,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":33,\"y\":27}}"
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4546",
+    "SCENARIO-ARC-WMTE-4546"
+  ],
+  "target_game": "su15",
+  "target_level": 2
+}

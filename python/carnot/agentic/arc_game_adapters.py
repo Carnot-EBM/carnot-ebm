@@ -86,6 +86,42 @@ SP80_L2_TAIL_LABELS: tuple[str, ...] = (
 SP80_L2_SOLUTION_LABELS: tuple[str, ...] = SP80_L1_LABELS + SP80_L2_TAIL_LABELS
 
 
+SU15_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": x, "y": y})
+    for x, y in (
+        (10, 53),
+        (16, 47),
+        (22, 41),
+        (28, 35),
+        (34, 29),
+        (40, 23),
+        (46, 17),
+    )
+)
+
+SU15_L2_TAIL_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": x, "y": y})
+    for x, y in (
+        (40, 40),
+        (17, 40),
+        (15, 56),
+        (48, 55),
+        (31, 39),
+        (24, 39),
+        (39, 54),
+        (31, 54),
+        (23, 54),
+        (16, 54),
+        (20, 47),
+        (27, 40),
+        (33, 33),
+        (33, 27),
+    )
+)
+
+SU15_L2_SOLUTION_LABELS: tuple[str, ...] = SU15_L1_LABELS + SU15_L2_TAIL_LABELS
+
+
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
     from carnot.experiment_4179_arc_incremental_progress import (
@@ -117,6 +153,62 @@ def _lp85():
         game="lp85", action_labels=action_labels, apply=apply, state_key=_goal_key,
         featurize=featurize, hand_verifier=lambda g: float(sum(_dists(g))),
         depth_caps={1: 20, 2: 70, 3: 90},
+    )
+
+
+# ---------------- su15 (fruit drag/merge; L1 seed + L2 delta) ----------------
+def _su15():
+    """su15 -- click and staged fruit drag/merge puzzle.
+
+    L1 is the existing seven-click diagonal line. L2 preserves ACTION6 click-only input but changes
+    the win predicate to fruit construction: merge eight level-0 fruits into one level-3 fruit, then
+    drag its center into the xkstxyqbs target zone near (33,27). The L2 tail below is the offline
+    replay-gated delta from the L1 start state.
+    """
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(SU15_L1_LABELS):
+            return [SU15_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(SU15_L2_TAIL_LABELS):
+            return [SU15_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
+
+    def _sprite_key(sprite):
+        pixels = getattr(sprite, "pixels", None)
+        shape = tuple(int(v) for v in getattr(pixels, "shape", ()) or ())
+        return (int(sprite.x), int(sprite.y), int(getattr(sprite, "width", 0)), int(getattr(sprite, "height", 0)), shape)
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else -1
+        fruit_levels = getattr(game, "kqywaxhmsb", {})
+        fruits = tuple(
+            sorted(
+                (int(fruit_levels.get(sprite, 0)), *_sprite_key(sprite))
+                for sprite in getattr(game, "lkujttxgs", [])
+            )
+        )
+        targets = tuple(sorted(_sprite_key(sprite) for sprite in getattr(game, "powykypsm", [])))
+        step_counter = getattr(getattr(game, "step_counter_ui", None), "current_steps", 0)
+        return level, int(step_counter), fruits, targets
+
+    return GameAdapter(
+        game="su15",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        depth_caps={1: len(SU15_L1_LABELS), 2: len(SU15_L2_TAIL_LABELS), 3: 80},
+        branch_mode="fresh_env",
     )
 
 
@@ -635,6 +727,7 @@ def _m0r0():
 
 
 _BUILDERS = {
+    "su15": _su15,
     "sp80": _sp80,
     "lp85": _lp85,
     "tu93": _tu93,
