@@ -9,6 +9,41 @@
   "learned_verifier_checkpoint": null,
   "selected_generic_operators": [
     {
+      "operator": "per_level_reinduction_operator",
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "deepening",
+        "goal_bias",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "llm_proposer_reinduction_operator",
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "llm_proposer",
+        "bounded_refinement",
+        "trust_energy",
+        "transfer"
+      ]
+    },
+    {
       "operator": "object_centric_digest",
       "derived_from_games": [
         "g50t",
