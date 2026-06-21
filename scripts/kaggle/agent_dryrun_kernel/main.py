@@ -50,9 +50,11 @@ def main():
     REPORT["import_s"] = round(time.time() - t0, 1)
     REPORT["jax_imported"] = "jax" in sys.modules
 
-    # (2) PROPOSER-THROUGH-BINARY TEST -- the carnot->binary->Qwen path
+    # (2) PROPOSER-THROUGH-BINARY TEST -- the carnot->binary->Qwen path. mtp=False to MATCH the shipped
+    # submission config (CARNOT_ARC_MTP=0, set 2026-06-21 after the binary-smoke probe showed MTP gives
+    # no throughput gain on the P100 and costs ~5.8GB) so this dry-run exercises exactly what the eval runs.
     prop = LocalGGUFProposer(
-        model_path=str(gguf), mtp=True, kv_quant="q8_0", no_think_prefix="/no_think\n", max_tokens=256
+        model_path=str(gguf), mtp=False, kv_quant="q8_0", no_think_prefix="/no_think\n", max_tokens=256
     )
     t1 = time.time()
     ok, code = prop.generate(

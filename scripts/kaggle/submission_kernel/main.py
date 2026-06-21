@@ -74,6 +74,12 @@ if server and gguf:
     os.environ["LD_LIBRARY_PATH"] = f"{server.parent}:" + os.environ.get("LD_LIBRARY_PATH", "")
     os.environ["CARNOT_LLAMA_SERVER"] = str(run_server)
     os.environ["CARNOT_ARC_GGUF_PATH"] = str(gguf)
+    # 16GB P100/T4 (2026-06-21, evidence-backed by the carnot-arc-binary-smoke probe): the MTP
+    # self-draft loads a 2nd ~5.9GB copy of the model (probe: 11.8GB used vs 5.9GB MTP-off) for NO
+    # throughput gain on this GPU (probe: 27.5 vs 25.3 tok/s, MTP-off slightly FASTER). Disable it to
+    # free ~5.8GB of VRAM for KV headroom. Speculative decoding is exact, so output quality is
+    # unchanged. (The frozen stack's MTP speedup was validated on the iGPU, not the P100.)
+    os.environ["CARNOT_ARC_MTP"] = "0"
     _mtp = os.environ.get("CARNOT_ARC_MTP", "1") != "0"
     print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx=16384 kv=q8_0", flush=True)
     # one-shot health probe: spawn the generator with the SAME args the agent uses and confirm it
