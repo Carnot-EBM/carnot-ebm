@@ -4124,3 +4124,28 @@ PER/DQfD replay seeding for predictor/value training, add UI-Mem-style
 persistent action memory behind similarity-gated retrieval, and keep SLOPE as
 ranking-only until it reduces actions-to-first-levelup at equal solve-rate.
 <!-- EXP4520-ACTION-EFFICIENCY-SOTA-END -->
+
+<!-- EXP4530-NAVIGATION-SEARCH-SOTA-START -->
+## 2026-06-21 Exp 4530 - .418 navigation-search SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/arc-navigation-search-sota-418.md`
+and `results/experiment_4530_sota_ingestion_navigation_search.json`.
+
+**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
+reachability check succeeded; `scripts/sweep_clusters.py` clusters 5 and 6
+emitted focused URLs; `scripts/sweep_semscholar.py` returned zero unique arXiv
+IDs and HTTP 429 on four focused navigation/search queries; top sources were
+verified by arXiv abs-page HTTP 200 and low-concurrency WebSearch/WebFetch.
+`/deep-research` was not invoked. No live solve, training run, leaderboard
+submission, ops/status/traceability edit, or `scripts/research_conductor.py`
+edit occurred.
+
+**Methods marked ingested:** SoRB replay-buffer graph search (arXiv:1906.05253),
+SIERL reachable-frontier subgoal control with reachability novelty
+(arXiv:2602.00460, arXiv:1810.02274), Go-Explore / First-return-then-explore
+archive discipline (arXiv:1901.10995, arXiv:2004.12919), embodied frontier
+navigation scoring (arXiv:2304.05506, arXiv:2603.05377), and AERA speed-depth
+budget control for ARC-AGI-3 (arXiv:2605.25931).
+
+flagged_for_v419: SoRB-style replay-buffer graph over StepwiseExplorer frontier nodes, with exact _shortest_path navigation costs, charged return prefixes, RESET fallback diagnostics, and the existing CORE median-action gate as the acceptance metric
+<!-- EXP4530-NAVIGATION-SEARCH-SOTA-END -->

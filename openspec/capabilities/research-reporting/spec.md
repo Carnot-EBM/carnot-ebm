@@ -28016,6 +28016,80 @@ edits, or `scripts/research_conductor.py` edit.
 |---|---|---|
 | REQ-REPORT-4520 | Planned (`python/carnot/experiment_4520_sota_ingestion_417.py`) | Planned (`tests/python/test_experiment_4520_sota_ingestion_417.py`) |
 
+### REQ-REPORT-4530: Ingest Navigation-Cost Search SOTA Into The .419 Plan
+
+The Exp 4530 workflow SHALL write
+`docs/research-notes/arc-navigation-search-sota-418.md` with a
+machine-readable JSON artifact block followed by a concise SOTA-to-experiment
+mapping note. It SHALL read `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `docs/research-notes/arc-action-efficiency-sota-417.md`,
+the `.418` forward-walk navigation artifact
+`results/experiment_4523_forward_walk_navigation.json`, and the nav-metric
+artifact `results/experiment_4527_nav_metric_harness.json`. It SHALL run the
+reliable channel only: `scripts/sweep_clusters.py 5 --max-results 8`,
+`scripts/sweep_clusters.py 6 --max-results 8`, `scripts/sweep_semscholar.py`
+on focused navigation/search queries, and low-concurrency WebSearch/WebFetch
+over five to eight top arXiv sources. It SHALL verify
+`.venv/bin/python scripts/sweep_clusters.py --help` exits zero and
+`curl -sf -o /dev/null https://export.arxiv.org/api/query?search_query=all:test`
+exits zero before promoting citations. It SHALL NOT invoke `/deep-research`,
+SHALL NOT launch live LLM inference, SHALL NOT launch training, SHALL NOT submit
+to the leaderboard, SHALL NOT claim a new ARC solve, SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The required runner SHALL be
+`results/experiment_4530_sota_ingestion_navigation_search.py` delegating to
+`python/carnot/experiment_4530_sota_ingestion_navigation_search.py`, and the
+workflow SHALL also write
+`results/experiment_4530_sota_ingestion_navigation_search.json`.
+
+The artifact SHALL include the required top-level fields `honest_verdict`,
+`inference_substrate`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `preconditions_checked`, `research_note_path`,
+`random_seed`, and `field_principles`. `honest_verdict` SHALL be
+terminal-prefixed and equal `complete: sota_ingestion_navigation_search_mapped`
+on the complete path. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`. `methods_mapped` SHALL contain three to
+five strongest methods with real arXiv-backed `source_ids`, a
+`takes_over_current_explorer` field mapping onto the current `.418`
+StepwiseExplorer forward-walk navigation fix, and a `fails_when` caveat.
+`citations_verified` SHALL provide one verified arXiv URL and title for every
+source ID used by the method claims and SHALL include arXiv IDs from the set
+`1906.05253`, `2602.00460`, `1901.10995`, `2004.12919`, `2605.25931`,
+`2304.05506`, `2603.05377`, and `1810.02274`. `flagged_for_next_roadmap` SHALL
+flag the strongest `.419` candidate. `field_principles` SHALL include one-line
+principles for every top-level artifact field, including the required
+terminal-prefix `honest_verdict`, aggregation-only `inference_substrate`,
+verifiable-citation `methods_mapped` and `citations_verified`,
+roadmap-closing `flagged_for_next_roadmap`, and resource-recording
+`preconditions_checked` principles.
+
+#### SCENARIO-REPORT-4530: Navigation Search SOTA Maps To .419 Inputs
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, the `.417` action-efficiency SOTA note, and the
+`.418` navigation artifacts are readable
+**And** `scripts/sweep_clusters.py --help` and the arXiv API reachability check
+succeed
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4530 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps
+backtrack-efficient and RESET-free tree search, replay-buffer graph search,
+frontier cost-to-come/cost-to-go control, embodied frontier navigation, and
+ARC speed-depth budget control onto the current forward-walk explorer, flags
+the strongest `.419` input, declares `aggregation_from_upstream_artifacts`, and
+records no `/deep-research`, live inference, training, leaderboard submission,
+solve claim, ops/status/traceability edits, or `scripts/research_conductor.py`
+edit.
+
+## Implementation Status (REQ-REPORT-4530)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4530 | Planned (`python/carnot/experiment_4530_sota_ingestion_navigation_search.py`) | Planned (`tests/python/test_experiment_4530_sota_ingestion_navigation_search.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
