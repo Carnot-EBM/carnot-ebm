@@ -34,6 +34,8 @@ from carnot.agentic.arc_competition_agent import (
 )
 
 _VALUE_HEAD = None      # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
+_DISC_ROUTER = None     # Exp4556: cross-game DiscriminativeVerifier candidate router, loaded once
+_RANDOM_ROUTER = None   # Exp4556 positive-control router
 _PROPOSER = None        # E3: a stronger world-model proposer (a bigger GGUF), loaded once + reused
 _PROPOSER_REPO = ""     # repo substr for the E3 proposer (e.g. "Qwen3.6-35B-A3B"); "" = E3 default 12B
 _VALUE_WEIGHT = 0.0     # A* blend weight for explorer_vh; 0 = depth-primary tiebreak (neutral, safe).
@@ -76,6 +78,20 @@ def _build_policy(kind: str, game: str):
         mode = "best_first" if kind == "explorer_bf" else "depth_first_ride"
         return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD,
                                  value_weight=_VALUE_WEIGHT, search_mode=mode)
+    if kind in ("explorer_dv", "verifier_router"):
+        global _DISC_ROUTER
+        if _DISC_ROUTER is None:
+            from carnot.agentic.arc_discriminative_router import load_cross_game_discriminative_router
+
+            _DISC_ROUTER = load_cross_game_discriminative_router(root=REPO)
+        return CarnotAgentPolicy(game, {}, force_explore=True, candidate_router=_DISC_ROUTER)
+    if kind in ("explorer_random_router", "random_router"):
+        global _RANDOM_ROUTER
+        if _RANDOM_ROUTER is None:
+            from carnot.agentic.arc_discriminative_router import RandomCandidateRouter
+
+            _RANDOM_ROUTER = RandomCandidateRouter(seed=4556)
+        return CarnotAgentPolicy(game, {}, force_explore=True, candidate_router=_RANDOM_ROUTER)
     return CarnotAgentPolicy(game, {}, force_explore=True)   # force_explore -> ignores any banked plan
 
 

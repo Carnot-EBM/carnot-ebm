@@ -196,6 +196,7 @@ class StepwiseExplorer:
         early_stop_grace: Optional[int] = None,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
+        candidate_router: Any | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -255,6 +256,7 @@ class StepwiseExplorer:
         self.explored_out = False
         self.frontier_batch_size = self._normalize_frontier_batch_size(frontier_batch_size)
         self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
+        self.candidate_router = candidate_router
         # Smart grace-period early-stop (does NOT cap levels). After reaching >=1 level, keep searching
         # for the next; stop only if no NEW level within `early_stop_grace` moves of the last level-up.
         # Consecutive level-ups reset the window, so multi-level games are NOT capped -- only the fruitless
@@ -491,6 +493,7 @@ class StepwiseExplorer:
             frame_change_prune_threshold=self.frame_change_prune_threshold,
             action_prior=action_prior,
             action_prior_prune_quantile=self.action_prior_prune_quantile,
+            candidate_router=self.candidate_router,
         )
         if self.adaptive_budget_threshold is not None and candidates:
             from carnot.agentic.arc_adaptive_budget import apply_adaptive_budget
@@ -961,6 +964,7 @@ class CarnotAgentPolicy:
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
+        candidate_router: Any | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -989,6 +993,7 @@ class CarnotAgentPolicy:
                 lazy_value_top_k=lazy_value_top_k,
                 frontier_batch_size=frontier_batch_size,
                 navigation_cost_tiebreak=navigation_cost_tiebreak,
+                candidate_router=candidate_router,
             )
         )
 
@@ -1046,6 +1051,7 @@ class E3AgentPolicy:
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
+        candidate_router: Any | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
@@ -1072,6 +1078,7 @@ class E3AgentPolicy:
             lazy_value_top_k=lazy_value_top_k,
             frontier_batch_size=frontier_batch_size,
             navigation_cost_tiebreak=navigation_cost_tiebreak,
+            candidate_router=candidate_router,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
