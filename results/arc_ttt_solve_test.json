@@ -1,0 +1,69 @@
+{
+  "experiment": "arc_ttt_solve_test",
+  "honest_verdict": "complete_ttt_solve_full_0_cnnonly_0_of_4",
+  "full_solved_via_L0_or_cnn": 0,
+  "cnn_only_generalization_solved": 0,
+  "max_plan": 1500,
+  "max_depth": 25,
+  "per_game": [
+    {
+      "game": "ka59",
+      "n_win_states": 0,
+      "full": {
+        "game": "ka59",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      },
+      "cnn_only": {
+        "game": "ka59",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      }
+    },
+    {
+      "game": "sc25",
+      "n_win_states": 0,
+      "full": {
+        "game": "sc25",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      },
+      "cnn_only": {
+        "game": "sc25",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      }
+    },
+    {
+      "game": "tn36",
+      "n_win_states": 0,
+      "full": {
+        "game": "tn36",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      },
+      "cnn_only": {
+        "game": "tn36",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      }
+    },
+    {
+      "game": "lp85",
+      "n_win_states": 0,
+      "full": {
+        "game": "lp85",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      },
+      "cnn_only": {
+        "game": "lp85",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      }
+    }
+  ],
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "interpretation": "CNN-ONLY level-ups = NEW generalization solving power from the prior+TTT (beyond the registry's memorized replay). FULL-but-not-CNN solves are L0 replay, which the registry already banks. If CNN-ONLY solves ~0, the cell-recall model fires the gate but cannot drive the exact-match plan_and_execute loop -- it improves prediction, not solving, and won't move the 0.08 hidden score without a divergence-tolerant executor (replan-on-divergence) + goal-induction."
+}
