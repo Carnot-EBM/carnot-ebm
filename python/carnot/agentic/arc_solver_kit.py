@@ -122,6 +122,15 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("graph_explore", "astar", "action_cost", "keyboard", "click"),
         ),
         PrimitiveOperator(
+            operator="per_level_reinduction_operator",
+            derived_from_games=("lp85", "m0r0", "sp80", "vc33"),
+            purpose=(
+                "Detect a level-up, clear stale level-local induction state, re-induce the "
+                "next level predicate, and route the frontier with depth-primary goal bias."
+            ),
+            selector_tags=("reinduction", "level_up", "deepening", "goal_bias", "transfer"),
+        ),
+        PrimitiveOperator(
             operator="object_centric_digest",
             derived_from_games=("g50t", "lp85", "tn36", "ka59"),
             purpose="Connected-component object summary for routing, grounding, and active data.",
@@ -170,6 +179,7 @@ def select_primitive_operators(
         or gid == "sc25"
     ):
         names = (
+            "per_level_reinduction_operator",
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
             "active_data_collection",
@@ -205,13 +215,25 @@ def select_primitive_operators(
         names = (
             "glyph_rewrite_rule_verifier",
             "glyph_rewrite_matcher",
+            "per_level_reinduction_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
     elif "config" in mechanic or "toggle" in mechanic or "constraint" in mechanic:
-        names = ("config_rule_verifier", "config_rule_grounding", "object_centric_digest", "graph_astar_action_cost")
+        names = (
+            "config_rule_verifier",
+            "config_rule_grounding",
+            "per_level_reinduction_operator",
+            "object_centric_digest",
+            "graph_astar_action_cost",
+        )
     elif "program_editor" in mechanic:
-        names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
+        names = (
+            "per_level_reinduction_operator",
+            "object_centric_digest",
+            "active_data_collection",
+            "graph_astar_action_cost",
+        )
     elif (
         "object_motion" in mechanic
         or "object motion" in mechanic
@@ -233,10 +255,116 @@ def select_primitive_operators(
             "graph_astar_action_cost",
         )
     elif "keyboard" in action or "click" in action or "graph" in mechanic:
-        names = ("graph_astar_action_cost", "object_centric_digest")
+        names = ("per_level_reinduction_operator", "graph_astar_action_cost", "object_centric_digest")
     else:
-        names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
+        names = (
+            "per_level_reinduction_operator",
+            "object_centric_digest",
+            "active_data_collection",
+            "graph_astar_action_cost",
+        )
     return tuple(registry[name] for name in names)
+
+
+def _observation_level(observation: Any) -> int:
+    if isinstance(observation, Mapping):
+        for key in ("levels_completed", "level", "reached_level"):
+            if key in observation:
+                return int(observation[key] or 0)
+    if hasattr(observation, "levels_completed"):
+        return int(getattr(observation, "levels_completed") or 0)
+    return frame_level(observation)
+
+
+def per_level_reinduction_operator(
+    observations: Sequence[Any],
+    *,
+    predicate_inducer: Callable[[int, dict[str, Any]], Mapping[str, Any] | str | None],
+    route_builder: Optional[Callable[[dict[str, Any]], Mapping[str, Any]]] = None,
+    initial_predicate: Mapping[str, Any] | str | None = None,
+    initial_level: Optional[int] = None,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4537: reusable detect-level-up -> re-induce -> route loop."""
+
+    if route_builder is None:
+        route_builder = lambda event: {
+            "route": "depth_primary_goal_bias",
+            "depth_primary": True,
+            "goal_bias_label": str((event.get("predicate") or {}).get("predicate_id") or ""),
+        }
+
+    current_level = int(initial_level) if initial_level is not None else None
+    prior_signature = (
+        str(initial_predicate.get("signature") or initial_predicate.get("predicate_id"))
+        if isinstance(initial_predicate, Mapping)
+        else (str(initial_predicate) if initial_predicate is not None else "")
+    )
+    events: list[dict[str, Any]] = []
+
+    for index, observation in enumerate(observations):
+        level = _observation_level(observation)
+        if current_level is None:
+            current_level = level
+            continue
+        if level <= current_level:
+            continue
+        for won_level in range(current_level + 1, level + 1):
+            next_goal_level = won_level + 1
+            context = {
+                "from_level": won_level,
+                "next_goal_level": next_goal_level,
+                "observation_index": index,
+                "observation": observation,
+                "prior_predicate_signature": prior_signature,
+                "clear_stale_induction": True,
+            }
+            raw_predicate = predicate_inducer(next_goal_level, context)
+            if isinstance(raw_predicate, Mapping):
+                predicate = dict(raw_predicate)
+            elif raw_predicate is None:
+                predicate = {
+                    "predicate_id": f"L{next_goal_level}_predicate_unavailable",
+                    "signature": "",
+                    "representation_correct": False,
+                }
+            else:
+                predicate = {
+                    "predicate_id": str(raw_predicate),
+                    "signature": str(raw_predicate),
+                    "representation_correct": True,
+                }
+            predicate.setdefault("predicate_id", f"L{next_goal_level}_predicate")
+            predicate.setdefault("signature", str(predicate.get("predicate_id") or ""))
+            predicate.setdefault("representation_correct", False)
+            signature = str(predicate.get("signature") or predicate.get("predicate_id") or "")
+            representation_transfer = bool(
+                predicate.get("representation_correct") is True
+                and signature
+                and (not prior_signature or signature != prior_signature)
+            )
+            event = {
+                "trigger": "level_up",
+                "from_level": won_level,
+                "next_goal_level": next_goal_level,
+                "stale_state_cleared": True,
+                "predicate": predicate,
+                "representation_transfer": representation_transfer,
+            }
+            event["route"] = dict(route_builder(event))
+            events.append(event)
+            prior_signature = signature
+        current_level = level
+
+    return {
+        "operator": "per_level_reinduction_operator",
+        "level_ups_detected": len(events),
+        "stale_state_cleared": bool(events),
+        "current_level": int(current_level or 0),
+        "events": events,
+        "latest_predicate": events[-1]["predicate"] if events else None,
+        "latest_route": events[-1]["route"] if events else None,
+        "representation_transfer": any(bool(event["representation_transfer"]) for event in events),
+    }
 
 
 def cyclic_distance(current: int, target: int, *, modulus: int = 7) -> int:

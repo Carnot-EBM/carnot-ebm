@@ -379,6 +379,64 @@ per-level efficiency without a CORE level loss, the artifact SHALL report
 `levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
 NOT submit to the leaderboard.
 
+### REQ-ARC-WMTE-4537: Reusable Per-Level Re-Induction Primitive Transfer
+
+The solver kit SHALL persist the per-level re-induction loop from experiment
+4533 as a reusable primitive operator named `per_level_reinduction_operator`.
+The operator SHALL detect a
+`frame.levels_completed` increment, clear stale level-local induction state,
+re-induce the `L_{n+1}` predicate from the post-transition representation, and
+return a route that keeps depth as the primary search key while using the
+newly induced predicate only as a goal-bias/routing hint. The operator SHALL be
+registered in `primitive_operator_registry()` and selected by
+`select_primitive_operators()` for deepening and graph/config/program-editor
+mechanics so `arc_solve_learning.recommend_approach()` can surface it before
+per-game reverse engineering.
+
+Experiment 4537 SHALL read
+`results/experiment_4533_per_level_goal_reinduction.json`, persist the
+operator in `python/carnot/agentic/arc_solver_kit.py`, add a
+`general_gotchas` registry row documenting the primitive, and apply the
+persisted primitive to at least two deeper games that were not tuned in A1 from
+`{tn36,tr87,tu93,sc25}`. For each transfer game, the artifact SHALL report the
+deepest offline-reproduced level reached by the transfer replay, whether the
+primitive re-induced a different representation-correct `L_{n+1}` predicate,
+and the route/dead-end that remains if no deeper level is banked. Any newly
+claimed deeper level SHALL pass `arc_solver_kit.reproduce()` before it counts
+toward `reproducible_total_levels`; otherwise the registry total SHALL remain
+unchanged and the artifact SHALL report a terminal honest null.
+
+Experiment 4537 SHALL write
+`results/experiment_4537_reinduction_primitive_persist_transfer.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`,
+`primitive_persisted`, `transfer_games`,
+`transfer_deepest_level_per_game`, `representation_transfer`,
+`offline_reproduced`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. Required field
+principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: reinduction_primitive_persisted_transfer_<game>_L<n> OR complete: reinduction_primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade primitive application, no headline LLM load."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added -- the reusable asset (Solver-Reuse Discipline); without it the A1 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the deeper games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_deepest_level_per_game`: principle "best_level reached per transfer game -- the cross-game evidence the primitive generalizes."
+- `representation_transfer`: principle "whether the primitive re-induced a DIFFERENT (correct) L_{n+1} predicate even without a full solve -- a representation win short of a bank."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4537: Primitive Transfers Without Retuning A1
+
+Given the offline arcade precondition passes and the A1 artifact exists
+When experiment 4537 runs the persisted solver-kit re-induction operator on
+at least two of `tn36`, `tr87`, `tu93`, and `sc25`
+Then the artifact records the persisted operator, the transfer games, each
+game's deepest offline-reproduced level, any different representation-correct
+`L_{n+1}` predicate, and a terminal honest null unless a newly reproduced
+deeper level passes the offline reproduction gate.
+
 ### REQ-ARC-WMTE-4525: Standing Loop Level-Up Registry Bank
 
 Experiment 4525 SHALL run the offline arcade precondition and use the standing
