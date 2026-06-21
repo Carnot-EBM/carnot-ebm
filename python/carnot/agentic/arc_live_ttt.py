@@ -185,10 +185,13 @@ class LiveTTTWorldModel:
     existing ``plan_in_model`` BFS and ``WorldModelVerifier`` consume."""
 
     def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16,
-                 dynamics_backend: str = "dsl", prior_state: Any = None) -> None:
+                 dynamics_backend: str = "dsl", prior_state: Any = None, cnn_epochs: int = 40) -> None:
         self.game = game
         self.refit_every = int(refit_every)
         self.min_transitions = int(min_transitions)
+        # live per-game CNN fine-tuning epochs -- LIGHT (the agent inducts on stalls; the offline prior
+        # pretrain uses its own higher epoch count). Warm-starting from the prior means few epochs suffice.
+        self.cnn_epochs = int(cnn_epochs)
         # a pretrained cross-game CNN PRIOR state_dict (models/arc_dynamics_prior.pt); when set and the
         # backend is 'cnn', the per-game learner warm-starts from it -> fewer real probes to converge.
         self._prior_state = prior_state
@@ -204,7 +207,8 @@ class LiveTTTWorldModel:
         self._refits = 0
 
     def _new_l1(self) -> Any:
-        return CNNDynamics(self.game) if self.dynamics_backend == "cnn" else ObjectDeltaModel(self.game)
+        return (CNNDynamics(self.game, epochs=self.cnn_epochs) if self.dynamics_backend == "cnn"
+                else ObjectDeltaModel(self.game))
 
     def _fit_l1(self, transitions):
         l1 = self._new_l1()
@@ -286,3 +290,54 @@ class LiveTTTWorldModel:
             "n_win_states": len(self._win_states),
             "verifier_is_oracle": False,
         }
+
+
+def _load_prior(prior_path: str) -> Any:
+    """Load the pretrained cross-game CNN prior state_dict (models/arc_dynamics_prior.pt), or None."""
+    try:
+        import torch
+        from pathlib import Path
+        p = Path(prior_path)
+        if not p.is_absolute():
+            p = Path(__file__).resolve().parents[3] / prior_path
+        return torch.load(p) if p.exists() else None
+    except Exception:
+        return None
+
+
+def gated_engine_from_transitions(game: str, transitions: list, *,
+                                  prior_path: str = "models/arc_dynamics_prior.pt",
+                                  trust_threshold: float = 0.5, holdout_frac: float = 0.25,
+                                  dynamics_backend: str = "cnn"):
+    """Build a per-game world-model engine LEARNED from the played transitions, WARM-STARTED from the
+    cross-game prior (models/arc_dynamics_prior.pt, the one that transfers 5/5), and GATED by held-out
+    trust. Returns ``(engine, is_level_complete, diag)``.
+
+    engine/is_level_complete are None UNLESS the learned model reproduces a held-out split of the played
+    transitions at >= trust_threshold exact-grid accuracy -- the SAME bar the live agent's existing
+    WorldModelVerifier gate uses, so a weak learned model can never displace the fallback path. This is the
+    execution-grounded, zero-LLM alternative to e3.load_engine: the conductor's live agent tries it FIRST
+    and falls through to the LLM induction if the gate fails. diag carries the prior-loaded flag + the
+    held-out accuracy for telemetry. (Oracle-distinct learned dynamics; verifier_is_oracle False.)"""
+    diag: dict = {"backend": dynamics_backend, "n_transitions": len(transitions)}
+    if len(transitions) < 8:
+        diag["skip"] = "too_few_transitions"
+        return None, None, diag
+    prior_state = _load_prior(prior_path)
+    diag["prior_loaded"] = prior_state is not None
+    ttt = LiveTTTWorldModel(game, dynamics_backend=dynamics_backend, prior_state=prior_state)
+    k = max(2, int(len(transitions) * holdout_frac))
+    train, held = transitions[:-k], transitions[-k:]
+    for t in train:
+        ttt.observe_transition(t)
+    ttt.fit_now()
+    acc = ttt.trust(held)
+    diag.update(heldout_accuracy=round(acc, 4), trust_threshold=trust_threshold)
+    if acc < trust_threshold:
+        diag["gate"] = "FAIL"
+        return None, None, diag
+    for t in held:  # gate passed -> refit on ALL transitions for the final engine
+        ttt.observe_transition(t)
+    ttt.fit_now()
+    diag["gate"] = "PASS"
+    return ttt.engine, ttt.is_level_complete, diag
