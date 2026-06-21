@@ -68,47 +68,79 @@ def main():
     os.chmod(run_server, 0o755)
     SERVER = run_server
     REPORT["lib_dir"] = str(lib_dir)
-    log = open(WORK / "server.log", "w")
     env = dict(os.environ, LD_LIBRARY_PATH=f"{lib_dir}:" + os.environ.get("LD_LIBRARY_PATH", ""))
-    proc = subprocess.Popen(
-        [str(SERVER), "-m", str(GGUF), "-ngl", "999", "-c", "4096",
-         "--spec-type", "draft-mtp", "--model-draft", str(GGUF),  # MTP self-draft
-         "--cache-type-k", "q8_0", "--cache-type-v", "q8_0",       # 8-bit KV
-         "--port", str(PORT), "--host", "127.0.0.1"],
-        stdout=log, stderr=log, env=env,
-    )
-    ok = False
-    for _ in range(120):  # model load on a P100 can take ~30-60s
-        if healthy():
-            ok = True; break
-        if proc.poll() is not None:  # server died -> capture why
-            break
-        time.sleep(2)
-    REPORT["server_started"] = ok
-    REPORT["gpu_after_load"] = vram()
-    if ok:
-        body = json.dumps({"prompt": "/no_think\nWrite a python function is_even(n):",
-                           "n_predict": 48, "temperature": 0.2}).encode()
-        t0 = time.time()
+
+    # 2026-06-21: the SUBMISSION agent runs the generator at n_ctx=16384 (arc_executable_world_model.py),
+    # NOT the 4096 the prior smoke used. ctx=16384+MTP on a 16GB P100 is the suspected OOM cliff that
+    # silently degrades the eval agent to CPU graph-explore (-> the stuck 0.08). Test the REAL submission
+    # config AND the proposed CARNOT_ARC_MTP=0 fallback, each in a fresh server, so the result is directly
+    # actionable: which config actually loads on the eval GPU.
+    CONFIGS = [
+        {"name": "submission_ctx16384_mtp_on", "n_ctx": 16384, "mtp": True},   # the exact frozen config
+        {"name": "fallback_ctx16384_mtp_off", "n_ctx": 16384, "mtp": False},   # the MTP=0 fix
+        {"name": "baseline_ctx4096_mtp_on", "n_ctx": 4096, "mtp": True},       # known-good control
+    ]
+    results = []
+    for cfg in CONFIGS:
+        logp = WORK / f"server_{cfg['name']}.log"
+        log = open(logp, "w")
+        args = [str(SERVER), "-m", str(GGUF), "-ngl", "999", "-c", str(cfg["n_ctx"]),
+                "--cache-type-k", "q8_0", "--cache-type-v", "q8_0", "--port", str(PORT), "--host", "127.0.0.1"]
+        if cfg["mtp"]:
+            args += ["--spec-type", "draft-mtp", "--model-draft", str(GGUF)]
+        proc = subprocess.Popen(args, stdout=log, stderr=log, env=env)
+        ok = False
+        for _ in range(180):  # ctx=16384 load can be slower; allow ~360s
+            if healthy():
+                ok = True; break
+            if proc.poll() is not None:  # server died (OOM) -> stop waiting, capture why
+                break
+            time.sleep(2)
+        r = {"config": cfg["name"], "n_ctx": cfg["n_ctx"], "mtp": cfg["mtp"],
+             "server_started": ok, "gpu_after_load": vram() if ok else None,
+             "exited_early": proc.poll() is not None}
+        if ok:
+            body = json.dumps({"prompt": "/no_think\nWrite a python function is_even(n):",
+                               "n_predict": 32, "temperature": 0.2}).encode()
+            t0 = time.time()
+            try:
+                with urllib.request.urlopen(urllib.request.Request(
+                    f"http://127.0.0.1:{PORT}/completion", data=body,
+                    headers={"Content-Type": "application/json"}), timeout=300) as resp_r:
+                    resp = json.load(resp_r)
+                r["generated_ok"] = bool(resp.get("content"))
+                r["tok_per_s"] = round((resp.get("tokens_predicted") or 0) / max(time.time() - t0, 0.1), 1)
+            except Exception as e:
+                r["generated_ok"] = False; r["gen_error"] = f"{type(e).__name__}: {e}"
+        log.flush()
+        tail = logp.read_text(errors="replace").splitlines()[-12:]
+        r["oom_in_log"] = any(("out of memory" in ln.lower() or "cudamalloc" in ln.lower()
+                               or "failed to allocate" in ln.lower()) for ln in tail)
+        r["log_tail"] = tail
+        results.append(r)
+        proc.terminate()
         try:
-            with urllib.request.urlopen(urllib.request.Request(
-                f"http://127.0.0.1:{PORT}/completion", data=body,
-                headers={"Content-Type": "application/json"}), timeout=300) as r:
-                resp = json.load(r)
-            REPORT["generation"] = (resp.get("content") or "")[:200]
-            REPORT["tokens_predicted"] = resp.get("tokens_predicted")
-            REPORT["wall_s"] = round(time.time() - t0, 1)
-            REPORT["tok_per_s"] = round((resp.get("tokens_predicted") or 0) / max(time.time() - t0, 0.1), 1)
-            REPORT["ok"] = bool(REPORT["generation"])
-        except Exception as e:
-            REPORT["error"] = f"generation failed: {type(e).__name__}: {e}"
-    log.flush()
-    tail = (WORK / "server.log").read_text(errors="replace").splitlines()[-25:]
-    REPORT["mtp_active"] = any("draft" in ln.lower() and "mtp" in ln.lower() for ln in tail)
-    REPORT["server_log_tail"] = tail
-    proc.terminate()
+            proc.wait(timeout=15)
+        except Exception:
+            proc.kill()
+        # let VRAM free before the next config
+        for _ in range(15):
+            if not healthy():
+                break
+            time.sleep(2)
+        time.sleep(3)
+
+    REPORT["configs_tested"] = results
+    REPORT["ok"] = any(r["server_started"] for r in results)
+    REPORT["VERDICT"] = {
+        "submission_config_loads": next((r["server_started"] for r in results
+                                         if r["config"] == "submission_ctx16384_mtp_on"), None),
+        "mtp_off_fallback_loads": next((r["server_started"] for r in results
+                                        if r["config"] == "fallback_ctx16384_mtp_off"), None),
+    }
     (WORK / "smoke_report.json").write_text(json.dumps(REPORT, indent=2))
-    print(json.dumps({k: v for k, v in REPORT.items() if k != "server_log_tail"}, indent=2))
+    print(json.dumps({"VERDICT": REPORT["VERDICT"],
+                      "configs": [{k: v for k, v in r.items() if k != "log_tail"} for r in results]}, indent=2))
 
 
 if __name__ == "__main__":
