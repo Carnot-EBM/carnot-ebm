@@ -9037,3 +9037,5 @@ c |
 | 2026-06-21 19:36 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.50s |
 | 2026-06-21 19:52 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 123 passed, 1 warning in 9.16s |
 | 2026-06-21 20:12 UTC | PHASE E (CAPSTONE .421) -- the scorecard: did OPER | OK | 85 passed, 1 warning in 7.96s |
+| 2026-06-21 21:00 UTC | Plan milestone 2026.06.422 | OK | 12 tasks proposed |
+| 2026-06-21 21:06 UTC | Milestone 2026.06.422 activated | OK | 12 tasks queued |
