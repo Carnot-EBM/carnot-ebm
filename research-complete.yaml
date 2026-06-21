@@ -46337,3 +46337,91 @@ milestones:
       grow (A3/A5)? Skip flagged_adversarial -- BUT do not lose a real diagnosis to a null-delta false-positive (per B2).'
     deliverable: results/experiment_4542_capstone_v419.json
     result: OK (conductor)
+- id: 2026.06.420
+  title: TEACH THE PROPOSER TO INDUCE -- bring the LLM generator into per-level GOAL RE-INDUCTION
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-21'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4543-phase0
+    title: PHASE 0 (TRANSITION) -- archive .419 -> activate .420; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .419 close-state (per-level re-induction TRIGGERS but the offline DSL-only proposer produces no reachable L_{{n+1}}
+      plan -- the PROPOSER is the bottleneck; A3 banked sp80 L2; reproducible_total_levels=51; efficiency_moved=false).
+    deliverable: results/experiment_4543_archive_419_activate_420.json
+    result: OK (conductor)
+  - id: exp4544-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- BRING THE LLM GENERATOR INTO PER-LEVEL RE-INDUCTION:
+      on a level-up, the FROZEN sprint LLM (Qwen3.5-9B-MTP, the wired LocalGGUFProposer) proposes the L_{{n+1}} GOAL predicate
+      + transition + action plan; the world-model trust energy ranks candidates; a bounded counterexample-guided refinement
+      loop retries. Measure the LLM proposer''s value vs the .419 offline-DSL baseline. Gate: a CORE game reaches L2 (core_efficiency
+      STRICTLY > 2.0074, CORE solves preserved) OR a measured proposer-value characterization (the LLM produces a reachable
+      L2 plan the DSL could not).'
+    deliverable: results/experiment_4544_llm_proposer_reinduction.json
+    result: OK (conductor)
+  - id: exp4545-a2
+    title: "PHASE A2 (ARC NORTH STAR; operator MANDATORY; ORACLE-DISTINCT MOAT) -- richer cross-game verifier features (relational\
+      \ / \u0394frame / action-conditioned / predicate-distance) -> re-run the DiscriminativeVerifier LOO-AUROC gate (currently\
+      \ in-sample 0.726 but LOO 0.503 == chance). Gate: LOO-AUROC STRICTLY > 0.5 with CI excluding 0.5 + positive control\
+      \ + FALSE_NEGATIVE_RISK. verifier_is_oracle: false."
+    deliverable: results/experiment_4545_cross_game_discrimination_v3.json
+    result: OK (conductor)
+  - id: exp4546-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank +1 NEW reproducible level: deepen
+      a shallow solved game (su15/cn04/sk48 L1->L2) via the standing arc_loop_solve loop, OR first-contact rotation. Gate:
+      offline_reproduced new level.'
+    deliverable: results/experiment_4546_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4547-a4
+    title: 'PHASE A4 (ARC NORTH STAR; operator MANDATORY; ACTION EFFICIENCY -- the score metric) -- train a small CNN predict(frame)
+      -> (click-heatmap, directional-change) self-supervised on the now-cached 14,672 human-replay transitions; wire into
+      rich_action_candidates. Gate: held-out median actions-to-first-levelup STRICTLY lower than blind BFS + positive control
+      + FALSE_NEGATIVE_RISK; must NOT drop solve-rate.'
+    deliverable: results/experiment_4547_frame_change_predictor.json
+    result: OK (conductor)
+  - id: exp4548-a5
+    title: PHASE A5 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whatever RAISED core_efficiency
+      (A1 LLM proposer; A4 CNN action ranker) into the SUBMITTED agent; re-measure end-to-end on core_efficiency (baseline
+      2.0074). If NONE raise it, keep the bare explorer + honest null.
+    deliverable: results/experiment_4548_integration_8game_gate.json
+    result: OK (conductor)
+  - id: exp4549-a6
+    title: 'PHASE A6 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the LLM-proposer re-induction
+      + bounded-refinement primitive to arc_solver_kit / arc_solve_registry (Tier-2 constraint memory; ARC Solve Reproducibility
+      + Solver-Reuse Discipline), and measure CROSS-GAME TRANSFER: does the primitive produce a reachable deeper-level plan
+      on a game it was NOT tuned on?'
+    deliverable: results/experiment_4549_llm_proposer_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4550-b1
+    title: 'PHASE B1 (RESERVED INFRA) -- HONEST SPRINT-METRIC reporting: wire the SHIPPED variant benchmark (arc_leaderboard_eval
+      --variant/--reflect) into the capstone metric so reproducible_total_levels is reported ALONGSIDE generic_transfer_rate_over_variants
+      -- surfacing the "mirage" (GAP-LIVE-INTEGRATION: most banked levels are KNOWN-game replays ~0 on the hidden eval). Asserting
+      tests.'
+    deliverable: results/experiment_4550_honest_sprint_metric.json
+    result: OK (conductor)
+  - id: exp4551-b2
+    title: 'PHASE B2 (RESERVED INFRA) -- OFFLINE/LIVE PROPOSER PARITY guard: a regression assert that the offline core_efficiency
+      harness measures the SAME proposer/config the SUBMITTED agent ships (or explicitly FLAGS the CARNOT_ARC_DISABLE_INDUCTION
+      discrepancy), so the offline measurement never silently understates the real agent (the .419 gap: offline ran no-LLM
+      while the live agent has the LLM proposer). Asserting tests.'
+    deliverable: results/experiment_4551_offline_live_proposer_parity.json
+    result: OK (conductor)
+  - id: exp4552-c
+    title: PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH reachability only,
+      NEVER host SD card), GateMate (USB detect), PolarFire (SSH). Per-board continuity audit; honest blocked_<board>_<reason>
+      if a board is unreachable.
+    deliverable: results/experiment_4552_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4553-d
+    title: PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = LLM-as-world-model-inducer) -- ingest SOTA on LLM/coding-agent
+      world-model + goal induction, verifier-guided / counterexample-guided refinement loops, and intra-episode goal-shift
+      detection for ARC-AGI-3; map onto the A1 LLM-proposer headline. Emit a SOTA->experiment mapping note with real arXiv
+      IDs + flag the strongest method for .421.
+    deliverable: results/experiment_4553_sota_ingestion_llm_inducer.json
+    result: OK (conductor)
+  - id: exp4554-e
+    title: 'PHASE E (CAPSTONE .420) -- the PER-LEVEL EFFICIENCY scorecard: did bringing the LLM GENERATOR into per-level RE-INDUCTION
+      (A1) raise core_efficiency above 2.0074 (reach a deeper CORE level)? Did cross-game verifier discrimination beat chance
+      (A2)? Did the action-efficiency CNN cut median actions (A4)? Did reproducible_total_levels grow (A3/A6)? Skip flagged_adversarial
+      -- EXCEPT the annotated control-vs-treatment null-delta carve-out (the .419 B2 robustness).'
+    deliverable: results/experiment_4554_capstone_v420.json
+    result: OK (conductor)
