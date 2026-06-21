@@ -1,0 +1,1383 @@
+{
+  "additivity_checked": {
+    "core_interaction_delta": 0.0,
+    "generic_interaction_delta": 0.0,
+    "integrated_core_efficiency_delta": 0.0,
+    "integrated_generic_transfer_delta": 0.0,
+    "isolated_deltas": {
+      "A1_verifier_router": {
+        "core_efficiency_delta": 0.0,
+        "generic_transfer_delta": 0.0
+      },
+      "A2_executable_world_model_proposer": {
+        "core_efficiency_delta": 0.0,
+        "generic_transfer_delta": 0.0
+      },
+      "A4_hidden_field_state_probe": {
+        "core_efficiency_delta": 0.0,
+        "generic_transfer_delta": 0.0
+      }
+    },
+    "metrics": [
+      "core_efficiency",
+      "generic_transfer_rate_over_variants"
+    ],
+    "naive_core_efficiency_delta": 0.0,
+    "naive_generic_transfer_delta": 0.0
+  },
+  "core_efficiency_baseline": 2.0074,
+  "core_efficiency_integrated": 2.0074,
+  "core_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33"
+  ],
+  "core_solves_preserved": true,
+  "duration_s": 36.66356104495935,
+  "experiment": "experiment_4560_integration_8game_gate",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "additivity_checked": "integrated metric vs the naive sum of isolated A1/A2/A4 deltas -- surfaces a destructive interaction instead of burying it.",
+    "core_efficiency_integrated": "the SUBMITTED-config per-level efficiency after wiring winners vs baseline 2.0074.",
+    "core_solves_preserved": "integration must preserve every CORE solve (set-containment).",
+    "false_negative_risk_checked": "an honest null is only valid with both baselines measured the same way.",
+    "generic_transfer_rate_integrated": "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04 -- the leaderboard-honest HEADLINE.",
+    "heldout_solve_rate": "the real transfer signal; integration should not regress it.",
+    "honest_verdict": "terminal prefix; success: integrated_generic_transfer_<n>_above_0.04_or_core_efficiency_above_2.0074 OR complete: no_lever_raises_a_metric_honest_null.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
+    "levers_integrated": "names which of A1/A2/A4 were wired -- traceable to their measured deltas; [] is an honest null.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "ready_for_operator_submit": "True if the integrated config is a CORE-preserved improvement on either metric worth a 1/day submission slot; the task NEVER submits (operator-only).",
+    "reproducibility_checksum": "catches silent drift on replay."
+  },
+  "gate_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33",
+    "cd82",
+    "ft09",
+    "su15",
+    "ls20"
+  ],
+  "gate_heldout_solve_rate": 0.0,
+  "gate_result": {
+    "baseline": {
+      "median_actions_on_solved": 7761.5,
+      "solved_count": 4,
+      "total_actions_on_solved": 31057
+    },
+    "baseline_guard": {
+      "action_metric_field": "actions",
+      "canonical_baseline_median_actions": 7760.0,
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "canonical_lp85_per_level_efficiency_floor": 2.0069,
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "errors": [],
+      "ok": true
+    },
+    "current": {
+      "action_metric": {
+        "definition": "total_actions_on_solved_games",
+        "field": "actions"
+      },
+      "actions_by_game": {
+        "lp85": 20,
+        "m0r0": 3891,
+        "sp80": 7218,
+        "vc33": 1758
+      },
+      "core_efficiency": 2.0074,
+      "deepest_level_by_game": {
+        "cd82": 0,
+        "ft09": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 1,
+        "sp80": 1,
+        "su15": 0,
+        "vc33": 1
+      },
+      "efficiency_by_game": {
+        "lp85": 2.0069,
+        "m0r0": 0.0003,
+        "sp80": 0.0001,
+        "vc33": 0.0001
+      },
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_core": 2824.5,
+      "median_actions_on_solved": 2824.5,
+      "navigation_by_game": {
+        "cd82": {
+          "forward_walk_hit_rate": 0.0769,
+          "reset_replay_steps": 325
+        },
+        "ft09": {
+          "forward_walk_hit_rate": 0.027,
+          "reset_replay_steps": 28
+        },
+        "lp85": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ls20": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 882
+        },
+        "m0r0": {
+          "forward_walk_hit_rate": 0.0776,
+          "reset_replay_steps": 212
+        },
+        "sp80": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 562
+        },
+        "su15": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 335
+        },
+        "vc33": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 37
+        }
+      },
+      "offline_effective_proposer_config": {
+        "cascade": true,
+        "disable_induction_env": "1",
+        "gate_policy_arg": "e3",
+        "induction_enabled": false,
+        "lower_bound_note": "offline_core_efficiency_is_lower_bound_when_mismatch_true",
+        "policy": "E3AgentPolicy",
+        "proposer_kind": null,
+        "proposer_source": "none"
+      },
+      "per_game": [
+        {
+          "actions": 20,
+          "deepest_level_reached": 1,
+          "efficiency": 2.0069,
+          "forward_walk_hit_rate": 0.0,
+          "game": "lp85",
+          "levels": 1,
+          "per_level_efficiency": 2.0069,
+          "reset_replay_steps": 0,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 3891,
+          "deepest_level_reached": 1,
+          "efficiency": 0.0003,
+          "forward_walk_hit_rate": 0.0776,
+          "game": "m0r0",
+          "levels": 1,
+          "per_level_efficiency": 0.0003,
+          "reset_replay_steps": 212,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7218,
+          "deepest_level_reached": 1,
+          "efficiency": 0.0001,
+          "forward_walk_hit_rate": 0.0,
+          "game": "sp80",
+          "levels": 1,
+          "per_level_efficiency": 0.0001,
+          "reset_replay_steps": 562,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 1758,
+          "deepest_level_reached": 1,
+          "efficiency": 0.0001,
+          "forward_walk_hit_rate": 0.0,
+          "game": "vc33",
+          "levels": 1,
+          "per_level_efficiency": 0.0001,
+          "reset_replay_steps": 37,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7819,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.0769,
+          "game": "cd82",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 325,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7963,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.027,
+          "game": "ft09",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 28,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7786,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.0,
+          "game": "su15",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 335,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7821,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.0,
+          "game": "ls20",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 882,
+          "solved": false,
+          "timed_out": false
+        }
+      ],
+      "per_level_efficiency_by_game": {
+        "cd82": 0.0,
+        "ft09": 0.0,
+        "lp85": 2.0069,
+        "ls20": 0.0,
+        "m0r0": 0.0003,
+        "sp80": 0.0001,
+        "su15": 0.0,
+        "vc33": 0.0001
+      },
+      "policy": "e3",
+      "proposer_config_divergence": [
+        {
+          "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()",
+          "field": "induction_enabled",
+          "offline": false,
+          "submitted": true
+        },
+        {
+          "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound",
+          "field": "proposer_kind",
+          "offline": null,
+          "submitted": "LocalGGUFProposer"
+        }
+      ],
+      "proposer_config_mismatch": true,
+      "proposer_config_parity": {
+        "offline_config": {
+          "cascade": true,
+          "disable_induction_env": "1",
+          "gate_policy_arg": "e3",
+          "induction_enabled": false,
+          "lower_bound_note": "offline_core_efficiency_is_lower_bound_when_mismatch_true",
+          "policy": "E3AgentPolicy",
+          "proposer_kind": null,
+          "proposer_source": "none"
+        },
+        "parity_guard": "offline_live_proposer_config_parity",
+        "proposer_config_divergence": [
+          {
+            "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()",
+            "field": "induction_enabled",
+            "offline": false,
+            "submitted": true
+          },
+          {
+            "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound",
+            "field": "proposer_kind",
+            "offline": null,
+            "submitted": "LocalGGUFProposer"
+          }
+        ],
+        "proposer_config_mismatch": true,
+        "submitted_config": {
+          "cascade": true,
+          "disable_induction_env": "unset",
+          "induction_enabled": true,
+          "policy": "E3AgentPolicy",
+          "proposer_kind": "LocalGGUFProposer",
+          "proposer_source": "E3AgentPolicy._proposer",
+          "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+        }
+      },
+      "solved_count": 4,
+      "solved_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "submitted_effective_proposer_config": {
+        "cascade": true,
+        "disable_induction_env": "unset",
+        "induction_enabled": true,
+        "policy": "E3AgentPolicy",
+        "proposer_kind": "LocalGGUFProposer",
+        "proposer_source": "E3AgentPolicy._proposer",
+        "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+      },
+      "timed_out_count": 0,
+      "total_actions_on_solved": 12887
+    },
+    "gate_command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/kaggle/arc_local_submission_gate.py",
+      "--check",
+      "--policy",
+      "e3",
+      "--budget",
+      "8000",
+      "--cap",
+      "115",
+      "--lever",
+      "experiment_4560_integration",
+      "--json"
+    ],
+    "gate_returncode": 0,
+    "lever_dashboard_row": {
+      "actions_saved_vs_baseline": 4937.0,
+      "baseline_median_actions_on_core": 7761.5,
+      "baseline_navigation_by_game": {
+        "cd82": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ft09": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "lp85": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ls20": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "m0r0": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "sp80": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "su15": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "vc33": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        }
+      },
+      "bonus_solves": [],
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "core_solves_preserved": true,
+      "lever": "experiment_4560_integration",
+      "lost_core_solves": [],
+      "median_actions_on_core": 2824.5,
+      "metric_action_field": "actions",
+      "nav_metric_role": "secondary_wall_clock_warning_not_score_metric",
+      "nav_regression_warning": "",
+      "navigation_by_game": {
+        "cd82": {
+          "forward_walk_hit_rate": 0.0769,
+          "reset_replay_steps": 325
+        },
+        "ft09": {
+          "forward_walk_hit_rate": 0.027,
+          "reset_replay_steps": 28
+        },
+        "lp85": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ls20": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 882
+        },
+        "m0r0": {
+          "forward_walk_hit_rate": 0.0776,
+          "reset_replay_steps": 212
+        },
+        "sp80": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 562
+        },
+        "su15": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 335
+        },
+        "vc33": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 37
+        }
+      },
+      "proposer_config_divergence": [
+        {
+          "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()",
+          "field": "induction_enabled",
+          "offline": false,
+          "submitted": true
+        },
+        {
+          "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound",
+          "field": "proposer_kind",
+          "offline": null,
+          "submitted": "LocalGGUFProposer"
+        }
+      ],
+      "proposer_config_mismatch": true,
+      "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074",
+      "verdict_pass": true
+    },
+    "pass": true,
+    "proposer_config_divergence": [
+      {
+        "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()",
+        "field": "induction_enabled",
+        "offline": false,
+        "submitted": true
+      },
+      {
+        "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound",
+        "field": "proposer_kind",
+        "offline": null,
+        "submitted": "LocalGGUFProposer"
+      }
+    ],
+    "proposer_config_mismatch": true,
+    "proposer_config_parity": {
+      "offline_config": {
+        "cascade": true,
+        "disable_induction_env": "1",
+        "gate_policy_arg": "e3",
+        "induction_enabled": false,
+        "lower_bound_note": "offline_core_efficiency_is_lower_bound_when_mismatch_true",
+        "policy": "E3AgentPolicy",
+        "proposer_kind": null,
+        "proposer_source": "none"
+      },
+      "parity_guard": "offline_live_proposer_config_parity",
+      "proposer_config_divergence": [
+        {
+          "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()",
+          "field": "induction_enabled",
+          "offline": false,
+          "submitted": true
+        },
+        {
+          "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound",
+          "field": "proposer_kind",
+          "offline": null,
+          "submitted": "LocalGGUFProposer"
+        }
+      ],
+      "proposer_config_mismatch": true,
+      "submitted_config": {
+        "cascade": true,
+        "disable_induction_env": "unset",
+        "induction_enabled": true,
+        "policy": "E3AgentPolicy",
+        "proposer_kind": "LocalGGUFProposer",
+        "proposer_source": "E3AgentPolicy._proposer",
+        "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+      }
+    },
+    "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074"
+  },
+  "generic_transfer_baseline": 0.04,
+  "generic_transfer_budget": 200,
+  "generic_transfer_measurement": {
+    "generic_transfer_rate_over_variants": 0.04,
+    "variant_attempts": [
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "ar25",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "ar25",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "ar25~color01"
+      },
+      {
+        "actions": 189,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "bp35",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "bp35",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "bp35~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "cd82",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "cd82",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "cd82~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "cn04",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "cn04",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "cn04~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "dc22",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "dc22",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "dc22~color01"
+      },
+      {
+        "actions": 199,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "ft09",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "ft09",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "ft09~color01"
+      },
+      {
+        "actions": 197,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "g50t",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "g50t",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "g50t~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "ka59",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "ka59",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "ka59~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "lf52",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "lf52",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "lf52~color01"
+      },
+      {
+        "actions": 20,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "lp85",
+        "kind": "color",
+        "reached_level": 1,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 1,
+          "game": "lp85",
+          "mode": "offline_reproduction_gate_no_quota",
+          "reached_level": 1,
+          "reproduced": true
+        },
+        "solution_labels": [
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+          "{\"action\":6,\"data\":{\"x\":0,\"y\":31}}",
+          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+          "{\"action\":6,\"data\":{\"x\":0,\"y\":34}}",
+          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+          "{\"action\":6,\"data\":{\"x\":0,\"y\":36}}",
+          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+          "{\"action\":6,\"data\":{\"x\":0,\"y\":39}}",
+          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+          "{\"action\":6,\"data\":{\"x\":0,\"y\":41}}",
+          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+        ],
+        "solved": true,
+        "variant": 1,
+        "variant_signature": "lp85~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "ls20",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "ls20",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "ls20~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "m0r0",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "m0r0",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "m0r0~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "r11l",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "r11l",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "r11l~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "re86",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "re86",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "re86~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "s5i5",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "s5i5",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "s5i5~color01"
+      },
+      {
+        "actions": 198,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "sb26",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "sb26",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "sb26~color01"
+      },
+      {
+        "actions": 196,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "sc25",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "sc25",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "sc25~color01"
+      },
+      {
+        "actions": 197,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "sk48",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "sk48",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "sk48~color01"
+      },
+      {
+        "actions": 193,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "sp80",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "sp80",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "sp80~color01"
+      },
+      {
+        "actions": 197,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "su15",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "su15",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "su15~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "tn36",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "tn36",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "tn36~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "tr87",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "tr87",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "tr87~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "tu93",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "tu93",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "tu93~color01"
+      },
+      {
+        "actions": 195,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "vc33",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "vc33",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "vc33~color01"
+      },
+      {
+        "actions": 197,
+        "attempted": true,
+        "blocked_reason": "",
+        "game": "wa30",
+        "kind": "color",
+        "reached_level": 0,
+        "reflect": null,
+        "reproduction_gate": {
+          "claimed_level": 0,
+          "game": "wa30",
+          "mode": "offline_reproduction_gate_no_solution",
+          "reached_level": 0,
+          "reproduced": false
+        },
+        "solution_labels": [],
+        "solved": false,
+        "variant": 1,
+        "variant_signature": "wa30~color01"
+      }
+    ],
+    "variant_attempts_count": 25,
+    "variant_solved_count": 1,
+    "variant_specs": [
+      {
+        "game": "ar25",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "ar25~color01"
+      },
+      {
+        "game": "bp35",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "bp35~color01"
+      },
+      {
+        "game": "cd82",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "cd82~color01"
+      },
+      {
+        "game": "cn04",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "cn04~color01"
+      },
+      {
+        "game": "dc22",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "dc22~color01"
+      },
+      {
+        "game": "ft09",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "ft09~color01"
+      },
+      {
+        "game": "g50t",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "g50t~color01"
+      },
+      {
+        "game": "ka59",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "ka59~color01"
+      },
+      {
+        "game": "lf52",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "lf52~color01"
+      },
+      {
+        "game": "lp85",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "lp85~color01"
+      },
+      {
+        "game": "ls20",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "ls20~color01"
+      },
+      {
+        "game": "m0r0",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "m0r0~color01"
+      },
+      {
+        "game": "r11l",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "r11l~color01"
+      },
+      {
+        "game": "re86",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "re86~color01"
+      },
+      {
+        "game": "s5i5",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "s5i5~color01"
+      },
+      {
+        "game": "sb26",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "sb26~color01"
+      },
+      {
+        "game": "sc25",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "sc25~color01"
+      },
+      {
+        "game": "sk48",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "sk48~color01"
+      },
+      {
+        "game": "sp80",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "sp80~color01"
+      },
+      {
+        "game": "su15",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "su15~color01"
+      },
+      {
+        "game": "tn36",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "tn36~color01"
+      },
+      {
+        "game": "tr87",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "tr87~color01"
+      },
+      {
+        "game": "tu93",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "tu93~color01"
+      },
+      {
+        "game": "vc33",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "vc33~color01"
+      },
+      {
+        "game": "wa30",
+        "kind": "color",
+        "reflect": null,
+        "variant": 1,
+        "variant_signature": "wa30~color01"
+      }
+    ]
+  },
+  "generic_transfer_rate_integrated": 0.04,
+  "heldout_solve_rate": 0.04,
+  "honest_verdict": "complete: no_lever_raises_a_metric_honest_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition).",
+  "levers_integrated": [],
+  "local_gate_budget": 8000,
+  "operator_submission_performed": false,
+  "per_game_deepest_level_reached": {
+    "cd82": 0,
+    "ft09": 0,
+    "lp85": 1,
+    "ls20": 0,
+    "m0r0": 1,
+    "sp80": 1,
+    "su15": 0,
+    "vc33": 1
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "a4_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "leaderboard_submission": false,
+    "offline_arcade_import": true,
+    "ok": true,
+    "spec_has_req_4560": true
+  },
+  "random_seed": 4560,
+  "ready_for_operator_submit": false,
+  "reproducibility_checksum": "sha256:449fab60876b2bd5975c4778d59c2cff54c50926528d9bc1c12c69acede96811",
+  "requirements": [
+    "REQ-ARC-WMTE-4560"
+  ],
+  "result_path": "results/experiment_4560_integration_8game_gate.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4560"
+  ],
+  "schema": "carnot.arc_integration_8game_gate_4560.v1",
+  "submitted_agent_config": {
+    "cascade": true,
+    "frontier_batch_size": 1,
+    "graph_explore_budget": 80,
+    "lazy_value_top_k": 4,
+    "navigation_cost_tiebreak": false,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 1,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "upstream_decision": {
+    "accepted_levers": [],
+    "isolated_deltas": {
+      "A1_verifier_router": {
+        "core_efficiency_delta": 0.0,
+        "generic_transfer_delta": 0.0
+      },
+      "A2_executable_world_model_proposer": {
+        "core_efficiency_delta": 0.0,
+        "generic_transfer_delta": 0.0
+      },
+      "A4_hidden_field_state_probe": {
+        "core_efficiency_delta": 0.0,
+        "generic_transfer_delta": 0.0
+      }
+    },
+    "naive_core_efficiency_delta": 0.0,
+    "naive_generic_transfer_delta": 0.0,
+    "rejected_levers": {
+      "A1_verifier_router:generic_transfer": {
+        "flag_status": "rejected_flagged_adversarial",
+        "generic_transfer_ci": [
+          0.0,
+          0.0
+        ],
+        "generic_transfer_delta": 0.0,
+        "generic_transfer_rate_baseline": 0.04,
+        "generic_transfer_rate_with_verifier": 0.04,
+        "honest_verdict": "complete: verifier_router_no_value_added_honest_null_gap_sharpened",
+        "reason": "flagged_adversarial",
+        "solve_rate_preserved": true
+      },
+      "A2_executable_world_model_proposer:core_l2": {
+        "core_efficiency_best": null,
+        "core_solves_preserved": null,
+        "efficiency_delta": 0.0,
+        "honest_verdict": "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined",
+        "offline_reproduced": false,
+        "positive_control_passed": false,
+        "reason": "core_solves_not_preserved"
+      },
+      "A4_hidden_field_state_probe:new_bank": {
+        "honest_verdict": "complete: hidden_field_state_gap_sharpened_no_bank_honest_null",
+        "offline_reproduced": false,
+        "reason": "no_new_offline_bank",
+        "registry_updated": true,
+        "reproduced_levels": 0,
+        "state_disambiguation_control_passed": true
+      }
+    },
+    "upstream_summaries": {
+      "A1_verifier_router": {
+        "flag_status": "rejected_flagged_adversarial",
+        "generic_transfer_ci": [
+          0.0,
+          0.0
+        ],
+        "generic_transfer_delta": 0.0,
+        "generic_transfer_rate_baseline": 0.04,
+        "generic_transfer_rate_with_verifier": 0.04,
+        "honest_verdict": "complete: verifier_router_no_value_added_honest_null_gap_sharpened",
+        "solve_rate_preserved": true
+      },
+      "A2_executable_world_model_proposer": {
+        "core_efficiency_best": null,
+        "core_solves_preserved": null,
+        "efficiency_delta": 0.0,
+        "honest_verdict": "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined",
+        "offline_reproduced": false,
+        "positive_control_passed": false
+      },
+      "A4_hidden_field_state_probe": {
+        "honest_verdict": "complete: hidden_field_state_gap_sharpened_no_bank_honest_null",
+        "offline_reproduced": false,
+        "registry_updated": true,
+        "reproduced_levels": 0,
+        "state_disambiguation_control_passed": true
+      }
+    }
+  }
+}
