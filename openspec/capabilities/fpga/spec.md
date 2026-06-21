@@ -10377,3 +10377,83 @@ per board, `blocked_<board>_unreachable` for unavailable boards, and no
 unsupported hardware progress claims.
 
 **Implementation status:** Pending (Exp 4519)
+
+---
+
+### REQ-HW-4529
+
+**Title:** Hardware continuity audit MUST capture reachable-board state for KV260, GateMate, and PolarFire
+
+**Description:**
+Experiment 4529 MUST produce `results/experiment_4529_hardware_continuity.json`
+as an audit-only hardware-continuity artifact for KV260, GateMate, and
+PolarFire. It MUST run only the operator-requested board reachability
+preconditions and MUST treat each board independently: an unavailable board is
+reported as its own `blocked_<board>` state while the experiment still completes
+with a terminal `honest_verdict`.
+
+The only valid preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; this is the
+  only valid KV260 precondition because the host SD-card mechanism is retired.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`; reachability requires a
+  successful command and a GM1Ax IDCODE observation.
+- PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
+
+For each reachable board, the experiment MUST record current board state and
+MUST NOT build, flash, or claim any new bitstream:
+
+- KV260 reachable state: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'sudo -n xmutil listapps'`.
+- GateMate reachable state: the GM1Ax IDCODE observed from DirtyJTAG detect.
+- PolarFire reachable state: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire uptime`.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; complete: hardware_continuity_audit_<n>_boards_reachable (blocked_<board> per-board is honest, not terminal failure).`
+- `inference_substrate`: `hardware_smoke -- SSH/USB board checks, per-board duration floors.`
+- `per_board_status`: `each board's reachability + state -- keeps every attached board visible in the milestone retro (the forget-pattern guard).`
+- `preconditions_checked`: `records WHICH board resources were verified; SSH-not-SD-card for KV260.`
+
+**Acceptance criteria:**
+- `results/experiment_4529_hardware_continuity.json` is generated.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `honest_verdict` is `complete: hardware_continuity_audit_<n>_boards_reachable`
+  where `<n>` is the number of reachable boards.
+- `preconditions_checked` records exactly the KV260 SSH BatchMode command,
+  GateMate DirtyJTAG detect command, and PolarFire SSH BatchMode command listed
+  above.
+- `per_board_status` is keyed by `kv260`, `gatemate`, and `polarfire`; each row
+  records `reachable`, `status`, `precondition_resource`, `precondition_command`,
+  reachability transcript, state transcript, and total board duration.
+- Unreachable board rows use `blocked_kv260_ssh_unreachable`,
+  `blocked_gatemate_usb_undetected`, or `blocked_polarfire_ssh_timeout` and do
+  not fabricate a state transcript.
+- Reachable KV260 rows include the `xmutil listapps` transcript, reachable
+  GateMate rows include the GM1Ax IDCODE, and reachable PolarFire rows include
+  the `uptime` transcript.
+- The artifact includes `random_seed=4529`, `spec_refs`, `field_principles`,
+  `duration_s`, `fabric_acceleration_claimed=false`,
+  `speedup_claim_made=false`, `bitstream_build_attempted=false`, and a stable
+  `reproducibility_checksum`.
+- The artifact contains no host SD-card block-device precondition.
+
+**Implementation status:** Pending (Exp 4529)
+
+---
+
+### SCENARIO-HW-4529
+
+**Scenario:** Exp 4529 records live board reachability and reachable-board state.
+
+**Given:** The hardware-continuity task requires KV260 SSH reachability only,
+GateMate DirtyJTAG GM1Ax detection, and PolarFire SSH reachability.
+**When:** Experiment 4529 runs the three required preconditions and then records
+state only for boards that are reachable.
+**Then:** It writes `results/experiment_4529_hardware_continuity.json` with a
+terminal-prefixed board-count `honest_verdict`, `inference_substrate` equal to
+`hardware_smoke`, principle-annotated required fields, one reachability plus
+state row per attached board, precise per-board blocked statuses for unavailable
+boards, and no bitstream-build or speedup claim.
+
+**Implementation status:** Pending (Exp 4529)
