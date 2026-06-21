@@ -45,7 +45,7 @@ subprocess.run(
 #    Kaggle image (agent dry-run: 3.6s). The bundled llama-server is copied to a writable
 #    path (/kaggle/input is read-only) and pointed at via CARNOT_LLAMA_SERVER / GGUF env.
 AGENT_SRC = r'''
-import os, shutil, sys
+import os, shutil, sys, time, subprocess, urllib.request
 from pathlib import Path
 
 inp = Path("/kaggle/input")
@@ -54,8 +54,19 @@ inp = Path("/kaggle/input")
 carnot = next(p.parents[2] for p in inp.rglob("carnot/agentic/arc_competition_agent.py"))
 sys.path.insert(0, str(carnot))
 
+# --- generator (LLM tier) resolution + LOUD visibility (2026-06-21) --------------------------------
+# The v3=0.08 run could NOT be diagnosed because nothing logged whether the Qwen generator loaded or
+# silently degraded to the CPU graph-explore cascade (env vars were set inside `if server and gguf:`
+# with no else, and the agent launches llama-server with stderr=DEVNULL). Make it self-reporting in the
+# eval log so the operator can grep "LLM GENERATOR HEALTHY/FAILED" on the next run. We do NOT change the
+# operator-frozen stack (MTP stays on); the probe tests the REAL config and only RECOMMENDS MTP=0 on OOM.
 server = next(iter(inp.rglob("llama-server")), None)
-gguf = next(iter(inp.rglob("*.gguf")), None)
+# match the Qwen GGUF by name so an order-undefined rglob can't bind a stale/second .gguf
+_ggufs = [g for g in inp.rglob("*.gguf") if ("Qwen3.5-9B" in g.name or "Q4_K_M" in g.name)] or list(inp.rglob("*.gguf"))
+gguf = _ggufs[0] if _ggufs else None
+if len(_ggufs) > 1:
+    print(f"LLM TIER WARNING: {len(_ggufs)} GGUFs under /kaggle/input, using {gguf.name}; all={[g.name for g in _ggufs]}", flush=True)
+
 if server and gguf:
     run_server = Path("/kaggle/working/llama-server")
     shutil.copy2(server, run_server)
@@ -63,6 +74,48 @@ if server and gguf:
     os.environ["LD_LIBRARY_PATH"] = f"{server.parent}:" + os.environ.get("LD_LIBRARY_PATH", "")
     os.environ["CARNOT_LLAMA_SERVER"] = str(run_server)
     os.environ["CARNOT_ARC_GGUF_PATH"] = str(gguf)
+    _mtp = os.environ.get("CARNOT_ARC_MTP", "1") != "0"
+    print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx=16384 kv=q8_0", flush=True)
+    # one-shot health probe: spawn the generator with the SAME args the agent uses and confirm it
+    # actually LOADS on this 16GB GPU (stderr CAPTURED, not swallowed like the agent's DEVNULL launch),
+    # then free the port. Wrapped so a probe failure can NEVER crash the agent / zero the submission.
+    try:
+        _pp = 8945
+        _err = open("/kaggle/working/llm_probe.err", "w")
+        _args = [str(run_server), "-m", str(gguf), "-ngl", "999", "-c", "16384",
+                 "--port", str(_pp), "--host", "127.0.0.1", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0"]
+        if _mtp:
+            _args += ["--spec-type", "draft-mtp", "--model-draft", str(gguf)]
+        _proc = subprocess.Popen(_args, stdout=_err, stderr=_err)
+        _ok = False
+        for _ in range(150):  # up to ~300s for a cold GPU load
+            if _proc.poll() is not None:
+                break
+            try:
+                with urllib.request.urlopen(f"http://127.0.0.1:{_pp}/health", timeout=2) as r:
+                    if r.status == 200:
+                        _ok = True; break
+            except Exception:
+                time.sleep(2)
+        _proc.terminate()
+        try:
+            _proc.wait(timeout=15)
+        except Exception:
+            _proc.kill()
+        _err.close()
+        if _ok:
+            print("LLM GENERATOR HEALTHY -- loaded on GPU, /health ok (generator tier ENGAGED)", flush=True)
+        else:
+            _tail = Path("/kaggle/working/llm_probe.err").read_text()[-1000:]
+            print(f"LLM GENERATOR FAILED TO LOAD (likely OOM at mtp={_mtp}/ctx=16384 on 16GB) -- agent will "
+                  f"run CPU graph-explore ONLY. Operator: consider CARNOT_ARC_MTP=0. stderr tail:\n{_tail}",
+                  flush=True)
+    except Exception as _e:
+        print(f"LLM PROBE ERROR (non-fatal, agent continues with LLM env set): {_e!r}", flush=True)
+else:
+    print("LLM TIER DISABLED: llama-server/gguf NOT FOUND under /kaggle/input -- running CPU graph-explore "
+          f"ONLY (server={server}, gguf={gguf}). Verify the carnot-llamacpp + qwen GGUF datasets are attached.",
+          flush=True)
 
 from agents.agent import Agent
 from carnot.agentic.arc_competition_agent import make_carnot_agent
