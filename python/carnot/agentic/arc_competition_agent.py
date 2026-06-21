@@ -1375,6 +1375,26 @@ class E3AgentPolicy:
             return
 
         try:
+            # PRIOR-WARM-STARTED LEARNED ENGINE (2026-06-21): try the per-game world model LEARNED from the
+            # played transitions (warm-started from the cross-game CNN prior that transfers 5/5 to unseen
+            # games), GATED by the same >=0.5 held-out trust bar the LLM path uses. If it earns trust and
+            # plans a win, use it (zero-LLM, execution-grounded); otherwise fall through to the LLM
+            # induction. Non-fatal -- never breaks the existing path. The prior is models/arc_dynamics_prior.pt.
+            try:
+                from carnot.agentic.arc_live_ttt import gated_engine_from_transitions
+                _eng, _isdone, _diag = gated_engine_from_transitions(self.short, active_transitions)
+                attempt["ttt_prior_engine"] = _diag
+                if _eng is not None and self.root_grid is not None:
+                    self._install_goal_bias(_isdone)
+                    _plan = e3.plan_in_model(_eng, _isdone, self.root_grid)
+                    if _plan:
+                        self.plan = _plan
+                        attempt["planned"] = True
+                        attempt["plan_length"] = len(_plan)
+                        attempt["engine_source"] = "ttt_prior_warmstarted"
+                        return
+            except Exception as _ttt_e:
+                attempt["ttt_prior_engine_error"] = repr(_ttt_e)[:120]
             if attempt["reason"] == "level_up_reinduction":
                 self._fit_dsl_model()
                 outcome = execute_bounded_llm_reinduction(
