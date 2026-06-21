@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.420",
+  "generated_at": "2026-06-21T15:43:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The injected milestone-scoped timing detector again reported zero experiment commits since activation, so the locked fields read 0/0/0 with gpu_idle_on_compute_bound_tasks=null. This is the recurring retro-timing false-zero (documented .363-.419, now .420), NOT a genuinely idle milestone: on-disk verification this turn shows 12 experiments (exp4543-exp4554) committed in a ~211.6-minute window, including -- distinct from .416/.418/.419 -- ONE genuine compute-bound task (exp4544, live_llm_inference, Qwen3.5-9B-MTP, 231s). Both RTX 3090s idle at the 15:43Z snapshot is correct (post-hoc, ~8 min after the last commit; the frozen sprint generator runs on the iGPU, not the monitored 3090s). Bottleneck = observability, not execution.",
+  "bottlenecks_identified": [
+    "RECURRING (PRIMARY): the injected TIMING DATA false-zeroed AGAIN -- the milestone-scoped detector reports 0 commits since activation while 12 experiments (exp4543-exp4554, ~211.6-min on-disk window, verified this turn) actually committed. Third consecutive retro (.418/.419/.420) with this gap, despite B1 infra tasks repeatedly shipping the fix into the standalone module; the conductor's retro prompt-assembly consumer never receives it.",
+    "NEW this milestone: the detector hid a GENUINE compute-bound task. exp4544 is live_llm_inference (Qwen3.5-9B-MTP GGUF, duration_s=231) -- the A1 LLM-proposer headline. Unlike .416/.418/.419 (zero compute-bound tasks), .420's false-zero masks a real GPU-class run, so compute_bound_experiments_count=0 is a detector artifact, not the truth.",
+    "NOT a bottleneck (ruled out): both RTX 3090s idle at the 15:43:50Z snapshot is correct -- the snapshot is post-hoc (~8 min after the last experiment, ~3h after exp4544 finished) and the frozen sprint generator runs on the AMD iGPU per project policy (NEVER the 3090s). No in-window 3090 telemetry exists for the one compute-bound task, so gpu_idle_on_compute_bound_tasks=null is the honest value, not a flag."
+  ],
+  "improvements_suggested": [
+    "MOVE the .419/.420-shipped retro-timing-detector wire (exp4538 / B1 exp4550-4551) from the standalone module to the conductor's prompt-assembly call site that builds the retro TIMING DATA block, and prove injected==on-disk on .421. This is the third milestone recommending it.",
+    "Promote the injected-count == on-disk-in-window-count regression assert to a HARD retro-launch gate; emit detector_gap_suspected when artifacts exist on disk but the injected count is 0 (true this milestone).",
+    "Stamp duration_s + inference_substrate + compute_bound at experiment WRITE-time (experiment_template.py) so the retro derives per-experiment timing and the compute-bound count independently of the commit-window detector -- it would have surfaced exp4544 as the one compute-bound task.",
+    "Capture per-experiment, device-attributed GPU telemetry (AMD iGPU + both 3090s) keyed to live_llm_inference tasks, so gpu_idle_on_compute_bound_tasks can resolve to true/false for a real compute-bound run (exp4544) instead of defaulting to null from a single post-hoc snapshot."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the shipped detector-repair into the RETRO prompt-assembly path (not just the standalone module) and assert injected==on-disk on .421 -- the load-bearing, thrice-recommended fix.",
+    "Write-time stamping of duration_s/inference_substrate/compute_bound in experiment_template.py so retros derive timing + compute-bound count even when the commit-window detector misses (would have surfaced exp4544 this milestone).",
+    "Device-attributed in-window GPU telemetry for live_llm_inference tasks so gpu_idle_on_compute_bound_tasks resolves true/false instead of null."
+  ],
+  "estimated_time_savings_pct": 4,
+  "meta_reflection": "Three retros running (.418/.419/.420), the injected detector has false-zeroed every time despite infra tasks shipping the repair into the module -- the unrepaired link is the conductor's retro prompt-assembly consumer, not the detector. The .420-specific danger sharpens the .419 warning: this is the first sprint milestone where a genuinely compute-bound task ran (exp4544 live_llm_inference), so a naive read of '0 compute-bound, GPUs idle' would mis-certify an executed, GPU-using milestone as a clean idle run. Fix the call site or the retro keeps mislabeling real execution as absence."
+}
