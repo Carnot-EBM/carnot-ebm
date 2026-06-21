@@ -9035,3 +9035,4 @@ c |
 | 2026-06-21 19:00 UTC | PHASE B1 (RESERVED INFRA) -- make generic_transfer | OK | 94 passed, 1 warning in 8.12s |
 | 2026-06-21 19:25 UTC | PHASE B2 (RESERVED INFRA) -- POSITIVE-CONTROL-FAIL | OK | 143 passed, 1 warning in 7.43s |
 | 2026-06-21 19:36 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.50s |
+| 2026-06-21 19:52 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 123 passed, 1 warning in 9.16s |
