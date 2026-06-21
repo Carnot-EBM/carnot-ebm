@@ -1,0 +1,1785 @@
+{
+  "barrier_refinement": "positive_control_failed: live Qwen proposer did not produce the known reachable fixture plan.",
+  "chosen_submitted_config": "unchanged",
+  "core_efficiency_baseline": 2.0074,
+  "core_efficiency_best": 2.0074,
+  "core_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33"
+  ],
+  "core_solves_preserved": true,
+  "deepest_level_reached_per_core_game": {
+    "llm_proposer": {
+      "lp85": 1,
+      "m0r0": 0,
+      "sp80": 0,
+      "vc33": 0
+    },
+    "offline_dsl_baseline": {
+      "lp85": 1,
+      "m0r0": 0,
+      "sp80": 0,
+      "vc33": 0
+    }
+  },
+  "duration_s": 231.2429809110472,
+  "efficiency_delta": 0.0,
+  "experiment": "experiment_4544_llm_proposer_reinduction",
+  "false_negative_risk_checked": false,
+  "field_principles": {
+    "barrier_refinement": "if no deeper CORE level is reached, the concrete actionable refinement of what the LLM plan still gets wrong.",
+    "chosen_submitted_config": "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); parity tests must stay consistent.",
+    "core_efficiency_baseline": "2.0074 -- the REAL per-level metric control, measured the SAME way as best.",
+    "core_efficiency_best": "the HEADLINE -- did the LLM proposer reach a deeper CORE level and raise core_efficiency.",
+    "core_solves_preserved": "HARD empirical gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve fails the lever.",
+    "deepest_level_reached_per_core_game": "best_level per CORE game per condition -- direct evidence of reaching MORE levels.",
+    "efficiency_delta": "core_efficiency_best - core_efficiency_baseline, emitted explicitly so a null delta is annotated.",
+    "false_negative_risk_checked": "a null is valid only if the positive control passed.",
+    "honest_verdict": "terminal prefix; e.g. success: llm_proposer_<game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: llm_proposer_no_deeper_level_proposer_value_characterized_honest_null.",
+    "inference_substrate": "live_llm_inference -- the Qwen3.5-9B-MTP generator is genuinely loaded + invoked (60s floor).",
+    "llm_proposer_value": "the count/rate of level-ups where the LLM proposer produced a REACHABLE plan the offline DSL could not.",
+    "model_specs": "names the generator actually invoked (Qwen3.5-9B-MTP GGUF + the resolved .gguf path).",
+    "null_delta_methodology_note": "present when efficiency_delta==0.0 -- states the equality is an honest no-deeper-level null, not a measurement bug.",
+    "offline_reproduced": "any new level reached must offline-reproduce to count.",
+    "positive_control_passed": "proves the LLM proposer can produce a reachable plan the DSL could not on a known-L2 game.",
+    "preconditions_checked": "records offline arcade, Qwen3.5-9B-MTP GGUF cache, and llama_cpp checks; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "refinement_rounds_used": "bounded counterexample-guided refinement rounds per level-up -- proves the loop ran and stayed bounded.",
+    "reproducibility_checksum": "content-addressed hash catches silent corpus/model drift on replay.",
+    "verifier_is_oracle": "false -- the world-model trust energy ranks candidates by held-out generalization, oracle-DISTINCT."
+  },
+  "honest_verdict": "complete: llm_proposer_positive_control_failed_false_negative_risk_open",
+  "inference_substrate": "live_llm_inference",
+  "live_invocation": {
+    "dsl_reachable_plan": false,
+    "duration_s": 45.052136,
+    "invoked": false,
+    "message": "local gguf (GPU server) failed: TimeoutError('timed out')",
+    "reachable_plan": false
+  },
+  "llm_proposer_measurement": {
+    "core_efficiency": 2.0069,
+    "deepest_level_by_game": {
+      "lp85": 1,
+      "m0r0": 0,
+      "sp80": 0,
+      "vc33": 0
+    },
+    "efficiency_by_game": {
+      "lp85": 2.0069,
+      "m0r0": 0.0,
+      "sp80": 0.0,
+      "vc33": 0.0
+    },
+    "measurement": "llm_proposer",
+    "per_game": [
+      {
+        "actions": 119,
+        "best_level": 1,
+        "diagnostics": {
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": null,
+            "energy": null,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 0,
+            "n_heldout": 1,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "counterexamples": [],
+              "dsl_transition_count": 1,
+              "dynamics_candidate_names": [],
+              "goal_candidate_names": [],
+              "goal_level": 2,
+              "model_specs": "Qwen3.5-9B-MTP GGUF (/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf)",
+              "plan_length": 0,
+              "planned": false,
+              "reason": "level_up_reinduction",
+              "refinement_rounds": [
+                {
+                  "action": "induce",
+                  "message": "local gguf (GPU server) failed: TimeoutError('timed out')",
+                  "proposer_ok": false,
+                  "round": 1,
+                  "skipped": "proposer_failed"
+                }
+              ],
+              "refinement_rounds_used": 1,
+              "selected_candidate_name": "",
+              "skipped": "proposer_failed",
+              "transition_count": 1,
+              "verifier_is_oracle": false
+            }
+          ],
+          "reinduction_events": [
+            {
+              "completed_level": 1,
+              "dsl_transition_start": 20,
+              "frames_seen": 21,
+              "next_goal_level": 2,
+              "transition_start": 20,
+              "trigger": "level_up"
+            }
+          ]
+        },
+        "efficiency": 2.0069,
+        "error": null,
+        "game": "lp85",
+        "level_up_actions": [
+          20
+        ],
+        "per_level": [
+          {
+            "agent_actions": 20,
+            "completed": true,
+            "human_actions": 17,
+            "level": 0
+          },
+          {
+            "agent_actions": 99,
+            "completed": false,
+            "human_actions": 38,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 31,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 16,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 41,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 60,
+            "level": 5
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 26,
+            "level": 6
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 159,
+            "level": 7
+          }
+        ],
+        "reached": 1,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 45.537581
+      },
+      {
+        "actions": 118,
+        "best_level": 0,
+        "diagnostics": {
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": 1.0,
+            "energy": 0.0,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 18,
+            "n_heldout": 25,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "dsl_transition_count": 25,
+              "goal_level": 1,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "planned": false,
+              "reason": "stall",
+              "skipped": "proposer_failed_or_missing_root",
+              "transition_count": 25
+            }
+          ],
+          "reinduction_events": []
+        },
+        "efficiency": 0.0,
+        "error": null,
+        "game": "m0r0",
+        "level_up_actions": [],
+        "per_level": [
+          {
+            "agent_actions": 118,
+            "completed": false,
+            "human_actions": 30,
+            "level": 0
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 111,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 203,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 26,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 500,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 237,
+            "level": 5
+          }
+        ],
+        "reached": 0,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 46.154375
+      },
+      {
+        "actions": 116,
+        "best_level": 0,
+        "diagnostics": {
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": 1.0,
+            "energy": 0.0,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 25,
+            "n_heldout": 25,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "dsl_transition_count": 25,
+              "goal_level": 1,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "planned": false,
+              "reason": "stall",
+              "skipped": "proposer_failed_or_missing_root",
+              "transition_count": 25
+            }
+          ],
+          "reinduction_events": []
+        },
+        "efficiency": 0.0,
+        "error": null,
+        "game": "sp80",
+        "level_up_actions": [],
+        "per_level": [
+          {
+            "agent_actions": 116,
+            "completed": false,
+            "human_actions": 39,
+            "level": 0
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 58,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 25,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 148,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 96,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 152,
+            "level": 5
+          }
+        ],
+        "reached": 0,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 45.79651
+      },
+      {
+        "actions": 117,
+        "best_level": 0,
+        "diagnostics": {
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": 1.0,
+            "energy": 0.0,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 25,
+            "n_heldout": 25,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "dsl_transition_count": 25,
+              "goal_level": 1,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "planned": false,
+              "reason": "stall",
+              "skipped": "proposer_failed_or_missing_root",
+              "transition_count": 25
+            }
+          ],
+          "reinduction_events": []
+        },
+        "efficiency": 0.0,
+        "error": null,
+        "game": "vc33",
+        "level_up_actions": [],
+        "per_level": [
+          {
+            "agent_actions": 117,
+            "completed": false,
+            "human_actions": 7,
+            "level": 0
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 18,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 44,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 61,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 131,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 34,
+            "level": 5
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 152,
+            "level": 6
+          }
+        ],
+        "reached": 0,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 45.625294
+      }
+    ],
+    "target_levels": 2
+  },
+  "llm_proposer_value": {
+    "count": 0,
+    "events": [],
+    "opportunities": 1,
+    "rate": 0.0
+  },
+  "measured_games": [
+    "lp85",
+    "m0r0"
+  ],
+  "measurements": [
+    {
+      "core_efficiency": 2.0069,
+      "deepest_level_by_game": {
+        "lp85": 1,
+        "m0r0": 0,
+        "sp80": 0,
+        "vc33": 0
+      },
+      "efficiency_by_game": {
+        "lp85": 2.0069,
+        "m0r0": 0.0,
+        "sp80": 0.0,
+        "vc33": 0.0
+      },
+      "measurement": "offline_dsl_baseline",
+      "per_game": [
+        {
+          "actions": 119,
+          "best_level": 1,
+          "diagnostics": {
+            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": null,
+              "energy": null,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 0,
+              "n_heldout": 1,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "counterexamples": [],
+                "dsl_transition_count": 1,
+                "dynamics_candidate_names": [],
+                "goal_candidate_names": [],
+                "goal_level": 2,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "plan_length": 0,
+                "planned": false,
+                "reason": "level_up_reinduction",
+                "refinement_rounds": [
+                  {
+                    "action": "induce",
+                    "proposer_ok": false,
+                    "round": 1,
+                    "skipped": "proposer_failed"
+                  }
+                ],
+                "refinement_rounds_used": 1,
+                "selected_candidate_name": "",
+                "skipped": "proposer_failed",
+                "transition_count": 1,
+                "verifier_is_oracle": false
+              }
+            ],
+            "model_specs": "offline_dsl_induction_no_llm",
+            "navigation": {
+              "exact_shortest_path_hits": 0,
+              "forward_edges_recorded": 32,
+              "forward_navigation_steps": 0,
+              "forward_walk_hit_rate": 0.0,
+              "forward_walk_hits": 0,
+              "navigation_attempts": 0,
+              "partial_forward_walk_hits": 0,
+              "reset_replay_fallbacks": 0,
+              "reset_replay_steps": 0
+            },
+            "reinduction_events": [
+              {
+                "completed_level": 1,
+                "dsl_transition_start": 20,
+                "frames_seen": 21,
+                "next_goal_level": 2,
+                "transition_start": 20,
+                "trigger": "level_up"
+              }
+            ]
+          },
+          "efficiency": 2.0069,
+          "error": null,
+          "game": "lp85",
+          "level_up_actions": [
+            20
+          ],
+          "per_level": [
+            {
+              "agent_actions": 20,
+              "completed": true,
+              "human_actions": 17,
+              "level": 0
+            },
+            {
+              "agent_actions": 99,
+              "completed": false,
+              "human_actions": 38,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 31,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 16,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 41,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 60,
+              "level": 5
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 26,
+              "level": 6
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 159,
+              "level": 7
+            }
+          ],
+          "reached": 1,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 1.528664
+        },
+        {
+          "actions": 118,
+          "best_level": 0,
+          "diagnostics": {
+            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": 1.0,
+              "energy": 0.0,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 18,
+              "n_heldout": 25,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "dsl_transition_count": 25,
+                "goal_level": 1,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "planned": false,
+                "reason": "stall",
+                "skipped": "proposer_failed_or_missing_root",
+                "transition_count": 25
+              }
+            ],
+            "model_specs": "offline_dsl_induction_no_llm",
+            "navigation": {
+              "exact_shortest_path_hits": 0,
+              "forward_edges_recorded": 90,
+              "forward_navigation_steps": 0,
+              "forward_walk_hit_rate": 0.0,
+              "forward_walk_hits": 0,
+              "navigation_attempts": 1,
+              "partial_forward_walk_hits": 0,
+              "reset_replay_fallbacks": 1,
+              "reset_replay_steps": 0
+            },
+            "reinduction_events": []
+          },
+          "efficiency": 0.0,
+          "error": null,
+          "game": "m0r0",
+          "level_up_actions": [],
+          "per_level": [
+            {
+              "agent_actions": 118,
+              "completed": false,
+              "human_actions": 30,
+              "level": 0
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 111,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 203,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 26,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 500,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 237,
+              "level": 5
+            }
+          ],
+          "reached": 0,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 2.191106
+        },
+        {
+          "actions": 116,
+          "best_level": 0,
+          "diagnostics": {
+            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": 1.0,
+              "energy": 0.0,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 25,
+              "n_heldout": 25,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "dsl_transition_count": 25,
+                "goal_level": 1,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "planned": false,
+                "reason": "stall",
+                "skipped": "proposer_failed_or_missing_root",
+                "transition_count": 25
+              }
+            ],
+            "model_specs": "offline_dsl_induction_no_llm",
+            "navigation": {
+              "exact_shortest_path_hits": 0,
+              "forward_edges_recorded": 112,
+              "forward_navigation_steps": 0,
+              "forward_walk_hit_rate": 0.0,
+              "forward_walk_hits": 0,
+              "navigation_attempts": 3,
+              "partial_forward_walk_hits": 0,
+              "reset_replay_fallbacks": 3,
+              "reset_replay_steps": 0
+            },
+            "reinduction_events": []
+          },
+          "efficiency": 0.0,
+          "error": null,
+          "game": "sp80",
+          "level_up_actions": [],
+          "per_level": [
+            {
+              "agent_actions": 116,
+              "completed": false,
+              "human_actions": 39,
+              "level": 0
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 58,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 25,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 148,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 96,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 152,
+              "level": 5
+            }
+          ],
+          "reached": 0,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 2.181025
+        },
+        {
+          "actions": 117,
+          "best_level": 0,
+          "diagnostics": {
+            "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": 1.0,
+              "energy": 0.0,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 25,
+              "n_heldout": 25,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "dsl_transition_count": 25,
+                "goal_level": 1,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "planned": false,
+                "reason": "stall",
+                "skipped": "proposer_failed_or_missing_root",
+                "transition_count": 25
+              }
+            ],
+            "model_specs": "offline_dsl_induction_no_llm",
+            "navigation": {
+              "exact_shortest_path_hits": 0,
+              "forward_edges_recorded": 116,
+              "forward_navigation_steps": 0,
+              "forward_walk_hit_rate": 0.0,
+              "forward_walk_hits": 0,
+              "navigation_attempts": 2,
+              "partial_forward_walk_hits": 0,
+              "reset_replay_fallbacks": 2,
+              "reset_replay_steps": 0
+            },
+            "reinduction_events": []
+          },
+          "efficiency": 0.0,
+          "error": null,
+          "game": "vc33",
+          "level_up_actions": [],
+          "per_level": [
+            {
+              "agent_actions": 117,
+              "completed": false,
+              "human_actions": 7,
+              "level": 0
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 18,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 44,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 61,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 131,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 34,
+              "level": 5
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 152,
+              "level": 6
+            }
+          ],
+          "reached": 0,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 1.653658
+        }
+      ],
+      "target_levels": 2
+    },
+    {
+      "core_efficiency": 2.0069,
+      "deepest_level_by_game": {
+        "lp85": 1,
+        "m0r0": 0,
+        "sp80": 0,
+        "vc33": 0
+      },
+      "efficiency_by_game": {
+        "lp85": 2.0069,
+        "m0r0": 0.0,
+        "sp80": 0.0,
+        "vc33": 0.0
+      },
+      "measurement": "llm_proposer",
+      "per_game": [
+        {
+          "actions": 119,
+          "best_level": 1,
+          "diagnostics": {
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": null,
+              "energy": null,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 0,
+              "n_heldout": 1,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "counterexamples": [],
+                "dsl_transition_count": 1,
+                "dynamics_candidate_names": [],
+                "goal_candidate_names": [],
+                "goal_level": 2,
+                "model_specs": "Qwen3.5-9B-MTP GGUF (/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf)",
+                "plan_length": 0,
+                "planned": false,
+                "reason": "level_up_reinduction",
+                "refinement_rounds": [
+                  {
+                    "action": "induce",
+                    "message": "local gguf (GPU server) failed: TimeoutError('timed out')",
+                    "proposer_ok": false,
+                    "round": 1,
+                    "skipped": "proposer_failed"
+                  }
+                ],
+                "refinement_rounds_used": 1,
+                "selected_candidate_name": "",
+                "skipped": "proposer_failed",
+                "transition_count": 1,
+                "verifier_is_oracle": false
+              }
+            ],
+            "reinduction_events": [
+              {
+                "completed_level": 1,
+                "dsl_transition_start": 20,
+                "frames_seen": 21,
+                "next_goal_level": 2,
+                "transition_start": 20,
+                "trigger": "level_up"
+              }
+            ]
+          },
+          "efficiency": 2.0069,
+          "error": null,
+          "game": "lp85",
+          "level_up_actions": [
+            20
+          ],
+          "per_level": [
+            {
+              "agent_actions": 20,
+              "completed": true,
+              "human_actions": 17,
+              "level": 0
+            },
+            {
+              "agent_actions": 99,
+              "completed": false,
+              "human_actions": 38,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 31,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 16,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 41,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 60,
+              "level": 5
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 26,
+              "level": 6
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 159,
+              "level": 7
+            }
+          ],
+          "reached": 1,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 45.537581
+        },
+        {
+          "actions": 118,
+          "best_level": 0,
+          "diagnostics": {
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": 1.0,
+              "energy": 0.0,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 18,
+              "n_heldout": 25,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "dsl_transition_count": 25,
+                "goal_level": 1,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "planned": false,
+                "reason": "stall",
+                "skipped": "proposer_failed_or_missing_root",
+                "transition_count": 25
+              }
+            ],
+            "reinduction_events": []
+          },
+          "efficiency": 0.0,
+          "error": null,
+          "game": "m0r0",
+          "level_up_actions": [],
+          "per_level": [
+            {
+              "agent_actions": 118,
+              "completed": false,
+              "human_actions": 30,
+              "level": 0
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 111,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 203,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 26,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 500,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 237,
+              "level": 5
+            }
+          ],
+          "reached": 0,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 46.154375
+        },
+        {
+          "actions": 116,
+          "best_level": 0,
+          "diagnostics": {
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": 1.0,
+              "energy": 0.0,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 25,
+              "n_heldout": 25,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "dsl_transition_count": 25,
+                "goal_level": 1,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "planned": false,
+                "reason": "stall",
+                "skipped": "proposer_failed_or_missing_root",
+                "transition_count": 25
+              }
+            ],
+            "reinduction_events": []
+          },
+          "efficiency": 0.0,
+          "error": null,
+          "game": "sp80",
+          "level_up_actions": [],
+          "per_level": [
+            {
+              "agent_actions": 116,
+              "completed": false,
+              "human_actions": 39,
+              "level": 0
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 58,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 25,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 148,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 96,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 152,
+              "level": 5
+            }
+          ],
+          "reached": 0,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 45.79651
+        },
+        {
+          "actions": 117,
+          "best_level": 0,
+          "diagnostics": {
+            "budget_exhausted": true,
+            "dsl_energy": {
+              "cell_accuracy": 1.0,
+              "dynamics_accuracy": 1.0,
+              "energy": 0.0,
+              "energy_exact": 0.0,
+              "n_changed_transitions": 25,
+              "n_heldout": 25,
+              "transition_exact_rate": 1.0
+            },
+            "goal_bias": {
+              "enabled": false,
+              "errors": 0,
+              "label": "",
+              "lower_is_better": false,
+              "nodes_scored": 0
+            },
+            "induction_attempts": [
+              {
+                "dsl_transition_count": 25,
+                "goal_level": 1,
+                "model_specs": "offline_dsl_induction_no_llm",
+                "planned": false,
+                "reason": "stall",
+                "skipped": "proposer_failed_or_missing_root",
+                "transition_count": 25
+              }
+            ],
+            "reinduction_events": []
+          },
+          "efficiency": 0.0,
+          "error": null,
+          "game": "vc33",
+          "level_up_actions": [],
+          "per_level": [
+            {
+              "agent_actions": 117,
+              "completed": false,
+              "human_actions": 7,
+              "level": 0
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 18,
+              "level": 1
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 44,
+              "level": 2
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 61,
+              "level": 3
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 131,
+              "level": 4
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 34,
+              "level": 5
+            },
+            {
+              "agent_actions": 0,
+              "completed": false,
+              "human_actions": 152,
+              "level": 6
+            }
+          ],
+          "reached": 0,
+          "segment_to_l2": [],
+          "target_levels": 2,
+          "wall_seconds": 45.625294
+        }
+      ],
+      "target_levels": 2
+    }
+  ],
+  "model_specs": "Qwen3.5-9B-MTP GGUF (/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf)",
+  "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; not a measurement bug.",
+  "offline_dsl_baseline": {
+    "core_efficiency": 2.0069,
+    "deepest_level_by_game": {
+      "lp85": 1,
+      "m0r0": 0,
+      "sp80": 0,
+      "vc33": 0
+    },
+    "efficiency_by_game": {
+      "lp85": 2.0069,
+      "m0r0": 0.0,
+      "sp80": 0.0,
+      "vc33": 0.0
+    },
+    "measurement": "offline_dsl_baseline",
+    "per_game": [
+      {
+        "actions": 119,
+        "best_level": 1,
+        "diagnostics": {
+          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": null,
+            "energy": null,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 0,
+            "n_heldout": 1,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "counterexamples": [],
+              "dsl_transition_count": 1,
+              "dynamics_candidate_names": [],
+              "goal_candidate_names": [],
+              "goal_level": 2,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "plan_length": 0,
+              "planned": false,
+              "reason": "level_up_reinduction",
+              "refinement_rounds": [
+                {
+                  "action": "induce",
+                  "proposer_ok": false,
+                  "round": 1,
+                  "skipped": "proposer_failed"
+                }
+              ],
+              "refinement_rounds_used": 1,
+              "selected_candidate_name": "",
+              "skipped": "proposer_failed",
+              "transition_count": 1,
+              "verifier_is_oracle": false
+            }
+          ],
+          "model_specs": "offline_dsl_induction_no_llm",
+          "navigation": {
+            "exact_shortest_path_hits": 0,
+            "forward_edges_recorded": 32,
+            "forward_navigation_steps": 0,
+            "forward_walk_hit_rate": 0.0,
+            "forward_walk_hits": 0,
+            "navigation_attempts": 0,
+            "partial_forward_walk_hits": 0,
+            "reset_replay_fallbacks": 0,
+            "reset_replay_steps": 0
+          },
+          "reinduction_events": [
+            {
+              "completed_level": 1,
+              "dsl_transition_start": 20,
+              "frames_seen": 21,
+              "next_goal_level": 2,
+              "transition_start": 20,
+              "trigger": "level_up"
+            }
+          ]
+        },
+        "efficiency": 2.0069,
+        "error": null,
+        "game": "lp85",
+        "level_up_actions": [
+          20
+        ],
+        "per_level": [
+          {
+            "agent_actions": 20,
+            "completed": true,
+            "human_actions": 17,
+            "level": 0
+          },
+          {
+            "agent_actions": 99,
+            "completed": false,
+            "human_actions": 38,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 31,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 16,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 41,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 60,
+            "level": 5
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 26,
+            "level": 6
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 159,
+            "level": 7
+          }
+        ],
+        "reached": 1,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 1.528664
+      },
+      {
+        "actions": 118,
+        "best_level": 0,
+        "diagnostics": {
+          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": 1.0,
+            "energy": 0.0,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 18,
+            "n_heldout": 25,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "dsl_transition_count": 25,
+              "goal_level": 1,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "planned": false,
+              "reason": "stall",
+              "skipped": "proposer_failed_or_missing_root",
+              "transition_count": 25
+            }
+          ],
+          "model_specs": "offline_dsl_induction_no_llm",
+          "navigation": {
+            "exact_shortest_path_hits": 0,
+            "forward_edges_recorded": 90,
+            "forward_navigation_steps": 0,
+            "forward_walk_hit_rate": 0.0,
+            "forward_walk_hits": 0,
+            "navigation_attempts": 1,
+            "partial_forward_walk_hits": 0,
+            "reset_replay_fallbacks": 1,
+            "reset_replay_steps": 0
+          },
+          "reinduction_events": []
+        },
+        "efficiency": 0.0,
+        "error": null,
+        "game": "m0r0",
+        "level_up_actions": [],
+        "per_level": [
+          {
+            "agent_actions": 118,
+            "completed": false,
+            "human_actions": 30,
+            "level": 0
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 111,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 203,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 26,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 500,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 237,
+            "level": 5
+          }
+        ],
+        "reached": 0,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 2.191106
+      },
+      {
+        "actions": 116,
+        "best_level": 0,
+        "diagnostics": {
+          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": 1.0,
+            "energy": 0.0,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 25,
+            "n_heldout": 25,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "dsl_transition_count": 25,
+              "goal_level": 1,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "planned": false,
+              "reason": "stall",
+              "skipped": "proposer_failed_or_missing_root",
+              "transition_count": 25
+            }
+          ],
+          "model_specs": "offline_dsl_induction_no_llm",
+          "navigation": {
+            "exact_shortest_path_hits": 0,
+            "forward_edges_recorded": 112,
+            "forward_navigation_steps": 0,
+            "forward_walk_hit_rate": 0.0,
+            "forward_walk_hits": 0,
+            "navigation_attempts": 3,
+            "partial_forward_walk_hits": 0,
+            "reset_replay_fallbacks": 3,
+            "reset_replay_steps": 0
+          },
+          "reinduction_events": []
+        },
+        "efficiency": 0.0,
+        "error": null,
+        "game": "sp80",
+        "level_up_actions": [],
+        "per_level": [
+          {
+            "agent_actions": 116,
+            "completed": false,
+            "human_actions": 39,
+            "level": 0
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 58,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 25,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 148,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 96,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 152,
+            "level": 5
+          }
+        ],
+        "reached": 0,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 2.181025
+      },
+      {
+        "actions": 117,
+        "best_level": 0,
+        "diagnostics": {
+          "barrier_hint": "reinduction registered but offline DSL-only induction did not produce a reachable post-L1 plan",
+          "budget_exhausted": true,
+          "dsl_energy": {
+            "cell_accuracy": 1.0,
+            "dynamics_accuracy": 1.0,
+            "energy": 0.0,
+            "energy_exact": 0.0,
+            "n_changed_transitions": 25,
+            "n_heldout": 25,
+            "transition_exact_rate": 1.0
+          },
+          "goal_bias": {
+            "enabled": false,
+            "errors": 0,
+            "label": "",
+            "lower_is_better": false,
+            "nodes_scored": 0
+          },
+          "induction_attempts": [
+            {
+              "dsl_transition_count": 25,
+              "goal_level": 1,
+              "model_specs": "offline_dsl_induction_no_llm",
+              "planned": false,
+              "reason": "stall",
+              "skipped": "proposer_failed_or_missing_root",
+              "transition_count": 25
+            }
+          ],
+          "model_specs": "offline_dsl_induction_no_llm",
+          "navigation": {
+            "exact_shortest_path_hits": 0,
+            "forward_edges_recorded": 116,
+            "forward_navigation_steps": 0,
+            "forward_walk_hit_rate": 0.0,
+            "forward_walk_hits": 0,
+            "navigation_attempts": 2,
+            "partial_forward_walk_hits": 0,
+            "reset_replay_fallbacks": 2,
+            "reset_replay_steps": 0
+          },
+          "reinduction_events": []
+        },
+        "efficiency": 0.0,
+        "error": null,
+        "game": "vc33",
+        "level_up_actions": [],
+        "per_level": [
+          {
+            "agent_actions": 117,
+            "completed": false,
+            "human_actions": 7,
+            "level": 0
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 18,
+            "level": 1
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 44,
+            "level": 2
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 61,
+            "level": 3
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 131,
+            "level": 4
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 34,
+            "level": 5
+          },
+          {
+            "agent_actions": 0,
+            "completed": false,
+            "human_actions": 152,
+            "level": 6
+          }
+        ],
+        "reached": 0,
+        "segment_to_l2": [],
+        "target_levels": 2,
+        "wall_seconds": 1.653658
+      }
+    ],
+    "target_levels": 2
+  },
+  "offline_reproduced": false,
+  "offline_reproduction": {},
+  "positive_control": {
+    "dsl_reachable_plan": false,
+    "live_invocation_duration_s": 45.052136,
+    "passed": false,
+    "reachable_plan": false,
+    "source": "live_qwen_known_l2_fixture"
+  },
+  "positive_control_passed": false,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "llama_cpp_import": true,
+    "llama_cpp_version": "0.3.29",
+    "offline_arcade_import_smoke": true,
+    "ok": true,
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen3_5_9b_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "spec_has_req_4544": true
+  },
+  "random_seed": 4544,
+  "refinement_rounds_used": {
+    "lp85": [
+      1
+    ],
+    "m0r0": [],
+    "sp80": [],
+    "vc33": []
+  },
+  "reproducibility_checksum": "sha256:7a48265f4fb3065e07f5295bd85c65975f4bb2b915423858b5493aa0ec71d88e",
+  "requirements": [
+    "REQ-ARC-WMTE-4544"
+  ],
+  "result_path": "results/experiment_4544_llm_proposer_reinduction.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4544"
+  ],
+  "schema": "carnot.arc_llm_proposer_reinduction_4544.v1",
+  "submitted_agent_config_before": {
+    "cascade": true,
+    "frontier_batch_size": 1,
+    "graph_explore_budget": 80,
+    "lazy_value_top_k": 4,
+    "navigation_cost_tiebreak": false,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 1,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "verifier_is_oracle": false
+}

@@ -28,6 +28,10 @@ from typing import Any, Mapping, Optional, Sequence
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
+from carnot.agentic.arc_llm_reinduction import (
+    MAX_REFINEMENT_ROUNDS,
+    execute_bounded_llm_reinduction,
+)
 from carnot.agentic.arc_world_model_trust_energy import (
     HIDDEN_STATE_GAME_IDS,
     WorldModelCandidate,
@@ -1364,6 +1368,39 @@ class E3AgentPolicy:
             return
 
         try:
+            if attempt["reason"] == "level_up_reinduction":
+                self._fit_dsl_model()
+                outcome = execute_bounded_llm_reinduction(
+                    game=self.short,
+                    transitions=active_transitions,
+                    cell=self.cell,
+                    root_grid=self.root_grid,
+                    proposer=self._proposer(),
+                    candidate_provider=self._world_model_candidates,
+                    load_engine=e3.load_engine,
+                    plan_in_model=e3.plan_in_model,
+                    max_rounds=MAX_REFINEMENT_ROUNDS,
+                )
+                attempt.update(
+                    {
+                        "model_specs": outcome.model_specs,
+                        "planned": bool(outcome.planned),
+                        "skipped": outcome.skipped,
+                        "plan_length": len(outcome.plan),
+                        "selected_candidate_name": outcome.selected_candidate_name,
+                        "goal_candidate_names": list(outcome.goal_candidate_names),
+                        "dynamics_candidate_names": list(outcome.dynamics_candidate_names),
+                        "refinement_rounds_used": int(outcome.refinement_rounds_used),
+                        "refinement_rounds": list(outcome.rounds),
+                        "counterexamples": list(outcome.counterexamples),
+                        "verifier_is_oracle": bool(outcome.verifier_is_oracle),
+                    }
+                )
+                if outcome.goal_predicate is not None:
+                    self._install_goal_bias(outcome.goal_predicate)
+                if outcome.planned:
+                    self.plan = list(outcome.plan)
+                return
             self._fit_dsl_model()
             ok, _ = self._proposer().induce(self.short, active_transitions, self.cell)
             if not ok or self.root_grid is None:
