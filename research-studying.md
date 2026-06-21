@@ -4149,3 +4149,28 @@ budget control for ARC-AGI-3 (arXiv:2605.25931).
 
 flagged_for_v419: SoRB-style replay-buffer graph over StepwiseExplorer frontier nodes, with exact _shortest_path navigation costs, charged return prefixes, RESET fallback diagnostics, and the existing CORE median-action gate as the acceptance metric
 <!-- EXP4530-NAVIGATION-SEARCH-SOTA-END -->
+
+<!-- EXP4541-GOAL-ACQUISITION-SOTA-START -->
+## 2026-06-21 Exp 4541 - .419 goal-acquisition SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/arc-goal-acquisition-sota-419.md`
+and `results/experiment_4541_sota_ingestion_goal_acquisition.json`.
+
+**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
+reachability check succeeded; `scripts/sweep_clusters.py` clusters 6 and 3
+emitted focused URLs; `scripts/sweep_semscholar.py` returned arXiv:2507.14172,
+arXiv:2603.20334, arXiv:2603.13372, and arXiv:2601.10904 with HTTP 429 on
+three focused queries; top sources were verified by arXiv abs-page HTTP 200 and
+low-concurrency WebSearch/WebFetch. `/deep-research` was not invoked. The .418
+navigation thread is superseded and was not re-ingested. No live solve,
+training run, leaderboard submission, ops/status/traceability edit, or
+`scripts/research_conductor.py` edit occurred.
+
+**Methods marked ingested:** Family-B executable world-model re-induction
+(arXiv:2605.05138, arXiv:2603.24621), refinement-loop program synthesis
+(arXiv:2601.10904, arXiv:2507.14172), adaptive behavior-test goal-shift
+detection (arXiv:2512.22336, arXiv:2604.08792), and neural-guided DSL/library
+induction for reusable level predicates (arXiv:2411.17708, arXiv:2310.19791).
+
+flagged_for_v420: Family-B executable re-induction loop for each level-up, with separate GOAL-vs-dynamics candidates, adaptive behavior tests for goal-shift detection, and a bounded refinement loop around exp4533
+<!-- EXP4541-GOAL-ACQUISITION-SOTA-END -->

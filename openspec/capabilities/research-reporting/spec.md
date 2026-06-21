@@ -28152,6 +28152,85 @@ edit.
 |---|---|---|
 | REQ-REPORT-4530 | Planned (`python/carnot/experiment_4530_sota_ingestion_navigation_search.py`) | Planned (`tests/python/test_experiment_4530_sota_ingestion_navigation_search.py`) |
 
+### REQ-REPORT-4541: Ingest Goal-Acquisition SOTA Into The .420 Plan
+
+The Exp 4541 workflow SHALL write
+`docs/research-notes/arc-goal-acquisition-sota-419.md` with a
+machine-readable JSON artifact block followed by a concise SOTA-to-experiment
+mapping note. It SHALL read `AGENTS.md`, `CODEX.md`,
+`research-studying.md`, `research-references.md`, the per-level re-induction
+spec section `REQ-ARC-WMTE-4533`, and
+`results/experiment_4533_per_level_goal_reinduction.json`. It SHALL filter the
+already-discovered corpus to ARC goal-acquisition, per-level goal
+re-induction, goal-shift detection, Family-B executable world-model induction,
+and refinement-loop program synthesis. It SHALL run the reliable channel only:
+`scripts/sweep_clusters.py 6 --max-results 8`,
+`scripts/sweep_clusters.py 3 --max-results 8`, `scripts/sweep_semscholar.py`
+on focused goal/world-model/program-induction queries, and low-concurrency
+WebSearch/WebFetch over five to eight top arXiv sources. It SHALL verify
+`.venv/bin/python scripts/sweep_clusters.py --help` exits zero and
+`curl -sf -o /dev/null https://export.arxiv.org/api/query?search_query=all:test`
+exits zero before promoting citations. It SHALL NOT invoke `/deep-research`,
+SHALL NOT re-ingest the superseded `.418` navigation/SoRB thread, SHALL NOT
+launch live LLM inference, SHALL NOT launch training, SHALL NOT submit to the
+leaderboard, SHALL NOT claim a new ARC solve, SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The required runner SHALL be
+`results/experiment_4541_sota_ingestion_goal_acquisition.py` delegating to
+`python/carnot/experiment_4541_sota_ingestion_goal_acquisition.py`, and the
+workflow SHALL also write
+`results/experiment_4541_sota_ingestion_goal_acquisition.json`.
+
+The artifact SHALL include the required top-level fields `honest_verdict`,
+`inference_substrate`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `preconditions_checked`, `research_note_path`,
+`random_seed`, and `field_principles`. `honest_verdict` SHALL be
+terminal-prefixed and equal
+`complete: sota_ingestion_goal_acquisition_mapped` on the complete path.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`methods_mapped` SHALL contain three to five strongest methods with real
+arXiv-backed `source_ids`, a `takes_over_current_reinduction` field mapping
+onto the current Exp 4533 per-level re-induction mechanism, and a `fails_when`
+caveat. `citations_verified` SHALL provide one verified arXiv URL and title
+for every source ID used by the method claims and SHALL include arXiv IDs from
+the set `2603.24621`, `2605.05138`, `2601.10904`, `2507.14172`,
+`2512.22336`, `2604.08792`, `2411.17708`, and `2310.19791`.
+`flagged_for_next_roadmap` SHALL flag the strongest `.420` candidate.
+`field_principles` SHALL include one-line principles for every top-level
+artifact field, including the required terminal-prefix `honest_verdict`,
+aggregation-only `inference_substrate`, verifiable-citation
+`methods_mapped` and `citations_verified`, roadmap-closing
+`flagged_for_next_roadmap`, and resource-recording `preconditions_checked`
+principles.
+
+#### SCENARIO-REPORT-4541: Goal-Acquisition SOTA Maps To .420 Inputs
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, `REQ-ARC-WMTE-4533`, and the Exp 4533
+per-level goal re-induction artifact are readable
+**And** `scripts/sweep_clusters.py --help` and the arXiv API reachability check
+succeed
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4541 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps
+per-level/intra-episode GOAL induction, goal-shift detection, Family-B
+executable world-model induction, adaptive behavior-test repair, and
+refinement-loop program synthesis onto the current Exp 4533 re-induction
+mechanism, flags the strongest `.420` input, declares
+`aggregation_from_upstream_artifacts`, and records no `/deep-research`,
+navigation-thread re-ingestion, live inference, training, leaderboard
+submission, solve claim, ops/status/traceability edits, or
+`scripts/research_conductor.py` edit.
+
+## Implementation Status (REQ-REPORT-4541)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4541 | Implemented (`python/carnot/experiment_4541_sota_ingestion_goal_acquisition.py`) | Implemented (`tests/python/test_experiment_4541_sota_ingestion_goal_acquisition.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
