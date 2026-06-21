@@ -13,6 +13,7 @@ plus optional warmup_label and a hand verifier (goal-distance) for cold start.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -42,6 +43,137 @@ def _json_action_label(action: int, data: Optional[dict[str, int]] = None) -> st
     if data is not None:
         payload["data"] = {str(key): int(value) for key, value in data.items()}
     return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+
+def _level_data(game: Any, name: str) -> Any:
+    level = getattr(game, "current_level", None)
+    getter = getattr(level, "get_data", None)
+    if not callable(getter):
+        return None
+    try:
+        return getter(name)
+    except Exception:
+        return None
+
+
+def _maybe_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _frame_grid_state_key(frame: Any) -> tuple[Any, ...]:
+    if frame is None:
+        return ("grid", None)
+    try:
+        from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
+
+        return ("grid", frame_hash(grid_of(frame)))
+    except Exception:
+        pass
+    grid = getattr(frame, "grid", None)
+    if grid is None:
+        grid = getattr(frame, "observation", None)
+    if grid is None:
+        return ("grid", None, int(getattr(frame, "levels_completed", 0) or 0))
+    try:
+        import numpy as np
+
+        arr = np.asarray(grid)
+        return (
+            "grid",
+            tuple(int(item) for item in arr.shape),
+            str(arr.dtype),
+            hashlib.sha256(arr.tobytes()).hexdigest(),
+        )
+    except Exception:
+        return ("grid", repr(grid))
+
+
+def _register_key(registers: dict[str, Any]) -> tuple[tuple[str, str], ...]:
+    return tuple(
+        (str(key), json.dumps(value, sort_keys=True, separators=(",", ":"), default=str))
+        for key, value in sorted(registers.items(), key=lambda item: str(item[0]))
+    )
+
+
+def _sprite_color(sprite: Any) -> int | None:
+    pixels = getattr(sprite, "pixels", None)
+    if pixels is None:
+        return None
+    try:
+        import numpy as np
+
+        arr = np.asarray(pixels)
+        if arr.ndim >= 2 and arr.shape[0] > 1 and arr.shape[1] > 1:
+            return int(arr[1, 1])
+        values = [int(value) for value in arr.reshape(-1).tolist() if int(value) >= 0]
+        return values[0] if values else None
+    except Exception:
+        return None
+
+
+def _ft09_cycle_phase_rows(game: Any, color_cycle: tuple[int, ...]) -> tuple[tuple[Any, ...], ...]:
+    rows: list[tuple[Any, ...]] = []
+    sprites = list(getattr(game, "fhc", []) or []) + list(getattr(game, "mou", []) or [])
+    for sprite in sprites:
+        color = _sprite_color(sprite)
+        phase = color_cycle.index(color) if color in color_cycle else None
+        rows.append(
+            (
+                str(getattr(sprite, "name", "")),
+                int(getattr(sprite, "x", 0)),
+                int(getattr(sprite, "y", 0)),
+                color,
+                phase,
+            )
+        )
+    return tuple(sorted(rows))
+
+
+def hidden_state_registers(game_id: str, game: Any) -> dict[str, Any]:
+    """Readable hidden/HUD registers used by adapter state keys."""
+    if game_id == "ka59":
+        hud = getattr(game, "urgssjskot", None)
+        return {
+            "step_counter_current_steps": _maybe_int(getattr(hud, "current_steps", None)),
+            "step_counter_limit": _maybe_int(
+                getattr(hud, "koyyeuyzyr", None) or _level_data(game, "StepCounter")
+            ),
+        }
+    if game_id == "ar25":
+        hud = getattr(game, "lelsvjlwneo", None)
+        stack = getattr(game, "flqblmrxsla", None)
+        return {
+            "undo_stack_depth": len(stack) if isinstance(stack, list) else 0,
+            "step_counter_current_steps": _maybe_int(getattr(hud, "current_steps", None)),
+            "step_counter_limit": _maybe_int(
+                getattr(hud, "ilqnjlrnkk", None) or _level_data(game, "StepCounter")
+            ),
+        }
+    if game_id == "ft09":
+        raw_cycle = getattr(game, "gqb", None)
+        if raw_cycle is None:
+            raw_cycle = _level_data(game, "cwU")
+        color_cycle = tuple(int(item) for item in (raw_cycle or ()))
+        hud = getattr(game, "lpw", None)
+        return {
+            "color_cycle": color_cycle,
+            "cell_cycle_phases": _ft09_cycle_phase_rows(game, color_cycle),
+            "animation_ticks": _maybe_int(getattr(game, "our", None)),
+            "step_counter_current_steps": _maybe_int(getattr(hud, "dzy", None)),
+            "step_counter_limit": _maybe_int(getattr(hud, "oro", None)),
+        }
+    return {}
+
+
+def _hidden_state_key(game_id: str, game: Any, frame: Any = None) -> tuple[Any, ...]:
+    return (
+        int(getattr(frame, "levels_completed", 0) or 0) if frame is not None else None,
+        _frame_grid_state_key(frame),
+        _register_key(hidden_state_registers(game_id, game)),
+    )
 
 
 SP80_L1_LABELS: tuple[str, ...] = (
@@ -726,7 +858,132 @@ def _m0r0():
     )
 
 
+def _ar25():
+    """ar25 -- object reflection puzzle with hidden ACTION7 undo-stack state."""
+    from carnot import experiment_4339_e3_explore_verify_plan_ar25 as exp4339
+
+    l1_labels = tuple(exp4339.L1_SOLUTION_LABELS)
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        from carnot.agentic import arc_solver_kit as kit
+
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(l1_labels):
+            return [l1_labels[extension_index]]
+        if level >= 1:
+            return [str(action) for action in (1, 2, 3, 4, 5, 7)]
+        return []
+
+    def state_key(game, frame=None):
+        return _hidden_state_key("ar25", game, frame)
+
+    return GameAdapter(
+        game="ar25",
+        action_labels=action_labels,
+        apply=exp4339._apply_ar25_label,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
+        branch_mode="replay",
+    )
+
+
+def _ka59():
+    """ka59 -- push-block puzzle with a hidden bottom-row StepCounter HUD."""
+    from carnot import experiment_4350_e3_explore_verify_plan_ka59 as exp4350
+
+    l1_labels = tuple(exp4350.L1_SOLUTION_LABELS)
+
+    def _click_labels(game):
+        sprites = []
+        try:
+            sprites = list(game.current_level.get_sprites_by_tag("0022vrxelxosfy"))
+        except Exception:
+            sprites = []
+        return [f"C:{index}" for index in range(len(sprites))]
+
+    def action_labels(env, frame=None, path=None):
+        from carnot.agentic import arc_solver_kit as kit
+
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(l1_labels):
+            return [l1_labels[extension_index]]
+        if level >= 1:
+            return [*("1", "2", "3", "4"), *_click_labels(env._game)]
+        return []
+
+    def state_key(game, frame=None):
+        return _hidden_state_key("ka59", game, frame)
+
+    return GameAdapter(
+        game="ka59",
+        action_labels=action_labels,
+        apply=exp4350._apply_ka59_label,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
+        branch_mode="replay",
+    )
+
+
+def _ft09():
+    """ft09 -- local constraint puzzle with internal color-cycle state."""
+    from carnot import experiment_4363_e3_mechanic_limited_tails_tr87_ft09 as exp4363
+
+    l1_labels = tuple(exp4363._ft09_candidate_labels(exp4363.REPO))
+
+    def _click_labels(game):
+        labels: list[str] = []
+        for sprite in list(getattr(game, "fhc", []) or []) + list(getattr(game, "mou", []) or []):
+            labels.append(
+                _json_action_label(
+                    6,
+                    {
+                        "x": int(getattr(sprite, "x", 0)) + int(getattr(sprite, "width", 0)) // 2,
+                        "y": int(getattr(sprite, "y", 0)) + int(getattr(sprite, "height", 0)) // 2,
+                    },
+                )
+            )
+        return labels or list(l1_labels)
+
+    def action_labels(env, frame=None, path=None):
+        from carnot.agentic import arc_solver_kit as kit
+
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(l1_labels):
+            return [l1_labels[extension_index]]
+        if level >= 1:
+            return _click_labels(env._game)
+        return []
+
+    def state_key(game, frame=None):
+        return _hidden_state_key("ft09", game, frame)
+
+    return GameAdapter(
+        game="ft09",
+        action_labels=action_labels,
+        apply=exp4363._apply_ft09_label,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
+        branch_mode="replay",
+    )
+
+
 _BUILDERS = {
+    "ar25": _ar25,
+    "ft09": _ft09,
+    "ka59": _ka59,
     "su15": _su15,
     "sp80": _sp80,
     "lp85": _lp85,

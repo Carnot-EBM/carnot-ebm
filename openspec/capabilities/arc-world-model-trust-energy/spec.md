@@ -899,6 +899,59 @@ stalls before a reproducing next-level gate, the artifact SHALL use
 `complete: <game>_delta_identified_no_bank`, set `reproduced_levels=0`, preserve
 the dead-end evidence, and SHALL NOT increment `reproducible_total_levels`.
 
+### REQ-ARC-WMTE-4559: Hidden-Field State Key Probe
+
+Experiment 4559 SHALL extend the standing ARC offline search state key for
+`ka59`, `ar25`, and `ft09` from a visible grid-only key to a registered
+`(grid, hidden_fields)` key. The added hidden fields SHALL be read from the
+current offline environment internals at each state-key call, not hardcoded
+from registry constants: `ka59` SHALL include the live StepCounter HUD counter,
+`ar25` SHALL include the hidden ACTION7 undo-stack depth, and `ft09` SHALL
+include the local color-cycle register/order and current color-cycle phases.
+
+Experiment 4559 SHALL run the offline arcade precondition, attempt the L2
+deepening targets through the standing `OfflineSolver`/adapter route, and gate
+any claimed new level with `arc_solver_kit.reproduce()`. A no-bank null is valid
+only if a positive control demonstrates that the extended state key
+disambiguates at least one pair of states that the grid-only key aliases;
+otherwise the artifact SHALL report the specific unreadable register as a
+sharpened `GAP-ARCH-GRID-ONLY-STATE` blocker.
+
+Experiment 4559 SHALL write
+`results/experiment_4559_hidden_field_state_probe.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `hidden_fields_added`,
+`state_disambiguation_control_passed`, `false_negative_risk_checked`,
+`offline_reproduced`, `reproduced_levels`, `missing_verifier_gaps`,
+`registry_updated`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: hidden_field_state_<game>_L2_offline_reproduced OR complete: hidden_field_state_gap_sharpened_no_bank_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load."
+- `hidden_fields_added`: principle "the HUD/hidden registers added to the state_key per game (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE."
+- `state_disambiguation_control_passed`: principle "the POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; guards a no-op change; a no-bank null is valid only if this passed."
+- `false_negative_risk_checked`: principle "a no-bank null is valid only if the disambiguation positive control passed."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task."
+- `missing_verifier_gaps`: principle "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry."
+- `registry_updated`: principle "the per-game hidden-field findings + dead-ends persisted so the next attempt reuses."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4559: Hidden Registers Split Grid-Aliased States
+
+Given the offline arcade precondition passes and the `ka59`, `ar25`, and `ft09`
+adapters are registered
+When experiment 4559 computes a grid-only key and an extended adapter state key
+for same-frame state pairs that differ only in StepCounter, undo-stack depth, or
+color-cycle register state
+Then the grid-only keys are equal, the extended state keys differ, and a no-bank
+artifact sets `state_disambiguation_control_passed=true`,
+`false_negative_risk_checked=true`, and records the remaining unreadable
+register gap if no L2 reproduction gate passes.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
