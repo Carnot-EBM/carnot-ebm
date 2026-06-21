@@ -24042,3 +24042,47 @@ actions-to-solve on the 8-game gate (`scripts/kaggle/arc_local_submission_gate.p
 baseline 7760, driven down WITHOUT dropping solve-rate. No NEW arXiv refs beyond the
 above were required — the action-efficiency levers are engineering on the existing
 offline-search + lazy-value-head (.416 B2, 232x) + human-replay corpus stack.
+
+## 2026-06-21 — .419 planning sweep — REACH DEEPER LEVELS via per-level GOAL RE-INDUCTION (the real score lever; `core_efficiency`>2.0074, NOT action-trimming)
+
+Added by the `.419 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-21). The `.418
+scorecard (exp4531 capstone, `efficiency_moved: false`, `reproducible_total_levels: 50`): the
+`.418 navigation/action-trimming thread NULLED (A1 forward-walk: median actions stayed 7761.5 —
+a fixed transition-budget termination means navigation efficiency CANNOT cut the action count),
+but the `.418 A2 diagnosis (exp4524) located the REAL barrier to the score lever. New refs:
+
+- **ARC-AGI-3 = a GOAL-ACQUISITION benchmark (the .419 headline frame; arXiv:2603.24621,
+  ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence, 2026-03).** The official
+  benchmark paper names the required capabilities verbatim: agents must "explore, infer
+  goals, build internal models of environment dynamics, and plan effective action
+  sequences without explicit instructions" — and frontier systems score <1% (humans 100%).
+  This reframes the `.418 deeper-levels pivot: the L1->L2 wall the `.418 A2 diagnosis
+  surfaced (exp4524: `l2_win_condition_differs_from_l1: true`,
+  `known_l2_transition_in_salience: null`, induction does not engage post-level-up,
+  `SUBMITTED_TARGET_LEVELS=1`) IS a GOAL-ACQUISITION failure at the level boundary — the
+  agent acquires the L1 goal but never RE-ACQUIRES the (different) L2 goal. The score
+  metric `core_efficiency` (per-level `min((human/agent)^2*100,115)` index-weighted,
+  baseline 2.0074) rewards solving MORE/DEEPER levels, so per-level goal RE-INDUCTION is
+  the score lever. NOTE: this SUPERSEDES the `.418 SoRB/navigation ingestion thread
+  (1906.05253 Search-on-the-Replay-Buffer, 1901.10995 Go-Explore, 2004.12919 First-Return-
+  Then-Explore, 1810.02274 Episodic-Curiosity, 2602.00460 Search-Inspired-Exploration) —
+  the `.418 A1 forward-walk nav fix PROVED navigation/action-trimming is a dead score lever.
+  Navigation refs are parked, not active.
+
+- **ARC Prize 2025 Technical Report (arXiv:2601.10904) — refinement loops as the central
+  2025-2026 AGI-progress mechanism.** Frames the winning pattern as iterative
+  program->program refinement toward a goal under a feedback signal. Maps onto the Carnot
+  hybrid (Family-B executable world-model induction + energy verifier as the feedback
+  signal): a per-level goal RE-INDUCTION loop is exactly a refinement loop scoped to the
+  level boundary. Cross-ref the `.419 SOTA-ingestion task (PHASE D), which does the deep
+  per-level-goal-induction / intra-episode-goal-shift literature pass and files the
+  strongest 3-5 methods for `.420.
+
+The `.419 program (per-level GOAL RE-INDUCTION; the score lever = `core_efficiency`>2.0074) is
+shaped in `openspec/change-proposals/research-roadmap-vNEXT.md`. The barrier diagnosis (exp4524,
+`.418 A2, false-positive-flagged on a control==best null-delta TAUTOLOGY but content valid) is
+the load-bearing input; the `.419 A1 builds the re-induction the diagnosis prescribed
+(re-induce the L_{n+1} predicate after a level-up + route the frontier toward it + raise
+`target_levels`), A2 adds the oracle-distinct energy-trust routing toward predicted-deeper
+states, A5 persists the per-level induction primitive as reusable scaffolding (Tier-2
+self-learning + the ARC reuse discipline).
