@@ -1,93 +1,123 @@
 {
-  "experiment": "arc_ttt_loo_gate_probe",
-  "honest_verdict": "complete_ttt_loo_gate_warm_0_scratch_0_of_5",
+  "experiment": "arc_ttt_loo_gate_probe_v2_cellrecall",
+  "honest_verdict": "complete_ttt_loo_gate_exact_warm_0_cellrecall_warm_4_scratch_2_of_5",
   "trust_threshold": 0.5,
-  "metric": "WorldModelVerifier exact-grid-match accuracy on within-game held-out split",
-  "warm_gate_fires": 0,
-  "scratch_gate_fires": 0,
+  "exact_gate_fires_warm": 0,
+  "cell_recall_gate_fires_warm": 4,
+  "cell_recall_gate_fires_scratch": 2,
   "per_game": [
     {
       "game": "cd82",
       "n_tr": 134,
-      "warm": {
+      "exact_warm": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.3299
       },
-      "scratch": {
+      "cell_warm": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.3299
+      },
+      "cell_scratch": {
+        "gate": "FAIL",
+        "fired": false,
+        "exact": 0.0,
+        "cell_recall": 0.2481
       }
     },
     {
       "game": "ka59",
       "n_tr": 931,
-      "warm": {
+      "exact_warm": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.9119
       },
-      "scratch": {
-        "gate": "FAIL",
-        "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+      "cell_warm": {
+        "gate": "PASS",
+        "fired": true,
+        "exact": 0.0,
+        "cell_recall": 0.9119
+      },
+      "cell_scratch": {
+        "gate": "PASS",
+        "fired": true,
+        "exact": 0.0,
+        "cell_recall": 0.861
       }
     },
     {
       "game": "sc25",
       "n_tr": 215,
-      "warm": {
+      "exact_warm": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.7975
       },
-      "scratch": {
-        "gate": "FAIL",
-        "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+      "cell_warm": {
+        "gate": "PASS",
+        "fired": true,
+        "exact": 0.0,
+        "cell_recall": 0.7975
+      },
+      "cell_scratch": {
+        "gate": "PASS",
+        "fired": true,
+        "exact": 0.0,
+        "cell_recall": 0.5713
       }
     },
     {
       "game": "tn36",
       "n_tr": 249,
-      "warm": {
+      "exact_warm": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.8714
       },
-      "scratch": {
+      "cell_warm": {
+        "gate": "PASS",
+        "fired": true,
+        "exact": 0.0,
+        "cell_recall": 0.8714
+      },
+      "cell_scratch": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.1394
       }
     },
     {
       "game": "lp85",
       "n_tr": 418,
-      "warm": {
+      "exact_warm": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.5898
       },
-      "scratch": {
+      "cell_warm": {
+        "gate": "PASS",
+        "fired": true,
+        "exact": 0.0,
+        "cell_recall": 0.5856
+      },
+      "cell_scratch": {
         "gate": "FAIL",
         "fired": false,
-        "skip": null,
-        "heldout_acc": 0.0
+        "exact": 0.0,
+        "cell_recall": 0.3225
       }
     }
   ],
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "verifier_is_oracle": false,
-  "interpretation": "Gate must FIRE for the prior+TTT path to activate on a hidden game; if warm fires ~0/5 the path stays dormant on unseen games and the prior cannot move the 0.08 hidden score."
+  "interpretation": "If cell-recall-warm fires materially more than exact-warm AND more than cell-recall-scratch, the prior+TTT path can be ACTIVATED on unseen games by re-metricing the gate. Firing is necessary-not-sufficient: whether a plan BFS'd through a ~0.6-cell-recall model actually SOLVES (+ goal-induction) is the next gate signal, not settled here."
 }

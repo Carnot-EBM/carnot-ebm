@@ -310,11 +310,46 @@ class LiveTTTWorldModel:
         """Held-out transition accuracy of the LEARNED engine -- the input to the existing
         ``WorldModelVerifier`` 0.5 trust gate. ``held_out`` is a list of ``Transition``. The model
         EARNS trust only by predicting transitions it was not fit to (the same bar the LLM engine failed
-        at 0.0). Returns accuracy in [0, 1]."""
+        at 0.0). Returns EXACT-FULL-GRID-match accuracy in [0, 1].
+
+        CAVEAT (2026-06-21, the LOO gate probe): exact-full-grid match is ~0 for a 64x64 CNN dynamics
+        model that is ~55% changed-cell-accurate -- getting EVERY one of hundreds of changed cells right
+        across a full grid essentially never happens. So this metric gates the TTT path OUT on unseen games
+        (warm 0/5 on the LOO probe) even though the dynamics genuinely transferred. Use
+        ``trust_cell_recall`` as the granularity-matched alternative; see ``gated_engine_from_transitions``
+        ``trust_metric``."""
         from carnot.agentic.arc_executable_world_model import WorldModelVerifier
         if not held_out:
             return 0.0
         return float(WorldModelVerifier(held_out).score(self.engine).accuracy)
+
+    def trust_cell_recall(self, held_out: list) -> float:
+        """Mean CHANGED-CELL recall of the learned engine on held-out transitions -- the GRADED trust
+        metric matched to the CNN dynamics model's granularity. ``trust`` (exact-full-grid match) reads ~0
+        for a model that is genuinely 55%-cell-accurate, so it gates the path out; cell-recall reflects the
+        real prediction quality the prior actually improved (0.314 -> 0.5485 cross-game). Recall is computed
+        ONLY on the changed cells (next != input -- the hard part the dynamics must model); noop transitions
+        are correct by construction via the KEEP head and excluded. Returns mean recall in [0, 1].
+
+        Honest limitation: a model passing cell-recall 0.5 still mispredicts ~half the changed cells, so a
+        plan BFS'd through it can diverge from reality -- the live agent's execute-and-halt-on-divergence
+        loop (``plan_and_execute``) is the safety net, and whether plan-through-an-imperfect-model actually
+        SOLVES is a separate, unproven question from whether the gate fires."""
+        chg = [t for t in held_out
+               if not np.array_equal(np.asarray(t.grid), np.asarray(t.next_grid))]
+        if not chg:
+            return 0.0
+        recalls = []
+        for t in chg:
+            s = np.asarray(t.grid)
+            s2 = np.asarray(t.next_grid)
+            pred = np.asarray(self.engine(s, t.action, t.data))
+            if pred.shape != s2.shape:
+                recalls.append(0.0)
+                continue
+            m = s != s2
+            recalls.append(float((pred[m] == s2[m]).mean()))
+        return float(np.mean(recalls)) if recalls else 0.0
 
     # --- diagnostics --------------------------------------------------------------------------------
     def ttt_diagnostics(self) -> dict:
@@ -344,7 +379,7 @@ def _load_prior(prior_path: str) -> Any:
 def gated_engine_from_transitions(game: str, transitions: list, *,
                                   prior_path: str = "models/arc_dynamics_prior.pt",
                                   trust_threshold: float = 0.5, holdout_frac: float = 0.25,
-                                  dynamics_backend: str = "cnn"):
+                                  dynamics_backend: str = "cnn", trust_metric: str = "exact"):
     """Build a per-game world-model engine LEARNED from the played transitions, WARM-STARTED from the
     cross-game prior (models/arc_dynamics_prior.pt, the one that transfers 5/5), and GATED by held-out
     trust. Returns ``(engine, is_level_complete, diag)``.
@@ -367,9 +402,12 @@ def gated_engine_from_transitions(game: str, transitions: list, *,
     for t in train:
         ttt.observe_transition(t)
     ttt.fit_now()
-    acc = ttt.trust(held)
-    diag.update(heldout_accuracy=round(acc, 4), trust_threshold=trust_threshold)
-    if acc < trust_threshold:
+    acc = ttt.trust(held)                         # exact-full-grid match (the original, strict bar)
+    cell = ttt.trust_cell_recall(held)            # changed-cell recall (granularity-matched)
+    gate_value = cell if trust_metric == "cell_recall" else acc
+    diag.update(heldout_accuracy=round(acc, 4), heldout_cell_recall=round(cell, 4),
+                trust_threshold=trust_threshold, trust_metric=trust_metric)
+    if gate_value < trust_threshold:
         diag["gate"] = "FAIL"
         return None, None, diag
     for t in held:  # gate passed -> refit on ALL transitions for the final engine
