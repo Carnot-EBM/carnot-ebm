@@ -1,0 +1,290 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "efficiency_moved",
+        "generic_transfer_moved",
+        "reinduction_retired",
+        "reproducible_total_levels",
+        "scorecard"
+      ],
+      "path": "results/experiment_4566_capstone_v421.json",
+      "sha256": "9ae9082be10c006287987738c2e8112067c55566f910ae2ae3966c66a474191a",
+      "source": "experiment_4566_capstone_v421"
+    },
+    {
+      "fields_imported": [
+        "generic_transfer_delta",
+        "random_router_control_passed",
+        "false_negative_risk_checked",
+        "flagged_adversarial"
+      ],
+      "path": "results/experiment_4556_verifier_router_generic_transfer.json",
+      "sha256": "3dc1c80112b5d335100c33e7691b8741ebcb187988e8ef0fbd8721dcb083a0b4",
+      "source": "experiment_4556_verifier_router_generic_transfer"
+    },
+    {
+      "fields_imported": [
+        "flagged_adversarial",
+        "adversarial_flags",
+        "core_efficiency_integrated"
+      ],
+      "path": "results/experiment_4560_integration_8game_gate.json",
+      "sha256": "263cad113f896da966de39d9623d145ae1dad232035f2c8e889ca6a4a9ea2a46",
+      "source": "experiment_4560_integration_8game_gate"
+    },
+    {
+      "fields_imported": [
+        "transfer_results",
+        "transfer_dead_ends",
+        "new_levels_banked",
+        "offline_reproduced"
+      ],
+      "path": "results/experiment_4561_primitive_persist_transfer.json",
+      "sha256": "65b7a3b86377a1d1654cd91aa30eed078d829f1c8bc253899e2a58086c275faf",
+      "source": "experiment_4561_primitive_persist_transfer"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "b529d60725875c1a525293c8d53c24a96c8267a7398df844716d65115315d2de",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_421": {
+    "a1_verifier_router": {
+      "false_negative_risk_checked": false,
+      "flagged_adversarial": true,
+      "flagged_and_excluded": true,
+      "generic_transfer_ci": [
+        0.0,
+        0.0
+      ],
+      "generic_transfer_delta": 0.0,
+      "generic_transfer_rate_baseline": 0.04,
+      "random_router_control_passed": false,
+      "status": "false_negative_risk_open",
+      "value_added": false
+    },
+    "a2_reinduction": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_best": null,
+      "false_negative_risk_checked": false,
+      "false_negative_risk_open": true,
+      "positive_control_passed": false,
+      "reinduction_retired": true,
+      "retired_reason": "fourth_reinduction_attempt_failed_positive_control_no_efficiency_claim_valid",
+      "status": "false_negative_risk_open"
+    },
+    "a3_levelup_attempt": {
+      "already_banked": true,
+      "new_levels_banked": 0,
+      "offline_reproduced": true,
+      "status": "no_new_level_banked",
+      "target_game": "m0r0",
+      "target_level": 2
+    },
+    "a4_hidden_state_probe": {
+      "new_levels_banked": 0,
+      "offline_reproduced": false,
+      "status": "no_new_level_banked"
+    },
+    "a5_integration": {
+      "core_efficiency_integrated": null,
+      "duration_too_short_flagged": true,
+      "false_negative_risk_checked": true,
+      "flagged_adversarial": true,
+      "flagged_and_excluded": true,
+      "integrated_metric_improved": false,
+      "status": "false_negative_risk_open"
+    },
+    "a6_transfer": {
+      "candidate_pool_contains_winner": false,
+      "new_levels_banked": 0,
+      "offline_reproduced_new_level": false,
+      "ordering_gain": 0,
+      "root_cause": "winning_candidate_never_in_pool",
+      "status": "transfer_null",
+      "transfer_dead_ends": {
+        "sc25": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+        "tr87": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null.",
+        "tu93": "persisted verifier-router ranking was applied, but no cached candidate reached the offline reproduction gate, so ordering gain is unmeasurable/value-null."
+      },
+      "transfer_games": [
+        "tu93",
+        "tr87",
+        "sc25"
+      ],
+      "transfer_value_per_game": {
+        "sc25": {
+          "best_candidate_id": "verifier",
+          "candidate_count": 3,
+          "operator": "verifier_router_candidate_ranking_operator",
+          "ordering_gain": 0,
+          "target_rank_after": null,
+          "target_rank_before": null,
+          "value_added": false
+        },
+        "tr87": {
+          "best_candidate_id": "verifier",
+          "candidate_count": 3,
+          "operator": "verifier_router_candidate_ranking_operator",
+          "ordering_gain": 0,
+          "target_rank_after": null,
+          "target_rank_before": null,
+          "value_added": false
+        },
+        "tu93": {
+          "best_candidate_id": "verifier",
+          "candidate_count": 3,
+          "operator": "verifier_router_candidate_ranking_operator",
+          "ordering_gain": 0,
+          "target_rank_after": null,
+          "target_rank_before": null,
+          "value_added": false
+        }
+      }
+    },
+    "b1_generic_transfer_coheadline": {
+      "generic_transfer_ci": [
+        0.0,
+        0.1
+      ],
+      "generic_transfer_rate_over_variants": 0.04,
+      "reproducible_total_levels": 52,
+      "status": "clean_generic_transfer_coheadline"
+    },
+    "core_efficiency_plateau": {
+      "core_efficiency": 2.0074,
+      "milestone_count": 4,
+      "milestones": [
+        "2026.06.418",
+        "2026.06.419",
+        "2026.06.420",
+        "2026.06.421"
+      ]
+    },
+    "efficiency_moved": false,
+    "generic_transfer_moved": false,
+    "net_421": {
+      "efficiency_moved": false,
+      "generic_transfer_moved": false,
+      "reinduction_retired": true,
+      "score_lever_to_build_next": "action_efficiency_candidate_generation",
+      "solve_capability_grew": false
+    },
+    "reinduction_retired": true,
+    "reproducible_total_levels": 52,
+    "reproducible_total_levels_delta": {
+      "a3_new_levels_banked": 0,
+      "a4_new_levels_banked": 0,
+      "a6_new_levels_banked": 0,
+      "capability_grew": false,
+      "current_total": 52,
+      "delta": 0,
+      "prior_total": 52
+    },
+    "source_a1_honest_verdict": "complete: verifier_router_no_value_added_honest_null_gap_sharpened",
+    "source_a5_honest_verdict": "complete: no_lever_raises_a_metric_honest_null",
+    "source_a6_honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+    "source_capstone_honest_verdict": "complete: verifier_router_null_reinduction_retired_or_refined"
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4567_archive_421_activate_422",
+  "experiment_id": 4567,
+  "field_provenance": {
+    "close_state_421": {
+      "principle": "the honest .421 numbers (verifier-router null + failed control; re-induction RETIRED; A6 winner-not-in-pool root cause; core_efficiency 2.0074 x4; generic_transfer 0.04; reproducible_total_levels=52) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    }
+  },
+  "honest_verdict": "complete: archive_421_activate_422_true_close_state_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "a1_verifier_router": {
+      "available": true,
+      "path": "results/experiment_4556_verifier_router_generic_transfer.json"
+    },
+    "a5_integration": {
+      "available": true,
+      "path": "results/experiment_4560_integration_8game_gate.json"
+    },
+    "a6_transfer": {
+      "available": true,
+      "path": "results/experiment_4561_primitive_persist_transfer.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.422",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "capstone_4566": {
+      "available": true,
+      "path": "results/experiment_4566_capstone_v421.json"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 52
+    },
+    "research_complete_yaml": {
+      "available": true,
+      "contains_2026_06_421": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "available": false,
+      "milestone": null,
+      "note": "literal precondition unavailable; accepted only when active research-roadmap.yaml is parseable at 2026.06.422",
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4567_archive_421_activate_422.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n88 passed, 1 warning in 5.51s\n"
+    }
+  },
+  "random_seed": 4567,
+  "reproducibility_checksum": "sha256:76db335283883c6997cfe896a0a56f0ef9afb3e948cbe62f857f9d7f9f6f259d",
+  "schema": "carnot.archive_activation.v421_to_v422_4567.v1",
+  "transition": {
+    "activated_milestone": "2026.06.422",
+    "activation_state": "already_active_roadmap_next_consumed",
+    "active_milestone_confirmed": true,
+    "archive_state": "research_complete_contains_2026.06.421",
+    "archived_milestone": "2026.06.421"
+  }
+}
