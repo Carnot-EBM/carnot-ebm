@@ -42,22 +42,52 @@ VRAM to the equally-scarce RAM) becomes unnecessary.
 Those fixes are NOT wasted — the corpus leak and the npz-decompression bug were correctness defects
 that would bite at any memory size; they just stop being load-bearing.
 
-## Current state + what to verify before flipping it
+## WIRED 2026-06-21 (operator-directed) — `"machine_shape": "NvidiaL4"`
 
-- **Our kernels currently request NO `machine_shape`** — every `kernel-metadata.json` has only
-  `"enable_gpu": true`, which yields the DEFAULT (P100, 16 GB). We are not requesting the upgrade.
-- To upgrade the scored submission, add `"machine_shape": "<L4 id>"` to
-  `scripts/kaggle/submission_kernel/kernel-metadata.json`.
-- **Three things to confirm in the live Kaggle UI / competition rules before relying on it** (the
-  competition page is JS-rendered; WebFetch couldn't read the dynamic content):
-  1. The **exact identifier** for the 4×L4 config. The CLI docs list `NvidiaL4` and `NvidiaL4X1`;
-     the competition calls it "L4x4". Confirm whether `NvidiaL4` IS the x4 config or there is a
-     distinct x4 string, by selecting it once in the notebook UI and reading back the metadata.
-  2. **Scoring fidelity** — ARC submissions re-run YOUR notebook, so the accelerator set on the
-     notebook should be what scoring uses (unlike pinned code-competition envs). Confirm on the
-     competition's submission-rules page.
-  3. **Quota math** — L4x4 burns GPU quota 2×; a 12 h submission run is a large quota draw. Check
-     the weekly GPU-hour budget against planned submission count before the June-30 milestone.
+Added to `scripts/kaggle/submission_kernel/kernel-metadata.json` (the scored kernel). Confirmed
+correct on every axis by the operator + a 3-agent verification workflow + the installed kaggle-cli
+source:
+
+- **Field name `machine_shape` (CERTAIN).** The JSON key is `machine_shape`, NOT `accelerator`.
+  Verified in the installed kaggle-cli source `kaggle/api/kaggle_api_extended.py:4649`:
+  `request.machine_shape = acc if acc else get_or_default(meta_data, "machine_shape", None)`.
+  `--accelerator` is the *CLI flag* that overrides it; an `"accelerator"` JSON key would be
+  silently ignored (`get_or_default` → None → default P100) — a silent failure on the scored run.
+- **Value `NvidiaL4` (the 4×L4 upgrade).** The bare base name provisions the competition's multi-GPU
+  default (96 GB total / 24 GB per card), by direct analogy to the documented T4x2 precedent
+  (kaggle-cli issue #821: bare `NvidiaTeslaT4` → 2×T4). REJECT `NvidiaL4X1` (that is explicitly
+  1×L4). Do NOT use `NvidiaL4X4` — it is NOT in the kaggle-cli accelerator enum and would 400.
+- **sm_89 binary coverage (PROVEN).** The bundled `libggml-cuda.so` is built with
+  `CUDA_ARCHS="60;75;89;89-virtual"` (scripts/kaggle/kernel/main.py:27) and direct `cuobjdump`
+  inspection of the v7 artifact shows native sm_89 SASS + compute_89 PTX. So the LLM generator loads
+  at full speed on L4 — no hard-fail. The 24 GB L4 strictly RELAXES the VRAM/OOM risk vs the 16 GB
+  P100/T4 (so MTP-off may no longer be necessary on L4 — re-evaluate `CARNOT_ARC_MTP`).
+- **Scoring honors the choice (operator-confirmed).** The scoring engine pulls the hardware profile
+  from the submission notebook's last saved commit / pushed metadata; with internet disabled the
+  hidden test set runs on the chosen L4x4 tier.
+- **Quota (operator-confirmed).** L4x4 burns GPU quota 2×: a full 12 h run subtracts ~24 h from the
+  weekly allowance. Verify weekly runway before a long submission so it doesn't terminate early.
+
+### One ground-truth check remaining (medium→high confidence closer)
+
+The identifier confidence is "medium" only because the live ARC upgraded-accelerators page is
+JS/login-gated (un-fetchable headlessly) and there is no client-side enum to validate against. The
+definitive check, when convenient: in the Kaggle UI set one notebook to the L4x4 accelerator, then
+`kaggle kernels pull <that-notebook> -m` and read the `machine_shape` Kaggle itself wrote. Expected:
+`NvidiaL4`. (Not blocking — both the operator and the T4x2 precedent already point to `NvidiaL4`.)
+
+### Optional follow-ups (operator's call — not done, to respect the explicit "submission kernel" scope)
+
+- **dryrun_kernel + agent_dryrun_kernel**: SHOULD also set `machine_shape: NvidiaL4` so the offline
+  smoke tests validate on the REAL eval GPU (else we test the OOM cliff on a 16 GB P100 and may
+  falsely conclude MTP-off is required when the 24 GB L4 has the headroom). Cost: each dry-run run
+  then burns 2× quota. Safe to defer — a dry-run that passes on the tighter P100 is a conservative
+  proxy for the roomier L4 (the binary covers both arches).
+- **Stale comment**: `scripts/kaggle/dryrun_kernel/main.py:3` says "built for sm_60" — inaccurate;
+  the real binary covers 60/75/89. Cosmetic fix.
+- **Defense-in-depth**: add a post-build `cuobjdump --list-elf | grep -q sm_89` assertion to the
+  BUILD kernel (mirrors the existing MTP-symbol self-verify) so a future disk-pressure rebuild that
+  drops sm_89 fails loudly instead of silently shipping an L4-incompatible binary.
 
 ## Sources
 
