@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.419",
+  "generated_at": "2026-06-21T11:07:25Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation and 0 compute-bound tasks, with both RTX 3090s idle at the snapshot, so gpu_idle_on_compute_bound_tasks is null (there is no compute-bound task for a GPU to be idle on). The locked 0/0/0 counts reflect the recurring false-zero detector gap -- an observability artifact -- not a real execution stall; per-experiment durations were unmeasurable from the detector this retro.",
+  "bottlenecks_identified": [
+    "Observability, not execution: the milestone-scoped timing detector AGAIN returned 0 experiment commits since activation -- the recurring false-zero gap carried across .363 through .418 -- so per-experiment durations and the slowest-experiment table are unmeasurable from the detector this retro.",
+    "Shipped-fix-did-not-take-effect-for-its-own-retro: this milestone's reserved-infra task SHIPPED exactly the recommended repair (wire the prior detector fix into the retro timing-data path + a regression assert that injected count == on-disk in-window count + detector_gap_suspected emission, verdict retro_timing_detector_wired_regression_asserted, regression_assert_passed=true, detector_gap_suspected=true), yet THIS retro's injected TIMING DATA block STILL false-zeroed. The fix landed in the module but the conductor built this same retro's TIMING DATA before/around the wiring -- the consumer that generates the prompt block still did not pick it up, the identical .417->.418 failure mode one milestone later."
+  ],
+  "improvements_suggested": [
+    "Confirm the shipped retro-timing-detector wire is invoked by the EXACT conductor code path that assembles the retro task's TIMING DATA prompt block (not a sibling/standalone detector), then verify end-to-end on the NEXT retro (.420): if .420 still false-zeros despite the .419 wire + passing regression assert, the wire is in the wrong consumer again and must be moved to the prompt-assembly call site.",
+    "Make the regression assert (injected experiment count == on-disk results/experiment_*.json count inside the activation window) gate the retro task itself, so a false-zero TIMING DATA block fails loudly at retro-launch instead of silently producing a 0/0/0 retro that must be hand-reconciled against ops/changelog.",
+    "Stamp duration_s and compute_bound at artifact write-time in scripts/experiment_template.py so per-experiment timing is intrinsic to each artifact; a retro can then compute the slowest-experiment table directly from on-disk artifacts with no dependency on the commit-scoped detector at all.",
+    "Keep the on-disk reconciliation step in the retro task (list in-window exp range + inference_substrate per artifact) so future retros surface the true execution window and substrate mix (here: exp4533-exp4542, ~3h58m, all verifier_ensemble/aggregation/hardware_smoke, 0 live_llm_inference) even when the detector false-zeros."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Move the retro-timing wire to the conductor's TIMING-DATA prompt-assembly call site and prove it on .420: the .419 fix shipped + passed its own regression assert but this retro still false-zeroed, so the binding gap is consumer-location, not detector logic.",
+    "Promote the injected==on-disk count regression assert to a hard retro-launch gate so a false-zero self-fails instead of producing a silently-wrong 0/0/0 retro.",
+    "Stamp duration_s/compute_bound at write-time in experiment_template.py so per-experiment timing is intrinsic to each artifact and the retro no longer depends on the commit-scoped detector."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "Execution was not the bottleneck; observability was -- the .419 work (exp4533-exp4542, ~3h58m, all cached-candidate / aggregation / hardware-smoke substrates, 0 compute-bound) ran cleanly and the idle GPUs are correct. The sharp new signal: this milestone SHIPPED the precise fix prior retros asked for and it passed its own regression assert, yet the immediately-following retro STILL received a false-zero -- conclusive evidence the wire reached the module but not the prompt-assembly consumer, the same one-milestone-late miss as .417->.418. Until that consumer path is the one fixed and proven on the next retro, every retro keeps hand-reconciling on-disk ground truth to avoid reporting a false zero as a real execution stall."
+}
