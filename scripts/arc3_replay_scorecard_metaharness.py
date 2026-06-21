@@ -47,6 +47,14 @@ GAME_ARTIFACTS = {
     "ka59": "results/experiment_4350_e3_explore_verify_plan_ka59.json",          # L1
     # glyph-substitution config puzzle solved via GameAdapter _tr87 (rule-mapped target verifier)
     "tr87": "results/arc_loop_solve_tr87.json",                                  # L1
+    # graph-explore solves recovered into the live-replay set (2026-06-21 outer-loop): both have a
+    # replayable banked trajectory on disk that load_actions/normalize already handle, so they were
+    # only missing a GAME_ARTIFACTS pointer. dc22 stores its 20-action plan under "solution"
+    # ({action} / {action,x,y} dicts); vc33 under "trajectory" ({action,data:{x,y}} dicts). Both
+    # reproduce L1 offline. NOTE: do NOT point dc22 at experiment_4467 -- its solution_labels are
+    # JSON-encoded strings that crash normalize; arc_loop_solve_dc22.json has the parsed dicts.
+    "dc22": "results/arc_loop_solve_dc22.json",                                  # L1
+    "vc33": "results/arc_explore_trajectory_vc33.json",                          # L1
 }
 
 # from-scratch OFFLINE re-solves (these replay deterministically on the offline
