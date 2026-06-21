@@ -97,31 +97,48 @@ class CNNDynamics:
             nn.Conv2d(self.hidden, N_COLORS, 3, padding=1),  # -> per-cell colour logits
         )
 
-    def fit(self, transitions) -> "CNNDynamics":
-        """transitions: iterable of (s_grid, akey, s2_grid). Trains the net on CPU (fast for small grids)."""
+    def fit(self, transitions, *, epochs: Optional[int] = None, batch_size: int = 256,
+            warm_state: Any = None) -> "CNNDynamics":
+        """transitions: iterable of (s_grid, akey, s2_grid). Mini-batched CPU training. If warm_state is a
+        net state_dict (from a pretrained PRIOR), the net is initialised from it before fine-tuning -- the
+        cross-game mechanic prior the per-game live learner adapts from (fewer real probes to converge)."""
         import torch
 
         items = [(np.asarray(s), tuple(a), np.asarray(s2)) for s, a, s2 in transitions]
-        items = [t for t in items if t[0].shape == t[2].shape and t[0].ndim == 2]
+        items = [t for t in items if t[0].ndim == 2 and t[0].shape == t[2].shape]
         if not items:
             return self
-        self._shape = items[0][0].shape
-        items = [t for t in items if t[0].shape == self._shape]  # one net per grid shape (per-game = fixed)
+        # all public ARC-AGI-3 grids are 64x64 -> a single net trains across games; keep the dominant shape
+        from collections import Counter
+        self._shape = Counter(t[0].shape for t in items).most_common(1)[0][0]
+        items = [t for t in items if t[0].shape == self._shape]
         torch.manual_seed(0)
         net = self._build_net(torch)
-        X = torch.stack([self._encode(s, a, torch) for s, a, _ in items])
-        Y = torch.stack([torch.from_numpy(np.clip(s2.astype(np.int64), 0, N_COLORS - 1)) for _, _, s2 in items])
+        if warm_state is not None:
+            net.load_state_dict(warm_state)
         opt = torch.optim.Adam(net.parameters(), lr=self.lr)
         loss_fn = torch.nn.CrossEntropyLoss()
+        n = len(items)
         net.train()
-        for _ in range(self.epochs):
-            opt.zero_grad()
-            loss = loss_fn(net(X), Y)  # net(X): [B,16,H,W]; Y: [B,H,W]
-            loss.backward()
-            opt.step()
+        for _ in range(int(epochs if epochs is not None else self.epochs)):
+            perm = torch.randperm(n).tolist()
+            for i in range(0, n, batch_size):
+                idx = perm[i:i + batch_size]
+                # encode PER BATCH (lazy) -- pre-stacking the whole corpus is ~5GB at 12k x 24x64x64.
+                xb = torch.stack([self._encode(items[j][0], items[j][1], torch) for j in idx])
+                yb = torch.stack([torch.from_numpy(np.clip(items[j][2].astype(np.int64), 0, N_COLORS - 1))
+                                  for j in idx])
+                opt.zero_grad()
+                loss = loss_fn(net(xb), yb)
+                loss.backward()
+                opt.step()
         net.eval()
         self._net = net
         return self
+
+    def get_state(self) -> Any:
+        """The net's state_dict (for saving a pretrained prior), or None if untrained."""
+        return None if self._net is None else {k: v.clone() for k, v in self._net.state_dict().items()}
 
     def predict(self, s_grid, akey: tuple) -> np.ndarray:
         if self._net is None or np.asarray(s_grid).shape != self._shape:
@@ -146,10 +163,13 @@ class LiveTTTWorldModel:
     existing ``plan_in_model`` BFS and ``WorldModelVerifier`` consume."""
 
     def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16,
-                 dynamics_backend: str = "dsl") -> None:
+                 dynamics_backend: str = "dsl", prior_state: Any = None) -> None:
         self.game = game
         self.refit_every = int(refit_every)
         self.min_transitions = int(min_transitions)
+        # a pretrained cross-game CNN PRIOR state_dict (models/arc_dynamics_prior.pt); when set and the
+        # backend is 'cnn', the per-game learner warm-starts from it -> fewer real probes to converge.
+        self._prior_state = prior_state
         # 'dsl' = ObjectDeltaModel rule learner (fast, zero-train, but a fixed hypothesis class);
         # 'cnn' = CNNDynamics learned net (fits arbitrary local rules, the make-or-break test for games
         # the rule class can't express). Both expose .fit(transitions)/.predict(grid, akey).
@@ -163,6 +183,12 @@ class LiveTTTWorldModel:
 
     def _new_l1(self) -> Any:
         return CNNDynamics(self.game) if self.dynamics_backend == "cnn" else ObjectDeltaModel(self.game)
+
+    def _fit_l1(self, transitions):
+        l1 = self._new_l1()
+        if self.dynamics_backend == "cnn" and self._prior_state is not None:
+            return l1.fit(transitions, warm_state=self._prior_state)
+        return l1.fit(transitions)
 
     # --- learning from play (FREE compute; NOT rate-limited) ----------------------------------------
     def observe(self, grid: Any, action: int, data: Any, next_grid: Any,
@@ -187,7 +213,7 @@ class LiveTTTWorldModel:
             return False
         if len(self._dsl_transitions) < self.min_transitions:
             return False
-        self._l1 = self._new_l1().fit(self._dsl_transitions)
+        self._l1 = self._fit_l1(self._dsl_transitions)
         self._last_refit = step_idx
         self._refits += 1
         return True
@@ -195,7 +221,7 @@ class LiveTTTWorldModel:
     def fit_now(self) -> "LiveTTTWorldModel":
         """Force an immediate L1 fit on all accumulated transitions (offline-harness convenience)."""
         if self._dsl_transitions:
-            self._l1 = self._new_l1().fit(self._dsl_transitions)
+            self._l1 = self._fit_l1(self._dsl_transitions)
             self._refits += 1
         return self
 
