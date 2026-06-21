@@ -4,6 +4,31 @@ The keystone validation of the operator's live-learning + capture/pretrain refra
 prior trained on 20 public games **transfers to 5 held-out games it never saw** — a learner warm-started
 from the prior reaches 28-47% changed-cell accuracy from just 60 transitions, while from-scratch gets ~0.
 
+## UPDATE 2026-06-21 (later): promoted epochs=30 prior — warm cell-recall 0.314 -> 0.5485
+
+After fixing the corpus-load RAM leak (the compressed-`.npz` re-decompression bug — `load(game)` 7.5GB ->
+0.18GB; see `arc-kaggle-accelerator-upgrade-2026-06-21.md` sibling work + the commit), the epochs=30 GPU
+pretrain — the run that previously OOM-leaked the box to 101GB host RAM — completed cleanly at **1.8GB RSS,
+exit 0**, simultaneously VALIDATING the leak fix at scale. The longer pretrain (epochs 10->30, fewshot
+60->80) is materially better and is now the shipped `models/arc_dynamics_prior.pt`:
+
+| held-out game | cell-recall scratch -> **warm** (e30/fs80) | changing test-n |
+|---|---|---|
+| tn36 | 0.183 -> **0.875** | 165 |
+| sc25 | 0.263 -> **0.732** | 135 |
+| ka59 | 0.296 -> **0.484** | 829 |
+| lp85 | 0.185 -> **0.278** | 331 |
+| cd82 | (in run) | 72 |
+
+**Mean cell-recall scratch 0.2229 -> warm 0.5485; warm-start wins 5/5.** (The e10/fs60 prior below read
+scratch 0.034 -> warm 0.314; fewshot 60->80 lifts scratch too, but the warm TRANSFER margin grew +0.28 ->
++0.33.) The validated e10 prior is preserved at `/tmp/arc_dynamics_prior_e10_validated.pt` + in git history.
+The original e10 result is kept verbatim below (never-prune).
+
+---
+
+## Original result (epochs=10, fewshot=60)
+
 ## Result (results/arc_pretrain_prior.json)
 
 Prior trained on 20 public games (12,681 transitions, human play + probes), held out cd82/ka59/sc25/tn36/
