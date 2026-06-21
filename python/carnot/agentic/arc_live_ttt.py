@@ -59,11 +59,16 @@ class CNNDynamics:
     cross-entropy; predict = argmax per cell. Oracle-DISTINCT (a learned net, not the executable oracle).
     torch is imported LAZILY so the rule-only path needs no torch."""
 
-    def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48) -> None:
+    def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48,
+                 change_weight: float = 40.0) -> None:
         self.game = game
         self.epochs = int(epochs)
         self.lr = float(lr)
         self.hidden = int(hidden)
+        # per-cell loss weight on CHANGED cells (target != KEEP). The KEEP class is ~4000:1 dominant at
+        # 64x64, so unweighted cross-entropy collapses the net to "predict KEEP everywhere" = identity =
+        # 0% on changing transitions (verified). Upweighting the change forces the net to model it.
+        self.change_weight = float(change_weight)
         self._net: Any = None
         self._shape: Optional[tuple] = None  # (H, W) the net was trained at
 
@@ -128,7 +133,7 @@ class CNNDynamics:
         if warm_state is not None:
             net.load_state_dict(warm_state)
         opt = torch.optim.Adam(net.parameters(), lr=self.lr)
-        loss_fn = torch.nn.CrossEntropyLoss()
+        loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
         n = len(items)
         net.train()
         for _ in range(int(epochs if epochs is not None else self.epochs)):
@@ -140,7 +145,9 @@ class CNNDynamics:
                 yb = torch.stack([torch.from_numpy(self._residual_target(items[j][0], items[j][2]))
                                   for j in idx])  # residual/KEEP target (0=keep, 1..16=set colour)
                 opt.zero_grad()
-                loss = loss_fn(net(xb), yb)
+                ce = loss_fn(net(xb), yb)                                  # [B, H, W] per-cell loss
+                w = torch.where(yb > 0, self.change_weight, 1.0)           # upweight CHANGED cells
+                loss = (ce * w).sum() / w.sum()
                 loss.backward()
                 opt.step()
         net.eval()
