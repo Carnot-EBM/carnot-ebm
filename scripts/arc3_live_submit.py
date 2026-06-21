@@ -155,11 +155,14 @@ def resolve_game_id(arcade, short: str) -> str:
     return short
 
 
-def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh) -> int:
+def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh, corpus=None) -> int:
     gid = resolve_game_id(arcade, short)
     env = arcade.make(gid, scorecard_id=scorecard_id)
     frame = env.reset()
     from carnot.agentic.arc_agi3_live_adapter import _levels_completed
+    from carnot.agentic.arc_agi3_world_model import grid_of
+    prev_grid = grid_of(frame) if frame is not None else None
+    prev_lvl = _levels_completed(frame) if frame is not None else 0
     for a in actions:
         aid, data = mh.normalize(a)
         if aid is None:
@@ -168,6 +171,16 @@ def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh) 
         frame = env.step(ge, data=data, reasoning={"policy": "offline_reproduced_replay"})
         if frame is None:
             break
+        # CAPTURE the live transition for learning/debugging (non-fatal -- never break a submission).
+        # Feeds the transition corpus (the exact live behaviour, incl. env-mismatch cases like sc25).
+        if corpus is not None and prev_grid is not None:
+            try:
+                ng = grid_of(frame)
+                lvl = _levels_completed(frame)
+                corpus.add(short, prev_grid, aid, data, ng, prev_lvl, lvl)
+                prev_grid, prev_lvl = ng, lvl
+            except Exception:
+                pass
     return _levels_completed(frame) if frame is not None else -1
 
 
@@ -190,6 +203,14 @@ def main(argv) -> int:
     scorecard_id = arcade.open_scorecard()
     print(f"  opened LIVE scorecard: {scorecard_id}", flush=True)
 
+    # CAPTURE live transitions into the corpus (recording ON, 2026-06-21) -- non-fatal; the SDK also
+    # records frames to recordings_dir. This is the live-play half of the transition-capture sink.
+    try:
+        from carnot.agentic.arc_transition_capture import TransitionCorpus
+        corpus = TransitionCorpus()
+    except Exception:
+        corpus = None
+
     rows, total, matched = [], 0, 0
     for short, claimed in claimed_set.items():
         src = mh.RESOLVED_ARTIFACTS.get(short, mh.GAME_ARTIFACTS.get(short))
@@ -200,7 +221,7 @@ def main(argv) -> int:
             continue
         t0 = time.time()
         try:
-            lvl = replay_live(arcade, short, scorecard_id, actions, mh)
+            lvl = replay_live(arcade, short, scorecard_id, actions, mh, corpus=corpus)
         except Exception as e:
             rows.append({"game": short, "claimed": claimed, "live_level": None, "error": repr(e)[:140]})
             print(f"    {short:5} claimed L{claimed} -> ERROR {repr(e)[:70]}", flush=True)
@@ -210,6 +231,14 @@ def main(argv) -> int:
         total += max(0, lvl)
         rows.append({"game": short, "claimed": claimed, "live_level": lvl, "env_match": ok})
         print(f"    {short:5} claimed L{claimed} -> LIVE L{lvl}  {'MATCH' if ok else 'MISMATCH'}  [{time.time()-t0:.0f}s]", flush=True)
+
+    if corpus is not None:
+        try:
+            captured = corpus.flush()
+            print(f"  captured live transitions -> corpus: {sum(captured.values()) if captured else 0} new",
+                  flush=True)
+        except Exception:
+            pass
 
     print(f"\n  LIVE TOTAL: {total} levels; {matched}/{len(claimed_set)} games env-matched", flush=True)
 

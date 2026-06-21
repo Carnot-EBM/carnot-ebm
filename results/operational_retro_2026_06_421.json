@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.421",
+  "generated_at": "2026-06-21T20:17:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The retro's authoritative milestone-scoped timing extraction reports 0 experiment commits / 0 compute-bound / 0 wall-time minutes since activation of 2026.06.421 (locked fields preserved). This is the recurring FALSE-ZERO detector gap documented across .363-.420, NOT an empty milestone: the full milestone's artifacts exist on disk (the .421 range through capstone v421, verified this turn by mtime + summarize_artifact.py). The detector also false-zeroed the compute-bound COUNT, masking one genuine live_llm_inference task. Both RTX 3090s idle at the 20:17:10Z snapshot is CORRECT (gpu_idle_on_compute_bound_tasks=null): the snapshot is post-hoc, and the frozen sprint generator runs on the AMD iGPU per project policy, never the monitored 3090s.",
+  "bottlenecks_identified": [
+    "Recurring false-zero observability gap (NOT a wall-time bottleneck): the milestone-scoped timing detector reported 0 commits since activation despite a full milestone of artifacts on disk through capstone v421 -- the same gap seen .363-.420. The operational failure is observability, not execution.",
+    "The detector's compute_bound_experiments_count also false-zeroed, masking the milestone's one genuine compute-bound task (a live_llm_inference Qwen3.5-9B-MTP run just above the 60s floor). Write-time duration_s/inference_substrate/compute_bound stamping would have surfaced it.",
+    "NOT a GPU-idle bottleneck: gpu_idle_on_compute_bound_tasks is null. With the lone compute-bound task running on the AMD iGPU (never the monitored 3090s) and the snapshot taken post-hoc, the idle 3090s are correct behaviour -- do not flag, and do not propose DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped timing-detector wire (mtime scan + ops/changelog-window fallback) to the conductor's RETRO TIMING-DATA prompt-assembly call site -- prior milestones shipped the fix into the standalone module but it never reached the consumer that feeds this retro's TIMING DATA block.",
+    "Promote the injected==on-disk regression assert to a HARD retro-launch gate so a retro cannot run while the detector count disagrees with the on-disk in-window artifact count.",
+    "Add write-time stamping of duration_s / inference_substrate / compute_bound on every experiment artifact, plus device-attributed in-window GPU telemetry, so a real compute-bound run (and its true GPU device) is countable instead of being inferred post-hoc from an idle snapshot.",
+    "Do NOT propose DualGPURunner or GPU-warming this milestone: no compute-bound multi-model 3090 task was present; idle 3090s are correct."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the timing detector into the retro TIMING-DATA prompt-assembly call site (not just the standalone module) and prove it false-zeros no longer on the next milestone -- this single fix ends the .363-.421 recurring gap.",
+    "Gate retro launch on injected==on-disk in-window artifact count (hard assert), so a false-zero cannot silently reach the JSON locked fields again.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write time so compute_bound_experiments_count stops missing genuine live_llm_inference runs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is a correctness/observability fix, not a wall-time speedup: the .421 experiments executed fine (one ~62s live LLM run plus fast aggregation/verifier-ensemble tasks), so there is no execution bottleneck to accelerate -- estimated_time_savings_pct is honestly 0. The recurring, actionable operational finding is that the timing detector keeps false-zeroing the retro's authoritative TIMING DATA block; the fix has been shipped into the standalone module repeatedly but must be moved to the conductor's retro prompt-assembly consumer and backed by a hard injected==on-disk launch gate."
+}
