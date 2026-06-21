@@ -47,9 +47,6 @@ MODELS = {
     # coder beats the small Q4 models on accuracy. Qwen3.6-based, so /no_think applies.
     "qwopus-q3km": ("models--Jackrong--Qwopus3.6-27B-Coder-MTP-GGUF/snapshots/*/Qwopus3.6-27B-Coder-MTP-Q3_K_M.gguf", "/no_think\n"),
     "gemma-12b": ("models--unsloth--gemma-4-12B-it-GGUF/snapshots/*/gemma-4-12b-it-Q4_K_M.gguf", None),
-    # candidate (operator 2026-06-21): gemma-4-12B agentic/tau2/composer fine-tune (yuxinlu1) -- tests
-    # whether an agentic-tuned gemma-4-12B beats base Qwen3.5-9B-MTP on Layer-B grounding for the ARC generator.
-    "gemma4-agentic": ("models--yuxinlu1--gemma-4-12B-agentic*GGUF/snapshots/*/gemma4-v2-Q4_K_M.gguf", None),
 }
 
 
