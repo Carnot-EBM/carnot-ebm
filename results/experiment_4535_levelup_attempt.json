@@ -1,0 +1,110 @@
+{
+  "arc_loop_result_path": "results/arc_loop_solve_sp80.json",
+  "dead_ends": [
+    {
+      "attempt": "arc_loop_solve --game sp80",
+      "game": "sp80",
+      "result": "reproduced_L1_only_before_adapter",
+      "why": "Adapter-free graph explore re-gated the shallow seed but did not expose the L2 splitter-placement delta."
+    },
+    {
+      "attempt": "unbounded move/select/commit BFS from L2",
+      "game": "sp80",
+      "result": "stalled_on_failed_spill_states",
+      "why": "Failed commits can spend the search budget in spill animation; a bounded spill predicate was needed before path planning."
+    },
+    {
+      "attempt": "arc_loop_solve --game sp80 --target-level 3",
+      "game": "sp80",
+      "result": "stalled_at_L2",
+      "why": "The registered adapter banks L2 only; L3 has a larger four-splitter delta and remains unmodelled."
+    }
+  ],
+  "experiment": "experiment_4535_levelup_attempt",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank).",
+    "reproducibility_checksum": "catches silent drift on replay."
+  },
+  "honest_verdict": "success: sp80_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4535,
+  "registry_update": {
+    "banked_levels": 1,
+    "new_game_levels": 2,
+    "new_total_declared": 51,
+    "new_total_row_sum": 51,
+    "path": "ops/arc_solve_registry.yaml",
+    "prior_game_levels": 1,
+    "prior_total_declared": 50,
+    "prior_total_row_sum": 50,
+    "reconciled_total_delta": 1,
+    "target_game": "sp80",
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "5d54bed6392d124fb1ebef0474fa9abe05ca9a97675f2eccc3c44b80f5f801e9",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "sp80",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.arc_levelup_attempt_4535.v1",
+  "schema_errors": [],
+  "solution_labels": [
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":5}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":6,\"data\":{\"x\":33,\"y\":25}}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":6,\"data\":{\"x\":13,\"y\":17}}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":5}"
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4535",
+    "SCENARIO-ARC-WMTE-4535"
+  ],
+  "target_game": "sp80",
+  "target_level": 2
+}
