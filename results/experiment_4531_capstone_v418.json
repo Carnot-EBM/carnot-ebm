@@ -1,0 +1,397 @@
+{
+  "a2_l1_l2_barrier_diagnosis": {
+    "cleanly_reportable": false,
+    "status": "excluded_flagged_adversarial",
+    "what_blocks_deeper_levels": null,
+    "what_to_build_next": "not_cleanly_reportable_from_flagged_artifact"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "A1_forward_walk_navigation",
+      "experiment_id": 4523,
+      "fields_imported": [],
+      "path": "results/experiment_4523_forward_walk_navigation.json",
+      "sha256": "2706415488d6539c92b727ba8f6fe0f4e224859a9ed6c82ecf5ca6684c719a9b"
+    },
+    {
+      "artifact_key": "A2_reach_deeper_levels",
+      "experiment_id": 4524,
+      "fields_imported": [],
+      "path": "results/experiment_4524_reach_deeper_levels.json",
+      "sha256": "28aaf8e0266e6a938aec7dd02090cd52e1c3b080b3d02d4ba47bbdaf74c8473f"
+    },
+    {
+      "artifact_key": "A2_stop_after_levelup",
+      "experiment_id": 4524,
+      "fields_imported": [
+        "honest_verdict",
+        "median_actions_on_core_control",
+        "median_actions_on_core_best",
+        "core_solves_preserved",
+        "levels_per_game_preserved"
+      ],
+      "path": "results/experiment_4524_stop_after_levelup.json",
+      "sha256": "d20c5e4530a32eb49dcde680cda0661b5c0238f49a35a99dfc8fbcf4d513fba4"
+    },
+    {
+      "artifact_key": "A3_levelup_attempt",
+      "experiment_id": 4525,
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "target_level",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "path": "results/experiment_4525_levelup_attempt.json",
+      "sha256": "4688690173042d0beaf27ce7c7630411eec1b42db7168a300155556df4776b83"
+    },
+    {
+      "artifact_key": "A4_integration",
+      "experiment_id": 4526,
+      "fields_imported": [],
+      "path": "results/experiment_4526_integration_8game_gate.json",
+      "sha256": "759e6be8ac7f6e10b4c13e1008d591e25739791d41b54abbf646f74b0c6215f3"
+    }
+  ],
+  "duration_s": 0.210517,
+  "efficiency_moved": false,
+  "experiment": 4531,
+  "field_principles": {
+    "cited_upstream_artifacts": "every headline number traces to a real upstream measurement (the audit trail).",
+    "efficiency_moved": "the bottom line -- did CORE median actions drop STRICTLY below 7760 (the IMPROVED tag, not merely non-inferior within the 10% slack) at preserved solve-rate (the thing .417 did not achieve).",
+    "flagged_artifacts_skipped": "names any flagged_adversarial artifact excluded from aggregation -- the fabrication-gate compliance.",
+    "honest_verdict": "terminal prefix; success: nav_fix_core_actions_<n>_below_7760 OR complete: nav_fix_null_efficiency_unmoved.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "ready_for_operator_submit": "True only if the integrated config is a CORE-preserved efficiency improvement worth a 1/day slot; never submits.",
+    "reproducible_total_levels_delta": "did solve CAPABILITY grow this milestone (A3 level-up)."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "artifact_key": "A1_forward_walk_navigation",
+      "experiment_id": 4523,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "median_actions_on_core_best=7761.5 and median_actions_on_core_control=7761.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_4523_forward_walk_navigation.json",
+      "reason": "flagged_adversarial",
+      "sha256": "2706415488d6539c92b727ba8f6fe0f4e224859a9ed6c82ecf5ca6684c719a9b",
+      "stamped_flagged_adversarial": true
+    },
+    {
+      "artifact_key": "A2_reach_deeper_levels",
+      "experiment_id": 4524,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_4524_reach_deeper_levels.json",
+      "reason": "flagged_adversarial",
+      "sha256": "28aaf8e0266e6a938aec7dd02090cd52e1c3b080b3d02d4ba47bbdaf74c8473f",
+      "stamped_flagged_adversarial": true
+    },
+    {
+      "artifact_key": "A4_integration",
+      "experiment_id": 4526,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_integrated=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "duration_s=22.52119164809119 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_4526_integration_8game_gate.json",
+      "reason": "flagged_adversarial",
+      "sha256": "759e6be8ac7f6e10b4c13e1008d591e25739791d41b54abbf646f74b0c6215f3",
+      "stamped_flagged_adversarial": true
+    }
+  ],
+  "honest_verdict": "complete: nav_fix_null_efficiency_unmoved",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "operator_submission_performed": false,
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "reading_results_discipline": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 50
+    },
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "A1_forward_walk_navigation",
+        "exists": true,
+        "experiment_id": 4523,
+        "path": "results/experiment_4523_forward_walk_navigation.json",
+        "skip_reason": "flagged_adversarial",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A2_reach_deeper_levels",
+        "exists": true,
+        "experiment_id": 4524,
+        "path": "results/experiment_4524_reach_deeper_levels.json",
+        "skip_reason": "flagged_adversarial",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A2_stop_after_levelup",
+        "exists": true,
+        "experiment_id": 4524,
+        "path": "results/experiment_4524_stop_after_levelup.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A3_levelup_attempt",
+        "exists": true,
+        "experiment_id": 4525,
+        "path": "results/experiment_4525_levelup_attempt.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A4_integration",
+        "exists": true,
+        "experiment_id": 4526,
+        "path": "results/experiment_4526_integration_8game_gate.json",
+        "skip_reason": "flagged_adversarial",
+        "skipped": true,
+        "summarize_exit_code": 2
+      }
+    ]
+  },
+  "random_seed": 4531,
+  "ready_for_operator_submit": false,
+  "reproducibility_checksum": "sha256:612b19e9e97beddbd6ec87125d474d6c1210648c9e063551b9e8c066d206465c",
+  "reproducible_total_levels_delta": {
+    "banked_levels": 1,
+    "capability_grew": true,
+    "current_total": 50,
+    "delta": 2,
+    "prior_total": 48,
+    "source": "A3_levelup_attempt+ops/arc_solve_registry.yaml"
+  },
+  "result_path": "results/experiment_4531_capstone_v418.json",
+  "schema": "carnot.capstone_v418_4531.v1",
+  "scorecard": {
+    "a3_levelup": {
+      "banked_levels": 1,
+      "current_total": 50,
+      "delta": 2,
+      "honest_verdict": "success: cd82_L2_offline_reproduced",
+      "level_up_banked": true,
+      "prior_total": 48,
+      "status": "level_up_banked",
+      "target_game": "cd82",
+      "target_level": 2
+    },
+    "core_efficiency": {
+      "baseline": 2.0074,
+      "delta": null,
+      "integrated": null,
+      "moved": false,
+      "reason": "integration_excluded_flagged_or_live_critical"
+    },
+    "integration_headline": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_delta": null,
+      "core_efficiency_integrated": null,
+      "core_solves_preserved": false,
+      "median_actions_on_core": null,
+      "operator_submission_performed": false,
+      "ready_for_operator_submit": false,
+      "status": "excluded_flagged_adversarial",
+      "submitted_config_improved": false
+    },
+    "nav_fix_delta": {
+      "median_actions_best": null,
+      "median_actions_control": null,
+      "median_actions_delta": null,
+      "reset_replay_steps_after": null,
+      "reset_replay_steps_before": null,
+      "reset_replay_steps_delta": null,
+      "score_lever_retired": true,
+      "status": "excluded_flagged_adversarial"
+    },
+    "stop_after_levelup_delta": {
+      "core_solves_preserved": true,
+      "honest_verdict": "success: stop_after_levelup_core_actions_2825_below_control",
+      "levels_per_game_preserved": true,
+      "median_actions_best": 2825.5,
+      "median_actions_control": 7761.5,
+      "median_actions_delta": -4936.0,
+      "moves_score": false,
+      "reason": "median_actions_retired_as_score_lever",
+      "score_lever_retired": true,
+      "status": "retired_action_trimming_context"
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4531",
+    "SCENARIO-CAPSTONE-4531"
+  ],
+  "upstream_provenance": [
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A1_forward_walk_navigation",
+      "experiment_id": 4523,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "median_actions_on_core_best=7761.5 and median_actions_on_core_control=7761.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4523_forward_walk_navigation.json",
+      "payload_reproducibility_checksum": "cc8bdb1e2106fa7a3329c4f746a5b6f8d9c3bb037f1b04053d5d79b18781a022",
+      "sha256": "2706415488d6539c92b727ba8f6fe0f4e224859a9ed6c82ecf5ca6684c719a9b",
+      "skip_reason": "flagged_adversarial",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A2_reach_deeper_levels",
+      "experiment_id": 4524,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4524_reach_deeper_levels.json",
+      "payload_reproducibility_checksum": "68ec43c51e9b5b569831865ac04e2b91b02111c304bb49449e918dfa68023e6c",
+      "sha256": "28aaf8e0266e6a938aec7dd02090cd52e1c3b080b3d02d4ba47bbdaf74c8473f",
+      "skip_reason": "flagged_adversarial",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A2_stop_after_levelup",
+      "experiment_id": 4524,
+      "fields_imported": [
+        "honest_verdict",
+        "median_actions_on_core_control",
+        "median_actions_on_core_best",
+        "core_solves_preserved",
+        "levels_per_game_preserved"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4524_stop_after_levelup.json",
+      "payload_reproducibility_checksum": "a4df17eabd5f972654c6520ff1974e32351fef2b79c91c389671dfde4cb3cbb3",
+      "sha256": "d20c5e4530a32eb49dcde680cda0661b5c0238f49a35a99dfc8fbcf4d513fba4",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A3_levelup_attempt",
+      "experiment_id": 4525,
+      "fields_imported": [
+        "honest_verdict",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "target_level",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4525_levelup_attempt.json",
+      "payload_reproducibility_checksum": "b59582a4cbd1491aa889d32755872643eb6e046c84a323105a47f536eaab9842",
+      "sha256": "4688690173042d0beaf27ce7c7630411eec1b42db7168a300155556df4776b83",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": true,
+      "artifact_key": "A4_integration",
+      "experiment_id": 4526,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_integrated=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "duration_s=22.52119164809119 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4526_integration_8game_gate.json",
+      "payload_reproducibility_checksum": "0a68f0f167212967d1c8d27d67d55142d4e5772e85e7ee3074426426c6eaa597",
+      "sha256": "759e6be8ac7f6e10b4c13e1008d591e25739791d41b54abbf646f74b0c6215f3",
+      "skip_reason": "flagged_adversarial",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    }
+  ]
+}
