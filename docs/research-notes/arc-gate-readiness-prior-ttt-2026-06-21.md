@@ -34,6 +34,19 @@
 > address exploration-to-first-win, so they don't move 0.08. **What CHANGES:** the lever is a goal-biased
 > online explorer, NOT "goal/win-condition induction" (the env already supplies win-detection).
 > See `results/` workflow output + the live-process investigation (2026-06-21).
+>
+> ### Exploration-to-first-win BASELINE measured (2026-06-21, `results/arc_compete_sim.json`)
+>
+> Ran the `explorer` policy — explicitly the unseen-game simulation (NO banked solution, NO GameAdapter,
+> NO internal-state reads; `arc_leaderboard_eval.py:57`) — against the offline arcade with a generous
+> 2000-action/game cap. **First-win reached on 1 / 11 games (lp85, 20 actions); the other 10 burned
+> ~2000 actions each and never triggered a single level-up** (`L+0`, eff 0.0, GAVE-UP): r11l, ls20, wa30,
+> cd82, sp80, su15, tu93, cn04, m0r0, sk48. Tellingly, r11l L1 is solvable in **4 actions WITH a recipe**
+> (exp3946) but the first-contact explorer gets 0 in 1956 — the gap is purely directed exploration, not
+> reachability-in-principle. **This 1/11 undirected first-win rate IS the 0.08 wall, now measured.** It is
+> the baseline the goal-biased online explorer must beat: re-run this harness with the goal-bias and the
+> offline signal that would justify spending a shot is a material lift in first-win games (e.g. 1/11 → N/11)
+> at comparable or better action-efficiency.
 
 
 **Question (operator):** are we gate-ready to spend a scarce L4x4 submission shot? The gate (offline-first
