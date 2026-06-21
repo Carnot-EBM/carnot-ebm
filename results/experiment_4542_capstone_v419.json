@@ -1,0 +1,472 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "A1_goal_reinduction",
+      "experiment_id": 4533,
+      "fields_imported": [],
+      "path": "results/experiment_4533_per_level_goal_reinduction.json",
+      "sha256": "7d30845db615d41874132eade62615c03590a2a74e6a2ccbe45d909ee2746795"
+    },
+    {
+      "artifact_key": "A2_energy_routing",
+      "experiment_id": 4534,
+      "fields_imported": [],
+      "path": "results/experiment_4534_energy_trust_next_level_routing.json",
+      "sha256": "1a8c5e9dc0ddc56317c7442b08e9f297878e39483e87803532b8383e54e69650"
+    },
+    {
+      "artifact_key": "A3_levelup_attempt",
+      "experiment_id": 4535,
+      "fields_imported": [
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "target_level",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "path": "results/experiment_4535_levelup_attempt.json",
+      "sha256": "c8d13b8dac2ad0c309a82ecc54b65546699aed675b074e07744de315ef61d64e"
+    },
+    {
+      "artifact_key": "A4_integration",
+      "experiment_id": 4536,
+      "fields_imported": [],
+      "path": "results/experiment_4536_integration_8game_gate.json",
+      "sha256": "fcd3ed6118fa7acdcd7a95e58bc46708848517b80e627a136ec57bcb34bf56bb"
+    },
+    {
+      "artifact_key": "A5_primitive_transfer",
+      "experiment_id": 4537,
+      "fields_imported": [
+        "primitive_persisted",
+        "representation_transfer",
+        "transfer_deepest_level_per_game",
+        "new_levels_banked",
+        "offline_reproduced"
+      ],
+      "path": "results/experiment_4537_reinduction_primitive_persist_transfer.json",
+      "sha256": "aa9e01d7581490584e2b67ee3d649ae06bb35eb03e660b9dd2a2e76b2fcc421c"
+    }
+  ],
+  "deepest_level_gains_per_core_game": {
+    "any_core_game_deeper_clean": false,
+    "clean_before_after": {},
+    "gains": {},
+    "headline_numbers_aggregated": false,
+    "status": "no_clean_score_lever_evidence"
+  },
+  "duration_s": 0.18406,
+  "efficiency_moved": false,
+  "energy_routing_generalization": {
+    "core_efficiency_baseline": 2.0074,
+    "core_efficiency_delta": null,
+    "core_efficiency_energy_routed": null,
+    "energy_separation_auroc": null,
+    "generalized": false,
+    "reason": "headline numbers quarantined",
+    "status": "excluded_flagged_adversarial_or_live_critical",
+    "verifier_is_oracle": null
+  },
+  "experiment": 4542,
+  "field_principles": {
+    "cited_upstream_artifacts": "every headline number traces to a real upstream measurement (the audit trail).",
+    "deepest_level_gains_per_core_game": "per-CORE-game deepest level before/after re-induction -- the direct score-lever evidence.",
+    "efficiency_moved": "the bottom line -- did core_efficiency rise STRICTLY above 2.0074 (a CORE game reached a deeper level) at preserved solve-rate (the thing .418 did not achieve).",
+    "flagged_artifacts_handled": "names any flagged_adversarial artifact excluded AND any null-delta-carve-out artifact whose diagnosis was read (B2) -- the fabrication-gate compliance + the no-lost-diagnosis guard.",
+    "honest_verdict": "terminal prefix; success: reinduction_core_efficiency_<n>_above_2.0074 OR complete: reinduction_null_efficiency_unmoved_barrier_refined.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "ready_for_operator_submit": "True only if the integrated config is a CORE-preserved core_efficiency improvement worth a 1/day slot; never submits.",
+    "reproducible_total_levels_delta": "did solve CAPABILITY grow this milestone (A3/A5 level-up)."
+  },
+  "flagged_artifacts_handled": {
+    "excluded": [
+      {
+        "artifact_key": "A1_goal_reinduction",
+        "experiment_id": 4533,
+        "live_critical": true,
+        "path": "results/experiment_4533_per_level_goal_reinduction.json",
+        "reason": "null_delta_carve_out_diagnosis_only",
+        "sha256": "7d30845db615d41874132eade62615c03590a2a74e6a2ccbe45d909ee2746795",
+        "stamped_flagged_adversarial": true
+      },
+      {
+        "artifact_key": "A2_energy_routing",
+        "experiment_id": 4534,
+        "live_critical": true,
+        "path": "results/experiment_4534_energy_trust_next_level_routing.json",
+        "reason": "flagged_adversarial",
+        "sha256": "1a8c5e9dc0ddc56317c7442b08e9f297878e39483e87803532b8383e54e69650",
+        "stamped_flagged_adversarial": true
+      },
+      {
+        "artifact_key": "A4_integration",
+        "experiment_id": 4536,
+        "live_critical": true,
+        "path": "results/experiment_4536_integration_8game_gate.json",
+        "reason": "flagged_adversarial",
+        "sha256": "fcd3ed6118fa7acdcd7a95e58bc46708848517b80e627a136ec57bcb34bf56bb",
+        "stamped_flagged_adversarial": true
+      }
+    ],
+    "null_delta_carve_out_diagnosis_read": [
+      {
+        "artifact_key": "A1_goal_reinduction",
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_refinement"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; this is an honest null, not a measurement bug."
+        },
+        "diagnosis_context_fields_read": [
+          "barrier_refinement"
+        ],
+        "experiment_id": 4533,
+        "path": "results/experiment_4533_per_level_goal_reinduction.json",
+        "sha256": "7d30845db615d41874132eade62615c03590a2a74e6a2ccbe45d909ee2746795"
+      }
+    ]
+  },
+  "honest_verdict": "complete: reinduction_null_efficiency_unmoved_barrier_refined",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "operator_resubmission_verdict": {
+    "operator_only": true,
+    "reason": "no_clean_integrated_core_efficiency_improvement",
+    "resubmission_warranted": false
+  },
+  "operator_submission_performed": false,
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "reading_results_discipline": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 51
+    },
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "A1_goal_reinduction",
+        "exists": true,
+        "experiment_id": 4533,
+        "path": "results/experiment_4533_per_level_goal_reinduction.json",
+        "skip_reason": "null_delta_carve_out_diagnosis_only",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A2_energy_routing",
+        "exists": true,
+        "experiment_id": 4534,
+        "path": "results/experiment_4534_energy_trust_next_level_routing.json",
+        "skip_reason": "flagged_adversarial",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A3_levelup_attempt",
+        "exists": true,
+        "experiment_id": 4535,
+        "path": "results/experiment_4535_levelup_attempt.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A4_integration",
+        "exists": true,
+        "experiment_id": 4536,
+        "path": "results/experiment_4536_integration_8game_gate.json",
+        "skip_reason": "flagged_adversarial",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A5_primitive_transfer",
+        "exists": true,
+        "experiment_id": 4537,
+        "path": "results/experiment_4537_reinduction_primitive_persist_transfer.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "primitive_transfer_generalization": {
+    "new_levels_banked": 0,
+    "offline_reproduced_new_level": false,
+    "primitive_persisted": {
+      "derived_from_a1_artifact": "results/experiment_4533_per_level_goal_reinduction.json",
+      "operator": "per_level_reinduction_operator",
+      "registry_general_gotcha_id": "primitive_per_level_reinduction_operator"
+    },
+    "representation_generalized": true,
+    "status": "representation_generalized_no_reproducible_level_bank",
+    "transfer_deepest_level_per_game": {
+      "sc25": 5,
+      "tr87": 6,
+      "tu93": 5
+    },
+    "transfer_games": [
+      "tu93",
+      "tr87",
+      "sc25"
+    ]
+  },
+  "random_seed": 4542,
+  "ready_for_operator_submit": false,
+  "reproducibility_checksum": "sha256:a309551a86ae232022faa2519f73db612e87749b960068285bc7d06e6d217e2e",
+  "reproducible_total_levels_delta": {
+    "banked_levels": 1,
+    "capability_grew": true,
+    "current_total": 51,
+    "delta": 1,
+    "prior_total": 50,
+    "source": "A3_levelup_attempt+ops/arc_solve_registry.yaml"
+  },
+  "result_path": "results/experiment_4542_capstone_v419.json",
+  "schema": "carnot.capstone_v419_4542.v1",
+  "scorecard": {
+    "a1_reinduction": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_best": null,
+      "core_efficiency_delta": null,
+      "core_solves_preserved": null,
+      "diagnosis": {
+        "barrier_refinement": "post_level_reinduction_triggered_but_no_reachable_l2_plan; offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root'].",
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_refinement"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; this is an honest null, not a measurement bug."
+        }
+      },
+      "headline_numbers_aggregated": false,
+      "moved": false,
+      "status": "diagnosis_only_null_delta_carve_out"
+    },
+    "a2_energy_routing": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_delta": null,
+      "core_efficiency_energy_routed": null,
+      "energy_separation_auroc": null,
+      "generalized": false,
+      "reason": "headline numbers quarantined",
+      "status": "excluded_flagged_adversarial_or_live_critical",
+      "verifier_is_oracle": null
+    },
+    "a3_levelup": {
+      "banked_levels": 1,
+      "current_total": 51,
+      "delta": 1,
+      "honest_verdict": "success: sp80_L2_offline_reproduced",
+      "level_up_banked": true,
+      "prior_total": 50,
+      "status": "level_up_banked",
+      "target_game": "sp80",
+      "target_level": 2
+    },
+    "a4_integration": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_delta": null,
+      "core_efficiency_integrated": null,
+      "core_solves_preserved": false,
+      "operator_submission_performed": false,
+      "ready_for_operator_submit": false,
+      "status": "excluded_flagged_adversarial_or_live_critical",
+      "submitted_config_improved": false
+    },
+    "a5_primitive_transfer": {
+      "new_levels_banked": 0,
+      "offline_reproduced_new_level": false,
+      "primitive_persisted": {
+        "derived_from_a1_artifact": "results/experiment_4533_per_level_goal_reinduction.json",
+        "operator": "per_level_reinduction_operator",
+        "registry_general_gotcha_id": "primitive_per_level_reinduction_operator"
+      },
+      "representation_generalized": true,
+      "status": "representation_generalized_no_reproducible_level_bank",
+      "transfer_deepest_level_per_game": {
+        "sc25": 5,
+        "tr87": 6,
+        "tu93": 5
+      },
+      "transfer_games": [
+        "tu93",
+        "tr87",
+        "sc25"
+      ]
+    },
+    "baseline_core_efficiency": 2.0074
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4542",
+    "SCENARIO-CAPSTONE-4542"
+  ],
+  "upstream_provenance": [
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A1_goal_reinduction",
+      "diagnosis_context": {
+        "barrier_refinement": "post_level_reinduction_triggered_but_no_reachable_l2_plan; offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root'].",
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_refinement"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; this is an honest null, not a measurement bug."
+        }
+      },
+      "diagnosis_context_read": true,
+      "experiment_id": 4533,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "efficiency_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4533_per_level_goal_reinduction.json",
+      "payload_reproducibility_checksum": "fd5da77c6107b8fe52e336a2c73357998ae6f4f8abd980080f96d17afd3ab5bc",
+      "sha256": "7d30845db615d41874132eade62615c03590a2a74e6a2ccbe45d909ee2746795",
+      "skip_reason": "null_delta_carve_out_diagnosis_only",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A2_energy_routing",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4534,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "duration_s=0.8855722440639511 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4534_energy_trust_next_level_routing.json",
+      "payload_reproducibility_checksum": "8448eeb226ec8aa7c44ab92e9e423aaa500d75bf8d14db7a23c187e8bd8d0e96",
+      "sha256": "1a8c5e9dc0ddc56317c7442b08e9f297878e39483e87803532b8383e54e69650",
+      "skip_reason": "flagged_adversarial",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A3_levelup_attempt",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4535,
+      "fields_imported": [
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "target_level",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4535_levelup_attempt.json",
+      "payload_reproducibility_checksum": "5d54bed6392d124fb1ebef0474fa9abe05ca9a97675f2eccc3c44b80f5f801e9",
+      "sha256": "c8d13b8dac2ad0c309a82ecc54b65546699aed675b074e07744de315ef61d64e",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A4_integration",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4536,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_integrated=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4536_integration_8game_gate.json",
+      "payload_reproducibility_checksum": "7082b4a141bf18b0a5257e378eb429ac8b97e88a1d9ac7b81f674a461997ef14",
+      "sha256": "fcd3ed6118fa7acdcd7a95e58bc46708848517b80e627a136ec57bcb34bf56bb",
+      "skip_reason": "flagged_adversarial",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A5_primitive_transfer",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4537,
+      "fields_imported": [
+        "primitive_persisted",
+        "representation_transfer",
+        "transfer_deepest_level_per_game",
+        "new_levels_banked",
+        "offline_reproduced"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4537_reinduction_primitive_persist_transfer.json",
+      "payload_reproducibility_checksum": "752efcadd8e13df7573dd87250fa3faa1d8c39094bf6efccc19b9dbd2103c536",
+      "sha256": "aa9e01d7581490584e2b67ee3d649ae06bb35eb03e660b9dd2a2e76b2fcc421c",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ]
+}
