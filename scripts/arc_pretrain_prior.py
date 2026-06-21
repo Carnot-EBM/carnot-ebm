@@ -38,10 +38,19 @@ def _to_triples(transitions):
 
 
 def _acc_on_changing(model, transitions) -> tuple:
-    """Exact-full-grid accuracy on the state-CHANGING transitions only (no-ops are trivial)."""
+    """On state-CHANGING transitions: (exact-full-grid matches, n, mean cell-recall on the changed cells).
+    Cell-recall is the GRADED signal -- exact-match of every changed cell is brutal when a transition
+    changes hundreds of cells, so cell-recall shows whether the prior helps even short of a perfect grid."""
     chg = [t for t in transitions if not np.array_equal(t.grid, t.next_grid)]
-    ok = sum(1 for t in chg if np.array_equal(np.asarray(model.predict(t.grid, _ak(t))), t.next_grid))
-    return ok, len(chg)
+    ok = 0
+    recalls = []
+    for t in chg:
+        pred = np.asarray(model.predict(t.grid, _ak(t)))
+        if pred.shape == t.next_grid.shape and np.array_equal(pred, t.next_grid):
+            ok += 1
+        m = t.grid != t.next_grid
+        recalls.append(float((pred[m] == t.next_grid[m]).mean()) if pred.shape == t.next_grid.shape else 0.0)
+    return ok, len(chg), (round(float(np.mean(recalls)), 4) if recalls else 0.0)
 
 
 def _ak(t):
@@ -86,34 +95,37 @@ def main(argv) -> int:
         triples = _to_triples(train)
         scratch = CNNDynamics(g, epochs=epochs).fit(triples, batch_size=256)
         warm = CNNDynamics(g, epochs=epochs).fit(triples, batch_size=256, warm_state=state)
-        s_ok, s_n = _acc_on_changing(scratch, test)
-        w_ok, w_n = _acc_on_changing(warm, test)
+        s_ok, s_n, s_rec = _acc_on_changing(scratch, test)
+        w_ok, w_n, w_rec = _acc_on_changing(warm, test)
         rows.append({"game": g, "fewshot": fewshot, "test_changing": s_n,
                      "scratch_acc": round(s_ok / max(1, s_n), 4), "warm_acc": round(w_ok / max(1, w_n), 4),
-                     "warm_beats_scratch": (w_ok / max(1, w_n)) > (s_ok / max(1, s_n))})
+                     "scratch_cellrec": s_rec, "warm_cellrec": w_rec,
+                     "warm_beats_scratch": w_rec > s_rec})  # graded cell-recall is the primary signal
         r = rows[-1]
-        print(f"  {g:5} few-shot={fewshot}: scratch={r['scratch_acc']:.3f} warm={r['warm_acc']:.3f} "
-              f"(changing n={s_n})  {'WARM WINS' if r['warm_beats_scratch'] else ''}", flush=True)
+        print(f"  {g:5} fs={fewshot}: exact s={r['scratch_acc']:.3f}/w={r['warm_acc']:.3f} | "
+              f"cell-recall s={s_rec:.3f}/w={w_rec:.3f} (n={s_n}) "
+              f"{'WARM WINS' if r['warm_beats_scratch'] else ''}", flush=True)
 
     scored = [r for r in rows if "warm_acc" in r]
     wins = sum(1 for r in scored if r["warm_beats_scratch"])
-    mean_scratch = round(np.mean([r["scratch_acc"] for r in scored]), 4) if scored else 0.0
-    mean_warm = round(np.mean([r["warm_acc"] for r in scored]), 4) if scored else 0.0
+    mean_scratch = round(np.mean([r["scratch_cellrec"] for r in scored]), 4) if scored else 0.0
+    mean_warm = round(np.mean([r["warm_cellrec"] for r in scored]), 4) if scored else 0.0
     out = {
         "experiment": "arc_pretrain_prior",
         "honest_verdict": f"complete_prior_transfer_warm_wins_{wins}_of_{len(scored)}",
         "epochs": epochs, "fewshot": fewshot, "holdout": holdout,
         "train_games": len(train_games), "train_transitions": len(train_tr),
-        "mean_scratch_acc_on_changing": mean_scratch, "mean_warm_acc_on_changing": mean_warm,
+        "mean_scratch_cellrecall": mean_scratch, "mean_warm_cellrecall": mean_warm,
+        "primary_metric": "cell_recall_on_changed_cells (graded; exact-full-grid is brutal at 64x64)",
         "warm_wins": wins, "held_out_games": len(scored), "per_game": rows,
         "prior_path": "models/arc_dynamics_prior.pt",
         "inference_substrate": "offline cross-game CNN dynamics pretraining + few-shot transfer; no LLM, no quota",
         "verifier_is_oracle": False,
     }
     (REPO / "results" / "arc_pretrain_prior.json").write_text(json.dumps(out, indent=2, default=str))
-    print(f"\n  TRANSFER: warm-start beats scratch on {wins}/{len(scored)} held-out games; "
-          f"mean acc_on_changing scratch={mean_scratch} -> warm={mean_warm}. -> {out['honest_verdict']}",
-          flush=True)
+    print(f"\n  TRANSFER (cell-recall on changed cells): warm-start beats scratch on {wins}/{len(scored)} "
+          f"held-out games; mean cell-recall scratch={mean_scratch} -> warm={mean_warm}. "
+          f"-> {out['honest_verdict']}", flush=True)
     return 0
 
 
