@@ -8985,3 +8985,4 @@ c |
 | 2026-06-20 23:14 UTC | PHASE A2 (ARC NORTH STAR; SCORE-LEVER) -- STOP-aft | OK | 117 passed, 1 warning in 7.60s |
 | 2026-06-20 23:39 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-21 00:04 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 86 passed, 1 warning in 8.20s |
+| 2026-06-21 00:21 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY; INTE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
