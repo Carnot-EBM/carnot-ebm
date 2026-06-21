@@ -1,3 +1,37 @@
+## 2026-06-21 — .421 planning sweep — OPERATIONALIZE THE VERIFIER WIN: the .420 A2 cross-game DiscriminativeVerifier beat LOO chance (0.674), the FIRST oracle-distinct moat result; .420 B1 measured the honest leaderboard ceiling (generic_transfer=0.04); pivot from 3x-null re-induction to wiring the verifier into the LIVE solver
+
+Added by the .421 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-21). The .420 scorecard
+(capstone exp4554, `complete: llm_proposer_null_efficiency_unmoved_barrier_refined`): `core_efficiency`
+stuck at 2.0074 for THREE milestones (.418/.419/.420); the LLM-proposer re-induction headline NULLED
+with **positive_control FAILED** (the live Qwen proposer produced ZERO reachable plans). The ONE win:
+A2 cross-game verifier discrimination (**LOO-AUROC 0.674, CI [0.606,0.745] excludes 0.5**). B1 shipped
+the honest leaderboard metric: **generic_transfer_rate_over_variants=0.04** (the 52 banked levels are
+mostly known-game replays). `.421 pivot: operationalize the verifier win (wire it into the LIVE solver
+as a candidate router, measured on generic_transfer) + one re-scoped Family-B executable-proposer
+attempt (positive-control-first, retire-if-same).
+
+**New / verified references this sweep (WebSearch 2026-06-21):**
+- **arXiv:2601.22607** — "From Self-Evolving Synthetic Data to Verifiable-Reward RL: Post-Training
+  Multi-turn Interactive Tool-Using Agents." Learned verifier / PRM modules that GENERALIZE beyond the
+  training agent (cross-domain, 81.3% avg pass). Directly corroborates the .420 A2 win and the .421 A1
+  thesis (a learned cross-game verifier-as-router that transfers). `flagged_for_v421` → the SOTA-ingestion
+  anchor (D/exp4565).
+- **arXiv:2505.24760** — "REASONING GYM: Reasoning Environments for RLVR." Cross-domain transfer of
+  verifiable-reward skills — peer evidence that a verifier trained on some environments transfers to
+  others (the LOO-AUROC generalization A2 just demonstrated for ARC games).
+- **arXiv:2603.24621** — "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence" (official report;
+  carried). VERIFIED this sweep: the leaderboard metric is **action efficiency = moves to solve a NEW
+  environment on FIRST CONTACT** (frontier models 0.37% / Gemini 3.1 Pro). This is why bank count on
+  KNOWN games is a mirage and `generic_transfer_rate_over_variants` (0.04) is the honest signal — the
+  load-bearing framing for the .421 capstone co-headline (B1/exp4562).
+- **Carried (re-confirmed) for the A2 executable-proposer re-scope:** **arXiv:2605.05138** (Executable
+  World Models for ARC-AGI-3 — the Family-B inducer), **arXiv:2606.11521** (Counterexample-Guided
+  Learning — the bounded refinement loop), **arXiv:2510.14331** (LLM Priors for ERM over Programs).
+  These were the .420 D SOTA-ingestion `flagged_for_v421` set; the .421 A2 (exp4557) builds the executable
+  GOAL+DYNAMICS proposer they describe, gated positive-control-first.
+
+---
+
 ## 2026-06-19 — .411 planning sweep — CONTINUE CLOSING THE GENERIC-SOLVER GAP via library learning over the example corpus; the .410 LOO benchmark proved PARTIAL generic transfer (2/7) + a REAL example-conditioned win-induction solve (g50t L1, quarantined on an artifact-substrate bug)
 
 Added by the `.411 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-19). The `.410
