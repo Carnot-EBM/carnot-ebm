@@ -1,0 +1,113 @@
+{
+  "cnn_held_out_delta_auroc": 0.7092359400538687,
+  "corpus_summary": {
+    "changed_examples": 13418,
+    "corpus_examples_loaded": 14020,
+    "corpus_manifest_examples": 14797,
+    "corpus_manifest_shards": 4,
+    "feature_source": "raw_frame_shard_recomputed",
+    "game_count": 24,
+    "heldout_examples": 2655,
+    "noop_examples": 467,
+    "train_examples": 4096,
+    "trainable_examples": 13885
+  },
+  "duration_s": 13.999747924972326,
+  "experiment": "experiment_4547_frame_change_predictor",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "cnn_held_out_delta_auroc": "principle \"the POSITIVE CONTROL -- the CNN predicts held-out transition deltas above a trivial baseline; guards a silently-broken predictor.\"",
+    "false_negative_risk_checked": "principle \"a null is valid only with the positive control passed.\"",
+    "honest_verdict": "principle \"terminal prefix; success: frame_change_cnn_median_actions_reduced_<n> OR complete: frame_change_cnn_no_action_reduction_honest_null.\"",
+    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- CNN trains on cached transitions + scores offline candidates, no headline LLM load.\"",
+    "median_actions_to_first_levelup_blind": "principle \"the matched blind-BFS control measured the SAME way -- the apples-to-apples comparison.\"",
+    "median_actions_to_first_levelup_cnn": "principle \"the HEADLINE -- held-out median actions-to-first-levelup with the CNN ranker (the score-metric lever).\"",
+    "positive_control_passed": "principle \"the CNN learned the action-effect signal; a median-actions null is valid only if this passed.\"",
+    "preconditions_checked": "principle \"records resources verified (offline arcade, human-replay corpus cached); pre-empts missing-resource fabrication.\"",
+    "random_seed": "principle \"determinism precondition for reproducibility.\"",
+    "reproducibility_checksum": "principle \"catches silent corpus/model drift on replay.\"",
+    "solve_rate_preserved": "principle \"HARD gate -- the action-efficiency win must NOT drop solve-rate (a faster agent that solves fewer games is worse).\""
+  },
+  "heldout_delta_metrics": {
+    "cnn_held_out_delta_auroc": 0.7092359400538687,
+    "heldout_changed_count": 2513,
+    "heldout_noop_count": 121,
+    "heldout_transition_count": 2634,
+    "positive_control_passed": true,
+    "trivial_delta_auroc": 0.5
+  },
+  "honest_verdict": "complete: frame_change_cnn_no_action_reduction_honest_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- CNN trains on cached transitions + scores offline candidates, no headline LLM load.",
+  "median_actions_to_first_levelup_blind": 1.0,
+  "median_actions_to_first_levelup_cnn": 1.0,
+  "positive_control": {
+    "actions_reduced": true,
+    "baseline_actions_to_first_levelup": 3,
+    "baseline_efficiency": 0.1111111111111111,
+    "implied_efficiency_delta": 0.8888888888888888,
+    "ranked_actions_to_first_levelup": 1,
+    "ranked_efficiency": 1.0
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "action_effect_npz_present": false,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "corpus_cached": true,
+    "env_game_access_blocked": true,
+    "offline_arcade_import": true,
+    "ok": true,
+    "torch_import": true,
+    "torch_version": "2.11.0+cu128",
+    "training_device_requested": "cpu",
+    "training_manifest_examples": 14797,
+    "training_shard_count": 4,
+    "training_shards_present": true
+  },
+  "random_seed": 4547,
+  "ranking_metrics": {
+    "action_reduction": false,
+    "heldout_group_count": 184,
+    "measurement_kind": "heldout_frame_change_candidate_group_proxy",
+    "median_actions_to_first_levelup_blind": 1.0,
+    "median_actions_to_first_levelup_cnn": 1.0,
+    "solve_rate_blind": 1.0,
+    "solve_rate_cnn": 1.0,
+    "solve_rate_preserved": true
+  },
+  "reproducibility_checksum": "sha256:6444a5139d0734ea19e6695a1e091bb70109f50f81baa6190fed66dcdf8ffa12",
+  "requirements": [
+    "REQ-ARC-FCP-4547"
+  ],
+  "rich_action_candidates_wired": true,
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4547"
+  ],
+  "schema": "carnot.arc_frame_change_predictor_4547.v1",
+  "secondary_input": {
+    "games": [
+      "ka59",
+      "ar25"
+    ],
+    "reason": "secondary cheaper item for L2 stall when CNN ranker produces an honest null",
+    "topic": "hidden_field_state_hash_probe"
+  },
+  "solve_rate_blind": 1.0,
+  "solve_rate_cnn": 1.0,
+  "solve_rate_preserved": true,
+  "training_summary": {
+    "batch_size": 64,
+    "batches_trained": 64,
+    "epochs": 1,
+    "examples_seen": 4096,
+    "examples_used": 4096,
+    "final_loss": 0.5608996702358127,
+    "frame_size": 64,
+    "hidden_channels": 8,
+    "initial_loss": 0.6983041977509856,
+    "learning_rate": 0.01,
+    "num_colors": 16
+  },
+  "trivial_delta_auroc": 0.5,
+  "weights_bundled": false
+}
