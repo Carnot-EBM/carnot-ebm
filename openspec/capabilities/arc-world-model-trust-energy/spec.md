@@ -368,6 +368,44 @@ stalls at the prior level, the artifact SHALL use a `complete:` verdict, set
 `reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
 the registry count.
 
+### REQ-ARC-WMTE-4535: ARC Sprint Level-Up Attempt Guarantee Bank
+
+Experiment 4535 SHALL run the offline arcade precondition and bank at least one
+new reproducible ARC level independent of the A1/A2 headline path. The workflow
+SHALL prefer deepening a shallow L1 game from `sp80`, `su15`, or `cn04`, SHALL
+derive only the next-level win/action/state delta from the offline environment,
+and SHALL use the standing ARC loop output plus `arc_solver_kit.reproduce` as
+the source of truth for any bank. A banked level SHALL require
+`offline_reproduced=true`, a reproduction gate whose `reached_level` is greater
+than the target game's prior registry level, and a persisted update to
+`ops/arc_solve_registry.yaml` that records the win condition, action model,
+solver module, gotchas, and dead-ends needed by the next attempt.
+
+Experiment 4535 SHALL write
+`results/experiment_4535_levelup_attempt.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `offline_reproduced`,
+`reproduced_levels`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `target_game`,
+`reproduction_gate`, `solution_labels`, `dead_ends`, and `registry_update`.
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL set `honest_verdict` to
+`success: <game>_L<n>_offline_reproduced`, `offline_reproduced=true`,
+`reproduced_levels >= 1`, and `registry_updated=true`. If the target only
+identifies a delta, repeats an already registered level, or stalls at the prior
+level, the artifact SHALL use a `complete:` verdict, set
+`reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
+the registry count.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
@@ -535,6 +573,19 @@ Then it records the required field principles, computes a stable
 `reproducibility_checksum`, updates the registry entry and total level count,
 records dead-end attempts, and reports success only when the offline
 reproduction gate is true and at least one new level was banked.
+
+### SCENARIO-ARC-WMTE-4535: sp80 L2 Splitter Placement Banks Offline
+
+Given the offline arcade precondition passes, `sp80` has a prior reproduced L1
+registry row, and the `sp80` adapter derives the L2 spill-splitter placement
+delta from the offline environment state
+When experiment 4535 runs the standing loop to target level 2 and builds the
+level-up artifact
+Then the full L1+L2 label plan is replayed through `arc_solver_kit.reproduce`,
+the terminal artifact records the required field principles, computes a stable
+`reproducibility_checksum`, updates the `sp80` registry row and total level
+count, records dead-end attempts, and reports success only when the offline
+reproduction gate reaches level 2 with `offline_reproduced=true`.
 
 ### SCENARIO-ARC-WMTE-4526: Integration Wires Only Deeper-Level Winners
 

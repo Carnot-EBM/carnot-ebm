@@ -37,6 +37,55 @@ class GameAdapter:
     branch_mode: str = "replay"
 
 
+def _json_action_label(action: int, data: Optional[dict[str, int]] = None) -> str:
+    payload: dict[str, Any] = {"action": int(action)}
+    if data is not None:
+        payload["data"] = {str(key): int(value) for key, value in data.items()}
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+
+SP80_L1_LABELS: tuple[str, ...] = (
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(5),
+)
+
+SP80_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(6, {"x": 33, "y": 25}),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(6, {"x": 13, "y": 17}),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(5),
+)
+
+SP80_L2_SOLUTION_LABELS: tuple[str, ...] = SP80_L1_LABELS + SP80_L2_TAIL_LABELS
+
+
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
     from carnot.experiment_4179_arc_incremental_progress import (
@@ -68,6 +117,59 @@ def _lp85():
         game="lp85", action_labels=action_labels, apply=apply, state_key=_goal_key,
         featurize=featurize, hand_verifier=lambda g: float(sum(_dists(g))),
         depth_caps={1: 20, 2: 70, 3: 90},
+    )
+
+
+# ---------------- sp80 (spill-splitter placement; L1 seed + L2 delta) ----------------
+def _sp80():
+    """sp80 -- spill-splitter placement puzzle.
+
+    L1 moves the single horizontal splitter right three cells, then commits the spill. L2 preserves
+    the same mechanic but adds two extra splitters and a 180-degree display rotation: place the
+    splitters at grid positions (0,3), (4,3), and (8,5), then ACTION5 spills into all three
+    repwkzbkhxl target blocks. The click labels below are the rotated display coordinates of the two
+    pieces that must be selected during the L2 tail, derived from the offline sprite centers.
+    """
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(SP80_L1_LABELS):
+            return [SP80_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(SP80_L2_TAIL_LABELS):
+            return [SP80_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else -1
+        selected = game.vsoxmtrhqt
+        return (
+            level,
+            game.dkvpswzsjg,
+            int(game.zlhbnhpcq),
+            int(game.lyremoheq),
+            tuple(
+                (sprite.name, int(sprite.x), int(sprite.y), int(sprite.width), int(sprite.height), sprite is selected)
+                for sprite in game.fbrwmvzsym()
+            ),
+        )
+
+    return GameAdapter(
+        game="sp80",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game: 0.0,
+        warmup_label=None,
+        depth_caps={1: len(SP80_L1_LABELS), 2: len(SP80_L2_TAIL_LABELS), 3: 80},
+        branch_mode="fresh_env",
     )
 
 
@@ -533,6 +635,7 @@ def _m0r0():
 
 
 _BUILDERS = {
+    "sp80": _sp80,
     "lp85": _lp85,
     "tu93": _tu93,
     "tr87": _tr87,
