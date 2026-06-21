@@ -234,6 +234,57 @@ level, and `offline_reproduced=true` for the newly reached level. Otherwise the
 artifact SHALL report a terminal honest null with the concrete barrier root cause
 and SHALL NOT claim action-count reductions as a score win.
 
+### REQ-ARC-WMTE-4533: Per-Level Goal Re-Induction Gate
+
+The live `E3AgentPolicy` and `StepwiseExplorer` SHALL treat an increment in
+`frame.levels_completed` as a new goal-acquisition episode when
+`target_levels > 1`. On every detected level-up, the policy SHALL clear stale
+induction state, re-run the executable world-model / DSL induction path against
+post-transition frames, and route subsequent frontier search with the newly
+induced level-conditioned goal predicate as a bias while preserving depth as
+the no-regression primary key. Stall-triggered induction SHALL remain available,
+but it SHALL NOT be the only trigger for induction after a won level.
+
+Experiment 4533 SHALL sweep `target_levels` over `{1, 2, 3, 8}` on at least
+`lp85` and `m0r0`, report the CORE-preservation check over
+`{lp85,m0r0,sp80,vc33}`, and write
+`results/experiment_4533_per_level_goal_reinduction.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `model_specs`,
+`core_efficiency_baseline`, `core_efficiency_best`, `efficiency_delta`,
+`deepest_level_reached_per_core_game`, `core_solves_preserved`,
+`barrier_refinement`, `target_levels_sweep`, `chosen_submitted_config`,
+`positive_control_passed`, `false_negative_risk_checked`,
+`offline_reproduced`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. When `efficiency_delta == 0.0`, the artifact SHALL
+also include `null_delta_methodology_note` explaining that baseline equals best
+because no lever reached a deeper level, not because of a measurement bug.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: reinduction_<game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: reinduction_no_deeper_level_barrier_refined_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade search/induction, no headline GGUF load (1s floor). If the LLM induction tier is genuinely invoked, declare live_llm_inference + add the model precondition."
+- `model_specs`: principle "names the inducer/model actually invoked (or 'offline_dsl_induction_no_llm') -- the methodology field whose absence false-flagged the .418 A2 as METHODOLOGY_MISSING."
+- `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control (NOT median actions, retired)."
+- `core_efficiency_best`: principle "the HEADLINE -- did per-level re-induction reach a deeper level and raise core_efficiency."
+- `efficiency_delta`: principle "core_efficiency_best - core_efficiency_baseline, emitted explicitly so a null (delta 0.0) is annotated, not a control==best TAUTOLOGY false-positive."
+- `deepest_level_reached_per_core_game`: principle "best_level per CORE game per config -- the direct evidence of reaching MORE levels (the score lever)."
+- `core_solves_preserved`: principle "HARD empirical gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve fails the lever regardless."
+- `barrier_refinement`: principle "if no deeper level is reached, the concrete actionable refinement of what still blocks the re-induced L2 predicate."
+- `target_levels_sweep`: principle "the {target_levels -> (core_efficiency, deepest_level, core_solves_preserved)} table so the decision is auditable."
+- `chosen_submitted_config`: principle "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); must keep parity tests consistent."
+- `positive_control_passed`: principle "proves the harness can detect a real re-induction through a level-conditioned predicate change."
+- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
+- `offline_reproduced`: principle "any new level reached must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require some CORE game to reach L2, a strict
+`core_efficiency_best > 2.0074`, `core_solves_preserved=true`, and
+`offline_reproduced=true` for any newly reached level before changing
+`SUBMITTED_AGENT_CONFIG`. Otherwise the submitted configuration SHALL remain
+unchanged and the artifact SHALL report the honest null plus barrier refinement.
+
 ### REQ-ARC-WMTE-4525: Standing Loop Level-Up Registry Bank
 
 Experiment 4525 SHALL run the offline arcade precondition and use the standing
@@ -404,6 +455,17 @@ Then the terminal artifact records the CORE per-level efficiency baseline,
 deepest level reached per CORE game for each lever, a concrete L1 to L2 barrier
 diagnosis, and reports success only if a CORE game reaches L2 without losing a
 CORE level and offline reproduction confirms the new level.
+
+### SCENARIO-ARC-WMTE-4533: Level-Up Re-Induces A New Goal Predicate
+
+Given a live E3 policy has induced an L1 predicate and then observes
+`frame.levels_completed` increase while `target_levels > 1`
+When experiment 4533 enables per-level re-induction and sweeps target levels
+Then the policy records a level-boundary induction event, clears stale predicate
+state, attempts a fresh post-transition induction for the next level, reports
+the level-conditioned predicate-change positive control, and only wires the
+submitted config if the CORE per-level efficiency strictly exceeds `2.0074`
+without losing a CORE solve.
 
 ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
 

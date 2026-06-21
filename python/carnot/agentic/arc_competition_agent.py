@@ -268,6 +268,10 @@ class StepwiseExplorer:
         self._nav_edges_recorded = 0
         self._nav_forward_steps = 0
         self._nav_reset_replay_steps = 0
+        self.goal_bias = None
+        self.goal_bias_label = ""
+        self._goal_bias_scored = 0
+        self._goal_bias_errors = 0
 
     @staticmethod
     def _normalize_frontier_batch_size(value: int | str | None) -> int | None:
@@ -424,6 +428,34 @@ class StepwiseExplorer:
             "forward_walk_hit_rate": float(hits / attempts) if attempts else 0.0,
         }
 
+    def set_goal_bias(self, goal_bias, *, label: str = "") -> None:
+        """REQ-ARC-WMTE-4533: install a level-conditioned predicate as a depth-preserving bias."""
+
+        self.goal_bias = goal_bias
+        self.goal_bias_label = str(label or "")
+
+    def goal_bias_diagnostics(self) -> dict[str, Any]:
+        return {
+            "enabled": self.goal_bias is not None,
+            "label": self.goal_bias_label,
+            "nodes_scored": int(self._goal_bias_scored),
+            "errors": int(self._goal_bias_errors),
+        }
+
+    def _goal_bias_score(self, node: Mapping[str, Any]) -> float:
+        if self.goal_bias is None:
+            return 0.0
+        frame = node.get("frame")
+        if frame is None:
+            return 0.0
+        try:
+            score = float(self.goal_bias(frame))
+            self._goal_bias_scored += 1
+            return score
+        except Exception:
+            self._goal_bias_errors += 1
+            return 0.0
+
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
 
@@ -569,11 +601,12 @@ class StepwiseExplorer:
                         node_hash=h,
                     )
                     new_path = opath + [act]
+                    value, frame_for_value = self._initial_value(latest)
                     self.graph[h] = {
                         "path": new_path,
                         "untested": self._candidates(latest, path=new_path),
-                        "value": self._initial_value(latest)[0],
-                        "frame": self._initial_value(latest)[1],
+                        "value": value,
+                        "frame": latest if self.goal_bias is not None else frame_for_value,
                         "discriminative_features": features,
                     }
         self.cur = h
@@ -585,13 +618,14 @@ class StepwiseExplorer:
                 source="root",
                 node_hash=h,
             )
+            value, frame_for_value = self._initial_value(latest)
             self.graph.setdefault(
                 h,
                 {
                     "path": [],
                     "untested": self._candidates(latest, path=[]),
-                    "value": self._initial_value(latest)[0],
-                    "frame": self._initial_value(latest)[1],
+                    "value": value,
+                    "frame": latest if self.goal_bias is not None else frame_for_value,
                     "discriminative_features": features,
                 },
             )
@@ -626,7 +660,7 @@ class StepwiseExplorer:
                 continue
             node["discriminative_pruned"] = False
             depth = len(node["path"])
-            eligible.append((h, node, depth, on_path))
+            eligible.append((h, node, depth, on_path, self._goal_bias_score(node)))
 
         if use_value and eligible:
             cheap_ranked = sorted(
@@ -637,29 +671,30 @@ class StepwiseExplorer:
                     item[0],
                 ),
             )[: self.lazy_value_top_k]
-            for h, node, _depth, _on_path in cheap_ranked:
+            for h, node, _depth, _on_path, _goal_bias in cheap_ranked:
                 if node.get("value") is None:
                     node["value"] = self._value(node.get("frame"), node_hash=h)
-                    node["frame"] = None
+                    if self.goal_bias is None:
+                        node["frame"] = None
 
         best = None
         best_key = None
-        for h, node, depth, on_path in eligible:
+        for h, node, depth, on_path, goal_bias in eligible:
             nav_key = self._frontier_navigation_cost_key(h) if self.navigation_cost_tiebreak else ()
             if self.navigation_cost_tiebreak and use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
-                key = (depth, w * float(value), *nav_key, -on_path)
+                key = (depth, w * float(value), -goal_bias, *nav_key, -on_path)
             elif use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
-                key = (depth + w * float(value), depth, -on_path)
+                key = (depth + w * float(value), depth, -goal_bias, -on_path)
             elif self.navigation_cost_tiebreak:
-                key = (depth, *nav_key, -on_path)
+                key = (depth, -goal_bias, *nav_key, -on_path)
             else:
-                key = (depth, -on_path)
+                key = (depth, -goal_bias, -on_path)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
@@ -999,6 +1034,7 @@ class E3AgentPolicy:
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
+        self.target_levels = int(target_levels)
         if value_head is _DEFAULT_VALUE_HEAD:
             value_head = load_cross_game_value_head()
         self.strategy_route = arc_strategy_router.route_for_game(self.short)
@@ -1038,6 +1074,16 @@ class E3AgentPolicy:
         self.induced = False
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
         self.world_model_trust_selection = None
+        self._observed_level: Optional[int] = None
+        self._start_level: Optional[int] = None
+        self._current_goal_level: Optional[int] = None
+        self._episode_transition_start = 0
+        self._episode_dsl_transition_start = 0
+        self._level_reinduction_pending = False
+        self._pending_induction_reason: Optional[str] = None
+        self._execute_plan_from_current = False
+        self.level_induction_events: list[dict[str, Any]] = []
+        self.induction_attempts: list[dict[str, Any]] = []
 
     def _maybe_route_from_frame(self, latest: Any) -> None:
         if self._route_from_frame_checked or latest is None:
@@ -1057,13 +1103,104 @@ class E3AgentPolicy:
             self.explore_budget = min(self.explore_budget, _route_explore_budget(routed))
 
     def _fit_dsl_model(self) -> None:
-        if not self._dsl_transitions:
+        active = self._active_dsl_transitions()
+        if not active:
             return
         try:
-            self.dsl_model = ObjectDeltaModel(self.short).fit(self._dsl_transitions)
-            self.dsl_energy = self.dsl_model.consistency_energy(self._dsl_transitions)
+            self.dsl_model = ObjectDeltaModel(self.short).fit(active)
+            self.dsl_energy = self.dsl_model.consistency_energy(active)
         except Exception:
-            self.dsl_energy = {"energy": None, "n_heldout": len(self._dsl_transitions)}
+            self.dsl_energy = {"energy": None, "n_heldout": len(active)}
+
+    def _active_transitions(self) -> list:
+        return list(self.transitions[self._episode_transition_start :])
+
+    def _active_dsl_transitions(self) -> list[tuple[Any, tuple, Any]]:
+        return list(self._dsl_transitions[self._episode_dsl_transition_start :])
+
+    def _observe_level_boundary(self, latest: Any, *, frames_seen: int) -> list[dict[str, Any]]:
+        """SCENARIO-ARC-WMTE-4533: level-up starts a new goal-acquisition episode."""
+
+        if latest is None:
+            return []
+        level = _level_of(latest)
+        if self._start_level is None:
+            self._start_level = level
+        if self._observed_level is None:
+            self._observed_level = level
+            self._current_goal_level = level + 1
+            return []
+        if level <= self._observed_level:
+            return []
+        events: list[dict[str, Any]] = []
+        start = int(self._start_level or 0)
+        for new_level in range(self._observed_level + 1, level + 1):
+            relative = new_level - start
+            if relative >= self.target_levels:
+                continue
+            event = self._begin_level_goal_episode(new_level, frames_seen=frames_seen)
+            events.append(event)
+        self._observed_level = level
+        return events
+
+    def _begin_level_goal_episode(self, completed_level: int, *, frames_seen: int) -> dict[str, Any]:
+        next_goal = int(completed_level) + 1
+        self._current_goal_level = next_goal
+        self._episode_transition_start = len(self.transitions)
+        self._episode_dsl_transition_start = len(self._dsl_transitions)
+        self.induced = False
+        self.plan = []
+        self.pi = 0
+        self._level_reinduction_pending = True
+        self._execute_plan_from_current = True
+        self.world_model_trust_selection = None
+        self.dsl_energy = None
+        self.explorer.set_goal_bias(None, label="")
+        event = {
+            "trigger": "level_up",
+            "completed_level": int(completed_level),
+            "next_goal_level": next_goal,
+            "transition_start": int(self._episode_transition_start),
+            "dsl_transition_start": int(self._episode_dsl_transition_start),
+            "frames_seen": int(frames_seen),
+        }
+        self.level_induction_events.append(event)
+        return event
+
+    def _current_goal_reached(self) -> bool:
+        if self._current_goal_level is None:
+            return self.explorer.best_level > (self.explorer.start_level or 0)
+        return self.explorer.best_level >= self._current_goal_level
+
+    def _should_enter_induction(self, *, stalled: bool, won: bool) -> tuple[bool, Optional[str]]:
+        if (
+            self._level_reinduction_pending
+            and not self.induced
+            and len(self.transitions) > self._episode_transition_start
+        ):
+            return True, "level_up_reinduction"
+        if stalled and not won and not self.induced:
+            return True, "stall"
+        return False, None
+
+    def _install_goal_bias(self, is_done) -> None:
+        if not callable(is_done):
+            return
+
+        def _bias(frame: Any) -> float:
+            from carnot.agentic.arc_agi3_world_model import grid_of
+            from carnot.agentic.arc_executable_world_model import to_logical
+
+            grid = to_logical(grid_of(frame), self.cell)
+            return 1.0 if is_done(grid) else 0.0
+
+        label = f"L{self._current_goal_level or '?'}_induced_goal_predicate"
+        self.explorer.set_goal_bias(_bias, label=label)
+
+    def _next_plan_move(self) -> tuple:
+        step = self.plan[self.pi]
+        self.pi += 1
+        return (step["action"], step.get("data"))
 
     def _proposer(self):
         if self.proposer is None:
@@ -1126,38 +1263,62 @@ class E3AgentPolicy:
             g1 = to_logical(grid_of(latest), self.cell)
             self.transitions.append(Transition(g0, aid, data, g1, 0, _level_of(latest)))
             self._dsl_transitions.append((g0, _action_key(aid, data), g1))
-        if self.phase == "explore":
-            mv = self.explorer.next_move(frames, latest)
-            if latest is not None:
+        boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))
+        if boundary_events and latest is not None:
+            try:
                 from carnot.agentic.arc_agi3_world_model import grid_of
 
                 self.cell = detect_cell(grid_of(latest))
-                if self.root_grid is None and self.explorer.root is not None:
-                    self.root_grid = to_logical(grid_of(latest), self.cell)
-                if mv[0] not in ("RESET", None):
-                    self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
-                else:
-                    self._prev = None
-            # VERIFIER-ROUTED CASCADE escalation: hand off to the tier-3 LLM (E3 induction)
-            # only when the cheap tier-1 explorer has STALLED — spent its transition budget
-            # without a level-up, or fully explored out. If the explorer WON, is_done ends
-            # the episode (tier-1 success; no costly escalation). This is the router: cheap
-            # first, escalate the hard tail.
-            won = self.explorer.best_level > (self.explorer.start_level or 0)
-            stalled = len(self.transitions) >= self.explore_budget or self.explorer.explored_out
-            if stalled and not won and not self.induced:  # escalate ONCE; then tier-1 fallback
+                self.root_grid = to_logical(grid_of(latest), self.cell)
+                self._prev = None
+            except Exception:
+                pass
+        if self.phase == "explore":
+            should_induce, reason = self._should_enter_induction(
+                stalled=False,
+                won=self._current_goal_reached(),
+            )
+            if should_induce:
                 self.phase = "induce"
-            return mv
+                self._pending_induction_reason = reason
+                if reason != "level_up_reinduction":
+                    self._execute_plan_from_current = False
+            else:
+                mv = self.explorer.next_move(frames, latest)
+                if latest is not None:
+                    from carnot.agentic.arc_agi3_world_model import grid_of
+
+                    self.cell = detect_cell(grid_of(latest))
+                    if self.root_grid is None and self.explorer.root is not None:
+                        self.root_grid = to_logical(grid_of(latest), self.cell)
+                    if mv[0] not in ("RESET", None):
+                        self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
+                    else:
+                        self._prev = None
+                # VERIFIER-ROUTED CASCADE escalation: hand off to the tier-3 induction path on
+                # a genuine stall, and also after a level-up once post-boundary evidence exists.
+                won = self._current_goal_reached()
+                stalled = len(self.transitions) >= self.explore_budget or self.explorer.explored_out
+                should_induce, reason = self._should_enter_induction(stalled=stalled, won=won)
+                if should_induce:
+                    self.phase = "induce"
+                    self._pending_induction_reason = reason
+                    if reason != "level_up_reinduction":
+                        self._execute_plan_from_current = False
+                return mv
         if self.phase == "induce" and not self.induced:
             self.induced = True
             self._induce_and_plan()
+            self._level_reinduction_pending = False
             self.phase = "execute" if self.plan else "explore"
             self._prev = None
-            return ("RESET", None) if self.plan else self.explorer.next_move(frames, latest)
+            if self.plan:
+                if self._execute_plan_from_current:
+                    return self._next_plan_move()
+                return ("RESET", None)
+            return self.explorer.next_move(frames, latest)
         if self.phase == "execute" and self.pi < len(self.plan):
-            step = self.plan[self.pi]
-            self.pi += 1
-            return (step["action"], step.get("data"))
+            return self._next_plan_move()
         # plan exhausted / no model -> keep exploring
         self.phase = "explore"
         return self.explorer.next_move(frames, latest)
@@ -1167,6 +1328,18 @@ class E3AgentPolicy:
 
         from carnot.agentic import arc_executable_world_model as e3
 
+        active_transitions = self._active_transitions()
+        attempt = {
+            "reason": self._pending_induction_reason or "stall",
+            "goal_level": self._current_goal_level,
+            "transition_count": len(active_transitions),
+            "dsl_transition_count": len(self._active_dsl_transitions()),
+            "model_specs": "offline_dsl_induction_no_llm",
+            "planned": False,
+            "skipped": "",
+        }
+        self.induction_attempts.append(attempt)
+
         # Production-safe escape hatch (default OFF): when CARNOT_ARC_DISABLE_INDUCTION=1, skip the LLM
         # world-model induction tier entirely and stay in the (fast) tier-1 explorer. The local submission
         # GATE sets this so it measures the explorer's SEARCH/efficiency cleanly + fast, without paying the
@@ -1174,34 +1347,45 @@ class E3AgentPolicy:
         # bounded local gate run and is irrelevant to detecting a SEARCH regression). Unset in production
         # (Kaggle) -> induction runs exactly as before.
         if os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") == "1":
+            attempt["skipped"] = "disabled_by_env"
+            return
+        if not active_transitions:
+            attempt["skipped"] = "no_active_transitions"
             return
 
         try:
             self._fit_dsl_model()
-            ok, _ = self._proposer().induce(self.short, self.transitions, self.cell)
+            ok, _ = self._proposer().induce(self.short, active_transitions, self.cell)
             if not ok or self.root_grid is None:
+                attempt["skipped"] = "proposer_failed_or_missing_root"
                 return
             engine, is_done = e3.load_engine(self.short)
             if self.short in HIDDEN_STATE_GAME_IDS:
                 self.world_model_trust_selection = select_trusted_world_model(
-                    self.transitions,
+                    active_transitions,
                     self._world_model_candidates(engine, is_done),
                     hidden_state=True,
                 )
                 if self.world_model_trust_selection.selected_score.heldout_accuracy < 0.5:
+                    attempt["skipped"] = "hidden_state_trust_below_threshold"
                     return
                 engine = self.world_model_trust_selection.selected.engine
                 is_done = self.world_model_trust_selection.selected.is_level_complete or is_done
             else:
-                vr = e3.WorldModelVerifier(self.transitions).score(engine)
+                vr = e3.WorldModelVerifier(active_transitions).score(engine)
                 if vr.accuracy < 0.5:  # too weak to trust for execution-grounded planning
+                    attempt["skipped"] = "world_model_accuracy_below_threshold"
                     return
+            self._install_goal_bias(is_done)
             # plan ENTIRELY in the model (zero real actions); execute phase RESETs then
             # replays this plan in the real env, halting on divergence.
             plan = e3.plan_in_model(engine, is_done, self.root_grid)
             if plan:
                 self.plan = plan
+                attempt["planned"] = True
+                attempt["plan_length"] = len(plan)
         except Exception:
+            attempt["skipped"] = "exception"
             return
 
     def is_done(self, frames, latest):
