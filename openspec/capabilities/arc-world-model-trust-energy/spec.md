@@ -402,6 +402,50 @@ submitted configuration SHALL remain unchanged and the artifact SHALL report an
 honest null with `efficiency_delta=0.0`, `llm_proposer_value` characterized, and
 a concrete `barrier_refinement`.
 
+### REQ-ARC-WMTE-4551: Offline/Live Proposer Parity Guard
+
+Experiment 4551 SHALL add a no-model regression guard that compares the local
+submission gate's effective proposer/induction configuration against
+`SUBMITTED_AGENT_CONFIG`. The guard SHALL identify when
+`scripts/kaggle/arc_local_submission_gate.py` sets
+`CARNOT_ARC_DISABLE_INDUCTION=1` while the submitted
+`make_carnot_agent -> E3AgentPolicy` path ships live proposer induction through
+`E3AgentPolicy._proposer()`. On a mismatch, the gate SHALL emit
+`proposer_config_mismatch=true` and a specific divergence record instead of
+silently presenting the bare-explorer `core_efficiency` as the submitted
+agent's live-proposer number. When the effective offline configuration matches
+the submitted proposer/induction configuration, the guard SHALL pass cleanly
+with `proposer_config_mismatch=false`.
+
+Experiment 4551 SHALL write
+`results/experiment_4551_offline_live_proposer_parity.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`,
+`parity_guard_mechanism`, `proposer_config_mismatch_detected`,
+`tests_added_pass`, and `preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; shipped: offline_live_proposer_parity_guard_added OR complete: proposer_parity_partial_<reason>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the gate/parity logic against fixtures, no model load (1s floor)."
+- `parity_guard_mechanism`: principle "names the parity check + where it fires -- the fix that stops the offline gate silently understating the submitted agent."
+- `proposer_config_mismatch_detected`: principle "whether the .419-state offline gate (induction disabled) is correctly flagged as a mismatch vs the LLM-proposer SUBMITTED config -- the concrete bug this catches."
+- `tests_added_pass`: principle "Tests Must Run and Assert -- both the mismatch-fires and the matched-config-clean cases."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4551-PROPOSER-PARITY
+
+**Given** `SUBMITTED_AGENT_CONFIG` declares `policy=E3AgentPolicy` with the live
+LLM-proposer induction path available and the local gate fixture disables
+induction via `CARNOT_ARC_DISABLE_INDUCTION=1`
+**When** the offline/live proposer parity guard runs
+**Then** it reports `proposer_config_mismatch=true`, names the disabled
+induction divergence, and exposes the mismatch in the local gate JSON payload.
+
+**Given** a local gate fixture whose effective induction/proposer configuration
+matches the submitted E3 live-proposer configuration
+**When** the same guard runs
+**Then** it reports `proposer_config_mismatch=false` and emits no divergence.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from

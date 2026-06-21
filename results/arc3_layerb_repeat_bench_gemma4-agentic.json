@@ -1,0 +1,95 @@
+{
+  "experiment": "arc3_layerb_repeat_bench",
+  "model_key": "gemma4-agentic",
+  "mtp": false,
+  "repeat": 5,
+  "n_predict": 2560,
+  "per_game": {
+    "ka59": {
+      "grounded_rate": "4/5",
+      "n_grounded": 4,
+      "n_capped": 0,
+      "runs": [
+        {
+          "seed": 0,
+          "grounded": true,
+          "tokens": 764,
+          "capped": false,
+          "tok_per_s": 7.38
+        },
+        {
+          "seed": 1,
+          "grounded": true,
+          "tokens": 230,
+          "capped": false,
+          "tok_per_s": 5.91
+        },
+        {
+          "seed": 2,
+          "grounded": true,
+          "tokens": 333,
+          "capped": false,
+          "tok_per_s": 4.17
+        },
+        {
+          "seed": 3,
+          "grounded": true,
+          "tokens": 370,
+          "capped": false,
+          "tok_per_s": 4.07
+        },
+        {
+          "seed": 4,
+          "grounded": false,
+          "tokens": 501,
+          "capped": false,
+          "tok_per_s": 3.69
+        }
+      ]
+    },
+    "tn36": {
+      "grounded_rate": "2/5",
+      "n_grounded": 2,
+      "n_capped": 2,
+      "runs": [
+        {
+          "seed": 0,
+          "grounded": true,
+          "tokens": 478,
+          "capped": false,
+          "tok_per_s": 3.18
+        },
+        {
+          "seed": 1,
+          "grounded": false,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 3.57
+        },
+        {
+          "seed": 2,
+          "grounded": true,
+          "tokens": 1257,
+          "capped": false,
+          "tok_per_s": 3.6
+        },
+        {
+          "seed": 3,
+          "grounded": false,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 2.91
+        },
+        {
+          "seed": 4,
+          "grounded": false,
+          "tokens": 267,
+          "capped": false,
+          "tok_per_s": 3.77
+        }
+      ]
+    }
+  },
+  "honest_verdict": "complete_repeatbench_gemma4_agentic_mtp_False",
+  "inference_substrate": "offline_arc_agi3_gemma4-agentic_iGPU_repeat5"
+}

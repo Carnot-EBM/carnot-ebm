@@ -23,9 +23,11 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Mapping
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from statistics import median
+from typing import Any
 
 REPO = Path(__file__).resolve().parents[2]
 BASELINE = REPO / "ops" / "arc-submission-baseline.json"
@@ -42,6 +44,10 @@ CANONICAL_ACTION_METRIC = {
 }
 HEADROOM_BUDGET_CANDIDATES = (8000, 12000, 16000, 24000)
 DEFAULT_BUDGET = 8000
+INDUCTION_DISABLE_ENV = "CARNOT_ARC_DISABLE_INDUCTION"
+OFFLINE_GATE_DISABLE_INDUCTION = True
+PROPOSER_PARITY_GUARD = "offline_live_proposer_config_parity"
+LIVE_PROPOSER_KIND = "LocalGGUFProposer"
 # 4 reliably-solvable games (the bare-BFS solves) + 4 controls. Small so the gate runs in a couple minutes.
 GATE_GAMES = list(CANONICAL_GAME_SET)
 _LINE = re.compile(
@@ -54,7 +60,152 @@ EFFICIENCY_DROP_SLACK = 0.97  # PRIMARY: fail if CORE per-level efficiency drops
 BIG_ACTIONS = 10 ** 9
 
 
-def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
+def _gate_policy_class(policy: str) -> str:
+    if policy == "e3":
+        return "E3AgentPolicy"
+    if policy == "explorer":
+        return "StepwiseExplorer"
+    return str(policy)
+
+
+def submitted_agent_proposer_config(
+    submitted_agent_config: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Return the proposer/induction config implied by the submitted agent path."""
+
+    if submitted_agent_config is None:
+        from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG
+
+        submitted_agent_config = SUBMITTED_AGENT_CONFIG
+    policy = str(submitted_agent_config.get("policy") or "")
+    cascade = bool(submitted_agent_config.get("cascade"))
+    induction_enabled = bool(policy == "E3AgentPolicy" and cascade)
+    return {
+        "policy": policy,
+        "cascade": cascade,
+        "induction_enabled": induction_enabled,
+        "proposer_kind": LIVE_PROPOSER_KIND if induction_enabled else None,
+        "proposer_source": "E3AgentPolicy._proposer" if induction_enabled else "none",
+        "disable_induction_env": "unset",
+        "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG",
+    }
+
+
+def offline_gate_proposer_config(
+    *,
+    policy: str,
+    disable_induction: bool = OFFLINE_GATE_DISABLE_INDUCTION,
+) -> dict[str, Any]:
+    """Return the local gate's effective proposer/induction config."""
+
+    policy_class = _gate_policy_class(policy)
+    cascade = policy_class == "E3AgentPolicy"
+    induction_enabled = bool(cascade and not disable_induction)
+    return {
+        "policy": policy_class,
+        "gate_policy_arg": str(policy),
+        "cascade": cascade,
+        "induction_enabled": induction_enabled,
+        "proposer_kind": LIVE_PROPOSER_KIND if induction_enabled else None,
+        "proposer_source": "E3AgentPolicy._proposer" if induction_enabled else "none",
+        "disable_induction_env": "1" if disable_induction else "unset",
+        "lower_bound_note": (
+            "offline_core_efficiency_is_lower_bound_when_mismatch_true"
+            if disable_induction
+            else ""
+        ),
+    }
+
+
+def _proposer_divergence_detail(
+    field: str,
+    offline_config: Mapping[str, Any],
+    submitted_config: Mapping[str, Any],
+) -> str:
+    if (
+        field == "induction_enabled"
+        and offline_config.get(field) is False
+        and submitted_config.get(field) is True
+        and offline_config.get("disable_induction_env") == "1"
+    ):
+        return (
+            f"offline gate sets {INDUCTION_DISABLE_ENV}=1, disabling induction/proposer; "
+            "submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()"
+        )
+    if field == "proposer_kind":
+        return (
+            "offline and submitted paths use different proposer availability; "
+            "a None offline proposer means the measured core_efficiency is a bare-explorer lower bound"
+        )
+    return "offline effective config differs from submitted agent config"
+
+
+def proposer_config_parity_report(
+    *,
+    offline_config: Mapping[str, Any],
+    submitted_config: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compare gate and submitted proposer config without loading any model."""
+
+    offline = dict(offline_config)
+    submitted = dict(submitted_config)
+    divergence: list[dict[str, Any]] = []
+    for field in ("policy", "cascade", "induction_enabled", "proposer_kind"):
+        if offline.get(field) != submitted.get(field):
+            divergence.append(
+                {
+                    "field": field,
+                    "offline": offline.get(field),
+                    "submitted": submitted.get(field),
+                    "detail": _proposer_divergence_detail(field, offline, submitted),
+                }
+            )
+    return {
+        "parity_guard": PROPOSER_PARITY_GUARD,
+        "proposer_config_mismatch": bool(divergence),
+        "proposer_config_divergence": divergence,
+        "offline_config": offline,
+        "submitted_config": submitted,
+    }
+
+
+def attach_proposer_config_parity(
+    measurement: Mapping[str, Any],
+    *,
+    policy: str,
+    disable_induction: bool = OFFLINE_GATE_DISABLE_INDUCTION,
+    submitted_agent_config: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Attach the offline/live proposer parity result to a gate measurement."""
+
+    report = proposer_config_parity_report(
+        offline_config=offline_gate_proposer_config(
+            policy=policy,
+            disable_induction=disable_induction,
+        ),
+        submitted_config=submitted_agent_proposer_config(submitted_agent_config),
+    )
+    out = dict(measurement)
+    out.update(
+        {
+            "proposer_config_mismatch": report["proposer_config_mismatch"],
+            "proposer_config_divergence": report["proposer_config_divergence"],
+            "proposer_config_parity": report,
+            "offline_effective_proposer_config": report["offline_config"],
+            "submitted_effective_proposer_config": report["submitted_config"],
+        }
+    )
+    return out
+
+
+def _measure_game(
+    game: str,
+    policy: str,
+    budget: int,
+    cap: int,
+    *,
+    disable_induction: bool = OFFLINE_GATE_DISABLE_INDUCTION,
+) -> dict:
     import os
 
     cmd = [str(REPO / ".venv" / "bin" / "python"), str(EVAL), "--policy", policy,
@@ -62,7 +213,11 @@ def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
     # Measure the SEARCH/efficiency of the tier-1 explorer cleanly: disable the LLM induction tier so the
     # gate doesn't pay the local llama-server spawn (irrelevant to a search regression; a one-time cost
     # under the real 12h eval). Production submission does NOT set this -> induction runs normally there.
-    env = {**os.environ, "CARNOT_ARC_DISABLE_INDUCTION": "1"}
+    env = dict(os.environ)
+    if disable_induction:
+        env[INDUCTION_DISABLE_ENV] = "1"
+    else:
+        env.pop(INDUCTION_DISABLE_ENV, None)
     try:
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=cap, cwd=str(REPO), env=env)
         m = None
@@ -124,9 +279,27 @@ def _normalize_game_row(row: dict) -> dict:
     return out
 
 
-def measure(policy: str, budget: int, cap: int) -> dict:
+def measure(
+    policy: str,
+    budget: int,
+    cap: int,
+    *,
+    disable_induction: bool = OFFLINE_GATE_DISABLE_INDUCTION,
+) -> dict:
     with ThreadPoolExecutor(max_workers=8) as ex:
-        rows = [_normalize_game_row(row) for row in ex.map(lambda g: _measure_game(g, policy, budget, cap), GATE_GAMES)]
+        rows = [
+            _normalize_game_row(row)
+            for row in ex.map(
+                lambda g: _measure_game(
+                    g,
+                    policy,
+                    budget,
+                    cap,
+                    disable_induction=disable_induction,
+                ),
+                GATE_GAMES,
+            )
+        ]
     solved = [r for r in rows if r["solved"]]
     acts = [r["actions"] for r in solved if r["actions"] is not None]
     per_level_efficiency_by_game = {
@@ -141,7 +314,7 @@ def measure(policy: str, budget: int, cap: int) -> dict:
         }
         for r in rows
     }
-    return {
+    measurement = {
         "policy": policy, "games": GATE_GAMES, "per_game": rows,
         "action_metric": dict(CANONICAL_ACTION_METRIC),
         "solved_count": len(solved),
@@ -173,6 +346,11 @@ def measure(policy: str, budget: int, cap: int) -> dict:
             r["efficiency"] for r in rows
             if r["game"] in CANONICAL_CORE_GAMES and r.get("efficiency") is not None), 4),
     }
+    return attach_proposer_config_parity(
+        measurement,
+        policy=policy,
+        disable_induction=disable_induction,
+    )
 
 
 def _efficiency_by_game(measurement: dict) -> dict[str, float]:
@@ -427,6 +605,8 @@ def dashboard_row(cur: dict, base: dict, *, lever: str) -> dict:
         "baseline_navigation_by_game": _navigation_by_game(base),
         "nav_regression_warning": nav_warning,
         "nav_metric_role": "secondary_wall_clock_warning_not_score_metric",
+        "proposer_config_mismatch": bool(cur.get("proposer_config_mismatch")),
+        "proposer_config_divergence": cur.get("proposer_config_divergence") or [],
     }
 
 
@@ -570,6 +750,9 @@ def main() -> int:
                     "pass": False,
                     "verdict": f"REGRESSION: canonical baseline guard failed {guard['errors']}",
                     "baseline_guard": guard,
+                    "proposer_config_mismatch": cur.get("proposer_config_mismatch"),
+                    "proposer_config_divergence": cur.get("proposer_config_divergence"),
+                    "proposer_config_parity": cur.get("proposer_config_parity"),
                     "current": cur,
                 }, indent=2))
             return 1
@@ -597,6 +780,9 @@ def main() -> int:
             "verdict": msg,
             "lever_dashboard_row": row,
             "baseline_guard": guard,
+            "proposer_config_mismatch": cur.get("proposer_config_mismatch"),
+            "proposer_config_divergence": cur.get("proposer_config_divergence"),
+            "proposer_config_parity": cur.get("proposer_config_parity"),
             "current": cur,
             "baseline": {
                 k: base.get(k)
@@ -611,6 +797,11 @@ def main() -> int:
         print(f"[gate] {'PASS' if ok else 'FAIL'}: {msg}")
         print(f"[gate] lever {a.lever}: median_actions_on_core={row['median_actions_on_core']}, "
               f"core_solves_preserved={row['core_solves_preserved']}, bonus={row['bonus_solves']}")
+        if cur.get("proposer_config_mismatch"):
+            print(
+                "[gate] proposer_config_mismatch=true: "
+                f"{cur.get('proposer_config_divergence')}"
+            )
     return 0 if ok else 1
 
 
