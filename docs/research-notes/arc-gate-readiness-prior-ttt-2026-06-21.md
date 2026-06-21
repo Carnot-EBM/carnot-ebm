@@ -47,6 +47,27 @@
 > the baseline the goal-biased online explorer must beat: re-run this harness with the goal-bias and the
 > offline signal that would justify spending a shot is a material lift in first-win games (e.g. 1/11 → N/11)
 > at comparable or better action-efficiency.
+>
+> ### Goal-bias prototype v1 (fixed order-prior) — REFUTED, 1/11 (no lift), `python/carnot/agentic/arc_goal_bias.py`
+>
+> Built `GoalBiasValueHead` — a zero-shot distance-to-win prior over the `arc_agi3_goal_induction`
+> hypothesis classes (object-count + color-count + 1−coverage; lower = more ordered = closer), plugged into
+> the explorer A* frontier as `explorer_goalbias` (best-first, value_weight 3.0). Same harness/games/budget:
+>
+> | | first-wins | lp85 |
+> |---|---|---|
+> | undirected baseline | 1/11 | 20 actions (eff 2.0069) |
+> | fixed order-prior goal-bias | **1/11 (no lift)** | 437 actions (eff 0.0042 — crashed) |
+>
+> The fixed order-prior unlocked NO new games and badly degraded the one that worked (best-first toward
+> "more ordered" detoured 20→437 actions to lp85's win, which is not a consolidation). **Refuted as a
+> design:** a FIXED directional bias cannot work because different games reward different directions
+> (clear / build / toggle); committing to a guessed direction misroutes as often as it helps. The no-lift
+> result is weight-robust — order does not point at the win-mechanic on the 10 failing games at any weight.
+> **The lever requires ONLINE direction-induction:** stay direction-agnostic (novelty/coverage) until the
+> env `levels_completed` reveals which hypothesis the game rewards, then commit that direction. That
+> online-confirmation explorer is the next iteration; the fixed prior is preserved as the refuted seed.
+> Gate decision unchanged: NOT gate-ready; do not spend a shot.
 
 
 **Question (operator):** are we gate-ready to spend a scarce L4x4 submission shot? The gate (offline-first
