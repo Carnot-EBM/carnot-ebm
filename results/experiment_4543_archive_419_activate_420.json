@@ -1,0 +1,174 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "efficiency_moved",
+        "scorecard",
+        "reproducible_total_levels_delta"
+      ],
+      "path": "results/experiment_4542_capstone_v419.json",
+      "sha256": "69d59730a362a5792a022bfc7dc5bc73faeb6efc1c65371091271139472e7d4b",
+      "source": "experiment_4542_capstone_v419"
+    },
+    {
+      "fields_imported": [
+        "barrier_refinement",
+        "model_specs",
+        "efficiency_delta",
+        "deepest_level_reached_per_core_game"
+      ],
+      "path": "results/experiment_4533_per_level_goal_reinduction.json",
+      "sha256": "7d30845db615d41874132eade62615c03590a2a74e6a2ccbe45d909ee2746795",
+      "source": "experiment_4533_per_level_goal_reinduction"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "34fd0c8b0972a42addace80c08c2b354166e4f07480d9a8550b19df37908e85a",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_419": {
+    "a1_reinduction": {
+      "barrier_refinement": "post_level_reinduction_triggered_but_no_reachable_l2_plan; offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root'].",
+      "empty_next_level_plan": true,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "proposer_failure": "proposer_failed_or_missing_root",
+      "proposer_is_bottleneck": true,
+      "status": "diagnosis_only_null_delta_carve_out",
+      "triggered_on_level_up": true
+    },
+    "a2_energy_routing": {
+      "generalized": false,
+      "nulled_because_no_reachable_plan": true,
+      "reason": "nothing_to_route_toward",
+      "status": "excluded_flagged_adversarial_or_live_critical"
+    },
+    "a3_levelup": {
+      "banked": true,
+      "banked_levels": 1,
+      "source_honest_verdict": "success: sp80_L2_offline_reproduced",
+      "target_game": "sp80",
+      "target_level": 2
+    },
+    "a5_primitive_transfer": {
+      "new_levels_banked": 0,
+      "offline_reproduced_new_level": false,
+      "representation_transferred": true,
+      "status": "representation_generalized_no_reproducible_level_bank"
+    },
+    "capstone_reported_efficiency_moved": false,
+    "capstone_reported_reproducible_total_levels_delta": {
+      "banked_levels": 1,
+      "capability_grew": true,
+      "current_total": 51,
+      "delta": 1,
+      "prior_total": 50,
+      "source": "A3_levelup_attempt+ops/arc_solve_registry.yaml"
+    },
+    "core_efficiency_baseline": 2.0074,
+    "core_efficiency_best": 2.0074,
+    "efficiency_delta": 0.0,
+    "efficiency_moved": false,
+    "net_419": {
+      "efficiency_moved": false,
+      "efficiency_reason": "no lever raised core_efficiency above 2.0074",
+      "score_lever_to_build_next": "llm_proposer_reinduction",
+      "solve_capability_grew": true,
+      "submitted_config": "unchanged"
+    },
+    "reproducible_total_levels": 51,
+    "source_a1_honest_verdict": "complete: reinduction_no_deeper_level_barrier_refined_honest_null",
+    "source_capstone_honest_verdict": "complete: reinduction_null_efficiency_unmoved_barrier_refined"
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4543_archive_419_activate_420",
+  "experiment_id": 4543,
+  "field_provenance": {
+    "close_state_419": {
+      "principle": "the honest .419 numbers (proposer-is-the-bottleneck; A3 sp80 L2; reproducible_total_levels=51; efficiency_moved=false) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    }
+  },
+  "honest_verdict": "complete: archive_419_activate_420_true_close_state_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "a1_goal_reinduction": {
+      "available": true,
+      "path": "results/experiment_4533_per_level_goal_reinduction.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.420",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "capstone_4542": {
+      "available": true,
+      "path": "results/experiment_4542_capstone_v419.json"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 51
+    },
+    "research_complete_yaml": {
+      "available": true,
+      "contains_2026_06_419": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "available": false,
+      "milestone": null,
+      "note": "literal precondition unavailable; accepted only when active research-roadmap.yaml is parseable at 2026.06.420",
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4543_archive_419_activate_420.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n88 passed, 1 warning in 5.82s\n"
+    }
+  },
+  "random_seed": 4543,
+  "reproducibility_checksum": "sha256:6da426363051d502358e80d17d146a65e1bb1563c5d66a01ca953116882c2f56",
+  "schema": "carnot.archive_activation.v419_to_v420_4543.v1",
+  "transition": {
+    "activated_milestone": "2026.06.420",
+    "activation_state": "already_active_roadmap_next_consumed",
+    "active_milestone_confirmed": true,
+    "archive_state": "research_complete_contains_2026.06.419",
+    "archived_milestone": "2026.06.419"
+  }
+}
