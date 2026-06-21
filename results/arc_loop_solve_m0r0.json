@@ -1,38 +1,45 @@
 {
   "game": "m0r0",
-  "status": "needs_per_game_RE",
-  "transfer_recommendation": [
-    {
-      "game": "lf52",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "results/arc_explore_trajectory_lf52.json (graph_explore_solve_v2 adapter-free, 8 actions); verifier seed models/arc_verifier_lf52.json (heuristic cell_count).",
-      "win_condition": "first-solve L1 adapter-free (outer-loop generic sweep 2026-06-20); previously one of the 3 unsolved public games. 8 ACTION6 clicks advance level 0->1.",
-      "action_model": "ACTION6 click-only; clicks (18,19),(30,19)x2,(42,19)x2,(42,31)x2,(42,43) -- a unit-positioning placement sequence (survey class = unit-positioning).",
-      "reusable_gotchas": []
-    },
-    {
-      "game": "sp80",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
-      "win_condition": "first-solve L1 adapter-free; move-right x3 then commit.",
-      "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
-      "reusable_gotchas": []
-    },
-    {
-      "game": "cn04",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions).",
-      "win_condition": "first-solve L1 adapter-free (E1); 13-action sequence replays offline.",
-      "action_model": null,
-      "reusable_gotchas": [
-        "Only solvable after the E1 salience-ordering upgrade \u2014 the winning actions were low in the pre-E1 raster order."
-      ]
-    }
-  ],
+  "reached_level": 2,
+  "moves": 38,
+  "states_expanded": 1802,
+  "verifier_src": "hand_verifier_cold_start",
+  "offline_reproduced": true,
+  "reproduced_levels": 2,
+  "learned_verifier_checkpoint": null,
   "selected_generic_operators": [
+    {
+      "operator": "object_centric_digest",
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "purpose": "Connected-component object summary for routing, grounding, and active data.",
+      "selector_tags": [
+        "object",
+        "digest",
+        "program_editor",
+        "world_model"
+      ]
+    },
+    {
+      "operator": "active_data_collection",
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "ft09",
+        "sc25"
+      ],
+      "purpose": "Balanced action/object coverage plan for offline transition collection.",
+      "selector_tags": [
+        "active_data",
+        "world_model",
+        "e3",
+        "transition"
+      ]
+    },
     {
       "operator": "graph_astar_action_cost",
       "derived_from_games": [
@@ -53,124 +60,170 @@
         "keyboard",
         "click"
       ]
-    },
-    {
-      "operator": "object_centric_digest",
-      "derived_from_games": [
-        "g50t",
-        "lp85",
-        "tn36",
-        "ka59"
-      ],
-      "purpose": "Connected-component object summary for routing, grounding, and active data.",
-      "selector_tags": [
-        "object",
-        "digest",
-        "program_editor",
-        "world_model"
-      ]
     }
   ],
-  "general_gotchas": [
+  "reproduction_gate": {
+    "game": "m0r0",
+    "reached_level": 2,
+    "claimed_level": 2,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota"
+  },
+  "solution_labels": [
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":3}",
+    "{\"action\":1}",
+    "{\"action\":3}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":4}",
+    "{\"action\":1}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":2}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":1}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":1}",
+    "{\"action\":3}"
+  ],
+  "solution": [
     {
-      "id": "offline_is_a_simulator",
-      "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      "action": 1
     },
     {
-      "id": "level_on_frame_not_game",
-      "note": "level = frame.levels_completed; env._game has no levels_completed."
+      "action": 1
     },
     {
-      "id": "deepcopy_injection_unreliable",
-      "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      "action": 3
     },
     {
-      "id": "first_step_after_reset_consumed",
-      "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      "action": 1
     },
     {
-      "id": "discover_coords_never_hardcode",
-      "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      "action": 3
     },
     {
-      "id": "state_dependent_controls_and_animations",
-      "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      "action": 1
     },
     {
-      "id": "non_idempotent_reset",
-      "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      "action": 1
     },
     {
-      "id": "same_action_next_level",
-      "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      "action": 1
     },
     {
-      "id": "primitive_glyph_rewrite_matcher",
-      "operator": "glyph_rewrite_matcher",
-      "derived_from_games": [
-        "tr87"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436."
+      "action": 1
     },
     {
-      "id": "primitive_config_rule_grounding",
-      "operator": "config_rule_grounding",
-      "derived_from_games": [
-        "s5i5",
-        "ft09",
-        "tr87"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436."
+      "action": 1
     },
     {
-      "id": "primitive_config_rule_verifier",
-      "operator": "config_rule_verifier",
-      "derived_from_games": [
-        "s5i5",
-        "ft09",
-        "g50t"
-      ],
-      "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe."
+      "action": 4
     },
     {
-      "id": "primitive_graph_astar_action_cost",
-      "operator": "graph_astar_action_cost",
-      "derived_from_games": [
-        "tu93",
-        "lp85",
-        "cd82",
-        "sp80",
-        "cn04",
-        "m0r0",
-        "sk48",
-        "su15"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436."
+      "action": 1
     },
     {
-      "id": "primitive_object_centric_digest",
-      "operator": "object_centric_digest",
-      "derived_from_games": [
-        "g50t",
-        "lp85",
-        "tn36",
-        "ka59"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436."
+      "action": 4
     },
     {
-      "id": "primitive_active_data_collection",
-      "operator": "active_data_collection",
-      "derived_from_games": [
-        "ar25",
-        "ka59",
-        "ft09",
-        "sc25"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436."
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
     }
   ],
-  "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
-  "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
-  "mode": "standing_arc_loop_routing_only"
+  "mode": "standing_arc_loop_offline_no_quota"
 }

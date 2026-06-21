@@ -234,6 +234,43 @@ level, and `offline_reproduced=true` for the newly reached level. Otherwise the
 artifact SHALL report a terminal honest null with the concrete barrier root cause
 and SHALL NOT claim action-count reductions as a score win.
 
+### REQ-ARC-WMTE-4525: Standing Loop Level-Up Registry Bank
+
+Experiment 4525 SHALL run the offline arcade precondition and use the standing
+ARC loop output as the source of truth for a level-up bank. The experiment SHALL
+prefer an unadaptered public game for first-contact routing, but when all public
+games already have registry rows it MAY deepen a registered adapter target. A
+banked level SHALL require `offline_reproduced=true`, a reproduction gate whose
+`reached_level` is greater than the target game's prior registry level, and a
+persisted update to `ops/arc_solve_registry.yaml` that records the win
+condition, action model, solver artifact, gotchas, and dead-ends needed by the
+next attempt.
+
+Experiment 4525 SHALL write
+`results/experiment_4525_levelup_attempt.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `offline_reproduced`,
+`reproduced_levels`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `target_game`,
+`reproduction_gate`, `solution_labels`, `dead_ends`, and `registry_update`.
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_routing_recommendation_delta_identified (un-adaptered: honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL set `honest_verdict` to
+`success: <game>_L<n>_offline_reproduced`, `offline_reproduced=true`,
+`reproduced_levels >= 1`, and `registry_updated=true`. If the target only
+produces a routing recommendation, repeats an already registered level, or
+stalls at the prior level, the artifact SHALL use a `complete:` verdict, set
+`reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
+the registry count.
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-4491: Held-Out Ranking Beats First-Clears Baseline
@@ -326,3 +363,14 @@ Then the terminal artifact records the CORE per-level efficiency baseline,
 deepest level reached per CORE game for each lever, a concrete L1 to L2 barrier
 diagnosis, and reports success only if a CORE game reaches L2 without losing a
 CORE level and offline reproduction confirms the new level.
+
+### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
+
+Given the offline arcade precondition passes and the standing loop writes a
+target result whose reproduction gate reaches a level above the target's prior
+registry level
+When experiment 4525 builds the level-up artifact
+Then it records the required field principles, computes a stable
+`reproducibility_checksum`, updates the registry entry and total level count,
+records dead-end attempts, and reports success only when the offline
+reproduction gate is true and at least one new level was banked.
