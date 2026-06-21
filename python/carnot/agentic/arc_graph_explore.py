@@ -50,6 +50,8 @@ def rich_action_candidates(
     action_prior: Any | None = None,
     action_prior_prune_quantile: float | None = None,
     structural_energy_scorer: Any | None = None,
+    candidate_router: Any | None = None,
+    previous_frame: Any | None = None,
 ) -> list:
     """Every detected object is a click candidate (no 12-click cap — the winning
     clicks for e.g. r11l are objects #15/#27 that the cap dropped). Keyboard actions
@@ -72,7 +74,11 @@ def rich_action_candidates(
 
     REQ-ARC-FCP-4512: when ``action_prior_prune_quantile`` is supplied with an
     action prior, the bottom prior-likelihood quantile is removed before
-    expansion while retaining at least one candidate."""
+    expansion while retaining at least one candidate.
+
+    REQ-CAPSTONE-4556: when ``candidate_router`` is supplied, apply its learned
+    cross-game ordering as the final candidate-router pass. A scoring failure
+    keeps the bare order so the live solver has a no-regression fallback."""
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
@@ -123,6 +129,15 @@ def rich_action_candidates(
             prior=action_prior,
             structural_energy_scorer=structural_energy_scorer,
         )
+    if candidate_router is not None and out:
+        try:
+            if hasattr(candidate_router, "rank"):
+                ranked = candidate_router.rank(frame, out, previous_frame=previous_frame)
+            else:
+                ranked = candidate_router(frame, out)
+            out = list(ranked)
+        except Exception:
+            pass
     return out
 
 
@@ -218,6 +233,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                            prefix: Optional[list] = None,
                            mask_hud: bool = False,
                            heuristic=None, heuristic_weight: float = 1.0,
+                           candidate_router=None,
                            stats: Optional[dict] = None
                            ) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
@@ -260,8 +276,12 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
             g[hud] = 0
         return frame_hash(g)
 
-    def _candidates(frame):
-        return rich_action_candidates(frame)   # salience-ordered, all objects (fixes r11l)
+    def _candidates(frame, previous_frame=None):
+        return rich_action_candidates(
+            frame,
+            candidate_router=candidate_router,
+            previous_frame=previous_frame,
+        )   # salience-ordered, all objects (fixes r11l)
 
     def replay(path):
         f = _warm(env, warmup)
@@ -271,7 +291,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
 
     f0 = replay(prefix)                 # root at the post-prefix state (L0 if no prefix)
     h0 = node_id(f0)
-    states = {h0: {"path": list(prefix), "untested": _candidates(f0)}}
+    states = {h0: {"path": list(prefix), "untested": _candidates(f0), "frame": f0}}
     best = start_level
     expansions = 0
 
@@ -294,7 +314,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                 frontier.popleft()
                 continue
             sel = st["untested"].pop(0)
-            replay(st["path"])          # navigate to this state
+            f_here = replay(st["path"])          # navigate to this state
             nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
                           reasoning={"policy": "graph_explore_v2_shortest_path"})
             expansions += 1
@@ -309,7 +329,11 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                 continue
             nh = node_id(nf)
             if nh not in states:        # new state ⇒ add to graph + frontier
-                states[nh] = {"path": traj, "untested": _candidates(nf)}
+                states[nh] = {
+                    "path": traj,
+                    "untested": _candidates(nf, previous_frame=f_here),
+                    "frame": nf,
+                }
                 frontier.append(nh)
         return _ret(None, best)
 
@@ -335,7 +359,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
         # each state expanded once, in priority order)
         while st["untested"]:
             sel = st["untested"].pop(0)
-            replay(st["path"])          # navigate to this state
+            f_here = replay(st["path"])          # navigate to this state
             nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
                           reasoning={"policy": "graph_explore_v2_heuristic_guided"})
             expansions += 1
@@ -348,7 +372,11 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                 if not _game_over(nf):
                     nh = node_id(nf)
                     if nh not in states:    # new state ⇒ add with A* priority g+h
-                        states[nh] = {"path": traj, "untested": _candidates(nf)}
+                        states[nh] = {
+                            "path": traj,
+                            "untested": _candidates(nf, previous_frame=f_here),
+                            "frame": nf,
+                        }
                         heapq.heappush(heap, (len(traj) + _h(nf), next(counter), nh))
             if expansions >= max_expansions:
                 break
