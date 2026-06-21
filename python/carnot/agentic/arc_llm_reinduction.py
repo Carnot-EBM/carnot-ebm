@@ -1,6 +1,7 @@
 """Bounded live-LLM re-induction helper for ARC level-up episodes.
 
-Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544.
+Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544,
+REQ-ARC-WMTE-4557, SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST.
 """
 
 from __future__ import annotations
@@ -34,6 +35,8 @@ class LlmReinductionResult:
     refinement_rounds_used: int = 0
     verifier_is_oracle: bool = False
     model_specs: str = ""
+    heldout_accuracy: float | None = None
+    accepted_by_heldout_verifier: bool = False
     rounds: list[dict[str, Any]] = field(default_factory=list)
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
     skipped: str = ""
@@ -77,6 +80,17 @@ def _normalise_candidates(rows: Sequence[Any], engine: Any, goal: Any) -> list[W
 
 def _counterexample_result(counterexample: Mapping[str, Any]) -> Any:
     return SimpleNamespace(n=1, n_correct=0, accuracy=0.0, mismatches=[dict(counterexample)])
+
+
+def _proposal_prefix(transitions: Sequence[Any]) -> list[Any]:
+    """REQ-ARC-WMTE-4557: keep a held-out suffix out of the proposer prompt."""
+
+    rows = list(transitions)
+    if len(rows) < 2:
+        return rows
+    n_heldout = max(1, int(round(len(rows) / 3.0)))
+    n_heldout = min(n_heldout, len(rows) - 1)
+    return rows[:-n_heldout]
 
 
 def _plan_reaches_goal(
@@ -142,11 +156,14 @@ def execute_bounded_llm_reinduction(
     load_engine: Callable[[str], tuple[Any, Any]],
     plan_in_model: Callable[[Any, Any, np.ndarray], list[dict[str, Any]] | None],
     max_rounds: int = MAX_REFINEMENT_ROUNDS,
+    min_heldout_accuracy: float = 0.0,
+    proposal_transitions: Sequence[Any] | None = None,
 ) -> LlmReinductionResult:
-    """REQ-ARC-WMTE-4544: run GOAL+DYNAMICS proposal with K<=3 refinements."""
+    """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
     rounds_limit = min(int(max_rounds), MAX_REFINEMENT_ROUNDS)
     specs = _model_specs(proposer)
+    verifier_threshold = max(0.0, min(1.0, float(min_heldout_accuracy)))
     if root_grid is None:
         return LlmReinductionResult(
             planned=False,
@@ -162,6 +179,11 @@ def execute_bounded_llm_reinduction(
             skipped="no_active_transitions",
         )
 
+    induction_evidence = (
+        list(proposal_transitions)
+        if proposal_transitions is not None
+        else _proposal_prefix(list(transitions))
+    )
     rounds: list[dict[str, Any]] = []
     counterexamples: list[dict[str, Any]] = []
     last_counterexample: dict[str, Any] = {"kind": "initial_induction"}
@@ -170,12 +192,14 @@ def execute_bounded_llm_reinduction(
     last_selected = ""
     last_engine = None
     last_goal = None
+    last_heldout_accuracy: float | None = None
+    last_accepted = False
     skipped = "no_reachable_plan_after_refinement"
 
     for round_index in range(rounds_limit):
         round_no = round_index + 1
         if round_index == 0:
-            ok, message = proposer.induce(game, list(transitions), int(cell))
+            ok, message = proposer.induce(game, induction_evidence, int(cell))
             action = "induce"
         else:
             ok, message = proposer.refactor(game, _counterexample_result(last_counterexample))
@@ -204,6 +228,40 @@ def execute_bounded_llm_reinduction(
             )
             selected = selection.selected
             selected_goal = selected.is_level_complete or goal
+            heldout_accuracy = float(selection.selected_score.heldout_accuracy)
+            accepted = heldout_accuracy >= verifier_threshold
+            last_heldout_accuracy = heldout_accuracy
+            last_accepted = bool(accepted)
+            names = [candidate.name for candidate in candidates]
+            last_goal_names = list(names)
+            last_dynamics_names = list(names)
+            last_selected = selected.name
+            last_engine = selected.engine
+            last_goal = selected_goal
+            row.update(
+                {
+                    "selected_candidate_name": selected.name,
+                    "goal_candidate_names": list(names),
+                    "dynamics_candidate_names": list(names),
+                    "prefix_accuracy": round(float(selection.selected_score.prefix_accuracy), 6),
+                    "heldout_accuracy": round(heldout_accuracy, 6),
+                    "heldout_threshold": round(verifier_threshold, 6),
+                    "accepted_by_heldout_verifier": bool(accepted),
+                    "trust_energy": round(float(selection.selected_score.trust_energy), 6),
+                }
+            )
+            if not accepted:
+                last_counterexample = {
+                    "kind": "heldout_transition_verification_failed",
+                    "selected_candidate_name": selected.name,
+                    "heldout_accuracy": round(heldout_accuracy, 6),
+                    "heldout_threshold": round(verifier_threshold, 6),
+                }
+                counterexamples.append(last_counterexample)
+                row["counterexample"] = dict(last_counterexample)
+                row["skipped"] = "heldout_transition_verification_failed"
+                rounds.append(row)
+                continue
             plan = plan_in_model(selected.engine, selected_goal, np.asarray(root_grid))
             check = _plan_reaches_goal(
                 engine=selected.engine,
@@ -218,19 +276,8 @@ def execute_bounded_llm_reinduction(
             rounds.append(row)
             continue
 
-        names = [candidate.name for candidate in candidates]
-        last_goal_names = list(names)
-        last_dynamics_names = list(names)
-        last_selected = selected.name
-        last_engine = selected.engine
-        last_goal = selected_goal
         row.update(
             {
-                "selected_candidate_name": selected.name,
-                "goal_candidate_names": list(names),
-                "dynamics_candidate_names": list(names),
-                "heldout_accuracy": round(float(selection.selected_score.heldout_accuracy), 6),
-                "trust_energy": round(float(selection.selected_score.trust_energy), 6),
                 "plan_length": len(plan or []),
                 "plan_reaches_goal": bool(check["reaches_goal"]),
             }
@@ -248,6 +295,8 @@ def execute_bounded_llm_reinduction(
                 refinement_rounds_used=round_no,
                 verifier_is_oracle=False,
                 model_specs=specs,
+                heldout_accuracy=last_heldout_accuracy,
+                accepted_by_heldout_verifier=last_accepted,
                 rounds=rounds,
                 counterexamples=counterexamples,
                 skipped="",
@@ -268,6 +317,8 @@ def execute_bounded_llm_reinduction(
         refinement_rounds_used=len(rounds),
         verifier_is_oracle=False,
         model_specs=specs,
+        heldout_accuracy=last_heldout_accuracy,
+        accepted_by_heldout_verifier=last_accepted,
         rounds=rounds,
         counterexamples=counterexamples,
         skipped=skipped,

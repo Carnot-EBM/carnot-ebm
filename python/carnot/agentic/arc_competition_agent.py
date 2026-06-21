@@ -1387,6 +1387,7 @@ class E3AgentPolicy:
                     load_engine=e3.load_engine,
                     plan_in_model=e3.plan_in_model,
                     max_rounds=MAX_REFINEMENT_ROUNDS,
+                    min_heldout_accuracy=1.0,
                 )
                 attempt.update(
                     {
