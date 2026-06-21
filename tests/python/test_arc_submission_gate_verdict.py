@@ -17,6 +17,7 @@ lp85=7792, m0r0=7789, sp80=7724, vc33=7731 (median 7760).
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 _GATE = Path(__file__).resolve().parents[2] / "scripts" / "kaggle" / "arc_local_submission_gate.py"
@@ -191,3 +192,115 @@ def test_req_arc_fcp_4518_cli_exposes_lever_and_canonical_budget_default():
 
     assert args.lever == "A6"
     assert args.budget == gate.DEFAULT_BUDGET
+
+
+def _efficiency_baseline() -> dict:
+    baseline = _baseline()
+    baseline["efficiency_by_game"] = {
+        "lp85": gate.CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR,
+        "m0r0": 0.0003,
+        "sp80": 0.0001,
+        "vc33": 0.0001,
+    }
+    baseline["core_efficiency"] = 2.0074
+    return baseline
+
+
+def test_req_arc_fcp_4527_measure_tracks_per_game_score_and_nav_fields(monkeypatch):
+    """REQ-ARC-FCP-4527: measure() promotes score and nav diagnostics into CI-guarded maps."""
+
+    def fake_measure_game(game: str, _policy: str, _budget: int, _cap: int) -> dict:
+        solved = game in gate.CANONICAL_CORE_GAMES
+        return {
+            "game": game,
+            "timed_out": False,
+            "solved": solved,
+            "actions": 100 if solved else 999,
+            "efficiency": 1.25 if game == "lp85" else (0.25 if solved else 0.0),
+            "levels": 2 if game == "lp85" else (1 if solved else 0),
+            "deepest_level_reached": 2 if game == "lp85" else (1 if solved else 0),
+            "reset_replay_steps": 7 if game == "lp85" else 3,
+            "forward_walk_hit_rate": 0.5 if game == "lp85" else 0.0,
+        }
+
+    monkeypatch.setattr(gate, "_measure_game", fake_measure_game)
+
+    measurement = gate.measure("fixture", budget=123, cap=4)
+
+    assert measurement["deepest_level_by_game"]["lp85"] == 2
+    assert measurement["per_level_efficiency_by_game"]["lp85"] == 1.25
+    assert measurement["navigation_by_game"]["lp85"] == {
+        "reset_replay_steps": 7,
+        "forward_walk_hit_rate": 0.5,
+    }
+    lp85 = next(row for row in measurement["per_game"] if row["game"] == "lp85")
+    assert lp85["deepest_level_reached"] == 2
+    assert lp85["per_level_efficiency"] == 1.25
+    assert lp85["reset_replay_steps"] == 7
+    assert lp85["forward_walk_hit_rate"] == 0.5
+
+
+def test_req_arc_fcp_4527_nav_regression_warns_without_changing_core_verdict():
+    """SCENARIO-ARC-FCP-4527: higher replay tax at equal actions is WARN, not a score fail."""
+
+    base = _baseline()
+    base["navigation_by_game"] = {
+        game: {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25}
+        for game in gate.CANONICAL_CORE_GAMES
+    }
+    cur = _cur({"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731})
+    cur["navigation_by_game"] = {
+        game: {"reset_replay_steps": 10, "forward_walk_hit_rate": 0.25}
+        for game in gate.CANONICAL_CORE_GAMES
+    }
+    cur["navigation_by_game"]["lp85"] = {
+        "reset_replay_steps": 25,
+        "forward_walk_hit_rate": 0.10,
+    }
+
+    row = gate.dashboard_row(cur, base, lever="nav_regression_fixture")
+
+    assert row["verdict_pass"] is True
+    assert "non-inferior" in row["verdict"]
+    assert row["nav_regression_warning"].startswith("WARN:")
+    assert "lp85" in row["nav_regression_warning"]
+    assert row["navigation_by_game"]["lp85"]["reset_replay_steps"] == 25
+
+
+def test_req_arc_fcp_4527_validate_baseline_rejects_deflated_lp85_efficiency():
+    """REQ-ARC-FCP-4527: canonical baseline validation pins the lp85 efficiency floor."""
+
+    assert gate.validate_canonical_baseline(_efficiency_baseline())["ok"] is True
+
+    deflated = _efficiency_baseline()
+    deflated["efficiency_by_game"] = dict(deflated["efficiency_by_game"])
+    deflated["efficiency_by_game"]["lp85"] = gate.CANONICAL_LP85_PER_LEVEL_EFFICIENCY_FLOOR - 0.0001
+
+    validation = gate.validate_canonical_baseline(deflated)
+
+    assert validation["ok"] is False
+    assert any("lp85" in error and "floor" in error for error in validation["errors"])
+
+
+def test_req_arc_fcp_4527_update_baseline_rejects_invalid_candidate(monkeypatch, tmp_path, capsys):
+    """REQ-ARC-FCP-4527: --update-baseline validates before persisting a new baseline."""
+
+    candidate = _efficiency_baseline()
+    candidate["efficiency_by_game"] = dict(candidate["efficiency_by_game"])
+    candidate["efficiency_by_game"]["lp85"] = 1.0
+    candidate["per_game"] = [
+        {"game": game, "solved": True, "actions": actions, "efficiency": candidate["efficiency_by_game"][game]}
+        for game, actions in candidate["actions_by_game"].items()
+    ]
+    target = tmp_path / "arc-submission-baseline.json"
+
+    monkeypatch.setattr(gate, "BASELINE", target)
+    monkeypatch.setattr(gate, "measure", lambda _policy, _budget, _cap: candidate)
+    monkeypatch.setattr(sys, "argv", ["arc_local_submission_gate.py", "--update-baseline"])
+
+    rc = gate.main()
+    captured = capsys.readouterr()
+
+    assert rc == 1
+    assert not target.exists()
+    assert "canonical baseline guard failed" in captured.out

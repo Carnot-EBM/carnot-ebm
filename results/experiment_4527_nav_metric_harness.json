@@ -1,0 +1,476 @@
+{
+  "baseline_guard": {
+    "action_metric_field": "actions",
+    "canonical_baseline_median_actions": 7760.0,
+    "canonical_game_set": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33",
+      "cd82",
+      "ft09",
+      "su15",
+      "ls20"
+    ],
+    "canonical_lp85_per_level_efficiency_floor": 2.0069,
+    "core_games": [
+      "lp85",
+      "m0r0",
+      "sp80",
+      "vc33"
+    ],
+    "errors": [],
+    "ok": true
+  },
+  "canonical_core_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33"
+  ],
+  "canonical_game_set": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33",
+    "cd82",
+    "ft09",
+    "su15",
+    "ls20"
+  ],
+  "core_efficiency_baseline": 2.0074,
+  "duration_s": 45.062343818019144,
+  "experiment": "experiment_4527_nav_metric_harness",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; shipped: nav_metric_first_class_ci_guarded OR complete: nav_metric_partial_<reason>.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
+    "nav_metric_added": "names the per-game nav fields the gate now tracks -- the nav-regression early warning.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "tests_added_pass": "Tests Must Run and Assert."
+  },
+  "gate_result": {
+    "baseline": {
+      "median_actions_on_solved": 7761.5,
+      "solved_count": 4,
+      "total_actions_on_solved": 31057
+    },
+    "baseline_guard": {
+      "action_metric_field": "actions",
+      "canonical_baseline_median_actions": 7760.0,
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "canonical_lp85_per_level_efficiency_floor": 2.0069,
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "errors": [],
+      "ok": true
+    },
+    "current": {
+      "action_metric": {
+        "definition": "total_actions_on_solved_games",
+        "field": "actions"
+      },
+      "actions_by_game": {
+        "lp85": 20,
+        "m0r0": 3891,
+        "sp80": 7218,
+        "vc33": 1758
+      },
+      "core_efficiency": 2.0074,
+      "deepest_level_by_game": {
+        "cd82": 0,
+        "ft09": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 1,
+        "sp80": 1,
+        "su15": 0,
+        "vc33": 1
+      },
+      "efficiency_by_game": {
+        "lp85": 2.0069,
+        "m0r0": 0.0003,
+        "sp80": 0.0001,
+        "vc33": 0.0001
+      },
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_core": 2824.5,
+      "median_actions_on_solved": 2824.5,
+      "navigation_by_game": {
+        "cd82": {
+          "forward_walk_hit_rate": 0.0769,
+          "reset_replay_steps": 325
+        },
+        "ft09": {
+          "forward_walk_hit_rate": 0.027,
+          "reset_replay_steps": 28
+        },
+        "lp85": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ls20": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 882
+        },
+        "m0r0": {
+          "forward_walk_hit_rate": 0.0776,
+          "reset_replay_steps": 212
+        },
+        "sp80": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 562
+        },
+        "su15": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 335
+        },
+        "vc33": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 37
+        }
+      },
+      "per_game": [
+        {
+          "actions": 20,
+          "deepest_level_reached": 1,
+          "efficiency": 2.0069,
+          "forward_walk_hit_rate": 0.0,
+          "game": "lp85",
+          "levels": 1,
+          "per_level_efficiency": 2.0069,
+          "reset_replay_steps": 0,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 3891,
+          "deepest_level_reached": 1,
+          "efficiency": 0.0003,
+          "forward_walk_hit_rate": 0.0776,
+          "game": "m0r0",
+          "levels": 1,
+          "per_level_efficiency": 0.0003,
+          "reset_replay_steps": 212,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7218,
+          "deepest_level_reached": 1,
+          "efficiency": 0.0001,
+          "forward_walk_hit_rate": 0.0,
+          "game": "sp80",
+          "levels": 1,
+          "per_level_efficiency": 0.0001,
+          "reset_replay_steps": 562,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 1758,
+          "deepest_level_reached": 1,
+          "efficiency": 0.0001,
+          "forward_walk_hit_rate": 0.0,
+          "game": "vc33",
+          "levels": 1,
+          "per_level_efficiency": 0.0001,
+          "reset_replay_steps": 37,
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7819,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.0769,
+          "game": "cd82",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 325,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7963,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.027,
+          "game": "ft09",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 28,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7786,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.0,
+          "game": "su15",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 335,
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7821,
+          "deepest_level_reached": 0,
+          "efficiency": 0.0,
+          "forward_walk_hit_rate": 0.0,
+          "game": "ls20",
+          "levels": 0,
+          "per_level_efficiency": 0.0,
+          "reset_replay_steps": 882,
+          "solved": false,
+          "timed_out": false
+        }
+      ],
+      "per_level_efficiency_by_game": {
+        "cd82": 0.0,
+        "ft09": 0.0,
+        "lp85": 2.0069,
+        "ls20": 0.0,
+        "m0r0": 0.0003,
+        "sp80": 0.0001,
+        "su15": 0.0,
+        "vc33": 0.0001
+      },
+      "policy": "e3",
+      "solved_count": 4,
+      "solved_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "timed_out_count": 0,
+      "total_actions_on_solved": 12887
+    },
+    "gate_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/kaggle/arc_local_submission_gate.py --check --json --lever submitted_default",
+    "gate_returncode": 0,
+    "lever_dashboard_row": {
+      "actions_saved_vs_baseline": 4937.0,
+      "baseline_median_actions_on_core": 7761.5,
+      "baseline_navigation_by_game": {
+        "cd82": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ft09": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "lp85": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ls20": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "m0r0": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "sp80": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "su15": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "vc33": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        }
+      },
+      "bonus_solves": [],
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "core_solves_preserved": true,
+      "lever": "submitted_default",
+      "lost_core_solves": [],
+      "median_actions_on_core": 2824.5,
+      "metric_action_field": "actions",
+      "nav_metric_role": "secondary_wall_clock_warning_not_score_metric",
+      "nav_regression_warning": "",
+      "navigation_by_game": {
+        "cd82": {
+          "forward_walk_hit_rate": 0.0769,
+          "reset_replay_steps": 325
+        },
+        "ft09": {
+          "forward_walk_hit_rate": 0.027,
+          "reset_replay_steps": 28
+        },
+        "lp85": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 0
+        },
+        "ls20": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 882
+        },
+        "m0r0": {
+          "forward_walk_hit_rate": 0.0776,
+          "reset_replay_steps": 212
+        },
+        "sp80": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 562
+        },
+        "su15": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 335
+        },
+        "vc33": {
+          "forward_walk_hit_rate": 0.0,
+          "reset_replay_steps": 37
+        }
+      },
+      "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074",
+      "verdict_pass": true
+    },
+    "pass": true,
+    "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074"
+  },
+  "honest_verdict": "shipped: nav_metric_first_class_ci_guarded",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
+  "leaderboard_submission": false,
+  "nav_metric_added": {
+    "nav_fields": [
+      "reset_replay_steps",
+      "forward_walk_hit_rate"
+    ],
+    "per_game_fields": [
+      "deepest_level_reached",
+      "per_level_efficiency",
+      "reset_replay_steps",
+      "forward_walk_hit_rate"
+    ],
+    "score_fields": [
+      "deepest_level_reached",
+      "per_level_efficiency"
+    ],
+    "secondary_warning": ""
+  },
+  "nav_metric_secondary": "reset_replay_steps_and_forward_walk_hit_rate_warn_only",
+  "per_game_deepest_level_reached": {
+    "cd82": 0,
+    "ft09": 0,
+    "lp85": 1,
+    "ls20": 0,
+    "m0r0": 1,
+    "sp80": 1,
+    "su15": 0,
+    "vc33": 1
+  },
+  "per_game_nav_diagnostics": {
+    "cd82": {
+      "forward_walk_hit_rate": 0.0769,
+      "reset_replay_steps": 325
+    },
+    "ft09": {
+      "forward_walk_hit_rate": 0.027,
+      "reset_replay_steps": 28
+    },
+    "lp85": {
+      "forward_walk_hit_rate": 0.0,
+      "reset_replay_steps": 0
+    },
+    "ls20": {
+      "forward_walk_hit_rate": 0.0,
+      "reset_replay_steps": 882
+    },
+    "m0r0": {
+      "forward_walk_hit_rate": 0.0776,
+      "reset_replay_steps": 212
+    },
+    "sp80": {
+      "forward_walk_hit_rate": 0.0,
+      "reset_replay_steps": 562
+    },
+    "su15": {
+      "forward_walk_hit_rate": 0.0,
+      "reset_replay_steps": 335
+    },
+    "vc33": {
+      "forward_walk_hit_rate": 0.0,
+      "reset_replay_steps": 37
+    }
+  },
+  "per_game_per_level_efficiency": {
+    "cd82": 0.0,
+    "ft09": 0.0,
+    "lp85": 2.0069,
+    "ls20": 0.0,
+    "m0r0": 0.0003,
+    "sp80": 0.0001,
+    "su15": 0.0,
+    "vc33": 0.0001
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "baseline_file_present": true,
+    "codex_md_read": true,
+    "gate_help_precondition": true,
+    "ok": true,
+    "spec_has_req_4527": true
+  },
+  "reproducibility_checksum": "sha256:b0769869b4333ccb76f1658e752c659c2902644ad52540f2d8d6a585e53c7167",
+  "requirements": [
+    "REQ-ARC-FCP-4527"
+  ],
+  "result_path": "results/experiment_4527_nav_metric_harness.json",
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4527"
+  ],
+  "schema": "carnot.arc_nav_metric_harness_4527.v1",
+  "score_metric_primary": "per_level_efficiency_and_deepest_level_reached",
+  "tests_added_pass": {
+    "command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py tests/python/test_experiment_4527_nav_metric_harness.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [23 items]\n\n.......................                                                  [100%]\n============================== 23 passed in 3.89s ==============================\n"
+  }
+}
