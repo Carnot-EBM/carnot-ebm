@@ -79,6 +79,24 @@ def stage_dataset() -> None:
     if leaked:
         sys.exit(f"ABORT: compiled _rust.so leaked into bundle (SIGILLs on Kaggle): {leaked}")
 
+    # import+build smoke against the STAGED tree: a non-importable / broken agent (e.g. a core file
+    # caught mid-edit by the daily rsync) would be 0 on EVERY eval game. The existing guards only
+    # string-check MAX_ACTIONS and the .so leak -- neither validates that the agent actually imports
+    # and constructs. Catch the catastrophic-zero case at bundle time, before a scored slot is spent.
+    smoke = subprocess.run(
+        [sys.executable, "-c",
+         "import sys; sys.path.insert(0, %r); "
+         "import carnot.agentic.arc_competition_agent as m; "
+         "cls = m.make_carnot_agent(type('S', (), {'MAX_ACTIONS': 80})); "
+         "assert isinstance(cls, type), 'make_carnot_agent did not return a class'; "
+         "print('agent import+build smoke OK')" % str(STAGE / "python")],
+        capture_output=True, text=True,
+    )
+    if smoke.returncode != 0:
+        sys.exit("ABORT: staged agent failed import+build smoke (would be 0 on every eval game):\n"
+                 f"{smoke.stdout[-400:]}\n{smoke.stderr[-1000:]}")
+    print("[stage] agent import+build smoke passed.")
+
     (STAGE / "dataset-metadata.json").write_text(
         json.dumps({"id": DATASET, "title": "carnot-agent-code", "licenses": [{"name": "other"}]})
     )
