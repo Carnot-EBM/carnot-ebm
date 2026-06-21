@@ -483,6 +483,16 @@ class LocalGGUFProposer:
     kv_quant: Optional[str] = (
         None  # e.g. "q8_0" -> --cache-type-k/v q8_0 (halves KV, near-lossless)
     )
+    # -ngl: how many transformer layers' weights live on the GPU. 999 = all on GPU (fast, default).
+    # Operator prefill-to-RAM lever (2026-06-21): on the shared 16GB eval GPU the LLM (5.9GB MTP-off)
+    # coexists with the live per-game CNN dynamics fit (measured 1.45GB peak) + the q8 KV-cache. Full
+    # offload already fits (~9.4GB of 16GB), so 999 stays the default. But if a heavier config (deeper
+    # search, larger CNN, bigger ctx) pushes VRAM, set CARNOT_ARC_NGL below the layer count: the
+    # un-offloaded layers stay PREFILLED in system RAM (llama.cpp mmaps the GGUF -> host page cache;
+    # 125GB RAM trivially holds the 5.9GB Q4 weights) and compute on CPU, freeing VRAM for KV + CNN
+    # training. The wall-clock cost is acceptable because the ARC eval has NO time limit (only the 12h
+    # Kaggle-notebook cap + the 600 RPM real-env rate limit, neither of which gates internal generation).
+    n_gpu_layers: int = 999
     no_think_prefix: str = ""  # e.g. "/no_think\n" -> suppress hybrid-thinking CoT (Qwen3)
     model_path: Optional[str] = (
         None  # explicit .gguf path; on Kaggle set to the bundled /kaggle/input/... path
@@ -518,7 +528,7 @@ class LocalGGUFProposer:
             "-m",
             path,
             "-ngl",
-            "999",
+            str(self.n_gpu_layers),  # 999=all-GPU (default); lower spills weights to system RAM (frees VRAM)
             "-c",
             str(self.n_ctx),
             "--port",

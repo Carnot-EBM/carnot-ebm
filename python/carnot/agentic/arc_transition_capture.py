@@ -121,12 +121,19 @@ class TransitionCorpus:
         if not p.exists():
             return []
         d = np.load(p, allow_pickle=False)
+        # CRITICAL: a COMPRESSED NpzFile re-decompresses the WHOLE array on EVERY d[key] access. Materialise
+        # each array exactly ONCE here -- indexing d["grids"][i] inside the loop decompressed the full 5.6MB
+        # grids array 679x = ~7.5GB of transient host RAM per game, which OOM-kills a 16GB-RAM eval notebook
+        # (operator 2026-06-21: the Kaggle notebook's ~16GB system RAM is as scarce as its 16GB VRAM, and the
+        # live agent loads its captured corpus to warm-start). After this fix, loading a game is ~11MB.
+        grids = d["grids"]; next_grids = d["next_grids"]
+        actions = d["actions"]; xs = d["xs"]; ys = d["ys"]; lb = d["lb"]; la = d["la"]
         out = []
-        for i in range(d["grids"].shape[0]):
-            a = int(d["actions"][i]); x = int(d["xs"][i]); y = int(d["ys"][i])
+        for i in range(grids.shape[0]):
+            a = int(actions[i]); x = int(xs[i]); y = int(ys[i])
             data = {"x": x, "y": y} if a == 6 and x >= 0 else None
-            out.append(Transition(grid=d["grids"][i], action=a, data=data, next_grid=d["next_grids"][i],
-                                  level_before=int(d["lb"][i]), level_after=int(d["la"][i])))
+            out.append(Transition(grid=grids[i], action=a, data=data, next_grid=next_grids[i],
+                                  level_before=int(lb[i]), level_after=int(la[i])))
         return out
 
     def stats(self) -> dict:
@@ -134,9 +141,10 @@ class TransitionCorpus:
         total = 0
         for g in self.games():
             d = np.load(self.root / f"{g}.npz", allow_pickle=False)
-            n = int(d["grids"].shape[0])
-            chg = int(np.sum([not np.array_equal(d["grids"][i], d["next_grids"][i]) for i in range(n)]))
-            per_game[g] = {"transitions": n, "changing": chg, "grid_shape": list(d["grids"].shape[1:])}
+            gr = d["grids"]; ngr = d["next_grids"]  # materialise once (compressed NpzFile re-decompresses per access)
+            n = int(gr.shape[0])
+            chg = int(np.sum([not np.array_equal(gr[i], ngr[i]) for i in range(n)]))
+            per_game[g] = {"transitions": n, "changing": chg, "grid_shape": list(gr.shape[1:])}
             total += n
         return {"root": str(self.root), "games": len(per_game), "total_transitions": total, "per_game": per_game}
 

@@ -1232,6 +1232,10 @@ class E3AgentPolicy:
             # n_predict>=2048. 5.9GB Q4 fits 16GB; 62.5% Layer-B grounding (DeepSeek-Flash 25%, gemma verbose).
             # Kaggle deploy: set CARNOT_ARC_GGUF_PATH to the bundled /kaggle/input/.../Qwen3.5-9B-Q4_K_M.gguf;
             # CARNOT_ARC_MTP=0 disables MTP if a tight-VRAM box needs the ~4GB the self-draft costs.
+            # CARNOT_ARC_NGL (default 999=all layers on GPU): the operator prefill-to-RAM lever. Lowering it
+            # keeps that many of the top weight layers in system RAM (mmap'd, prefilled in page cache) instead
+            # of VRAM, freeing GPU memory for the q8 KV-cache + the live CNN dynamics fit that coexists with
+            # the LLM on the shared 16GB eval GPU. Acceptable because the ARC eval has no internal time limit.
             self.proposer = LocalGGUFProposer(
                 repo_substr="Qwen3.5-9B-MTP",
                 model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
@@ -1239,6 +1243,7 @@ class E3AgentPolicy:
                 kv_quant="q8_0",
                 no_think_prefix="/no_think\n",
                 max_tokens=2560,
+                n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
             )
         return self.proposer
 
