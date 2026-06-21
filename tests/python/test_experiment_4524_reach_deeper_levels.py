@@ -108,6 +108,8 @@ def test_scenario_arc_wmte_4524_honest_null_records_concrete_barrier(tmp_path: P
     )
     assert artifact["core_efficiency_baseline"] == exp4524.CORE_EFFICIENCY_BASELINE
     assert artifact["core_efficiency_best"] == exp4524.CORE_EFFICIENCY_BASELINE
+    assert artifact["efficiency_delta"] == 0.0
+    assert "no lever reached a deeper CORE level" in artifact["null_delta_methodology_note"]
     assert artifact["offline_reproduced"] is False
     assert artifact["barrier_diagnosis"]["root_cause"] == "new_win_condition"
     assert artifact["barrier_diagnosis"]["target_game"] == "lp85"
@@ -148,6 +150,8 @@ def test_req_arc_wmte_4524_success_requires_l2_efficiency_gain_and_reproduction(
 
     assert artifact["honest_verdict"] == "success: lp85_reached_L2_core_efficiency_7.2500_above_2.0074"
     assert artifact["core_efficiency_best"] == 7.25
+    assert artifact["efficiency_delta"] == pytest.approx(5.2426)
+    assert "null_delta_methodology_note" not in artifact
     assert artifact["offline_reproduced"] is True
     assert artifact["barrier_diagnosis"]["root_cause"] == "resolved_l2_reached"
     assert exp4524.artifact_schema_errors(artifact) == []

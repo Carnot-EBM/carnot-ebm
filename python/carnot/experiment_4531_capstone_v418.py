@@ -12,17 +12,22 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
 import time
 from typing import Any
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from carnot.reporting import capstone_v400_4335 as base
+from scripts import summarize_artifact as summary_reader
 
 
 JsonDict = dict[str, Any]
 LiveFlagRunner = Callable[[Path], list[dict[str, Any]]]
 SummarizeRunner = Callable[[Path, Path], int]
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = "results/experiment_4531_capstone_v418.json"
 OUTPUT_REL_PATH = Path(RESULT_RELATIVE_PATH)
 REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
@@ -238,7 +243,6 @@ def _read_inputs(
             summarize_runner,
         )
         live_flags = base._safe_live_flags(path, live_flag_runner)  # noqa: SLF001
-        critical = base.live_has_critical(live_flags)
         parse_error = ""
         payload: JsonDict | None = None
         try:
@@ -246,6 +250,17 @@ def _read_inputs(
         except (OSError, json.JSONDecodeError, ValueError) as exc:  # pragma: no cover
             parse_error = f"{type(exc).__name__}: {exc}"
 
+        critical = base.live_has_critical(live_flags)
+        diagnosis_context = (
+            summary_reader.readable_diagnosis_context(payload, live_flags)
+            if payload is not None
+            else None
+        )
+        diagnosis_corrigendum = (
+            diagnosis_context.get("corrigendum")
+            if isinstance(diagnosis_context, Mapping)
+            else None
+        )
         stamped = payload.get("flagged_adversarial") is True if payload is not None else False
         gate_failed = _acceptance_gate_failed(payload)
         skipped = stamped or critical or payload is None or bool(parse_error) or gate_failed
@@ -271,6 +286,8 @@ def _read_inputs(
             "parse_error": parse_error,
             "skipped": skipped,
             "skip_reason": reason,
+            "diagnosis_context_read": diagnosis_context is not None,
+            "diagnosis_context_corrigendum": diagnosis_corrigendum,
             "fields_imported": _fields_for_payload(key, skipped),
         }
         provenance.append(row)
@@ -289,6 +306,8 @@ def _read_inputs(
                         if str(flag.get("severity", "")).lower() == "critical"
                     ],
                     "reason": reason,
+                    "diagnosis_context_read": diagnosis_context is not None,
+                    "diagnosis_context_corrigendum": diagnosis_corrigendum,
                 }
             )
     return raw_artifacts, provenance, flagged_skipped
@@ -402,14 +421,22 @@ def _a2_l1_l2_barrier_diagnosis(payload: JsonDict | None, row: Mapping[str, Any]
             else "missing_clean_barrier_artifact",
         }
     diagnosis = _mapping(payload, "barrier_diagnosis")
-    return {
-        "status": "clean_barrier_diagnosis",
+    status = (
+        "corrigendum_known_false_positive_null_delta"
+        if row.get("diagnosis_context_read")
+        else "clean_barrier_diagnosis"
+    )
+    result = {
+        "status": status,
         "cleanly_reportable": True,
         "what_blocks_deeper_levels": base.str_metric(diagnosis, "root_cause"),
         "what_to_build_next": base.str_metric(diagnosis, "actionable_next_step"),
         "new_win_condition_likely": _bool(diagnosis, "new_win_condition_likely"),
         "induction_not_engaged": _bool(diagnosis, "induction_not_engaged"),
     }
+    if row.get("diagnosis_context_read"):
+        result["corrigendum"] = row.get("diagnosis_context_corrigendum")
+    return result
 
 
 def _a3_levelup(payload: JsonDict | None, row: Mapping[str, Any], registry: Mapping[str, Any]) -> JsonDict:
@@ -638,10 +665,12 @@ def build_artifact(
         clean["A2_stop_after_levelup"],
         rows.get("A2_stop_after_levelup", {}),
     )
-    a2_diagnosis = _a2_l1_l2_barrier_diagnosis(
-        clean["A2_reach_deeper_levels"],
-        rows.get("A2_reach_deeper_levels", {}),
-    )
+    a2_row = rows.get("A2_reach_deeper_levels", {})
+    a2_payload_for_diagnosis = clean["A2_reach_deeper_levels"]
+    if a2_payload_for_diagnosis is None and a2_row.get("diagnosis_context_read"):
+        raw_a2 = raw_artifacts.get("A2_reach_deeper_levels")
+        a2_payload_for_diagnosis = raw_a2 if isinstance(raw_a2, dict) else None
+    a2_diagnosis = _a2_l1_l2_barrier_diagnosis(a2_payload_for_diagnosis, a2_row)
     a3 = _a3_levelup(
         raw_artifacts.get("A3_levelup_attempt")
         if isinstance(raw_artifacts.get("A3_levelup_attempt"), dict)
