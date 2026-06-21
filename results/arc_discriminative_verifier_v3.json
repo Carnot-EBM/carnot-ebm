@@ -1,79 +1,82 @@
 {
-  "n_pos": 496,
-  "n_neg": 183,
-  "per_game": {
-    "ar25": {
-      "pos": 16,
-      "neg": 14
-    },
-    "cd82": {
-      "pos": 6,
-      "neg": 5
-    },
-    "cn04": {
-      "pos": 14,
-      "neg": 13
-    },
-    "ka59": {
-      "pos": 12,
-      "neg": 11
-    },
-    "lp85": {
-      "pos": 55,
-      "neg": 14
-    },
-    "ls20": {
-      "pos": 14,
-      "neg": 13
-    },
-    "m0r0": {
-      "pos": 16,
-      "neg": 14
-    },
-    "r11l": {
-      "pos": 5,
-      "neg": 4
-    },
-    "sc25": {
-      "pos": 17,
-      "neg": 14
-    },
-    "sk48": {
-      "pos": 15,
-      "neg": 14
-    },
-    "sp80": {
-      "pos": 5,
-      "neg": 4
-    },
-    "su15": {
-      "pos": 8,
-      "neg": 7
-    },
-    "tn36": {
-      "pos": 103,
-      "neg": 14
-    },
-    "tr87": {
-      "pos": 128,
-      "neg": 14
-    },
-    "tu93": {
-      "pos": 48,
-      "neg": 14
-    },
-    "wa30": {
-      "pos": 34,
-      "neg": 14
-    }
-  },
-  "in_sample_auroc": 0.8710834214701216,
-  "loo_auroc": 0.6744657162333668,
-  "n_held_out_games": 16,
-  "verdict": "TRANSFERS: off-path negatives carry cross-game discriminative signal.",
   "checkpoint": "models/arc_discriminative_verifier_v3.json",
   "feature_names": "cross_game_features_v3",
   "honest_verdict": "complete_discriminative_cross_game_transfer_measured",
+  "in_sample_auroc": 0.8710834214701216,
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
-  "mode": "discriminative_win_reachability_off_path_negatives"
+  "loo_auroc": 0.6744657162333668,
+  "loo_auroc_ci": [
+    0.6058303817975523,
+    0.7451888709482918
+  ],
+  "mode": "discriminative_win_reachability_off_path_negatives_v3",
+  "n_held_out_games": 16,
+  "n_neg": 183,
+  "n_pos": 496,
+  "per_game": {
+    "ar25": {
+      "neg": 14,
+      "pos": 16
+    },
+    "cd82": {
+      "neg": 5,
+      "pos": 6
+    },
+    "cn04": {
+      "neg": 13,
+      "pos": 14
+    },
+    "ka59": {
+      "neg": 11,
+      "pos": 12
+    },
+    "lp85": {
+      "neg": 14,
+      "pos": 55
+    },
+    "ls20": {
+      "neg": 13,
+      "pos": 14
+    },
+    "m0r0": {
+      "neg": 14,
+      "pos": 16
+    },
+    "r11l": {
+      "neg": 4,
+      "pos": 5
+    },
+    "sc25": {
+      "neg": 14,
+      "pos": 17
+    },
+    "sk48": {
+      "neg": 14,
+      "pos": 15
+    },
+    "sp80": {
+      "neg": 4,
+      "pos": 5
+    },
+    "su15": {
+      "neg": 7,
+      "pos": 8
+    },
+    "tn36": {
+      "neg": 14,
+      "pos": 103
+    },
+    "tr87": {
+      "neg": 14,
+      "pos": 128
+    },
+    "tu93": {
+      "neg": 14,
+      "pos": 48
+    },
+    "wa30": {
+      "neg": 14,
+      "pos": 34
+    }
+  }
 }
