@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.418",
+  "generated_at": "2026-06-21T05:32:13Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation and 0 compute-bound tasks, with both RTX 3090s idle at the snapshot, so gpu_idle_on_compute_bound_tasks is null (there is no compute-bound task for a GPU to be idle on). The locked 0/0/0 counts reflect the recurring false-zero detector gap -- an observability artifact -- not a real execution stall; per-experiment durations were unmeasurable for this retro.",
+  "bottlenecks_identified": [
+    "Observability, not execution: the milestone-scoped timing detector again returned 0 experiment commits since activation -- the recurring false-zero gap carried across many prior milestones -- so per-experiment durations are unmeasurable from the detector this retro.",
+    "Repair-did-not-reach-the-consumer: a timing-detector repair was shipped one milestone earlier (.417, verdict timing_detector_repaired_true_counts) and was audited as already-done this milestone (infra_audit_already_done), yet this retro's injected TIMING DATA block STILL false-zeroed. The repair landed in the standalone detector but not in the path that generates the retro task's TIMING DATA -- the fix did not reach the consumer that needs it."
+  ],
+  "improvements_suggested": [
+    "Wire the prior-milestone timing-detector repair (mtime scan + ops/changelog activation-window fallback) into the exact code path that builds the retro task's TIMING DATA block, and add a regression assertion that the retro's injected experiment count matches the on-disk results/experiment_*.json count inside the activation window.",
+    "Emit detector_gap_suspected=true (plus the on-disk artifact count) into the retro's TIMING DATA whenever the detector returns 0 but experiment artifacts exist on disk inside the activation window, so the false-zero self-announces instead of silently producing a 0/0/0 retro.",
+    "Stamp duration_s and compute_bound at artifact write-time in scripts/experiment_template.py so per-experiment timing is intrinsic to each artifact and a retro can compute the slowest-experiment table directly, with no dependency on the commit-scoped detector.",
+    "Add a lightweight on-disk reconciliation step to the retro task (list the in-window exp range + inference_substrate per artifact) so future retros surface the true execution window and substrate mix even when the detector false-zeros."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the retro TIMING DATA path itself (not just the standalone detector): point it at artifact mtimes + the ops/changelog activation window so experiments_completed reflects on-disk reality and the false-zero stops recurring.",
+    "Add a detector_gap_suspected self-check: when the detector returns 0 but in-window artifacts exist on disk, stamp the flag and the true count so the retro stops silently false-zeroing.",
+    "Stamp duration_s/compute_bound at write-time in experiment_template.py so per-experiment timing is intrinsic to each artifact and the retro no longer depends on the commit-scoped detector at all."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "Execution was not the bottleneck; observability was. The notable new signal this milestone: a timing-detector repair shipped one milestone earlier and was audited as already-done here, yet this retro still received a false-zero -- proving the repair reached the standalone detector but not the path that feeds the retro's TIMING DATA. Until that consumer path is fixed and regression-checked, every retro will keep hand-reconciling on-disk ground truth to avoid reporting a false zero as a real execution stall."
+}
