@@ -340,6 +340,68 @@ A success artifact SHALL require an energy-routed configuration to reach level
 including `energy_separation_auroc` and the positive-control status, without
 claiming a circular win or changing the submitted configuration.
 
+### REQ-ARC-WMTE-4544: Live LLM Proposer Re-Induction Gate
+
+Experiment 4544 SHALL replace the empty offline-DSL post-level proposer with the
+frozen local GGUF generator already wired through
+`E3AgentPolicy._proposer()`: Qwen3.5-9B-MTP via `LocalGGUFProposer`. On every
+level-up re-induction trigger, the policy SHALL ask the generator for separate
+GOAL predicate and DYNAMICS/world-model candidates, rank executable candidates
+with the oracle-distinct world-model trust energy, plan toward the selected
+GOAL predicate, and run a bounded counterexample-guided refinement loop of at
+most three rounds. Each refinement round SHALL feed the verifier's first
+counterexample or plan-reachability failure back to the proposer, and SHALL stop
+as soon as a candidate plan reaches the induced goal in the selected world
+model. `CARNOT_ARC_DISABLE_INDUCTION=1` SHALL remain a control-only escape hatch
+and SHALL NOT be set for the live LLM proposer condition.
+
+Experiment 4544 SHALL measure the matched offline-DSL baseline and LLM-proposer
+condition the same way on `lp85` and `m0r0`, report the CORE-preservation check
+over `{lp85,m0r0,sp80,vc33}`, characterize `llm_proposer_value` as the count
+and rate of level-ups where the LLM produced a reachable plan the offline DSL
+did not, and write
+`results/experiment_4544_llm_proposer_reinduction.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `model_specs`,
+`core_efficiency_baseline`, `core_efficiency_best`, `efficiency_delta`,
+`null_delta_methodology_note` when the delta is zero, `llm_proposer_value`,
+`deepest_level_reached_per_core_game`, `core_solves_preserved`,
+`refinement_rounds_used`, `barrier_refinement`, `chosen_submitted_config`,
+`positive_control_passed`, `false_negative_risk_checked`,
+`verifier_is_oracle`, `offline_reproduced`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; e.g. success: llm_proposer_<game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: llm_proposer_no_deeper_level_proposer_value_characterized_honest_null."
+- `inference_substrate`: principle "live_llm_inference -- the Qwen3.5-9B-MTP generator is genuinely loaded + invoked (60s floor)."
+- `model_specs`: principle "names the generator actually invoked (Qwen3.5-9B-MTP GGUF + the resolved .gguf path)."
+- `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control, measured the SAME way as best."
+- `core_efficiency_best`: principle "the HEADLINE -- did the LLM proposer reach a deeper CORE level and raise core_efficiency."
+- `efficiency_delta`: principle "core_efficiency_best - core_efficiency_baseline, emitted explicitly so a null delta is annotated."
+- `null_delta_methodology_note`: principle "present when efficiency_delta==0.0 -- states the equality is an honest no-deeper-level null, not a measurement bug."
+- `llm_proposer_value`: principle "the count/rate of level-ups where the LLM proposer produced a REACHABLE plan the offline DSL could not."
+- `deepest_level_reached_per_core_game`: principle "best_level per CORE game per condition -- direct evidence of reaching MORE levels."
+- `core_solves_preserved`: principle "HARD empirical gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve fails the lever."
+- `refinement_rounds_used`: principle "bounded counterexample-guided refinement rounds per level-up -- proves the loop ran and stayed bounded."
+- `barrier_refinement`: principle "if no deeper CORE level is reached, the concrete actionable refinement of what the LLM plan still gets wrong."
+- `chosen_submitted_config`: principle "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); parity tests must stay consistent."
+- `positive_control_passed`: principle "proves the LLM proposer can produce a reachable plan the DSL could not on a known-L2 game."
+- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
+- `verifier_is_oracle`: principle "false -- the world-model trust energy ranks candidates by held-out generalization, oracle-DISTINCT."
+- `offline_reproduced`: principle "any new level reached must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records offline arcade, Qwen3.5-9B-MTP GGUF cache, and llama_cpp checks; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require some CORE game to reach L2 under the LLM
+proposer, `core_efficiency_best > 2.0074`, `core_solves_preserved=true`,
+`positive_control_passed=true`, `verifier_is_oracle=false`, and
+`offline_reproduced=true` for any new level before changing
+`SUBMITTED_AGENT_CONFIG` or raising `SUBMITTED_TARGET_LEVELS`. Otherwise the
+submitted configuration SHALL remain unchanged and the artifact SHALL report an
+honest null with `efficiency_delta=0.0`, `llm_proposer_value` characterized, and
+a concrete `barrier_refinement`.
+
 ### REQ-ARC-WMTE-4536: Submitted A1/A2 Integration Gate Refresh
 
 Experiment 4536 SHALL read the A1 per-level goal re-induction artifact from
@@ -679,6 +741,19 @@ the depth-compatible candidate set, the artifact compares `lp85` and `sp80`
 against a matched no-energy control, sets `verifier_is_oracle=false`, and a null
 is accepted only when the positive-control energy separation check passes and
 `energy_separation_auroc` is reported.
+
+### SCENARIO-ARC-WMTE-4544: LLM Proposer Refines Post-Level Plans
+
+Given a live E3 policy observes a level-up and has post-transition frames for
+the next level
+When experiment 4544 enables the Qwen3.5-9B-MTP proposer instead of the
+offline-DSL-only control
+Then the policy invokes the local GGUF generator, records separate GOAL and
+DYNAMICS candidate metadata, selects an executable world model with the
+oracle-distinct trust energy, retries at most three verifier-guided refinement
+rounds, reports whether the LLM produced a reachable plan the offline DSL did
+not, and wires the submitted configuration only when a CORE game reaches L2
+with strict per-level efficiency improvement and no CORE solve loss.
 
 ### SCENARIO-ARC-WMTE-4536: A1/A2 Integration Preserves Honest Null
 

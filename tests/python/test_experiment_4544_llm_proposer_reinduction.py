@@ -1,0 +1,710 @@
+"""Tests for Exp 4544 live LLM proposer re-induction.
+
+Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from types import SimpleNamespace
+
+import numpy as np
+import pytest
+
+
+REPO = Path(__file__).resolve().parents[2]
+SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
+
+
+def _levels(lp85: int = 1, m0r0: int = 1, sp80: int = 1, vc33: int = 1) -> dict[str, int]:
+    return {"lp85": lp85, "m0r0": m0r0, "sp80": sp80, "vc33": vc33}
+
+
+def _measurement(
+    label: str,
+    *,
+    levels: dict[str, int] | None = None,
+    efficiency: float = 2.0074,
+    planned: bool = False,
+) -> dict[str, object]:
+    levels = dict(levels or _levels())
+    return {
+        "measurement": label,
+        "core_efficiency": efficiency,
+        "deepest_level_by_game": levels,
+        "per_game": [
+            {
+                "game": game,
+                "best_level": level,
+                "efficiency": efficiency / 4.0,
+                "diagnostics": {
+                    "induction_attempts": [
+                        {
+                            "reason": "level_up_reinduction",
+                            "planned": planned,
+                            "skipped": "" if planned else "proposer_failed_or_missing_root",
+                        }
+                    ]
+                },
+            }
+            for game, level in levels.items()
+        ],
+    }
+
+
+def _preconditions() -> dict[str, object]:
+    return {
+        "agents_md_read": True,
+        "codex_md_read": True,
+        "offline_arcade_import_smoke": True,
+        "qwen3_5_9b_mtp_gguf_cached": True,
+        "qwen3_5_9b_mtp_gguf_path": "/models/Qwen3.5-9B-Q4_K_M.gguf",
+        "llama_cpp_import": True,
+        "llama_cpp_version": "0.3.29",
+        "spec_has_req_4544": True,
+        "ok": True,
+    }
+
+
+def test_req_arc_wmte_4544_spec_declares_required_artifact_contract() -> None:
+    """REQ-ARC-WMTE-4544: OpenSpec anchors the live-LLM artifact contract."""
+
+    from carnot import experiment_4544_llm_proposer_reinduction as exp4544
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+
+    assert "REQ-ARC-WMTE-4544" in spec
+    assert "SCENARIO-ARC-WMTE-4544" in spec
+    assert exp4544.RESULT_RELATIVE_PATH in spec
+    for field, principle in exp4544.FIELD_PRINCIPLES.items():
+        assert field in spec
+        assert principle in spec
+
+
+def test_req_arc_wmte_4544_bounded_refinement_stops_on_reachable_plan() -> None:
+    """REQ-ARC-WMTE-4544: refinement retries are bounded and stop after a reachable plan."""
+
+    from carnot.agentic.arc_executable_world_model import Transition
+    from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
+
+    class FakeProposer:
+        model_specs = "Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)"
+
+        def __init__(self) -> None:
+            self.induce_calls = 0
+            self.refactor_calls = 0
+
+        def induce(self, _game, _transitions, _cell):
+            self.induce_calls += 1
+            return True, "first candidate"
+
+        def refactor(self, _game, _counterexample):
+            self.refactor_calls += 1
+            return True, "refined candidate"
+
+    transitions = [
+        Transition(
+            grid=np.array([[0]], dtype=np.int16),
+            action=1,
+            data=None,
+            next_grid=np.array([[1]], dtype=np.int16),
+            level_before=1,
+            level_after=1,
+        ),
+        Transition(
+            grid=np.array([[1]], dtype=np.int16),
+            action=1,
+            data=None,
+            next_grid=np.array([[2]], dtype=np.int16),
+            level_before=1,
+            level_after=1,
+        ),
+    ]
+
+    def stuck_engine(grid, _action, _data):
+        return np.asarray(grid)
+
+    def progress_engine(grid, _action, _data):
+        return np.asarray(grid) + 1
+
+    engines = iter(
+        [
+            (stuck_engine, lambda grid: bool(np.asarray(grid)[0, 0] >= 2)),
+            (progress_engine, lambda grid: bool(np.asarray(grid)[0, 0] >= 2)),
+        ]
+    )
+
+    def load_engine(_game):
+        return next(engines)
+
+    def plan_in_model(engine, is_done, start_grid):
+        grid = np.asarray(engine(np.asarray(start_grid), 1, None))
+        return [{"action": 1, "data": None}] if bool(is_done(grid)) else None
+
+    proposer = FakeProposer()
+    result = execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=transitions,
+        cell=1,
+        root_grid=np.array([[1]], dtype=np.int16),
+        proposer=proposer,
+        candidate_provider=lambda engine, goal: [("loaded", engine, goal)],
+        load_engine=load_engine,
+        plan_in_model=plan_in_model,
+        max_rounds=3,
+    )
+
+    assert result.planned is True
+    assert result.plan == [{"action": 1, "data": None}]
+    assert result.refinement_rounds_used == 2
+    assert proposer.induce_calls == 1
+    assert proposer.refactor_calls == 1
+    assert result.verifier_is_oracle is False
+    assert result.goal_candidate_names == ["loaded"]
+    assert result.dynamics_candidate_names == ["loaded"]
+    assert result.counterexamples[0]["kind"] in {"no_reachable_plan", "plan_execution"}
+
+
+def test_req_arc_wmte_4544_bounded_refinement_caps_at_three_rounds() -> None:
+    """SCENARIO-ARC-WMTE-4544: an unreachable plan cannot exceed the K<=3 loop bound."""
+
+    from carnot.agentic.arc_executable_world_model import Transition
+    from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
+
+    class NeverProposer:
+        model_specs = "Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)"
+
+        def __init__(self) -> None:
+            self.calls = []
+
+        def induce(self, _game, _transitions, _cell):
+            self.calls.append("induce")
+            return True, "candidate"
+
+        def refactor(self, _game, _counterexample):
+            self.calls.append("refactor")
+            return True, "refined"
+
+    transition = Transition(
+        grid=np.array([[0]], dtype=np.int16),
+        action=1,
+        data=None,
+        next_grid=np.array([[0]], dtype=np.int16),
+        level_before=1,
+        level_after=1,
+    )
+
+    def noop(grid, _action, _data):
+        return np.asarray(grid)
+
+    result = execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=[transition],
+        cell=1,
+        root_grid=np.array([[0]], dtype=np.int16),
+        proposer=NeverProposer(),
+        candidate_provider=lambda engine, goal: [("loaded", engine, goal)],
+        load_engine=lambda _game: (noop, lambda grid: bool(np.asarray(grid)[0, 0] >= 9)),
+        plan_in_model=lambda _engine, _goal, _start: None,
+        max_rounds=3,
+    )
+
+    assert result.planned is False
+    assert result.refinement_rounds_used == 3
+    assert [row["round"] for row in result.rounds] == [1, 2, 3]
+    assert result.skipped == "no_reachable_plan_after_refinement"
+
+
+def test_req_arc_wmte_4544_honest_null_records_proposer_value(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-4544: no L2 still reports measured proposer value and null delta."""
+
+    from carnot import experiment_4544_llm_proposer_reinduction as exp4544
+
+    artifact = exp4544.build_artifact(
+        preconditions_checked=_preconditions(),
+        offline_dsl_baseline=_measurement("offline_dsl_baseline"),
+        llm_proposer=_measurement("llm_proposer", planned=True),
+        llm_proposer_value={"count": 1, "opportunities": 2, "rate": 0.5, "events": ["lp85:L2"]},
+        positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
+        offline_reproduction={},
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        refinement_rounds_used={"lp85": [2], "m0r0": [3]},
+        barrier_refinement="llm_plan_reaches_model_goal_but_real_execution_still_diverges_at_click",
+        random_seed=4544,
+        duration_s=61.0,
+    )
+
+    assert artifact["honest_verdict"] == (
+        "complete: llm_proposer_no_deeper_level_proposer_value_characterized_honest_null"
+    )
+    assert artifact["inference_substrate"] == "live_llm_inference"
+    assert artifact["efficiency_delta"] == 0.0
+    assert "null_delta_methodology_note" in artifact
+    assert artifact["llm_proposer_value"]["count"] == 1
+    assert artifact["verifier_is_oracle"] is False
+    assert artifact["chosen_submitted_config"] == "unchanged"
+    assert exp4544.artifact_schema_errors(artifact) == []
+
+    out = exp4544.write_artifact(artifact, root=tmp_path)
+    assert json.loads(out.read_text(encoding="utf-8")) == artifact
+
+
+def test_req_arc_wmte_4544_success_requires_l2_efficiency_preservation_and_replay() -> None:
+    """REQ-ARC-WMTE-4544: submitted config changes only on strict CORE improvement."""
+
+    from carnot import experiment_4544_llm_proposer_reinduction as exp4544
+
+    artifact = exp4544.build_artifact(
+        preconditions_checked=_preconditions(),
+        offline_dsl_baseline=_measurement("offline_dsl_baseline", levels=_levels(lp85=1)),
+        llm_proposer=_measurement("llm_proposer", levels=_levels(lp85=2), efficiency=3.125, planned=True),
+        llm_proposer_value={"count": 1, "opportunities": 1, "rate": 1.0, "events": ["lp85:L2"]},
+        positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
+        offline_reproduction={"reproduced": True, "game": "lp85", "reached_level": 2},
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        refinement_rounds_used={"lp85": [2]},
+        barrier_refinement="resolved: llm proposer reached L2",
+        random_seed=4544,
+        duration_s=61.0,
+    )
+
+    assert artifact["honest_verdict"] == (
+        "success: llm_proposer_lp85_reached_L2_core_efficiency_3.1250_above_2.0074"
+    )
+    assert artifact["core_efficiency_best"] == 3.125
+    assert artifact["efficiency_delta"] == 1.1176
+    assert artifact["core_solves_preserved"] is True
+    assert artifact["chosen_submitted_config"]["llm_proposer_reinduction"] is True
+    assert exp4544.artifact_schema_errors(artifact) == []
+
+    dropped = exp4544.build_artifact(
+        preconditions_checked=_preconditions(),
+        offline_dsl_baseline=_measurement("offline_dsl_baseline", levels=_levels(lp85=1, m0r0=1)),
+        llm_proposer=_measurement(
+            "llm_proposer",
+            levels=_levels(lp85=2, m0r0=0),
+            efficiency=3.125,
+            planned=True,
+        ),
+        llm_proposer_value={"count": 1, "opportunities": 1, "rate": 1.0, "events": ["lp85:L2"]},
+        positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
+        offline_reproduction={"reproduced": True, "game": "lp85", "reached_level": 2},
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        refinement_rounds_used={"lp85": [2]},
+        barrier_refinement="lp85_l2_reached_but_m0r0_core_solve_dropped",
+        random_seed=4544,
+        duration_s=61.0,
+    )
+    assert dropped["honest_verdict"] == (
+        "complete: llm_proposer_no_deeper_level_proposer_value_characterized_honest_null"
+    )
+    assert dropped["chosen_submitted_config"] == "unchanged"
+
+
+def test_scenario_arc_wmte_4544_run_writes_injected_measurements(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-4544: injected matched measurements write stable JSON."""
+
+    from carnot import experiment_4544_llm_proposer_reinduction as exp4544
+
+    artifact = exp4544.run(
+        root=tmp_path,
+        preconditions_checked=_preconditions(),
+        measurement_runner=lambda: (
+            _measurement("offline_dsl_baseline"),
+            _measurement("llm_proposer", planned=True),
+        ),
+        positive_control_runner=lambda: {
+            "passed": True,
+            "reachable_plan": True,
+            "dsl_reachable_plan": False,
+        },
+        offline_reproduction_runner=lambda _best: {},
+        live_invocation_runner=lambda _proposer, _model_path: {"invoked": True, "duration_s": 60.0},
+        now=lambda: 1.0,
+    )
+
+    assert artifact["result_path"] == exp4544.RESULT_RELATIVE_PATH
+    assert artifact["positive_control_passed"] is True
+    assert artifact["false_negative_risk_checked"] is True
+    assert json.loads((tmp_path / exp4544.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
+
+
+def test_scenario_arc_wmte_4544_e3_policy_records_llm_refinement(monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-4544: level-up induction records GOAL/DYNAMICS and bounded rounds."""
+
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic.arc_llm_reinduction import LlmReinductionResult
+
+    result = LlmReinductionResult(
+        planned=True,
+        plan=[{"action": 1, "data": None}],
+        goal_predicate=lambda grid: bool(np.asarray(grid).sum()),
+        engine=lambda grid, _action, _data: np.asarray(grid),
+        selected_candidate_name="candidate-a",
+        goal_candidate_names=["goal-a"],
+        dynamics_candidate_names=["dynamics-a"],
+        refinement_rounds_used=2,
+        verifier_is_oracle=False,
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        rounds=[{"round": 1}, {"round": 2}],
+        counterexamples=[{"kind": "no_reachable_plan"}],
+        skipped="",
+    )
+
+    monkeypatch.setattr(
+        agent,
+        "execute_bounded_llm_reinduction",
+        lambda **_kwargs: result,
+        raising=False,
+    )
+
+    policy = agent.E3AgentPolicy(
+        "lp85",
+        proposer=SimpleNamespace(model_specs=result.model_specs),
+        target_levels=2,
+        value_head=None,
+    )
+    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
+    policy.root_grid = np.array([[1]], dtype=np.int16)
+    policy._pending_induction_reason = "level_up_reinduction"
+    policy._current_goal_level = 2
+
+    policy._induce_and_plan()
+
+    attempt = policy.induction_attempts[-1]
+    assert policy.plan == [{"action": 1, "data": None}]
+    assert attempt["planned"] is True
+    assert attempt["refinement_rounds_used"] == 2
+    assert attempt["goal_candidate_names"] == ["goal-a"]
+    assert attempt["dynamics_candidate_names"] == ["dynamics-a"]
+    assert attempt["verifier_is_oracle"] is False
+
+
+def test_req_arc_wmte_4544_helper_defensive_branches() -> None:
+    """REQ-ARC-WMTE-4544: helper branches emit compact counterexamples."""
+
+    from carnot.agentic.arc_llm_reinduction import (
+        WorldModelCandidate,
+        _model_specs,
+        _normalise_candidates,
+        _plan_reaches_goal,
+        execute_bounded_llm_reinduction,
+    )
+
+    def noop(grid, _action, _data):
+        return np.asarray(grid)
+
+    assert _model_specs(SimpleNamespace(repo_substr="Qwen3.5-9B-MTP", model_path="/m.gguf")) == (
+        "Qwen3.5-9B-MTP GGUF (/m.gguf)"
+    )
+    assert _model_specs(SimpleNamespace()).endswith("SimpleNamespace")
+
+    direct = WorldModelCandidate("direct", noop, lambda _grid: False)
+    rows = _normalise_candidates(
+        [
+            direct,
+            {"name": "mapping", "engine": noop, "goal_predicate": lambda _grid: False},
+            ("tuple", noop),
+        ],
+        noop,
+        lambda _grid: False,
+    )
+    assert [row.name for row in rows] == ["direct", "mapping", "tuple"]
+
+    grid = np.array([[0]], dtype=np.int16)
+    assert _plan_reaches_goal(engine=noop, goal=None, start_grid=grid, plan=[])["counterexample"][
+        "kind"
+    ] == "missing_goal_predicate"
+    assert _plan_reaches_goal(
+        engine=noop,
+        goal=lambda current: bool(np.asarray(current)[0, 0] == 0),
+        start_grid=grid,
+        plan=[],
+    )["reaches_goal"] is True
+
+    def bad_goal(_grid):
+        raise RuntimeError("goal boom")
+
+    assert _plan_reaches_goal(engine=noop, goal=bad_goal, start_grid=grid, plan=[])[
+        "counterexample"
+    ]["kind"] == "goal_predicate_error"
+
+    def bad_engine(_grid, _action, _data):
+        raise RuntimeError("engine boom")
+
+    assert _plan_reaches_goal(
+        engine=bad_engine,
+        goal=lambda _grid: False,
+        start_grid=grid,
+        plan=[{"action": 1, "data": None}],
+    )["counterexample"]["kind"] == "plan_execution"
+    assert _plan_reaches_goal(
+        engine=noop,
+        goal=bad_goal,
+        start_grid=grid,
+        plan=[{"action": 1, "data": None}],
+    )["counterexample"]["kind"] == "goal_predicate_error"
+    assert _plan_reaches_goal(
+        engine=noop,
+        goal=lambda _grid: False,
+        start_grid=grid,
+        plan=[{"action": 1, "data": None}],
+    )["counterexample"]["reason"] == "plan_finished_before_goal"
+
+    proposer = SimpleNamespace(model_specs="Qwen3.5-9B-MTP GGUF (/m.gguf)")
+    assert execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=[SimpleNamespace()],
+        cell=1,
+        root_grid=None,
+        proposer=proposer,
+        candidate_provider=lambda _engine, _goal: [],
+        load_engine=lambda _game: (noop, lambda _grid: False),
+        plan_in_model=lambda _engine, _goal, _grid: None,
+    ).skipped == "missing_root_grid"
+    assert execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=[],
+        cell=1,
+        root_grid=grid,
+        proposer=proposer,
+        candidate_provider=lambda _engine, _goal: [],
+        load_engine=lambda _game: (noop, lambda _grid: False),
+        plan_in_model=lambda _engine, _goal, _grid: None,
+    ).skipped == "no_active_transitions"
+
+
+def test_req_arc_wmte_4544_helper_failure_paths() -> None:
+    """REQ-ARC-WMTE-4544: proposer and selection failures stay bounded."""
+
+    from carnot.agentic.arc_executable_world_model import Transition
+    from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
+
+    transition = Transition(
+        grid=np.array([[0]], dtype=np.int16),
+        action=1,
+        data=None,
+        next_grid=np.array([[0]], dtype=np.int16),
+        level_before=0,
+        level_after=0,
+    )
+
+    class Fails:
+        model_specs = "Qwen3.5-9B-MTP GGUF (/m.gguf)"
+
+        def induce(self, _game, _transitions, _cell):
+            return False, "no code"
+
+    failed = execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=[transition],
+        cell=1,
+        root_grid=np.array([[0]], dtype=np.int16),
+        proposer=Fails(),
+        candidate_provider=lambda _engine, _goal: [],
+        load_engine=lambda _game: (lambda grid, _action, _data: np.asarray(grid), lambda _grid: False),
+        plan_in_model=lambda _engine, _goal, _grid: None,
+    )
+    assert failed.skipped == "proposer_failed"
+    assert failed.rounds[0]["skipped"] == "proposer_failed"
+
+    class Raises:
+        model_specs = "Qwen3.5-9B-MTP GGUF (/m.gguf)"
+
+        def induce(self, _game, _transitions, _cell):
+            return True, "candidate"
+
+        def refactor(self, _game, _counterexample):
+            return True, "refined"
+
+    errored = execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=[transition],
+        cell=1,
+        root_grid=np.array([[0]], dtype=np.int16),
+        proposer=Raises(),
+        candidate_provider=lambda _engine, _goal: [],
+        load_engine=lambda _game: (_ for _ in ()).throw(RuntimeError("load boom")),
+        plan_in_model=lambda _engine, _goal, _grid: None,
+        max_rounds=1,
+    )
+    assert errored.skipped == "no_reachable_plan_after_refinement"
+    assert errored.counterexamples[0]["kind"] == "selection_or_planning_exception"
+
+
+def test_req_arc_wmte_4544_experiment_helper_branches() -> None:
+    """REQ-ARC-WMTE-4544: measurement helpers handle sparse and failed inputs."""
+
+    from carnot import experiment_4544_llm_proposer_reinduction as exp4544
+
+    sparse = {
+        "measurement": "sparse",
+        "best_level_by_game": {"lp85": 2},
+        "efficiency_by_game": {"lp85": 1.0},
+        "per_game": [
+            "bad-row",
+            {"game": "m0r0", "levels": 1, "per_level_efficiency": 0.25},
+            {
+                "game": "sp80",
+                "best_level": 1,
+                "diagnostics": {
+                    "induction_attempts": [
+                        {
+                            "reason": "level_up_reinduction",
+                            "planned": False,
+                            "refinement_rounds_used": 3,
+                            "counterexamples": [{"kind": "no_reachable_plan"}],
+                        }
+                    ]
+                },
+            },
+        ],
+    }
+    normal = exp4544._normalise_measurement(sparse, label="fallback")
+    assert normal["deepest_level_by_game"]["lp85"] == 2
+    assert normal["deepest_level_by_game"]["m0r0"] == 1
+    assert normal["core_efficiency"] == 1.25
+    assert exp4544.characterize_llm_proposer_value({}, {"per_game": ["bad", {"game": "lp85"}]})[
+        "rate"
+    ] == 0.0
+    assert exp4544.refinement_rounds_from_measurement(sparse)["sp80"] == [3]
+    assert exp4544.positive_control_from_live(
+        {"invoked": False, "reachable_plan": False, "dsl_reachable_plan": False}
+    )["passed"] is False
+    assert exp4544._default_barrier(
+        llm_proposer=normal,
+        positive_control_passed=True,
+        success=True,
+    ).startswith("resolved:")
+    assert exp4544._default_barrier(
+        llm_proposer=normal,
+        positive_control_passed=False,
+        success=False,
+    ).startswith("positive_control_failed")
+    assert exp4544._default_barrier(
+        llm_proposer={"per_game": []},
+        positive_control_passed=True,
+        success=False,
+    ).startswith("no_post_level")
+    assert "counterexamples" in exp4544._default_barrier(
+        llm_proposer=normal,
+        positive_control_passed=True,
+        success=False,
+    )
+
+
+def test_req_arc_wmte_4544_schema_error_branches_and_blocked_run(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-ARC-WMTE-4544: schema rejects malformed artifacts and blocked runs write."""
+
+    from carnot import experiment_4544_llm_proposer_reinduction as exp4544
+
+    artifact = exp4544.build_artifact(
+        preconditions_checked=_preconditions(),
+        offline_dsl_baseline=_measurement("offline_dsl_baseline"),
+        llm_proposer=_measurement("llm_proposer", planned=True),
+        llm_proposer_value={"count": 0, "opportunities": 1, "rate": 0.0, "events": []},
+        positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
+        offline_reproduction={},
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        refinement_rounds_used={"lp85": []},
+        barrier_refinement=None,
+        random_seed=4544,
+        duration_s=61.0,
+    )
+
+    mutations = []
+    missing = dict(artifact)
+    missing.pop("model_specs")
+    mutations.append((missing, "missing required field model_specs"))
+    for key, value, expected in [
+        ("honest_verdict", "oops", "honest_verdict must start"),
+        ("inference_substrate", "cached", "inference_substrate"),
+        ("model_specs", "Qwen missing path", "model_specs must name"),
+        ("field_principles", {}, "field_principles"),
+        ("verifier_is_oracle", True, "verifier_is_oracle"),
+        ("core_efficiency_baseline", 0.0, "core_efficiency_baseline"),
+        ("efficiency_delta", 999.0, "efficiency_delta"),
+        ("false_negative_risk_checked", False, "false_negative_risk_checked"),
+        ("preconditions_checked", [], "preconditions_checked must be a mapping"),
+        ("preconditions_checked", {}, "preconditions_checked must record"),
+        ("llm_proposer_value", [], "llm_proposer_value must be a mapping"),
+        ("deepest_level_reached_per_core_game", [], "deepest_level"),
+        ("reproducibility_checksum", "bad", "reproducibility_checksum"),
+        ("chosen_submitted_config", {"bad": True}, "non-success"),
+    ]:
+        changed = dict(artifact)
+        changed[key] = value
+        mutations.append((changed, expected))
+    no_note = dict(artifact)
+    no_note.pop("null_delta_methodology_note")
+    mutations.append((no_note, "null_delta_methodology_note"))
+    bad_value = dict(artifact)
+    bad_value["llm_proposer_value"] = {"count": 2, "opportunities": 1}
+    mutations.append((bad_value, "count cannot exceed"))
+
+    for changed, expected in mutations:
+        assert any(expected in error for error in exp4544.artifact_schema_errors(changed))
+
+    success = exp4544.build_artifact(
+        preconditions_checked=_preconditions(),
+        offline_dsl_baseline=_measurement("offline_dsl_baseline", levels=_levels(lp85=1)),
+        llm_proposer=_measurement("llm_proposer", levels=_levels(lp85=2), efficiency=3.2, planned=True),
+        llm_proposer_value={"count": 1, "opportunities": 1, "rate": 1.0, "events": ["lp85:L2"]},
+        positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
+        offline_reproduction={"reproduced": True, "reached_level": 2},
+        model_specs="Qwen3.5-9B-MTP GGUF (/models/Qwen3.5-9B-Q4_K_M.gguf)",
+        refinement_rounds_used={"lp85": [1]},
+        barrier_refinement=None,
+        random_seed=4544,
+        duration_s=61.0,
+    )
+    for key, value, expected in [
+        ("core_solves_preserved", False, "core_solves_preserved"),
+        ("positive_control_passed", False, "positive_control_passed"),
+        ("offline_reproduced", False, "offline_reproduced"),
+        ("core_efficiency_best", 2.0074, "core_efficiency_best"),
+        ("chosen_submitted_config", "unchanged", "chosen submitted config"),
+    ]:
+        changed = dict(success)
+        changed[key] = value
+        assert any(expected in error for error in exp4544.artifact_schema_errors(changed))
+
+    with pytest.raises(ValueError):
+        exp4544.write_artifact({**artifact, "reproducibility_checksum": "bad"}, root=tmp_path)
+
+    blocked = exp4544.run(
+        root=tmp_path,
+        preconditions_checked={
+            "offline_arcade_import_smoke": False,
+            "qwen3_5_9b_mtp_gguf_cached": False,
+            "llama_cpp_import": False,
+            "spec_has_req_4544": True,
+            "qwen3_5_9b_mtp_gguf_path": None,
+            "ok": False,
+        },
+        measurement_runner=lambda: (_measurement("offline"), _measurement("llm")),
+        live_invocation_runner=lambda _proposer, _model_path: {"invoked": False},
+        now=lambda: 1.0,
+    )
+    assert blocked["honest_verdict"] == "blocked_llm_proposer_reinduction_precondition"
+    assert json.loads((tmp_path / exp4544.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == blocked
+
+    monkeypatch.setattr(exp4544, "artifact_schema_errors", lambda _artifact: ["forced"])
+    with pytest.raises(ValueError):
+        exp4544.run(
+            root=tmp_path,
+            preconditions_checked=_preconditions(),
+            measurement_runner=lambda: (_measurement("offline"), _measurement("llm")),
+            positive_control_runner=lambda: {
+                "passed": True,
+                "reachable_plan": True,
+                "dsl_reachable_plan": False,
+            },
+            offline_reproduction_runner=lambda _best: {},
+            live_invocation_runner=lambda _proposer, _model_path: {"duration_s": 60.0},
+            now=lambda: 1.0,
+        )

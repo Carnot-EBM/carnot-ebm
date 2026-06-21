@@ -454,6 +454,7 @@ class LocalGGUFProposer:
     model_path: Optional[str] = (
         None  # explicit .gguf path; on Kaggle set to the bundled /kaggle/input/... path
     )
+    tries: int = 3
     _proc: Any = None
 
     def _url(self) -> str:
@@ -572,7 +573,7 @@ class LocalGGUFProposer:
 
     def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
-        ok, code = self.generate(prompt, ("engine", "is_level_complete"))
+        ok, code = self.generate(prompt, ("engine", "is_level_complete"), tries=self.tries)
         if ok:
             (E3_DIR / game / "world_model.py").write_text(code)
             return True, "local gguf (GPU server) wrote world_model.py"
