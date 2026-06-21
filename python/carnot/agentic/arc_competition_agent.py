@@ -270,6 +270,7 @@ class StepwiseExplorer:
         self._nav_reset_replay_steps = 0
         self.goal_bias = None
         self.goal_bias_label = ""
+        self.goal_bias_lower_is_better = False
         self._goal_bias_scored = 0
         self._goal_bias_errors = 0
 
@@ -428,16 +429,18 @@ class StepwiseExplorer:
             "forward_walk_hit_rate": float(hits / attempts) if attempts else 0.0,
         }
 
-    def set_goal_bias(self, goal_bias, *, label: str = "") -> None:
-        """REQ-ARC-WMTE-4533: install a level-conditioned predicate as a depth-preserving bias."""
+    def set_goal_bias(self, goal_bias, *, label: str = "", lower_is_better: bool = False) -> None:
+        """REQ-ARC-WMTE-4533/4534: install a depth-preserving goal or energy bias."""
 
         self.goal_bias = goal_bias
         self.goal_bias_label = str(label or "")
+        self.goal_bias_lower_is_better = bool(lower_is_better and goal_bias is not None)
 
     def goal_bias_diagnostics(self) -> dict[str, Any]:
         return {
             "enabled": self.goal_bias is not None,
             "label": self.goal_bias_label,
+            "lower_is_better": bool(self.goal_bias_lower_is_better),
             "nodes_scored": int(self._goal_bias_scored),
             "errors": int(self._goal_bias_errors),
         }
@@ -455,6 +458,13 @@ class StepwiseExplorer:
         except Exception:
             self._goal_bias_errors += 1
             return 0.0
+
+    def _goal_bias_key(self, score: float) -> float:
+        if self.goal_bias is None:
+            return 0.0
+        if self.goal_bias_lower_is_better:
+            return float(score)
+        return -float(score)
 
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
@@ -685,16 +695,16 @@ class StepwiseExplorer:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
-                key = (depth, w * float(value), -goal_bias, *nav_key, -on_path)
+                key = (depth, w * float(value), self._goal_bias_key(goal_bias), *nav_key, -on_path)
             elif use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
-                key = (depth + w * float(value), depth, -goal_bias, -on_path)
+                key = (depth + w * float(value), depth, self._goal_bias_key(goal_bias), -on_path)
             elif self.navigation_cost_tiebreak:
-                key = (depth, -goal_bias, *nav_key, -on_path)
+                key = (depth, self._goal_bias_key(goal_bias), *nav_key, -on_path)
             else:
-                key = (depth, -goal_bias, -on_path)
+                key = (depth, self._goal_bias_key(goal_bias), -on_path)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
