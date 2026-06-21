@@ -79,6 +79,7 @@ class CNNDynamics:
         self.change_weight = float(change_weight)
         self._net: Any = None
         self._shape: Optional[tuple] = None  # (H, W) the net was trained at
+        self._device = "cpu"  # set to cuda at fit time when available (matches the 16GB CUDA eval GPU)
 
     @staticmethod
     def _click_xy(akey: tuple) -> Optional[tuple]:
@@ -161,9 +162,10 @@ class CNNDynamics:
         self._shape = Counter(t[0].shape for t in items).most_common(1)[0][0]
         items = [t for t in items if t[0].shape == self._shape]
         torch.manual_seed(0)
-        net = self._build_net(torch)
+        self._device = "cuda" if torch.cuda.is_available() else "cpu"
+        net = self._build_net(torch).to(self._device)
         if warm_state is not None:
-            net.load_state_dict(warm_state)
+            net.load_state_dict(warm_state)  # copies CPU prior weights onto the net's device
         opt = torch.optim.Adam(net.parameters(), lr=self.lr)
         loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
         n = len(items)
@@ -173,9 +175,9 @@ class CNNDynamics:
             for i in range(0, n, batch_size):
                 idx = perm[i:i + batch_size]
                 # encode PER BATCH (lazy) -- pre-stacking the whole corpus is ~5GB at 12k x 24x64x64.
-                xb = torch.stack([self._encode(items[j][0], items[j][1], torch) for j in idx])
+                xb = torch.stack([self._encode(items[j][0], items[j][1], torch) for j in idx]).to(self._device)
                 yb = torch.stack([torch.from_numpy(self._residual_target(items[j][0], items[j][2]))
-                                  for j in idx])  # residual/KEEP target (0=keep, 1..16=set colour)
+                                  for j in idx]).to(self._device)  # residual/KEEP target (0=keep,1..16=set)
                 opt.zero_grad()
                 ce = loss_fn(net(xb), yb)                                  # [B, H, W] per-cell loss
                 w = torch.where(yb > 0, self.change_weight, 1.0)           # upweight CHANGED cells
@@ -188,7 +190,7 @@ class CNNDynamics:
 
     def get_state(self) -> Any:
         """The net's state_dict (for saving a pretrained prior), or None if untrained."""
-        return None if self._net is None else {k: v.clone() for k, v in self._net.state_dict().items()}
+        return None if self._net is None else {k: v.detach().cpu().clone() for k, v in self._net.state_dict().items()}
 
     def predict(self, s_grid, akey: tuple) -> np.ndarray:
         if self._net is None or np.asarray(s_grid).shape != self._shape:
@@ -197,8 +199,8 @@ class CNNDynamics:
 
         s = np.asarray(s_grid)
         with torch.no_grad():
-            logits = self._net(self._encode(s, tuple(akey), torch).unsqueeze(0))  # [1, 1+16, H, W]
-            cls = logits.argmax(dim=1).squeeze(0).cpu().numpy()                    # 0=KEEP, 1..16=set colour
+            xb = self._encode(s, tuple(akey), torch).unsqueeze(0).to(self._device)
+            cls = self._net(xb).argmax(dim=1).squeeze(0).cpu().numpy()             # 0=KEEP, 1..16=set colour
         # apply the residual: KEEP -> copy input; else -> colour (class-1). Unchanged cells are correct
         # by construction; only the cells the net flags as changed deviate from the input.
         return np.where(cls == 0, s, (cls - 1)).astype(s.dtype)

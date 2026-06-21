@@ -61,6 +61,16 @@ def _ak(t):
 def main(argv) -> int:
     import torch
 
+    # Develop under the EVAL resource profile (operator 2026-06-21): the live agent runs on a 16GB CUDA
+    # GPU (P100/T4), so train on CUDA capped to ~16GB -- never build a config that needs the 3090's 24GB
+    # or it would fail at eval. (The CNN is tiny; the cap is a faithfulness guard, esp. for LLM-coexistence.)
+    if torch.cuda.is_available():
+        torch.cuda.set_per_process_memory_fraction(16.0 / 24.0)
+        print(f"== device: {torch.cuda.get_device_name(0)} (capped ~16GB to match the P100/T4 eval GPU) ==",
+              flush=True)
+    else:
+        print("== device: CPU (no CUDA) ==", flush=True)
+
     from carnot.agentic.arc_live_ttt import CNNDynamics
     from carnot.agentic.arc_transition_capture import TransitionCorpus
 
