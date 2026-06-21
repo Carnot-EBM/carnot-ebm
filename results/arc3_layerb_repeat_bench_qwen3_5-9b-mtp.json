@@ -1,0 +1,95 @@
+{
+  "experiment": "arc3_layerb_repeat_bench",
+  "model_key": "qwen3.5-9b-mtp",
+  "mtp": false,
+  "repeat": 5,
+  "n_predict": 2560,
+  "per_game": {
+    "ka59": {
+      "grounded_rate": "4/5",
+      "n_grounded": 4,
+      "n_capped": 4,
+      "runs": [
+        {
+          "seed": 0,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 5.35
+        },
+        {
+          "seed": 1,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 4.93
+        },
+        {
+          "seed": 2,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 5.43
+        },
+        {
+          "seed": 3,
+          "grounded": true,
+          "tokens": 615,
+          "capped": false,
+          "tok_per_s": 4.25
+        },
+        {
+          "seed": 4,
+          "grounded": false,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 5.65
+        }
+      ]
+    },
+    "tn36": {
+      "grounded_rate": "5/5",
+      "n_grounded": 5,
+      "n_capped": 2,
+      "runs": [
+        {
+          "seed": 0,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 5.31
+        },
+        {
+          "seed": 1,
+          "grounded": true,
+          "tokens": 813,
+          "capped": false,
+          "tok_per_s": 5.65
+        },
+        {
+          "seed": 2,
+          "grounded": true,
+          "tokens": 521,
+          "capped": false,
+          "tok_per_s": 5.71
+        },
+        {
+          "seed": 3,
+          "grounded": true,
+          "tokens": 2560,
+          "capped": true,
+          "tok_per_s": 5.65
+        },
+        {
+          "seed": 4,
+          "grounded": true,
+          "tokens": 277,
+          "capped": false,
+          "tok_per_s": 5.09
+        }
+      ]
+    }
+  },
+  "honest_verdict": "complete_repeatbench_qwen3_5_9b_mtp_mtp_False",
+  "inference_substrate": "offline_arc_agi3_qwen3.5-9b-mtp_iGPU_repeat5"
+}

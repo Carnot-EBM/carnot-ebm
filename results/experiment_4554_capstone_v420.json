@@ -1,0 +1,647 @@
+{
+  "action_efficiency_improved": {
+    "cnn_held_out_delta_auroc": 0.7092359400538687,
+    "false_negative_risk_checked": true,
+    "improved": false,
+    "median_actions_blind": 1.0,
+    "median_actions_cnn": 1.0,
+    "median_actions_delta": 0.0,
+    "positive_control_passed": true,
+    "solve_rate_blind": 1.0,
+    "solve_rate_cnn": 1.0,
+    "solve_rate_preserved": true,
+    "status": "clean_action_efficiency_null"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "artifact_key": "A1_llm_proposer",
+      "experiment_id": 4544,
+      "fields_imported": [],
+      "path": "results/experiment_4544_llm_proposer_reinduction.json",
+      "sha256": "9d87ff183f8786fd8b37b02a1228939eb3647aa213d1944ed07b1e9d77b94d21"
+    },
+    {
+      "artifact_key": "A2_cross_game_discrimination",
+      "experiment_id": 4545,
+      "fields_imported": [
+        "loo_auroc_mean",
+        "loo_auroc_ci",
+        "loo_ci_excludes_chance",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4545_cross_game_discrimination_v3.json",
+      "sha256": "4b39681039e40a9e2512535d1a2bb07c36d06c8b569c6ddc359f84cbc8e88d40"
+    },
+    {
+      "artifact_key": "A3_levelup_attempt",
+      "experiment_id": 4546,
+      "fields_imported": [
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "target_level",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "path": "results/experiment_4546_levelup_attempt.json",
+      "sha256": "02e95e296ab2d954e515c1eccf0d695be9007804ccde6c14ce43e084f98e1a78"
+    },
+    {
+      "artifact_key": "A4_frame_change_predictor",
+      "experiment_id": 4547,
+      "fields_imported": [
+        "median_actions_to_first_levelup_blind",
+        "median_actions_to_first_levelup_cnn",
+        "solve_rate_blind",
+        "solve_rate_cnn",
+        "solve_rate_preserved"
+      ],
+      "path": "results/experiment_4547_frame_change_predictor.json",
+      "sha256": "b026e7d7dfb1a2d46c54a834162090a638eddf2bd663d43b77c5ad356371c5fa"
+    },
+    {
+      "artifact_key": "A5_integration",
+      "experiment_id": 4548,
+      "fields_imported": [],
+      "path": "results/experiment_4548_integration_8game_gate.json",
+      "sha256": "9b25db42ef381133ae1f95b8b240b85e9a9c6fa1c9de1d1a4ce6db36afb16cc7"
+    },
+    {
+      "artifact_key": "A6_transfer",
+      "experiment_id": 4549,
+      "fields_imported": [
+        "primitive_persisted",
+        "transfer_deepest_level_per_game",
+        "reachable_plan_produced",
+        "representation_transfer",
+        "new_levels_banked"
+      ],
+      "path": "results/experiment_4549_llm_proposer_primitive_persist_transfer.json",
+      "sha256": "231551b9e151a85580bdb8307f82e371089609979b648cec5b5a00fbeb16d939"
+    },
+    {
+      "artifact_key": "B1_honest_sprint_metric",
+      "experiment_id": 4550,
+      "fields_imported": [
+        "reproducible_total_levels",
+        "generic_transfer_rate_over_variants",
+        "variant_attempts_count",
+        "variant_solved_count"
+      ],
+      "path": "results/experiment_4550_honest_sprint_metric.json",
+      "sha256": "1f5e444de40eb8193673084af4cdcd9f99f364cd428b3a1b93f39ba9952ad18f"
+    }
+  ],
+  "cross_game_discrimination_above_chance": {
+    "above_chance": true,
+    "chance_auroc": 0.5,
+    "false_negative_risk_checked": true,
+    "in_sample_auroc": 0.8710834214701216,
+    "loo_auroc_ci": [
+      0.6058303817975523,
+      0.7451888709482918
+    ],
+    "loo_auroc_mean": 0.6744657162333668,
+    "loo_ci_excludes_chance": true,
+    "positive_control_passed": true,
+    "status": "clean_cross_game_discrimination_above_chance",
+    "verifier_is_oracle": false
+  },
+  "deepest_level_gains_per_core_game": {
+    "any_core_game_deeper_clean": false,
+    "clean_before_after": {},
+    "gains": {},
+    "headline_numbers_aggregated": false,
+    "status": "no_clean_score_lever_evidence"
+  },
+  "duration_s": 0.282239,
+  "efficiency_moved": false,
+  "experiment": 4554,
+  "field_principles": {
+    "action_efficiency_improved": "did the CNN (A4) cut held-out median actions at preserved solve-rate -- the score-metric lever.",
+    "cited_upstream_artifacts": "every headline number traces to a real upstream measurement (the audit trail).",
+    "cross_game_discrimination_above_chance": "did the oracle-distinct verifier (A2) beat LOO chance -- the verifier-moat progress (north-star \u00a75).",
+    "deepest_level_gains_per_core_game": "per-CORE-game deepest level before/after the LLM proposer -- the direct score-lever evidence.",
+    "efficiency_moved": "the bottom line -- did core_efficiency rise STRICTLY above 2.0074 (a CORE game reached a deeper level via the LLM proposer) at preserved solve-rate (the thing .418/.419 did not achieve).",
+    "flagged_artifacts_handled": "names any flagged_adversarial artifact excluded AND any null-delta-carve-out artifact whose diagnosis was read (B2) -- fabrication-gate compliance + no-lost-diagnosis guard.",
+    "generic_transfer_rate_over_variants": "the honest held-out-proxy signal (B1) reported alongside the bank count -- ends the single-number mirage.",
+    "honest_verdict": "terminal prefix; success: llm_proposer_core_efficiency_<n>_above_2.0074 OR complete: llm_proposer_null_efficiency_unmoved_barrier_refined.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+    "llm_proposer_value_summary": "did the LLM proposer produce reachable plans the offline DSL could not (A1) -- the headline mechanism's measured value, not just the efficiency number.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "ready_for_operator_submit": "True only if the integrated config is a CORE-preserved core_efficiency improvement worth a 1/day slot; never submits.",
+    "reproducible_total_levels_delta": "did solve CAPABILITY grow this milestone (A3/A6 level-up)."
+  },
+  "flagged_artifacts_handled": {
+    "excluded": [
+      {
+        "artifact_key": "A1_llm_proposer",
+        "experiment_id": 4544,
+        "live_critical": true,
+        "path": "results/experiment_4544_llm_proposer_reinduction.json",
+        "reason": "null_delta_carve_out_diagnosis_only",
+        "sha256": "9d87ff183f8786fd8b37b02a1228939eb3647aa213d1944ed07b1e9d77b94d21",
+        "stamped_flagged_adversarial": true
+      },
+      {
+        "artifact_key": "A5_integration",
+        "experiment_id": 4548,
+        "live_critical": true,
+        "path": "results/experiment_4548_integration_8game_gate.json",
+        "reason": "flagged_adversarial",
+        "sha256": "9b25db42ef381133ae1f95b8b240b85e9a9c6fa1c9de1d1a4ce6db36afb16cc7",
+        "stamped_flagged_adversarial": true
+      }
+    ],
+    "null_delta_carve_out_diagnosis_read": [
+      {
+        "artifact_key": "A1_llm_proposer",
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_refinement"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; not a measurement bug."
+        },
+        "diagnosis_context_fields_read": [
+          "barrier_refinement"
+        ],
+        "experiment_id": 4544,
+        "path": "results/experiment_4544_llm_proposer_reinduction.json",
+        "sha256": "9d87ff183f8786fd8b37b02a1228939eb3647aa213d1944ed07b1e9d77b94d21"
+      }
+    ]
+  },
+  "generic_transfer_rate_over_variants": 0.04,
+  "honest_verdict": "complete: llm_proposer_null_efficiency_unmoved_barrier_refined",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "llm_proposer_value_summary": {
+    "core_efficiency_baseline": 2.0074,
+    "core_efficiency_best": null,
+    "core_efficiency_delta": null,
+    "core_solves_preserved": null,
+    "diagnosis": {
+      "barrier_refinement": "positive_control_failed: live Qwen proposer did not produce the known reachable fixture plan.",
+      "corrigendum": {
+        "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+        "diagnosis_context_fields": [
+          "barrier_refinement"
+        ],
+        "field_pair": [
+          "core_efficiency_baseline",
+          "core_efficiency_best"
+        ],
+        "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+        "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; not a measurement bug."
+      }
+    },
+    "headline_numbers_aggregated": false,
+    "moved": false,
+    "offline_reproduced": null,
+    "positive_control_passed": null,
+    "status": "diagnosis_only_null_delta_carve_out",
+    "value": {
+      "count": null,
+      "events": [],
+      "opportunities": null,
+      "rate": null
+    },
+    "verifier_is_oracle": null
+  },
+  "operator_resubmission_verdict": {
+    "operator_only": true,
+    "reason": "no_clean_integrated_core_efficiency_improvement",
+    "resubmission_warranted": false
+  },
+  "operator_submission_performed": false,
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "reading_results_discipline": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 52
+    },
+    "summarize_artifact_required": "scripts/summarize_artifact.py",
+    "upstream_artifacts": [
+      {
+        "artifact_key": "A1_llm_proposer",
+        "exists": true,
+        "experiment_id": 4544,
+        "path": "results/experiment_4544_llm_proposer_reinduction.json",
+        "skip_reason": "null_delta_carve_out_diagnosis_only",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A2_cross_game_discrimination",
+        "exists": true,
+        "experiment_id": 4545,
+        "path": "results/experiment_4545_cross_game_discrimination_v3.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A3_levelup_attempt",
+        "exists": true,
+        "experiment_id": 4546,
+        "path": "results/experiment_4546_levelup_attempt.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A4_frame_change_predictor",
+        "exists": true,
+        "experiment_id": 4547,
+        "path": "results/experiment_4547_frame_change_predictor.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "A5_integration",
+        "exists": true,
+        "experiment_id": 4548,
+        "path": "results/experiment_4548_integration_8game_gate.json",
+        "skip_reason": "flagged_adversarial",
+        "skipped": true,
+        "summarize_exit_code": 2
+      },
+      {
+        "artifact_key": "A6_transfer",
+        "exists": true,
+        "experiment_id": 4549,
+        "path": "results/experiment_4549_llm_proposer_primitive_persist_transfer.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      },
+      {
+        "artifact_key": "B1_honest_sprint_metric",
+        "exists": true,
+        "experiment_id": 4550,
+        "path": "results/experiment_4550_honest_sprint_metric.json",
+        "skip_reason": "",
+        "skipped": false,
+        "summarize_exit_code": 0
+      }
+    ]
+  },
+  "random_seed": 4554,
+  "ready_for_operator_submit": false,
+  "reproducibility_checksum": "sha256:6cd0764b46b01731e5832e770c29af37e5cd8a7f118fe4698575fbb0e522cd5b",
+  "reproducible_total_levels_delta": {
+    "a6_new_levels_banked": 0,
+    "banked_levels": 1,
+    "capability_grew": true,
+    "current_total": 52,
+    "delta": 1,
+    "prior_total": 51,
+    "source": "A3_levelup_attempt+A6_transfer+ops/arc_solve_registry.yaml"
+  },
+  "result_path": "results/experiment_4554_capstone_v420.json",
+  "schema": "carnot.capstone_v420_4554.v1",
+  "scorecard": {
+    "a1_llm_proposer": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_best": null,
+      "core_efficiency_delta": null,
+      "core_solves_preserved": null,
+      "diagnosis": {
+        "barrier_refinement": "positive_control_failed: live Qwen proposer did not produce the known reachable fixture plan.",
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_refinement"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; not a measurement bug."
+        }
+      },
+      "headline_numbers_aggregated": false,
+      "moved": false,
+      "offline_reproduced": null,
+      "positive_control_passed": null,
+      "status": "diagnosis_only_null_delta_carve_out",
+      "value": {
+        "count": null,
+        "events": [],
+        "opportunities": null,
+        "rate": null
+      },
+      "verifier_is_oracle": null
+    },
+    "a2_cross_game_discrimination": {
+      "above_chance": true,
+      "chance_auroc": 0.5,
+      "false_negative_risk_checked": true,
+      "in_sample_auroc": 0.8710834214701216,
+      "loo_auroc_ci": [
+        0.6058303817975523,
+        0.7451888709482918
+      ],
+      "loo_auroc_mean": 0.6744657162333668,
+      "loo_ci_excludes_chance": true,
+      "positive_control_passed": true,
+      "status": "clean_cross_game_discrimination_above_chance",
+      "verifier_is_oracle": false
+    },
+    "a3_levelup": {
+      "banked_levels": 1,
+      "current_total": 52,
+      "delta": 1,
+      "honest_verdict": "success: su15_L2_offline_reproduced",
+      "level_up_banked": true,
+      "prior_total": 51,
+      "status": "level_up_banked",
+      "target_game": "su15",
+      "target_level": 2
+    },
+    "a4_frame_change_predictor": {
+      "cnn_held_out_delta_auroc": 0.7092359400538687,
+      "false_negative_risk_checked": true,
+      "improved": false,
+      "median_actions_blind": 1.0,
+      "median_actions_cnn": 1.0,
+      "median_actions_delta": 0.0,
+      "positive_control_passed": true,
+      "solve_rate_blind": 1.0,
+      "solve_rate_cnn": 1.0,
+      "solve_rate_preserved": true,
+      "status": "clean_action_efficiency_null"
+    },
+    "a5_integration": {
+      "core_efficiency_baseline": 2.0074,
+      "core_efficiency_delta": null,
+      "core_efficiency_integrated": null,
+      "core_solves_preserved": false,
+      "operator_submission_performed": false,
+      "ready_for_operator_submit": false,
+      "status": "excluded_flagged_adversarial_or_live_critical",
+      "submitted_config_improved": false
+    },
+    "a6_transfer": {
+      "new_levels_banked": 0,
+      "offline_reproduced_new_level": false,
+      "primitive_persisted": {
+        "base_operator": "per_level_reinduction_operator",
+        "derived_from_a1_artifact": "results/experiment_4544_llm_proposer_reinduction.json",
+        "operator": "llm_proposer_reinduction_operator",
+        "registry_general_gotcha_id": "primitive_per_level_reinduction_operator"
+      },
+      "reachable_plan_produced": {
+        "sc25": false,
+        "tr87": false,
+        "tu93": false
+      },
+      "registry_updated": true,
+      "representation_generalized": true,
+      "representation_transfer": {
+        "sc25": true,
+        "tr87": true,
+        "tu93": true
+      },
+      "status": "representation_generalized_no_reproducible_level_bank",
+      "transfer_deepest_level_per_game": {
+        "sc25": 5,
+        "tr87": 6,
+        "tu93": 5
+      },
+      "transfer_games": [
+        "tu93",
+        "tr87",
+        "sc25"
+      ]
+    },
+    "b1_honest_sprint_metric": {
+      "generic_transfer_rate_over_variants": 0.04,
+      "honest_verdict": "shipped: honest_sprint_metric_variant_transfer_wired",
+      "metric_wired_into_capstone": {
+        "artifact": "results/experiment_4550_honest_sprint_metric.json",
+        "helper": "carnot.experiment_4550_honest_sprint_metric.measure_generic_transfer_over_variants",
+        "known_game_bank_inflates_transfer": false,
+        "reported_side_by_side": [
+          "reproducible_total_levels",
+          "generic_transfer_rate_over_variants"
+        ]
+      },
+      "reproducible_total_levels": 52,
+      "status": "clean_honest_sprint_metric",
+      "variant_attempts_count": 25,
+      "variant_solved_count": 1
+    },
+    "baseline_core_efficiency": 2.0074
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4554",
+    "SCENARIO-CAPSTONE-4554",
+    "SCENARIO-CAPSTONE-4554-FIELD-PRINCIPLES"
+  ],
+  "upstream_provenance": [
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A1_llm_proposer",
+      "diagnosis_context": {
+        "barrier_refinement": "positive_control_failed: live Qwen proposer did not produce the known reachable fixture plan.",
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_refinement"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "baseline==best because no lever reached a deeper offline-reproduced CORE level with CORE solves preserved; not a measurement bug."
+        }
+      },
+      "diagnosis_context_read": true,
+      "experiment_id": 4544,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "efficiency_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4544_llm_proposer_reinduction.json",
+      "payload_reproducibility_checksum": "7a48265f4fb3065e07f5295bd85c65975f4bb2b915423858b5493aa0ec71d88e",
+      "sha256": "9d87ff183f8786fd8b37b02a1228939eb3647aa213d1944ed07b1e9d77b94d21",
+      "skip_reason": "null_delta_carve_out_diagnosis_only",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A2_cross_game_discrimination",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4545,
+      "fields_imported": [
+        "loo_auroc_mean",
+        "loo_auroc_ci",
+        "loo_ci_excludes_chance",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4545_cross_game_discrimination_v3.json",
+      "payload_reproducibility_checksum": "b98ce68d150760fb1a40651e5d5415699897e7250b3eb2265266cfc0901a8a24",
+      "sha256": "4b39681039e40a9e2512535d1a2bb07c36d06c8b569c6ddc359f84cbc8e88d40",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A3_levelup_attempt",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4546,
+      "fields_imported": [
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "target_level",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4546_levelup_attempt.json",
+      "payload_reproducibility_checksum": "6fdbf3729d83286316909e8a3753857ec15f9dac1e38a13c6e6cd3f3de4e1867",
+      "sha256": "02e95e296ab2d954e515c1eccf0d695be9007804ccde6c14ce43e084f98e1a78",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A4_frame_change_predictor",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4547,
+      "fields_imported": [
+        "median_actions_to_first_levelup_blind",
+        "median_actions_to_first_levelup_cnn",
+        "solve_rate_blind",
+        "solve_rate_cnn",
+        "solve_rate_preserved"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4547_frame_change_predictor.json",
+      "payload_reproducibility_checksum": "6444a5139d0734ea19e6695a1e091bb70109f50f81baa6190fed66dcdf8ffa12",
+      "sha256": "b026e7d7dfb1a2d46c54a834162090a638eddf2bd663d43b77c5ad356371c5fa",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A5_integration",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4548,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_integrated=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4548_integration_8game_gate.json",
+      "payload_reproducibility_checksum": "e869ec1d91cf5577f37f8eada019177e15916b88e5ea1c44f79d785f1efd609f",
+      "sha256": "9b25db42ef381133ae1f95b8b240b85e9a9c6fa1c9de1d1a4ce6db36afb16cc7",
+      "skip_reason": "flagged_adversarial",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "A6_transfer",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4549,
+      "fields_imported": [
+        "primitive_persisted",
+        "transfer_deepest_level_per_game",
+        "reachable_plan_produced",
+        "representation_transfer",
+        "new_levels_banked"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4549_llm_proposer_primitive_persist_transfer.json",
+      "payload_reproducibility_checksum": "12fee49df1b0c962933e18fa1a11474a71561bd170a2bbe2824beddb25a498db",
+      "sha256": "231551b9e151a85580bdb8307f82e371089609979b648cec5b5a00fbeb16d939",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "acceptance_gate_failed": false,
+      "artifact_key": "B1_honest_sprint_metric",
+      "diagnosis_context": {},
+      "diagnosis_context_read": false,
+      "experiment_id": 4550,
+      "fields_imported": [
+        "reproducible_total_levels",
+        "generic_transfer_rate_over_variants",
+        "variant_attempts_count",
+        "variant_solved_count"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4550_honest_sprint_metric.json",
+      "payload_reproducibility_checksum": "292f05b3a7467e1cdf2961c7a6daad96fb91f3aa52abe33a0857677c73f9d28f",
+      "sha256": "1f5e444de40eb8193673084af4cdcd9f99f364cd428b3a1b93f39ba9952ad18f",
+      "skip_reason": "",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ]
+}
