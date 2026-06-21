@@ -7,14 +7,27 @@ the shipped agent matches the single-source-of-truth SUBMITTED_AGENT_CONFIG, and
 reflect REALITY — so a silent divergence between what we measure and what we ship fails CI.
 """
 
+import importlib.util
 import inspect
+import json
+from pathlib import Path
 import re
 
 import pytest
 
+from carnot import experiment_4551_offline_live_proposer_parity as exp4551
 from carnot.agentic import arc_competition_agent as m
 from carnot.agentic.arc_competition_agent import (
     E3AgentPolicy, SUBMITTED_AGENT_CONFIG, StepwiseExplorer, make_carnot_agent)
+
+
+REPO = Path(__file__).resolve().parents[2]
+SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
+_GATE = REPO / "scripts" / "kaggle" / "arc_local_submission_gate.py"
+_spec = importlib.util.spec_from_file_location("arc_local_submission_gate_parity", _GATE)
+gate = importlib.util.module_from_spec(_spec)
+assert _spec.loader is not None
+_spec.loader.exec_module(gate)
 
 
 def _imports(module_name: str, src: str) -> bool:
@@ -104,3 +117,100 @@ def test_stepwise_explorer_prefers_forward_shortest_path_over_reset():
     assert exp.next_move([], None) == (7, None)
     assert exp.next_move([], None) == (2, {"x": 1, "y": 2})
     assert exp.awaiting == {"origin": "B", "action": 2, "data": {"x": 1, "y": 2}}
+
+
+def test_req_arc_wmte_4551_spec_declares_offline_live_proposer_parity_guard():
+    """REQ-ARC-WMTE-4551: OpenSpec declares the offline/live proposer parity guard."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+
+    assert "REQ-ARC-WMTE-4551" in spec
+    assert "SCENARIO-ARC-WMTE-4551-PROPOSER-PARITY" in spec
+    assert exp4551.RESULT_RELATIVE_PATH in spec
+    for field, principle in exp4551.FIELD_PRINCIPLES.items():
+        assert field in spec
+        assert principle["principle"] in spec
+
+
+def test_req_arc_wmte_4551_disabled_offline_induction_mismatch_fires():
+    """REQ-ARC-WMTE-4551: disabled offline induction is flagged against submitted E3."""
+
+    report = gate.proposer_config_parity_report(
+        offline_config=gate.offline_gate_proposer_config(
+            policy="e3",
+            disable_induction=True,
+        ),
+        submitted_config=gate.submitted_agent_proposer_config(SUBMITTED_AGENT_CONFIG),
+    )
+
+    assert report["proposer_config_mismatch"] is True
+    assert report["parity_guard"] == "offline_live_proposer_config_parity"
+    assert any(
+        item["field"] == "induction_enabled"
+        and item["offline"] is False
+        and item["submitted"] is True
+        and "CARNOT_ARC_DISABLE_INDUCTION=1" in item["detail"]
+        for item in report["proposer_config_divergence"]
+    )
+
+    annotated = gate.attach_proposer_config_parity(
+        {"policy": "e3", "core_efficiency": 0.419},
+        policy="e3",
+        disable_induction=True,
+        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
+    )
+    assert annotated["proposer_config_mismatch"] is True
+    assert annotated["core_efficiency"] == 0.419
+    assert annotated["proposer_config_parity"]["offline_config"]["lower_bound_note"] == (
+        "offline_core_efficiency_is_lower_bound_when_mismatch_true"
+    )
+
+
+def test_scenario_arc_wmte_4551_matched_proposer_config_passes_clean():
+    """SCENARIO-ARC-WMTE-4551-PROPOSER-PARITY: matched live-proposer config is clean."""
+
+    report = gate.proposer_config_parity_report(
+        offline_config=gate.offline_gate_proposer_config(
+            policy="e3",
+            disable_induction=False,
+        ),
+        submitted_config=gate.submitted_agent_proposer_config(SUBMITTED_AGENT_CONFIG),
+    )
+
+    assert report["proposer_config_mismatch"] is False
+    assert report["proposer_config_divergence"] == []
+    assert report["offline_config"]["proposer_kind"] == "LocalGGUFProposer"
+    assert report["submitted_config"]["proposer_kind"] == "LocalGGUFProposer"
+
+
+def test_scenario_arc_wmte_4551_artifact_records_fixture_results(tmp_path: Path):
+    """SCENARIO-ARC-WMTE-4551-PROPOSER-PARITY: artifact records both guard fixtures."""
+
+    artifact = exp4551.run(
+        root=tmp_path,
+        preconditions_checked={
+            "arc_competition_agent_import": True,
+            "arc_local_submission_gate_present": True,
+            "spec_has_req_4551": True,
+            "research_conductor_modified": False,
+            "ok": True,
+        },
+        write=True,
+    )
+
+    assert artifact["honest_verdict"] == (
+        "shipped: offline_live_proposer_parity_guard_added"
+    )
+    assert artifact["inference_substrate"] == exp4551.INFERENCE_SUBSTRATE
+    assert artifact["proposer_config_mismatch_detected"] is True
+    assert artifact["fixture_results"]["disabled_induction_mismatch"][
+        "proposer_config_mismatch"
+    ] is True
+    assert artifact["fixture_results"]["matched_config_clean"][
+        "proposer_config_mismatch"
+    ] is False
+    assert artifact["tests_added_pass"]["passed"] is True
+    assert exp4551.validate_artifact(artifact) == []
+
+    written = json.loads((tmp_path / exp4551.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
+    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]

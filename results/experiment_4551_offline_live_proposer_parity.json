@@ -1,0 +1,128 @@
+{
+  "experiment": "experiment_4551_offline_live_proposer_parity",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; shipped: offline_live_proposer_parity_guard_added OR complete: proposer_parity_partial_<reason>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- runs the gate/parity logic against fixtures, no model load (1s floor)."
+    },
+    "parity_guard_mechanism": {
+      "principle": "names the parity check + where it fires -- the fix that stops the offline gate silently understating the submitted agent."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "proposer_config_mismatch_detected": {
+      "principle": "whether the .419-state offline gate (induction disabled) is correctly flagged as a mismatch vs the LLM-proposer SUBMITTED config -- the concrete bug this catches."
+    },
+    "tests_added_pass": {
+      "principle": "Tests Must Run and Assert -- both the mismatch-fires and the matched-config-clean cases."
+    }
+  },
+  "fixture_results": {
+    "disabled_induction_mismatch": {
+      "offline_config": {
+        "cascade": true,
+        "disable_induction_env": "1",
+        "gate_policy_arg": "e3",
+        "induction_enabled": false,
+        "lower_bound_note": "offline_core_efficiency_is_lower_bound_when_mismatch_true",
+        "policy": "E3AgentPolicy",
+        "proposer_kind": null,
+        "proposer_source": "none"
+      },
+      "parity_guard": "offline_live_proposer_config_parity",
+      "proposer_config_divergence": [
+        {
+          "detail": "offline gate sets CARNOT_ARC_DISABLE_INDUCTION=1, disabling induction/proposer; submitted E3 leaves the escape hatch unset and can call E3AgentPolicy._proposer()",
+          "field": "induction_enabled",
+          "offline": false,
+          "submitted": true
+        },
+        {
+          "detail": "offline and submitted paths use different proposer availability; a None offline proposer means the measured core_efficiency is a bare-explorer lower bound",
+          "field": "proposer_kind",
+          "offline": null,
+          "submitted": "LocalGGUFProposer"
+        }
+      ],
+      "proposer_config_mismatch": true,
+      "submitted_config": {
+        "cascade": true,
+        "disable_induction_env": "unset",
+        "induction_enabled": true,
+        "policy": "E3AgentPolicy",
+        "proposer_kind": "LocalGGUFProposer",
+        "proposer_source": "E3AgentPolicy._proposer",
+        "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+      }
+    },
+    "matched_config_clean": {
+      "offline_config": {
+        "cascade": true,
+        "disable_induction_env": "unset",
+        "gate_policy_arg": "e3",
+        "induction_enabled": true,
+        "lower_bound_note": "",
+        "policy": "E3AgentPolicy",
+        "proposer_kind": "LocalGGUFProposer",
+        "proposer_source": "E3AgentPolicy._proposer"
+      },
+      "parity_guard": "offline_live_proposer_config_parity",
+      "proposer_config_divergence": [],
+      "proposer_config_mismatch": false,
+      "submitted_config": {
+        "cascade": true,
+        "disable_induction_env": "unset",
+        "induction_enabled": true,
+        "policy": "E3AgentPolicy",
+        "proposer_kind": "LocalGGUFProposer",
+        "proposer_source": "E3AgentPolicy._proposer",
+        "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+      }
+    }
+  },
+  "honest_verdict": "shipped: offline_live_proposer_parity_guard_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the gate/parity logic against fixtures, no model load (1s floor).",
+  "leaderboard_submission": false,
+  "model_load_performed": false,
+  "parity_guard_mechanism": {
+    "fires_in": "scripts/kaggle/arc_local_submission_gate.py",
+    "measurement_attachment": "attach_proposer_config_parity adds proposer_config_mismatch, proposer_config_divergence, and proposer_config_parity to the gate payload",
+    "name": "offline_live_proposer_config_parity",
+    "no_model_load": true,
+    "submitted_config_source": "carnot.agentic.arc_competition_agent.SUBMITTED_AGENT_CONFIG"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_competition_agent_import": true,
+    "arc_local_submission_gate_present": true,
+    "codex_md_read": true,
+    "leaderboard_submission": false,
+    "model_load_performed": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4551": true
+  },
+  "proposer_config_mismatch_detected": true,
+  "random_seed": 4551,
+  "reproducibility_checksum": "sha256:4ed80b481c583f7b2b4c27218f635d424ed3a94b03ae8acebb70270bb2eb63be",
+  "result_path": "results/experiment_4551_offline_live_proposer_parity.json",
+  "schema": "carnot.exp4551.offline_live_proposer_parity.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4551",
+    "SCENARIO-ARC-WMTE-4551-PROPOSER-PARITY"
+  ],
+  "tests_added_pass": {
+    "assertions": [
+      "disabled offline induction fixture fires proposer_config_mismatch=true",
+      "matched proposer config fixture emits no divergence",
+      "experiment artifact validates the parity guard fields"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov"
+    ],
+    "passed": true
+  }
+}
