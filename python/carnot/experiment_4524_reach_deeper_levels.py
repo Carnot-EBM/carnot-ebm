@@ -66,6 +66,14 @@ FIELD_PRINCIPLES = {
     "core_efficiency_best": (
         "the HEADLINE -- did any lever raise per-level efficiency by reaching a deeper level."
     ),
+    "efficiency_delta": (
+        "core_efficiency_best - core_efficiency_baseline, emitted explicitly so a null (delta 0.0) is "
+        "annotated, not a control==best TAUTOLOGY false-positive."
+    ),
+    "null_delta_methodology_note": (
+        "required when efficiency_delta is 0.0; states that equal baseline/best means no lever moved "
+        "per-level efficiency, not a measurement bug."
+    ),
     "deepest_level_reached_per_core_game": (
         "best_level per CORE game WITH each lever -- the direct evidence of solving MORE levels "
         "(the score lever)."
@@ -87,7 +95,9 @@ FIELD_PRINCIPLES = {
     "reproducibility_checksum": "catches silent drift on replay.",
     "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
 }
-REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
+REQUIRED_ARTIFACT_FIELDS = tuple(
+    field for field in FIELD_PRINCIPLES if field != "null_delta_methodology_note"
+) + (
     "experiment",
     "schema",
     "field_principles",
@@ -385,6 +395,8 @@ def build_artifact(
         and offline_reproduced
         and not core_regressions
     )
+    core_efficiency_best = max(CORE_EFFICIENCY_BASELINE, _measurement_efficiency(best))
+    efficiency_delta = round(core_efficiency_best - CORE_EFFICIENCY_BASELINE, 4)
     verdict = _success_verdict(best) if success else _null_verdict(str(diagnosis["root_cause"]))
     artifact = {
         "experiment": "experiment_4524_reach_deeper_levels",
@@ -396,7 +408,8 @@ def build_artifact(
         "scenarios": list(SCENARIOS),
         "preconditions_checked": dict(preconditions_checked),
         "core_efficiency_baseline": CORE_EFFICIENCY_BASELINE,
-        "core_efficiency_best": max(CORE_EFFICIENCY_BASELINE, _measurement_efficiency(best)),
+        "core_efficiency_best": core_efficiency_best,
+        "efficiency_delta": efficiency_delta,
         "deepest_level_reached_per_core_game": _deepest_level_reached_per_core_game(rows),
         "barrier_diagnosis": diagnosis,
         "levers_tried": [_lever_summary(measurement) for measurement in rows],
@@ -413,6 +426,11 @@ def build_artifact(
         "result_path": RESULT_RELATIVE_PATH,
         "duration_s": None if duration_s is None else float(duration_s),
     }
+    if efficiency_delta == 0.0:
+        artifact["null_delta_methodology_note"] = (
+            "core_efficiency_baseline equals core_efficiency_best because no lever reached "
+            "a deeper CORE level; this is an honest null delta, not a measurement bug."
+        )
     artifact["reproducibility_checksum"] = payload_checksum(artifact)
     return artifact
 
@@ -454,6 +472,15 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("field_principles must match REQ-ARC-WMTE-4524")
     if float(artifact.get("core_efficiency_baseline") or 0.0) != CORE_EFFICIENCY_BASELINE:
         errors.append("core_efficiency_baseline must equal 2.0074")
+    delta = round(
+        float(artifact.get("core_efficiency_best") or 0.0)
+        - float(artifact.get("core_efficiency_baseline") or 0.0),
+        4,
+    )
+    if round(float(artifact.get("efficiency_delta") or 0.0), 4) != delta:
+        errors.append("efficiency_delta must equal best-baseline")
+    if delta == 0.0 and "null_delta_methodology_note" not in artifact:
+        errors.append("null_delta_methodology_note required when efficiency_delta is zero")
     if artifact.get("leaderboard_submission") is not False:
         errors.append("leaderboard_submission must be false")
     preconditions = artifact.get("preconditions_checked")

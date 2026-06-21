@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import glob
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -60,6 +61,12 @@ _HEADLINE_HINTS = (
     "f1", "precision", "recall", "delta", "lift", "improvement", "score",
     "energy", "kl", "flip", "n_samples", "n_problems", "n_completed",
 )
+_DIAGNOSIS_CONTEXT_FIELDS = (
+    "barrier_diagnosis",
+    "levers_tried",
+    "barrier_refinement",
+)
+_TAUTOLOGY_FIELD_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)=")
 
 
 def _resolve(arg: str) -> list[Path]:
@@ -87,6 +94,97 @@ def _live_flags(path: Path) -> list[dict[str, Any]]:
 
 def _sev(f: dict[str, Any]) -> str:
     return str(f.get("severity", "")).lower()
+
+
+def _tautology_field_pair(flag: dict[str, Any]) -> tuple[str, str] | None:
+    """Extract the two field names from adversarial_verify's TAUTOLOGY detail."""
+    fields = _TAUTOLOGY_FIELD_RE.findall(str(flag.get("detail", "")))
+    if len(fields) < 2:
+        return None
+    return fields[0], fields[1]
+
+
+def _suffix_stem(name: str, suffix: str) -> str | None:
+    marker = f"_{suffix}"
+    if not name.endswith(marker):
+        return None
+    return name[: -len(marker)]
+
+
+def _control_vs_treatment_pair(k1: str, k2: str) -> bool:
+    """True for same-stem baseline/control versus best/treatment metric names."""
+    left_suffixes = ("baseline", "control")
+    right_suffixes = ("best", "treatment")
+    pairs = ((k1, k2), (k2, k1))
+    for left, right in pairs:
+        for left_suffix in left_suffixes:
+            left_stem = _suffix_stem(left, left_suffix)
+            if left_stem is None:
+                continue
+            for right_suffix in right_suffixes:
+                if _suffix_stem(right, right_suffix) == left_stem:
+                    return True
+    return False
+
+
+def _is_explicit_zero(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and float(value) == 0.0
+
+
+def classify_known_false_positive_null_delta(
+    artifact: dict[str, Any],
+    flags: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Classify the annotated control-vs-treatment null-delta TAUTOLOGY case.
+
+    This does not weaken adversarial verification. It only tells aggregation
+    readers that a quarantined artifact's diagnosis context can still be read
+    when the artifact explicitly documents a zero efficiency delta and the sole
+    live critical flag is the expected control/best equality.
+    """
+    critical = [flag for flag in flags if _sev(flag) == "critical"]
+    if len(critical) != 1 or critical[0].get("kind") != "TAUTOLOGY":
+        return None
+    pair = _tautology_field_pair(critical[0])
+    if pair is None or not _control_vs_treatment_pair(*pair):
+        return None
+    if not _is_explicit_zero(artifact.get("efficiency_delta")):
+        return None
+    note = artifact.get("null_delta_methodology_note")
+    if not isinstance(note, str) or not note.strip():
+        return None
+    return {
+        "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+        "field_pair": [pair[0], pair[1]],
+        "null_delta_methodology_note": note,
+        "corrigendum_note": (
+            "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment "
+            "null-delta; read diagnosis context only, do not aggregate headline "
+            "numbers as an improvement."
+        ),
+        "diagnosis_context_fields": [
+            field for field in _DIAGNOSIS_CONTEXT_FIELDS if field in artifact
+        ],
+    }
+
+
+def readable_diagnosis_context(
+    artifact: dict[str, Any],
+    flags: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Return diagnosis fields that aggregation may read under the corrigendum."""
+    classification = classify_known_false_positive_null_delta(artifact, flags)
+    if classification is None:
+        return None
+    context = {
+        field: artifact[field]
+        for field in _DIAGNOSIS_CONTEXT_FIELDS
+        if field in artifact
+    }
+    if not context:
+        return None
+    context["corrigendum"] = classification
+    return context
 
 
 def summarize(path: Path) -> int:
@@ -119,6 +217,10 @@ def summarize(path: Path) -> int:
     if stamped and not crit:
         print("    note: stamped-flagged but live re-check is clean "
               "(rule may have been fixed since; verify the corrigendum).")
+    null_delta_corrigendum = readable_diagnosis_context(d, flags)
+    if null_delta_corrigendum is not None:
+        print("    note: annotated null-delta TAUTOLOGY corrigendum; diagnosis "
+              "context may be read, headline numbers remain quarantined.")
     if crit and not stamped:
         print("    *** GAP: live verifier flags CRITICAL but artifact is NOT "
               "stamped flagged_adversarial. Do not cite as clean. ***")

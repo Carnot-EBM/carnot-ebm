@@ -211,15 +211,21 @@ as one of `depth_cap`, `missing_mechanic`, `new_win_condition`,
 Experiment 4524 SHALL write
 `results/experiment_4524_reach_deeper_levels.json` with bare top-level fields
 for `honest_verdict`, `inference_substrate`, `core_efficiency_baseline`,
-`core_efficiency_best`, `deepest_level_reached_per_core_game`,
-`barrier_diagnosis`, `levers_tried`, `offline_reproduced`, `random_seed`,
-`reproducibility_checksum`, and `preconditions_checked`. Required field
+`core_efficiency_best`, `efficiency_delta`,
+`deepest_level_reached_per_core_game`, `barrier_diagnosis`, `levers_tried`,
+`offline_reproduced`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. When `efficiency_delta == 0.0`, the artifact SHALL
+also include `null_delta_methodology_note` explaining that baseline equals best
+because no lever reached a deeper level, not because of a measurement bug.
+Required field
 principles SHALL be included for:
 
 - `honest_verdict`: principle "terminal prefix; success: <game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: l1_l2_barrier_diagnosed_<root_cause>_honest_null."
 - `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade search + world-model/verifier routing (no headline GGUF load); if the LLM induction tier is invoked, declare live_llm_inference + add the model precondition."
 - `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control (NOT median actions, which is retired as a score lever)."
 - `core_efficiency_best`: principle "the HEADLINE -- did any lever raise per-level efficiency by reaching a deeper level."
+- `efficiency_delta`: principle "core_efficiency_best - core_efficiency_baseline, emitted explicitly so a null (delta 0.0) is annotated, not a control==best TAUTOLOGY false-positive."
+- `null_delta_methodology_note`: principle "required when efficiency_delta is 0.0; states that equal baseline/best means no lever moved per-level efficiency, not a measurement bug."
 - `deepest_level_reached_per_core_game`: principle "best_level per CORE game WITH each lever -- the direct evidence of solving MORE levels (the score lever)."
 - `barrier_diagnosis`: principle "the concrete, actionable root cause of the L1->L2 stall (depth-cap / missing mechanic / new win-condition / induction-not-engaged) -- the deliverable when L2 is not reached, and the input to the next milestone."
 - `levers_tried`: principle "each L1->L2 lever (deeper search / world-model induction / verifier routing) with its measured effect -- no assumed wins."
@@ -232,7 +238,10 @@ A success artifact SHALL require some CORE game to reach L2 under at least one
 lever, `core_efficiency_best > 2.0074`, no CORE game losing a previously reached
 level, and `offline_reproduced=true` for the newly reached level. Otherwise the
 artifact SHALL report a terminal honest null with the concrete barrier root cause
-and SHALL NOT claim action-count reductions as a score win.
+and SHALL NOT claim action-count reductions as a score win. The honest-null
+artifact SHALL emit `efficiency_delta=0.0` and the
+`null_delta_methodology_note` so aggregation can distinguish the annotated
+control-vs-best null from an unannotated metric collision.
 
 ### REQ-ARC-WMTE-4533: Per-Level Goal Re-Induction Gate
 
@@ -642,9 +651,11 @@ Given the offline arcade precondition passes and lp85 has known deeper levels
 When experiment 4524 runs the control, deeper-search, world-model induction, and
 verifier-routing lever measurements
 Then the terminal artifact records the CORE per-level efficiency baseline,
-deepest level reached per CORE game for each lever, a concrete L1 to L2 barrier
-diagnosis, and reports success only if a CORE game reaches L2 without losing a
-CORE level and offline reproduction confirms the new level.
+explicit `efficiency_delta`, deepest level reached per CORE game for each lever,
+a concrete L1 to L2 barrier diagnosis, and reports success only if a CORE game
+reaches L2 without losing a CORE level and offline reproduction confirms the new
+level. When no lever raises efficiency, it records the null-delta methodology
+note.
 
 ### SCENARIO-ARC-WMTE-4533: Level-Up Re-Induces A New Goal Predicate
 

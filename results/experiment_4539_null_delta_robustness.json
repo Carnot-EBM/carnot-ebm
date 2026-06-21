@@ -1,0 +1,112 @@
+{
+  "compute_bound": false,
+  "duration_s": 0.051126,
+  "experiment": "experiment_4539_null_delta_robustness",
+  "field_principles": {
+    "genuine_tautology_still_excluded": "proves the carve-out does NOT weaken fabrication detection for real two-distinct-measurement collisions.",
+    "honest_verdict": "terminal prefix; shipped: null_delta_false_positive_robustness_added OR complete: null_delta_robustness_partial_<reason>.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the summarize/capstone logic against fixtures, no model load (1s floor).",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "robustness_mechanism": "names the carve-out (annotated control-vs-treatment null-delta) + where the capstone now reads the diagnosis -- the fix that prevents another lost diagnosis.",
+    "tests_added_pass": "Tests Must Run and Assert -- both the read-the-diagnosis and the still-exclude-fabrication cases."
+  },
+  "genuine_tautology_still_excluded": {
+    "capstone_status": "excluded_flagged_adversarial",
+    "classification": null,
+    "fixture": "synthetic_unrelated_metric_collision",
+    "live_critical_flags": [
+      {
+        "detail": "metric_alpha=0.812345 and metric_beta=0.812345 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "passed": true
+  },
+  "honest_verdict": "shipped: null_delta_false_positive_robustness_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "preconditions_checked": {
+    "adversarial_verify_import_ok": true,
+    "capstone_module_import_ok": true,
+    "exp4524_fixture_exists": true,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_4539": true,
+    "spec_has_scenario_4539": true,
+    "summarize_artifact_help_exits_0": true,
+    "summarize_artifact_import_ok": true
+  },
+  "requirements": [
+    "REQ-CAPSTONE-4539"
+  ],
+  "result_path": "results/experiment_4539_null_delta_robustness.json",
+  "robustness_mechanism": {
+    "capstone_reader": "carnot.experiment_4531_capstone_v418._a2_l1_l2_barrier_diagnosis",
+    "capstone_reads_diagnosis": true,
+    "carve_out": "annotated_control_vs_treatment_null_delta",
+    "diagnosis_fields_read": [
+      "barrier_diagnosis",
+      "levers_tried",
+      "barrier_refinement"
+    ],
+    "exp4524_fixture": {
+      "capstone_diagnosis": {
+        "cleanly_reportable": true,
+        "corrigendum": {
+          "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+          "diagnosis_context_fields": [
+            "barrier_diagnosis",
+            "levers_tried"
+          ],
+          "field_pair": [
+            "core_efficiency_baseline",
+            "core_efficiency_best"
+          ],
+          "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+          "null_delta_methodology_note": "core_efficiency_baseline equals core_efficiency_best because no lever reached a deeper CORE level; this is an honest null delta, not a measurement bug."
+        },
+        "induction_not_engaged": true,
+        "new_win_condition_likely": true,
+        "status": "corrigendum_known_false_positive_null_delta",
+        "what_blocks_deeper_levels": "depth_cap",
+        "what_to_build_next": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate."
+      },
+      "capstone_reads_diagnosis": true,
+      "classification": {
+        "corrigendum_note": "corrigendum: live TAUTOLOGY is the annotated control-vs-treatment null-delta; read diagnosis context only, do not aggregate headline numbers as an improvement.",
+        "diagnosis_context_fields": [
+          "barrier_diagnosis",
+          "levers_tried"
+        ],
+        "field_pair": [
+          "core_efficiency_baseline",
+          "core_efficiency_best"
+        ],
+        "kind": "KNOWN_FALSE_POSITIVE_NULL_DELTA_TAUTOLOGY",
+        "null_delta_methodology_note": "core_efficiency_baseline equals core_efficiency_best because no lever reached a deeper CORE level; this is an honest null delta, not a measurement bug."
+      },
+      "diagnosis_context_fields": [
+        "barrier_diagnosis",
+        "levers_tried"
+      ],
+      "fixture": "results/experiment_4524_reach_deeper_levels.json",
+      "fixture_sha256": "sha256:6101943ea83e2ef9e385072d05bb1f495a46600a5ee458f998fa67cfe450d12b",
+      "live_critical_flags": [
+        {
+          "detail": "core_efficiency_baseline=2.0074 and core_efficiency_best=2.0074 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ]
+    },
+    "headline_numbers_remain_quarantined": true,
+    "summarizer_helper": "scripts.summarize_artifact.classify_known_false_positive_null_delta"
+  },
+  "scenarios": [
+    "SCENARIO-CAPSTONE-4539"
+  ],
+  "schema": "carnot.null_delta_robustness_4539.v1",
+  "tests_added_pass": {
+    "command": ".venv/bin/pytest tests/python/test_experiment_4539_null_delta_robustness.py -q --no-cov",
+    "passed": true
+  }
+}
