@@ -19023,6 +19023,68 @@ count, and source-only path lists.
 |---|---|---|
 | REQ-REPORT-4517 | Implemented (`python/carnot/reporting/timing_detector_repair_4517.py`, `python/carnot/experiment_4517_timing_detector_repair.py`) | Implemented (`tests/python/test_experiment_4517_timing_detector_repair.py`) |
 
+### REQ-REPORT-4538: Retro Timing Data Uses Repaired Detector
+
+The Exp 4538 workflow SHALL wire the operational retrospective timing-data
+consumer path to the Exp 4517 repaired detector semantics without modifying
+`scripts/research_conductor.py`. It SHALL name the consumer path as
+`scripts/research_conductor.py::_run_operational_retrospective TIMING DATA`
+and SHALL expose an importable reporting helper that builds the same
+milestone-scoped timing fields from the repaired detector's mtime scan plus
+`ops/changelog.md` dated-window fallback.
+
+The repaired retro timing-data helper SHALL count terminal
+`results/experiment_<digits>_*.json` artifacts within the milestone experiment
+ID window, excluding auxiliary state files. The helper SHALL inject/report an
+`experiments_completed` count equal to the on-disk in-window terminal artifact
+count. If terminal artifacts exist on disk but the legacy retro detector
+reported zero, the helper SHALL emit `detector_gap_suspected=true` with the
+legacy count, repaired count, on-disk count, and source artifact paths.
+
+The Exp 4538 artifact SHALL read
+`results/experiment_4517_timing_detector_repair.json`,
+`results/operational_retro_2026_06_418.json`, and
+`results/experiment_4528_infra_carryforward.json` as upstream traceability
+evidence. It SHALL write
+`results/experiment_4538_retro_timing_detector_wire.json` with terminal-prefix
+`honest_verdict`, `inference_substrate`, `retro_path_wired`,
+`regression_assert_added`, `tests_added_pass`, `cited_upstream_artifacts`, and
+`preconditions_checked` fields, each principle-annotated.
+
+#### SCENARIO-REPORT-4538-RETRO-PATH: Fixture Artifacts Produce Nonzero Timing Data
+
+**Given** a milestone fixture has terminal result artifacts on disk inside the
+experiment ID window
+**And** the legacy retro timing detector reports zero completed experiments
+**When** the Exp 4538 retro timing-data helper builds the TIMING DATA block
+**Then** `experiments_completed` SHALL equal the on-disk in-window artifact
+count
+**And** `detector_gap_suspected` SHALL be true.
+
+#### SCENARIO-REPORT-4538-FALLBACK: Changelog Recovers A Touched Artifact
+
+**Given** a terminal artifact exists in the milestone experiment ID window but
+its mtime falls outside the mtime window
+**And** the dated `ops/changelog.md` window cites that artifact path
+**When** the Exp 4538 helper builds repaired retro timing data
+**Then** the reported in-window count SHALL still equal the on-disk artifact
+count
+**And** the helper SHALL record that the changelog fallback was used.
+
+#### SCENARIO-REPORT-4538-ARTIFACT: Required Fields Are Principle-Annotated
+
+**Given** the Exp 4517 repair artifact, the Exp 4528 audit artifact, and the
+`.418` operational retro are readable
+**When** the Exp 4538 workflow writes its terminal artifact
+**Then** all required fields SHALL be present
+**And** their field principles SHALL be recorded in the artifact.
+
+## Implementation Status (REQ-REPORT-4538)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4538 | Implemented (`python/carnot/reporting/retro_timing_detector_wire_4538.py`, `python/carnot/experiment_4538_retro_timing_detector_wire.py`) | Implemented (`tests/python/test_experiment_4538_retro_timing_detector_wire.py`) |
+
 ### REQ-REPORT-3986: Archive .368 And Activate .369 GAP-4 Follow-Up Milestone
 
 The Exp 3986 workflow SHALL archive milestone `2026.06.368`, confirm
