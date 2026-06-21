@@ -702,6 +702,35 @@ def check_degenerate_controls(d: dict[str, Any], flags: list[Flag]) -> None:
             )
 
 
+# Tokens an artifact's honest_verdict uses to DECLARE a no-value null result. A genuine fabrication
+# would never self-label as a null, so requiring one of these is the load-bearing safety condition
+# for the control-vs-treatment carve-out below.
+_HONEST_NULL_VERDICT_TOKENS = (
+    "honest_null", "no_value_added", "no_lever_raises", "no_value", "no_improvement",
+    "no_metric_moved", "no_delta",
+)
+# Qualifier tokens that mark a metric key as one ARM of a control/treatment ablation (X_baseline vs
+# X_with_verifier vs X_integrated). A pair where at least one side carries one of these, in an artifact
+# that declares an honest null, is an EXPECTED ablation equality (the treatment changed nothing) — not
+# a coincidence between two distinct measurements.
+_CONTROL_TREATMENT_QUALIFIERS = (
+    "_baseline_reference", "_baseline", "_with_verifier", "_integrated", "_random_router",
+    "_control", "_treatment", "_reference", "_ablation",
+)
+
+
+def _is_declared_honest_null(d: dict[str, Any]) -> bool:
+    """True if the artifact's honest_verdict declares a no-value/no-lever null result."""
+    v = str(d.get("honest_verdict", "")).lower()
+    return any(tok in v for tok in _HONEST_NULL_VERDICT_TOKENS)
+
+
+def _has_control_treatment_qualifier(k: str) -> bool:
+    """True if the metric key carries a control/treatment ablation-arm qualifier."""
+    kl = k.lower()
+    return any(q in kl for q in _CONTROL_TREATMENT_QUALIFIERS)
+
+
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.
 
@@ -722,6 +751,20 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # this rule was false-flagging as TAUTOLOGY). Two identifiers agreeing
         # is structural, not a coincidence between two distinct measurements.
         if _is_identifier_field(k1) or _is_identifier_field(k2):
+            continue
+        # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
+        # honest_verdict declares a no-value null (verifier_router_no_value_added,
+        # no_lever_raises_a_metric, ...), a control==treatment equality where one side is an
+        # ablation arm (X_baseline == X_with_verifier == 0.04) is the EXPECTED, MEANINGFUL outcome —
+        # the treatment changed nothing — not a coincidence between two distinct measurements. Gate
+        # on BOTH the honest-null verdict (a fabrication never self-labels a null) AND a
+        # control/treatment qualifier key, so a generic two-metric coincidence is still flagged.
+        # Origin: exp4556 (HEADLINE generic_transfer null) + exp4560 (integration gate null) were
+        # spuriously quarantined ~8x across .420/.421, excluding the project's two most important ARC
+        # measurements from capstone aggregation. Mirrors the _is_identifier_field carve-out above.
+        if _is_declared_honest_null(d) and (
+            _has_control_treatment_qualifier(k1) or _has_control_treatment_qualifier(k2)
+        ):
             continue
         # Skip count-coincidence pairs: both names imply counts AND
         # both values are small integers.
