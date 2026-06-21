@@ -285,6 +285,52 @@ A success artifact SHALL require some CORE game to reach L2, a strict
 `SUBMITTED_AGENT_CONFIG`. Otherwise the submitted configuration SHALL remain
 unchanged and the artifact SHALL report the honest null plus barrier refinement.
 
+### REQ-ARC-WMTE-4534: Trust-Energy Next-Level Frontier Routing
+
+Experiment 4534 SHALL use the oracle-distinct world-model trust energy as a
+next-level-distance heuristic after the per-level goal re-induction attempt.
+When a re-induced `L_{n+1}` predicate is available from experiment 4533, the
+frontier SHALL preserve depth as the no-regression primary key and use
+lower-is-closer trust energy only as the goal-bias tie/secondary key. When
+experiment 4533 produced an honest null and no live `L_{n+1}` predicate is
+available, the experiment SHALL still compare the matched cached no-energy and
+energy-routed measurements on `lp85` and `sp80`, and SHALL independently
+characterize whether the trust-energy signal separates deeper-progress states
+from L1-stuck states.
+
+Experiment 4534 SHALL write
+`results/experiment_4534_energy_trust_next_level_routing.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`,
+`verifier_is_oracle`, `core_efficiency_baseline`,
+`core_efficiency_energy_routed`, `no_energy_control`,
+`energy_separation_auroc`, `deepest_level_reached_per_core_game`,
+`core_solves_preserved`, `positive_control_passed`,
+`false_negative_risk_checked`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. Required field
+principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: energy_routing_<game>_reached_L2_oracle_distinct OR complete: energy_routing_no_deeper_level_signal_characterized_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade + trust-energy scoring, no headline GGUF load (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the trust energy is oracle-DISTINCT (ranks held-out generalization), NOT the executable win-check; a circular win does not count (Circularity / Oracle-Distinctness Discipline)."
+- `core_efficiency_baseline`: principle "2.0074 -- the per-level metric control."
+- `core_efficiency_energy_routed`: principle "the HEADLINE -- did energy routing toward the re-induced goal reach a deeper level."
+- `no_energy_control`: principle "matched control measured the SAME way (energy off) -- the apples-to-apples comparison."
+- `energy_separation_auroc`: principle "AUROC of the trust energy separating deeper-progress states from L1-stuck states -- the signal characterization that is the deliverable on a null."
+- `deepest_level_reached_per_core_game`: principle "best_level per CORE game with vs without energy routing -- the score-lever evidence."
+- `core_solves_preserved`: principle "HARD gate on {lp85,m0r0,sp80,vc33}; a dropped CORE solve FAILS the lever."
+- `positive_control_passed`: principle "the energy SHOULD separate deeper-progress on a known-L2 game; guards a silently-broken signal."
+- `false_negative_risk_checked`: principle "a null is valid only if the positive control passed."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require an energy-routed configuration to reach level
+2 or deeper on a CORE game where the matched no-energy control does not,
+`core_solves_preserved=true`, `positive_control_passed=true`, and
+`verifier_is_oracle=false`. Otherwise the artifact SHALL report an honest null,
+including `energy_separation_auroc` and the positive-control status, without
+claiming a circular win or changing the submitted configuration.
+
 ### REQ-ARC-WMTE-4525: Standing Loop Level-Up Registry Bank
 
 Experiment 4525 SHALL run the offline arcade precondition and use the standing
@@ -466,6 +512,18 @@ state, attempts a fresh post-transition induction for the next level, reports
 the level-conditioned predicate-change positive control, and only wires the
 submitted config if the CORE per-level efficiency strictly exceeds `2.0074`
 without losing a CORE solve.
+
+### SCENARIO-ARC-WMTE-4534: Trust Energy Routes Same-Depth Frontier Toward Next Goal
+
+Given experiment 4533 either supplies a re-induced `L_{n+1}` predicate or
+honestly reports that no live predicate is available
+When experiment 4534 enables trust-energy next-level routing on the eligible
+frontier
+Then depth remains the primary frontier key, lower trust energy wins only within
+the depth-compatible candidate set, the artifact compares `lp85` and `sp80`
+against a matched no-energy control, sets `verifier_is_oracle=false`, and a null
+is accepted only when the positive-control energy separation check passes and
+`energy_separation_auroc` is reported.
 
 ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
 
