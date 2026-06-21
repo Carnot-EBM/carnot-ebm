@@ -272,14 +272,30 @@ games:
     current adapter has no grounded L3 splitter-placement delta.
 - game: su15
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along\
-    \ a diagonal line (x up, y down)."
-  action_model: click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates
-    surfaced the object clicks the 12-cap would have dropped.
-  solver: results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).
-  reproduce: re-gated reproduced=True L1.
-  gotchas: []
+  levels_reproduced: 2
+  mechanic_class: drag_merge_fruit_target
+  win_condition: "L1 click-to-connect diagonal plus L2 staged drag/merge: merge
+    eight level-0 fruits into one level-3 fruit and drag its center into the
+    xkstxyqbs target zone centered near (33,27)."
+  action_model: "ACTION6 click-only; L2 tail uses 14 discovered drag/merge
+    clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54),
+    (23,54),(16,54),(20,47),(27,40),(33,33),(33,27)."
+  solver: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py +
+    scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2 gate.
+  reproduce: Exp4546 results/experiment_4546_levelup_attempt.json re-gated results/arc_loop_solve_su15.json
+    offline_reproduced=True, reached_level=2, banked +1 over the current L1
+    registry row, checksum 1b1702434993f3b26f1cf41595267aa8df107e403c5041d2373bd2b8962950fe.
+  gotchas:
+  - Click radius is 8 and each ACTION6 animates four drag ticks, so L2 requires
+    staged drag/merge clicks; pair-merge clicks alone do not combine distant
+    level-1 pieces.
+  - The win predicate counts the center of a level-3 fruit inside xkstxyqbs, not
+    merely creating a level-3 fruit elsewhere.
+  dead_ends:
+  - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a
+    gate because fresh-env replay per candidate was too noisy/expensive; the
+    banked route came from reverse-engineering the drag/merge radius and
+    constructive merge staging.
 - game: tu93
   reproducibility: reproduced
   levels_reproduced: 5
@@ -808,7 +824,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 51
+reproducible_total_levels: 52
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

@@ -583,6 +583,44 @@ level, the artifact SHALL use a `complete:` verdict, set
 `reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
 the registry count.
 
+### REQ-ARC-WMTE-4546: ARC Sprint Rotation Level-Up Bank
+
+Experiment 4546 SHALL run the offline arcade precondition and bank at least one
+new reproducible ARC level independent of the A1 headline path. The workflow
+SHALL prefer a shallow game not recently deepened, SHALL select `su15`, SHALL
+derive only the L2 win/action/state delta from the offline environment, and
+SHALL use the standing ARC loop output plus `arc_solver_kit.reproduce` as the
+source of truth for the bank. A banked level SHALL require
+`offline_reproduced=true`, a reproduction gate whose `reached_level` is greater
+than the target game's prior registry level, and a persisted update to
+`ops/arc_solve_registry.yaml` that records the win condition, action model,
+solver module, gotchas, and dead-end evidence needed by the next attempt.
+
+Experiment 4546 SHALL write
+`results/experiment_4546_levelup_attempt.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `offline_reproduced`,
+`reproduced_levels`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `target_game`,
+`reproduction_gate`, `solution_labels`, `dead_ends`, and `registry_update`.
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL set `honest_verdict` to
+`success: su15_L2_offline_reproduced`, `offline_reproduced=true`,
+`reproduced_levels >= 1`, and `registry_updated=true`. If `su15` repeats the
+already registered L1, stalls at the prior level, or produces a non-reproducing
+delta, the artifact SHALL use a `complete:` verdict, set
+`reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
+the registry count.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
@@ -789,6 +827,18 @@ the terminal artifact records the required field principles, computes a stable
 `reproducibility_checksum`, updates the `sp80` registry row and total level
 count, records dead-end attempts, and reports success only when the offline
 reproduction gate reaches level 2 with `offline_reproduced=true`.
+
+### SCENARIO-ARC-WMTE-4546: su15 Adapter Banks L2 Offline
+
+Given the prior reproduced `su15` L1 trajectory and offline L2 state exposing
+eight level-0 fruit pieces plus a level-3 target zone
+When experiment 4546 registers the `su15` `GameAdapter`, replays the standing
+loop to target level 2, and runs `arc_solver_kit.reproduce`
+Then the full L1+L2 label plan is replayed through the offline reproduction
+gate, the terminal artifact records `target_game=su15`,
+`offline_reproduced=true`, `reproduced_levels>=1`,
+`registry_updated=true`, and a stable `reproducibility_checksum`, and success
+is not reported unless the registry bank advances beyond the prior L1 row.
 
 ### SCENARIO-ARC-WMTE-4526: Integration Wires Only Deeper-Level Winners
 
