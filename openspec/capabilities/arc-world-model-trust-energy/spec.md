@@ -742,6 +742,55 @@ artifact SHALL report `complete: no_lever_raises_a_metric_honest_null`, keep
 `levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
 NOT submit to the leaderboard.
 
+### REQ-ARC-WMTE-4561: Persist Winning Primitive And Measure Cross-Game Transfer
+
+Experiment 4561 SHALL read the A1 verifier-router generic-transfer artifact
+from `results/experiment_4556_verifier_router_generic_transfer.json` and the
+A2 executable world-model proposer artifact from
+`results/experiment_4557_executable_world_model_proposer.json`, select the
+best-characterized primitive with the strongest measured signal, persist it as
+a reusable solver-kit operator, and record that reusable asset in
+`ops/arc_solve_registry.yaml` under `general_gotchas`. If A1 and A2 are both
+honest nulls, the workflow SHALL still persist the best-characterized
+primitive-as-built, report the transfer null, and state what evidence or
+capability would be needed for the primitive to add value.
+
+For the A1 path, the solver kit SHALL expose
+`verifier_router_candidate_ranking_operator` as a generic candidate-ranking
+operator. The operator SHALL rank candidate actions or plans by a verifier
+score while keeping depth/search cost primary outside the compatible candidate
+set, preserve deterministic tie-breaking by original order, and report ordering
+gain versus the incoming order. The operator SHALL be registered in
+`primitive_operator_registry()` and surfaced by `select_primitive_operators()`
+and `arc_solve_learning.recommend_approach()` for graph/config/program-editor
+routes so live solves can reuse it before game-specific reverse engineering.
+
+Experiment 4561 SHALL apply the persisted primitive to at least two games that
+were not tuned in A1/A2 and SHALL write
+`results/experiment_4561_primitive_persist_transfer.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `primitive_persisted`,
+`transfer_games`, `transfer_value_per_game`, `offline_reproduced`,
+`registry_updated`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for the offline-verifier transfer; live_llm_inference + model_specs if the executable proposer is invoked in the transfer runs."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_value_per_game`: principle "the per-game value-add (verifier-router ordering gain / executable-proposer reachable plan) -- the cross-game evidence the primitive generalizes."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+If no held-out transfer game shows positive ordering gain or a reachable plan,
+the artifact SHALL report
+`complete: primitive_persisted_transfer_null_characterized`, keep
+`offline_reproduced=false` unless a new level passed `arc_solver_kit.reproduce`,
+and record the transfer dead-ends in the registry rather than incrementing
+`reproducible_total_levels`.
+
 ### REQ-ARC-WMTE-4537: Reusable Per-Level Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the per-level re-induction loop from experiment
@@ -1213,6 +1262,18 @@ baselines, CORE solve preservation and held-out solve rate are reported, and
 the artifact uses `complete: no_lever_raises_a_metric_honest_null` unless the
 integrated SUBMITTED configuration strictly raises either metric with an
 accepted A1/A2/A4 lever.
+
+### SCENARIO-ARC-WMTE-4561: Verifier-Router Primitive Persists And Transfers Honestly
+
+Given A1's verifier-router artifact has the strongest measured signal among
+the current A1/A2 artifacts and the offline arcade precondition passes
+When experiment 4561 persists
+`verifier_router_candidate_ranking_operator` and applies it to at least two
+non-tuned games
+Then the artifact records the persisted operator and registry
+`primitive_verifier_router_candidate_ranking_operator` gotcha, each held-out
+game's ordering-gain value, any transfer dead-end, a stable checksum, and a
+terminal success only when at least one held-out game has positive value-add.
 
 ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
 

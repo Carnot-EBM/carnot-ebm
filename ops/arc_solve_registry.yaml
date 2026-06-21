@@ -81,6 +81,27 @@ general_gotchas:
     trust-energy-rank them, run at most 3 bounded refinement rounds, and degrade
     to the DSL/verifier predicate inducer when A1's live proposer is null. New
     levels still count only through arc_solver_kit.reproduce().
+- id: primitive_verifier_router_candidate_ranking_operator
+  operator: verifier_router_candidate_ranking_operator
+  derived_from_games:
+  - exp4556_cached_generic_transfer
+  note: >-
+    Exp 4561 persists the A1 verifier-router as a reusable generic
+    candidate-ranking operator: rank compatible cached action/plan candidates by
+    verifier score with stable original-order tie-breaking, then report ordering
+    gain before any solve claim. Cross-game transfer on tu93/tr87/sc25 was a
+    characterized null: the operator applied cleanly, but the cached held-out
+    candidates had no offline-reproduced target candidate for the ranker to
+    promote, so ordering gain remained 0. Needs a non-oracle verifier score that
+    separates at least one held-out reachable candidate from same-depth
+    distractors to add value.
+  transfer_dead_ends:
+  - tu93: no cached candidate reached the offline reproduction gate, so ordering
+      gain was unmeasurable/value-null.
+  - tr87: no cached candidate reached the offline reproduction gate, so ordering
+      gain was unmeasurable/value-null.
+  - sc25: no cached candidate reached the offline reproduction gate, so ordering
+      gain was unmeasurable/value-null.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
