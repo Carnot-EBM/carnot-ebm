@@ -91,11 +91,22 @@ class CNNDynamics:
     def _build_net(self, torch: Any) -> Any:
         nn = torch.nn
         c_in = N_COLORS + 1 + 7
+        # RESIDUAL/KEEP head (2026-06-21): per cell, predict 1 + N_COLORS classes -- class 0 = KEEP (copy
+        # input), classes 1..16 = SET-to-colour-(0..15). So the ~4095 unchanged cells of a 64x64 grid learn
+        # the trivial KEEP majority class and are correct BY CONSTRUCTION at predict time; the net's
+        # capacity + the loss focus only on the sparse CHANGE. (Full-grid colour prediction read 0/5 because
+        # exact-match over 4096 absolute colours is unwinnable -- it wasted capacity re-copying the bg.)
         return nn.Sequential(
             nn.Conv2d(c_in, self.hidden, 3, padding=1), nn.ReLU(),
             nn.Conv2d(self.hidden, self.hidden, 3, padding=1), nn.ReLU(),
-            nn.Conv2d(self.hidden, N_COLORS, 3, padding=1),  # -> per-cell colour logits
+            nn.Conv2d(self.hidden, 1 + N_COLORS, 3, padding=1),  # -> per-cell {KEEP, set-colour-0..15}
         )
+
+    @staticmethod
+    def _residual_target(s: np.ndarray, s2: np.ndarray):
+        """Per-cell class: 0 = KEEP (next == input), else colour+1 (1..16). Defined vs the INPUT grid."""
+        s = np.asarray(s); s2 = np.clip(np.asarray(s2).astype(np.int64), 0, N_COLORS - 1)
+        return np.where(s2 == s, 0, s2 + 1)
 
     def fit(self, transitions, *, epochs: Optional[int] = None, batch_size: int = 256,
             warm_state: Any = None) -> "CNNDynamics":
@@ -126,8 +137,8 @@ class CNNDynamics:
                 idx = perm[i:i + batch_size]
                 # encode PER BATCH (lazy) -- pre-stacking the whole corpus is ~5GB at 12k x 24x64x64.
                 xb = torch.stack([self._encode(items[j][0], items[j][1], torch) for j in idx])
-                yb = torch.stack([torch.from_numpy(np.clip(items[j][2].astype(np.int64), 0, N_COLORS - 1))
-                                  for j in idx])
+                yb = torch.stack([torch.from_numpy(self._residual_target(items[j][0], items[j][2]))
+                                  for j in idx])  # residual/KEEP target (0=keep, 1..16=set colour)
                 opt.zero_grad()
                 loss = loss_fn(net(xb), yb)
                 loss.backward()
@@ -145,9 +156,13 @@ class CNNDynamics:
             return np.asarray(s_grid)  # untrained / wrong shape -> identity (never crash the planner)
         import torch
 
+        s = np.asarray(s_grid)
         with torch.no_grad():
-            logits = self._net(self._encode(s_grid, tuple(akey), torch).unsqueeze(0))  # [1,16,H,W]
-            return logits.argmax(dim=1).squeeze(0).cpu().numpy().astype(np.asarray(s_grid).dtype)
+            logits = self._net(self._encode(s, tuple(akey), torch).unsqueeze(0))  # [1, 1+16, H, W]
+            cls = logits.argmax(dim=1).squeeze(0).cpu().numpy()                    # 0=KEEP, 1..16=set colour
+        # apply the residual: KEEP -> copy input; else -> colour (class-1). Unchanged cells are correct
+        # by construction; only the cells the net flags as changed deviate from the input.
+        return np.where(cls == 0, s, (cls - 1)).astype(s.dtype)
 
 
 def action_key(action_id: int, data: Any) -> tuple:
