@@ -1,3 +1,40 @@
+## 2026-06-21 — .422 planning sweep — ACTION EFFICIENCY: the .421 verifier-router NULLED (re-ranking a fixed pool adds 0 when the winner is never IN the pool); pivot to the leaderboard's #1 lever (a CNN clickability/action-effect predictor) re-aimed at actions-to-first-levelup + verifier-guided candidate EXPANSION
+
+Added by the .422 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-21). The .421 scorecard
+(capstone exp4566, `complete: verifier_router_null_reinduction_retired_or_refined`) is a near-total
+honest NULL: `core_efficiency` stuck at **2.0074** for FOUR milestones (.418–.421); `generic_transfer`
+stuck at **0.04**; `reproducible_total_levels` stuck at **52**; the LLM re-induction lever is **RETIRED**
+(retire_if_same_verdict fired after the 4th null); the .421 A1 verifier-router HEADLINE nulled with a
+**failed positive control** (random_router_control_passed=false). The A6 transfer null exposed the ROOT
+CAUSE: a verifier that RE-RANKS a fixed candidate pool has `ordering_gain=0` because **the winning
+candidate is never IN the pool** — the bottleneck is candidate GENERATION on first contact, not ranking.
+
+**The .422 pivot — ACTION EFFICIENCY (the operator-flagged #1 score lever, now unblocked):**
+- **arXiv:2603.24621** — "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence" (official report;
+  carried, re-verified). The leaderboard metric is **action efficiency on FIRST CONTACT**
+  (`min(human/agent,1)²`); frontier models < 1%. This is the metric `generic_transfer`=0.04 proxies.
+- **StochasticGoose / Tufa Labs** (ARC-AGI-3 preview LEADER, **12.58%**; arcprize.org 30-day report +
+  Kaggle public kernel `imaadmahmood/stochasticgoose-cnn-frame-change-agent`). A **CNN that predicts which
+  actions cause a FRAME CHANGE** (RL), so the agent stops wasting actions on no-ops ("wasted ~350 moves
+  clicking with no result, then exploited the learned clickability map"). This is the **.422 A1 headline** —
+  re-aimed at the COARSE clickability/action-effect target + the actions-to-first-levelup metric, NOT the
+  exact next-cell DYNAMICS target the outer-loop `arc_pretrain_prior` scored **0%** on (warm_wins 0/5). The
+  14,672-row human-replay corpus (`data/arc_public_demo_human_replay_corpus`, CC BY 4.0) + the 14,628-row
+  self-captured `data/arc_transition_corpus/` are now LOCAL (the exp4490 `blocked_corpus_not_cached` blocker
+  is cleared).
+- **arXiv:2502.18407** — "AgentRM: Enhancing Agent Generalization with Reward Modeling." A reward model that
+  GUIDES agent search and GENERALIZES across tasks — the peer for **.422 A2** (the oracle-distinct
+  cross-game DiscriminativeVerifier as a FRONTIER-EXPANSION priority that GROWS the candidate set toward the
+  goal, fixing the A6 "winner-not-in-pool" root cause).
+- **arXiv:2504.16828** — "Process Reward Models That Think" (ThinkPRM): a PRM that GENERALIZES under domain
+  shift (out-of-domain > baselines). Supports A2/D — a learned verifier-guided search that transfers
+  cross-game.
+- **arXiv:2502.00271** — "Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning" (cautionary):
+  PRM-guided search degrades at scale when the PRM mis-scores local steps. A2 must measure a random-priority
+  positive control + bound the expansion to avoid this failure mode.
+- **arXiv:2602.01070 + arXiv:2601.22607** — the `.421 D SOTA-ingestion `flagged_for_v422` set (PRM-guided
+  candidate EXPANSION + self-evolving verifiable-reward data); the .422 A2/D anchors.
+
 ## 2026-06-21 — .421 planning sweep — OPERATIONALIZE THE VERIFIER WIN: the .420 A2 cross-game DiscriminativeVerifier beat LOO chance (0.674), the FIRST oracle-distinct moat result; .420 B1 measured the honest leaderboard ceiling (generic_transfer=0.04); pivot from 3x-null re-induction to wiring the verifier into the LIVE solver
 
 Added by the .421 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-21). The .420 scorecard

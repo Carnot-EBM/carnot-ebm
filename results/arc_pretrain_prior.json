@@ -1,0 +1,64 @@
+{
+  "experiment": "arc_pretrain_prior",
+  "honest_verdict": "complete_prior_transfer_warm_wins_0_of_5",
+  "epochs": 6,
+  "fewshot": 40,
+  "holdout": [
+    "cd82",
+    "ka59",
+    "sc25",
+    "tn36",
+    "lp85"
+  ],
+  "train_games": 20,
+  "train_transitions": 12681,
+  "mean_scratch_acc_on_changing": 0.0,
+  "mean_warm_acc_on_changing": 0.0,
+  "warm_wins": 0,
+  "held_out_games": 5,
+  "per_game": [
+    {
+      "game": "cd82",
+      "fewshot": 40,
+      "test_changing": 91,
+      "scratch_acc": 0.0,
+      "warm_acc": 0.0,
+      "warm_beats_scratch": false
+    },
+    {
+      "game": "ka59",
+      "fewshot": 40,
+      "test_changing": 857,
+      "scratch_acc": 0.0,
+      "warm_acc": 0.0,
+      "warm_beats_scratch": false
+    },
+    {
+      "game": "sc25",
+      "fewshot": 40,
+      "test_changing": 172,
+      "scratch_acc": 0.0,
+      "warm_acc": 0.0,
+      "warm_beats_scratch": false
+    },
+    {
+      "game": "tn36",
+      "fewshot": 40,
+      "test_changing": 205,
+      "scratch_acc": 0.0,
+      "warm_acc": 0.0,
+      "warm_beats_scratch": false
+    },
+    {
+      "game": "lp85",
+      "fewshot": 40,
+      "test_changing": 370,
+      "scratch_acc": 0.0,
+      "warm_acc": 0.0,
+      "warm_beats_scratch": false
+    }
+  ],
+  "prior_path": "models/arc_dynamics_prior.pt",
+  "inference_substrate": "offline cross-game CNN dynamics pretraining + few-shot transfer; no LLM, no quota",
+  "verifier_is_oracle": false
+}
