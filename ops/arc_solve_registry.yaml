@@ -880,7 +880,20 @@ live_submissions:
   driver: scripts/arc3_live_submit.py
   artifact: results/arc3_live_submit.json
   note: 'FIRST live submission. The gate for the next online play: beat 13 levels.'
-prior_submitted_baseline_levels: 13
+- date: '2026-06-21'
+  scorecard_id: d6a4b922-b52c-4202-989d-4d58215a8a3e
+  levels: 33
+  games: 18
+  games_env_matched: 17/18
+  mode: mode1_offline_reproduced_replay
+  authorization: operator directive 2026-06-21 'let's go ahead and submit then' (validate-first, then submit)
+  driver: scripts/arc3_live_submit.py
+  artifact: results/arc3_live_submit.json
+  note: 'SECOND live submission, +20 over the first (2.5x). Dynamic validated-package replay set
+    (16->18 games incl recovered dc22/vc33; honest flat-replay-capped claims). Only miss: sc25 ->
+    LIVE L0 (claimed L1; offline-reproduced L1 but live version-drift on hash 635fd71a -- +1 follow-up).
+    The gate for the next online play: beat 33 levels.'
+prior_submitted_baseline_levels: 33
 learning_loop:
   transfer_routing: python/carnot/agentic/arc_solve_learning.py
   verifier_routed_search: python/carnot/agentic/arc_solver_kit.py
