@@ -10,6 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 import hashlib
 import json
 from pathlib import Path
+import random
 import re
 import sys
 from typing import Any
@@ -31,8 +32,9 @@ EXPERIMENT_ID = "experiment_4550_honest_sprint_metric"
 SCHEMA = "carnot.exp4550.honest_sprint_metric.v1"
 RANDOM_SEED = 4550
 INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
-DEFAULT_VARIANT_IDS = (1,)
+DEFAULT_VARIANT_IDS = (1, 2)
 DEFAULT_BUDGET = 200
+DEFAULT_BOOTSTRAPS = 1000
 TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
 
 REQUIRED_ARTIFACT_FIELDS = (
@@ -73,6 +75,12 @@ FIELD_PRINCIPLES = {
         "principle": (
             "the held-out-proxy generalization rate -- the REAL leaderboard signal that "
             "ends the single-number mirage (GAP-LIVE-INTEGRATION)."
+        )
+    },
+    "generic_transfer_ci": {
+        "principle": (
+            "the bootstrap CI -- makes the transfer claim falsifiable and ends the "
+            "single-number mirage."
         )
     },
     "metric_wired_into_capstone": {
@@ -187,12 +195,59 @@ def _transfer_rate(solved: int, attempted: int) -> float:
     return 0.0 if attempted <= 0 else round(float(solved) / float(attempted), 10)
 
 
+def bootstrap_transfer_ci(
+    attempts: Sequence[Mapping[str, Any]],
+    *,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
+) -> list[float]:
+    """SCENARIO-CAPSTONE-4562: bootstrap a CI from attempted variant solves."""
+
+    outcomes = [
+        1.0 if _attempt_solved(attempt) else 0.0
+        for attempt in attempts
+        if attempt.get("attempted") is True
+    ]
+    if not outcomes:
+        return [0.0, 0.0]
+    point = sum(outcomes) / len(outcomes)
+    if n_bootstrap <= 0 or len(outcomes) == 1:
+        rounded = round(float(point), 10)
+        return [rounded, rounded]
+
+    rng = random.Random(random_seed)
+    n = len(outcomes)
+    samples: list[float] = []
+    for _index in range(int(n_bootstrap)):
+        total = 0.0
+        for _sample in range(n):
+            total += outcomes[rng.randrange(n)]
+        samples.append(total / n)
+    samples.sort()
+    lo = samples[int(0.025 * (len(samples) - 1))]
+    hi = samples[int(0.975 * (len(samples) - 1))]
+    return [round(float(min(lo, point)), 10), round(float(max(hi, point)), 10)]
+
+
+def _empty_transfer_measurement() -> JsonDict:
+    return {
+        "variant_specs": [],
+        "variant_attempts": [],
+        "variant_attempts_count": 0,
+        "variant_solved_count": 0,
+        "generic_transfer_rate_over_variants": 0.0,
+        "generic_transfer_ci": [0.0, 0.0],
+    }
+
+
 def measure_generic_transfer_over_variants(
     *,
     public_games: Sequence[str],
     variant_ids: Sequence[int],
     budget: int,
     variant_runner: VariantRunner,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
 ) -> JsonDict:
     """SCENARIO-CAPSTONE-4550: compute transfer from variant attempts only."""
 
@@ -208,6 +263,11 @@ def measure_generic_transfer_over_variants(
         "variant_attempts_count": attempted,
         "variant_solved_count": solved,
         "generic_transfer_rate_over_variants": _transfer_rate(solved, attempted),
+        "generic_transfer_ci": bootstrap_transfer_ci(
+            attempts,
+            random_seed=random_seed,
+            n_bootstrap=n_bootstrap,
+        ),
     }
 
 
@@ -216,16 +276,21 @@ def _checksum(payload: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(blob).hexdigest()
 
 
-def _metric_wiring() -> JsonDict:
+def _metric_wiring(result_path: str = RESULT_RELATIVE_PATH) -> JsonDict:
     return {
-        "artifact": RESULT_RELATIVE_PATH,
+        "artifact": result_path,
         "helper": (
             "carnot.experiment_4550_honest_sprint_metric."
             "measure_generic_transfer_over_variants"
         ),
+        "coheadline_helper": (
+            "carnot.experiment_4550_honest_sprint_metric."
+            "build_generic_transfer_coheadline"
+        ),
         "reported_side_by_side": [
             "reproducible_total_levels",
             "generic_transfer_rate_over_variants",
+            "generic_transfer_ci",
         ],
         "known_game_bank_inflates_transfer": False,
     }
@@ -239,6 +304,7 @@ def _tests_added_pass() -> JsonDict:
         ],
         "assertions": [
             "both metrics are computed",
+            "bootstrap CI brackets the variant-transfer rate",
             "variant-transfer rate is in [0,1]",
             "known-game bank count does not inflate transfer rate",
         ],
@@ -252,6 +318,7 @@ def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
         "generic_transfer_rate_over_variants": artifact.get(
             "generic_transfer_rate_over_variants"
         ),
+        "generic_transfer_ci": artifact.get("generic_transfer_ci"),
         "variant_attempts_count": artifact.get("variant_attempts_count"),
         "variant_solved_count": artifact.get("variant_solved_count"),
         "metric_wired_into_capstone": artifact.get("metric_wired_into_capstone"),
@@ -260,7 +327,7 @@ def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
     }
 
 
-def build_artifact(
+def build_generic_transfer_coheadline(
     root: Path | str = REPO_ROOT,
     *,
     public_games: Sequence[str] | None = None,
@@ -268,6 +335,8 @@ def build_artifact(
     budget: int = DEFAULT_BUDGET,
     preconditions_checked: Mapping[str, Any] | None = None,
     variant_runner: VariantRunner = default_variant_runner,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
 ) -> JsonDict:
     root_path = Path(root)
     preconditions = dict(preconditions_checked or check_preconditions(root_path))
@@ -279,21 +348,62 @@ def build_artifact(
 
     miss = _first_precondition_miss(preconditions)
     measurement = (
-        {
-            "variant_specs": [],
-            "variant_attempts": [],
-            "variant_attempts_count": 0,
-            "variant_solved_count": 0,
-            "generic_transfer_rate_over_variants": 0.0,
-        }
+        _empty_transfer_measurement()
         if miss
         else measure_generic_transfer_over_variants(
             public_games=games,
             variant_ids=variant_ids,
             budget=budget,
             variant_runner=variant_runner,
+            random_seed=random_seed,
+            n_bootstrap=n_bootstrap,
         )
     )
+    return {
+        "precondition_miss": miss,
+        "preconditions_checked": preconditions,
+        "reproducible_total_levels": total,
+        "generic_transfer_rate_over_variants": measurement[
+            "generic_transfer_rate_over_variants"
+        ],
+        "generic_transfer_ci": measurement["generic_transfer_ci"],
+        "variant_specs": measurement["variant_specs"],
+        "variant_attempts": measurement["variant_attempts"],
+        "variant_attempts_count": measurement["variant_attempts_count"],
+        "variant_solved_count": measurement["variant_solved_count"],
+        "variant_plan": {
+            "public_games": sorted(str(game) for game in games),
+            "public_game_count": len(games),
+            "variant_ids": [int(item) for item in variant_ids],
+            "variants_per_game": len(variant_ids),
+            "budget": int(budget),
+            "runner": "generic_solver_offline_variant_env",
+        },
+    }
+
+
+def build_artifact(
+    root: Path | str = REPO_ROOT,
+    *,
+    public_games: Sequence[str] | None = None,
+    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
+    budget: int = DEFAULT_BUDGET,
+    preconditions_checked: Mapping[str, Any] | None = None,
+    variant_runner: VariantRunner = default_variant_runner,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
+) -> JsonDict:
+    coheadline = build_generic_transfer_coheadline(
+        root,
+        public_games=public_games,
+        variant_ids=variant_ids,
+        budget=budget,
+        preconditions_checked=preconditions_checked,
+        variant_runner=variant_runner,
+        random_seed=random_seed,
+        n_bootstrap=n_bootstrap,
+    )
+    miss = coheadline["precondition_miss"]
     artifact: JsonDict = {
         "experiment": EXPERIMENT_ID,
         "schema": SCHEMA,
@@ -311,25 +421,19 @@ def build_artifact(
         "inference_substrate": INFERENCE_SUBSTRATE,
         "field_principles": FIELD_PRINCIPLES,
         "honest_metric_framing": HONEST_FRAMING,
-        "reproducible_total_levels": total,
-        "generic_transfer_rate_over_variants": measurement[
+        "reproducible_total_levels": coheadline["reproducible_total_levels"],
+        "generic_transfer_rate_over_variants": coheadline[
             "generic_transfer_rate_over_variants"
         ],
+        "generic_transfer_ci": coheadline["generic_transfer_ci"],
         "metric_wired_into_capstone": _metric_wiring(),
         "tests_added_pass": _tests_added_pass(),
-        "preconditions_checked": preconditions,
-        "variant_plan": {
-            "public_games": sorted(str(game) for game in games),
-            "public_game_count": len(games),
-            "variant_ids": [int(item) for item in variant_ids],
-            "variants_per_game": len(variant_ids),
-            "budget": int(budget),
-            "runner": "generic_solver_offline_variant_env",
-        },
-        "variant_specs": measurement["variant_specs"],
-        "variant_attempts": measurement["variant_attempts"],
-        "variant_attempts_count": measurement["variant_attempts_count"],
-        "variant_solved_count": measurement["variant_solved_count"],
+        "preconditions_checked": coheadline["preconditions_checked"],
+        "variant_plan": coheadline["variant_plan"],
+        "variant_specs": coheadline["variant_specs"],
+        "variant_attempts": coheadline["variant_attempts"],
+        "variant_attempts_count": coheadline["variant_attempts_count"],
+        "variant_solved_count": coheadline["variant_solved_count"],
         "leaderboard_submission": False,
         "random_seed": RANDOM_SEED,
     }
@@ -359,6 +463,19 @@ def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
         for value in [artifact.get("generic_transfer_rate_over_variants")]
         if not isinstance(value, float) or not 0.0 <= value <= 1.0
     ]
+    ci = artifact.get("generic_transfer_ci")
+    if (
+        not isinstance(ci, list)
+        or len(ci) != 2
+        or not all(isinstance(value, float) for value in ci)
+    ):
+        errors.append("generic_transfer_ci must be [float, float]")
+    elif not 0.0 <= ci[0] <= ci[1] <= 1.0:
+        errors.append("generic_transfer_ci must be ordered floats in [0,1]")
+    elif isinstance(artifact.get("generic_transfer_rate_over_variants"), float) and not (
+        ci[0] <= artifact["generic_transfer_rate_over_variants"] <= ci[1]
+    ):
+        errors.append("generic_transfer_ci must bracket the point estimate")
     expected = _transfer_rate(
         int(artifact.get("variant_solved_count") or 0),
         int(artifact.get("variant_attempts_count") or 0),
@@ -400,6 +517,8 @@ def run(
     budget: int = DEFAULT_BUDGET,
     preconditions_checked: Mapping[str, Any] | None = None,
     variant_runner: VariantRunner = default_variant_runner,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
     write: bool = True,
 ) -> JsonDict:
     artifact = build_artifact(
@@ -409,6 +528,8 @@ def run(
         budget=budget,
         preconditions_checked=preconditions_checked,
         variant_runner=variant_runner,
+        random_seed=random_seed,
+        n_bootstrap=n_bootstrap,
     )
     if write:
         write_artifact(root, artifact=artifact)
