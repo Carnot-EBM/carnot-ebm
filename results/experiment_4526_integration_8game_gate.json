@@ -1,0 +1,418 @@
+{
+  "additivity_checked": {
+    "a1_delta_core_efficiency": 0.0,
+    "a2_best_delta_core_efficiency": 0.0,
+    "action_trimming_retired": true,
+    "integrated_delta": 0.0,
+    "interaction_delta": 0.0,
+    "metric": "core_efficiency",
+    "naive_sum_delta": 0.0
+  },
+  "core_efficiency_baseline": 2.0074,
+  "core_efficiency_integrated": 2.0074,
+  "core_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33"
+  ],
+  "core_solves_preserved": true,
+  "duration_s": 22.52119164809119,
+  "experiment": "experiment_4526_integration_8game_gate",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "additivity_checked": "integrated CORE median vs the naive sum of isolated A1+A2 deltas -- surfaces a destructive batch-expand x stop-after-levelup interaction instead of burying it.",
+    "core_efficiency_baseline": "2.0074 -- the REAL per-level metric control (NOT median actions, retired as a score lever).",
+    "core_efficiency_integrated": "the HEADLINE -- the SUBMITTED-config per-level efficiency after wiring the winners (did it solve MORE levels).",
+    "core_solves_preserved": "integration must preserve every CORE solve (set-containment).",
+    "false_negative_risk_checked": "an honest null only valid with the 7760 baseline measured the same way.",
+    "heldout_solve_rate": "the real transfer signal; integration should not regress it.",
+    "honest_verdict": "terminal prefix; success: integrated_core_efficiency_<n>_above_2.0074 OR complete: no_lever_raises_core_efficiency_honest_null.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked).",
+    "levers_integrated": "names which of A1/A2 were wired -- traceable to their measured deltas; [] is an honest null.",
+    "nav_diagnostics": "reset_replay_steps end-to-end -- did the integrated config actually cut the replay tax.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "ready_for_operator_submit": "True if the integrated config is a CORE-preserved improvement worth a 1/day submission slot; the task NEVER submits (operator-only).",
+    "reproducibility_checksum": "catches silent drift on replay."
+  },
+  "gate_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33",
+    "cd82",
+    "ft09",
+    "su15",
+    "ls20"
+  ],
+  "gate_result": {
+    "baseline": {
+      "median_actions_on_solved": 7761.5,
+      "solved_count": 4,
+      "total_actions_on_solved": 31057
+    },
+    "baseline_guard": {
+      "action_metric_field": "actions",
+      "canonical_baseline_median_actions": 7760.0,
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "errors": [],
+      "ok": true
+    },
+    "current": {
+      "action_metric": {
+        "definition": "total_actions_on_solved_games",
+        "field": "actions"
+      },
+      "actions_by_game": {
+        "lp85": 20,
+        "m0r0": 3891,
+        "sp80": 7218,
+        "vc33": 1758
+      },
+      "core_efficiency": 2.0074,
+      "efficiency_by_game": {
+        "lp85": 2.0069,
+        "m0r0": 0.0003,
+        "sp80": 0.0001,
+        "vc33": 0.0001
+      },
+      "games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "median_actions_on_core": 2824.5,
+      "median_actions_on_solved": 2824.5,
+      "per_game": [
+        {
+          "actions": 20,
+          "efficiency": 2.0069,
+          "game": "lp85",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 3891,
+          "efficiency": 0.0003,
+          "game": "m0r0",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7218,
+          "efficiency": 0.0001,
+          "game": "sp80",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 1758,
+          "efficiency": 0.0001,
+          "game": "vc33",
+          "solved": true,
+          "timed_out": false
+        },
+        {
+          "actions": 7819,
+          "efficiency": 0.0,
+          "game": "cd82",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7963,
+          "efficiency": 0.0,
+          "game": "ft09",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7786,
+          "efficiency": 0.0,
+          "game": "su15",
+          "solved": false,
+          "timed_out": false
+        },
+        {
+          "actions": 7821,
+          "efficiency": 0.0,
+          "game": "ls20",
+          "solved": false,
+          "timed_out": false
+        }
+      ],
+      "policy": "e3",
+      "solved_count": 4,
+      "solved_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "timed_out_count": 0,
+      "total_actions_on_solved": 12887
+    },
+    "gate_command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/kaggle/arc_local_submission_gate.py",
+      "--check",
+      "--policy",
+      "e3",
+      "--budget",
+      "8000",
+      "--cap",
+      "115",
+      "--lever",
+      "experiment_4526_integration",
+      "--json"
+    ],
+    "gate_returncode": 0,
+    "lever_dashboard_row": {
+      "actions_saved_vs_baseline": 4937.0,
+      "baseline_median_actions_on_core": 7761.5,
+      "bonus_solves": [],
+      "canonical_game_set": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33",
+        "cd82",
+        "ft09",
+        "su15",
+        "ls20"
+      ],
+      "core_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "core_solves_preserved": true,
+      "lever": "experiment_4526_integration",
+      "lost_core_solves": [],
+      "median_actions_on_core": 2824.5,
+      "metric_action_field": "actions",
+      "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074",
+      "verdict_pass": true
+    },
+    "pass": true,
+    "verdict": "PASS (non-inferior): CORE per-level efficiency 2.0074 vs baseline 2.0074"
+  },
+  "heldout_solve_rate": 0.0,
+  "honest_verdict": "complete: no_lever_raises_core_efficiency_honest_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked).",
+  "levers_integrated": [],
+  "local_gate_budget": 8000,
+  "nav_diagnostics": {
+    "forward_walk_hit_rate_candidate_after": 0.021683673469387755,
+    "forward_walk_hit_rate_integrated": 0.01653944020356234,
+    "integrated_config": "unchanged",
+    "reset_replay_steps_candidate_after": 4533,
+    "reset_replay_steps_delta_candidate": -43,
+    "reset_replay_steps_integrated": 4576,
+    "source": "results/experiment_4523_forward_walk_navigation.json"
+  },
+  "operator_submission_performed": false,
+  "per_game_deepest_level_reached": {
+    "cd82": 0,
+    "ft09": 0,
+    "lp85": 1,
+    "ls20": 0,
+    "m0r0": 1,
+    "sp80": 1,
+    "su15": 0,
+    "vc33": 1
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_reach_artifact_present": true,
+    "agents_md_read": true,
+    "baseline_file_present": true,
+    "codex_md_read": true,
+    "offline_arcade_import": true,
+    "ok": true,
+    "spec_has_req_4526": true
+  },
+  "random_seed": 4526,
+  "ready_for_operator_submit": false,
+  "reproducibility_checksum": "sha256:0a68f0f167212967d1c8d27d67d55142d4e5772e85e7ee3074426426c6eaa597",
+  "requirements": [
+    "REQ-ARC-WMTE-4526"
+  ],
+  "result_path": "results/experiment_4526_integration_8game_gate.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4526"
+  ],
+  "schema": "carnot.arc_integration_8game_gate_4526.v1",
+  "submitted_agent_config": {
+    "cascade": true,
+    "frontier_batch_size": 1,
+    "graph_explore_budget": 80,
+    "lazy_value_top_k": 4,
+    "navigation_cost_tiebreak": false,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 1,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "upstream_decision": {
+    "a2_best_delta_core_efficiency": 0.0,
+    "a2_control_levels": {
+      "lp85": 1,
+      "m0r0": 1,
+      "sp80": 1,
+      "vc33": 0
+    },
+    "accepted_levers": [],
+    "nav_diagnostics": {
+      "forward_walk_hit_rate_candidate_after": 0.021683673469387755,
+      "forward_walk_hit_rate_integrated": 0.01653944020356234,
+      "integrated_config": "unchanged",
+      "reset_replay_steps_candidate_after": 4533,
+      "reset_replay_steps_delta_candidate": -43,
+      "reset_replay_steps_integrated": 4576,
+      "source": "results/experiment_4523_forward_walk_navigation.json"
+    },
+    "rejected_levers": {
+      "A1_forward_walk_navigation": {
+        "chosen_submitted_config": "unchanged",
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
+        "median_actions_delta": 0.0,
+        "name": "A1_forward_walk_navigation",
+        "reason": "flagged_adversarial"
+      },
+      "A2_reach_deeper_levels:deeper_search_max_depth_90": {
+        "core_efficiency": 2.0072,
+        "deepest_level_by_game": {
+          "lp85": 1,
+          "m0r0": 1,
+          "sp80": 1,
+          "vc33": 0
+        },
+        "delta_vs_baseline": -0.0002,
+        "flagged_adversarial": true,
+        "lever": "deeper_search_max_depth_90",
+        "lost_core_level_games": [],
+        "offline_reproduced": false,
+        "reason": "flagged_adversarial"
+      },
+      "A2_reach_deeper_levels:energy_verifier_frontier_routing": {
+        "core_efficiency": 0.0058,
+        "deepest_level_by_game": {
+          "lp85": 1,
+          "m0r0": 0,
+          "sp80": 1,
+          "vc33": 0
+        },
+        "delta_vs_baseline": -2.0016,
+        "flagged_adversarial": true,
+        "lever": "energy_verifier_frontier_routing",
+        "lost_core_level_games": [
+          "m0r0"
+        ],
+        "offline_reproduced": false,
+        "reason": "flagged_adversarial"
+      },
+      "A2_reach_deeper_levels:world_model_dsl_induction": {
+        "core_efficiency": 2.0073,
+        "deepest_level_by_game": {
+          "lp85": 1,
+          "m0r0": 1,
+          "sp80": 1,
+          "vc33": 0
+        },
+        "delta_vs_baseline": -0.0001,
+        "flagged_adversarial": true,
+        "lever": "world_model_dsl_induction",
+        "lost_core_level_games": [],
+        "offline_reproduced": false,
+        "reason": "flagged_adversarial"
+      },
+      "A2_stop_after_levelup": {
+        "flagged_adversarial": false,
+        "honest_verdict": "success: stop_after_levelup_core_actions_2825_below_control",
+        "reason": "action_trimming_retired"
+      }
+    },
+    "upstream_summaries": {
+      "A1_forward_walk_navigation": {
+        "chosen_submitted_config": "unchanged",
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
+        "median_actions_delta": 0.0,
+        "name": "A1_forward_walk_navigation",
+        "reason": "retired_metric_no_core_efficiency_gain"
+      },
+      "A2_reach_deeper_levels:deeper_search_max_depth_90": {
+        "core_efficiency": 2.0072,
+        "deepest_level_by_game": {
+          "lp85": 1,
+          "m0r0": 1,
+          "sp80": 1,
+          "vc33": 0
+        },
+        "delta_vs_baseline": -0.0002,
+        "flagged_adversarial": true,
+        "lever": "deeper_search_max_depth_90",
+        "lost_core_level_games": [],
+        "offline_reproduced": false
+      },
+      "A2_reach_deeper_levels:energy_verifier_frontier_routing": {
+        "core_efficiency": 0.0058,
+        "deepest_level_by_game": {
+          "lp85": 1,
+          "m0r0": 0,
+          "sp80": 1,
+          "vc33": 0
+        },
+        "delta_vs_baseline": -2.0016,
+        "flagged_adversarial": true,
+        "lever": "energy_verifier_frontier_routing",
+        "lost_core_level_games": [
+          "m0r0"
+        ],
+        "offline_reproduced": false
+      },
+      "A2_reach_deeper_levels:world_model_dsl_induction": {
+        "core_efficiency": 2.0073,
+        "deepest_level_by_game": {
+          "lp85": 1,
+          "m0r0": 1,
+          "sp80": 1,
+          "vc33": 0
+        },
+        "delta_vs_baseline": -0.0001,
+        "flagged_adversarial": true,
+        "lever": "world_model_dsl_induction",
+        "lost_core_level_games": [],
+        "offline_reproduced": false
+      }
+    }
+  }
+}

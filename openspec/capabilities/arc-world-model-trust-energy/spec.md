@@ -271,6 +271,47 @@ stalls at the prior level, the artifact SHALL use a `complete:` verdict, set
 `reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
 the registry count.
 
+### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
+
+Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
+reach-deeper-levels artifact, select only non-`flagged_adversarial` levers that
+raise the CORE per-level efficiency above the canonical `2.0074` baseline by
+reaching a deeper CORE level, and reject action-trimming-only levers as retired
+score levers. If no A2 lever raises CORE efficiency without a CORE level loss,
+the workflow SHALL leave `SUBMITTED_AGENT_CONFIG` unchanged and report an honest
+null rather than wiring a median-action or stop-after-level-up surrogate.
+
+Experiment 4526 SHALL write
+`results/experiment_4526_integration_8game_gate.json` with bare top-level fields
+for `honest_verdict`, `inference_substrate`, `core_efficiency_baseline`,
+`core_efficiency_integrated`, `core_solves_preserved`, `levers_integrated`,
+`additivity_checked`, `heldout_solve_rate`, `nav_diagnostics`,
+`ready_for_operator_submit`, `false_negative_risk_checked`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. Required field
+principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_core_efficiency_<n>_above_2.0074 OR complete: no_lever_raises_core_efficiency_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate (no headline GGUF load unless the induction tier is invoked)."
+- `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control (NOT median actions, retired as a score lever)."
+- `core_efficiency_integrated`: principle "the HEADLINE -- the SUBMITTED-config per-level efficiency after wiring the winners (did it solve MORE levels)."
+- `core_solves_preserved`: principle "integration must preserve every CORE solve (set-containment)."
+- `levers_integrated`: principle "names which of A1/A2 were wired -- traceable to their measured deltas; [] is an honest null."
+- `additivity_checked`: principle "integrated CORE median vs the naive sum of isolated A1+A2 deltas -- surfaces a destructive batch-expand x stop-after-levelup interaction instead of burying it."
+- `heldout_solve_rate`: principle "the real transfer signal; integration should not regress it."
+- `nav_diagnostics`: principle "reset_replay_steps end-to-end -- did the integrated config actually cut the replay tax."
+- `ready_for_operator_submit`: principle "True if the integrated config is a CORE-preserved improvement worth a 1/day submission slot; the task NEVER submits (operator-only)."
+- `false_negative_risk_checked`: principle "an honest null only valid with the 7760 baseline measured the same way."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require `core_efficiency_integrated > 2.0074`,
+`core_solves_preserved=true`, at least one integrated A2 reach-deeper lever, no
+CORE game losing a previously reached level, and `ready_for_operator_submit=true`.
+Otherwise the artifact SHALL report
+`complete: no_lever_raises_core_efficiency_honest_null`, keep
+`levers_integrated=[]`, and SHALL NOT submit to the leaderboard.
+
 ## Scenarios
 
 ### SCENARIO-ARC-WMTE-4491: Held-Out Ranking Beats First-Clears Baseline
@@ -374,3 +415,13 @@ Then it records the required field principles, computes a stable
 `reproducibility_checksum`, updates the registry entry and total level count,
 records dead-end attempts, and reports success only when the offline
 reproduction gate is true and at least one new level was banked.
+
+### SCENARIO-ARC-WMTE-4526: Integration Wires Only Deeper-Level Winners
+
+Given the A1 forward-walk artifact, the A2 reach-deeper-levels artifact, and the
+canonical per-level baseline are present
+When experiment 4526 selects levers and runs the local submission gate
+Then it integrates only A2 levers that raise CORE per-level efficiency by
+reaching a deeper CORE level, rejects retired action-trimming levers, records
+the 8-game gate measurement and held-out solve rate, and reports an honest null
+when no lever beats `2.0074`.
