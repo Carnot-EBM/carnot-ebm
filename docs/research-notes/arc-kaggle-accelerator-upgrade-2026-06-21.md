@@ -68,6 +68,33 @@ source:
 - **Quota (operator-confirmed).** L4x4 burns GPU quota 2×: a full 12 h run subtracts ~24 h from the
   weekly allowance. Verify weekly runway before a long submission so it doesn't terminate early.
 
+### Quota math + submission cadence (operator 2026-06-21) — PLAN AROUND THIS
+
+- **Baseline pool: 30 GPU-h/week** (floating; occasionally bumped to 36-40 h if site demand is low,
+  but plan for the hard 30 h).
+- **On L4x4 the 2× burn → ~15 real-world GPU-h/week.** A full-length ARC notebook (12 h cap) burns
+  **24 h of quota**, so **effectively ONE full-length L4x4 submission per week** — unless the run
+  finishes materially under 12 h (L4 is far faster than P100, which helps).
+- **Reset: Saturday 00:00 UTC = Friday 8:00 PM EDT (Florida).**
+- **Overdraft rule:** if you have ≥1 minute of quota left when a submission STARTS, Kaggle lets it run
+  to completion (up to 12 h) without killing it or bleeding into next week. So the final weekly run
+  can be launched on fumes.
+
+**Implication for the June-30 deadline (~9 days out):** only ~**2 L4x4 full submissions remain** (this
+quota week, reset Fri Jun 26 8 PM EDT; then the Jun 27–30 window). Each is precious → **gate every
+submission on an offline result that beats both the TRM baseline AND our best prior submitted run**
+(the standing offline-first discipline, now doubly binding). Launch each weekly run before the Friday
+reset, using the overdraft rule if needed.
+
+**Efficiency pays double:** the ARC score is `min(1.15, h/a)²` (rewards FEW actions), and a
+faster-finishing notebook also preserves quota for a possible second run. L4's speed serves both.
+
+**The standing lever (not a re-litigation — L4 is the operator's choice):** 16 GB is now PROVEN
+sufficient (corpus-leak fix + MTP-off 5.9 GB + 1.45 GB CNN fit). So the default 1× tier (P100/T4,
+16 GB) would permit ~2 submissions/week instead of 1. L4x4 trades that frequency for 24 GB headroom +
+much faster inference (P100 is ancient Pascal). Staying on L4x4 is sound; the 1× tier is the fallback
+if submission FREQUENCY ever matters more than headroom near a deadline.
+
 ### One ground-truth check remaining (medium→high confidence closer)
 
 The identifier confidence is "medium" only because the live ARC upgraded-accelerators page is
