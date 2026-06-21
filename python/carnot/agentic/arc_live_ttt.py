@@ -59,12 +59,20 @@ class CNNDynamics:
     cross-entropy; predict = argmax per cell. Oracle-DISTINCT (a learned net, not the executable oracle).
     torch is imported LAZILY so the rule-only path needs no torch."""
 
+    _OBJ_CHANNELS = 4  # foreground mask + object-centroid-offset (dy, dx) + object-size
+
     def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48,
-                 change_weight: float = 40.0) -> None:
+                 change_weight: float = 40.0, object_features: bool = False) -> None:
         self.game = game
         self.epochs = int(epochs)
         self.lr = float(lr)
         self.hidden = int(hidden)
+        # OBJECT-DELTA encoding (2026-06-21): augment the per-pixel input with connected-component object
+        # structure so the local CNN sees whole OBJECTS, not just colours -- its per-cell residual then
+        # moves/recolours objects COHERENTLY instead of independently (the per-pixel CNN's receptive field
+        # can't span an object, capping cell-recall). Channels: foreground mask + centroid-offset dy/dx +
+        # log-size. Needs its own prior (the input-channel count differs from the plain cnn backend).
+        self.object_features = bool(object_features)
         # per-cell loss weight on CHANGED cells (target != KEEP). The KEEP class is ~4000:1 dominant at
         # 64x64, so unweighted cross-entropy collapses the net to "predict KEEP everywhere" = identity =
         # 0% on changing transitions (verified). Upweighting the change forces the net to model it.
@@ -75,6 +83,28 @@ class CNNDynamics:
     @staticmethod
     def _click_xy(akey: tuple) -> Optional[tuple]:
         return (int(akey[1]), int(akey[2])) if len(akey) == 3 and int(akey[0]) == 6 else None
+
+    def _object_channels(self, grid: np.ndarray) -> np.ndarray:
+        """[4, H, W] object-structure features: foreground mask + per-cell object-centroid offset (dy, dx,
+        normalised) + log-size. Background = the most common colour; objects = connected components of the
+        rest. Gives the CNN object-shape context its receptive field can't span."""
+        from scipy import ndimage
+        g = np.asarray(grid)
+        h, w = g.shape
+        vals, counts = np.unique(g, return_counts=True)
+        bg = int(vals[counts.argmax()])
+        fg = g != bg
+        labels, n = ndimage.label(fg)
+        out = np.zeros((self._OBJ_CHANNELS, h, w), dtype=np.float32)
+        out[0] = fg.astype(np.float32)
+        if n > 0:
+            ys, xs = np.mgrid[0:h, 0:w]
+            for oid in range(1, n + 1):
+                m = labels == oid
+                out[1][m] = (ys[m] - ys[m].mean()) / max(1, h)   # centroid offset dy
+                out[2][m] = (xs[m] - xs[m].mean()) / max(1, w)   # centroid offset dx
+                out[3][m] = np.log1p(int(m.sum())) / np.log1p(h * w)  # log object size
+        return out
 
     def _encode(self, grid: np.ndarray, akey: tuple, torch: Any) -> Any:
         g = np.clip(np.asarray(grid).astype(np.int64), 0, N_COLORS - 1)
@@ -91,11 +121,13 @@ class CNNDynamics:
         aid = int(akey[0])
         if 1 <= aid <= 7:
             chans[N_COLORS + aid] = 1.0               # action one-hot broadcast (index N_COLORS+1 .. +7)
+        if self.object_features:
+            chans = torch.cat([chans, torch.from_numpy(self._object_channels(grid))], dim=0)
         return chans
 
     def _build_net(self, torch: Any) -> Any:
         nn = torch.nn
-        c_in = N_COLORS + 1 + 7
+        c_in = N_COLORS + 1 + 7 + (self._OBJ_CHANNELS if self.object_features else 0)
         # RESIDUAL/KEEP head (2026-06-21): per cell, predict 1 + N_COLORS classes -- class 0 = KEEP (copy
         # input), classes 1..16 = SET-to-colour-(0..15). So the ~4095 unchanged cells of a 64x64 grid learn
         # the trivial KEEP majority class and are correct BY CONSTRUCTION at predict time; the net's
@@ -207,8 +239,10 @@ class LiveTTTWorldModel:
         self._refits = 0
 
     def _new_l1(self) -> Any:
-        return (CNNDynamics(self.game, epochs=self.cnn_epochs) if self.dynamics_backend == "cnn"
-                else ObjectDeltaModel(self.game))
+        if self.dynamics_backend in ("cnn", "cnn_obj"):
+            return CNNDynamics(self.game, epochs=self.cnn_epochs,
+                               object_features=(self.dynamics_backend == "cnn_obj"))
+        return ObjectDeltaModel(self.game)
 
     def _fit_l1(self, transitions):
         l1 = self._new_l1()
