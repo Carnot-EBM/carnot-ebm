@@ -1,5 +1,41 @@
 # Gate-readiness verdict: the prior+TTT improves the WRONG bottleneck (2026-06-21 outer-loop)
 
+> ## CORRECTION (2026-06-21, later — a live-process investigation overturned the "goal-induction" framing)
+>
+> The verdict below said *goal-induction* is the bottleneck. **That was a CORPUS ARTIFACT, not a
+> live-process property** — the exact trap CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent"
+> point 3 warns about. A 3-agent investigation established:
+>
+> - **Win-DETECTION is NOT the gap.** The LIVE solver (`arc_competition_agent.StepwiseExplorer` +
+>   `arc_solver_kit`) reads the win signal from the **env frame** (`frame.levels_completed` via
+>   `arc_agi3_live_adapter._levels_completed` / `arc_solver_kit:415`) — never from the corpus. The live
+>   agent already knows when a level completes (the env tells it) and already reproduces 52 levels. The
+>   `n_win_states=0` / 0-4 null came purely from the **static corpus never containing a level-up
+>   transition** (`lb=la=0`); the level signal IS in the raw HF parquet (`actions_by_level`,
+>   `levels_completed`) and was dropped at the shard-BUILD stage (`arc_human_replay_corpus.py`), upstream
+>   of capture. The offline probe also never triggers a live level-up under a random explorer budget.
+> - **The REAL remaining gap is EXPLORATION-TO-FIRST-WIN** under the action-efficiency score —
+>   credit-assignment / sub-goal discovery. On an unseen game the agent gets a sparse terminal
+>   level-completed bit but must DISCOVER which action sequence causes it, from scratch, within ~5n
+>   actions/level (score `min(h/a,1)²` punishes wasted exploration). `StepwiseExplorer` does **undirected**
+>   salient-action BFS — no bias toward the latent win-mechanic — so on OOD games it never triggers the
+>   first level-up or burns the budget getting there. **That is the 0.08 wall.**
+> - **Highest-EV PROCESS lever (no weights, transfers by construction):** a **goal-biased online explorer**
+>   — induce candidate win-predicates ONLINE from frame-delta structure (object/color-count reduction,
+>   color-disappearance, coverage/toggle — the hypothesis classes already sketched in
+>   `arc_agi3_goal_induction.py`, which is NOT wired into the live path), seeded with NO win example,
+>   confirmed/pruned against the env `levels_completed` signal as observed, and used as the **priority key
+>   for frontier expansion** (replan-on-divergence, not exact-match halt). Pure reusable scaffolding for
+>   `arc_solver_kit`/registry, applied fresh to never-seen games.
+> - **Cheap secondary:** rebuild the corpus shards from the full parquet to fix `lb/la` — lets the
+>   prior+TTT plan toward OBSERVED wins for action-efficiency on REVISITS. Marginal; not the score-mover.
+>
+> **What still HOLDS from below:** NOT gate-ready; the prior+TTT (dynamics) + cell-recall gate do not
+> address exploration-to-first-win, so they don't move 0.08. **What CHANGES:** the lever is a goal-biased
+> online explorer, NOT "goal/win-condition induction" (the env already supplies win-detection).
+> See `results/` workflow output + the live-process investigation (2026-06-21).
+
+
 **Question (operator):** are we gate-ready to spend a scarce L4x4 submission shot? The gate (offline-first
 discipline) = an offline result beating both the TRM baseline AND our best prior submitted run.
 
