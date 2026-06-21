@@ -1,0 +1,226 @@
+{
+  "attempts": [
+    {
+      "game": "ka59",
+      "offline_reproduced": false,
+      "reached_level": 1,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual": "ka59_l2_not_reproduced_after_hidden_key",
+      "solution_labels": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ],
+      "states_expanded": 83,
+      "target_level": 2
+    },
+    {
+      "game": "ar25",
+      "offline_reproduced": false,
+      "reached_level": 1,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "ar25",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual": "ar25_l2_not_reproduced_after_hidden_key",
+      "solution_labels": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2"
+      ],
+      "states_expanded": 51,
+      "target_level": 2
+    },
+    {
+      "game": "ft09",
+      "offline_reproduced": false,
+      "reached_level": 1,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "ft09",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual": "ft09_l2_not_reproduced_after_hidden_key",
+      "solution_labels": [
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 36}}",
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 52}}"
+      ],
+      "states_expanded": 17,
+      "target_level": 2
+    }
+  ],
+  "experiment": "experiment_4559_hidden_field_state_probe",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "false_negative_risk_checked": "a no-bank null is valid only if the disambiguation positive control passed.",
+    "hidden_fields_added": "the HUD/hidden registers added to the state_key per game (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE.",
+    "honest_verdict": "terminal prefix; success: hidden_field_state_<game>_L2_offline_reproduced OR complete: hidden_field_state_gap_sharpened_no_bank_honest_null.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load.",
+    "missing_verifier_gaps": "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry.",
+    "offline_reproduced": "only offline-reproduced new levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game hidden-field findings + dead-ends persisted so the next attempt reuses.",
+    "reproduced_levels": "the integer new-level count banked this task.",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "state_disambiguation_control_passed": "the POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; guards a no-op change; a no-bank null is valid only if this passed."
+  },
+  "hidden_fields_added": {
+    "ar25": [
+      "undo_stack_depth from len(game.flqblmrxsla)",
+      "step_counter_current_steps from game.lelsvjlwneo.current_steps",
+      "step_counter_limit from game.lelsvjlwneo.ilqnjlrnkk/current_level.get_data('StepCounter')"
+    ],
+    "ft09": [
+      "color_cycle from game.gqb/current_level.get_data('cwU')",
+      "cell_cycle_phases from live Hkx/NTi sprite center colors",
+      "step_counter_current_steps from game.lpw.dzy"
+    ],
+    "ka59": [
+      "step_counter_current_steps from game.urgssjskot.current_steps",
+      "step_counter_limit from game.urgssjskot.koyyeuyzyr/current_level.get_data('StepCounter')"
+    ]
+  },
+  "honest_verdict": "complete: hidden_field_state_gap_sharpened_no_bank_honest_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [
+    "ka59_l2_not_reproduced_after_hidden_key",
+    "ar25_l2_not_reproduced_after_hidden_key",
+    "ft09_l2_not_reproduced_after_hidden_key"
+  ],
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4559,
+  "registry_update": {
+    "path": "ops/arc_solve_registry.yaml",
+    "section": "latest_hidden_field_state_probe_4559",
+    "target_games": [
+      "ka59",
+      "ar25",
+      "ft09"
+    ],
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "8560dd00ed0aecf13a15a2b49ce83bbeb366ae1233d01bfb12f3ea2aca24a45f",
+  "schema": "carnot.hidden_field_state_probe_4559.v1",
+  "schema_errors": [],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4559",
+    "SCENARIO-ARC-WMTE-4559"
+  ],
+  "state_disambiguation_control": {
+    "passed": true,
+    "per_game": {
+      "ar25": {
+        "extended_state_key_disambiguated": true,
+        "grid_only_aliased": true,
+        "hidden_fields_left": {
+          "step_counter_current_steps": 64,
+          "step_counter_limit": 64,
+          "undo_stack_depth": 0
+        },
+        "hidden_fields_right": {
+          "step_counter_current_steps": 64,
+          "step_counter_limit": 64,
+          "undo_stack_depth": 1
+        }
+      },
+      "ft09": {
+        "extended_state_key_disambiguated": true,
+        "grid_only_aliased": true,
+        "hidden_fields_left": {
+          "animation_ticks": 0,
+          "cell_cycle_phases": [
+            [
+              "Hkx-test",
+              1,
+              2,
+              9,
+              0
+            ]
+          ],
+          "color_cycle": [
+            9,
+            8
+          ],
+          "step_counter_current_steps": 32,
+          "step_counter_limit": 32
+        },
+        "hidden_fields_right": {
+          "animation_ticks": 0,
+          "cell_cycle_phases": [
+            [
+              "Hkx-test",
+              1,
+              2,
+              9,
+              1
+            ]
+          ],
+          "color_cycle": [
+            8,
+            9
+          ],
+          "step_counter_current_steps": 32,
+          "step_counter_limit": 32
+        }
+      },
+      "ka59": {
+        "extended_state_key_disambiguated": true,
+        "grid_only_aliased": true,
+        "hidden_fields_left": {
+          "step_counter_current_steps": 100,
+          "step_counter_limit": 100
+        },
+        "hidden_fields_right": {
+          "step_counter_current_steps": 99,
+          "step_counter_limit": 100
+        }
+      }
+    }
+  },
+  "state_disambiguation_control_passed": true
+}
