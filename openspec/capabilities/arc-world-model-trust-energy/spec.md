@@ -331,6 +331,54 @@ A success artifact SHALL require an energy-routed configuration to reach level
 including `energy_separation_auroc` and the positive-control status, without
 claiming a circular win or changing the submitted configuration.
 
+### REQ-ARC-WMTE-4536: Submitted A1/A2 Integration Gate Refresh
+
+Experiment 4536 SHALL read the A1 per-level goal re-induction artifact from
+`results/experiment_4533_per_level_goal_reinduction.json` and the A2
+trust-energy routing artifact from
+`results/experiment_4534_energy_trust_next_level_routing.json`. The workflow
+SHALL select only levers that strictly raise CORE per-level efficiency above the
+canonical `2.0074` baseline by reaching a deeper CORE level while preserving
+every CORE solve. Median-actions or action-trimming effects SHALL NOT count as
+score levers. An upstream artifact with `flagged_adversarial: true` SHALL be
+rejected unless its only flag is the control-equals-best null-delta tautology:
+it MUST include explicit `efficiency_delta: 0.0`, a non-empty
+`null_delta_methodology_note`, and matching baseline/best core efficiency. Such
+an artifact MAY be aggregated only as a valid null and SHALL NOT be treated as
+an improvement.
+
+Experiment 4536 SHALL re-measure the current submitted-default configuration
+end-to-end through `scripts/kaggle/arc_local_submission_gate.py --check` and
+write `results/experiment_4536_integration_8game_gate.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`,
+`core_efficiency_baseline`, `core_efficiency_integrated`,
+`core_solves_preserved`, `levers_integrated`, `additivity_checked`,
+`heldout_solve_rate`, `ready_for_operator_submit`,
+`false_negative_risk_checked`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_core_efficiency_<n>_above_2.0074 OR complete: no_lever_raises_core_efficiency_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end via the per-level gate."
+- `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control (NOT median actions, retired)."
+- `core_efficiency_integrated`: principle "the HEADLINE -- the SUBMITTED-config per-level efficiency after wiring the winners (did it solve MORE levels)."
+- `core_solves_preserved`: principle "integration must preserve every CORE solve (set-containment)."
+- `levers_integrated`: principle "names which of A1/A2 were wired -- traceable to their measured deltas; [] is an honest null."
+- `additivity_checked`: principle "integrated CORE core_efficiency vs the naive sum of isolated A1+A2 deltas -- surfaces a destructive re-induction x energy-routing interaction instead of burying it."
+- `heldout_solve_rate`: principle "the real transfer signal; integration should not regress it."
+- `ready_for_operator_submit`: principle "True if the integrated config is a CORE-preserved core_efficiency improvement worth a 1/day submission slot; the task NEVER submits (operator-only)."
+- `false_negative_risk_checked`: principle "an honest null only valid with the 2.0074 baseline measured the same way."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require `core_efficiency_integrated > 2.0074`,
+`core_solves_preserved=true`, at least one integrated A1/A2 deeper-level lever,
+and `ready_for_operator_submit=true`. If neither A1 nor A2 raised CORE
+per-level efficiency without a CORE level loss, the artifact SHALL report
+`complete: no_lever_raises_core_efficiency_honest_null`, keep
+`levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
+NOT submit to the leaderboard.
+
 ### REQ-ARC-WMTE-4525: Standing Loop Level-Up Registry Bank
 
 Experiment 4525 SHALL run the offline arcade precondition and use the standing
@@ -562,6 +610,17 @@ the depth-compatible candidate set, the artifact compares `lp85` and `sp80`
 against a matched no-energy control, sets `verifier_is_oracle=false`, and a null
 is accepted only when the positive-control energy separation check passes and
 `energy_separation_auroc` is reported.
+
+### SCENARIO-ARC-WMTE-4536: A1/A2 Integration Preserves Honest Null
+
+Given A1 reports a permitted flagged null-delta tautology and A2 is flagged
+without that exception while reaching no deeper CORE level
+When experiment 4536 selects integration levers and runs the 8-game per-level
+submission gate
+Then no lever is wired, `core_efficiency_integrated` is measured on the current
+submitted default, CORE solve preservation is reported, and the artifact uses
+`complete: no_lever_raises_core_efficiency_honest_null` unless the submitted
+configuration strictly raises CORE per-level efficiency above `2.0074`.
 
 ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
 
