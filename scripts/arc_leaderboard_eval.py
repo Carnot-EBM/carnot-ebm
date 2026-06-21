@@ -78,6 +78,14 @@ def _build_policy(kind: str, game: str):
         mode = "best_first" if kind == "explorer_bf" else "depth_first_ride"
         return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD,
                                  value_weight=_VALUE_WEIGHT, search_mode=mode)
+    if kind in ("explorer_goalbias", "goalbias"):           # zero-shot order-prior goal-biased explorer
+        from carnot.agentic.arc_goal_bias import GoalBiasValueHead
+        # best_first A* frontier nudged toward more-ordered (plausibly-winning) states by a hand-crafted
+        # distance-to-win prior (NO trained weights). value_weight defaults to 3.0 here (the global
+        # --value-weight default is 0, which would disable the nudge); override with --value-weight.
+        _w = _VALUE_WEIGHT if _VALUE_WEIGHT > 0 else 3.0
+        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=GoalBiasValueHead(),
+                                 value_weight=_w, search_mode="best_first")
     if kind in ("explorer_dv", "verifier_router"):
         global _DISC_ROUTER
         if _DISC_ROUTER is None:
