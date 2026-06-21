@@ -1,0 +1,53 @@
+{
+  "experiment": "arc_ttt_validate",
+  "honest_verdict": "complete_live_ttt_offline_gate_0_of_3_games_pass",
+  "games_scored": 3,
+  "games_gate_pass": 0,
+  "games_learned_beats_llm": 1,
+  "mean_learned_heldout_accuracy": 0.2167,
+  "per_game": [
+    {
+      "game": "ar25",
+      "n_train": 120,
+      "n_heldout": 40,
+      "learned_heldout_accuracy": 0.25,
+      "llm_heldout_accuracy": 0.525,
+      "n_win_states": 0,
+      "plan_found": false,
+      "plan_length": null,
+      "gate_pass": false,
+      "learned_beats_llm": false,
+      "duration_s": 2.04
+    },
+    {
+      "game": "ka59",
+      "n_train": 120,
+      "n_heldout": 40,
+      "learned_heldout_accuracy": 0.2,
+      "llm_heldout_accuracy": 0.2,
+      "n_win_states": 0,
+      "plan_found": false,
+      "plan_length": null,
+      "gate_pass": false,
+      "learned_beats_llm": false,
+      "duration_s": 1.22
+    },
+    {
+      "game": "cd82",
+      "n_train": 120,
+      "n_heldout": 40,
+      "learned_heldout_accuracy": 0.2,
+      "llm_heldout_accuracy": 0.0,
+      "n_win_states": 0,
+      "plan_found": false,
+      "plan_length": null,
+      "gate_pass": false,
+      "learned_beats_llm": true,
+      "duration_s": 0.82
+    }
+  ],
+  "random_seed": 0,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade transition collection + learned-vs-LLM engine scoring; no live LLM inference",
+  "verifier_is_oracle": false,
+  "methodology_note": "held-out = the last 25% of the salience-ordered probe; the learned engine earns accuracy only on transitions outside its L0 table / fit set. The LLM comparison uses the same held-out set (apples-to-apples)."
+}
