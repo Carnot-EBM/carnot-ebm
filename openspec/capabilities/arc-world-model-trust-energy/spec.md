@@ -402,6 +402,68 @@ submitted configuration SHALL remain unchanged and the artifact SHALL report an
 honest null with `efficiency_delta=0.0`, `llm_proposer_value` characterized, and
 a concrete `barrier_refinement`.
 
+### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
+
+The solver kit SHALL persist the live LLM-proposer re-induction loop from
+experiment 4544 as a reusable primitive operator named
+`llm_proposer_reinduction_operator`. The operator SHALL detect a level-up,
+clear stale level-local induction state, ask a proposer for separate GOAL,
+DYNAMICS/world-model, and plan candidates when a live proposer is available,
+rank candidates by oracle-distinct trust-energy evidence, and run a bounded
+counterexample-guided refinement loop of at most three rounds. If the live
+proposer is unavailable or the upstream A1 artifact is null, the operator SHALL
+fall back to the persisted DSL/verifier predicate inducer while preserving the
+same transfer artifact fields and explicitly reporting that no reachable
+LLM-produced deeper plan was available.
+
+Experiment 4549 SHALL read
+`results/experiment_4544_llm_proposer_reinduction.json`, persist the operator
+in `python/carnot/agentic/arc_solver_kit.py`, extend the existing
+`primitive_per_level_reinduction_operator` `general_gotchas` registry row
+rather than duplicating it, and apply the persisted primitive to at least two
+deeper games that were not tuned in A1 from `{tn36,tr87,tu93,sc25}`. For each
+transfer game, the artifact SHALL report the deepest offline-reproduced level
+available to the transfer replay, whether the primitive produced a reachable
+deeper-level plan, whether it re-induced a different representation-correct
+`L_{n+1}` predicate, and the dead-end that remains if no deeper level is
+banked. Any newly claimed deeper level SHALL pass `arc_solver_kit.reproduce()`
+before it counts toward `reproducible_total_levels`; otherwise the registry
+total SHALL remain unchanged and the artifact SHALL report a terminal honest
+null.
+
+Experiment 4549 SHALL write
+`results/experiment_4549_llm_proposer_primitive_persist_transfer.json` with
+bare top-level fields for `honest_verdict`, `inference_substrate`,
+`primitive_persisted`, `transfer_games`,
+`transfer_deepest_level_per_game`, `reachable_plan_produced`,
+`representation_transfer`, `offline_reproduced`, `registry_updated`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: llm_proposer_primitive_persisted_transfer_<game>_L<n> OR complete: llm_proposer_primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for the DSL-fallback transfer; live_llm_inference + model_specs if the LLM proposer is invoked in the transfer runs."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the deeper games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_deepest_level_per_game`: principle "best_level reached per transfer game -- the cross-game evidence the primitive generalizes."
+- `reachable_plan_produced`: principle "whether the persisted primitive produced a REACHABLE deeper-level plan on a transfer game (the A1-barrier-clearing evidence), distinct from mere representation re-induction."
+- `representation_transfer`: principle "whether the primitive re-induced a DIFFERENT (correct) L_{n+1} predicate even without a full solve -- a representation win short of a bank."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4549: LLM-Proposer Primitive Transfers Without Retuning A1
+
+Given the offline arcade precondition passes and the experiment 4544 A1 artifact
+exists
+When experiment 4549 runs the persisted solver-kit LLM-proposer re-induction
+operator on at least two of `tn36`, `tr87`, `tu93`, and `sc25`
+Then the artifact records the persisted operator, the transfer games, each
+game's deepest offline-reproduced level, any reachable deeper-level plan, any
+different representation-correct `L_{n+1}` predicate, and a terminal honest null
+unless a newly reproduced deeper level passes the offline reproduction gate.
+
 ### REQ-ARC-WMTE-4536: Submitted A1/A2 Integration Gate Refresh
 
 Experiment 4536 SHALL read the A1 per-level goal re-induction artifact from
