@@ -1,0 +1,194 @@
+{
+  "b_track_status": {
+    "gaps": [],
+    "this_task_completed": {
+      "audit_only": true,
+      "completed_missing_piece": "none",
+      "no_blind_budget_raise": true,
+      "result_path": "results/experiment_4528_infra_carryforward.json"
+    },
+    "upstream_417_b2_landed": {
+      "canonical_gate": {
+        "action_metric_field": "actions",
+        "baseline_guard_ok": true,
+        "canonical_game_set": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33",
+          "cd82",
+          "ft09",
+          "su15",
+          "ls20"
+        ],
+        "core_containment_gate_canonical": true,
+        "core_games": [
+          "lp85",
+          "m0r0",
+          "sp80",
+          "vc33"
+        ],
+        "landed_in_4518": true,
+        "upstream_honest_verdict": "shipped: metric_harness_canonical_ci_guarded"
+      },
+      "fixture_ci_guard": {
+        "ci_command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov",
+        "ci_guarded": true,
+        "fixture_count": 5,
+        "fixture_tests_present": [
+          "test_a1_frame_change_prune_fails_lost_core_m0r0",
+          "test_a2_imitation_prior_fails_core_traded_for_fringe",
+          "test_positive_core_faster_passes_improved",
+          "test_neutral_core_same_passes_non_inferior",
+          "test_bonus_solve_reported_but_core_required"
+        ],
+        "landed_in_4518": true
+      },
+      "headroom_budget": {
+        "b_star_measured": false,
+        "candidate_rows": [
+          {
+            "budget": 8000,
+            "comparison_budget": 12000,
+            "comparison_solved_games": [
+              "lp85",
+              "ls20",
+              "m0r0",
+              "sp80",
+              "su15",
+              "vc33"
+            ],
+            "solved_games": [
+              "lp85",
+              "m0r0",
+              "sp80",
+              "vc33"
+            ],
+            "stable_vs_1_5x": false
+          },
+          {
+            "budget": 12000,
+            "comparison_budget": 18000,
+            "comparison_solved_games": [
+              "cd82",
+              "lp85",
+              "ls20",
+              "m0r0",
+              "sp80",
+              "su15",
+              "vc33"
+            ],
+            "solved_games": [
+              "lp85",
+              "ls20",
+              "m0r0",
+              "sp80",
+              "su15",
+              "vc33"
+            ],
+            "stable_vs_1_5x": false
+          },
+          {
+            "budget": 16000,
+            "comparison_budget": 24000,
+            "comparison_solved_games": [
+              "cd82",
+              "lp85",
+              "ls20",
+              "m0r0",
+              "sp80",
+              "su15",
+              "vc33"
+            ],
+            "solved_games": [
+              "lp85",
+              "ls20",
+              "m0r0",
+              "sp80",
+              "su15",
+              "vc33"
+            ],
+            "stable_vs_1_5x": false
+          },
+          {
+            "budget": 24000,
+            "comparison_budget": 36000,
+            "comparison_solved_games": [
+              "ls20",
+              "m0r0",
+              "vc33"
+            ],
+            "solved_games": [
+              "cd82",
+              "lp85",
+              "ls20",
+              "m0r0",
+              "sp80",
+              "su15",
+              "vc33"
+            ],
+            "stable_vs_1_5x": false
+          }
+        ],
+        "landed_in_4518": true,
+        "measured": true,
+        "no_blind_budget_raise": true,
+        "no_stable_candidate": true,
+        "selected_b_star": null,
+        "stable_rows": [],
+        "upstream_default_budget": 8000
+      }
+    }
+  },
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "canonical_game_set",
+        "canonical_baseline",
+        "tests_added_pass",
+        "headroom_budget_measurement",
+        "canonical_default_budget"
+      ],
+      "path": "results/experiment_4518_metric_harness_canonical.json",
+      "sha256": "sha256:0b85016d9c1c36d464bc261c05bb404df9a8ca89e5ed1b5e829f4a62b786bdc1"
+    }
+  ],
+  "duration_s": 3.7782628120621666,
+  "experiment": "experiment_4528_infra_carryforward",
+  "field_principles": {
+    "b_track_status": "principle \"what landed in .417 B2 vs what this task completed -- the audit trail.\"",
+    "cited_upstream_artifacts": "principle \"traceability of the .417 B2 numbers this reconciles.\"",
+    "honest_verdict": "principle \"terminal prefix; shipped: infra_carryforward_complete OR complete: infra_audit_already_done.\"",
+    "inference_substrate": "principle \"aggregation_from_upstream_artifacts (reads the .417 B2 artifact) unless it measures B* live (then verifier_ensemble_against_cached_candidates).\"",
+    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\""
+  },
+  "honest_verdict": "complete: infra_audit_already_done",
+  "inference_substrate": "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "fixture_test_file_present": true,
+    "gate_help_precondition": true,
+    "ok": true,
+    "spec_has_req_4528": true,
+    "upstream_artifact_present": true
+  },
+  "reproducibility_checksum": "sha256:eeb9bca4a28644ea7a5365c21575061ed441a952b47d28e32907c19b1957f211",
+  "requirements": [
+    "REQ-ARC-FCP-4528"
+  ],
+  "result_path": "results/experiment_4528_infra_carryforward.json",
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4528"
+  ],
+  "schema": "carnot.arc_infra_carryforward_4528.v1",
+  "tests_added_pass": {
+    "command": ".venv/bin/pytest tests/python/test_experiment_4528_infra_carryforward.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [5 items]\n\n.....                                                                    [100%]\n============================== 5 passed in 2.47s ===============================\n"
+  }
+}
