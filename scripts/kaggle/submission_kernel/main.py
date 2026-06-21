@@ -88,7 +88,10 @@ if server and gguf:
     try:
         _pp = 8945
         _err = open("/kaggle/working/llm_probe.err", "w")
-        _args = [str(run_server), "-m", str(gguf), "-ngl", "999", "-c", "16384",
+        # CARNOT_ARC_NGL (default 999=all-GPU): the prefill-to-RAM lever. Lower it to spill weight layers
+        # into system RAM, freeing VRAM for KV + the coexisting live CNN fit. Probe the SAME ngl the agent uses.
+        _ngl = os.environ.get("CARNOT_ARC_NGL", "999")
+        _args = [str(run_server), "-m", str(gguf), "-ngl", _ngl, "-c", "16384",
                  "--port", str(_pp), "--host", "127.0.0.1", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0"]
         if _mtp:
             _args += ["--spec-type", "draft-mtp", "--model-draft", str(gguf)]
