@@ -1,0 +1,217 @@
+{
+  "barrier_refinement": "positive_control_failed: executable proposer gate failed before CORE measurement (proposer_failed).",
+  "chosen_submitted_config": "unchanged",
+  "core_efficiency_baseline": 2.0074,
+  "core_efficiency_best": null,
+  "core_games": [
+    "lp85",
+    "m0r0",
+    "sp80",
+    "vc33"
+  ],
+  "core_solves_preserved": null,
+  "deepest_level_reached_per_core_game": {
+    "executable_proposer": null,
+    "offline_dsl_baseline": null
+  },
+  "duration_s": 62.03632480103988,
+  "efficiency_delta": null,
+  "executable_proposer_measurement": null,
+  "experiment": "experiment_4557_executable_world_model_proposer",
+  "false_negative_risk_checked": false,
+  "field_principles": {
+    "barrier_refinement": "if the positive control fails or no deeper level is reached, the CONCRETE actionable refinement of what the executable proposer still gets wrong -- the deliverable on a null + the retire/.422 input.",
+    "chosen_submitted_config": "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); keeps test_arc_submitted_agent_parity.py consistent.",
+    "core_efficiency_baseline": "2.0074 -- the REAL per-level metric control (.420/.419 baseline, measured the SAME way).",
+    "core_efficiency_best": "the HEADLINE -- did the executable proposer reach a deeper CORE level and raise core_efficiency.",
+    "core_solves_preserved": "HARD empirical gate on {lp85,m0r0,sp80,vc33} -- a dropped CORE solve FAILS the lever regardless.",
+    "deepest_level_reached_per_core_game": "best_level per CORE game per condition -- the direct score-lever evidence.",
+    "efficiency_delta": "core_efficiency_best - baseline, emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive.",
+    "false_negative_risk_checked": "a no-deeper-level null is valid only if positive_control_passed=True (else the proposer is broken, not the idea -- the .420 uninformative-null trap).",
+    "honest_verdict": "terminal prefix; success: executable_proposer_<game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: executable_proposer_positive_control_<passed|failed>_<deeper|no_deeper>_barrier_refined.",
+    "inference_substrate": "live_llm_inference -- the Qwen3.5-9B-MTP generator is genuinely loaded + invoked (60s floor); declare it so adversarial_verify does not false-flag DURATION_TOO_SHORT.",
+    "llm_proposer_value": "count/rate of level-ups where the executable proposer produced a REACHABLE plan the offline DSL could not -- the measured value (vs .420's count=0).",
+    "model_specs": "names the generator actually invoked (Qwen3.5-9B-MTP GGUF + resolved .gguf path) -- the methodology field whose absence false-flagged the .419 A2.",
+    "null_delta_methodology_note": "present when efficiency_delta==0.0 -- states the equality is an honest no-deeper-level null, not a measurement bug.",
+    "offline_reproduced": "any new level must offline-reproduce (arc_solver_kit.reproduce) to count.",
+    "positive_control_passed": "THE GATE -- the executable proposer must produce the known reachable fixture plan FIRST (the .420 break); an efficiency claim is invalid without it.",
+    "preconditions_checked": "records resources verified (offline arcade, Qwen3.5-9B-MTP cached, llama_cpp); pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "refinement_rounds_used": "the bounded counterexample-guided rounds per level-up -- proves the loop ran + bounds wall-clock.",
+    "reproducibility_checksum": "content-addressed hash catches silent corpus/model drift on replay.",
+    "verifier_is_oracle": "false -- the world-model trust energy RANKS candidate executable models by held-out generalization, oracle-DISTINCT (the LLM generates; the energy verifies)."
+  },
+  "honest_verdict": "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined",
+  "inference_substrate": "live_llm_inference",
+  "live_invocation": {
+    "counterexamples": [
+      {
+        "heldout_accuracy": 0.0,
+        "heldout_threshold": 1.0,
+        "kind": "heldout_transition_verification_failed",
+        "selected_candidate_name": "live_executable_world_model"
+      }
+    ],
+    "dsl_reachable_plan": false,
+    "duration_s": 61.13241,
+    "executable_model_verified": false,
+    "heldout_accuracy": 0.0,
+    "invoked": true,
+    "passed": false,
+    "plan_length": 0,
+    "reachable_plan": false,
+    "refinement_rounds_used": 2,
+    "rounds": [
+      {
+        "accepted_by_heldout_verifier": false,
+        "action": "induce",
+        "counterexample": {
+          "heldout_accuracy": 0.0,
+          "heldout_threshold": 1.0,
+          "kind": "heldout_transition_verification_failed",
+          "selected_candidate_name": "live_executable_world_model"
+        },
+        "dynamics_candidate_names": [
+          "live_executable_world_model"
+        ],
+        "goal_candidate_names": [
+          "live_executable_world_model"
+        ],
+        "heldout_accuracy": 0.0,
+        "heldout_threshold": 1.0,
+        "message": "local gguf (GPU server) wrote world_model.py",
+        "prefix_accuracy": 0.0,
+        "proposer_ok": true,
+        "round": 1,
+        "selected_candidate_name": "live_executable_world_model",
+        "skipped": "heldout_transition_verification_failed",
+        "trust_energy": 1.0
+      },
+      {
+        "action": "refactor",
+        "message": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+        "proposer_ok": false,
+        "round": 2,
+        "skipped": "proposer_failed"
+      }
+    ],
+    "selected_candidate_name": "live_executable_world_model",
+    "skipped": "proposer_failed",
+    "source": "live_qwen_executable_world_model_fixture"
+  },
+  "llm_proposer_value": {
+    "count": 0,
+    "events": [],
+    "opportunities": 0,
+    "rate": 0.0
+  },
+  "measured_games": [
+    "lp85",
+    "m0r0"
+  ],
+  "measurements": [],
+  "model_specs": "Qwen3.5-9B-MTP GGUF (/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf)",
+  "offline_dsl_baseline": null,
+  "offline_reproduced": false,
+  "offline_reproduction": {},
+  "positive_control": {
+    "counterexamples": [
+      {
+        "heldout_accuracy": 0.0,
+        "heldout_threshold": 1.0,
+        "kind": "heldout_transition_verification_failed",
+        "selected_candidate_name": "live_executable_world_model"
+      }
+    ],
+    "dsl_reachable_plan": false,
+    "duration_s": 61.13241,
+    "executable_model_verified": false,
+    "heldout_accuracy": 0.0,
+    "invoked": true,
+    "passed": false,
+    "plan_length": 0,
+    "reachable_plan": false,
+    "refinement_rounds_used": 2,
+    "rounds": [
+      {
+        "accepted_by_heldout_verifier": false,
+        "action": "induce",
+        "counterexample": {
+          "heldout_accuracy": 0.0,
+          "heldout_threshold": 1.0,
+          "kind": "heldout_transition_verification_failed",
+          "selected_candidate_name": "live_executable_world_model"
+        },
+        "dynamics_candidate_names": [
+          "live_executable_world_model"
+        ],
+        "goal_candidate_names": [
+          "live_executable_world_model"
+        ],
+        "heldout_accuracy": 0.0,
+        "heldout_threshold": 1.0,
+        "message": "local gguf (GPU server) wrote world_model.py",
+        "prefix_accuracy": 0.0,
+        "proposer_ok": true,
+        "round": 1,
+        "selected_candidate_name": "live_executable_world_model",
+        "skipped": "heldout_transition_verification_failed",
+        "trust_energy": 1.0
+      },
+      {
+        "action": "refactor",
+        "message": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+        "proposer_ok": false,
+        "round": 2,
+        "skipped": "proposer_failed"
+      }
+    ],
+    "selected_candidate_name": "live_executable_world_model",
+    "skipped": "proposer_failed",
+    "source": "live_qwen_executable_world_model_fixture"
+  },
+  "positive_control_passed": false,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "llama_cpp_import": true,
+    "llama_cpp_version": "0.3.29",
+    "offline_arcade_import_smoke": true,
+    "ok": true,
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen3_5_9b_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "spec_has_req_4557": true
+  },
+  "random_seed": 4557,
+  "refinement_rounds_used": {
+    "lp85": [],
+    "m0r0": [],
+    "sp80": [],
+    "vc33": []
+  },
+  "reproducibility_checksum": "sha256:1d29d0385f34d0b6c6a94cf8062d3663589c15e5f8be9038293e684109a48dcb",
+  "requirements": [
+    "REQ-ARC-WMTE-4557"
+  ],
+  "result_path": "results/experiment_4557_executable_world_model_proposer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST"
+  ],
+  "schema": "carnot.arc_executable_world_model_proposer_4557.v1",
+  "submitted_agent_config_before": {
+    "cascade": true,
+    "frontier_batch_size": 1,
+    "graph_explore_budget": 80,
+    "lazy_value_top_k": 4,
+    "navigation_cost_tiebreak": false,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 1,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "verifier_is_oracle": false
+}

@@ -446,6 +446,91 @@ matches the submitted E3 live-proposer configuration
 **When** the same guard runs
 **Then** it reports `proposer_config_mismatch=false` and emits no divergence.
 
+### REQ-ARC-WMTE-4557: Family-B Executable World-Model Proposer Gate
+
+Experiment 4557 SHALL rebuild the per-level LLM re-induction proposer as a
+Family-B executable Python world-model inducer. The proposer SHALL emit
+`engine(grid, action, data)` and `is_level_complete(grid)` candidates, the
+selector SHALL verify candidates against held-out transitions that were not
+included in the induction prompt, and planning SHALL run only through accepted
+GOAL+DYNAMICS candidates whose held-out executable transition score clears the
+configured verifier threshold. The bounded counterexample-guided refinement
+loop SHALL run for at most three rounds, feeding the first held-out transition
+failure or plan reachability counterexample back to the proposer before retry.
+
+Experiment 4557 SHALL run the known reachable executable-proposer positive
+control before any CORE efficiency measurement. If the positive control does
+not produce a verified executable world model and a reachable plan while the
+offline DSL has no reachable fixture plan, the experiment SHALL write
+`results/experiment_4557_executable_world_model_proposer.json` with the honest
+barrier and SHALL NOT measure or fabricate `core_efficiency_best` or
+`efficiency_delta`. Only when the positive control passes SHALL the experiment
+measure the executable proposer against the matched offline-DSL baseline on
+`lp85` and `m0r0`, report the CORE-preservation games `sp80` and `vc33`, and
+characterize `llm_proposer_value` as the count and rate of level-ups where the
+executable proposer produced a reachable plan the DSL did not.
+
+Experiment 4557 SHALL write
+`results/experiment_4557_executable_world_model_proposer.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`, `model_specs`,
+`positive_control_passed`, `false_negative_risk_checked`,
+`core_efficiency_baseline`, `core_efficiency_best`, `efficiency_delta`,
+`null_delta_methodology_note` when the delta is zero, `llm_proposer_value`,
+`deepest_level_reached_per_core_game`, `core_solves_preserved`,
+`refinement_rounds_used`, `barrier_refinement`, `verifier_is_oracle`,
+`chosen_submitted_config`, `offline_reproduced`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: executable_proposer_<game>_reached_L2_core_efficiency_<n>_above_2.0074 OR complete: executable_proposer_positive_control_<passed|failed>_<deeper|no_deeper>_barrier_refined."
+- `inference_substrate`: principle "live_llm_inference -- the Qwen3.5-9B-MTP generator is genuinely loaded + invoked (60s floor); declare it so adversarial_verify does not false-flag DURATION_TOO_SHORT."
+- `model_specs`: principle "names the generator actually invoked (Qwen3.5-9B-MTP GGUF + resolved .gguf path) -- the methodology field whose absence false-flagged the .419 A2."
+- `positive_control_passed`: principle "THE GATE -- the executable proposer must produce the known reachable fixture plan FIRST (the .420 break); an efficiency claim is invalid without it."
+- `false_negative_risk_checked`: principle "a no-deeper-level null is valid only if positive_control_passed=True (else the proposer is broken, not the idea -- the .420 uninformative-null trap)."
+- `core_efficiency_baseline`: principle "2.0074 -- the REAL per-level metric control (.420/.419 baseline, measured the SAME way)."
+- `core_efficiency_best`: principle "the HEADLINE -- did the executable proposer reach a deeper CORE level and raise core_efficiency."
+- `efficiency_delta`: principle "core_efficiency_best - baseline, emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive."
+- `null_delta_methodology_note`: principle "present when efficiency_delta==0.0 -- states the equality is an honest no-deeper-level null, not a measurement bug."
+- `llm_proposer_value`: principle "count/rate of level-ups where the executable proposer produced a REACHABLE plan the offline DSL could not -- the measured value (vs .420's count=0)."
+- `deepest_level_reached_per_core_game`: principle "best_level per CORE game per condition -- the direct score-lever evidence."
+- `core_solves_preserved`: principle "HARD empirical gate on {lp85,m0r0,sp80,vc33} -- a dropped CORE solve FAILS the lever regardless."
+- `refinement_rounds_used`: principle "the bounded counterexample-guided rounds per level-up -- proves the loop ran + bounds wall-clock."
+- `barrier_refinement`: principle "if the positive control fails or no deeper level is reached, the CONCRETE actionable refinement of what the executable proposer still gets wrong -- the deliverable on a null + the retire/.422 input."
+- `verifier_is_oracle`: principle "false -- the world-model trust energy RANKS candidate executable models by held-out generalization, oracle-DISTINCT (the LLM generates; the energy verifies)."
+- `chosen_submitted_config`: principle "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); keeps test_arc_submitted_agent_parity.py consistent."
+- `offline_reproduced`: principle "any new level must offline-reproduce (arc_solver_kit.reproduce) to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, Qwen3.5-9B-MTP cached, llama_cpp); pre-empts missing-resource fabrication."
+
+A success artifact SHALL require a CORE game to reach L2 under the executable
+proposer, `core_efficiency_best > 2.0074`, `core_solves_preserved=true`,
+`positive_control_passed=true`, `verifier_is_oracle=false`, and
+`offline_reproduced=true` for any new level before changing
+`SUBMITTED_AGENT_CONFIG` or raising `SUBMITTED_TARGET_LEVELS`. Otherwise the
+submitted configuration SHALL remain unchanged and the artifact SHALL report the
+honest barrier. If the positive control fails, `core_efficiency_best` and
+`efficiency_delta` SHALL remain unmeasured rather than being set equal to the
+baseline.
+
+#### SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST
+
+**Given** the offline arcade, Qwen3.5-9B-MTP GGUF cache, `llama_cpp`, and
+REQ-ARC-WMTE-4557 spec preconditions all pass
+**When** experiment 4557 runs the executable-proposer positive control
+**Then** CORE efficiency measurement is skipped unless the proposer emits a
+held-out-verified executable world model and a plan that reaches the fixture
+goal while the DSL control remains unreachable.
+
+**Given** a proposed executable world-model candidate reproduces the induction
+prefix but fails a held-out transition
+**When** the bounded re-induction helper evaluates candidates with the
+Family-B verifier threshold enabled
+**Then** the candidate is rejected before planning, a
+`heldout_transition_verification_failed` counterexample is recorded, and the
+proposer receives at most three total refinement rounds.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
