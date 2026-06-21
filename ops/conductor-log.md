@@ -9036,3 +9036,4 @@ c |
 | 2026-06-21 19:25 UTC | PHASE B2 (RESERVED INFRA) -- POSITIVE-CONTROL-FAIL | OK | 143 passed, 1 warning in 7.43s |
 | 2026-06-21 19:36 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.50s |
 | 2026-06-21 19:52 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 123 passed, 1 warning in 9.16s |
+| 2026-06-21 20:12 UTC | PHASE E (CAPSTONE .421) -- the scorecard: did OPER | OK | 85 passed, 1 warning in 7.96s |
