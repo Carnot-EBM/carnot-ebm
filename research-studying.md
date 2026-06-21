@@ -4174,3 +4174,27 @@ induction for reusable level predicates (arXiv:2411.17708, arXiv:2310.19791).
 
 flagged_for_v420: Family-B executable re-induction loop for each level-up, with separate GOAL-vs-dynamics candidates, adaptive behavior tests for goal-shift detection, and a bounded refinement loop around exp4533
 <!-- EXP4541-GOAL-ACQUISITION-SOTA-END -->
+
+<!-- EXP4553-LLM-INDUCER-SOTA-START -->
+## 2026-06-21 Exp 4553 - .420 LLM-inducer SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/arc-llm-inducer-sota-420.md`
+and `results/experiment_4553_sota_ingestion_llm_inducer.json`.
+
+**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
+reachability check succeeded; `scripts/sweep_clusters.py` clusters 6 and 3
+emitted focused URLs; `scripts/sweep_semscholar.py` ran four focused queries
+and returned HTTP 429 on all four, so no S2-only source was promoted. Top
+sources were verified by arXiv abs-page HTTP 200 and low-concurrency
+WebSearch/WebFetch. `/deep-research` was not invoked. No live solve, training
+run, live LLM inference, leaderboard submission, ops/status/traceability edit,
+or `scripts/research_conductor.py` edit occurred.
+
+**Methods marked ingested:** Family-B executable world-model induction
+(arXiv:2605.05138, arXiv:2603.24621), LLM-PV proposal distribution with held-out
+execution selection (arXiv:2510.14331), ALGO LLM-generated oracle verification
+(arXiv:2305.14591), ABPR procedural refinement (arXiv:2603.20334), and
+Counterexample Guided Learning (arXiv:2606.11521).
+
+flagged_for_v421: combine Family-B executable world-model induction (arXiv:2605.05138) with bounded counterexample-guided refinement (arXiv:2606.11521) inside the Exp 4544 GOAL+DYNAMICS+plan proposer
+<!-- EXP4553-LLM-INDUCER-SOTA-END -->

@@ -28231,6 +28231,83 @@ submission, solve claim, ops/status/traceability edits, or
 |---|---|---|
 | REQ-REPORT-4541 | Implemented (`python/carnot/experiment_4541_sota_ingestion_goal_acquisition.py`) | Implemented (`tests/python/test_experiment_4541_sota_ingestion_goal_acquisition.py`) |
 
+### REQ-REPORT-4553: Ingest LLM-Inducer SOTA Into The .421 Plan
+
+The Exp 4553 workflow SHALL write
+`docs/research-notes/arc-llm-inducer-sota-420.md` with a machine-readable JSON
+artifact block followed by a concise SOTA-to-experiment mapping note. It SHALL
+read `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, the A1 LLM-proposer section
+`REQ-ARC-WMTE-4544`, and
+`results/experiment_4544_llm_proposer_reinduction.json`. It SHALL filter the
+already-discovered corpus to LLM world-model induction, LLM proposal
+distributions over executable programs, verifier-guided refinement, and
+intra-episode goal-shift detection. It SHALL run the reliable channel only:
+`scripts/sweep_clusters.py 6 --max-results 8`,
+`scripts/sweep_clusters.py 3 --max-results 8`, `scripts/sweep_semscholar.py`
+on focused LLM-world-model / verifier-refinement / goal-shift queries, and
+low-concurrency WebSearch/WebFetch over five to eight top arXiv sources. It
+SHALL verify `.venv/bin/python scripts/sweep_clusters.py --help` exits zero
+and `curl -sf -o /dev/null
+https://export.arxiv.org/api/query?search_query=all:test` exits zero before
+promoting citations. It SHALL NOT invoke `/deep-research`, SHALL NOT launch
+live LLM inference, SHALL NOT launch training, SHALL NOT submit to the
+leaderboard, SHALL NOT claim a new ARC solve, SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+The required runner SHALL be
+`results/experiment_4553_sota_ingestion_llm_inducer.py` delegating to
+`python/carnot/experiment_4553_sota_ingestion_llm_inducer.py`, and the workflow
+SHALL also write `results/experiment_4553_sota_ingestion_llm_inducer.json`.
+
+The artifact SHALL include the required top-level fields `honest_verdict`,
+`inference_substrate`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `preconditions_checked`, `research_note_path`,
+`random_seed`, and `field_principles`. `honest_verdict` SHALL be
+terminal-prefixed and equal
+`complete: sota_ingestion_llm_inducer_mapped` on the complete path.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`methods_mapped` SHALL contain three to five strongest methods with real
+arXiv-backed `source_ids`, a `takes_over_current_a1_llm_proposer` field mapping
+onto the current Exp 4544 A1 LLM-proposer mechanism, and a `fails_when` caveat.
+`citations_verified` SHALL provide one verified arXiv URL and title for every
+source ID used by the method claims and SHALL include arXiv IDs from the set
+`2605.05138`, `2510.14331`, `2305.14591`, `2603.20334`, `2606.11521`, and
+`2603.24621`. `flagged_for_next_roadmap` SHALL flag the strongest `.421`
+candidate and `research-studying.md` SHALL mark the ingested methods with
+`flagged_for_v421`. `field_principles` SHALL include one-line principles for
+every top-level artifact field, including the required terminal-prefix
+`honest_verdict`, aggregation-only `inference_substrate`, verifiable-citation
+`methods_mapped` and `citations_verified`, roadmap-closing
+`flagged_for_next_roadmap`, and resource-recording `preconditions_checked`
+principles.
+
+#### SCENARIO-REPORT-4553: LLM-Inducer SOTA Maps To .421 Inputs
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, `REQ-ARC-WMTE-4544`, and the Exp 4544
+LLM-proposer re-induction artifact are readable
+**And** `scripts/sweep_clusters.py --help` and the arXiv API reachability check
+succeed
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4553 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps
+Family-B executable world-model induction, LLM-prior program proposal with
+execution selection, LLM-generated oracle verification, ABPR procedural
+refinement, counterexample-guided learning, and ARC-AGI-3 goal acquisition onto
+the current Exp 4544 A1 LLM-proposer mechanism, flags the strongest `.421`
+input, declares `aggregation_from_upstream_artifacts`, and records no
+`/deep-research`, live inference, training, leaderboard submission, solve claim,
+ops/status/traceability edits, or `scripts/research_conductor.py` edit.
+
+## Implementation Status (REQ-REPORT-4553)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4553 | Implemented (`python/carnot/experiment_4553_sota_ingestion_llm_inducer.py`) | Implemented (`tests/python/test_experiment_4553_sota_ingestion_llm_inducer.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
