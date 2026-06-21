@@ -690,6 +690,58 @@ per-level efficiency without a CORE level loss, the artifact SHALL report
 `levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
 NOT submit to the leaderboard.
 
+### REQ-ARC-WMTE-4560: Submitted A1/A2/A4 Two-Metric Integration Gate
+
+Experiment 4560 SHALL read the A1 verifier-router generic-transfer artifact
+from `results/experiment_4556_verifier_router_generic_transfer.json`, the A2
+executable world-model proposer artifact from
+`results/experiment_4557_executable_world_model_proposer.json`, and the A4
+hidden-field state probe artifact from
+`results/experiment_4559_hidden_field_state_probe.json`. The workflow SHALL
+select only levers that raise a real metric: A1 only when
+`generic_transfer_rate_with_verifier > 0.04` with a non-negative confidence
+interval and no CORE level loss, A2 only when a CORE game reaches L2 while
+`core_solves_preserved=true`, and A4 only when a newly offline-reproduced bank
+is present. An upstream artifact with `flagged_adversarial: true` SHALL be
+rejected unless its only flag is the control-equals-best null-delta tautology
+with an explicit zero delta and a non-empty null-delta methodology note; that
+exception MAY be recorded only as a valid null and SHALL NOT be treated as an
+improvement.
+
+Experiment 4560 SHALL re-measure the SUBMITTED configuration end-to-end through
+`scripts/kaggle/arc_local_submission_gate.py --check` for CORE per-level
+efficiency and through `measure_generic_transfer_over_variants` for held-out
+generic transfer. It SHALL write
+`results/experiment_4560_integration_8game_gate.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`,
+`core_efficiency_integrated`, `generic_transfer_rate_integrated`,
+`core_solves_preserved`, `levers_integrated`, `additivity_checked`,
+`heldout_solve_rate`, `ready_for_operator_submit`,
+`false_negative_risk_checked`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_generic_transfer_<n>_above_0.04_or_core_efficiency_above_2.0074 OR complete: no_lever_raises_a_metric_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated config invokes the LLM proposer in the measured run, declare live_llm_inference + add the model precondition)."
+- `core_efficiency_integrated`: principle "the SUBMITTED-config per-level efficiency after wiring winners vs baseline 2.0074."
+- `generic_transfer_rate_integrated`: principle "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04 -- the leaderboard-honest HEADLINE."
+- `core_solves_preserved`: principle "integration must preserve every CORE solve (set-containment)."
+- `levers_integrated`: principle "names which of A1/A2/A4 were wired -- traceable to their measured deltas; [] is an honest null."
+- `additivity_checked`: principle "integrated metric vs the naive sum of isolated A1/A2/A4 deltas -- surfaces a destructive interaction instead of burying it."
+- `heldout_solve_rate`: principle "the real transfer signal; integration should not regress it."
+- `ready_for_operator_submit`: principle "True if the integrated config is a CORE-preserved improvement on either metric worth a 1/day submission slot; the task NEVER submits (operator-only)."
+- `false_negative_risk_checked`: principle "an honest null is only valid with both baselines measured the same way."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL require at least one accepted A1/A2/A4 lever,
+`core_solves_preserved=true`, and either
+`generic_transfer_rate_integrated > 0.04` or
+`core_efficiency_integrated > 2.0074`. If no lever raises either metric, the
+artifact SHALL report `complete: no_lever_raises_a_metric_honest_null`, keep
+`levers_integrated=[]`, keep the submitted configuration unchanged, and SHALL
+NOT submit to the leaderboard.
+
 ### REQ-ARC-WMTE-4537: Reusable Per-Level Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the per-level re-induction loop from experiment
@@ -1147,6 +1199,20 @@ submitted default, CORE solve preservation and held-out solve rate are reported,
 and the artifact uses `complete: no_lever_raises_core_efficiency_honest_null`
 unless the submitted configuration strictly raises CORE per-level efficiency
 above `2.0074` with an accepted A1/A4 lever.
+
+### SCENARIO-ARC-WMTE-4560: A1/A2/A4 Integration Reports The Honest Two-Metric Null
+
+Given A1's verifier-router artifact is flagged with zero generic-transfer
+delta, A2's executable proposer artifact has no CORE L2 reproduction, and A4's
+hidden-field state probe reports no new bank
+When experiment 4560 selects integration levers, runs the 8-game per-level gate,
+and re-measures generic transfer over variants
+Then no lever is wired, both `core_efficiency_integrated` and
+`generic_transfer_rate_integrated` are reported against the `2.0074` and `0.04`
+baselines, CORE solve preservation and held-out solve rate are reported, and
+the artifact uses `complete: no_lever_raises_a_metric_honest_null` unless the
+integrated SUBMITTED configuration strictly raises either metric with an
+accepted A1/A2/A4 lever.
 
 ### SCENARIO-ARC-WMTE-4525: Standing Loop Bank Persists One Reproduced Level
 
