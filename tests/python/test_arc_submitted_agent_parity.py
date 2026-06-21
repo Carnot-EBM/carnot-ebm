@@ -49,6 +49,19 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert exp.target_levels == 1
 
 
+def test_req_arc_wmte_4548_null_a1_a4_levers_are_not_submitted_by_default():
+    """REQ-ARC-WMTE-4548: null A1/A4 levers stay off the submitted path."""
+    pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+    exp = pol.explorer
+
+    assert SUBMITTED_AGENT_CONFIG["target_levels"] == 1
+    assert exp.target_levels == 1
+    assert exp.frame_change_scorer is None
+    assert exp.frame_change_prune_threshold is None
+    assert exp.action_prior is None
+    assert exp.action_prior_prune_quantile is None
+
+
 def test_wired_flags_reflect_actual_imports():
     """REQ-REPORT-4475-LIVE-STACK: shipped config declares real router/DSL imports."""
     # router_wired / world_model_dsl_wired must match whether the modules are ACTUALLY referenced in the
