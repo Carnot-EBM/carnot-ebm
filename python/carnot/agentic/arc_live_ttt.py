@@ -43,6 +43,95 @@ import numpy as np
 
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 
+N_COLORS = 16  # ARC grids use colours 0-15
+
+
+class CNNDynamics:
+    """A small fully-convolutional, ACTION-CONDITIONED grid->grid dynamics model, learned ONLINE from
+    played transitions on CPU in seconds. Drop-in L1 replacement for ObjectDeltaModel (same fit/predict
+    contract) for games whose mechanics the fixed rule class cannot express (the rule learner scored 0%
+    on state-CHANGING transitions in arc_ttt_validate). A CNN can fit ARBITRARY LOCAL change rules
+    (gravity, growth, click-spread, recolour-by-neighbour) from the ~120 transitions a probe gathers.
+
+    Encoding (per transition): input = [16 colour one-hot] + [1 click-location mask at (y,x)] +
+    [7 keyboard/action one-hot broadcast] = 24 channels at the grid's native H x W (fully-convolutional,
+    so any grid size works). Target = the next grid's per-cell colour index. Trained with per-cell
+    cross-entropy; predict = argmax per cell. Oracle-DISTINCT (a learned net, not the executable oracle).
+    torch is imported LAZILY so the rule-only path needs no torch."""
+
+    def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48) -> None:
+        self.game = game
+        self.epochs = int(epochs)
+        self.lr = float(lr)
+        self.hidden = int(hidden)
+        self._net: Any = None
+        self._shape: Optional[tuple] = None  # (H, W) the net was trained at
+
+    @staticmethod
+    def _click_xy(akey: tuple) -> Optional[tuple]:
+        return (int(akey[1]), int(akey[2])) if len(akey) == 3 and int(akey[0]) == 6 else None
+
+    def _encode(self, grid: np.ndarray, akey: tuple, torch: Any) -> Any:
+        g = np.clip(np.asarray(grid).astype(np.int64), 0, N_COLORS - 1)
+        h, w = g.shape
+        chans = torch.zeros((N_COLORS + 1 + 7, h, w), dtype=torch.float32)
+        # colour one-hot
+        gt = torch.from_numpy(g)
+        chans[:N_COLORS].scatter_(0, gt.unsqueeze(0), 1.0)
+        xy = self._click_xy(akey)
+        if xy is not None:
+            x, y = xy
+            if 0 <= y < h and 0 <= x < w:
+                chans[N_COLORS, y, x] = 1.0           # click-location mask
+        aid = int(akey[0])
+        if 1 <= aid <= 7:
+            chans[N_COLORS + aid] = 1.0               # action one-hot broadcast (index N_COLORS+1 .. +7)
+        return chans
+
+    def _build_net(self, torch: Any) -> Any:
+        nn = torch.nn
+        c_in = N_COLORS + 1 + 7
+        return nn.Sequential(
+            nn.Conv2d(c_in, self.hidden, 3, padding=1), nn.ReLU(),
+            nn.Conv2d(self.hidden, self.hidden, 3, padding=1), nn.ReLU(),
+            nn.Conv2d(self.hidden, N_COLORS, 3, padding=1),  # -> per-cell colour logits
+        )
+
+    def fit(self, transitions) -> "CNNDynamics":
+        """transitions: iterable of (s_grid, akey, s2_grid). Trains the net on CPU (fast for small grids)."""
+        import torch
+
+        items = [(np.asarray(s), tuple(a), np.asarray(s2)) for s, a, s2 in transitions]
+        items = [t for t in items if t[0].shape == t[2].shape and t[0].ndim == 2]
+        if not items:
+            return self
+        self._shape = items[0][0].shape
+        items = [t for t in items if t[0].shape == self._shape]  # one net per grid shape (per-game = fixed)
+        torch.manual_seed(0)
+        net = self._build_net(torch)
+        X = torch.stack([self._encode(s, a, torch) for s, a, _ in items])
+        Y = torch.stack([torch.from_numpy(np.clip(s2.astype(np.int64), 0, N_COLORS - 1)) for _, _, s2 in items])
+        opt = torch.optim.Adam(net.parameters(), lr=self.lr)
+        loss_fn = torch.nn.CrossEntropyLoss()
+        net.train()
+        for _ in range(self.epochs):
+            opt.zero_grad()
+            loss = loss_fn(net(X), Y)  # net(X): [B,16,H,W]; Y: [B,H,W]
+            loss.backward()
+            opt.step()
+        net.eval()
+        self._net = net
+        return self
+
+    def predict(self, s_grid, akey: tuple) -> np.ndarray:
+        if self._net is None or np.asarray(s_grid).shape != self._shape:
+            return np.asarray(s_grid)  # untrained / wrong shape -> identity (never crash the planner)
+        import torch
+
+        with torch.no_grad():
+            logits = self._net(self._encode(s_grid, tuple(akey), torch).unsqueeze(0))  # [1,16,H,W]
+            return logits.argmax(dim=1).squeeze(0).cpu().numpy().astype(np.asarray(s_grid).dtype)
+
 
 def action_key(action_id: int, data: Any) -> tuple:
     """Canonical action key: ``(6, x, y)`` for a click with coords, else ``(action_id,)``. Mirrors
@@ -56,16 +145,24 @@ class LiveTTTWorldModel:
     """A per-game world model learned from played transitions, exposing the engine + win predicate the
     existing ``plan_in_model`` BFS and ``WorldModelVerifier`` consume."""
 
-    def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16) -> None:
+    def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16,
+                 dynamics_backend: str = "dsl") -> None:
         self.game = game
         self.refit_every = int(refit_every)
         self.min_transitions = int(min_transitions)
+        # 'dsl' = ObjectDeltaModel rule learner (fast, zero-train, but a fixed hypothesis class);
+        # 'cnn' = CNNDynamics learned net (fits arbitrary local rules, the make-or-break test for games
+        # the rule class can't express). Both expose .fit(transitions)/.predict(grid, akey).
+        self.dynamics_backend = dynamics_backend
         self._l0: dict[tuple, np.ndarray] = {}        # (grid.tobytes(), akey) -> next_grid (exact backbone)
-        self._dsl_transitions: list[tuple] = []       # (s, akey, s2) feed for ObjectDeltaModel.fit
+        self._dsl_transitions: list[tuple] = []       # (s, akey, s2) feed for the L1 learner
         self._win_states: set[bytes] = set()          # next_grid bytes observed at a level-up
-        self._l1: Optional[ObjectDeltaModel] = None
+        self._l1: Any = None
         self._last_refit = -1
         self._refits = 0
+
+    def _new_l1(self) -> Any:
+        return CNNDynamics(self.game) if self.dynamics_backend == "cnn" else ObjectDeltaModel(self.game)
 
     # --- learning from play (FREE compute; NOT rate-limited) ----------------------------------------
     def observe(self, grid: Any, action: int, data: Any, next_grid: Any,
@@ -90,7 +187,7 @@ class LiveTTTWorldModel:
             return False
         if len(self._dsl_transitions) < self.min_transitions:
             return False
-        self._l1 = ObjectDeltaModel(self.game).fit(self._dsl_transitions)
+        self._l1 = self._new_l1().fit(self._dsl_transitions)
         self._last_refit = step_idx
         self._refits += 1
         return True
@@ -98,7 +195,7 @@ class LiveTTTWorldModel:
     def fit_now(self) -> "LiveTTTWorldModel":
         """Force an immediate L1 fit on all accumulated transitions (offline-harness convenience)."""
         if self._dsl_transitions:
-            self._l1 = ObjectDeltaModel(self.game).fit(self._dsl_transitions)
+            self._l1 = self._new_l1().fit(self._dsl_transitions)
             self._refits += 1
         return self
 

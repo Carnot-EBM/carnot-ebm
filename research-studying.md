@@ -4198,3 +4198,28 @@ Counterexample Guided Learning (arXiv:2606.11521).
 
 flagged_for_v421: combine Family-B executable world-model induction (arXiv:2605.05138) with bounded counterexample-guided refinement (arXiv:2606.11521) inside the Exp 4544 GOAL+DYNAMICS+plan proposer
 <!-- EXP4553-LLM-INDUCER-SOTA-END -->
+
+<!-- EXP4565-VERIFIER-ROUTER-SOTA-START -->
+## 2026-06-21 Exp 4565 - .421 verifier-router SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-router-421-2026-06-21.md`
+and `results/experiment_4565_sota_ingestion_verifier_router.json`.
+
+**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
+reachability check succeeded; `scripts/sweep_clusters.py` clusters 0 and 6
+emitted focused URLs; `scripts/sweep_semscholar.py` ran five focused queries
+and returned HTTP 429 on all five, so no S2-only source was promoted. Top
+sources were verified by arXiv abs-page HTTP 200 and low-concurrency
+WebSearch/WebFetch. `/deep-research` was not invoked. No live solve, training
+run, live LLM inference, leaderboard submission, ops/status/traceability edit,
+or `scripts/research_conductor.py` edit occurred.
+
+**Methods marked ingested:** self-evolving verifiable-reward RL for cross-game
+verifier transfer (arXiv:2601.22607, arXiv:2505.24760), adaptive PRM-guided
+candidate expansion (arXiv:2602.01070), budget-aware discriminative
+verification (arXiv:2510.14913), CASCAL / IR3DE generated-data routing
+(arXiv:2601.09692, arXiv:2606.06098), and executable world-model plus
+counterexample-guided repair (arXiv:2605.05138, arXiv:2606.11521).
+
+flagged_for_v422: adaptive PRM-guided candidate expansion over the Exp 4556 DiscriminativeVerifier, trained and refreshed with self-evolving verifiable-reward data (arXiv:2602.01070 + arXiv:2601.22607)
+<!-- EXP4565-VERIFIER-ROUTER-SOTA-END -->

@@ -38,7 +38,7 @@ HELDOUT_FRAC = 0.25
 N_COLLECT = 160
 
 
-def validate_game(game: str) -> dict:
+def validate_game(game: str, backend: str = "dsl") -> dict:
     from carnot.agentic.arc_executable_world_model import (
         WorldModelVerifier, collect_transitions, load_engine, plan_in_model,
     )
@@ -55,13 +55,21 @@ def validate_game(game: str) -> dict:
     k = max(2, int(len(transitions) * HELDOUT_FRAC))
     train, held = transitions[:-k], transitions[-k:]
 
-    learned = LiveTTTWorldModel(game)
+    learned = LiveTTTWorldModel(game, dynamics_backend=backend)
     for t in train:
         learned.observe_transition(t)
     learned.fit_now()
 
-    out: dict = {"game": game, "n_train": len(train), "n_heldout": len(held)}
+    out: dict = {"game": game, "backend": backend, "n_train": len(train), "n_heldout": len(held)}
     out["learned_heldout_accuracy"] = round(learned.trust(held), 4)
+    # the LOAD-BEARING metric: accuracy on state-CHANGING held-out transitions (the dsl rule learner
+    # scored 0% here -- no-ops inflate the overall number). This is what the neural backend must lift.
+    import numpy as np
+    chg = [t for t in held if not np.array_equal(t.grid, t.next_grid)]
+    ok_chg = sum(1 for t in chg
+                 if np.array_equal(np.asarray(learned.engine(t.grid, t.action, t.data)), t.next_grid))
+    out["n_changing_heldout"] = len(chg)
+    out["acc_on_changing"] = round(ok_chg / max(1, len(chg)), 4)
     try:  # the frozen-9B-induced engine, if one was written for this game
         eng, _ = load_engine(game)
         out["llm_heldout_accuracy"] = round(float(WorldModelVerifier(held).score(eng).accuracy), 4)
@@ -69,7 +77,7 @@ def validate_game(game: str) -> dict:
         out["llm_heldout_accuracy"] = None
 
     # planning inside the learned model (meaningful only if a win-state was observed in the probe)
-    full = LiveTTTWorldModel(game)
+    full = LiveTTTWorldModel(game, dynamics_backend=backend)
     for t in transitions:
         full.observe_transition(t)
     full.fit_now()
@@ -88,8 +96,9 @@ def validate_game(game: str) -> dict:
 
 
 def main(argv: list[str]) -> int:
-    games = [a for a in argv if not a.startswith("-")] or DEFAULT_GAMES
-    rows = [validate_game(g) for g in games]
+    backend = argv[argv.index("--backend") + 1] if "--backend" in argv else "dsl"
+    games = [a for a in argv if not a.startswith("-") and a != backend] or DEFAULT_GAMES
+    rows = [validate_game(g, backend=backend) for g in games]
     scored = [r for r in rows if "learned_heldout_accuracy" in r]
     passed = [r for r in scored if r.get("gate_pass")]
     beats = [r for r in scored if r.get("learned_beats_llm")]
@@ -99,10 +108,10 @@ def main(argv: list[str]) -> int:
         if "error" in r:
             print(f"  {r['game']:5} ERROR {r['error']}", flush=True)
         else:
-            print(f"  {r['game']:5} learned={r['learned_heldout_accuracy']:.3f} "
-                  f"llm={r['llm_heldout_accuracy']} win_states={r['n_win_states']} "
-                  f"plan={'Y' if r['plan_found'] else 'n'} gate={'PASS' if r['gate_pass'] else 'fail'}",
-                  flush=True)
+            print(f"  {r['game']:5} [{r.get('backend')}] learned={r['learned_heldout_accuracy']:.3f} "
+                  f"acc_on_changing={r.get('acc_on_changing')} ({r.get('n_changing_heldout')}) "
+                  f"llm={r['llm_heldout_accuracy']} plan={'Y' if r['plan_found'] else 'n'} "
+                  f"gate={'PASS' if r['gate_pass'] else 'fail'}", flush=True)
 
     out = {
         "experiment": "arc_ttt_validate",
