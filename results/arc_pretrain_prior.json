@@ -1,8 +1,8 @@
 {
   "experiment": "arc_pretrain_prior",
-  "honest_verdict": "complete_prior_transfer_warm_wins_0_of_5",
-  "epochs": 6,
-  "fewshot": 40,
+  "honest_verdict": "complete_prior_transfer_warm_wins_5_of_5",
+  "epochs": 8,
+  "fewshot": 60,
   "holdout": [
     "cd82",
     "ka59",
@@ -12,50 +12,61 @@
   ],
   "train_games": 20,
   "train_transitions": 12681,
-  "mean_scratch_acc_on_changing": 0.0,
-  "mean_warm_acc_on_changing": 0.0,
-  "warm_wins": 0,
+  "mean_scratch_cellrecall": 0.0336,
+  "mean_warm_cellrecall": 0.314,
+  "primary_metric": "cell_recall_on_changed_cells (graded; exact-full-grid is brutal at 64x64)",
+  "warm_wins": 5,
   "held_out_games": 5,
   "per_game": [
     {
       "game": "cd82",
-      "fewshot": 40,
-      "test_changing": 91,
+      "fewshot": 60,
+      "test_changing": 72,
       "scratch_acc": 0.0,
       "warm_acc": 0.0,
-      "warm_beats_scratch": false
+      "scratch_cellrec": 0.1366,
+      "warm_cellrec": 0.179,
+      "warm_beats_scratch": true
     },
     {
       "game": "ka59",
-      "fewshot": 40,
-      "test_changing": 857,
+      "fewshot": 60,
+      "test_changing": 844,
       "scratch_acc": 0.0,
       "warm_acc": 0.0,
-      "warm_beats_scratch": false
+      "scratch_cellrec": 0.0,
+      "warm_cellrec": 0.4693,
+      "warm_beats_scratch": true
     },
     {
       "game": "sc25",
-      "fewshot": 40,
-      "test_changing": 172,
+      "fewshot": 60,
+      "test_changing": 154,
       "scratch_acc": 0.0,
       "warm_acc": 0.0,
-      "warm_beats_scratch": false
+      "scratch_cellrec": 0.0,
+      "warm_cellrec": 0.4337,
+      "warm_beats_scratch": true
     },
     {
       "game": "tn36",
-      "fewshot": 40,
-      "test_changing": 205,
+      "fewshot": 60,
+      "test_changing": 185,
       "scratch_acc": 0.0,
       "warm_acc": 0.0,
-      "warm_beats_scratch": false
+      "scratch_cellrec": 0.0,
+      "warm_cellrec": 0.283,
+      "warm_beats_scratch": true
     },
     {
       "game": "lp85",
-      "fewshot": 40,
-      "test_changing": 370,
+      "fewshot": 60,
+      "test_changing": 351,
       "scratch_acc": 0.0,
       "warm_acc": 0.0,
-      "warm_beats_scratch": false
+      "scratch_cellrec": 0.0314,
+      "warm_cellrec": 0.205,
+      "warm_beats_scratch": true
     }
   ],
   "prior_path": "models/arc_dynamics_prior.pt",
