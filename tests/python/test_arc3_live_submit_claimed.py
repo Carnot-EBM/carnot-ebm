@@ -92,3 +92,29 @@ def test_scenario_livesubmit_4_caps_to_flat_replay_depth(monkeypatch) -> None:
     assert claimed == {"sc25": 1, "tn36": 7}  # sc25 capped 5 -> 1
     assert info["uncapped_package_total"] == 12 and info["capped_total"] == 8
     assert info["capped"] == [{"game": "sc25", "package_levels": 5, "offline_reached": 1}]
+
+
+def test_scenario_livesubmit_5_uses_package_trajectory_path_and_offline_cap(monkeypatch) -> None:
+    """SCENARIO-LIVESUBMIT-5: refreshed package trajectory_path rows are loadable without metaharness maps."""
+    drv = _load_driver()
+    monkeypatch.setattr(drv, "_latest_package", lambda: {"path": "pkg4580.json", "manifest": [
+        {
+            "game": "ft09",
+            "env_matched": True,
+            "levels": 1,
+            "trajectory_path": "results/arc3_live_banked_trajectories/ft09.json",
+            "offline_reproduced_level": 1,
+        },
+        {
+            "game": "lp85",
+            "env_matched": True,
+            "levels": 5,
+            "trajectory_path": "results/arc3_live_banked_trajectories/lp85.json",
+            "offline_reproduced_level": 4,
+        },
+    ]})
+    monkeypatch.setattr(drv, "_offline_reached", lambda: {"lp85": 1})
+    claimed, info = drv._build_claimed(_FakeMH(set()))
+    assert claimed == {"ft09": 1, "lp85": 4}
+    assert info["trajectory_sources"]["ft09"] == "results/arc3_live_banked_trajectories/ft09.json"
+    assert info["capped"] == [{"game": "lp85", "package_levels": 5, "offline_reached": 4}]
