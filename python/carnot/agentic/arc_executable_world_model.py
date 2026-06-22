@@ -141,6 +141,12 @@ class VerifyResult:
     accuracy: float
     mismatches: list[dict] = field(default_factory=list)
     error: Optional[str] = None
+    # GRADED companion to `accuracy` (which is exact-FULL-GRID match): mean changed-cell recall over the
+    # state-CHANGING transitions. Exact-match reads ~0 for an imperfect (e.g. LLM-induced or learned) world
+    # model that is still ~55% changed-cell-accurate, so it gates EVERY such model out of execution-grounded
+    # planning -- the single root cause of the 0.08 wall (docs/research-notes/arc-008-wall-root-cause-2026-06-21.md).
+    # cell_recall is the granularity-matched gate the coordinated redesign turns on via CARNOT_ARC_TRUST_METRIC.
+    cell_recall: float = 0.0
 
 
 class WorldModelVerifier:
@@ -156,6 +162,7 @@ class WorldModelVerifier:
         self, engine: Callable[[np.ndarray, int, Optional[dict]], np.ndarray], max_mismatch: int = 8
     ) -> VerifyResult:
         n_correct, mism = 0, []
+        cell_recalls: list[float] = []   # per-CHANGED-transition fraction of changed cells predicted right
         for i, t in enumerate(self.transitions):
             try:
                 pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
@@ -163,6 +170,14 @@ class WorldModelVerifier:
                 if len(mism) < max_mismatch:
                     mism.append({"i": i, "action": t.action, "error": repr(e)[:160]})
                 continue
+            # graded changed-cell recall (granularity-matched gate); only state-changing transitions count
+            changed = not np.array_equal(t.grid, t.next_grid)
+            if changed:
+                if pred.shape == t.next_grid.shape:
+                    m = t.grid != t.next_grid
+                    cell_recalls.append(float((pred[m] == t.next_grid[m]).mean()))
+                else:
+                    cell_recalls.append(0.0)
             if pred.shape == t.next_grid.shape and np.array_equal(pred, t.next_grid):
                 n_correct += 1
             elif len(mism) < max_mismatch:
@@ -181,7 +196,8 @@ class WorldModelVerifier:
                     }
                 )
         n = len(self.transitions)
-        return VerifyResult(n, n_correct, n_correct / max(1, n), mism)
+        cell_recall = float(np.mean(cell_recalls)) if cell_recalls else 0.0
+        return VerifyResult(n, n_correct, n_correct / max(1, n), mism, cell_recall=cell_recall)
 
 
 def load_engine(game: str):

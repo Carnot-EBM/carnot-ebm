@@ -1452,8 +1452,19 @@ class E3AgentPolicy:
                 engine = self.world_model_trust_selection.selected.engine
                 is_done = self.world_model_trust_selection.selected.is_level_complete or is_done
             else:
+                import os
                 vr = e3.WorldModelVerifier(active_transitions).score(engine)
-                if vr.accuracy < 0.5:  # too weak to trust for execution-grounded planning
+                # CARNOT_ARC_TRUST_METRIC=cell_recall gates on GRADED changed-cell recall instead of the
+                # exact-FULL-GRID match (the coordinated-redesign lever for the 0.08 wall: exact-match reads
+                # ~0 for an imperfect-but-useful induced model and gates it out -> the induce->plan path is a
+                # no-op). Default 'exact' preserves the submitted behavior + the parity test. Both metrics are
+                # recorded on the attempt for diagnosis regardless of which one gates.
+                _metric = os.environ.get("CARNOT_ARC_TRUST_METRIC", "exact")
+                _gate_value = vr.cell_recall if _metric == "cell_recall" else vr.accuracy
+                attempt["verify_accuracy"] = round(vr.accuracy, 4)
+                attempt["verify_cell_recall"] = round(vr.cell_recall, 4)
+                attempt["trust_metric"] = _metric
+                if _gate_value < 0.5:  # too weak to trust for execution-grounded planning
                     attempt["skipped"] = "world_model_accuracy_below_threshold"
                     return
             self._install_goal_bias(is_done)
