@@ -143,6 +143,23 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             selector_tags=("graph_explore", "astar", "action_cost", "keyboard", "click"),
         ),
         PrimitiveOperator(
+            operator="approach_dispatcher_operator",
+            derived_from_games=("exp4592_generation_completeness_wiring",),
+            purpose=(
+                "Execute the mechanic-class route by selecting the generated candidate for "
+                "the routed toolkit approach, while falling back honestly when no routed "
+                "candidate exists."
+            ),
+            selector_tags=(
+                "approach_dispatch",
+                "mechanic_router",
+                "candidate_generation",
+                "graph_explore",
+                "goal_distance",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -276,6 +293,7 @@ def select_primitive_operators(
         or gid == "sc25"
     ):
         names = (
+            "approach_dispatcher_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -294,6 +312,7 @@ def select_primitive_operators(
         or gid == "sb26"
     ):
         names = (
+            "approach_dispatcher_operator",
             "color_match_slot_sequence_verifier",
             "config_rule_verifier",
             "object_centric_digest",
@@ -308,12 +327,14 @@ def select_primitive_operators(
         or gid == "re86"
     ):
         names = (
+            "approach_dispatcher_operator",
             "sprite_overlay_resize_verifier",
             "object_centric_digest",
             "graph_astar_action_cost",
         )
     elif "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
         names = (
+            "approach_dispatcher_operator",
             "glyph_rewrite_rule_verifier",
             "glyph_rewrite_matcher",
             "per_level_reinduction_operator",
@@ -326,6 +347,7 @@ def select_primitive_operators(
         )
     elif "config" in mechanic or "toggle" in mechanic or "constraint" in mechanic:
         names = (
+            "approach_dispatcher_operator",
             "config_rule_verifier",
             "config_rule_grounding",
             "per_level_reinduction_operator",
@@ -338,6 +360,7 @@ def select_primitive_operators(
         )
     elif "program_editor" in mechanic:
         names = (
+            "approach_dispatcher_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -357,6 +380,7 @@ def select_primitive_operators(
         or "e3" in mechanic
     ):
         names = (
+            "approach_dispatcher_operator",
             "object_motion_world_model",
             "active_data_collection",
             "object_centric_digest",
@@ -364,6 +388,7 @@ def select_primitive_operators(
         )
     elif "keyboard" in action or "click" in action or "graph" in mechanic:
         names = (
+            "approach_dispatcher_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -374,6 +399,7 @@ def select_primitive_operators(
         )
     else:
         names = (
+            "approach_dispatcher_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -415,6 +441,123 @@ def _candidate_score(candidate: Any, score_key: str) -> float:
         except (TypeError, ValueError):
             return 0.0
     return 0.0
+
+
+def _candidate_truthy(candidate: Any, key: str) -> bool:
+    value = _candidate_field(candidate, key)
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int | float):
+        return bool(value)
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "win", "won", "solved", "reproduced"}
+    return False
+
+
+def _candidate_approach(candidate: Any) -> str:
+    for key in ("approach", "selected_approach", "executed_approach", "route", "operator"):
+        value = _candidate_field(candidate, key)
+        if value:
+            return str(value)
+    return ""
+
+
+def _candidate_public_dict(candidate: Any) -> dict[str, Any]:
+    if isinstance(candidate, Mapping):
+        return dict(candidate)
+    data = getattr(candidate, "__dict__", None)
+    return dict(data) if isinstance(data, Mapping) else {"repr": repr(candidate)}
+
+
+def _candidate_generated(candidate: Any) -> bool:
+    if _candidate_truthy(candidate, "candidate_generated"):
+        return True
+    if _candidate_reaches_dispatch_win(candidate):
+        return True
+    return bool(_candidate_field(candidate, "solution_labels") or _candidate_field(candidate, "labels"))
+
+
+def _candidate_reaches_dispatch_win(candidate: Any) -> bool:
+    if any(
+        _candidate_truthy(candidate, key)
+        for key in ("winner_generated", "win_reached", "solved", "offline_reproduced")
+    ):
+        return True
+    gate = _candidate_field(candidate, "reproduction_gate")
+    if isinstance(gate, Mapping) and gate.get("reproduced") is True:
+        try:
+            reached = int(gate.get("reached_level") or 0)
+            claimed = int(gate.get("claimed_level") or reached)
+        except (TypeError, ValueError):
+            return True
+        return reached >= max(1, claimed)
+    return False
+
+
+def approach_dispatcher_operator(
+    route: Mapping[str, Any] | None,
+    candidates: Sequence[Any] | Mapping[str, Any],
+    *,
+    baseline_approach: str = "default_graph_explore",
+) -> dict[str, Any]:
+    """REQ-CAPSTONE-4596: execute a routed approach over generated candidates."""
+
+    route_map = route if isinstance(route, Mapping) else {}
+    selected_approach = str(route_map.get("approach") or baseline_approach)
+    if isinstance(candidates, Mapping):
+        candidate_rows: list[Any] = list(candidates.values())
+    else:
+        candidate_rows = list(candidates or [])
+
+    baseline = next(
+        (
+            candidate
+            for candidate in candidate_rows
+            if _candidate_approach(candidate) == baseline_approach
+        ),
+        None,
+    )
+    routed = next(
+        (
+            candidate
+            for candidate in candidate_rows
+            if _candidate_approach(candidate) == selected_approach and _candidate_generated(candidate)
+        ),
+        None,
+    )
+    selected = routed if routed is not None else baseline
+    executed_approach = _candidate_approach(selected) if selected is not None else ""
+    baseline_winner = bool(baseline is not None and _candidate_reaches_dispatch_win(baseline))
+    selected_winner = bool(selected is not None and _candidate_reaches_dispatch_win(selected))
+    selected_generated = bool(selected is not None and _candidate_generated(selected))
+    value_added = bool(routed is not None and selected_winner and not baseline_winner)
+
+    if routed is None:
+        dead_end = f"no generated candidate for routed approach {selected_approach}"
+    elif not selected_winner:
+        dead_end = "dispatched candidate generated a proposal, but the verifier gate did not reach a win"
+    elif baseline_winner:
+        dead_end = "baseline approach already generated the winning candidate"
+    else:
+        dead_end = ""
+
+    return {
+        "operator": "approach_dispatcher_operator",
+        "mechanic_class": str(route_map.get("mechanic_class") or ""),
+        "selected_approach": selected_approach,
+        "executed_approach": executed_approach or baseline_approach,
+        "baseline_approach": baseline_approach,
+        "candidate_count": len(candidate_rows),
+        "candidate_generated": selected_generated,
+        "winner_generated": selected_winner,
+        "win_reached": selected_winner,
+        "baseline_winner_generated": baseline_winner,
+        "value_added": value_added,
+        "selected_candidate": _candidate_public_dict(selected) if selected is not None else None,
+        "baseline_candidate": _candidate_public_dict(baseline) if baseline is not None else None,
+        "dead_end": dead_end,
+        "verifier_is_oracle": False,
+    }
 
 
 def _effect_row_field(row: Any, key: str, default: Any = None) -> Any:

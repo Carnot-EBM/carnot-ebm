@@ -190,6 +190,50 @@ general_gotchas:
     residual_dead_end: Transfer value is drift-recovery over cached symbolic click
       labels; no new executable level was banked, so reproducible_total_levels is
       unchanged.
+- id: primitive_approach_dispatcher_operator
+  operator: approach_dispatcher_operator
+  derived_from_games:
+  - exp4592_generation_completeness_wiring
+  note: >-
+    Exp 4596 persists the A1 approach-dispatcher as reusable live-solver
+    scaffolding: take the mechanic-class route from early-play routing, select
+    and execute the generated candidate for the routed toolkit approach, keep
+    the no-wiring default_graph_explore candidate as the fallback/control, and
+    report winner-generated or win-reached value only after verifier/reproduce
+    evidence. This is candidate-generation/selection wiring, not a win oracle;
+    new levels still count only through arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - A routed approach with no generated candidate remains a candidate-generation
+      null; the dispatcher cannot promote a winner that was never proposed.
+  - Existing reproduced candidates can demonstrate cross-game selection value,
+      but they do not increment reproducible_total_levels unless this run banks
+      a strictly new offline-reproduced level.
+  latest_exp4596_transfer:
+    artifact: results/experiment_4596_primitive_persist_transfer.json
+    transfer_games:
+    - ar25
+    - cn04
+    - dc22
+    transfer_value_per_game:
+      ar25:
+        winner_generated: true
+        win_reached: true
+        existing_reproduced_level: 2
+        offline_reproduced_new_level: false
+      cn04:
+        winner_generated: true
+        win_reached: true
+        existing_reproduced_level: 2
+        offline_reproduced_new_level: false
+      dc22:
+        winner_generated: true
+        win_reached: true
+        existing_reproduced_level: 1
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is dispatcher selection over cached
+      verifier/reproduction-gated candidates; no new executable level was
+      banked, so reproducible_total_levels is unchanged.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
