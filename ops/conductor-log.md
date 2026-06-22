@@ -9064,3 +9064,4 @@ c |
 | 2026-06-22 10:51 UTC | PHASE B2 (RESERVED INFRA) -- OFFLINE-ARC-SUBSTRATE | OK | 120 passed, 1 warning in 7.17s |
 | 2026-06-22 11:02 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.52s |
 | 2026-06-22 11:16 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 103 passed, 1 warning in 5.92s |
+| 2026-06-22 11:39 UTC | PHASE E (CAPSTONE .423) -- the scorecard: did clos | OK | 87 passed, 1 warning in 7.83s |
