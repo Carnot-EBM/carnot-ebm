@@ -323,6 +323,91 @@ def _is_identifier_field(k: str) -> bool:
     return kl.endswith("_seed") or kl.endswith("_id") or kl.endswith("_seed_used")
 
 
+# Reference fields name a KNOWN PRIOR baseline (not this experiment's fresh
+# outcome); arithmetic-derived fields name a FUNCTION of other reported fields
+# (a delta = treatment - baseline). Neither is an INDEPENDENT measurement, so
+# their coincidence — two names for the same baseline, two related baselines that
+# share a starting reference, or a delta equal to its own baseline (which happens
+# whenever treatment == 2*baseline) — is structural arithmetic, not the "two
+# DISTINCT measured metrics agree to >5 sig figs" signal a fabrication TAUTOLOGY
+# is meant to catch. This mirrors the _is_identifier_field carve-out.
+#
+# SAFETY (adversarial review 2026-06-22): matching is SUFFIX-ANCHORED (not bare
+# substring) so it cannot collide with measured outcomes whose names merely
+# contain "reference"/"diff"/"change" (e.g. `n_referenced_artifacts`,
+# `all_spins_different`, `ops_changelog_modified`). And a `*_delta` field is
+# treated as derived ONLY IF its value is VERIFIED to equal the difference of two
+# other present fields that SHARE its metric stem — so a fabricator cannot escape
+# quarantine merely by NAMING two distinct copied outcomes `accuracy_delta` /
+# `auroc_delta` (those have no backing arithmetic and stay CRITICAL).
+_DELTA_SUFFIXES = ("_delta", "_diff", "_change")
+
+
+def _is_reference_field(k: str) -> bool:
+    """True if the field names a KNOWN PRIOR baseline/reference. Suffix-anchored
+    to avoid substring collisions with measured outcomes."""
+    kl = k.lower()
+    return (
+        kl in ("baseline", "reference", "ref")
+        or kl.endswith(("_baseline", "_reference", "_ref"))
+        or "_baseline_" in kl
+        or "_reference_" in kl
+    )
+
+
+def _delta_stem(k: str) -> str | None:
+    """If k names a delta/diff/change, return the metric STEM it should derive
+    from (text before the delta token); '' for a bare `delta`; None otherwise."""
+    kl = k.lower()
+    if kl in ("delta", "diff", "change"):
+        return ""
+    for suf in _DELTA_SUFFIXES:
+        if kl.endswith(suf):
+            return kl[: -len(suf)]
+        marker = suf + "_"  # infix, e.g. accuracy_delta_vs_self_consistency
+        if marker in kl:
+            return kl.split(marker, 1)[0]
+    return None
+
+
+def _is_verified_arithmetic_delta(k: str, v: Any, d: dict[str, Any]) -> bool:
+    """True if k is a delta/diff/change field whose value EQUALS the difference of
+    two other present numeric fields that SHARE its metric stem — i.e. a genuinely
+    DERIVED quantity, not an independent measurement merely NAMED like a delta.
+    Null deltas (==0) are out of scope here (handled by the honest-null carve-out).
+    The stem-binding + arithmetic check closes the fabrication hole where two
+    distinct copied outcomes are named `*_delta` to dodge quarantine."""
+    stem = _delta_stem(k)
+    if stem is None or not _is_finite_number(v):
+        return False
+    target = abs(float(v))
+    if target <= 1e-12:
+        return False
+    operands = [
+        float(x)
+        for kk, x in d.items()
+        if _is_finite_number(x)
+        and kk.lower() != k.lower()
+        and (stem == "" or stem in kk.lower())
+    ]
+    for i in range(len(operands)):
+        for j in range(len(operands)):
+            if i == j:
+                continue
+            a, b = operands[i], operands[j]
+            tol = max(1e-9, 1e-6 * max(abs(a), abs(b), 1.0))
+            if abs(abs(a - b) - target) <= tol:
+                return True
+    return False
+
+
+def _is_structural_nonmeasurement(k: str, v: Any, d: dict[str, Any]) -> bool:
+    """True if k is a baseline/reference OR a VERIFIED arithmetic delta — a field
+    that is not an independent fresh measurement, so its coincidence with another
+    such field is structural arithmetic rather than a fabrication TAUTOLOGY."""
+    return _is_reference_field(k) or _is_verified_arithmetic_delta(k, v, d)
+
+
 _POSITIVE_CONTROL_NULL_VERDICT_MARKERS = (
     "honest_null",
     "null",
@@ -913,18 +998,47 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         ):
             continue
         if _significant_digits_match(v1, v2, TAUTOLOGY_DIGITS):
-            flags.append(
-                Flag(
-                    kind="TAUTOLOGY",
-                    severity="critical",
-                    detail=(
-                        f"{k1}={v1!r} and {k2}={v2!r} agree to "
-                        f">{TAUTOLOGY_DIGITS} sig figs. Two distinct "
-                        f"metrics matching this precisely is more likely "
-                        f"a bug than a finding."
-                    ),
+            # Baseline-identity carve-out: when BOTH sides are baseline/reference
+            # or arithmetic-derived (delta) fields, the agreement is structural
+            # arithmetic (the same baseline reported twice, or a delta collapsing
+            # onto its baseline when treatment == 2*baseline), NOT two distinct
+            # measured metrics coinciding. Downgrade CRITICAL -> annotated WARN so
+            # the artifact is NOT quarantined but the coincidence is still
+            # surfaced for audit. Two distinct OUTCOME metrics agreeing stays
+            # CRITICAL. Origin: exp4592 (.424 generation-completeness, a GENUINE
+            # winner_generated 1/25->2/25 positive) was quarantined by 11
+            # TAUTOLOGY flags, ~all the 0.04 baseline/delta arithmetic cascade
+            # (baseline=0.04=1/25, treatment=0.08=2/25, delta=0.08-0.04=0.04).
+            if _is_structural_nonmeasurement(k1, v1, d) and _is_structural_nonmeasurement(
+                k2, v2, d
+            ):
+                flags.append(
+                    Flag(
+                        kind="TAUTOLOGY",
+                        severity="warn",
+                        detail=(
+                            f"{k1}={v1!r} and {k2}={v2!r} agree, but BOTH are "
+                            f"baseline/reference or VERIFIED arithmetic-derived "
+                            f"(delta) fields, not independent measurements — "
+                            f"structural arithmetic, not a coincidence between two "
+                            f"distinct measured metrics. Downgraded CRITICAL->WARN "
+                            f"(baseline-identity carve-out)."
+                        ),
+                    )
                 )
-            )
+            else:
+                flags.append(
+                    Flag(
+                        kind="TAUTOLOGY",
+                        severity="critical",
+                        detail=(
+                            f"{k1}={v1!r} and {k2}={v2!r} agree to "
+                            f">{TAUTOLOGY_DIGITS} sig figs. Two distinct "
+                            f"metrics matching this precisely is more likely "
+                            f"a bug than a finding."
+                        ),
+                    )
+                )
 
 
 def _legitimate_pair(k1: str, k2: str) -> bool:
