@@ -67,6 +67,15 @@ def _hash(frame):
         return None
 
 
+def _ok(frame) -> bool:
+    """True if the frame has a usable 2-D grid (rich_action_candidates/object digest
+    crash on degenerate frames — guard every candidate-gen call with this)."""
+    try:
+        return np.asarray(grid_of(frame)).ndim == 2
+    except Exception:
+        return False
+
+
 # ---- evaluation: replay a genome on a fresh deterministic offline env ----
 def _new_env(game: str):
     arc = kit.offline_arcade()
@@ -120,7 +129,7 @@ def seed_rollout(game: str, max_len: int, rng: random.Random) -> dict:
     distinct = {prev_h}
     changed = 0
     for i in range(max_len):
-        cands = rich_action_candidates(f) if f is not None else []
+        cands = rich_action_candidates(f) if (f is not None and _ok(f)) else []
         if not cands:
             break
         for c in cands[:12]:
@@ -147,6 +156,71 @@ def seed_rollout(game: str, max_len: int, rng: random.Random) -> dict:
         "won": reached > start, "n_distinct": len(distinct),
         "frame_change_count": changed, "len": len(genome), "hashes": hashes,
     }
+
+
+# ---- Go-Explore return-then-explore seeding (the crossover-enabling seeder) ----
+def go_explore_seed(game: str, seed_budget: int, explore_steps: int, rng: random.Random) -> dict:
+    """Build a Go-Explore archive (return to an archived state, THEN explore) and return its
+    cell trajectories as seed genomes. Unlike independent random rollouts, these genomes form a
+    TREE rooted at reset, so many SHARE early visited states -> the crossover-at-shared-hash
+    operator can actually fire (the diagnosed reason the random-seeded QD nulled). Returns the
+    seed genomes + the first win found while building the archive (if any)."""
+    env = _new_env(game)
+    f0 = _warm(env, False)
+    start = _level(f0)
+    h0 = _hash(f0)
+    archive: dict = {h0: {"labels": [], "visits": 0, "depth": 0}}  # cell_hash -> reach trajectory
+    steps = 0
+    won_genome = None
+    while steps < seed_budget and archive:
+        # SELECT: weight under-visited + deeper (frontier) cells higher
+        keys = list(archive.keys())
+        weights = [1.0 / (1 + archive[k]["visits"]) * (1.0 + 0.15 * archive[k]["depth"]) for k in keys]
+        tot = sum(weights) or 1.0
+        r = rng.random() * tot
+        acc = 0.0
+        chosen = keys[-1]
+        for k, w in zip(keys, weights):
+            acc += w
+            if acc >= r:
+                chosen = k
+                break
+        archive[chosen]["visits"] += 1
+        # RETURN: reset and replay to the chosen cell
+        f = _warm(env, False)
+        for lab in archive[chosen]["labels"]:
+            if steps >= seed_budget:
+                break
+            f = _apply(env, lab, f)
+            steps += 1
+            if f is None:
+                break
+        if f is None or not _ok(f):
+            continue
+        # EXPLORE: salient-with-randomization actions from the cell, archiving each NEW state
+        labels = list(archive[chosen]["labels"])
+        for _ in range(explore_steps):
+            if steps >= seed_budget:
+                break
+            cands = rich_action_candidates(f) if (f is not None and _ok(f)) else []
+            if not cands:
+                break
+            c = cands[0] if rng.random() < 0.5 else cands[rng.randrange(min(len(cands), 8))]
+            lab = _label(int(c.action_id), c.data)
+            nf = _apply(env, lab, f)
+            steps += 1
+            if nf is None:
+                break
+            labels = labels + [lab]
+            f = nf
+            if _level(f) > start and won_genome is None:
+                won_genome = list(labels)
+            h = _hash(f)
+            if h is not None and h not in archive:
+                archive[h] = {"labels": list(labels), "visits": 0, "depth": len(labels)}
+    genomes = [e["labels"] for e in archive.values() if e["labels"]]
+    return {"genomes": genomes, "archive_cells": len(archive), "steps": steps,
+            "won_genome": won_genome, "start_level": start}
 
 
 # ---- energy-as-fitness (perception-independent dense signal) ----
@@ -219,56 +293,85 @@ def bfs_baseline(game: str, max_expansions: int) -> dict:
 
 
 # ---- the QD run for one game ----
-def qd_solve(game: str, budget: int, n_seeds: int, seed_len: int, rng: random.Random) -> dict:
+def qd_solve(game: str, budget: int, seed_budget: int, explore_steps: int, seeding: str,
+             n_seeds: int, seed_len: int, rng: random.Random) -> dict:
     archive: dict[tuple, dict] = {}   # descriptor -> {fitness, genome, rollout}
     vocab: set[str] = set()
     steps_used = 0
     best_won = None
+    win_provenance = None
 
-    def consider(genome: list[str], r: dict):
-        nonlocal best_won
+    def consider(genome: list[str], r: dict, source: str) -> bool:
+        nonlocal best_won, win_provenance
         cell = descriptor(r)
         fit = genome_fitness(r)
         cur = archive.get(cell)
-        if cur is None or fit > cur["fitness"]:
+        improved = cur is None or fit > cur["fitness"]
+        if improved:
             archive[cell] = {"fitness": fit, "genome": genome, "rollout": r}
         if r["won"] and best_won is None:
             best_won = {"genome": genome, "reached_level": r["reached_level"], "len": r["len"]}
+            win_provenance = source
+        return improved
 
-    # 1) seed from real exploration
-    for _ in range(n_seeds):
-        if steps_used >= budget:
-            break
-        s = seed_rollout(game, seed_len, rng)
-        steps_used += max(1, s["len"])
-        vocab |= s["vocab"]
-        consider(s["genome"], {k: s[k] for k in
-                               ("start_level", "reached_level", "won", "n_distinct",
-                                "frame_change_count", "len", "hashes")})
+    # 1) SEED — Go-Explore (return-then-explore: genomes share states -> crossover can fire) or random
+    if seeding == "go_explore":
+        seed = go_explore_seed(game, seed_budget, explore_steps, rng)
+        steps_used += seed["steps"]
+        for g in seed["genomes"]:
+            vocab.update(g)
+            consider(g, rollout(game, g), "seed_go_explore")
+        if seed["won_genome"] is not None and best_won is None:
+            consider(seed["won_genome"], rollout(game, seed["won_genome"]), "seed_go_explore")
+    else:  # random independent rollouts (the prior, crossover-starved seeding)
+        for _ in range(n_seeds):
+            if steps_used >= seed_budget:
+                break
+            s = seed_rollout(game, seed_len, rng)
+            steps_used += max(1, s["len"])
+            vocab |= s["vocab"]
+            consider(s["genome"], {k: s[k] for k in
+                     ("start_level", "reached_level", "won", "n_distinct",
+                      "frame_change_count", "len", "hashes")}, "seed_random")
     vocab_l = sorted(vocab)
-    generations = 0
 
-    # 2) evolve: mutation + crossover, MAP-Elites insertion, until budget
+    # 2) EVOLVE — mutation + crossover, MAP-Elites insertion, with fire-rate instrumentation
+    generations = 0
+    xover = {"attempts": 0, "fired": 0, "improved": 0, "won": 0}
+    mut = {"attempts": 0, "improved": 0, "won": 0}
     while steps_used < budget and archive and best_won is None:
         generations += 1
         cells = list(archive.values())
-        if rng.random() < 0.5 and len(cells) >= 2:   # crossover (the non-AR operator)
+        use_xover = rng.random() < 0.5 and len(cells) >= 2
+        if use_xover:
+            xover["attempts"] += 1
             a, b = rng.sample(cells, 2)
             child = crossover(a["genome"], a["rollout"]["hashes"],
                               b["genome"], b["rollout"]["hashes"], rng)
-        else:                                          # mutation
+            if child:
+                xover["fired"] += 1   # a shared visited-state was found and spliced
+        else:
+            mut["attempts"] += 1
             p = cells[rng.randrange(len(cells))]
             child = mutate(p["genome"], vocab_l, rng)
         if not child:
             continue
         r = rollout(game, child)
         steps_used += max(1, r["len"])
-        consider(child, r)
+        won_before = best_won is not None
+        improved = consider(child, r, "crossover" if use_xover else "mutation")
+        bucket = xover if use_xover else mut
+        bucket["improved"] += int(improved)
+        if best_won is not None and not won_before:
+            bucket["won"] += 1
 
     return {
         "game": game, "steps_used": steps_used, "generations": generations,
         "archive_size": len(archive), "vocab_size": len(vocab_l),
-        "best_won": best_won, "seeded_won": any(c["rollout"]["won"] for c in archive.values()),
+        "best_won": best_won, "win_provenance": win_provenance,
+        "seeded_won": any(c["rollout"]["won"] for c in archive.values()),
+        "crossover": xover, "mutation": mut,
+        "crossover_fire_rate": round(xover["fired"] / xover["attempts"], 3) if xover["attempts"] else None,
     }
 
 
@@ -276,10 +379,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--games", type=str, default="ls20,tu93,wa30")
     ap.add_argument("--budget", type=int, default=8000, help="total env steps per game (QD and BFS matched)")
-    ap.add_argument("--seeds", type=int, default=40)
-    ap.add_argument("--seed-len", type=int, default=40)
+    ap.add_argument("--seeding", choices=["go_explore", "random"], default="go_explore",
+                    help="go_explore (return-then-explore: genomes share states -> crossover fires) vs random")
+    ap.add_argument("--seed-budget", type=int, default=0, help="env steps for seeding (0 -> budget//2)")
+    ap.add_argument("--explore-steps", type=int, default=25, help="Go-Explore explore depth per return")
+    ap.add_argument("--seeds", type=int, default=40, help="(random seeding only) number of seed rollouts")
+    ap.add_argument("--seed-len", type=int, default=40, help="(random seeding only) seed rollout length")
     ap.add_argument("--seed", type=int, default=20260622)
     args = ap.parse_args()
+    seed_budget = args.seed_budget or (args.budget // 2)
     t0 = time.time()
     games = [g.strip() for g in args.games.split(",") if g.strip()]
 
@@ -287,7 +395,8 @@ def main() -> int:
     for game in games:
         rng = random.Random(args.seed + hash(game) % 9999)
         t1 = time.time()
-        qd = qd_solve(game, args.budget, args.seeds, args.seed_len, rng)
+        qd = qd_solve(game, args.budget, seed_budget, args.explore_steps, args.seeding,
+                      args.seeds, args.seed_len, rng)
         # match BFS budget to QD's total env steps (expansions ~ env steps)
         bfs = bfs_baseline(game, max_expansions=max(qd["steps_used"], args.budget))
         qd_won = qd["best_won"] is not None
@@ -305,15 +414,19 @@ def main() -> int:
             "bfs_won": bfs["won"], "bfs_offline_reproduced": bfs["offline_reproduced"],
             "bfs_reached_level": bfs["reached_level"],
             "qd_generates_where_bfs_does_not": bool(qd_repro and not bfs["offline_reproduced"]),
+            "win_provenance": qd["win_provenance"],
+            "crossover_fire_rate": qd["crossover_fire_rate"],
+            "crossover": qd["crossover"], "mutation": qd["mutation"],
             "steps_used": qd["steps_used"], "generations": qd["generations"],
             "archive_size": qd["archive_size"], "vocab_size": qd["vocab_size"],
             "secs": round(time.time() - t1, 1),
         }
         rows.append(row)
-        print(f"  [{game}] qd_won={qd_won} repro={qd_repro} (L{row['qd_reached_level']}) "
-              f"| bfs_won={bfs['won']} repro={bfs['offline_reproduced']} (L{bfs['reached_level']}) "
-              f"| QD>BFS={row['qd_generates_where_bfs_does_not']} "
-              f"gens={qd['generations']} arch={qd['archive_size']} [{row['secs']}s]", flush=True)
+        print(f"  [{game}] qd_won={qd_won} repro={qd_repro} (L{row['qd_reached_level']}, "
+              f"via {qd['win_provenance']}) | bfs_won={bfs['won']} repro={bfs['offline_reproduced']} "
+              f"(L{bfs['reached_level']}) | QD>BFS={row['qd_generates_where_bfs_does_not']} "
+              f"| xover_fire={qd['crossover_fire_rate']} ({qd['crossover']['fired']}/{qd['crossover']['attempts']}) "
+              f"arch={qd['archive_size']} gens={qd['generations']} [{row['secs']}s]", flush=True)
 
     n_qd_only = sum(1 for r in rows if r["qd_generates_where_bfs_does_not"])
     n_qd_repro = sum(1 for r in rows if r["qd_offline_reproduced"])
@@ -333,6 +446,7 @@ def main() -> int:
         "inference_substrate": "offline_arc_search",
         "random_seed": args.seed,
         "budget_env_steps_per_game": args.budget,
+        "seeding": args.seeding, "seed_budget": seed_budget, "explore_steps": args.explore_steps,
         "games": games,
         "n_games_qd_generates_above_bfs": n_qd_only,
         "n_games_qd_reproduced": n_qd_repro,
