@@ -908,21 +908,25 @@ all adversarial-verify clean), write-up
   0 false-blocks) let `plan_in_model` plan an 18-action L1 path ENTIRELY IN IMAGINATION, execute it, and
   level up — **fresh-env reproduced** (`experiment_program_gen_tu93.json`). This is the first demonstration
   on our stack of planning a level we never real-env-searched for.
-- **Deepening to L2 is HIDDEN-STATE bound**, NOT planner-bound or fidelity-bound. The model planned an
-  8-action L2 path; execution matched reality move-for-move for 3–4 steps then hit env GAME-OVER at a
-  RUN-DEPENDENT step — the signature of tu93's documented non-idempotent-reset parity (registry `tu93`
-  gotcha #7). A pure grid→grid model can't represent the hidden parity. tu93 ∈ wa30/ls20 family; ties to
-  `experiment_8`'s wa30 ~53% observed-state nondeterminism. This is the SAME hidden-state wall the value
-  approach (value_q_head v5/v6) hit, now named precisely.
+- **Deepening to L2 fails as a MODEL-GENERALIZATION failure** (the L2 mechanic differs), NOT planner-bound,
+  NOT fidelity-bound, and NOT hidden-state/parity. (An earlier draft mislabeled this "hidden-state bound";
+  an adversarial review reading the `tu93.py` env source refuted it and an independent re-measure confirmed.)
+  The L2 plan dies at a DETERMINISTIC step (3 in 4/4 fresh-env trials) with the move budget UNEXHAUSTED
+  (50/50) — which rules OUT the non-idempotent-reset parity (run-dependent) and rules OUT budget exhaustion.
+  L2 introduces a different mechanic (sprite pixel-validation + rotation state machine that calls `lose()`),
+  so the L1-induced blocking rule plans an L2-fatal move. The harness now DIAGNOSES this empirically
+  (`diagnose_deepening_stall`: death-step determinism + budget over fresh-env replays) rather than asserting.
 - **Existing E3 models don't generalize:** ka59 (genuine engine, cell-recall 0.43 — too noisy for BFS to
   plan even L1) and sc25 (`PATCH_BY_KEY` memorized table, off-table cell-recall 0.06) both reached L0 in
   imagination. Induction fidelity is the precondition the local/codex proposers don't yet reach on these
   games; a careful hand-induction does.
-- **Forward for `.425+`:** (a) the energy/config state for the wa30/ls20/tu93 family MUST carry the hidden
-  parity/budget LATENT dimension (the energy-config-space directive can't be grid-only on this family);
-  (b) fresh-env-per-candidate branch search in imagination is the registry's own deepening fix (don't reuse
-  one env across the chain); (c) target the local-GGUF proposer at induction fidelity (the gate that
-  blocked ka59/sc25). The hand-induced tu93 nav model is a reusable faithful-model exemplar for the family.
+- **Forward for `.425+`:** (a) the deepening loop should treat a deterministic + budget-unexhausted env
+  game-over after a level-up as a RE-INDUCTION TRIGGER (the level's mechanic shifted; collect fresh L2
+  transitions and re-fit — exactly the per-mechanic cost the leader pays), with a predicted≠observed
+  divergence detector as the cheap trip-wire; (b) the energy-config-space should be MECHANIC-CONDITIONED
+  (allow the transition/energy to switch at a level boundary), not a single global model spanning all
+  levels; (c) target the local-GGUF proposer at induction fidelity (the gate that blocked ka59/sc25). The
+  hand-induced tu93 nav model is a reusable faithful-L1-model exemplar.
 
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 

@@ -24,7 +24,7 @@ Three games, two arms:
 |---|---|---|---|---|---|
 | **ka59** | existing E3 (genuine logic engine) | 0.19 / 0.43 | L0 (0 actions) | L0 | engine too noisy for BFS to plan even L1 |
 | **sc25** | existing E3 (`PATCH_BY_KEY` table) | 0.41 / **0.06** | L0 (1 action) | L0 | a memorized replay table, not a generalizing model |
-| **tu93** | **hand-induced** (this swing) | 0.00 / 0.32* | **L1 (18-action imagination plan)** | **L1 (fresh-env)** | lever works at L1; deepening is HIDDEN-STATE bound |
+| **tu93** | **hand-induced** (this swing) | 0.00 / 0.32* | **L1 (18-action imagination plan)** | **L1 (fresh-env)** | lever works at L1; L2 mechanic differs (model doesn't generalize) |
 
 \* tu93 cell-recall is dragged down by the unmodeled move-counter strip (a 1-cell tick per blocked move);
 on the avatar-MOVE transitions the hand-induced engine is **100% accurate** (99/99 moves, 101/101 blocks,
@@ -44,31 +44,47 @@ IMAGINATION (zero real actions spent searching), executed it in the real env, an
 by the fresh-env reproduction gate.** The lever is real: a verified world model lets us plan a level we
 never searched for in the real env.
 
-## Where it walls: HIDDEN ENV STATE, not the planner or local fidelity
+## Where it walls: the L2 MECHANIC DIFFERS (model-generalization failure), not the planner or local fidelity
+
+> **Correction (2026-06-22, post adversarial review).** An earlier version of this note claimed the L2 wall
+> was tu93's "non-idempotent-reset hidden parity." A hostile review read the actual `tu93.py` env source and
+> refuted it; an independent re-measurement confirmed the refutation. The corrected finding is below.
 
 Deepening to L2 stalls. The model planned an 8-action L2 path; execution matched reality move-for-move for
-3–4 steps and then the env hit **game-over** — at a step that is RUN-DEPENDENT (step 3 "after match" one
-run, step 4 "after divergence" the next). That run-to-run variation IS the signature of tu93's documented
-**non-idempotent-reset hidden parity** (registry `tu93` gotcha #7: "env.reset() leaves a parity-toggling
-hidden state"). A pure grid→grid world model cannot represent that parity, so an L2 plan computed from the
-visible grid walks into a parity-contingent game-over.
+the first steps and then the env hit **game-over at a DETERMINISTIC step** (step 3 in **4/4** fresh-env
+trials), with the **move budget unexhausted** (50 steps, only ~3 used — and the env source shows the
+counter near-full at the stall). Determinism *rules out* the non-idempotent-reset parity gotcha (#7), which
+produces *run-dependent* outcomes; budget-fullness rules out move-exhaustion. The real cause, confirmed
+against the env source: **L2 introduces a different move mechanic** — new colours plus a sprite
+pixel-buffer move-validation and a multi-phase rotation state machine that calls `lose()` on an invalid
+arrangement (`tu93.py`). The L1-induced blocking rule (colour-5 in the swept gap) is not L2's rule, so BFS
+plans a move that is fatal under L2.
 
-This is the same CLASS of wall the value approach hit, named precisely: **deepening on this game family is
-HIDDEN-STATE bound.** tu93 is in the wa30/ls20 family (registry), and `experiment_8` independently found
-wa30 ~53% observed-state nondeterminism. The bottleneck for program-generalization here is modeling the
-hidden state, NOT the planner (BFS found the plan) and NOT local transition fidelity (100% accurate).
+So the wall here is **NOT** the value approach's gradient wall, and NOT hidden state — it is a clean
+**model-generalization failure: tu93's levels are not mechanically identical.** This is the precise cost the
+Executable-World-Models lever pays: a single induction deepens *only across levels that share the mechanic*;
+when the mechanic shifts, the model must be re-induced. The bottleneck for program-generalization here is
+**per-level mechanic re-induction (detecting the shift and re-fitting)**, NOT the planner (BFS found the
+plan) and NOT local L1 fidelity (100% accurate on L1 moves).
 
 ## Forward levers (for the energy-config-space direction)
 
-1. **The energy/config state must include LATENT env state, not just the visible grid.** The operator's
-   energy-config-space directive — refine an energy over each game's config space — must carry the hidden
-   parity/budget dimension for the wa30/ls20/tu93 family, or imagination-planning diverges at depth.
-2. **Fresh-env-per-candidate branch search in imagination** (the registry's own fix that got tu93 L3 to
-   reproduce) is the planner-side workaround: don't reuse one env across the deepening chain.
+1. **Detect the level-boundary mechanic shift and RE-INDUCE.** The model is correct within a mechanic and
+   walls at the boundary. The deepening loop should treat a deterministic, budget-unexhausted env game-over
+   after a level-up as a *re-induction trigger* (collect fresh L2 transitions, re-fit), exactly as the
+   leader pays per mechanic. A divergence detector (predicted ≠ observed on a non-fatal step) is the cheap
+   trip-wire.
+2. **The energy/config space should be MECHANIC-CONDITIONED, not global.** The operator's energy-config-space
+   directive — refine an energy over each game's config space — must allow the energy/transition to switch
+   when the level's mechanic switches (tu93 L1 nav ≠ L2 rotation-validated nav), rather than assuming one
+   model spans all levels.
 3. **Induction fidelity gates everything.** The two pre-existing E3 models could not plan even L1 (ka59 too
    noisy, sc25 memorized). A faithful model is the precondition; our local/codex inductions don't yet reach
    it on these games, while a careful hand-induction does. This is the concrete target for the local-GGUF
    proposer.
+4. **(Separately) the non-idempotent-reset parity is real but is a DIFFERENT problem** — it bit the *real*
+   solver's reuse-one-env branch search (registry gotcha #7, fixed via fresh-env-per-candidate). It is not
+   what walls this imagination-planning L2 attempt.
 
 ## Artifacts
 

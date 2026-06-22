@@ -1,6 +1,12 @@
 # Carnot — Changelog
 
-## 2026-06-22 (Program-generalization first swing: imagination-planning DEEPENS L1, walls on hidden state — outer-loop, interactive)
+## 2026-06-22 (Program-generalization first swing: imagination-planning DEEPENS L1, walls on L2 mechanic-shift — outer-loop, interactive)
+
+> Correction note: this entry was revised after an adversarial sub-agent review (and an independent
+> re-measure) refuted the first draft's "walls on hidden state" framing. The L2 wall is a deterministic
+> model-generalization failure (the L2 mechanic differs), NOT non-idempotent-reset parity and NOT budget
+> exhaustion. Corrected throughout below.
+
 
 Operator: "take a first swing at the program-generalization direction" (the leaderboard-leader deepening
 lever, Executable World Models arXiv:2605.05138 — induce a `transition+goal` model, plan in imagination
@@ -16,19 +22,21 @@ instead of stumbling into deeper levels via real-env search). REUSED the existin
   accuracy** = 99/99 moves, 101/101 blocks, 0 false-blocks). `plan_in_model` planned an 18-action L1 path
   ENTIRELY IN IMAGINATION, executed it, leveled up — **fresh-env reproduced**
   (`experiment_program_gen_tu93.json`).
-- **Deepening to L2 is HIDDEN-STATE bound**, not planner- or fidelity-bound. The L2 plan matched reality
-  move-for-move for 3–4 steps then hit env GAME-OVER at a RUN-DEPENDENT step — the signature of tu93's
-  documented non-idempotent-reset parity (registry `tu93` gotcha #7). A pure grid→grid model can't carry
-  the hidden parity. Same hidden-state wall the value approach (value_q_head v5/v6) hit; tu93 ∈ wa30/ls20
-  family, ties to `experiment_8`'s wa30 ~53% nondeterminism.
+- **Deepening to L2 fails as a MODEL-GENERALIZATION failure** (the L2 mechanic differs), not planner-,
+  fidelity-, hidden-state-, or budget-bound. The L2 plan dies at a DETERMINISTIC step (3 in 4/4 fresh-env
+  trials) with budget UNEXHAUSTED (50/50) — ruling out the run-dependent non-idempotent-reset parity AND
+  move-exhaustion. L2 adds a different mechanic (sprite pixel-validation + rotation state machine calling
+  `lose()`), so the L1-induced blocking rule plans an L2-fatal move. The harness now DIAGNOSES the cause
+  empirically (`diagnose_deepening_stall`) rather than asserting it.
 - **Existing E3 models don't generalize:** ka59 (genuine engine, cell-recall 0.43 — too noisy for BFS to
   plan even L1) and sc25 (`PATCH_BY_KEY` memorized table, off-table cell-recall 0.06) both reached only L0
   in imagination. Induction fidelity is the precondition; local/codex proposers don't yet reach it, a
   careful hand-induction does.
-- **Forward (`.425+`, folded into known-issues):** the energy/config state for the wa30/ls20/tu93 family
-  must carry the hidden parity/budget LATENT dimension (grid-only energy diverges at depth);
-  fresh-env-per-candidate branch search is the registry's deepening fix; aim the local-GGUF proposer at
-  induction fidelity. Conductor left STOPPED (per operator's earlier fold-not-restart choice). Committed `[outer-loop]`.
+- **Forward (`.425+`, folded into known-issues):** treat a deterministic + budget-unexhausted env
+  game-over after a level-up as a RE-INDUCTION TRIGGER (per-mechanic re-fit, the leader's cost); make the
+  energy-config-space MECHANIC-CONDITIONED (switch transition/energy at a level boundary), not one global
+  model; aim the local-GGUF proposer at induction fidelity. Conductor left STOPPED (per operator's earlier
+  fold-not-restart choice). Committed `[outer-loop]`.
 
 ## 2026-06-22 (Verifier-as-Q-head: learned dense value validated per-level (7.6x) — outer-loop, interactive)
 
