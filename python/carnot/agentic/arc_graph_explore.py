@@ -233,6 +233,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                            prefix: Optional[list] = None,
                            mask_hud: bool = False,
                            heuristic=None, heuristic_weight: float = 1.0,
+                           expansion_priority=None,
                            candidate_router=None,
                            stats: Optional[dict] = None
                            ) -> tuple[Optional[list], int]:
@@ -259,6 +260,11 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     This is the plug-in slot for an LLM-written / captured gap-fill heuristic
     (scripts/arc_gap_fill.py, python/carnot/agentic/gap_fills/). When None, the search
     is byte-for-byte the original pure-BFS (no regression to the proven solves).
+
+    `expansion_priority` is the generic REQ-CAPSTONE-4569 hook: a learned frontier-node
+    scorer (lower = expand earlier). It uses the same bounded best-first queue as
+    `heuristic`, but is named for the verifier-guided expansion use case to keep it
+    distinct from action candidate re-ranking.
     """
     from collections import deque
     from arcengine import GameAction
@@ -302,9 +308,12 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
         if stats is not None:
             stats["expansions"] = expansions
             stats["states"] = len(states)
+            stats["max_expansions"] = int(max_expansions)
         return traj, lvl
 
-    if heuristic is None:
+    priority_scorer = expansion_priority if expansion_priority is not None else heuristic
+
+    if priority_scorer is None:
         # --- pure BFS (UNCHANGED from the original; preserves the proven 8/11 solves) ---
         frontier = deque([h0])          # BFS order ⇒ shortest path first
         while frontier and expansions < max_expansions:
@@ -343,7 +352,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
 
     def _h(frame) -> float:
         try:
-            return heuristic_weight * float(heuristic(frame))
+            return heuristic_weight * float(priority_scorer(frame))
         except Exception:
             return 1e9                   # a broken heuristic must never crash the search
 
