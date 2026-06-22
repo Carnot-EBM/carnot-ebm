@@ -1,0 +1,43 @@
+{
+  "experiment": "experiment_value_q_head",
+  "honest_verdict": "success: learned_cnn_value_routes_better_than_blind_q_head_foundation_validated",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search_plus_cpu_cnn_train",
+  "random_seed": 99,
+  "games": [
+    "ls20"
+  ],
+  "budget": 3000,
+  "n_games_value_routes_better": 1,
+  "n_games_value_discriminates": 1,
+  "prior_finding": "linear head over hand-features CANNOT route (arc_offline_to_live_bridge_v2); this tests the CNN",
+  "rows": [
+    {
+      "game": "ls20",
+      "n_win_rollouts": 1,
+      "n_states": 56,
+      "value_discriminates": true,
+      "near_win_value_mean": 59.49,
+      "off_path_value_mean": 60.14,
+      "train_loss": 13.33,
+      "learned": {
+        "won": true,
+        "reached_level": 1,
+        "offline_reproduced": true,
+        "expansions": 1553,
+        "actions": 13
+      },
+      "blind": {
+        "won": true,
+        "reached_level": 1,
+        "offline_reproduced": true,
+        "expansions": 1777,
+        "actions": 13
+      },
+      "value_routes_better_than_blind": true,
+      "expansion_speedup": 1.14,
+      "secs": 49.0
+    }
+  ],
+  "duration_s": 49.0
+}
