@@ -22,6 +22,7 @@ if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
     sys.path.insert(0, str(REPO_ROOT))
 
 from carnot import experiment_4550_honest_sprint_metric as exp4550  # noqa: E402
+from carnot import live_submittable_metrics  # noqa: E402
 
 
 JsonDict = dict[str, Any]
@@ -156,6 +157,63 @@ def _honest_verdict(precondition_miss: str | None) -> str:
     if precondition_miss:
         return f"complete: action_efficiency_coheadline_partial_{precondition_miss}"
     return "shipped: action_efficiency_coheadline_with_ci_wired"
+
+
+def _existing_b1_artifact(root: Path) -> JsonDict:
+    path = root / RESULT_RELATIVE_PATH
+    try:
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):  # pragma: no cover - defensive file boundary
+        return {}
+    return loaded if isinstance(loaded, dict) else {}  # pragma: no cover - defensive file boundary
+
+
+def build_live_submittable_coheadline_metrics(
+    root: Path | str = REPO_ROOT,
+    *,
+    registry: Mapping[str, Any] | None = None,
+    package: Mapping[str, Any] | None = None,
+    package_path: str | None = None,
+    b1_artifact: Mapping[str, Any] | None = None,
+) -> JsonDict:
+    """REQ-CAPSTONE-4586: report all co-headline metrics side-by-side."""
+
+    root_path = Path(root)
+    live = live_submittable_metrics.compute_live_submittable_metrics(
+        root_path,
+        registry=registry,
+        package=package,
+        package_path=package_path,
+    )
+    b1 = dict(b1_artifact or _existing_b1_artifact(root_path) or build_artifact(root_path))
+    return {
+        "reported_side_by_side": [
+            "reproducible_total_levels",
+            "live_submittable_level_count",
+            "reproducible_vs_submittable_gap",
+            "generic_transfer_rate_over_variants",
+            "generic_transfer_ci",
+            "action_efficiency_score",
+            "action_efficiency_ci",
+        ],
+        "reproducible_total_levels": live["reproducible_total_levels"],
+        "live_submittable_level_count": live["live_submittable_level_count"],
+        "reproducible_vs_submittable_gap": live["reproducible_vs_submittable_gap"],
+        "generic_transfer_rate_over_variants": b1.get("generic_transfer_rate_over_variants"),
+        "generic_transfer_ci": b1.get("generic_transfer_ci"),
+        "action_efficiency_score": b1.get("action_efficiency_score"),
+        "action_efficiency_ci": b1.get("action_efficiency_ci"),
+        "median_actions_to_first_levelup": b1.get("median_actions_to_first_levelup"),
+        "human_baseline_actions": b1.get("human_baseline_actions"),
+        "live_submittable_subset_of_reproducible": live[
+            "live_submittable_subset_of_reproducible"
+        ],
+        "refreshed_package_path": live["refreshed_package_path"],
+        "capstone_function": (
+            "carnot.experiment_4574_action_efficiency_coheadline."
+            "build_live_submittable_coheadline_metrics"
+        ),
+    }
 
 
 def build_artifact(
