@@ -1,0 +1,117 @@
+{
+  "attempts": [
+    {
+      "game": "ka59",
+      "offline_reproduced": false,
+      "reached_level": 1,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual": "ka59_l2_not_reproduced_after_step_counter_state_key",
+      "solution_labels": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ],
+      "states_expanded": 83,
+      "target_level": 2
+    }
+  ],
+  "experiment": "experiment_4571_hidden_field_state_probe_ka59",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "false_negative_risk_checked": "a no-bank null is valid only if the disambiguation positive control passed.",
+    "hidden_fields_added": "the ka59 StepCounter register added to the state_key (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE.",
+    "honest_verdict": "terminal prefix; success: hidden_field_state_ka59_L2_offline_reproduced OR complete: hidden_field_state_ka59_gap_sharpened_no_bank_honest_null.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load (1s floor).",
+    "missing_verifier_gaps": "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry.",
+    "offline_reproduced": "only offline-reproduced new levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the ka59 hidden-field findings + dead-ends persisted so the next attempt reuses.",
+    "reproduced_levels": "the integer new-level count banked this task.",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "state_disambiguation_control_passed": "THE GATE-FIRST POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; a no-bank null is valid only if this passed (else the change is a no-op)."
+  },
+  "hidden_fields_added": {
+    "ka59": [
+      "step_counter_current_steps from game.urgssjskot.current_steps",
+      "step_counter_limit from game.urgssjskot.koyyeuyzyr/current_level.get_data('StepCounter')"
+    ]
+  },
+  "honest_verdict": "complete: hidden_field_state_ka59_gap_sharpened_no_bank_honest_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [
+    "ka59_l2_not_reproduced_after_step_counter_state_key"
+  ],
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4571,
+  "registry_update": {
+    "path": "ops/arc_solve_registry.yaml",
+    "section": "latest_hidden_field_state_probe_4571",
+    "target_game": "ka59",
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "ee5f34e2d524a7f4cbffba19a86e6557903059f88fd64c1c998bfca5aa9a9953",
+  "schema": "carnot.hidden_field_state_probe_ka59_4571.v1",
+  "schema_errors": [],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4571",
+    "SCENARIO-ARC-WMTE-4571"
+  ],
+  "state_disambiguation_control": {
+    "extended_state_key_disambiguated": true,
+    "game": "ka59",
+    "grid_only_aliased": true,
+    "left_grid_key": [
+      "grid",
+      "7ac50d82a53d947e"
+    ],
+    "left_hidden_fields": {
+      "step_counter_current_steps": 114,
+      "step_counter_limit": 127
+    },
+    "left_path": [
+      "C:1",
+      "1"
+    ],
+    "passed": true,
+    "right_grid_key": [
+      "grid",
+      "7ac50d82a53d947e"
+    ],
+    "right_hidden_fields": {
+      "step_counter_current_steps": 113,
+      "step_counter_limit": 127
+    },
+    "right_path": [
+      "1",
+      "1",
+      "2"
+    ],
+    "step_counter_current_steps_differ": true,
+    "unreadable_register": null
+  },
+  "state_disambiguation_control_passed": true
+}

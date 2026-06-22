@@ -1099,6 +1099,60 @@ artifact sets `state_disambiguation_control_passed=true`,
 `false_negative_risk_checked=true`, and records the remaining unreadable
 register gap if no L2 reproduction gate passes.
 
+### REQ-ARC-WMTE-4571: ka59 StepCounter State-Key Probe
+
+Experiment 4571 SHALL re-scope the hidden-field state-key probe to `ka59` only.
+The `ka59` adapter state key SHALL include the live bottom-row StepCounter HUD
+register read from the offline environment internals at each state-key call:
+`game.urgssjskot.current_steps` for the current counter and
+`game.urgssjskot.koyyeuyzyr` or `current_level.get_data('StepCounter')` for the
+limit. These values SHALL NOT be hardcoded from the registry.
+
+Experiment 4571 SHALL run the offline arcade precondition and then execute the
+positive control before any L2 deepening attempt. The positive control SHALL
+demonstrate that the extended `ka59` adapter key disambiguates at least one pair
+of same-grid states that the grid-only key aliases and whose StepCounter
+registers differ. If the control fails, the experiment SHALL write the terminal
+artifact with `state_disambiguation_control_passed=false`, record the unreadable
+register in `missing_verifier_gaps`, and SHALL NOT run or claim a bank. If the
+control passes, the experiment SHALL attempt `ka59` L2 through the standing
+`OfflineSolver`/adapter route and SHALL accept a new level only when
+`arc_solver_kit.reproduce()` offline-reproduces the claimed L2.
+
+Experiment 4571 SHALL write
+`results/experiment_4571_hidden_field_state_probe_ka59.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`,
+`hidden_fields_added`, `state_disambiguation_control_passed`,
+`false_negative_risk_checked`, `offline_reproduced`, `reproduced_levels`,
+`missing_verifier_gaps`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: hidden_field_state_ka59_L2_offline_reproduced OR complete: hidden_field_state_ka59_gap_sharpened_no_bank_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load (1s floor)."
+- `hidden_fields_added`: principle "the ka59 StepCounter register added to the state_key (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE."
+- `state_disambiguation_control_passed`: principle "THE GATE-FIRST POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; a no-bank null is valid only if this passed (else the change is a no-op)."
+- `false_negative_risk_checked`: principle "a no-bank null is valid only if the disambiguation positive control passed."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task."
+- `missing_verifier_gaps`: principle "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry."
+- `registry_updated`: principle "the ka59 hidden-field findings + dead-ends persisted so the next attempt reuses."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4571: ka59 StepCounter Splits Grid-Aliased States
+
+Given the offline arcade precondition passes and the `ka59` adapter is registered
+When experiment 4571 compares a grid-only key with the extended adapter state
+key for a same-grid `ka59` state pair whose `StepCounter.current_steps` values
+differ
+Then the grid-only keys are equal, the extended state keys differ,
+`state_disambiguation_control_passed=true`, `false_negative_risk_checked=true`,
+and any no-bank terminal artifact records the remaining `ka59` L2 register gap
+without incrementing `reproducible_total_levels`.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
