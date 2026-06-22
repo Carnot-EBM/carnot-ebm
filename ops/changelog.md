@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-06-21 (ARC-AGI-3 exploration-diversity floor SHIPPED — milestone win, outer-loop)
+
+Triggered by the operator directive to develop the live ARC agent under the eval resource profile and
+push the 0.08 Kaggle wall. A full-session investigation, all offline + zero L4x4 shots spent:
+
+- **SHIPPED — exploration-diversity floor.** Wired `CARNOT_ARC_EXPLORE_DIVERSITY` into the submitted
+  `StepwiseExplorer` (random-untested-among-top-K on stall; parity-safe, default OFF, parity 10/10) +
+  the scored submission kernel (`scripts/kaggle/submission_kernel/main.py`, propagation verified). Validated
+  end-to-end through the authoritative scorer: **4/11 first-win + eff-sum 2.0804 vs structured 1/11 +
+  2.0069**; confirmed through the full submitted `E3AgentPolicy` cascade (3/3 recovery games). First
+  gate-justified candidate to move 0.08. (`docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`.)
+- **Submission config:** wired `machine_shape: NvidiaL4` (L4x4, 24GB; `arc-kaggle-accelerator-upgrade-2026-06-21.md`)
+  + kept `CARNOT_ARC_MTP=0` (5.9GB) + the `CARNOT_ARC_NGL` prefill-to-RAM lever. Quota math recorded
+  (~1 L4x4 submission/week, ~2 before Jun 30).
+- **Mapped the 0.08 root cause:** the exact-full-grid-match `WorldModelVerifier` gate gates out every
+  imperfect world-model (TTT 0/5; e3 LLM induction 0/6, model-size-independent, induced models predict
+  near-identity) -> agent reduces to the bare explorer floor. Built but refuted offline (saved the shots):
+  prior+TTT, fixed/confirming goal-bias, e3 induction (incl. 35B), Go-Explore, goal-distance A* for the
+  deep tail. Added cell-recall verify gate (`CARNOT_ARC_TRUST_METRIC`), divergence-tolerant TTT loop,
+  Go-Explore archive, goal-distance gradient — toolkit members + the framing/finding notes.
+- **Infra fixes (eval-path):** corpus-load RAM leak (`TransitionCorpus.load` npz re-decompression, 40GB->0.42GB);
+  promoted the e30 warm-start prior (transfer 0.314->0.5485); unpoisoned the gated TTT test (memory_watchdog).
+- **CLAUDE.md MANDATORY rule added:** "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent — Foundational
+  Framing" (the deliverable is the live runtime discovery loop, NOT trained weights or offline replays; an
+  offline null may be a corpus artifact) + `ops/north-star.md` §0 reinforcement + memory.
+- **Characterized the hard tail** (7 STRUCTURE-bound games) + a general TOOLKIT for the operator's
+  feature-router idea (classify a hidden game's mechanic -> route to the approach). Reachable but not
+  efficiently scorable -> documented frontier thread; diversity floor banked as the milestone win.
+
 ## 2026-06-20 (REQ-REPORT-4482 activation guard test fix)
 
 - Fixed the ARC roadmap no-cov activation-guard regression without editing
