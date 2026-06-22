@@ -1153,6 +1153,67 @@ Then the grid-only keys are equal, the extended state keys differ,
 and any no-bank terminal artifact records the remaining `ka59` L2 register gap
 without incrementing `reproducible_total_levels`.
 
+### REQ-ARC-WMTE-4572: .422 Submitted Two-Metric Integration Gate
+
+Experiment 4572 SHALL read
+`results/experiment_4568_clickability_action_effect_predictor.json`,
+`results/experiment_4569_verifier_guided_expansion.json`, and
+`results/experiment_4571_hidden_field_state_probe_ka59.json` before changing the
+submitted agent. It SHALL select only levers that raised a real metric without a
+CORE-game level loss: A1 only when median actions-to-first-levelup is strictly
+lower than the blind baseline with confidence support and a passed positive
+control; A2 only when generic transfer is strictly above `0.04` with confidence
+support and the random-priority control passes; A4 only when a new level bank is
+offline reproduced. Flagged-adversarial upstream artifacts SHALL be excluded
+unless their only flag is an explicit null-delta TAUTOLOGY carve-out with a
+null-delta methodology note.
+
+If no upstream lever passes, experiment 4572 SHALL leave
+`SUBMITTED_AGENT_CONFIG` and `SUBMITTED_TARGET_LEVELS` unchanged, remeasure the
+submitted/bare explorer action metric and generic-transfer metric using the same
+baseline method, and write an honest null. If at least one lever passes, the
+workflow SHALL wire only those winners into the submitted config, rerun both
+metrics, preserve every CORE solve by set containment, check additivity against
+the naive isolated A1/A2 deltas, and set operator-submit readiness only for a
+CORE-preserved integrated metric lift. The workflow SHALL never submit to the
+leaderboard.
+
+Experiment 4572 SHALL write `results/experiment_4572_integration_gate.json` with
+bare top-level fields for `honest_verdict`, `inference_substrate`,
+`median_actions_to_first_levelup_integrated`, `generic_transfer_rate_integrated`,
+`levers_integrated`, `additivity_checked`, `core_solves_preserved`,
+`heldout_solve_rate`, `ready_for_operator_submit`,
+`false_negative_risk_checked`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_actions_to_levelup_below_blind_or_generic_transfer_above_0.04 OR complete: no_lever_raises_a_metric_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated run invokes the LLM proposer, declare live_llm_inference + add the Qwen3.5-9B-MTP model precondition); a CNN predictor forward pass is NOT live_llm_inference."
+- `median_actions_to_first_levelup_integrated`: principle "the SUBMITTED-config action efficiency after wiring winners vs the blind baseline -- the leaderboard scoring lever."
+- `generic_transfer_rate_integrated`: principle "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04 -- the leaderboard-honest HEADLINE."
+- `levers_integrated`: principle "names which of A1/A2/A4 were wired -- traceable to their measured deltas; [] is an honest null."
+- `additivity_checked`: principle "integrated metric vs the naive sum of isolated A1/A2 deltas -- surfaces a destructive interaction instead of burying it."
+- `core_solves_preserved`: principle "integration must preserve every CORE solve (set-containment); a dropped solve FAILS the lever."
+- `heldout_solve_rate`: principle "the real transfer signal; integration should not regress it."
+- `ready_for_operator_submit`: principle "True if the integrated config is a CORE-preserved improvement on either metric worth a 1/day submission slot; the task NEVER submits (operator-only)."
+- `false_negative_risk_checked`: principle "an honest null is only valid with both baselines measured the same way."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4572: Null Levers Keep Submitted Config Bare
+
+Given A1 reports no strict action-efficiency gain, A2 fails the random-priority
+control or fails to raise generic transfer above `0.04`, and A4 reproduces no
+new bank
+When experiment 4572 selects integration levers and reruns both action and
+generic-transfer measurements
+Then `levers_integrated=[]`, `ready_for_operator_submit=false`, the submitted
+configuration remains unchanged, `additivity_checked` reports the integrated
+deltas against the isolated A1/A2 deltas, `core_solves_preserved=true`, and the
+terminal artifact starts with `complete: no_lever_raises_a_metric_honest_null`.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
