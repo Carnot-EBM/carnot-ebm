@@ -1747,5 +1747,28 @@
     ],
     "variants_per_game": 1
   },
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "solve_rate_with_diversity=0.04 and solve_rate_without_diversity=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "actions_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "firstwin_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "FALSE_NEGATIVE_RISK",
+      "severity": "warn",
+      "detail": "false_negative_risk_open: null efficiency/proposer/transfer claim ('complete: diversity_floor_no_transfer_honest_null_gap_sharpened') lacks a passed positive control and completed false-negative-risk check (positive_control_passed=None, false_negative_risk_checked=True). Treat this as a broken-test signal, not as evidence for a clean null."
+    }
+  ]
 }
