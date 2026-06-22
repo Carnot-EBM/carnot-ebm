@@ -72,7 +72,14 @@ _MECHANIC_TEMPLATES: dict[str, dict[str, Any]] = {
     "config_rule": {
         "operator": "config_rule_verifier",
         "description": "Grounds visible configuration predicates such as coverage, local constraints, and toggles.",
-        "cues": ("config", "toggle", "coverage", "local constraint", "target offset", "rule family"),
+        "cues": (
+            "config",
+            "toggle",
+            "coverage",
+            "local constraint",
+            "target offset",
+            "rule family",
+        ),
         "supports": (
             "config_rule",
             "config_toggle_marker_coverage",
@@ -104,7 +111,13 @@ _MECHANIC_TEMPLATES: dict[str, dict[str, Any]] = {
     "config_toggle_marker_coverage": {
         "operator": "config_rule_verifier",
         "description": "Moves controlled markers or supports until all visible target slots are covered.",
-        "cues": ("marker coverage", "controlled markers", "target markers", "support clearance", "coverage"),
+        "cues": (
+            "marker coverage",
+            "controlled markers",
+            "target markers",
+            "support clearance",
+            "coverage",
+        ),
         "supports": ("config_toggle_marker_coverage", "config_support_clearance", "config_rule"),
     },
     "config_toggle_target_offset": {
@@ -116,7 +129,13 @@ _MECHANIC_TEMPLATES: dict[str, dict[str, Any]] = {
     "graph_explore_navigation": {
         "operator": "graph_astar_action_cost",
         "description": "Plans keyboard or click graph exploration with additive path cost and verifier heuristic.",
-        "cues": ("graph explore", "keyboard directional", "goal distance", "adapter free", "confirm commit"),
+        "cues": (
+            "graph explore",
+            "keyboard directional",
+            "goal distance",
+            "adapter free",
+            "confirm commit",
+        ),
         "supports": ("graph_explore_navigation", "graph_explore"),
     },
     "local_constraint_color_cycle": {
@@ -134,14 +153,26 @@ _MECHANIC_TEMPLATES: dict[str, dict[str, Any]] = {
     "object_motion_reflect": {
         "operator": "object_motion_world_model",
         "description": "Models paired object motion where a selected object and reflected object move together.",
-        "cues": ("reflect", "reflection", "selected object", "reflected object", "object slots", "motion family"),
+        "cues": (
+            "reflect",
+            "reflection",
+            "selected object",
+            "reflected object",
+            "object slots",
+            "motion family",
+        ),
         "supports": ("object_motion_reflect", "object_motion_world_model", "world_model"),
     },
     "object_motion_world_model": {
         "operator": "object_motion_world_model",
         "description": "Uses object slots to synthesize translate, reflect, push, and selection transitions.",
         "cues": ("object motion", "world model", "motion family", "translate", "reflect", "push"),
-        "supports": ("object_motion_world_model", "object_motion_reflect", "object_motion_push", "world_model"),
+        "supports": (
+            "object_motion_world_model",
+            "object_motion_reflect",
+            "object_motion_push",
+            "world_model",
+        ),
     },
     "object_template_alignment": {
         "operator": "object_centric_digest",
@@ -152,7 +183,14 @@ _MECHANIC_TEMPLATES: dict[str, dict[str, Any]] = {
     "program_editor_object_attribute_match": {
         "operator": "object_centric_digest",
         "description": "Edits object command slots until object attributes match the visible target.",
-        "cues": ("program editor", "move program", "slot", "attribute", "object target", "bit code"),
+        "cues": (
+            "program editor",
+            "move program",
+            "slot",
+            "attribute",
+            "object target",
+            "bit code",
+        ),
         "supports": ("program_editor_object_attribute_match", "program_editor"),
     },
 }
@@ -173,7 +211,14 @@ _OPERATOR_MECHANICS: dict[str, dict[str, Any]] = {
     "config_rule_verifier": {
         "mechanic": "config_rule",
         "description": "Retrieves and execution-grounds coverage, local-constraint, and target-toggle predicates.",
-        "cues": ("config", "verifier", "marker coverage", "local constraint", "target offset", "toggle"),
+        "cues": (
+            "config",
+            "verifier",
+            "marker coverage",
+            "local constraint",
+            "target offset",
+            "toggle",
+        ),
         "supports": _MECHANIC_TEMPLATES["config_rule"]["supports"],
     },
     "color_match_slot_sequence_verifier": {
@@ -192,7 +237,12 @@ _OPERATOR_MECHANICS: dict[str, dict[str, Any]] = {
         "mechanic": "graph_explore_navigation",
         "description": "Ranks graph-search frontiers by path cost plus verifier or distance heuristic.",
         "cues": ("graph", "astar", "keyboard", "click", "goal distance", "action cost"),
-        "supports": ("graph_explore_navigation", "graph_explore", "click_connect_line", "action_sequence_replay"),
+        "supports": (
+            "graph_explore_navigation",
+            "graph_explore",
+            "click_connect_line",
+            "action_sequence_replay",
+        ),
     },
     "object_centric_digest": {
         "mechanic": "object_geometry_digest",
@@ -211,12 +261,35 @@ _OPERATOR_MECHANICS: dict[str, dict[str, Any]] = {
         "cues": _MECHANIC_TEMPLATES["object_motion_world_model"]["cues"],
         "supports": _MECHANIC_TEMPLATES["object_motion_world_model"]["supports"],
     },
+    "persistent_action_effect_memory_operator": {
+        "mechanic": "action_effect_memory",
+        "description": (
+            "Ranks candidate actions with leave-one-game cross-game memory of cached "
+            "frame/action effects before per-game reverse engineering."
+        ),
+        "cues": (
+            "action effect",
+            "clickability",
+            "candidate ranking",
+            "actions to first levelup",
+            "cross game memory",
+        ),
+        "supports": (
+            "action_effect_memory",
+            "graph_explore_navigation",
+            "click_connect_line",
+            "program_editor_object_attribute_match",
+        ),
+    },
 }
 
 _CONSTANT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("coordinate_literal", re.compile(r"\(\s*-?\d+\s*,\s*-?\d+\s*\)|\b-?\d+\s*,\s*-?\d+\b")),
     ("level_id_literal", re.compile(r"\bL\d+\b|\blevel\s*\d+\b", re.IGNORECASE)),
-    ("sprite_tag_literal", re.compile(r"\b(?=[a-z0-9]*[a-z])(?=[a-z0-9]*\d)[a-z0-9]{10,}\b", re.IGNORECASE)),
+    (
+        "sprite_tag_literal",
+        re.compile(r"\b(?=[a-z0-9]*[a-z])(?=[a-z0-9]*\d)[a-z0-9]{10,}\b", re.IGNORECASE),
+    ),
     ("action_sequence_literal", re.compile(r"\b[1-6]{5,}\b|\bcell\d+\s*,\s*\d+\b", re.IGNORECASE)),
 )
 
@@ -291,7 +364,12 @@ def infer_mechanic_class(entry: Mapping[str, Any]) -> str:
         return "click_connect_line"
     if "template" in text or "goal sprite" in text or "moveable piece" in text:
         return "object_template_alignment"
-    if "adapter-free" in text or "keyboard directional" in text or "goal-distance" in text or "move-right" in text:
+    if (
+        "adapter-free" in text
+        or "keyboard directional" in text
+        or "goal-distance" in text
+        or "move-right" in text
+    ):
         return "graph_explore_navigation"
     if "action + kind sequence" in text:
         return "action_sequence_replay"
@@ -462,7 +540,10 @@ def _score_entry(digest: Mapping[str, Any], entry: DocumentedPrimitive) -> tuple
     target_mechanic = _clean_mechanic(digest.get("mechanic_class") or digest.get("rule_family"))
     score = 0.0
     matched: list[str] = []
-    if target_mechanic in entry.supported_mechanic_classes or target_mechanic == entry.mechanic_class:
+    if (
+        target_mechanic in entry.supported_mechanic_classes
+        or target_mechanic == entry.mechanic_class
+    ):
         score += 5.0
         matched.append(f"mechanic:{target_mechanic}")
     template = _MECHANIC_TEMPLATES.get(target_mechanic)
@@ -489,7 +570,11 @@ def retrieve_primitives(
 ) -> list[dict[str, Any]]:
     """Return ranked documented primitives for a target digest."""
 
-    rows = tuple(library) if library is not None else documented_primitive_library(exclude_games=exclude_games)
+    rows = (
+        tuple(library)
+        if library is not None
+        else documented_primitive_library(exclude_games=exclude_games)
+    )
     ranked: list[dict[str, Any]] = []
     for entry in rows:
         score, matched = _score_entry(digest, entry)
@@ -528,7 +613,9 @@ def retrieval_identifies_mechanic(
     return False
 
 
-def constant_leak_violations(entries: Sequence[DocumentedPrimitive | Mapping[str, Any]]) -> list[dict[str, str]]:
+def constant_leak_violations(
+    entries: Sequence[DocumentedPrimitive | Mapping[str, Any]],
+) -> list[dict[str, str]]:
     """Literal-scan AutoDoc fields for constants that would make a primitive non-generic."""
 
     violations: list[dict[str, str]] = []
@@ -608,8 +695,12 @@ def measure_leave_one_out(
     library = documented_primitive_library(reg, solved_game_limit=solved_game_limit)
     return {
         "target_count": target_count,
-        "library_coverage": round(float(identified_count / target_count), 6) if target_count else 0.0,
-        "retrieval_precision_at_1": round(float(top1_count / target_count), 6) if target_count else 0.0,
+        "library_coverage": round(float(identified_count / target_count), 6)
+        if target_count
+        else 0.0,
+        "retrieval_precision_at_1": round(float(top1_count / target_count), 6)
+        if target_count
+        else 0.0,
         "per_game": per_game,
         "constant_leak_violations": constant_leak_violations(library),
     }
