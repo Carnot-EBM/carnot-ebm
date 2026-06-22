@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Hazard fit WIRED into the re-induction loop at the trigger — outer-loop, ultracode)
+
+Operator: "wire the hazard fit into the re-induction loop at the trigger." Integrated the re-induction
+trigger + the hazard-aware model class into ONE self-deepening loop. Adversarial review: SURVIVES.
+Write-up `docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md`.
+
+- `scripts/experiments/experiment_reinduction_hazard_loop.py:escalating_deepen`: at each level, re-induce a
+  NAV model + plan/execute; on a level-up bank and continue; on the TRIGGER specialised to a hazard (a
+  game-over where the avatar was REMOVED — the nav engine only translates/blocks so it plans into a hazard)
+  ESCALATE to a hazard-aware re-fit (signal = the trigger's own death) and re-plan the same level; on any
+  other stall (budget/wall) stop. The ladder nav→hazard-aware fires purely on avatar-removal detection — no
+  per-level or per-game hand-holding.
+- RESULT: the loop AUTO-deepens tu93 L1→L2 on 5/5 seeds (chain L1(nav)→L2(hazard_aware)), reproduced L2 on a
+  fresh env, as one loop with no manual step between levels. It stalls at L3 (no_plan_in_model — L3 needs the
+  next primitive), the honest next wall.
+- Adversarial review (SURVIVES): escalation is generic (fired by avatar-removal, no level==2 branch, no
+  hardcoded hazard colours — all data-fitted); reproduction genuine (env's own levels_completed counter, the
+  model can't set it); escalation structurally necessary (nav returns game_over_avatar_removed, hazard-aware
+  returns level_up). Artifact adversarial-verify clean. Conductor left STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (Hazard-aware world model DEEPENS tu93 L2 + adversarially verified — outer-loop, ultracode)
 
 Operator: "build the hazard-aware model class" (the forward need from the re-induction work — tu93 L2 stalls

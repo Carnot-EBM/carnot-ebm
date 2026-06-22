@@ -1,0 +1,219 @@
+{
+  "experiment": "experiment_reinduction_hazard_loop",
+  "game": "tu93",
+  "honest_verdict": "success: reinduction_loop_AUTO_ESCALATES_nav_to_hazard_aware_at_the_avatar_removal_trigger_and_deepens_tu93_to_L2_reproduced_on_every_seed",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search_plus_induced_world_model",
+  "random_seeds": [
+    7,
+    20260622,
+    3,
+    42,
+    100
+  ],
+  "target_level": 2,
+  "n_seeds_escalate_and_reproduce": 5,
+  "rows": [
+    {
+      "seed": 7,
+      "reached_L1": true,
+      "deepest_level": 2,
+      "reproduced_level": 2,
+      "per_level": [
+        {
+          "level_reached": 1,
+          "model_class": "nav",
+          "via": "reach_level_one"
+        },
+        {
+          "level_reached": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "hazard_fit": {
+            "n_death_transitions": 6,
+            "hazard_colors": [
+              8,
+              15
+            ],
+            "hazard_axis": "row",
+            "charge_range": 6,
+            "axis_votes": {
+              "row": 6
+            },
+            "post_move_distances_at_death": [
+              6.125,
+              6.125,
+              6.125,
+              6.125,
+              6.125,
+              6.125
+            ]
+          },
+          "plan_len": 10
+        }
+      ],
+      "n_banked_actions": 28,
+      "escalated_to_hazard_aware": true
+    },
+    {
+      "seed": 20260622,
+      "reached_L1": true,
+      "deepest_level": 2,
+      "reproduced_level": 2,
+      "per_level": [
+        {
+          "level_reached": 1,
+          "model_class": "nav",
+          "via": "reach_level_one"
+        },
+        {
+          "level_reached": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "hazard_fit": {
+            "n_death_transitions": 5,
+            "hazard_colors": [
+              8,
+              15
+            ],
+            "hazard_axis": "row",
+            "charge_range": 6,
+            "axis_votes": {
+              "row": 5
+            },
+            "post_move_distances_at_death": [
+              6.125,
+              6.125,
+              6.125,
+              6.125,
+              6.125
+            ]
+          },
+          "plan_len": 10
+        }
+      ],
+      "n_banked_actions": 28,
+      "escalated_to_hazard_aware": true
+    },
+    {
+      "seed": 3,
+      "reached_L1": true,
+      "deepest_level": 2,
+      "reproduced_level": 2,
+      "per_level": [
+        {
+          "level_reached": 1,
+          "model_class": "nav",
+          "via": "reach_level_one"
+        },
+        {
+          "level_reached": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "hazard_fit": {
+            "n_death_transitions": 3,
+            "hazard_colors": [
+              8,
+              15
+            ],
+            "hazard_axis": "row",
+            "charge_range": 6,
+            "axis_votes": {
+              "row": 3
+            },
+            "post_move_distances_at_death": [
+              6.125,
+              6.125,
+              6.125
+            ]
+          },
+          "plan_len": 10
+        }
+      ],
+      "n_banked_actions": 28,
+      "escalated_to_hazard_aware": true
+    },
+    {
+      "seed": 42,
+      "reached_L1": true,
+      "deepest_level": 2,
+      "reproduced_level": 2,
+      "per_level": [
+        {
+          "level_reached": 1,
+          "model_class": "nav",
+          "via": "reach_level_one"
+        },
+        {
+          "level_reached": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "hazard_fit": {
+            "n_death_transitions": 6,
+            "hazard_colors": [
+              8,
+              15
+            ],
+            "hazard_axis": "row",
+            "charge_range": 6,
+            "axis_votes": {
+              "row": 6
+            },
+            "post_move_distances_at_death": [
+              6.125,
+              6.125,
+              6.125,
+              6.125,
+              6.125,
+              6.125
+            ]
+          },
+          "plan_len": 10
+        }
+      ],
+      "n_banked_actions": 28,
+      "escalated_to_hazard_aware": true
+    },
+    {
+      "seed": 100,
+      "reached_L1": true,
+      "deepest_level": 2,
+      "reproduced_level": 2,
+      "per_level": [
+        {
+          "level_reached": 1,
+          "model_class": "nav",
+          "via": "reach_level_one"
+        },
+        {
+          "level_reached": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "hazard_fit": {
+            "n_death_transitions": 4,
+            "hazard_colors": [
+              8,
+              15
+            ],
+            "hazard_axis": "row",
+            "charge_range": 6,
+            "axis_votes": {
+              "row": 4
+            },
+            "post_move_distances_at_death": [
+              6.125,
+              6.125,
+              6.125,
+              6.125
+            ]
+          },
+          "plan_len": 10
+        }
+      ],
+      "n_banked_actions": 28,
+      "escalated_to_hazard_aware": true
+    }
+  ],
+  "methodology_note": "One integrated loop: re-induce nav per level; on the TRIGGER (a game-over with the avatar REMOVED = the hazard signature) escalate to a hazard-aware re-fit (its signal is the trigger's own death) and re-plan the same level; continue. No hand-holding between levels. Reproduction-gated on a fresh env. Scope: the hazard class handles the line-charger (tu93 L2); other hazard types are future primitives.",
+  "duration_s": 8.2
+}

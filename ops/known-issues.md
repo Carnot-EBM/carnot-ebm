@@ -974,6 +974,20 @@ SURVIVES). Write-up `docs/research-notes/hazard-aware-world-model-2026-06-22.md`
   multi-hazard) as new games surface them; still need the win-vocabulary extension (reflection/coalescence)
   for the non-nav L2s.
 
+**HAZARD FIT WIRED INTO THE RE-INDUCTION LOOP AT THE TRIGGER (2026-06-22, outer-loop, ultracode — operator:
+"wire the hazard fit into the re-induction loop at the trigger").** DONE. Adversarial review: SURVIVES.
+Write-up `docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md`.
+- `experiment_reinduction_hazard_loop.py:escalating_deepen` — ONE loop: re-induce nav per level + plan/exec;
+  on a level-up bank+continue; on the avatar-REMOVAL trigger (the hazard signature) ESCALATE to a hazard-aware
+  re-fit (signal = the trigger's own death) and re-plan the same level; else stop. Ladder nav→hazard-aware,
+  fired purely on avatar-removal — no per-level/per-game hand-holding.
+- RESULT: auto-deepens tu93 L1→L2 on 5/5 seeds (chain L1(nav)→L2(hazard_aware)), reproduced L2 on a fresh env,
+  with no manual step between levels. Stalls at L3 (no_plan_in_model) — the honest next wall.
+- Review SURVIVES: escalation generic (no hardcoding, all data-fitted); reproduction genuine (env counter);
+  escalation structurally necessary (nav dies, hazard-aware solves the same L2 transitions).
+- **Next**: add the next escalation rung (pursuer/proximity/multi-hazard hazard classes; non-reach-goal win
+  vocab) to push past L3; drop the loop into the standing solver as the level-boundary behaviour.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
