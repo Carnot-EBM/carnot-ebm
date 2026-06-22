@@ -1,0 +1,415 @@
+{
+  "action_efficiency_ci": [
+    1.0,
+    1.0
+  ],
+  "action_efficiency_score": 1.0,
+  "cited_upstream_artifacts": {
+    "A1": {
+      "artifact": "results/experiment_4580_live_submission_gap_close.json",
+      "exists": true,
+      "honest_verdict": "success: live_submittable_count_53_above_33",
+      "imported_fields": [
+        "live_submittable_level_count",
+        "live_submittable_count_baseline",
+        "count_delta",
+        "env_adaptive_resolve_recovered",
+        "verifier_is_oracle"
+      ],
+      "included_in_headline": true,
+      "reason": "included_clean",
+      "role": "live_submission_gap_close",
+      "sha256": "sha256:97cce27b061837c90d14840bbf4512032a76eb13860af33d0c28df634d8764db"
+    },
+    "A2": {
+      "artifact": "results/experiment_4581_levelup_selfplay.json",
+      "exists": true,
+      "honest_verdict": "success: ar25_L2_offline_reproduced",
+      "imported_fields": [
+        "registry_update",
+        "offline_reproduced"
+      ],
+      "included_in_headline": true,
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:a9d626778c60884c39bf78f0ee9057a9f3bde8e4aab99d90ce546091df0cdb66"
+    },
+    "A3": {
+      "artifact": "results/experiment_4582_feature_router_transfer.json",
+      "exists": true,
+      "honest_verdict": "complete: feature_router_no_value_honest_null_transfer_gap_sharpened",
+      "imported_fields": [],
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_excluded",
+      "role": "feature_router_transfer",
+      "sha256": "sha256:b9f8e18b0a0ba2a868f48b007d75729a7709382345175275e80725f7cbb527ac"
+    },
+    "A4": {
+      "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+      "exists": true,
+      "honest_verdict": "complete: diversity_floor_no_transfer_honest_null_gap_sharpened",
+      "imported_fields": [],
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_excluded",
+      "role": "diversity_floor_transfer",
+      "sha256": "sha256:c74c1551b15d2e6d53699e4de410cee388affb8d8eb5b9c376ff06f275a4f46c"
+    },
+    "A5": {
+      "artifact": "results/experiment_4584_primitive_persist_transfer.json",
+      "exists": true,
+      "honest_verdict": "success: primitive_persisted_transfer_s5i5_value_added",
+      "imported_fields": [
+        "primitive_persisted",
+        "transfer_games",
+        "transfer_value_per_game",
+        "new_levels_banked"
+      ],
+      "included_in_headline": true,
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:c7f78f4192438b7d89466152f73748528789eb5b195c6d5776fce09bd66fa650"
+    },
+    "A6": {
+      "artifact": "results/experiment_4585_integration_gate.json",
+      "exists": true,
+      "honest_verdict": "success: integrated_live_submittable_54_above_33",
+      "imported_fields": [],
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_excluded",
+      "role": "integration_gate",
+      "sha256": "sha256:16d16175f64ee01203883b280ce08471aa24fe84082fdfb91d7916e4a8cbded7"
+    },
+    "B1": {
+      "artifact": "results/experiment_4586_live_submittable_coheadline.json",
+      "exists": true,
+      "honest_verdict": "shipped: live_submittable_coheadline_wired",
+      "imported_fields": [
+        "live_submittable_level_count",
+        "reproducible_total_levels",
+        "generic_transfer_rate_over_variants",
+        "generic_transfer_ci",
+        "action_efficiency_score",
+        "action_efficiency_ci"
+      ],
+      "included_in_headline": true,
+      "reason": "included_clean",
+      "role": "live_submittable_coheadline",
+      "sha256": "sha256:3904c777227504a8a77747144b3ef33e23e882a32af519fb8471f2b0f165b9df"
+    },
+    "LIVE_BASELINE": {
+      "artifact": "results/arc3_live_submit.json",
+      "exists": true,
+      "honest_verdict": null,
+      "imported_fields": [
+        "live_total_levels"
+      ],
+      "included_in_headline": true,
+      "reason": "included_clean",
+      "role": "last_submitted_scorecard",
+      "sha256": "sha256:f751acbc08caa117147e99b71edd953678c76e0d1e8543373ca45b5a7c25084f"
+    },
+    "REGISTRY": {
+      "artifact": "ops/arc_solve_registry.yaml",
+      "exists": true,
+      "imported_fields": [
+        "reproducible_total_levels"
+      ],
+      "role": "reproducible_total_levels_registry"
+    }
+  },
+  "coheadline_metrics": {
+    "action_efficiency_ci": [
+      1.0,
+      1.0
+    ],
+    "action_efficiency_score": 1.0,
+    "generic_transfer_ci": [
+      0.0,
+      0.1
+    ],
+    "generic_transfer_rate_over_variants": 0.04,
+    "live_submittable_level_count": 54,
+    "reproducible_total_levels": 54
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4590_capstone_v423",
+  "field_principles": {
+    "action_efficiency_score": {
+      "principle": "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream measurement (the audit trail)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial artifact excluded AND any null-delta-carve-out / offline-arc-methodology / positive-control-failed artifact handled (B2 guards) -- fabrication-gate + false-negative-risk compliance."
+    },
+    "generic_transfer_moved": {
+      "principle": "did the feature-router (A3) raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI + a passing random-route control (the seen->hidden transfer fix)."
+    },
+    "generic_transfer_rate_over_variants": {
+      "principle": "the held-out first-contact signal reported WITH a CI -- a co-headline metric."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: live_submittable_above_33_or_feature_router_generic_transfer_above_0.04 OR complete: submission_gap_partially_closed_transfer_null_gaps_sharpened."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "live_submittable_level_count": {
+      "principle": "the honest leaderboard score (B1) reported alongside reproducible_total_levels (the mirage) + generic_transfer + action efficiency."
+    },
+    "live_submittable_moved": {
+      "principle": "the bottom line -- did A1 raise the offline-reproduction-gated live-submittable count STRICTLY above 33 (the leaderboard score lever)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "ready_for_operator_submit": {
+      "principle": "True only if the integrated config + refreshed package beat the last 33-level submitted scorecard on a real metric worth a 1/day slot; never submits."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "did solve CAPABILITY grow this milestone (A2 + A4 banks)."
+    },
+    "verifier_is_oracle_distinct_levers": {
+      "principle": "A1/A3/A4 value claims are verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."
+    }
+  },
+  "flagged_artifacts_handled": {
+    "excluded_artifacts": [
+      "results/experiment_4582_feature_router_transfer.json",
+      "results/experiment_4583_diversity_floor_transfer.json",
+      "results/experiment_4585_integration_gate.json"
+    ],
+    "excluded_details": [
+      {
+        "artifact": "results/experiment_4582_feature_router_transfer.json",
+        "critical_flags": [
+          {
+            "detail": "generic_transfer_rate_with_router=0.04 and random_route_transfer_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "A3",
+        "reason": "flagged_adversarial_excluded",
+        "stamped_flagged_adversarial": true
+      },
+      {
+        "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+        "critical_flags": [
+          {
+            "detail": "solve_rate_with_diversity=0.04 and solve_rate_without_diversity=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "A4",
+        "reason": "flagged_adversarial_excluded",
+        "stamped_flagged_adversarial": true
+      },
+      {
+        "artifact": "results/experiment_4585_integration_gate.json",
+        "critical_flags": [
+          {
+            "detail": "generic_transfer_rate_integrated=0.04 and held_out_solve_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "A6",
+        "reason": "flagged_adversarial_excluded",
+        "stamped_flagged_adversarial": true
+      }
+    ],
+    "failed_acceptance_gate_overrides": [],
+    "learned_cnn_duration_guard_honored": "No .423 learned-CNN artifact was excluded for fast duration or missing model_specs.",
+    "null_delta_carveouts": [],
+    "offline_arc_methodology_guard_honored": [
+      "A1 offline reproduction-gated package accepted",
+      "A2 offline reproduction gate accepted despite no duration_s headline",
+      "A5 fast offline transfer accepted because substrate and reproduction fields declare offline-ARC methodology"
+    ],
+    "positive_control_failed_guard": [
+      "A3",
+      "A4"
+    ],
+    "positive_control_guard_note": "Artifacts with positive_control_passed=False/None or FALSE_NEGATIVE_RISK are false_negative_risk_open; their nulls are not clean results."
+  },
+  "generic_transfer_ci": [
+    0.0,
+    0.1
+  ],
+  "generic_transfer_moved": {
+    "baseline": 0.04,
+    "headline_numbers_aggregated": false,
+    "moved": false,
+    "reason": "a3_flagged_false_negative_risk_open",
+    "source": "results/experiment_4582_feature_router_transfer.json"
+  },
+  "generic_transfer_rate_over_variants": 0.04,
+  "honest_verdict": "success: live_submittable_above_33_feature_router_false_negative_risk_open",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "live_submittable_count_baseline": 33,
+  "live_submittable_level_count": 54,
+  "live_submittable_moved": {
+    "a1_count_delta": 20,
+    "a1_live_submittable_level_count": 53,
+    "baseline": 33,
+    "env_adaptive_resolve_recovered": [
+      "sc25"
+    ],
+    "moved": true,
+    "reason": "a1_clean_strictly_above_baseline",
+    "source": "results/experiment_4580_live_submission_gap_close.json",
+    "verifier_is_oracle": false
+  },
+  "operator_submission_basis": {
+    "a6_integration_artifact_quarantined": true,
+    "basis": "clean B1/A1 evidence beats the 33-level 2026-06-21 scorecard; A6's own headline is quarantined and not aggregated.",
+    "clean_a1_live_submittable_level_count": 53,
+    "clean_b1_live_submittable_level_count": 54,
+    "last_submitted_scorecard_levels": 33,
+    "leaderboard_submission": false,
+    "operator_only": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 54,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4590": true,
+    "summarize_artifact_py_used_for_live_flags": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "LIVE_BASELINE": true
+    }
+  },
+  "random_seed": 4590,
+  "ready_for_operator_submit": true,
+  "reproducibility_checksum": "sha256:ba33f56150291e34737eb174cdfb62a1354bbb4a375e0b74988d76753c6d0f74",
+  "reproducible_total_levels": 54,
+  "reproducible_total_levels_before": 53,
+  "reproducible_total_levels_delta": 1,
+  "result_path": "results/experiment_4590_capstone_v423.json",
+  "schema": "carnot.exp4590.capstone_v423.v1",
+  "scorecard": {
+    "A1": {
+      "artifact": "results/experiment_4580_live_submission_gap_close.json",
+      "count_delta": 20,
+      "env_adaptive_resolve_recovered": [
+        "sc25"
+      ],
+      "included_in_headline": true,
+      "live_submittable_baseline": 33,
+      "live_submittable_level_count": 53,
+      "moved_above_33": true
+    },
+    "A2": {
+      "artifact": "results/experiment_4581_levelup_selfplay.json",
+      "included_in_headline": true,
+      "reproducible_total_after": 54,
+      "reproducible_total_before": 53,
+      "reproducible_total_delta": 1
+    },
+    "A3": {
+      "artifact": "results/experiment_4582_feature_router_transfer.json",
+      "generic_transfer_moved": false,
+      "headline_numbers_aggregated": false,
+      "included_in_headline": false,
+      "reason": "a3_flagged_false_negative_risk_open"
+    },
+    "A4": {
+      "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+      "firstwin_delta_counted": 0,
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_excluded"
+    },
+    "A5": {
+      "artifact": "results/experiment_4584_primitive_persist_transfer.json",
+      "included_in_headline": true,
+      "new_levels_banked": 0,
+      "primitive_persisted": {
+        "derived_from_artifacts": [
+          "results/experiment_4580_live_submission_gap_close.json",
+          "results/experiment_4582_feature_router_transfer.json",
+          "results/experiment_4583_diversity_floor_transfer.json"
+        ],
+        "operator": "env_adaptive_resolve_operator",
+        "registry_general_gotcha_id": "primitive_env_adaptive_resolve_operator",
+        "source": "A1_env_adaptive_resolve",
+        "source_tuning_games": [
+          "sc25"
+        ]
+      },
+      "transfer_games": [
+        "s5i5",
+        "ft09",
+        "sb26"
+      ],
+      "value_added_games": [
+        "ft09",
+        "s5i5",
+        "sb26"
+      ]
+    },
+    "A6": {
+      "artifact": "results/experiment_4585_integration_gate.json",
+      "included_in_headline": false,
+      "integration_headline_aggregated": false,
+      "reason": "flagged_adversarial_excluded"
+    },
+    "B1": {
+      "action_efficiency_ci": [
+        1.0,
+        1.0
+      ],
+      "action_efficiency_score": 1.0,
+      "artifact": "results/experiment_4586_live_submittable_coheadline.json",
+      "generic_transfer_ci": [
+        0.0,
+        0.1
+      ],
+      "generic_transfer_rate_over_variants": 0.04,
+      "included_in_headline": true,
+      "live_submittable_level_count": 54,
+      "reproducible_total_levels": 54
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4590",
+    "SCENARIO-CAPSTONE-4590",
+    "SCENARIO-CAPSTONE-4590-FIELD-PRINCIPLES"
+  ],
+  "verifier_is_oracle_distinct_levers": {
+    "A1": {
+      "artifact": "results/experiment_4580_live_submission_gap_close.json",
+      "included_in_headline": true,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "A3": {
+      "artifact": "results/experiment_4582_feature_router_transfer.json",
+      "included_in_headline": false,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "A4": {
+      "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+      "included_in_headline": false,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "all_included_value_claims_oracle_distinct": true
+  }
+}
