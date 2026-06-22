@@ -150,6 +150,7 @@ COMPUTE_BOUND_MARKERS = (
     "DualGPURunner",
     "DualGPUHarness",
     "llama.cpp",
+    "torch",
     "torch.cuda",
     ".cuda(",
 )
@@ -157,6 +158,7 @@ COMPUTE_BOUND_MARKERS = (
 # Minimum duration (seconds) for a compute-bound artifact. Loading +
 # inference on even a 0.5B GGUF takes at least this long.
 COMPUTE_BOUND_MIN_DURATION_S = 60.0
+LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 # Verifier-scoring artifacts: experiments that score an ensemble of
 # verifiers against already-cached (input, candidate, label) triples
@@ -1049,6 +1051,30 @@ def _has_compute_bound_marker(d: dict[str, Any]) -> bool:
     return any(m in text for m in COMPUTE_BOUND_MARKERS)
 
 
+def _inference_substrate_text(d: dict[str, Any]) -> str:
+    """Return the declared substrate as a stripped string."""
+    return str(d.get("inference_substrate") or "").strip()
+
+
+def _inference_substrate_matches(d: dict[str, Any], canonical: str) -> bool:
+    """True when `inference_substrate` declares a canonical substrate value.
+
+    Newer ARC artifacts often store the canonical value followed by a human
+    principle explanation (`value -- why this floor applies`). Matching the
+    leading value keeps that reader annotation from changing verifier behavior.
+    """
+    raw = _inference_substrate_text(d)
+    if raw == canonical:
+        return True
+    prefix = raw.split("--", 1)[0].strip()
+    return prefix == canonical or raw.startswith(f"{canonical} ")
+
+
+def _is_live_llm_inference(d: dict[str, Any]) -> bool:
+    """True when the artifact declares a live LLM inference substrate."""
+    return _inference_substrate_matches(d, LIVE_LLM_SUBSTRATE)
+
+
 def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:
     """True if the artifact declares it scored verifiers against
     cached candidate triples without invoking LLM inference.
@@ -1068,7 +1094,7 @@ def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:
        family, etc.) that were authored before the explicit-field
        discipline shipped.
     """
-    if d.get("inference_substrate") == VERIFIER_SCORING_SUBSTRATE:
+    if _inference_substrate_matches(d, VERIFIER_SCORING_SUBSTRATE):
         return True
     schema = str(d.get("schema") or d.get("schema_version") or "")
     return any(schema.startswith(p) for p in VERIFIER_SCORING_SCHEMA_PREFIXES)
@@ -1083,7 +1109,7 @@ def _is_aggregation_only(d: dict[str, Any]) -> bool:
     markers (when present) are inherited from upstream sources cited
     in the artifact body, not invoked by the artifact itself.
     """
-    if d.get("inference_substrate") == AGGREGATION_SUBSTRATE:
+    if _inference_substrate_matches(d, AGGREGATION_SUBSTRATE):
         return True
     schema = str(d.get("schema") or d.get("schema_version") or "")
     return any(schema.startswith(p) for p in AGGREGATION_SCHEMA_PREFIXES)
@@ -1102,10 +1128,51 @@ def _is_deterministic_verifier(d: dict[str, Any]) -> bool:
     inference artifacts declare `live_llm_inference`, so this never masks a real
     fast-fabrication of a live-model claim. (Inference-Substrate Declaration Discipline.)
     """
-    sub = str(d.get("inference_substrate") or "")
+    sub = _inference_substrate_text(d)
     if sub in DETERMINISTIC_VERIFIER_SUBSTRATES:
         return True
     return any(tok in sub for tok in ("replay", "reconciliation"))
+
+
+def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
+    """Return the duration floor selected from the artifact substrate.
+
+    The return value is intentionally small and JSON-like so
+    `summarize_artifact.py` can print it directly for reviewer-facing
+    diagnostics. `None` means no compute-bound marker or floor-bearing
+    substrate was declared.
+    """
+    if _is_verifier_scoring_only(d):
+        return {
+            "substrate": VERIFIER_SCORING_SUBSTRATE,
+            "min_duration_s": VERIFIER_SCORING_MIN_DURATION_S,
+            "reason": "verifier_scoring",
+        }
+    if _is_aggregation_only(d):
+        return {
+            "substrate": AGGREGATION_SUBSTRATE,
+            "min_duration_s": AGGREGATION_MIN_DURATION_S,
+            "reason": "aggregation",
+        }
+    if _is_deterministic_verifier(d):
+        return {
+            "substrate": _inference_substrate_text(d) or "deterministic_verifier",
+            "min_duration_s": DETERMINISTIC_VERIFIER_MIN_DURATION_S,
+            "reason": "deterministic_verifier",
+        }
+    if _is_live_llm_inference(d):
+        return {
+            "substrate": LIVE_LLM_SUBSTRATE,
+            "min_duration_s": COMPUTE_BOUND_MIN_DURATION_S,
+            "reason": "live_model",
+        }
+    if _has_compute_bound_marker(d):
+        return {
+            "substrate": _inference_substrate_text(d) or "compute_bound_marker",
+            "min_duration_s": COMPUTE_BOUND_MIN_DURATION_S,
+            "reason": "live_model",
+        }
+    return None
 
 
 def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
@@ -1113,14 +1180,18 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     duration = d.get("duration_s")
     if not _is_finite_number(duration):
         return
-    if not _has_compute_bound_marker(d):
+    if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
+        return
+    floor = duration_floor_for_artifact(d)
+    if floor is None:
         return
     # Verifier-scoring artifacts run in seconds because they score
     # cached candidates -- their GGUF markers are vestigial. Apply
     # the tighter verifier-scoring threshold instead of the full
     # model-inference threshold.
-    if _is_verifier_scoring_only(d):
-        if float(duration) < VERIFIER_SCORING_MIN_DURATION_S:
+    if floor["reason"] == "verifier_scoring":
+        min_duration = float(floor["min_duration_s"])
+        if float(duration) < min_duration:
             flags.append(
                 Flag(
                     kind="DURATION_TOO_SHORT",
@@ -1129,7 +1200,7 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                         f"duration_s={duration} but artifact declares "
                         f"verifier-scoring substrate. Even verifier "
                         f"scoring of a few hundred candidates takes "
-                        f">={VERIFIER_SCORING_MIN_DURATION_S}s; this "
+                        f">={min_duration}s; this "
                         f"completed too fast to have scored anything."
                     ),
                 )
@@ -1139,8 +1210,9 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     # paper-table builders) just read upstream JSON and arithmetic.
     # Milliseconds are honest. The GGUF markers are inherited from
     # the upstream artifacts they cite, not invoked here.
-    if _is_aggregation_only(d):
-        if float(duration) < AGGREGATION_MIN_DURATION_S:
+    if floor["reason"] == "aggregation":
+        min_duration = float(floor["min_duration_s"])
+        if float(duration) < min_duration:
             flags.append(
                 Flag(
                     kind="DURATION_TOO_SHORT",
@@ -1149,14 +1221,15 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                         f"duration_s={duration} but artifact declares "
                         f"aggregation substrate. Even loading upstream "
                         f"JSON takes microseconds; a value below "
-                        f"{AGGREGATION_MIN_DURATION_S}s suggests the "
+                        f"{min_duration}s suggests the "
                         f"duration was not measured at all."
                     ),
                 )
             )
         return
-    if _is_deterministic_verifier(d):
-        if float(duration) < DETERMINISTIC_VERIFIER_MIN_DURATION_S:
+    if floor["reason"] == "deterministic_verifier":
+        min_duration = float(floor["min_duration_s"])
+        if float(duration) < min_duration:
             flags.append(
                 Flag(
                     kind="DURATION_TOO_SHORT",
@@ -1165,13 +1238,14 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                         f"duration_s={duration} but artifact declares "
                         f"deterministic-verifier substrate. Even loading "
                         f"checked-in JSON takes microseconds; a value below "
-                        f"{DETERMINISTIC_VERIFIER_MIN_DURATION_S}s suggests "
+                        f"{min_duration}s suggests "
                         f"the duration was not measured at all."
                     ),
                 )
             )
         return
-    if float(duration) < COMPUTE_BOUND_MIN_DURATION_S:
+    min_duration = float(floor["min_duration_s"])
+    if float(duration) < min_duration:
         flags.append(
             Flag(
                 kind="DURATION_TOO_SHORT",
@@ -1180,7 +1254,7 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                     f"duration_s={duration} but artifact references "
                     f"compute-bound markers (GGUF / CUDA / live model). "
                     f"Loading and running a real model takes "
-                    f">={COMPUTE_BOUND_MIN_DURATION_S}s minimum; this "
+                    f">={min_duration}s minimum; this "
                     f"completed too fast to have invoked the model."
                 ),
             )
@@ -1650,7 +1724,7 @@ def _claims_live_model(d: dict[str, Any]) -> bool:
     claim a live run, so a sub-floor duration is expected, not suspicious. This
     guard keeps the retroactive backfill high-precision (see exp1877/1498/1459
     aggregation false positives vs exp1851/1782 real live-claim fabrications)."""
-    if str(d.get("inference_substrate", "")).lower() == "live_llm_inference":
+    if _is_live_llm_inference(d):
         return True
     for key in ("model_specs", "target_model", "models", "model"):
         v = d.get(key)

@@ -22,10 +22,17 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import adversarial_verify as av  # noqa: E402
+import summarize_artifact as summary_reader  # noqa: E402
 
 
 def _kinds(flags):
     return [f.kind if hasattr(f, "kind") else f.get("kind") for f in flags]
+
+
+def _report_for_payload(tmp_path: Path, payload: dict) -> dict:
+    path = tmp_path / "artifact.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return av.verify_artifact(path)
 
 
 # --- 1. TAUTOLOGY excludes identifier/seed fields --------------------------
@@ -322,6 +329,100 @@ def test_backfill_idempotent_skips_already_stamped(tmp_path):
     p = tmp_path / "experiment_9004_x.json"
     p.write_text(json.dumps(art))
     assert av.backfill_stamps([p], apply=True) == []
+
+
+# --- 4b. Inference-substrate floor for learned CNN action models ------------
+
+def test_req_arc_fcp_4575_learned_cnn_torch_marker_uses_offline_floor(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-FCP-4575: a fast learned-CNN action-model artifact with a torch
+    marker and cached-candidate substrate must use the 1s floor, not the 60s
+    live-model floor."""
+    artifact = {
+        "experiment": "experiment_4575_cnn_fixture",
+        "honest_verdict": "complete: learned_cnn_fixture_real_fast_forward",
+        "inference_substrate": av.VERIFIER_SCORING_SUBSTRATE,
+        "duration_s": 5.0,
+        "model_specs": {
+            "architecture": "learned frame-action CNN",
+            "framework": "torch",
+            "device": "cpu",
+        },
+        "random_seed": 4575,
+        "reproducibility_checksum": "sha256:" + "a" * 64,
+    }
+
+    floor = av.duration_floor_for_artifact(artifact)
+    report = _report_for_payload(tmp_path, artifact)
+
+    assert floor == {
+        "substrate": av.VERIFIER_SCORING_SUBSTRATE,
+        "min_duration_s": av.VERIFIER_SCORING_MIN_DURATION_S,
+        "reason": "verifier_scoring",
+    }
+    assert "DURATION_TOO_SHORT" not in _kinds(report["flags"])
+
+
+def test_req_arc_fcp_4575_live_llm_gguf_still_uses_60s_floor(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-FCP-4575: the CNN carve-out must not weaken the real live-LLM
+    fabrication check."""
+    artifact = {
+        "experiment": "experiment_4575_fake_llm_fixture",
+        "honest_verdict": "complete: fake_llm_claim_finished_too_fast",
+        "inference_substrate": "live_llm_inference",
+        "duration_s": 5.0,
+        "model_specs": [{"name": "unsloth/Qwen3.6-35B-A3B-GGUF"}],
+        "random_seed": 4575,
+        "reproducibility_checksum": "sha256:" + "b" * 64,
+    }
+
+    floor = av.duration_floor_for_artifact(artifact)
+    report = _report_for_payload(tmp_path, artifact)
+    duration_flags = [flag for flag in report["flags"] if flag["kind"] == "DURATION_TOO_SHORT"]
+
+    assert floor == {
+        "substrate": "live_llm_inference",
+        "min_duration_s": av.COMPUTE_BOUND_MIN_DURATION_S,
+        "reason": "live_model",
+    }
+    assert duration_flags
+    assert duration_flags[0]["severity"] == "critical"
+
+
+def test_req_arc_fcp_4575_summary_surfaces_applied_floor(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """REQ-ARC-FCP-4575: summarize_artifact prints the floor chosen by the
+    inference-substrate declaration before headline metrics."""
+    artifact = {
+        "experiment": "experiment_4575_cnn_fixture",
+        "honest_verdict": "complete: learned_cnn_fixture_real_fast_forward",
+        "inference_substrate": (
+            "verifier_ensemble_against_cached_candidates -- learned CNN CPU forward pass"
+        ),
+        "duration_s": 5.0,
+        "model_specs": {
+            "architecture": "learned frame-action CNN",
+            "framework": "torch",
+            "device": "cpu",
+        },
+        "random_seed": 4575,
+        "reproducibility_checksum": "sha256:" + "c" * 64,
+    }
+    path = tmp_path / "experiment_4575_cnn_fixture.json"
+    path.write_text(json.dumps(artifact), encoding="utf-8")
+
+    assert summary_reader.summarize(path) == 0
+    out = capsys.readouterr().out
+
+    assert "duration floor" in out
+    assert "verifier_ensemble_against_cached_candidates" in out
+    assert ">=1.0s" in out
+    assert "adversarial flags: none" in out
 
 
 # --- 5. CEILING_SATURATION (positive-claim no-headroom partner) -------------

@@ -1,0 +1,87 @@
+{
+  "cnn_artifact_not_flagged": true,
+  "duration_s": 1.0,
+  "experiment": "experiment_4575_learned_cnn_substrate_guard",
+  "fake_llm_still_flagged": true,
+  "field_principles": {
+    "cnn_artifact_not_flagged": {
+      "principle": "a fast learned-CNN action-model fixture is NOT DURATION_TOO_SHORT-flagged -- the .422 A1 headline protection."
+    },
+    "fake_llm_still_flagged": {
+      "principle": "a live_llm_inference fixture at <60s IS still flagged -- guards against weakening the real fabrication check."
+    },
+    "guard_mechanism": {
+      "principle": "names the recognized substrate/floor + where it fires -- the fix that stops a fast-but-real CNN being quarantined."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; shipped: learned_cnn_substrate_guard_added OR complete: learned_cnn_substrate_guard_partial_<reason>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "tests_added_pass": {
+      "principle": "Tests Must Run and Assert -- both the not-flagged-on-CNN and still-flagged-on-fake-LLM cases."
+    }
+  },
+  "guard_mechanism": {
+    "cnn_applied_floor_s": 1.0,
+    "cnn_duration_flag_kinds": [],
+    "cnn_floor_reason": "verifier_scoring",
+    "fake_llm_applied_floor_s": 60.0,
+    "fake_llm_duration_flag_kinds": [
+      "DURATION_TOO_SHORT"
+    ],
+    "fake_llm_floor_reason": "live_model",
+    "fires_in": [
+      "scripts/adversarial_verify.py:duration_floor_for_artifact",
+      "scripts/adversarial_verify.py:check_duration_vs_claim",
+      "scripts/summarize_artifact.py:summarize"
+    ],
+    "recognized_substrates": [
+      "verifier_ensemble_against_cached_candidates",
+      "live_llm_inference"
+    ]
+  },
+  "honest_verdict": "shipped: learned_cnn_substrate_guard_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "model_specs": {
+    "fixture_markers": [
+      "learned CNN torch CPU marker",
+      "fake live_llm_inference GGUF marker"
+    ],
+    "invoked": "none",
+    "purpose": "adversarial_verify duration-floor regression fixtures only"
+  },
+  "preconditions_checked": {
+    "adversarial_verify_help_exits_0": true,
+    "adversarial_verify_import_ok": true,
+    "cnn_fixture_has_llm_or_gguf_marker": false,
+    "cnn_fixture_has_torch_marker": true,
+    "fake_llm_fixture_has_gguf_marker": true,
+    "model_load": false,
+    "scripts_research_conductor_modified": false
+  },
+  "random_seed": 4575,
+  "reproducibility_checksum": "sha256:f6ee2e476a398e983e78152055f4a3d5125a0d03884b13da046b0af1ba9e3eeb",
+  "result_path": "results/experiment_4575_learned_cnn_substrate_guard.json",
+  "schema": "carnot.exp4575.learned_cnn_substrate_guard.v1",
+  "spec_refs": [
+    "REQ-ARC-FCP-4575",
+    "SCENARIO-ARC-FCP-4575"
+  ],
+  "tests_added_pass": {
+    "assertions": [
+      "fast learned-CNN torch fixture uses verifier-scoring 1s floor",
+      "fast live_llm_inference GGUF fixture still emits DURATION_TOO_SHORT",
+      "summarize_artifact surfaces the applied substrate floor"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_guards.py tests/python/test_experiment_4575_learned_cnn_substrate_guard.py -q --no-cov"
+    ],
+    "passed": true
+  }
+}
