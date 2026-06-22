@@ -1,3 +1,72 @@
+## 2026-06-22 — .424 planning sweep — GENERATION COMPLETENESS: the .423 feature-ROUTER NULLED (winner generated for only 1/25 held-out variants; 15/24 misses because the routed approach `goal_distance_astar` is `variant_wired=False` — a mechanical wiring gap, not modeling); the un-tried fix is to WIRE the toolkit into the held-out generation harness so the selected approach actually RUNS
+
+Added by the .424 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-22). The .423 scorecard
+(capstone exp4590, `success: live_submittable_above_33_feature_router_false_negative_risk_open`) had ONE
+clean win and confirmed the wall a FOURTH time:
+
+- **WIN — A1 closed the live-submission gap (exp4580):** `live_submittable_level_count` 33 → **53**
+  (`count_delta=20`), banked replayable trajectories for all 24 reproduced games, env-adaptive re-solve
+  recovered sc25 (version-drift), `ready_for_operator_submit=True`. The refreshed package
+  (`results/experiment_4580_submission_package_live_gap_close.json`) is ready for the operator to resubmit
+  and beat the standing 33-level gate. **A2 banked ar25 L2 → `reproducible_total_levels` 53 → 54.**
+- **NULL (4th confirmation of generation-not-ranking) — A3 feature-ROUTER (exp4582):** `generic_transfer`
+  flat at **0.04** (== baseline == random-route control → TAUTOLOGY-flagged, false-negative-risk open).
+  The decisive diagnostic: `winner_generated` = **1 of 25** held-out variants (24 NOT generated), and the
+  residual is mechanical — `avatar_navigation:goal_distance_astar:variant_wired=False unsolved=12`,
+  `click_connect:goal_distance_astar:variant_wired=False unsolved=3`, `keyboard_graph:systematic_bfs:
+  variant_wired=True unsolved=7`. **15/24 misses are because the right approach is NOT WIRED into the
+  variant generation harness** — selecting it (the router's job) generates nothing if it never runs.
+- **A4 diversity-floor transfer (exp4583):** no transfer (honest null). The shipped 4/11-public-set
+  diversity floor does not lift first-win on unseen variants.
+
+**Settled, do NOT re-derive or re-build (planner read this before drafting .424):**
+1. **`cross_game_features_v3` ALREADY transfers — LOO-AUROC 0.674** (exp4545 `.418,
+   `success: cross_game_discrimination_loo_auroc_0.674_above_chance`, in-sample 0.871). The structural-
+   feature verifier transfer (GAP-ARCH-FEATURES) is **closed above the 0.6 bar**. Do NOT re-propose
+   "build v3 to beat chance" — it is done. The OPEN question is using that transferring energy to GUIDE
+   GENERATION, not to re-rank.
+2. **Verifier-guided best-first EXPANSION REGRESSED** (.422 A2 exp4569 `transfer_delta=-0.04`; weekend
+   `value_weight>0` 2/11 vs diversity 4/11; reset-replay navigation tax). Do NOT re-run a learned-value
+   EXPANSION priority as a headline.
+3. **Re-ranking / routing a fixed pool adds 0** (.421 A6, .423 A3): the winner is never in the pool.
+
+**The .424 pivot — finally attack GENERATION directly (the un-tried lever):**
+- **WIRE the toolkit into the held-out generation harness** (`measure_generic_transfer_over_variants`'s
+  `variant_runner`): dispatch each held-out variant to its mechanic-class approach
+  (`arc_goal_distance.goal_distance_solve` for avatar/click-connect, `graph_explore_solve_v2`+diversity
+  for graph, the LLM reasoner for the tail) so the selected approach RUNS and GENERATES candidates.
+  Metric: `winner_generated_rate` (1/25 baseline) + `generic_transfer` (0.04) + actions-to-first-levelup.
+- **Generation guidance via an objective goal-distance / structural-progress ENERGY** (the operator's
+  2026-06-20 energy-augmented-ARC spine) for the wired-but-still-failing classes — a GENERATION prior
+  biasing action proposals toward the goal, NOT a learned-value EXPANSION priority (which regressed).
+
+**New / verified references this sweep (WebSearch 2026-06-22) — candidate GENERATION / world-model
+induction / exploration for novel interactive games (the .424 headline track):**
+- **arXiv:2510.04542** — "Code World Models for General Game Playing" (CWM): an agent INDUCES an explicit
+  Python transition/world model for an unseen game and PLANS in it — the strongest match to the ARC-AGI-3
+  generation-on-first-contact problem and to Carnot's E3 executable-world-model slot. Generation prior.
+- **arXiv:2507.12821** — "Assessing Adaptive World Models in Machines with Novel Games" (ICLR 2025): an
+  eval framework for rapid world-model induction on novel games — directly the ARC-AGI-3 first-contact
+  generalization task; corroborates the "induce perception+dynamics+goal at runtime" north-star framing.
+- **arXiv:2510.12088** — "One Life to Learn: Inferring Symbolic World Models for Stochastic Environments
+  from Unguided Exploration": symbolic (not latent) world-model induction from exploration alone — maps
+  onto Carnot's symbolic per-game adapters + the offline self-play loop.
+- **arXiv:2502.13200** — "Learning To Explore With Predictive World Model Via Self-Supervised Learning":
+  self-supervised predictive model drives exploration under sparse reward — the 0.08-wall root cause
+  (exploration-to-first-win) is exactly this; relevant to the click-effect generation prior.
+- **arXiv:2505.19095** — "ScreenExplorer: Training a VLM for Diverse Exploration in Open GUI World":
+  diversity-driven exploration of a GUI action space — corroborates the shipped diversity floor and the
+  generation-broadening direction.
+- **arXiv:2603.24621** — "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence" (official report;
+  carried + re-verified): the scored metric is action efficiency on FIRST CONTACT over UNSEEN games;
+  frontier models < 1% of human efficiency. The benchmark this whole track serves.
+
+Sources (WebSearch 2026-06-22): arxiv.org/abs/{2510.04542, 2507.12821, 2510.12088, 2502.13200, 2505.19095,
+2603.24621}; kaggle.com/competitions/arc-prize-2026-arc-agi-3; arcprize.org/blog/arc-agi-3-launch. The D
+task (SOTA-ingestion) re-verifies these via the reliable channel + extends the mapping onto A1/A3.
+
+---
+
 ## 2026-06-21 — .422 planning sweep — ACTION EFFICIENCY: the .421 verifier-router NULLED (re-ranking a fixed pool adds 0 when the winner is never IN the pool); pivot to the leaderboard's #1 lever (a CNN clickability/action-effect predictor) re-aimed at actions-to-first-levelup + verifier-guided candidate EXPANSION
 
 Added by the .422 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-21). The .421 scorecard
