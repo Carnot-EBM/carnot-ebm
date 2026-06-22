@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-06-22 (adversarial_verify: baseline-identity TAUTOLOGY carve-out — outer-loop, operator-directed)
+
+Operator: "Have B2's carve-out cover the baseline-identity tautology case." The `.424` headline
+exp4592 (a GENUINE `winner_generated` 1/25->2/25 positive) was quarantined by 11 TAUTOLOGY flags,
+~all the 0.04 baseline/delta arithmetic cascade (baseline=0.04=1/25, treatment=0.08=2/25,
+delta=0.04). The pre-existing control-vs-treatment honest-null carve-out missed it (exp4592 has a
+`success:` verdict, not a null).
+
+- **`scripts/adversarial_verify.py`**: `check_tautology` downgrades CRITICAL->WARN only when BOTH
+  coinciding fields are non-measurements — a baseline/reference (`_is_reference_field`,
+  suffix-anchored) OR a VERIFIED arithmetic delta (`_is_verified_arithmetic_delta`: value ==
+  |a-b| for two other present fields SHARING its metric stem). exp4592 -> 11 critical to 1 (the
+  legitimate two-treatment-outcome pair, which needs an experiment-side methodology note, not a
+  linter hole). Complements the conductor's `.424` B2 (exp4599) null-delta methodology carve-out.
+- **Adversarial-reviewed (2 passes).** Pass 1 caught a bare-substring fabrication hole (name two
+  copied outcomes `accuracy_delta`/`auroc_delta` to dodge quarantine); fixed via suffix-anchoring
+  + stem-bound arithmetic verification. Pass 2 verdict: SHIP (corpus audit: 16 downgraded pairs
+  across 7 artifacts, all genuinely structural; copied measurements still flag CRITICAL).
+- **`tests/python/test_adversarial_verify_baseline_identity_tautology.py`**: 9 asserting tests
+  incl. the reviewer's exact exploit as regression guards (BIDT-7/8/9). Full adversarial suite: 97 pass.
+- Commit `446c0586d`.
+
 ## 2026-06-22 (Energy-config-space generation strategy — research ingested + flagged for .425, outer-loop)
 
 Triggered by the operator asking to step back from the `.424` candidate-GENERATION wall, research higher
