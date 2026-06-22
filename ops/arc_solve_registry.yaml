@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-21'
+updated: '2026-06-22'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -148,6 +148,48 @@ general_gotchas:
       leave-one-game rows; no new executable level was banked, so
       reproducible_total_levels is unchanged.
     reproducibility_checksum: sha256:40b6b9874717b0a9973e9e33addfba694337ee722656e4101335c6c44173bab1
+- id: primitive_env_adaptive_resolve_operator
+  operator: env_adaptive_resolve_operator
+  derived_from_games:
+  - sc25
+  - exp4580_live_submission_gap_close
+  note: >-
+    Exp 4584 promotes the A1 env-adaptive re-solve pattern into a reusable
+    operator: keep symbolic action labels as the durable plan, discover or
+    re-derive the current environment's coordinates at replay time, compare the
+    adaptive replay against frozen coordinate replay, and count value only when
+    the adaptive path reaches the transfer verifier target under coordinate drift
+    where frozen replay fails. This is packaging/replay scaffolding, not a win
+    oracle; any new level still counts only through arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Env-adaptive replay adds value only for symbolic plans whose labels can be
+      resolved against current environment features; pure keyboard plans or
+      already-valid frozen coordinates are expected nulls.
+  - Transfer proxy recovered coordinate drift on non-sc25 click-label games, but
+      no new level was banked, so reproducible_total_levels is unchanged.
+  latest_exp4584_transfer:
+    artifact: results/experiment_4584_primitive_persist_transfer.json
+    transfer_games:
+    - s5i5
+    - ft09
+    - sb26
+    transfer_value_per_game:
+      s5i5:
+        drift_recovered: true
+        existing_reproduced_level: 1
+        offline_reproduced_new_level: false
+      ft09:
+        drift_recovered: true
+        existing_reproduced_level: 1
+        offline_reproduced_new_level: false
+      sb26:
+        drift_recovered: true
+        existing_reproduced_level: 1
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is drift-recovery over cached symbolic click
+      labels; no new executable level was banked, so reproducible_total_levels is
+      unchanged.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
