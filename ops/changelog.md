@@ -1,5 +1,35 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Program-generalization first swing: imagination-planning DEEPENS L1, walls on hidden state — outer-loop, interactive)
+
+Operator: "take a first swing at the program-generalization direction" (the leaderboard-leader deepening
+lever, Executable World Models arXiv:2605.05138 — induce a `transition+goal` model, plan in imagination
+instead of stumbling into deeper levels via real-env search). REUSED the existing E3 framework
+(`python/carnot/agentic/arc_executable_world_model.py`: `collect_transitions` → `WorldModelVerifier` →
+`plan_in_model`) rather than reinventing; harness `scripts/experiments/experiment_program_gen.py`
+(per-game artifacts, all 3 adversarial-verify clean). Write-up
+`docs/research-notes/program-generalization-first-swing-2026-06-22.md`.
+
+- **The lever WORKS at L1 (first such demonstration on our stack).** Hand-induced a faithful tu93 4-dir
+  maze-nav world model (`results/arc_e3/tu93/world_model_nav.py`; reverse-engineered: avatar=3x3 colour-9
+  block + colour-4 centre, 6px/step, colour-5 wall / colour-2 door / colour-14 goal; **100% movement
+  accuracy** = 99/99 moves, 101/101 blocks, 0 false-blocks). `plan_in_model` planned an 18-action L1 path
+  ENTIRELY IN IMAGINATION, executed it, leveled up — **fresh-env reproduced**
+  (`experiment_program_gen_tu93.json`).
+- **Deepening to L2 is HIDDEN-STATE bound**, not planner- or fidelity-bound. The L2 plan matched reality
+  move-for-move for 3–4 steps then hit env GAME-OVER at a RUN-DEPENDENT step — the signature of tu93's
+  documented non-idempotent-reset parity (registry `tu93` gotcha #7). A pure grid→grid model can't carry
+  the hidden parity. Same hidden-state wall the value approach (value_q_head v5/v6) hit; tu93 ∈ wa30/ls20
+  family, ties to `experiment_8`'s wa30 ~53% nondeterminism.
+- **Existing E3 models don't generalize:** ka59 (genuine engine, cell-recall 0.43 — too noisy for BFS to
+  plan even L1) and sc25 (`PATCH_BY_KEY` memorized table, off-table cell-recall 0.06) both reached only L0
+  in imagination. Induction fidelity is the precondition; local/codex proposers don't yet reach it, a
+  careful hand-induction does.
+- **Forward (`.425+`, folded into known-issues):** the energy/config state for the wa30/ls20/tu93 family
+  must carry the hidden parity/budget LATENT dimension (grid-only energy diverges at depth);
+  fresh-env-per-candidate branch search is the registry's deepening fix; aim the local-GGUF proposer at
+  induction fidelity. Conductor left STOPPED (per operator's earlier fold-not-restart choice). Committed `[outer-loop]`.
+
 ## 2026-06-22 (Verifier-as-Q-head: learned dense value validated per-level (7.6x) — outer-loop, interactive)
 
 Continuation of the generation-wall session: chased the Phase-3 verifier-as-Q-head direction the
