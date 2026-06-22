@@ -130,6 +130,19 @@ frontier-research part (multi-step specific sequences in a sparse-reward env), n
 | pure random | 3/11 | 142 actions (~0.04) | WORSE (lost efficiency) |
 | **hybrid (structured+random-on-stall)** | **3/11** | **20 actions (eff 2.0069)** | **best — dominates both** |
 
+
+## VALIDATED END-TO-END — flag-ON submitted explorer: 4/11, score 2.0804 > 2.0069
+
+Wired the diversity into the SUBMITTED `StepwiseExplorer` (`CARNOT_ARC_EXPLORE_DIVERSITY=1`, parity-safe,
+default OFF, parity 10/10). Run through the real harness + authoritative scorer, the flag-ON explorer
+reaches **4/11 first-win** (lp85@20 eff 2.0069 KEPT; r11l@479, sp80@401, cd82@882 RECOVERED) for an
+**efficiency-sum of 2.0804 vs the structured baseline's 2.0069** — strictly higher score AND 4x the
+reachability. The INTEGRATED explorer beats even the offline pure-random hybrid (3/11): structured
+state-building gives the diversity-on-stall injection a richer frontier, so it catches cd82 that pure
+random missed. General (diversity, not game-specific) -> should transfer to the hidden eval; ship-ready
+behind the flag. This is the offline-beats-baseline result the gate wanted: a genuine candidate to move
+0.08, gate-justified rather than a 0.08 re-confirmation.
+
 ## Artifacts
 
 - `results/arc_compete_sim.json` — explorer floor 1/11; goal-bias variants
