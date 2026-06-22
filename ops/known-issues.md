@@ -865,6 +865,29 @@ reproduction-gated, verifier_is_oracle:false). ALL THREE NULL on the genuinely-h
   grid-DETERMINED, NO hidden state** (0% nondet over 163 pairs; wall is search/goal-bound — a deep
   needle with an un-inducible goal). ka59 control confirmed hidden-state detection (0.857).
 
+- **VERIFIER-AS-Q-HEAD: a LEARNED value supplies the dense gradient (the session's ONE genuine
+  positive).** The unifying finding was "need a DENSE per-step gradient"; a learned value IS that.
+  Arc v1->v5 (`scripts/experiments/experiment_value_q_head*.py`, `experiment_value_q_head_v3.py`):
+  - **v1**: the CNN ValueNet routes (1.15x), beating the LINEAR `LearnedVerifier` that "actively
+    misled" (arc_offline_to_live_bridge_v2). **v2**: hard-negatives null but DIAGNOSE the
+    architecture — `AdaptiveAvgPool2d(1)` (global pool) discards spatial position. **v3**: a
+    position-preserving `SpatialValueNet` (4x4 pool) DISCRIMINATES sharply (on-path 13 << far 43).
+    **v4 BREAKTHROUGH**: with a tuned `heuristic_weight` (~10), it routes ls20-L1 in 233 vs blind's
+    1777 expansions = **7.6x** (monotonic in weight). **v5 + budget diagnostic**: does NOT DEEPEN —
+    a per-level value has no signal for L2's different goal, and L2 is GRADIENT-bound not
+    budget-bound (blind+value both fail L2 at 12000). The self-play deepening loop CANNOT bootstrap
+    (no findable L2 seed; value doesn't cross level boundaries).
+  - **BREADTH (bounded win)**: 7.6x is game-dependent — ls20 7.6x (clean nav), tu93 1.23x
+    (nav+parity), su15 1.28x (weak, non-positional), sk48 BLOCKED (blind can't seed L1). Strong only
+    where the gradient is directly-followable (clean navigation); needs a blind-seedable L1.
+
+**SHIPPABLE UPGRADE FLAGGED (`.425+`): wire `SpatialValueNet` + a tuned weight into the conductor's
+`scripts/arc_loop_solve.py`.** It currently warm-starts with the LINEAR `LearnedVerifier`
+(`arc_value_learner`) which we've now SHOWN cannot route the live search; the position-aware
+`SpatialValueNet` (`arc_value_net.py` has the global-pool version — add the 4x4-pool variant) +
+`heuristic_weight~10` is a real per-level routing speedup on navigation games (faster banking, not
+deeper levels). Per-game value, CPU-trained, mirror-ready (Rule 3). Does NOT crack the hard tail.
+
 **WHAT THIS MEANS FOR `.425` (forward guidance):** (a) the energy-config-space approach works where
 a goal is INDUCIBLE/OBSERVABLE (the target-satisfaction class, vc33/r11l-style) — apply it there and
 BANK levels (real reproducible_total_levels growth); (b) HIDDEN-STATE games (wa30-class) need
