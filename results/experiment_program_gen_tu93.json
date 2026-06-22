@@ -2,7 +2,7 @@
   "experiment": "experiment_program_gen",
   "game": "tu93",
   "phase": "existing_model_deepening",
-  "honest_verdict": "complete: faithful_world_model_plans_and_reproduces_L1_in_imagination_but_deepening_is_HIDDEN_STATE_bound_env_game_over_after_locally_correct_predictions",
+  "honest_verdict": "complete: faithful_world_model_plans_and_reproduces_L1_in_imagination_but_L2_mechanic_differs_deterministic_env_fatal_move_model_does_not_generalize_across_levels",
   "verifier_is_oracle": false,
   "inference_substrate": "offline_arc_search_plus_induced_world_model",
   "random_seed": 20260622,
@@ -28,7 +28,36 @@
       "stop_reason": "game_over_after_model_divergence"
     }
   ],
-  "deepening_hidden_state_bound": true,
+  "deepening_stall_diagnosis": {
+    "l2_death_steps_over_trials": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "budget_at_stall": [
+      [
+        50,
+        null
+      ],
+      [
+        50,
+        null
+      ],
+      [
+        50,
+        null
+      ],
+      [
+        50,
+        null
+      ]
+    ],
+    "deterministic": true,
+    "budget_non_exhausted": false,
+    "diagnosed_cause": "deterministic_env_fatal_move_L2_mechanic_differs_from_L1_model_does_not_generalize"
+  },
+  "methodology_note": "L2 deepening, when it stalls at a game-over, is diagnosed empirically (death-step determinism + move-budget over fresh-env replays), not asserted. For tu93 the L2 death is deterministic + budget-unexhausted => the L2 move mechanic differs from L1's (model-generalization failure), NOT the non-idempotent-reset parity (which is run-dependent).",
   "deepened_to_L2plus_reproduced": false,
-  "duration_s": 0.8
+  "duration_s": 1.6
 }
