@@ -953,6 +953,27 @@ experiments + read env source; 2 first-draft over-claims caught and corrected). 
   vocabulary beyond reach-goal (so reflection/coalescence/toggle L2s become plannable). Then more real-game
   re-induction tests + a tu93-L2 deepen become possible.
 
+**HAZARD-AWARE MODEL CLASS BUILT → DEEPENS tu93 L2 (2026-06-22, outer-loop, ultracode — operator: "build
+the hazard-aware model class").** Built + 3-skeptic adversarial review (reproduction/causality/scoping; core
+SURVIVES). Write-up `docs/research-notes/hazard-aware-world-model-2026-06-22.md`.
+- The tu93 L2 hazard (investigated live): colours 8+15 = a charging ENEMY on row 28, stationary until the
+  avatar approaches along its row within ~6 cells, then charges to intercept + removes the avatar. Safe path
+  = up off its row then right to the goal. Grid-expressible (L2 grid-deterministic).
+- `HazardAwareNavWorldModel` (`arc_nav_world_model.py`) learns the line-charger FROM TRANSITIONS (hazard =
+  the object that MOVES at death, disambiguating it from the static door; + charge axis/range; goal inherited
+  from L1). `engine` predicts avatar-REMOVAL for lethal moves so `plan_in_model` routes the safe detour.
+  Unit-tested (6 pass).
+- RESULT (`scripts/experiments/experiment_hazard_aware.py`): HAZARD_AWARE deepens tu93 L2 + reproduces
+  (`reproduced_level=2`) on 5/5 seeds; pure-NAV dies on every seed. PARITY-ROBUST (8 fresh envs/reset-8x all
+  return L2). CAUSAL (disable `is_lethal` → collapses to nav plan + death). No hardcoding.
+- SCOPE (honest): ONE hazard instance (tu93 line-charger) + 1 synthetic test — generality across hazard
+  TYPES NOT proven. Caveats: death signal self-supplied via the nav suicidal plan; charge_range = max(death
+  distances).
+- **Next**: wire the hazard-aware fit into the re-induction loop at the trigger (the death that fires the
+  trigger IS the hazard signal); extend the hazard vocabulary beyond the line-charger (pursuer/proximity/
+  multi-hazard) as new games surface them; still need the win-vocabulary extension (reflection/coalescence)
+  for the non-nav L2s.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")

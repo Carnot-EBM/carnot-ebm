@@ -108,3 +108,49 @@ def test_fit_does_not_fabricate_on_static_input():
     assert m.displacement == {}
     g = np.full((7, 7), WALL)
     assert np.array_equal(m.engine(g, 4), g)           # safe identity, no motion invented
+
+
+# --- hazard-aware model: a horizontal line-charger HAZARD (colour 8) on the avatar's row ---------------
+HAZ = 8
+
+
+def _haz_transitions():
+    """Move + block + a LETHAL transition: the avatar approaches a colour-8 charger along its row; the
+    charger CHARGES (moves toward the avatar) and REMOVES it (avatar absent in g1)."""
+    tr = list(_transitions())  # the nav move/block/levelup transitions (no hazard present)
+    # lethal: avatar at (3,1) on row 3, charger block at (3,5); avatar moves right (toward it); charger
+    # charges left to intercept and the avatar is REMOVED.
+    g0 = np.full((7, 9), WALL, dtype=int)
+    g0[3, 1] = AV
+    g0[3, 4:7] = HAZ; g0[2, 5] = HAZ; g0[4, 5] = HAZ  # noqa: E702 — a colour-8 charger blob around (3,5)
+    g1 = np.full((7, 9), WALL, dtype=int)                  # avatar REMOVED (death)
+    g1[3, 2:5] = HAZ; g1[2, 3] = HAZ; g1[4, 3] = HAZ  # noqa: E702 — charger CHARGED left (moved) to ~(3,3)
+    for _ in range(3):
+        tr.append((g0, 4, g1, 0, 0))                       # repeat so the learner has a clear signal
+    return tr
+
+
+def test_hazard_aware_learns_line_charger():
+    """REQ: the hazard-aware model learns the charger colour, axis (row), and a positive charge range."""
+    from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+    m = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL)
+    assert HAZ in m.hazard_colors          # learned the charger colour (the object that MOVED at death)
+    assert m.hazard_axis == "row"          # horizontal charger
+    assert m.charge_range > 0
+    assert m.goal_color == GOAL            # inherited / level-invariant goal
+
+
+def test_hazard_aware_engine_predicts_avatar_removal_on_lethal_move():
+    """REQ: a move into the charger's range is predicted as avatar-REMOVAL (a dead-end the planner avoids);
+    a move AWAY from the charger is a normal safe nav move."""
+    from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+    m = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL)
+    # avatar adjacent to the charger on the same row, moving toward it -> lethal -> avatar erased
+    g = np.full((7, 9), WALL, dtype=int)
+    g[3, 1] = AV
+    g[3, 4:7] = HAZ; g[2, 5] = HAZ; g[4, 5] = HAZ  # noqa: E702
+    assert m.is_lethal(g, 4) is True
+    out = m.engine(g, 4)
+    assert not np.any(out == AV)           # the avatar was removed (dead-end grid)
+    # moving the other way (away from the charger) is NOT lethal
+    assert m.is_lethal(g, 3) is False
