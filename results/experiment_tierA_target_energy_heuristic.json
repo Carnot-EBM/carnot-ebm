@@ -1,0 +1,283 @@
+{
+  "experiment": "experiment_tierA_target_energy_heuristic",
+  "game": "vc33-5430563c",
+  "honest_verdict": "complete: target_energy_heuristic_helps_on_featurizer_ok_only_no_variant_transfer_perception_gated",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search",
+  "random_seed": 20260622,
+  "budget_max_expansions": 2000,
+  "winner_generated_rate_target_energy_all": 1.0,
+  "winner_generated_rate_bfs_all": 1.0,
+  "winner_generated_rate_target_energy_featurizer_ok": 1.0,
+  "winner_generated_rate_bfs_featurizer_ok": 1.0,
+  "n_featurizer_ok": 7,
+  "n_featurizer_broken": 0,
+  "mean_bfs_over_target_energy_expansion_ratio": 1.247,
+  "perception_brittleness_note": "featurizer_ok on base/color-preserving variants, expected False on color-permuted variants (hardcoded TARGET_COLORS) -> bounds #1 to games with a bespoke featurizer.",
+  "a3_reorder_prior_baseline": "exp4594 winner_generated_by_energy_prior=0/25 (the reorder-prior null)",
+  "rows": [
+    {
+      "spec": {
+        "label": "base",
+        "variant": null
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": true,
+          "misaligned_target_pairs": 1,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 24
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 29,
+          "secs": 0.0
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 95,
+          "secs": 0.1
+        }
+      }
+    },
+    {
+      "spec": {
+        "label": "color_v1",
+        "variant": 1
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": false,
+          "misaligned_target_pairs": 0,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 0
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 95,
+          "secs": 0.2
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 95,
+          "secs": 0.1
+        }
+      }
+    },
+    {
+      "spec": {
+        "label": "color_v1_reflect0",
+        "variant": 1,
+        "reflect": 0
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": false,
+          "misaligned_target_pairs": 0,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 0
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 50,
+          "secs": 0.1
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 83,
+          "secs": 0.1
+        }
+      }
+    },
+    {
+      "spec": {
+        "label": "color_v2",
+        "variant": 2
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": false,
+          "misaligned_target_pairs": 0,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 0
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 36,
+          "expansions": 1332,
+          "secs": 7.1
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 95,
+          "secs": 0.1
+        }
+      }
+    },
+    {
+      "spec": {
+        "label": "color_v2_reflect0",
+        "variant": 2,
+        "reflect": 0
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": false,
+          "misaligned_target_pairs": 0,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 0
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 35,
+          "expansions": 1320,
+          "secs": 7.1
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 83,
+          "secs": 0.1
+        }
+      }
+    },
+    {
+      "spec": {
+        "label": "color_v3",
+        "variant": 3
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": false,
+          "misaligned_target_pairs": 0,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 0
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 95,
+          "secs": 0.2
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 95,
+          "secs": 0.1
+        }
+      }
+    },
+    {
+      "spec": {
+        "label": "color_v3_reflect0",
+        "variant": 3,
+        "reflect": 0
+      },
+      "featurizer_ok": true,
+      "featurizer": {
+        "ok": true,
+        "features": {
+          "has_target_pair": false,
+          "misaligned_target_pairs": 0,
+          "unsatisfied_targets": 1,
+          "total_targets": null,
+          "manhattan_to_target": 0
+        }
+      },
+      "arms": {
+        "target_energy_heuristic": {
+          "arm": "target_energy_heuristic",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 50,
+          "secs": 0.1
+        },
+        "bfs_baseline": {
+          "arm": "bfs_baseline",
+          "reached_level": 1,
+          "winner_generated": true,
+          "offline_reproduced": true,
+          "actions": 3,
+          "expansions": 83,
+          "secs": 0.1
+        }
+      }
+    }
+  ],
+  "duration_s": 16.1
+}
