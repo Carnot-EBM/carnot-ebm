@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Verifier-as-Q-head: learned dense value validated per-level (7.6x) — outer-loop, interactive)
+
+Continuation of the generation-wall session: chased the Phase-3 verifier-as-Q-head direction the
+mapping pointed to (a LEARNED value supplies the dense per-step gradient every hand/LLM goal lacked).
+Five-step arc (`scripts/experiments/experiment_value_q_head*.py`):
+
+- **v1** CNN ValueNet routes (1.15x) — beats the linear `LearnedVerifier` that "actively misled".
+- **v2** hard-negatives null but diagnose the architecture (global avg-pool discards spatial position).
+- **v3** position-preserving `SpatialValueNet` (4x4 pool) discriminates sharply (on-path 13 << far 43).
+- **v4 BREAKTHROUGH** tuned `heuristic_weight`~10 -> routes ls20-L1 in 233 vs blind's 1777 = **7.6x**.
+- **v5 + budget diagnostic** does NOT deepen: per-level value has no L2 signal; L2 is gradient-bound
+  (not budget-bound; fails at 12000). Self-play deepening can't bootstrap (no findable L2 seed).
+- **Breadth (bounded)**: 7.6x is game-dependent (ls20 7.6x clean-nav; tu93 1.23x; su15 1.28x; sk48
+  blocked). Strong only where the gradient is directly-followable + blind can seed L1.
+
+The session's ONE genuine positive: the verifier-as-Q-head is a real PER-LEVEL routing tool (not a
+deepener). Folded into `ops/known-issues.md` `.425` flag + flagged the SpatialValueNet routing
+upgrade for the conductor's `arc_loop_solve` (replaces the linear verifier that can't route).
+Conductor left STOPPED (operator chose fold+flag, not restart). All committed `[outer-loop]`.
+
 ## 2026-06-22 (ARC generation-wall sprint: 3 levers falsified + hard tail mapped — outer-loop, interactive)
 
 Operator switched from the autonomous conductor to interactive outer-loop for faster progress on the
