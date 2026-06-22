@@ -6,7 +6,7 @@ SCENARIO-CAPSTONE-4550-FIELD-PRINCIPLES.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 import hashlib
 import json
 from pathlib import Path
@@ -28,6 +28,7 @@ VariantRunner = Callable[[str, Mapping[str, Any], int], Mapping[str, Any]]
 
 RESULT_RELATIVE_PATH = "results/experiment_4550_honest_sprint_metric.json"
 REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
+HUMAN_REPLAY_RELATIVE_PATH = Path("data/arc_public_demo_human_replay_corpus")
 EXPERIMENT_ID = "experiment_4550_honest_sprint_metric"
 SCHEMA = "carnot.exp4550.honest_sprint_metric.v1"
 RANDOM_SEED = 4550
@@ -195,6 +196,189 @@ def _transfer_rate(solved: int, attempted: int) -> float:
     return 0.0 if attempted <= 0 else round(float(solved) / float(attempted), 10)
 
 
+def _positive_float(value: Any) -> float | None:
+    if not isinstance(value, int | float) or isinstance(value, bool):
+        return None
+    numeric = float(value)
+    return numeric if numeric > 0.0 else None
+
+
+def _median(values: Sequence[int | float]) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(float(value) for value in values)
+    midpoint = len(ordered) // 2
+    if len(ordered) % 2:
+        return float(ordered[midpoint])
+    return float((ordered[midpoint - 1] + ordered[midpoint]) / 2.0)
+
+
+def _attempt_actions_to_first_levelup(attempt: Mapping[str, Any]) -> int | None:
+    if attempt.get("attempted") is not True or attempt.get("solved") is not True:
+        return None
+    for key in ("actions_to_first_levelup", "first_levelup_actions"):
+        value = _positive_float(attempt.get(key))
+        if value is not None:
+            return int(value)
+    actions = _positive_float(attempt.get("actions"))
+    return int(actions) if actions is not None else None
+
+
+def _flatten_action_thresholds(value: Any) -> list[tuple[int, int]]:
+    thresholds: list[tuple[int, int]] = []
+
+    def visit(item: Any) -> None:
+        if (
+            isinstance(item, list)
+            and len(item) == 2
+            and all(isinstance(part, int | float) and not isinstance(part, bool) for part in item)
+        ):
+            level = int(item[0])
+            count = int(item[1])
+            if level > 0 and count > 0:
+                thresholds.append((level, count))
+            return
+        if isinstance(item, list):
+            for child in item:
+                visit(child)
+
+    visit(value)
+    return thresholds
+
+
+def agent_actions_to_first_levelup(attempts: Iterable[Mapping[str, Any]]) -> list[int]:
+    """REQ-CAPSTONE-4574: count only solved held-out variant first-contact attempts."""
+
+    actions: list[int] = []
+    for attempt in attempts:
+        value = _attempt_actions_to_first_levelup(attempt)
+        if value is not None:
+            actions.append(value)
+    return actions
+
+
+def human_actions_to_first_levelup_from_rows(rows: Iterable[Mapping[str, Any]]) -> list[int]:
+    """REQ-CAPSTONE-4574: derive the local replay-corpus human baseline."""
+
+    first_by_replay: dict[tuple[str, str], int] = {}
+    for row_index, row in enumerate(rows):
+        env = str(row.get("env") or "")
+        replay_id = str(row.get("guid") or row.get("source_row_index") or row_index)
+        key = (env, replay_id)
+
+        thresholds = _flatten_action_thresholds(row.get("actions_by_level"))
+        if thresholds:
+            first_level_actions = min(count for _level, count in thresholds)
+            current = first_by_replay.get(key)
+            first_by_replay[key] = (
+                first_level_actions if current is None else min(current, first_level_actions)
+            )
+            continue
+
+        explicit = _positive_float(
+            row.get("actions_to_first_levelup")
+            if row.get("actions_to_first_levelup") is not None
+            else row.get("human_actions_to_first_levelup")
+        )
+        if explicit is not None:
+            current = first_by_replay.get(key)
+            value = int(explicit)
+            first_by_replay[key] = value if current is None else min(current, value)
+            continue
+
+        try:
+            progress = float(row.get("level_progress") or 0.0)
+        except (TypeError, ValueError):
+            progress = 0.0
+        step = _positive_float(row.get("step_index"))
+        if progress > 0.0 and step is not None:
+            current = first_by_replay.get(key)
+            value = int(step)
+            first_by_replay[key] = value if current is None else min(current, value)
+    return sorted(first_by_replay.values())
+
+
+def load_human_actions_to_first_levelup(
+    root: Path | str = REPO_ROOT,
+    *,
+    data_dir: Path | str | None = None,
+    limit: int | None = None,
+) -> list[int]:
+    """REQ-CAPSTONE-4574: load human actions-to-levelup from staged local shards."""
+
+    root_path = Path(root)
+    corpus_path = Path(data_dir) if data_dir is not None else HUMAN_REPLAY_RELATIVE_PATH
+    if not corpus_path.is_absolute():
+        corpus_path = root_path / corpus_path
+    if not (corpus_path / "manifest.json").exists():
+        return []
+    from carnot.agentic import arc_human_replay_corpus
+
+    rows = arc_human_replay_corpus.load_training_shards(corpus_path, limit=limit)
+    actions = human_actions_to_first_levelup_from_rows(rows)
+    if actions:
+        return actions
+    raw_paths = sorted((corpus_path / "raw_hf_mirror" / "data").glob("*.parquet"))
+    if not raw_paths:
+        return []
+    rows = arc_human_replay_corpus.iter_parquet_rows(raw_paths)
+    return human_actions_to_first_levelup_from_rows(rows)
+
+
+def action_efficiency_score(
+    *,
+    human_baseline_actions: float | None,
+    median_actions_to_first_levelup: float | None,
+) -> float:
+    """REQ-CAPSTONE-4574: compute min(human/agent,1)^2."""
+
+    if (
+        human_baseline_actions is None
+        or median_actions_to_first_levelup is None
+        or human_baseline_actions <= 0.0
+        or median_actions_to_first_levelup <= 0.0
+    ):
+        return 0.0
+    ratio = min(float(human_baseline_actions) / float(median_actions_to_first_levelup), 1.0)
+    return round(float(ratio * ratio), 10)
+
+
+def bootstrap_action_efficiency_ci(
+    *,
+    agent_actions: Sequence[int | float],
+    human_baseline_actions: float | None,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
+) -> list[float]:
+    """SCENARIO-CAPSTONE-4574: bootstrap action-efficiency over held-out attempts."""
+
+    clean_agent = [float(value) for value in agent_actions if _positive_float(value) is not None]
+    point = action_efficiency_score(
+        human_baseline_actions=human_baseline_actions,
+        median_actions_to_first_levelup=_median(clean_agent),
+    )
+    if not clean_agent or human_baseline_actions is None or human_baseline_actions <= 0.0:
+        return [0.0, 0.0]
+    if n_bootstrap <= 0 or len(clean_agent) == 1:
+        return [point, point]
+
+    rng = random.Random(random_seed)
+    n = len(clean_agent)
+    samples: list[float] = []
+    for _index in range(int(n_bootstrap)):
+        resample = [clean_agent[rng.randrange(n)] for _sample in range(n)]
+        samples.append(
+            action_efficiency_score(
+                human_baseline_actions=human_baseline_actions,
+                median_actions_to_first_levelup=_median(resample),
+            )
+        )
+    samples.sort()
+    lo = samples[int(0.025 * (len(samples) - 1))]
+    hi = samples[int(0.975 * (len(samples) - 1))]
+    return [round(float(min(lo, point)), 10), round(float(max(hi, point)), 10)]
+
+
 def bootstrap_transfer_ci(
     attempts: Sequence[Mapping[str, Any]],
     *,
@@ -271,6 +455,47 @@ def measure_generic_transfer_over_variants(
     }
 
 
+def measure_action_efficiency_over_variants(
+    attempts: Sequence[Mapping[str, Any]],
+    *,
+    root: Path | str = REPO_ROOT,
+    human_actions: Sequence[int | float] | None = None,
+    human_replay_data_dir: Path | str | None = None,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
+) -> JsonDict:
+    """SCENARIO-CAPSTONE-4574: compute the leaderboard action-efficiency term."""
+
+    agent_actions = agent_actions_to_first_levelup(attempts)
+    human_samples = (
+        [int(value) for value in human_actions if _positive_float(value) is not None]
+        if human_actions is not None
+        else load_human_actions_to_first_levelup(
+            root,
+            data_dir=human_replay_data_dir,
+        )
+    )
+    agent_median = _median(agent_actions)
+    human_median = _median(human_samples)
+    score = action_efficiency_score(
+        human_baseline_actions=human_median,
+        median_actions_to_first_levelup=agent_median,
+    )
+    return {
+        "median_actions_to_first_levelup": agent_median,
+        "human_baseline_actions": human_median,
+        "action_efficiency_score": score,
+        "action_efficiency_ci": bootstrap_action_efficiency_ci(
+            agent_actions=agent_actions,
+            human_baseline_actions=human_median,
+            random_seed=random_seed,
+            n_bootstrap=n_bootstrap,
+        ),
+        "agent_actions_to_first_levelup": agent_actions,
+        "human_baseline_sample_count": len(human_samples),
+    }
+
+
 def _checksum(payload: Mapping[str, Any]) -> str:
     blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return "sha256:" + hashlib.sha256(blob).hexdigest()
@@ -293,6 +518,33 @@ def _metric_wiring(result_path: str = RESULT_RELATIVE_PATH) -> JsonDict:
             "generic_transfer_ci",
         ],
         "known_game_bank_inflates_transfer": False,
+    }
+
+
+def capstone_coheadline_metric_wiring(result_path: str) -> JsonDict:
+    return {
+        "artifact": result_path,
+        "shared_helper": (
+            "carnot.experiment_4550_honest_sprint_metric."
+            "build_capstone_coheadline_metrics"
+        ),
+        "generic_transfer_helper": (
+            "carnot.experiment_4550_honest_sprint_metric."
+            "measure_generic_transfer_over_variants"
+        ),
+        "action_efficiency_helper": (
+            "carnot.experiment_4550_honest_sprint_metric."
+            "measure_action_efficiency_over_variants"
+        ),
+        "reported_side_by_side": [
+            "reproducible_total_levels",
+            "generic_transfer_rate_over_variants",
+            "generic_transfer_ci",
+            "action_efficiency_score",
+            "action_efficiency_ci",
+        ],
+        "known_game_bank_inflates_transfer": False,
+        "known_game_bank_inflates_action_efficiency": False,
     }
 
 
@@ -379,6 +631,70 @@ def build_generic_transfer_coheadline(
             "budget": int(budget),
             "runner": "generic_solver_offline_variant_env",
         },
+    }
+
+
+def build_capstone_coheadline_metrics(
+    root: Path | str = REPO_ROOT,
+    *,
+    result_path: str,
+    public_games: Sequence[str] | None = None,
+    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
+    budget: int = DEFAULT_BUDGET,
+    preconditions_checked: Mapping[str, Any] | None = None,
+    variant_runner: VariantRunner = default_variant_runner,
+    human_actions: Sequence[int | float] | None = None,
+    human_replay_data_dir: Path | str | None = None,
+    random_seed: int = RANDOM_SEED,
+    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
+) -> JsonDict:
+    """REQ-CAPSTONE-4574: build all three capstone headline metrics."""
+
+    root_path = Path(root)
+    coheadline = build_generic_transfer_coheadline(
+        root_path,
+        public_games=public_games,
+        variant_ids=variant_ids,
+        budget=budget,
+        preconditions_checked=preconditions_checked,
+        variant_runner=variant_runner,
+        random_seed=random_seed,
+        n_bootstrap=n_bootstrap,
+    )
+    preconditions = dict(coheadline["preconditions_checked"])
+    corpus_path = Path(human_replay_data_dir) if human_replay_data_dir is not None else HUMAN_REPLAY_RELATIVE_PATH
+    if not corpus_path.is_absolute():
+        corpus_path = root_path / corpus_path
+    preconditions.update(
+        {
+            "human_replay_corpus_path": str(corpus_path.relative_to(root_path))
+            if corpus_path.is_relative_to(root_path)
+            else str(corpus_path),
+            "human_replay_corpus_present": corpus_path.exists(),
+            "human_replay_manifest_present": (corpus_path / "manifest.json").exists(),
+            "exp4550_measure_generic_transfer_over_variants_import": callable(
+                measure_generic_transfer_over_variants
+            ),
+        }
+    )
+    action = measure_action_efficiency_over_variants(
+        coheadline["variant_attempts"],
+        root=root_path,
+        human_actions=human_actions,
+        human_replay_data_dir=corpus_path,
+        random_seed=random_seed,
+        n_bootstrap=n_bootstrap,
+    )
+    preconditions["human_baseline_sample_count"] = action["human_baseline_sample_count"]
+    miss = coheadline["precondition_miss"]
+    if miss is None and action["human_baseline_sample_count"] <= 0:
+        miss = "human_replay_corpus"
+    coheadline["preconditions_checked"] = preconditions
+    return {
+        **coheadline,
+        **action,
+        "precondition_miss": miss,
+        "metric_wired_into_capstone": capstone_coheadline_metric_wiring(result_path),
     }
 
 
