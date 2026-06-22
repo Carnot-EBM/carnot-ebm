@@ -1537,6 +1537,10 @@ SUBMITTED_AGENT_CONFIG = {
     "router_wired": True,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
+    "live_submit_package_path": "results/experiment_4585_submission_package_integration_gate.json",
+    "live_submit_source": "experiment_4585_integration_gate",
+    "feature_router_enabled": False,
+    "explore_diversity_default": False,
 }
 
 
