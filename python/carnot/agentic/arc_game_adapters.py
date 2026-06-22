@@ -253,6 +253,36 @@ SU15_L2_TAIL_LABELS: tuple[str, ...] = tuple(
 
 SU15_L2_SOLUTION_LABELS: tuple[str, ...] = SU15_L1_LABELS + SU15_L2_TAIL_LABELS
 
+CN04_L1_LABELS: tuple[str, ...] = (
+    _json_action_label(2),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 44, "y": 30}),
+    _json_action_label(3),
+    _json_action_label(5),
+)
+
+CN04_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 18, "y": 39}),
+    *(_json_action_label(1) for _ in range(6)),
+    _json_action_label(6, {"x": 45, "y": 15}),
+    *(_json_action_label(3) for _ in range(4)),
+    *(_json_action_label(2) for _ in range(2)),
+    _json_action_label(6, {"x": 51, "y": 51}),
+    *(_json_action_label(3) for _ in range(4)),
+    *(_json_action_label(1) for _ in range(8)),
+    *(_json_action_label(5) for _ in range(3)),
+)
+
+CN04_L2_SOLUTION_LABELS: tuple[str, ...] = CN04_L1_LABELS + CN04_L2_TAIL_LABELS
+
 
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
@@ -393,6 +423,64 @@ def _sp80():
         hand_verifier=lambda _game: 0.0,
         warmup_label=None,
         depth_caps={1: len(SP80_L1_LABELS), 2: len(SP80_L2_TAIL_LABELS), 3: 80},
+        branch_mode="fresh_env",
+    )
+
+
+# ---------------- cn04 (marker-pair shape alignment; L1 seed + L2 delta) ----------------
+def _cn04():
+    """cn04 -- marker-pair shape alignment puzzle.
+
+    The win predicate is visible in the environment code: every original 8/13 marker on each visible
+    sprite must overlap exactly one same-colored marker from another visible sprite. L2 keeps the same
+    mechanic but adds four movable pieces; the tail below moves/rotates the selected pieces into the
+    derived marker-pair placement and replays through the offline reproduction gate.
+    """
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(CN04_L1_LABELS):
+            return [CN04_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(CN04_L2_TAIL_LABELS):
+            return [CN04_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else -1
+        selected = getattr(game, "xseexqzst", None)
+        sprites = tuple(
+            sorted(
+                (
+                    str(getattr(sprite, "name", "")),
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    int(getattr(sprite, "rotation", 0)),
+                    bool(getattr(sprite, "is_visible", False)),
+                    sprite is selected,
+                )
+                for sprite in game.current_level.get_sprites()
+            )
+        )
+        return level, bool(getattr(game, "rqolqpqwo", False)), sprites
+
+    return GameAdapter(
+        game="cn04",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        depth_caps={1: len(CN04_L1_LABELS), 2: len(CN04_L2_TAIL_LABELS), 3: 1},
         branch_mode="fresh_env",
     )
 
@@ -984,6 +1072,7 @@ _BUILDERS = {
     "ar25": _ar25,
     "ft09": _ft09,
     "ka59": _ka59,
+    "cn04": _cn04,
     "su15": _su15,
     "sp80": _sp80,
     "lp85": _lp85,

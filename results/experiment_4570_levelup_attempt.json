@@ -1,0 +1,122 @@
+{
+  "arc_loop_result_path": "results/arc_loop_solve_cn04.json",
+  "dead_ends": [
+    {
+      "attempt": "pre-adapter arc_loop_solve --game cn04",
+      "game": "cn04",
+      "result": "needs_per_game_RE",
+      "why": "Adapter-free graph exploration only preserved the L1 seed; L2 needed the marker-pair shape-alignment delta registered in the cn04 GameAdapter."
+    },
+    {
+      "attempt": "rotation candidate skipped before retry",
+      "game": "ar25",
+      "result": "recorded_hidden_state_dead_end",
+      "why": "The registry already records ar25 L2 as stalled on hidden undo/step-counter state, so the rotated guarantee used cn04 instead of repeating that dead end."
+    },
+    {
+      "attempt": ".421 rotation candidate",
+      "game": "m0r0",
+      "result": "already_banked_L2",
+      "why": "The .421 attempt repeated an already banked m0r0 L2; this run avoided m0r0."
+    }
+  ],
+  "experiment": "experiment_4570_levelup_attempt",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee on an attempted bank).",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "target_game": "the rotated game attempted -- traceable to the rotation discipline (not a recently-deepened game)."
+  },
+  "honest_verdict": "success: cn04_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4570,
+  "registry_update": {
+    "banked_levels": 1,
+    "new_game_levels": 2,
+    "new_total_declared": 53,
+    "new_total_row_sum": 53,
+    "path": "ops/arc_solve_registry.yaml",
+    "prior_game_levels": 1,
+    "prior_total_declared": 52,
+    "prior_total_row_sum": 52,
+    "reason": "banked_offline_reproduced_level",
+    "reconciled_total_delta": 1,
+    "target_game": "cn04",
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "b5fd66ea752048ae02e68d61d344eedc80ddf982c690ccd25829a473739a47bb",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "cn04",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.arc_levelup_attempt_4570.v1",
+  "schema_errors": [],
+  "solution_labels": [
+    "{\"action\":2}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":6,\"data\":{\"x\":44,\"y\":30}}",
+    "{\"action\":3}",
+    "{\"action\":5}",
+    "{\"action\":6,\"data\":{\"x\":18,\"y\":39}}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":6,\"data\":{\"x\":45,\"y\":15}}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":6,\"data\":{\"x\":51,\"y\":51}}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":3}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":5}",
+    "{\"action\":5}",
+    "{\"action\":5}"
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4570",
+    "SCENARIO-ARC-WMTE-4570"
+  ],
+  "target_game": "cn04",
+  "target_level": 2
+}

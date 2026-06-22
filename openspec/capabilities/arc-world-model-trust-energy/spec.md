@@ -1000,6 +1000,52 @@ stalls before a reproducing next-level gate, the artifact SHALL use
 `complete: <game>_delta_identified_no_bank`, set `reproduced_levels=0`, preserve
 the dead-end evidence, and SHALL NOT increment `reproducible_total_levels`.
 
+### REQ-ARC-WMTE-4570: Rotated cn04 L1 to L2 Offline Bank
+
+Experiment 4570 SHALL satisfy the ARC sprint level-up attempt guarantee by
+deepening a rotated graph/world-model-family game that was not the wasted
+`.421` `m0r0` attempt. The workflow SHALL choose `cn04` over the stalled
+hidden-state `ar25` path, SHALL run the standing `scripts/arc_loop_solve.py`
+entrypoint for `cn04`, SHALL derive the L2 win/action/state delta from the
+offline environment, and SHALL register a `cn04` `GameAdapter` whose L2 plan is
+gated by `arc_solver_kit.reproduce`.
+
+The `cn04` adapter SHALL model the marker-pair shape-alignment mechanic:
+ACTION1-4 move the selected visible sprite, ACTION5 rotates a singleton selected
+sprite or cycles a stacked variant, ACTION6 selects a visible sprite through
+camera-derived display coordinates, and a level is complete only when every
+original 8/13 marker cell is paired with exactly one same-colored marker cell
+from another visible sprite. The adapter SHALL replay the prior L1 seed and the
+derived L2 delta, then the experiment SHALL update `ops/arc_solve_registry.yaml`
+only if the reproduction gate advances beyond the prior `cn04` registry level.
+
+Experiment 4570 SHALL write
+`results/experiment_4570_levelup_attempt.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `offline_reproduced`,
+`reproduced_levels`, `target_game`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `reproduction_gate`,
+`solution_labels`, `dead_ends`, and `registry_update`. Required field
+principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 satisfies the level-up guarantee on an attempted bank)."
+- `target_game`: principle "the rotated game attempted -- traceable to the rotation discipline (not a recently-deepened game)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL set `target_game=cn04`,
+`honest_verdict=success: cn04_L2_offline_reproduced`,
+`offline_reproduced=true`, `reproduced_levels >= 1`,
+`registry_updated=true`, and SHALL increment `reproducible_total_levels`
+monotonically beyond 52. If the L2 gate does not reproduce, the artifact SHALL
+use `complete: cn04_delta_identified_no_bank`, set `reproduced_levels=0`,
+record the stalled approach in `dead_ends`, and SHALL NOT increment the
+registry count.
+
 ### REQ-ARC-WMTE-4559: Hidden-Field State Key Probe
 
 Experiment 4559 SHALL extend the standing ARC offline search state key for
@@ -1325,6 +1371,20 @@ candidate's reproduced `reached_level` exceeds its prior registry level, and
 otherwise reports `complete: <game>_delta_identified_no_bank` with
 `reproduced_levels=0`, `registry_updated=false`, and no increment to
 `reproducible_total_levels`.
+
+### SCENARIO-ARC-WMTE-4570: cn04 Adapter Banks L2 Offline
+
+Given the offline arcade precondition passes, the registry records `cn04` as a
+reproduced L1 game, and the rotated target selection skips the stalled `ar25`
+hidden-state path and the already banked `m0r0` L2 path
+When experiment 4570 registers the `cn04` marker-pair `GameAdapter`, runs the
+standing loop, and replays the full L1+L2 label plan through
+`arc_solver_kit.reproduce`
+Then the artifact records `target_game=cn04`, the required field principles, a
+stable `reproducibility_checksum`, `offline_reproduced=true`,
+`reproduced_levels>=1`, `registry_updated=true`, the `cn04` registry row is
+persisted with the L2 win/action/state delta and dead-end evidence, and
+`reproducible_total_levels` increments monotonically beyond 52.
 
 ### SCENARIO-ARC-WMTE-4526: Integration Wires Only Deeper-Level Winners
 
