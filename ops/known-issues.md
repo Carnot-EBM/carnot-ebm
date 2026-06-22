@@ -849,6 +849,15 @@ reproduction-gated, verifier_is_oracle:false). ALL THREE NULL on the genuinely-h
   PLAUSIBLE goals from grid structure (pipeline works end-to-end — su15 reached a reproduced L1),
   but on the hard games the induced goal is wrong/insufficient (you can't induce the TRUE win from
   a static first-contact grid — chicken-and-egg: need to OBSERVE a win to ground the goal). 0/2.
+- **#3b CLAUDE as the goal-inducer** (`--goal-code`, sb26): Claude's best-reasoned goal FAILS too —
+  a decisive diagnostic proved the hypothesis wrong (painting the bar / all 2s never levels up). So
+  the goal-induction limit is **FUNDAMENTAL, not the model**: a static first-contact grid does not
+  determine the win, even for a strong reasoner.
+- **Hindsight goal-induction** (`experiment_hindsight`, lp85): grounding the goal on an OBSERVED
+  (start,win) PAIR cleanly reveals the win PREDICATE (the tractable half — the pair shows the
+  mechanic). BUT deepening to L2 NULLED: the pair gives a TERMINAL goal, not a DENSE per-level
+  gradient for the matching sub-puzzle. **Unifying conclusion: every goal-induction path yields a
+  sparse/terminal signal; the hard/deep levels need a DENSE per-level steering gradient none provides.**
 
 - **#8 hidden-state diagnostic** (`experiment_8_hidden_state_diagnostic`) DISAMBIGUATES the hard
   tail (it is HETEROGENEOUS): **wa30 = HIDDEN-STATE-bound** (same grid+action -> different outcome
