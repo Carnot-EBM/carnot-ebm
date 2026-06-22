@@ -1,5 +1,31 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Hazard-aware world model DEEPENS tu93 L2 + adversarially verified — outer-loop, ultracode)
+
+Operator: "build the hazard-aware model class" (the forward need from the re-induction work — tu93 L2 stalls
+because a charging-enemy hazard removes the avatar, a transition the pure-nav engine can't represent). Built
++ 3-skeptic adversarial review (reproduction / causality / scoping); core claim SURVIVES, scoping narrowed.
+Write-up `docs/research-notes/hazard-aware-world-model-2026-06-22.md`.
+
+- **Investigated the tu93 L2 hazard from the live env**: colours 8+15 are a charging ENEMY (3x3 colour-8
+  block + colour-15 centre, mirror of the avatar) on row 28. It is stationary until the avatar moves along
+  its row toward it within ~6 cells, then charges to intercept and removes the avatar. A safe path exists
+  (go up off its row, then right to the goal). Fully grid-expressible (L2 is grid-deterministic).
+- **`HazardAwareNavWorldModel`** (`python/carnot/agentic/arc_nav_world_model.py`, extends InducedNavWorldModel):
+  learns the line-charger FROM TRANSITIONS — the hazard is the object that MOVES (charges) at the instant of
+  death (disambiguates the charger from the static door), plus the charge axis + range; goal colour inherited
+  from L1 (level-invariant). `engine` predicts avatar-REMOVAL for a lethal move so `plan_in_model` routes the
+  safe detour. Unit-tested (`tests/python/test_arc_nav_world_model.py`, 6 pass incl. 2 hazard).
+- **Result** (`scripts/experiments/experiment_hazard_aware.py`, head-to-head, only the model class differs):
+  HAZARD_AWARE deepens tu93 L2 + reproduces (`reproduced_level=2`) on **5/5 seeds**; pure-NAV dies
+  (game_over) on every seed. Fit stable `[8,15]/row/range6`.
+- **Adversarial confirmations**: reproduction is PARITY-ROBUST (8 fresh envs / reset-8x / fresh-arcade all
+  return L2, no [1,2,1,2] toggle despite gotcha #7); CAUSAL (disabling `is_lethal` collapses to the nav plan
+  + death; a nav model refit on the identical data still dies — the win is solely `is_lethal`); no hardcoding
+  (synthetic colour-6 charger learned correctly). Scoping narrowed: ONE hazard instance + 1 synthetic test,
+  generality across hazard TYPES not proven; honest caveats (self-supplied death signal; charge_range est.).
+  Artifact adversarial-verify clean. Conductor left STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (Mechanic-conditioned re-induction trigger IMPLEMENTED + adversarially verified — outer-loop, ultracode)
 
 Operator: "implement the mechanic-conditioned re-induction trigger for L2." Built the trigger, an

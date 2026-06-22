@@ -275,6 +275,175 @@ class InducedNavWorldModel:
         return self.engine, self.is_level_complete
 
 
+def _blobs(mask):
+    """Connected components (4-neighbour) of a boolean mask -> list of (centre_row, centre_col, size)."""
+    H, W = mask.shape
+    seen = np.zeros_like(mask, dtype=bool)
+    out = []
+    for i in range(H):
+        for j in range(W):
+            if mask[i, j] and not seen[i, j]:
+                stack = [(i, j)]
+                seen[i, j] = True
+                cells = []
+                while stack:
+                    y, x = stack.pop()
+                    cells.append((y, x))
+                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        ny, nx = y + dy, x + dx
+                        if 0 <= ny < H and 0 <= nx < W and mask[ny, nx] and not seen[ny, nx]:
+                            seen[ny, nx] = True
+                            stack.append((ny, nx))
+                ys = [c[0] for c in cells]; xs = [c[1] for c in cells]
+                out.append((sum(ys) / len(ys), sum(xs) / len(xs), len(cells)))
+    return out
+
+
+@dataclass
+class HazardAwareNavWorldModel(InducedNavWorldModel):
+    """Nav world model EXTENDED to represent a charging-HAZARD object (e.g. tu93 L2's charging enemy).
+
+    Why. The pure-nav model only translates/blocks, so it is structurally blind to a level mechanic that
+    REMOVES the avatar -- it plans straight into the hazard (the tu93 L2 deepening wall, see
+    docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md). This subclass LEARNS, from
+    the death transitions in a level's data, a LINE-CHARGER hazard: an object (e.g. tu93 colour-8 block +
+    colour-15 centre) that sits still until the avatar approaches ALONG a shared line (row or column) within
+    a charge range, then charges to intercept and removes the avatar. `engine` predicts avatar-REMOVAL for a
+    lethal move (yielding an avatar-less, dead-end grid), so `plan_in_model` routes AROUND the hazard to the
+    goal -- exactly the safe detour the nav-only planner could not find.
+
+    Scope/honesty: this is a grid-expressible hazard (the charger object is rendered + its lethality is a
+    function of the visible avatar/hazard geometry; tu93 L2 is grid-deterministic, 0.0 nondeterminism). It
+    does not model hazards whose lethality depends on non-rendered state.
+    """
+
+    hazard_colors: frozenset = frozenset()
+    hazard_axis: Optional[str] = None       # 'row' (horizontal charger) or 'col' (vertical charger)
+    charge_range: int = 0                   # max post-move along-line distance at which the charge intercepts
+    align_tol: int = 2                      # how close to the hazard's line counts as "on the line"
+    hazard_fit: dict = field(default_factory=dict)
+
+    @classmethod
+    def fit(cls, transitions, goal_color=None) -> "HazardAwareNavWorldModel":
+        """Fit nav params + a line-charger hazard. `goal_color` (if given) OVERRIDES the auto-detected goal
+        -- the goal colour is level-invariant in reach-goal games, so when re-inducing at a deeper level
+        (whose data may contain no level-up to anchor goal detection) the caller passes the L1 goal."""
+        rows = [_norm(t) for t in transitions]
+        base = InducedNavWorldModel.fit(rows)
+        if goal_color is not None:
+            base.goal_color = goal_color
+            base.fit_quality["goal_color"] = goal_color
+        structural = {base.bg_color, base.floor_color, base.goal_color} | set(base.avatar_colors) | set(base.wall_colors)
+        # death transitions: avatar present in g0, ABSENT in g1, and NOT a level-up (those also clear the avatar)
+        deaths = []
+        for g0, a, g1, lb, la in rows:
+            if la is not None and lb is not None and la > lb:
+                continue
+            if _bbox(_color_cells(g0, base.avatar_colors)) is not None and \
+               _bbox(_color_cells(g1, base.avatar_colors)) is None:
+                deaths.append((np.asarray(g0), a, np.asarray(g1)))
+        hz_color_votes: Counter = Counter()
+        axis_votes: Counter = Counter()
+        post_dists: list = []
+        for g0, a, g1 in deaths:
+            ab = _bbox(_color_cells(g0, base.avatar_colors))
+            if ab is None or a not in base.displacement:
+                continue
+            dy, dx = base.displacement[a]
+            acy, acx = (ab[0] + ab[2]) / 2 + dy, (ab[1] + ab[3]) / 2 + dx   # avatar centre AFTER its nav move
+            # The HAZARD is the object that CHARGED (moved) at the instant of death -- find the non-structural
+            # colour whose compact blob TRANSLATED between g0 and g1 (the static door does NOT move; the
+            # charging enemy does). This disambiguates the charger from passable decoration.
+            best = None
+            for col in set(int(v) for v in g0.flatten().tolist()):
+                if col in structural:
+                    continue
+                n0 = int((g0 == col).sum()); n1 = int((g1 == col).sum())
+                if not (3 <= n0 <= 30) or n1 == 0:
+                    continue
+                b0 = _blobs(g0 == col); b1 = _blobs(g1 == col)
+                if not b0 or not b1:
+                    continue
+                c0 = min(b0, key=lambda b: abs(b[0] - acy) + abs(b[1] - acx))
+                c1 = min(b1, key=lambda b: abs(b[0] - c0[0]) + abs(b[1] - c0[1]))
+                moved = abs(c0[0] - c1[0]) + abs(c0[1] - c1[1])
+                if moved < 1:                      # static (e.g. door) -> not the charger
+                    continue
+                d = abs(c0[0] - acy) + abs(c0[1] - acx)
+                if best is None or d < best[0]:
+                    best = (d, col, c0[0], c0[1])
+            if best is None:
+                continue
+            _, col, by, bx = best
+            hz_color_votes[col] += 1
+            if abs(by - acy) <= abs(bx - acx):     # avatar ends aligned on the hazard's ROW (perp offset small)
+                axis_votes["row"] += 1
+                post_dists.append(abs(bx - acx))
+            else:
+                axis_votes["col"] += 1
+                post_dists.append(abs(by - acy))
+        hazard_colors = frozenset(c for c, _ in hz_color_votes.most_common(2))
+        # include the centre colour(s) co-located inside the hazard blob (tu93: 15 inside the 8-ring)
+        if deaths and hazard_colors:
+            g0 = deaths[0][0]
+            hb = _bbox(_color_cells(g0, hazard_colors))
+            if hb:
+                inside = set(int(v) for v in g0[hb[0]:hb[2] + 1, hb[1]:hb[3] + 1].flatten().tolist())
+                hazard_colors = frozenset(set(hazard_colors) | {c for c in inside if c not in structural
+                                                                and c != base.bg_color})
+        hazard_axis = axis_votes.most_common(1)[0][0] if axis_votes else None
+        charge_range = int(max(post_dists)) if post_dists else 0
+        hazard_fit = {"n_death_transitions": len(deaths), "hazard_colors": sorted(hazard_colors),
+                      "hazard_axis": hazard_axis, "charge_range": charge_range,
+                      "axis_votes": dict(axis_votes), "post_move_distances_at_death": sorted(post_dists)}
+        return cls(displacement=base.displacement, avatar_colors=base.avatar_colors, bg_color=base.bg_color,
+                   floor_color=base.floor_color, wall_colors=base.wall_colors, goal_color=base.goal_color,
+                   fit_quality=base.fit_quality, hazard_colors=hazard_colors, hazard_axis=hazard_axis,
+                   charge_range=charge_range, hazard_fit=hazard_fit)
+
+    def _hazard_blobs(self, grid):
+        return _blobs(_color_cells(grid, self.hazard_colors)) if self.hazard_colors else []
+
+    def is_lethal(self, grid, action):
+        """A nav move is lethal if it leaves the avatar ON a hazard's charge line (within align_tol of the
+        hazard's row/col), MOVING TOWARD it, and within charge_range -> the charger intercepts and removes
+        the avatar."""
+        if not self.hazard_colors or self.hazard_axis is None or self.charge_range <= 0:
+            return False
+        a = int(action)
+        if a not in self.displacement:
+            return False
+        bb = self._avatar_bbox(grid)
+        if bb is None:
+            return False
+        dy, dx = self.displacement[a]
+        acy = (bb[0] + bb[2]) / 2 + dy
+        acx = (bb[1] + bb[3]) / 2 + dx
+        bcy, bcx = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2   # avatar centre BEFORE the move
+        for (hy, hx, _sz) in self._hazard_blobs(grid):
+            if self.hazard_axis == "row":
+                on_line = abs(acy - hy) <= self.align_tol
+                toward = (hx - bcx) * dx > 0           # moving along the row toward the hazard
+                dist = abs(acx - hx)
+            else:
+                on_line = abs(acx - hx) <= self.align_tol
+                toward = (hy - bcy) * dy > 0
+                dist = abs(acy - hy)
+            if on_line and toward and dist <= self.charge_range:
+                return True
+        return False
+
+    def engine(self, grid, action, data=None):
+        if self.is_lethal(grid, action):
+            # the charger intercepts and REMOVES the avatar -> erase it (an avatar-less, dead-end grid that
+            # plan_in_model will never route through to the goal). This is the capability the nav model lacks.
+            g = np.asarray(grid).copy()
+            for c in self.avatar_colors:
+                g[g == c] = self.floor_color
+            return g
+        return super().engine(grid, action, data)
+
+
 def _norm(t):
     """Normalize a transition into (grid, action, next_grid, level_before, level_after)."""
     if hasattr(t, "grid"):
