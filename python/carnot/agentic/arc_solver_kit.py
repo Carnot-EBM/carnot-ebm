@@ -39,6 +39,7 @@ Hard-won general gotchas (apply to ANY ARC-AGI-3 game; see ops/arc_solve_registr
    execution state immediately before next_level, then count only the reproduce()
    level advance.
 """
+
 from __future__ import annotations
 
 import copy
@@ -98,13 +99,26 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             operator="config_rule_verifier",
             derived_from_games=("s5i5", "ft09", "g50t", "dc22"),
             purpose="Propose and execution-ground coverage, local-constraint, or toggle win predicates.",
-            selector_tags=("config_toggle", "marker_coverage", "local_constraint", "verifier", "rule"),
+            selector_tags=(
+                "config_toggle",
+                "marker_coverage",
+                "local_constraint",
+                "verifier",
+                "rule",
+            ),
         ),
         PrimitiveOperator(
             operator="color_match_slot_sequence_verifier",
             derived_from_games=("sb26", "s5i5", "ft09"),
             purpose="Ground ordered colored item-to-slot placement predicates with undo-aware counterexamples.",
-            selector_tags=("color_match", "slot_sequence", "ordered", "config_rule", "undo", "verifier"),
+            selector_tags=(
+                "color_match",
+                "slot_sequence",
+                "ordered",
+                "config_rule",
+                "undo",
+                "verifier",
+            ),
         ),
         PrimitiveOperator(
             operator="sprite_overlay_resize_verifier",
@@ -113,7 +127,14 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
                 "Ground transparent sprite overlays by matching required target pixels, "
                 "including explicit resize variants when the action model exposes them."
             ),
-            selector_tags=("sprite_overlay", "pattern_match", "resize", "transparent", "verifier", "re86"),
+            selector_tags=(
+                "sprite_overlay",
+                "pattern_match",
+                "resize",
+                "transparent",
+                "verifier",
+                "re86",
+            ),
         ),
         PrimitiveOperator(
             operator="graph_astar_action_cost",
@@ -135,6 +156,24 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
                 "graph_explore",
                 "config_toggle",
                 "program_editor",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
+            operator="persistent_action_effect_memory_operator",
+            derived_from_games=("exp4568_clickability_action_effect_predictor",),
+            purpose=(
+                "Rank action candidates with a leave-one-game cross-game memory of cached "
+                "frame/action effects, preserving original-order tie-breaking and reporting "
+                "actions-to-first-levelup deltas before solve claims."
+            ),
+            selector_tags=(
+                "action_effect",
+                "clickability",
+                "candidate_ranking",
+                "graph_explore",
+                "click",
+                "keyboard",
                 "transfer",
             ),
         ),
@@ -186,7 +225,14 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             operator="cast_grid_phase_fsm_world_model",
             derived_from_games=("sc25", "ar25", "ka59", "ft09"),
             purpose="Two-phase cast/config-grid toggle CSP followed by player navigation to an exit predicate.",
-            selector_tags=("cast_grid", "phase_fsm", "config_toggle", "navigation", "world_model", "verifier"),
+            selector_tags=(
+                "cast_grid",
+                "phase_fsm",
+                "config_toggle",
+                "navigation",
+                "world_model",
+                "verifier",
+            ),
         ),
     )
 
@@ -216,6 +262,7 @@ def select_primitive_operators(
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "verifier_router_candidate_ranking_operator",
+            "persistent_action_effect_memory_operator",
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
             "active_data_collection",
@@ -254,6 +301,7 @@ def select_primitive_operators(
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "verifier_router_candidate_ranking_operator",
+            "persistent_action_effect_memory_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -264,6 +312,7 @@ def select_primitive_operators(
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "verifier_router_candidate_ranking_operator",
+            "persistent_action_effect_memory_operator",
             "object_centric_digest",
             "graph_astar_action_cost",
         )
@@ -272,6 +321,7 @@ def select_primitive_operators(
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "verifier_router_candidate_ranking_operator",
+            "persistent_action_effect_memory_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -282,14 +332,9 @@ def select_primitive_operators(
         or "reflection" in mechanic
         or "reflect" in mechanic
         or "push" in mechanic
+        or "world_model" in mechanic
+        or "e3" in mechanic
     ):
-        names = (
-            "object_motion_world_model",
-            "active_data_collection",
-            "object_centric_digest",
-            "graph_astar_action_cost",
-        )
-    elif "world_model" in mechanic or "e3" in mechanic:
         names = (
             "object_motion_world_model",
             "active_data_collection",
@@ -301,6 +346,7 @@ def select_primitive_operators(
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "verifier_router_candidate_ranking_operator",
+            "persistent_action_effect_memory_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -309,6 +355,7 @@ def select_primitive_operators(
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "verifier_router_candidate_ranking_operator",
+            "persistent_action_effect_memory_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -347,6 +394,217 @@ def _candidate_score(candidate: Any, score_key: str) -> float:
     return 0.0
 
 
+def _effect_row_field(row: Any, key: str, default: Any = None) -> Any:
+    if isinstance(row, Mapping):
+        return row.get(key, default)
+    return getattr(row, key, default)
+
+
+def _effect_row_float(row: Any, key: str, default: float = 0.0) -> float:
+    try:
+        return float(_effect_row_field(row, key, default) or 0.0)
+    except (TypeError, ValueError):
+        return float(default)
+
+
+def _effect_row_int(row: Any, key: str) -> int | None:
+    value = _effect_row_field(row, key)
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _action_id_from(value: Any) -> int | None:
+    action_id = _candidate_field(value, "action_id")
+    if action_id is None:
+        action_id = _candidate_field(value, "action")
+    try:
+        return None if action_id is None else int(action_id)
+    except (TypeError, ValueError):
+        return None
+
+
+def _click_xy_from(value: Any) -> tuple[int, int] | None:
+    data = _candidate_field(value, "data", None)
+    x_value = _candidate_field(value, "x", None)
+    y_value = _candidate_field(value, "y", None)
+    if isinstance(data, Mapping):
+        x_value = data.get("x", data.get("click_x", x_value))
+        y_value = data.get("y", data.get("click_y", y_value))
+    if x_value is None or y_value is None:
+        return None
+    try:
+        return int(x_value), int(y_value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _aem_click_bucket(x: int, y: int, bucket_size: int) -> tuple[int, int]:
+    size = max(1, int(bucket_size))
+    return int(x) // size, int(y) // size
+
+
+@dataclass(frozen=True)
+class PersistentAEM:
+    """REQ-ARC-WMTE-4573: cross-game cached action-effect memory."""
+
+    effect_counts: Mapping[str, Mapping[str, float]]
+    included_games: tuple[str, ...] = ()
+    excluded_games: tuple[str, ...] = ()
+    row_count: int = 0
+    bucket_size: int = 16
+    smoothing: float = 1.0
+
+    @classmethod
+    def from_effect_rows(
+        cls,
+        rows: Sequence[Any],
+        *,
+        exclude_games: Sequence[str] = (),
+        bucket_size: int = 16,
+        smoothing: float = 1.0,
+    ) -> "PersistentAEM":
+        excluded = {str(game) for game in exclude_games if str(game)}
+        counts: dict[str, dict[str, float]] = {}
+        included_games: set[str] = set()
+        row_count = 0
+
+        def add(key: str, effect: float) -> None:
+            row = counts.setdefault(key, {"total": 0.0, "effect": 0.0, "levelup": 0.0})
+            row["total"] += 1.0
+            row["effect"] += float(effect > 0.0)
+            row["levelup"] += float(effect >= 2.0)
+
+        for row in rows:
+            game = str(
+                _effect_row_field(row, "game", "") or _effect_row_field(row, "env", "") or ""
+            )
+            if game in excluded:
+                continue
+            action_id = _effect_row_int(row, "action_id")
+            if action_id is None:
+                action_id = _effect_row_int(row, "action")
+            if action_id is None:
+                continue
+            level_progress = _effect_row_float(row, "level_progress")
+            changed_value = _effect_row_field(row, "changed", None)
+            changed = (
+                bool(changed_value)
+                if changed_value is not None
+                else (_effect_row_float(row, "frame_delta") > 0.0)
+            )
+            effect = 2.0 if level_progress > 0.0 else (1.0 if changed else 0.0)
+            add(f"action:{action_id}", effect)
+            x = _effect_row_int(row, "x")
+            y = _effect_row_int(row, "y")
+            if action_id == 6 and x is not None and y is not None:
+                bx, by = _aem_click_bucket(x, y, bucket_size)
+                add(f"click_bucket:{bx}:{by}", effect)
+            if game:
+                included_games.add(game)
+            row_count += 1
+
+        return cls(
+            effect_counts=counts,
+            included_games=tuple(sorted(included_games)),
+            excluded_games=tuple(sorted(excluded)),
+            row_count=int(row_count),
+            bucket_size=int(bucket_size),
+            smoothing=float(smoothing),
+        )
+
+    def _ratio(self, key: str, field: str = "effect") -> float:
+        row = self.effect_counts.get(key)
+        if not row:
+            return 0.0
+        total = float(row.get("total") or 0.0)
+        if total <= 0.0:
+            return 0.0
+        smooth = max(0.0, float(self.smoothing))
+        return float((float(row.get(field) or 0.0) + smooth) / (total + (2.0 * smooth)))
+
+    def candidate_score(self, candidate: Any) -> float:
+        action_id = _action_id_from(candidate)
+        if action_id is None:
+            return 0.0
+        score = self._ratio(f"action:{action_id}")
+        click = _click_xy_from(candidate)
+        if action_id == 6 and click is not None:
+            bx, by = _aem_click_bucket(click[0], click[1], self.bucket_size)
+            score += self._ratio(f"click_bucket:{bx}:{by}")
+        return float(score)
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "row_count": int(self.row_count),
+            "included_games": list(self.included_games),
+            "excluded_games": list(self.excluded_games),
+            "bucket_size": int(self.bucket_size),
+            "feature_count": int(len(self.effect_counts)),
+        }
+
+
+def _candidate_reaches_levelup(candidate: Any, target_key: str) -> bool:
+    explicit = _candidate_field(candidate, target_key, None)
+    if explicit is not None:
+        return bool(explicit)
+    for key in ("reaches_goal", "target", "solved"):
+        value = _candidate_field(candidate, key, None)
+        if value is not None:
+            return bool(value)
+    return _candidate_score(candidate, "level_progress") > 0.0
+
+
+def persistent_action_effect_memory_operator(
+    candidates: Sequence[Any],
+    *,
+    memory: PersistentAEM,
+    target_key: str = "reaches_levelup",
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4573: rank cached candidates with cross-game action-effect memory."""
+
+    rows: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates):
+        row = dict(candidate) if isinstance(candidate, Mapping) else {"candidate": repr(candidate)}
+        row["candidate_id"] = str(
+            row.get("candidate_id") or _candidate_identifier(candidate, index)
+        )
+        row["action_effect_score"] = float(memory.candidate_score(candidate))
+        row["original_index"] = int(index)
+        row["target"] = _candidate_reaches_levelup(candidate, target_key)
+        rows.append(row)
+
+    ranked = sorted(
+        rows,
+        key=lambda row: (-float(row.get("action_effect_score") or 0.0), int(row["original_index"])),
+    )
+
+    def first_target(items: Sequence[Mapping[str, Any]]) -> int | None:
+        for index, row in enumerate(items, start=1):
+            if row.get("target") is True:
+                return int(index)
+        return None
+
+    before = first_target(rows)
+    after = first_target(ranked)
+    actions_reduced = float(before - after) if before is not None and after is not None else 0.0
+    return {
+        "operator": "persistent_action_effect_memory_operator",
+        "memory": memory.as_dict(),
+        "candidate_count": int(len(rows)),
+        "incoming_candidates": rows,
+        "ranked_candidates": ranked,
+        "best_candidate_id": str(ranked[0]["candidate_id"]) if ranked else "",
+        "actions_to_first_levelup_before": before,
+        "actions_to_first_levelup_after": after,
+        "actions_reduced": actions_reduced,
+        "value_added": bool(actions_reduced > 0.0),
+    }
+
+
 def verifier_router_candidate_ranking_operator(
     candidates: Sequence[Any],
     *,
@@ -370,7 +628,9 @@ def verifier_router_candidate_ranking_operator(
             if score_fn is not None
             else _candidate_score(candidate, score_key)
         )
-        row["candidate_id"] = str(row.get("candidate_id") or _candidate_identifier(candidate, index))
+        row["candidate_id"] = str(
+            row.get("candidate_id") or _candidate_identifier(candidate, index)
+        )
         row["verifier_score"] = score
         row["original_index"] = index
         row["target"] = bool(_candidate_field(candidate, target_key, False))
@@ -547,11 +807,17 @@ def _candidate_reaches_goal(candidate: Mapping[str, Any]) -> bool:
     )
 
 
-def _predicate_from_llm_candidate(next_goal_level: int, candidate: Mapping[str, Any]) -> dict[str, Any]:
-    name = str(candidate.get("name") or candidate.get("candidate_name") or f"L{next_goal_level}_candidate")
+def _predicate_from_llm_candidate(
+    next_goal_level: int, candidate: Mapping[str, Any]
+) -> dict[str, Any]:
+    name = str(
+        candidate.get("name") or candidate.get("candidate_name") or f"L{next_goal_level}_candidate"
+    )
     signature = str(candidate.get("signature") or candidate.get("goal_predicate") or name)
     return {
-        "predicate_id": str(candidate.get("predicate_id") or candidate.get("goal_predicate") or name),
+        "predicate_id": str(
+            candidate.get("predicate_id") or candidate.get("goal_predicate") or name
+        ),
         "signature": signature,
         "representation_correct": bool(candidate.get("representation_correct") is True),
         "goal_predicate": candidate.get("goal_predicate"),
@@ -564,7 +830,9 @@ def llm_proposer_reinduction_operator(
     observations: Sequence[Any],
     *,
     proposal_provider: Optional[
-        Callable[[int, dict[str, Any]], Mapping[str, Any] | Sequence[Mapping[str, Any]] | str | None]
+        Callable[
+            [int, dict[str, Any]], Mapping[str, Any] | Sequence[Mapping[str, Any]] | str | None
+        ]
     ] = None,
     fallback_predicate_inducer: Optional[
         Callable[[int, dict[str, Any]], Mapping[str, Any] | str | None]
@@ -781,7 +1049,9 @@ def _sprite_grid(value: Any) -> tuple[tuple[int, ...], ...]:
     return tuple(rows)
 
 
-def _source_color(pixels: Sequence[Sequence[int]], *, transparent: int = -1, marker: int = 0) -> int | None:
+def _source_color(
+    pixels: Sequence[Sequence[int]], *, transparent: int = -1, marker: int = 0
+) -> int | None:
     counts: dict[int, int] = {}
     for row in pixels:
         for cell in row:
@@ -859,7 +1129,9 @@ def _sprite_overlay_variants(source: Mapping[str, Any]) -> list[dict[str, Any]]:
                 continue
             variants.append(
                 {
-                    "variant_id": str(variant.get("id") or variant.get("variant_id") or f"variant_{index}"),
+                    "variant_id": str(
+                        variant.get("id") or variant.get("variant_id") or f"variant_{index}"
+                    ),
                     "pixels": pixels,
                     "pre_labels": [str(label) for label in variant.get("pre_labels") or ()],
                     "post_labels": [str(label) for label in variant.get("post_labels") or ()],
@@ -920,7 +1192,10 @@ def _best_sprite_overlay_placement(
             candidate_delta = candidate["delta"]
             best_key = (
                 int(best["covered_count"]),
-                int(int(best_delta[0]) % max(1, movement_step) == 0 and int(best_delta[1]) % max(1, movement_step) == 0),
+                int(
+                    int(best_delta[0]) % max(1, movement_step) == 0
+                    and int(best_delta[1]) % max(1, movement_step) == 0
+                ),
                 -len(best["pre_labels"]) - len(best["post_labels"]),
                 -abs(int(best_delta[0])) - abs(int(best_delta[1])),
             )
@@ -1117,7 +1392,7 @@ def greedy_rewrite(
         rewritten: list[Hashable] = []
         while pos < len(out):
             for lhs, rhs in normalized:
-                if out[pos:pos + len(lhs)] == lhs:
+                if out[pos : pos + len(lhs)] == lhs:
                     rewritten.extend(rhs)
                     pos += len(lhs)
                     break
@@ -1173,7 +1448,9 @@ def _glyph_sequence(value: Any) -> tuple[str, ...]:
     return tuple(str(item) for item in value)
 
 
-def _glyph_rules(object_digest: Mapping[str, Any]) -> tuple[tuple[tuple[str, ...], tuple[str, ...]], ...]:
+def _glyph_rules(
+    object_digest: Mapping[str, Any],
+) -> tuple[tuple[tuple[str, ...], tuple[str, ...]], ...]:
     raw_rules = object_digest.get("rules") or ()
     parsed: list[tuple[tuple[str, ...], tuple[str, ...]]] = []
     if not isinstance(raw_rules, Sequence) or isinstance(raw_rules, (str, bytes)):
@@ -1249,8 +1526,7 @@ def _solve_glyph_rule_parse(
         while pos < len(target):
             for rule_index, (lhs_len, _rhs_len) in enumerate(structs):
                 if pos + lhs_len <= len(target) and all(
-                    target[pos + offset] == lhs_vals[rule_index]
-                    for offset in range(lhs_len)
+                    target[pos + offset] == lhs_vals[rule_index] for offset in range(lhs_len)
                 ):
                     parse.append(rule_index)
                     pos += lhs_len
@@ -1265,7 +1541,7 @@ def _solve_glyph_rule_parse(
         good = True
         for rule_index in parse:
             rhs_len = structs[rule_index][1]
-            segment = editable[editable_pos:editable_pos + rhs_len]
+            segment = editable[editable_pos : editable_pos + rhs_len]
             if len(segment) < rhs_len or len(set(segment)) != 1:
                 good = False
                 break
@@ -1359,7 +1635,9 @@ def _ground_direct_glyph_rewrite(
         return _ungrounded_glyph_rewrite_result(game, "glyph_rewrite_candidate_did_not_ground")
 
     try:
-        distance = sequence_cyclic_distance(_glyph_values(editable), _glyph_values(rewritten), modulus=7)
+        distance = sequence_cyclic_distance(
+            _glyph_values(editable), _glyph_values(rewritten), modulus=7
+        )
     except ValueError:
         return _ungrounded_glyph_rewrite_result(game, "missing_glyph_numeric_values")
     distance += 7 * abs(len(editable) - len(rewritten))
@@ -1432,19 +1710,25 @@ def _ground_alter_rules_rewrite(
                 for lhs, rhs in rules
             )
             target_pairs = tuple((_glyph_series(token), _glyph_value(token)) for token in target)
-            editable_pairs = tuple((_glyph_series(token), _glyph_value(token)) for token in editable)
+            editable_pairs = tuple(
+                (_glyph_series(token), _glyph_value(token)) for token in editable
+            )
         except ValueError:
             return _ungrounded_glyph_rewrite_result(game, "missing_glyph_numeric_values")
         required_pairs = _find_glyph_alter_2pass(meta, target_pairs, editable_pairs)
         if required_pairs is None:
-            return _ungrounded_glyph_rewrite_result(game, "glyph_alter_rules_two_pass_did_not_ground")
+            return _ungrounded_glyph_rewrite_result(
+                game, "glyph_alter_rules_two_pass_did_not_ground"
+            )
         required_sides = tuple(value for pair in required_pairs for value in pair)
         predicate_id = "alter_rules_two_pass_rewrite"
     else:
         structs = tuple((len(lhs), len(rhs)) for lhs, rhs in rules)
         solved = _solve_glyph_rule_parse(structs, target_values, editable_values)
         if solved is None:
-            return _ungrounded_glyph_rewrite_result(game, "glyph_alter_rules_candidate_did_not_ground")
+            return _ungrounded_glyph_rewrite_result(
+                game, "glyph_alter_rules_candidate_did_not_ground"
+            )
         lhs_values, rhs_assignments = solved
         side_values: list[int] = []
         for index in range(len(structs)):
@@ -1454,7 +1738,10 @@ def _ground_alter_rules_rewrite(
         predicate_id = "alter_rules_inverse_rewrite"
 
     distance = float(
-        sum(cyclic_distance(current, required, modulus=7) for current, required in zip(current_sides, required_sides))
+        sum(
+            cyclic_distance(current, required, modulus=7)
+            for current, required in zip(current_sides, required_sides)
+        )
         + 7 * abs(len(current_sides) - len(required_sides))
     )
     return {
@@ -1509,13 +1796,23 @@ def glyph_rewrite_rule_verifier(
 
     if not isinstance(object_digest, Mapping):
         return _ungrounded_glyph_rewrite_result(game, "missing_glyph_rewrite_digest")
-    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
-    if "glyph" not in rule_family and "rewrite" not in rule_family and not _glyph_examples_support(few_shot_examples):
+    rule_family = str(
+        object_digest.get("rule_family") or object_digest.get("predicate_id") or ""
+    ).lower()
+    if (
+        "glyph" not in rule_family
+        and "rewrite" not in rule_family
+        and not _glyph_examples_support(few_shot_examples)
+    ):
         return _ungrounded_glyph_rewrite_result(game, "missing_glyph_rewrite_few_shot_examples")
 
     rules = _glyph_rules(object_digest)
-    target = _glyph_sequence(object_digest.get("target_sequence") or object_digest.get("target") or ())
-    editable = _glyph_sequence(object_digest.get("editable_sequence") or object_digest.get("editable") or ())
+    target = _glyph_sequence(
+        object_digest.get("target_sequence") or object_digest.get("target") or ()
+    )
+    editable = _glyph_sequence(
+        object_digest.get("editable_sequence") or object_digest.get("editable") or ()
+    )
     if not rules or not target or not editable:
         return _ungrounded_glyph_rewrite_result(game, "missing_glyph_rewrite_digest")
 
@@ -1552,14 +1849,18 @@ def ground_marker_coverage_rule(
     predicted = [tuple(marker) for marker in controlled_markers]
     path: list[str] = []
     for target_x, target_y in target_markers:
-        candidates = [(i, x, y) for i, (x, y) in enumerate(predicted) if y == target_y and x < target_x]
+        candidates = [
+            (i, x, y) for i, (x, y) in enumerate(predicted) if y == target_y and x < target_x
+        ]
         if candidates:
             index, x, _ = candidates[0]
             moves = (target_x - x) // int(step)
             path.extend([horizontal_label] * moves)
             predicted[index] = (target_x, target_y)
     for target_x, target_y in target_markers:
-        candidates = [(i, x, y) for i, (x, y) in enumerate(predicted) if x == target_x and y < target_y]
+        candidates = [
+            (i, x, y) for i, (x, y) in enumerate(predicted) if x == target_x and y < target_y
+        ]
         if candidates:
             index, _, y = candidates[0]
             moves = (target_y - y) // int(step)
@@ -1600,7 +1901,11 @@ def _ungrounded_config_result(game: str, residual: str) -> dict[str, Any]:
         "grounded": False,
         "solution": [],
         "predicate_id": "",
-        "candidate_predicates": ["marker_coverage", "local_constraint_color_cycle", "target_offset_toggle"],
+        "candidate_predicates": [
+            "marker_coverage",
+            "local_constraint_color_cycle",
+            "target_offset_toggle",
+        ],
         "residual": residual,
         "verifier_is_oracle": True,
     }
@@ -1748,8 +2053,7 @@ def _ground_local_constraint_color_cycle(
         "target_recipe_withheld": str(game),
         "solution": actions,
         "predicted_cell_colors": {
-            f"{grid[0]},{grid[1]}": int(color)
-            for grid, color in sorted(predicted.items())
+            f"{grid[0]},{grid[1]}": int(color) for grid, color in sorted(predicted.items())
         },
         "verifier": {
             "name": "execution_grounded_local_constraint_color_cycle",
@@ -1771,7 +2075,13 @@ def _ground_marker_coverage_verifier(
     game: str,
     object_digest: Mapping[str, Any],
 ) -> dict[str, Any]:
-    required = ("controlled_markers", "target_markers", "step", "horizontal_label", "vertical_label")
+    required = (
+        "controlled_markers",
+        "target_markers",
+        "step",
+        "horizontal_label",
+        "vertical_label",
+    )
     if any(key not in object_digest for key in required):
         return _ungrounded_config_result(game, "missing_marker_coverage_digest")
     grounded = ground_marker_coverage_rule(
@@ -1802,7 +2112,9 @@ def _ground_marker_coverage_verifier(
         "grounded_win_condition": {
             "predicate": "all target marker coordinates are occupied by controlled markers",
             "fires_on_win": True,
-            "rejects_nonwins": bool(object_digest.get("controlled_markers") != object_digest.get("target_markers")),
+            "rejects_nonwins": bool(
+                object_digest.get("controlled_markers") != object_digest.get("target_markers")
+            ),
         },
         "verifier_is_oracle": True,
     }
@@ -1815,7 +2127,11 @@ def _ground_target_offset_toggle(
 ) -> dict[str, Any]:
     components = object_digest.get("components")
     solution = object_digest.get("solution") or object_digest.get("candidate_solution") or ()
-    if not isinstance(components, Mapping) or "player" not in components or "target" not in components:
+    if (
+        not isinstance(components, Mapping)
+        or "player" not in components
+        or "target" not in components
+    ):
         return _ungrounded_config_result(game, "missing_target_offset_digest")
     if not solution:
         return _ungrounded_config_result(game, "missing_target_offset_action_model")
@@ -1846,7 +2162,10 @@ def _ground_dc22_toggle_navigation(
     game: str,
     object_digest: Mapping[str, Any],
 ) -> dict[str, Any]:
-    solution = [str(label) for label in object_digest.get("candidate_solution") or object_digest.get("solution") or []]
+    solution = [
+        str(label)
+        for label in object_digest.get("candidate_solution") or object_digest.get("solution") or []
+    ]
     components = object_digest.get("components")
     if str(game) != "dc22":
         return _ungrounded_config_result(game, "dc22_toggle_navigation_wrong_game")
@@ -1898,9 +2217,13 @@ def config_rule_verifier(
     explicit residual instead of a path.
     """
 
-    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    rule_family = str(
+        object_digest.get("rule_family") or object_digest.get("predicate_id") or ""
+    ).lower()
     if rule_family in {"dc22_toggle_navigation", "toggle_navigation_goal"} or (
-        str(game) == "dc22" and "candidate_solution" in object_digest and "components" in object_digest
+        str(game) == "dc22"
+        and "candidate_solution" in object_digest
+        and "components" in object_digest
     ):
         return _ground_dc22_toggle_navigation(game=game, object_digest=object_digest)
     if (
@@ -1918,7 +2241,9 @@ def config_rule_verifier(
     ):
         return _ground_local_constraint_color_cycle(game=game, object_digest=object_digest)
     components = object_digest.get("components")
-    has_target_offset_shape = isinstance(components, Mapping) and "player" in components and "target" in components
+    has_target_offset_shape = (
+        isinstance(components, Mapping) and "player" in components and "target" in components
+    )
     if rule_family == "target_offset_toggle" or (
         _has_example_family(few_shot_examples, "target_offset", "target offset")
         and has_target_offset_shape
@@ -1927,7 +2252,9 @@ def config_rule_verifier(
     return _ungrounded_config_result(game, "missing_config_rule_verifier_grounding")
 
 
-def _ungrounded_color_match_slot_result(game: str, residual: str, *, rounds: int = 0) -> dict[str, Any]:
+def _ungrounded_color_match_slot_result(
+    game: str, residual: str, *, rounds: int = 0
+) -> dict[str, Any]:
     return {
         "operator": "color_match_slot_sequence_verifier",
         "game": str(game),
@@ -1950,9 +2277,8 @@ def _ungrounded_color_match_slot_result(game: str, residual: str, *, rounds: int
 def _color_match_examples_support(few_shot_examples: Sequence[Mapping[str, Any]]) -> bool:
     text = _example_text(few_shot_examples)
     return (
-        ("color_match" in text or "color match" in text or "slot" in text or "item" in text)
-        and ("verifier" in text or "ground" in text or "predicate" in text or "undo" in text)
-    )
+        "color_match" in text or "color match" in text or "slot" in text or "item" in text
+    ) and ("verifier" in text or "ground" in text or "predicate" in text or "undo" in text)
 
 
 def _color_match_label(row: Mapping[str, Any], object_digest: Mapping[str, Any]) -> str:
@@ -2007,11 +2333,15 @@ def color_match_slot_sequence_verifier(
 
     if not isinstance(object_digest, Mapping):
         return _ungrounded_color_match_slot_result(game, "missing_color_match_slot_sequence_digest")
-    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    rule_family = str(
+        object_digest.get("rule_family") or object_digest.get("predicate_id") or ""
+    ).lower()
     if "color_match" not in rule_family and "slot_sequence" not in rule_family:
         return _ungrounded_color_match_slot_result(game, "missing_color_match_slot_sequence_digest")
     if not _color_match_examples_support(few_shot_examples):
-        return _ungrounded_color_match_slot_result(game, "missing_color_match_slot_sequence_few_shot_examples")
+        return _ungrounded_color_match_slot_result(
+            game, "missing_color_match_slot_sequence_few_shot_examples"
+        )
 
     raw_slots = object_digest.get("slots")
     raw_items = object_digest.get("items")
@@ -2054,13 +2384,17 @@ def color_match_slot_sequence_verifier(
                 selected = (item_index, item)
                 break
         if selected is None:
-            return _ungrounded_color_match_slot_result(game, "missing_matching_item_for_slot", rounds=1)
+            return _ungrounded_color_match_slot_result(
+                game, "missing_matching_item_for_slot", rounds=1
+            )
         remaining = [(index, item) for index, item in remaining if index != selected[0]]
         item = selected[1]
         item_label = _color_match_label(item, object_digest)
         slot_label = _color_match_label(slot, object_digest)
         if not item_label or not slot_label:
-            return _ungrounded_color_match_slot_result(game, "missing_color_match_action_label", rounds=1)
+            return _ungrounded_color_match_slot_result(
+                game, "missing_color_match_action_label", rounds=1
+            )
         solution.extend([item_label, slot_label])
         pairs.append(
             {
@@ -2077,7 +2411,10 @@ def color_match_slot_sequence_verifier(
     undo_label = object_digest.get("undo_label")
     item_order_colors = [
         int(color)
-        for color in (_color_value(item, "color", "item_color", "target_color") for item in items[: len(slots)])
+        for color in (
+            _color_value(item, "color", "item_color", "target_color")
+            for item in items[: len(slots)]
+        )
         if color is not None
     ]
     wrong_order_rejected = tuple(item_order_colors) != tuple(target_colors)
@@ -2210,11 +2547,7 @@ def _object_motion_solution(object_digest: Mapping[str, Any]) -> list[str]:
 
 
 def _copy_slot_rows(slots: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
-    return {
-        str(name): dict(row)
-        for name, row in slots.items()
-        if isinstance(row, Mapping)
-    }
+    return {str(name): dict(row) for name, row in slots.items() if isinstance(row, Mapping)}
 
 
 def _move_mask(arr: Any, mask: Any, *, dy: int, dx: int, fill: int) -> Any:
@@ -2226,7 +2559,12 @@ def _move_mask(arr: Any, mask: Any, *, dy: int, dx: int, fill: int) -> Any:
         return out
     moved = coords + np.asarray([dy, dx])
     h, w = out.shape
-    if (moved[:, 0] < 0).any() or (moved[:, 1] < 0).any() or (moved[:, 0] >= h).any() or (moved[:, 1] >= w).any():
+    if (
+        (moved[:, 0] < 0).any()
+        or (moved[:, 1] < 0).any()
+        or (moved[:, 0] >= h).any()
+        or (moved[:, 1] >= w).any()
+    ):
         return out
     values = out[mask].copy()
     out[mask] = int(fill)
@@ -2280,8 +2618,12 @@ def _reflect_motion_engine(
     if dy == 0 and dx == 0:
         return out
     slots = _copy_slot_rows(object_digest.get("slots", {}))
-    selected_color = int(slots.get("selected_block", {}).get("color", object_digest.get("selected_color", 5)))
-    reflected_color = int(slots.get("reflected_block", {}).get("color", object_digest.get("reflected_color", 4)))
+    selected_color = int(
+        slots.get("selected_block", {}).get("color", object_digest.get("selected_color", 5))
+    )
+    reflected_color = int(
+        slots.get("reflected_block", {}).get("color", object_digest.get("reflected_color", 4))
+    )
     selected_mask = out == selected_color
     reflected_mask = out == reflected_color
     selected_values = out[selected_mask].copy()
@@ -2317,7 +2659,7 @@ def _find_player_center(arr: Any, player_color: int) -> tuple[int, int] | None:
         for col in range(1, w - 1):
             if int(arr[row, col]) != 0:
                 continue
-            window = arr[row - 1: row + 2, col - 1: col + 2]
+            window = arr[row - 1 : row + 2, col - 1 : col + 2]
             if window.shape == (3, 3) and int(np_count_equal(window, player_color)) == 8:
                 return row, col
     return None
@@ -2370,9 +2712,9 @@ def _push_motion_engine(
     new_row, new_col = row + dy, col + dx
     if not (1 <= new_row < out.shape[0] - 1 and 1 <= new_col < out.shape[1] - 1):
         return out
-    out[row - 1: row + 2, col - 1: col + 2] = block_color
+    out[row - 1 : row + 2, col - 1 : col + 2] = block_color
     out[row, col] = 0
-    out[new_row - 1: new_row + 2, new_col - 1: new_col + 2] = player_color
+    out[new_row - 1 : new_row + 2, new_col - 1 : new_col + 2] = player_color
     out[new_row, new_col] = 0
     return out
 
@@ -2428,10 +2770,14 @@ def object_motion_world_model(
         "verifier": {
             "name": "execution_grounded_object_motion_transition_model",
             "grounded_transition_count": len(solution),
-            "few_shot_examples": [str(row.get("game", "")) for row in few_shot_examples if isinstance(row, Mapping)],
+            "few_shot_examples": [
+                str(row.get("game", "")) for row in few_shot_examples if isinstance(row, Mapping)
+            ],
         },
         "grounded_win_condition": {
-            "predicate": str(object_digest.get("win_predicate", "object slots satisfy target geometry")),
+            "predicate": str(
+                object_digest.get("win_predicate", "object slots satisfy target geometry")
+            ),
             "fires_on_win": bool(solution),
             "rejects_nonwins": True,
         },
@@ -2460,9 +2806,8 @@ def _ungrounded_cast_grid_result(game: str, residual: str) -> dict[str, Any]:
 def _cast_grid_examples_support(few_shot_examples: Sequence[Mapping[str, Any]]) -> bool:
     text = _example_text(few_shot_examples)
     return (
-        ("cast_grid" in text or "cast grid" in text or "phase_fsm" in text or "shrink" in text)
-        and ("world_model" in text or "verifier" in text or "transition" in text)
-    )
+        "cast_grid" in text or "cast grid" in text or "phase_fsm" in text or "shrink" in text
+    ) and ("world_model" in text or "verifier" in text or "transition" in text)
 
 
 def _bool_pattern(value: Any) -> tuple[tuple[bool, ...], ...]:
@@ -2493,7 +2838,11 @@ def _cast_grid_toggle_solution(
     actions: list[str] = []
     for row, target_row in enumerate(target_pattern):
         for col, target in enumerate(target_row):
-            current = bool(current_pattern[row][col]) if row < len(current_pattern) and col < len(current_pattern[row]) else False
+            current = (
+                bool(current_pattern[row][col])
+                if row < len(current_pattern) and col < len(current_pattern[row])
+                else False
+            )
             if current != bool(target):
                 actions.append(_cast_label(row, col, object_digest))
     return actions
@@ -2504,7 +2853,11 @@ def _navigation_solution(object_digest: Mapping[str, Any]) -> list[str]:
     exit_box = object_digest.get("exit_box")
     if not isinstance(start, Sequence) or isinstance(start, (str, bytes)) or len(start) < 2:
         return []
-    if not isinstance(exit_box, Sequence) or isinstance(exit_box, (str, bytes)) or len(exit_box) < 4:
+    if (
+        not isinstance(exit_box, Sequence)
+        or isinstance(exit_box, (str, bytes))
+        or len(exit_box) < 4
+    ):
         return []
     row = int(start[0])
     col = int(start[1])
@@ -2643,7 +2996,7 @@ def _shrink_player(out: Any, object_digest: Mapping[str, Any]) -> None:
     out[row0:row1, col0:col1] = background
     height = int(object_digest.get("shrunk_player_height", 2) or 2)
     for index, color in enumerate(colors[: max(1, len(colors))]):
-        out[row0: row0 + height, col0 + index: col0 + index + 1] = color
+        out[row0 : row0 + height, col0 + index : col0 + index + 1] = color
 
 
 def _cast_grid_hash(grid: Any) -> str:
@@ -2653,7 +3006,9 @@ def _cast_grid_hash(grid: Any) -> str:
     return hashlib.sha256(np.asarray(grid, dtype="<i2").tobytes()).hexdigest()[:16]
 
 
-def _patch_lookup(object_digest: Mapping[str, Any]) -> dict[tuple[str, int, tuple[int, int] | None], Any]:
+def _patch_lookup(
+    object_digest: Mapping[str, Any],
+) -> dict[tuple[str, int, tuple[int, int] | None], Any]:
     import numpy as np
 
     lookup: dict[tuple[str, int, tuple[int, int] | None], Any] = {}
@@ -2667,8 +3022,14 @@ def _patch_lookup(object_digest: Mapping[str, Any]) -> dict[tuple[str, int, tupl
         if not before_hash or "next_grid" not in row:
             continue
         data_key_value = row.get("data_key")
-        data_key = tuple(int(v) for v in data_key_value) if isinstance(data_key_value, Sequence) and not isinstance(data_key_value, (str, bytes)) else None
-        lookup[(before_hash, int(row.get("action", 0) or 0), data_key)] = np.asarray(row["next_grid"], dtype=int)
+        data_key = (
+            tuple(int(v) for v in data_key_value)
+            if isinstance(data_key_value, Sequence) and not isinstance(data_key_value, (str, bytes))
+            else None
+        )
+        lookup[(before_hash, int(row.get("action", 0) or 0), data_key)] = np.asarray(
+            row["next_grid"], dtype=int
+        )
     return lookup
 
 
@@ -2678,12 +3039,16 @@ def _direction_delta_for_cast(
 ) -> tuple[int, int]:
     actions = object_digest.get("direction_actions") or {}
     step = int(object_digest.get("navigation_step", object_digest.get("step", 1)) or 1)
-    return _motion_delta_for_action(action, step=step, direction_actions={
-        "up": int(actions.get("up", 1)),
-        "down": int(actions.get("down", 2)),
-        "left": int(actions.get("left", 3)),
-        "right": int(actions.get("right", 4)),
-    })
+    return _motion_delta_for_action(
+        action,
+        step=step,
+        direction_actions={
+            "up": int(actions.get("up", 1)),
+            "down": int(actions.get("down", 2)),
+            "left": int(actions.get("left", 3)),
+            "right": int(actions.get("right", 4)),
+        },
+    )
 
 
 def _move_cast_player(grid: Any, action: Any, object_digest: Mapping[str, Any]) -> Any:
@@ -2716,7 +3081,11 @@ def _cast_player_at_exit(grid: Any, object_digest: Mapping[str, Any]) -> bool:
     import numpy as np
 
     exit_box = object_digest.get("exit_box")
-    if not isinstance(exit_box, Sequence) or isinstance(exit_box, (str, bytes)) or len(exit_box) < 4:
+    if (
+        not isinstance(exit_box, Sequence)
+        or isinstance(exit_box, (str, bytes))
+        or len(exit_box) < 4
+    ):
         return False
     row_min, col_min, row_max, col_max = (int(v) for v in exit_box[:4])
     coords = np.argwhere(_player_mask(grid, object_digest))
@@ -2750,7 +3119,9 @@ def cast_grid_phase_fsm_world_model(
 
     if not isinstance(object_digest, Mapping):
         return _ungrounded_cast_grid_result(game, "missing_cast_grid_phase_fsm_digest")
-    rule_family = str(object_digest.get("rule_family") or object_digest.get("predicate_id") or "").lower()
+    rule_family = str(
+        object_digest.get("rule_family") or object_digest.get("predicate_id") or ""
+    ).lower()
     if "cast" not in rule_family and not _cast_grid_examples_support(few_shot_examples):
         return _ungrounded_cast_grid_result(game, "missing_cast_grid_phase_fsm_few_shot_examples")
     if not _cast_grid_examples_support(few_shot_examples):
@@ -2764,14 +3135,25 @@ def cast_grid_phase_fsm_world_model(
     if not target_pattern or not current_pattern:
         return _ungrounded_cast_grid_result(game, "missing_cast_grid_toggle_digest")
     if len(current_pattern) != len(target_pattern) or any(
-        len(current_pattern[row]) != len(target_pattern[row])
-        for row in range(len(target_pattern))
+        len(current_pattern[row]) != len(target_pattern[row]) for row in range(len(target_pattern))
     ):
         return _ungrounded_cast_grid_result(game, "cast_grid_pattern_shape_mismatch")
-    for key in ("cast_origin", "cast_step", "cast_cell_size", "cast_active_color", "background_color"):
+    for key in (
+        "cast_origin",
+        "cast_step",
+        "cast_cell_size",
+        "cast_active_color",
+        "background_color",
+    ):
         if key not in object_digest:
             return _ungrounded_cast_grid_result(game, "missing_cast_grid_toggle_digest")
-    for key in ("player_colors", "player_start", "exit_box", "direction_actions", "direction_labels"):
+    for key in (
+        "player_colors",
+        "player_start",
+        "exit_box",
+        "direction_actions",
+        "direction_labels",
+    ):
         if key not in object_digest:
             return _ungrounded_cast_grid_result(game, "missing_cast_grid_navigation_digest")
 
@@ -2843,7 +3225,9 @@ def cast_grid_phase_fsm_world_model(
             "transition_patch_count": len(patches),
             "toggle_actions": len(toggle_path),
             "navigation_actions": len(navigation_path),
-            "few_shot_examples": [str(row.get("game", "")) for row in few_shot_examples if isinstance(row, Mapping)],
+            "few_shot_examples": [
+                str(row.get("game", "")) for row in few_shot_examples if isinstance(row, Mapping)
+            ],
         },
         "grounded_win_condition": {
             "predicate": "cast-grid target pattern transitions to shrunk-player navigation; win is player-at-exit",
@@ -2958,8 +3342,9 @@ def offline_arcade() -> Any:  # pragma: no cover - thin SDK boundary
     from arc_agi import Arcade
     from arc_agi.base import OperationMode
 
-    return Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE,
-                  environments_dir=str(ENV_DIR))
+    return Arcade(
+        arc_api_key="", operation_mode=OperationMode.OFFLINE, environments_dir=str(ENV_DIR)
+    )
 
 
 def frame_level(frame: Any) -> int:
@@ -2984,12 +3369,20 @@ class OfflineSolver:
         gotcha #6), else turns/no-ops collapse and the search stalls.
     """
 
-    def __init__(self, game_id: str, action_labels: Callable[[Any], Sequence[str]],
-                 apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
-                 *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
-                 verifier: Optional[Callable[[Any], float]] = None,
-                 path_cost_weight: Optional[float] = None, branch_mode: str = "replay",
-                 env_factory: Optional[Callable[[], Any]] = None) -> None:
+    def __init__(
+        self,
+        game_id: str,
+        action_labels: Callable[[Any], Sequence[str]],
+        apply: Callable[[Any, str, Any], Any],
+        state_key: Callable[[Any], Hashable],
+        *,
+        warmup_label: Optional[str] = None,
+        max_nodes: int = 30000,
+        verifier: Optional[Callable[[Any], float]] = None,
+        path_cost_weight: Optional[float] = None,
+        branch_mode: str = "replay",
+        env_factory: Optional[Callable[[], Any]] = None,
+    ) -> None:
         self.game_id = game_id
         self.action_labels = action_labels
         self.apply = apply
@@ -3014,8 +3407,8 @@ class OfflineSolver:
         #             SAME pristine parity the gate uses, so found paths reproduce. Costs a fresh env +
         #             full replay per evaluation — slower, so reserve it for non-idempotent-reset games.
         self.branch_mode = branch_mode
-        self.env_factory = env_factory       # () -> fresh env, for branch_mode="fresh_env"
-        self._fresh_arcade: Any = None       # lazily-cached arcade + scorecard for the default factory
+        self.env_factory = env_factory  # () -> fresh env, for branch_mode="fresh_env"
+        self._fresh_arcade: Any = None  # lazily-cached arcade + scorecard for the default factory
         self._fresh_scorecard: Any = None
         # VERIFIER-ROUTED SEARCH (the north-star efficiency loop): a score on a
         # state (LOWER = closer to the win, an energy/goal-distance). When given,
@@ -3096,12 +3489,16 @@ class OfflineSolver:
                 if k not in seen:
                     seen.add(k)
                     child_path = path + [label]
-                    heapq.heappush(heap, (self._priority(env, child_path), next(counter), child_path))
+                    heapq.heappush(
+                        heap, (self._priority(env, child_path), next(counter), child_path)
+                    )
                 self._replay(env, list(prefix) + path)  # restore for next sibling
         self.last_states_expanded = nodes
         return None, nodes
 
-    def _solve_level_deepcopy(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
+    def _solve_level_deepcopy(
+        self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int
+    ):
         """DEEPCOPY-PER-NODE variant of solve_level. Instead of replaying-from-reset to navigate, it
         SNAPSHOTS copy.deepcopy(env._game) per node and restores by deepcopy — branching the EXACT env
         state (incl. anything replay-from-reset doesn't faithfully reconstruct). Each heap node carries
@@ -3110,17 +3507,23 @@ class OfflineSolver:
         self._replay(env, list(prefix))
         seen = {self._call_state_key(env)}
         counter = itertools.count()
-        root = (self._priority(env, []), next(counter), [], copy.deepcopy(env._game), self.last_frame)
+        root = (
+            self._priority(env, []),
+            next(counter),
+            [],
+            copy.deepcopy(env._game),
+            self.last_frame,
+        )
         heap = [root]
         nodes = 0
         while heap and nodes < self.max_nodes:
             _, _, path, snap, frame = heapq.heappop(heap)
             if len(path) >= depth_cap:
                 continue
-            env._game = copy.deepcopy(snap)            # restore this node's exact state
+            env._game = copy.deepcopy(snap)  # restore this node's exact state
             self.last_frame = frame
             for label in self._call_action_labels(env, path):
-                env._game = copy.deepcopy(snap)        # branch from the node for each child
+                env._game = copy.deepcopy(snap)  # branch from the node for each child
                 self.last_frame = frame
                 f2 = self.apply(env, label, None)
                 self.last_frame = f2
@@ -3132,8 +3535,16 @@ class OfflineSolver:
                 if k not in seen:
                     seen.add(k)
                     child_path = path + [label]
-                    heapq.heappush(heap, (self._priority(env, child_path), next(counter),
-                                          child_path, copy.deepcopy(env._game), f2))
+                    heapq.heappush(
+                        heap,
+                        (
+                            self._priority(env, child_path),
+                            next(counter),
+                            child_path,
+                            copy.deepcopy(env._game),
+                            f2,
+                        ),
+                    )
         self.last_states_expanded = nodes
         return None, nodes
 
@@ -3157,7 +3568,9 @@ class OfflineSolver:
 
         def at(path: Sequence[str]):
             e = self._fresh_env()
-            self._replay(e, list(prefix) + list(path))   # reset+replay on the fresh env; sets last_frame
+            self._replay(
+                e, list(prefix) + list(path)
+            )  # reset+replay on the fresh env; sets last_frame
             return e
 
         e0 = at([])
@@ -3169,7 +3582,7 @@ class OfflineSolver:
             _, _, path = heapq.heappop(heap)
             if len(path) >= depth_cap:
                 continue
-            e_node = at(path)                             # fresh env at the node (for action_labels)
+            e_node = at(path)  # fresh env at the node (for action_labels)
             for label in self._call_action_labels(e_node, path):
                 e_child = at(path + [label])
                 f2 = self.last_frame
@@ -3180,8 +3593,10 @@ class OfflineSolver:
                 k = self._call_state_key(e_child)
                 if k not in seen:
                     seen.add(k)
-                    heapq.heappush(heap, (self._priority(e_child, path + [label]),
-                                          next(counter), path + [label]))
+                    heapq.heappush(
+                        heap,
+                        (self._priority(e_child, path + [label]), next(counter), path + [label]),
+                    )
         self.last_states_expanded = nodes
         return None, nodes
 
@@ -3202,8 +3617,14 @@ class OfflineSolver:
         return full, cur
 
 
-def reproduce(game_id: str, solution: Sequence[str], apply: Callable[[Any, str, Any], Any],
-              *, warmup_label: Optional[str] = None, claimed_level: Optional[int] = None) -> dict:
+def reproduce(
+    game_id: str,
+    solution: Sequence[str],
+    apply: Callable[[Any, str, Any], Any],
+    *,
+    warmup_label: Optional[str] = None,
+    claimed_level: Optional[int] = None,
+) -> dict:
     """THE REPRODUCTION GATE. Replay a banked `solution` against the OFFLINE env and
     report the level it actually reaches. A solve is only real if this reproduces
     the claimed level offline — never trust a live-recorded trajectory alone.

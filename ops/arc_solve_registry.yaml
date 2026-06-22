@@ -102,6 +102,52 @@ general_gotchas:
       gain was unmeasurable/value-null.
   - sc25: no cached candidate reached the offline reproduction gate, so ordering
       gain was unmeasurable/value-null.
+- id: primitive_persistent_action_effect_memory_operator
+  operator: persistent_action_effect_memory_operator
+  derived_from_games:
+  - exp4568_clickability_action_effect_predictor
+  note: >-
+    Exp 4573 persists A1's action-effect predictor as a reusable PersistentAEM
+    operator: build a leave-one-game cross-game memory from cached frame/action
+    effects, rank compatible action candidates by predicted effect with stable
+    original-order tie-breaking, and report actions-to-first-levelup deltas
+    before any solve claim. A CNN predictor forward pass is not live LLM
+    inference; the persisted operator can also run from cached action-effect
+    rows without invoking the CNN. New levels still count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - If the winning action is absent from the candidate group, PersistentAEM can
+    only reorder generated candidates; candidate generation remains the residual
+    bottleneck.
+  - Leave-one-game transfer can be value-null when the held-out game's effective
+    action family is not represented in the cached memory features.
+  latest_exp4573_transfer:
+    artifact: results/experiment_4573_primitive_persist_transfer.json
+    transfer_games:
+    - dc22
+    - m0r0
+    - ka59
+    transfer_value_per_game:
+      dc22:
+        actions_reduced: 1.0
+        baseline_actions_to_first_levelup: 2.0
+        memory_actions_to_first_levelup: 1.0
+        candidate_group_count: 115
+      m0r0:
+        actions_reduced: 1.0
+        baseline_actions_to_first_levelup: 2.0
+        memory_actions_to_first_levelup: 1.0
+        candidate_group_count: 53
+      ka59:
+        actions_reduced: 1.0
+        baseline_actions_to_first_levelup: 2.0
+        memory_actions_to_first_levelup: 1.0
+        candidate_group_count: 41
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is candidate-ordering efficiency over cached
+      leave-one-game rows; no new executable level was banked, so
+      reproducible_total_levels is unchanged.
+    reproducibility_checksum: sha256:40b6b9874717b0a9973e9e33addfba694337ee722656e4101335c6c44173bab1
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:

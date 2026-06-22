@@ -1214,6 +1214,67 @@ configuration remains unchanged, `additivity_checked` reports the integrated
 deltas against the isolated A1/A2 deltas, `core_solves_preserved=true`, and the
 terminal artifact starts with `complete: no_lever_raises_a_metric_honest_null`.
 
+### REQ-ARC-WMTE-4573: Persist A1/A2 Winning Primitive With Leave-One-Game Transfer
+
+Experiment 4573 SHALL read
+`results/experiment_4568_clickability_action_effect_predictor.json` and
+`results/experiment_4569_verifier_guided_expansion.json`, select the strongest
+measured primitive signal, persist it as a reusable solver-kit operator, and
+record that reusable asset in `ops/arc_solve_registry.yaml` under
+`general_gotchas` as `primitive_persistent_action_effect_memory_operator`.
+If A1 and A2 are both transfer nulls, the workflow SHALL
+persist the best-characterized primitive-as-built, report the transfer null, and
+state what evidence or candidate-generation capability would be needed for value.
+
+For the A1 path, the solver kit SHALL expose
+`persistent_action_effect_memory_operator` backed by `PersistentAEM`. The
+operator SHALL build a cross-game action-effect memory from cached frame/action
+rows while excluding each transfer target game from its memory, rank compatible
+action candidates by predicted effect with deterministic original-order
+tie-breaking, and report actions-to-first-levelup before and after ranking. The
+operator SHALL be registered in `primitive_operator_registry()`, selected by
+`select_primitive_operators()`, and surfaced by
+`arc_solve_learning.recommend_approach()` so live solves can reuse it before
+game-specific reverse engineering.
+
+Experiment 4573 SHALL apply the persisted primitive to at least two games that
+were not used to build that game's memory and SHALL write
+`results/experiment_4573_primitive_persist_transfer.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `primitive_persisted`,
+`transfer_games`, `transfer_value_per_game`, `offline_reproduced`,
+`registry_updated`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for the offline transfer; a CNN predictor forward pass is NOT live_llm_inference."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_value_per_game`: principle "the per-game value-add (predictor actions-reduced / expansion winner-generated) -- the cross-game evidence the primitive generalizes."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+If no held-out transfer game shows positive action reduction or winner
+generation, the artifact SHALL report
+`complete: primitive_persisted_transfer_null_characterized`, keep
+`offline_reproduced=false` unless a new level passed `arc_solver_kit.reproduce`,
+and record the transfer dead-ends in the registry rather than incrementing
+`reproducible_total_levels`.
+
+### SCENARIO-ARC-WMTE-4573: Action-Effect Memory Transfers Without Target-Game Tuning
+
+Given the offline arcade precondition passes and the experiment 4568/4569
+artifacts are present
+When experiment 4573 selects the A1 action-effect predictor as the
+best-characterized primitive and applies `persistent_action_effect_memory_operator`
+to cached transfer games with each target game excluded from the memory
+Then the artifact records the persisted operator, transfer games, per-game
+actions reduced or null, offline reproduction status, registry update status,
+and a terminal honest verdict without incrementing `reproducible_total_levels`
+unless a new level passes `arc_solver_kit.reproduce()`.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
