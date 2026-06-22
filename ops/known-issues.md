@@ -779,6 +779,59 @@ generator is FROZEN: Qwen3.5-9B-MTP ([[project_arc_live_generator]]). `.409 is a
 (`research-roadmap-next.yaml`) as the template. Retires **2026-06-30** (the challenge deadline) ONLY — NOT
 on submissions (the operator expects MULTIPLE submissions before then; keep improving across all of them).
 
+### NEW 2026-06-22 (TOP PRIORITY for .425+ — operator-directed, ARC sprint sub-direction): ENERGY-CONFIG-SPACE GENERATION — work energy judgement INTO the live agent loop (make-a-winner-appear, not select-the-winner)
+
+**Origin:** 2026-06-22 operator directive after a step-back research session (two
+adversarial workflows, six higher-abstraction families, repo-grounded) on the
+`.424` candidate-GENERATION wall (`winner_generated=1/25`). Operator: *"work
+energy judgement into the live agent so that it can refine and embrace an energy
+config space within each game and shared amongst the games to provide guidance to
+the agent loops as it tries to tackle each game level iteratively."* Full mapping +
+real arXiv IDs + reusable-asset/gap cross-refs:
+`docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md`. This
+EXTENDS the 2026-06-20 "energy-augmented ARC is the research spine" directive and
+is the concrete `.425` instantiation of it; it sits UNDER the ARC submission sprint
+(majority-ARC, monotonic `reproducible_total_levels`, codex experiments, Opus
+planner/retro), not in competition with it.
+
+**The reframe (settled):** the wall is `make-a-winner-appear`, not
+`select-the-winner` (all rerankers/routers/best-first-expansion REFUTED — see the
+refuted ledger). Carnot's energy verifier earns its keep only by becoming a
+generative DRIVER (a per-game ONLINE energy landscape + a SHARED cross-game energy
+prior that guides iterative level attempts), not a terminal judge.
+
+**The `.425+` pickups (cheapest-first; all offline-reproduction-gated +
+uniform-energy ablation control + `verifier_is_oracle:false`; NO quota until
+offline transfer > 0.08 AND beats best prior submitted run):**
+
+1. **(FIRST, ~free) Wire `exp4020`'s `is_goal` as a GRADED goal-ENERGY target** in
+   `graph_explore_solve_v2` (`results/experiment_4020_goal_induction_separation.json`
+   is held-out precision 1.0 but UNWIRED — closes GAP-ARCH-GOAL-NOT-VERIFIED). Gate:
+   `offline_reproduced=true` on ≥3 games with `cell_recall>0.8` but currently 0
+   reproduced, fewer actions-to-win than navigation-only. RISK: precision-1.0 is
+   n=6 on ONE game (r11l) over a state-dict — its failure is silent; ablation control
+   mandatory; retire-as-universal + log verifier-gap if it fires wrongly on ≥2
+   non-r11l games.
+2. **(PARALLEL) Induce a per-game MACRO-action vocabulary** (empowerment/affordances;
+   the shared cross-game energy prior) so plan search runs over macros — collapses
+   the 4^13 horizon into the ~5n budget; the enabler for #3. Gate: reaches ≥1
+   hard-tail level at lower expansion count AND banks ≥1 level primitives miss.
+3. **(THIRD, needs 1+2) Energy-as-FITNESS quality-diversity evolution** over
+   action-sequences (MAP-Elites; crossover at shared visited-state hashes; fitness =
+   rollout energy) — the NON-autoregressive generator; turns the moat into a
+   GENERATOR. Tests the P0.1 "energy fails de-novo" boundary under population-seeding.
+   Gate: on ≥2 of 8 hard games, QD banks a winner pure-BFS does not at equal budget.
+4. **(EARLY/PARALLEL, sub-second DIAGNOSTIC) Hidden-state `cell_recall` probe** —
+   is the hard tail search/goal-bound or structurally hidden-state-bound
+   (GAP-ARCH-GRID-ONLY-STATE)? Log a `ops/verifier_gaps.md` gap on a clean negative.
+
+**Second wave (after the bottleneck is localized):** PoE-World divergence-tolerant
+factored executable model + plan-through-model (the answer to why exact-match
+induction died 0/5); Plan2Explore/EFE planner wiring the BUILT-but-unwired
+`arc_world_model_trust_energy.py` + `is_goal` (one wire closes 3 gaps). SOTA IDs:
+2605.05138 (ARC-AGI-3 SOTA), 2605.28814, 2505.10819, 2005.05960, 2505.24784,
+2009.08111, FunSearch (Nature s41586-023-06924-6).
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")

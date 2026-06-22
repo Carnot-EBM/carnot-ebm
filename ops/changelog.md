@@ -1,5 +1,31 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Energy-config-space generation strategy — research ingested + flagged for .425, outer-loop)
+
+Triggered by the operator asking to step back from the `.424` candidate-GENERATION wall, research higher
+layers of abstraction, and "work energy judgement into the live agent so that it can refine and embrace an
+energy config space within each game and shared amongst the games to provide guidance to the agent loops as
+it tries to tackle each game level iteratively."
+
+- **Research:** two adversarial workflows over six higher-abstraction families (intrinsic motivation/
+  empowerment, skill discovery, active inference/EFE, program synthesis + ARC-AGI-3 SOTA, object-centric/
+  latent planning, LLM-hypothesis + evolutionary generation), each cross-checked against the repo's
+  refuted-approaches ledger and reusable assets. First pass rate-limited 4/6 clusters (concurrent
+  WebSearch 429); re-ran at 2-at-a-time + merged.
+- **Reframe captured:** the wall is `make-a-winner-appear`, not `select-the-winner` (all rerankers/routers/
+  best-first-expansion REFUTED). Carnot's energy verifier earns its keep as a generative DRIVER — a per-game
+  ONLINE energy landscape + a SHARED cross-game energy prior guiding iterative level attempts.
+- **Deliverable:** `docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md` (the unified
+  8-direction menu, energy-angle foregrounded, real arXiv IDs, asset/gap cross-refs, honest risks).
+- **Flagged for `.425`:** `ops/known-issues.md` MANDATORY-NEXT-MILESTONE entry (under the ARC sprint) +
+  `research-studying.md` marked INGESTED. Cheapest-first pickups: (1) wire the BUILT-but-unwired `exp4020`
+  `is_goal` (held-out precision 1.0) as a graded goal-ENERGY target — closes GAP-ARCH-GOAL-NOT-VERIFIED;
+  (2) macro-vocabulary horizon collapse; (3) energy-as-FITNESS quality-diversity evolution (the non-AR
+  generator). All offline-reproduction-gated + uniform-energy ablation; no quota until offline transfer
+  > 0.08 AND beats the best prior submitted run.
+- **Memory:** `project_arc_energy_config_space` (the durable operator directive).
+- No code changes (the conductor is mid-`.424`); doc/strategy only. Committed `[outer-loop]`.
+
 ## 2026-06-21 (ARC-AGI-3 exploration-diversity floor SHIPPED — milestone win, outer-loop)
 
 Triggered by the operator directive to develop the live ARC agent under the eval resource profile and
