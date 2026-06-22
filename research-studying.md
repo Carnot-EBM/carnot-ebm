@@ -10,6 +10,32 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-22 Skill-to-LoRA (arXiv:2606.16769) - operator-directed ingestion - INGESTED
+
+**Status:** INGESTED (operator: "what can we learn"). S2L (Zhang & Qi, CUHK, 2026-06-15) distills a
+procedural SKILL.md into a per-skill LoRA adapter (rank-16, ~6M params, 24MB) loaded at runtime instead of
+injecting full skill text. SWE-Skills-Bench 21-skill subset: +5.2pp pass (65/210 vs 54/210), -6.6% tokens,
+CNG 0.58 vs -0.18. Qwen3.6-27B base; code "upon acceptance." No EBM/verifier/world-model/active-inference/
+ARC content.
+
+**Verdict:** CITE / CALIBRATE, do NOT build. The method is trained PER-SKILL WEIGHTS — a public-game weights
+prior that does NOT transfer to hidden games (the trap in [[feedback_arc_value_is_process_not_weights]]); S2L's
+own scope limit ("not for open-ended reasoning / edge cases") confirms it. Reinforced by our own
+full-FT>LoRA-for-OOD finding ([[reference_trm_tta_mcgovern]]) and the retired TRM-adapter line
+([[feedback_trm_training_retired]]). Do NOT build per-skill LoRAs for the frozen ARC generator
+([[project_arc_live_generator]]).
+
+**What we keep (3 calibrations):** (1) SHARPENS the .425 energy-config-space bet — S2L and Carnot solve the
+same skill-library + composition + ROUTING problem, but S2L picks LoRA-WEIGHTS as the skill representation
+while we pick ENERGY ([[project_arc_energy_config_space]]); their "weights don't transfer OOD" limitation is
+exactly why energy-as-online-refined-config-space is the right substrate for hidden games — the contrast
+VALIDATES our choice. (2) Their reproduced finding "skill prompting is often neutral or harmful" corroborates
+the CLAUDE.md "MECHANICALLY-ENFORCED — prose is reference-only" direction (distill stable rules into linters,
+don't re-inject text); optional low-priority follow-up = measure whether prose-injected disciplines help the
+planner or just cost latency (the .424 1201s planner timeout is a hint). (3) Their adapter-router ≈ our
+`recommend_approach` survey-feature routing; they confirm weights-routing degrades OOD (Wrong-LoRA), our
+affordance/energy routing is the right level. Peer/contrast, not a build direction.
+
 ## 2026-06-22 Energy-config-space generation for the ARC-AGI-3 wall - operator-directed ingestion - INGESTED
 
 **Status:** INGESTED into `docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md`
