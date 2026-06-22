@@ -77,14 +77,14 @@ def test_req_arc_wmte_4548_null_a1_a4_levers_are_not_submitted_by_default():
     assert SUBMITTED_AGENT_CONFIG["explore_diversity_default"] is False
 
 
-def test_req_capstone_4585_submitted_config_points_at_integrated_package():
-    """REQ-CAPSTONE-4585: submitted metadata names the integrated live package."""
+def test_req_capstone_4597_submitted_config_points_at_refreshed_package():
+    """REQ-CAPSTONE-4597: submitted metadata names the refreshed live package."""
 
     assert (
         SUBMITTED_AGENT_CONFIG["live_submit_package_path"]
-        == "results/experiment_4585_submission_package_integration_gate.json"
+        == "results/experiment_4595_submission_package_operator_resubmit.json"
     )
-    assert SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4585_integration_gate"
+    assert SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4595_refresh_submission_package"
 
 
 def test_wired_flags_reflect_actual_imports():
