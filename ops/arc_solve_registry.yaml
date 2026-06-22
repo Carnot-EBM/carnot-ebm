@@ -553,27 +553,35 @@ games:
   gotchas: []
 - game: ar25
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: 'E3 executable-world-model L1: move the selected L-shaped object
-    left 5 and down 10 so its reflection across the vertical mirror covers the lower-right
-    target L.'
-  action_model: keyboard-only [ACTION3 x5, ACTION2 x10]; ACTION3 moves selected object
-    left, ACTION2 moves selected object down; ACTION7 is hidden undo-stack and remains
-    a verifier gap outside the L1 plan.
-  solver: results/experiment_4339_e3_explore_verify_plan_ar25.json + results/arc_e3/ar25/world_model.py
-  reproduce: arc_solver_kit.reproduce(ar25, ['3']*5 + ['2']*10, Exp4339 apply) reproduced=True
-    L1; checksum 8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391.
-  generic_object_motion_reproduce: Exp4445 object_motion_world_model re-solved ar25
-    L1 without ar25's hand world-model recipe.
-  world_model: results/arc_e3/ar25/world_model.py
-  world_model_sha256: d6274374375774291731d21258fc2ddb77b521fb13a7d762de693602897c492f
+  levels_reproduced: 2
+  mechanic_class: reflection_mirror_object_alignment
+  win_condition: 'L1 object reflection plus L2 mirror/object alignment: after the
+    L1 reflected L-shape, L2 moves the vertical mirror to x=10 and the selected
+    object to (15,14) so its vertical reflection covers every fixed 0001sruqbuvukh
+    target cell.'
+  action_model: Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling.
+    L2 delta is ACTION3 x2 to move the selected vertical mirror left, ACTION5 to
+    select the object, then ACTION2 x8 to move it down.
+  solver: GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py +
+    scripts/arc_loop_solve.py; results/arc_loop_solve_ar25.json 26-label L2 gate.
+  reproduce: Exp4581 results/experiment_4581_levelup_selfplay.json re-gated results/arc_loop_solve_ar25.json
+    offline_reproduced=True, reached_level=2, banked +1 over the current L1
+    registry row, checksum 673c828fa05f82f38e861f5ef8fc07ca7dd4d1e8ae99f82c5fca4abf5cf32125.
+  learned_verifier_checkpoint: models/arc_verifier_ar25.json trained by scripts/arc_loop_solve.py
+    on the ar25 L1+L2 positive steps-to-go trace and this run's recorded
+    off-path/dead-end evidence.
   gotchas:
-  - Rendered grid is 64x64 display space, not a constant-cell logical grid; movement
-    appears as 3-pixel shifts.
-  - Visible target cells are layer-owned and must not be copied as part of moving
-    component patches.
-  - ACTION7 pops a hidden undo stack that is not encoded in the visible grid; verifier
-    mismatches on ACTION7 are a real missing-world-model-rule gap.
+  - The L2 selected object cannot move to x=19 because the 5-wide sprite is board
+    bounded; move the vertical mirror from x=12 to x=10 instead.
+  - ACTION5 is load-bearing at L2 because reset selects the vertical mirror before
+    the movable object.
+  - ACTION7 pops a hidden undo stack that is not encoded in the visible grid; skip
+    ACTION7 for this banked path and retain it as a dead-end caution.
+  dead_ends:
+  - sk48 remained routing-only for this milestone; the chain/color reorder L2 still
+    needs a grounded adapter.
+  - Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta
+    is required before the standing loop can bank.
 - game: ka59
   reproducibility: reproduced
   levels_reproduced: 1
@@ -952,7 +960,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 53
+reproducible_total_levels: 54
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

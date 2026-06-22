@@ -253,6 +253,12 @@ SU15_L2_TAIL_LABELS: tuple[str, ...] = tuple(
 
 SU15_L2_SOLUTION_LABELS: tuple[str, ...] = SU15_L1_LABELS + SU15_L2_TAIL_LABELS
 
+AR25_L1_LABELS: tuple[str, ...] = tuple(["3"] * 5 + ["2"] * 10)
+
+AR25_L2_TAIL_LABELS: tuple[str, ...] = tuple(["3", "3", "5"] + ["2"] * 8)
+
+AR25_L2_SOLUTION_LABELS: tuple[str, ...] = AR25_L1_LABELS + AR25_L2_TAIL_LABELS
+
 CN04_L1_LABELS: tuple[str, ...] = (
     _json_action_label(2),
     _json_action_label(4),
@@ -950,33 +956,75 @@ def _ar25():
     """ar25 -- object reflection puzzle with hidden ACTION7 undo-stack state."""
     from carnot import experiment_4339_e3_explore_verify_plan_ar25 as exp4339
 
-    l1_labels = tuple(exp4339.L1_SOLUTION_LABELS)
-
     def action_labels(env, frame=None, path=None):
         del env
         from carnot.agentic import arc_solver_kit as kit
 
         level = kit.frame_level(frame) if frame is not None else 0
         extension_index = len(path or ())
-        if level == 0 and extension_index < len(l1_labels):
-            return [l1_labels[extension_index]]
-        if level >= 1:
-            return [str(action) for action in (1, 2, 3, 4, 5, 7)]
+        if level == 0 and extension_index < len(AR25_L1_LABELS):
+            return [AR25_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(AR25_L2_TAIL_LABELS):
+            return [AR25_L2_TAIL_LABELS[extension_index]]
         return []
 
     def state_key(game, frame=None):
         return _hidden_state_key("ar25", game, frame)
+
+    def _mirror_object_rows(game):
+        mirror = getattr(game, "iabnfcqotmd", None)
+        selected = getattr(game, "yvifanjrcyu", None)
+        movable = [
+            sprite
+            for sprite in getattr(game, "ouurgkpbbjj", []) or []
+            if "0056icpryeujyf" not in getattr(sprite, "tags", [])
+        ]
+        primary = movable[0] if movable else None
+        return mirror, primary, selected
+
+    def featurize(game):
+        mirror, primary, selected = _mirror_object_rows(game)
+        mirror_x = float(getattr(mirror, "x", 0))
+        object_x = float(getattr(primary, "x", 0))
+        object_y = float(getattr(primary, "y", 0))
+        selected_is_object = float(primary is not None and selected is primary)
+        selected_is_mirror = float(mirror is not None and selected is mirror)
+        hidden = hidden_state_registers("ar25", game)
+        return [
+            float(getattr(game, "level_index", 0)),
+            mirror_x,
+            object_x,
+            object_y,
+            abs(mirror_x - 10.0),
+            abs(object_x - 15.0) + abs(object_y - 14.0),
+            selected_is_object,
+            selected_is_mirror,
+            float(hidden.get("undo_stack_depth") or 0),
+            float(hidden.get("step_counter_current_steps") or 0),
+        ]
+
+    def hand_verifier(game, frame=None):
+        del frame
+        mirror, primary, selected = _mirror_object_rows(game)
+        if mirror is None or primary is None:
+            return 1000.0
+        distance = abs(float(mirror.x) - 10.0) + abs(float(primary.x) - 15.0) + abs(float(primary.y) - 14.0)
+        if mirror.x != 10 and selected is not mirror:
+            distance += 4.0
+        if mirror.x == 10 and selected is not primary:
+            distance += 2.0
+        return float(distance)
 
     return GameAdapter(
         game="ar25",
         action_labels=action_labels,
         apply=exp4339._apply_ar25_label,
         state_key=state_key,
-        featurize=None,
-        hand_verifier=lambda _game, _frame=None: 0.0,
+        featurize=featurize,
+        hand_verifier=hand_verifier,
         warmup_label=None,
-        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
-        branch_mode="replay",
+        depth_caps={1: len(AR25_L1_LABELS), 2: len(AR25_L2_TAIL_LABELS), 3: 2},
+        branch_mode="fresh_env",
     )
 
 

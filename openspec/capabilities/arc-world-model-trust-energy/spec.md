@@ -1275,6 +1275,54 @@ actions reduced or null, offline reproduction status, registry update status,
 and a terminal honest verdict without incrementing `reproducible_total_levels`
 unless a new level passes `arc_solver_kit.reproduce()`.
 
+### REQ-ARC-WMTE-4581: Rotated ar25 Self-Play Level-Up And Verifier Checkpoint
+
+Experiment 4581 SHALL satisfy the ARC sprint level-up attempt guarantee through
+the standing ARC self-play loop while avoiding the stalled `ka59` hidden-register
+path and the recently deepened `.421-.422` `m0r0`/`cn04` targets. The workflow
+SHALL first record the preferred rotated targets `sk48` and `ar25`, SHALL skip
+recorded dead-end approaches, and SHALL accept a bank only when
+`arc_solver_kit.reproduce()` offline-reproduces a target level above that game's
+prior `ops/arc_solve_registry.yaml` row.
+
+For `ar25`, the L2 delta SHALL be derived from the offline environment state:
+after the reproduced L1 prefix, the selected vertical mirror moves left twice,
+ACTION5 selects the reflected object, and ACTION2 moves the object down eight
+steps so the vertical reflection covers the L2 fixed target cells. The
+`ar25` `GameAdapter` SHALL expose that deterministic L1+L2 tail to
+`scripts/arc_loop_solve.py`, and the experiment SHALL persist a learned-verifier
+checkpoint at `models/arc_verifier_ar25.json` trained on the run's positive
+steps-to-go trace and negative off-path/dead-end trace evidence.
+
+Experiment 4581 SHALL write
+`results/experiment_4581_levelup_selfplay.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `offline_reproduced`,
+`reproduced_levels`, `target_game`, `verifier_checkpoint_updated`,
+`registry_updated`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, `reproduction_gate`, `solution_labels`, `dead_ends`,
+`registry_update`, and `verifier_delta`. Required field principles SHALL be
+included for:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
+- `target_game`: principle "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .419-.422)."
+- `verifier_checkpoint_updated`: principle "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+A success artifact SHALL set `honest_verdict` to
+`success: ar25_L2_offline_reproduced`, `target_game=ar25`,
+`offline_reproduced=true`, `reproduced_levels>=1`,
+`verifier_checkpoint_updated=true`, and `registry_updated=true`. If the
+standing loop repeats an existing level, routes to per-game reverse engineering,
+or does not update the learned verifier checkpoint, the artifact SHALL use
+`complete: <game>_delta_identified_no_bank`, set `reproduced_levels=0`, preserve
+dead-end evidence, and SHALL NOT increment `reproducible_total_levels`.
+
 ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
 
 Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
@@ -1561,6 +1609,21 @@ stable `reproducibility_checksum`, `offline_reproduced=true`,
 `reproduced_levels>=1`, `registry_updated=true`, the `cn04` registry row is
 persisted with the L2 win/action/state delta and dead-end evidence, and
 `reproducible_total_levels` increments monotonically beyond 52.
+
+### SCENARIO-ARC-WMTE-4581: ar25 Self-Play Banks L2 And Updates Verifier
+
+Given the offline arcade precondition passes, `sk48` remains routing-only,
+`ka59` is excluded by its recorded hidden-register dead end, and the registry
+records `ar25` as reproduced only through L1
+When experiment 4581 runs the standing loop with the `ar25` L2 mirror/object
+delta, replays the full L1+L2 label plan through `arc_solver_kit.reproduce`,
+and writes the learned verifier checkpoint
+Then the artifact records `target_game=ar25`, the required field principles, a
+stable `reproducibility_checksum`, `offline_reproduced=true`,
+`reproduced_levels>=1`, `verifier_checkpoint_updated=true`,
+`registry_updated=true`, the `ar25` registry row persists the L2 win/action/state
+delta plus dead-end evidence, and `reproducible_total_levels` increments
+monotonically beyond the prior total.
 
 ### SCENARIO-ARC-WMTE-4526: Integration Wires Only Deeper-Level Winners
 

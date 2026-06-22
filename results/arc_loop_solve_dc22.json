@@ -44,6 +44,38 @@
       ]
     },
     {
+      "operator": "verifier_router_candidate_ranking_operator",
+      "derived_from_games": [
+        "exp4556_cached_generic_transfer"
+      ],
+      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
+      "selector_tags": [
+        "verifier_router",
+        "candidate_ranking",
+        "trust_energy",
+        "graph_explore",
+        "config_toggle",
+        "program_editor",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "persistent_action_effect_memory_operator",
+      "derived_from_games": [
+        "exp4568_clickability_action_effect_predictor"
+      ],
+      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+      "selector_tags": [
+        "action_effect",
+        "clickability",
+        "candidate_ranking",
+        "graph_explore",
+        "click",
+        "keyboard",
+        "transfer"
+      ]
+    },
+    {
       "operator": "object_centric_digest",
       "derived_from_games": [
         "g50t",
