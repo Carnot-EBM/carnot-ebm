@@ -1,0 +1,100 @@
+{
+  "arc_loop_result_path": "results/arc_loop_solve_ft09.json",
+  "dead_ends": [
+    {
+      "attempt": "standing loop preferred rotation target",
+      "game": "sk48",
+      "result": "needs_per_game_RE",
+      "why": "The standing adapter-free loop emitted transfer routing only; bounded grounded search exposed chain permutation progress but did not produce an offline-reproduced L2 bank."
+    },
+    {
+      "attempt": "rotation candidate skipped",
+      "game": "ka59",
+      "result": "recorded_hidden_register_dead_end",
+      "why": "The registry records ka59 L2 as stalled on hidden StepCounter state; this run did not retry it."
+    },
+    {
+      "attempt": "existing shallow adapter rerun",
+      "game": "dc22",
+      "result": "reproduced_existing_L1_only",
+      "why": "The current dc22 adapter re-gated L1 and did not update a verifier checkpoint or bank L2."
+    }
+  ],
+  "experiment": "experiment_4593_levelup_selfplay",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "target_game": "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .420-.423).",
+    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+  },
+  "honest_verdict": "success: ft09_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4593,
+  "registry_update": {
+    "banked_levels": 1,
+    "new_game_levels": 2,
+    "new_total_declared": 55,
+    "new_total_row_sum": 55,
+    "path": "ops/arc_solve_registry.yaml",
+    "prior_game_levels": 1,
+    "prior_total_declared": 54,
+    "prior_total_row_sum": 54,
+    "reason": "banked_offline_reproduced_level",
+    "reconciled_total_delta": 1,
+    "target_game": "ft09",
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "5ee7f13403743f436b448763b045b31a760b8bf0b55c03caa93214d6d48aee92",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "ft09",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.arc_levelup_selfplay_4593.v1",
+  "schema_errors": [],
+  "solution_labels": [
+    "{\"action\":6,\"data\":{\"x\":36,\"y\":36}}",
+    "{\"action\":6,\"data\":{\"x\":36,\"y\":44}}",
+    "{\"action\":6,\"data\":{\"x\":52,\"y\":44}}",
+    "{\"action\":6,\"data\":{\"x\":36,\"y\":52}}",
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":16}}",
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":24}}",
+    "{\"action\":6,\"data\":{\"x\":38,\"y\":24}}",
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":32}}",
+    "{\"action\":6,\"data\":{\"x\":38,\"y\":32}}",
+    "{\"action\":6,\"data\":{\"x\":30,\"y\":48}}",
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":48}}"
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4593",
+    "SCENARIO-ARC-WMTE-4593"
+  ],
+  "target_game": "ft09",
+  "target_level": 2,
+  "verifier_checkpoint_updated": true,
+  "verifier_delta": {
+    "checkpoint_path": "models/arc_verifier_ft09.json",
+    "checkpoint_schema": "carnot_arc_learned_verifier_v1",
+    "checkpoint_updated": true,
+    "negative_trace_count": 3,
+    "negative_trace_source": "recorded_off_path_dead_ends",
+    "positive_trace_count": 11
+  }
+}

@@ -650,25 +650,34 @@ games:
     sprite centers, not hardcoded live pixels.
 - game: ft09
   reproducibility: reproduced
-  levels_reproduced: 1
+  levels_reproduced: 2
   mechanic_class: local_constraint_color_cycle
-  win_condition: 'L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor
-    slots equal the center color and non-zero-neighbor slots differ; the real frame
-    level counter is the accept gate.'
-  action_model: ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)]
-    through arc_solver_kit.reproduce.
-  solver: python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json
-  reproduce: arc_solver_kit.reproduce(ft09, Exp4363 labels, _apply_ft09_label, claimed_level=1)
-    reproduced=True L1; checksum fe02d5adf671bd769d10dea11d6b3a53ba1ff92e9d54d9c7bbbe8eb4d63e2168.
-  generic_verifier_reproduce: Exp4444 results/experiment_4444_generic_config_rule_verifier_operator.json
-    ft09_resolved_generically=True via config_rule_verifier.
-  world_model: results/arc_e3/ft09/world_model.py
-  world_model_sha256: 8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee
+  win_condition: 'L1 local constraint puzzle plus L2 cwU=[9,12] local constraint:
+    every adjacent Hkx/NTi cell must satisfy each bsT center color with equal-vs-different
+    semantics read from zero/non-zero bsT pixels; the real frame level counter is the accept gate.'
+  action_model: ACTION6 click-only. L1 uses the four registered clicks; L2 clicks
+    display coordinates (22,16), (22,24), (38,24), (22,32), (38,32),
+    (30,48), and (22,48) to cycle the required Hkx cells from 9 to 12.
+  solver: GameAdapter _ft09 in python/carnot/agentic/arc_game_adapters.py +
+    scripts/arc_loop_solve.py; results/arc_loop_solve_ft09.json 11-label L2 gate.
+  reproduce: Exp4593 results/experiment_4593_levelup_selfplay.json re-gated results/arc_loop_solve_ft09.json
+    offline_reproduced=True, reached_level=2, banked +1 over the current L1
+    registry row, checksum ccb93940148787601b6316425d8628008c466c198d1394a03faedc00cb0e100f.
+  learned_verifier_checkpoint: models/arc_verifier_ft09.json trained by scripts/arc_loop_solve.py
+    on the ft09 L1+L2 positive steps-to-go trace and this run's recorded
+    off-path/dead-end evidence.
   gotchas:
+  - Click coordinates are display pixels, not raw grid pixels; Hkx grid center
+    (x+1,y+1) maps to display coordinate 2*(x+1,y+1).
   - Use the real offline frame level counter as the verifier; visible color-cycle
     satisfaction alone is not enough.
-  - Click coordinates are display pixels in the offline layout; derive or replay them
-    as {x,y}, not grid-only labels.
+  - The L2 cycle is binary [9,12], so each listed Hkx cell is clicked exactly once.
+  dead_ends:
+  - sk48 remained routing/search-progress only for this milestone; no offline L2
+    bank was produced from the chain-permutation delta.
+  - ka59 remains skipped because the registry records a hidden StepCounter L2
+    dead-end.
+  - dc22 rerun reproduced its existing L1 only and did not update a checkpoint.
 - game: tr87
   reproducibility: reproduced
   mechanic_class: config_substitution
@@ -1002,7 +1011,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 54
+reproducible_total_levels: 55
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

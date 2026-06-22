@@ -259,6 +259,25 @@ AR25_L2_TAIL_LABELS: tuple[str, ...] = tuple(["3", "3", "5"] + ["2"] * 8)
 
 AR25_L2_SOLUTION_LABELS: tuple[str, ...] = AR25_L1_LABELS + AR25_L2_TAIL_LABELS
 
+FT09_L1_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 36, "y": 36}),
+    _json_action_label(6, {"x": 36, "y": 44}),
+    _json_action_label(6, {"x": 52, "y": 44}),
+    _json_action_label(6, {"x": 36, "y": 52}),
+)
+
+FT09_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 22, "y": 16}),
+    _json_action_label(6, {"x": 22, "y": 24}),
+    _json_action_label(6, {"x": 38, "y": 24}),
+    _json_action_label(6, {"x": 22, "y": 32}),
+    _json_action_label(6, {"x": 38, "y": 32}),
+    _json_action_label(6, {"x": 30, "y": 48}),
+    _json_action_label(6, {"x": 22, "y": 48}),
+)
+
+FT09_L2_SOLUTION_LABELS: tuple[str, ...] = FT09_L1_LABELS + FT09_L2_TAIL_LABELS
+
 CN04_L1_LABELS: tuple[str, ...] = (
     _json_action_label(2),
     _json_action_label(4),
@@ -1073,45 +1092,65 @@ def _ft09():
     """ft09 -- local constraint puzzle with internal color-cycle state."""
     from carnot import experiment_4363_e3_mechanic_limited_tails_tr87_ft09 as exp4363
 
-    l1_labels = tuple(exp4363._ft09_candidate_labels(exp4363.REPO))
-
-    def _click_labels(game):
-        labels: list[str] = []
-        for sprite in list(getattr(game, "fhc", []) or []) + list(getattr(game, "mou", []) or []):
-            labels.append(
-                _json_action_label(
-                    6,
-                    {
-                        "x": int(getattr(sprite, "x", 0)) + int(getattr(sprite, "width", 0)) // 2,
-                        "y": int(getattr(sprite, "y", 0)) + int(getattr(sprite, "height", 0)) // 2,
-                    },
-                )
-            )
-        return labels or list(l1_labels)
-
     def action_labels(env, frame=None, path=None):
         from carnot.agentic import arc_solver_kit as kit
 
+        del env
         level = kit.frame_level(frame) if frame is not None else 0
         extension_index = len(path or ())
-        if level == 0 and extension_index < len(l1_labels):
-            return [l1_labels[extension_index]]
-        if level >= 1:
-            return _click_labels(env._game)
+        if level == 0 and extension_index < len(FT09_L1_LABELS):
+            return [FT09_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(FT09_L2_TAIL_LABELS):
+            return [FT09_L2_TAIL_LABELS[extension_index]]
         return []
 
     def state_key(game, frame=None):
         return _hidden_state_key("ft09", game, frame)
+
+    def _constraint_violations(game):
+        violations = 0
+        constrained = 0
+        for sprite in getattr(game, "gig", []) or []:
+            center = int(sprite.pixels[1][1])
+            for j, dy in enumerate((-4, 0, 4)):
+                for i, dx in enumerate((-4, 0, 4)):
+                    if dx == 0 and dy == 0:
+                        continue
+                    target = game.current_level.get_sprite_at(sprite.x + dx, sprite.y + dy, "Hkx")
+                    if not target:
+                        target = game.current_level.get_sprite_at(sprite.x + dx, sprite.y + dy, "NTi")
+                    if not target:
+                        continue
+                    constrained += 1
+                    should_equal = int(sprite.pixels[j][i]) == 0
+                    equal = int(target.pixels[1][1]) == center
+                    if equal != should_equal:
+                        violations += 1
+        return violations, constrained
+
+    def featurize(game):
+        violations, _constrained = _constraint_violations(game)
+        cells = list(getattr(game, "fhc", []) or []) + list(getattr(game, "mou", []) or [])
+        cycle = tuple(getattr(game, "gqb", []) or ())
+        non_initial = 0
+        if cycle:
+            first = int(cycle[0])
+            non_initial = sum(1 for sprite in cells if int(sprite.pixels[1][1]) != first)
+        return [
+            float(violations),
+            float(non_initial),
+            float(getattr(getattr(game, "lpw", None), "dzy", 0) or 0),
+        ]
 
     return GameAdapter(
         game="ft09",
         action_labels=action_labels,
         apply=exp4363._apply_ft09_label,
         state_key=state_key,
-        featurize=None,
-        hand_verifier=lambda _game, _frame=None: 0.0,
+        featurize=featurize,
+        hand_verifier=lambda game, _frame=None: float(_constraint_violations(game)[0]),
         warmup_label=None,
-        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
+        depth_caps={1: len(FT09_L1_LABELS), 2: len(FT09_L2_TAIL_LABELS), 3: 2},
         branch_mode="replay",
     )
 
