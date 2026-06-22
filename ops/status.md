@@ -1,5 +1,34 @@
 # Carnot — Operational Status
 
+## Session 2026-06-21 — ARC-AGI-3 exploration-diversity floor SHIPPED (milestone win banked)
+
+**What's working (banked this session): the hybrid exploration-diversity floor.** The submitted
+`StepwiseExplorer` over-commits to the top-salient depth-first branch and misses easy "structure-missed"
+first-level wins. New flag `CARNOT_ARC_EXPLORE_DIVERSITY=1` (wired into the explorer + the scored
+submission kernel, parity-safe, default OFF, parity 10/10) injects a random untested action among the
+top-K once the search stalls. **Validated end-to-end through the authoritative scorer: 4/11 first-win,
+eff-sum 2.0804 vs the structured baseline's 1/11 + 2.0069** — strictly higher score AND 4x reachability;
+recovers r11l/sp80/cd82. Confirmed through the FULL submitted `E3AgentPolicy` cascade (3/3 recovery games,
+the LLM induction does not interfere). General lever (not game-specific) -> expected to transfer to the
+hidden eval. This is the first gate-justified candidate to move the Kaggle 0.08, all offline, zero L4x4
+shots spent. Submission-ready config: `machine_shape: NvidiaL4` (L4x4, 24GB) + `CARNOT_ARC_MTP=0` (5.9GB)
++ the diversity flag. (Submission is operator-only.)
+
+**Root cause of the 0.08 wall (mapped, `docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`):**
+every world-model path is gated out by the same exact-full-grid-match `WorldModelVerifier` gate (TTT
+learned dynamics 0/5; e3 LLM induction 0/6, model-size-independent gemma-12B==Qwen-35B, induced models
+predict near-identity) -> the agent always falls back to the bare explorer floor = the 0.08. The binding
+constraint is exploration-to-first-win (sparse reward, no denser signal than `levels_completed`).
+
+**What's next (characterized, the documented research thread):** the hard tail (7 games) is STRUCTURE-bound
+(deep 13-33 action specific-sequence wins, no intermediate reward). It is REACHABLE (systematic BFS,
+goal-distance A*, Go-Explore all find ls20/su15/tu93) but NOT EFFICIENTLY (~1500-2000 search expansions ->
+near-0 efficiency score). Built a general TOOLKIT for the operator's feature-router idea (classify a hidden
+game's mechanic from early play -> route to the approach, the general seen->hidden transfer per-game recipes
+cannot do): diversity-on-stall (shipped), systematic BFS, goal-distance A* (avatar+goal detector, general,
+self-scoping), LLM-as-reasoner (scaffolding). Per-game banked solutions + learned verifiers exist for SEEN
+games (the live agent replays them) but the scored games are hidden -> the toolkit+router is the lever.
+
 ## Session 2026-06-20 — REQ-REPORT-4482 Test Fix
 
 Fixed the ARC roadmap no-cov activation-guard regression without modifying
