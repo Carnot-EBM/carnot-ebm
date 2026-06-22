@@ -4223,3 +4223,30 @@ counterexample-guided repair (arXiv:2605.05138, arXiv:2606.11521).
 
 flagged_for_v422: adaptive PRM-guided candidate expansion over the Exp 4556 DiscriminativeVerifier, trained and refreshed with self-evolving verifiable-reward data (arXiv:2602.01070 + arXiv:2601.22607)
 <!-- EXP4565-VERIFIER-ROUTER-SOTA-END -->
+
+<!-- EXP4577-ACTION-EFFECT-SOTA-START -->
+## 2026-06-22 Exp 4577 - .422 action-effect SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-action-effect-422-2026-06-22.md`
+and `results/experiment_4577_sota_ingestion_action_effect.json`.
+
+**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
+reachability check succeeded; `scripts/sweep_clusters.py` clusters 5 and 6
+emitted focused URLs; `scripts/sweep_semscholar.py` returned HTTP 429 for both
+focused queries, so no S2-only source was promoted. Top sources were verified
+by arXiv abs-page HTTP 200 and low-concurrency WebSearch/WebFetch of the six
+arXiv sources plus the StochasticGoose implementation URL. `/deep-research` was
+not invoked. No live solve, training run, live LLM inference, leaderboard
+submission, ops/status/traceability edit, or `scripts/research_conductor.py`
+edit occurred.
+
+**Methods marked ingested:** StochasticGoose-style learned frame-change
+clickability predictor (arXiv:2603.24621), AgentRM generalizable reward-model
+search (arXiv:2502.18407), ThinkPRM generative process verifier
+(arXiv:2504.16828), Scaling Flaws verifier-guided-search caution
+(arXiv:2502.00271), adaptive PRM-guided best-first candidate expansion
+(arXiv:2602.01070), and self-evolving verifiable-reward data refresh
+(arXiv:2601.22607).
+
+flagged_for_v423: use a StochasticGoose-style learned action-effect model as the candidate-expansion prior, then allocate Exp 4569 best-first frontier budget with adaptive PRM guidance and scaling-flaw controls (arXiv:2603.24621 + arXiv:2602.01070 + arXiv:2502.00271)
+<!-- EXP4577-ACTION-EFFECT-SOTA-END -->
