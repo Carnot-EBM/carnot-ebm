@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.423",
+  "generated_at": "2026-06-22T11:45:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative TIMING DATA block reports no experiment commits since activation, so the locked fields are 0/0/0 and gpu_idle_on_compute_bound_tasks is null. On-disk ground truth read this turn (12 artifacts exp4579-exp4590, ~3h59m window 03:38->07:37 EDT) shows the milestone DID run a full phase set — the recurring milestone-scoped detector false-zero gap documented across .363-.422, now extending to .423. No live_llm_inference task ran (all substrates are verifier_ensemble_against_cached_candidates / aggregation_from_upstream_artifacts / hardware_smoke), so compute_bound_experiments_count=0 AND both RTX 3090s idle at the 11:45Z snapshot are BOTH genuinely correct here, not miscounts.",
+  "bottlenecks_identified": [
+    "Observability, not execution: the only false-zero this milestone is the COMMIT count — 12 on-disk artifacts (exp4579-exp4590) attributed as 0 by the authoritative TIMING-DATA detector. The experiments themselves ran cleanly in a ~3h59m window; no wall-time was wasted.",
+    "GPU idle is explicitly NOT flagged as a bottleneck — gpu_idle_on_compute_bound_tasks is null because zero compute-bound (GGUF/CUDA/live_llm_inference) tasks ran. Idle 3090s ~8 min after the last commit is correct; the frozen sprint generator runs on the AMD iGPU per project policy, never the monitored 3090s.",
+    "The shipped retro-timing-detector wire (B1 across .419/.420/.422) keeps reaching the standalone module but still does NOT reach the conductor's retro prompt-assembly consumer that populates the TIMING DATA block — so the false-zero recurs one milestone after each repair."
+  ],
+  "improvements_suggested": [
+    "Move the shipped detector-wire from the standalone module to the conductor's retro TIMING-DATA prompt-assembly call site, and prove it on the NEXT milestone (the repair has landed in the wrong consumer for ~60 milestones).",
+    "Promote an injected==on-disk regression assert to a HARD retro-launch gate: refuse to launch the retro when the milestone-scoped commit scan returns 0 while results/ holds artifacts newer than the activation timestamp.",
+    "Add write-time stamping of duration_s / inference_substrate / compute_bound on every experiment artifact so the retro can rank slowest experiments even when the commit-scan path under-reports.",
+    "Do NOT propose DualGPURunner or GPU-utilization enforcement off this milestone — there was no monitored-3090 compute-bound workload to optimize; that would be inferred from training distribution, not from this milestone's data."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Relocate the detector-wire to the retro TIMING-DATA prompt-assembly call site and verify on the next milestone — this single fix would end the recurring false-zero that has masked real execution since .363.",
+    "Gate retro launch on an injected==on-disk commit-count assert, so a zero-commit report that contradicts the artifacts on disk blocks rather than silently produces a false-zero retro.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write time to make slowest-experiment ranking robust to the commit-scan gap."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone is a content POSITIVE the retro cannot see: A1 raised the live-submittable level count to 53 (above the 33 score-lever baseline) and A2/A5 banked a reproducible level and a reusable primitive, while A3/A4 were honest transfer nulls — yet the authoritative block shows only 0/0/0/null. The operational lesson is unchanged and now ~60 milestones old: the detector false-zero is an observability defect, the repair keeps landing in a module the retro prompt-assembly never calls, and the highest-leverage move is to wire it at the actual call site and gate the retro on an on-disk cross-check."
+}
