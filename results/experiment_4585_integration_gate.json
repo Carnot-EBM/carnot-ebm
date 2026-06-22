@@ -1,0 +1,832 @@
+{
+  "additivity_checked": {
+    "generic_transfer": {
+      "baseline": 0.04,
+      "integrated": 0.04,
+      "interaction_delta": 0.0,
+      "isolated_deltas": {},
+      "naive_expected": 0.04
+    },
+    "live_submittable": {
+      "baseline": 33,
+      "integrated": 54,
+      "interaction_delta": 0,
+      "isolated_deltas": {
+        "A1": 20,
+        "A2": 1
+      },
+      "naive_expected": 54
+    },
+    "passed": true
+  },
+  "core_solves_preserved": {
+    "baseline_core_games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ft09",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "baseline_deepest_level_by_game": {
+      "ar25": 1,
+      "bp35": 1,
+      "cd82": 2,
+      "cn04": 2,
+      "dc22": 1,
+      "ft09": 1,
+      "g50t": 1,
+      "ka59": 1,
+      "lf52": 1,
+      "lp85": 5,
+      "ls20": 1,
+      "m0r0": 2,
+      "r11l": 1,
+      "re86": 1,
+      "s5i5": 1,
+      "sb26": 1,
+      "sc25": 5,
+      "sk48": 1,
+      "sp80": 2,
+      "su15": 2,
+      "tn36": 7,
+      "tr87": 6,
+      "tu93": 5,
+      "vc33": 1,
+      "wa30": 1
+    },
+    "dropped_games": [],
+    "integrated_deepest_level_by_game": {
+      "ar25": 2,
+      "bp35": 1,
+      "cd82": 2,
+      "cn04": 2,
+      "dc22": 1,
+      "ft09": 1,
+      "g50t": 1,
+      "ka59": 1,
+      "lf52": 1,
+      "lp85": 5,
+      "ls20": 1,
+      "m0r0": 2,
+      "r11l": 1,
+      "re86": 1,
+      "s5i5": 1,
+      "sb26": 1,
+      "sc25": 5,
+      "sk48": 1,
+      "sp80": 2,
+      "su15": 2,
+      "tn36": 7,
+      "tr87": 6,
+      "tu93": 5,
+      "vc33": 1,
+      "wa30": 1
+    },
+    "passed": true
+  },
+  "disallowed_adversarial_inputs": [
+    {
+      "artifact": "results/experiment_4582_feature_router_transfer.json",
+      "lever": "A3",
+      "reason": "flagged_adversarial_not_allowed_for_aggregation"
+    },
+    {
+      "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+      "lever": "A4",
+      "reason": "flagged_adversarial_not_allowed_for_aggregation"
+    }
+  ],
+  "duration_s": 13.330439,
+  "experiment": "experiment_4585_integration_gate",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "additivity_checked": {
+      "principle": "integrated metric vs the naive sum of isolated deltas -- surfaces a destructive interaction instead of burying it."
+    },
+    "core_solves_preserved": {
+      "principle": "integration must preserve every CORE solve (set-containment); a dropped solve FAILS the lever."
+    },
+    "false_negative_risk_checked": {
+      "principle": "an honest null is only valid with both baselines measured the same way."
+    },
+    "generic_transfer_rate_integrated": {
+      "principle": "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04 -- the leaderboard-honest transfer headline."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: integrated_live_submittable_above_33_or_generic_transfer_above_0.04 OR complete: no_lever_raises_a_metric_honest_null."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end; if live LLM proposer is invoked, declare live_llm_inference with the Qwen3.5-9B-MTP iGPU precondition, never the 3090s."
+    },
+    "levers_integrated": {
+      "principle": "names which of A1/A2/A3/A4 were wired -- traceable to their measured deltas; [] is an honest null."
+    },
+    "live_submittable_level_count_integrated": {
+      "principle": "the SUBMITTED-config live-submittable count after wiring winners vs the 33 baseline -- the headline score lever."
+    },
+    "parity_green": {
+      "principle": "test_arc_submitted_agent_parity.py stays green after wiring -- the single-source-of-truth guard."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "ready_for_operator_submit": {
+      "principle": "True if the integrated config + refreshed package beat the 33-level scorecard on a real metric worth a 1/day submission slot; the task NEVER submits (operator-only)."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    }
+  },
+  "generic_transfer_ci_integrated": [
+    0.0,
+    0.12
+  ],
+  "generic_transfer_rate_integrated": 0.04,
+  "held_out_deepest_level_by_game": {
+    "ar25": 0,
+    "bp35": 0,
+    "cd82": 0,
+    "cn04": 0,
+    "dc22": 0,
+    "ft09": 0,
+    "g50t": 0,
+    "ka59": 0,
+    "lf52": 0,
+    "lp85": 1,
+    "ls20": 0,
+    "m0r0": 0,
+    "r11l": 0,
+    "re86": 0,
+    "s5i5": 0,
+    "sb26": 0,
+    "sc25": 0,
+    "sk48": 0,
+    "sp80": 0,
+    "su15": 0,
+    "tn36": 0,
+    "tr87": 0,
+    "tu93": 0,
+    "vc33": 0,
+    "wa30": 0
+  },
+  "held_out_solve_rate": 0.04,
+  "honest_verdict": "success: integrated_live_submittable_54_above_33",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end, no LLM load",
+  "integrated_package_checksum": "sha256:ab3362db9bc891cf0e5161ea8ce6b6285815ce90493af12fe533244423a4e3d6",
+  "integrated_package_path": "results/experiment_4585_submission_package_integration_gate.json",
+  "leaderboard_submission": false,
+  "levers_integrated": [
+    "A1_refreshed_live_submit_package",
+    "A2_ar25_L2_banked_package_refresh"
+  ],
+  "live_submittable_level_count_integrated": 54,
+  "parity_green": true,
+  "per_game_deepest_level_integrated": {
+    "ar25": 2,
+    "bp35": 1,
+    "cd82": 2,
+    "cn04": 2,
+    "dc22": 1,
+    "ft09": 1,
+    "g50t": 1,
+    "ka59": 1,
+    "lf52": 1,
+    "lp85": 5,
+    "ls20": 1,
+    "m0r0": 2,
+    "r11l": 1,
+    "re86": 1,
+    "s5i5": 1,
+    "sb26": 1,
+    "sc25": 5,
+    "sk48": 1,
+    "sp80": 2,
+    "su15": 2,
+    "tn36": 7,
+    "tr87": 6,
+    "tu93": 5,
+    "vc33": 1,
+    "wa30": 1
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a1_package_present": true,
+    "a2_artifact_present": true,
+    "a3_artifact_present": true,
+    "a4_artifact_present": true,
+    "agents_md_read": true,
+    "ar25_l2_source_present": true,
+    "codex_md_read": true,
+    "leaderboard_submission": false,
+    "no_3090_inference": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_only": true,
+    "spec_has_req_4585": true,
+    "submitted_config_package_path": "results/experiment_4585_submission_package_integration_gate.json"
+  },
+  "random_seed": 4585,
+  "ready_for_operator_submit": true,
+  "reproducibility_checksum": "sha256:41f626a4ffca360562a3ede346bbd5e1817a5647e42d6385911269104702be43",
+  "result_path": "results/experiment_4585_integration_gate.json",
+  "schema": "carnot.exp4585.integration_gate.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4585",
+    "SCENARIO-CAPSTONE-4585",
+    "SCENARIO-CAPSTONE-4585-FIELD-PRINCIPLES"
+  ],
+  "submitted_agent_config": {
+    "cascade": true,
+    "explore_diversity_default": false,
+    "feature_router_enabled": false,
+    "frontier_batch_size": 1,
+    "graph_explore_budget": 80,
+    "lazy_value_top_k": 4,
+    "live_submit_package_path": "results/experiment_4585_submission_package_integration_gate.json",
+    "live_submit_source": "experiment_4585_integration_gate",
+    "navigation_cost_tiebreak": false,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "target_levels": 1,
+    "value_weight": 0.0,
+    "world_model_dsl_wired": true
+  },
+  "upstream_lever_audit": {
+    "A1": {
+      "artifact": "results/experiment_4580_live_submission_gap_close.json",
+      "integrated": true,
+      "live_submittable_delta": 20,
+      "reason": "live_submittable_count_strictly_above_33"
+    },
+    "A2": {
+      "artifact": "results/experiment_4581_levelup_selfplay.json",
+      "integrated": true,
+      "live_submittable_delta": 1,
+      "reason": "ar25_L2_new_offline_reproduced_bank"
+    },
+    "A3": {
+      "artifact": "results/experiment_4582_feature_router_transfer.json",
+      "generic_transfer_delta": 0.0,
+      "integrated": false,
+      "reason": "flagged_adversarial_not_allowed_for_aggregation"
+    },
+    "A4": {
+      "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+      "firstwin_delta": 0,
+      "integrated": false,
+      "reason": "flagged_adversarial_not_allowed_for_aggregation"
+    }
+  },
+  "variant_attempts": [
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "ar25",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ar25",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "ar25~color01"
+    },
+    {
+      "actions": 189,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "bp35",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "bp35",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "bp35~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "cd82",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "cd82",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "cd82~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "cn04",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "cn04",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "cn04~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "dc22",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "dc22",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "dc22~color01"
+    },
+    {
+      "actions": 199,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "ft09",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ft09",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "ft09~color01"
+    },
+    {
+      "actions": 197,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "g50t",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "g50t",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "g50t~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "ka59",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "ka59~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "lf52",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "lf52",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "lf52~color01"
+    },
+    {
+      "actions": 20,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "lp85",
+      "kind": "color",
+      "reached_level": 1,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 1,
+        "game": "lp85",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true
+      },
+      "solution_labels": [
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":0,\"y\":31}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":0,\"y\":34}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":0,\"y\":36}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":0,\"y\":39}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":0,\"y\":41}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+      ],
+      "solved": true,
+      "variant": 1,
+      "variant_signature": "lp85~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "ls20",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "ls20",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "ls20~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "m0r0",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "m0r0",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "m0r0~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "r11l",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "r11l",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "r11l~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "re86",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "re86",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "re86~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "s5i5",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "s5i5",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "s5i5~color01"
+    },
+    {
+      "actions": 198,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "sb26",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "sb26",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "sb26~color01"
+    },
+    {
+      "actions": 196,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "sc25",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "sc25",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "sc25~color01"
+    },
+    {
+      "actions": 197,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "sk48",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "sk48",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "sk48~color01"
+    },
+    {
+      "actions": 193,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "sp80",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "sp80",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "sp80~color01"
+    },
+    {
+      "actions": 197,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "su15",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "su15",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "su15~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "tn36",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "tn36",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "tn36~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "tr87",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "tr87",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "tr87~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "tu93",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "tu93",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "tu93~color01"
+    },
+    {
+      "actions": 195,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "vc33",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "vc33",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "vc33~color01"
+    },
+    {
+      "actions": 197,
+      "attempted": true,
+      "blocked_reason": "",
+      "game": "wa30",
+      "kind": "color",
+      "reached_level": 0,
+      "reflect": null,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "wa30",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "solved": false,
+      "variant": 1,
+      "variant_signature": "wa30~color01"
+    }
+  ],
+  "variant_attempts_count": 25,
+  "variant_solved_count": 1
+}
