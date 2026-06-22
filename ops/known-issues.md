@@ -832,6 +832,40 @@ induction died 0/5); Plan2Explore/EFE planner wiring the BUILT-but-unwired
 2605.05138 (ARC-AGI-3 SOTA), 2605.28814, 2505.10819, 2005.05960, 2505.24784,
 2009.08111, FunSearch (Nature s41586-023-06924-6).
 
+**EMPIRICAL SPRINT RESULTS (2026-06-22 interactive outer-loop — READ BEFORE re-proposing
+generation work; do NOT re-run the falsified levers).** A ~2h interactive sprint implemented
++ tested all three cheap generation levers offline (scripts/experiments/, all
+reproduction-gated, verifier_is_oracle:false). ALL THREE NULL on the genuinely-hard tail:
+
+- **#1 energy-as-A\*-heuristic** (`experiment_tierA_target_energy_heuristic`): PERCEPTION-GATED.
+  `unsatisfied_targets` is game-specific (r11l from cached annotations, vc33 bespoke geometry);
+  NO general live featurizer. On vc33 it gives an inconsistent efficiency tweak (14x WORSE under
+  color-perm), not a generation unlock; hard games have no featurizer. FALSIFIED as a general lever.
+- **#2 energy-as-fitness QD** (`experiment_2_energy_as_fitness_qd`): the recombination ENGINE works
+  — Go-Explore seeding made crossover-at-shared-state FIRE (0.15-0.62 fire-rate, archive 3-5x
+  bigger) — but it is GOAL-STARVED: exploration never reaches the win region, so no winning
+  fragment exists to recombine. 0/3 where BFS fails. The mechanism is sound; the bottleneck is upstream.
+- **#3 LLM goal-induction first-contact** (`experiment_3_llm_goal_induction`): the LLM induces
+  PLAUSIBLE goals from grid structure (pipeline works end-to-end — su15 reached a reproduced L1),
+  but on the hard games the induced goal is wrong/insufficient (you can't induce the TRUE win from
+  a static first-contact grid — chicken-and-egg: need to OBSERVE a win to ground the goal). 0/2.
+
+- **#8 hidden-state diagnostic** (`experiment_8_hidden_state_diagnostic`) DISAMBIGUATES the hard
+  tail (it is HETEROGENEOUS): **wa30 = HIDDEN-STATE-bound** (same grid+action -> different outcome
+  53%; grid-only generation is DOOMED there; needs state-augmentation / latent registers); **sb26 =
+  grid-DETERMINED, NO hidden state** (0% nondet over 163 pairs; wall is search/goal-bound — a deep
+  needle with an un-inducible goal). ka59 control confirmed hidden-state detection (0.857).
+
+**WHAT THIS MEANS FOR `.425` (forward guidance):** (a) the energy-config-space approach works where
+a goal is INDUCIBLE/OBSERVABLE (the target-satisfaction class, vc33/r11l-style) — apply it there and
+BANK levels (real reproducible_total_levels growth); (b) HIDDEN-STATE games (wa30-class) need
+state-augmentation (the #8 register-inference path, GAP-ARCH-GRID-ONLY-STATE) — NOT more grid-only
+generation; (c) search/goal-bound games (sb26-class) need a goal signal stronger than static-grid
+LLM-induction — candidates: ground the goal on an OBSERVED win (post-first-win, the chicken-and-egg
+breaker) or transfer a goal from a solved sibling. (d) Do NOT re-propose #1/#2/#3 as-drafted on the
+hard tail (falsified); the #2 recombination engine is REUSABLE once a goal signal exists. Full
+write-up: the commit chain + `docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md`.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
