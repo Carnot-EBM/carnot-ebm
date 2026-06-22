@@ -65,6 +65,37 @@ Sources (WebSearch 2026-06-22): arxiv.org/abs/{2510.04542, 2507.12821, 2510.1208
 2603.24621}; kaggle.com/competitions/arc-prize-2026-arc-agi-3; arcprize.org/blog/arc-agi-3-launch. The D
 task (SOTA-ingestion) re-verifies these via the reliable channel + extends the mapping onto A1/A3.
 
+**ADDENDUM (planner confirmation pass, 2026-06-22, WebSearch + WebFetch) — additional verified
+GENERATION / test-time-induction references that sharpen the .424 A1 (wire-the-toolkit) + A3
+(energy-generation-prior) design. The decision-grade one is Sensi:**
+- **arXiv:2603.17683** — "Sensi: Curriculum-Based Test-Time Learning for LLM Game Agents" (ON ARC-AGI-3).
+  DECISION-GRADE corroboration of our own diagnosis from a different angle: Sensi v2 reached the SOTA in
+  sample efficiency (~32 actions vs 1,600–3,000, 50–94x) but **solved 0 levels — its bottleneck shifted to
+  PERCEPTUAL GROUNDING** (the LLM cannot accurately read the grid to generate the winner). This is the same
+  wall as our "generation-not-ranking" (the winner is never generated): an LLM-on-raw-ASCII generator is
+  perception-blind. Implication for .424 A1: dispatch each variant to a STRUCTURED/object-centric approach
+  (goal-distance, graph-explore), and where the LLM reasoner is the tail approach, feed it an
+  object-centric digest (not raw ASCII) and MEASURE perception as a diagnostic. Mechanism worth reusing:
+  curriculum state-machine + LLM-as-judge rubric for "learned enough, advance."
+- **arXiv:2502.00225** — "Should You Use Your LLM to Explore or Exploit?" The LLM as an **exploration
+  oracle**: generate a small candidate ACTION set from the text action space, then run a cheap bandit/search
+  over that set. Exactly the .424 generation shape — LLM/heuristic narrows the action space, the verifier/env
+  disposes. Supports wiring the LLM reasoner as ONE dispatched generator for the residual tail.
+- **arXiv:2605.05138** — "Executable World Models for ARC-AGI-3 in the Era of Coding Agents" (the ARC-AGI-3
+  SOTA: induce a Python world model, verify against transitions, plan; 7/25 fully solved, 32.58%
+  human-normalized). The induce+verify shape that IS the Carnot E3 executable-world-model slot — the
+  strongest generation-on-first-contact peer (pairs with CWM 2510.04542).
+- **arXiv:2605.10999 / 2605.16986** — "SkillGen: Verified Inference-Time Agent Skill Synthesis" /
+  "Skills on the Fly: Test-Time Adaptive Skill Synthesis." Test-time SYNTHESIS (not retrieval) of new
+  verified skills — the generation-side complement to the SkillRouter retrieval flagged last sweep; maps onto
+  composing arc_solver_kit primitives into NEW candidate procedures for unseen mechanics.
+- **arXiv:2605.08083** — "LLMs Improving LLMs: Agentic Discovery for Test-Time Scaling" (AutoTTS): discover
+  the TTS controller as synthesis over trajectories + probe signals; generalizes to held-out benchmarks at
+  ~$40/160min. A cheap-discovery peer for the self-play loop's controller.
+
+Additional sources (planner confirmation pass 2026-06-22): arxiv.org/abs/{2603.17683, 2502.00225, 2605.05138,
+2605.10999, 2605.16986, 2605.08083}.
+
 ---
 
 ## 2026-06-21 — .422 planning sweep — ACTION EFFICIENCY: the .421 verifier-router NULLED (re-ranking a fixed pool adds 0 when the winner is never IN the pool); pivot to the leaderboard's #1 lever (a CNN clickability/action-effect predictor) re-aimed at actions-to-first-levelup + verifier-guided candidate EXPANSION
