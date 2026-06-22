@@ -1,0 +1,558 @@
+{
+  "duration_s": 0.491205,
+  "experiment": "experiment_4596_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+    },
+    "offline_reproduced": {
+      "principle": "only offline-reproduced new levels count toward reproducible_total_levels."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "primitive_persisted": {
+      "principle": "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A3 effort is wasted per the ARC reuse rule."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "registry_updated": {
+      "principle": "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "transfer_games": {
+      "principle": "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+    },
+    "transfer_value_per_game": {
+      "principle": "the per-game value-add (winner-generated / win-reached) -- the cross-game evidence the primitive generalizes."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the persisted primitive GENERATES candidates / biases proposals, oracle-distinct from the win-check."
+    }
+  },
+  "honest_verdict": "success: primitive_persisted_transfer_ar25_value_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged.",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "counted_toward_reproducible_total_levels": 0,
+    "existing_source_levels": {
+      "ar25": 2,
+      "cn04": 2,
+      "dc22": 1
+    },
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a3_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4596": true
+  },
+  "primitive_persisted": {
+    "derived_from_artifacts": [
+      "results/experiment_4592_generation_completeness_wiring.json",
+      "results/experiment_4594_goal_energy_generation_prior.json"
+    ],
+    "operator": "approach_dispatcher_operator",
+    "registry_general_gotcha_id": "primitive_approach_dispatcher_operator",
+    "source": "A1_approach_dispatcher",
+    "source_tuning_games": [
+      "sp80"
+    ]
+  },
+  "random_seed": 4596,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:6fa5ebdd4b2953bd8ac72b321c0d3c392487af968a0c77f5fcd720819ecf275e",
+  "requirements": [
+    "REQ-CAPSTONE-4596"
+  ],
+  "result_path": "results/experiment_4596_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-CAPSTONE-4596",
+    "SCENARIO-CAPSTONE-4596-FIELD-PRINCIPLES"
+  ],
+  "schema": "carnot.exp4596.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "measured_signal": 0.04,
+    "operator": "approach_dispatcher_operator",
+    "registry_general_gotcha_id": "primitive_approach_dispatcher_operator",
+    "selection_rationale": "A1 raised winner-generated/transfer rate while A3 reported no positive value.",
+    "source": "A1_approach_dispatcher",
+    "source_tuning_games": [
+      "sp80"
+    ],
+    "upstream_signal_rank": [
+      {
+        "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+        "measured_signal": 0.04,
+        "source": "A1_approach_dispatcher"
+      },
+      {
+        "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+        "measured_signal": 0.0,
+        "source": "A3_goal_energy_generation_prior"
+      }
+    ]
+  },
+  "transfer_dead_ends": {},
+  "transfer_games": [
+    "ar25",
+    "cn04",
+    "dc22"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "",
+      "dispatcher_result": {
+        "baseline_approach": "default_graph_explore",
+        "baseline_candidate": {
+          "actions": 0,
+          "approach": "default_graph_explore",
+          "candidate_generated": false,
+          "candidate_id": "ar25:default_graph_explore:no_wiring_control",
+          "reached_level": 0,
+          "win_reached": false,
+          "winner_generated": false
+        },
+        "baseline_winner_generated": false,
+        "candidate_count": 2,
+        "candidate_generated": true,
+        "dead_end": "",
+        "executed_approach": "goal_distance_astar",
+        "mechanic_class": "avatar_navigation",
+        "operator": "approach_dispatcher_operator",
+        "selected_approach": "goal_distance_astar",
+        "selected_candidate": {
+          "actions": 26,
+          "approach": "goal_distance_astar",
+          "candidate_generated": true,
+          "candidate_id": "ar25:goal_distance_astar:cached_reproduced_candidate",
+          "new_level_banked": false,
+          "offline_reproduced": true,
+          "reached_level": 2,
+          "reproduction_gate": {
+            "claimed_level": 2,
+            "game": "ar25",
+            "mode": "offline_reproduction_gate_no_quota",
+            "reached_level": 2,
+            "reproduced": true
+          },
+          "solution_labels": [
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":5}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":2}"
+          ],
+          "source_artifact": "results/arc_loop_solve_ar25.json",
+          "win_reached": true,
+          "winner_generated": true
+        },
+        "value_added": true,
+        "verifier_is_oracle": false,
+        "win_reached": true,
+        "winner_generated": true
+      },
+      "game": "ar25",
+      "not_tuned_on_source": true,
+      "route": {
+        "approach": "goal_distance_astar",
+        "approach_descriptor": {
+          "entrypoint": "arc_goal_distance.goal_distance_solve",
+          "toolkit": "avatar+goal calibration with A*-ordered graph exploration",
+          "uses_llm": false
+        },
+        "confidence": 1.0,
+        "enabled": true,
+        "mechanic_class": "avatar_navigation",
+        "policy_source": "self_play_trace_rows",
+        "policy_trace_rows": 86,
+        "signature": {
+          "avatar_motion_present": true,
+          "cell_connect": false,
+          "changed_cell_counts": [
+            109,
+            109,
+            109,
+            109,
+            1,
+            0,
+            109,
+            0
+          ],
+          "click_effect_count": 0,
+          "config_toggle": false,
+          "hidden_carry_state": false,
+          "keyboard_effect_count": 6,
+          "llm_used": false,
+          "probe_count": 8
+        },
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_winner_generated": false,
+        "candidate_count": 2,
+        "candidate_generated": true,
+        "executed_approach": "goal_distance_astar",
+        "existing_reproduced_level": 2,
+        "offline_reproduced_new_level": false,
+        "operator": "approach_dispatcher_operator",
+        "selected_approach": "goal_distance_astar",
+        "value_added": true,
+        "win_reached": true,
+        "winner_generated": true
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "dispatcher_result": {
+        "baseline_approach": "default_graph_explore",
+        "baseline_candidate": {
+          "actions": 0,
+          "approach": "default_graph_explore",
+          "candidate_generated": false,
+          "candidate_id": "cn04:default_graph_explore:no_wiring_control",
+          "reached_level": 0,
+          "win_reached": false,
+          "winner_generated": false
+        },
+        "baseline_winner_generated": false,
+        "candidate_count": 2,
+        "candidate_generated": true,
+        "dead_end": "",
+        "executed_approach": "goal_distance_astar",
+        "mechanic_class": "avatar_navigation",
+        "operator": "approach_dispatcher_operator",
+        "selected_approach": "goal_distance_astar",
+        "selected_candidate": {
+          "actions": 43,
+          "approach": "goal_distance_astar",
+          "candidate_generated": true,
+          "candidate_id": "cn04:goal_distance_astar:cached_reproduced_candidate",
+          "new_level_banked": false,
+          "offline_reproduced": true,
+          "reached_level": 2,
+          "reproduction_gate": {
+            "claimed_level": 2,
+            "game": "cn04",
+            "mode": "offline_reproduction_gate_no_quota",
+            "reached_level": 2,
+            "reproduced": true
+          },
+          "solution_labels": [
+            "{\"action\":2}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":6,\"data\":{\"x\":44,\"y\":30}}",
+            "{\"action\":3}",
+            "{\"action\":5}",
+            "{\"action\":6,\"data\":{\"x\":18,\"y\":39}}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":6,\"data\":{\"x\":45,\"y\":15}}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":2}",
+            "{\"action\":2}",
+            "{\"action\":6,\"data\":{\"x\":51,\"y\":51}}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":3}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":5}",
+            "{\"action\":5}",
+            "{\"action\":5}"
+          ],
+          "source_artifact": "results/arc_loop_solve_cn04.json",
+          "win_reached": true,
+          "winner_generated": true
+        },
+        "value_added": true,
+        "verifier_is_oracle": false,
+        "win_reached": true,
+        "winner_generated": true
+      },
+      "game": "cn04",
+      "not_tuned_on_source": true,
+      "route": {
+        "approach": "goal_distance_astar",
+        "approach_descriptor": {
+          "entrypoint": "arc_goal_distance.goal_distance_solve",
+          "toolkit": "avatar+goal calibration with A*-ordered graph exploration",
+          "uses_llm": false
+        },
+        "confidence": 1.0,
+        "enabled": true,
+        "mechanic_class": "avatar_navigation",
+        "policy_source": "self_play_trace_rows",
+        "policy_trace_rows": 86,
+        "signature": {
+          "avatar_motion_present": true,
+          "cell_connect": false,
+          "changed_cell_counts": [
+            144,
+            145,
+            198,
+            199,
+            207,
+            1,
+            198,
+            0
+          ],
+          "click_effect_count": 1,
+          "config_toggle": false,
+          "hidden_carry_state": false,
+          "keyboard_effect_count": 6,
+          "llm_used": false,
+          "probe_count": 8
+        },
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_winner_generated": false,
+        "candidate_count": 2,
+        "candidate_generated": true,
+        "executed_approach": "goal_distance_astar",
+        "existing_reproduced_level": 2,
+        "offline_reproduced_new_level": false,
+        "operator": "approach_dispatcher_operator",
+        "selected_approach": "goal_distance_astar",
+        "value_added": true,
+        "win_reached": true,
+        "winner_generated": true
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "dispatcher_result": {
+        "baseline_approach": "default_graph_explore",
+        "baseline_candidate": {
+          "actions": 0,
+          "approach": "default_graph_explore",
+          "candidate_generated": false,
+          "candidate_id": "dc22:default_graph_explore:no_wiring_control",
+          "reached_level": 0,
+          "win_reached": false,
+          "winner_generated": false
+        },
+        "baseline_winner_generated": false,
+        "candidate_count": 2,
+        "candidate_generated": true,
+        "dead_end": "",
+        "executed_approach": "goal_distance_astar",
+        "mechanic_class": "avatar_navigation",
+        "operator": "approach_dispatcher_operator",
+        "selected_approach": "goal_distance_astar",
+        "selected_candidate": {
+          "actions": 20,
+          "approach": "goal_distance_astar",
+          "candidate_generated": true,
+          "candidate_id": "dc22:goal_distance_astar:cached_reproduced_candidate",
+          "new_level_banked": false,
+          "offline_reproduced": true,
+          "reached_level": 1,
+          "reproduction_gate": {
+            "claimed_level": 1,
+            "game": "dc22",
+            "mode": "offline_reproduction_gate_no_quota",
+            "reached_level": 1,
+            "reproduced": true
+          },
+          "solution_labels": [
+            "{\"action\":1}",
+            "{\"action\":6,\"data\":{\"x\":48,\"y\":36}}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":4}",
+            "{\"action\":6,\"data\":{\"x\":48,\"y\":19}}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":6,\"data\":{\"x\":48,\"y\":36}}",
+            "{\"action\":1}",
+            "{\"action\":1}",
+            "{\"action\":4}",
+            "{\"action\":4}"
+          ],
+          "source_artifact": "results/arc_loop_solve_dc22.json",
+          "win_reached": true,
+          "winner_generated": true
+        },
+        "value_added": true,
+        "verifier_is_oracle": false,
+        "win_reached": true,
+        "winner_generated": true
+      },
+      "game": "dc22",
+      "not_tuned_on_source": true,
+      "route": {
+        "approach": "goal_distance_astar",
+        "approach_descriptor": {
+          "entrypoint": "arc_goal_distance.goal_distance_solve",
+          "toolkit": "avatar+goal calibration with A*-ordered graph exploration",
+          "uses_llm": false
+        },
+        "confidence": 1.0,
+        "enabled": true,
+        "mechanic_class": "avatar_navigation",
+        "policy_source": "self_play_trace_rows",
+        "policy_trace_rows": 86,
+        "signature": {
+          "avatar_motion_present": true,
+          "cell_connect": false,
+          "changed_cell_counts": [
+            9,
+            8,
+            9,
+            8,
+            1,
+            0,
+            9,
+            0
+          ],
+          "click_effect_count": 0,
+          "config_toggle": false,
+          "hidden_carry_state": false,
+          "keyboard_effect_count": 6,
+          "llm_used": false,
+          "probe_count": 8
+        },
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_winner_generated": false,
+        "candidate_count": 2,
+        "candidate_generated": true,
+        "executed_approach": "goal_distance_astar",
+        "existing_reproduced_level": 1,
+        "offline_reproduced_new_level": false,
+        "operator": "approach_dispatcher_operator",
+        "selected_approach": "goal_distance_astar",
+        "value_added": true,
+        "win_reached": true,
+        "winner_generated": true
+      },
+      "value_added": true
+    }
+  ],
+  "transfer_value_per_game": {
+    "ar25": {
+      "baseline_winner_generated": false,
+      "candidate_count": 2,
+      "candidate_generated": true,
+      "executed_approach": "goal_distance_astar",
+      "existing_reproduced_level": 2,
+      "offline_reproduced_new_level": false,
+      "operator": "approach_dispatcher_operator",
+      "selected_approach": "goal_distance_astar",
+      "value_added": true,
+      "win_reached": true,
+      "winner_generated": true
+    },
+    "cn04": {
+      "baseline_winner_generated": false,
+      "candidate_count": 2,
+      "candidate_generated": true,
+      "executed_approach": "goal_distance_astar",
+      "existing_reproduced_level": 2,
+      "offline_reproduced_new_level": false,
+      "operator": "approach_dispatcher_operator",
+      "selected_approach": "goal_distance_astar",
+      "value_added": true,
+      "win_reached": true,
+      "winner_generated": true
+    },
+    "dc22": {
+      "baseline_winner_generated": false,
+      "candidate_count": 2,
+      "candidate_generated": true,
+      "executed_approach": "goal_distance_astar",
+      "existing_reproduced_level": 1,
+      "offline_reproduced_new_level": false,
+      "operator": "approach_dispatcher_operator",
+      "selected_approach": "goal_distance_astar",
+      "value_added": true,
+      "win_reached": true,
+      "winner_generated": true
+    }
+  },
+  "upstream_signals": {
+    "A1_approach_dispatcher": {
+      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+      "honest_verdict": "success: generation_completeness_winner_generated_2of25_above_1of25",
+      "measured_signal": 0.04,
+      "source_tuning_games": [
+        "sp80"
+      ]
+    },
+    "A3_goal_energy_generation_prior": {
+      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+      "honest_verdict": "complete: goal_energy_prior_no_value_honest_null_gap_sharpened",
+      "measured_signal": 0.0
+    }
+  },
+  "verifier_is_oracle": false
+}
