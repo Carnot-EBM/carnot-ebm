@@ -928,6 +928,31 @@ all adversarial-verify clean), write-up
   levels; (c) target the local-GGUF proposer at induction fidelity (the gate that blocked ka59/sc25). The
   hand-induced tu93 nav model is a reusable faithful-L1-model exemplar.
 
+**RE-INDUCTION TRIGGER IMPLEMENTED (2026-06-22, outer-loop, ultracode — operator: "implement the
+mechanic-conditioned re-induction trigger for L2").** Built + adversarially-verified (3 skeptics re-ran the
+experiments + read env source; 2 first-draft over-claims caught and corrected). Write-up
+`docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md`.
+- **Auto-fitting nav world model** `python/carnot/agentic/arc_nav_world_model.py:InducedNavWorldModel` —
+  learns displacement/avatar/wall/floor/goal FROM TRANSITIONS (no hardcoding; proven by colour-permutation
+  invariance), seed-stable, recovers tu93 L1 at 100% movement accuracy in- AND out-of-sample (review verdict
+  SURVIVES). Unit-tested `tests/python/test_arc_nav_world_model.py` (4 pass). Re-induction = re-`fit` at the
+  new level.
+- **The trigger + FROZEN-vs-REINDUCT harness** `scripts/experiments/experiment_reinduction.py` (deterministic
+  budget-unexhausted game-over after a level-up → re-collect at the level + re-fit + re-plan).
+- **POSITIVE PROOF (controlled)** `experiment_reinduction_synthetic_control.py`: on the REAL tu93 maze with a
+  wall-colour-only shift (5→7), FROZEN fails L2 (`plan_executed_no_advance`, avatar findable — legitimate
+  mis-navigation, NOT the trivial avatar-relabel) while REINDUCT recovers wall=7 and SOLVES L2. The operator
+  provably deepens past a frozen model on a grid-expressible nav shift.
+- **REAL-GAME tu93**: re-induction re-fits a MOVEMENT-accurate L2 nav model (L2 nav is grid-deterministic,
+  0.0 nondeterminism over 12012 transitions) but deepening still stalls — the avatar is REMOVED by a
+  deterministic Level-2 charging-wall-sprite HAZARD (env source) the pure-nav engine cannot represent
+  (it only translates/blocks). So nav re-induction is INSUFFICIENT for tu93 L2 → needs a HAZARD-AWARE model
+  class. (Corrected over-claims: "movement-accurate" ≠ "clean refit" — the metric can't see the removal;
+  NOT enemy/box — it's a charging-wall sprite; NOT broad hidden-state — only the hazard is non-grid.)
+- **Next**: build the hazard-aware model class (object-removal/lethal-contact) + extend the inducer's win
+  vocabulary beyond reach-goal (so reflection/coalescence/toggle L2s become plannable). Then more real-game
+  re-induction tests + a tu93-L2 deepen become possible.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")

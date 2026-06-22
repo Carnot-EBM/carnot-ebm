@@ -1,5 +1,35 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Mechanic-conditioned re-induction trigger IMPLEMENTED + adversarially verified — outer-loop, ultracode)
+
+Operator: "implement the mechanic-conditioned re-induction trigger for L2." Built the trigger, an
+auto-fitting nav world model, a controlled positive proof, and a real-game diagnosis — all put through a
+3-skeptic adversarial review (re-ran experiments + read env source) BEFORE write-up, which caught and
+corrected two first-draft over-claims. Write-up
+`docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md`.
+
+- **Auto-fitting nav world model** (`python/carnot/agentic/arc_nav_world_model.py:InducedNavWorldModel`):
+  learns displacement/avatar/wall/floor/goal FROM TRANSITIONS, no hardcoding (review verdict SURVIVES —
+  colour-permutation-invariant, seed-stable, tu93 L1 100% movement accuracy in/out-of-sample). Co-translation
+  avatar detection + blocked-vs-moved wall discrimination. Unit test `tests/python/test_arc_nav_world_model.py`
+  (4 pass). Re-induction = re-`fit` at the new level.
+- **Trigger + FROZEN-vs-REINDUCT harness** (`scripts/experiments/experiment_reinduction.py`): on a
+  deterministic budget-unexhausted game-over after a level-up, re-collect transitions at the level
+  (`collect_at_level`) + re-fit + re-plan.
+- **Controlled POSITIVE proof** (`experiment_reinduction_synthetic_control.py`): real tu93 maze, wall-colour
+  shift 5→7. FROZEN fails L2 (`plan_executed_no_advance`, avatar findable — legitimate mis-navigation) while
+  REINDUCT recovers wall=7 and SOLVES L2. The operator provably deepens past a frozen model on a
+  grid-expressible nav shift.
+- **Real-game tu93**: re-induction re-fits a MOVEMENT-accurate L2 nav model (L2 nav is grid-deterministic,
+  0.0 nondeterminism / 12012 transitions) but deepening still stalls — a deterministic Level-2 charging-wall
+  HAZARD REMOVES the avatar (env source), a transition the pure-nav engine cannot represent. Nav re-induction
+  INSUFFICIENT for tu93 L2 → needs a hazard-aware model class.
+- **Adversarial corrections folded in**: (1) the synthetic first draft shifted every param incl. avatar
+  colour → FROZEN failed trivially (avatar-not-found tautology); fixed to wall-colour-only on the real maze.
+  (2) tu93: "movement-accurate" ≠ "clean refit" (metric can't see avatar removal); mechanic is a charging-wall
+  sprite NOT enemy/box; "hidden state" narrowed (only the hazard is non-grid). Both artifacts adversarial-verify
+  clean. Conductor left STOPPED (operator's session choice). Committed `[outer-loop]`.
+
 ## 2026-06-22 (Program-generalization first swing: imagination-planning DEEPENS L1, walls on L2 mechanic-shift — outer-loop, interactive)
 
 > Correction note: this entry was revised after an adversarial sub-agent review (and an independent
