@@ -247,6 +247,14 @@ def summarize(path: Path) -> int:
     # 4. plausibility floor
     print(f"  duration_s       : {d.get('duration_s')}   "
           f"substrate: {d.get('inference_substrate')}")
+    floor = av.duration_floor_for_artifact(d)
+    if floor is None:
+        print("  duration floor   : none")
+    else:
+        print(
+            f"  duration floor   : {floor.get('substrate')} "
+            f">={floor.get('min_duration_s')}s ({floor.get('reason')})"
+        )
 
     # 5. headline metrics (only now), annotated with any flag touching them
     flag_fields = {

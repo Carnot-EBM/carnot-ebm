@@ -675,6 +675,39 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent corpus/model drift on replay."
 - `preconditions_checked`: principle "records resources verified (offline arcade, torch, LOCAL corpora)."
 
+### REQ-ARC-FCP-4575: Learned-CNN Substrate Guard
+
+The adversarial artifact reader SHALL recognize a learned CNN action-effect
+artifact that declares `inference_substrate=verifier_ensemble_against_cached_candidates`
+and references CNN or torch markers but no LLM/GGUF invocation as an offline
+cached-candidate scoring artifact. Such an artifact SHALL use the one-second
+verifier-scoring duration floor, not the sixty-second live-model floor, so a
+fast CPU or integrated-device forward pass is not quarantined as
+`DURATION_TOO_SHORT`.
+
+The guard SHALL remain strict for real live-model claims: an artifact that
+declares `inference_substrate=live_llm_inference` or names a GGUF/live LLM
+model and reports `duration_s < 60` SHALL still emit a critical
+`DURATION_TOO_SHORT` flag. The summary reader SHALL surface the substrate floor
+it applied so reviewers can see why a CNN artifact used the offline floor and
+why a fake live-LLM artifact used the live floor.
+
+Experiment 4575 SHALL write
+`results/experiment_4575_learned_cnn_substrate_guard.json` with required
+principle-annotated fields for `honest_verdict`, `inference_substrate`,
+`guard_mechanism`, `cnn_artifact_not_flagged`, `fake_llm_still_flagged`,
+`tests_added_pass`, and `preconditions_checked`.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; shipped: learned_cnn_substrate_guard_added OR complete: learned_cnn_substrate_guard_partial_<reason>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
+- `guard_mechanism`: principle "names the recognized substrate/floor + where it fires -- the fix that stops a fast-but-real CNN being quarantined."
+- `cnn_artifact_not_flagged`: principle "a fast learned-CNN action-model fixture is NOT DURATION_TOO_SHORT-flagged -- the .422 A1 headline protection."
+- `fake_llm_still_flagged`: principle "a live_llm_inference fixture at <60s IS still flagged -- guards against weakening the real fabrication check."
+- `tests_added_pass`: principle "Tests Must Run and Assert -- both the not-flagged-on-CNN and still-flagged-on-fake-LLM cases."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -942,3 +975,17 @@ Then it records the CORE containment gate, fixture CI guard, and measured
 headroom table in `b_track_status`, cites the upstream artifact fields it
 imports, and reports a complete audit if the headroom table has no stable `B*`
 candidate instead of raising the local submission-gate default blindly.
+
+### SCENARIO-ARC-FCP-4575: Learned-CNN Duration Floor
+
+Given a fixture artifact with a CNN/torch marker, `duration_s` around five
+seconds, no LLM/GGUF marker, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`
+When adversarial verification and the summary reader process the artifact
+Then the applied floor is the one-second verifier-scoring floor and no
+`DURATION_TOO_SHORT` flag is emitted.
+
+Given a fixture artifact with `inference_substrate=live_llm_inference`, a GGUF
+marker, and `duration_s < 60`
+When adversarial verification processes the artifact
+Then it emits a critical `DURATION_TOO_SHORT` flag.
