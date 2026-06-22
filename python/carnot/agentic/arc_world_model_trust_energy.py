@@ -118,7 +118,13 @@ def _split_prefix_heldout(
 
 
 def _score_accuracy(transitions: Sequence[Transition], engine: Engine) -> float:
-    return float(WorldModelVerifier(list(transitions)).score(engine).accuracy)
+    # HIDDEN-STATE-branch verify metric (the gap-1 0.08-wall games -- cn04/ar25/sc25/sk48/wa30 -- are all
+    # hidden-state and gate HERE). CARNOT_ARC_TRUST_METRIC=cell_recall scores by GRADED changed-cell recall
+    # instead of exact-full-grid match, the same coordinated-redesign lever wired into the non-hidden gate.
+    # Default (unset) -> exact accuracy: submitted behavior + the parity test unchanged.
+    import os
+    vr = WorldModelVerifier(list(transitions)).score(engine)
+    return float(vr.cell_recall if os.environ.get("CARNOT_ARC_TRUST_METRIC") == "cell_recall" else vr.accuracy)
 
 
 def select_trusted_world_model(

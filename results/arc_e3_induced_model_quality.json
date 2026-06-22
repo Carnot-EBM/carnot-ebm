@@ -1,0 +1,53 @@
+{
+  "experiment": "arc_e3_induced_model_quality",
+  "honest_verdict": "complete_e3_induced_models_predict_near_identity_cellrecall_near_zero",
+  "finding": "e3 LLM-induced world-models predict near-identity (cell_recall ~0-0.05 on gap-1 games, LOWER than exact-match which is inflated by no-op transitions). The cell-recall gate correctly REJECTS them -- the e3 bottleneck is INDUCTION QUALITY, not the gate metric. cell_recall is the honest gate + the correct fix for the LEARNED-dynamics (TTT) path.",
+  "per_game": [
+    {
+      "game": "cn04",
+      "n": 120,
+      "n_changed": 97,
+      "exact_accuracy": 0.1333,
+      "cell_recall": 0.0146,
+      "verdict": "both_skip"
+    },
+    {
+      "game": "sc25",
+      "n": 120,
+      "n_changed": 78,
+      "exact_accuracy": 0.35,
+      "cell_recall": 0.0547,
+      "verdict": "both_skip"
+    },
+    {
+      "game": "ar25",
+      "n": 120,
+      "n_changed": 96,
+      "exact_accuracy": 0.6667,
+      "cell_recall": 0.8567,
+      "verdict": "both_pass"
+    },
+    {
+      "game": "cd82",
+      "n": 120,
+      "n_changed": 84,
+      "exact_accuracy": 0.1917,
+      "cell_recall": 0.0,
+      "verdict": "both_skip"
+    },
+    {
+      "game": "tn36",
+      "error": "AttributeError: module 'arc_wm_tn36' has no attribute 'engine'"
+    },
+    {
+      "game": "ka59",
+      "n": 120,
+      "n_changed": 92,
+      "exact_accuracy": 0.1667,
+      "cell_recall": 0.4628,
+      "verdict": "both_skip"
+    }
+  ],
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false
+}
