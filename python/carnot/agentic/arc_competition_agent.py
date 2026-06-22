@@ -257,6 +257,20 @@ class StepwiseExplorer:
         self.frontier_batch_size = self._normalize_frontier_batch_size(frontier_batch_size)
         self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
         self.candidate_router = candidate_router
+        # HYBRID exploration diversity (flag-gated, default OFF -> byte-identical/parity-preserving). The
+        # depth_first_ride over-commits to the top-salient branch and MISSES easy "structure-missed" wins
+        # (r11l/sp80: 0/2000 structured but trivially reachable randomly). With CARNOT_ARC_EXPLORE_DIVERSITY=1,
+        # once the search has STALLED (no new level for _stall_threshold moves), pop a RANDOM untested action
+        # among the top-K instead of the most-salient pop(0) -- recovering the structure-missed tail without
+        # costing the efficient wins. Measured: hybrid 3/11 vs structured 1/11, lp85 kept efficient (eff 2.0069).
+        import os as _os
+        import random as _random
+        self._hybrid_diversity = _os.environ.get("CARNOT_ARC_EXPLORE_DIVERSITY", "0") != "0"
+        self._stall_threshold = int(_os.environ.get("CARNOT_ARC_EXPLORE_STALL", "150"))
+        self._div_topk = int(_os.environ.get("CARNOT_ARC_EXPLORE_DIV_TOPK", "8"))
+        self._steps_since_progress = 0
+        self._nm_best_level = 0
+        self._div_rng = _random.Random(20260621)
         # Smart grace-period early-stop (does NOT cap levels). After reaching >=1 level, keep searching
         # for the next; stop only if no NEW level within `early_stop_grace` moves of the last level-up.
         # Consecutive level-ups reset the window, so multi-level games are NOT capped -- only the fruitless
@@ -812,10 +826,27 @@ class StepwiseExplorer:
         del node["untested"][:count]
         return actions
 
+    def _pop_untested(self, node):
+        """Pop the next untested action: the most-salient (pop(0)) normally; but when hybrid diversity is on
+        AND the search has STALLED (no new level for _stall_threshold moves), pop a RANDOM one among the
+        top-K -- the injection that recovers the structure-missed wins (r11l/sp80) the depth-first ride over-
+        commits past. Flag OFF -> always pop(0) -> byte-identical to the submitted behavior."""
+        lst = node["untested"]
+        if self._hybrid_diversity and self._steps_since_progress > self._stall_threshold and len(lst) > 1:
+            return lst.pop(self._div_rng.randrange(min(len(lst), self._div_topk)))
+        return lst.pop(0)
+
     def next_move(self, frames, latest) -> tuple:
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
             return ("RESET", None)
         self._ingest(latest)
+        if self._hybrid_diversity and latest is not None:   # track stall for the diversity injection
+            _lvl = _level_of(latest)
+            if _lvl > self._nm_best_level:
+                self._nm_best_level = _lvl
+                self._steps_since_progress = 0
+            else:
+                self._steps_since_progress += 1
         if self.pending:
             return self._serve()
         over = latest is not None and self._game_over(latest)
@@ -830,7 +861,7 @@ class StepwiseExplorer:
             and cur_node["untested"]
             and len(cur_node["path"]) < self.max_depth
         ):
-            a = cur_node["untested"].pop(0)
+            a = self._pop_untested(cur_node)
             self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
             return (a["action"], a["data"])
         # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
@@ -843,7 +874,7 @@ class StepwiseExplorer:
         if (
             th == self.cur and not over
         ):  # best frontier IS the current state -> expand in place (no nav)
-            a = node["untested"].pop(0)
+            a = self._pop_untested(node)
             self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
             return (a["action"], a["data"])
         batch = self._pop_frontier_batch(node)
