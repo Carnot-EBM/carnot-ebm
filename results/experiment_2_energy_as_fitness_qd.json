@@ -5,10 +5,13 @@
   "inference_substrate": "offline_arc_search",
   "random_seed": 20260622,
   "budget_env_steps_per_game": 5000,
+  "seeding": "go_explore",
+  "seed_budget": 2500,
+  "explore_steps": 30,
   "games": [
     "wa30",
-    "su15",
-    "sb26"
+    "sb26",
+    "su15"
   ],
   "n_games_qd_generates_above_bfs": 0,
   "n_games_qd_reproduced": 0,
@@ -26,27 +29,24 @@
       "bfs_offline_reproduced": false,
       "bfs_reached_level": 0,
       "qd_generates_where_bfs_does_not": false,
-      "steps_used": 5044,
-      "generations": 82,
-      "archive_size": 9,
+      "win_provenance": null,
+      "crossover_fire_rate": 0.147,
+      "crossover": {
+        "attempts": 34,
+        "fired": 5,
+        "improved": 2,
+        "won": 0
+      },
+      "mutation": {
+        "attempts": 31,
+        "improved": 8,
+        "won": 0
+      },
+      "steps_used": 5066,
+      "generations": 65,
+      "archive_size": 46,
       "vocab_size": 5,
-      "secs": 7.8
-    },
-    {
-      "game": "su15",
-      "qd_won": false,
-      "qd_offline_reproduced": false,
-      "qd_reached_level": null,
-      "qd_winner_len": null,
-      "bfs_won": true,
-      "bfs_offline_reproduced": true,
-      "bfs_reached_level": 1,
-      "qd_generates_where_bfs_does_not": false,
-      "steps_used": 5008,
-      "generations": 71,
-      "archive_size": 20,
-      "vocab_size": 41,
-      "secs": 8.7
+      "secs": 13.4
     },
     {
       "game": "sb26",
@@ -58,12 +58,54 @@
       "bfs_offline_reproduced": false,
       "bfs_reached_level": 0,
       "qd_generates_where_bfs_does_not": false,
-      "steps_used": 5014,
-      "generations": 48,
-      "archive_size": 15,
+      "win_provenance": null,
+      "crossover_fire_rate": 0.361,
+      "crossover": {
+        "attempts": 36,
+        "fired": 13,
+        "improved": 4,
+        "won": 0
+      },
+      "mutation": {
+        "attempts": 41,
+        "improved": 2,
+        "won": 0
+      },
+      "steps_used": 5005,
+      "generations": 77,
+      "archive_size": 31,
+      "vocab_size": 21,
+      "secs": 23.5
+    },
+    {
+      "game": "su15",
+      "qd_won": false,
+      "qd_offline_reproduced": false,
+      "qd_reached_level": null,
+      "qd_winner_len": null,
+      "bfs_won": true,
+      "bfs_offline_reproduced": true,
+      "bfs_reached_level": 1,
+      "qd_generates_where_bfs_does_not": false,
+      "win_provenance": null,
+      "crossover_fire_rate": 0.621,
+      "crossover": {
+        "attempts": 29,
+        "fired": 18,
+        "improved": 2,
+        "won": 0
+      },
+      "mutation": {
+        "attempts": 29,
+        "improved": 6,
+        "won": 0
+      },
+      "steps_used": 5006,
+      "generations": 58,
+      "archive_size": 25,
       "vocab_size": 17,
-      "secs": 18.4
+      "secs": 7.0
     }
   ],
-  "duration_s": 34.9
+  "duration_s": 43.8
 }
