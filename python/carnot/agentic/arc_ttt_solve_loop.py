@@ -54,6 +54,12 @@ def ttt_solve(
     start_level = _levels_completed(f)
     levels = start_level
 
+    def _logical(frame) -> Optional[np.ndarray]:
+        """Logical grid for a frame, or None for a DEGENERATE frame (grid_of returns a non-2D array on
+        game-over / reset states the naive explorer can step into) -- guards to_logical's `h, w = shape`."""
+        g = grid_of(frame)
+        return to_logical(g, cell) if np.asarray(g).ndim == 2 else None
+
     model = LiveTTTWorldModel(game, dynamics_backend="cnn", prior_state=_load_prior(prior_path),
                               refit_every=refit_every, min_transitions=min_transitions, cnn_epochs=cnn_epochs)
 
@@ -90,7 +96,9 @@ def ttt_solve(
                 actions += 1
                 if nf is None:
                     break
-                obs = to_logical(grid_of(nf), cell)
+                obs = _logical(nf)
+                if obs is None:                                   # degenerate frame -> stop this plan
+                    break
                 lvl = _levels_completed(nf)
                 model.observe(gp, step["action"], step["data"], obs, levels, lvl)
                 if lvl > levels:                                  # LEVEL UP -> bank, replan for next level
@@ -118,7 +126,11 @@ def ttt_solve(
             actions += 1
             if nf is None:
                 break
-            obs = to_logical(grid_of(nf), cell)
+            obs = _logical(nf)
+            if obs is None:                                       # degenerate frame -> skip, try next action
+                f = _warm(env, warmup)                            # reset to a valid state and continue exploring
+                gp = to_logical(grid_of(f), cell)
+                continue
             lvl = _levels_completed(nf)
             model.observe(gp, int(c.action_id), c.data, obs, levels, lvl)
             if lvl > levels:
