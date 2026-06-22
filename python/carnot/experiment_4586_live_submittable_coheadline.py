@@ -24,6 +24,7 @@ if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
     sys.path.insert(0, str(REPO_ROOT))
 
 from carnot import experiment_4574_action_efficiency_coheadline as exp4574  # noqa: E402
+from carnot import experiment_4550_honest_sprint_metric as exp4550  # noqa: E402
 from carnot import live_submittable_metrics  # noqa: E402
 
 
@@ -32,6 +33,7 @@ JsonDict = dict[str, Any]
 RESULT_RELATIVE_PATH = "results/experiment_4586_live_submittable_coheadline.json"
 B1_COHEADLINE_RELATIVE_PATH = exp4574.RESULT_RELATIVE_PATH
 CAPSTONE_422_RELATIVE_PATH = "results/experiment_4578_capstone_v422.json"
+WINNER_GENERATED_SOURCE_RELATIVE_PATH = "results/experiment_4582_feature_router_transfer.json"
 LIVE_SCORECARD_RELATIVE_PATH = "results/arc3_live_submit.json"
 SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
 
@@ -181,6 +183,71 @@ def _honest_verdict(preconditions: Mapping[str, Any], live_subset: bool) -> str:
     if not live_subset:
         return "complete: live_submittable_coheadline_partial_subset_violation"
     return "shipped: live_submittable_coheadline_wired"
+
+
+def _float_or_none(value: Any) -> float | None:
+    if isinstance(value, bool):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def build_winner_generated_rate_coheadline_metrics(
+    root: Path | str = REPO_ROOT,
+    *,
+    registry: Mapping[str, Any] | None = None,
+    package: Mapping[str, Any] | None = None,
+    package_path: str | None = None,
+    b1_artifact: Mapping[str, Any] | None = None,
+    winner_source_artifact: Mapping[str, Any] | None = None,
+) -> JsonDict:
+    """REQ-CAPSTONE-4598: report all capstone co-headline metrics side-by-side."""
+
+    root_path = Path(root)
+    coheadline = exp4574.build_live_submittable_coheadline_metrics(
+        root_path,
+        registry=registry,
+        package=package,
+        package_path=package_path,
+        b1_artifact=b1_artifact,
+    )
+    winner_source = dict(
+        winner_source_artifact
+        or _read_json(root_path / WINNER_GENERATED_SOURCE_RELATIVE_PATH)
+    )
+    winner = exp4550.winner_generated_metric_from_artifact(winner_source)
+    generic_rate = _float_or_none(coheadline.get("generic_transfer_rate_over_variants"))
+    if generic_rate is not None:
+        winner["generic_transfer_rate_over_variants"] = round(generic_rate, 10)
+        winner["generation_vs_ranking_gap"] = round(
+            float(winner["winner_generated_rate"]) - generic_rate,
+            10,
+        )
+    reported_side_by_side = [
+        "reproducible_total_levels",
+        "live_submittable_level_count",
+        "reproducible_vs_submittable_gap",
+        "generic_transfer_rate_over_variants",
+        "generic_transfer_ci",
+        "action_efficiency_score",
+        "action_efficiency_ci",
+        "winner_generated_rate",
+        "generation_vs_ranking_gap",
+    ]
+    return {
+        **coheadline,
+        **winner,
+        "reported_side_by_side": reported_side_by_side,
+        "winner_generated_source_artifact": str(
+            winner_source.get("result_path") or WINNER_GENERATED_SOURCE_RELATIVE_PATH
+        ),
+        "capstone_function": (
+            "carnot.experiment_4586_live_submittable_coheadline."
+            "build_winner_generated_rate_coheadline_metrics"
+        ),
+    }
 
 
 def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
