@@ -1,0 +1,70 @@
+{
+  "experiment": "experiment_8_hidden_state_diagnostic",
+  "honest_verdict": "complete: hidden_state_determinism_diagnostic_ran",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search",
+  "random_seed": 20260622,
+  "games": [
+    "wa30",
+    "sb26",
+    "ka59"
+  ],
+  "positive_control_ka59_detected_hud_hidden_state": false,
+  "rows": [
+    {
+      "game": "wa30",
+      "n_transitions": 800,
+      "raw_grid": {
+        "n_recurring_state_action_groups": 19,
+        "n_nondeterministic_groups": 10,
+        "nondeterminism_rate": 0.526
+      },
+      "logical_grid": {
+        "n_recurring_state_action_groups": 19,
+        "n_nondeterministic_groups": 10,
+        "nondeterminism_rate": 0.526
+      },
+      "raw_nondeterminism_rate": 0.526,
+      "logical_nondeterminism_rate": 0.526,
+      "diagnosis": "TRULY_hidden_state_needs_state_augmentation",
+      "secs": 0.4
+    },
+    {
+      "game": "sb26",
+      "n_transitions": 800,
+      "raw_grid": {
+        "n_recurring_state_action_groups": 163,
+        "n_nondeterministic_groups": 0,
+        "nondeterminism_rate": 0.0
+      },
+      "logical_grid": {
+        "n_recurring_state_action_groups": 163,
+        "n_nondeterministic_groups": 0,
+        "nondeterminism_rate": 0.0
+      },
+      "raw_nondeterminism_rate": 0.0,
+      "logical_nondeterminism_rate": 0.0,
+      "diagnosis": "grid_deterministic_NO_hidden_state_wall_is_search_or_goal_bound",
+      "secs": 0.9
+    },
+    {
+      "game": "ka59",
+      "n_transitions": 400,
+      "raw_grid": {
+        "n_recurring_state_action_groups": 14,
+        "n_nondeterministic_groups": 12,
+        "nondeterminism_rate": 0.857
+      },
+      "logical_grid": {
+        "n_recurring_state_action_groups": 14,
+        "n_nondeterministic_groups": 12,
+        "nondeterminism_rate": 0.857
+      },
+      "raw_nondeterminism_rate": 0.857,
+      "logical_nondeterminism_rate": 0.857,
+      "diagnosis": "TRULY_hidden_state_needs_state_augmentation",
+      "secs": 0.5
+    }
+  ],
+  "duration_s": 1.8
+}
