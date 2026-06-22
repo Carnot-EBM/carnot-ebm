@@ -929,6 +929,23 @@ _CONTROL_TREATMENT_QUALIFIERS = (
     "_baseline_reference", "_baseline", "_with_verifier", "_integrated", "_random_router",
     "_control", "_treatment", "_reference", "_ablation",
 )
+_DELTA_COVERAGE_STOP_TOKENS = frozenset(
+    {
+        "arm",
+        "baseline",
+        "change",
+        "control",
+        "delta",
+        "diff",
+        "metric",
+        "rate",
+        "result",
+        "score",
+        "value",
+        "with",
+        "without",
+    }
+)
 
 
 def _is_declared_honest_null(d: dict[str, Any]) -> bool:
@@ -941,6 +958,66 @@ def _has_control_treatment_qualifier(k: str) -> bool:
     """True if the metric key carries a control/treatment ablation-arm qualifier."""
     kl = k.lower()
     return any(q in kl for q in _CONTROL_TREATMENT_QUALIFIERS)
+
+
+def _is_explicit_zero(value: Any) -> bool:
+    return _is_finite_number(value) and math.isclose(
+        float(value), 0.0, rel_tol=0.0, abs_tol=1e-12
+    )
+
+
+def _passing_positive_control_key(d: dict[str, Any]) -> str | None:
+    """Return a top-level passing positive-control key if the artifact declares one."""
+    for key, value in d.items():
+        kl = key.lower()
+        if (kl == "positive_control_passed" or kl.endswith("_control_passed")) and value is True:
+            return key
+    return None
+
+
+def _delta_key_covers_pair(delta_key: str, left: str, right: str) -> bool:
+    """True when a zero-delta field names the metric family shared by both arms."""
+    stem = _delta_stem(delta_key)
+    if stem is None:
+        return False
+    left_lower = left.lower()
+    right_lower = right.lower()
+    if stem and stem in left_lower and stem in right_lower:
+        return True
+    tokens = [
+        tok
+        for tok in re.findall(r"[a-z0-9]+", stem)
+        if len(tok) >= 3 and tok not in _DELTA_COVERAGE_STOP_TOKENS
+    ]
+    return any(tok in left_lower and tok in right_lower for tok in tokens)
+
+
+def _declared_null_delta_descriptor(
+    d: dict[str, Any], left: str, right: str
+) -> dict[str, str] | None:
+    """Recognize explicit honest-null evidence for an equal metric pair.
+
+    The descriptor is deliberately stricter than an `honest_verdict` string:
+    it needs a covering zero delta, a methodology note, and a passing control.
+    """
+    note = d.get("null_delta_methodology_note")
+    if not isinstance(note, str) or not note.strip():
+        return None
+    control_key = _passing_positive_control_key(d)
+    if control_key is None:
+        return None
+    for key, value in d.items():
+        if key in (left, right):
+            continue
+        if _delta_stem(key) is None or not _is_explicit_zero(value):
+            continue
+        if _delta_key_covers_pair(key, left, right):
+            return {
+                "delta_key": key,
+                "methodology_key": "null_delta_methodology_note",
+                "control_key": control_key,
+            }
+    return None
 
 
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
@@ -964,6 +1041,7 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # is structural, not a coincidence between two distinct measurements.
         if _is_identifier_field(k1) or _is_identifier_field(k2):
             continue
+        declared_null_delta = _declared_null_delta_descriptor(d, k1, k2)
         # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
         # honest_verdict declares a no-value null (verifier_router_no_value_added,
         # no_lever_raises_a_metric, ...), a control==treatment equality where one side is an
@@ -974,7 +1052,7 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # Origin: exp4556 (HEADLINE generic_transfer null) + exp4560 (integration gate null) were
         # spuriously quarantined ~8x across .420/.421, excluding the project's two most important ARC
         # measurements from capstone aggregation. Mirrors the _is_identifier_field carve-out above.
-        if _is_declared_honest_null(d) and (
+        if declared_null_delta is None and _is_declared_honest_null(d) and (
             _has_control_treatment_qualifier(k1) or _has_control_treatment_qualifier(k2)
         ):
             continue
@@ -998,6 +1076,23 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         ):
             continue
         if _significant_digits_match(v1, v2, TAUTOLOGY_DIGITS):
+            if declared_null_delta is not None:
+                flags.append(
+                    Flag(
+                        kind="TAUTOLOGY",
+                        severity="warn",
+                        detail=(
+                            f"{k1}={v1!r} and {k2}={v2!r} agree to "
+                            f">{TAUTOLOGY_DIGITS} sig figs, but the artifact "
+                            f"declares declared_null_delta via "
+                            f"{declared_null_delta['delta_key']}==0, "
+                            f"{declared_null_delta['methodology_key']}, and "
+                            f"{declared_null_delta['control_key']}=true. "
+                            f"Downgraded CRITICAL->WARN so an honest null is "
+                            f"read instead of quarantined."
+                        ),
+                    )
+                )
             # Baseline-identity carve-out: when BOTH sides are baseline/reference
             # or arithmetic-derived (delta) fields, the agreement is structural
             # arithmetic (the same baseline reported twice, or a delta collapsing
@@ -1011,7 +1106,7 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
             # (baseline=0.04=1/25, treatment=0.08=2/25, delta=0.08-0.04=0.04).
             if _is_structural_nonmeasurement(k1, v1, d) and _is_structural_nonmeasurement(
                 k2, v2, d
-            ):
+            ) and declared_null_delta is None:
                 flags.append(
                     Flag(
                         kind="TAUTOLOGY",
@@ -1026,7 +1121,7 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
                         ),
                     )
                 )
-            else:
+            elif declared_null_delta is None:
                 flags.append(
                     Flag(
                         kind="TAUTOLOGY",
