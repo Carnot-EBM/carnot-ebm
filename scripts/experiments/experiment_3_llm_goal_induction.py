@@ -139,12 +139,20 @@ def main() -> int:
                     help="GGUF repo substring (iGPU). arc_gap_fill's proven goal-heuristic codegen model; "
                          "swap --repo Qwen3.5-9B-DeepSeek for the live-agent generator")
     ap.add_argument("--warmup-steps", type=int, default=18)
+    ap.add_argument("--max-depth", type=int, default=60, help="A* max path depth (raise for deep fills)")
     ap.add_argument("--seed", type=int, default=20260622)
+    ap.add_argument("--dump-prompt", action="store_true",
+                    help="print the induce-prompt (grid + dynamics) for each game and exit (no LLM)")
+    ap.add_argument("--goal-code", type=str, default="",
+                    help="path to a Claude-written goal_progress(grid) .py file; bypasses the local LLM "
+                         "(the Claude-as-goal-inducer test). Applies to the single --games game.")
     args = ap.parse_args()
     t0 = time.time()
     games = [g.strip() for g in args.games.split(",") if g.strip()]
 
-    proposer = e3.LocalGGUFProposer(repo_substr=args.repo, max_tokens=1536, timeout=600)
+    proposer = None
+    if not args.dump_prompt and not args.goal_code:
+        proposer = e3.LocalGGUFProposer(repo_substr=args.repo, max_tokens=1536, timeout=600)
     rows = []
     for game in games:
         rng = random.Random(args.seed + hash(game) % 9999)
@@ -169,13 +177,24 @@ def main() -> int:
             except Exception:
                 return False
 
-        ok, code = proposer.generate(induce_prompt(game, start_grid, trans, avail),
-                                     required=("goal_progress",), validate=_validate)
+        prompt = induce_prompt(game, start_grid, trans, avail)
+        if args.dump_prompt:
+            print(f"\n===== INDUCE-PROMPT {game} (cell={cell}, {len(trans)} transitions) =====")
+            print(prompt)
+            print(f"===== END {game} =====\n", flush=True)
+            continue
+        if args.goal_code:
+            code = Path(args.goal_code).read_text()
+            ok = _validate(code)
+            inducer = f"claude:{Path(args.goal_code).name}"
+        else:
+            ok, code = proposer.generate(prompt, required=("goal_progress",), validate=_validate)
+            inducer = f"local:{args.repo}"
         if not ok:
-            rows.append({"game": game, "induced": False,
-                         "honest_verdict": "blocked_llm_unavailable_or_invalid_code",
+            rows.append({"game": game, "induced": False, "inducer": inducer,
+                         "honest_verdict": "blocked_inducer_unavailable_or_invalid_code",
                          "error": str(code)[:200], "secs": round(time.time() - t1, 1)})
-            print(f"  [{game}] LLM goal-induction FAILED: {str(code)[:120]}", flush=True)
+            print(f"  [{game}] goal-induction FAILED ({inducer}): {str(code)[:120]}", flush=True)
             continue
         gp = _progress_from_code(code)
 
@@ -191,7 +210,7 @@ def main() -> int:
             arc = kit.offline_arcade()
             env = arc.make(game, scorecard_id=arc.open_scorecard())
             st: dict = {}
-            traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=args.budget, max_depth=60,
+            traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=args.budget, max_depth=args.max_depth,
                                                heuristic=hf, stats=st)
             won = bool(traj) and int(lvl) >= 1
             repro = False
@@ -206,7 +225,7 @@ def main() -> int:
 
         llm, bfs = res["llm_goal_heuristic"], res["bfs_baseline"]
         row = {
-            "game": game, "induced": True, "goal_progress_code": code.strip()[:1200],
+            "game": game, "induced": True, "inducer": inducer, "goal_progress_code": code.strip()[:1200],
             "goal_progress_start_value": round(float(gp(start_grid)), 3),
             "llm_won": llm["won"], "llm_offline_reproduced": llm["offline_reproduced"],
             "llm_reached_level": llm["reached_level"], "llm_expansions": llm["expansions"],
