@@ -106,7 +106,13 @@ class GoalBiasValueHead:
     value_weight*value; min-heap, so lower value is expanded first). A zero-shot ORDER prior over the
     arc_agi3_goal_induction hypothesis classes -- no trained weights, no win example, no game-specific
     state. Matches the load_cross_game_value_head callable contract (``value_head(frame) -> float``) so it
-    drops into CarnotAgentPolicy(value_head=..., value_weight>0, search_mode="best_first") unchanged."""
+    drops into CarnotAgentPolicy(value_head=..., value_weight>0, search_mode="best_first") unchanged.
+
+    REFUTED 2026-06-21 (results/arc_compete_sim.json, explorer_goalbias): the FIXED order direction
+    (always bias toward consolidation) lifted first-win 0/10 and CRASHED the one working game (lp85
+    20->437 actions) because lp85's win is NOT a consolidation. A fixed directional prior misroutes on
+    games whose win-direction differs. Use ConfirmingGoalBiasValueHead instead -- it is direction-AGNOSTIC
+    until the env confirms a direction. Kept as the refuted seed."""
 
     def __init__(self) -> None:
         self._evals = 0
@@ -117,3 +123,100 @@ class GoalBiasValueHead:
         if g is None:
             return 0.0
         return disorder(g)
+
+
+def _features(grid: np.ndarray) -> tuple[float, float, float]:
+    """The three direction-AGNOSTIC hypothesis axes, as comparable scalars (no assumed win-direction):
+    (n_objects, n_colors, dominant-color coverage in [0,1]). A win-state is EXTREMAL on at least one of
+    these -- but we do NOT assume which end (clear vs build, uniform vs varied). The explorer rewards
+    moving toward an extreme on ANY axis pre-confirmation; once the env's levels_completed reveals a real
+    level-up, the axis+direction that moved most becomes the confirmed bias for deepening."""
+    g = np.asarray(grid)
+    if g.ndim != 2 or g.size == 0:
+        return (0.0, 0.0, 0.0)
+    colors = np.unique(g)
+    n_colors = float((colors != 0).sum())
+    _, counts = np.unique(g, return_counts=True)
+    dom_cov = float(counts.max()) / float(g.size)
+    n_objects = float(min(_component_count(g), 64))
+    return (n_objects, n_colors, dom_cov)
+
+
+# per-axis normalizers so |delta| on each axis is comparable (objects 0-64, colors 0-15, coverage 0-1)
+_AXIS_SCALE = (64.0, 15.0, 1.0)
+
+
+class ConfirmingGoalBiasValueHead:
+    """Direction-AGNOSTIC, online-CONFIRMING goal-bias value head (the v2 lever, 2026-06-21).
+
+    Fixes the v1 (GoalBiasValueHead) refutation: v1 committed to ONE direction (consolidation) and
+    misrouted games whose win lies the other way. v2 assumes only that a win-state is EXTREMAL on SOME
+    hypothesis axis -- not which axis, not which end -- and CONFIRMS the true axis+direction online from
+    the env's own level signal:
+
+    PRE-CONFIRMATION (no level-up observed yet): value = 1 - max_axis(|feature - start_feature| / scale).
+    Reward being far from the START along ANY axis (clear OR build, uniform OR varied). This is
+    direction-agnostic, so it cannot misroute the way a fixed prior does; at worst it degrades to
+    near-undirected (a weak, permissive signal) rather than actively steering away from the win.
+
+    ONLINE CONFIRMATION: the value head reads ``frame.levels_completed`` on every frame it scores (the
+    frame carries it; arc_agi3_live_adapter._levels_completed). The moment it sees a frame whose level
+    exceeds the start level, it INDUCES the rewarded hypothesis = the (axis, direction) that moved most
+    from start to that win-frame, and switches to BIASING toward extending that confirmed direction (to
+    reach the NEXT level efficiently). This is the 'confirm against levels_completed' step, done with no
+    extra harness hook -- the level signal rides on the frames the A* already scores.
+
+    No trained weights, no win example, no game-specific state -- pure reusable PROCESS; transfers to the
+    hidden eval by construction. Matches value_head(frame)->float (lower = expand first)."""
+
+    def __init__(self) -> None:
+        self._evals = 0
+        self._start: tuple[float, float, float] | None = None
+        self._start_level: int | None = None
+        self._confirmed: tuple[int, float] | None = None   # (axis_index, sign in {+1,-1}) once a level-up is seen
+        self._max_level_seen = 0
+
+    @staticmethod
+    def _level_of(frame: Any) -> int:
+        try:
+            from carnot.agentic.arc_agi3_live_adapter import _levels_completed
+            return int(_levels_completed(frame))
+        except Exception:
+            return int(getattr(frame, "levels_completed", 0) or 0)
+
+    def _confirm_from_win(self, win_feats: tuple[float, float, float]) -> None:
+        """Induce the rewarded (axis, direction): the axis whose normalized move from start was largest."""
+        if self._start is None:
+            return
+        best_axis, best_mag, best_sign = 0, -1.0, 1.0
+        for ax in range(3):
+            delta = (win_feats[ax] - self._start[ax]) / _AXIS_SCALE[ax]
+            if abs(delta) > best_mag:
+                best_axis, best_mag, best_sign = ax, abs(delta), (1.0 if delta >= 0 else -1.0)
+        if best_mag > 0:
+            self._confirmed = (best_axis, best_sign)
+
+    def __call__(self, frame: Any) -> float:
+        self._evals += 1
+        g = _grid(frame)
+        if g is None:
+            return 0.0
+        feats = _features(g)
+        lvl = self._level_of(frame)
+        if self._start is None:
+            self._start = feats
+            self._start_level = lvl
+            self._max_level_seen = lvl
+        # online confirmation: a frame past the start level reveals the rewarded axis+direction
+        if self._confirmed is None and self._start_level is not None and lvl > self._start_level:
+            self._confirm_from_win(feats)
+        self._max_level_seen = max(self._max_level_seen, lvl)
+        start = self._start
+        if self._confirmed is not None:
+            ax, sign = self._confirmed
+            # bias toward EXTENDING the confirmed direction: lower value = further along it
+            prog = sign * (feats[ax] - start[ax]) / _AXIS_SCALE[ax]   # >0 = moved the rewarded way
+            return float(max(0.0, 1.0 - prog))
+        # pre-confirmation: reward extremality on ANY axis (direction-agnostic) -> lower value = more extremal
+        extremality = max(abs(feats[ax] - start[ax]) / _AXIS_SCALE[ax] for ax in range(3))
+        return float(max(0.0, 1.0 - min(1.0, extremality)))

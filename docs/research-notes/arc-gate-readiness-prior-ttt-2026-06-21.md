@@ -68,6 +68,40 @@
 > env `levels_completed` reveals which hypothesis the game rewards, then commit that direction. That
 > online-confirmation explorer is the next iteration; the fixed prior is preserved as the refuted seed.
 > Gate decision unchanged: NOT gate-ready; do not spend a shot.
+>
+> ### Goal-bias v2 (direction-agnostic, online-confirming) — partial unlock, but the LEVER is REFUTED
+>
+> `ConfirmingGoalBiasValueHead` (direction-agnostic extremality-on-any-axis pre-win; reads
+> `frame.levels_completed` to confirm the rewarded axis+direction post-win). Measured across both search
+> modes and a weight sweep:
+>
+> | config | first-wins | efficiency-sum (baseline 2.0069) |
+> |---|---|---|
+> | undirected baseline | 1/11 (lp85) | **2.0069** |
+> | confirm, `best_first` (w=0.5..5, weight-INERT — best_first priority is pure value, no depth) | **2/11 (lp85 + cd82 NEW)** | 0.0152 (lp85 20→437, cd82 1144 — replay-tax) |
+> | confirm, `depth_first_ride` (w=1,5,20) | 1/11 | 2.0069 (IDENTICAL to baseline — value head inert) |
+>
+> **Two real findings, one refutation.** (1) The direction-agnostic bias DOES reach a game undirected
+> exploration + the fixed prior both miss (cd82) — the signal is real. (2) But `best_first` is value-PRIMARY
+> (its priority is `float(verifier(frame))`, no depth term, so `value_weight` is ignored) and pays a
+> ruinous replay-from-reset navigation tax jumping the frontier → the cd82 win costs 1144 actions, scoring
+> ~0; net SCORE is WORSE than baseline. (3) In the efficient `depth_first_ride` mode (the one that earns the
+> deep wins) the value head is **inert** — identical to no head at every weight. **So there is NO regime
+> where the value-head goal-bias improves the score**: where it has effect it destroys efficiency; where it
+> preserves efficiency it has no effect.
+>
+> **Conclusion: the explorer-frontier-reordering lever is refuted for moving 0.08.** Reordering WHICH state
+> to expand doesn't help when (a) the efficient ride structure is dominant and (b) the real bottleneck is
+> generating the right ACTIONS / inducing the game MECHANIC — which is the e3 LLM-induction cascade's job
+> (the actual 0.08 mechanism), not the tier-1 explorer floor. The cd82 reachability signal is trapped
+> behind best_first's replay tax; capturing it efficiently needs value-GUIDED depth-first branch selection
+> (which the current explorer does not implement), not a frontier value head. `GoalBiasValueHead` +
+> `ConfirmingGoalBiasValueHead` + `explorer_goalbias`/`explorer_confirm` are preserved as refuted scaffolding.
+>
+> **The offline-first discipline worked exactly as intended:** ~zero quota, exhaustively tested the
+> hypothesized lever (2 variants × 2 modes × weight sweep), found it does not move the score, and **saved
+> the scarce L4x4 shots**. Gate decision unchanged: NOT gate-ready. Next candidate lever (operator's call):
+> the e3 LLM mechanic-induction cascade (the real first-win mechanism), not the explorer floor.
 
 
 **Question (operator):** are we gate-ready to spend a scarce L4x4 submission shot? The gate (offline-first
