@@ -9056,3 +9056,4 @@ c |
 | 2026-06-22 07:39 UTC | PHASE 0 (TRANSITION) -- archive .422 -> activate . | OK | 86 passed, 1 warning in 5.57s |
 | 2026-06-22 08:02 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 94 passed, 1 warning in 6.29s |
 | 2026-06-22 08:37 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 108 passed, 1 warning in 8.36s |
+| 2026-06-22 09:25 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; FRON | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
