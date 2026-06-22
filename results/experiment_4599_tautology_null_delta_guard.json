@@ -1,0 +1,117 @@
+{
+  "declared_null_delta_downgraded": {
+    "all_tautology_flags": [
+      {
+        "detail": "generic_transfer_rate_with_router=0.04 and random_route_transfer_rate=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via transfer_delta==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      }
+    ],
+    "critical_flags": [],
+    "fixture": {
+      "generic_transfer_rate_with_router": 0.04,
+      "honest_verdict": "complete: router_transfer_no_value_honest_null",
+      "null_delta_methodology_note": "transfer_delta==0.0 is the paired same-variant null result, not a measurement bug.",
+      "positive_control_passed": true,
+      "random_route_transfer_rate": 0.04,
+      "transfer_delta": 0.0
+    },
+    "passed": true,
+    "warn_flags": [
+      {
+        "detail": "generic_transfer_rate_with_router=0.04 and random_route_transfer_rate=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via transfer_delta==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      }
+    ]
+  },
+  "duration_s": 1.0,
+  "experiment": "experiment_4599_tautology_null_delta_guard",
+  "field_principles": {
+    "declared_null_delta_downgraded": {
+      "principle": "a declared-null-delta fixture is downgraded from CRITICAL to annotated-WARN -- the recurring .423 A3/A4/A6 false-exclusion fix."
+    },
+    "guard_mechanism": {
+      "principle": "names the recognized declared-null-delta descriptor (a *_delta==0 + null_delta_methodology_note + passing control) + where it downgrades CRITICAL TAUTOLOGY to WARN -- the fix that stops honest nulls being quarantined."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; shipped: tautology_null_delta_guard_added OR complete: tautology_null_delta_guard_partial_<reason>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "tests_added_pass": {
+      "principle": "Tests Must Run and Assert -- both the downgraded-on-declared-null-delta and still-CRITICAL-on-undeclared cases."
+    },
+    "undeclared_tautology_still_critical": {
+      "principle": "a genuinely-distinct-metric bit-identity fixture with no declared null-delta IS still CRITICAL -- guards against weakening the real fabrication signal."
+    }
+  },
+  "guard_mechanism": {
+    "annotation": "declared_null_delta",
+    "descriptor": {
+      "methodology_note": "null_delta_methodology_note",
+      "passing_control": "positive_control_passed or *_control_passed == true",
+      "zero_delta_field": "*_delta/*_diff/*_change == 0 covering both equal metrics"
+    },
+    "downgrade_site": "scripts.adversarial_verify.check_tautology",
+    "recognizer": "scripts.adversarial_verify._declared_null_delta_descriptor",
+    "solver_behavior_changed": false
+  },
+  "honest_verdict": "shipped: tautology_null_delta_guard_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor).",
+  "preconditions_checked": {
+    "adversarial_verify_help_exits_0": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "solver_behavior_changed": false,
+    "spec_has_req_4599": true
+  },
+  "random_seed": 4599,
+  "reproducibility_checksum": "sha256:553a13f708b930e991454f39a33915a85fae6b6effab1696a4ac0471cb35e58f",
+  "result_path": "results/experiment_4599_tautology_null_delta_guard.json",
+  "schema": "carnot.exp4599.tautology_null_delta_guard.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4599",
+    "SCENARIO-CAPSTONE-4599",
+    "SCENARIO-CAPSTONE-4599-FIELD-PRINCIPLES"
+  ],
+  "tests_added_pass": {
+    "assertions": [
+      "declared null-delta fixture downgrades to annotated WARN",
+      "undeclared distinct-metric bit identity remains CRITICAL"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4599_tautology_null_delta_guard.py -q --no-cov"
+    ],
+    "passed": true
+  },
+  "undeclared_tautology_still_critical": {
+    "all_tautology_flags": [
+      {
+        "detail": "auroc=0.137913 and kl_divergence=0.137913 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "critical_flags": [
+      {
+        "detail": "auroc=0.137913 and kl_divergence=0.137913 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "fixture": {
+      "auroc": 0.137913,
+      "honest_verdict": "success: unrelated_metrics_copy_exactly",
+      "kl_divergence": 0.137913
+    },
+    "passed": true
+  }
+}
