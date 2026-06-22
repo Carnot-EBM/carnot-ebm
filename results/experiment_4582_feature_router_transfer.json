@@ -4320,5 +4320,28 @@
     "random_route": true,
     "with_router": true,
     "without_router": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "generic_transfer_rate_with_router=0.04 and random_route_transfer_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "actions_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "transfer_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "FALSE_NEGATIVE_RISK",
+      "severity": "warn",
+      "detail": "false_negative_risk_open: null efficiency/proposer/transfer claim ('complete: feature_router_no_value_honest_null_transfer_gap_sharp') lacks a passed positive control and completed false-negative-risk check (positive_control_passed=None, false_negative_risk_checked=False). Treat this as a broken-test signal, not as evidence for a clean null."
+    }
+  ]
 }
