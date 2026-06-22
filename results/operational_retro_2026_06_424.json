@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.424",
+  "generated_at": "2026-06-22T19:24:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing block attributes 0 experiment commits / 0 compute-bound / 0 wall-minutes to 2026.06.424 with gpu_idle_on_compute_bound_tasks=null. The zero is the recurring milestone-scoped-detector FALSE-ZERO documented since .363 (the shipped detector-wire reaches the standalone module but not the conductor's retro prompt-assembly consumer), NOT a true absence of execution — the on-disk close-state is reconciled separately in docs/research-log.md from artifacts read this turn. With 0 compute-bound tasks in the block, both RTX 3090s idle at 0% is correct baseline behaviour, not a bottleneck.",
+  "bottlenecks_identified": [
+    "Observability (the ONLY operational bottleneck this milestone): the milestone-scoped timing detector reports 0 commits since activation — the same false-zero documented across .363-.423 and now .424. The shipped detector-wire repair reaches the standalone module but still never reaches the conductor's retro prompt-assembly consumer that feeds the TIMING DATA block, so this retro launches with a near-empty data block while the milestone's experiments actually landed on disk.",
+    "GPU idle is explicitly NOT a bottleneck: both RTX 3090s read 0% util / 4MB allocated, and compute_bound_experiments_count is genuinely 0 in the timing block (gpu_idle_on_compute_bound_tasks=null). No monitored-3090 compute-bound task exists to gate a GPU-idle claim on, so the idle GPUs are correct — DualGPURunner enforcement would be inappropriate."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped milestone-scoped-detector wire from the standalone module to the conductor's retro TIMING-DATA prompt-assembly call site, and prove injected==on-disk reconciliation on the next milestone — the recurring highest-leverage fix carried since .419.",
+    "Promote the injected-timing == on-disk-artifacts regression assert to a HARD retro-launch gate, so a false-zero block blocks the retro instead of silently emitting a near-empty artifact.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write time so the retro computes wall-time and compute-bound counts directly, without ls-mtime + summarize_artifact archaeology each milestone.",
+    "Keep the anti-hallucination guard: it correctly pinned the JSON number fields to the authoritative 0/0/0/null while the narrative reconciled on-disk truth read this turn — no fabricated experiment IDs or durations entered the locked fields."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the milestone-scoped timing detector into the conductor's retro prompt-assembly call site (not just the standalone module) and prove injected==on-disk on the next milestone — recurring since .419.",
+    "Make injected==on-disk a HARD retro-launch gate so a false-zero blocks rather than silently emits a near-empty retro.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write time so wall-time and compute-bound counts are computable without ls-mtime archaeology."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The operational lesson is observability, not execution speed: the milestone's experiments ran fine (reconciled on-disk in docs/research-log.md), but the milestone-scoped detector again false-zeroed the commit count, forcing manual ls-mtime + summarize_artifact reconciliation. The fix is unchanged and overdue since .419 — move the detector wire to the retro prompt-assembly consumer and gate the retro on injected==on-disk. The anti-hallucination guard worked exactly as intended: locked number fields stayed at 0/0/0/null while the on-disk truth lived in the narrative with explicit read-this-turn provenance."
+}
