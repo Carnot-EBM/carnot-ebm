@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.422",
+  "generated_at": "2026-06-22T06:40:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Per the retro's authoritative TIMING DATA block, milestone 2026.06.422 attributed ZERO experiment commits since activation: total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, gpu_idle_on_compute_bound_tasks=null. This 0/0/0 matches the recurring milestone-scoped-timing detector FALSE-ZERO gap documented continuously across .363-.421 — the on-disk ops/changelog (read this turn) records .422 phases completing through a v422 capstone, so the zero is an observability artifact, not an execution stall. Both RTX 3090s idle at 0% is CORRECT regardless: no compute-bound task is attributed, and the frozen ARC sprint generator runs on the AMD iGPU, never the monitored 3090s.",
+  "bottlenecks_identified": [
+    "The authoritative milestone-scoped timing block attributed 0 commits since activation, so no per-experiment wall-time bottleneck is measurable FROM THE DATA BLOCKS; reported honestly, with no durations inferred or recalled.",
+    "The 0/0/0 is consistent with the recurring milestone-scoped-timing detector FALSE-ZERO gap (documented .363-.421): the shipped detector-wire repair reaches the standalone module but still never reaches the conductor's retro prompt-assembly consumer that feeds this TIMING DATA block. The operational failure is observability, not execution — the on-disk changelog records .422 phases completing through a capstone.",
+    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because zero compute-bound tasks were attributed (per the GPU-idle interpretation rule, 0% util with no GGUF/CUDA task is correct behaviour); the frozen ARC sprint generator runs on the AMD iGPU, never the monitored RTX 3090s."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped milestone-scoped-timing detector-wire from the standalone module to the conductor's retro TIMING-DATA prompt-assembly call site, so the retro receives real commit/duration data instead of a false zero (the recurring .363-.421 fix that keeps missing the actual consumer).",
+    "Promote injected-timing == on-disk-ground-truth to a HARD retro-launch gate: refuse to launch the retro reporting 0 attributed commits when the changelog/results dir shows the milestone's experiments landed, forcing the detector gap to surface instead of being narrated around each milestone.",
+    "Add write-time duration_s / inference_substrate / compute_bound stamping on every experiment artifact plus device-attributed in-window GPU telemetry, so a real compute-bound run is counted and gpu_idle resolves to true/false rather than null."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Land the detector-wire at the retro prompt-assembly call site (not just the standalone module) — the single recurring fix that converts each recent false-zero retro into real timing analysis.",
+    "Gate retro launch on injected==on-disk timing parity so the observability gap is a hard failure rather than a per-milestone footnote.",
+    "Confirm the next roadmap carries at least one reproduction-gated ARC level-up attempt (Level-Up Attempt Guarantee lint) so the sprint keeps advancing reproducible_total_levels toward the 2026-06-30 deadline."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With empty timing/GPU-compute blocks, every timing-derived field honestly reports no data rather than inferring numbers — the anti-hallucination guard is the load-bearing discipline. But the 0/0/0 is the SAME recurring milestone-scoped-timing detector false-zero seen across .363-.421 (the on-disk changelog shows .422 completed through a capstone), so the durable highest-leverage action is wiring the detector into the retro's actual prompt-assembly consumer: the operational failure this milestone is observability, not execution."
+}
