@@ -1,0 +1,9 @@
+{
+  "experiment": "arc_go_explore_hardtail",
+  "honest_verdict": "complete_go_explore_hardtail_0_of_4_needs_goal_gradient",
+  "budget": 4000,
+  "result": "Go-Explore archive (affordance-priored, full-action-set) reaches 0/4 hard-tail first-wins (ls20/su15/sk48/cn04) despite deep archives (90-565 cells, maxdepth up to 160). Finds easy/shallow wins (r11l @8 actions) but NOT the deep narrow specific-sequence wins.",
+  "conclusion": "Go-Explore gives broad systematic DEEP coverage but the hard-tail wins are NARROW specific 13-33 action sequences with no intermediate reward; broad coverage cannot hit a narrow deep win without a GOAL GRADIENT. Confirms the mechanic-agent diagnosis: the tail needs a sub-goal gradient (LLM-as-reasoner: analyze the grid -> hypothesize the mechanic -> propose actions/sub-goals), the SOTA-flagged layer ON TOP of this archive. Blind exploration (diversity + Go-Explore) is refuted for the hard tail.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false
+}
