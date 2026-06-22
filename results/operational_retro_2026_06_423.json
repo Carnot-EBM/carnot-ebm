@@ -1,30 +1,30 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.06.423",
-  "generated_at": "2026-06-22T11:45:21Z",
+  "generated_at": "2026-06-22T12:36:20Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The authoritative TIMING DATA block reports no experiment commits since activation, so the locked fields are 0/0/0 and gpu_idle_on_compute_bound_tasks is null. On-disk ground truth read this turn (12 artifacts exp4579-exp4590, ~3h59m window 03:38->07:37 EDT) shows the milestone DID run a full phase set — the recurring milestone-scoped detector false-zero gap documented across .363-.422, now extending to .423. No live_llm_inference task ran (all substrates are verifier_ensemble_against_cached_candidates / aggregation_from_upstream_artifacts / hardware_smoke), so compute_bound_experiments_count=0 AND both RTX 3090s idle at the 11:45Z snapshot are BOTH genuinely correct here, not miscounts.",
+  "summary": "The injected TIMING DATA reported 0 commits since activation, but on-disk ground truth (ls results/ this turn + the already-committed ops/changelog.md and docs/research-log.md .423 entries) shows 12 artifacts (exp4579-exp4590) ran over a ~3h59m window (03:38->07:37 EDT). The locked structured fields are left at 0/0/0/null: experiments_completed=0 is the RECURRING milestone-scoped-detector false-zero (documented .363-.422, now .423), whereas compute_bound_experiments_count=0 and gpu_idle_on_compute_bound_tasks=null are GENUINELY correct -- every .423 substrate was verifier_ensemble/aggregation/hardware_smoke and the frozen ARC sprint generator runs on the AMD iGPU, so both idle RTX 3090s are expected, not a bug.",
   "bottlenecks_identified": [
-    "Observability, not execution: the only false-zero this milestone is the COMMIT count — 12 on-disk artifacts (exp4579-exp4590) attributed as 0 by the authoritative TIMING-DATA detector. The experiments themselves ran cleanly in a ~3h59m window; no wall-time was wasted.",
-    "GPU idle is explicitly NOT flagged as a bottleneck — gpu_idle_on_compute_bound_tasks is null because zero compute-bound (GGUF/CUDA/live_llm_inference) tasks ran. Idle 3090s ~8 min after the last commit is correct; the frozen sprint generator runs on the AMD iGPU per project policy, never the monitored 3090s.",
-    "The shipped retro-timing-detector wire (B1 across .419/.420/.422) keeps reaching the standalone module but still does NOT reach the conductor's retro prompt-assembly consumer that populates the TIMING DATA block — so the false-zero recurs one milestone after each repair."
+    "Recurring timing-detector false-zero (the real operational bottleneck this milestone): the authoritative injected TIMING DATA block reported 0 commits since activation, yet 12 artifacts (exp4579-exp4590) are on disk for a ~3h59m window. This is an OBSERVABILITY failure documented across .363-.422 and now extending to .423 -- the shipped detector-wire repair reaches the standalone module but never reaches the conductor's retro prompt-assembly consumer that feeds this block.",
+    "NOT a GPU/compute bottleneck: compute_bound_experiments_count=0 is genuinely correct -- every .423 substrate was verifier_ensemble_against_cached_candidates / aggregation_from_upstream_artifacts / hardware_smoke, and the frozen sprint generator (Qwen3.5-9B-MTP) runs on the AMD iGPU per project policy, so the two RTX 3090s reading 0% util is expected (gpu_idle_on_compute_bound_tasks=null). No DualGPURunner concern: zero tasks loaded 2+ models on the monitored GPUs.",
+    "The false-zero forces every .423-class retro to fall back to manual on-disk ls/mtime + committed-changelog archaeology to recover the true experiment set -- slow, manual, and error-prone versus reading the injected block."
   ],
   "improvements_suggested": [
-    "Move the shipped detector-wire from the standalone module to the conductor's retro TIMING-DATA prompt-assembly call site, and prove it on the NEXT milestone (the repair has landed in the wrong consumer for ~60 milestones).",
-    "Promote an injected==on-disk regression assert to a HARD retro-launch gate: refuse to launch the retro when the milestone-scoped commit scan returns 0 while results/ holds artifacts newer than the activation timestamp.",
-    "Add write-time stamping of duration_s / inference_substrate / compute_bound on every experiment artifact so the retro can rank slowest experiments even when the commit-scan path under-reports.",
-    "Do NOT propose DualGPURunner or GPU-utilization enforcement off this milestone — there was no monitored-3090 compute-bound workload to optimize; that would be inferred from training distribution, not from this milestone's data."
+    "Root-cause fix (recurring .363->.423): MOVE the already-shipped detector-wire repair to the conductor's retro TIMING-DATA prompt-assembly call site. The standalone detector module is fixed, but the retro consumer that builds the TIMING DATA block does not call it -- which is why the false-zero keeps recurring.",
+    "Promote injected-commit-count == on-disk-artifact-count to a HARD retro-launch gate, so a false-zero is caught and corrected before the retro runs rather than reconciled afterward.",
+    "Stamp duration_s / inference_substrate / compute_bound on each artifact at WRITE time, so a retro can read per-experiment timing directly instead of reconstructing it from file mtimes.",
+    "No DualGPURunner enforcement is warranted this milestone (0 compute-bound tasks); keep both 3090s free for the next milestone that runs a monitored live_llm_inference task."
   ],
   "top_3_highest_leverage_actions": [
-    "Relocate the detector-wire to the retro TIMING-DATA prompt-assembly call site and verify on the next milestone — this single fix would end the recurring false-zero that has masked real execution since .363.",
-    "Gate retro launch on an injected==on-disk commit-count assert, so a zero-commit report that contradicts the artifacts on disk blocks rather than silently produces a false-zero retro.",
-    "Stamp duration_s / inference_substrate / compute_bound at artifact write time to make slowest-experiment ranking robust to the commit-scan gap."
+    "Wire the shipped detector repair into the conductor's retro TIMING-DATA prompt-assembly call site -- fixes the recurring false-zero (.363->.423) at its source so the retro reads the true 12-artifact set, not 0.",
+    "Gate retro launch on injected-commit-count == on-disk-artifact-count, so a miscount blocks (not silently passes) the retro.",
+    "Stamp duration_s/inference_substrate/compute_bound at artifact write time to make per-experiment timing directly readable in future retros."
   ],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": "This milestone is a content POSITIVE the retro cannot see: A1 raised the live-submittable level count to 53 (above the 33 score-lever baseline) and A2/A5 banked a reproducible level and a reusable primitive, while A3/A4 were honest transfer nulls — yet the authoritative block shows only 0/0/0/null. The operational lesson is unchanged and now ~60 milestones old: the detector false-zero is an observability defect, the repair keeps landing in a module the retro prompt-assembly never calls, and the highest-leverage move is to wire it at the actual call site and gate the retro on an on-disk cross-check."
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "Execution was healthy -- 12 artifacts over ~3h59m, with a genuine headline positive (the live-submittable level count cleared the 33 score-lever baseline). The single recurring operational failure is observability, not execution: the retro's authoritative timing block false-zeroed AGAIN (.363->.423) because the detector-wire repair never reached the retro prompt-assembly consumer. compute_bound=0 and idle 3090s are genuinely correct here, so the only real action item is closing the detector false-zero at its source. estimated_time_savings_pct reflects retro/observability time (eliminating per-milestone manual on-disk reconciliation), NOT experiment wall-time, which was already fine."
 }
