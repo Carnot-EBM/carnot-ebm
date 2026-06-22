@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-06-22 (ARC generation-wall sprint: 3 levers falsified + hard tail mapped — outer-loop, interactive)
+
+Operator switched from the autonomous conductor to interactive outer-loop for faster progress on the
+energy-config-space generation program. Conductor stopped cleanly after `.424` closed (capstone E
+done 18:43). A ~2h sprint implemented + tested all three cheap generation levers offline
+(reproduction-gated), then a hidden-state diagnostic that mapped the hard tail:
+
+- **#1 energy-as-A* heuristic** (`scripts/experiments/experiment_tierA_target_energy_heuristic.py`):
+  perception-gated + inconsistent (vc33 14x worse under color-perm; no general featurizer). Falsified.
+- **#2 energy-as-fitness QD** (`experiment_2_energy_as_fitness_qd.py`): added Go-Explore seeding ->
+  crossover-at-shared-state now FIRES (0.15-0.62), archive 3-5x bigger, BUT goal-starved (0/3 where
+  BFS fails). The recombination engine works; the bottleneck is upstream (no goal signal).
+- **#3 LLM goal-induction first-contact** (`experiment_3_llm_goal_induction.py`): pipeline works
+  (su15 reproduced L1) but induced goals are plausible-but-wrong on hard games (0/2) — can't induce
+  the true goal from a static first-contact grid.
+- **#8 hidden-state diagnostic** (`experiment_8_hidden_state_diagnostic.py`): the hard tail is
+  HETEROGENEOUS — wa30 hidden-state-bound (53% nondet -> needs state augmentation), sb26
+  grid-determined/search-goal-bound (0% nondet), ka59 control confirms detection.
+- **Also shipped** (operator-directed earlier in the session): the `adversarial_verify` baseline-identity
+  TAUTOLOGY carve-out (446c0586d) + the energy-config-space research note + `.425` flag.
+- **Folded into `.425`**: `ops/known-issues.md` MANDATORY-NEXT-MILESTONE flag now carries the empirical
+  map (do NOT re-run the falsified levers; apply energy-config-space to the goal-inducible
+  target-satisfaction class; hidden-state games need state-augmentation). Conductor restarted to resume
+  autonomous `.425` with this knowledge.
+
 ## 2026-06-22 (adversarial_verify: baseline-identity TAUTOLOGY carve-out — outer-loop, operator-directed)
 
 Operator: "Have B2's carve-out cover the baseline-identity tautology case." The `.424` headline
