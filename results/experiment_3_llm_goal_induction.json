@@ -8,9 +8,8 @@
     "device": "iGPU (never the 3090s)"
   },
   "random_seed": 20260622,
-  "budget_max_expansions": 5000,
+  "budget_max_expansions": 2500,
   "games": [
-    "wa30",
     "sb26"
   ],
   "n_games_llm_generates_above_bfs": 0,
@@ -20,39 +19,23 @@
   "grounding_wall_note": "Sensi 2603.17683: the live risk is the LLM mis-reading the grid -> wrong goal",
   "rows": [
     {
-      "game": "wa30",
-      "induced": true,
-      "goal_progress_code": "def goal_progress(grid) -> float:\n    # The grid shows a large area of color 1 with several \"islands\" or \"structures\"\n    # of colors 4, 9, 14, and 0. \n    # ACTION1, 3, 4 involve complex swaps/changes around (44-50, 32-39).\n    # ACTION5 changes (63, 63) from 7 to 4.\n    # The structure suggests a \"fill\" or \"alignment\" goal where the \n    # background (color 1) is being modified or a specific pattern is being completed.\n    # Given the 64x64 size and the specific coordinates, the goal is likely \n    # to eliminate the \"noise\" (colors 4, 9, 14, 0) or complete a specific \n    # geometric pattern in the center.\n    \n    # Heuristic: Measure the \"impurity\" of the grid. \n    # A win condition is likely a uniform grid or a specific pattern.\n    # Since no win is seen, we minimize the count of non-1 and non-7 colors.\n    # We also penalize the presence of color 0 (often a 'void' or 'empty' state).\n    \n    # Count of cells that are not the primary background (1) or the bottom border (7)\n    # and are not the \"target\" color 4 (which ACTION5 seems to favor).\n    impurity = 0\n    for r in range(64):\n        for c in range(64):\n            val = grid[r, c]\n            if val != 1 and val != ",
-      "goal_progress_start_value": 0.019,
-      "llm_won": false,
-      "llm_offline_reproduced": false,
-      "llm_reached_level": 0,
-      "llm_expansions": 5000,
-      "bfs_won": false,
-      "bfs_offline_reproduced": false,
-      "bfs_reached_level": 0,
-      "bfs_expansions": 5000,
-      "llm_generates_where_bfs_does_not": false,
-      "honest_verdict": "complete: llm_goal_induction_ran",
-      "secs": 104.7
-    },
-    {
       "game": "sb26",
       "induced": true,
-      "goal_progress_code": "def goal_progress(grid) -> float:\n    # The grid shows a large area of color 4 (background) with several \n    # distinct \"islands\" or \"zones\" of colors 0, 2, 5, 8, 9, 11, 14, 15.\n    # The observed actions (changing 2 to 3) and the presence of \n    # color 3 in the grid (though not prominent) suggest a \"fill\" or \n    # \"unification\" goal.\n    # Specifically, the grid has a large block of color 2 at the bottom.\n    # The goal is likely to convert the entire grid to a single uniform color \n    # (likely color 3 or 4) or to eliminate the \"islands\".\n    # Given the actions, we measure the distance to a uniform grid of color 3.\n    \n    # Count of cells that are NOT the target color 3\n    non_target_count = (grid != 3).sum()\n    \n    # Normalize by total cells to keep the value bounded\n    # 0.0 means all cells are 3 (goal satisfied)\n    return float(non_target_count) / (64 * 64)",
-      "goal_progress_start_value": 1.0,
+      "inducer": "claude:sb26_v1.py",
+      "goal_progress_code": "def goal_progress(grid):\n    # sb26, first-contact induction by Claude (2026-06-22). Evidence: ACTION5 paints the full-width\n    # horizontal BAR (row ~53, color 2) to color 3, one cell at a time (observed col 63->62->61).\n    # Most-supported hypothesis: the win is FILLING that progress bar (all its 2s -> 3). Progress =\n    # count of color-2 cells in any row that is MOSTLY color 2 (the bar identified by structure, not a\n    # hardcoded row, so it survives layout shifts); drops by 1 per ACTION5, reaches 0 when filled. An\n    # A* descending this commits to the ~64-deep sequential ACTION5 line that breadth-first BFS misses.\n    g = np.asarray(grid)\n    twos_per_row = (g == 2).sum(axis=1)\n    bar_mask = twos_per_row > (g.shape[1] // 2)\n    return float(twos_per_row[bar_mask].sum())",
+      "goal_progress_start_value": 64.0,
       "llm_won": false,
       "llm_offline_reproduced": false,
       "llm_reached_level": 0,
-      "llm_expansions": 5000,
+      "llm_expansions": 2500,
       "bfs_won": false,
       "bfs_offline_reproduced": false,
       "bfs_reached_level": 0,
-      "bfs_expansions": 5000,
+      "bfs_expansions": 2500,
       "llm_generates_where_bfs_does_not": false,
       "honest_verdict": "complete: llm_goal_induction_ran",
-      "secs": 100.3
+      "secs": 113.1
     }
   ],
-  "duration_s": 205.0
+  "duration_s": 113.1
 }
