@@ -1,0 +1,619 @@
+{
+  "a5_transfer": {
+    "included_in_headline": true,
+    "new_levels_banked": 0,
+    "primitive_persisted": {
+      "derived_from_artifacts": [
+        "results/experiment_4592_generation_completeness_wiring.json",
+        "results/experiment_4594_goal_energy_generation_prior.json"
+      ],
+      "operator": "approach_dispatcher_operator",
+      "registry_general_gotcha_id": "primitive_approach_dispatcher_operator",
+      "source": "A1_approach_dispatcher",
+      "source_tuning_games": [
+        "sp80"
+      ]
+    },
+    "transfer_games": [
+      "ar25",
+      "cn04",
+      "dc22"
+    ],
+    "value_added_games": [
+      "ar25",
+      "cn04",
+      "dc22"
+    ]
+  },
+  "a6_integration_headline": {
+    "included_in_headline": false,
+    "levers_integrated": [
+      "A2_ft09_L2_banked_package_refresh",
+      "A4_refreshed_live_submit_package"
+    ],
+    "raw_honest_verdict": "success: integrated_live_submittable_55_above_33",
+    "reason": "flagged_adversarial_excluded",
+    "submitted_config_raised_metric_clean": false,
+    "upstream_lever_audit": {
+      "A1": {
+        "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+        "flagged_adversarial": true,
+        "integrated": false,
+        "isolated_deltas": {},
+        "reason": "flagged_adversarial_not_allowed_for_aggregation"
+      },
+      "A2": {
+        "artifact": "results/experiment_4593_levelup_selfplay.json",
+        "integrated": true,
+        "live_submittable_delta": 1,
+        "reason": "ft09_L2_new_offline_reproduced_bank"
+      },
+      "A3": {
+        "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+        "integrated": false,
+        "isolated_deltas": {},
+        "reason": "no_admissible_goal_energy_metric_gain"
+      },
+      "A4": {
+        "artifact": "results/experiment_4595_refresh_submission_package.json",
+        "integrated": true,
+        "live_submittable_delta": 2,
+        "reason": "refreshed_package_live_submittable_above_33"
+      }
+    }
+  },
+  "action_efficiency_ci": [
+    1.0,
+    1.0
+  ],
+  "action_efficiency_score": {
+    "ci": [
+      1.0,
+      1.0
+    ],
+    "clean_value": null,
+    "included_in_clean_headline": false,
+    "quarantined_value": 1.0,
+    "source": "results/experiment_4598_winner_generated_rate_metric.json"
+  },
+  "cited_upstream_artifacts": {
+    "A1": {
+      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "winner_generated_rate_with_wiring",
+        "generic_transfer_rate_with_wiring",
+        "transfer_ci"
+      ],
+      "reason": "flagged_adversarial_excluded",
+      "role": "generation_completeness_wiring",
+      "sha256": "sha256:962682b016fd711583552fc39f913fa1c8f81025b96bea7325f55fd16d32f3b6"
+    },
+    "A2": {
+      "artifact": "results/experiment_4593_levelup_selfplay.json",
+      "exists": true,
+      "imported_fields": [
+        "registry_update",
+        "reproduction_gate",
+        "offline_reproduced"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:dbf1e4798c8b20355faff2ba5a2edbf27b90bb0b8ff868011418fd794cdacbdf"
+    },
+    "A3": {
+      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [],
+      "reason": "false_negative_risk_open",
+      "role": "goal_energy_generation_prior",
+      "sha256": "sha256:533d30a6be9c11f2f98c7c3d621622532dbe1847d25dab9dd37a52f8cbe9403e"
+    },
+    "A4": {
+      "artifact": "results/experiment_4595_refresh_submission_package.json",
+      "exists": true,
+      "imported_fields": [
+        "live_submittable_level_count",
+        "live_submittable_count_prev",
+        "count_delta",
+        "ready_for_operator_submit"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "refresh_submission_package",
+      "sha256": "sha256:98ee4e7a8d0f251ba1f1c06d45956d936cab226ce18965ef093ead6fa6ecf90c"
+    },
+    "A5": {
+      "artifact": "results/experiment_4596_primitive_persist_transfer.json",
+      "exists": true,
+      "imported_fields": [
+        "primitive_persisted",
+        "transfer_games",
+        "transfer_value_per_game"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:db99fab879df128f68f75166dcf641c7cbf7bad8f724a0e97b92fa2e9559df64"
+    },
+    "A6": {
+      "artifact": "results/experiment_4597_integration_gate.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "winner_generated_rate_integrated",
+        "generic_transfer_rate_integrated",
+        "live_submittable_level_count_integrated"
+      ],
+      "reason": "flagged_adversarial_excluded",
+      "role": "integration_gate",
+      "sha256": "sha256:12fe9aa89041feb3a701504d727da240a087d66d18b9b172a111e6986ef2af64"
+    },
+    "B1": {
+      "artifact": "results/experiment_4598_winner_generated_rate_metric.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "winner_generated_rate",
+        "generic_transfer_rate_over_variants",
+        "action_efficiency_score"
+      ],
+      "reason": "flagged_adversarial_excluded",
+      "role": "winner_generated_rate_metric",
+      "sha256": "sha256:6bd002b6f9f3461a79cb45abfea0f5b026032996f04423717d07ff62aba57d63"
+    },
+    "LIVE_BASELINE": {
+      "artifact": "results/arc3_live_submit.json",
+      "exists": true,
+      "imported_fields": [
+        "live_total_levels"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "last_submitted_scorecard",
+      "sha256": "sha256:f751acbc08caa117147e99b71edd953678c76e0d1e8543373ca45b5a7c25084f"
+    },
+    "REGISTRY": {
+      "artifact": "ops/arc_solve_registry.yaml",
+      "exists": true,
+      "imported_fields": [
+        "reproducible_total_levels"
+      ],
+      "role": "authoritative_reproducible_total_levels"
+    }
+  },
+  "coheadline_metrics": {
+    "action_efficiency_score": {
+      "ci": [
+        1.0,
+        1.0
+      ],
+      "clean_value": null,
+      "included_in_clean_headline": false,
+      "quarantined_value": 1.0,
+      "source": "results/experiment_4598_winner_generated_rate_metric.json"
+    },
+    "generic_transfer_rate_over_variants": {
+      "ci": [
+        0.0,
+        0.1
+      ],
+      "clean_value": null,
+      "included_in_clean_headline": false,
+      "quarantined_value": 0.04,
+      "source": "results/experiment_4598_winner_generated_rate_metric.json"
+    },
+    "live_submittable_level_count": {
+      "clean_value": 55,
+      "included_in_clean_headline": true,
+      "source": "results/experiment_4595_refresh_submission_package.json"
+    },
+    "reproducible_total_levels": {
+      "clean_value": 55,
+      "included_in_clean_headline": true,
+      "source": "ops/arc_solve_registry.yaml"
+    },
+    "winner_generated_rate": {
+      "ci": null,
+      "clean_value": null,
+      "included_in_clean_headline": false,
+      "quarantined_value": 0.04,
+      "source": "results/experiment_4598_winner_generated_rate_metric.json"
+    }
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4602_capstone_v424",
+  "field_principles": {
+    "action_efficiency_score": {
+      "principle": "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream measurement (the audit trail)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial artifact excluded AND any null-delta-carve-out (mechanical via .424 B2) / offline-arc-methodology / positive-control-failed artifact handled -- fabrication-gate + false-negative-risk compliance."
+    },
+    "generic_transfer_moved": {
+      "principle": "did A1/A3 raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI (the seen->hidden solve-rate)."
+    },
+    "generic_transfer_rate_over_variants": {
+      "principle": "the held-out first-contact solve-rate reported WITH a CI -- a co-headline metric."
+    },
+    "goal_energy_helped": {
+      "principle": "did the A3 goal-energy generation prior raise winner_generated_rate on the wired-but-failing classes with a passing no-energy control."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: generation_completeness_winner_generated_above_1of25_or_transfer_above_0.04 OR complete: generation_wall_persists_residual_logged_capability_grew."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "live_submittable_level_count": {
+      "principle": "the honest leaderboard score (A4/B1) reported alongside reproducible_total_levels + generic_transfer + action efficiency + winner_generated_rate."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "ready_for_operator_submit": {
+      "principle": "True only if the integrated config + refreshed package beat the last 33-level submitted scorecard on a real metric worth a 1/day slot; never submits."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "did solve CAPABILITY grow this milestone (A2 bank, 54->55+)."
+    },
+    "verifier_is_oracle_distinct_levers": {
+      "principle": "A1/A3 value claims are verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."
+    },
+    "winner_generated_moved": {
+      "principle": "the bottom line -- did A1 wiring raise winner_generated_rate STRICTLY above 1/25 with CI + a passing no-wiring control (the generation wall finally cracking)."
+    },
+    "winner_generated_rate": {
+      "principle": "the generation-vs-ranking gap co-headline (B1) -- can the system GENERATE the winner at all (1/25 baseline)."
+    }
+  },
+  "flagged_artifacts_handled": {
+    "excluded_artifacts": [
+      "results/experiment_4592_generation_completeness_wiring.json",
+      "results/experiment_4597_integration_gate.json",
+      "results/experiment_4598_winner_generated_rate_metric.json"
+    ],
+    "excluded_details": [
+      {
+        "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+        "critical_flags": [
+          {
+            "detail": "generic_transfer_rate_with_wiring=0.08 and winner_generated_rate_with_wiring=0.08 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "A1",
+        "reason": "flagged_adversarial_excluded"
+      },
+      {
+        "artifact": "results/experiment_4597_integration_gate.json",
+        "critical_flags": [
+          {
+            "detail": "generic_transfer_rate_baseline=0.04 and generic_transfer_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "generic_transfer_rate_baseline=0.04 and held_out_solve_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "generic_transfer_rate_baseline=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "generic_transfer_rate_integrated=0.04 and held_out_solve_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "generic_transfer_rate_integrated=0.04 and winner_generated_rate_baseline=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "generic_transfer_rate_integrated=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "held_out_solve_rate=0.04 and winner_generated_rate_baseline=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "held_out_solve_rate=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          },
+          {
+            "detail": "winner_generated_rate_baseline=0.04 and winner_generated_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "A6",
+        "reason": "flagged_adversarial_excluded"
+      },
+      {
+        "artifact": "results/experiment_4598_winner_generated_rate_metric.json",
+        "critical_flags": [
+          {
+            "detail": "generic_transfer_rate_over_variants=0.04 and winner_generated_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "B1",
+        "reason": "flagged_adversarial_excluded"
+      }
+    ],
+    "failed_acceptance_gate_overrides": [],
+    "learned_cnn_duration_guard_honored": "No .424 artifact was excluded merely for fast offline duration or missing model_specs.",
+    "null_delta_carveouts": [],
+    "offline_arc_methodology_guard_honored": [
+      "A1/A2/A3/A4/A5/A6 offline ARC artifacts were evaluated by flags and gates, not by fast-runtime suspicion alone.",
+      "A2/A4/A5 clean fast offline artifacts remain admissible when reproduction/methodology fields are present."
+    ],
+    "positive_control_failed_guard": [
+      "A3",
+      "A6"
+    ],
+    "positive_control_guard_note": "FALSE_NEGATIVE_RISK nulls are broken-test signals; their nulls are not clean results."
+  },
+  "generic_transfer_ci": [
+    0.0,
+    0.1
+  ],
+  "generic_transfer_moved": {
+    "a1": {
+      "ci": [
+        0.0,
+        0.12
+      ],
+      "delta": 0.04,
+      "headline_numbers_aggregated": false,
+      "rate": 0.08,
+      "reason": "flagged_adversarial_excluded",
+      "source": "results/experiment_4592_generation_completeness_wiring.json"
+    },
+    "a3": {
+      "ci": null,
+      "delta": 0.0,
+      "headline_numbers_aggregated": false,
+      "no_energy_rate": 0.0,
+      "rate": 0.0,
+      "reason": "false_negative_risk_open",
+      "source": "results/experiment_4594_goal_energy_generation_prior.json"
+    },
+    "baseline": 0.04,
+    "moved": false,
+    "reason": "no_clean_ci_supported_transfer_move"
+  },
+  "generic_transfer_rate_over_variants": {
+    "ci": [
+      0.0,
+      0.1
+    ],
+    "clean_value": null,
+    "included_in_clean_headline": false,
+    "quarantined_value": 0.04,
+    "source": "results/experiment_4598_winner_generated_rate_metric.json"
+  },
+  "goal_energy_helped": {
+    "helped": false,
+    "no_energy_control_passed": true,
+    "null_is_clean": false,
+    "reason": "a3_false_negative_risk_open",
+    "source": "results/experiment_4594_goal_energy_generation_prior.json",
+    "targeted_classes": [
+      "keyboard_graph:systematic_bfs:variant_wired=True",
+      "click_graph:diversity_graph_explore:variant_wired=True",
+      "config_toggle:diversity_graph_explore:variant_wired=True"
+    ],
+    "winner_generated_delta": 0.0,
+    "winner_generated_rate_no_energy": 0.0,
+    "winner_generated_rate_with_energy": 0.0
+  },
+  "honest_verdict": "complete: generation_wall_persists_residual_logged_capability_grew",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "live_submittable_count_baseline": 33,
+  "live_submittable_level_count": 55,
+  "operator_submission_basis": {
+    "a6_integration_headline_clean": false,
+    "basis": "clean_a4_package_above_33",
+    "clean_a4_live_submittable_level_count": 55,
+    "last_submitted_scorecard_levels": 33,
+    "leaderboard_submission": false,
+    "operator_only": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 55,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4602": true,
+    "summarize_artifact_py_used_for_live_flags": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "LIVE_BASELINE": true
+    }
+  },
+  "random_seed": 4602,
+  "ready_for_operator_submit": true,
+  "reproducibility_checksum": "sha256:0cf9e1d7a80de91e365154d7b3ba7437cb34b5e605c629ebeb45a06bc207101c",
+  "reproducible_total_levels": 55,
+  "reproducible_total_levels_before": 54,
+  "reproducible_total_levels_delta": 1,
+  "result_path": "results/experiment_4602_capstone_v424.json",
+  "schema": "carnot.exp4602.capstone_v424.v1",
+  "scorecard": {
+    "A1": {
+      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+      "generic_transfer_moved": false,
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_excluded",
+      "winner_generated_moved": false
+    },
+    "A2": {
+      "artifact": "results/experiment_4593_levelup_selfplay.json",
+      "included_in_headline": true,
+      "reproducible_total_after": 55,
+      "reproducible_total_before": 54,
+      "reproducible_total_delta": 1
+    },
+    "A3": {
+      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+      "goal_energy_helped": false,
+      "included_in_headline": false,
+      "reason": "false_negative_risk_open"
+    },
+    "A4": {
+      "artifact": "results/experiment_4595_refresh_submission_package.json",
+      "count_delta": 2,
+      "included_in_headline": true,
+      "live_submittable_level_count": 55,
+      "ready_for_operator_submit": true
+    },
+    "A5": {
+      "included_in_headline": true,
+      "new_levels_banked": 0,
+      "primitive_persisted": {
+        "derived_from_artifacts": [
+          "results/experiment_4592_generation_completeness_wiring.json",
+          "results/experiment_4594_goal_energy_generation_prior.json"
+        ],
+        "operator": "approach_dispatcher_operator",
+        "registry_general_gotcha_id": "primitive_approach_dispatcher_operator",
+        "source": "A1_approach_dispatcher",
+        "source_tuning_games": [
+          "sp80"
+        ]
+      },
+      "transfer_games": [
+        "ar25",
+        "cn04",
+        "dc22"
+      ],
+      "value_added_games": [
+        "ar25",
+        "cn04",
+        "dc22"
+      ]
+    },
+    "A6": {
+      "included_in_headline": false,
+      "levers_integrated": [
+        "A2_ft09_L2_banked_package_refresh",
+        "A4_refreshed_live_submit_package"
+      ],
+      "raw_honest_verdict": "success: integrated_live_submittable_55_above_33",
+      "reason": "flagged_adversarial_excluded",
+      "submitted_config_raised_metric_clean": false,
+      "upstream_lever_audit": {
+        "A1": {
+          "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+          "flagged_adversarial": true,
+          "integrated": false,
+          "isolated_deltas": {},
+          "reason": "flagged_adversarial_not_allowed_for_aggregation"
+        },
+        "A2": {
+          "artifact": "results/experiment_4593_levelup_selfplay.json",
+          "integrated": true,
+          "live_submittable_delta": 1,
+          "reason": "ft09_L2_new_offline_reproduced_bank"
+        },
+        "A3": {
+          "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+          "integrated": false,
+          "isolated_deltas": {},
+          "reason": "no_admissible_goal_energy_metric_gain"
+        },
+        "A4": {
+          "artifact": "results/experiment_4595_refresh_submission_package.json",
+          "integrated": true,
+          "live_submittable_delta": 2,
+          "reason": "refreshed_package_live_submittable_above_33"
+        }
+      }
+    },
+    "B1": {
+      "artifact": "results/experiment_4598_winner_generated_rate_metric.json",
+      "coheadline_numbers_quarantined": true,
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_excluded"
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4602",
+    "SCENARIO-CAPSTONE-4602",
+    "SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES"
+  ],
+  "verifier_is_oracle_distinct_levers": {
+    "A1": {
+      "artifact": "results/experiment_4592_generation_completeness_wiring.json",
+      "included_in_headline": false,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "A3": {
+      "artifact": "results/experiment_4594_goal_energy_generation_prior.json",
+      "included_in_headline": false,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "A4": {
+      "artifact": "results/experiment_4595_refresh_submission_package.json",
+      "included_in_headline": true,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "A6": {
+      "artifact": "results/experiment_4597_integration_gate.json",
+      "included_in_headline": false,
+      "oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "all_included_value_claims_oracle_distinct": true
+  },
+  "winner_generated_moved": {
+    "baseline": 0.04,
+    "headline_numbers_aggregated": false,
+    "moved": false,
+    "no_wiring_control_passed": true,
+    "rate_with_wiring": 0.08,
+    "raw_reported_strictly_above_baseline": true,
+    "reason": "flagged_adversarial_excluded",
+    "source": "results/experiment_4592_generation_completeness_wiring.json",
+    "winner_generated_ci": null,
+    "winner_generated_delta": 0.04
+  },
+  "winner_generated_rate": {
+    "ci": null,
+    "clean_value": null,
+    "included_in_clean_headline": false,
+    "quarantined_value": 0.04,
+    "source": "results/experiment_4598_winner_generated_rate_metric.json"
+  }
+}
