@@ -4319,3 +4319,41 @@ distillation (arXiv:2602.08234), Graph-Based Exploration for ARC-AGI-3
 
 flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)
 <!-- EXP4589-FEATURE-ROUTER-SOTA-END -->
+
+<!-- EXP4601-GENERATION-SOTA-START -->
+## 2026-06-22 Exp 4601 - .424 generation SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-generation-world-model-424-2026-06-22.md`.
+
+**Filtered track:** candidate generation on first contact, executable/symbolic
+world-model induction, perceptual grounding, verified skill/controller
+synthesis, exploration oracles, and objective energy as a generation prior.
+
+**Preconditions:** `.venv/bin/python scripts/sweep_clusters.py --help`
+succeeded and the arXiv API reachability check succeeded. Cluster helpers 5 and
+6 emitted focused exploration/world-model URLs. Semantic Scholar returned HTTP
+429 for the focused ARC/CWM/Sensi/SkillGen query and HTTP 500 for the broader
+world-model exploration query, so no S2-only source was promoted. Direct arXiv
+HTTP checks verified all cited IDs. `/deep-research` was not invoked. No live
+LLM inference, training run, leaderboard submission, ops/status/traceability
+edit, or `scripts/research_conductor.py` edit occurred.
+
+**Methods marked ingested:** Executable World Models plus Code World Models
+(arXiv:2605.05138, arXiv:2510.04542, arXiv:2603.24621), Sensi perceptual
+grounding and curriculum test-time learning (arXiv:2603.17683), verified
+skill/controller synthesis (arXiv:2605.10999, arXiv:2605.16986,
+arXiv:2605.08083), exploration-oracle / predictive-world-model curiosity
+(arXiv:2502.00225, arXiv:2502.13200, arXiv:2505.19095), and adaptive symbolic
+world-model induction for novel games (arXiv:2507.12821, arXiv:2510.12088).
+
+Exp 4592 status mapped honestly: `winner_generated=2/25`, improving over the
+1/25 baseline but leaving the generation wall mostly open. Exp 4594 status
+mapped honestly: `complete: goal_energy_prior_no_value_honest_null_gap_sharpened`.
+
+flagged_for_v425: executable_world_model_energy_config_space_generation_prior
+(arXiv:2605.05138 + arXiv:2510.04542).
+
+**Bottom line for .425:** make executable world-model induction the candidate
+generator, and use objective energy as a trust/goal/repair prior inside
+generation rather than another final reranker.
+<!-- EXP4601-GENERATION-SOTA-END -->

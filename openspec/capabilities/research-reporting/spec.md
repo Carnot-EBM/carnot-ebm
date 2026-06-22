@@ -28552,6 +28552,98 @@ ops/status/traceability edits, or `scripts/research_conductor.py` edit.
 |---|---|---|
 | REQ-REPORT-4589 | Implemented (`python/carnot/experiment_4589_sota_ingestion_feature_router.py`) | Implemented (`tests/python/test_experiment_4589_sota_ingestion_feature_router.py`) |
 
+### REQ-REPORT-4601: Ingest Candidate-Generation And World-Model SOTA Into The .425 Plan
+
+The Exp 4601 workflow SHALL write
+`docs/research-notes/sota-ingestion-generation-world-model-424-2026-06-22.md`
+with a machine-readable JSON artifact block followed by a concise SOTA-to-
+experiment mapping note. It SHALL write
+`results/experiment_4601_sota_ingestion_generation.json` and SHALL provide
+`results/experiment_4601_sota_ingestion_generation.py` as the required
+results-side runner delegating to
+`python/carnot/experiment_4601_sota_ingestion_generation.py`.
+
+The workflow SHALL read `AGENTS.md`, `CODEX.md`, `research-references.md`
+`.424` sweep and planner-confirmation addendum, `research-studying.md`,
+`results/experiment_4592_generation_completeness_wiring.json`, and
+`results/experiment_4594_goal_energy_generation_prior.json`. It SHALL filter
+the already-discovered corpus to candidate generation, first-contact generation,
+world-model induction, skill/controller synthesis, exploration, perceptual
+grounding, and objective-energy generation priors. It SHALL run the reliable
+channel only: `scripts/sweep_clusters.py 5 --max-results 8`,
+`scripts/sweep_clusters.py 6 --max-results 8`, `scripts/sweep_semscholar.py`
+on focused candidate-generation/world-model queries, arXiv abs-page HTTP-200
+verification, and low-concurrency WebSearch/WebFetch over top sources. It SHALL
+verify `.venv/bin/python scripts/sweep_clusters.py --help` exits zero and
+`curl -sf -o /dev/null
+https://export.arxiv.org/api/query?search_query=all:test` exits zero before
+promoting citations. If either precondition fails, the workflow SHALL stop with
+a `blocked_network` honest verdict and SHALL NOT fabricate a complete mapping.
+
+The workflow SHALL NOT invoke `/deep-research`, SHALL NOT launch live LLM
+inference, SHALL NOT launch training, SHALL NOT submit to the leaderboard,
+SHALL NOT claim a new ARC solve, SHALL NOT modify `ops/changelog.md`,
+`ops/status.md`, or `_bmad/traceability.md`, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact SHALL include the required top-level fields `honest_verdict`,
+`inference_substrate`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `preconditions_checked`, `research_note_path`,
+`random_seed`, and `field_principles`. `honest_verdict` SHALL be terminal-
+prefixed and equal `complete: sota_ingestion_generation_mapped` on the complete
+path. `inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`methods_mapped` SHALL contain three to five strongest candidate-generation /
+world-model-induction methods with real arXiv-backed `source_ids`, a
+`generation_track`, a `takes_over_current_a1_a3_mechanisms` field mapping onto
+Exp 4592 and/or Exp 4594, and a `fails_when` caveat. `citations_verified` SHALL
+provide one verified arXiv URL and title for every source ID used by method
+claims and SHALL include arXiv IDs from the set `2510.04542`, `2507.12821`,
+`2510.12088`, `2502.13200`, `2505.19095`, `2603.17683`, `2502.00225`,
+`2605.05138`, `2605.10999`, and `2603.24621`; it MAY also include
+WebFetch-verified adjacent synthesis/controller IDs such as `2605.16986` and
+`2605.08083`. `flagged_for_next_roadmap` SHALL flag the strongest `.425`
+candidate and `research-studying.md` SHALL mark the ingested methods with
+`flagged_for_v425`.
+
+`field_principles` SHALL include one-line principles for every top-level
+artifact field, including these required principles: `honest_verdict` =
+`terminal prefix; complete: sota_ingestion_generation_mapped.`,
+`inference_substrate` = `aggregation_from_upstream_artifacts -- literature
+synthesis, no model load (100us floor).`, `methods_mapped` = `the 3-5
+strongest GENERATION/world-model-induction methods with REAL arXiv IDs -- the
+shoulders-of-giants anti-rederivation check.`, `citations_verified` = `every
+method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as
+any results artifact).`, `flagged_for_next_roadmap` = `the strongest method
+flagged as a .425 candidate -- closes the discover->ingest->plan loop.`, and
+`preconditions_checked` = `records resources verified; pre-empts missing-
+resource fabrication.`
+
+#### SCENARIO-REPORT-4601: Generation And World-Model SOTA Maps To .425 Inputs
+
+**Given** `AGENTS.md`, `CODEX.md`, `research-references.md`,
+`research-studying.md`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, and the Exp 4592/4594 artifacts are readable
+**And** `scripts/sweep_clusters.py --help` and the arXiv API reachability check
+succeed
+**And** arXiv abs-page checks verify the complete-path source IDs
+**When** the Exp 4601 SOTA-ingestion workflow runs
+**Then** it writes the required JSON artifact and markdown note, maps Code World
+Models, Executable World Models, Sensi, SkillGen-style verified skill
+synthesis, exploration-oracle / predictive-world-model exploration, and
+adaptive symbolic world-model induction onto the current Exp 4592 A1 wiring and
+Exp 4594 A3 objective-energy mechanisms, records the Sensi perceptual-
+grounding wall as a failure mode for LLM-on-grid generation, flags the strongest
+`.425` input, declares `aggregation_from_upstream_artifacts`, updates
+`research-studying.md` with `flagged_for_v425`, and records no `/deep-research`,
+live inference, training, leaderboard submission, solve claim,
+ops/status/traceability edits, or `scripts/research_conductor.py` edit.
+
+## Implementation Status (REQ-REPORT-4601)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4601 | Implemented (`python/carnot/experiment_4601_sota_ingestion_generation.py`, `results/experiment_4601_sota_ingestion_generation.py`) | Implemented (`tests/python/test_experiment_4601_sota_ingestion_generation.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
