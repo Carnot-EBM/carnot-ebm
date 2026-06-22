@@ -54,6 +54,16 @@ inp = Path("/kaggle/input")
 carnot = next(p.parents[2] for p in inp.rglob("carnot/agentic/arc_competition_agent.py"))
 sys.path.insert(0, str(carnot))
 
+# HYBRID EXPLORER DIVERSITY (validated 2026-06-21). The depth_first_ride StepwiseExplorer over-commits to
+# the top-salient branch and MISSES easy "structure-missed" first-level wins (r11l/sp80/cd82). With this
+# flag set, once the search STALLS (no new level for CARNOT_ARC_EXPLORE_STALL=150 moves) the explorer pops a
+# RANDOM untested action among the top-K instead of the most-salient pop(0) -- recovering those wins WITHOUT
+# costing the efficient ones. Measured end-to-end through the authoritative scorer: 4/11 first-win + eff-sum
+# 2.0804 vs the structured baseline's 1/11 + 2.0069. Set UNCONDITIONALLY here (the explorer runs whether or
+# not the LLM tier below loads); parity-safe (default OFF in the code). General lever (diversity, not game-
+# specific) -> expected to transfer to the hidden eval games' own structure-missed wins.
+os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = "1"
+
 # --- generator (LLM tier) resolution + LOUD visibility (2026-06-21) --------------------------------
 # The v3=0.08 run could NOT be diagnosed because nothing logged whether the Qwen generator loaded or
 # silently degraded to the CPU graph-explore cascade (env vars were set inside `if server and gguf:`
