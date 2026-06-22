@@ -255,6 +255,12 @@ def summarize(path: Path) -> int:
             f"  duration floor   : {floor.get('substrate')} "
             f">={floor.get('min_duration_s')}s ({floor.get('reason')})"
         )
+    methodology = av.offline_arc_methodology_descriptor(d)
+    if methodology is not None:
+        fields = ", ".join(methodology.get("evidence_fields", []))
+        print(
+            f"  methodology      : {methodology.get('kind')} via {fields}"
+        )
 
     # 5. headline metrics (only now), annotated with any flag touching them
     flag_fields = {

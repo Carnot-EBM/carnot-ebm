@@ -1,0 +1,87 @@
+{
+  "duration_s": 1.0,
+  "experiment": "experiment_4587_offline_arc_methodology_guard",
+  "field_principles": {
+    "guard_mechanism": {
+      "principle": "names the recognized offline-arc methodology descriptor + where it suppresses the warn -- the fix that stops every ARC artifact false-warning."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; shipped: offline_arc_methodology_guard_added OR complete: offline_arc_methodology_guard_partial_<reason>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
+    },
+    "offline_arc_artifact_not_warned": {
+      "principle": "an offline-arc fixture (substrate + cited solver/checksum, no model_specs) is NOT METHODOLOGY_MISSING-warned -- the recurring-warn fix."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "real_llm_still_warned": {
+      "principle": "a live_llm_inference fixture missing model_specs IS still warned -- guards against weakening the real methodology check."
+    },
+    "tests_added_pass": {
+      "principle": "Tests Must Run and Assert -- both the not-warned-on-offline-arc and still-warned-on-real-LLM cases."
+    }
+  },
+  "guard_mechanism": {
+    "live_llm_methodology_flag_kinds": [
+      "METHODOLOGY_MISSING"
+    ],
+    "offline_arc_methodology_flag_kinds": [],
+    "recognized_descriptor": {
+      "evidence_fields": [
+        "reproducibility_checksum",
+        "reproduction_gate",
+        "solver_module",
+        "verifier_checkpoint"
+      ],
+      "kind": "offline_arc_methodology_descriptor",
+      "reason": "offline ARC solver/reproduce/checkpoint methodology; no live model_specs required",
+      "substrate": "verifier_ensemble_against_cached_candidates"
+    },
+    "suppresses_in": [
+      "scripts/adversarial_verify.py:check_methodology_present"
+    ],
+    "surfaces_in": [
+      "scripts/summarize_artifact.py:summarize"
+    ]
+  },
+  "honest_verdict": "shipped: offline_arc_methodology_guard_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "leaderboard_submission": false,
+  "offline_arc_artifact_not_warned": true,
+  "preconditions_checked": {
+    "adversarial_verify_help_exits_0": true,
+    "adversarial_verify_import_ok": true,
+    "live_fixture_declares_live_llm_inference": true,
+    "live_fixture_has_no_model_specs": true,
+    "model_load": false,
+    "offline_fixture_declares_cached_verifier_substrate": true,
+    "offline_fixture_has_no_model_specs": true,
+    "offline_fixture_has_reproducibility_checksum": true,
+    "offline_fixture_has_solver_module": true,
+    "scripts_research_conductor_modified": false,
+    "spec_has_req_4587": true
+  },
+  "random_seed": 4587,
+  "real_llm_still_warned": true,
+  "reproducibility_checksum": "sha256:91c330ae34ece34984ad20eef4920f3869c74e79f95bca71e5e3eeb0c22066ac",
+  "result_path": "results/experiment_4587_offline_arc_methodology_guard.json",
+  "schema": "carnot.exp4587.offline_arc_methodology_guard.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4587",
+    "SCENARIO-ARC-WMTE-4587"
+  ],
+  "tests_added_pass": {
+    "assertions": [
+      "offline ARC descriptor fixture without model_specs has no METHODOLOGY_MISSING",
+      "live_llm_inference fixture without model_specs still has METHODOLOGY_MISSING",
+      "summarize_artifact surfaces the recognized offline methodology descriptor"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_guards.py tests/python/test_experiment_4587_offline_arc_methodology_guard.py -q --no-cov"
+    ],
+    "passed": true
+  }
+}

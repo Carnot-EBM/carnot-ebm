@@ -1275,6 +1275,50 @@ actions reduced or null, offline reproduction status, registry update status,
 and a terminal honest verdict without incrementing `reproducible_total_levels`
 unless a new level passes `arc_solver_kit.reproduce()`.
 
+### REQ-ARC-WMTE-4587: Offline ARC Methodology Descriptor Guard
+
+Experiment 4587 SHALL harden `scripts/adversarial_verify.py` so an offline ARC
+artifact is not `METHODOLOGY_MISSING`-warned merely because it has no
+`model_specs`. The verifier SHALL recognize an offline ARC methodology
+descriptor when an artifact declares
+`inference_substrate=verifier_ensemble_against_cached_candidates` or
+`inference_substrate=aggregation_from_upstream_artifacts`, carries a
+`reproducibility_checksum`, and cites offline methodology evidence such as
+`solver_module`, a persisted solver-kit operator (`primitive_persisted`),
+`offline_reproduced`, `reproduction_gate` / `reproduce_gate`, or
+`verifier_checkpoint`. Such artifacts use the offline
+solver/reproduction/checkpoint descriptor as their methodology rather than a
+live model specification.
+
+The guard SHALL NOT weaken live-model verification: an artifact declaring
+`inference_substrate=live_llm_inference` and missing
+`model_specs` / `target_model` SHALL still emit `METHODOLOGY_MISSING`.
+
+Experiment 4587 SHALL write
+`results/experiment_4587_offline_arc_methodology_guard.json` with bare
+top-level fields for `honest_verdict`, `inference_substrate`,
+`guard_mechanism`, `offline_arc_artifact_not_warned`,
+`real_llm_still_warned`, `tests_added_pass`, and `preconditions_checked`.
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; shipped: offline_arc_methodology_guard_added OR complete: offline_arc_methodology_guard_partial_<reason>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
+- `guard_mechanism`: principle "names the recognized offline-arc methodology descriptor + where it suppresses the warn -- the fix that stops every ARC artifact false-warning."
+- `offline_arc_artifact_not_warned`: principle "an offline-arc fixture (substrate + cited solver/checksum, no model_specs) is NOT METHODOLOGY_MISSING-warned -- the recurring-warn fix."
+- `real_llm_still_warned`: principle "a live_llm_inference fixture missing model_specs IS still warned -- guards against weakening the real methodology check."
+- `tests_added_pass`: principle "Tests Must Run and Assert -- both the not-warned-on-offline-arc and still-warned-on-real-LLM cases."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4587: Offline ARC Descriptor Suppresses Only The False Warn
+
+Given an offline ARC fixture with
+`inference_substrate=verifier_ensemble_against_cached_candidates`, a cited
+`solver_module`, a `reproducibility_checksum`, and no `model_specs`
+When `adversarial_verify` checks methodology
+Then the fixture does not receive `METHODOLOGY_MISSING`. Given a
+`live_llm_inference` fixture with `random_seed` and `reproducibility_checksum`
+but no `model_specs`, the same check still emits `METHODOLOGY_MISSING`.
+
 ### REQ-ARC-WMTE-4581: Rotated ar25 Self-Play Level-Up And Verifier Checkpoint
 
 Experiment 4581 SHALL satisfy the ARC sprint level-up attempt guarantee through
