@@ -1,0 +1,8 @@
+{
+  "experiment": "arc_goal_distance_navtail",
+  "honest_verdict": "complete_goal_distance_recovers_nav_tail_but_modest_efficiency",
+  "result": "Goal-distance A* (general avatar+goal detector -> Manhattan heuristic -> graph_explore_solve_v2): recovers ls20 (avatar=9, 15-action win) and tu93 (avatar=6, 18-action win); correctly self-scopes su15 as 'not a nav game' (no avatar); m0r0 detects an avatar but the goal candidates miss. Efficiency: ls20 found at ~1000-1500 expansions vs blind BFS's 1777 -- a MODEST ~15-30% gain, NOT dramatic, because the path reverses around obstacles (goal-distance descent stalls -> leans on the BFS depth term) and the 4 rare-cell goal-candidates only approximate the true goal.",
+  "conclusion": "The navigation hard-tail (ls20/tu93/m0r0) is REACHABLE by the goal-distance gradient but NOT EFFICIENTLY -- the deep 13-18 action specific-sequence wins still cost ~1500 expansions of search -> near-0 min(h/a,1)^2 efficiency score. So recovering the hard tail adds reachability (>0 vs 0) but negligible SCORE. The shipped diversity floor (4/11, shallow structure-missed wins at modest efficiency) remains the meaningful improvement. The hard tail's EFFICIENT recovery is genuine frontier research (deep sparse-reward search). The goal-distance detector + heuristic is a working GENERAL toolkit member for the feature-router (correctly identifies + handles the nav class, transfers to hidden nav games).",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false
+}
