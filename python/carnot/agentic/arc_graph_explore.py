@@ -119,7 +119,25 @@ def rich_action_candidates(
             prior=action_prior,
             prune_quantile=action_prior_prune_quantile,
         )
-    if frame_change_scorer is not None or action_prior is not None or structural_energy_scorer is not None:
+    if (
+        structural_energy_scorer is not None
+        and frame_change_scorer is None
+        and action_prior is None
+    ):
+        scored = []
+        for index, candidate in enumerate(out):
+            try:
+                if hasattr(structural_energy_scorer, "candidate_delta_energy"):
+                    delta_energy = structural_energy_scorer.candidate_delta_energy(frame, candidate)
+                else:
+                    delta_energy = structural_energy_scorer(frame, candidate)
+                score = -float(delta_energy)
+            except Exception:
+                score = 0.0
+            scored.append((score, index, candidate))
+        scored.sort(key=lambda row: (-row[0], row[1]))
+        out = [candidate for _score, _index, candidate in scored]
+    elif frame_change_scorer is not None or action_prior is not None or structural_energy_scorer is not None:
         from carnot.agentic.arc_frame_change_predictor import rank_arc_actions
 
         out = rank_arc_actions(
@@ -235,6 +253,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                            heuristic=None, heuristic_weight: float = 1.0,
                            expansion_priority=None,
                            candidate_router=None,
+                           structural_energy_scorer=None,
                            stats: Optional[dict] = None
                            ) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
@@ -285,6 +304,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     def _candidates(frame, previous_frame=None):
         return rich_action_candidates(
             frame,
+            structural_energy_scorer=structural_energy_scorer,
             candidate_router=candidate_router,
             previous_frame=previous_frame,
         )   # salience-ordered, all objects (fixes r11l)
@@ -309,6 +329,8 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
             stats["expansions"] = expansions
             stats["states"] = len(states)
             stats["max_expansions"] = int(max_expansions)
+            stats["proposal_prior_enabled"] = structural_energy_scorer is not None
+            stats["expansion_priority_enabled"] = expansion_priority is not None or heuristic is not None
         return traj, lvl
 
     priority_scorer = expansion_priority if expansion_priority is not None else heuristic
