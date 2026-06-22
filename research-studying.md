@@ -10,6 +10,23 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-22 Energy-config-space generation for the ARC-AGI-3 wall - operator-directed ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md`
+(operator: "work energy judgement into the live agent ... refine and embrace an energy config space within
+each game and shared amongst the games"). Two adversarial research workflows over six higher-abstraction
+families, repo-grounded against the refuted ledger + reusable assets.
+
+**Verdict:** BUILD (cheapest-first), flagged for `.425` in `ops/known-issues.md` MANDATORY-NEXT-MILESTONE.
+The reframe: the candidate-GENERATION wall (`winner_generated=1/25`) is `make-a-winner-appear`, not
+`select-the-winner` (rerankers/routers/best-first REFUTED). Carnot's energy verifier earns its keep as a
+generative DRIVER — a per-game ONLINE energy landscape + a SHARED cross-game energy prior guiding iterative
+level attempts. Strongest cheap unlock: wire the BUILT-but-unwired `exp4020` `is_goal` (held-out precision
+1.0) as a graded goal-ENERGY target (closes GAP-ARCH-GOAL-NOT-VERIFIED). Then macro-vocabulary horizon
+collapse, then energy-as-FITNESS quality-diversity evolution (the non-AR generator). Real arXiv IDs:
+2605.05138 (ARC-AGI-3 SOTA), 2605.28814, 2505.10819, 2005.05960, 2505.24784, 2009.08111, FunSearch
+(Nature s41586-023-06924-6). Flagged for the `.425` planner per the SOTA-ingestion cycle.
+
 ## 2026-06-20 LoopWM (arXiv:2606.18208) - operator-directed ingestion - INGESTED
 
 **Status:** INGESTED into `docs/research-notes/loopwm-2606.18208-ingestion-2026-06-20.md` (operator asked
