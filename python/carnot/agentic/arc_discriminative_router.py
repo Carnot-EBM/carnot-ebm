@@ -116,6 +116,59 @@ class RandomCandidateRouter:
         return [action for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))]
 
 
+class CrossGameDiscriminativeExpansionPriority:
+    """REQ-CAPSTONE-4569: score frontier nodes for verifier-guided expansion.
+
+    The graph and stepwise solvers expect lower energies to expand first, while
+    the discriminative verifier emits higher P(on winning path). This adapter
+    converts the learned probability into a non-oracle energy without inspecting
+    executable win checks.
+    """
+
+    verifier_is_oracle = False
+
+    def __init__(
+        self,
+        verifier: Any,
+        *,
+        featurize: Any = cross_game_features_v3,
+        neutral_proba: float = 0.5,
+    ) -> None:
+        self.verifier = verifier
+        self.featurize = featurize
+        self.neutral_proba = float(neutral_proba)
+
+    def proba(self, frame: Any) -> float:
+        try:
+            features = self.featurize(frame)
+            return float(self.verifier.proba_features(features))
+        except Exception:
+            return self.neutral_proba
+
+    def __call__(self, frame: Any) -> float:
+        return 1.0 - self.proba(frame)
+
+
+class RandomExpansionPriority:
+    """Deterministic random frontier-priority positive control for REQ-CAPSTONE-4569."""
+
+    verifier_is_oracle = False
+
+    def __init__(self, seed: int = 4569) -> None:
+        self.seed = int(seed)
+
+    def __call__(self, frame: Any) -> float:
+        payload = json.dumps(
+            {
+                "seed": self.seed,
+                "frame": _frame_digest(frame),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        return int(hashlib.sha256(payload).hexdigest()[:16], 16) / float(16**16 - 1)
+
+
 def load_cross_game_discriminative_router(
     *,
     root: Path | str = REPO_ROOT,
@@ -135,6 +188,23 @@ def load_cross_game_discriminative_router(
         verifier,
         prune_threshold=prune_threshold,
     )
+
+
+def load_cross_game_discriminative_expansion_priority(
+    *,
+    root: Path | str = REPO_ROOT,
+    checkpoint: Path | str | None = None,
+) -> CrossGameDiscriminativeExpansionPriority | None:
+    """Load the Exp 4545 v3 checkpoint as a frontier-expansion priority."""
+
+    path = Path(checkpoint) if checkpoint is not None else DEFAULT_CHECKPOINT_RELATIVE_PATH
+    if not path.is_absolute():
+        path = Path(root) / path
+    try:
+        verifier = DiscriminativeVerifier.load(path, cross_game_features_v3)
+    except Exception:
+        return None
+    return CrossGameDiscriminativeExpansionPriority(verifier)
 
 
 def dominant_feature_family_from_weights(weights: Sequence[float]) -> str:
