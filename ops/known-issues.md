@@ -27,6 +27,42 @@ predictor + trust-energy tasks as the energy-augmented hybrid, not pure copies.
 
 ---
 
+### 2026-06-21 (MANDATORY-NEXT-MILESTONE, operator: CONTINUE the live-agent self-play + pos/neg-feedback loop): diversity floor transfer + feature-router + toolkit, all via the standing self-improvement loop
+
+**Operator 2026-06-21** (before restarting the conductor): "make sure we're enabling self game simulation
+and learning from positive and negative feedback while playing games. The more we can run this locally,
+the more we can capture breakthroughs and embrace self-improvement iteration." The self-play +
+pos/neg-learning infrastructure IS wired (`scripts/arc_loop_solve.py` standing loop on the offline arcade,
+zero quota; `arc_value_learner` learns from positive steps-to-go AND the win-reachability classifier's
+off-path/dead-end NEGATIVES; dead-ends recorded in `ops/arc_solve_registry.yaml`). This priority QUEUES the
+continuation of the 2026-06-21 outer-loop breakthroughs so the conductor advances them rather than drifting:
+
+1. **Diversity floor — hidden-game transfer (SHIPPED, validate the generalization).** `CARNOT_ARC_EXPLORE_DIVERSITY=1`
+   is wired into the submitted explorer + scored kernel (4/11 first-win, eff 2.0804 vs 1/11/2.0069, parity-safe).
+   Task: measure it on the held-out/variant proxy (does diversity-on-stall transfer to unseen games?); combine
+   with the .415/.416 CNN clickability predictor (the leaderboard leaders' action-efficiency lever) — diversity
+   reaches structure-missed wins, the predictor makes them efficient. Falsifiable gate: first-win count up AND
+   efficiency not down on the held-out proxy.
+2. **Feature-ROUTER (operator's TRM-feature->approach idea) over the TOOLKIT.** The hard tail clusters by
+   mechanic class, each with a built general approach: diversity-on-stall (shipped), systematic BFS, goal-distance
+   A* (`arc_goal_distance.py`, avatar+goal detector, self-scoping), LLM-as-reasoner (`arc_llm_guided_solve.py`,
+   residual). Task: classify a game's mechanic from EARLY-PLAY features (avatar moves on keyboard? clicks connect
+   cells? hidden carry-state?) -> route to the approach (extend `arc_solve_learning.recommend_approach`); this is
+   the GENERAL seen->hidden transfer per-game recipes cannot do. Learn the router from the self-play loop's pos/neg
+   traces.
+3. **Run the self-play loop EVERY milestone (the self-improvement engine).** `arc_loop_solve.py --auto` (or a
+   rotation target): self-play -> verifier-routed solve -> reproduction gate -> TRAIN+CHECKPOINT the learned
+   verifier on pos+neg traces -> registry update (incl. dead_ends). The more local self-play runs, the more the
+   verifier improves and the live agent warm-starts from it. The 0.08 root cause is the exact-match world-model
+   gate + exploration-to-first-win (`docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`); the loop's
+   negative-feedback learning (win-reachability off-path discrimination) is the structural lever against it.
+
+Sequence WITH the existing .415/.416 (CNN clickability) priority — they compose (diversity reaches wins, the
+predictor + router make them efficient + transferable). Full session record: `ops/changelog.md` 2026-06-21,
+`ops/status.md` Session 2026-06-21, `docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`.
+
+---
+
 ### 2026-06-20 (MANDATORY-NEXT-MILESTONE .415/.416, operator leaderboard dive): CNN FRAME-CHANGE / clickability predictor (action efficiency = the score lever)
 
 **Operator 2026-06-20** asked what the top ARC leaderboard players do; the code says the leader (Tufa
