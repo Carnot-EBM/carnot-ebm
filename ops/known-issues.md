@@ -61,6 +61,27 @@ Sequence WITH the existing .415/.416 (CNN clickability) priority — they compos
 predictor + router make them efficient + transferable). Full session record: `ops/changelog.md` 2026-06-21,
 `ops/status.md` Session 2026-06-21, `docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`.
 
+**CURRENT AGENT STATE (2026-06-21 outer-loop — planner: read before drafting .423, do NOT re-derive these):**
+- **The exploration-diversity floor is SHIPPED + wired** into the submitted `StepwiseExplorer` +
+  `submission_kernel/main.py` (`CARNOT_ARC_EXPLORE_DIVERSITY=1`, parity-safe). It already does the
+  "better-ordered explorer puts the winner in the pool earlier" that the `.422` A1/A2 context describes for
+  the SHALLOW structure-missed wins (r11l/sp80/cd82, 1/11->4/11). Build ON it; do not rebuild explorer ordering
+  from scratch.
+- **0.08 root cause is MAPPED:** every world-model path is gated out by the exact-full-grid-match
+  `WorldModelVerifier` gate (TTT 0/5; e3 LLM induction 0/6, model-size-independent); the binding constraint is
+  exploration-to-first-win (sparse reward). `docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`.
+- **HEADS-UP on frontier-VALUE-routing (the `.422` A2 approach):** using a learned verifier as the best-first
+  EXPANSION priority pays a reset-replay navigation tax and REGRESSED this weekend (goal-bias best_first 0.0152;
+  explorer_bf/value_weight>0 2/11 vs the diversity floor's 4/11; depth_first_ride ignores the value head). The
+  `.421` "winner not in pool" gap is real, but value-head best-first expansion is NOT the efficient fix —
+  prefer the diversity-on-stall (shipped) + the CNN clickability/action-effect predictor (.415/.416 A1) for the
+  action-efficiency lever. If A2 is re-attempted, it MUST measure ACTION cost (not just generic_transfer) and
+  carry a `prior_failures:` block vs this weekend's best_first regression.
+- **The hard tail is characterized + the TOOLKIT is built** (systematic BFS, goal-distance A* `arc_goal_distance.py`,
+  LLM-reasoner `arc_llm_guided_solve.py`, cell-recall gate `CARNOT_ARC_TRUST_METRIC`); the feature-ROUTER over it
+  is the general seen->hidden transfer (item 2 above). The deep tail is REACHABLE but near-0-efficiency
+  (reachability != score); efficient recovery needs the goal gradient + the clickability efficiency lever.
+
 ---
 
 ### 2026-06-20 (MANDATORY-NEXT-MILESTONE .415/.416, operator leaderboard dive): CNN FRAME-CHANGE / clickability predictor (action efficiency = the score lever)
