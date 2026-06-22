@@ -83,11 +83,16 @@ def solve_adaptered(game: str, target_level: int) -> dict:
         total_states += nodes
         if path is None:
             break
+        search_reached = kit.frame_level(solver.last_frame)
         if ad.featurize is not None:
             Xi, yi = collect_trajectory_data(env, solver, full, path, ad.featurize)
             X += Xi; y += yi
         f = solver._replay(env, full + path)
-        cur = kit.frame_level(f)
+        # Some games need fresh-env node evaluation because env.reset() is not
+        # idempotent during search. In that case the searched winning frame is
+        # more reliable than replaying on the reused env; the reproduction gate
+        # below remains the final authority.
+        cur = max(kit.frame_level(f), search_reached)
         full += path
 
     # REPRODUCTION GATE

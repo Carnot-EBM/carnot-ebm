@@ -29,11 +29,14 @@
       "game": "cn04",
       "similarity": 6.0,
       "reproducibility": "reproduced",
-      "solver": "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions).",
-      "win_condition": "first-solve L1 adapter-free (E1); 13-action sequence replays offline.",
-      "action_model": null,
+      "solver": "GameAdapter _cn04 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py with branch_mode='fresh_env'; results/arc_loop_solve_cn04.json 43-label L2 gate.",
+      "win_condition": "L1 adapter-free seed plus L2 marker-pair shape alignment: every original 8/13 marker on each visible sprite must overlap exactly one same-colored marker from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6), 0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0.",
+      "action_model": "ACTION1-4 move the selected visible sprite; ACTION5 rotates a singleton selected sprite or cycles a stacked variant; ACTION6 selects a visible sprite through camera-derived display coordinates.",
       "reusable_gotchas": [
-        "Only solvable after the E1 salience-ordering upgrade \u2014 the winning actions were low in the pre-E1 raster order."
+        "The win predicate is marker-pair coverage, not full-canvas equality; every same-colored 8/13 marker must be paired exactly twice.",
+        "ACTION5 can rotate the selected sprite and advance the level on the same action, so count only the offline reproduction gate's reached_level.",
+        "ACTION6 display coordinates must land on non-transparent rendered sprite pixels after camera.display_to_grid mapping.",
+        "Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even though the full L1+L2 label sequence reproduces on a fresh offline arcade."
       ]
     }
   ],
@@ -70,6 +73,38 @@
         "llm_proposer",
         "bounded_refinement",
         "trust_energy",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "verifier_router_candidate_ranking_operator",
+      "derived_from_games": [
+        "exp4556_cached_generic_transfer"
+      ],
+      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
+      "selector_tags": [
+        "verifier_router",
+        "candidate_ranking",
+        "trust_energy",
+        "graph_explore",
+        "config_toggle",
+        "program_editor",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "persistent_action_effect_memory_operator",
+      "derived_from_games": [
+        "exp4568_clickability_action_effect_predictor"
+      ],
+      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+      "selector_tags": [
+        "action_effect",
+        "clickability",
+        "candidate_ranking",
+        "graph_explore",
+        "click",
+        "keyboard",
         "transfer"
       ]
     },
@@ -197,6 +232,68 @@
         "vc33"
       ],
       "note": "Exp 4537 persists the A1 loop as a reusable operator; detect level-up from frame.levels_completed, clear stale induction, re-induce the L_{n+1} predicate from the post-transition representation, and route with depth-primary goal bias. Exp 4549 extends the same primitive family with arc_solver_kit.llm_proposer_reinduction_operator: detect level-up, request GOAL+DYNAMICS+plan candidates from the LLM proposer when available, trust-energy-rank them, run at most 3 bounded refinement rounds, and degrade to the DSL/verifier predicate inducer when A1's live proposer is null. New levels still count only through arc_solver_kit.reproduce()."
+    },
+    {
+      "id": "primitive_verifier_router_candidate_ranking_operator",
+      "operator": "verifier_router_candidate_ranking_operator",
+      "derived_from_games": [
+        "exp4556_cached_generic_transfer"
+      ],
+      "note": "Exp 4561 persists the A1 verifier-router as a reusable generic candidate-ranking operator: rank compatible cached action/plan candidates by verifier score with stable original-order tie-breaking, then report ordering gain before any solve claim. Cross-game transfer on tu93/tr87/sc25 was a characterized null: the operator applied cleanly, but the cached held-out candidates had no offline-reproduced target candidate for the ranker to promote, so ordering gain remained 0. Needs a non-oracle verifier score that separates at least one held-out reachable candidate from same-depth distractors to add value.",
+      "transfer_dead_ends": [
+        {
+          "tu93": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
+        },
+        {
+          "tr87": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
+        },
+        {
+          "sc25": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
+        }
+      ]
+    },
+    {
+      "id": "primitive_persistent_action_effect_memory_operator",
+      "operator": "persistent_action_effect_memory_operator",
+      "derived_from_games": [
+        "exp4568_clickability_action_effect_predictor"
+      ],
+      "note": "Exp 4573 persists A1's action-effect predictor as a reusable PersistentAEM operator: build a leave-one-game cross-game memory from cached frame/action effects, rank compatible action candidates by predicted effect with stable original-order tie-breaking, and report actions-to-first-levelup deltas before any solve claim. A CNN predictor forward pass is not live LLM inference; the persisted operator can also run from cached action-effect rows without invoking the CNN. New levels still count only through arc_solver_kit.reproduce().",
+      "transfer_dead_ends": [
+        "If the winning action is absent from the candidate group, PersistentAEM can only reorder generated candidates; candidate generation remains the residual bottleneck.",
+        "Leave-one-game transfer can be value-null when the held-out game's effective action family is not represented in the cached memory features."
+      ],
+      "latest_exp4573_transfer": {
+        "artifact": "results/experiment_4573_primitive_persist_transfer.json",
+        "transfer_games": [
+          "dc22",
+          "m0r0",
+          "ka59"
+        ],
+        "transfer_value_per_game": {
+          "dc22": {
+            "actions_reduced": 1.0,
+            "baseline_actions_to_first_levelup": 2.0,
+            "memory_actions_to_first_levelup": 1.0,
+            "candidate_group_count": 115
+          },
+          "m0r0": {
+            "actions_reduced": 1.0,
+            "baseline_actions_to_first_levelup": 2.0,
+            "memory_actions_to_first_levelup": 1.0,
+            "candidate_group_count": 53
+          },
+          "ka59": {
+            "actions_reduced": 1.0,
+            "baseline_actions_to_first_levelup": 2.0,
+            "memory_actions_to_first_levelup": 1.0,
+            "candidate_group_count": 41
+          }
+        },
+        "offline_reproduced_new_level": false,
+        "residual_dead_end": "Transfer value is candidate-ordering efficiency over cached leave-one-game rows; no new executable level was banked, so reproducible_total_levels is unchanged.",
+        "reproducibility_checksum": "sha256:40b6b9874717b0a9973e9e33addfba694337ee722656e4101335c6c44173bab1"
+      }
     },
     {
       "id": "primitive_object_centric_digest",

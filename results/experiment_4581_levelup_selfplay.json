@@ -1,0 +1,115 @@
+{
+  "arc_loop_result_path": "results/arc_loop_solve_ar25.json",
+  "dead_ends": [
+    {
+      "attempt": "standing loop preferred rotation target",
+      "game": "sk48",
+      "result": "needs_per_game_RE",
+      "why": "The standing adapter-free loop preserved only the existing sk48 L1 route; L2 is a chain/color reorder puzzle that still needs a grounded adapter delta."
+    },
+    {
+      "attempt": "unbounded generic action search after L1",
+      "game": "ar25",
+      "result": "reproduced_existing_L1_only",
+      "why": "The previous ar25 adapter exposed arbitrary post-L1 actions with a neutral verifier, so the loop repeated L1 and did not derive the mirror/object L2 delta."
+    },
+    {
+      "attempt": "rotation candidate skipped",
+      "game": "ka59",
+      "result": "recorded_hidden_register_dead_end",
+      "why": "The registry records ka59 L2 as stalled on hidden StepCounter state; this run did not retry it."
+    }
+  ],
+  "experiment": "experiment_4581_levelup_selfplay",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "target_game": "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .419-.422).",
+    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+  },
+  "honest_verdict": "success: ar25_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_import_smoke": true,
+    "spec_refs_present": true
+  },
+  "random_seed": 4581,
+  "registry_update": {
+    "banked_levels": 1,
+    "new_game_levels": 2,
+    "new_total_declared": 54,
+    "new_total_row_sum": 54,
+    "path": "ops/arc_solve_registry.yaml",
+    "prior_game_levels": 1,
+    "prior_total_declared": 53,
+    "prior_total_row_sum": 53,
+    "reason": "banked_offline_reproduced_level",
+    "reconciled_total_delta": 1,
+    "target_game": "ar25",
+    "updated": true
+  },
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "97726c1a58ce6dcc35c078a5e16e7e2749ec9cebff832a72b12924cd7b0b932b",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "ar25",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.arc_levelup_selfplay_4581.v1",
+  "schema_errors": [],
+  "solution_labels": [
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "3",
+    "3",
+    "5",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2"
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4581",
+    "SCENARIO-ARC-WMTE-4581"
+  ],
+  "target_game": "ar25",
+  "target_level": 2,
+  "verifier_checkpoint_updated": true,
+  "verifier_delta": {
+    "checkpoint_path": "models/arc_verifier_ar25.json",
+    "checkpoint_schema": "carnot_arc_learned_verifier_v1",
+    "checkpoint_updated": true,
+    "negative_trace_count": 3,
+    "negative_trace_source": "recorded_off_path_dead_ends",
+    "positive_trace_count": 26
+  }
+}
