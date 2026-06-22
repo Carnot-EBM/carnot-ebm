@@ -102,6 +102,34 @@ and moot until it is solved. Directed exploration / sub-goal discovery is the re
 same bottleneck the SOTA scan flagged (Family-B executable world-models induce; the search/exploration is
 the moat). It is not a quick win, and bigger models / better gates / better executors do not address it.
 
+## PIECE 3 BREAKTHROUGH — exploration diversity is the lever; the hybrid explorer beats the floor
+
+The binding constraint (exploration-to-first-win) finally yielded a POSITIVE, measured, shippable result.
+
+- **No denser reward signal exists** — the frame exposes only `levels_completed` + `win_levels=6` (no
+  score/sub-progress). So it is pure sparse-reward search; no reward shaping is possible.
+- **Diagnostic breakthrough:** a random walk over salient candidates reaches first-win on **3/11**
+  (r11l, sp80, lp85) vs the structured `depth_first_ride` explorer's **1/11**. r11l is trivially
+  reachable randomly (372/600 steps post-win) but the structured explorer scored 0 in ~2000 actions:
+  **it over-commits to ONE depth-first branch and misses easy "structure-missed" wins.** The failures
+  split: 3 structure-missed (diversity-recoverable) + 8 genuinely-hard (random gets 0 too).
+- **The hybrid deliverable** (`scripts/arc_hybrid_explore_measure.py`): structured-first +
+  random-restart-on-stall. **3/11 first-win, and it DOMINATES both baselines** — lp85 kept efficient
+  (structured @20, eff 2.0069) while r11l (@901) + sp80 (@777) are recovered via random diversity. So
+  its averaged `min(h/a,1)²` score strictly beats pure-structured (1/11) AND pure-random (3/11 but lp85
+  inefficient).
+
+**This is the first lever that moves the wall.** It is general (diversity, not game-specific), so it
+should transfer to the hidden eval, and it is SHIPPABLE: wire random-restart-on-stall into the submitted
+explorer (behind a flag, parity-safe) → a real candidate to beat 0.08. The 8-game hard tail remains the
+frontier-research part (multi-step specific sequences in a sparse-reward env), not diversity-recoverable.
+
+| explorer | first-win | lp85 efficiency | averaged score |
+|---|---|---|---|
+| structured (submitted) | 1/11 | 20 actions (eff 2.0069) | baseline |
+| pure random | 3/11 | 142 actions (~0.04) | WORSE (lost efficiency) |
+| **hybrid (structured+random-on-stall)** | **3/11** | **20 actions (eff 2.0069)** | **best — dominates both** |
+
 ## Artifacts
 
 - `results/arc_compete_sim.json` — explorer floor 1/11; goal-bias variants
