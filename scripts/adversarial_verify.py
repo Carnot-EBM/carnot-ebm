@@ -211,6 +211,31 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 
+# Offline ARC solve / learned-verifier artifacts do not have a model to name:
+# their methodology is the solver entrypoint, reproduce gate/checksum, and
+# learned-verifier checkpoint. Treat those fields as the methodology descriptor
+# only when the substrate already says this is cached-candidate verifier work or
+# upstream aggregation, never for live LLM inference.
+OFFLINE_ARC_METHOD_DESCRIPTOR_KEYS = (
+    "offline_reproduced",
+    "primitive_persisted",
+    "solver_module",
+    "solver_modules",
+    "reproduction_gate",
+    "reproduce_gate",
+    "reproduce_gate_checksum",
+    "verifier_checkpoint",
+    "verifier_checkpoints",
+    "learned_verifier_checkpoint",
+)
+OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS = frozenset(
+    {
+        "field_principles",
+        "required_artifact_fields",
+        "tests_added_pass",
+    }
+)
+
 
 class Flag:
     """A single detected concern on an artifact."""
@@ -1134,6 +1159,64 @@ def _is_deterministic_verifier(d: dict[str, Any]) -> bool:
     return any(tok in sub for tok in ("replay", "reconciliation"))
 
 
+def _descriptor_key_present(value: Any, wanted: str) -> bool:
+    """True if a real artifact field named `wanted` appears outside metadata.
+
+    Several artifacts explain required fields inside `field_principles`; those
+    prose-only mentions must not count as methodology evidence. Nested result
+    rows are different: exp4572 stores many real `reproduction_gate` objects in
+    per-game rows, and those should count.
+    """
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            if key == wanted and nested is not None:
+                return True
+            if _descriptor_key_present(nested, wanted):
+                return True
+    elif isinstance(value, list):
+        return any(_descriptor_key_present(item, wanted) for item in value)
+    return False
+
+
+def offline_arc_methodology_descriptor(d: dict[str, Any]) -> dict[str, Any] | None:
+    """Return the recognized offline ARC methodology descriptor, if present.
+
+    Offline ARC artifacts are compute-bound in the sense that they may mention
+    torch/CUDA/CNN artifacts, but their run did not invoke a live LLM. A model
+    spec would be misleading there. The auditable methodology is instead:
+    an offline solver/reproduce gate or verifier checkpoint plus a stable
+    reproducibility checksum. This helper is deliberately gated by substrate so
+    a live_llm_inference artifact cannot use these fields to avoid naming the
+    model it claims to have run.
+    """
+    if not (_is_verifier_scoring_only(d) or _is_aggregation_only(d)):
+        return None
+
+    evidence_fields = [
+        key for key in OFFLINE_ARC_METHOD_DESCRIPTOR_KEYS
+        if _descriptor_key_present(d, key)
+    ]
+    if not evidence_fields or not d.get("reproducibility_checksum"):
+        return None
+
+    evidence_with_checksum = sorted(set(evidence_fields + ["reproducibility_checksum"]))
+    return {
+        "kind": "offline_arc_methodology_descriptor",
+        "substrate": (
+            VERIFIER_SCORING_SUBSTRATE
+            if _is_verifier_scoring_only(d)
+            else AGGREGATION_SUBSTRATE
+        ),
+        "evidence_fields": evidence_with_checksum,
+        "reason": (
+            "offline ARC solver/reproduce/checkpoint methodology; no live model_specs "
+            "required"
+        ),
+    }
+
+
 def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     """Return the duration floor selected from the artifact substrate.
 
@@ -1331,7 +1414,9 @@ def check_gate_passed_without_data(d: dict[str, Any], flags: list[Flag]) -> None
 
 def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact missing methodology evidence."""
-    if not _has_compute_bound_marker(d):
+    if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
+        return
+    if offline_arc_methodology_descriptor(d) is not None:
         return
     # Aggregation-only artifacts inherit methodology from the upstream
     # sources they cite; they aren't themselves a measurement, so this

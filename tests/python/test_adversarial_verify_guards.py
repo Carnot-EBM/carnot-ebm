@@ -425,6 +425,105 @@ def test_req_arc_fcp_4575_summary_surfaces_applied_floor(
     assert "adversarial flags: none" in out
 
 
+# --- 4c. Offline ARC methodology descriptor suppresses false warn ----------
+
+def _offline_arc_methodology_fixture() -> dict:
+    return {
+        "experiment": "experiment_4587_offline_arc_fixture",
+        "honest_verdict": "complete: offline_arc_fixture_methodology_cited",
+        "inference_substrate": (
+            "verifier_ensemble_against_cached_candidates -- offline ARC solve, no LLM load"
+        ),
+        "duration_s": 5.0,
+        "solver_module": "python/carnot/agentic/arc_solver_kit.py",
+        "reproduction_gate": {
+            "entrypoint": "arc_solver_kit.reproduce()",
+            "checksum": "sha256:" + "d" * 64,
+        },
+        "verifier_checkpoint": "models/arc_verifier_ar25.json",
+        "random_seed": 4587,
+        "reproducibility_checksum": "sha256:" + "e" * 64,
+        "preconditions_checked": {
+            "torch_import_required": False,
+            "offline_arcade_import_smoke": True,
+        },
+    }
+
+
+def test_req_arc_wmte_4587_offline_arc_descriptor_suppresses_methodology_warn(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-WMTE-4587: offline ARC solver/checksum/checkpoint methodology is
+    sufficient without model_specs."""
+    report = _report_for_payload(tmp_path, _offline_arc_methodology_fixture())
+
+    methodology_flags = [
+        flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"
+    ]
+
+    assert methodology_flags == []
+
+
+@pytest.mark.parametrize(
+    "artifact_name",
+    [
+        "experiment_4568_clickability_action_effect_predictor.json",
+        "experiment_4572_integration_gate.json",
+        "experiment_4573_primitive_persist_transfer.json",
+    ],
+)
+def test_req_arc_wmte_4587_dot422_arc_artifacts_do_not_methodology_warn(
+    artifact_name: str,
+) -> None:
+    """REQ-ARC-WMTE-4587: the real .422 offline ARC artifacts are covered."""
+    fixture = Path(__file__).resolve().parents[2] / "results" / artifact_name
+    report = av.verify_artifact(fixture)
+
+    methodology_flags = [
+        flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"
+    ]
+
+    assert methodology_flags == []
+
+
+def test_req_arc_wmte_4587_live_llm_missing_model_specs_still_warns(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-WMTE-4587: live_llm_inference still requires model_specs."""
+    artifact = {
+        "experiment": "experiment_4587_live_llm_fixture",
+        "honest_verdict": "complete: live_llm_fixture_missing_model_specs",
+        "inference_substrate": "live_llm_inference",
+        "duration_s": 120.0,
+        "random_seed": 4587,
+        "reproducibility_checksum": "sha256:" + "f" * 64,
+    }
+
+    report = _report_for_payload(tmp_path, artifact)
+    methodology_flags = [
+        flag for flag in report["flags"] if flag["kind"] == "METHODOLOGY_MISSING"
+    ]
+
+    assert methodology_flags
+    assert "model_specs/target_model" in methodology_flags[0]["detail"]
+
+
+def test_req_arc_wmte_4587_summary_surfaces_offline_methodology_descriptor(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """SCENARIO-ARC-WMTE-4587: summary shows the recognized offline descriptor."""
+    path = tmp_path / "experiment_4587_offline_arc_fixture.json"
+    path.write_text(json.dumps(_offline_arc_methodology_fixture()), encoding="utf-8")
+
+    assert summary_reader.summarize(path) == 0
+    out = capsys.readouterr().out
+
+    assert "methodology" in out
+    assert "offline_arc_methodology_descriptor" in out
+    assert "solver_module" in out
+
+
 # --- 5. CEILING_SATURATION (positive-claim no-headroom partner) -------------
 
 def test_ceiling_saturation_trivial_baseline_ties():
