@@ -1,0 +1,26 @@
+{
+  "experiment": "experiment_hindsight",
+  "game": "lp85",
+  "phase": "deepen_L2",
+  "honest_verdict": "complete: hindsight_pair_goal_no_L2_advantage_honest_null_gap_sharpened",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search",
+  "hindsight_deepened_where_blind_did_not": false,
+  "hindsight_goal": {
+    "reached_L2": false,
+    "level": 1,
+    "offline_reproduced": false,
+    "expansions": 4000,
+    "actions": 0
+  },
+  "blind": {
+    "reached_L2": false,
+    "level": 1,
+    "offline_reproduced": false,
+    "expansions": 4000,
+    "actions": 0
+  },
+  "goal_code": "def goal_progress(grid):\n    # lp85, HINDSIGHT goal induced by Claude from the OBSERVED (L1-start, L1-win) PAIR (2026-06-22).\n    # The top bar (rows 0-3, mostly row 1) is a sequence of 5555 \"slot\" blocks; the L1 win turned the\n    # FIRST 5555 slot -> 4444 (a click matched a middle block to fill the next slot). Level-invariant\n    # goal: FILL the top-bar slots. Progress = count of color-5 cells in the top-bar region; drops by 4\n    # each time a slot fills, 0 when all filled. The A* descends this -> finds the slot-filling click ->\n    # levels up; grounded on an OBSERVED win, not static structure (the chicken-and-egg breaker).\n    g = np.asarray(grid)\n    return float((g[0:4] == 5).sum())",
+  "l1_actions": 5,
+  "duration_s": 20.5
+}
