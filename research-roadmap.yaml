@@ -1,59 +1,60 @@
-milestone: 2026.06.422
+milestone: 2026.06.423
 planned_by: >-
-  outer-loop (Claude Opus 4.8 planner, 2026-06-21) -- the .421 capstone (exp4566) is a near-total honest
-  null: the verifier-router HEADLINE (A1) nulled with a FAILED positive control (random_router_control_passed
-  =false), the 4th re-induction attempt (A2) failed its positive control a 4th time -> the re-induction lever
-  is RETIRED, A3/A4 banked 0 new levels, and the A6 transfer null exposed the ROOT CAUSE: a verifier that
-  RE-RANKS a fixed candidate pool has ordering_gain=0 because the WINNING CANDIDATE IS NEVER IN THE POOL. The
-  plateau is structural: core_efficiency 2.0074 for FOUR milestones (.418-.421), generic_transfer 0.04,
-  reproducible_total_levels 52. .422 PIVOTS to ACTION EFFICIENCY -- the operator-flagged #1 score lever
-  (2026-06-20 leaderboard dive: the leader StochasticGoose/Tufa 12.58% wins on a CNN action-effect/clickability
-  predictor). The blocker is cleared: the 14.6k human-replay corpus + the 14.6k self-captured transition corpus
-  are now LOCAL (exp4490 was blocked_corpus_not_cached). The outer-loop's pretrain-prior USED this data but
-  aimed at the WRONG target (exact next-cell DYNAMICS, 0% acc both scratch+warm); .422 re-aims at the COARSE
-  clickability target + the actions-to-first-levelup metric (A1), and uses the oracle-distinct verifier as a
-  FRONTIER-EXPANSION priority so the winner is GENERATED not just re-ranked (A2, fixes the A6 root cause).
-milestone_title: ACTION EFFICIENCY -- ship the leaderboard's #1 lever (CNN clickability/action-effect predictor) re-aimed at actions-to-first-levelup + verifier-guided candidate EXPANSION
+  outer-loop (Claude Opus 4.8 planner, 2026-06-22) -- the .422 capstone (exp4578) is the FIFTH near-total
+  honest null in a row: A1 clickability predictor-as-RANKER actions_delta=0.0 (2nd null after .416); A2
+  verifier-guided EXPANSION transfer_delta=-0.04 with a BROKEN positive control (positive_control_passed=None,
+  false-negative-risk OPEN -- not a clean null); A5 integration no_lever_raises_a_metric. The ONE real win:
+  A3 banked cn04 L2 (reproducible_total_levels 52->53). The diagnosis is now triply-confirmed (.421 A6 -> .422
+  A1 -> .422 A6): the bottleneck is candidate GENERATION, not ranking -- a re-ranker adds 0 value because the
+  winning candidate is never generated. .423 PIVOTS the headline to the highest-confidence, most under-exploited
+  score lever (GAP-LIVE-INTEGRATION, operator 2026-06-19 #1): we have 53 REPRODUCIBLE levels but the 2026-06-21
+  live scorecard submitted only 33. The gap is mechanical -- a STALE package (sc25 L5 / tu93 L5 / lp85 L5 /
+  cn04+cd82+sp80+su15+m0r0 L2 banked since the submission are not in it), 9 graph-explore/config-rule solves
+  with NO banked replayable trajectory (dc22/ft09/g50t/s5i5/sb26/vc33/re86/bp35/lf52), and sc25 live
+  version-drift (env_match=false). Closing it is "integration, not modeling". Flank with the operator's freshest
+  2026-06-21 frontier (the feature-ROUTER for seen->hidden transfer + diversity-floor transfer + self-play every
+  milestone) and HONOR the weekend HEADS-UP: do NOT re-run value-head best-first expansion (it regressed
+  2/11 vs the diversity floor's 4/11).
+milestone_title: 'CLOSE THE LIVE-SUBMISSION GAP (33->53) -- bank replayable trajectories + refresh the validated package + env-adaptive re-solve for version-drift (the highest-confidence score lever), flanked by the feature-ROUTER for seen->hidden transfer'
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 theme: >-
-  THE BOTTLENECK IS CANDIDATE GENERATION, NOT RANKING. The .421 verifier-router nulled because re-ranking a
-  fixed pool adds 0 value when the winning candidate is never in the pool (A6 ordering_gain=0). The lever is
-  the GENERATOR. .422 HEADLINE (A1): the leaderboard's #1 technique -- a CNN clickability/action-effect
-  predictor predict(frame)->(click_heatmap, directional_change) trained on the now-LOCAL 14.6k human-replay +
-  transition corpora, wired into rich_action_candidates to RANK by predicted frame-change; measured by
-  median actions-to-first-levelup vs blind BFS (the action-efficiency scoring lever min(human/agent,1)^2),
-  verifier_is_oracle: false. A2: the oracle-distinct cross-game DiscriminativeVerifier (LOO-AUROC 0.674) as a
-  FRONTIER-EXPANSION priority that GROWS the search toward the goal (fixes the winner-not-in-pool root cause).
-  A1 re-aims the target the outer-loop pretrain-prior got wrong (clickability, not the 0% exact-dynamics
-  target). Plus the level-up bank (A3, guarantee), single-game hidden-field probe (A4, gate-first), integration
-  (A5), self-learning persist+transfer (A6), 2 infra (B1 action-efficiency co-headline metric / B2 learned-CNN
-  substrate guard), 1 hardware (C), 1 SOTA-ingestion (D), capstone (E).
-sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC; >=1
-  level-up attempt (ARC Level-Up Attempt Guarantee, A3); 2 reserved infra (B1/B2); 1 per-board hardware (C);
-  1 SOTA-ingestion (D). All experiments codex/gpt-5.5; planner/retro stay Claude Opus."
+  THE SUBMITTED SCORE LAGS THE BANKED CAPABILITY. We have 53 reproducible levels and submitted 33 -- the largest
+  under-exploited score lever in the sprint. .423 HEADLINE (A1): close the 33->53 live-submission gap -- refresh
+  the validated package to current banked depth, BANK a replayable action trajectory for every offline-reproduced
+  level that lacks one (extract the winning sequence reproduce() already replays), and make the submit replay
+  ENV-ADAPTIVE (discover-from-env re-solve, not flat-replay) for version-drift games (sc25 env_match=false).
+  Submission stays operator-only. FRONTIER (A3): the feature-ROUTER -- classify a game's mechanic from EARLY-PLAY
+  features -> route to a general approach (diversity/BFS/A*/toolkit), the seen->hidden transfer per-game recipes
+  cannot do (SkillRouter arXiv:2603.22455). Plus the level-up GUARANTEE via the self-play loop (A2, grows
+  reproducible_total_levels), diversity-floor transfer (A4), self-learning persist+reuse (A5), integration (A6),
+  2 infra (B1 live-submittable co-headline metric / B2 offline-arc-substrate METHODOLOGY guard), 1 hardware (C),
+  1 SOTA-ingestion (D), capstone (E). verifier_is_oracle:false on every value claim.
+sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC; >=1 level-up
+  attempt (ARC Level-Up Attempt Guarantee, A2); 2 reserved infra (B1/B2); 1 per-board hardware (C); 1
+  SOTA-ingestion (D). All experiments codex/gpt-5.5; planner/retro stay Claude Opus."
 
 tasks:
-  - id: exp4567-phase0
-    milestone: 2026.06.422
-    title: 'PHASE 0 (TRANSITION) -- archive .421 -> activate .422; assert YAML parses + smart-subset pre-test
-      gate green; RECORD the TRUE .421 close-state (near-total honest null: A1 verifier-router NULLED with a
-      FAILED positive control; A2 4th re-induction failed positive control -> re-induction RETIRED; A3/A4
-      banked 0; A6 root cause = WINNER-NOT-IN-POOL; core_efficiency 2.0074 x4 milestones; generic_transfer
-      0.04; reproducible_total_levels=52).'
+  - id: exp4579-phase0
+    milestone: 2026.06.423
+    title: 'PHASE 0 (TRANSITION) -- archive .422 -> activate .423; assert YAML parses + smart-subset pre-test
+      gate green; RECORD the TRUE .422 close-state (fifth near-total honest null: A1 clickability ranker
+      actions_delta=0.0; A2 verifier-expansion transfer_delta=-0.04 with a BROKEN positive control; A5 integration
+      no_lever_raises_a_metric; the ONE win = A3 cn04 L2 -> reproducible_total_levels=53; A6 PersistentAEM
+      cached-pool ordering-only; generation-not-ranking diagnosis triply-confirmed).'
     priority: critical
     track: transition
     max_turns: 30
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4567_archive_421_activate_422.json
-    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v421-activate-v422
+    deliverable: results/experiment_4579_archive_422_activate_423.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v422-activate-v423
       milestone-transition task -- false-positive scope-match vs every prior archive/activate task; structurally
       never a doomed rerun (the activation guard is a SCRIPT, not the agent). Mechanical YAML archive +
       next-milestone activation.'
     prompt: |
-      CONTEXT ({date}). Milestone 2026.06.421 has completed. This task mechanically transitions to 2026.06.422
-      and RECORDS the true .421 close-state so the record is honest. Routine (codex).
+      CONTEXT ({date}). Milestone 2026.06.422 has completed. This task mechanically transitions to 2026.06.423
+      and RECORDS the true .422 close-state so the record is honest. Routine (codex).
 
       IMPORTANT (lesson from prior PHASE 0 cascades): the conductor may have ALREADY archived/activated at its
       own level. If so, the archive step is a no-op -- EXPECTED, not a failure. You MUST still WRITE the
@@ -61,20 +62,20 @@ tasks:
       file change.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/research-roadmap.yaml (the .421 roadmap to archive)
-        - {project_root}/research-roadmap-next.yaml (THIS .422 roadmap to activate)
-        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=52)
-        - {project_root}/results/experiment_4566_capstone_v421.json (the .421 scorecard: efficiency_moved=false, generic_transfer_moved=false, reinduction_retired=true)
-        - {project_root}/results/experiment_4561_primitive_persist_transfer.json (.421 A6: the ordering_gain=0 winner-not-in-pool diagnostic)
+        - {project_root}/research-roadmap.yaml (the .422 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .423 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=53)
+        - {project_root}/results/experiment_4578_capstone_v422.json (the .422 scorecard: action_efficiency_null_gaps_sharpened)
+        - {project_root}/results/arc3_live_submit.json (the 2026-06-21 submission: live_total_levels=33, games_env_matched=17/18, sc25 env_match=false)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
            b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
            Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
-        1. Archive the .421 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
-        2. Activate .422 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
-        3. WRITE the deliverable recording the TRUE .421 close-state: A1 verifier-router NULLED (generic_transfer_delta=0.0, random_router_control_passed=false, flagged+excluded); A2 4th re-induction failed its positive control -> re-induction RETIRED; A3 m0r0 L2 already-banked (0 new); A4 0 banked; A5 DURATION_TOO_SHORT flagged+excluded; A6 transfer null with ROOT CAUSE = winning candidate never in the pool (ordering_gain=0); B1 generic_transfer=0.04 CI[0.0,0.1]; core_efficiency 2.0074 for FOUR milestones; reproducible_total_levels=52; efficiency_moved=false; generic_transfer_moved=false.
+        1. Archive the .422 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .423 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        3. WRITE the deliverable recording the TRUE .422 close-state: A1 clickability ranker actions_delta=0.0 (no efficiency gain, flagged warn); A2 verifier-guided expansion transfer_delta=-0.04 with positive_control_passed=None (BROKEN control, false-negative-risk OPEN -- NOT a clean null); A3 cn04 L2 banked (reproducible_total_levels 52->53); A4 ka59 hidden-state no bank (disambiguation control passed); A5 integration no_lever_raises_a_metric (heldout_solve_rate 0.04 unchanged); A6 PersistentAEM persisted, m0r0 cached-pool ordering value-add but no new bank; generation-not-ranking diagnosis triply-confirmed; live-submission gap = 53 reproducible vs 33 submitted.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
@@ -83,289 +84,177 @@ tasks:
           principle: "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
         preconditions_checked:
           principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
-        close_state_421:
-          principle: "the honest .421 numbers (verifier-router null + failed control; re-induction RETIRED; A6 winner-not-in-pool root cause; core_efficiency 2.0074 x4; generic_transfer 0.04; reproducible_total_levels=52) carried forward so the record does not drift."
+        close_state_422:
+          principle: "the honest .422 numbers (A1 ranker null; A2 broken-control; A3 cn04 L2 -> 53; A5 null; A6 ordering-only; generation-not-ranking diagnosis) carried forward so the record does not drift."
+        live_submission_gap:
+          principle: "the 53-reproducible vs 33-submitted gap recorded as the .423 headline rationale, traceable to arc3_live_submit.json + the registry header."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4567_archive_421_activate_422.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4579_archive_422_activate_423.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4568-a1
-    milestone: 2026.06.422
-    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- ACTION EFFICIENCY: the
-      leaderboard #1 lever. Train a small CNN clickability/action-effect predictor predict(frame)->(click_heatmap,
-      directional_change[5]) on the now-LOCAL 14.6k human-replay + 14.6k self-captured transition corpora; wire
-      into rich_action_candidates to RANK candidates by predicted frame-change. Measure median
-      actions-to-first-levelup WITH vs WITHOUT on held-out games/variants (the action-efficiency scoring lever
-      min(human/agent,1)^2) + generic_transfer (baseline 0.04). Gate: STRICTLY fewer actions-to-first-levelup
-      than blind BFS w/ CI + positive control + must NOT drop solve-rate. verifier_is_oracle: false.'
+  - id: exp4580-a1
+    milestone: 2026.06.423
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- CLOSE THE LIVE-SUBMISSION GAP
+      (33->53): refresh the validated submission package to current banked depth; BANK a replayable action
+      trajectory for every offline-reproduced level that lacks one (extract the winning sequence reproduce()
+      replays) so the graph-explore/config-rule solves (dc22/ft09/g50t/s5i5/sb26/vc33/re86/bp35/lf52) become
+      live-replayable; make the submit replay ENV-ADAPTIVE (discover-from-env re-solve, not flat-replay) for
+      version-drift games (sc25 env_match=false). Gate: offline-reproduction-gated live-submittable count
+      STRICTLY > 33. Does NOT submit (operator-only). verifier_is_oracle: false.'
     priority: critical
     track: arc-north-star
     max_turns: 160
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4568_clickability_action_effect_predictor.json
-    prior_failures:
-      - experiment_id: exp4490-human-replay-frame-change-predictor
-        verdict: 'complete: blocked_human_replay_corpus_not_cached'
-        addressed_by: 'exp4490 (.415) BLOCKED because the human-replay corpus was not cached. That blocker is
-          now CLEARED: data/arc_public_demo_human_replay_corpus (14,672 rows, CC BY 4.0) AND
-          data/arc_transition_corpus/*.npz (14,628 self-captured transitions, 25 public games) are LOCAL on
-          disk (outer-loop commits 352ebc043 + bdbe369e4). This attempt also re-aims the TARGET: the outer-loop
-          arc_pretrain_prior used this same corpus but predicted exact next-cell DYNAMICS and scored 0% accuracy
-          (warm_wins 0/5, both scratch and warm). This task targets the COARSE clickability/action-effect signal
-          (click_heatmap + per-action frame-change probability) and is measured by ACTIONS-TO-FIRST-LEVELUP (the
-          leaderboard scoring lever), NOT exact-cell dynamics accuracy -- the StochasticGoose/Tufa framing.'
-        retire_if_same_verdict: true
+    deliverable: results/experiment_4580_live_submission_gap_close.json
+    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1, the highest score-mover) + 2026-06-21
+      standing gate "beat 33 levels": NEW-scope live-submission-gap closer -- extends the submission-package-prep
+      tasks (exp4460/exp4473, which SUCCEED with ready=true) by BANKING replayable trajectories for the 9
+      no-trajectory solves + env-adaptive re-solve for version-drift, the forward difference being the live
+      version-drift fix + trajectory extraction that the prior flat-replay packages lacked. False-positive
+      fuzzy-token scope-match vs prior package-prep/live-submit tasks. Not a doomed rerun; submission stays
+      operator-only (this task only PREPARES + offline-validates).'
     prompt: |
-      CONTEXT ({date}, ARC sprint HEADLINE -- the operator-flagged #1 score lever). The ARC-AGI-3 leaderboard
-      metric is ACTION EFFICIENCY on first contact (min(human/agent,1)^2, arXiv:2603.24621); the leader
-      StochasticGoose/Tufa Labs (12.58%) and the top public agents all win on a learned CNN action-effect /
-      clickability predictor -- they predict which actions/clicks cause a FRAME CHANGE so the agent stops
-      wasting the budget on no-ops ("wasted ~350 moves clicking with no result, then exploited the learned
-      clickability map"). Our agent is effect-blind (centroid-click + RESET-replay). The .421 A6 proved the
-      bottleneck is candidate GENERATION, not ranking: a verifier can't promote a winner that was never
-      generated. A better-ORDERED explorer puts the winner in the pool earlier.
-
-      THE BLOCKER IS CLEARED: exp4490 was blocked_human_replay_corpus_not_cached; the corpus is now LOCAL
-      (data/arc_public_demo_human_replay_corpus, 14,672 rows; data/arc_transition_corpus/*.npz, 14,628 rows).
-      THE TARGET IS RE-AIMED: the outer-loop arc_pretrain_prior predicted exact next-cell DYNAMICS and got 0%;
-      this task predicts the COARSE clickability/action-effect signal and is measured by actions-to-first-levelup.
-      This is a LEARNED action-model -- a different paradigm that COMPLEMENTS the verifier thesis (it makes the
-      tier-1 explorer action-efficient; the verifier still routes+grounds). NO LLM, zero quota (CPU/iGPU CNN).
+      CONTEXT ({date}, ARC sprint HEADLINE -- the highest-confidence score lever). We have 53 REPRODUCIBLE levels
+      (ops/arc_solve_registry.yaml header) but the 2026-06-21 live scorecard submitted only 33 (results/
+      arc3_live_submit.json: live_total_levels=33, games_env_matched=17/18). The standing gate is "beat 33
+      levels". The gap is MECHANICAL, three causes: (1) STALE package -- deeper levels banked since the 2026-06-21
+      submission (sc25 L5, tu93 L5, lp85 L5, and cn04/cd82/sp80/su15/m0r0 L2) are NOT in the submitted package;
+      (2) NO banked replayable trajectory -- 9 graph-explore/config-rule solves (dc22/ft09/g50t/s5i5/sb26/vc33/
+      re86/bp35/lf52) solve via a solver that emits no flat action list, so the live-submit driver skips them;
+      (3) LIVE version-drift -- sc25 offline-reproduces L1+ but the LIVE env differs (env_match=false, hash drift)
+      so a frozen flat-replay misses. This is "integration, not modeling" (GAP-LIVE-INTEGRATION) AND a step
+      toward the genuine "Live Hidden-Game Discovery Agent" deliverable (env-adaptive re-solve, not frozen
+      replay). NO LLM at submit-time, zero quota (offline arcade + cached solves). Submission is OPERATOR-ONLY
+      (External Publication) -- this task PREPARES + offline-validates ONLY.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/docs/research-notes/arc-frame-change-predictor-spec.md (THE SPEC -- architecture, target, gate)
-        - {project_root}/docs/research-notes/arc-human-replay-application-spec.md (the replay corpus format frame_action_delta.v1)
-        - {project_root}/python/carnot/agentic/arc_human_replay_corpus.py + {project_root}/python/carnot/agentic/arc_transition_capture.py (TransitionCorpus.load ~116, ingest_human_replays ~144 -- the LOCAL corpora loaders)
-        - {project_root}/python/carnot/agentic/arc_graph_explore.py (rich_action_candidates ~44 -- the RANKING slot; graph_explore_solve_v2 ~231 -- the explorer)
-        - {project_root}/python/carnot/experiment_4490_human_replay_frame_change_predictor.py (the blocked predecessor -- reuse its scaffold now the corpus is local)
-        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants ~190 -- reuse for the held-out variant metric)
-        - {project_root}/results/arc_pretrain_prior.json (the 0% exact-dynamics null -- the WRONG target this corrects)
+        - {project_root}/scripts/arc3_live_submit.py (the live-submit driver: Mode-1 flat-replay; _latest_package; the 9 no-trajectory skips; CLAIMED_FALLBACK)
+        - {project_root}/results/arc3_live_submit.json (the 33-level submission state + per_game env_match + claimed_caps)
+        - {project_root}/python/carnot/experiment_4473_submission_package_prep_refresh.py (the package-prep builder -- extend it to current banked depth)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce() -- the gate that REPLAYS the winning action sequence; the source of a bankable trajectory)
+        - {project_root}/ops/arc_solve_registry.yaml (per-game solver + reproduce entries; the deeper banked levels to include)
+        - {project_root}/scripts/arc3_replay_scorecard_metaharness.py (the offline reproduction harness -- the offline analogue of live env_match)
 
-      TASK: train a small CNN predict(frame)->(click_heatmap[H,W], directional_change[5]) self-supervised on
-      the LOCAL corpora (label = did the action change the frame (binary) + where); wire it into
-      rich_action_candidates to RANK candidates by predicted frame-change; measure median actions-to-first-
-      levelup WITH vs WITHOUT (blind BFS) on held-out games/variants + generic_transfer; verifier_is_oracle:
-      false. Honest null if ranking does not reduce actions.
+      TASK: raise the offline-reproduction-gated LIVE-SUBMITTABLE level count above 33 by (1) refreshing the
+      validated package to current banked depth, (2) banking a replayable action trajectory for every
+      offline-reproduced level that lacks one, (3) making the replay ENV-ADAPTIVE for version-drift games. Honest
+      accounting: a level counts as live-submittable ONLY if it offline-reproduces AND has a banked trajectory
+      (or an env-adaptive re-solver) that replays on a fresh/drift-perturbed env. verifier_is_oracle: false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
-           b. `.venv/bin/python -c "import torch; print(torch.__version__)"` exits 0.
-           c. Corpora LOCAL: `.venv/bin/python -c "import os; assert os.path.isdir('{project_root}/data/arc_public_demo_human_replay_corpus'); import glob; assert glob.glob('{project_root}/data/arc_transition_corpus/*.npz'); print('corpora_ok')"` exits 0.
-           ANY missing -> honest_verdict blocked_<resource> (e.g. blocked_human_replay_corpus_not_cached), populate preconditions_checked, EXIT. (--no-cov on any focused pytest.)
-        1. Build the pooled (frame, action, frame_changed, change_location) corpus from BOTH local sources (human replays + self-captured transitions), across ALL 25 public games (cross-game pooling = the PersistentAEM idea). Train a small conv net (a few conv layers over 64x64x(color-onehot) -> click-heatmap head + 5-dim directional head). Add CBAM attention ONLY if the plain CNN underperforms.
-        2. Wire the predictor into rich_action_candidates to RANK candidates by predicted P(frame-change) (try high-change actions first); keep the bare salience ordering as the no-regression fallback. verifier_is_oracle: false (this is a learned action-model, NOT the executable win-check).
-        3. Measure on a HELD-OUT set of games/variants (reuse measure_generic_transfer_over_variants + arc_leaderboard_eval --variant): median actions-to-first-levelup WITH the predictor-ranked explorer vs WITHOUT (blind BFS), generic_transfer_rate_over_variants, solve-rate. The WIN: median actions-to-first-levelup STRICTLY lower with a bootstrap CI excluding the baseline AND solve-rate not dropped (efficiency cannot come from giving up on hard games).
-        4. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: a game where clickability is plainly learnable (most clicks are no-ops, a few aren't) -- the predictor-ranked explorer must beat blind on it (proves the harness detects a real win). A no-value null is valid only if this control passed; else report the honest null + which feature the predictor weights (the .423 refinement). Emit actions_delta explicitly + a null_delta_methodology_note when 0.0. Offline-reproduce any newly-solved variant.
-
-      REQUIRED ARTIFACT FIELDS (principle-annotated):
-        honest_verdict:
-          principle: "terminal prefix; success: clickability_predictor_actions_to_levelup_<n>_below_blind OR complete: clickability_predictor_no_efficiency_gain_honest_null_gap_sharpened."
-        inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- the CNN trains/scores against cached transitions (no LLM load, 1s floor); a fast CPU forward pass must NOT be DURATION_TOO_SHORT false-flagged (declare it so adversarial_verify uses the right floor; the .421 A5 trap)."
-        verifier_is_oracle:
-          principle: "MUST be false -- a learned action-effect model is oracle-DISTINCT from the executable win-check (Circularity / Oracle-Distinctness Discipline)."
-        median_actions_to_first_levelup_with_predictor:
-          principle: "the HEADLINE -- held-out median actions-to-first-levelup with the predictor-ranked explorer (the action-efficiency scoring lever)."
-        median_actions_to_first_levelup_baseline:
-          principle: "the blind-BFS baseline, measured the SAME way (the apples-to-apples control)."
-        actions_delta:
-          principle: "baseline - with_predictor (positive = fewer actions = win), emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive."
-        actions_delta_ci:
-          principle: "bootstrap CI on the actions delta; an efficiency claim requires the CI to exclude the baseline (FALSE_NEGATIVE_RISK guard against a small-sample artifact)."
-        efficiency_score_min_human_agent_sq:
-          principle: "min(human/agent,1)^2 with the human baseline from the replay corpus -- the literal leaderboard scoring term this lever moves."
-        generic_transfer_rate_with_predictor:
-          principle: "held-out variant transfer WITH the predictor vs the 0.04 baseline -- the second leaderboard-relevant signal."
-        solve_rate_preserved:
-          principle: "HARD gate -- the efficiency win must NOT drop solve-rate (a faster explorer that gives up is worse)."
-        positive_control_passed:
-          principle: "the learnable-clickability game where predictor-ranking must beat blind; a null is valid only if this passed (guards a broken/no-op predictor -- the .421 A1 trap)."
-        false_negative_risk_checked:
-          principle: "a no-value null is valid only if the positive control passed."
-        null_delta_methodology_note:
-          principle: "present when actions_delta==0.0 -- states the equality is an honest no-gain null, not a measurement bug."
-        chosen_submitted_config:
-          principle: "what (if anything) is recommended for SUBMITTED_AGENT_CONFIG (enable the predictor-ranker) -- the A5 input; 'unchanged' if null."
-        missing_verifier_gaps:
-          principle: "if no gain, the residual generation/ranking gap (Missing-Verifier Gap Logging) -- the verifier-build backlog input."
-        offline_reproduced:
-          principle: "any newly-solved variant must offline-reproduce to count."
-        random_seed:
-          principle: "determinism precondition for reproducibility."
-        reproducibility_checksum:
-          principle: "content-addressed hash catches silent corpus/model drift on replay."
-        preconditions_checked:
-          principle: "records resources verified (offline arcade, torch, LOCAL corpora); pre-empts missing-resource fabrication."
-
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4568_clickability_action_effect_predictor.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4569-a2
-    milestone: 2026.06.422
-    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; THE GENERATION FIX) -- use the oracle-distinct
-      cross-game DiscriminativeVerifier (LOO-AUROC 0.674) as a FRONTIER-EXPANSION priority in best-first search
-      so the WINNING candidate is GENERATED, not just re-ranked. This attacks the .421 A6 root cause
-      (ordering_gain=0 because the winner was never in the fixed pool). Measure generic_transfer + expanded-
-      states-to-goal WITH vs WITHOUT on held-out variants, vs a random-priority positive control; bounded
-      expansion (Scaling-Flaws guard). verifier_is_oracle: false. retire_if_same_verdict.'
-    priority: critical
-    track: arc-north-star
-    max_turns: 150
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4569_verifier_guided_expansion.json
-    prior_failures:
-      - experiment_id: exp4556-a1
-        verdict: 'complete: verifier_router_no_value_added_honest_null_gap_sharpened'
-        addressed_by: 'exp4556 (.421 A1) wired the cross-game DiscriminativeVerifier as a RE-RANKER of a FIXED
-          candidate pool and got ordering_gain=0 because the winning candidate was never IN the pool (the A6
-          diagnostic: "no offline-reproduced target candidate for the ranker to promote"), AND its positive
-          control failed. This task changes the MECHANISM: the verifier is the FRONTIER-EXPANSION priority in a
-          best-first search -- it GROWS the candidate set toward the goal so the winner is GENERATED, not merely
-          re-ordered within a pool that lacks it. Different operation (expansion vs ranking), with a random-
-          priority positive control and a bounded expansion budget (arXiv:2502.00271 verifier-guided-search
-          scaling-flaws guard). This is NOT the RETIRED LLM re-induction lever (no LLM proposal -- it grows the
-          existing non-LLM action enumeration). If it reproduces the same no-value/winner-not-generated verdict,
-          verifier-as-search-signal is retired for the sprint.'
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT ({date}, ARC sprint -- the GENERATION fix). The .421 A6 diagnostic is decisive: the oracle-distinct
-      cross-game DiscriminativeVerifier (LOO-AUROC 0.674, the real moat result) added ZERO value as a RE-RANKER
-      because the winning candidate was never in the fixed pool (ordering_gain=0 on tu93/tr87/sc25). A re-ranker
-      cannot promote a winner that was never generated. The fix: use the verifier as the EXPANSION priority in a
-      best-first search -- it decides WHICH frontier node to expand next, GROWING the search toward the goal so
-      the winning candidate is GENERATED and tried. This is the verifier moat used where it can add value
-      (search guidance, cf. arXiv:2502.18407 AgentRM / arXiv:2504.16828 ThinkPRM), bounded to avoid the
-      verifier-guided-search scaling flaws (arXiv:2502.00271). NO LLM (it grows the existing non-LLM action
-      enumeration; this is NOT the retired re-induction lever). verifier_is_oracle: false.
-
-      EXISTING CODE TO READ FIRST:
-        - {project_root}/python/carnot/agentic/arc_value_learner.py (DiscriminativeVerifier ~497, cross_game_features_v3 ~394 -- the oracle-distinct LOO-0.674 verifier)
-        - {project_root}/python/carnot/agentic/arc_graph_explore.py (graph_explore_solve_v2 ~231 -- best-first frontier; rich_action_candidates ~44)
-        - {project_root}/python/carnot/agentic/arc_solver_kit.py (OfflineSolver best-first/dedup -- the frontier the priority drives)
-        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants ~190 -- the 0.04 baseline harness)
-        - {project_root}/results/experiment_4561_primitive_persist_transfer.json (.421 A6: the ordering_gain=0 winner-not-in-pool root cause this fixes)
-        - {project_root}/results/experiment_4556_verifier_router_generic_transfer.json (.421 A1: the re-ranker null this re-mechanizes)
-
-      TASK: wire the DiscriminativeVerifier as a FRONTIER-EXPANSION priority (best-first node selection) in the
-      generic solver; measure generic_transfer + expanded-states/actions-to-goal WITH vs WITHOUT on held-out
-      variants, vs a RANDOM-priority positive control; bounded expansion. verifier_is_oracle: false. Honest null
-      if expansion does not help.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (BEFORE any other step):
-           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
-           b. `.venv/bin/python -c "from carnot.agentic.arc_value_learner import DiscriminativeVerifier"` exits 0 AND the trained cross-game verifier / corpus is loadable.
+           b. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml')); print('registry_ok')"` exits 0.
            ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
-        1. Use the DiscriminativeVerifier score as the best-first EXPANSION priority (which frontier node to expand next), NOT as a final re-ranker. Keep the bare best-first ordering as the no-regression fallback. Bound the expansion budget (max_expansions) so a mis-scoring verifier cannot blow up the search (the Scaling-Flaws guard); record expansions used.
-        2. Measure WITH verifier-expansion vs WITHOUT on the 25 public games x N held-out variants (reuse measure_generic_transfer_over_variants): generic_transfer_rate_over_variants, median expanded-states-to-goal / actions-to-goal, solve-rate. The WIN: generic_transfer STRICTLY > 0.04 with a bootstrap CI excluding the baseline, OR a STRICTLY lower expanded-states-to-goal on solved variants, AND solve-rate not dropped.
-        3. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: verifier-expansion must beat a RANDOM-priority control on the SAME variants (proves the verifier signal is load-bearing as a search guide). A no-value null is valid only if this control passed; else report the honest null + whether the winner was GENERATED at all (the sharpened generation gap for .423). Emit transfer_delta explicitly + a null_delta_methodology_note when 0.0. Offline-reproduce any newly-solved variant.
+        1. REFRESH the package: rebuild the validated submission package from the CURRENT registry (include sc25 L5, tu93 L5, lp85 L5, cn04/cd82/sp80/su15/m0r0 L2 and all reproduced levels). Record per-game claimed-vs-offline-reached so no level is claimed above its offline-reproduced depth (the claimed_caps discipline).
+        2. BANK trajectories: for each offline-reproduced level that has NO banked action sequence (the 9 graph-explore/config-rule solves), extract the winning action sequence that arc_solver_kit.reproduce() replays and persist it as a replayable trajectory the live-submit loader can load. Verify each banked trajectory offline-reproduces its claimed level on a FRESH env.
+        3. ENV-ADAPTIVE re-solve: for at least sc25 (env_match=false), make the replay discover coords/layout FROM the env it is given (the discover_coords_never_hardcode + per-game adapter pattern) and re-derive the plan, instead of a frozen flat-replay. Validate it recovers the level on a DRIFT-PERTURBED offline env (e.g. a layout/color-permuted variant) where a frozen flat-replay fails -- the offline proxy for live version-drift.
+        4. COUNT + GATE: compute the offline-reproduction-gated live-submittable level count (sum of per-game offline-reproduced levels that have a replayable trajectory or env-adaptive re-solver). The WIN: count STRICTLY > 33 AND env-adaptive re-solve recovers >=1 drift-perturbed game vs frozen flat-replay. Emit count_delta explicitly + a null_delta_methodology_note if ==33. Do NOT submit (operator-only) -- emit ready_for_operator_submit + the refreshed package path.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: verifier_guided_expansion_generic_transfer_<n>_above_0.04 OR complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened."
+          principle: "terminal prefix; success: live_submittable_count_<n>_above_33 OR complete: live_submission_gap_partially_closed_<n>_gaps_sharpened."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- the verifier scores offline frontier candidates, no LLM load (1s floor)."
+          principle: "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor); a fast real run must NOT be DURATION_TOO_SHORT/METHODOLOGY false-flagged (declare the offline substrate)."
         verifier_is_oracle:
-          principle: "MUST be false -- the DiscriminativeVerifier guides search by a LEARNED cross-game signal, oracle-DISTINCT from the executable win-check (a circular win does not count)."
-        generic_transfer_rate_with_expansion:
-          principle: "the HEADLINE -- held-out variant transfer WITH verifier-guided expansion; > 0.04 with CI-excl-baseline is the non-circular live-value evidence."
-        generic_transfer_rate_baseline:
-          principle: "0.04 -- the .420/.421 B1 bare-solver baseline, measured the SAME way."
-        transfer_delta:
-          principle: "with_expansion - baseline, emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive."
-        transfer_ci:
-          principle: "bootstrap CI on the transfer delta; a claim above baseline requires the CI to exclude the baseline."
-        expanded_states_to_goal_with_vs_without:
-          principle: "the search-efficiency evidence -- did verifier-guided expansion reach the goal in fewer expanded states (the winner GENERATED earlier)."
-        winner_generated:
-          principle: "did the search GENERATE the winning candidate at all (the .421 A6 root cause: a re-ranker fails when the winner is never generated) -- the load-bearing diagnostic."
-        expansions_used:
-          principle: "the bounded expansion budget consumed -- proves the Scaling-Flaws guard (arXiv:2502.00271) held and bounds wall-clock."
-        random_priority_control_passed:
-          principle: "the POSITIVE CONTROL -- verifier-expansion must beat random-priority on the SAME variants; a null is valid only if this passed."
-        false_negative_risk_checked:
-          principle: "a no-value null is valid only if the random-priority control passed."
+          principle: "MUST be false -- packaging + env-adaptive replay are not the executable win-check; they bank already-earned solves (no circular moat claim)."
+        live_submittable_level_count:
+          principle: "the HEADLINE -- offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest submittable score, NOT raw reproducible_total_levels)."
+        live_submittable_count_baseline:
+          principle: "33 -- the 2026-06-21 live scorecard, measured the SAME way (the apples-to-apples control)."
+        count_delta:
+          principle: "live_submittable_level_count - 33 (positive = more submittable levels = win), emitted explicitly so a null (0) is annotated, not a control==best false-positive."
+        trajectories_banked:
+          principle: "names the games whose offline-reproduced levels gained a replayable banked trajectory this task (the 9 no-trajectory solves are the target) -- the integration fix."
+        env_adaptive_resolve_recovered:
+          principle: "the version-drift games (sc25) whose env-adaptive re-solve recovered the level on a drift-perturbed env where frozen flat-replay failed -- the Live-Discovery-Agent step + the env_match fix."
+        refreshed_package_path:
+          principle: "the path to the refreshed validated package the operator's live-submit driver will load -- the deliverable the operator submits."
+        per_game_submittable:
+          principle: "per-game offline-reproduced level + has-trajectory + drift-robust flags -- the audit trail that no level is over-claimed above its offline depth."
+        ready_for_operator_submit:
+          principle: "True if the refreshed package's live-submittable count beats 33 and every claim is offline-reproduction-gated; the task NEVER submits (operator-only)."
         null_delta_methodology_note:
-          principle: "present when transfer_delta==0.0 -- states the equality is an honest no-value null, not a measurement bug."
-        solve_rate_preserved:
-          principle: "HARD gate -- expansion must NOT drop solve-rate."
-        chosen_submitted_config:
-          principle: "what (if anything) is recommended for SUBMITTED_AGENT_CONFIG (enable verifier-guided expansion) -- the A5 input; 'unchanged' if null."
-        missing_verifier_gaps:
-          principle: "if no value, the residual generation gap (which winner the search still cannot generate) -- the Missing-Verifier Gap Logging entry."
+          principle: "present when count_delta==0 -- states the equality is an honest no-gain result, not a measurement bug."
         offline_reproduced:
-          principle: "any newly-solved variant must offline-reproduce to count."
+          principle: "every claimed-submittable level must offline-reproduce to count (no frozen-trajectory over-claim)."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
-          principle: "content-addressed hash catches silent verifier/corpus drift on replay."
+          principle: "content-addressed hash catches silent registry/trajectory drift on replay."
         preconditions_checked:
-          principle: "records resources verified (offline arcade, DiscriminativeVerifier loadable); pre-empts missing-resource fabrication."
+          principle: "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4569_verifier_guided_expansion.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4580_live_submission_gap_close.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4570-a3
-    milestone: 2026.06.422
-    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank +1 NEW
-      reproducible level: rotate to a game NOT deepened in .419/.420/.421 (cn04/sk48/ar25 L1->L2 graph/world-
-      model family preferred; or an L2 game cd82/sp80/su15 L2->L3) via the standing arc_loop_solve loop. Gate:
-      offline_reproduced new level. reproducible_total_levels 52->53+.'
+  - id: exp4581-a2
+    milestone: 2026.06.423
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE)
+      -- run the standing self-play loop (arc_loop_solve --auto or a rotation target) to bank +1 NEW reproducible
+      level on a game NOT deepened in .419-.422 (cn04 was .422, m0r0 .421; prefer sk48/ar25 L1->L2 graph/world-
+      model family, or cd82/sp80/su15 L2->L3) AND train+checkpoint the learned verifier on pos/neg traces. Gate:
+      offline_reproduced new level -> reproducible_total_levels 53->54+.'
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4570_levelup_attempt.json
-    operator_override: '2026-06-19 operator directive (ARC Level-Up Attempt Guarantee + Submission Sprint,
-      standing): mandated >=1 level-bank attempt per roadmap -- versioned lineage continuation of the
-      deepen/level-up tasks (exp4546 su15 L2, exp4535 sp80 L2, exp4525 cd82 L2), which SUCCEED; false-positive
-      scope-match vs prior deepen tasks; the forward difference is the NEXT rotation target (cn04/sk48/ar25
-      L1->L2 -- games NOT deepened in .419/.420/.421, since .421 A3 hit the already-banked m0r0 L2). Not a
-      doomed rerun.'
+    deliverable: results/experiment_4581_levelup_selfplay.json
+    operator_override: '2026-06-21 operator directive (CONTINUE the live-agent self-play + pos/neg-feedback loop,
+      item 3 "run the self-play loop EVERY milestone") + 2026-06-19 ARC Level-Up Attempt Guarantee (standing):
+      versioned lineage continuation of the deepen/self-play tasks (exp4570 cn04 L2, exp4546 su15 L2, which
+      SUCCEED); false-positive scope-match vs prior deepen/self-play tasks; the forward difference is the NEXT
+      rotation target (a game NOT deepened in .419-.422) + the verifier train/checkpoint on the run pos/neg
+      traces. Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE -- CLAUDE.md mandates >=1 task per roadmap that
-      actually BANKS a new reproducible level). reproducible_total_levels must grow monotonically (currently
-      52). This is INDEPENDENT of the A1/A2 headlines so the guarantee holds even if they null. TARGET ROTATION:
-      .421 A3 wasted its attempt on m0r0 L2 (ALREADY banked) -- so rotate to a game NOT deepened in
-      .419/.420/.421. PREFER cn04/sk48/ar25 (currently L1; graph/world-model family, closest to the proven
-      graph_astar_action_cost + object_motion_world_model primitives) for L1->L2; alternatively cd82/sp80/su15
-      (L2) for L2->L3. Check the registry dead_ends per game FIRST and skip stalled approaches.
+      CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE + the self-improvement engine). CLAUDE.md mandates
+      >=1 task per roadmap that actually BANKS a new reproducible level, AND the operator's 2026-06-21 directive
+      mandates running the self-play loop EVERY milestone (the more local self-play, the more the learned verifier
+      improves and the live agent warm-starts from it). This task does BOTH: run the standing loop to bank +1
+      level AND train+checkpoint the learned verifier on the run's positive (steps-to-go) + negative (off-path/
+      dead-end) traces. This is INDEPENDENT of A1/A3/A4 so the guarantee holds even if they null. TARGET ROTATION:
+      cn04 was .422, m0r0 was .421 -- rotate to a game NOT deepened in .419-.422. PREFER sk48/ar25 (currently L1;
+      graph/world-model family, closest to the proven graph_astar_action_cost + object_motion_world_model
+      primitives) for L1->L2; alternatively cd82/sp80/su15 (L2) for L2->L3. Check the registry dead_ends per game
+      FIRST and skip stalled approaches (ka59 L2 keeps stalling on the hidden register -- do NOT pick ka59).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/ops/arc_solve_registry.yaml (current reproducible levels; L1 games: cn04, sk48, ar25, lf52, dc22, sb26, re86, bp35, vc33, g50t, s5i5; L2 games: cd82, sp80, su15, m0r0; per-game dead_ends + general_gotchas)
-        - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> registry update)
+        - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> TRAIN+CHECKPOINT the learned verifier -> registry update)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible levels + per-game dead_ends; L1 games sk48/ar25/lf52/dc22/sb26/re86/bp35/vc33/g50t/s5i5/ka59; L2 games cd82/sp80/su15/m0r0/cn04)
         - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate)
         - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -> route a deepen attempt to the closest solved recipe)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (the learned verifier trained on pos/neg traces; models/arc_verifier_<game>.json checkpoint)
 
-      TASK: bank a NEW level -- gate: offline_reproduced=true AND reproduced_levels>=1. Prefer DEEPENING a
-      rotated game to its next level (RE only the next-level win/action/state DELTA via a derive-from-env
-      GameAdapter). Only OFFLINE-REPRODUCED levels count. Skip the dead-ends already recorded per game.
+      TASK: bank a NEW level -- gate: offline_reproduced=true AND reproduced_levels>=1 -- via the self-play loop,
+      AND persist the trained/updated learned-verifier checkpoint. Prefer DEEPENING a rotated game to its next
+      level (RE only the next-level win/action/state DELTA via a derive-from-env GameAdapter). Only OFFLINE-
+      REPRODUCED levels count. Skip the dead-ends already recorded per game.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Pick the rotation target (a game NOT deepened in .419/.420/.421 -- m0r0 was .421's wasted attempt; check registry dead_ends to skip stalled approaches). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto).
+        1. Pick the rotation target (a game NOT deepened in .419-.422; check registry dead_ends to skip stalled approaches; do NOT pick ka59). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
         2. For a deepen: recommend_approach -> RE only the next-level delta -> register/extend the GameAdapter -> re-run the loop.
         3. Run the reproduction gate (arc_solver_kit.reproduce). Only on reproduced=True, update ops/arc_solve_registry.yaml (win condition, action model, gotchas, dead-ends, solver module) + bump reproducible_total_levels.
-        4. Record DEAD-ENDS (a search approach that stalled + why) in the registry entry so the next attempt skips them.
+        4. TRAIN+CHECKPOINT the learned verifier on the run's pos/neg traces (the self-improvement step); persist models/arc_verifier_<game>.json (mirror-ready per CLAUDE.md decentralization rule 3). Record the verifier delta.
+        5. Record DEAD-ENDS (a search approach that stalled + why) in the registry entry so the next attempt skips them.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
           principle: "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
         offline_reproduced:
           principle: "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
         reproduced_levels:
-          principle: "the integer new-level count banked this task (>=1 satisfies the level-up guarantee on an attempted bank)."
+          principle: "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
         target_game:
-          principle: "the rotated game attempted -- traceable to the rotation discipline (not a recently-deepened game)."
+          principle: "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .419-.422)."
+        verifier_checkpoint_updated:
+          principle: "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
         registry_updated:
           principle: "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
         random_seed:
@@ -375,82 +264,200 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4570_levelup_attempt.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4581_levelup_selfplay.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4571-a4
-    milestone: 2026.06.422
-    title: 'PHASE A4 (ARC NORTH STAR; HIDDEN-STATE DEEPENING) -- re-scoped single-game hidden-field state-hash
-      probe: focus on ka59 (named readable StepCounter HUD register) ONLY, gate-FIRST on a state-disambiguation
-      positive control (extended state_key distinguishes a pair the grid-only key aliased) BEFORE any bank
-      attempt, then attempt ka59 L2. The deepening-tail fix (GAP-ARCH-GRID-ONLY-STATE). Gate: ka59 L2
-      reproduced OR a sharpened unreadable-register gap + the disambiguation control passed.'
+  - id: exp4582-a3
+    milestone: 2026.06.423
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; FRONTIER -- THE SEEN->HIDDEN TRANSFER) -- the
+      feature-ROUTER: classify a game''s MECHANIC from EARLY-PLAY features (keyboard-avatar-moves? clicks-connect-
+      cells? hidden-carry-state? config-toggle?) and ROUTE to the matching general approach already in the toolkit
+      (diversity-on-stall [shipped], systematic BFS, goal-distance A*, LLM-reasoner). Extend
+      arc_solve_learning.recommend_approach with the early-play classifier; learn it from the self-play loop''s
+      pos/neg traces. Measure generic_transfer over variants WITH router vs WITHOUT (baseline 0.04) + ACTION cost,
+      vs a random-route control. verifier_is_oracle: false. retire_if_same_verdict.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4582_feature_router_transfer.json
+    prior_failures:
+      - experiment_id: exp4569-a2
+        verdict: 'complete: verifier_guided_expansion_no_value_honest_null_generation_gap_sharpened'
+        addressed_by: 'exp4569 (.422 A2) wired the learned verifier as the best-first EXPANSION priority and got
+          transfer_delta=-0.04 (WORSE) with a BROKEN positive control (positive_control_passed=None) -- and the
+          2026-06-21 outer-loop separately found value-head best-first expansion REGRESSED (2/11 vs the diversity
+          floor 4/11, paying a reset-replay navigation tax). This task changes the MECHANISM entirely: NOT a
+          value-head search-priority, but a FEATURE-ROUTER that classifies a game''s mechanic from early-play
+          features and selects WHICH general approach (diversity/BFS/A*/toolkit) to run -- the seen->hidden
+          transfer per-game recipes cannot do (SkillRouter arXiv:2603.22455). It measures ACTION cost (not just
+          generic_transfer, per the regression heads-up) and carries a WORKING random-route positive control
+          (fixing the .422 A2 broken-control trap). If it reproduces the same no-value/winner-not-generated
+          verdict with a passing control, the feature-router-over-toolkit lever is retired for the sprint.'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint FRONTIER -- the operator''s 2026-06-21 item 2, the general seen->hidden
+      transfer). generic_transfer has sat at 0.04 for five milestones; every learned-signal lever nulled because
+      it cannot GENERATE the unseen winner (generation-not-ranking, triply-confirmed). The hard tail clusters by
+      MECHANIC class, each with a built general approach (diversity-on-stall shipped; systematic BFS;
+      goal-distance A* arc_goal_distance.py; LLM-reasoner arc_llm_guided_solve.py). The untried lever: classify a
+      game''s mechanic from EARLY-PLAY features (does the avatar move on keyboard? do clicks connect cells? is
+      there hidden carry-state? is it a config-toggle?) and ROUTE to the matching approach. This is the general
+      transfer per-game recipes cannot do (literature: SkillRouter arXiv:2603.22455, SkillGraph arXiv:2605.12039).
+      HEADS-UP (honor it): do NOT re-run value-head best-first EXPANSION -- it regressed this weekend (2/11 vs the
+      diversity floor''s 4/11) and pays a reset-replay tax. This is a ROUTER over approaches, NOT a search-priority.
+      NO LLM for the router itself (it classifies from early-play features + routes). verifier_is_oracle: false.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach ~ -- EXTEND with the early-play mechanic classifier -> approach selection)
+        - {project_root}/python/carnot/agentic/arc_graph_explore.py (graph_explore_solve_v2 + the diversity floor CARNOT_ARC_EXPLORE_DIVERSITY -- the shipped approach the router can select)
+        - {project_root}/python/carnot/agentic/arc_goal_distance.py (goal-distance A*, avatar+goal detector -- a toolkit approach the router selects)
+        - {project_root}/python/carnot/agentic/arc_llm_guided_solve.py (LLM-reasoner -- the residual approach for the hard tail)
+        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants ~190 -- the 0.04 baseline harness)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (the self-play pos/neg traces the router learns from)
+        - {project_root}/results/experiment_4569_verifier_guided_expansion.json (.422 A2 -- the value-head expansion null this re-mechanizes as a ROUTER, NOT an expansion)
+
+      TASK: build an early-play MECHANIC classifier (from the first K actions'' observed feature signature) ->
+      route to the matching general approach (extend recommend_approach); learn the routing from the self-play
+      loop''s pos/neg traces; measure generic_transfer_rate_over_variants + median actions-to-first-levelup WITH
+      the router vs WITHOUT (default approach) on held-out variants, vs a RANDOM-route positive control.
+      verifier_is_oracle: false. Honest null if routing does not help.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic.arc_solve_learning import recommend_approach"` exits 0.
+           ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
+        1. Build the early-play mechanic classifier: from the first K actions on a game/variant, extract the feature signature (keyboard-vs-click action effects, avatar-motion presence, cell-connect, hidden-carry-state, config-toggle) -> classify the mechanic class -> select the matching toolkit approach. Learn the class->approach mapping from the self-play pos/neg traces (which approach won which mechanic class). Keep the current default approach as the no-regression fallback.
+        2. Measure WITH router vs WITHOUT (default) on the 25 public games x N held-out variants (reuse measure_generic_transfer_over_variants): generic_transfer_rate_over_variants, median actions-to-first-levelup, solve-rate. The WIN: generic_transfer STRICTLY > 0.04 with a bootstrap CI excluding the baseline, OR a STRICTLY lower actions-to-first-levelup on solved variants, AND solve-rate not dropped.
+        3. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: router-selection must beat a RANDOM-route control on the SAME variants (proves the early-play classification is load-bearing, not noise). A no-value null is valid ONLY if this control passed (the .422 A2 broken-control trap MUST NOT recur -- run the control, set positive_control_passed). Emit transfer_delta + actions_delta explicitly + a null_delta_methodology_note when 0. Offline-reproduce any newly-solved variant.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: feature_router_generic_transfer_<n>_above_0.04 OR complete: feature_router_no_value_honest_null_transfer_gap_sharpened."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- the router classifies + routes over offline variants, no LLM load (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false -- the router selects an approach by a LEARNED early-play signal, oracle-DISTINCT from the executable win-check (a circular win does not count)."
+        generic_transfer_rate_with_router:
+          principle: "the HEADLINE -- held-out variant transfer WITH the feature-router; > 0.04 with CI-excl-baseline is the non-circular live-value evidence."
+        generic_transfer_rate_baseline:
+          principle: "0.04 -- the .420/.421 B1 default-approach baseline, measured the SAME way."
+        transfer_delta:
+          principle: "with_router - baseline, emitted explicitly so a null (0.0) is annotated, not a control==best TAUTOLOGY false-positive."
+        transfer_ci:
+          principle: "bootstrap CI on the transfer delta; a claim above baseline requires the CI to exclude the baseline."
+        median_actions_to_first_levelup_with_router:
+          principle: "ACTION cost WITH routing -- the leaderboard tiebreaker; reported because the weekend best-first regression proved transfer-only is insufficient."
+        actions_delta:
+          principle: "baseline_actions - with_router (positive = fewer actions); emitted explicitly so a null is annotated."
+        winner_generated:
+          principle: "did routing to the right approach GENERATE the winning candidate (the generation-not-ranking root cause) -- the load-bearing diagnostic."
+        random_route_control_passed:
+          principle: "the POSITIVE CONTROL -- the router must beat random-route on the SAME variants; a null is valid only if this passed (fixes the .422 A2 broken-control trap)."
+        false_negative_risk_checked:
+          principle: "MUST be true with the random-route control run -- a no-value null is valid only if the control passed (the .422 A2 false-negative-risk-open trap MUST NOT recur)."
+        null_delta_methodology_note:
+          principle: "present when transfer_delta==0.0 -- states the equality is an honest no-value null, not a measurement bug."
+        solve_rate_preserved:
+          principle: "HARD gate -- routing must NOT drop solve-rate."
+        chosen_submitted_config:
+          principle: "what (if anything) is recommended for SUBMITTED_AGENT_CONFIG (enable the feature-router) -- the A6 input; 'unchanged' if null."
+        missing_verifier_gaps:
+          principle: "if no value, the residual generation gap (which mechanic class the router still cannot route to a winning approach) -- the Missing-Verifier Gap Logging entry."
+        offline_reproduced:
+          principle: "any newly-solved variant must offline-reproduce to count."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent router/corpus drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, recommend_approach importable); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4582_feature_router_transfer.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4583-a4
+    milestone: 2026.06.423
+    title: 'PHASE A4 (ARC NORTH STAR; operator item 1) -- DIVERSITY-FLOOR HELD-OUT TRANSFER VALIDATION: does the
+      SHIPPED exploration-diversity floor (CARNOT_ARC_EXPLORE_DIVERSITY=1; 4/11 first-win on the public set)
+      transfer to held-out/variant games (first-win count UP vs diversity-off)? Offline-reproduce any newly-
+      reached win as a bank. Gate: first-win count strictly up on the held-out proxy vs diversity-off + a working
+      control. verifier_is_oracle: false. retire_if_same_verdict.'
     priority: high
     track: arc-north-star
     max_turns: 130
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4571_hidden_field_state_probe_ka59.json
+    deliverable: results/experiment_4583_diversity_floor_transfer.json
     prior_failures:
-      - experiment_id: exp4559-a4
-        verdict: 'complete: hidden_field_state_gap_sharpened_no_bank_honest_null'
-        addressed_by: 'exp4559 (.421 A4) probed THREE games (ka59/ar25/ft09) generically and banked 0 with
-          offline_reproduced=false. This task is RE-SCOPED to a SINGLE game with a NAMED, readable register
-          (ka59 has a bottom-row StepCounter HUD per the registry gotcha), and makes the state-DISAMBIGUATION
-          positive control a HARD GATE FIRST: the extended state_key must provably distinguish a pair of states
-          the grid-only key aliased BEFORE any bank attempt -- so a still-aliased search retires cleanly instead
-          of burning the budget. It adopts the competitor _probe_hidden_fields-in-the-state-hash pattern (the
-          frame-change spec''s secondary lever). Different scope (one game, gate-first) than the .421 broad
-          attempt. If it reproduces the same no-bank/aliased verdict on ka59 with a passing disambiguation
-          control, hidden-field probing is retired for the sprint.'
+      - experiment_id: exp4561-a6
+        verdict: 'complete: verifier_router_candidate_ranking_operator transfer null (ordering_gain=0)'
+        addressed_by: 'exp4561 (.421 A6) persisted a candidate-RANKING operator and its cross-game transfer
+          nulled (ordering_gain=0 -- the winner was never in the pool to re-rank). This task measures a DIFFERENT
+          mechanism: the SHIPPED exploration-diversity floor (CARNOT_ARC_EXPLORE_DIVERSITY=1) is a GENERATION-
+          BROADENING lever (it injects an untested action among the top-K on stall to REACH structure-missed wins),
+          NOT a re-ranker of a fixed pool. The metric is first-WIN count on held-out variants (did diversity reach
+          a win the default explorer missed), not ordering gain over an existing pool. It carries a diversity-OFF
+          control on the same variants. If diversity-on does not raise first-win count over diversity-off on the
+          held-out proxy with a passing control, the diversity-transfer lever is retired for the sprint.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint; GAP-ARCH-GRID-ONLY-STATE). The deepening tail stalls on hidden-state games
-      because the search's grid-only state_key OMITS HUD registers, so the search ALIASES distinct states and
-      cannot deepen. ka59 has a NAMED readable register: a bottom-row StepCounter HUD (registry gotcha: "hidden
-      StepCounter HUD ... not visible-state deterministic"). The .421 A4 probed three games generically and
-      banked 0; THIS task re-scopes to ka59 ONLY and makes the disambiguation positive control a HARD GATE
-      FIRST (the competitor solved exactly this via _probe_hidden_fields baked into the state hash).
+      CONTEXT ({date}, ARC sprint -- the operator''s 2026-06-21 item 1, validate the SHIPPED diversity floor''s
+      hidden-game transfer). The exploration-diversity floor (CARNOT_ARC_EXPLORE_DIVERSITY=1) is SHIPPED + wired
+      into the submitted StepwiseExplorer + the scored kernel (parity-safe, default OFF): on the PUBLIC set it
+      lifts first-win 1/11 -> 4/11 (eff 2.0804 vs 2.0069) by injecting a random untested action among the top-K
+      once the search stalls -- it REACHES structure-missed wins the depth-first explorer over-commits past. The
+      open question: does it TRANSFER to UNSEEN games (the held-out variant proxy)? This is a GENERATION-broadening
+      lever (reach the winner), NOT a re-ranker -- it directly attacks the generation-not-ranking bottleneck. NO
+      new model; this validates a shipped flag. verifier_is_oracle: false.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/ops/arc_solve_registry.yaml (ka59 entry: the StepCounter HUD gotcha + dead_ends + the readable internal-state accessor)
-        - {project_root}/python/carnot/agentic/arc_solver_kit.py (OfflineSolver state_key / dedup -- where the hidden field joins the hash)
-        - {project_root}/python/carnot/agentic/arc_game_adapters.py (the ka59 _ka59 GameAdapter state_key hook)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (state-hash ~319-321 -- the hud_mask slot the hidden field extends)
-        - {project_root}/docs/research-notes/arc-frame-change-predictor-spec.md (the secondary hidden-field-probing lever)
-        - {project_root}/results/experiment_4559_hidden_field_state_probe.json (.421 A4 -- the broad no-bank attempt this re-scopes)
+        - {project_root}/python/carnot/agentic/arc_graph_explore.py (the StepwiseExplorer + CARNOT_ARC_EXPLORE_DIVERSITY diversity-on-stall floor)
+        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants ~190 -- the held-out variant harness)
+        - {project_root}/python/carnot/agentic/arc_variant_generator.py (the mechanic-preserving held-out variant set + VariantEnv)
+        - {project_root}/ops/status.md (Session 2026-06-21 -- the shipped 4/11 first-win diversity-floor result)
+        - {project_root}/results/experiment_4561_primitive_persist_transfer.json (.421 A6 -- the ranking-operator transfer null this differs from)
 
-      TASK: extend the ka59 search state_key with the READABLE StepCounter HUD register (read from the offline
-      env internal state each step, NOT hardcoded); GATE FIRST on a state-disambiguation positive control; then
-      attempt ka59 L2 via the standing loop. Gate: ka59 L2 offline-reproduced OR a sharpened unreadable-register
-      gap WITH the disambiguation control passed.
+      TASK: measure first-win count + median actions-to-first-levelup on the held-out variant set with
+      CARNOT_ARC_EXPLORE_DIVERSITY=1 (on) vs =0 (off); offline-reproduce any newly-reached win as a bank. The WIN:
+      first-win count STRICTLY up with diversity-on vs diversity-off on the held-out proxy. verifier_is_oracle:
+      false. Honest null if diversity does not transfer.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Read ka59's registry-named StepCounter accessor; add the readable register to the OfflineSolver/GameAdapter state_key (read from the env each step; do NOT hardcode values).
-        2. POSITIVE CONTROL FIRST: demonstrate the extended state_key DISAMBIGUATES at least one pair of states the grid-only key aliased (proves the register is load-bearing). If state_disambiguation_control_passed=False, write the artifact (which register is still unreadable = the sharpened gap) and EXIT -- do NOT claim a bank.
-        3. Only if the control passed: run the ka59 L2 deepen attempt (arc_loop_solve / OfflineSolver with the extended state_key). The WIN: ka59 reaches L2 AND offline-reproduces (arc_solver_kit.reproduce). Record the result + dead-ends in the registry; only reproduced levels count toward reproducible_total_levels.
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0 AND `.venv/bin/python -c "import carnot.agentic.arc_variant_generator"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Run the held-out variant set (measure_generic_transfer_over_variants + VariantEnv) with diversity-on and diversity-off; record first-win count, median actions-to-first-levelup, solve-rate for each.
+        2. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the diversity-OFF arm on the SAME variants IS the matched control (diversity-on must beat it). A no-transfer null is valid only if the diversity-off arm ran and is the matched baseline (set positive_control_passed = diversity_off arm completed + diversity_on first-win >= diversity_off). Emit firstwin_delta + actions_delta explicitly + a null_delta_methodology_note when 0.
+        3. Offline-reproduce any newly-reached win (arc_solver_kit.reproduce); only reproduced wins count as a bank. If a new level banks, update the registry + bump reproducible_total_levels.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: hidden_field_state_ka59_L2_offline_reproduced OR complete: hidden_field_state_ka59_gap_sharpened_no_bank_honest_null."
+          principle: "terminal prefix; success: diversity_floor_transfer_firstwin_up_<n> OR complete: diversity_floor_no_transfer_honest_null_gap_sharpened."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load (1s floor)."
-        hidden_fields_added:
-          principle: "the ka59 StepCounter register added to the state_key (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE."
-        state_disambiguation_control_passed:
-          principle: "THE GATE-FIRST POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; a no-bank null is valid only if this passed (else the change is a no-op)."
+          principle: "verifier_ensemble_against_cached_candidates -- offline variant exploration, no LLM load (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false -- diversity-on-stall is a generation-broadening explorer lever, oracle-DISTINCT from the win-check."
+        firstwin_count_diversity_on:
+          principle: "the HEADLINE -- held-out first-win count WITH the diversity floor (did it reach structure-missed wins on unseen games)."
+        firstwin_count_diversity_off:
+          principle: "the matched diversity-OFF baseline on the SAME variants (the apples-to-apples control)."
+        firstwin_delta:
+          principle: "on - off (positive = more wins reached = transfer), emitted explicitly so a null (0) is annotated."
+        median_actions_to_first_levelup_with_diversity:
+          principle: "ACTION cost WITH diversity -- the leaderboard tiebreaker; diversity must not blow up actions while reaching more wins."
+        diversity_off_control_passed:
+          principle: "the matched control arm ran and diversity-on first-win >= diversity-off -- a null is valid only if this holds."
         false_negative_risk_checked:
-          principle: "a no-bank null is valid only if the disambiguation positive control passed."
+          principle: "true with the diversity-off arm run as the matched control -- a no-transfer null is valid only then."
+        null_delta_methodology_note:
+          principle: "present when firstwin_delta==0 -- states the equality is an honest no-transfer null, not a measurement bug."
         offline_reproduced:
-          principle: "only offline-reproduced new levels count toward reproducible_total_levels."
-        reproduced_levels:
-          principle: "the integer new-level count banked this task."
-        missing_verifier_gaps:
-          principle: "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry."
-        registry_updated:
-          principle: "the ka59 hidden-field findings + dead-ends persisted so the next attempt reuses."
+          principle: "any newly-reached win must offline-reproduce to count as a bank."
+        chosen_submitted_config:
+          principle: "diversity is already shipped+wired; this confirms whether to keep it ON for the submitted agent (the A6 input)."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -458,152 +465,71 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4571_hidden_field_state_probe_ka59.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4583_diversity_floor_transfer.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4572-a5
-    milestone: 2026.06.422
-    title: 'PHASE A5 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whatever
-      RAISED a real metric (A1 clickability predictor-ranker -> actions-to-first-levelup; A2 verifier-guided
-      expansion -> generic_transfer; A4 hidden-state -> a new bank) into the SUBMITTED agent; re-measure
-      end-to-end on BOTH action efficiency (median actions-to-first-levelup) AND generic_transfer (baseline
-      0.04). If NONE raised a metric, keep the bare explorer + honest null. Keep test_arc_submitted_agent_parity.py
-      green.'
-    priority: critical
-    track: arc-north-star
-    max_turns: 130
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4572_integration_gate.json
-    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine per-milestone INTEGRATION
-      task (wire the milestone winners into SUBMITTED_AGENT_CONFIG + re-measure) -- the single-source-of-truth
-      discipline (test_arc_submitted_agent_parity.py); false-positive scope-match vs every prior integration
-      task (exp4560/exp4548/exp4536). Not a doomed rerun; the forward content is THIS milestone''s A1
-      clickability-predictor / A2 verifier-expansion / A4 hidden-state deltas.'
-    prompt: |
-      CONTEXT ({date}, operator MANDATORY, ARC sprint INTEGRATION). The score moves only when a lever is wired
-      into the SUBMITTED agent and a real metric RISES. .422 has TWO honest metrics: action efficiency (median
-      actions-to-first-levelup / min(human/agent,1)^2, the leaderboard scoring lever) and generic_transfer_rate
-      _over_variants (baseline 0.04). Wire whatever A1 (clickability predictor-ranker, if actions dropped), A2
-      (verifier-guided expansion, if generic_transfer rose), and/or A4 (hidden-state, if a new bank) showed a
-      real improvement; re-measure end-to-end. If none raised a metric, keep the bare explorer + honest null.
-
-      EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4568_clickability_action_effect_predictor.json (A1 actions delta + chosen config)
-        - {project_root}/results/experiment_4569_verifier_guided_expansion.json (A2 generic_transfer delta + chosen config)
-        - {project_root}/results/experiment_4571_hidden_field_state_probe_ka59.json (A4 new bank, if any)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy / SUBMITTED_AGENT_CONFIG ~1450 / SUBMITTED_TARGET_LEVELS ~69 / rich_action_candidates)
-        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants -- the 0.04 baseline)
-        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green after wiring)
-
-      TASK: wire whatever RAISED a real metric into SUBMITTED_AGENT_CONFIG, re-measure end-to-end on BOTH
-      metrics, keep parity green. Honest null if nothing rose. Do NOT aggregate any artifact carrying
-      flagged_adversarial: true UNLESS its only flag is a control==best null-delta TAUTOLOGY with an explicit
-      delta + null-delta note. Honor the .421 B2 + .422 B2 guards (a positive-control-failed or
-      DURATION_TOO_SHORT-on-a-CNN artifact is handled per the guard, not blindly aggregated).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Read the A1/A2/A4 artifacts; select ONLY a lever that RAISED a real metric (A1 actions-to-first-levelup STRICTLY lower w/ CI + positive control; A2 generic_transfer > 0.04 w/ CI + random-priority control; A4 a new offline-reproduced bank) with no CORE game losing a level.
-        2. Wire winners into SUBMITTED_AGENT_CONFIG (enable the predictor-ranker; enable verifier-guided expansion; raise SUBMITTED_TARGET_LEVELS if a bank); update test_arc_submitted_agent_parity.py consistently.
-        3. Re-measure BOTH median actions-to-first-levelup AND generic_transfer_rate_over_variants end-to-end + per-game deepest level reached + held-out solve-rate. Check ADDITIVITY (integrated metric vs naive sum of isolated A1/A2 deltas -- surface destructive interaction).
-        4. If the integrated config RAISES either metric, leave SUBMITTED ready -- but DO NOT submit (operator-only). If nothing rose, keep bare explorer + honest null.
-
-      REQUIRED ARTIFACT FIELDS (principle-annotated):
-        honest_verdict:
-          principle: "terminal prefix; success: integrated_actions_to_levelup_below_blind_or_generic_transfer_above_0.04 OR complete: no_lever_raises_a_metric_honest_null."
-        inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated run invokes the LLM proposer, declare live_llm_inference + add the Qwen3.5-9B-MTP model precondition); a CNN predictor forward pass is NOT live_llm_inference."
-        median_actions_to_first_levelup_integrated:
-          principle: "the SUBMITTED-config action efficiency after wiring winners vs the blind baseline -- the leaderboard scoring lever."
-        generic_transfer_rate_integrated:
-          principle: "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04 -- the leaderboard-honest HEADLINE."
-        levers_integrated:
-          principle: "names which of A1/A2/A4 were wired -- traceable to their measured deltas; [] is an honest null."
-        additivity_checked:
-          principle: "integrated metric vs the naive sum of isolated A1/A2 deltas -- surfaces a destructive interaction instead of burying it."
-        core_solves_preserved:
-          principle: "integration must preserve every CORE solve (set-containment); a dropped solve FAILS the lever."
-        heldout_solve_rate:
-          principle: "the real transfer signal; integration should not regress it."
-        ready_for_operator_submit:
-          principle: "True if the integrated config is a CORE-preserved improvement on either metric worth a 1/day submission slot; the task NEVER submits (operator-only)."
-        false_negative_risk_checked:
-          principle: "an honest null is only valid with both baselines measured the same way."
-        random_seed:
-          principle: "determinism precondition for reproducibility."
-        reproducibility_checksum:
-          principle: "catches silent drift on replay."
-        preconditions_checked:
-          principle: "records resources verified; pre-empts missing-resource fabrication."
-
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4572_integration_gate.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4573-a6
-    milestone: 2026.06.422
-    title: 'PHASE A6 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the milestone''s
-      winning primitive (A1 clickability/action-effect predictor as a reusable CROSS-GAME action-effect MEMORY,
-      a la PersistentAEM; OR A2 verifier-guided-expansion operator) into arc_solver_kit / arc_solve_registry
-      (Tier-2/Tier-3 self-learning; ARC Solve Reproducibility + Solver-Reuse Discipline), and measure CROSS-GAME
-      TRANSFER: does the persisted primitive add value (reduce actions / grow the frontier toward the goal) on
-      games it was NOT tuned on?'
+  - id: exp4584-a5
+    milestone: 2026.06.423
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the milestone''s
+      winning primitive (A1 env-adaptive re-solve as a reusable generic operator; OR the A3 feature-router; OR the
+      A4 diversity-transfer finding) into arc_solver_kit / arc_solve_registry (ARC Solve Reproducibility +
+      Solver-Reuse Discipline; SkillComposer-style consolidation arXiv:2606.06079), and measure CROSS-GAME
+      TRANSFER: does the persisted primitive add value on games it was NOT tuned on?'
     priority: high
     track: arc-north-star
     max_turns: 120
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4573_primitive_persist_transfer.json
+    deliverable: results/experiment_4584_primitive_persist_transfer.json
     operator_override: '2026-06-16 ARC Solve Reproducibility + Solver-Reuse Discipline (standing, CLAUDE.md) +
       2026-06-19 ARC sprint: NEW-scope self-learning/reuse continuation -- persist THIS milestone''s winning
-      primitive (A1 action-effect predictor / A2 verifier-expansion) as reusable scaffolding + measure transfer;
-      false-positive fuzzy-token scope-match vs the RETIRED cross-game VALUE-transfer exps (exp4318/4331/4342)
-      and the legacy verifier_router_candidate_ranking_operator (exp4561, the re-ranker whose transfer nulled).
-      This is a DIFFERENT primitive (a learned action-effect MEMORY or a search-expansion operator), persisted
-      and transfer-tested. Not a doomed rerun.'
+      primitive (A1 env-adaptive re-solve / A3 feature-router / A4 diversity-transfer) as reusable scaffolding +
+      measure transfer; false-positive fuzzy-token scope-match vs the prior persist tasks (exp4573 PersistentAEM
+      which SUCCEEDED, exp4561 the ranking operator). This is a DIFFERENT primitive (an env-adaptive re-solver or
+      a mechanic-router), persisted and transfer-tested. Not a doomed rerun.'
     prompt: |
       CONTEXT ({date}, ARC sprint SELF-LEARNING -- research-program.md mandates >=1 continuous-self-learning
-      experiment per milestone; this is Tier-2/Tier-3: consolidate the winning primitive into REUSABLE
-      scaffolding so the LIVE solver applies it to games it has never seen, per the ARC Solve Reproducibility +
-      Solver-Reuse Discipline). The .421 A6 persisted the verifier-router RE-RANKER and its transfer nulled
-      (ordering_gain=0, winner not in pool). THIS milestone's winning primitive is different: the A1 action-
-      effect predictor IS a cross-game action-effect MEMORY (PersistentAEM); the A2 verifier-expansion operator
-      GROWS the candidate set. Persist whichever WON and measure transfer to UNTUNED games.
-
-      EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4568_clickability_action_effect_predictor.json (A1: the action-effect predictor primitive -- persist if it added efficiency)
-        - {project_root}/results/experiment_4569_verifier_guided_expansion.json (A2: the verifier-expansion operator -- persist if it added value)
-        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate -- where the primitive is persisted)
-        - {project_root}/ops/arc_solve_registry.yaml (general_gotchas + per-game entries; existing primitive_* operators -- extend, do not duplicate)
-        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -- the routing this primitive feeds)
-
-      TASK: (1) PERSIST the milestone's winning primitive (A1 action-effect predictor as a generic cross-game
-      action-effect memory operator, OR A2 verifier-guided-expansion operator) into arc_solver_kit + a
-      general_gotcha in arc_solve_registry. (2) Measure CROSS-GAME TRANSFER: apply the persisted primitive to
-      2-3 games it was NOT tuned on -- does it add value (predictor: reduces actions-to-first-levelup on a
-      held-out game; expansion: grows the frontier toward the goal so the winner is generated)? Degrade
-      gracefully: if BOTH A1 and A2 nulled, persist the best-characterized primitive-as-built + report the
+      experiment per milestone; this is Tier-2/Tier-3: consolidate the winning primitive into REUSABLE scaffolding
+      so the LIVE solver applies it to games it has never seen, per the ARC Solve Reproducibility + Solver-Reuse
+      Discipline; literature: SkillComposer skill-merge arXiv:2606.06079). This milestone''s candidate primitives:
+      the A1 env-adaptive re-solve (discover-from-env -> re-derive plan, the generalization of frozen-replay) and
+      the A3 feature-router (mechanic-class -> approach). Persist whichever WON and measure transfer to UNTUNED
+      games. Degrade gracefully: if all nulled, persist the best-characterized primitive-as-built + report the
       transfer null + what it would need to add value.
 
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4580_live_submission_gap_close.json (A1: env-adaptive re-solve -- persist if it recovered drift games)
+        - {project_root}/results/experiment_4582_feature_router_transfer.json (A3: feature-router -- persist if it added transfer value)
+        - {project_root}/results/experiment_4583_diversity_floor_transfer.json (A4: diversity transfer -- the validated finding)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate -- where the primitive is persisted)
+        - {project_root}/ops/arc_solve_registry.yaml (general_gotchas + existing primitive_* operators -- extend, do not duplicate)
+        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -- the routing this primitive feeds)
+
+      TASK: (1) PERSIST the milestone''s winning primitive (A1 env-adaptive re-solve as a generic operator, OR A3
+      feature-router, OR A4 diversity-transfer finding) into arc_solver_kit + a general_gotcha in
+      arc_solve_registry. (2) Measure CROSS-GAME TRANSFER: apply the persisted primitive to 2-3 games it was NOT
+      tuned on -- does it add value (env-adaptive re-solve recovers a drift-perturbed game; router selects the
+      winning approach; diversity reaches a win)? Offline-reproduce any new level (arc_solver_kit.reproduce); only
+      reproduced levels count.
+
       CONCRETE STEPS:
-        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. (If transfer evaluates the CNN predictor, also `import torch` succeeds.) Missing -> blocked_<resource>, EXIT.
-        1. Read the A1/A2 artifacts; pick the primitive with the strongest measured signal. Persist it: add/extend a generic operator/helper in arc_solver_kit + a general_gotcha entry in ops/arc_solve_registry.yaml.
-        2. Measure transfer on 2-3 games NOT tuned in A1/A2: report the per-game value-add (actions reduced / winner-generated / representation-transfer). Offline-reproduce any new level (arc_solver_kit.reproduce); only reproduced levels count.
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Read the A1/A3/A4 artifacts; pick the primitive with the strongest measured signal. Persist it: add/extend a generic operator/helper in arc_solver_kit + a general_gotcha entry in ops/arc_solve_registry.yaml.
+        2. Measure transfer on 2-3 games NOT tuned in A1/A3/A4: report the per-game value-add (drift-recovery / winning-approach-selected / win-reached). Offline-reproduce any new level; only reproduced levels count.
         3. Record the transfer result + dead-ends in the registry. If a new level was banked, bump reproducible_total_levels.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
           principle: "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates for the offline transfer; a CNN predictor forward pass is NOT live_llm_inference (declare it so a fast real run is not DURATION_TOO_SHORT false-flagged)."
+          principle: "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
         primitive_persisted:
-          principle: "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+          principle: "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A3/A4 effort is wasted per the ARC reuse rule."
         transfer_games:
           principle: "the games the primitive was applied to (NOT tuned on) -- the generalization test."
         transfer_value_per_game:
-          principle: "the per-game value-add (predictor actions-reduced / expansion winner-generated) -- the cross-game evidence the primitive generalizes."
+          principle: "the per-game value-add (drift-recovered / winning-approach-selected / win-reached) -- the cross-game evidence the primitive generalizes."
         offline_reproduced:
           principle: "only offline-reproduced new levels count toward reproducible_total_levels."
         registry_updated:
@@ -615,151 +541,234 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4573_primitive_persist_transfer.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4584_primitive_persist_transfer.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4574-b1
-    milestone: 2026.06.422
-    title: 'PHASE B1 (RESERVED INFRA) -- make ACTION EFFICIENCY (median_actions_to_first_levelup +
-      min(human/agent,1)^2 with the human baseline from the replay corpus) a THIRD CO-HEADLINE capstone metric
-      alongside generic_transfer + reproducible_total_levels. This is the leaderboard scoring lever A1 moves and
-      it is currently UNREPORTED. Bootstrap CI on the actions metric. Asserting tests.'
-    priority: high
-    track: infra
-    max_turns: 100
+  - id: exp4585-a6
+    milestone: 2026.06.423
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whatever RAISED
+      a real metric (A1 env-adaptive replay + refreshed package -> live-submittable count; A3 feature-router ->
+      generic_transfer; A4 diversity -> first-win; A2 -> new bank) into the SUBMITTED agent + refreshed package;
+      re-measure end-to-end on BOTH live-submittable level count (vs 33) AND generic_transfer (baseline 0.04). If
+      NONE raised a metric, keep the bare config + honest null. Keep test_arc_submitted_agent_parity.py green.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 130
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4574_action_efficiency_coheadline.json
-    operator_override: '2026-06-20 known-issue (GAP-ARCH-FRAME-CHANGE-PREDICTOR, ops/known-issues.md
-      MANDATORY-NEXT-MILESTONE): action efficiency (min(human/agent,1)^2) is THE leaderboard scoring lever and
-      we report 0 of it. NEW-scope reserved-infra metric distinct from the .420/.421 B1 generic_transfer metric
-      (this adds the actions-to-first-levelup + efficiency-ratio co-headline with the human baseline).
-      False-positive fuzzy-token scope-match vs prior metric exps (exp4562/exp4550). Not a doomed rerun.'
+    deliverable: results/experiment_4585_integration_gate.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing) + GAP-LIVE-INTEGRATION: routine
+      per-milestone INTEGRATION task (wire the milestone winners into SUBMITTED_AGENT_CONFIG + the refreshed
+      package + re-measure) -- the single-source-of-truth discipline (test_arc_submitted_agent_parity.py);
+      false-positive scope-match vs every prior integration task (exp4572/exp4560/exp4548). Not a doomed rerun;
+      the forward content is THIS milestone''s A1 env-adaptive-replay / A3 feature-router / A4 diversity / A2 bank.'
     prompt: |
-      CONTEXT ({date}, RESERVED INFRA). The ARC-AGI-3 leaderboard metric is ACTION EFFICIENCY
-      (min(human/agent,1)^2, arXiv:2603.24621) -- and we report NONE of it; generic_transfer (binary solve-rate
-      over variants) is our only honest metric. The .422 A1 headline MOVES action efficiency, so it must be a
-      first-class capstone metric. This task adds median_actions_to_first_levelup + the efficiency ratio (with
-      the HUMAN baseline computed from the local replay corpus) as a THIRD co-headline number, with a bootstrap
-      CI, reported side-by-side with generic_transfer + reproducible_total_levels in every capstone.
+      CONTEXT ({date}, operator MANDATORY, ARC sprint INTEGRATION). The score moves only when a lever is wired
+      into the SUBMITTED agent + the refreshed package and a real metric RISES. .423 has TWO honest metrics:
+      LIVE-SUBMITTABLE level count (vs the 33 scorecard, A1) and generic_transfer_rate_over_variants (baseline
+      0.04, A3/A4). Wire whatever A1 (env-adaptive replay + refreshed package, if the submittable count rose), A3
+      (feature-router, if generic_transfer rose), A4 (diversity, if first-win rose), and/or A2 (new bank) showed a
+      real improvement; re-measure end-to-end. If none raised a metric, keep the bare config + honest null.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants ~190 + build_generic_transfer_coheadline -- extend with the actions/efficiency metric)
-        - {project_root}/python/carnot/agentic/arc_human_replay_corpus.py (the human replay corpus -> the human actions-to-levelup baseline)
-        - {project_root}/scripts/arc_leaderboard_eval.py (run_game --variant/--reflect ~108; VariantEnv -- where actions-to-first-levelup is measured)
-        - {project_root}/results/experiment_4566_capstone_v421.json (the .421 capstone -- where the third co-headline metric lands)
+        - {project_root}/results/experiment_4580_live_submission_gap_close.json (A1 live-submittable count delta + refreshed package + chosen config)
+        - {project_root}/results/experiment_4582_feature_router_transfer.json (A3 generic_transfer delta + chosen config)
+        - {project_root}/results/experiment_4583_diversity_floor_transfer.json (A4 first-win delta)
+        - {project_root}/results/experiment_4581_levelup_selfplay.json (A2 new bank, if any)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy / SUBMITTED_AGENT_CONFIG / SUBMITTED_TARGET_LEVELS / rich_action_candidates)
+        - {project_root}/python/carnot/experiment_4550_honest_sprint_metric.py (measure_generic_transfer_over_variants -- the 0.04 baseline)
+        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green after wiring)
+
+      TASK: wire whatever RAISED a real metric into SUBMITTED_AGENT_CONFIG + the refreshed package, re-measure
+      end-to-end on BOTH metrics, keep parity green. Honest null if nothing rose. Do NOT aggregate any artifact
+      carrying flagged_adversarial: true UNLESS its only flag is a control==best null-delta TAUTOLOGY with an
+      explicit delta + null-delta note. Honor the .422 B2 (learned-CNN substrate) + the .423 B2 (offline-arc
+      METHODOLOGY) guards (a fast offline-arc artifact that declared its substrate is NOT a fabrication).
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `.venv/bin/python -c "import carnot.experiment_4550_honest_sprint_metric as m; m.measure_generic_transfer_over_variants"` exits 0. Missing -> blocked, EXIT.
-        1. Add a shared helper that computes median_actions_to_first_levelup (agent) over held-out variants + the human baseline (from the replay corpus) + the efficiency ratio min(human/agent,1)^2, with a bootstrap CI. Provide a function the capstone calls so ALL THREE numbers (bank count + generic transfer + action efficiency) are reported side-by-side as the milestone HEADLINE. Do NOT modify scripts/research_conductor.py.
-        2. The artifact reports all THREE metrics + the CIs + a one-line honest framing (bank count = KNOWN-game capability; generic transfer = held-out first-contact solve-rate; action efficiency = the literal leaderboard scoring term).
-        3. Asserting tests (--no-cov): on a small variant set all three metrics + CIs are computed, the efficiency ratio is in [0,1], the CI brackets the point estimate, and a KNOWN-game bank does NOT inflate the action-efficiency metric.
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Read the A1/A2/A3/A4 artifacts; select ONLY a lever that RAISED a real metric (A1 live-submittable count STRICTLY > 33 offline-repro-gated; A3 generic_transfer > 0.04 w/ CI + random-route control; A4 first-win up w/ matched control; A2 a new offline-reproduced bank) with no CORE game losing a level.
+        2. Wire winners into SUBMITTED_AGENT_CONFIG (the refreshed package as the live-submit source; enable the feature-router; keep diversity ON; raise SUBMITTED_TARGET_LEVELS if banks); update test_arc_submitted_agent_parity.py consistently.
+        3. Re-measure BOTH live-submittable level count AND generic_transfer_rate_over_variants end-to-end + per-game deepest level + held-out solve-rate. Check ADDITIVITY (integrated metric vs naive sum of isolated A1/A3/A4 deltas -- surface destructive interaction).
+        4. If the integrated config RAISES either metric, leave SUBMITTED ready -- but DO NOT submit (operator-only). If nothing rose, keep bare config + honest null.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; shipped: action_efficiency_coheadline_with_ci_wired OR complete: action_efficiency_coheadline_partial_<reason>."
+          principle: "terminal prefix; success: integrated_live_submittable_above_33_or_generic_transfer_above_0.04 OR complete: no_lever_raises_a_metric_honest_null."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- runs the generic solver over variant envs offline, no headline LLM load."
-        median_actions_to_first_levelup:
-          principle: "the agent's held-out median actions-to-first-levelup -- the action-efficiency numerator the leaderboard scores."
-        human_baseline_actions:
-          principle: "the human actions-to-levelup baseline from the replay corpus -- the denominator of min(human/agent,1)^2."
-        action_efficiency_score:
-          principle: "min(human/agent,1)^2 -- the literal leaderboard scoring term, now a first-class metric."
-        action_efficiency_ci:
-          principle: "the bootstrap CI -- makes the efficiency claim falsifiable."
-        metric_wired_into_capstone:
-          principle: "names where all three co-headline metrics + CIs are now reported side-by-side -- the fix that surfaces the score lever."
-        tests_added_pass:
-          principle: "Tests Must Run and Assert."
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade end-to-end (if the integrated run invokes the LLM proposer, declare live_llm_inference + add the Qwen3.5-9B-MTP iGPU precondition, NEVER the 3090s)."
+        live_submittable_level_count_integrated:
+          principle: "the SUBMITTED-config live-submittable count after wiring winners vs the 33 baseline -- the headline score lever."
+        generic_transfer_rate_integrated:
+          principle: "the SUBMITTED-config held-out variant transfer after wiring winners vs baseline 0.04 -- the leaderboard-honest transfer headline."
+        levers_integrated:
+          principle: "names which of A1/A2/A3/A4 were wired -- traceable to their measured deltas; [] is an honest null."
+        additivity_checked:
+          principle: "integrated metric vs the naive sum of isolated deltas -- surfaces a destructive interaction instead of burying it."
+        core_solves_preserved:
+          principle: "integration must preserve every CORE solve (set-containment); a dropped solve FAILS the lever."
+        parity_green:
+          principle: "test_arc_submitted_agent_parity.py stays green after wiring -- the single-source-of-truth guard."
+        ready_for_operator_submit:
+          principle: "True if the integrated config + refreshed package beat the 33-level scorecard on a real metric worth a 1/day submission slot; the task NEVER submits (operator-only)."
+        false_negative_risk_checked:
+          principle: "an honest null is only valid with both baselines measured the same way."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4574_action_efficiency_coheadline.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4585_integration_gate.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4575-b2
-    milestone: 2026.06.422
-    title: 'PHASE B2 (RESERVED INFRA) -- LEARNED-CNN SUBSTRATE GUARD: a fast CPU/iGPU CNN action-model artifact
-      (torch markers, sub-60s forward pass) must NOT be DURATION_TOO_SHORT false-flagged by adversarial_verify
-      (the recurring trap that quarantined the .421 A5 and threatens the .422 A1 CNN headline). Recognize a
-      learned-CNN-cpu-inference substrate / declared verifier_ensemble_against_cached_candidates floor + a
-      regression assert. Asserting tests.'
+  - id: exp4586-b1
+    milestone: 2026.06.423
+    title: 'PHASE B1 (RESERVED INFRA) -- make LIVE-SUBMITTABLE LEVEL COUNT (offline-reproduced AND has a
+      replayable trajectory/env-adaptive re-solver AND env-matchable) a capstone CO-HEADLINE metric, distinct from
+      reproducible_total_levels (the GAP-LIVE-INTEGRATION "mirage": raw reproducible includes banked replays that
+      do not live-submit). Surfaces the honest submittable score (33 baseline) alongside reproducible_total_levels
+      + generic_transfer + action efficiency. Asserting tests.'
     priority: high
     track: infra
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4575_learned_cnn_substrate_guard.json
-    operator_override: '2026-06-21 planner observation (.421 close-state + .410 substrate lesson): the .421 A5
-      was quarantined DURATION_TOO_SHORT (36.7s with compute markers, no model_specs) and the .422 A1 CNN
-      headline (a fast CPU forward pass + torch markers) will hit the SAME false-positive. NEW-scope
-      reserved-infra robustness guard so a fast-but-real learned-CNN action-model artifact is not falsely
-      quarantined; false-positive fuzzy-token scope-match vs prior schema/guard exps (exp4563/exp4551). Not a
-      doomed rerun.'
+    deliverable: results/experiment_4586_live_submittable_coheadline.json
+    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1): reproducible_total_levels is partly a
+      mirage for the leaderboard; the honest submittable count must be reported. NEW-scope reserved-infra metric
+      distinct from the .422 B1 action-efficiency metric and the .420/.421 B1 generic_transfer metric (this adds
+      the live-submittable-count co-headline that exposes the reproducible-vs-submittable gap). False-positive
+      fuzzy-token scope-match vs prior metric exps (exp4574/exp4550). Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, RESERVED INFRA). adversarial_verify applies a 60s live-model duration floor when an
-      artifact references compute markers (torch / CUDA / GGUF). A learned CNN action-effect model (the .422 A1
-      headline) trains offline and runs a sub-ms CPU/iGPU forward pass -- a fast-but-REAL artifact that the 60s
-      floor false-flags as DURATION_TOO_SHORT (exactly what quarantined the .421 A5, 36.7s). The Inference-
-      Substrate Declaration Discipline already has verifier_ensemble_against_cached_candidates (1s floor) for
-      offline scoring; this task ensures a learned-CNN action-model artifact that declares it (or a new
-      learned_cnn_cpu_inference value) is recognized + NOT false-flagged, with a regression assert. This is a
-      READER guard, NOT a behavior change to any solver.
+      CONTEXT ({date}, RESERVED INFRA). GAP-LIVE-INTEGRATION (operator 2026-06-19 #1): reproducible_total_levels
+      (53) is partly a MIRAGE for the leaderboard -- it counts banked replays of KNOWN games that may not live-
+      submit (no trajectory, or live env-drift). The HONEST score is the LIVE-SUBMITTABLE count: levels that
+      offline-reproduce AND have a replayable trajectory (or env-adaptive re-solver) AND env-match (33 on the
+      2026-06-21 scorecard). The .423 A1 headline MOVES this count, so it must be a first-class capstone metric,
+      reported side-by-side with reproducible_total_levels (capability), generic_transfer (held-out transfer), and
+      action efficiency (the .422 B1 metric). This task adds the shared helper + wires it into the capstone.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/scripts/adversarial_verify.py (the DURATION_TOO_SHORT detector + the inference_substrate floor table -- where the learned-CNN floor is recognized)
-        - {project_root}/scripts/summarize_artifact.py (the reading-results discipline -- surface the substrate floor applied)
-        - {project_root}/results/experiment_4560_integration_8game_gate.json (the .421 A5 trap exemplar: 36.7s, compute markers, DURATION_TOO_SHORT)
+        - {project_root}/python/carnot/experiment_4574_action_efficiency_coheadline.py (the .422 B1 co-headline helper -- extend with the live-submittable metric)
+        - {project_root}/results/experiment_4580_live_submission_gap_close.json (A1 -- the live-submittable count this metric formalizes)
+        - {project_root}/results/arc3_live_submit.json (the 33-level scorecard -- the baseline)
+        - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels=53 -- the mirage numerator)
+        - {project_root}/results/experiment_4578_capstone_v422.json (the .422 capstone -- where the co-headline metrics land)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0. Missing -> blocked, EXIT.
+        1. Add a shared helper that computes the LIVE-SUBMITTABLE level count (per-game: offline-reproduced AND has-replayable-trajectory/env-adaptive-resolver AND env-matchable) from the registry + the refreshed package, and the reproducible-vs-submittable GAP. Provide a function the capstone calls so ALL co-headline numbers (reproducible_total_levels + live-submittable count + generic_transfer + action efficiency) are reported side-by-side. Do NOT modify scripts/research_conductor.py.
+        2. The artifact reports all co-headline metrics + a one-line honest framing (reproducible_total_levels = banked capability incl. non-submittable; live-submittable = the honest leaderboard score; generic_transfer = held-out first-contact; action efficiency = the scoring tiebreaker).
+        3. Asserting tests (--no-cov): the live-submittable count <= reproducible_total_levels (it is a subset); a banked-but-no-trajectory level is EXCLUDED from live-submittable; a level with a trajectory + env-match is INCLUDED; the gap is reported.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; shipped: live_submittable_coheadline_wired OR complete: live_submittable_coheadline_partial_<reason>."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- computes the count over the registry/package offline, no LLM load."
+        live_submittable_level_count:
+          principle: "the honest leaderboard score (offline-reproduced AND trajectory AND env-matchable) -- the metric this task formalizes."
+        reproducible_total_levels:
+          principle: "the raw banked-capability count (53) -- reported alongside to expose the mirage gap."
+        reproducible_vs_submittable_gap:
+          principle: "reproducible_total_levels - live_submittable_level_count -- the GAP-LIVE-INTEGRATION number that drives the A1 headline."
+        metric_wired_into_capstone:
+          principle: "names where all co-headline metrics are now reported side-by-side -- the fix that surfaces the honest score."
+        tests_added_pass:
+          principle: "Tests Must Run and Assert -- subset, exclude-no-trajectory, include-with-trajectory, gap-reported."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4586_live_submittable_coheadline.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4587-b2
+    milestone: 2026.06.423
+    title: 'PHASE B2 (RESERVED INFRA) -- OFFLINE-ARC-SUBSTRATE METHODOLOGY GUARD: an offline ARC solve /
+      learned-verifier artifact that declares inference_substrate=verifier_ensemble_against_cached_candidates and
+      cites its offline solver/checkpoint must NOT be METHODOLOGY_MISSING-warned for lacking model_specs/
+      target_model (the recurring warn on EVERY .422 ARC artifact: exp4568/4572/4573). Recognize the offline-arc
+      methodology descriptor; keep the warn firing on a real live-LLM artifact missing methodology. Asserting
+      tests.'
+    priority: high
+    track: infra
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4587_offline_arc_methodology_guard.json
+    operator_override: '2026-06-22 planner observation (.422 close-state): every .422 ARC artifact (exp4568/4572/
+      4573) carries a METHODOLOGY_MISSING warn for missing model_specs/target_model even though it is an offline
+      ARC solve with no LLM -- the substrate-declaration discipline already handles DURATION (the .422 B2 guard),
+      but the METHODOLOGY check still false-warns. NEW-scope reserved-infra reader guard, follow-on to the .422 B2
+      DURATION guard; false-positive fuzzy-token scope-match vs prior schema/guard exps (exp4575/exp4563). Not a
+      doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, RESERVED INFRA). adversarial_verify''s METHODOLOGY_MISSING check warns when a compute-bound
+      artifact lacks model_specs/target_model. But an OFFLINE ARC solve / learned-verifier artifact has no LLM and
+      no model_specs by design -- its methodology is the offline solver module + the reproduce() checksum + the
+      learned-verifier checkpoint, which it DOES cite. Every .422 ARC artifact (exp4568/4572/4573) carries this
+      false METHODOLOGY_MISSING warn. The .422 B2 guard fixed the DURATION_TOO_SHORT false-flag for fast offline-
+      CNN artifacts; this task is the follow-on: recognize an offline-arc methodology descriptor (declared
+      inference_substrate=verifier_ensemble_against_cached_candidates + a cited solver_module/reproducibility_
+      checksum/verifier_checkpoint) and do NOT METHODOLOGY_MISSING-warn it, WITHOUT weakening the check for a real
+      live_llm_inference artifact missing model_specs. This is a READER guard, NOT a behavior change to any solver.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/adversarial_verify.py (the METHODOLOGY_MISSING detector + the inference_substrate floor table; the .422 B2 learned-CNN DURATION guard)
+        - {project_root}/scripts/summarize_artifact.py (the reading-results discipline -- surface the substrate methodology recognized)
+        - {project_root}/results/experiment_4573_primitive_persist_transfer.json (an offline-arc artifact false-warned METHODOLOGY_MISSING -- the exemplar)
         - {project_root}/CLAUDE.md ("Inference-Substrate Declaration Discipline" -- the substrate/floor table)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python {project_root}/scripts/adversarial_verify.py --help` exits 0 (or the module imports). Missing -> blocked, EXIT.
-        1. Ensure adversarial_verify recognizes a learned-CNN action-model artifact (inference_substrate=verifier_ensemble_against_cached_candidates with a CNN/torch marker but NO LLM/GGUF marker, OR a new learned_cnn_cpu_inference value) and applies the offline floor (1s), NOT the 60s live-model floor. The guard must STILL fire DURATION_TOO_SHORT on an artifact that declares live_llm_inference / GGUF and finishes <60s (do not weaken the real check). Do NOT modify scripts/research_conductor.py.
-        2. Add a REGRESSION ASSERT: a fast learned-CNN action-model fixture (torch marker, ~5s, no LLM, declared offline substrate) is NOT flagged; a live_llm_inference fixture at <60s IS flagged.
-        3. Asserting tests (--no-cov): both the not-flagged-on-CNN and still-flagged-on-fake-LLM cases.
+        1. Ensure adversarial_verify recognizes an offline-arc methodology: an artifact declaring inference_substrate=verifier_ensemble_against_cached_candidates (or aggregation_from_upstream_artifacts) that cites an offline methodology descriptor (solver_module / reproducibility_checksum / verifier_checkpoint / reproduce-gate) is NOT METHODOLOGY_MISSING-warned. A live_llm_inference artifact missing model_specs MUST still warn (do not weaken the real check). Do NOT modify scripts/research_conductor.py.
+        2. Add a REGRESSION ASSERT: an offline-arc fixture (verifier_ensemble substrate + cited solver_module + checksum, no model_specs) is NOT warned; a live_llm_inference fixture missing model_specs IS warned.
+        3. Asserting tests (--no-cov): both the not-warned-on-offline-arc and still-warned-on-real-LLM cases.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; shipped: learned_cnn_substrate_guard_added OR complete: learned_cnn_substrate_guard_partial_<reason>."
+          principle: "terminal prefix; shipped: offline_arc_methodology_guard_added OR complete: offline_arc_methodology_guard_partial_<reason>."
         inference_substrate:
           principle: "verifier_ensemble_against_cached_candidates -- runs the guard against fixtures, no model load (1s floor)."
         guard_mechanism:
-          principle: "names the recognized substrate/floor + where it fires -- the fix that stops a fast-but-real CNN being quarantined."
-        cnn_artifact_not_flagged:
-          principle: "a fast learned-CNN action-model fixture is NOT DURATION_TOO_SHORT-flagged -- the .422 A1 headline protection."
-        fake_llm_still_flagged:
-          principle: "a live_llm_inference fixture at <60s IS still flagged -- guards against weakening the real fabrication check."
+          principle: "names the recognized offline-arc methodology descriptor + where it suppresses the warn -- the fix that stops every ARC artifact false-warning."
+        offline_arc_artifact_not_warned:
+          principle: "an offline-arc fixture (substrate + cited solver/checksum, no model_specs) is NOT METHODOLOGY_MISSING-warned -- the recurring-warn fix."
+        real_llm_still_warned:
+          principle: "a live_llm_inference fixture missing model_specs IS still warned -- guards against weakening the real methodology check."
         tests_added_pass:
-          principle: "Tests Must Run and Assert -- both the not-flagged-on-CNN and still-flagged-on-fake-LLM cases."
+          principle: "Tests Must Run and Assert -- both the not-warned-on-offline-arc and still-warned-on-real-LLM cases."
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4575_learned_cnn_substrate_guard.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4587_offline_arc_methodology_guard.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4576-c
-    milestone: 2026.06.422
+  - id: exp4588-c
+    milestone: 2026.06.423
     title: 'PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH
-      reachability only, NEVER host SD card), GateMate (USB detect), PolarFire (SSH). Per-board continuity
-      audit; honest blocked_<board>_<reason> if a board is unreachable.'
+      reachability only, NEVER host SD card), GateMate (USB detect), PolarFire (SSH). Per-board continuity audit;
+      honest blocked_<board>_<reason> if a board is unreachable.'
     priority: medium
     track: hardware
     max_turns: 80
     agent_type: codex
     model: gpt-5.5
     inference_substrate: hardware_smoke
-    operator_override: '2026-06-19 operator directive (standing): active hardware-continuity task mandated by
-      the Hardware-Task Continuity Discipline; scope-matches retired hardware exps but is required forward
-      per-board audit until each board reaches its terminal state.'
-    deliverable: results/experiment_4576_hardware_continuity.json
+    operator_override: '2026-06-19 operator directive (standing): active hardware-continuity task mandated by the
+      Hardware-Task Continuity Discipline; scope-matches retired hardware exps but is required forward per-board
+      audit until each board reaches its terminal state.'
+    deliverable: results/experiment_4588_hardware_continuity.json
     prompt: |
       CONTEXT ({date}, HARDWARE CONTINUITY -- CLAUDE.md mandates >=1 task per attached board per milestone).
       Per-board reachability audit. KV260: SSH reachability ONLY (the retired host SD-card block-device
-      precondition must NOT be used -- check the board over SSH, never a host storage-device path). GateMate:
-      USB detect. PolarFire: SSH.
+      precondition must NOT be used -- check the board over SSH, never a host storage-device path). GateMate: USB
+      detect. PolarFire: SSH.
 
       CONCRETE STEPS:
         0. PRECONDITIONS / per-board checks (each independent; a board being down is an honest blocked_<board>, not a failure):
@@ -778,48 +787,46 @@ tasks:
         preconditions_checked:
           principle: "records WHICH board resources were verified; SSH-not-SD-card for KV260."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4576_hardware_continuity.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4588_hardware_continuity.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4577-d
-    milestone: 2026.06.422
-    title: 'PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = learned action-effect model + verifier-
-      guided expansion) -- ingest SOTA on learned CNN action-effect/clickability models for interactive agents
-      (StochasticGoose/Tufa, arXiv:2603.24621) + verifier/PRM-guided candidate EXPANSION generalization
-      (arXiv:2502.18407 AgentRM, 2504.16828 ThinkPRM, 2502.00271 scaling-flaws, carried 2602.01070/2601.22607),
-      mapped onto the .422 A1/A2 headlines. Emit a SOTA->experiment mapping note with real arXiv IDs + flag the
-      strongest method for .423.'
+  - id: exp4589-d
+    milestone: 2026.06.423
+    title: 'PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = feature/skill ROUTING + env-adaptive replay)
+      -- ingest SOTA on skill-routing / skill-library selection for agents (SkillRouter arXiv:2603.22455,
+      SkillGraph arXiv:2605.12039, SkillComposer arXiv:2606.06079, Skill-Pro arXiv:2602.01869) + robust /
+      env-adaptive replay under env/version drift, mapped onto the .423 A1 (env-adaptive re-solve) + A3
+      (feature-router) headlines. Carry the action-effect citations (arXiv:2603.24621). Emit a SOTA->experiment
+      mapping note with real arXiv IDs + flag the strongest method for .424.'
     priority: medium
     track: sota-ingestion
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (standing, CLAUDE.md): reserved ingestion
-      slot for the milestone headline track; scope-matches prior SOTA-ingestion tasks (exp4565/exp4553) but the
-      forward difference is the NEW headline track (learned action-effect predictor + verifier-guided candidate
-      EXPANSION, superseding the .421 verifier-as-router ingestion). Not a doomed rerun.'
-    deliverable: results/experiment_4577_sota_ingestion_action_effect.json
+    operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (standing, CLAUDE.md): reserved ingestion slot
+      for the milestone headline track; scope-matches prior SOTA-ingestion tasks (exp4577/exp4565) but the forward
+      difference is the NEW headline track (feature/skill ROUTING + env-adaptive replay, superseding the .422
+      action-effect-predictor ingestion). Not a doomed rerun.'
+    deliverable: results/experiment_4589_sota_ingestion_feature_router.json
     prompt: |
-      CONTEXT ({date}, SOTA-INGESTION reserved slot; headline = ACTION EFFICIENCY via a learned CNN action-
-      effect/clickability predictor + verifier-guided candidate EXPANSION). Ingest SOTA mapped onto the .422
-      A1/A2 headlines: (A1) learned action-effect / clickability / exploration-efficiency models for interactive
-      agents (the StochasticGoose/Tufa CNN paradigm; the ARC-AGI-3 report arXiv:2603.24621); (A2) verifier /
-      process-reward-model GUIDED candidate EXPANSION + best-first search generalization (arXiv:2502.18407
-      AgentRM, arXiv:2504.16828 ThinkPRM, the cautionary arXiv:2502.00271 verifier-guided-search scaling flaws,
-      and the carried arXiv:2602.01070 + 2601.22607). RELIABLE channel only (scripts/sweep_clusters.py +
-      sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8). /deep-research is BANNED in the
-      autonomous loop.
+      CONTEXT ({date}, SOTA-INGESTION reserved slot; headline = the feature-ROUTER for seen->hidden transfer +
+      env-adaptive replay). Ingest SOTA mapped onto the .423 A1/A3 headlines: (A3) skill-routing / skill-library
+      selection for agents (SkillRouter arXiv:2603.22455, SkillGraph arXiv:2605.12039, SkillComposer
+      arXiv:2606.06079, Skill-Pro arXiv:2602.01869, SkillRL); (A1) robust / env-adaptive replay + agents under
+      env/version drift / OOD layout (graph-explore arXiv:2512.24156, the ARC-AGI-3 report arXiv:2603.24621).
+      RELIABLE channel only (scripts/sweep_clusters.py + sweep_semscholar.py + low-concurrency WebSearch/WebFetch
+      of the top 5-8). /deep-research is BANNED in the autonomous loop.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python {project_root}/scripts/sweep_clusters.py --help` exits 0 AND arXiv reachable (`curl -sf -o /dev/null "https://export.arxiv.org/api/query?search_query=all:test"`). Missing -> blocked_network, EXIT.
-        1. Read the already-discovered corpus (research-studying.md / research-references.md) filtered to learned action-effect models + verifier-guided expansion; run a focused fresh pass (clusters + semscholar + WebFetch top 5-8). VERIFY arXiv:2502.18407 / 2504.16828 / 2502.00271 / 2603.24621 + the carried 2602.01070/2601.22607 and extend.
-        2. Synthesize a SOTA->experiment mapping note (docs/research-notes/): the strongest 3-5 methods for (a) a learned action-effect predictor and (b) verifier-guided candidate expansion, what each takes over the CURRENT A1/A2 mechanisms (exp4568/exp4569), and where each fails. Cite REAL arXiv IDs for every method claim (no fabrication).
-        3. Update research-studying.md (mark ingested, add flagged_for_v423) + flag the strongest method as a candidate for .423.
+        1. Read the already-discovered corpus (research-studying.md / research-references.md, incl. the 2026-06-22 .423 scan) filtered to skill-routing + env-adaptive replay; run a focused fresh pass (clusters + semscholar + WebFetch top 5-8). VERIFY arXiv:2603.22455 / 2605.12039 / 2606.06079 / 2602.01869 / 2512.24156 / 2603.24621 and extend.
+        2. Synthesize a SOTA->experiment mapping note (docs/research-notes/): the strongest 3-5 methods for (a) feature/skill routing over a toolkit and (b) env-adaptive/robust replay, what each takes over the CURRENT A1/A3 mechanisms (exp4580/exp4582), and where each fails. Cite REAL arXiv IDs for every method claim (no fabrication).
+        3. Update research-studying.md (mark ingested, add flagged_for_v424) + flag the strongest method as a candidate for .424.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; complete: sota_ingestion_action_effect_mapped."
+          principle: "terminal prefix; complete: sota_ingestion_feature_router_mapped."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- literature synthesis, no model load (100us floor)."
         methods_mapped:
@@ -827,21 +834,22 @@ tasks:
         citations_verified:
           principle: "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as any results artifact)."
         flagged_for_next_roadmap:
-          principle: "the strongest method flagged as a .423 candidate -- closes the discover->ingest->plan loop."
+          principle: "the strongest method flagged as a .424 candidate -- closes the discover->ingest->plan loop."
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
       Run: this task primarily WRITES a research note + updates research-studying.md; emit the artifact JSON recording the mapping.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4578-e
-    milestone: 2026.06.422
-    title: 'PHASE E (CAPSTONE .422) -- the scorecard: did the CLICKABILITY/action-effect predictor (A1) reduce
-      median actions-to-first-levelup below blind BFS (the action-efficiency scoring lever)? Did verifier-guided
-      EXPANSION (A2) raise generic_transfer above 0.04 (fix the winner-not-in-pool root cause)? Did A3/A4 grow
-      reproducible_total_levels? Report ALL THREE co-headline metrics (bank count + generic transfer w/ CI +
-      action efficiency, per B1). Skip flagged_adversarial -- EXCEPT the annotated null-delta carve-out; honor
-      the B2 learned-CNN substrate guard + the .421 B2 positive-control-failed guard.'
+  - id: exp4590-e
+    milestone: 2026.06.423
+    title: 'PHASE E (CAPSTONE .423) -- the scorecard: did closing the LIVE-SUBMISSION GAP (A1) raise the
+      live-submittable level count above 33 (the score lever)? Did the feature-ROUTER (A3) raise generic_transfer
+      above 0.04 (the seen->hidden transfer)? Did the diversity floor (A4) transfer? Did A2 grow
+      reproducible_total_levels? Report ALL co-headline metrics (reproducible_total_levels + live-submittable
+      count [B1] + generic_transfer w/ CI + action efficiency). Skip flagged_adversarial EXCEPT the annotated
+      null-delta carve-out; honor the .423 B2 offline-arc-METHODOLOGY guard + the .422 B2 learned-CNN guard + the
+      positive-control-failed guard.'
     priority: high
     track: capstone
     max_turns: 110
@@ -849,70 +857,69 @@ tasks:
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
     operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine per-milestone CAPSTONE
-      aggregation (codex default); false-positive scope-match vs every prior capstone (exp4566/exp4554). Not a
+      aggregation (codex default); false-positive scope-match vs every prior capstone (exp4578/exp4566). Not a
       doomed rerun; the forward content is THIS milestone''s A1-A6 scorecard.'
-    deliverable: results/experiment_4578_capstone_v422.json
+    deliverable: results/experiment_4590_capstone_v423.json
     prompt: |
-      CONTEXT ({date}, CAPSTONE .422). Aggregate the milestone honestly. HEADLINE QUESTION: did the CLICKABILITY
-      / action-effect predictor (A1, the leaderboard #1 lever) reduce median actions-to-first-levelup below blind
-      BFS (the action-efficiency scoring lever min(human/agent,1)^2)? SECONDARY: did verifier-guided EXPANSION
-      (A2) raise generic_transfer above 0.04 by fixing the .421 winner-not-in-pool root cause (the winner
-      GENERATED, not just re-ranked)? Did A3 (level-up bank) + A4 (ka59 hidden-state) grow
-      reproducible_total_levels? Report ALL THREE co-headline metrics (bank count + generic transfer w/ CI +
-      action efficiency, per B1).
+      CONTEXT ({date}, CAPSTONE .423). Aggregate the milestone honestly. HEADLINE QUESTION: did closing the
+      LIVE-SUBMISSION GAP (A1) raise the live-submittable level count STRICTLY above 33 (the score lever -- bank
+      replayable trajectories + refresh the package + env-adaptive re-solve)? SECONDARY: did the feature-ROUTER
+      (A3) raise generic_transfer above 0.04 (the seen->hidden transfer)? Did the diversity floor (A4) transfer
+      (first-win up)? Did A2 grow reproducible_total_levels? Report ALL co-headline metrics (reproducible_total_
+      levels + live-submittable count [B1] + generic_transfer w/ CI + action efficiency).
 
       MANDATORY: skip ANY artifact carrying flagged_adversarial: true (do NOT aggregate its numbers) -- EXCEPT
       when its only critical flag is a control==best null-delta TAUTOLOGY WITH an explicit delta +
-      null_delta_methodology_note (then READ its diagnosis fields with a corrigendum note). HONOR the .422 B2
-      learned-CNN substrate guard (a fast CPU CNN action-model artifact is NOT a fabrication -- do not exclude
-      A1 merely for finishing fast if it declared the offline substrate) AND the .421 B2 positive-control-failed
-      guard (an artifact with positive_control_passed=False is false_negative_risk_open -- do NOT read its null
-      as a clean result). A FAILED acceptance gate overrides a celebratory verdict. Read every upstream artifact
-      via scripts/summarize_artifact.py (the reading-results discipline).
+      null_delta_methodology_note (then READ its diagnosis fields with a corrigendum note). HONOR the .423 B2
+      offline-arc METHODOLOGY guard + the .422 B2 learned-CNN DURATION guard (a fast offline-arc artifact that
+      declared its substrate is NOT a fabrication -- do not exclude A1/A2/A3 merely for finishing fast or lacking
+      model_specs) AND the positive-control-failed guard (an artifact with positive_control_passed=False/None is
+      false_negative_risk_open -- do NOT read its null as a clean result; the .422 A2 trap). A FAILED acceptance
+      gate overrides a celebratory verdict. Read every upstream artifact via scripts/summarize_artifact.py.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4568_clickability_action_effect_predictor.json (A1 -- predictor + actions delta + verifier_is_oracle:false)
-        - {project_root}/results/experiment_4569_verifier_guided_expansion.json (A2 -- verifier-expansion + generic_transfer delta + winner_generated)
-        - {project_root}/results/experiment_4570_levelup_attempt.json (A3 -- level-up bank)
-        - {project_root}/results/experiment_4571_hidden_field_state_probe_ka59.json (A4 -- ka59 hidden-state deepening)
-        - {project_root}/results/experiment_4572_integration_gate.json (A5 -- integration HEADLINE)
-        - {project_root}/results/experiment_4573_primitive_persist_transfer.json (A6 -- self-learning transfer)
-        - {project_root}/results/experiment_4574_action_efficiency_coheadline.json (B1 -- the action-efficiency co-headline metric + CI)
-        - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels)
+        - {project_root}/results/experiment_4580_live_submission_gap_close.json (A1 -- live-submittable count delta + env-adaptive recovery + verifier_is_oracle:false)
+        - {project_root}/results/experiment_4581_levelup_selfplay.json (A2 -- level-up bank + verifier checkpoint)
+        - {project_root}/results/experiment_4582_feature_router_transfer.json (A3 -- feature-router generic_transfer delta + random-route control)
+        - {project_root}/results/experiment_4583_diversity_floor_transfer.json (A4 -- diversity-floor first-win transfer)
+        - {project_root}/results/experiment_4584_primitive_persist_transfer.json (A5 -- self-learning transfer)
+        - {project_root}/results/experiment_4585_integration_gate.json (A6 -- integration HEADLINE)
+        - {project_root}/results/experiment_4586_live_submittable_coheadline.json (B1 -- the live-submittable co-headline metric)
+        - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels) + {project_root}/results/arc3_live_submit.json (the 33-level baseline)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: the upstream artifacts exist. Missing -> aggregate what exists + note gaps.
-        1. Read each upstream artifact via scripts/summarize_artifact.py. Skip flagged_adversarial:true EXCEPT the annotated null-delta carve-out; honor the B2 learned-CNN substrate guard + the .421 B2 positive-control-failed guard.
-        2. Build the scorecard: A1 actions-to-first-levelup delta (before/after blind + CI, efficiency ratio, verifier_is_oracle:false), A2 generic_transfer delta (before/after 0.04 + CI + winner_generated), A3+A4 reproducible_total_levels growth, A5 integration HEADLINE (did SUBMITTED config raise either metric), A6 transfer, B1 all-three co-headline metrics w/ CI.
-        3. State the honest milestone verdict: did action efficiency move (A1), did verifier-guided expansion fix the winner-not-in-pool gap (A2), did capability grow (A3/A4), and is a resubmission warranted (operator-only; the gate is beat the last submitted scorecard -- 33 levels as of 2026-06-21).
+        1. Read each upstream artifact via scripts/summarize_artifact.py. Skip flagged_adversarial:true EXCEPT the annotated null-delta carve-out; honor the .423 B2 offline-arc-METHODOLOGY + .422 B2 learned-CNN + positive-control-failed guards.
+        2. Build the scorecard: A1 live-submittable count delta (before/after 33, env-adaptive recovery, verifier_is_oracle:false), A3 generic_transfer delta (before/after 0.04 + CI + random-route control + action cost), A4 diversity first-win delta, A2 reproducible_total_levels growth, A5 transfer, A6 integration HEADLINE (did the SUBMITTED config + refreshed package raise either metric), B1 all co-headline metrics.
+        3. State the honest milestone verdict: did the live-submittable count move above 33 (A1), did the feature-router fix the seen->hidden transfer (A3), did capability grow (A2/A4), and is a resubmission warranted (operator-only; the gate is beat the last submitted scorecard -- 33 levels as of 2026-06-21).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: clickability_predictor_actions_below_blind_or_expansion_generic_transfer_above_0.04 OR complete: action_efficiency_null_gaps_sharpened."
+          principle: "terminal prefix; success: live_submittable_above_33_or_feature_router_generic_transfer_above_0.04 OR complete: submission_gap_partially_closed_transfer_null_gaps_sharpened."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
-        action_efficiency_moved:
-          principle: "the bottom line -- did the clickability predictor (A1) reduce median actions-to-first-levelup below blind BFS with CI (the leaderboard scoring lever)."
+        live_submittable_moved:
+          principle: "the bottom line -- did A1 raise the offline-reproduction-gated live-submittable count STRICTLY above 33 (the leaderboard score lever)."
         generic_transfer_moved:
-          principle: "did verifier-guided expansion (A2) raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI (the winner-not-in-pool fix)."
-        winner_generated_root_cause_addressed:
-          principle: "did A2 GENERATE the winning candidate (vs the .421 A6 ordering_gain=0 winner-never-in-pool) -- the central diagnostic this milestone tests."
+          principle: "did the feature-router (A3) raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI + a passing random-route control (the seen->hidden transfer fix)."
         reproducible_total_levels_delta:
-          principle: "did solve CAPABILITY grow this milestone (A3 + A4 level-ups)."
+          principle: "did solve CAPABILITY grow this milestone (A2 + A4 banks)."
+        live_submittable_level_count:
+          principle: "the honest leaderboard score (B1) reported alongside reproducible_total_levels (the mirage) + generic_transfer + action efficiency."
         action_efficiency_score:
-          principle: "min(human/agent,1)^2 with CI (B1) -- the third co-headline metric reported alongside bank count + generic transfer."
+          principle: "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."
         generic_transfer_rate_over_variants:
-          principle: "the held-out-proxy first-contact signal (B1) reported WITH a CI -- a co-headline metric."
+          principle: "the held-out first-contact signal reported WITH a CI -- a co-headline metric."
         verifier_is_oracle_distinct_levers:
-          principle: "A1 (learned action-model) and A2 (learned verifier search-guide) are BOTH verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."
+          principle: "A1/A3/A4 value claims are verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."
         flagged_artifacts_handled:
-          principle: "names any flagged_adversarial artifact excluded AND any null-delta-carve-out / learned-CNN-substrate / positive-control-failed artifact handled (B2) -- fabrication-gate + false-negative-risk compliance."
+          principle: "names any flagged_adversarial artifact excluded AND any null-delta-carve-out / offline-arc-methodology / positive-control-failed artifact handled (B2 guards) -- fabrication-gate + false-negative-risk compliance."
         cited_upstream_artifacts:
           principle: "every headline number traces to a real upstream measurement (the audit trail)."
         ready_for_operator_submit:
-          principle: "True only if the integrated config is a CORE-preserved improvement on a real metric worth a 1/day slot (gate: beat the last 33-level submitted scorecard); never submits."
+          principle: "True only if the integrated config + refreshed package beat the last 33-level submitted scorecard on a real metric worth a 1/day slot; never submits."
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4578_capstone_v422.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4590_capstone_v423.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
