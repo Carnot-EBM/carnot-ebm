@@ -1,0 +1,395 @@
+{
+  "duration_s": 0.552252,
+  "experiment": "experiment_4584_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+    },
+    "offline_reproduced": {
+      "principle": "only offline-reproduced new levels count toward reproducible_total_levels."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "primitive_persisted": {
+      "principle": "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A3/A4 effort is wasted per the ARC reuse rule."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "registry_updated": {
+      "principle": "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "transfer_games": {
+      "principle": "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+    },
+    "transfer_value_per_game": {
+      "principle": "the per-game value-add (drift-recovered / winning-approach-selected / win-reached) -- the cross-game evidence the primitive generalizes."
+    }
+  },
+  "honest_verdict": "success: primitive_persisted_transfer_s5i5_value_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged.",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "counted_toward_reproducible_total_levels": 0,
+    "existing_source_levels": {
+      "ft09": 1,
+      "s5i5": 1,
+      "sb26": 1
+    },
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a3_artifact_present": true,
+    "a4_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "leaderboard_submission": false,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4584": true
+  },
+  "primitive_persisted": {
+    "derived_from_artifacts": [
+      "results/experiment_4580_live_submission_gap_close.json",
+      "results/experiment_4582_feature_router_transfer.json",
+      "results/experiment_4583_diversity_floor_transfer.json"
+    ],
+    "operator": "env_adaptive_resolve_operator",
+    "registry_general_gotcha_id": "primitive_env_adaptive_resolve_operator",
+    "source": "A1_env_adaptive_resolve",
+    "source_tuning_games": [
+      "sc25"
+    ]
+  },
+  "random_seed": 4584,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:a0e491982e8bbf9f0b864d3b8e1500da306677b8e7c26bafbd6772a0e27a3759",
+  "requirements": [
+    "REQ-CAPSTONE-4584"
+  ],
+  "result_path": "results/experiment_4584_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-CAPSTONE-4584",
+    "SCENARIO-CAPSTONE-4584-FIELD-PRINCIPLES"
+  ],
+  "schema": "carnot.exp4584.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "measured_signal": 10.2,
+    "operator": "env_adaptive_resolve_operator",
+    "registry_general_gotcha_id": "primitive_env_adaptive_resolve_operator",
+    "selection_rationale": "A1 env-adaptive re-solve recovered drift in experiment 4580, while A3 and A4 reported no positive transfer delta; persist A1 as the reusable primitive.",
+    "source": "A1_env_adaptive_resolve",
+    "source_tuning_games": [
+      "sc25"
+    ],
+    "upstream_signal_rank": [
+      {
+        "artifact": "results/experiment_4580_live_submission_gap_close.json",
+        "measured_signal": 10.2,
+        "source": "A1_env_adaptive_resolve"
+      },
+      {
+        "artifact": "results/experiment_4582_feature_router_transfer.json",
+        "measured_signal": 0.0,
+        "source": "A3_feature_router"
+      },
+      {
+        "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+        "measured_signal": 0.0,
+        "source": "A4_diversity_transfer"
+      }
+    ]
+  },
+  "transfer_dead_ends": {},
+  "transfer_games": [
+    "s5i5",
+    "ft09",
+    "sb26"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "",
+      "game": "s5i5",
+      "labels": [
+        "h_extend",
+        "v_extend"
+      ],
+      "not_tuned_on_source": true,
+      "operator_result": {
+        "adaptive_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 50,
+              "y": 23
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 25,
+              "y": 49
+            }
+          }
+        ],
+        "adaptive_reached": true,
+        "dead_end": "",
+        "drift_recovered": true,
+        "frozen_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 47,
+              "y": 21
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 22,
+              "y": 47
+            }
+          }
+        ],
+        "frozen_reached": false,
+        "game": "s5i5",
+        "label_count": 2,
+        "operator": "env_adaptive_resolve_operator",
+        "value_added": true
+      },
+      "source_tuning_games": [
+        "sc25"
+      ],
+      "transfer_value": {
+        "adaptive_action_count": 2,
+        "adaptive_reached": true,
+        "drift_recovered": true,
+        "existing_reproduced_level": 1,
+        "frozen_action_count": 2,
+        "frozen_reached": false,
+        "label_count": 2,
+        "offline_reproduced_new_level": false,
+        "operator": "env_adaptive_resolve_operator",
+        "value_added": true,
+        "win_reached": false,
+        "winning_approach_selected": false
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "game": "ft09",
+      "labels": [
+        "click:36,36",
+        "click:36,44"
+      ],
+      "not_tuned_on_source": true,
+      "operator_result": {
+        "adaptive_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 39,
+              "y": 41
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 39,
+              "y": 49
+            }
+          }
+        ],
+        "adaptive_reached": true,
+        "dead_end": "",
+        "drift_recovered": true,
+        "frozen_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 36,
+              "y": 36
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 36,
+              "y": 44
+            }
+          }
+        ],
+        "frozen_reached": false,
+        "game": "ft09",
+        "label_count": 2,
+        "operator": "env_adaptive_resolve_operator",
+        "value_added": true
+      },
+      "source_tuning_games": [
+        "sc25"
+      ],
+      "transfer_value": {
+        "adaptive_action_count": 2,
+        "adaptive_reached": true,
+        "drift_recovered": true,
+        "existing_reproduced_level": 1,
+        "frozen_action_count": 2,
+        "frozen_reached": false,
+        "label_count": 2,
+        "offline_reproduced_new_level": false,
+        "operator": "env_adaptive_resolve_operator",
+        "value_added": true,
+        "win_reached": false,
+        "winning_approach_selected": false
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "game": "sb26",
+      "labels": [
+        "click:36,59",
+        "click:23,30"
+      ],
+      "not_tuned_on_source": true,
+      "operator_result": {
+        "adaptive_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 38,
+              "y": 58
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 25,
+              "y": 29
+            }
+          }
+        ],
+        "adaptive_reached": true,
+        "dead_end": "",
+        "drift_recovered": true,
+        "frozen_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 36,
+              "y": 59
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 23,
+              "y": 30
+            }
+          }
+        ],
+        "frozen_reached": false,
+        "game": "sb26",
+        "label_count": 2,
+        "operator": "env_adaptive_resolve_operator",
+        "value_added": true
+      },
+      "source_tuning_games": [
+        "sc25"
+      ],
+      "transfer_value": {
+        "adaptive_action_count": 2,
+        "adaptive_reached": true,
+        "drift_recovered": true,
+        "existing_reproduced_level": 1,
+        "frozen_action_count": 2,
+        "frozen_reached": false,
+        "label_count": 2,
+        "offline_reproduced_new_level": false,
+        "operator": "env_adaptive_resolve_operator",
+        "value_added": true,
+        "win_reached": false,
+        "winning_approach_selected": false
+      },
+      "value_added": true
+    }
+  ],
+  "transfer_value_per_game": {
+    "ft09": {
+      "adaptive_action_count": 2,
+      "adaptive_reached": true,
+      "drift_recovered": true,
+      "existing_reproduced_level": 1,
+      "frozen_action_count": 2,
+      "frozen_reached": false,
+      "label_count": 2,
+      "offline_reproduced_new_level": false,
+      "operator": "env_adaptive_resolve_operator",
+      "value_added": true,
+      "win_reached": false,
+      "winning_approach_selected": false
+    },
+    "s5i5": {
+      "adaptive_action_count": 2,
+      "adaptive_reached": true,
+      "drift_recovered": true,
+      "existing_reproduced_level": 1,
+      "frozen_action_count": 2,
+      "frozen_reached": false,
+      "label_count": 2,
+      "offline_reproduced_new_level": false,
+      "operator": "env_adaptive_resolve_operator",
+      "value_added": true,
+      "win_reached": false,
+      "winning_approach_selected": false
+    },
+    "sb26": {
+      "adaptive_action_count": 2,
+      "adaptive_reached": true,
+      "drift_recovered": true,
+      "existing_reproduced_level": 1,
+      "frozen_action_count": 2,
+      "frozen_reached": false,
+      "label_count": 2,
+      "offline_reproduced_new_level": false,
+      "operator": "env_adaptive_resolve_operator",
+      "value_added": true,
+      "win_reached": false,
+      "winning_approach_selected": false
+    }
+  },
+  "upstream_signals": {
+    "A1_env_adaptive_resolve": {
+      "artifact": "results/experiment_4580_live_submission_gap_close.json",
+      "count_delta": 20,
+      "env_adaptive_resolve_recovered": [
+        "sc25"
+      ],
+      "measured_signal": 10.2
+    },
+    "A3_feature_router": {
+      "artifact": "results/experiment_4582_feature_router_transfer.json",
+      "measured_signal": 0.0,
+      "transfer_delta": 0.0,
+      "winner_generated_count": 1
+    },
+    "A4_diversity_transfer": {
+      "artifact": "results/experiment_4583_diversity_floor_transfer.json",
+      "firstwin_delta": 0,
+      "measured_signal": 0.0
+    }
+  }
+}

@@ -178,6 +178,23 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="env_adaptive_resolve_operator",
+            derived_from_games=("sc25", "exp4580_live_submission_gap_close"),
+            purpose=(
+                "Re-derive replayable action coordinates from the current environment instead "
+                "of trusting frozen live/offline pixel coordinates, then report drift recovery "
+                "before any solve claim."
+            ),
+            selector_tags=(
+                "env_adaptive",
+                "coordinate_discovery",
+                "drift_recovery",
+                "replay",
+                "click",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="per_level_reinduction_operator",
             derived_from_games=("lp85", "m0r0", "sp80", "vc33"),
             purpose=(
@@ -261,6 +278,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
             "persistent_action_effect_memory_operator",
             "cast_grid_phase_fsm_world_model",
@@ -300,6 +318,7 @@ def select_primitive_operators(
             "glyph_rewrite_matcher",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
             "persistent_action_effect_memory_operator",
             "graph_astar_action_cost",
@@ -311,6 +330,7 @@ def select_primitive_operators(
             "config_rule_grounding",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
             "persistent_action_effect_memory_operator",
             "object_centric_digest",
@@ -320,6 +340,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
             "persistent_action_effect_memory_operator",
             "object_centric_digest",
@@ -345,6 +366,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
             "persistent_action_effect_memory_operator",
             "graph_astar_action_cost",
@@ -354,6 +376,7 @@ def select_primitive_operators(
         names = (
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
+            "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
             "persistent_action_effect_memory_operator",
             "object_centric_digest",
@@ -556,6 +579,111 @@ def _candidate_reaches_levelup(candidate: Any, target_key: str) -> bool:
         if value is not None:
             return bool(value)
     return _candidate_score(candidate, "level_progress") > 0.0
+
+
+def _normalise_resolved_action(value: Any) -> dict[str, Any] | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return {"action": int(value)}
+    if not isinstance(value, Mapping):
+        return None
+    action_id = value.get("action", value.get("action_id"))
+    if action_id is None and value.get("x") is not None and value.get("y") is not None:
+        action_id = 6
+    try:
+        action_int = int(action_id)
+    except (TypeError, ValueError):
+        return None
+    action: dict[str, Any] = {"action": action_int}
+    data = value.get("data") if isinstance(value.get("data"), Mapping) else {}
+    x_value = data.get("x", value.get("x")) if isinstance(data, Mapping) else value.get("x")
+    y_value = data.get("y", value.get("y")) if isinstance(data, Mapping) else value.get("y")
+    if x_value is not None and y_value is not None:
+        try:
+            action["data"] = {"x": int(x_value), "y": int(y_value)}
+        except (TypeError, ValueError):
+            return None
+    return action
+
+
+def _resolve_action_with(resolver: Any, label: Any) -> dict[str, Any] | None:
+    if resolver is None:
+        return _normalise_resolved_action(label)
+    try:
+        value = resolver(label) if callable(resolver) else resolver.get(label)
+    except Exception:
+        return None
+    if value is None and isinstance(resolver, Mapping):
+        value = resolver.get(str(label))
+    return _normalise_resolved_action(value)
+
+
+def _call_resolve_target(
+    target_predicate: Optional[Callable[..., bool]],
+    actions: Sequence[Mapping[str, Any]],
+    *,
+    game: str,
+    mode: str,
+) -> bool:
+    if target_predicate is None:
+        return bool(actions)
+    for args in ((actions, game, mode), (actions, game), (actions,)):
+        try:
+            return bool(target_predicate(*args))
+        except TypeError:
+            continue
+    return False
+
+
+def env_adaptive_resolve_operator(
+    labels: Sequence[Any],
+    *,
+    adaptive_resolver: Any,
+    frozen_resolver: Any = None,
+    target_predicate: Optional[Callable[..., bool]] = None,
+    game: str = "",
+) -> dict[str, Any]:
+    """REQ-CAPSTONE-4584: compare frozen replay with env-adaptive re-derived actions."""
+
+    label_list = list(labels)
+    frozen_actions = [
+        action for label in label_list if (action := _resolve_action_with(frozen_resolver, label))
+    ]
+    adaptive_actions = [
+        action for label in label_list if (action := _resolve_action_with(adaptive_resolver, label))
+    ]
+    frozen_reached = _call_resolve_target(
+        target_predicate,
+        frozen_actions,
+        game=game,
+        mode="frozen",
+    )
+    adaptive_reached = _call_resolve_target(
+        target_predicate,
+        adaptive_actions,
+        game=game,
+        mode="adaptive",
+    )
+    dead_end = ""
+    if not adaptive_actions:
+        dead_end = "adaptive resolver produced no replayable actions for the symbolic plan."
+    elif not adaptive_reached:
+        dead_end = "adaptive resolver produced actions, but the transfer verifier target was not reached."
+    elif frozen_reached:
+        dead_end = "frozen replay already reached the transfer verifier target, so no drift recovery value was added."
+    return {
+        "operator": "env_adaptive_resolve_operator",
+        "game": str(game),
+        "label_count": int(len(label_list)),
+        "frozen_actions": frozen_actions,
+        "adaptive_actions": adaptive_actions,
+        "frozen_reached": bool(frozen_reached),
+        "adaptive_reached": bool(adaptive_reached),
+        "drift_recovered": bool(adaptive_reached and not frozen_reached),
+        "value_added": bool(adaptive_reached and not frozen_reached),
+        "dead_end": dead_end,
+    }
 
 
 def persistent_action_effect_memory_operator(
