@@ -1,0 +1,105 @@
+{
+  "experiment": "experiment_reinduction_synthetic_control",
+  "honest_verdict": "success: reinduction_operator_DEEPENS_past_frozen_on_a_grid_expressible_wall_colour_shift_frozen_locates_avatar_but_mismodels_walls_controlled_proof",
+  "verifier_is_oracle": false,
+  "inference_substrate": "synthetic_ground_truth_nav_on_real_tu93_layout",
+  "random_seed": 20260622,
+  "headline_case": "wall_colour_shift_on_real_tu93_maze",
+  "wall_colour_shift": {
+    "case": "wall_colour_shift_on_real_tu93_maze",
+    "L1_params": {
+      "step": 6,
+      "wall_color": 5,
+      "goal_color": 14,
+      "avatar_colors": [
+        9,
+        4
+      ]
+    },
+    "L2_params": {
+      "step": 6,
+      "wall_color": 7,
+      "goal_color": 14,
+      "avatar_colors": [
+        9,
+        4
+      ]
+    },
+    "fit_L1": {
+      "avatar": [
+        4,
+        9
+      ],
+      "wall": [
+        5
+      ],
+      "goal": 14,
+      "displacement": {
+        "4": [
+          0,
+          6
+        ],
+        "3": [
+          0,
+          -6
+        ],
+        "2": [
+          6,
+          0
+        ],
+        "1": [
+          -6,
+          0
+        ]
+      },
+      "acc_L1": 1.0,
+      "acc_on_L2": 0.414
+    },
+    "fit_L2_reinduced": {
+      "avatar": [
+        4,
+        9
+      ],
+      "wall": [
+        7
+      ],
+      "goal": 14,
+      "displacement": {
+        "4": [
+          0,
+          6
+        ],
+        "2": [
+          6,
+          0
+        ],
+        "1": [
+          -6,
+          0
+        ],
+        "3": [
+          0,
+          -6
+        ]
+      },
+      "acc_L2": 1.0
+    },
+    "frozen": {
+      "L1": true,
+      "L1_reason": "advanced",
+      "L2": false,
+      "L2_reason": "plan_executed_no_advance"
+    },
+    "reinduct": {
+      "L1": true,
+      "L1_reason": "advanced",
+      "L2": true,
+      "L2_reason": "advanced"
+    },
+    "frozen_can_locate_L2_avatar": true,
+    "reinduct_deepens_past_frozen": true
+  },
+  "headline_is_clean_misnavigation_separation": true,
+  "methodology_note": "HEADLINE: the layout is the REAL tu93 L1 maze (rich transitions -> robust fitting); only the WALL colour shifts 5->7. Avatar/door/floor/goal colours are identical, so the frozen model LOCATES the avatar and knows the goal -- it fails purely because it learned wall=5 and mis-models L2's colour-7 walls as passable, planning a path that the real colour-7-walled env blocks. Re-induction recovers wall=7 and routes correctly. GroundTruthNav is an independently-coded simulator operating on the real maze grid; the claim is scoped to grid-expressible NAV shifts (here the wall colour), not arbitrary or hidden-state mechanics.",
+  "duration_s": 7.812
+}

@@ -1,0 +1,37 @@
+{
+  "experiment": "experiment_tu93_l2_hidden_state",
+  "honest_verdict": "complete: L2_transition_is_grid_deterministic_no_hidden_state_same_visible_logical_grid_plus_action_always_same_next_grid",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search",
+  "random_seed": 20260622,
+  "game": "tu93",
+  "level_under_test": 2,
+  "model_file": "results/arc_e3/tu93/world_model_nav.py",
+  "logical_cell_size": 1,
+  "l2_reachable": true,
+  "n_l2_episodes": 1001,
+  "n_l2_transitions": 12012,
+  "counter_mask_cells": 1,
+  "n_grid_action_pairs_with_repeats": 99,
+  "n_nondeterministic_pairs": 0,
+  "nondeterminism_fraction": 0.0,
+  "full_grid_determinism": {
+    "n_distinct_keys": 99,
+    "n_repeated_pairs": 99,
+    "n_nondeterministic_pairs": 0,
+    "nondeterminism_fraction": 0.0
+  },
+  "masked_grid_determinism": {
+    "n_distinct_keys": 96,
+    "n_repeated_pairs": 96,
+    "n_nondeterministic_pairs": 3,
+    "nondeterminism_fraction": 0.0312
+  },
+  "comparison_experiment_8": {
+    "sb26_logical_nondeterminism_rate": 0.0,
+    "wa30_logical_nondeterminism_rate": 0.53,
+    "note": "0 == grid-deterministic (sb26 class); >0 == hidden state (wa30 class)."
+  },
+  "duration_s": 450.4,
+  "methodology_note": "n_resets_to_reach_l2 was structurally equal to n_l2_episodes (each fresh episode resets exactly once to reach L2); removed to avoid a tautological field. The finding is the nondeterminism_fraction over distinct (grid_hash, action) repeats."
+}

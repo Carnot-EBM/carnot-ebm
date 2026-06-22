@@ -1,0 +1,138 @@
+{
+  "experiment": "experiment_reinduction",
+  "game": "tu93",
+  "honest_verdict": "complete: reinduction_refits_a_movement_accurate_nav_model_at_the_next_level_but_a_deterministic_HAZARD_REMOVES_the_avatar_a_transition_the_nav_model_cannot_represent_nav_reinduction_insufficient_needs_a_hazard_aware_model_class_gap_sharpened",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_search_plus_induced_world_model",
+  "random_seed": 20260622,
+  "target_level": 3,
+  "l1_fit_quality": {
+    "n_transitions": 200,
+    "n_move_transitions": 72,
+    "displacement_agreement": {
+      "1": 0.25925925925925924,
+      "2": 0.2982456140350877,
+      "3": 0.3617021276595745,
+      "4": 0.5714285714285714
+    },
+    "avatar_colors": [
+      4,
+      9
+    ],
+    "wall_colors": [
+      5
+    ],
+    "floor_color": 0,
+    "goal_color": 14,
+    "displacement": {
+      "4": [
+        0,
+        6
+      ],
+      "3": [
+        0,
+        -6
+      ],
+      "2": [
+        6,
+        0
+      ],
+      "1": [
+        -6,
+        0
+      ]
+    }
+  },
+  "l1_prefix_len": 18,
+  "frozen_arm": {
+    "reached": 1,
+    "levels_gained": 0,
+    "reproduced": 1,
+    "per_level": [
+      {
+        "from_level": 1,
+        "reinduced": {
+          "reinduced": false,
+          "source": "frozen_L1_model"
+        },
+        "plan_len": 8,
+        "steps": 4,
+        "advanced": false,
+        "stop": "game_over_step4_budget47/None_avatar_REMOVED"
+      }
+    ],
+    "banked_len": 22
+  },
+  "reinduction_arm": {
+    "reached": 1,
+    "levels_gained": 0,
+    "reproduced": 1,
+    "per_level": [
+      {
+        "from_level": 1,
+        "reinduced": {
+          "reinduced": true,
+          "level": 1,
+          "n_transitions": 109,
+          "movement_accuracy": {
+            "accuracy": 1.0,
+            "n": 109,
+            "correct_move": 50,
+            "correct_block": 59,
+            "false_move": 0,
+            "false_block": 0
+          },
+          "fit": {
+            "n_transitions": 109,
+            "n_move_transitions": 48,
+            "displacement_agreement": {
+              "1": 0.4411764705882353,
+              "2": 0.4583333333333333,
+              "3": 0.2857142857142857,
+              "4": 0.5714285714285714
+            },
+            "avatar_colors": [
+              4,
+              9
+            ],
+            "wall_colors": [
+              5
+            ],
+            "floor_color": 0,
+            "goal_color": 14,
+            "displacement": {
+              "1": [
+                -6,
+                0
+              ],
+              "4": [
+                0,
+                6
+              ],
+              "2": [
+                6,
+                0
+              ],
+              "3": [
+                0,
+                -6
+              ]
+            }
+          }
+        },
+        "plan_len": 8,
+        "steps": 4,
+        "advanced": false,
+        "stop": "game_over_step4_budget47/None_avatar_REMOVED"
+      }
+    ],
+    "banked_len": 22
+  },
+  "frozen_reproduced": 1,
+  "reinduction_reproduced": 1,
+  "reinduction_deepens_past_frozen": false,
+  "nav_refit_movement_accurate_but_stalled": true,
+  "stalled_by_avatar_removal_hazard": true,
+  "methodology_note": "Head-to-head: a model FROZEN at L1 vs RE-INDUCED per level. REINDUCT>FROZEN => the trigger cracks a grid-expressible mechanic shift (see the synthetic control for a clean positive). On tu93 both reach L1: the re-induced model is movement-accurate on L2 NAVIGATION (which is grid-deterministic) but the engine only translates/blocks and is structurally BLIND to the L2-specific hazard that REMOVES the avatar (a charging-wall sprite per the env source). movement_accuracy cannot see that fatal transition (removal counts as a move), so 'movement accurate' must NOT be read as 'captured the level'. Deepening tu93 L2 needs a hazard-aware model class, not more nav re-induction. This is NOT broad hidden state (L2 nav is grid-deterministic) and NOT enemy/box (the L2 mechanic is a single charging-wall sprite).",
+  "duration_s": 1.4
+}
