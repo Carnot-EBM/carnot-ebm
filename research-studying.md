@@ -4250,3 +4250,29 @@ search (arXiv:2502.18407), ThinkPRM generative process verifier
 
 flagged_for_v423: use a StochasticGoose-style learned action-effect model as the candidate-expansion prior, then allocate Exp 4569 best-first frontier budget with adaptive PRM guidance and scaling-flaw controls (arXiv:2603.24621 + arXiv:2602.01070 + arXiv:2502.00271)
 <!-- EXP4577-ACTION-EFFECT-SOTA-END -->
+
+<!-- EXP4589-FEATURE-ROUTER-SOTA-START -->
+## 2026-06-22 Exp 4589 - .423 feature-router SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md`
+and `results/experiment_4589_sota_ingestion_feature_router.json`.
+
+**Preconditions:** `scripts/sweep_clusters.py --help` succeeded; the arXiv API
+reachability check succeeded; `scripts/sweep_clusters.py` clusters 5 and 6
+emitted focused URLs; `scripts/sweep_semscholar.py` returned HTTP 429 for three
+focused queries and no S2-only arXiv ID was promoted. Top sources were verified
+by arXiv abs-page HTTP 200 and low-concurrency WebSearch/WebFetch of the seven
+arXiv sources. `/deep-research` was not invoked. No live solve, training run,
+live LLM inference, leaderboard submission, ops/status/traceability edit, or
+`scripts/research_conductor.py` edit occurred.
+
+**Methods marked ingested:** SkillRouter full-text skill routing
+(arXiv:2603.22455), SkillGraph evolving skill graphs (arXiv:2605.12039),
+SkillComposer skill create/merge/improve (arXiv:2606.06079), Skill-Pro reusable
+procedural skills (arXiv:2602.01869), SkillRL/SkillBank recursive skill
+distillation (arXiv:2602.08234), Graph-Based Exploration for ARC-AGI-3
+(arXiv:2512.24156), and the ARC-AGI-3 efficiency/drift contract
+(arXiv:2603.24621).
+
+flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)
+<!-- EXP4589-FEATURE-ROUTER-SOTA-END -->

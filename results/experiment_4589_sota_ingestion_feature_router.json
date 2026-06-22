@@ -1,0 +1,165 @@
+{
+  "citations_verified": {
+    "2512.24156": {
+      "http_status": 200,
+      "title": "Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning Tasks",
+      "url": "https://arxiv.org/abs/2512.24156"
+    },
+    "2602.01869": {
+      "http_status": 200,
+      "title": "Skill-Pro: Learning Reusable Skills from Experience via Non-Parametric PPO for LLM Agents",
+      "url": "https://arxiv.org/abs/2602.01869"
+    },
+    "2602.08234": {
+      "http_status": 200,
+      "title": "SkillRL: Evolving Agents via Recursive Skill-Augmented Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2602.08234"
+    },
+    "2603.22455": {
+      "http_status": 200,
+      "title": "SkillRouter: Skill Routing for LLM Agents at Scale",
+      "url": "https://arxiv.org/abs/2603.22455"
+    },
+    "2603.24621": {
+      "http_status": 200,
+      "title": "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence",
+      "url": "https://arxiv.org/abs/2603.24621"
+    },
+    "2605.12039": {
+      "http_status": 200,
+      "title": "SkillGraph: Skill-Augmented Reinforcement Learning for Agents via Evolving Skill Graphs",
+      "url": "https://arxiv.org/abs/2605.12039"
+    },
+    "2606.06079": {
+      "http_status": 200,
+      "title": "SkillComposer: Learning to Evolve Agent Skills for Specification and Generalization",
+      "url": "https://arxiv.org/abs/2606.06079"
+    }
+  },
+  "field_principles": {
+    "citations_verified": "every method claim cites a verifiable arXiv ID/URL -- the no-fabrication bar (same as any results artifact).",
+    "field_principles": "principle annotations for every top-level artifact field.",
+    "flagged_for_next_roadmap": "the strongest method flagged as a .424 candidate -- closes the discover->ingest->plan loop.",
+    "honest_verdict": "terminal prefix; complete: sota_ingestion_feature_router_mapped.",
+    "inference_substrate": "aggregation_from_upstream_artifacts -- literature synthesis, no model load (100us floor).",
+    "methods_mapped": "the 3-5 strongest methods with REAL arXiv IDs -- the shoulders-of-giants anti-rederivation check.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "bare integer seed for reproducible artifact generation.",
+    "research_note_path": "repo-relative markdown path for deterministic parsing."
+  },
+  "flagged_for_next_roadmap": "flagged_for_v424: implement SkillRouter-style full-body routing over arc_solver_kit skills, backed by SkillGraph/SkillRL trace distillation and graph-explore env-adaptive replay regeneration for drifted rows (arXiv:2603.22455 + arXiv:2605.12039 + arXiv:2512.24156)",
+  "honest_verdict": "complete: sota_ingestion_feature_router_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "skill bodies are hidden at routing time, the library is not execution validated, retrieval is evaluated only on seen public games, or routing is left as a final candidate reranker after the winning action is absent.",
+      "method": "SkillRouter full-text retrieve-and-rerank over the solver toolkit",
+      "source_ids": [
+        "2603.22455"
+      ],
+      "takes_over_current_a1_a3_mechanisms": "Exp 4582 currently classifies first-K early-play effects into a small mechanic class and routes to a fixed approach, but the artifact ended as a null because winner generation stayed mostly absent. SkillRouter takes over Exp 4582 by retrieving and reranking full skill bodies from the arc_solver_kit toolkit before planning, rather than exposing only short names or hand-coded class labels.",
+      "target_track": "feature_skill_routing",
+      "v424_candidate": "flagged_for_v424: SkillRouter-style full-body routing over arc_solver_kit skills for the Exp 4582 seen-to-hidden feature router"
+    },
+    {
+      "fails_when": "the graph grows from raw trajectories without deduplication, failed traces are not distilled into negative routing constraints, or dependency edges are trusted without replay through the current ARC environment.",
+      "method": "SkillGraph plus SkillRL evolving skill-library structure",
+      "source_ids": [
+        "2605.12039",
+        "2602.08234"
+      ],
+      "takes_over_current_a1_a3_mechanisms": "Exp 4582 stores a flat mechanic-class to approach preference learned from positive and negative traces. SkillGraph and SkillRL take over that Exp 4582 policy by turning traces into a structured skill graph or SkillBank with dependency edges, failure lessons, and adaptive retrieval for general and task-specific heuristics.",
+      "target_track": "feature_skill_routing",
+      "v424_candidate": "flagged_for_v424: SkillGraph/SkillRL library maintenance behind the Exp 4582 router, with replay-gated skill insertion"
+    },
+    {
+      "fails_when": "merged skills become too abstract to trigger reliably, task-specific skills are allowed to leak public-game identity, or reusable procedures lack an offline replay gate before entering the toolkit.",
+      "method": "SkillComposer and Skill-Pro skill merge into executable reusable procedures",
+      "source_ids": [
+        "2606.06079",
+        "2602.01869"
+      ],
+      "takes_over_current_a1_a3_mechanisms": "Exp 4582 exposes residual gaps by mechanic class, and Exp 4580 banks trajectory evidence when a procedure is replayable. SkillComposer and Skill-Pro take over this handoff by creating, improving, merging, and verifying reusable skills with activation/execution/termination conditions instead of repeatedly deriving per-game recipes.",
+      "target_track": "feature_skill_routing",
+      "v424_candidate": "flagged_for_v424: SkillComposer/Skill-Pro merge pass over Exp 4582 mechanic gaps before persisting new solver primitives"
+    },
+    {
+      "fails_when": "the game requires hidden carry-state induction, graph keys ignore layout version drift, exploration budgets do not preserve action efficiency, or newly recovered paths are not rechecked through offline reproduction.",
+      "method": "Graph-Based Exploration as env-derived robust replay generator",
+      "source_ids": [
+        "2512.24156"
+      ],
+      "takes_over_current_a1_a3_mechanisms": "Exp 4580 succeeded by closing the package gap and recovering sc25 with an env-adaptive replay path instead of trusting stale flat coordinates. Graph-Based Exploration takes over Exp 4580's replay fragility by re-deriving state-action paths from current frames, visited-state graphs, and untested action priorities when frozen replay no longer matches.",
+      "target_track": "env_adaptive_replay",
+      "v424_candidate": "flagged_for_v424: graph-explore replay regeneration for Exp 4580 version-drift rows before falling back to stale coordinate banks"
+    },
+    {
+      "fails_when": "the next roadmap optimizes only the public-game package gap, ignores actions-to-first-levelup, treats official and community harness evidence as identical, or promotes env-adaptive replay without held-out layout drift.",
+      "method": "ARC-AGI-3 efficiency-and-drift evaluation contract",
+      "source_ids": [
+        "2603.24621"
+      ],
+      "takes_over_current_a1_a3_mechanisms": "Exp 4580's headline is not a new solve; it converts 53 reproduced public levels into 53 live-submittable levels by requiring environment-matched trajectories or an env-adaptive resolver. The ARC-AGI-3 report takes over the Exp 4580 acceptance contract: novel interactive environments require goal inference, dynamics modeling, planning, and action-efficient replay under changing layouts.",
+      "target_track": "env_adaptive_replay",
+      "v424_candidate": "flagged_for_v424: ARC-AGI-3 drift-aware live-submittable gate for every Exp 4580 replay primitive"
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_api_reachable": true,
+    "arxiv_http_200_verified_ids": [
+      "2603.22455",
+      "2605.12039",
+      "2606.06079",
+      "2602.01869",
+      "2602.08234",
+      "2512.24156",
+      "2603.24621"
+    ],
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "exp4580_artifact_read": true,
+    "exp4580_spec_read": true,
+    "exp4582_artifact_read": true,
+    "exp4582_spec_read": true,
+    "leaderboard_submission": false,
+    "live_llm_inference": false,
+    "live_solve_claim": false,
+    "ops_docs_modified": false,
+    "research_conductor_modified": false,
+    "research_references_filtered": true,
+    "research_studying_filtered": true,
+    "research_studying_updated": true,
+    "sweep_clusters_help_exit_0": true,
+    "sweep_clusters_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_arxiv_ids": [],
+    "sweep_semscholar_queries": [
+      "SkillRouter Skill Routing LLM Agents at Scale",
+      "SkillGraph skill augmented RL evolving skill graphs",
+      "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO",
+      "ARC-AGI-3 graph-based exploration environment drift replay skill routing"
+    ],
+    "sweep_semscholar_rate_limited_queries": [
+      "SkillRouter Skill Routing LLM Agents at Scale",
+      "SkillGraph skill augmented RL evolving skill graphs",
+      "SkillComposer learning to evolve agent skills specification generalization Skill-Pro reusable skills non-parametric PPO"
+    ],
+    "sweep_semscholar_used": true,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/2603.22455",
+      "https://arxiv.org/abs/2605.12039",
+      "https://arxiv.org/abs/2606.06079",
+      "https://arxiv.org/abs/2602.01869",
+      "https://arxiv.org/abs/2602.08234",
+      "https://arxiv.org/abs/2512.24156",
+      "https://arxiv.org/abs/2603.24621"
+    ]
+  },
+  "random_seed": 4589,
+  "research_note_path": "docs/research-notes/sota-ingestion-feature-router-423-2026-06-22.md"
+}
