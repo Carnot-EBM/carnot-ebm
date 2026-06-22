@@ -196,6 +196,174 @@ def _transfer_rate(solved: int, attempted: int) -> float:
     return 0.0 if attempted <= 0 else round(float(solved) / float(attempted), 10)
 
 
+def _non_bool_int(value: Any, default: int = 0) -> int:
+    if isinstance(value, bool):
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _non_bool_float(value: Any) -> float | None:
+    if isinstance(value, bool):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _nested_winner_generated(value: Any) -> bool:
+    if not isinstance(value, Mapping):
+        return False
+    if (
+        value.get("winner_generated") is True
+        or value.get("winner_generated_by_energy_prior") is True
+        or value.get("win_reached") is True
+    ):
+        return True
+    for key in (
+        "selected_attempt",
+        "fallback_attempt",
+        "selected_result",
+        "transfer_value",
+        "result",
+    ):
+        if _nested_winner_generated(value.get(key)):
+            return True
+    return False
+
+
+def attempt_winner_generated(attempt: Mapping[str, Any]) -> bool:
+    """REQ-CAPSTONE-4598: solved variants necessarily generated the winning candidate."""
+
+    return attempt.get("attempted") is True and (
+        _nested_winner_generated(attempt) or _attempt_solved(attempt)
+    )
+
+
+def measure_winner_generated_over_variants(
+    attempts: Sequence[Mapping[str, Any]],
+    *,
+    generic_transfer_rate: float | None = None,
+) -> JsonDict:
+    """SCENARIO-CAPSTONE-4598: compute generation and ranking residual from attempts."""
+
+    attempted_records = [attempt for attempt in attempts if attempt.get("attempted") is True]
+    attempted = len(attempted_records)
+    winner_generated = [
+        attempt for attempt in attempted_records if attempt_winner_generated(attempt)
+    ]
+    solved = [attempt for attempt in attempted_records if _attempt_solved(attempt)]
+    winner_rate = _transfer_rate(len(winner_generated), attempted)
+    transfer_rate = (
+        _transfer_rate(len(solved), attempted)
+        if generic_transfer_rate is None
+        else round(float(generic_transfer_rate), 10)
+    )
+    generated_not_selected = [
+        attempt for attempt in winner_generated if not _attempt_solved(attempt)
+    ]
+    return {
+        "winner_generated_attempted_count": attempted,
+        "winner_generated_count": len(winner_generated),
+        "winner_generated_not_selected_count": len(generated_not_selected),
+        "generic_transfer_solved_count": len(solved),
+        "winner_generated_rate": winner_rate,
+        "generic_transfer_rate_over_variants": transfer_rate,
+        "generation_vs_ranking_gap": round(winner_rate - transfer_rate, 10),
+        "winner_generated_signatures": [
+            str(attempt.get("variant_signature") or "")
+            for attempt in winner_generated
+            if attempt.get("variant_signature") is not None
+        ],
+    }
+
+
+def _variant_attempts_from_artifact(artifact: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    direct = artifact.get("variant_attempts")
+    if isinstance(direct, list):
+        return [attempt for attempt in direct if isinstance(attempt, Mapping)]
+    for key in (
+        "wired_measurement",
+        "feature_router_measurement",
+        "baseline_measurement",
+        "random_route_measurement",
+        "with_energy_measurement",
+        "no_energy_measurement",
+        "integrated_measurement",
+    ):
+        value = artifact.get(key)
+        if not isinstance(value, Mapping):
+            continue
+        attempts = value.get("variant_attempts")
+        if isinstance(attempts, list):
+            return [attempt for attempt in attempts if isinstance(attempt, Mapping)]
+    return []
+
+
+def _artifact_generic_transfer_rate(artifact: Mapping[str, Any]) -> float | None:
+    for key in (
+        "generic_transfer_rate_over_variants",
+        "generic_transfer_rate_with_router",
+        "generic_transfer_rate_with_wiring",
+        "generic_transfer_rate_with_energy",
+        "generic_transfer_rate_integrated",
+        "generic_transfer_rate_baseline",
+        "random_route_transfer_rate",
+    ):
+        numeric = _non_bool_float(artifact.get(key))
+        if numeric is not None:
+            return round(numeric, 10)
+    for key in (
+        "wired_measurement",
+        "feature_router_measurement",
+        "baseline_measurement",
+        "random_route_measurement",
+        "with_energy_measurement",
+        "no_energy_measurement",
+        "integrated_measurement",
+    ):
+        value = artifact.get(key)
+        if not isinstance(value, Mapping):
+            continue
+        numeric = _non_bool_float(value.get("generic_transfer_rate_over_variants"))
+        if numeric is not None:
+            return round(numeric, 10)
+    return None
+
+
+def winner_generated_metric_from_artifact(artifact: Mapping[str, Any]) -> JsonDict:
+    """REQ-CAPSTONE-4598: reproduce winner-generated accounting from stored records."""
+
+    summary = artifact.get("winner_generated")
+    transfer_rate = _artifact_generic_transfer_rate(artifact)
+    if isinstance(summary, Mapping):
+        attempted = _non_bool_int(summary.get("attempted_count"))
+        generated = _non_bool_int(summary.get("generated_count"))
+        if attempted > 0:
+            winner_rate = _transfer_rate(generated, attempted)
+            transfer = 0.0 if transfer_rate is None else transfer_rate
+            solved = int(round(transfer * attempted))
+            return {
+                "winner_generated_attempted_count": attempted,
+                "winner_generated_count": generated,
+                "winner_generated_not_selected_count": max(0, generated - solved),
+                "generic_transfer_solved_count": solved,
+                "winner_generated_rate": winner_rate,
+                "generic_transfer_rate_over_variants": transfer,
+                "generation_vs_ranking_gap": round(winner_rate - transfer, 10),
+                "winner_generated_signatures": [],
+            }
+
+    attempts = _variant_attempts_from_artifact(artifact)
+    return measure_winner_generated_over_variants(
+        attempts,
+        generic_transfer_rate=transfer_rate,
+    )
+
+
 def _positive_float(value: Any) -> float | None:
     if not isinstance(value, int | float) or isinstance(value, bool):
         return None
