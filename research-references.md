@@ -24200,3 +24200,55 @@ distance features, the oracle-distinct verifier-moat item) and GAP-ARCH-FRAME-CH
 small CNN action-effect/clickability predictor trained on the 14,672 cached human-replay
 transitions -> action efficiency = the score metric). Full `.420 program in
 `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+## 2026-06-22 — `.423 planning scan (live-submission gap + the feature-ROUTER for seen→hidden transfer)
+
+The `.422 capstone (exp4578) is another near-total honest null: A1 clickability
+predictor-as-RANKER `actions_delta=0.0` (no efficiency gain, 2nd null after `.416);
+A2 verifier-guided EXPANSION `transfer_delta=-0.04` with a BROKEN positive control
+(`positive_control_passed=None`, false-negative-risk OPEN — not a clean null);
+A5 integration `no_lever_raises_a_metric`. The ONE real win: A3 banked cn04 L2
+(`reproducible_total_levels` 52→53). The `.423 headline pivots to the highest-
+confidence, most under-exploited score lever (GAP-LIVE-INTEGRATION, operator
+2026-06-19 #1): we have **53 reproducible levels but only 33 live-submitted**
+(2026-06-21 scorecard). The gap is mechanical — a stale package (sc25 L5 / tu93
+L5 / lp85 L5 / cn04+cd82+sp80+su15+m0r0 L2 banked since the submission are not in
+it), 9 graph-explore/config-rule solves with NO banked replayable trajectory
+(dc22/ft09/g50t/s5i5/sb26/vc33/re86/bp35/lf52), and sc25 live version-drift
+(`env_match=false`). Plus the operator's freshest 2026-06-21 frontier: the
+feature-ROUTER (classify a game's mechanic from early-play features → route to a
+general approach) for seen→hidden transfer, and the SHIPPED diversity floor's
+held-out transfer.
+
+- **SkillRouter: Skill Routing for LLM Agents at Scale (arXiv:2603.22455).** Retrieve
+  the right skill from a large pool given a task — the literature instantiation of the
+  operator's feature-ROUTER (classify a game's mechanic from early play → route to the
+  matching general approach: diversity-on-stall, systematic BFS, goal-distance A*,
+  LLM-reasoner). The reference architecture for `.423 A3 (the seen→hidden transfer that
+  per-game recipes cannot do).
+- **SkillGraph: Skill-Augmented RL via Evolving Skill Graphs (arXiv:2605.12039)** +
+  **SkillRL / SkillBank (recursive skill-augmented RL).** Represent experience as explicit
+  skill abstractions with typed dependencies and evolve the structure jointly with the
+  policy (a hierarchical skill library distilled from trajectories). Maps onto Carnot's
+  `arc_solver_kit` primitive library + the self-play loop that trains the learned verifier
+  on pos/neg traces — the `.423 A2 (self-play) + A5 (persist/reuse) lineage.
+- **SkillComposer: Learning to Evolve Agent Skills for Specification and Generalization
+  (arXiv:2606.06079)** + **Skill-Pro: Reusable Skills from Experience via Non-Parametric
+  PPO (arXiv:2602.01869).** Skill MERGE consolidates semantically-similar task-specific
+  skills into broader transferable skills (specification → generalization). This is exactly
+  the ARC Solve Reproducibility + Solver-Reuse Discipline's "consolidate per-game mechanics
+  into a generic primitive" — the `.423 A5 reuse mechanism, now with a literature anchor.
+- **ARC-AGI-3 Technical Report (arXiv:2603.24621).** Scoring confirmed: **levels completed
+  is primary, total actions is the tiebreaker** (exploration efficiency). TWO leaderboards —
+  the **Official** (no harness, frontier API systems, <1% as of 2026-03) and the
+  **Community** (self-reported, **harnesses permitted**). Carnot's submission is a Community
+  harness; closing the 33→53 public-game gap is a legitimate, in-rules score lift. Frontier
+  models still <1% = the generalization wall the feature-router attacks.
+- **Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning Tasks (arXiv:2512.24156).**
+  No-induction graph exploration (open-source, 3rd place) — the lineage of our
+  `graph_explore_solve_v2` + the diversity floor. Confirms exploration-broadening (not
+  re-ranking) is the generation lever; underwrites `.423 A4 (diversity-floor transfer).
+
+`.423 also carries the standing 2026-06-19/20 ARC priorities (GAP-LIVE-INTEGRATION wire-the-
+stronger-stack-into-the-submitted-agent = A1/A6; the feature-router = A3; diversity transfer =
+A4; self-play every milestone = A2). Full `.423 program: `openspec/change-proposals/research-roadmap-vNEXT.md`.
