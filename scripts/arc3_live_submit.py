@@ -100,28 +100,41 @@ def _build_claimed(mh) -> tuple[dict, dict]:
     reached = _offline_reached()
     claimed: dict[str, int] = {}
     capped: list[dict] = []
+    trajectory_sources: dict[str, str] = {}
+    adaptive_solvers: dict[str, str] = {}
     uncapped_total = 0
     for row in pkg["manifest"]:
         game = row.get("game")
         if not game or not row.get("env_matched"):
             continue
-        src = mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS.get(game))
-        actions = mh.load_actions(src) if src else []
+        src = row.get("trajectory_path") or row.get("source") or mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS.get(game))
+        actions = []
+        if src:
+            try:
+                actions = mh.load_actions(src)
+            except Exception:
+                actions = []
         if not actions:
             continue  # no replayable banked trajectory (e.g. graph-explore solve) -> skip
         pkg_levels = int(row.get("levels", 1) or 1)
         uncapped_total += pkg_levels
         # cap to the flat-replay-reachable level when we know it (game present in the offline
-        # aggregate); an unknown game keeps its package claim and the live VALIDATE step catches it.
-        offline = reached.get(game)
+        # aggregate), or to package-provided fresh offline replay depth for refreshed packages.
+        # An unknown game keeps its package claim and the live VALIDATE step catches it.
+        offline = row.get("offline_reproduced_level")
+        offline = int(offline) if offline is not None else reached.get(game)
         lvl = min(pkg_levels, offline) if offline is not None else pkg_levels
         if offline is not None and offline < pkg_levels:
             capped.append({"game": game, "package_levels": pkg_levels, "offline_reached": offline})
         claimed[game] = lvl
+        trajectory_sources[game] = str(src)
+        if row.get("adaptive_solver"):
+            adaptive_solvers[game] = str(row.get("adaptive_solver"))
     if not claimed:
         return dict(CLAIMED_FALLBACK), {"source": "hardcoded_fallback_2026_06_17", "capped": []}
     info = {"source": f"package:{pkg['path']}", "capped": capped,
-            "uncapped_package_total": uncapped_total, "capped_total": sum(claimed.values())}
+            "uncapped_package_total": uncapped_total, "capped_total": sum(claimed.values()),
+            "trajectory_sources": trajectory_sources, "adaptive_solvers": adaptive_solvers}
     return claimed, info
 
 
@@ -213,7 +226,7 @@ def main(argv) -> int:
 
     rows, total, matched = [], 0, 0
     for short, claimed in claimed_set.items():
-        src = mh.RESOLVED_ARTIFACTS.get(short, mh.GAME_ARTIFACTS.get(short))
+        src = claimed_info.get("trajectory_sources", {}).get(short) or mh.RESOLVED_ARTIFACTS.get(short, mh.GAME_ARTIFACTS.get(short))
         actions = mh.load_actions(src) if src else []
         if not actions:
             rows.append({"game": short, "claimed": claimed, "live_level": None, "error": "no banked actions"})
@@ -260,6 +273,8 @@ def main(argv) -> int:
         "uncapped_package_total": claimed_info.get("uncapped_package_total"),
         "leaderboard_submitted": submitted,
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "trajectory_sources": claimed_info.get("trajectory_sources", {}),
+        "adaptive_solvers": claimed_info.get("adaptive_solvers", {}),
         "inference_substrate": "live_arc_agi3_env_multi_game_replay",
     }, indent=2))
     print(f"  wrote {out.relative_to(REPO)}", flush=True)

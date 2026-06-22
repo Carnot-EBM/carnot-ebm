@@ -1,0 +1,1072 @@
+{
+  "count_delta": 20,
+  "duration_s": 2.075025,
+  "env_adaptive_resolve_recovered": [
+    "sc25"
+  ],
+  "experiment": "experiment_4580_live_submission_gap_close",
+  "field_principles": {
+    "count_delta": {
+      "principle": "live_submittable_level_count - 33"
+    },
+    "env_adaptive_resolve_recovered": {
+      "principle": "version-drift games recovered by env-adaptive re-solve"
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: live_submittable_count_<n>_above_33 OR complete: live_submission_gap_partially_closed_<n>_gaps_sharpened."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)"
+    },
+    "live_submittable_count_baseline": {
+      "principle": "33 -- the 2026-06-21 live scorecard, measured the SAME way"
+    },
+    "live_submittable_level_count": {
+      "principle": "the HEADLINE -- offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver"
+    },
+    "offline_reproduced": {
+      "principle": "every claimed-submittable level must offline-reproduce to count"
+    },
+    "per_game_submittable": {
+      "principle": "per-game offline-reproduced level + trajectory/adaptive audit"
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (offline arcade, registry loadable)"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "ready_for_operator_submit": {
+      "principle": "true only if the refreshed package beats 33 and every claim is gated"
+    },
+    "refreshed_package_path": {
+      "principle": "path to the refreshed validated package the operator live-submit driver loads"
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent registry/trajectory drift"
+    },
+    "trajectories_banked": {
+      "principle": "games whose offline-reproduced levels gained a replayable banked trajectory"
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- packaging + env-adaptive replay are not the executable win-check; they bank already-earned solves."
+    }
+  },
+  "honest_verdict": "success: live_submittable_count_53_above_33",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)",
+  "live_submittable_count_baseline": 33,
+  "live_submittable_level_count": 53,
+  "null_delta_methodology_note": "",
+  "offline_reproduced": {
+    "ar25": 1,
+    "bp35": 1,
+    "cd82": 2,
+    "cn04": 2,
+    "dc22": 1,
+    "ft09": 1,
+    "g50t": 1,
+    "ka59": 1,
+    "lf52": 1,
+    "lp85": 5,
+    "ls20": 1,
+    "m0r0": 2,
+    "r11l": 1,
+    "re86": 1,
+    "s5i5": 1,
+    "sb26": 1,
+    "sc25": 5,
+    "sk48": 1,
+    "sp80": 2,
+    "su15": 2,
+    "tn36": 7,
+    "tr87": 6,
+    "tu93": 5,
+    "vc33": 1,
+    "wa30": 1
+  },
+  "per_game_submittable": [
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "r11l",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4296_arc_incremental_progress_new_game.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 4,
+      "trajectory_path": "results/arc3_live_banked_trajectories/r11l.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "ls20",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4285_arc_incremental_progress_new_game.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 13,
+      "trajectory_path": "results/arc3_live_banked_trajectories/ls20.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "wa30",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4275_arc_incremental_progress_new_game.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 33,
+      "trajectory_path": "results/arc3_live_banked_trajectories/wa30.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "s5i5",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4421_config_rule_solve_unseen.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 13,
+      "trajectory_path": "results/arc3_live_banked_trajectories/s5i5.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "lp85",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 5,
+      "registry_reproduced_level": 5,
+      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json",
+      "submittable_level": 5,
+      "trajectory_action_count": 52,
+      "trajectory_path": "results/arc3_live_banked_trajectories/lp85.json"
+    },
+    {
+      "adaptive_labels": [
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "cell0,0",
+        "cell0,1",
+        "cell1,1",
+        "move1",
+        "move1",
+        "move4",
+        "cell0,1",
+        "cell1,1",
+        "cell2,1",
+        "move2",
+        "move2",
+        "move3",
+        "move3",
+        "move3",
+        "move2",
+        "move3",
+        "click1,1",
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1",
+        "move2",
+        "move2",
+        "move2",
+        "move2",
+        "move2",
+        "move3",
+        "click4,12",
+        "cell0,1",
+        "cell1,1",
+        "cell2,1",
+        "move2",
+        "move2",
+        "move2",
+        "move4",
+        "move4",
+        "move4",
+        "move4",
+        "move4",
+        "move4",
+        "move4",
+        "move4",
+        "move4",
+        "click1,1",
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1",
+        "click1,12",
+        "cell0,0",
+        "cell0,1",
+        "cell1,1",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move1",
+        "click4,23",
+        "cell0,1",
+        "cell1,1",
+        "cell2,1",
+        "move2",
+        "move2",
+        "move2",
+        "move3",
+        "click4,23",
+        "cell0,1",
+        "cell1,1",
+        "cell2,1",
+        "click1,1",
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1",
+        "click1,12",
+        "cell0,0",
+        "cell0,1",
+        "cell1,1",
+        "move1",
+        "move1",
+        "move1",
+        "move1",
+        "move1",
+        "move1"
+      ],
+      "adaptive_resolver": "sc25_dynamic_cast_grid_origin_step",
+      "claim_capped": false,
+      "drift_proxy": {
+        "adaptive_actions": [
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 39,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 1,
+              "y": 1
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 39,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 4,
+              "y": 12
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 4
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 1,
+              "y": 1
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 39,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 1,
+              "y": 12
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 4,
+              "y": 23
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 2
+          },
+          {
+            "action": 3
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 4,
+              "y": 23
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 1,
+              "y": 1
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 39,
+              "y": 49
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 55
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 1,
+              "y": 12
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 43
+            }
+          },
+          {
+            "action": 6,
+            "data": {
+              "x": 33,
+              "y": 49
+            }
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 1
+          },
+          {
+            "action": 1
+          }
+        ],
+        "drift_origin": [
+          27,
+          43
+        ],
+        "env_adaptive_replay_reached": true,
+        "frozen_flat_replay_reached": false,
+        "game": "sc25",
+        "recovered": true,
+        "step": 6
+      },
+      "drift_robust": true,
+      "game": "sc25",
+      "has_env_adaptive_resolver": true,
+      "has_trajectory": true,
+      "offline_reproduced_level": 5,
+      "registry_reproduced_level": 5,
+      "source": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "submittable_level": 5,
+      "trajectory_action_count": 102,
+      "trajectory_path": "results/arc3_live_banked_trajectories/sc25.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "cd82",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 2,
+      "registry_reproduced_level": 2,
+      "source": "results/arc_loop_solve_cd82.json",
+      "submittable_level": 2,
+      "trajectory_action_count": 20,
+      "trajectory_path": "results/arc3_live_banked_trajectories/cd82.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "lf52",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/arc_explore_trajectory_lf52.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 8,
+      "trajectory_path": "results/arc3_live_banked_trajectories/lf52.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "sp80",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 2,
+      "registry_reproduced_level": 2,
+      "source": "results/arc_loop_solve_sp80.json",
+      "submittable_level": 2,
+      "trajectory_action_count": 33,
+      "trajectory_path": "results/arc3_live_banked_trajectories/sp80.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "su15",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 2,
+      "registry_reproduced_level": 2,
+      "source": "results/arc_loop_solve_su15.json",
+      "submittable_level": 2,
+      "trajectory_action_count": 21,
+      "trajectory_path": "results/arc3_live_banked_trajectories/su15.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "tu93",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 5,
+      "registry_reproduced_level": 5,
+      "source": "results/experiment_4436_deepen_plus_primitive_consolidation.json",
+      "submittable_level": 5,
+      "trajectory_action_count": 93,
+      "trajectory_path": "results/arc3_live_banked_trajectories/tu93.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "tn36",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 7,
+      "registry_reproduced_level": 7,
+      "source": "results/arc_explore_trajectory_tn36.json",
+      "submittable_level": 7,
+      "trajectory_action_count": 102,
+      "trajectory_path": "results/arc3_live_banked_trajectories/tn36.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "cn04",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 2,
+      "registry_reproduced_level": 2,
+      "source": "results/arc_loop_solve_cn04.json",
+      "submittable_level": 2,
+      "trajectory_action_count": 43,
+      "trajectory_path": "results/arc3_live_banked_trajectories/cn04.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "m0r0",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 2,
+      "registry_reproduced_level": 2,
+      "source": "results/arc_loop_solve_m0r0.json",
+      "submittable_level": 2,
+      "trajectory_action_count": 38,
+      "trajectory_path": "results/arc3_live_banked_trajectories/m0r0.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "sk48",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/arc_explore_trajectory_sk48.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 14,
+      "trajectory_path": "results/arc3_live_banked_trajectories/sk48.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "ar25",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4339_e3_explore_verify_plan_ar25.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 15,
+      "trajectory_path": "results/arc3_live_banked_trajectories/ar25.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "ka59",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 11,
+      "trajectory_path": "results/arc3_live_banked_trajectories/ka59.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "ft09",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 4,
+      "trajectory_path": "results/arc3_live_banked_trajectories/ft09.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "tr87",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 6,
+      "registry_reproduced_level": 6,
+      "source": "results/arc_loop_solve_tr87.json",
+      "submittable_level": 6,
+      "trajectory_action_count": 127,
+      "trajectory_path": "results/arc3_live_banked_trajectories/tr87.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "vc33",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/arc_explore_trajectory_vc33.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 3,
+      "trajectory_path": "results/arc3_live_banked_trajectories/vc33.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "g50t",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4443_bank_g50t_example_conditioned_win.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 17,
+      "trajectory_path": "results/arc3_live_banked_trajectories/g50t.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "dc22",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/arc_loop_solve_dc22.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 20,
+      "trajectory_path": "results/arc3_live_banked_trajectories/dc22.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "sb26",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4470_color_match_slot_operator_solve_sb26.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 9,
+      "trajectory_path": "results/arc3_live_banked_trajectories/sb26.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "re86",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4479_solve_re86.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 20,
+      "trajectory_path": "results/arc3_live_banked_trajectories/re86.json"
+    },
+    {
+      "claim_capped": false,
+      "drift_robust": false,
+      "game": "bp35",
+      "has_env_adaptive_resolver": false,
+      "has_trajectory": true,
+      "offline_reproduced_level": 1,
+      "registry_reproduced_level": 1,
+      "source": "results/experiment_4480_solve_bp35_goal_directed.json",
+      "submittable_level": 1,
+      "trajectory_action_count": 17,
+      "trajectory_path": "results/arc3_live_banked_trajectories/bp35.json"
+    }
+  ],
+  "preconditions_checked": {
+    "leaderboard_submission": false,
+    "network_required": false,
+    "no_3090_inference": true,
+    "offline_arcade": {
+      "error": "",
+      "ok": true
+    },
+    "ok": true,
+    "registry": {
+      "error": "",
+      "ok": true,
+      "path": "ops/arc_solve_registry.yaml"
+    }
+  },
+  "random_seed": 4580,
+  "ready_for_operator_submit": true,
+  "refreshed_package_path": "results/experiment_4580_submission_package_live_gap_close.json",
+  "reproducibility_checksum": "17bc698573203c55937e4e25eacc34d2c60e8bc71b710698d9b573f47bc44aac",
+  "result_path": "results/experiment_4580_live_submission_gap_close.json",
+  "schema": "carnot.exp4580.live_submission_gap_close.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4580",
+    "SCENARIO-CAPSTONE-4580",
+    "SCENARIO-CAPSTONE-4580-FIELD-PRINCIPLES"
+  ],
+  "submitted_to_leaderboard": false,
+  "trajectories_banked": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+  ],
+  "verifier_is_oracle": false
+}
