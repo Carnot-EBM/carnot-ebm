@@ -72,6 +72,36 @@ induction incl. a 35B model) — all offline, **spending zero of the ~2 scarce L
 why 0.08 is stuck, definitively, instead of having burned submissions discovering it live. Gate verdict
 unchanged: NOT gate-ready.
 
+## Coordinated-redesign attempt (pieces 1 + 2 built) — converges on piece 3 as the binding constraint
+
+The operator authorized building the redesign on the TTT (learned-dynamics) path. Outcome:
+
+- **Piece 1 — cell-recall verify gate (built, both branches, parity-safe).** But scoring the SAVED e3
+  induced models (`results/arc_e3_induced_model_quality.json`) overturned its premise for the LLM path:
+  the LLM-induced world-models predict NEAR-IDENTITY (cell-recall ~0-0.05, *lower* than exact-match which
+  was inflated by no-op transitions). The gate correctly REJECTS them — the e3 induction bottleneck is
+  induction QUALITY, not the metric. Cell-recall remains the right gate for the *learned-dynamics* (TTT)
+  path (the CNN is genuinely 0.55-useful) and is the more honest metric (it exposes identity-predictors).
+- **Piece 2 — divergence-tolerant TTT solve loop (built, runs clean).** Replan-on-divergence + learn-from-
+  surprise, so a 0.55-cell-recall model can drive live execution instead of halting on the first exact
+  mismatch. But it **cannot be exercised**: `plan_in_model` needs an OBSERVED win-state, and the loop's
+  exploration never reaches a first level-up on the hard games (cd82: 0 wins in 400 actions). No win → no
+  goal → no plan → piece 2 never fires.
+
+**Both pieces are blocked by the SAME thing the whole investigation keeps returning to: EXPLORATION-TO-
+FIRST-WIN (piece 3).** Until the agent can trigger a first level-up on an unseen game, the cell-recall gate
+has no useful model to pass and the divergence-tolerant executor has no plan to execute. The naive
+salient-cycle explorer in the loop is even weaker than the real `depth_first_ride` explorer (1/11 floor);
+testing piece 2's *deepening* value would require wiring the real explorer into the loop's explore phase
+to reach level 1 first, then handing off to the TTT planner.
+
+**The unifying conclusion of the entire session:** the 0.08 wall is fundamentally a **sparse-reward
+exploration problem** — reaching the first level-up on a never-seen game within ~5n actions. Every piece
+of world-model machinery (LLM induction, learned dynamics, trust gates, execution) is *downstream* of it
+and moot until it is solved. Directed exploration / sub-goal discovery is the real, hard, open lever — the
+same bottleneck the SOTA scan flagged (Family-B executable world-models induce; the search/exploration is
+the moat). It is not a quick win, and bigger models / better gates / better executors do not address it.
+
 ## Artifacts
 
 - `results/arc_compete_sim.json` — explorer floor 1/11; goal-bias variants
