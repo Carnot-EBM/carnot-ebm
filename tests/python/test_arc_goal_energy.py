@@ -8,6 +8,11 @@ win/non-win states; an ablation control + a silent-failure guard are mandatory i
 
 import numpy as np
 
+# Pre-import the heavy chain at COLLECTION time. plan_in_model -> _model_candidates lazily does
+# `from carnot.agentic.arc_graph_explore import _components_detailed`, which pulls in torch (~700 MB) on
+# first use. If that happens DURING a test, the per-test RSS watchdog (conftest) flags it as a memory leak.
+# Importing it here loads torch before the per-test RSS snapshot, so the watchdog sees no growth.
+import carnot.agentic.arc_graph_explore  # noqa: F401
 from carnot.agentic.arc_agi3_goal_induction import induce_goal_energy
 from carnot.agentic.arc_agi3_world_model import objects
 from carnot.agentic.arc_executable_world_model import plan_in_model
