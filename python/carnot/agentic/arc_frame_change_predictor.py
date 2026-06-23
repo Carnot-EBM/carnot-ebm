@@ -760,6 +760,70 @@ def _scorer_value(frame: Any, candidate: Any, scorer: Any) -> float:
     raise TypeError("scorer must expose candidate_score(frame, candidate) or be callable")
 
 
+@dataclass
+class ActionEffectExpansionPrior:
+    """REQ-ARC-FCP-4641: score frontier branches by remaining predicted action effect.
+
+    The candidate ranker answers "which action in this state should go first".
+    The expansion prior answers the search-level question "which frontier state
+    still has the most promising untested action". Lower returned values expand
+    earlier, matching `graph_explore_solve_v2` and `StepwiseExplorer` frontier
+    priority conventions.
+    """
+
+    scorer: Any
+    weight: float = 0.25
+    aggregate: str = "max"
+    source: str = "persistent_aem_plus_optional_cnn_frontier_prior"
+    verifier_is_oracle: bool = False
+    _scored_frontiers: int = field(default=0, init=False, repr=False)
+    _scored_candidates: int = field(default=0, init=False, repr=False)
+    _scoring_errors: int = field(default=0, init=False, repr=False)
+
+    def _effect_score(self, frame: Any, candidate: Any) -> float | None:
+        try:
+            return float(_scorer_value(frame, candidate, self.scorer))
+        except Exception:
+            self._scoring_errors += 1
+            return None
+
+    def frontier_priority(self, frame: Any, candidates: Sequence[Any]) -> float:
+        """Return a lower-is-better branch priority from candidate effect scores."""
+
+        rows = list(candidates or [])
+        self._scored_frontiers += 1
+        if self.scorer is None or not rows:
+            return 0.0
+        scores = [
+            score
+            for score in (self._effect_score(frame, candidate) for candidate in rows)
+            if score is not None
+        ]
+        self._scored_candidates += len(scores)
+        if not scores:
+            return 0.0
+        if self.aggregate == "mean":
+            effect = sum(scores) / len(scores)
+        else:
+            effect = max(scores)
+        return -float(self.weight) * max(0.0, float(effect))
+
+    def __call__(self, frame: Any) -> float:
+        return self.frontier_priority(frame, [])
+
+    def diagnostics(self) -> dict[str, Any]:
+        return {
+            "enabled": True,
+            "source": self.source,
+            "weight": float(self.weight),
+            "aggregate": self.aggregate,
+            "verifier_is_oracle": False,
+            "scored_frontiers": int(self._scored_frontiers),
+            "scored_candidates": int(self._scored_candidates),
+            "scoring_errors": int(self._scoring_errors),
+        }
+
+
 def _prior_value(frame: Any, candidate: Any, prior: Any) -> float:
     if prior is None:
         return 0.0

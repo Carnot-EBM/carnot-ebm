@@ -31,7 +31,10 @@ import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
-from carnot.agentic.arc_frame_change_predictor import load_live_action_effect_scorer
+from carnot.agentic.arc_frame_change_predictor import (
+    ActionEffectExpansionPrior,
+    load_live_action_effect_scorer,
+)
 from carnot.agentic.arc_goal_energy_live import GOAL_ENERGY_SOURCE
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
@@ -85,6 +88,8 @@ SUBMITTED_FRONTIER_BATCH_SIZE: int | str = 1
 SUBMITTED_NAVIGATION_COST_TIEBREAK = True
 SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED = True
 SUBMITTED_FRAME_CHANGE_RANKING_MODE = "persistent_aem_plus_optional_cnn"
+SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED = True
+SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_MODE = "persistent_aem_plus_optional_cnn_frontier_prior"
 SUBMITTED_GOAL_ENERGY_ENABLED = True
 SUBMITTED_GOAL_ENERGY_ALPHA = 0.9
 SUBMITTED_GOAL_ENERGY_BETA = 0.1
@@ -245,6 +250,7 @@ class StepwiseExplorer:
         discriminative_prune_threshold: float = 0.12,
         frame_change_scorer: Any | None = None,
         frame_change_prune_threshold: float | None = None,
+        action_effect_expansion_prior: Any | bool | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
         adaptive_budget_threshold: float | None = None,
@@ -276,6 +282,12 @@ class StepwiseExplorer:
         self._value_cache_hits = 0
         self.frame_change_scorer = frame_change_scorer
         self.frame_change_prune_threshold = frame_change_prune_threshold
+        if hasattr(action_effect_expansion_prior, "frontier_priority"):
+            self.action_effect_expansion_prior = action_effect_expansion_prior
+        elif action_effect_expansion_prior and frame_change_scorer is not None:
+            self.action_effect_expansion_prior = ActionEffectExpansionPrior(frame_change_scorer)
+        else:
+            self.action_effect_expansion_prior = None
         self.action_prior = action_prior
         self.action_prior_prune_quantile = action_prior_prune_quantile
         self.adaptive_budget_threshold = adaptive_budget_threshold
@@ -540,6 +552,13 @@ class StepwiseExplorer:
             "errors": int(self._goal_bias_errors),
         }
 
+    def action_effect_expansion_prior_diagnostics(self) -> dict[str, Any]:
+        if self.action_effect_expansion_prior is None:
+            return {"enabled": False}
+        if hasattr(self.action_effect_expansion_prior, "diagnostics"):
+            return dict(self.action_effect_expansion_prior.diagnostics())
+        return {"enabled": True}
+
     def curiosity_diagnostics(self) -> dict[str, Any]:
         if self.dense_curiosity is None:
             return {"enabled": False}
@@ -570,6 +589,22 @@ class StepwiseExplorer:
         if self.goal_bias_lower_is_better:
             return float(score)
         return -float(score)
+
+    def _action_effect_frontier_key(self, node: Mapping[str, Any]) -> float:
+        if self.action_effect_expansion_prior is None:
+            return 0.0
+        frame = node.get("frame")
+        if frame is None:
+            return 0.0
+        try:
+            return float(
+                self.action_effect_expansion_prior.frontier_priority(
+                    frame,
+                    node.get("untested") or [],
+                )
+            )
+        except Exception:
+            return 0.0
 
     def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
@@ -760,7 +795,9 @@ class StepwiseExplorer:
                         "value": value,
                         "frame": (
                             latest
-                            if self.goal_bias is not None or self.dense_curiosity is not None
+                            if self.goal_bias is not None
+                            or self.dense_curiosity is not None
+                            or self.action_effect_expansion_prior is not None
                             else frame_for_value
                         ),
                         "discriminative_features": features,
@@ -783,7 +820,9 @@ class StepwiseExplorer:
                     "value": value,
                     "frame": (
                         latest
-                        if self.goal_bias is not None or self.dense_curiosity is not None
+                        if self.goal_bias is not None
+                        or self.dense_curiosity is not None
+                        or self.action_effect_expansion_prior is not None
                         else frame_for_value
                     ),
                     "discriminative_features": features,
@@ -798,7 +837,7 @@ class StepwiseExplorer:
         # baseline (the weak head misroutes from shallow wins), so the blend keeps depth load-bearing.
         use_value = self.value_head is not None and self.value_weight != 0.0
         w = self.value_weight
-        eligible: list[tuple[str, dict, int, float, float, float]] = []
+        eligible: list[tuple[str, dict, int, float, float, float, float]] = []
         for h, node in self.graph.items():
             if not node["untested"]:
                 self._record_discriminative_features(
@@ -826,6 +865,7 @@ class StepwiseExplorer:
                     node,
                     depth,
                     on_path,
+                    self._action_effect_frontier_key(node),
                     self._goal_bias_score(node),
                     self._curiosity_score(h),
                 )
@@ -840,15 +880,19 @@ class StepwiseExplorer:
                     item[0],
                 ),
             )[: self.lazy_value_top_k]
-            for h, node, _depth, _on_path, _goal_bias, _curiosity in cheap_ranked:
+            for h, node, _depth, _on_path, _action_effect, _goal_bias, _curiosity in cheap_ranked:
                 if node.get("value") is None:
                     node["value"] = self._value(node.get("frame"), node_hash=h)
-                    if self.goal_bias is None and self.dense_curiosity is None:
+                    if (
+                        self.goal_bias is None
+                        and self.dense_curiosity is None
+                        and self.action_effect_expansion_prior is None
+                    ):
                         node["frame"] = None
 
         best = None
         best_key = None
-        for h, node, depth, on_path, goal_bias, curiosity in eligible:
+        for h, node, depth, on_path, action_effect, goal_bias, curiosity in eligible:
             nav_key = self._frontier_navigation_cost_key(h) if self.navigation_cost_tiebreak else ()
             if self.navigation_cost_tiebreak and use_value:
                 value = node.get("value", 0.0)
@@ -856,6 +900,7 @@ class StepwiseExplorer:
                     value = 0.0
                 key = (
                     depth,
+                    float(action_effect),
                     w * float(value),
                     self._goal_bias_key(goal_bias),
                     -float(curiosity),
@@ -869,6 +914,7 @@ class StepwiseExplorer:
                 key = (
                     depth + w * float(value),
                     depth,
+                    float(action_effect),
                     self._goal_bias_key(goal_bias),
                     -float(curiosity),
                     -on_path,
@@ -876,13 +922,20 @@ class StepwiseExplorer:
             elif self.navigation_cost_tiebreak:
                 key = (
                     depth,
+                    float(action_effect),
                     self._goal_bias_key(goal_bias),
                     -float(curiosity),
                     *nav_key,
                     -on_path,
                 )
             else:
-                key = (depth, self._goal_bias_key(goal_bias), -float(curiosity), -on_path)
+                key = (
+                    depth,
+                    float(action_effect),
+                    self._goal_bias_key(goal_bias),
+                    -float(curiosity),
+                    -on_path,
+                )
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
@@ -1188,6 +1241,7 @@ class CarnotAgentPolicy:
         search_mode: str = "depth_first_ride",
         frame_change_scorer: Any | None = None,
         frame_change_prune_threshold: float | None = None,
+        action_effect_expansion_prior: Any | bool | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
         adaptive_budget_threshold: float | None = None,
@@ -1217,6 +1271,7 @@ class CarnotAgentPolicy:
                 search_mode=search_mode,
                 frame_change_scorer=frame_change_scorer,
                 frame_change_prune_threshold=frame_change_prune_threshold,
+                action_effect_expansion_prior=action_effect_expansion_prior,
                 action_prior=action_prior,
                 action_prior_prune_quantile=action_prior_prune_quantile,
                 adaptive_budget_threshold=adaptive_budget_threshold,
@@ -1275,6 +1330,7 @@ class E3AgentPolicy:
         mechanic_detector=None,
         frame_change_scorer: Any = _DEFAULT_FRAME_CHANGE_SCORER,
         frame_change_prune_threshold: float | None = None,
+        action_effect_expansion_prior: Any | bool | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
         adaptive_budget_threshold: float | None = None,
@@ -1297,6 +1353,11 @@ class E3AgentPolicy:
             candidate_router = _load_submitted_candidate_router()
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
             frame_change_scorer = _load_submitted_frame_change_scorer()
+        if action_effect_expansion_prior is None:
+            action_effect_expansion_prior = bool(
+                SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED
+                and frame_change_scorer is not None
+            )
         if goal_bias is _DEFAULT_GOAL_BIAS:
             goal_bias = _load_submitted_goal_energy_bias()
         self.approach_recommendation = _recommend_live_approach(self.short)
@@ -1317,6 +1378,7 @@ class E3AgentPolicy:
             search_mode=search_mode,
             frame_change_scorer=frame_change_scorer,
             frame_change_prune_threshold=frame_change_prune_threshold,
+            action_effect_expansion_prior=action_effect_expansion_prior,
             action_prior=action_prior,
             action_prior_prune_quantile=action_prior_prune_quantile,
             adaptive_budget_threshold=adaptive_budget_threshold,
@@ -1788,6 +1850,8 @@ SUBMITTED_AGENT_CONFIG = {
     "frame_change_predictor_enabled": SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED,
     "frame_change_ranking_mode": SUBMITTED_FRAME_CHANGE_RANKING_MODE,
     "frame_change_prune_threshold": None,
+    "action_effect_expansion_prior_enabled": SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED,
+    "action_effect_expansion_prior_mode": SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_MODE,
     "goal_energy_enabled": SUBMITTED_GOAL_ENERGY_ENABLED,
     "goal_energy_wired": True,
     "goal_energy_source": GOAL_ENERGY_SOURCE,
@@ -1816,6 +1880,7 @@ SUBMITTED_AGENT_CONFIG = {
         "search_mode": SUBMITTED_SEARCH_MODE,
         "candidate_router": None,
         "navigation_cost_tiebreak": False,
+        "action_effect_expansion_prior_enabled": False,
         "goal_energy_enabled": False,
     },
 }
