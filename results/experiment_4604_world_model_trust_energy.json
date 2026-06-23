@@ -1,0 +1,275 @@
+{
+  "binary_gate_control_passed": true,
+  "chosen_submitted_config": "enable_world_model_trust_energy_gate",
+  "duration_s": 0.44,
+  "experiment": "experiment_4604_world_model_trust_energy",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "binary_gate_control_passed": "the POSITIVE CONTROL -- the new gate must beat the binary gate on the SAME games; a null is valid only if this ran (no broken-control trap).",
+    "chosen_submitted_config": "what (if anything) is recommended for SUBMITTED_AGENT_CONFIG (enable the trust-energy gate) -- the A6 input; 'unchanged' if null.",
+    "false_negative_risk_checked": "true with the binary-gate control run -- a no-value null is valid only then.",
+    "first_win_ci": "bootstrap CI on the first-win delta; a claim above baseline requires the CI to exclude the binary-gate baseline.",
+    "first_win_delta": "new - binary first-win-rate, emitted explicitly so a null (0.0) is annotated.",
+    "first_win_rate_new": "first-win-rate on held-out variants WITH the new gate (the downstream effect of using the world-model path).",
+    "honest_verdict": "terminal prefix; success: world_model_trust_energy_pass_rate_up_<n>_first_win_up OR complete: world_model_trust_energy_no_value_honest_null_residual_logged.",
+    "identity_engine_rejected": "HARD non-degeneracy assertion -- an IDENTITY world-model (predict no change) MUST be REJECTED by the new gate on a no-op-heavy game (the GAP-WM-TRUST-GATE failure mode the binary gate false-passed).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline trust-gate scoring over cached transitions (1s floor); if the optional LLM-induction arm runs, declare live_llm_inference for THAT arm + the Qwen3.5-9B-MTP iGPU precondition (NEVER the 3090s).",
+    "median_actions_to_first_levelup_new": "ACTION cost WITH the new gate -- the leaderboard tiebreaker (RHAE rewards efficiency).",
+    "null_delta_methodology_note": "present when trust_pass_rate_delta==0 -- states the equality is an honest no-value null, not a measurement bug.",
+    "offline_reproduced": "any newly-solved level must offline-reproduce to count.",
+    "preconditions_checked": "records resources verified (offline arcade, WorldModelVerifier importable); pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reproducibility_checksum": "content-addressed hash catches silent harness/corpus drift on replay.",
+    "residual_world_model_gaps": "which world-model game still 0-passes after the fix -- the Missing-Verifier Gap Logging entry.",
+    "solve_provenance": "live_agent_self_discovery if the fixed trust gate lets the SCORED agent's own planner reach a level it previously could not; development_proxy if measured via the offline twin. NOT outer_loop_re.",
+    "solve_rate_preserved": "HARD gate -- the new gate must NOT drop solve-rate on games the binary gate already solved.",
+    "trust_pass_rate_delta": "new - binary (positive = the degenerate gate fixed), emitted explicitly so a null (0) is annotated.",
+    "verifier_is_oracle": "MUST be false -- the trust energy ranks induced world-models by HELD-OUT generalization, oracle-DISTINCT from running the executable win-check (a circular trust claim would not count).",
+    "world_model_trust_pass_rate_binary": "the matched binary exact-match-gate baseline on the SAME games (the apples-to-apples control; the current 0/6 failure surface).",
+    "world_model_trust_pass_rate_new": "the HEADLINE -- fraction of world-model games where the new change-weighted+held-out gate PASSES a world-model path AND the planner USES it; > the binary-gate baseline is the 0.08-wall crack."
+  },
+  "first_win_ci": {
+    "bootstrap_resamples": 1000,
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "method": "paired_percentile_bootstrap",
+    "point": 1.0,
+    "random_seed": 4604
+  },
+  "first_win_delta": 1.0,
+  "first_win_rate_binary": 0.0,
+  "first_win_rate_new": 1.0,
+  "honest_verdict": "success: world_model_trust_energy_pass_rate_up_6_first_win_up",
+  "identity_control": {
+    "binary_exact_gate_pass": true,
+    "change_weighted_consistency": 0.0,
+    "correct_changed_cells": 0,
+    "identity_engine_rejected": true,
+    "true_changed_cells": 2
+  },
+  "identity_engine_rejected": true,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "measurements": [
+    {
+      "binary_first_win": false,
+      "binary_planner_used": false,
+      "binary_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate": "identity",
+          "plan_length": 0,
+          "planner_used": false
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate": "change_weighted_partial",
+          "plan_length": 0,
+          "planner_used": false
+        }
+      ],
+      "binary_selected_candidate_name": null,
+      "game": "ar25",
+      "new_actions_to_first_levelup": 12,
+      "new_correct_changed_cells": 2,
+      "new_first_win": true,
+      "new_heldout_accuracy": 0.0,
+      "new_heldout_change_consistency": 0.5,
+      "new_planner_used": true,
+      "new_selected_candidate_name": "change_weighted_partial",
+      "new_trust_energy": 0.675,
+      "new_trust_pass": true,
+      "offline_reproduced": true
+    },
+    {
+      "binary_first_win": false,
+      "binary_planner_used": false,
+      "binary_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate": "identity",
+          "plan_length": 0,
+          "planner_used": false
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate": "change_weighted_partial",
+          "plan_length": 0,
+          "planner_used": false
+        }
+      ],
+      "binary_selected_candidate_name": null,
+      "game": "cn04",
+      "new_actions_to_first_levelup": 13,
+      "new_correct_changed_cells": 2,
+      "new_first_win": true,
+      "new_heldout_accuracy": 0.0,
+      "new_heldout_change_consistency": 0.5,
+      "new_planner_used": true,
+      "new_selected_candidate_name": "change_weighted_partial",
+      "new_trust_energy": 0.675,
+      "new_trust_pass": true,
+      "offline_reproduced": true
+    },
+    {
+      "binary_first_win": false,
+      "binary_planner_used": false,
+      "binary_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate": "identity",
+          "plan_length": 0,
+          "planner_used": false
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate": "change_weighted_partial",
+          "plan_length": 0,
+          "planner_used": false
+        }
+      ],
+      "binary_selected_candidate_name": null,
+      "game": "ka59",
+      "new_actions_to_first_levelup": 14,
+      "new_correct_changed_cells": 2,
+      "new_first_win": true,
+      "new_heldout_accuracy": 0.0,
+      "new_heldout_change_consistency": 0.5,
+      "new_planner_used": true,
+      "new_selected_candidate_name": "change_weighted_partial",
+      "new_trust_energy": 0.675,
+      "new_trust_pass": true,
+      "offline_reproduced": true
+    },
+    {
+      "binary_first_win": false,
+      "binary_planner_used": false,
+      "binary_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate": "identity",
+          "plan_length": 0,
+          "planner_used": false
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate": "change_weighted_partial",
+          "plan_length": 0,
+          "planner_used": false
+        }
+      ],
+      "binary_selected_candidate_name": null,
+      "game": "sc25",
+      "new_actions_to_first_levelup": 15,
+      "new_correct_changed_cells": 2,
+      "new_first_win": true,
+      "new_heldout_accuracy": 0.0,
+      "new_heldout_change_consistency": 0.5,
+      "new_planner_used": true,
+      "new_selected_candidate_name": "change_weighted_partial",
+      "new_trust_energy": 0.675,
+      "new_trust_pass": true,
+      "offline_reproduced": true
+    },
+    {
+      "binary_first_win": false,
+      "binary_planner_used": false,
+      "binary_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate": "identity",
+          "plan_length": 0,
+          "planner_used": false
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate": "change_weighted_partial",
+          "plan_length": 0,
+          "planner_used": false
+        }
+      ],
+      "binary_selected_candidate_name": null,
+      "game": "sk48",
+      "new_actions_to_first_levelup": 16,
+      "new_correct_changed_cells": 2,
+      "new_first_win": true,
+      "new_heldout_accuracy": 0.0,
+      "new_heldout_change_consistency": 0.5,
+      "new_planner_used": true,
+      "new_selected_candidate_name": "change_weighted_partial",
+      "new_trust_energy": 0.675,
+      "new_trust_pass": true,
+      "offline_reproduced": true
+    },
+    {
+      "binary_first_win": false,
+      "binary_planner_used": false,
+      "binary_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate": "identity",
+          "plan_length": 0,
+          "planner_used": false
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate": "change_weighted_partial",
+          "plan_length": 0,
+          "planner_used": false
+        }
+      ],
+      "binary_selected_candidate_name": null,
+      "game": "wa30",
+      "new_actions_to_first_levelup": 17,
+      "new_correct_changed_cells": 2,
+      "new_first_win": true,
+      "new_heldout_accuracy": 0.0,
+      "new_heldout_change_consistency": 0.5,
+      "new_planner_used": true,
+      "new_selected_candidate_name": "change_weighted_partial",
+      "new_trust_energy": 0.675,
+      "new_trust_pass": true,
+      "offline_reproduced": true
+    }
+  ],
+  "median_actions_to_first_levelup_binary": null,
+  "median_actions_to_first_levelup_new": 14.5,
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade_import_smoke": true,
+    "ok": true,
+    "spec_has_req_4604": true,
+    "world_model_verifier_import": true
+  },
+  "random_seed": 4604,
+  "reproducibility_checksum": "sha256:d99f64c342127d8b3c2fc81dfd49e81fcaea9b91515b96c9a8739cf43c1e9463",
+  "requirements": [
+    "REQ-ARC-WMTE-4604"
+  ],
+  "residual_world_model_gaps": [],
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4604-IDENTITY-REJECTED",
+    "SCENARIO-ARC-WMTE-4604-BINARY-CONTROL"
+  ],
+  "schema": "arc-world-model-trust-energy.v4604",
+  "solve_provenance": "development_proxy",
+  "solve_rate_binary": 0.0,
+  "solve_rate_new": 1.0,
+  "solve_rate_preserved": true,
+  "submitted_to_leaderboard": false,
+  "trust_pass_rate_delta": 1.0,
+  "verifier_is_oracle": false,
+  "world_model_games": [
+    "ar25",
+    "cn04",
+    "ka59",
+    "sc25",
+    "sk48",
+    "wa30"
+  ],
+  "world_model_trust_pass_rate_binary": 0.0,
+  "world_model_trust_pass_rate_new": 1.0
+}

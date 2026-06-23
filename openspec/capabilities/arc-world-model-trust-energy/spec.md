@@ -531,6 +531,77 @@ Family-B verifier threshold enabled
 `heldout_transition_verification_failed` counterexample is recorded, and the
 proposer receives at most three total refinement rounds.
 
+### REQ-ARC-WMTE-4604: Change-Weighted Trust Energy Gate
+
+The live hidden-state `E3AgentPolicy` world-model gate SHALL replace the
+degenerate full-grid binary exact-match threshold with an oracle-distinct trust
+energy. The trust score SHALL split recorded transitions into an observed
+prefix and held-out suffix, SHALL score held-out grid-changing transitions only
+for the headline consistency metric, and SHALL compute change-weighted
+agreement as correctly predicted changed cells divided by true changed cells.
+The gate SHALL require at least one correctly predicted real changed cell before
+planning so an identity/no-op world model cannot pass on no-op-heavy or
+click-heavy games. The legacy binary exact-full-grid gate SHALL remain
+available as a matched no-regression control.
+
+Experiment 4604 SHALL write
+`results/experiment_4604_world_model_trust_energy.json` with bare top-level
+fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `world_model_trust_pass_rate_new`,
+`world_model_trust_pass_rate_binary`, `trust_pass_rate_delta`,
+`first_win_rate_new`, `first_win_delta`, `first_win_ci`,
+`median_actions_to_first_levelup_new`, `identity_engine_rejected`,
+`binary_gate_control_passed`, `false_negative_risk_checked`,
+`solve_rate_preserved`, `chosen_submitted_config`,
+`residual_world_model_gaps`, `offline_reproduced`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. If
+`trust_pass_rate_delta == 0`, the artifact SHALL include
+`null_delta_methodology_note`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: world_model_trust_energy_pass_rate_up_<n>_first_win_up OR complete: world_model_trust_energy_no_value_honest_null_residual_logged."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline trust-gate scoring over cached transitions (1s floor); if the optional LLM-induction arm runs, declare live_llm_inference for THAT arm + the Qwen3.5-9B-MTP iGPU precondition (NEVER the 3090s)."
+- `verifier_is_oracle`: principle "MUST be false -- the trust energy ranks induced world-models by HELD-OUT generalization, oracle-DISTINCT from running the executable win-check (a circular trust claim would not count)."
+- `solve_provenance`: principle "live_agent_self_discovery if the fixed trust gate lets the SCORED agent's own planner reach a level it previously could not; development_proxy if measured via the offline twin. NOT outer_loop_re."
+- `world_model_trust_pass_rate_new`: principle "the HEADLINE -- fraction of world-model games where the new change-weighted+held-out gate PASSES a world-model path AND the planner USES it; > the binary-gate baseline is the 0.08-wall crack."
+- `world_model_trust_pass_rate_binary`: principle "the matched binary exact-match-gate baseline on the SAME games (the apples-to-apples control; the current 0/6 failure surface)."
+- `trust_pass_rate_delta`: principle "new - binary (positive = the degenerate gate fixed), emitted explicitly so a null (0) is annotated."
+- `first_win_rate_new`: principle "first-win-rate on held-out variants WITH the new gate (the downstream effect of using the world-model path)."
+- `first_win_delta`: principle "new - binary first-win-rate, emitted explicitly so a null (0.0) is annotated."
+- `first_win_ci`: principle "bootstrap CI on the first-win delta; a claim above baseline requires the CI to exclude the binary-gate baseline."
+- `median_actions_to_first_levelup_new`: principle "ACTION cost WITH the new gate -- the leaderboard tiebreaker (RHAE rewards efficiency)."
+- `identity_engine_rejected`: principle "HARD non-degeneracy assertion -- an IDENTITY world-model (predict no change) MUST be REJECTED by the new gate on a no-op-heavy game (the GAP-WM-TRUST-GATE failure mode the binary gate false-passed)."
+- `binary_gate_control_passed`: principle "the POSITIVE CONTROL -- the new gate must beat the binary gate on the SAME games; a null is valid only if this ran (no broken-control trap)."
+- `false_negative_risk_checked`: principle "true with the binary-gate control run -- a no-value null is valid only then."
+- `null_delta_methodology_note`: principle "present when trust_pass_rate_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+- `solve_rate_preserved`: principle "HARD gate -- the new gate must NOT drop solve-rate on games the binary gate already solved."
+- `chosen_submitted_config`: principle "what (if anything) is recommended for SUBMITTED_AGENT_CONFIG (enable the trust-energy gate) -- the A6 input; 'unchanged' if null."
+- `residual_world_model_gaps`: principle "which world-model game still 0-passes after the fix -- the Missing-Verifier Gap Logging entry."
+- `offline_reproduced`: principle "any newly-solved level must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, WorldModelVerifier importable); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4604-IDENTITY-REJECTED
+
+**Given** a no-op-heavy transition set with at least one real grid-changing
+transition
+**When** the new change-weighted held-out trust gate scores an identity engine
+that predicts no changes
+**Then** the engine is rejected because it predicts zero real changed cells
+correctly, even if the legacy full-grid binary gate rewards no-op transitions.
+
+#### SCENARIO-ARC-WMTE-4604-BINARY-CONTROL
+
+**Given** the same hidden-state world-model games and held-out variants are
+measured under the new trust-energy gate and under the legacy binary
+exact-match gate
+**When** experiment 4604 writes its artifact
+**Then** it reports both pass rates, their delta, first-win delta with bootstrap
+CI, solve-rate preservation, residual zero-pass games, and a terminal honest
+verdict without treating the held-out trust energy as an oracle win-check.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
