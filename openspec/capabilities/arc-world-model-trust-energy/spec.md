@@ -2765,6 +2765,53 @@ first-win-rate, and offline-to-live transfer ratio, and emits
 `null_delta_methodology_note` with value `0.0` when there are no solved live
 levels.
 
+### REQ-ARC-WMTE-4640: Exp4020 Graded Goal-Energy Live Generation
+
+Experiment 4640 SHALL wire Exp4020's induced visible-state `is_goal(state)`
+predicate into the live ARC generation path as a graded goal-satisfaction
+energy. The energy SHALL score the fraction of target groups satisfied,
+returning `0.0` only when the predicate fires and `1.0 - satisfied/total`
+otherwise; it SHALL NOT collapse to the binary `unsatisfied_targets == 0`
+gate. `graph_explore_solve_v2` SHALL accept this graded energy as a light dense
+bias and combine it convexly with the existing navigation heuristic,
+`alpha * arc_goal_distance + beta * graded_goal_energy`, while preserving depth
+as the no-regression primary search term. Any returned/generated plan SHALL pass
+the visible predicate gate before it is emitted.
+
+The scored `E3AgentPolicy` / `StepwiseExplorer` path SHALL import the goal-energy
+module, keep the Exp4629 action-effect predictor enabled, and install the same
+lower-is-better graded goal-energy bias in the submitted default configuration.
+The goal-energy module SHALL be live-path reachable from `arc_graph_explore` or
+`arc_competition_agent`, and `scripts/arc_orphan_solver_lint.py` SHALL remain
+green.
+
+Experiment 4640 SHALL compare the graded goal-energy arm against the matched
+action-effect-only baseline and a uniform-energy ablation on the same held-out
+public-game variants. The terminal artifact
+`results/experiment_4640_goal_energy_generation_live.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `solve_provenance`,
+`live_path_reachable`, `goal_energy_source`, `gap_closed`,
+`live_solve_rate_goal_energy`, `live_solve_rate_baseline`,
+`solve_rate_delta`, `first_win_rate_delta`, `median_actions_to_win_delta`,
+`uniform_energy_ablation_passed`, `live_lift_ci`, `bare_control_passed`,
+`false_negative_risk_checked`, `null_delta_methodology_note`,
+`chosen_submitted_config`, `offline_reproduced`, `residual_bridge_gaps`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+
+#### SCENARIO-ARC-WMTE-4640
+
+**Given** Exp4020's artifact is present with a sandboxed
+`goal_predicate_code`, the offline Arcade imports, and the E3 live explorer
+imports
+**When** Experiment 4640 compiles the predicate and runs the matched baseline,
+goal-energy, and uniform-energy arms
+**Then** a success artifact is permitted only when live solve-rate or
+first-win-rate improves over the baseline with a bootstrap CI excluding zero,
+beats the uniform-energy ablation, preserves offline reproduction for newly
+solved variants, and keeps the live-path lint green; otherwise the artifact
+MUST emit an honest null with explicit zero deltas and residual bridge gaps.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored

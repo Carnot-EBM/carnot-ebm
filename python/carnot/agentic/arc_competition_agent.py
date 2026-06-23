@@ -29,8 +29,10 @@ from typing import Any, Mapping, Optional, Sequence
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
+import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_frame_change_predictor import load_live_action_effect_scorer
+from carnot.agentic.arc_goal_energy_live import GOAL_ENERGY_SOURCE
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
@@ -83,9 +85,13 @@ SUBMITTED_FRONTIER_BATCH_SIZE: int | str = 1
 SUBMITTED_NAVIGATION_COST_TIEBREAK = True
 SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED = True
 SUBMITTED_FRAME_CHANGE_RANKING_MODE = "persistent_aem_plus_optional_cnn"
+SUBMITTED_GOAL_ENERGY_ENABLED = True
+SUBMITTED_GOAL_ENERGY_ALPHA = 0.9
+SUBMITTED_GOAL_ENERGY_BETA = 0.1
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
+_DEFAULT_GOAL_BIAS = object()
 
 
 def load_solutions() -> dict[str, list[dict]]:
@@ -202,6 +208,14 @@ def _load_submitted_frame_change_scorer() -> Any | None:
         return None
 
 
+def _load_submitted_goal_energy_bias() -> Any | None:
+    """REQ-ARC-WMTE-4640: load Exp4020's graded visible-state goal energy."""
+
+    if not SUBMITTED_GOAL_ENERGY_ENABLED:
+        return None
+    return arc_goal_energy_live.load_exp4020_goal_energy(root=REPO)
+
+
 class StepwiseExplorer:
     """Generic, game-AGNOSTIC step-wise solver — the competition asset (eval games are
     UNSEEN, so replay is useless; this is the only thing that scores). It is
@@ -244,6 +258,9 @@ class StepwiseExplorer:
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
         dense_curiosity_discount: float = 0.5,
+        goal_bias: Any | None = None,
+        goal_bias_label: str = "",
+        goal_bias_lower_is_better: bool = True,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -346,9 +363,9 @@ class StepwiseExplorer:
         self._nav_edges_recorded = 0
         self._nav_forward_steps = 0
         self._nav_reset_replay_steps = 0
-        self.goal_bias = None
-        self.goal_bias_label = ""
-        self.goal_bias_lower_is_better = False
+        self.goal_bias = goal_bias
+        self.goal_bias_label = str(goal_bias_label or "")
+        self.goal_bias_lower_is_better = bool(goal_bias_lower_is_better and goal_bias is not None)
         self._goal_bias_scored = 0
         self._goal_bias_errors = 0
 
@@ -1270,6 +1287,7 @@ class E3AgentPolicy:
         dense_curiosity: bool | DenseCuriosityProgress = False,
         dense_curiosity_weight: float = 0.15,
         dense_curiosity_discount: float = 0.5,
+        goal_bias: Any = _DEFAULT_GOAL_BIAS,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
@@ -1279,6 +1297,8 @@ class E3AgentPolicy:
             candidate_router = _load_submitted_candidate_router()
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
             frame_change_scorer = _load_submitted_frame_change_scorer()
+        if goal_bias is _DEFAULT_GOAL_BIAS:
+            goal_bias = _load_submitted_goal_energy_bias()
         self.approach_recommendation = _recommend_live_approach(self.short)
         self.strategy_route = dict(
             self.approach_recommendation.get("strategy")
@@ -1317,6 +1337,9 @@ class E3AgentPolicy:
             ),
             dense_curiosity_weight=dense_curiosity_weight,
             dense_curiosity_discount=dense_curiosity_discount,
+            goal_bias=goal_bias,
+            goal_bias_label=GOAL_ENERGY_SOURCE if goal_bias is not None else "",
+            goal_bias_lower_is_better=True,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -1765,6 +1788,11 @@ SUBMITTED_AGENT_CONFIG = {
     "frame_change_predictor_enabled": SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED,
     "frame_change_ranking_mode": SUBMITTED_FRAME_CHANGE_RANKING_MODE,
     "frame_change_prune_threshold": None,
+    "goal_energy_enabled": SUBMITTED_GOAL_ENERGY_ENABLED,
+    "goal_energy_wired": True,
+    "goal_energy_source": GOAL_ENERGY_SOURCE,
+    "goal_energy_alpha": SUBMITTED_GOAL_ENERGY_ALPHA,
+    "goal_energy_beta": SUBMITTED_GOAL_ENERGY_BETA,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,
@@ -1788,6 +1816,7 @@ SUBMITTED_AGENT_CONFIG = {
         "search_mode": SUBMITTED_SEARCH_MODE,
         "candidate_router": None,
         "navigation_cost_tiebreak": False,
+        "goal_energy_enabled": False,
     },
 }
 

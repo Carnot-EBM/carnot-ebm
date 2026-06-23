@@ -69,6 +69,12 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["frame_change_ranking_mode"] == "persistent_aem_plus_optional_cnn"
     assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
+    assert exp.goal_bias is not None
+    assert exp.goal_bias_label == "exp4020_graded_goal_satisfaction_energy"
+    assert SUBMITTED_AGENT_CONFIG["goal_energy_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["goal_energy_source"] == "exp4020_graded_goal_satisfaction_energy"
+    assert SUBMITTED_AGENT_CONFIG["goal_energy_alpha"] == 0.9
+    assert SUBMITTED_AGENT_CONFIG["goal_energy_beta"] == 0.1
     assert SUBMITTED_AGENT_CONFIG["verifier_is_oracle"] is False
 
 
@@ -83,6 +89,7 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
     assert exp.value_weight == 0.0
     assert exp.frame_change_scorer is not None
     assert exp.frame_change_prune_threshold is None
+    assert exp.goal_bias is not None
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["frame_change_prune_threshold"] is None
     assert exp.action_prior is None
@@ -124,6 +131,9 @@ def test_wired_flags_reflect_actual_imports():
     assert SUBMITTED_AGENT_CONFIG["world_model_dsl_wired"] == _imports(
         "arc_world_model_dsl", src
     ), "world_model_dsl_wired flag disagrees with whether arc_world_model_dsl is imported"
+    assert SUBMITTED_AGENT_CONFIG["goal_energy_wired"] == _imports("arc_goal_energy_live", src), (
+        "goal_energy_wired flag disagrees with whether arc_goal_energy_live is imported"
+    )
 
 
 def test_e3_policy_builds_strategy_route_and_world_model_dsl():
