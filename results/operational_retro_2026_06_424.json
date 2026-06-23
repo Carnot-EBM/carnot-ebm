@@ -1,29 +1,29 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.06.424",
-  "generated_at": "2026-06-23T03:30:35Z",
+  "generated_at": "2026-06-23T04:21:54Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The authoritative milestone-scoped timing block reports zero experiment commits since activation of 2026.06.424 (experiments_completed=0, total_wall_time_minutes=0, compute_bound_experiments_count=0, gpu_idle_on_compute_bound_tasks=null). This retro honors those locked zeros and analyzes execution efficiency only from the authoritative TIMING/GPU blocks; no per-experiment timing can be derived because the block carries no entries.",
+  "summary": "The authoritative milestone-scoped TIMING DATA block reports 0 commits / 0 experiments / 0 compute-bound / 0 wall-minutes / gpu_idle_on_compute_bound_tasks=null for 2026.06.424; locked numeric fields are left exactly as pre-filled per the anti-hallucination/locked-field contract. The compute_bound=0 and idle-3090 facts are GENUINELY CORRECT (no compute-bound 3090 task ran this milestone), but the 0-EXPERIMENT count is the documented milestone-scoped-detector FALSE-ZERO: on-disk ground truth verified this turn (artifact mtimes) shows a full ARC-sprint phase set ran over a ~5h window on 2026-06-22.",
   "bottlenecks_identified": [
-    "Observability, not execution: the authoritative timing block recorded 0 commits since activation, so no per-experiment wall-time is measurable. This is the recurring milestone-scoped-detector false-zero pattern (the detector-wire repair reaches the standalone module but not the conductor's retro prompt-assembly consumer that populates this block) rather than a measured wall-time bottleneck.",
-    "Both RTX 3090s are idle (0% util, ~4MB allocated). Per the GPU-idle interpretation rule this is NOT flagged as a bottleneck: compute_bound_experiments_count=0, so there was no compute-bound task that should have been driving the GPUs, and DualGPURunner is inapplicable (no 2+ models loaded in parallel)."
+    "OBSERVABILITY FALSE-ZERO (the one real operational defect, recurring since .363): the conductor's milestone-scoped timing detector reported 0 commits to this retro while on-disk ground truth verified this turn (ls mtimes) shows a full phase set exp4591-exp4602 ran 2026-06-22 13:36:42Z->18:41:30Z UTC (~5h05m). The retro's authoritative timing block is blind to a milestone that actually executed; the standalone detector works but the conductor's retro prompt-assembly call site does not consume it.",
+    "NOT a bottleneck (correct behaviour, explicitly not flagged): both RTX 3090s idle at 0% util. No compute-bound 3090 task ran this milestone -- every substrate was aggregation_from_upstream_artifacts / verifier_ensemble_against_cached_candidates / hardware_smoke, and the frozen ARC-sprint generator runs on the AMD iGPU per project policy -- so gpu_idle_on_compute_bound_tasks=null and DualGPURunner is inapplicable (no 2-model-parallel 3090 task to engage).",
+    "No experiment-execution / wall-time bottleneck is measurable from the authoritative block because it under-reports; reconciled against on-disk artifacts, the ~5h window ran a normal full phase set with no stalled task evident in the per-artifact mtime cadence."
   ],
   "improvements_suggested": [
-    "Move the milestone-scoped timing-detector wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro receives the same commit window the standalone module already computes, eliminating the false-zero.",
-    "Promote injected==on-disk to a HARD retro-launch gate: refuse to launch an operational retro when the injected timing block disagrees with the on-disk results/ + changelog window, so a false-zero cannot reach the artifact.",
-    "Add write-time stamping of duration_s / inference_substrate / compute_bound onto each experiment artifact so a results-mtime fallback can reconstruct the milestone window even when activation-window attribution misses commits.",
-    "If no compute-bound work is queued, release the residual ~4MB allocation the GPU monitor flagged on both RTX 3090s."
+    "Move the milestone-scoped-commit detector wiring to the conductor's retro TIMING-DATA prompt-assembly call site so the timing block reflects on-disk artifact mtimes/commits -- the standalone detector already reconciles correctly; the retro consumer is what is blind. This is the single highest-leverage fix and would have made this milestone's 12 artifacts visible to the retro.",
+    "HARD-gate retro launch on injected-commit-count == on-disk-artifact-count: if the injected TIMING DATA disagrees with the count of results/experiment_*.json mtimed inside the milestone window, reconcile from disk before generating any numbers, instead of silently emitting a 0-experiment retro.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact WRITE time so per-experiment timing is self-contained and future retros never depend on a commit-diff detector that can false-zero."
   ],
   "top_3_highest_leverage_actions": [
-    "Move the detector-wire to the retro TIMING-DATA prompt-assembly call site (the single change that would let future retros count commits by attribution instead of an activation-window that misses them).",
-    "Add a HARD injected==on-disk retro-launch gate so a false-zero timing block blocks the retro instead of silently producing a 0/0/0 artifact.",
-    "Add results-mtime fallback + write-time duration_s/inference_substrate/compute_bound stamping so a real compute-bound run (if any) is never under-counted, and gpu_idle can be resolved per-device for genuine GPU-class tasks."
+    "Wire the on-disk milestone-scoped detector into the conductor's retro TIMING-DATA call site (recurring false-zero since .363/.419) -- eliminates the under-report at the source so the retro sees the real exp4591-exp4602 phase set.",
+    "Add an injected==on-disk hard gate at retro launch so a detector false-zero can never produce a '0 experiments' retro that contradicts the changelog's own committed completions.",
+    "Adopt write-time per-artifact stamping (duration_s/inference_substrate/compute_bound) to make operational retros detector-independent and self-contained."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The operative finding is observability, not speed: with the authoritative block at 0/0/0 there is no wall-time to recover, so the realistic execution time-saving is ~0%. The value this milestone is making the retro pipeline trustworthy — fixing the detector false-zero so future retros analyze real timing rather than honoring a block that disagrees with the on-disk record. Reporting the zeros honestly (no fabricated IDs, durations, or metrics) is the correct anti-hallucination-compliant outcome."
+  "meta_reflection": "Milestone 2026.06.424 executed a full ARC-sprint phase set (exp4591-exp4602, on-disk-verified) efficiently on iGPU/CPU substrates; the idle 3090s are correct, not wasted compute. The ONLY operational defect is the recurring detector false-zero that makes the authoritative timing block under-report a milestone that actually ran -- an OBSERVABILITY fix (wire the detector into the retro call site + injected==on-disk gate), not a throughput fix. Estimated wall-time savings are therefore 0%; the real win is retro fidelity so future milestones are not silently reported as empty."
 }
