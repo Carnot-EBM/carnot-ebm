@@ -154,7 +154,8 @@ def escalating_deepen(game, target_level, n_reinduce, max_plan, max_depth, seed)
             break
     reproduced = _levels_completed(fr) - base
     return {"reached_L1": True, "deepest_level": int(level), "reproduced_level": int(reproduced),
-            "per_level": per_level, "n_banked_actions": len(banked),
+            "per_level": per_level, "n_banked_actions": len(banked), "banked": banked, "cell": cell,
+            "goal_color": goal_color,
             "escalated_to_hazard_aware": any(str(p.get("model_class", "")).startswith("hazard_aware")
                                              for p in per_level)}
 
