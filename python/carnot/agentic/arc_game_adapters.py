@@ -838,26 +838,52 @@ def _dc22():
     """
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
-    click_labels = [
-        json.dumps(
-            {"action": 6, "grid": [48, 26], "sprite": "buezna-blrmbx", "x": 48, "y": 36},
-            sort_keys=True,
-            separators=(",", ":"),
-        ),
-        json.dumps(
-            {"action": 6, "grid": [48, 9], "sprite": "buezna-refgps", "x": 48, "y": 19},
-            sort_keys=True,
-            separators=(",", ":"),
-        ),
-    ]
     move_labels = [
         json.dumps({"action": action}, sort_keys=True, separators=(",", ":"))
         for action in (1, 2, 3, 4)
     ]
 
+    def _click_label(game, sprite):
+        grid_w, grid_h = getattr(getattr(game, "current_level", None), "grid_size", None) or (64, 64)
+        grid_x = int(getattr(sprite, "x", 0)) + int(getattr(sprite, "width", 1)) // 2
+        grid_y = int(getattr(sprite, "y", 0)) + int(getattr(sprite, "height", 1)) // 2
+        display_x = grid_x + max(0, (64 - int(grid_w)) // 2)
+        display_y = grid_y + max(0, (64 - int(grid_h)) // 2)
+        return json.dumps(
+            {
+                "action": 6,
+                "grid": [grid_x, grid_y],
+                "sprite": str(getattr(sprite, "name", "")),
+                "x": display_x,
+                "y": display_y,
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
+    def _current_click_labels(game):
+        level = getattr(game, "current_level", None)
+        getter = getattr(level, "get_sprites_by_tag", None)
+        if not callable(getter):
+            return []
+        labels = []
+        for sprite in sorted(
+            getter("buezna"),
+            key=lambda item: (
+                str(getattr(item, "name", "")),
+                int(getattr(item, "x", 0)),
+                int(getattr(item, "y", 0)),
+            ),
+        ):
+            if "sys_click" not in getattr(sprite, "tags", []):
+                continue
+            labels.append(_click_label(game, sprite))
+        return labels
+
     def action_labels(env, frame=None, path=None):
-        del env, frame, path
-        return [*move_labels, *click_labels]
+        del frame, path
+        game = getattr(env, "_game", None)
+        return [*move_labels, *_current_click_labels(game)]
 
     def apply(env, label, frame):
         del frame
@@ -908,24 +934,33 @@ def _dc22():
         return level, player_key, goal_key, blockers
 
     def hand_verifier(game, frame=None):
-        if frame is not None and int(getattr(frame, "levels_completed", 0) or 0) > 0:
-            return 0.0
         player = getattr(game, "qnnpcoyzd", None)
         goal = getattr(game, "hfuqkxulm", None)
         if player is None or goal is None:
             return 1000.0
         return float(abs(int(player.x) - int(goal.x)) + abs(int(player.y) - int(goal.y)))
 
+    def featurize(game):
+        player = getattr(game, "qnnpcoyzd", None)
+        goal = getattr(game, "hfuqkxulm", None)
+        px = float(getattr(player, "x", 0))
+        py = float(getattr(player, "y", 0))
+        gx = float(getattr(goal, "x", 0))
+        gy = float(getattr(goal, "y", 0))
+        distance = abs(px - gx) + abs(py - gy)
+        steps = float(getattr(getattr(game, "ujotjblwn", None), "current_steps", 0) or 0)
+        return [distance, px, py, gx, gy, float(len(_current_click_labels(game))), steps]
+
     return GameAdapter(
         game="dc22",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
-        featurize=None,
+        featurize=featurize,
         hand_verifier=hand_verifier,
         warmup_label=None,
         depth_caps={1: 24, 2: 80, 3: 120, 4: 160, 5: 256, 6: 512},
-        branch_mode="replay",
+        branch_mode="fresh_env",
     )
 
 
