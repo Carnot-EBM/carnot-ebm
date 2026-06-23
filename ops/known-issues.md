@@ -808,6 +808,41 @@ it ran no k-ablation — its step-reductions are not evidence for the Carnot ver
 within-game. Full spec: `docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`;
 memory: [[reference_matm_transactive_memory]].
 
+### NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse) — build ON the .427 bridge-crossing
+
+**Origin:** 2026-06-23 operator flag after the "how do we improve the .427 result?" analysis
+(17-agent adversarial workflow, `docs/research-notes/arc-improve-bridge-result-2026-06-23.md`). `.427`
+crossed the offline→live bridge on EFFICIENCY (action-effect predictor: live first-win 0.407→0.591,
+actions 2→1, transferred cd82 +0.5) but live multi-level **solve-rate is still flat at 0.04**. `.428`
+A1 (goal-energy) + A2 (ranker→expansion-prior) extend the predictor over the SAME object-centroid
+candidate pool — they reach the first level-up faster but do not chain to a 2nd/3rd. The 0.04 is a
+**multi-level DEPTH wall**, and the most direct attack is **horizon collapse**. **Task (.429+):** induce
+a per-game macro vocabulary by clustering observed action *sequences* by frame-delta effect
+(push-until-blocked, cycle-color, toggle-then-step); expose each as a composite `ArcAction` so
+`graph_explore_solve_v2` best-first search plans over MACROS, not primitives (collapsing the
+exponential horizon into the ~5n budget). Shared library seeded from solved games (cross-game prior),
+refined online per-game (`live_agent_self_discovery`). The macro-keep criterion is **empowerment**
+(channel capacity from a macro to its reachable frame-delta set — an information-theoretic energy;
+`verifier_is_oracle: false`, the macro value is its OBSERVED frame-delta, never a read of the env
+win-counter). **Falsifiable LIVE gate:** on ≥1 hard-tail game (pre-confirmed horizon-bound via the
+cheap `cell_recall` probe, NOT representation-bound), macro-augmented search banks a NEW reproducible
+level (`arc_solver_kit.reproduce`) that primitive-only does NOT reach **at equal total budget
+(induction cost charged to the macro arm)**, with `horizon_reduction_ratio > 1×` (winning plan
+strictly shorter in macros than primitives — the anti-noise check that macros are real, not relabeled
+primitives), no first-win regression, bootstrap-CI on the new-level delta excludes 0;
+`retire_if_same_verdict: true` (if no macro ever shortens a winning plan / no new level banks across
+the tail, retire the inducer, fall back to primitives, log the residual). **Moves: live solve-rate
+(`reproducible_total_levels`)** — the prize, not just efficiency. **Sequencing:** generation lever,
+live-path-reachable (`arc_orphan_solver_lint` + `test_arc_submitted_agent_parity.py` green); a SECOND
+ARC slot that does NOT displace the ARC Level-Up Attempt Guarantee (≥1 banking attempt/roadmap) or the
+majority-ARC-solving allocation. **Why generation, not reranking:** `.425/.426/.427` confirmed 3×
+that generation levers cross the bridge and rerankers do not — macros add new PLANS, the thrice-nulled
+reranking class only reorders the existing pool. Secondary candidate from the same analysis (lower
+rank, gate behind a 30-min falsifier): **click-heatmap-as-GENERATOR** — our `SmallFrameChangeCNN` has a
+per-pixel `click_head` (verified) but `rich_action_candidates` enumerates centroids only, so off-
+centroid winning clicks are absent from the pool; pre-flight `winning_click_centroid_coverage` before
+building. Full spec: `docs/research-notes/arc-improve-bridge-result-2026-06-23.md`.
+
 ### NEW 2026-06-22 (TOP PRIORITY for .425+ — operator-directed, ARC sprint sub-direction): ENERGY-CONFIG-SPACE GENERATION — work energy judgement INTO the live agent loop (make-a-winner-appear, not select-the-winner)
 
 **Origin:** 2026-06-22 operator directive after a step-back research session (two
