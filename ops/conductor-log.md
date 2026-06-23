@@ -9131,3 +9131,4 @@ c |
 | 2026-06-23 19:30 UTC | Plan milestone 2026.06.428 | OK | 12 tasks proposed |
 | 2026-06-23 19:32 UTC | Milestone 2026.06.428 activated | OK | 12 tasks queued |
 | 2026-06-23 19:50 UTC | PHASE 0 (TRANSITION) -- archive .427 -> activate . | OK | 86 passed, 1 warning in 8.82s |
+| 2026-06-23 20:07 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 123 passed, 1 warning in 10.12s |
