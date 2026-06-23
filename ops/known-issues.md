@@ -779,6 +779,35 @@ generator is FROZEN: Qwen3.5-9B-MTP ([[project_arc_live_generator]]). `.409 is a
 (`research-roadmap-next.yaml`) as the template. Retires **2026-06-30** (the challenge deadline) ONLY — NOT
 on submissions (the operator expects MULTIPLE submissions before then; keep improving across all of them).
 
+### NEW 2026-06-23 (.427+ candidate — operator-flagged from MATM ingestion; ARC sprint sub-direction, action-efficiency): SIMILARITY-KEYED PARTIAL-TRAJECTORY RETRIEVAL in StepwiseExplorer (verifier-routed, oracle-distinct)
+
+**Origin:** 2026-06-23 operator flag after the MATM ingestion (arXiv:2606.19911, Multi-Agent
+Transactive Memory) — adversarial map killed 2 grafts as already-subsumed and kept ONE narrow
+survivor. The live ARC agent ALREADY does within-game self-populated trajectory retrieval
+(`StepwiseExplorer.adj` + `_shortest_path`/`_partial_forward_path`, scored by
+`navigation_diagnostics.forward_walk_hit_rate`) but keys it by EXACT frame-hash. MATM's un-subsumed
+slice: key by a coarse/LSH **similarity** state descriptor so a NEAR-match state inherits a useful
+action prefix across that hidden game's own rollouts — a strict generalization of the existing
+`hud_mask` exact-hash relaxation (grep confirms no similarity-trajectory index in the live `arc_*`
+modules). **Task (.427+):** add a flag-gated coarse/LSH state-descriptor index to `StepwiseExplorer.adj`
+so `_shortest_path` can return a sub-sequence from a SIMILAR (not bit-identical) prior state; quantize
+`cross_game_features_v2` (already imported) for the bucket key; score each retrieved prefix through the
+existing `value_head`/`goal_bias`/`WorldModelVerifier` router BEFORE commit (energy as router-not-
+generator → `verifier_is_oracle: false`, oracle-distinct per the Circularity discipline). A/B vs the
+SUBMITTED exact-hash baseline over reproduced games (tu93, lp85, sp80, cn04, m0r0) via
+`scripts/arc3_replay_scorecard_metaharness.py`. **Falsifiable gate:** `forward_walk_hit_rate` STRICTLY
+up vs exact-hash AND actions-to-first-levelup down ≥1 on ≥2 games AND ZERO `reached_level` regression
+AND `test_arc_submitted_agent_parity.py` green AND in-budget (`lazy_value_top_k`); else RETIRE (the
+`value_weight=5` disposition, `retire_if_same_verdict: true`). **Metric moved: live action-efficiency**
+(does NOT move `reproducible_total_levels` unless a banked sub-sequence reaches a strictly new
+offline-reproduced level — expect "efficiency, not new level"). **Sequencing:** this is an
+action-efficiency candidate, NOT a level-bank — it must NOT displace the ARC Level-Up Attempt Guarantee
+(≥1 banking attempt/roadmap) or the majority-ARC-solving allocation; pick it up in the
+SOTA-ingestion/efficiency slot. **Do NOT over-claim:** MATM's θ-filter is success-NOT-verification and
+it ran no k-ablation — its step-reductions are not evidence for the Carnot verifier moat; scope to
+within-game. Full spec: `docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`;
+memory: [[reference_matm_transactive_memory]].
+
 ### NEW 2026-06-22 (TOP PRIORITY for .425+ — operator-directed, ARC sprint sub-direction): ENERGY-CONFIG-SPACE GENERATION — work energy judgement INTO the live agent loop (make-a-winner-appear, not select-the-winner)
 
 **Origin:** 2026-06-22 operator directive after a step-back research session (two
