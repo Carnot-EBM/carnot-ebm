@@ -54,6 +54,45 @@ def _components_detailed(grid) -> list:
     return comps
 
 
+# just-explore's 5-tier salience schedule (heuristic_agent.py:frame_segments_to_action_groups,
+# arXiv:2512.24156). The 2026-06-23 offline head-to-head showed this SCHEDULE reaches first-wins our
+# flat area*rarity sort misses on 5 games (bp35/ft09/m0r0/r11l/vc33). It front-loads BUTTON-LIKE objects
+# (salient colour AND medium bounding-box) and defers very-large / dull / status-bar segments, where our
+# flat sort up-ranks the largest area first. Constants are just-explore's verbatim.
+_TIER_SALIENT_COLORS = frozenset(range(6, 16))  # {6..15} (non-salient = {0..5})
+_TIER_STATUS_BAR_COLOR = 16
+_TIER_MIN_WIDTH = 2
+_TIER_MAX_WIDTH = 32
+
+
+def _tier_ordered_click_points(grid) -> list:
+    """Object-click (x, y) points ordered by just-explore's 5 salience tiers (T0 first):
+    T0 salient AND medium-width, T1 medium-width, T2 salient, T3 other, T4 status-bar. Stable
+    secondary sort by descending area. x = centroid[0], y = centroid[1] (matching the flat path)."""
+    from carnot.agentic.arc_solver_kit import object_centric_digest
+
+    def _tier(comp) -> int:
+        bb = comp["bbox"]  # [min_row, min_col, max_row, max_col]
+        h = bb[2] - bb[0] + 1
+        w = bb[3] - bb[1] + 1
+        color = int(comp["color"])
+        salient = color in _TIER_SALIENT_COLORS
+        medium = _TIER_MIN_WIDTH <= w <= _TIER_MAX_WIDTH and _TIER_MIN_WIDTH <= h <= _TIER_MAX_WIDTH
+        if color == _TIER_STATUS_BAR_COLOR:
+            return 4
+        if salient and medium:
+            return 0
+        if medium:
+            return 1
+        if salient:
+            return 2
+        return 3
+
+    comps = object_centric_digest(grid)["components"]
+    comps_sorted = sorted(comps, key=lambda c: (_tier(c), -int(c["area"])))
+    return [(int(c["centroid"][0]), int(c["centroid"][1])) for c in comps_sorted]
+
+
 def rich_action_candidates(
     frame: Any,
     max_click: int = 48,
@@ -95,17 +134,31 @@ def rich_action_candidates(
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
-        grid = grid_of(frame)
-        comps = _components_detailed(grid)
-        if by_salience and comps:
-            from collections import Counter
+        import os
 
-            color_cells = Counter(int(v) for v in grid.flatten().tolist())
-            # salience: big segments + globally-rare colors score highest
-            comps.sort(
-                key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
-            )
-        pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
+        grid = grid_of(frame)
+        # CARNOT_ARC_TIER_SCHEDULE=1 orders object-clicks by just-explore's 5 salience tiers (button-like
+        # medium-width salient objects first) instead of the flat area*rarity sort. Default off -> the
+        # path below is byte-identical to the proven order (parity preserved; the SUBMITTED agent unchanged
+        # until the A/B greenlights it). A scoring failure falls back to the flat order (no-regression).
+        if os.environ.get("CARNOT_ARC_TIER_SCHEDULE") == "1":
+            try:
+                pts = _tier_ordered_click_points(grid) or None  # None -> fall back to the flat order
+            except Exception:
+                pts = None
+        else:
+            pts = None
+        if pts is None:
+            comps = _components_detailed(grid)
+            if by_salience and comps:
+                from collections import Counter
+
+                color_cells = Counter(int(v) for v in grid.flatten().tolist())
+                # salience: big segments + globally-rare colors score highest
+                comps.sort(
+                    key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
+                )
+            pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
         if not pts:
             h, w = grid.shape
             pts = [(w // 2, h // 2)]
