@@ -1,0 +1,304 @@
+{
+  "coheadline_block": {
+    "first_win_rate": 0.590909,
+    "live_action_efficiency": 0.758102,
+    "live_submittable_level_count": 56,
+    "offline_to_live_transfer_ratio": 0.0,
+    "offline_to_live_transfer_ratio_integrated": 0.0,
+    "reported_side_by_side": [
+      "live_action_efficiency",
+      "reproducible_total_levels",
+      "live_submittable_level_count",
+      "first_win_rate",
+      "offline_to_live_transfer_ratio"
+    ],
+    "reproducible_total_levels": 56,
+    "solved_level_count": 24,
+    "source_artifacts": {
+      "a2_action_effect_predictor": "results/experiment_4629_graduate_action_effect_predictor_live.json",
+      "a6_integration_gate": "results/experiment_4633_integration_gate.json",
+      "live_submittable": "results/experiment_4586_live_submittable_coheadline.json",
+      "offline_to_live_transfer": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json",
+      "registry": "ops/arc_solve_registry.yaml"
+    }
+  },
+  "duration_s": 0.821476,
+  "experiment": "experiment_4634_live_action_efficiency_metric",
+  "field_principles": {
+    "coheadline_block": {
+      "principle": "live_action_efficiency reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / offline_to_live_transfer_ratio -- the single canonical metric surface."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: live_action_efficiency_metric_helper_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads the A2 artifact + registry, no model load (100us floor)."
+    },
+    "live_action_efficiency": {
+      "principle": "the canonical co-headline metric value (mean min(human/agent,1)^2 over live-solved levels) -- the leaderboard score term."
+    },
+    "per_level_efficiency": {
+      "principle": "the per-level efficiency + agent-actions + baseline-actions -- explicit so the metric is auditable, not a single opaque number."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+    }
+  },
+  "honest_verdict": "success: live_action_efficiency_metric_helper_shipped_tests_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A2 artifact + registry, no model load (100us floor).",
+  "inference_substrate_detail": "aggregation_only_no_model_load",
+  "live_action_efficiency": 0.758102,
+  "per_level_efficiency": [
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "ar25",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "bp35",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "cd82",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "cn04",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "dc22",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "ft09",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "g50t",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "ka59",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "lf52",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "lp85",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "ls20",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "m0r0",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "re86",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "s5i5",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "sb26",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "sc25",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "sk48",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "sp80",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "su15",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 2.0,
+      "baseline_actions": 1.0,
+      "efficiency": 0.25,
+      "game": "tn36",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "tr87",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "tu93",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.5,
+      "baseline_actions": 1.0,
+      "efficiency": 0.444444,
+      "game": "vc33",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    },
+    {
+      "agent_actions": 1.0,
+      "baseline_actions": 1.0,
+      "efficiency": 1.0,
+      "game": "wa30",
+      "level": 0,
+      "source": "live_measurement.per_game"
+    }
+  ],
+  "preconditions_checked": {
+    "a2_artifact_present": true,
+    "a6_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "model_load_required": false,
+    "offline_arcade": true,
+    "offline_to_live_artifact_present": true,
+    "ok": true,
+    "registry_present": true,
+    "spec_has_req_4634": true
+  },
+  "random_seed": 4634,
+  "reproducibility_checksum": "sha256:8609dfbe922645f94cf3c949ac58bdb597e9a900db26c2f14e116c946d205265",
+  "schema": "carnot.exp4634.live_action_efficiency_metric.v1",
+  "solved_level_count": 24,
+  "source_artifacts": {
+    "a2_action_effect_predictor": "results/experiment_4629_graduate_action_effect_predictor_live.json",
+    "a6_integration_gate": "results/experiment_4633_integration_gate.json",
+    "live_submittable": "results/experiment_4586_live_submittable_coheadline.json",
+    "offline_to_live_transfer": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json",
+    "registry": "ops/arc_solve_registry.yaml"
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-4634",
+    "SCENARIO-ARC-WMTE-4634"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "assertions": [
+      "agent_actions equal to baseline reports efficiency 1.0",
+      "agent_actions twice the baseline reports efficiency 0.25",
+      "zero solved levels reports 0.0 with null_delta_methodology_note",
+      "multi-level mean averages per-level leaderboard score terms"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4634_live_action_efficiency_metric.py -q --no-cov",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4634_live_action_efficiency_metric.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4634_live_action_efficiency_metric.py -q",
+      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4634_live_action_efficiency_metric.py' --fail-under=100 --show-missing"
+    ],
+    "full_python_suite": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "passed": false,
+      "result": "attempted; unrelated pre-existing failures and a Z3 segmentation fault occurred before completion, then the run was terminated after failure was definitive."
+    },
+    "passed": true,
+    "scope": "added_4634_metric_tests_and_new_module_coverage",
+    "test_file": "tests/python/test_experiment_4634_live_action_efficiency_metric.py"
+  }
+}

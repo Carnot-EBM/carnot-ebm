@@ -2593,6 +2593,58 @@ aggregated numbers, runs the submitted-agent parity and orphan-solver lint
 gates, writes `results/experiment_4633_integration_gate.json`, and emits an
 honest null with the bare config if no clean lever raises a metric.
 
+### REQ-ARC-WMTE-4634: Canonical Live Action-Efficiency Metric Helper
+
+Experiment 4634 SHALL provide a canonical helper that reads the A2 action-effect
+predictor artifact `results/experiment_4629_graduate_action_effect_predictor_live.json`,
+the A6 integration artifact `results/experiment_4633_integration_gate.json`, the
+offline-to-live co-metric artifact
+`results/experiment_4622_offline_to_live_transfer_ratio_metric.json`, and the ARC
+solve registry without loading a model. The helper SHALL compute
+`live_action_efficiency` as the mean over live-solved levels of
+`min(human_baseline_actions / agent_actions, 1)^2`. It SHALL expose each
+per-level row's `agent_actions`, `baseline_actions`, and `efficiency` so the
+leaderboard score term is auditable and not a single opaque aggregate.
+
+Experiment 4634 SHALL report `live_action_efficiency` side-by-side with the other
+ARC co-headline metrics in one canonical `coheadline_block`: reproducible total
+levels from `ops/arc_solve_registry.yaml`, live-submittable level count,
+first-win-rate, and `offline_to_live_transfer_ratio`. If zero live levels are
+solved, efficiency is undefined; the helper SHALL report
+`live_action_efficiency: 0.0` and include `null_delta_methodology_note` instead
+of fabricating a non-null value.
+
+Experiment 4634 SHALL write
+`results/experiment_4634_live_action_efficiency_metric.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `live_action_efficiency`, `per_level_efficiency`,
+`coheadline_block`, `tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: live_action_efficiency_metric_helper_shipped_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the A2 artifact + registry, no model load (100us floor)."
+- `live_action_efficiency`: principle "the canonical co-headline metric value (mean min(human/agent,1)^2 over live-solved levels) -- the leaderboard score term."
+- `per_level_efficiency`: principle "the per-level efficiency + agent-actions + baseline-actions -- explicit so the metric is auditable, not a single opaque number."
+- `coheadline_block`: principle "live_action_efficiency reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / offline_to_live_transfer_ratio -- the single canonical metric surface."
+- `tests_added`: principle "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4634
+
+**Given** an A2 live artifact with explicit per-level agent action counts and
+baseline action references for solved levels
+**When** the 4634 helper computes the live action-efficiency metric
+**Then** it reports the mean `min(human_baseline_actions / agent_actions, 1)^2`,
+records per-level agent and baseline actions, reports the value in the canonical
+coheadline block beside reproducible total levels, live-submittable count,
+first-win-rate, and offline-to-live transfer ratio, and emits
+`null_delta_methodology_note` with value `0.0` when there are no solved live
+levels.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored
