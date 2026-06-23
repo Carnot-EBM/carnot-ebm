@@ -712,6 +712,51 @@ clean raised metric, the parity test stays green, the live-submittable count is
 reported from the clean refreshed package, and the artifact emits an honest null
 with a stable checksum.
 
+### REQ-ARC-WMTE-4610: Canonical World-Model Trust Pass-Rate Metric Helper
+
+Experiment 4610 SHALL provide a canonical helper that reads the A1 artifact
+`results/experiment_4604_world_model_trust_energy.json` and the ARC solve
+registry, without loading a model, and computes `world_model_trust_pass_rate`
+as the explicit integer numerator divided by the explicit integer denominator.
+The numerator SHALL count only world-model games where the new trust gate passed
+and the planner used the world-model path. Degenerate identity/no-op selected
+candidates SHALL NOT count as genuine passes, even if a source row marks
+`new_trust_pass=true` and `new_planner_used=true`. The denominator SHALL be the
+number of world-model game measurement rows tried.
+
+Experiment 4610 SHALL write
+`results/experiment_4610_world_model_trust_pass_rate_metric.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `world_model_trust_pass_rate`,
+`trust_pass_numerator`, `trust_pass_denominator`, `coheadline_block`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. If the computed trust-pass rate equals the matched
+baseline, the artifact SHALL include `null_delta_methodology_note`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: world_model_trust_pass_rate_metric_helper_shipped_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor)."
+- `world_model_trust_pass_rate`: principle "the canonical co-headline metric value computed from A1 (numerator/denominator explicit, not just the float)."
+- `trust_pass_numerator`: principle "the integer count of world-model games passing the new gate AND used by the planner -- explicit so the metric does not collide as a bare fraction (the TAUTOLOGY trap)."
+- `trust_pass_denominator`: principle "the integer count of world-model games tried -- explicit denominator."
+- `coheadline_block`: principle "world_model_trust_pass_rate reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / generic_transfer / action-efficiency -- the single canonical metric surface."
+- `tests_added`: principle "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4610
+
+**Given** an A1 world-model artifact with `k` non-degenerate rows whose
+`new_trust_pass` and `new_planner_used` flags are both true across `n`
+measurement rows
+**When** the 4610 helper computes the metric
+**Then** it returns `k/n`, exposes `trust_pass_numerator=k` and
+`trust_pass_denominator=n`, excludes identity/no-op selected candidates from
+the numerator, and emits a `null_delta_methodology_note` when the computed rate
+equals the baseline.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from

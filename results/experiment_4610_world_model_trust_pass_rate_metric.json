@@ -1,0 +1,129 @@
+{
+  "coheadline_block": {
+    "action_efficiency_ci": [
+      1.0,
+      1.0
+    ],
+    "action_efficiency_score": 1.0,
+    "first_win_rate": 1.0,
+    "generic_transfer_ci": [
+      0.0,
+      0.1
+    ],
+    "generic_transfer_rate_over_variants": 0.04,
+    "live_submittable_level_count": 54,
+    "median_actions_to_first_levelup": 20.0,
+    "reported_side_by_side": [
+      "world_model_trust_pass_rate",
+      "reproducible_total_levels",
+      "live_submittable_level_count",
+      "first_win_rate",
+      "generic_transfer_rate_over_variants",
+      "action_efficiency_score"
+    ],
+    "reproducible_total_levels": 55,
+    "source_artifacts": {
+      "action_efficiency": "results/experiment_4574_action_efficiency_coheadline.json",
+      "live_submittable": "results/experiment_4586_live_submittable_coheadline.json",
+      "registry": "ops/arc_solve_registry.yaml",
+      "world_model_trust": "results/experiment_4604_world_model_trust_energy.json"
+    },
+    "trust_pass_denominator": 6,
+    "trust_pass_numerator": 6,
+    "world_model_trust_pass_rate": 1.0,
+    "world_model_trust_pass_rate_baseline": 0.0,
+    "world_model_trust_pass_rate_delta": 1.0
+  },
+  "duration_s": 1.26981,
+  "excluded_degenerate_identity_games": [],
+  "experiment": "experiment_4610_world_model_trust_pass_rate_metric",
+  "field_principles": {
+    "coheadline_block": {
+      "principle": "world_model_trust_pass_rate reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / generic_transfer / action-efficiency -- the single canonical metric surface."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: world_model_trust_pass_rate_metric_helper_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+    },
+    "trust_pass_denominator": {
+      "principle": "the integer count of world-model games tried -- explicit denominator."
+    },
+    "trust_pass_numerator": {
+      "principle": "the integer count of world-model games passing the new gate AND used by the planner -- explicit so the metric does not collide as a bare fraction (the TAUTOLOGY trap)."
+    },
+    "world_model_trust_pass_rate": {
+      "principle": "the canonical co-headline metric value computed from A1 (numerator/denominator explicit, not just the float)."
+    }
+  },
+  "honest_verdict": "success: world_model_trust_pass_rate_metric_helper_shipped_tests_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1 artifact + registry, no model load (100us floor).",
+  "inference_substrate_detail": "aggregation_only_no_model_load",
+  "passed_games": [
+    "ar25",
+    "cn04",
+    "ka59",
+    "sc25",
+    "sk48",
+    "wa30"
+  ],
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "model_load_required": false,
+    "offline_arcade": true,
+    "ok": true,
+    "registry_present": true,
+    "spec_has_req_4610": true
+  },
+  "random_seed": 4610,
+  "registry_reproducible_total_levels": 55,
+  "reproducibility_checksum": "sha256:1c7e884164bcb2b7121cdc6bb593ea975a3b57de2e1c08bf70928ea3ea962f3b",
+  "schema": "carnot.exp4610.world_model_trust_pass_rate_metric.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4610",
+    "SCENARIO-ARC-WMTE-4610"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "assertions": [
+      "synthetic k/n returns explicit numerator and denominator",
+      "degenerate identity-pass is excluded from numerator",
+      "baseline-equal case emits null_delta_methodology_note"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4610_world_model_trust_pass_rate_metric.py -q --no-cov",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4610_world_model_trust_pass_rate_metric.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4610_world_model_trust_pass_rate_metric.py -q",
+      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4610_world_model_trust_pass_rate_metric.py' --fail-under=100 --show-missing"
+    ],
+    "passed": true,
+    "test_file": "tests/python/test_experiment_4610_world_model_trust_pass_rate_metric.py"
+  },
+  "tried_games": [
+    "ar25",
+    "cn04",
+    "ka59",
+    "sc25",
+    "sk48",
+    "wa30"
+  ],
+  "trust_pass_denominator": 6,
+  "trust_pass_numerator": 6,
+  "world_model_trust_pass_rate": 1.0,
+  "world_model_trust_pass_rate_baseline": 0.0,
+  "world_model_trust_pass_rate_delta": 1.0
+}
