@@ -1,0 +1,121 @@
+{
+  "cnn_substrate_floor_added": true,
+  "cnn_substrate_floor_report": {
+    "a2_fixture_duration_flags": [],
+    "a2_fixture_not_flagged": true,
+    "fast_cnn_duration_flags": [],
+    "fast_cnn_floor": {
+      "marker": "cnn",
+      "methodology_fields": [
+        "model_specs",
+        "random_seed",
+        "reproducibility_checksum"
+      ],
+      "min_duration_s": 0.0001,
+      "reason": "cheap_learned_value_scoring",
+      "substrate": "verifier_ensemble_against_cached_candidates"
+    },
+    "no_methodology_duration_flags": [
+      {
+        "detail": "duration_s=0.23 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "no_methodology_fast_run_still_fires": true,
+    "passed": true
+  },
+  "duration_s": 0.024896933929994702,
+  "experiment": "experiment_4635_adversarial_verify_hardening",
+  "field_principles": {
+    "cnn_substrate_floor_added": {
+      "principle": "the calibrated substrate floor so a methodology-bearing fast CNN action-effect scoring run is not DURATION_TOO_SHORT false-flagged (the .427 A2 fixture)."
+    },
+    "honest_diagnostic_not_flagged": {
+      "principle": "HARD -- an artifact honestly reporting an intrinsic-bonus magnitude as a diagnostic (no win claim) does NOT fire guard 1 (narrow, not a hole)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_hardened_intrinsic_reward_guard_plus_cnn_substrate_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor)."
+    },
+    "intrinsic_reward_overclaim_guard_added": {
+      "principle": "the guard that a curiosity/exploration win must carry a measured downstream metric, not only a rising intrinsic-bonus magnitude (the .427 A1 generation-thesis protection)."
+    },
+    "no_methodology_fast_run_still_fires": {
+      "principle": "HARD -- a no-methodology sub-second CNN-scoring run STILL fires DURATION_TOO_SHORT (guard 2 is narrow, the genuine fabrication case stays catchable)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (adversarial_verify.py parses, fixtures present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "research_conductor_modified": {
+      "principle": "MUST be false -- this edits adversarial_verify.py (the linter), never scripts/research_conductor.py."
+    },
+    "tests_added": {
+      "principle": "the asserting tests (every test >=1 assertion; no skips) -- both guards are verified."
+    }
+  },
+  "honest_diagnostic_not_flagged": true,
+  "honest_verdict": "success: adversarial_verify_hardened_intrinsic_reward_guard_plus_cnn_substrate_tests_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor).",
+  "intrinsic_reward_guard_report": {
+    "a1_fixture_flags": [],
+    "a1_fixture_not_flagged": true,
+    "honest_diagnostic_flags": [],
+    "honest_diagnostic_not_flagged": true,
+    "overclaim_warn_flags": [
+      {
+        "detail": "intrinsic-reward-without-downstream-gain: ARC artifact claims a curiosity/exploration/learning-progress win but reports only intrinsic-bonus magnitude evidence. Add a measured downstream solve_rate_delta, state_coverage_delta, or first_win_rate_delta versus a control before treating the intrinsic reward as a win.",
+        "kind": "intrinsic-reward-without-downstream-gain",
+        "severity": "warn"
+      }
+    ],
+    "passed": true
+  },
+  "intrinsic_reward_overclaim_guard_added": true,
+  "no_methodology_fast_run_still_fires": true,
+  "preconditions_checked": {
+    "adversarial_verify_parse_ok": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "fixtures_present": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4635": true
+  },
+  "random_seed": 4635,
+  "reproducibility_checksum": "sha256:12ccd84e8506319e00db8bf955bca3a559128fea72fda74b69717643addac2c2",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_4635_adversarial_verify_hardening.json",
+  "schema": "carnot.exp4635.adversarial_verify_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4635",
+    "SCENARIO-ARC-WMTE-4635-INTRINSIC-REWARD-DOWNSTREAM",
+    "SCENARIO-ARC-WMTE-4635-SELF-SUPERVISED-CNN-SUBSTRATE"
+  ],
+  "tests_added": {
+    "assertions": [
+      "exploration-win claim backed only by rising bonus emits intrinsic-reward-without-downstream-gain warn",
+      "honest intrinsic-bonus diagnostic does not emit the intrinsic-reward warn",
+      "methodology-bearing sub-second cached CNN scoring avoids DURATION_TOO_SHORT",
+      "no-methodology sub-second cached CNN scoring still emits DURATION_TOO_SHORT"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_hardening_4635.py -q --no-cov",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_4628_dense_curiosity_progress_loop.json",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_4629_graduate_action_effect_predictor_live.json"
+    ],
+    "passed": true,
+    "test_files": [
+      "tests/python/test_adversarial_verify_hardening_4635.py"
+    ]
+  }
+}

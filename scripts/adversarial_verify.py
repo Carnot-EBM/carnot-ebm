@@ -1368,6 +1368,31 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
     return False
 
 
+def _is_declared_honest_zero_delta(k: str, d: dict[str, Any]) -> bool:
+    """True for explicit zero deltas documented as measured honest nulls."""
+    kl = k.lower()
+    if "delta" not in kl:
+        return False
+    if not d.get("null_delta_methodology_note"):
+        return False
+    if not (
+        d.get("bare_control_passed") is True
+        or d.get("positive_control_passed") is True
+        or d.get("false_negative_risk_checked") is True
+    ):
+        return False
+    return any(
+        marker in kl
+        for marker in (
+            "solve_rate",
+            "first_win_rate",
+            "state_coverage",
+            "actions",
+            "live_lift",
+        )
+    )
+
+
 def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect implausibly perfect metrics (TPR/acc=1.0, error=0.0)."""
     perfect_score_fields = (
@@ -1414,6 +1439,8 @@ def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
                 )
         # Implausible 0.0 on an error/loss field
         if any(s in kl for s in perfect_error_fields) and vf == 0.0:
+            if _is_declared_honest_zero_delta(k, d):
+                continue
             # Allow 0.0 only if the field name is a clear baseline marker
             if "baseline" not in kl and "zero" not in kl:
                 flags.append(
@@ -2319,6 +2346,62 @@ _ARC_LIVE_METRIC_KEY_MARKERS = (
 )
 _ARC_OFFLINE_AUROC_KEY_MARKERS = ("auroc", "auc")
 _ARC_OFFLINE_AUROC_CONTEXT_MARKERS = ("offline", "loo", "leave_one", "leave-one", "detector")
+INTRINSIC_REWARD_WITHOUT_DOWNSTREAM_GAIN_KIND = "intrinsic-reward-without-downstream-gain"
+_INTRINSIC_REWARD_CONTEXT_MARKERS = (
+    "curiosity",
+    "exploration",
+    "intrinsic reward",
+    "intrinsic_reward",
+    "intrinsic-bonus",
+    "intrinsic_bonus",
+    "learning-progress",
+    "learning_progress",
+    "learning progress",
+)
+_INTRINSIC_REWARD_WIN_MARKERS = (
+    "success:",
+    "win",
+    "wins",
+    "won",
+    "_up",
+    " up",
+    "lift",
+    "improv",
+    "solve",
+    "solved",
+    "coverage",
+)
+_INTRINSIC_REWARD_DIAGNOSTIC_OR_NULL_MARKERS = (
+    "diagnostic",
+    "honest_null",
+    "null",
+    "no_live_lift",
+    "no live lift",
+    "no_win",
+    "no win",
+    "no_lift",
+    "no lift",
+    "no_gain",
+    "no gain",
+    "no_improvement",
+    "no improvement",
+    "gap_open",
+    "blocked",
+    "unchanged",
+    "regressed",
+)
+_INTRINSIC_REWARD_MAGNITUDE_KEY_MARKERS = (
+    "intrinsic",
+    "curiosity",
+    "learning_progress",
+    "learning-progress",
+    "bonus",
+)
+_INTRINSIC_REWARD_DOWNSTREAM_DELTA_KEYS = (
+    "solve_rate_delta",
+    "state_coverage_delta",
+    "first_win_rate_delta",
+)
 
 
 def _arc_live_claim_text(d: dict[str, Any]) -> str:
@@ -2390,6 +2473,84 @@ def check_arc_offline_live_overclaim(d: dict[str, Any], flags: list[Flag]) -> No
                 "evidence without a measured live metric field. Add first_win_rate_*, "
                 "actions_*/median_actions_*, or live_* evidence from the live agent; "
                 "offline AUROC alone characterizes the detector, not a live win."
+            ),
+        )
+    )
+
+
+def _claims_intrinsic_reward_exploration_win(d: dict[str, Any]) -> bool:
+    """True when an ARC headline claims an intrinsic-reward exploration win."""
+    if not _is_arc_artifact(d):
+        return False
+    text = _arc_live_claim_text(d)
+    if not any(marker in text for marker in _INTRINSIC_REWARD_CONTEXT_MARKERS):
+        return False
+    if any(marker in text for marker in _INTRINSIC_REWARD_DIAGNOSTIC_OR_NULL_MARKERS):
+        return False
+    return any(marker in text for marker in _INTRINSIC_REWARD_WIN_MARKERS)
+
+
+def _is_intrinsic_reward_downstream_delta_key(key: str) -> bool:
+    kl = str(key).lower()
+    return any(
+        kl == wanted or kl.endswith(f"_{wanted}")
+        for wanted in _INTRINSIC_REWARD_DOWNSTREAM_DELTA_KEYS
+    )
+
+
+def _has_measured_intrinsic_reward_downstream_delta(value: Any) -> bool:
+    """Find real downstream delta fields outside metadata principle prose."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            if _is_intrinsic_reward_downstream_delta_key(key) and _is_finite_number(nested):
+                return True
+            if _has_measured_intrinsic_reward_downstream_delta(nested):
+                return True
+    elif isinstance(value, list):
+        return any(_has_measured_intrinsic_reward_downstream_delta(item) for item in value)
+    return False
+
+
+def _has_rising_intrinsic_reward_magnitude(value: Any) -> bool:
+    """Find numeric intrinsic reward / curiosity bonus magnitude evidence."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            kl = str(key).lower()
+            if (
+                any(marker in kl for marker in _INTRINSIC_REWARD_MAGNITUDE_KEY_MARKERS)
+                and _is_finite_number(nested)
+                and float(nested) > 0.0
+            ):
+                return True
+            if _has_rising_intrinsic_reward_magnitude(nested):
+                return True
+    elif isinstance(value, list):
+        return any(_has_rising_intrinsic_reward_magnitude(item) for item in value)
+    return False
+
+
+def check_intrinsic_reward_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Warn when an intrinsic-reward exploration win lacks downstream deltas."""
+    if not _claims_intrinsic_reward_exploration_win(d):
+        return
+    if _has_measured_intrinsic_reward_downstream_delta(d):
+        return
+    if not _has_rising_intrinsic_reward_magnitude(d):
+        return
+    flags.append(
+        Flag(
+            kind=INTRINSIC_REWARD_WITHOUT_DOWNSTREAM_GAIN_KIND,
+            severity="warn",
+            detail=(
+                "intrinsic-reward-without-downstream-gain: ARC artifact claims "
+                "a curiosity/exploration/learning-progress win but reports only "
+                "intrinsic-bonus magnitude evidence. Add a measured downstream "
+                "solve_rate_delta, state_coverage_delta, or first_win_rate_delta "
+                "versus a control before treating the intrinsic reward as a win."
             ),
         )
     )
@@ -2695,6 +2856,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_methodology_present(d, flags)
     check_implausible_tight_ci(d, flags)
     check_false_negative_risk(d, flags)
+    check_intrinsic_reward_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)

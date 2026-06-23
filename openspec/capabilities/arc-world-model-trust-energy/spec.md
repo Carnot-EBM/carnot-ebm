@@ -869,6 +869,71 @@ value-head, CNN, or linear forward pass
 `reproducibility_checksum` are present; the same fast run without methodology
 still fires `DURATION_TOO_SHORT`.
 
+### REQ-ARC-WMTE-4635: Adversarial Verify Intrinsic Reward And CNN Floor Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the .427 ARC
+generation thesis from two narrow false reads. First, an ARC artifact whose
+`honest_verdict` or headline text claims a curiosity, exploration, or
+learning-progress win SHALL carry a measured downstream delta such as
+`solve_rate_delta`, `state_coverage_delta`, or `first_win_rate_delta` versus a
+control. If the claim is backed only by an intrinsic-reward / curiosity-bonus
+magnitude increase and no downstream delta, the reader SHALL emit a WARN flag
+of kind `intrinsic-reward-without-downstream-gain`. An artifact that honestly
+reports an intrinsic-bonus magnitude as a diagnostic, without a win claim,
+SHALL NOT fire this guard. An explicit zero downstream delta paired with an
+honest null-delta methodology note and passed control SHALL be treated as
+measured downstream evidence, not as a stub-default zero.
+
+Second, the reader SHALL apply a calibrated self-supervised CNN substrate
+floor: a verifier-scoring artifact that declares a cached-frame CNN
+action-effect / frame-change forward pass MAY pass a sub-1s duration only when
+it also carries methodology evidence: `model_specs`, `random_seed`, and
+`reproducibility_checksum`, plus a CNN or value substrate marker. A sub-second
+verifier-scoring run without that methodology SHALL still emit
+`DURATION_TOO_SHORT`.
+
+Experiment 4635 SHALL write
+`results/experiment_4635_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `intrinsic_reward_overclaim_guard_added`,
+`cnn_substrate_floor_added`, `honest_diagnostic_not_flagged`,
+`no_methodology_fast_run_still_fires`, `tests_added`,
+`research_conductor_modified`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_intrinsic_reward_guard_plus_cnn_substrate_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor)."
+- `intrinsic_reward_overclaim_guard_added`: principle "the guard that a curiosity/exploration win must carry a measured downstream metric, not only a rising intrinsic-bonus magnitude (the .427 A1 generation-thesis protection)."
+- `cnn_substrate_floor_added`: principle "the calibrated substrate floor so a methodology-bearing fast CNN action-effect scoring run is not DURATION_TOO_SHORT false-flagged (the .427 A2 fixture)."
+- `honest_diagnostic_not_flagged`: principle "HARD -- an artifact honestly reporting an intrinsic-bonus magnitude as a diagnostic (no win claim) does NOT fire guard 1 (narrow, not a hole)."
+- `no_methodology_fast_run_still_fires`: principle "HARD -- a no-methodology sub-second CNN-scoring run STILL fires DURATION_TOO_SHORT (guard 2 is narrow, the genuine fabrication case stays catchable)."
+- `tests_added`: principle "the asserting tests (every test >=1 assertion; no skips) -- both guards are verified."
+- `research_conductor_modified`: principle "MUST be false -- this edits adversarial_verify.py (the linter), never scripts/research_conductor.py."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (adversarial_verify.py parses, fixtures present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4635-INTRINSIC-REWARD-DOWNSTREAM
+
+**Given** an ARC artifact claims a curiosity, exploration, or learning-progress
+win
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is WARN-flagged when it reports only intrinsic-bonus
+magnitude evidence and no downstream `solve_rate_delta`,
+`state_coverage_delta`, or `first_win_rate_delta`; an honest diagnostic-only
+bonus report is not flagged.
+
+#### SCENARIO-ARC-WMTE-4635-SELF-SUPERVISED-CNN-SUBSTRATE
+
+**Given** a verifier-scoring artifact declares a cached-frame CNN action-effect
+or frame-change forward pass
+**When** its duration is below 1s
+**Then** it avoids `DURATION_TOO_SHORT` only if `model_specs`, `random_seed`,
+`reproducibility_checksum`, and the CNN/value substrate marker are present; the
+same fast run without methodology still fires `DURATION_TOO_SHORT`.
+
 ### REQ-ARC-WMTE-4625: Offline-To-Live Bridge SOTA Ingestion For .427
 
 Experiment 4625 SHALL synthesize the 2026-06-23 SOTA ingestion focused on the
