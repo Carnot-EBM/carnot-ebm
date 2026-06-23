@@ -864,34 +864,50 @@ games:
     sprite centers, not hardcoded live pixels.
 - game: ft09
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: local_constraint_color_cycle
-  win_condition: 'L1 local constraint puzzle plus L2 cwU=[9,12] local constraint:
-    every adjacent Hkx/NTi cell must satisfy each bsT center color with equal-vs-different
-    semantics read from zero/non-zero bsT pixels; the real frame level counter is the accept gate.'
-  action_model: ACTION6 click-only. L1 uses the four registered clicks; L2 clicks
-    display coordinates (22,16), (22,24), (38,24), (22,32), (38,32),
-    (30,48), and (22,48) to cycle the required Hkx cells from 9 to 12.
-  solver: GameAdapter _ft09 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_ft09.json 11-label L2 gate.
-  reproduce: Exp4593 results/experiment_4593_levelup_selfplay.json re-gated results/arc_loop_solve_ft09.json
-    offline_reproduced=True, reached_level=2, banked +1 over the current L1
-    registry row, checksum ccb93940148787601b6316425d8628008c466c198d1394a03faedc00cb0e100f.
+  win_condition: >-
+    L1+L2 local-constraint color-cycle plus L3: every visible bsT 3x3
+    predicate is satisfied by setting adjacent Hkx/NTi cells to either match or
+    differ from the predicate center color before the move counter expires.
+  action_model: >-
+    ACTION6 click on display coordinates derived from the level camera. The L3
+    delta clicks the forced Hkx cells at (28,20), (44,28), (28,36), (44,36),
+    (20,44), (20,52), (28,52), (36,52), (20,4), (28,4), (36,4), (20,12),
+    (12,20), and (12,28).
+  solver: >-
+    GameAdapter _ft09 in python/carnot/agentic/arc_game_adapters.py +
+    scripts/arc_loop_solve.py; results/arc_loop_solve_ft09.json 25-label L3
+    gate.
+  reproduce: >-
+    Exp4642 results/experiment_4642_levelup_selfplay.json re-gated
+    results/arc_loop_solve_ft09.json offline_reproduced=True, reached_level=3,
+    banked +1 over the current L2 registry row, checksum c76a265074f06a50966d202e8635c339667915bebf9294f70eaf0071b17cf232.
   learned_verifier_checkpoint: models/arc_verifier_ft09.json trained by scripts/arc_loop_solve.py
-    on the ft09 L1+L2 positive steps-to-go trace and this run's recorded
-    off-path/dead-end evidence.
+    on the ft09 L1+L2+L3 positive steps-to-go trace and the recorded preferred
+    target dead-end notes.
   gotchas:
-  - Click coordinates are display pixels, not raw grid pixels; Hkx grid center
-    (x+1,y+1) maps to display coordinate 2*(x+1,y+1).
-  - Use the real offline frame level counter as the verifier; visible color-cycle
-    satisfaction alone is not enough.
-  - The L2 cycle is binary [9,12], so each listed Hkx cell is clicked exactly once.
+  - ft09 ACTION6 expects display coordinates; for L3 the camera maps display
+    coordinates to grid coordinates by halving them.
+  - The L3 click set is the binary color assignment forced by the four visible
+    bsT predicates; using raw grid coordinates leaves most cells unchanged.
+  - This is a fallback bank after preferred targets failed bounded attempts, so
+    the rotation exception is recorded in the experiment artifact.
   dead_ends:
-  - sk48 remained routing/search-progress only for this milestone; no offline L2
-    bank was produced from the chain-permutation delta.
-  - ka59 remains skipped because the registry records a hidden StepCounter L2
-    dead-end.
-  - dc22 rerun reproduced its existing L1 only and did not update a checkpoint.
+  - r11l adapter-free L2 bounded search did not bank.
+  - g50t adapter-free L2 bounded search exhausted the bounded frontier.
+  - bp35 adapter-free L2 bounded search timed out.
+  - m0r0 and cn04 standing-loop L3 attempts repeated their prior L2 gates.
+  - ls20, sk48, dc22, ka59, and wa30 are skipped by the operator's rotation
+    exclusions for this milestone.
+  latest_exp4642_levelup_selfplay:
+    artifact: results/experiment_4642_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_ft09.json
+    offline_reproduced: true
+    reproduced_levels: 3
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_ft09.json
+    reproducibility_checksum: c76a265074f06a50966d202e8635c339667915bebf9294f70eaf0071b17cf232
 - game: tr87
   reproducibility: reproduced
   mechanic_class: config_substitution
@@ -1225,7 +1241,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 56
+reproducible_total_levels: 57
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
