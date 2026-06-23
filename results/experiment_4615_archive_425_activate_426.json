@@ -1,0 +1,200 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_levels",
+        "reproducible_total_levels_delta",
+        "live_submittable_level_count",
+        "ready_for_operator_submit",
+        "scorecard"
+      ],
+      "path": "results/experiment_4614_capstone_v425.json",
+      "sha256": "f5110f26f4f7ef03fc716d8fea8496c9454569ea6d1039fc12d2df9ac13b8cf5",
+      "source": "experiment_4614_capstone_v425"
+    },
+    {
+      "fields_imported": [
+        "flagged_adversarial",
+        "duration_s",
+        "world_model_trust_pass_rate_new",
+        "first_win_rate_new"
+      ],
+      "path": "results/experiment_4604_world_model_trust_energy.json",
+      "sha256": "f49092c38643e383e3d053a8d50482e1804c13258e3bfd92095ef18173df94c8",
+      "source": "experiment_4604_world_model_trust_energy"
+    },
+    {
+      "fields_imported": [
+        "first_win_delta",
+        "actions_delta",
+        "solve_rate_integrated",
+        "solve_rate_bare"
+      ],
+      "path": "results/experiment_4605_live_integration_scored_agent.json",
+      "sha256": "184e4cf46e6b560c781d82da7ce1187dc83b851b0e30588d026d8e3a9d3be517",
+      "source": "experiment_4605_live_integration_scored_agent"
+    },
+    {
+      "fields_imported": [
+        "target_game",
+        "reproduction_gate",
+        "offline_reproduced"
+      ],
+      "path": "results/experiment_4606_levelup_selfplay.json",
+      "sha256": "a9ac4b8ff278a0686884c03b0ac0f4e04317d49067fbcfcfffa2680ede5885c5",
+      "source": "experiment_4606_levelup_selfplay"
+    },
+    {
+      "fields_imported": [
+        "live_submittable_level_count",
+        "ready_for_operator_submit"
+      ],
+      "path": "results/experiment_4607_refresh_submission_package.json",
+      "sha256": "17d7aad9e478b0bc1eac123db14778c4d69cba473dcaf3750a2c2e7a4e892dde",
+      "source": "experiment_4607_refresh_submission_package"
+    },
+    {
+      "fields_imported": [
+        "LOO-AUROC 0.725",
+        "OFFLINE->LIVE BRIDGE"
+      ],
+      "path": "docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md",
+      "sha256": "c499cb629a9f8ef6019f0d48456d5ca7284868ae743ffbacf2b6de57d7d50c08",
+      "source": "arc_representation_rediagnosis_note"
+    },
+    {
+      "fields_imported": [
+        "2026.06.426 pivot"
+      ],
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "7a8801611594a96b52e119a565b239486fb1c72ef3adfbc3a10671d0a0521726",
+      "source": "research_roadmap_vnext_design"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "f51795f11e7c9fecf67b4087fd2bf56488c13d326a4383938905427cdb469fad",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_425": {},
+  "duration_s": 0.0001,
+  "experiment": "experiment_4615_archive_425_activate_426",
+  "experiment_id": 4615,
+  "field_provenance": {
+    "close_state_425": {
+      "principle": "the honest .425 numbers (capability flat 55->55; A1 quarantined; A2 null; A3 no-bank; A4 55>33) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    },
+    "v426_pivot": {
+      "principle": "the .426 headline rationale (PIVOT to the OFFLINE->LIVE BRIDGE: A1 disambiguate cause, A2 graduate the SpatialValueNet to the live path) recorded so the milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "a1_exp4604": {
+      "available": true,
+      "path": "results/experiment_4604_world_model_trust_energy.json"
+    },
+    "a2_exp4605": {
+      "available": true,
+      "path": "results/experiment_4605_live_integration_scored_agent.json"
+    },
+    "a3_exp4606": {
+      "available": true,
+      "path": "results/experiment_4606_levelup_selfplay.json"
+    },
+    "a4_exp4607": {
+      "available": true,
+      "path": "results/experiment_4607_refresh_submission_package.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.426",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "capstone_4614": {
+      "available": true,
+      "path": "results/experiment_4614_capstone_v425.json"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "rediagnosis_note": {
+      "available": true,
+      "path": "docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md"
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 55
+    },
+    "research_complete_yaml": {
+      "available": true,
+      "contains_2026_06_425": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('yaml_ok')\"",
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [],
+      "exit_code": null,
+      "not_run_reason": "blocked_before_smart_subset_gate",
+      "passed": null,
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    "vnext_design": {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  },
+  "random_seed": 4615,
+  "reproducibility_checksum": "sha256:8be8d09f13717af48bff571bef0ecf1deec638ab98c16f57674eccd1dda031d4",
+  "result_path": "results/experiment_4615_archive_425_activate_426.json",
+  "schema": "carnot.archive_activation.v425_to_v426_4615.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4615",
+    "SCENARIO-CAPSTONE-4615",
+    "SCENARIO-CAPSTONE-4615-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4615-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.426",
+    "activation_state": "blocked_missing_or_failed_precondition",
+    "active_milestone_confirmed": false,
+    "archive_state": "research_complete_contains_2026.06.425",
+    "archived_milestone": "2026.06.425"
+  },
+  "v426_pivot": {}
+}
