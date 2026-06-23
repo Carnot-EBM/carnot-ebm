@@ -934,6 +934,59 @@ or frame-change forward pass
 `reproducibility_checksum`, and the CNN/value substrate marker are present; the
 same fast run without methodology still fires `DURATION_TOO_SHORT`.
 
+### REQ-ARC-WMTE-4647: Adversarial Verify Goal-Energy Ablation Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the .428
+energy-DRIVES-generation thesis from a narrow false read. An ARC artifact whose
+`honest_verdict` or headline text claims a graded goal-energy, energy heuristic,
+or energy-as-fitness generation win SHALL carry uniform-energy ablation evidence,
+such as `uniform_energy_ablation_passed` or a uniform/random-energy ablation arm.
+If the artifact claims the goal-energy arm raised live solve-rate or first-win
+rate over the baseline but reports no uniform-energy ablation evidence, the
+reader SHALL emit a WARN flag of kind `goal-energy-without-ablation`.
+
+An artifact that honestly reports `uniform_energy_ablation_passed` or a
+uniform/random-energy ablation arm SHALL NOT fire this guard, even when the
+ablation failed. An artifact that reports goal-energy magnitude as a diagnostic,
+without a generation-win claim, SHALL NOT fire this guard.
+
+Experiment 4647 SHALL write
+`results/experiment_4647_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `goal_energy_ablation_guard_added`,
+`honest_ablation_not_flagged`, `diagnostic_not_flagged`, `tests_added`,
+`research_conductor_modified`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_goal_energy_ablation_guard_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor)."
+- `goal_energy_ablation_guard_added`: principle "the guard that an energy-driven-generation win must carry a uniform-energy ablation control, not only 'energy-on beat the baseline' (the .428 A1 generation-thesis protection)."
+- `honest_ablation_not_flagged`: principle "HARD -- an artifact honestly reporting the uniform-energy ablation (uniform_energy_ablation_passed) does NOT fire the guard (narrow, not a hole)."
+- `diagnostic_not_flagged`: principle "HARD -- an artifact reporting an energy magnitude as a diagnostic (no win claim) does NOT fire the guard."
+- `tests_added`: principle "the asserting tests (every test >=1 assertion; no skips) -- the guard is verified."
+- `research_conductor_modified`: principle "MUST be false -- this edits adversarial_verify.py (the linter), never scripts/research_conductor.py."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (adversarial_verify.py parses, fixtures present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4647-GOAL-ENERGY-ABLATION
+
+**Given** an ARC artifact claims a graded goal-energy, energy heuristic, or
+energy-as-fitness live generation win
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is WARN-flagged when it reports only energy-on beating the
+baseline and no uniform/random-energy ablation evidence; an artifact with
+`uniform_energy_ablation_passed` or an ablation arm is not flagged.
+
+#### SCENARIO-ARC-WMTE-4647-GOAL-ENERGY-DIAGNOSTIC
+
+**Given** an ARC artifact reports goal-energy or energy magnitude as a diagnostic
+without a generation-win claim
+**When** `adversarial_verify.py` checks the artifact
+**Then** it does not emit `goal-energy-without-ablation`.
+
 ### REQ-ARC-WMTE-4625: Offline-To-Live Bridge SOTA Ingestion For .427
 
 Experiment 4625 SHALL synthesize the 2026-06-23 SOTA ingestion focused on the

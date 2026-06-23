@@ -2347,6 +2347,7 @@ _ARC_LIVE_METRIC_KEY_MARKERS = (
 _ARC_OFFLINE_AUROC_KEY_MARKERS = ("auroc", "auc")
 _ARC_OFFLINE_AUROC_CONTEXT_MARKERS = ("offline", "loo", "leave_one", "leave-one", "detector")
 INTRINSIC_REWARD_WITHOUT_DOWNSTREAM_GAIN_KIND = "intrinsic-reward-without-downstream-gain"
+GOAL_ENERGY_WITHOUT_ABLATION_KIND = "goal-energy-without-ablation"
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -2401,6 +2402,124 @@ _INTRINSIC_REWARD_DOWNSTREAM_DELTA_KEYS = (
     "solve_rate_delta",
     "state_coverage_delta",
     "first_win_rate_delta",
+)
+_GOAL_ENERGY_CONTEXT_MARKERS = (
+    "goal-energy",
+    "goal_energy",
+    "goal energy",
+    "graded goal",
+    "graded_goal",
+    "energy-driven",
+    "energy driven",
+    "energy-as-fitness",
+    "energy as fitness",
+    "energy heuristic",
+    "goal-satisfaction energy",
+    "goal satisfaction energy",
+)
+_GOAL_ENERGY_GENERATION_MARKERS = (
+    "generation",
+    "generate",
+    "generated",
+    "generator",
+    "live",
+    "search",
+    "solve_rate",
+    "solve-rate",
+    "solve rate",
+    "first_win",
+    "first-win",
+    "first win",
+)
+_GOAL_ENERGY_WIN_MARKERS = (
+    "success:",
+    "win",
+    "wins",
+    "won",
+    "_up",
+    " up",
+    "raise",
+    "raised",
+    "lift",
+    "improv",
+    "beat",
+    "beats",
+    "beating",
+    "solved",
+)
+_GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS = (
+    "diagnostic",
+    "honest_null",
+    "null",
+    "no_live_lift",
+    "no live lift",
+    "no_win",
+    "no win",
+    "no_lift",
+    "no lift",
+    "no_gain",
+    "no gain",
+    "no_improvement",
+    "no improvement",
+    "no_value",
+    "no value",
+    "gap_open",
+    "blocked",
+    "unchanged",
+    "regressed",
+)
+_GOAL_ENERGY_ABLATION_KEY_MARKERS = (
+    "uniform_energy_ablation_passed",
+    "uniform_energy_ablation",
+    "uniform-energy-ablation",
+    "uniform_measurement",
+    "uniform_energy",
+    "uniform-energy",
+    "random_energy_ablation",
+    "random-energy-ablation",
+    "random_energy",
+    "random-energy",
+)
+_GOAL_ENERGY_ABLATION_ARM_VALUE_MARKERS = (
+    "uniform_energy",
+    "uniform-energy",
+    "uniform energy",
+    "random_energy",
+    "random-energy",
+    "random energy",
+)
+_GOAL_ENERGY_ABLATION_ARM_NAME_KEYS = (
+    "name",
+    "arm",
+    "policy_mode",
+    "mode",
+    "condition",
+    "label",
+)
+_GOAL_ENERGY_POSITIVE_DELTA_KEYS = (
+    "solve_rate_delta",
+    "first_win_rate_delta",
+    "live_solve_rate_delta",
+    "live_first_win_rate_delta",
+    "energy_on_baseline_delta",
+    "goal_energy_baseline_delta",
+)
+_GOAL_ENERGY_BASELINE_PAIRS = (
+    ("live_solve_rate_goal_energy", "live_solve_rate_baseline"),
+    ("goal_energy_solve_rate", "baseline_solve_rate"),
+    ("solve_rate_goal_energy", "solve_rate_baseline"),
+    ("live_first_win_rate_goal_energy", "live_first_win_rate_baseline"),
+    ("first_win_rate_goal_energy", "first_win_rate_baseline"),
+    ("goal_energy_first_win_rate", "baseline_first_win_rate"),
+)
+_GOAL_ENERGY_BEATS_BASELINE_KEY_MARKERS = (
+    "energy_on_beats_baseline",
+    "goal_energy_beats_baseline",
+    "energy_beats_baseline",
+)
+_GOAL_ENERGY_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "goal_energy_source",
+    "chosen_submitted_config",
 )
 
 
@@ -2551,6 +2670,90 @@ def check_intrinsic_reward_overclaim(d: dict[str, Any], flags: list[Flag]) -> No
                 "intrinsic-bonus magnitude evidence. Add a measured downstream "
                 "solve_rate_delta, state_coverage_delta, or first_win_rate_delta "
                 "versus a control before treating the intrinsic reward as a win."
+            ),
+        )
+    )
+
+
+def _goal_energy_claim_text(d: dict[str, Any]) -> str:
+    return " ".join(str(d.get(key, "")) for key in _GOAL_ENERGY_CLAIM_TEXT_KEYS).lower()
+
+
+def _has_positive_goal_energy_baseline_win_evidence(d: dict[str, Any]) -> bool:
+    for key, value in d.items():
+        if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+            continue
+        kl = str(key).lower()
+        if (
+            any(kl == wanted or kl.endswith(f"_{wanted}") for wanted in _GOAL_ENERGY_POSITIVE_DELTA_KEYS)
+            and _is_finite_number(value)
+            and float(value) > 0.0
+        ):
+            return True
+        if any(marker in kl for marker in _GOAL_ENERGY_BEATS_BASELINE_KEY_MARKERS) and value is True:
+            return True
+    for goal_key, baseline_key in _GOAL_ENERGY_BASELINE_PAIRS:
+        goal = _finite_float(d, goal_key)
+        baseline = _finite_float(d, baseline_key)
+        if goal is not None and baseline is not None and goal > baseline:
+            return True
+    return False
+
+
+def _claims_goal_energy_generation_win(d: dict[str, Any]) -> bool:
+    """True when an ARC headline claims goal-energy drove live generation."""
+    if not _is_arc_artifact(d):
+        return False
+    text = _goal_energy_claim_text(d)
+    if not any(marker in text for marker in _GOAL_ENERGY_CONTEXT_MARKERS):
+        return False
+    if any(marker in text for marker in _GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS):
+        return False
+    if not any(marker in text for marker in _GOAL_ENERGY_GENERATION_MARKERS):
+        return False
+    if not any(marker in text for marker in _GOAL_ENERGY_WIN_MARKERS):
+        return False
+    return _has_positive_goal_energy_baseline_win_evidence(d)
+
+
+def _has_uniform_energy_ablation_evidence(value: Any) -> bool:
+    """Find real uniform/random-energy ablation fields outside principle prose."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            kl = str(key).lower()
+            if any(marker in kl for marker in _GOAL_ENERGY_ABLATION_KEY_MARKERS) and nested is not None:
+                return True
+            if (
+                kl in _GOAL_ENERGY_ABLATION_ARM_NAME_KEYS
+                and isinstance(nested, str)
+                and any(marker in nested.lower() for marker in _GOAL_ENERGY_ABLATION_ARM_VALUE_MARKERS)
+            ):
+                return True
+            if _has_uniform_energy_ablation_evidence(nested):
+                return True
+    elif isinstance(value, list):
+        return any(_has_uniform_energy_ablation_evidence(item) for item in value)
+    return False
+
+
+def check_goal_energy_ablation_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Warn when a goal-energy generation win lacks a uniform-energy ablation."""
+    if not _claims_goal_energy_generation_win(d):
+        return
+    if _has_uniform_energy_ablation_evidence(d):
+        return
+    flags.append(
+        Flag(
+            kind=GOAL_ENERGY_WITHOUT_ABLATION_KIND,
+            severity="warn",
+            detail=(
+                "goal-energy-without-ablation: ARC artifact claims an energy-driven "
+                "generation win but reports only energy-on beat the baseline evidence. "
+                "Add uniform-energy ablation evidence such as "
+                "uniform_energy_ablation_passed or a uniform/random-energy ablation "
+                "arm before treating goal-energy as the driver."
             ),
         )
     )
@@ -2857,6 +3060,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_implausible_tight_ci(d, flags)
     check_false_negative_risk(d, flags)
     check_intrinsic_reward_overclaim(d, flags)
+    check_goal_energy_ablation_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
