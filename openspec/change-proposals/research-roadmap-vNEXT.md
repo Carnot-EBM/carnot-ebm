@@ -164,11 +164,43 @@ honestly. No task claims an outer-loop hand-RE solve.
   with `reproducible_total_levels`, live-submittable count, generic_transfer, winner_generated_rate,
   and action efficiency. Asserting tests.
 
-- **B2 — degenerate/circular world-model-trust guard in `adversarial_verify.py`.** An ARC artifact
-  claiming a world-model trust pass MUST declare `verifier_is_oracle: false` AND show >=1
-  correctly-predicted grid-CHANGING transition (non-degeneracy) — else a degenerate identity-engine
-  false-pass (the GAP-WM-TRUST-GATE failure mode) or a circular trust claim is flagged. Reader/guard
-  only; does NOT change any solver. Asserting tests.
+- **B2 — `adversarial_verify.py` hardening (TWO reader-side guards; bundled — both are localized linter
+  changes, neither touches a solver). Asserting tests for both.**
+  1. **TAUTOLOGY small-sample shared-denominator carve-out (the DEMONSTRATED .424 fix — do this FIRST).**
+     `.424`'s A1 generation WIN (`winner_generated_rate` 1/25 → **2/25**) and A6/B1 were CRITICAL-quarantined
+     by `check_tautology` because small-sample rate metrics over a SHARED denominator collide by construction
+     (`winner_generated_rate=2/25=0.08` == `generic_transfer_rate=2/25=0.08`; `1/25=0.04` in five fields).
+     Add a carve-out — in the exact style of the existing `_is_identifier_field` / seed carve-out — so two
+     `*_rate` / `*_fraction` / first-win / transfer metrics that are equal small-N fractions over the same
+     variant denominator do NOT trip TAUTOLOGY. Regression test: the `.424` exp4592/exp4597/exp4598 artifacts
+     no longer CRITICAL-flag on the k/N collision, AND a genuinely fabricated tautology (two unrelated
+     large-precision metrics bit-identical) STILL fires. Without this, every incremental generation/first-win
+     win (1/25→2/25→3/25) stays invisible to the loop.
+  2. **Degenerate/circular world-model-trust guard.** An ARC artifact claiming a world-model trust pass MUST
+     declare `verifier_is_oracle: false` AND show ≥1 correctly-predicted grid-CHANGING transition
+     (non-degeneracy) — else a degenerate identity-engine false-pass (the GAP-WM-TRUST-GATE failure mode) or a
+     circular trust claim is flagged (preventive for A1's trust-pass claims).
+
+> **Flagged secondary lever (NOT the .425 headline — recorded so it is not lost; A3/A5 may opportunistically
+> fold it in).** The 2026-06-22 sprint's ONE genuine positive was a LEARNED VALUE as the dense per-step
+> gradient: the position-preserving `SpatialValueNet` (4×4 pool; `scripts/experiments/experiment_value_q_head_v3..v6`)
+> routes ls20-L1 in 233 vs blind's 1777 expansions = **7.6×** with `heuristic_weight≈10` (game-dependent: clean
+> nav strong, weak elsewhere). `scripts/arc_loop_solve.py` (the DEV twin) still warm-starts with the linear
+> `LearnedVerifier` shown unable to route the live search — promoting `SpatialValueNet` into
+> `python/carnot/agentic/arc_value_net.py` + wiring it in is a real per-level banking speedup (faster A3, not a
+> leaderboard mover). A **goal-CONDITIONED (UVFA)** value is the literature-backed attack on the deepening wall
+> (sprint v5: "value doesn't cross level boundaries"). These improve the dev twin; the `.425` headline (A1/A2)
+> deliberately targets the SCORED agent + the trust-gate root cause, which is what moves the actual leaderboard.
+
+> **SOTA verified this sweep (WebSearch/WebFetch; real IDs for D + the A1/A2 design).** ARC-AGI-3 SOTA =
+> Executable World Models in the Era of Coding Agents (arXiv:2605.05138): GPT-5.5 fully solves **15/25** public
+> games, mean per-game **RHAE 58.12%** — the agent induces a Python transition model and VERIFIES transitions
+> before acting ("world models play a role analogous to verifiers"), and RHAE rewards efficiency → the
+> verifier-as-trust-gate / pruner is the venue (direct support for A1). Graph-Based Exploration
+> (arXiv:2512.24156) is the open-source no-induction 3rd-place. Learned-value-as-A\*-heuristic literature
+> (support for the flagged SpatialValueNet lever): DeepCubeA (arXiv:2102.04518), SLOPE (arXiv:2406.04935),
+> RL-of-heuristics with limited-horizon search (arXiv:2511.10264), D-TSN (ICLR 2025). Goal-conditioned value /
+> deepening (support for the UVFA lever): UVFA, HER, f-Advantage Regression (arXiv:2206.03023).
 
 ### Phase C — hardware continuity (1 per attached board)
 
