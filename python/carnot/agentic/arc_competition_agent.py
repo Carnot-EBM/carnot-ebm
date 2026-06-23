@@ -29,6 +29,7 @@ from typing import Any, Mapping, Optional, Sequence
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
+from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
@@ -225,6 +226,9 @@ class StepwiseExplorer:
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
         candidate_router: Any | None = None,
+        dense_curiosity: bool | DenseCuriosityProgress = False,
+        dense_curiosity_weight: float = 0.15,
+        dense_curiosity_discount: float = 0.5,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -285,6 +289,16 @@ class StepwiseExplorer:
         self.frontier_batch_size = self._normalize_frontier_batch_size(frontier_batch_size)
         self.navigation_cost_tiebreak = bool(navigation_cost_tiebreak)
         self.candidate_router = candidate_router
+        if isinstance(dense_curiosity, DenseCuriosityProgress):
+            self.dense_curiosity: DenseCuriosityProgress | None = dense_curiosity
+        elif dense_curiosity:
+            self.dense_curiosity = DenseCuriosityProgress(
+                "?",
+                bonus_weight=dense_curiosity_weight,
+                backup_discount=dense_curiosity_discount,
+            )
+        else:
+            self.dense_curiosity = None
         # HYBRID exploration diversity (flag-gated, default OFF -> byte-identical/parity-preserving). The
         # depth_first_ride over-commits to the top-salient branch and MISSES easy "structure-missed" wins
         # (r11l/sp80: 0/2000 structured but trivially reachable randomly). With CARNOT_ARC_EXPLORE_DIVERSITY=1,
@@ -494,6 +508,16 @@ class StepwiseExplorer:
             "errors": int(self._goal_bias_errors),
         }
 
+    def curiosity_diagnostics(self) -> dict[str, Any]:
+        if self.dense_curiosity is None:
+            return {"enabled": False}
+        return self.dense_curiosity.diagnostics()
+
+    def _curiosity_score(self, node_hash: str) -> float:
+        if self.dense_curiosity is None:
+            return 0.0
+        return self.dense_curiosity.score_state(node_hash)
+
     def _goal_bias_score(self, node: Mapping[str, Any]) -> float:
         if self.goal_bias is None:
             return 0.0
@@ -523,6 +547,20 @@ class StepwiseExplorer:
             g = g.copy()
             g[self.hud_mask] = 0  # collapse counter/timer cells so equal game states dedup
         return frame_hash(g)
+
+    def _grid_for_hash(self, node_hash: Optional[str]):
+        if node_hash is None:
+            return None
+        node = self.graph.get(node_hash)
+        frame = node.get("frame") if node else None
+        if frame is None:
+            return None
+        try:
+            from carnot.agentic.arc_agi3_world_model import grid_of
+
+            return grid_of(frame)
+        except Exception:
+            return None
 
     def _candidates(self, frame, path: Sequence[dict] | None = None) -> list[dict]:
         from carnot.agentic.arc_graph_explore import rich_action_candidates
@@ -646,6 +684,22 @@ class StepwiseExplorer:
         if self.awaiting is not None:
             o = self.awaiting
             self.awaiting = None
+            if self.dense_curiosity is not None and o.get("grid") is not None:
+                try:
+                    from carnot.agentic.arc_agi3_world_model import grid_of
+
+                    self.dense_curiosity.observe_transition(
+                        str(o["origin"]),
+                        h,
+                        o["grid"],
+                        int(o["action"]),
+                        o["data"],
+                        grid_of(latest),
+                        level_before=int(o.get("level_before") or 0),
+                        level_after=int(lvl),
+                    )
+                except Exception:
+                    pass
             if over:
                 self._record_discriminative_sample(
                     latest,
@@ -672,7 +726,11 @@ class StepwiseExplorer:
                         "path": new_path,
                         "untested": self._candidates(latest, path=new_path),
                         "value": value,
-                        "frame": latest if self.goal_bias is not None else frame_for_value,
+                        "frame": (
+                            latest
+                            if self.goal_bias is not None or self.dense_curiosity is not None
+                            else frame_for_value
+                        ),
                         "discriminative_features": features,
                     }
         self.cur = h
@@ -691,7 +749,11 @@ class StepwiseExplorer:
                     "path": [],
                     "untested": self._candidates(latest, path=[]),
                     "value": value,
-                    "frame": latest if self.goal_bias is not None else frame_for_value,
+                    "frame": (
+                        latest
+                        if self.goal_bias is not None or self.dense_curiosity is not None
+                        else frame_for_value
+                    ),
                     "discriminative_features": features,
                 },
             )
@@ -704,7 +766,7 @@ class StepwiseExplorer:
         # baseline (the weak head misroutes from shallow wins), so the blend keeps depth load-bearing.
         use_value = self.value_head is not None and self.value_weight != 0.0
         w = self.value_weight
-        eligible: list[tuple[str, dict, int, float]] = []
+        eligible: list[tuple[str, dict, int, float, float, float]] = []
         for h, node in self.graph.items():
             if not node["untested"]:
                 self._record_discriminative_features(
@@ -726,7 +788,16 @@ class StepwiseExplorer:
                 continue
             node["discriminative_pruned"] = False
             depth = len(node["path"])
-            eligible.append((h, node, depth, on_path, self._goal_bias_score(node)))
+            eligible.append(
+                (
+                    h,
+                    node,
+                    depth,
+                    on_path,
+                    self._goal_bias_score(node),
+                    self._curiosity_score(h),
+                )
+            )
 
         if use_value and eligible:
             cheap_ranked = sorted(
@@ -737,30 +808,49 @@ class StepwiseExplorer:
                     item[0],
                 ),
             )[: self.lazy_value_top_k]
-            for h, node, _depth, _on_path, _goal_bias in cheap_ranked:
+            for h, node, _depth, _on_path, _goal_bias, _curiosity in cheap_ranked:
                 if node.get("value") is None:
                     node["value"] = self._value(node.get("frame"), node_hash=h)
-                    if self.goal_bias is None:
+                    if self.goal_bias is None and self.dense_curiosity is None:
                         node["frame"] = None
 
         best = None
         best_key = None
-        for h, node, depth, on_path, goal_bias in eligible:
+        for h, node, depth, on_path, goal_bias, curiosity in eligible:
             nav_key = self._frontier_navigation_cost_key(h) if self.navigation_cost_tiebreak else ()
             if self.navigation_cost_tiebreak and use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
-                key = (depth, w * float(value), self._goal_bias_key(goal_bias), *nav_key, -on_path)
+                key = (
+                    depth,
+                    w * float(value),
+                    self._goal_bias_key(goal_bias),
+                    -float(curiosity),
+                    *nav_key,
+                    -on_path,
+                )
             elif use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
-                key = (depth + w * float(value), depth, self._goal_bias_key(goal_bias), -on_path)
+                key = (
+                    depth + w * float(value),
+                    depth,
+                    self._goal_bias_key(goal_bias),
+                    -float(curiosity),
+                    -on_path,
+                )
             elif self.navigation_cost_tiebreak:
-                key = (depth, self._goal_bias_key(goal_bias), *nav_key, -on_path)
+                key = (
+                    depth,
+                    self._goal_bias_key(goal_bias),
+                    -float(curiosity),
+                    *nav_key,
+                    -on_path,
+                )
             else:
-                key = (depth, self._goal_bias_key(goal_bias), -on_path)
+                key = (depth, self._goal_bias_key(goal_bias), -float(curiosity), -on_path)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
@@ -832,14 +922,26 @@ class StepwiseExplorer:
             origin = item.get("origin", self.cur)
             if "origin" not in item:
                 self._drop_queued_action_from_current_frontier(origin, item)
-            self.awaiting = {"origin": origin, "action": item["kind"], "data": item["data"]}
+            self.awaiting = {
+                "origin": origin,
+                "action": item["kind"],
+                "data": item["data"],
+                "grid": self._grid_for_hash(origin),
+                "level_before": int(self.best_level),
+            }
         else:
             # nav / RESET-replay step (probe:False): attribute its forward edge from the CURRENT state so
             # adj FILLS IN the replayed path. Previously only probe steps recorded edges, so replayed paths
             # were never learned -> _shortest_path returned None -> every backtrack RESET-replayed from root,
             # burning actions (the 2026-06-20 regression: lp85 7792 actions vs bare BFS's 21). Recording
             # these edges lets future navigation use _shortest_path (forward-walk) instead of RESET-replay.
-            self.awaiting = {"origin": self.cur, "action": item["kind"], "data": item["data"]}
+            self.awaiting = {
+                "origin": self.cur,
+                "action": item["kind"],
+                "data": item["data"],
+                "grid": self._grid_for_hash(self.cur),
+                "level_before": int(self.best_level),
+            }
         return (item["kind"], item["data"])
 
     def _drop_queued_action_from_current_frontier(
@@ -905,7 +1007,13 @@ class StepwiseExplorer:
             and len(cur_node["path"]) < self.max_depth
         ):
             a = self._pop_untested(cur_node)
-            self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
+            self.awaiting = {
+                "origin": self.cur,
+                "action": a["action"],
+                "data": a["data"],
+                "grid": self._grid_for_hash(self.cur),
+                "level_before": int(self.best_level),
+            }
             return (a["action"], a["data"])
         # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
         #    depth_first_ride it fires when the current node is exhausted / dead-end / depth-capped.
@@ -918,7 +1026,13 @@ class StepwiseExplorer:
             th == self.cur and not over
         ):  # best frontier IS the current state -> expand in place (no nav)
             a = self._pop_untested(node)
-            self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
+            self.awaiting = {
+                "origin": self.cur,
+                "action": a["action"],
+                "data": a["data"],
+                "grid": self._grid_for_hash(self.cur),
+                "level_before": int(self.best_level),
+            }
             return (a["action"], a["data"])
         batch = self._pop_frontier_batch(node)
         self._nav_attempts += 1
@@ -1138,6 +1252,9 @@ class E3AgentPolicy:
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
         candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER,
+        dense_curiosity: bool | DenseCuriosityProgress = False,
+        dense_curiosity_weight: float = 0.15,
+        dense_curiosity_discount: float = 0.5,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
@@ -1172,6 +1289,17 @@ class E3AgentPolicy:
             frontier_batch_size=frontier_batch_size,
             navigation_cost_tiebreak=navigation_cost_tiebreak,
             candidate_router=candidate_router,
+            dense_curiosity=(
+                DenseCuriosityProgress(
+                    self.short,
+                    bonus_weight=dense_curiosity_weight,
+                    backup_discount=dense_curiosity_discount,
+                )
+                if dense_curiosity is True
+                else dense_curiosity
+            ),
+            dense_curiosity_weight=dense_curiosity_weight,
+            dense_curiosity_discount=dense_curiosity_discount,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -1626,6 +1754,9 @@ SUBMITTED_AGENT_CONFIG = {
     "verifier_is_oracle": False,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
+    "dense_curiosity_progress_loop_enabled": False,
+    "dense_curiosity_weight": 0.15,
+    "dense_curiosity_discount": 0.5,
     "live_submit_package_path": "results/experiment_4595_submission_package_operator_resubmit.json",
     "live_submit_source": "experiment_4595_refresh_submission_package",
     "feature_router_enabled": False,
