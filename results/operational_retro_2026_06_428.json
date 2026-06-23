@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.428",
+  "generated_at": "2026-06-23T23:15:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped TIMING DATA detector reported 0 commits since activation (locked retro fields 0/0/0/null) -- the SAME recurring false-zero gap documented .363-.427. On-disk ground truth (results/experiment_4639..4650_*.json mtimes, read this turn) shows the milestone actually ran 12 experiments over a ~199-minute window (2026-06-23 15:47:23 -> 19:06:09 EDT), so the locked zeros are a DETECTOR/observability artifact, not a real empty milestone. Both RTX 3090s idle at the 23:15:07Z snapshot is CORRECT: no monitored-3090 compute-bound task ran (every substrate is verifier_ensemble_against_cached_candidates / aggregation_from_upstream_artifacts / hardware_smoke; the frozen sprint generator Qwen3.5-9B-MTP runs on the AMD iGPU per project policy, NEVER the monitored 3090s), so compute_bound_experiments_count=0 and gpu_idle_on_compute_bound_tasks=null are both right.",
+  "bottlenecks_identified": [
+    "RECURRING false-zero timing detector (the only real operational bottleneck, now extended .363->.428): the milestone-scoped commit detector that feeds the retro TIMING DATA block reports 0 commits since activation even though 12 experiments (exp4639-exp4650) committed on disk this milestone. The shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer. Cost is observability, not wall-time -- every retro must be manually reconciled against on-disk ground truth.",
+    "GPU idle is NOT a bottleneck this milestone: gpu_idle_on_compute_bound_tasks is null because zero compute-bound (monitored-3090) tasks ran. Idle 3090s are correct when the only live generation work uses cached-candidate verifier scoring (small conv net on CPU/iGPU) and the frozen generator runs on the AMD iGPU."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro receives the real per-experiment timing instead of a false zero (the recurring highest-leverage fix carried .363->.428).",
+    "Promote injected-timing == on-disk-artifact-count to a HARD retro-launch gate: refuse to launch the retro with '0 commits since activation' when results/experiment_<range>_*.json for the active milestone are non-empty, forcing the detector to be fixed rather than worked around each milestone.",
+    "Add write-time stamping of duration_s + inference_substrate + compute_bound on every experiment artifact so the retro can classify compute-bound vs synthesis/aggregation tasks directly from the artifacts, independent of the commit-scan detector."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the milestone-scoped timing detector into the conductor's retro prompt-assembly consumer (close the .363->.428 false-zero gap at its true call site).",
+    "Gate retro launch on injected-timing == on-disk-artifact-count so a false zero blocks rather than silently produces an empty operational analysis.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write-time to make compute-bound classification detector-independent."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "Execution this milestone was efficient (12 experiments, ~199-min window, no GPU-idle-on-compute-bound bug) -- the only recurring operational failure is OBSERVABILITY: the retro's authoritative timing was again a false zero, reconciled only by reading on-disk artifacts by hand. The honest report is that the locked 0/0/0/null are a detector artifact; the durable fix is moving the detector to the retro's true consumer and gating the retro on injected==on-disk, so future retros analyze real wall-clock instead of inferring it."
+}
