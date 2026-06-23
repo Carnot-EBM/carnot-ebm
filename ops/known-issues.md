@@ -823,10 +823,29 @@ multiply branching (24 vs 4 candidates) without a guiding signal → strictly wo
 ranking was on the *theory* that 0.04 is a depth wall; the empirics refute it. **Do NOT re-propose**
 horizon-collapse / macro-action / option-framework levers for this corpus without a NEW root cause
 (a depth-bound level that primitive search provably cannot reach). **Redirect:** the GUIDANCE-class
-lever — the click-heatmap-as-GENERATOR below (adds candidates the centroid pool omits), and the
-`.428` goal-energy / expansion-prior already in flight. Full evidence:
-`docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md` (on the branch). retired_verdict:
+levers already in flight — `.428` goal-energy / expansion-prior + the `.427` action-effect predictor.
+Full evidence: `docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md` (branch
+`outer-loop/macro-vocab`). retired_verdict:
 `complete: macro_horizon_collapse_empirical_null_guidance_not_depth`.
+
+### RETIRED 2026-06-23 (premise falsified pre-build, non-circular) — CLICK-HEATMAP-AS-GENERATOR (off-centroid click candidates)
+
+**RETIRED before any build.** The SECOND PURSUE-ranked lever from the `.427`-improvement workflow
+(use the `SmallFrameChangeCNN` per-pixel `click_head` to GENERATE off-centroid click candidates the
+centroid enumerator omits). The outer loop ran the note's pre-flight falsifier (~30 min, no training,
+no generator). **NON-CIRCULAR test on the ARC Public Demo HUMAN replays** (free-clicking humans,
+`data/arc_public_demo_human_replay_corpus`): over 4097 human clicks that CHANGED the frame, **99.1%
+land on or near (≤2px) an object centroid; only 0.9% (36/4097) are truly off-object.** VERDICT
+`DEAD_human_effective_clicks_centroid_covered`. (A solver-trajectory falsifier agreed at 0/90 but is
+circular — those clicks came from a centroid-only solver.) **Insight:** ARC click games are
+OBJECT-level interactions (WHICH object, not WHERE-precisely), so the centroid enumerator already
+covers what works — the click-game wall is a GUIDANCE problem (which object, in which order), NOT a
+candidate-coverage problem. **Do NOT build** a per-pixel click generator for this corpus. With the
+macro lever also retired, BOTH PURSUE levers are empirically dead and the root cause is the same:
+the 0.04 wall is generation-GUIDANCE, not depth or coverage → concentrate `.429+` on the guidance
+class (`.428` goal-energy/expansion-prior, `.427` action-effect predictor). Evidence:
+`docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md` (branch `outer-loop/click-heatmap`).
+retired_verdict: `complete: click_heatmap_generator_premise_falsified_guidance_not_coverage`.
 
 ### ~~NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)~~ — RETIRED (see above)
 
