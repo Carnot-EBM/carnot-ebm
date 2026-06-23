@@ -2870,6 +2870,78 @@ beats the uniform-energy ablation, preserves offline reproduction for newly
 solved variants, and keeps the live-path lint green; otherwise the artifact
 MUST emit an honest null with explicit zero deltas and residual bridge gaps.
 
+### REQ-ARC-WMTE-4645: ARC Sprint Integration Gate Consolidation
+
+Experiment 4645 SHALL consolidate the 2026-06-23 ARC integration sprint's
+clean scored-agent levers into the submitted ARC agent configuration. The
+workflow SHALL first verify `arc_solver_kit.offline_arcade()` and the presence
+of `results/experiment_4640_goal_energy_generation_live.json`,
+`results/experiment_4641_action_effect_expansion_prior_live.json`,
+`results/experiment_4642_levelup_selfplay.json`, and
+`results/experiment_4643_refresh_submission_package.json`. It SHALL read A1,
+A2, and A3 through `scripts/summarize_artifact.py` before aggregating any
+number. A lever may be admitted into `SUBMITTED_AGENT_CONFIG` only when its
+upstream artifact has a terminal success verdict, is not stamped or
+live-rechecked as adversarial, passes its positive control, and raises a real
+scored-agent metric. A1 SHALL additionally pass the uniform-energy ablation
+before it may ship. Any flagged-adversarial, positive-control-failed,
+uniform-energy-ablation-failed, false-negative-risk, or non-success artifact
+SHALL be quarantined and SHALL NOT contribute headline numbers.
+
+If Experiment 4640 cleanly raises live solve-rate or first-win over both the
+matched baseline and the uniform-energy ablation, the workflow SHALL keep the
+graded goal-energy setting enabled in `SUBMITTED_AGENT_CONFIG`. If Experiment
+4641 cleanly raises the live multi-level solve rate or depth, the workflow
+SHALL keep the action-effect expansion prior enabled. If Experiment 4642 banks
+a level, the workflow SHALL rely on the Experiment 4643 refreshed package that
+already folded it in. If no clean upstream lever raises a scored-agent metric,
+the workflow SHALL keep the bare submitted config, rerun the parity and
+orphan-lint gates, and emit an honest null. A bare==integrated metric equality
+SHALL be reported as an honest null with `null_delta_methodology_note`, never
+as a fabricated matched-pair improvement. The gate SHALL never submit to the
+leaderboard and SHALL write `results/experiment_4645_integration_gate.json`.
+
+Experiment 4645 SHALL emit bare top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `levers_integrated`,
+`flagged_artifacts_excluded`, `live_solve_rate_integrated`,
+`live_multi_level_solve_rate_integrated`, `action_efficiency_integrated`,
+`offline_to_live_transfer_ratio_integrated`,
+`live_submittable_level_count_integrated`, `parity_test_green`,
+`orphan_lint_green`, `submitted_config_raised_metric_clean`,
+`null_delta_methodology_note`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<metric>_raised_config_shipped OR complete: integration_no_clean_metric_bare_config_kept_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false for every aggregated value claim -- the integrated levers are oracle-distinct."
+- `levers_integrated`: principle "names the upstream levers (A1/A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- the audit trail."
+- `flagged_artifacts_excluded`: principle "names any flagged_adversarial / positive-control-failed / uniform-energy-ablation-failed upstream artifact NOT aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
+- `live_solve_rate_integrated`: principle "the integrated held-out live solve-rate on the shipped config (A1's effect)."
+- `live_multi_level_solve_rate_integrated`: principle "the integrated >=2-level live solve-rate (A2's deeper-solve effect) -- the new wall metric."
+- `action_efficiency_integrated`: principle "the integrated median actions-to-first-levelup + efficiency term on the shipped config."
+- `offline_to_live_transfer_ratio_integrated`: principle "the integrated bridge co-metric on the shipped config -- did the offline signal transfer to the SCORED agent."
+- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is the single source of truth."
+- `orphan_lint_green`: principle "HARD gate -- arc_orphan_solver_lint passes; the graduated A1/A2 modules stay live-path-reachable."
+- `submitted_config_raised_metric_clean`: principle "True only if a CLEAN (non-flagged, control-passed, uniform-energy-ablation-passed for A1) lever raised a real metric on the SCORED config; false -> honest null, bare config kept."
+- `null_delta_methodology_note`: principle "present where any integrated delta == 0 -- states the equality is an honest no-value null, not a bug (the .427 TAUTOLOGY-false-flag fix)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, upstream artifacts present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4645
+
+**Given** the offline arcade precondition passes, Experiments 4640 through 4643
+exist, and A1/A2/A3 have been summarized through `scripts/summarize_artifact.py`
+**When** experiment 4645 audits the upstream levers and re-measures the shipped
+submitted configuration
+**Then** it wires only clean metric-raising levers into
+`SUBMITTED_AGENT_CONFIG`, excludes flagged, failed-control, or failed-uniform
+artifacts from all aggregated numbers, runs the submitted-agent parity and
+orphan-solver lint gates, writes `results/experiment_4645_integration_gate.json`,
+and emits an honest null with the bare config if no clean lever raises a
+metric, including when bare and integrated metrics are exactly equal.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2

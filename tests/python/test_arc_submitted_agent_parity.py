@@ -108,14 +108,14 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
 
 
 def test_req_capstone_4597_submitted_config_points_at_refreshed_package():
-    """REQ-ARC-WMTE-4633: submitted metadata names the refreshed live package."""
+    """REQ-ARC-WMTE-4645: submitted metadata names the refreshed live package."""
 
     assert (
         SUBMITTED_AGENT_CONFIG["live_submit_package_path"]
-        == "results/experiment_4631_submission_package_operator_resubmit.json"
+        == "results/experiment_4643_submission_package_operator_resubmit.json"
     )
     assert (
-        SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4631_refresh_submission_package"
+        SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4643_refresh_submission_package"
     )
 
 
