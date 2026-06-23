@@ -160,6 +160,24 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="value_head_bridge_fix_operator",
+            derived_from_games=("exp4616_offline_live_bridge_disambiguation",),
+            purpose=(
+                "Apply the offline-to-live value-head bridge fix by scoring only bounded "
+                "decision points, caching repeated state scores, and reporting first-win or "
+                "efficiency lift before any solve claim."
+            ),
+            selector_tags=(
+                "value_head",
+                "bridge_fix",
+                "decision_point",
+                "candidate_ranking",
+                "graph_explore",
+                "live_path",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -311,6 +329,7 @@ def select_primitive_operators(
     ):
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -353,6 +372,7 @@ def select_primitive_operators(
     elif "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "glyph_rewrite_rule_verifier",
             "glyph_rewrite_matcher",
             "per_level_reinduction_operator",
@@ -367,6 +387,7 @@ def select_primitive_operators(
     elif "config" in mechanic or "toggle" in mechanic or "constraint" in mechanic:
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "config_rule_verifier",
             "config_rule_grounding",
             "per_level_reinduction_operator",
@@ -381,6 +402,7 @@ def select_primitive_operators(
     elif "program_editor" in mechanic:
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -402,6 +424,7 @@ def select_primitive_operators(
     ):
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "world_model_trust_energy_gate_operator",
             "object_motion_world_model",
             "active_data_collection",
@@ -411,6 +434,7 @@ def select_primitive_operators(
     elif "keyboard" in action or "click" in action or "graph" in mechanic:
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -423,6 +447,7 @@ def select_primitive_operators(
     else:
         names = (
             "approach_dispatcher_operator",
+            "value_head_bridge_fix_operator",
             "per_level_reinduction_operator",
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
@@ -543,7 +568,9 @@ def world_model_trust_energy_gate_operator(
         select_trusted_world_model,
     )
 
-    candidate_rows = list(candidates.values()) if isinstance(candidates, Mapping) else list(candidates or [])
+    candidate_rows = (
+        list(candidates.values()) if isinstance(candidates, Mapping) else list(candidates or [])
+    )
     world_model_candidates: list[WorldModelCandidate] = []
     public_by_name: dict[str, dict[str, Any]] = {}
     for index, candidate in enumerate(candidate_rows):
@@ -594,7 +621,9 @@ def world_model_trust_energy_gate_operator(
         "operator": "world_model_trust_energy_gate_operator",
         "candidate_count": len(world_model_candidates),
         "selected_candidate_name": selected_name,
-        "baseline_candidate_name": baseline_row.candidate.name if baseline_row is not None else None,
+        "baseline_candidate_name": baseline_row.candidate.name
+        if baseline_row is not None
+        else None,
         "trust_pass": bool(selected.trust_pass),
         "binary_gate_pass": selected_binary_pass,
         "trust_pass_added": trust_pass_added,
@@ -698,6 +727,199 @@ def approach_dispatcher_operator(
         "value_added": value_added,
         "selected_candidate": _candidate_public_dict(selected) if selected is not None else None,
         "baseline_candidate": _candidate_public_dict(baseline) if baseline is not None else None,
+        "dead_end": dead_end,
+        "verifier_is_oracle": False,
+    }
+
+
+def _value_head_bridge_score(
+    candidate: Any,
+    *,
+    value_head: Callable[[Any], float] | None,
+    score_key: str,
+) -> float | None:
+    if callable(value_head):
+        try:
+            value = value_head(candidate)
+        except Exception:
+            return None
+    else:
+        value = None
+        for key in (score_key, "value_head_score", "value_score", "score"):
+            raw = _candidate_field(candidate, key)
+            if raw is not None:
+                value = raw
+                break
+    try:
+        return None if value is None else float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _value_head_bridge_target(candidate: Any, target_key: str) -> bool:
+    if _candidate_truthy(candidate, target_key):
+        return True
+    if _candidate_reaches_dispatch_win(candidate):
+        return True
+    return any(
+        _candidate_truthy(candidate, key)
+        for key in ("reaches_levelup", "reaches_goal", "level_progress")
+    )
+
+
+def _value_head_bridge_public_row(
+    candidate: Any,
+    *,
+    index: int,
+    score: float | None,
+    scored: bool,
+    target: bool,
+) -> dict[str, Any]:
+    public = _candidate_public_dict(candidate)
+    public.setdefault("candidate_id", _candidate_identifier(candidate, index))
+    public["original_index"] = int(index)
+    public["value_head_score"] = score
+    public["value_head_scored"] = bool(scored)
+    public["target_candidate"] = bool(target)
+    return public
+
+
+def value_head_bridge_fix_operator(
+    candidates: Sequence[Any] | Mapping[str, Any],
+    *,
+    value_head: Callable[[Any], float] | None = None,
+    score_key: str = "value_head_score",
+    target_key: str = "reaches_levelup",
+    decision_point_key: str = "decision_point",
+    state_key: str = "state_key",
+    max_value_evals: int = 32,
+    first_win_budget: int | None = None,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4620: bounded cached value-head bridge-fix ranker."""
+
+    candidate_rows = (
+        list(candidates.values()) if isinstance(candidates, Mapping) else list(candidates or [])
+    )
+    max_evals = max(0, int(max_value_evals))
+    cache: dict[str, float | None] = {}
+    cache_hits = 0
+    value_evals = 0
+    scored_rows: list[dict[str, Any]] = []
+
+    for index, candidate in enumerate(candidate_rows):
+        decision_value = _candidate_field(candidate, decision_point_key, True)
+        is_decision_point = (
+            bool(decision_value)
+            if not isinstance(decision_value, str)
+            else (decision_value.strip().lower() not in {"0", "false", "no"})
+        )
+        score: float | None = None
+        scored = False
+        if is_decision_point:
+            state_value = _candidate_field(candidate, state_key)
+            state_id = (
+                str(state_value)
+                if state_value is not None
+                else _candidate_identifier(candidate, index)
+            )
+            if state_id in cache:
+                score = cache[state_id]
+                scored = score is not None
+                cache_hits += 1
+            elif value_evals < max_evals:
+                score = _value_head_bridge_score(
+                    candidate,
+                    value_head=value_head,
+                    score_key=score_key,
+                )
+                cache[state_id] = score
+                value_evals += 1
+                scored = score is not None
+        target = _value_head_bridge_target(candidate, target_key)
+        scored_rows.append(
+            {
+                "candidate": candidate,
+                "index": index,
+                "score": score,
+                "scored": scored,
+                "target": target,
+            }
+        )
+
+    ranked_internal = sorted(
+        scored_rows,
+        key=lambda row: (
+            row["score"] is None,
+            float(row["score"]) if row["score"] is not None else 0.0,
+            int(row["index"]),
+        ),
+    )
+    ranked = [
+        _value_head_bridge_public_row(
+            row["candidate"],
+            index=int(row["index"]),
+            score=row["score"],
+            scored=bool(row["scored"]),
+            target=bool(row["target"]),
+        )
+        for row in ranked_internal
+    ]
+    baseline = [
+        _value_head_bridge_public_row(
+            row["candidate"],
+            index=int(row["index"]),
+            score=row["score"],
+            scored=bool(row["scored"]),
+            target=bool(row["target"]),
+        )
+        for row in scored_rows
+    ]
+
+    target_before = next((idx for idx, row in enumerate(scored_rows) if row["target"]), None)
+    target_after = next((idx for idx, row in enumerate(ranked_internal) if row["target"]), None)
+    before_actions = None if target_before is None else target_before + 1
+    after_actions = None if target_after is None else target_after + 1
+    efficiency_lift = (
+        0
+        if before_actions is None or after_actions is None
+        else max(0, int(before_actions - after_actions))
+    )
+    if first_win_budget is None:
+        first_win_lift = False
+    else:
+        budget = max(1, int(first_win_budget))
+        baseline_first = before_actions is not None and before_actions <= budget
+        bounded_first = after_actions is not None and after_actions <= budget
+        first_win_lift = bool(bounded_first and not baseline_first)
+    value_added = bool(efficiency_lift > 0 or first_win_lift)
+
+    if not candidate_rows:
+        dead_end = "no candidates"
+    elif target_before is None:
+        dead_end = "no level-up/win candidate in decision set"
+    elif not any(row["scored"] for row in scored_rows):
+        dead_end = "no bounded decision-point value scores available"
+    elif not value_added:
+        dead_end = "value-head order matched baseline or did not improve target rank"
+    else:
+        dead_end = ""
+
+    return {
+        "operator": "value_head_bridge_fix_operator",
+        "candidate_count": len(candidate_rows),
+        "max_value_evals": max_evals,
+        "value_head_evals": value_evals,
+        "cache_hits": cache_hits,
+        "target_rank_before": target_before,
+        "target_rank_after": target_after,
+        "actions_to_first_levelup_before": before_actions,
+        "actions_to_first_levelup_after": after_actions,
+        "efficiency_lift": efficiency_lift,
+        "first_win_lift": first_win_lift,
+        "value_added": value_added,
+        "baseline_candidates": baseline,
+        "ranked_candidates": ranked,
+        "selected_candidate": ranked[0] if ranked else None,
         "dead_end": dead_end,
         "verifier_is_oracle": False,
     }

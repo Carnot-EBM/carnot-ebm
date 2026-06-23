@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-22'
+updated: '2026-06-23'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -276,6 +276,49 @@ general_gotchas:
     residual_dead_end: Transfer value is dispatcher selection over cached
       verifier/reproduction-gated candidates; no new executable level was
       banked, so reproducible_total_levels is unchanged.
+- id: primitive_value_head_bridge_fix_operator
+  operator: value_head_bridge_fix_operator
+  derived_from_games:
+  - exp4616_offline_live_bridge_disambiguation
+  note: >-
+    Exp 4620 persists the A1 offline-to-live bridge-fix helper as reusable
+    value-head scaffolding: score only bounded decision-point candidates, cache repeated
+    state scores, keep value-head weight effectively as a rank/tie-break signal,
+    and report live first-win or efficiency lift before any solve claim. Exp
+    4617's graduated SpatialValueNet live path was a characterized null, so this
+    persists the compute-cost fix that made the offline value-head win reusable
+    without repeating the heavy value_weight=5 regression. This is ranking/routing
+    scaffolding, not a win oracle; new levels still count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - If the generated candidate set lacks a level-up/win candidate, the bridge fix
+      can only reorder non-winning candidates; candidate generation remains the
+      residual bottleneck.
+  - If the target candidate is already first in baseline order, decision-point
+      value ranking is an honest efficiency null for that game.
+  latest_exp4620_transfer:
+    artifact: results/experiment_4620_primitive_persist_transfer.json
+    transfer_games:
+    - bp35
+    - dc22
+    - g50t
+    transfer_value_per_game:
+      bp35:
+        first_win_lift: true
+        efficiency_lift: 1
+        offline_reproduced_new_level: false
+      dc22:
+        first_win_lift: true
+        efficiency_lift: 2
+        offline_reproduced_new_level: false
+      g50t:
+        first_win_lift: false
+        efficiency_lift: 0
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is bounded decision-point value ranking over
+      cached untuned candidates; no new executable level was banked, so
+      reproducible_total_levels is unchanged.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:

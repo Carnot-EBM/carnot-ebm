@@ -2189,3 +2189,64 @@ artifact are unavailable
 **When** experiment 4617 runs its precondition check
 **Then** it writes a blocked artifact with `preconditions_checked`, a terminal
 `blocked_` verdict, no fabricated live-value evidence, and a stable checksum.
+
+### REQ-ARC-WMTE-4620: Primitive Persist Transfer for Offline-To-Live Bridge Fix
+
+Experiment 4620 SHALL read
+`results/experiment_4616_offline_live_bridge_disambiguation.json` and
+`results/experiment_4617_graduate_spatial_value_head_live.json`, select the
+strongest measured reusable primitive, persist it as an `arc_solver_kit`
+operator, and record the reusable asset under `general_gotchas` in
+`ops/arc_solve_registry.yaml`. Because Experiment 4617 graduated the
+SpatialValueNet into the live path but reported no first-win or action lift,
+while Experiment 4616 isolated `compute_cost` and identified
+decision-point-only/cached value evaluation as the reusable bridge fix, the
+expected persisted primitive is `value_head_bridge_fix_operator` with registry
+gotcha `primitive_value_head_bridge_fix_operator`.
+
+The persisted bridge-fix operator SHALL compare a baseline candidate order to a
+bounded decision-point-only value-head order, SHALL cache repeated state scores,
+SHALL report value-head evaluation count and elapsed cost proxies, SHALL keep
+`verifier_is_oracle=false`, and SHALL report value only when an untuned transfer
+game has a live first-win lift or an efficiency lift without fabricating a new
+level. Experiment 4620 SHALL apply the persisted primitive to two or more
+transfer games not tuned in Experiment 4616 or 4617, offline-reproduce any newly
+counted level through `arc_solver_kit.reproduce`, and write
+`results/experiment_4620_primitive_persist_transfer.json`.
+
+The artifact SHALL emit principle-annotated top-level fields for
+`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `primitive_persisted`, `transfer_games`,
+`transfer_value_per_game`, `offline_reproduced`, `registry_updated`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive RANKS/ROUTES (the value head) or RE-CALIBRATES, oracle-distinct from the win-check."
+- `solve_provenance`: principle "development_proxy if a transfer solve is via the offline twin; live_agent_self_discovery if the persisted primitive improves the SCORED agent's own path. NOT outer_loop_re."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_value_per_game`: principle "the per-game value-add (live first-win / efficiency lift) -- the cross-game evidence the primitive generalizes."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+If no untuned transfer game shows positive live first-win or efficiency lift,
+the artifact SHALL report `complete: primitive_persisted_transfer_null_characterized`,
+persist the best-characterized primitive-as-built, record transfer dead-ends in
+the registry, and SHALL NOT increment `reproducible_total_levels`.
+
+#### SCENARIO-ARC-WMTE-4620
+
+**Given** the offline arcade precondition passes, Experiment 4616 and 4617
+artifacts exist, and the bridge-fix helper has the stronger measured reusable
+signal
+**When** experiment 4620 persists the solver-kit bridge-fix operator and
+measures it on at least two untuned transfer games
+**Then** the artifact records the persisted operator and registry gotcha, the
+untuned transfer games, per-game first-win or efficiency value-add, offline
+reproduction accounting for any new level, a stable checksum, and a terminal
+success only when at least one transfer game adds value.
