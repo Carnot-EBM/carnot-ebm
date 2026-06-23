@@ -1,0 +1,312 @@
+"""Tests for Exp 4612 hardware continuity.
+
+Spec refs: REQ-HW-4612, SCENARIO-HW-4612.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from carnot import experiment_4612_hardware_continuity as mod
+
+
+class RecordingRunner:
+    """SCENARIO-HW-4612 runner with queued reachability and state transcripts."""
+
+    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
+        self.probes = {command: list(values) for command, values in probes.items()}
+        self.commands: list[tuple[str, ...]] = []
+
+    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
+        assert timeout_s > 0.0
+        command = tuple(command)
+        self.commands.append(command)
+        if command not in self.probes or not self.probes[command]:
+            raise AssertionError(f"unexpected command: {command!r}")
+        return self.probes[command].pop(0)
+
+
+def _probe(
+    command: tuple[str, ...],
+    exit_code: int = 0,
+    stdout: str = "",
+    stderr: str = "",
+    duration_s: float = 0.01,
+) -> mod.CommandProbe:
+    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
+
+
+def _all_reachable_runner() -> RecordingRunner:
+    return RecordingRunner(
+        {
+            mod.KV260_PRECONDITION_COMMAND: [
+                _probe(mod.KV260_PRECONDITION_COMMAND, duration_s=0.11),
+            ],
+            mod.POLARFIRE_PRECONDITION_COMMAND: [
+                _probe(mod.POLARFIRE_PRECONDITION_COMMAND, duration_s=0.22),
+            ],
+            mod.GATEMATE_PRECONDITION_COMMAND: [
+                _probe(
+                    mod.GATEMATE_PRECONDITION_COMMAND,
+                    stdout="IDCode : 0x20000001 colognechip GateMate GM1Ax\n",
+                    duration_s=0.33,
+                ),
+            ],
+            mod.KV260_STATE_COMMAND: [
+                _probe(
+                    mod.KV260_STATE_COMMAND,
+                    stdout="app: carnot_ising_v4\napp: benchmark_shell\n",
+                    duration_s=0.44,
+                ),
+            ],
+            mod.KV260_UIO_SMOKE_COMMAND: [
+                _probe(
+                    mod.KV260_UIO_SMOKE_COMMAND,
+                    stdout="/dev/uio0\n/dev/uio1\n",
+                    duration_s=0.05,
+                ),
+            ],
+            mod.POLARFIRE_STATE_COMMAND: [
+                _probe(
+                    mod.POLARFIRE_STATE_COMMAND,
+                    stdout=" 12:01:02 up 12 days,  4:03,  1 user,  load average: 0.00\n",
+                    duration_s=0.55,
+                ),
+            ],
+        }
+    )
+
+
+def test_req_hw_4612_spec_entry_declares_required_artifact_contract() -> None:
+    """REQ-HW-4612: OpenSpec anchors the fields, commands, and principles."""
+    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
+
+    assert "REQ-HW-4612" in spec
+    assert "SCENARIO-HW-4612" in spec
+    assert "experiment_4612_hardware_continuity.json" in spec
+    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
+    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'" in spec
+    assert "openFPGALoader -c dirtyJtag --detect" in spec
+    assert "ssh kria 'xmutil listapps'" in spec
+    assert "ssh kria 'ls /dev/uio*'" in spec
+    assert "GateMate GM1Ax IDCODE" in spec
+    assert "random_seed=4612" in spec
+    assert "blocked_kv260_ssh_unreachable" in spec
+    assert "blocked_polarfire_ssh_timeout" in spec
+    assert "blocked_gatemate_usb_undetected" in spec
+    for field in mod.REQUIRED_OPERATOR_FIELDS:
+        assert field in spec
+        assert mod.FIELD_PRINCIPLES[field] in spec
+
+
+def test_scenario_hw_4612_reachable_boards_record_state_and_optional_uio(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-HW-4612: reachable boards capture overlay, uptime, IDCODE, and UIO."""
+    runner = _all_reachable_runner()
+
+    artifact = mod.build_artifact(command_runner=runner)
+    out_path = mod.write_artifact(tmp_path, artifact)
+    saved = json.loads(out_path.read_text(encoding="utf-8"))
+
+    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
+    assert runner.commands == [
+        mod.KV260_PRECONDITION_COMMAND,
+        mod.POLARFIRE_PRECONDITION_COMMAND,
+        mod.GATEMATE_PRECONDITION_COMMAND,
+        mod.KV260_STATE_COMMAND,
+        mod.KV260_UIO_SMOKE_COMMAND,
+        mod.POLARFIRE_STATE_COMMAND,
+    ]
+    assert saved["schema"] == mod.SCHEMA
+    assert saved["experiment"] == mod.EXPERIMENT_ID
+    assert saved["spec_refs"] == mod.SPEC_REFS
+    assert saved["random_seed"] == mod.RANDOM_SEED
+    assert saved["inference_substrate"] == "hardware_smoke"
+    assert saved["field_principles"] == mod.FIELD_PRINCIPLES
+    assert saved["honest_verdict"] == "success: hardware_continuity_3_of_3_boards_reachable"
+    assert saved["reachable_board_count"] == 3
+    assert saved["boards_reachable"] == {
+        "kv260": True,
+        "polarfire": True,
+        "gatemate": True,
+    }
+    assert saved["kv260_precondition"]["command"] == (
+        "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true"
+    )
+    assert saved["kv260_precondition"]["result"]["available"] is True
+    assert saved["preconditions_checked"] == [
+        {
+            "resource": "kv260_ssh",
+            "available": True,
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+            "exit_code": 0,
+            "duration_s": 0.11,
+            "observed": "returncode=0",
+        },
+        {
+            "resource": "polarfire_ssh",
+            "available": True,
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+            "exit_code": 0,
+            "duration_s": 0.22,
+            "observed": "returncode=0",
+        },
+        {
+            "resource": "gatemate_usb_detect",
+            "available": True,
+            "command": "openFPGALoader -c dirtyJtag --detect",
+            "exit_code": 0,
+            "duration_s": 0.33,
+            "observed": "IDCode : 0x20000001 colognechip GateMate GM1Ax",
+        },
+    ]
+    kv260 = saved["per_board_state"]["kv260"]
+    assert kv260["status"] == "kv260_reachable_loaded_overlay_recorded"
+    assert kv260["state"]["state_type"] == "loaded_overlay"
+    assert "carnot_ising_v4" in kv260["state"]["observed"]
+    assert kv260["energy_eval_smoke"]["captured"] is True
+    assert kv260["energy_eval_smoke"]["state_type"] == "uio_devices"
+    assert "/dev/uio1" in kv260["energy_eval_smoke"]["observed"]
+    polarfire = saved["per_board_state"]["polarfire"]
+    assert polarfire["status"] == "polarfire_reachable_uptime_recorded"
+    assert "up 12 days" in polarfire["state"]["observed"]
+    gatemate = saved["per_board_state"]["gatemate"]
+    assert gatemate["status"] == "gatemate_reachable_idcode_recorded"
+    assert gatemate["state"]["idcode"] == "0x20000001"
+    assert saved["per_board_reachability"] == saved["boards_reachable"]
+    assert saved["bitstream_build_attempted"] is False
+    assert saved["fabric_acceleration_claimed"] is False
+    assert saved["speedup_claim_made"] is False
+    encoded = json.dumps(saved).lower()
+    assert "mmcblk" not in encoded
+    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
+    mod.validate_artifact(saved)
+
+
+def test_req_hw_4612_blocked_boards_do_not_run_state_commands() -> None:
+    """REQ-HW-4612: blocked board rows remain visible and do not stop the audit."""
+    runner = RecordingRunner(
+        {
+            mod.KV260_PRECONDITION_COMMAND: [
+                _probe(
+                    mod.KV260_PRECONDITION_COMMAND,
+                    255,
+                    stderr="timeout",
+                    duration_s=0.2,
+                ),
+            ],
+            mod.POLARFIRE_PRECONDITION_COMMAND: [
+                _probe(
+                    mod.POLARFIRE_PRECONDITION_COMMAND,
+                    255,
+                    stderr="timeout",
+                    duration_s=0.3,
+                ),
+            ],
+            mod.GATEMATE_PRECONDITION_COMMAND: [
+                _probe(
+                    mod.GATEMATE_PRECONDITION_COMMAND,
+                    stdout="Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+                    duration_s=0.4,
+                ),
+            ],
+        }
+    )
+
+    artifact = mod.build_artifact(command_runner=runner)
+
+    assert runner.commands == [
+        mod.KV260_PRECONDITION_COMMAND,
+        mod.POLARFIRE_PRECONDITION_COMMAND,
+        mod.GATEMATE_PRECONDITION_COMMAND,
+    ]
+    assert artifact["honest_verdict"] == "success: hardware_continuity_0_of_3_boards_reachable"
+    assert artifact["reachable_board_count"] == 0
+    assert artifact["boards_reachable"] == {
+        "kv260": False,
+        "polarfire": False,
+        "gatemate": False,
+    }
+    assert artifact["per_board_state"]["kv260"]["status"] == "blocked_kv260_ssh_unreachable"
+    assert artifact["per_board_state"]["polarfire"]["status"] == "blocked_polarfire_ssh_timeout"
+    assert artifact["per_board_state"]["gatemate"]["status"] == "blocked_gatemate_usb_undetected"
+    for board in mod.BOARD_NAMES:
+        assert artifact["per_board_state"][board]["state"] == {
+            "captured": False,
+            "reason": artifact["per_board_state"][board]["status"],
+        }
+    mod.validate_artifact(artifact)
+
+
+def test_scenario_hw_4612_kv260_without_carnot_overlay_skips_uio_smoke() -> None:
+    """SCENARIO-HW-4612: KV260 UIO smoke is gated on a Carnot Ising overlay."""
+    runner = RecordingRunner(
+        {
+            mod.KV260_PRECONDITION_COMMAND: [
+                _probe(mod.KV260_PRECONDITION_COMMAND, duration_s=0.11),
+            ],
+            mod.POLARFIRE_PRECONDITION_COMMAND: [
+                _probe(mod.POLARFIRE_PRECONDITION_COMMAND, duration_s=0.22),
+            ],
+            mod.GATEMATE_PRECONDITION_COMMAND: [
+                _probe(
+                    mod.GATEMATE_PRECONDITION_COMMAND,
+                    stdout="IDCode : 0x20000001 colognechip GateMate GM1Ax\n",
+                    duration_s=0.33,
+                ),
+            ],
+            mod.KV260_STATE_COMMAND: [
+                _probe(
+                    mod.KV260_STATE_COMMAND,
+                    1,
+                    stderr="xmutil should be called with root privileges.",
+                    duration_s=0.44,
+                ),
+            ],
+            mod.POLARFIRE_STATE_COMMAND: [
+                _probe(mod.POLARFIRE_STATE_COMMAND, stdout="up 1 day\n", duration_s=0.55),
+            ],
+        }
+    )
+
+    artifact = mod.build_artifact(command_runner=runner)
+
+    assert mod.KV260_UIO_SMOKE_COMMAND not in runner.commands
+    assert artifact["per_board_state"]["kv260"]["status"] == (
+        "blocked_kv260_loaded_overlay_probe_failed_returncode_1"
+    )
+    smoke = artifact["per_board_state"]["kv260"]["energy_eval_smoke"]
+    assert smoke == {
+        "captured": False,
+        "reason": "carnot_ising_overlay_not_loaded",
+    }
+    mod.validate_artifact(artifact)
+
+
+def test_scenario_hw_4612_run_experiment_writes_artifact(tmp_path: Path) -> None:
+    """SCENARIO-HW-4612: run_experiment writes the requested results artifact."""
+    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=_all_reachable_runner())
+    artifact = json.loads(out_path.read_text(encoding="utf-8"))
+
+    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
+    assert artifact["experiment"] == 4612
+    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
+    mod.validate_artifact(artifact)
+
+
+def test_req_hw_4612_validation_rejects_bad_metadata_and_checksum() -> None:
+    """REQ-HW-4612: validation rejects wrong metadata and stale checksums."""
+    artifact = mod.build_artifact(command_runner=_all_reachable_runner())
+    artifact["experiment"] = 4600
+    artifact["reproducibility_checksum"] = mod.payload_checksum(artifact)
+    with pytest.raises(ValueError, match="4612"):
+        mod.validate_artifact(artifact)
+
+    artifact = mod.build_artifact(command_runner=_all_reachable_runner())
+    artifact["reproducibility_checksum"] = "stale"
+    with pytest.raises(ValueError, match="checksum"):
+        mod.validate_artifact(artifact)
