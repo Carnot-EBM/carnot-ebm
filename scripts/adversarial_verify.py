@@ -183,6 +183,20 @@ VERIFIER_SCORING_SCHEMA_PREFIXES = (
     "carnot.mbpp_humaneval_generated_code_clean_row",
 )
 VERIFIER_SCORING_MIN_DURATION_S = 1.0
+CHEAP_LEARNED_VALUE_MIN_DURATION_S = 0.0001
+CHEAP_LEARNED_VALUE_MARKERS = (
+    "value_head",
+    "value-head",
+    "value head",
+    "spatialvaluenet",
+    "learnedvaluenet",
+    "linear forward",
+    "linear_forward",
+    "linear value",
+    "cnn",
+    "forward pass",
+    "cached_candidate_linear_forward_pass",
+)
 
 # Aggregation-only artifacts: milestone capstones, archive/activate
 # transitions, paper-table synthesizers, cross-corpus-matrix builders.
@@ -1513,6 +1527,72 @@ def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:
     return any(schema.startswith(p) for p in VERIFIER_SCORING_SCHEMA_PREFIXES)
 
 
+def _cheap_learned_value_marker(value: Any) -> str | None:
+    """Return a cheap learned-value/CNN/linear marker from real fields."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            key_text = str(key).lower()
+            for marker in CHEAP_LEARNED_VALUE_MARKERS:
+                if marker in key_text:
+                    return marker
+            found = _cheap_learned_value_marker(nested)
+            if found is not None:
+                return found
+    elif isinstance(value, list):
+        for item in value:
+            found = _cheap_learned_value_marker(item)
+            if found is not None:
+                return found
+    elif isinstance(value, str):
+        text = value.lower()
+        for marker in CHEAP_LEARNED_VALUE_MARKERS:
+            if marker in text:
+                return marker
+    return None
+
+
+def _has_cheap_learned_value_methodology(d: dict[str, Any]) -> bool:
+    """True when a fast cached value-head run carries auditable methodology."""
+    return (
+        bool(d.get("model_specs"))
+        and (d.get("random_seed") is not None or d.get("seed") is not None)
+        and bool(d.get("reproducibility_checksum"))
+    )
+
+
+def _cheap_learned_value_floor_descriptor(d: dict[str, Any]) -> dict[str, Any] | None:
+    """Return the calibrated sub-1s floor for method-bearing cheap value scoring.
+
+    This is intentionally narrower than the generic verifier-scoring substrate:
+    it only applies below the existing 1s verifier floor, only when the artifact
+    declares a cached learned value/CNN/linear forward-pass marker, and only
+    when the methodology fields needed for replay are present.
+    """
+    duration = d.get("duration_s")
+    if not (
+        _is_verifier_scoring_only(d)
+        and _is_finite_number(duration)
+        and float(duration) < VERIFIER_SCORING_MIN_DURATION_S
+    ):
+        return None
+    marker = _cheap_learned_value_marker(d)
+    if marker is None or not _has_cheap_learned_value_methodology(d):
+        return None
+    return {
+        "substrate": VERIFIER_SCORING_SUBSTRATE,
+        "min_duration_s": CHEAP_LEARNED_VALUE_MIN_DURATION_S,
+        "reason": "cheap_learned_value_scoring",
+        "marker": marker,
+        "methodology_fields": [
+            "model_specs",
+            "random_seed",
+            "reproducibility_checksum",
+        ],
+    }
+
+
 def _is_aggregation_only(d: dict[str, Any]) -> bool:
     """True if the artifact is a synthesis / aggregation over upstream
     artifacts and not itself a compute-bound experiment.
@@ -1610,6 +1690,9 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     substrate was declared.
     """
     if _is_verifier_scoring_only(d):
+        cheap_floor = _cheap_learned_value_floor_descriptor(d)
+        if cheap_floor is not None:
+            return cheap_floor
         return {
             "substrate": VERIFIER_SCORING_SUBSTRATE,
             "min_duration_s": VERIFIER_SCORING_MIN_DURATION_S,
@@ -1656,6 +1739,23 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     # cached candidates -- their GGUF markers are vestigial. Apply
     # the tighter verifier-scoring threshold instead of the full
     # model-inference threshold.
+    if floor["reason"] == "cheap_learned_value_scoring":
+        min_duration = float(floor["min_duration_s"])
+        if float(duration) < min_duration:
+            flags.append(
+                Flag(
+                    kind="DURATION_TOO_SHORT",
+                    severity="critical",
+                    detail=(
+                        f"duration_s={duration} but artifact declares "
+                        f"cheap learned-value/CNN/linear scoring substrate. "
+                        f"Even loading cached candidates takes >= "
+                        f"{min_duration}s; this duration suggests it "
+                        f"was not measured at all."
+                    ),
+                )
+            )
+        return
     if floor["reason"] == "verifier_scoring":
         min_duration = float(floor["min_duration_s"])
         if float(duration) < min_duration:
@@ -2159,6 +2259,142 @@ def _is_arc_artifact(d: dict[str, Any]) -> bool:
     return isinstance(d.get("game"), str) or "arc" in text or any(g in text for g in _ARC_GAME_IDS)
 
 
+_ARC_LIVE_CLAIM_TEXT_KEYS = (
+    "honest_verdict",
+    "headline",
+    "headline_outcome",
+    "title",
+    "claim",
+    "summary",
+)
+_ARC_LIVE_CONTEXT_MARKERS = (
+    "live",
+    "live_agent",
+    "live agent",
+    "scored agent",
+    "submitted agent",
+)
+_ARC_LIVE_WIN_MARKERS = (
+    "first_win",
+    "first-win",
+    "first win",
+    "efficiency",
+    "actions",
+    "solve",
+    "solved",
+    "levelup",
+    "level-up",
+    "search win",
+)
+_ARC_POSITIVE_LIVE_CLAIM_MARKERS = (
+    "success:",
+    "_up",
+    " up",
+    "lift",
+    "improv",
+    "wins",
+    "won",
+    "solved",
+    "fewer actions",
+    "reduced actions",
+)
+_ARC_NULL_LIVE_CLAIM_MARKERS = (
+    "honest_null",
+    "no_live_value",
+    "no live value",
+    "no_value",
+    "no value",
+    "null",
+    "regressed",
+    "gap_open",
+    "blocked",
+)
+_ARC_LIVE_METRIC_KEY_MARKERS = (
+    "first_win_rate",
+    "actions_to_first",
+    "median_actions",
+    "actions_delta",
+    "action_efficiency",
+    "solve_rate",
+)
+_ARC_OFFLINE_AUROC_KEY_MARKERS = ("auroc", "auc")
+_ARC_OFFLINE_AUROC_CONTEXT_MARKERS = ("offline", "loo", "leave_one", "leave-one", "detector")
+
+
+def _arc_live_claim_text(d: dict[str, Any]) -> str:
+    return " ".join(str(d.get(key, "")) for key in _ARC_LIVE_CLAIM_TEXT_KEYS).lower()
+
+
+def _claims_arc_live_search_win(d: dict[str, Any]) -> bool:
+    """True if the artifact headlines a positive live-agent ARC search win."""
+    if not _is_arc_artifact(d):
+        return False
+    text = _arc_live_claim_text(d)
+    live_context = any(marker in text for marker in _ARC_LIVE_CONTEXT_MARKERS) or (
+        d.get("solve_provenance") == "live_agent_self_discovery"
+    )
+    if not live_context:
+        return False
+    if not any(marker in text for marker in _ARC_LIVE_WIN_MARKERS):
+        return False
+    positive = any(marker in text for marker in _ARC_POSITIVE_LIVE_CLAIM_MARKERS)
+    null = any(marker in text for marker in _ARC_NULL_LIVE_CLAIM_MARKERS)
+    return positive and not null
+
+
+def _has_measured_arc_live_metric(d: dict[str, Any]) -> bool:
+    """Return true for real metric fields, not prose-only field principles."""
+    for key, value in d.items():
+        kl = str(key).lower()
+        if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+            continue
+        if value is None:
+            continue
+        if kl.startswith("offline_") or "_offline" in kl:
+            continue
+        if kl.startswith("live_") and (_is_finite_number(value) or isinstance(value, (dict, list, bool))):
+            return True
+        if any(marker in kl for marker in _ARC_LIVE_METRIC_KEY_MARKERS) and (
+            _is_finite_number(value) or isinstance(value, (dict, list))
+        ):
+            return True
+    return False
+
+
+def _has_offline_auroc_metric(d: dict[str, Any]) -> bool:
+    for key, value in d.items():
+        kl = str(key).lower()
+        if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS or not _is_finite_number(value):
+            continue
+        if not any(marker in kl for marker in _ARC_OFFLINE_AUROC_KEY_MARKERS):
+            continue
+        if any(marker in kl for marker in _ARC_OFFLINE_AUROC_CONTEXT_MARKERS):
+            return True
+    return False
+
+
+def check_arc_offline_live_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Warn when an ARC live-search win is backed only by offline AUROC."""
+    if not _claims_arc_live_search_win(d):
+        return
+    if _has_measured_arc_live_metric(d):
+        return
+    if not _has_offline_auroc_metric(d):
+        return
+    flags.append(
+        Flag(
+            kind="OFFLINE_SUBSTITUTED_FOR_LIVE",
+            severity="warn",
+            detail=(
+                "ARC artifact claims a live search win but reports offline AUROC "
+                "evidence without a measured live metric field. Add first_win_rate_*, "
+                "actions_*/median_actions_*, or live_* evidence from the live agent; "
+                "offline AUROC alone characterizes the detector, not a live win."
+            ),
+        )
+    )
+
+
 _WORLD_MODEL_TRUST_RATE_KEYS = (
     "world_model_trust_pass_rate",
     "world_model_trust_pass_rate_new",
@@ -2464,6 +2700,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
     check_world_model_trust_degeneracy(d, flags)
+    check_arc_offline_live_overclaim(d, flags)
     check_arc_outer_loop_solve(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""

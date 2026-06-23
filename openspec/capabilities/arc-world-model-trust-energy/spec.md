@@ -809,6 +809,66 @@ near-zero transfer ratio plus `null_delta_methodology_note` for high-offline
 AUROC and zero live lift, and emits a positive transfer ratio when the value
 head produces positive live first-win or efficiency lift.
 
+### REQ-ARC-WMTE-4623: Adversarial Verify Offline/Live Bridge Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the ARC offline-to-live
+bridge thesis from two narrow false reads. First, an ARC artifact whose
+`honest_verdict` or headline text claims a live search win, efficiency win, or
+solve by the live agent SHALL report a measured live metric field such as
+`first_win_rate_*`, `actions_*`, or `live_*`. If the artifact reports only an
+offline AUROC or offline discriminator metric for that live-win claim, the
+reader SHALL emit a WARN flag of kind `OFFLINE_SUBSTITUTED_FOR_LIVE`. An artifact
+that honestly reports an offline AUROC as an offline result, without a live-win
+claim, SHALL NOT fire this guard.
+
+Second, the reader SHALL apply a calibrated cheap learned-value substrate floor:
+a verifier-scoring artifact that declares a cached-candidate learned value-head,
+CNN, or linear forward-pass substrate MAY pass a sub-1s duration only when it
+also carries methodology evidence: `model_specs`, `random_seed`, and
+`reproducibility_checksum`. A sub-second verifier-scoring run without that
+methodology SHALL still emit `DURATION_TOO_SHORT`.
+
+Experiment 4623 SHALL write
+`results/experiment_4623_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `offline_live_overclaim_guard_added`,
+`cheap_value_substrate_floor_added`, `honest_offline_result_not_flagged`,
+`no_methodology_fast_run_still_fires`, `tests_added`,
+`research_conductor_modified`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_offline_live_overclaim_guard_plus_cheap_value_substrate_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor)."
+- `offline_live_overclaim_guard_added`: principle "the guard that a LIVE-win claim must carry a LIVE metric, not only an offline AUROC (the .426 bridge-thesis protection)."
+- `cheap_value_substrate_floor_added`: principle "the calibrated substrate floor so a methodology-bearing fast value-head scoring run is not DURATION_TOO_SHORT false-flagged (the .425 A1 regression fixture)."
+- `honest_offline_result_not_flagged`: principle "HARD -- an artifact honestly reporting an offline AUROC as an offline result (no live-win claim) does NOT fire guard 1 (narrow, not a hole)."
+- `no_methodology_fast_run_still_fires`: principle "HARD -- a no-methodology sub-second verifier-scoring run STILL fires DURATION_TOO_SHORT (guard 2 is narrow, the .425 A1 0.44s fabrication case stays catchable)."
+- `tests_added`: principle "the asserting tests (every test >=1 assertion; no skips) -- both guards are verified."
+- `research_conductor_modified`: principle "MUST be false -- this edits adversarial_verify.py (the linter), never scripts/research_conductor.py."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (adversarial_verify.py parses, fixtures present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4623-OFFLINE-LIVE-OVERCLAIM
+
+**Given** an ARC artifact claims a live first-win, action-efficiency, solve, or
+live-agent search improvement
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is WARN-flagged when it reports only offline AUROC evidence
+and no measured live metric field, while an honest offline-only AUROC result is
+not flagged.
+
+#### SCENARIO-ARC-WMTE-4623-CHEAP-VALUE-SUBSTRATE
+
+**Given** a verifier-scoring artifact declares a cached-candidate learned
+value-head, CNN, or linear forward pass
+**When** its duration is below 1s
+**Then** it avoids `DURATION_TOO_SHORT` only if `model_specs`, `random_seed`, and
+`reproducibility_checksum` are present; the same fast run without methodology
+still fires `DURATION_TOO_SHORT`.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from

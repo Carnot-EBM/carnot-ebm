@@ -1,0 +1,118 @@
+{
+  "cheap_value_substrate_floor_added": true,
+  "cheap_value_substrate_floor_report": {
+    "cheap_duration_flags": [],
+    "cheap_floor": {
+      "marker": "value_head",
+      "methodology_fields": [
+        "model_specs",
+        "random_seed",
+        "reproducibility_checksum"
+      ],
+      "min_duration_s": 0.0001,
+      "reason": "cheap_learned_value_scoring",
+      "substrate": "verifier_ensemble_against_cached_candidates"
+    },
+    "no_methodology_duration_flags": [
+      {
+        "detail": "duration_s=0.44 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "no_methodology_fast_run_still_fires": true,
+    "passed": true
+  },
+  "duration_s": 0.030244754045270383,
+  "experiment": "experiment_4623_adversarial_verify_hardening",
+  "field_principles": {
+    "cheap_value_substrate_floor_added": {
+      "principle": "the calibrated substrate floor so a methodology-bearing fast value-head scoring run is not DURATION_TOO_SHORT false-flagged (the .425 A1 regression fixture)."
+    },
+    "honest_offline_result_not_flagged": {
+      "principle": "HARD -- an artifact honestly reporting an offline AUROC as an offline result (no live-win claim) does NOT fire guard 1 (narrow, not a hole)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_hardened_offline_live_overclaim_guard_plus_cheap_value_substrate_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor)."
+    },
+    "no_methodology_fast_run_still_fires": {
+      "principle": "HARD -- a no-methodology sub-second verifier-scoring run STILL fires DURATION_TOO_SHORT (guard 2 is narrow, the .425 A1 0.44s fabrication case stays catchable)."
+    },
+    "offline_live_overclaim_guard_added": {
+      "principle": "the guard that a LIVE-win claim must carry a LIVE metric, not only an offline AUROC (the .426 bridge-thesis protection)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (adversarial_verify.py parses, fixtures present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "research_conductor_modified": {
+      "principle": "MUST be false -- this edits adversarial_verify.py (the linter), never scripts/research_conductor.py."
+    },
+    "tests_added": {
+      "principle": "the asserting tests (every test >=1 assertion; no skips) -- both guards are verified."
+    }
+  },
+  "honest_offline_result_not_flagged": true,
+  "honest_verdict": "success: adversarial_verify_hardened_offline_live_overclaim_guard_plus_cheap_value_substrate_tests_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor).",
+  "no_methodology_fast_run_still_fires": true,
+  "offline_live_guard_report": {
+    "honest_offline_flags": [],
+    "honest_offline_result_not_flagged": true,
+    "live_metric_exemplar_flags": [],
+    "live_metric_exemplar_not_flagged": true,
+    "overclaim_warn_flags": [
+      {
+        "detail": "ARC artifact claims a live search win but reports offline AUROC evidence without a measured live metric field. Add first_win_rate_*, actions_*/median_actions_*, or live_* evidence from the live agent; offline AUROC alone characterizes the detector, not a live win.",
+        "kind": "OFFLINE_SUBSTITUTED_FOR_LIVE",
+        "severity": "warn"
+      }
+    ],
+    "passed": true
+  },
+  "offline_live_overclaim_guard_added": true,
+  "preconditions_checked": {
+    "adversarial_verify_parse_ok": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "fixtures_present": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4623": true
+  },
+  "random_seed": 4623,
+  "reproducibility_checksum": "sha256:09b9d9eb144357d98727bda122e172eeb936a0445dd94ace6105449018dbe0e3",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_4623_adversarial_verify_hardening.json",
+  "schema": "carnot.exp4623.adversarial_verify_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4623",
+    "SCENARIO-ARC-WMTE-4623-OFFLINE-LIVE-OVERCLAIM",
+    "SCENARIO-ARC-WMTE-4623-CHEAP-VALUE-SUBSTRATE"
+  ],
+  "tests_added": {
+    "assertions": [
+      "live-win claim backed only by offline AUROC emits OFFLINE_SUBSTITUTED_FOR_LIVE warn",
+      "honest offline-only AUROC result does not emit the offline/live warn",
+      "methodology-bearing 0.44s cached value-head scoring avoids DURATION_TOO_SHORT",
+      "no-methodology 0.44s cached value-head scoring still emits DURATION_TOO_SHORT"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_hardening_4623.py -q --no-cov",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_4617_graduate_spatial_value_head_live.json"
+    ],
+    "passed": true,
+    "test_files": [
+      "tests/python/test_adversarial_verify_hardening_4623.py"
+    ]
+  }
+}
