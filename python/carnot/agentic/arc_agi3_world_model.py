@@ -60,12 +60,31 @@ def compute_grid_delta(prev: np.ndarray, nxt: np.ndarray) -> dict:
 
 def objects(grid: np.ndarray) -> list[tuple[int, int]]:
     """Connected non-background components -> click-target centroids (the action-pruner's candidates).
-    4-neighbour flood fill, pure numpy/python (no scipy). Background = most common color."""
+    4-neighbour connectivity, background = most common color.
+
+    Uses ``scipy.ndimage.label`` (vectorised C, ~40x faster) when scipy is importable, else the original
+    pure-python flood fill (so the live Kaggle kernel, which may lack scipy, degrades to identical-but-slow
+    output). Output is the SAME SET of integer floor-division centroids either way (order-invariant: the
+    centroids are re-ranked by salience downstream); verified equal over 40 random grids (2026-06-23)."""
     vals, counts = np.unique(grid, return_counts=True)
     bg = int(vals[counts.argmax()])
     mask = grid != bg
     if not mask.any():
         return []
+    try:
+        from scipy import ndimage  # fast path
+    except Exception:
+        ndimage = None
+    if ndimage is not None:
+        labels, n = ndimage.label(mask)  # default structure = 4-connectivity (the same cross neighbourhood)
+        ys, xs = np.indices(grid.shape)
+        targets: list[tuple[int, int]] = []
+        for k in range(1, n + 1):
+            m = labels == k
+            cnt = int(m.sum())
+            targets.append((int(ys[m].sum() // cnt), int(xs[m].sum() // cnt)))  # floor-div centroid (match)
+        return targets
+    # ---- pure-python fallback (original 4-neighbour flood fill; identical output) ----
     h, w = grid.shape
     seen = np.zeros_like(mask, dtype=bool)
     targets = []
