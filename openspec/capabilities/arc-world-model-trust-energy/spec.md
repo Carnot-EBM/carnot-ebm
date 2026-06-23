@@ -2248,6 +2248,53 @@ diagnostic threshold, otherwise reports `inseparable_multi_cause`, records the
 corresponding indicated fix, keeps `verifier_is_oracle=false`, and emits a
 stable checksum.
 
+### REQ-ARC-WMTE-4630: Rotated Clean-Nav Self-Play Level Bank
+
+Experiment 4630 SHALL run the standing ARC self-play loop on the next eligible
+clean-navigation L1 game, with `ls20` as the preferred target. The workflow SHALL
+verify `arc_solver_kit.offline_arcade()`, inspect the ARC solve registry for
+dead-end skips, avoid the recently failed or hidden-state-bound targets `sk48`,
+`dc22`, `ka59`, and `wa30`, and deepen only a game whose registry row is a
+reproduced L1. The `ls20` deepen SHALL register a reusable `GameAdapter` that
+replays the L1 seed plus the L2 delta through `scripts/arc_loop_solve.py`, runs
+the `arc_solver_kit.reproduce()` gate, and trains/checkpoints
+`models/arc_verifier_ls20.json` from the positive steps-to-go trace and recorded
+off-path/dead-end notes.
+
+Experiment 4630 SHALL write
+`results/experiment_4630_levelup_selfplay.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`,
+`verifier_checkpoint_updated`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
+- `solve_provenance`: principle "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
+- `target_game`: principle "the rotated game attempted -- traceable to the rotation discipline (a clean-nav game not deepened in .421-.426, not sk48/dc22/ka59/wa30)."
+- `verifier_checkpoint_updated`: principle "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4630
+
+**Given** the offline ARC environment is importable, the registry records `ls20`
+as reproduced through L1 with no blocking dead-end, and the skipped targets have
+registry or rotation reasons
+**When** experiment 4630 runs `scripts/arc_loop_solve.py --game ls20
+--target-level 2`
+**Then** the loop reaches L2 through offline reproduction, updates
+`models/arc_verifier_ls20.json`, records the registry bank from total 55 to 56,
+writes the required principle-annotated artifact, and reports
+`verifier_is_oracle=false` with `solve_provenance=development_proxy`.
+
 #### SCENARIO-ARC-WMTE-4616-BLOCKED-PRECONDITION
 
 **Given** the offline arcade or value-learner imports are unavailable
