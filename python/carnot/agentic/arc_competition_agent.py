@@ -1869,8 +1869,8 @@ SUBMITTED_AGENT_CONFIG = {
     "dense_curiosity_progress_loop_enabled": False,
     "dense_curiosity_weight": 0.15,
     "dense_curiosity_discount": 0.5,
-    "live_submit_package_path": "results/experiment_4631_submission_package_operator_resubmit.json",
-    "live_submit_source": "experiment_4631_refresh_submission_package",
+    "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
+    "live_submit_source": "experiment_4643_refresh_submission_package",
     "feature_router_enabled": False,
     "explore_diversity_default": False,
     "bare_control_config": {
