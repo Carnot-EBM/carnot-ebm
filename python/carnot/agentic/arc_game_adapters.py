@@ -321,6 +321,64 @@ SK48_L2_TAIL_LABELS: tuple[str, ...] = tuple(
 
 SK48_L2_SOLUTION_LABELS: tuple[str, ...] = SK48_L1_LABELS + SK48_L2_TAIL_LABELS
 
+LS20_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(action)
+    for action in (3, 3, 3, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1)
+)
+
+LS20_L2_TAIL_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(action)
+    for action in (
+        1,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        4,
+        4,
+        2,
+        4,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        4,
+        2,
+        3,
+        3,
+        4,
+        1,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+    )
+)
+
+LS20_L2_SOLUTION_LABELS: tuple[str, ...] = LS20_L1_LABELS + LS20_L2_TAIL_LABELS
+
 CN04_L1_LABELS: tuple[str, ...] = (
     _json_action_label(2),
     _json_action_label(4),
@@ -1233,6 +1291,141 @@ def _ft09():
     )
 
 
+def _ls20():
+    """ls20 -- clean navigation plus visible shape/color/rotation target matching.
+
+    The L1 seed is the adapter-free graph-explore trajectory already in the
+    registry. L2 keeps the same four keyboard moves, but adds a step-counter
+    constraint: route to the rotation trigger three times, collect both visible
+    reset pickups before the counter expires, then enter the target with the
+    required shape/color/rotation tuple. The replay labels below are the
+    derived next-level delta and are still gated by arc_solver_kit.reproduce().
+    """
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(LS20_L1_LABELS):
+            return [LS20_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(LS20_L2_TAIL_LABELS):
+            return [LS20_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        return env.step(_game_action(GameAction, int(row["action"])))
+
+    def _target_rows(game):
+        rows = []
+        targets = list(getattr(game, "plrpelhym", []) or [])
+        shapes = list(getattr(game, "ldxlnycps", []) or [])
+        colors = list(getattr(game, "yjdexjsoa", []) or [])
+        rotations = list(getattr(game, "ehwheiwsk", []) or [])
+        consumed = list(getattr(game, "lvrnuajbl", []) or [])
+        for index, sprite in enumerate(targets):
+            rows.append(
+                (
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    int(shapes[index]) if index < len(shapes) else -1,
+                    int(colors[index]) if index < len(colors) else -1,
+                    int(rotations[index]) if index < len(rotations) else -1,
+                    bool(consumed[index]) if index < len(consumed) else False,
+                )
+            )
+        return tuple(rows)
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0)
+        player = getattr(game, "gudziatsk", None)
+        step_counter = getattr(getattr(game, "_step_counter_ui", None), "current_steps", 0)
+
+        def _visible(sprite):
+            value = getattr(sprite, "is_visible", None)
+            if callable(value):
+                return bool(value())
+            if value is not None:
+                return bool(value)
+            return bool(getattr(sprite, "visible", True))
+
+        reset_pickups = tuple(
+            sorted(
+                (
+                    str(getattr(sprite, "name", "")),
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    _visible(sprite),
+                )
+                for sprite in getattr(game, "ofoahudlo", [])
+            )
+        )
+        return (
+            int(level),
+            int(getattr(player, "x", -1)),
+            int(getattr(player, "y", -1)),
+            int(getattr(game, "fwckfzsyc", 0) or 0),
+            int(getattr(game, "hiaauhahz", 0) or 0),
+            int(getattr(game, "cklxociuu", 0) or 0),
+            _target_rows(game),
+            int(step_counter or 0),
+            int(getattr(game, "aqygnziho", 0) or 0),
+            int(getattr(game, "ebfuxzbvn", 0) or 0),
+            int(getattr(game, "akoadfsur", 0) or 0),
+            len(getattr(game, "euemavvxz", []) or []),
+            reset_pickups,
+        )
+
+    def hand_verifier(game, frame=None):
+        del frame
+        player = getattr(game, "gudziatsk", None)
+        if player is None:
+            return 1000.0
+        best = 1000.0
+        for x, y, shape, color, rotation, consumed in _target_rows(game):
+            if consumed:
+                continue
+            distance = abs(int(player.x) - x) + abs(int(player.y) - y)
+            distance += 20 * (int(getattr(game, "fwckfzsyc", 0) or 0) != shape)
+            distance += 20 * (int(getattr(game, "hiaauhahz", 0) or 0) != color)
+            current_rotation = int(getattr(game, "cklxociuu", 0) or 0)
+            distance += 8 * min(
+                (current_rotation - rotation) % 4,
+                (rotation - current_rotation) % 4,
+            )
+            best = min(best, float(distance))
+        return 0.0 if best == 1000.0 else best
+
+    def featurize(game):
+        player = getattr(game, "gudziatsk", None)
+        step_counter = getattr(getattr(game, "_step_counter_ui", None), "current_steps", 0)
+        verifier = hand_verifier(game)
+        unconsumed = sum(1 for row in _target_rows(game) if not row[-1])
+        return [
+            verifier,
+            float(getattr(player, "x", 0)),
+            float(getattr(player, "y", 0)),
+            float(getattr(game, "cklxociuu", 0) or 0),
+            float(step_counter or 0),
+            float(unconsumed),
+        ]
+
+    return GameAdapter(
+        game="ls20",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: len(LS20_L1_LABELS), 2: len(LS20_L2_TAIL_LABELS), 3: 2},
+        branch_mode="fresh_env",
+    )
+
+
 def _sk48():
     """sk48 -- chain-color reorder L1->L2 delta registered from the offline env."""
     from carnot.agentic.arc_agi3_live_adapter import _game_action
@@ -1350,6 +1543,7 @@ _BUILDERS = {
     "cn04": _cn04,
     "su15": _su15,
     "sp80": _sp80,
+    "ls20": _ls20,
     "lp85": _lp85,
     "tu93": _tu93,
     "tr87": _tr87,
