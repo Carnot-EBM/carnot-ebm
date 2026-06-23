@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Facing-aware omni validated on a 2nd charger config (tu93 L2); chargers tu93-specific in reachable set — outer-loop, ultracode)
+
+Operator: "test facing-aware omni on a second charger level." Done — the omni rule is CLEAN on a second
+charger configuration. Write-up `docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md`.
+
+- Generalized the calibration harness (`experiment_hazard_l3_calibration.py` now `--game/--target-level`):
+  reaches the charger level via the full escalation loop, then position-keyed real-env BFS → win path +
+  died/safe labels → scores omni's is_lethal (FN/FP/win-path-pruned).
+- RESULT: facing-aware omni is CLEAN (FN=0, FP=0, win-path-unpruned) on BOTH tu93 L2 (1 horizontal charger,
+  facing LEFT; 41 labels/2 deaths) and tu93 L3 (3 chargers, facing RIGHT+DOWN; 88 labels/5 deaths) — a
+  different charger COUNT, different maze LAYOUT, and 3 of 4 facing directions. So the rule (calibrated vs
+  L3) is NOT overfit to L3's layout; it transfers cleanly to L2's different config. (omni also solves L2
+  end-to-end when forced; in the live ladder L2 is taken by the cheaper toward rung.)
+- Cross-GAME scan (parallel, reproduced game set): completed batches found NO second charging-enemy game —
+  wa30/ls20/dc22/ar25/cn04 have no block that moves at a death; chargers appear tu93-specific in the
+  reachable set (most other games are click/paint/match, not nav, so the loop can't reach their charger
+  levels if any). The within-tu93 L2-vs-L3 generalization is the achievable evidence. Artifacts:
+  `experiment_hazard_l3_calibration.json` (L3) + `..._tu93_L2.json` (L2). Conductor STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (tu93 L3 SOLVED: hazard interception zone CALIBRATED against the BFS path — outer-loop, ultracode)
 
 Operator: "calibrate the static interception zone against the BFS path." Done — the escalation loop now

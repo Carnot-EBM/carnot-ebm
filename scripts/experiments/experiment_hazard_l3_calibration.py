@@ -42,7 +42,11 @@ _ha = _load("exp_haz", "experiment_hazard_aware.py")
 _loop = _load("exp_loop", "experiment_reinduction_hazard_loop.py")
 
 REPO = _here.parents[1]
-OUT = REPO / "results" / "experiment_hazard_l3_calibration.json"
+
+
+def _out(game, level):
+    suffix = "" if (game == "tu93" and level == 3) else f"_{game}_L{level}"
+    return REPO / "results" / f"experiment_hazard_l3_calibration{suffix}.json"
 
 
 def _ok(f):
@@ -59,21 +63,27 @@ def _avatar_pos(g, av_colors):
 
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--game", default="tu93")
+    ap.add_argument("--target-level", type=int, default=3, help="the charger level to BFS-calibrate at")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--max-nodes", type=int, default=80)
     args = ap.parse_args()
     t0 = time.time()
-    game, seed = "tu93", args.seed
+    game, seed = args.game, args.seed
 
-    # --- reach L3: L1 (nav) -> L2 (hazard toward); bank the L1->L2 action prefix -----------------------
-    m0, pre, cell, _ = _ri.reach_level_one(game, 120000, 80, seed=seed)
-    goal = m0.goal_color
-    tr2, _ = _ri.collect_at_level(game, pre, 150, seed=seed + 1)
-    nav = InducedNavWorldModel.fit(tr2); nav.goal_color = goal
-    nd = _ha.nav_death_transitions(nav, game, pre, cell, 120000, 80)
-    haz2 = HazardAwareNavWorldModel.fit(list(tr2) + nd, goal_color=goal, lethal_mode="toward")
-    l1l2 = _loop.execute_from(game, pre, cell, haz2, 120000, 80)["banked"]
-    av_colors = nav.avatar_colors
+    # --- reach the charger level via the full escalation loop; bank the prefix that reaches it ----------
+    deep = _loop.escalating_deepen(game, args.target_level - 1, 150, 120000, 120, seed)
+    if not deep.get("reached_L1") or deep.get("deepest_level", 0) < args.target_level - 1:
+        art = {"experiment": "experiment_hazard_l3_calibration", "game": game,
+               "honest_verdict": f"complete: could_not_reach_level_{args.target_level - 1}_to_calibrate_at_L{args.target_level}",
+               "verifier_is_oracle": False, "random_seed": seed,
+               "reached_level": deep.get("deepest_level", 0), "duration_s": round(time.time() - t0, 1)}
+        _out(game, args.target_level).write_text(json.dumps(art, indent=2))
+        print(f"VERDICT: {art['honest_verdict']}")
+        return 0
+    l1l2, cell, goal = deep["banked"], deep["cell"], deep["goal_color"]
+    nav0, _p, _c, _t = _ri.reach_level_one(game, 120000, 80, seed=seed)
+    av_colors = nav0.avatar_colors
 
     def run(actions):
         arc = kit.offline_arcade(); env = arc.make(game, scorecard_id=arc.open_scorecard()); f = _warm(env, False)
@@ -132,8 +142,8 @@ def main() -> int:
 
     n_deaths = sum(1 for _p, _a, d in labels if d)
     clean = (fn == 0 and wpp == 0 and winpath is not None)
-    verdict = ("success: omni_lethal_zone_CALIBRATED_clean_FN0_winpath_unpruned_on_tu93_L3_single_layout"
-               if clean else f"complete: calibration_not_clean_FN{fn}_winpathpruned{wpp}_inspect")
+    verdict = (f"success: facing_aware_omni_lethal_zone_CLEAN_FN0_FP0_winpath_unpruned_on_{game}_L{args.target_level}"
+               if clean else f"complete: omni_calibration_not_clean_on_{game}_L{args.target_level}_FN{fn}_winpathpruned{wpp}_inspect")
 
     art = {"experiment": "experiment_hazard_l3_calibration", "game": game, "honest_verdict": verdict,
            "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
@@ -152,10 +162,11 @@ def main() -> int:
                                 "a SINGLE static layout (seed-invariant); this validates the calibration on "
                                 "that one level, not a general hazard solver."),
            "duration_s": round(time.time() - t0, 1)}
-    OUT.write_text(json.dumps(art, indent=2))
+    out = _out(game, args.target_level)
+    out.write_text(json.dumps(art, indent=2))
     print(f"VERDICT: {verdict}")
     print(f"  BFS nodes={nodes} labels={len(labels)} deaths={n_deaths} win_path_len={art['win_path_len']}")
-    print(f"  omni: FN={fn} FP={fp} win_path_pruned={wpp} | facings={dict(facings)} -> {OUT}")
+    print(f"  omni: FN={fn} FP={fp} win_path_pruned={wpp} | facings={dict(facings)} -> {out}")
     return 0
 
 
