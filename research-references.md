@@ -1,3 +1,40 @@
+## 2026-06-23 — .426 planning sweep — CROSS THE OFFLINE→LIVE BRIDGE: the representation is SOLVED (0.725 LOO-AUROC) and the dense-gradient positive is PROVEN, but both REGRESS the live depth-first explorer; disambiguate the cause (compute / shift / calibration) and graduate the SpatialValueNet to the live path
+
+Added by the .426 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-23). The `.425` capstone
+(exp4614) closed FLAT (`pivot_characterized_capability_grew_55_to_55`, delta=0): A1 world-model trust
+energy was QUARANTINED (flagged_adversarial DURATION_TOO_SHORT 0.44s — a degenerate trivially-passing
+gate); A2 live integration (the 0.674 LINEAR verifier as tie-breaker + router) was an HONEST NULL
+(`first_win_delta=0`, solve_rate stuck 0.04); A3 dc22 deepen did NOT bank. The DECISIVE input is the
+outer-loop re-diagnosis (commit `4b7782d41`,
+`docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md`):
+
+1. **The ARC representation is NOT the bottleneck.** `cross_game_features_v3` (the LIVE features) get
+   LOO-AUROC **0.725** (CI [0.649,0.806]), not the 0.503 the .425 architecture analysis cited; the
+   frame-Δ/relational features are already implemented and already lift 0.515→0.725. "Add more features"
+   is not the lever.
+2. **The binding constraint is the OFFLINE→LIVE BRIDGE.** A 0.725 discriminator AND a 7.6x-offline
+   SpatialValueNet Q-head both REGRESS the live depth-first explorer (`value_weight` reverted 5→0;
+   `arc_offline_to_live_bridge_v2` "does not transfer to the live depth-first explorer"). Three candidate
+   causes to isolate: COMPUTE-COST (value-per-node slows bounded search), DISTRIBUTION-SHIFT (trained on
+   winning-path, applied to off-path frontier), CALIBRATION (a ranking is not an A* cost).
+
+**New SOTA references mapped onto the bridge (for the .426 Phase D ingestion → .427):**
+- **DAgger / dataset aggregation** (arXiv:1011.0686) — imitation under distribution-shift; the fix for the
+  off-path-frontier failure (train the value on the search distribution, not just winning paths).
+- **Isotonic / Platt calibration** — turn a 0.725 *ranking* into a usable A* *cost* (the calibration arm).
+- **DeepCubeA / Q* learned-heuristic A*** (arXiv:2102.04518) + **SLOPE learned pruning** (arXiv:2406.04935)
+  + **GoFAR goal-conditioned offline value** (arXiv:2206.03023) — the value-guided-search family the .425
+  ingestion already flagged for .426; here they support the graduated-value-head bridge.
+
+**The .426 build:** A1 disambiguates the bridge cause (three-arm controlled experiment); A2 graduates the
+position-preserving SpatialValueNet (4×4 pool) from `scripts/experiments/` into a LIVE-PATH-REACHABLE
+`python/carnot/agentic/` module (replacing the linear verifier that "actively misled"), applies the
+A1-diagnosed fix, and measures LIVE first-win-rate/efficiency on the SCORED E3AgentPolicy vs the linear and
+bare controls; A3 banks +1 level (55→56+). `verifier_is_oracle: false` throughout. Full design:
+`openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+---
+
 ## 2026-06-23 — .425 planning sweep — SHIP THE ONE GENUINE POSITIVE: a LEARNED VALUE (verifier-as-Q-head / SpatialValueNet) supplies the dense per-step gradient the energy-heuristic / QD / LLM-goal-induction levers all lacked (7.6x routing on clean-nav ls20); wire it into the live solver, attack the deepening gradient wall with a GOAL-CONDITIONED value, fix the TAUTOLOGY false-positive that quarantined .424's real generation win
 
 Added by the .425 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-23). The `.424` capstone
