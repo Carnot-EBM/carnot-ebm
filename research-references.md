@@ -24352,3 +24352,59 @@ held-out transfer.
 `.423 also carries the standing 2026-06-19/20 ARC priorities (GAP-LIVE-INTEGRATION wire-the-
 stronger-stack-into-the-submitted-agent = A1/A6; the feature-router = A3; diversity transfer =
 A4; self-play every milestone = A2). Full `.423 program: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+## .425 planner pre-sweep — the verifier/world-model side generalizes where generation does not (2026-06-23)
+
+The .424 capstone confirmed the generation wall a FIFTH time (re-ranking .421,
+routing .423, verifier-expansion .422, wiring .424-A1, energy-generation-prior
+.424-A3 — both .424 generation levers carried `retire_if_same_verdict` and
+nulled). The .425 pivot is to the VERIFIER / WORLD-MODEL side, anchored by the
+operator's energy-augmented graft #3 (world-model trust energy = "the one
+oracle-distinct EBM slot") and GAP-LIVE-INTEGRATION (the scored agent never
+imports the transfer-validated discriminative verifier). A focused fresh sweep
+corroborates the pivot:
+
+- **VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable
+  Diffusion (arXiv:2502.01989).** A learned ENERGY used as an intrinsic
+  verifier performs "nearly identically to a perfect continuous ground-truth
+  score verifier." Direct support for the energy-as-verifier thesis and for
+  trusting an energy ranking over a binary gate — the A1 world-model trust
+  energy.
+- **Verifiers generalize better than generators** (recurring 2025-26 finding,
+  e.g. the maze case: a learned solver trained on small grids fails to
+  generalize to larger grids, whereas a *verifier* of a maze solution transfers
+  to larger grids). The exact argument for the .425 pivot: invest in the
+  verifier/energy side (which transfers across novel games) over fighting the
+  generation wall. Underwrites A1 (trust energy) + A2 (wire the 0.674
+  discriminative verifier into the scored agent).
+- **World-in-World: World Models in a Closed-Loop World (arXiv:2510.18135)** +
+  **WMPO: World-Model-based Policy Optimization (arXiv:2511.09515)** +
+  **Grounding Generated Videos in Feasible Plans via World Models
+  (arXiv:2602.01960).** World-model generalization is the central failure mode:
+  in unseen environments models revert to training priors / ignore action
+  controls, yielding plausible-but-inconsistent rollouts that mislead planning.
+  This is precisely the 0.08-wall root cause (the degenerate full-grid-match
+  `WorldModelVerifier` either rejects every induced model OR an identity engine
+  false-passes) and the motivation to rank induced models by HELD-OUT (not
+  prefix) generalization — the A1 trust energy.
+- **Contrastive Representations for Temporal Reasoning (arXiv:2508.13113)** +
+  **Learning Representations Through Contrastive Neural Model Checking
+  (arXiv:2510.01853)** + **ConRep4CO (ICLR 2026, contrastive representation
+  learning of combinatorial-optimization instances across types).** Contrastive
+  energy over structural features as the route to cross-instance/cross-type
+  generalization — the energy-augmented graft #2 (contrastive energy verifier
+  over the cross_game_features_v3 structural features whose LOO-AUROC already
+  cleared chance at 0.674).
+- **ARC-AGI-3 (arcprize.org/arc-agi/3) + 2026 competition ($850k, $700k grand
+  prize for 100%).** Four core capabilities — exploration, WORLD MODELING,
+  goal-setting, planning; frontier <1%. The benchmark itself names
+  world-modeling-that-generalizes as the crux, which is the A1 trust-energy slot.
+
+**Bottom line for .425:** the un-tried, top-priority, oracle-distinct lever is
+the WORLD-MODEL TRUST ENERGY (fix the degenerate `WorldModelVerifier` gate that
+caps the scored agent at 0.08 by rejecting every induced model — the e3-induction
+0/6, TTT 0/5 root cause), paired with WIRING the already-transfer-validated
+discriminative verifier (LOO-AUROC 0.674) into the SCORED `E3AgentPolicy`
+(GAP-LIVE-INTEGRATION). Both are live-path improvements (per the 2026-06-22 ARC
+Live-Path Reachability Discipline), and both pivot from the exhausted generation
+side to the verifier/energy side the literature says transfers.

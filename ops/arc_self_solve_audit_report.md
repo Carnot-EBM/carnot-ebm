@@ -33,4 +33,28 @@ OK: all solver-like ARC modules are reachable from the live agent path (27 modul
 
 ## Hostile LLM review
 
-(skipped: --model none)
+## TL;DR
+
+**VERDICT: 0 of 18 demonstrate live self-discovery this window.** 3 OUTER_LOOP_RE (codex hand-authored per-game world models), 15 DUPLICATE (standing-loop reproduction-gate re-runs of already-registered levels via hand GameAdapters / generic operators). 0 OFF_PATH (reachability pre-pass clean). **Systemic contract violation: all 18 omit `solve_provenance`** — so none can be certified `live_agent_self_discovery`, and the burden is unmet by default. The genuinely new levels this period were banked by `exp45XX` deepening artifacts that are NOT in this set; what surfaced here is gate re-runs + stale codex-authored L1s.
+
+## Per-artifact
+
+| Artifact | Game/Lvl | Verdict | Evidence | Action |
+|---|---|---|---|---|
+| experiment_4350_e3…ka59 | ka59 L1 | **OUTER_LOOP_RE** | `inference_substrate=codex_direct_model_edit_offline_env_no_nested_proposer`; deliverable is a per-game `results/arc_e3/ka59/world_model.py` codex authored; live induction proposer explicitly bypassed (`no_nested_proposer`). Verifier model only 0.64 acc — solve stands on execution gate, not the inducer. | Stamp provenance honestly (`outer_loop_re`/`development_proxy`); the real test is whether the live `LocalGGUFProposer` induces this model on its own. Registry already has a generic re-solve (Exp4445) — prefer that path. |
+| experiment_4341_e3…sc25 | sc25 L1 | **OUTER_LOOP_RE + DUPLICATE** | Same `codex_direct_model_edit` substrate + `world_model.py`; name literally `_reproduction`; registry sc25 `levels_reproduced: 5` so L1 is long-banked. | Mark `development_proxy`/duplicate; don't count or headline. |
+| experiment_4339_e3…ar25 | ar25 L1 | **OUTER_LOOP_RE + DUPLICATE** | codex-edited e3 world model; registry ar25 already L2 (Exp4581). | Same as above. |
+| arc_loop_solve_tr87 | tr87 L6 | **OUTER_LOOP_RE + DUPLICATE** | Registry entry RE'd from **game source** (cites `tn36.py:2153/2171/2269` line numbers, internal field names `cifzvbcuwqe/ztgmtnnufb`); `hand_verifier reads internal state`; hand GameAdapter `_tr87`; L6 == registry depth (gate re-run). | Declare `read_game_source: true` + `outer_loop_re`; never headline. The cited line-number RE is exactly the anti-pattern. |
+| arc_loop_solve_tu93 | tu93 L3 | **DUPLICATE** | `verifier_src=hand_verifier_cold_start`, GameAdapter `_tu93`, offline twin; L3 < registry L5. | Stamp `development_proxy`; legit as gate, not new. |
+| arc_loop_solve_lp85 | lp85 L4 | **DUPLICATE** | adaptered offline twin; L4 < registry L5 (registry notes this file "remains the L4 gate"). | Same. |
+| arc_loop_solve_{cd82,sp80,su15,cn04,m0r0,ar25,ft09} | L2 each | **DUPLICATE** | Hand GameAdapter `_<game>` + `branch_mode=fresh_env`, offline twin; level == registry depth (gate re-runs). | Stamp `development_proxy`; fine as reproduction discipline, do not count as new live capability. |
+| arc_loop_solve_{r11l,ls20,dc22,vc33,lf52} | L1 each | **DUPLICATE** (healthiest provenance) | `mode=…graph_explore…`; adapter-free / generic config-rule verifier (lf52, vc33 "adapter-free"); level == registry depth. | Stamp `development_proxy`; this adapter-free/generic class is the pattern to GROW — but in-window these are gate re-runs, not new. |
+
+## Pattern watch — drift toward outer-loop solving
+
+**Confirmed drift, two heads:**
+1. **Depth is bought with hand-built per-game machinery, not live induction.** Every deep solve (tr87 L6, sc25 L5, lp85 L5, tu93 L5, tn36 L7) rests on a hand `GameAdapter` or a `codex_direct_model_edit` `world_model.py` — `development_proxy`/`outer_loop_re` by the contract. tr87/tn36 registry entries openly cite **reading game source** (line numbers, internal symbol names). On a hidden Kaggle game there is no codex to edit `world_model.py` and no source to read — so this depth does **not** transfer to the live deliverable.
+2. **`solve_provenance` is universally unstamped (18/18).** The 2026-06-22 contract requires it; its absence is precisely what lets codex-authored and source-read solves blend in with genuine discovery. Layer 1b only WARNs on undeclared, so this slid through.
+
+**The missing signal:** not one artifact shows the live `E3AgentPolicy` + `LocalGGUFProposer` inducing a model and banking a **new** level **without** a codex-authored world model or hand adapter. Until that exists, the solved-game count is a development/registry proxy, not evidence the live agent self-discovers. **Recommend:** (a) make `solve_provenance` a hard field on every solve artifact; (b) flag `codex_direct_model_edit` substrate as `outer_loop_re` by default; (c) track and report the `development_proxy : live_agent_self_discovery` ratio per milestone — right now it is effectively 18:0.
+
