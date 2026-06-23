@@ -213,15 +213,22 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
         ),
         PrimitiveOperator(
             operator="persistent_action_effect_memory_operator",
-            derived_from_games=("exp4568_clickability_action_effect_predictor",),
+            derived_from_games=(
+                "exp4568_clickability_action_effect_predictor",
+                "exp4629_graduate_action_effect_predictor_live",
+            ),
             purpose=(
                 "Rank action candidates with a leave-one-game cross-game memory of cached "
-                "frame/action effects, preserving original-order tie-breaking and reporting "
-                "actions-to-first-levelup deltas before solve claims."
+                "frame/action effects or the graduated live action-effect scorer, preserving "
+                "original-order tie-breaking and reporting actions-to-first-levelup deltas "
+                "before solve claims."
             ),
             selector_tags=(
                 "action_effect",
                 "clickability",
+                "frame_change",
+                "live_action_pruner",
+                "persistent_aem_plus_optional_cnn",
                 "candidate_ranking",
                 "graph_explore",
                 "click",
@@ -1196,21 +1203,45 @@ def env_adaptive_resolve_operator(
     }
 
 
+def _live_action_effect_score(scorer: Any, frame: Any, candidate: Any) -> float | None:
+    if scorer is None:
+        return None
+    try:
+        if hasattr(scorer, "candidate_score"):
+            return float(scorer.candidate_score(frame, candidate))
+        return float(scorer(frame, candidate))
+    except TypeError:
+        try:
+            return float(scorer(candidate))
+        except (TypeError, ValueError):
+            return None
+    except (ValueError, AttributeError):
+        return None
+
+
 def persistent_action_effect_memory_operator(
     candidates: Sequence[Any],
     *,
     memory: PersistentAEM,
+    frame: Any = None,
+    scorer: Any = None,
     target_key: str = "reaches_levelup",
 ) -> dict[str, Any]:
-    """REQ-ARC-WMTE-4573: rank cached candidates with cross-game action-effect memory."""
+    """REQ-ARC-WMTE-4573/4632: rank candidates with cross-game action-effect evidence."""
 
     rows: list[dict[str, Any]] = []
+    scorer_used = False
     for index, candidate in enumerate(candidates):
         row = dict(candidate) if isinstance(candidate, Mapping) else {"candidate": repr(candidate)}
         row["candidate_id"] = str(
             row.get("candidate_id") or _candidate_identifier(candidate, index)
         )
-        row["action_effect_score"] = float(memory.candidate_score(candidate))
+        live_score = _live_action_effect_score(scorer, frame, candidate)
+        if live_score is None:
+            row["action_effect_score"] = float(memory.candidate_score(candidate))
+        else:
+            scorer_used = True
+            row["action_effect_score"] = float(live_score)
         row["original_index"] = int(index)
         row["target"] = _candidate_reaches_levelup(candidate, target_key)
         rows.append(row)
@@ -1231,6 +1262,7 @@ def persistent_action_effect_memory_operator(
     actions_reduced = float(before - after) if before is not None and after is not None else 0.0
     return {
         "operator": "persistent_action_effect_memory_operator",
+        "score_source": "live_action_effect_scorer" if scorer_used else "persistent_aem",
         "memory": memory.as_dict(),
         "candidate_count": int(len(rows)),
         "incoming_candidates": rows,
