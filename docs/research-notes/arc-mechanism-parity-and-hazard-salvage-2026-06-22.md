@@ -77,9 +77,18 @@ This makes `arc_nav_world_model` **reachable from the live path** (`arc_loop_sol
   path, don't build a parallel solver. (b) Every ARC solver/world-model module must be reachable from a live
   entrypoint, or explicitly allow-listed.
 - **`scripts/arc_orphan_solver_lint.py`** (pre-commit `arc-orphan-solver-lint`): computes the live import
-  closure and refuses a commit that leaves a solver-like `arc_*` module orphaned. It surfaced two
-  pre-existing offline prototypes (`arc_execution_guided_world_model`, `arc_world_model_synth`) now
-  allow-listed with reasons and flagged for future review.
+  closure (absolute, relative, and function-level imports) and refuses a commit that leaves a solver-like
+  `arc_*` agentic module orphaned. After teaching it to follow relative imports, the only genuinely-orphaned
+  pre-existing prototype is `arc_execution_guided_world_model` (one reasoned allow-list entry);
+  `arc_world_model_synth` turned out to be live-reachable and needs no exemption.
+- **Layer 1b / Layer 2 (added the same session, 2nd-recurrence hardening):**
+  `adversarial_verify.check_arc_outer_loop_solve` flags the solve ARTIFACT (CRITICAL on an
+  offline-ground-truth-BFS / calibration solve — the honesty-independent catch for THIS incident's artifact,
+  which made a prose tu93-L3 solve claim with no structural solve fields — plus `outer_loop_re`,
+  outer-loop-input contradictions, and registry duplicates); `scripts/arc_self_solve_audit.py` is the
+  milestone-close hostile LLM review. See CLAUDE.md "ARC Live-Path Reachability Discipline" for the honest
+  residual (a self-contained, undeclared, mislabeled outer-loop solve of a NEW game is caught only by the
+  Layer 2 LLM, not mechanically).
 
 ## Honest scope
 

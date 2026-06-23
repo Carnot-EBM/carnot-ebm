@@ -4438,6 +4438,34 @@ def research_step(
                 except Exception as _e:
                     logger.warning("Verifier authenticity audit failed (non-fatal): %s", _e)
 
+            # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
+            # recurrence: "aggressively caught and stopped"). Hostile review that the
+            # recent ARC work made the LIVE agent better at self-discovering
+            # hidden-game solves from its OWN attempts -- NOT outer-loop RE (reading
+            # game source / offline BFS / hand-built per-game) and NOT an off-path
+            # solver. Mechanical pre-pass (reachability + provenance) always runs;
+            # the LLM hostile review is the subtle-case layer. Writes
+            # ops/arc_self_solve_audit_report.md. Never edits. Non-fatal. The
+            # commit-time HARD STOP is scripts/arc_orphan_solver_lint.py; the
+            # per-artifact catch is adversarial_verify.check_arc_outer_loop_solve.
+            if not dry_run:
+                try:
+                    logger.info("Running ARC live-agent self-solve audit...")
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "arc_self_solve_audit.py"),
+                            "--since-days", "7",
+                            # 2026-06-08 operator directive: adversarial agent on Claude Opus 4.8
+                            "--model", "claude", "--model-name", "claude-opus-4-8",
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=900,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("ARC self-solve audit failed (non-fatal): %s", _e)
+
             # Adversarial-verify completion-gate BACKSTOP (2026-05-31 operator
             # directive). The fabrication gate in _log_experiment_completion only
             # fires for artifacts that complete inside research_step. Artifacts

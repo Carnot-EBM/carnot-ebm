@@ -1,5 +1,36 @@
 # Carnot — Changelog
 
+## 2026-06-22 (AGGRESSIVE adversarial defense vs outer-loop ARC solving — the 2nd-recurrence hardening: per-artifact calibration-solve catch + milestone-close AI audit + provenance contract — outer-loop, ultracode)
+
+Operator: "Update the adversarial agent to prevent this from happening again. This is the 2nd time ... it
+needs to be aggressively caught and stopped. We want to help the LIVE agent find ways of solving hidden
+games on its own ... based on its own attempts and RE of the game." Built a 3-layer adversarial defense +
+hardened it through a hostile review. Folds into `docs/research-notes/arc-mechanism-parity-and-hazard-salvage-2026-06-22.md`
++ CLAUDE.md "ARC Live-Path Reachability Discipline".
+
+- Layer 1b (per-artifact): `adversarial_verify.check_arc_outer_loop_solve` — every ARC solve artifact must
+  declare `solve_provenance` ∈ {live_agent_self_discovery | development_proxy | outer_loop_re}. CRITICAL on
+  an OFFLINE-GROUND-TRUTH-BFS / per-game CALIBRATION solve (keyed on the experiment NAME + a game-solve
+  claim — the honesty-INDEPENDENT catch that flags THIS incident's artifact, which made a prose tu93-L3
+  solve claim with NO structural solve fields), on `outer_loop_re`, on an outer-loop-input contradiction,
+  on a registry duplicate; WARN on undeclared provenance. CRITICAL → fabrication-gate quarantine. Wired into
+  `verify_artifact`. `arc_loop_solve` now stamps provenance (dev twin → development_proxy; adapter-free
+  explore → live_agent_self_discovery).
+- Layer 2 (milestone-close AI audit): `scripts/arc_self_solve_audit.py` (wired into
+  `_run_operational_retrospective`) — mechanical pre-pass (reachability + provenance) + hostile LLM review
+  (SELF_DISCOVERY_ADVANCE | OUTER_LOOP_RE | OFF_PATH | DUPLICATE). Writes `ops/arc_self_solve_audit_report.md`.
+- Layer 1a (commit-time HARD STOP) is `scripts/arc_orphan_solver_lint.py` (prior commit).
+- ADVERSARIAL REVIEW (FIX-FIRST) applied: a hostile sub-agent proved the structural gate missed THIS
+  incident's (non-solve-shaped) artifact and the provenance stamp was gameable. Closed: added the
+  calibration-name-keyed detector (now flags the exact incident artifact + future offline-BFS-calibration
+  solves, honesty-independent), made game-id detection substring-robust, and documented the HONEST residual
+  in CLAUDE.md (a self-contained, undeclared, mislabeled outer-loop solve of a NEW game is caught only by the
+  Layer 2 LLM, not mechanically — the stamp is a contract, not a guarantee). Fixed a stale research-note
+  claim (`arc_world_model_synth` is live-reachable, not allow-listed).
+- VERIFIED: 11 new self-solve tests + adversarial-verify guard regression pass; retroactive scan of
+  results/ shows ONLY the 2 incident calibration artifacts CRITICAL (zero false positives); orphan lint green
+  (27 modules); conductor parses; audit runs clean. Conductor STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (Mechanism-parity audit: hazard world model was ORPHANED + duplicated an already-solved level; SALVAGED as a live-path move-pruner + reachability lint — outer-loop, ultracode)
 
 Operator: "Is the mechanism we use in the outer loop the same one the live agent uses to find solves?

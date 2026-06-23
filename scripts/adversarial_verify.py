@@ -282,7 +282,7 @@ def _numeric_pairs(d: dict[str, Any]) -> list[tuple[str, str, float, float]]:
     items = [(k, float(v)) for k, v in d.items() if _is_finite_number(v)]
     pairs = []
     for i, (k1, v1) in enumerate(items):
-        for k2, v2 in items[i + 1:]:
+        for k2, v2 in items[i + 1 :]:
             pairs.append((k1, k2, v1, v2))
     return pairs
 
@@ -292,8 +292,17 @@ def _is_count_field(name: str) -> bool:
     coincidence is plausible, not suspicious."""
     nl = name.lower()
     count_markers = (
-        "count", "n_", "_n", "num_", "_num", "total", "size",
-        "_index", "step", "iteration", "epoch",
+        "count",
+        "n_",
+        "_n",
+        "num_",
+        "_num",
+        "total",
+        "size",
+        "_index",
+        "step",
+        "iteration",
+        "epoch",
     )
     return any(m in nl for m in count_markers)
 
@@ -305,10 +314,28 @@ def _is_integer_value(v: float) -> bool:
 
 _IDENTIFIER_FIELDS = frozenset(
     {
-        "experiment", "experiment_id", "exp_id", "id", "run_id", "task_id",
-        "random_seed", "seed", "rng_seed", "torch_seed", "np_seed", "jax_seed",
-        "milestone", "milestone_id", "schema_version", "version",
-        "pid", "port", "gpu_id", "device_id", "rank", "world_size",
+        "experiment",
+        "experiment_id",
+        "exp_id",
+        "id",
+        "run_id",
+        "task_id",
+        "random_seed",
+        "seed",
+        "rng_seed",
+        "torch_seed",
+        "np_seed",
+        "jax_seed",
+        "milestone",
+        "milestone_id",
+        "schema_version",
+        "version",
+        "pid",
+        "port",
+        "gpu_id",
+        "device_id",
+        "rank",
+        "world_size",
     }
 )
 
@@ -386,9 +413,7 @@ def _is_verified_arithmetic_delta(k: str, v: Any, d: dict[str, Any]) -> bool:
     operands = [
         float(x)
         for kk, x in d.items()
-        if _is_finite_number(x)
-        and kk.lower() != k.lower()
-        and (stem == "" or stem in kk.lower())
+        if _is_finite_number(x) and kk.lower() != k.lower() and (stem == "" or stem in kk.lower())
     ]
     for i in range(len(operands)):
         for j in range(len(operands)):
@@ -487,9 +512,10 @@ def _is_positive_control_null_claim(d: dict[str, Any], verdict: str) -> bool:
 
 def _positive_control_failed_or_unchecked(d: dict[str, Any]) -> bool:
     """A null is informative only when the positive control and FNR check passed."""
-    return d.get("positive_control_passed") is not True or d.get(
-        "false_negative_risk_checked"
-    ) is not True
+    return (
+        d.get("positive_control_passed") is not True
+        or d.get("false_negative_risk_checked") is not True
+    )
 
 
 def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
@@ -517,10 +543,22 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
     verdict_raw = d.get("honest_verdict") or ""
     verdict = (verdict_raw if isinstance(verdict_raw, str) else "").lower()
     null_markers = (
-        "no_improvement", "does_not", "doesnt", "no_delta", "no_gain",
-        "not_beat", "no_beat", "no_effect", "refuted", "null_result",
-        "no_lift", "no_advantage", "no_benefit", "fails_to_beat",
-        "not_better", "no_headroom",
+        "no_improvement",
+        "does_not",
+        "doesnt",
+        "no_delta",
+        "no_gain",
+        "not_beat",
+        "no_beat",
+        "no_effect",
+        "refuted",
+        "null_result",
+        "no_lift",
+        "no_advantage",
+        "no_benefit",
+        "fails_to_beat",
+        "not_better",
+        "no_headroom",
     )
     is_null_claim = any(m in verdict for m in null_markers)
     if _is_positive_control_null_claim(d, verdict) and _positive_control_failed_or_unchecked(d):
@@ -547,9 +585,7 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
         kl = k.lower()
         if not _is_finite_number(v):
             continue
-        if ("flip" in kl and "count" in kl) or kl.startswith("n_changed") or (
-            "n_flips" in kl
-        ):
+        if ("flip" in kl and "count" in kl) or kl.startswith("n_changed") or ("n_flips" in kl):
             if float(v) == 0.0:
                 flags.append(
                     Flag(
@@ -572,13 +608,17 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
         if not _is_finite_number(v):
             continue
         kl = k.lower()
-        if oracle is None and any(
-            s in kl for s in ("oracle", "optimal", "upper_bound", "best_possible")
-        ) and any(s in kl for s in ("acc", "rate", "solve", "score")):
+        if (
+            oracle is None
+            and any(s in kl for s in ("oracle", "optimal", "upper_bound", "best_possible"))
+            and any(s in kl for s in ("acc", "rate", "solve", "score"))
+        ):
             oracle = float(v)
-        if baseline is None and any(
-            s in kl for s in ("self_consistency", "baseline", "majority")
-        ) and any(s in kl for s in ("acc", "rate", "solve", "score")):
+        if (
+            baseline is None
+            and any(s in kl for s in ("self_consistency", "baseline", "majority"))
+            and any(s in kl for s in ("acc", "rate", "solve", "score"))
+        ):
             baseline = float(v)
     if oracle is not None and baseline is not None and oracle <= baseline:
         flags.append(
@@ -598,8 +638,10 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
     # Signal 3: an explicit non-degeneracy / G2 gate self-reported False
     for k, v in d.items():
         kl = k.lower()
-        if isinstance(v, bool) and v is False and (
-            "non_degenerate" in kl or "g2" in kl or "headroom" in kl
+        if (
+            isinstance(v, bool)
+            and v is False
+            and ("non_degenerate" in kl or "g2" in kl or "headroom" in kl)
         ):
             flags.append(
                 Flag(
@@ -615,12 +657,27 @@ def check_false_negative_risk(d: dict[str, Any], flags: list[Flag]) -> None:
 
 
 _COMPARISON_VERDICT_MARKERS = (
-    "beats", "_vs_", "generaliz", "outperform", "superior", "wins",
-    "better_than", "_beat_", "dominates",
+    "beats",
+    "_vs_",
+    "generaliz",
+    "outperform",
+    "superior",
+    "wins",
+    "better_than",
+    "_beat_",
+    "dominates",
 )
 _TRIVIAL_BASELINE_MARKERS = (
-    "vanilla", "greedy", "random", "single", "descent", "naive", "trivial",
-    "default", "sequential", "baseline",
+    "vanilla",
+    "greedy",
+    "random",
+    "single",
+    "descent",
+    "naive",
+    "trivial",
+    "default",
+    "sequential",
+    "baseline",
 )
 
 
@@ -668,8 +725,15 @@ def check_ceiling_saturation(d: dict[str, Any], flags: list[Flag]) -> None:
         kl = k.lower()
         if not any(
             s in kl
-            for s in ("by_optimizer", "by_variant", "by_method", "by_model",
-                      "by_approach", "by_sampler", "by_solver")
+            for s in (
+                "by_optimizer",
+                "by_variant",
+                "by_method",
+                "by_model",
+                "by_approach",
+                "by_sampler",
+                "by_solver",
+            )
         ):
             continue
         nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}
@@ -677,8 +741,7 @@ def check_ceiling_saturation(d: dict[str, Any], flags: list[Flag]) -> None:
             continue
         at_ceiling = [kk for kk, vv in nums.items() if vv >= CEIL]
         trivial = [
-            kk for kk in at_ceiling
-            if any(m in kk.lower() for m in _TRIVIAL_BASELINE_MARKERS)
+            kk for kk in at_ceiling if any(m in kk.lower() for m in _TRIVIAL_BASELINE_MARKERS)
         ]
         if len(at_ceiling) >= 2 and trivial:
             flags.append(
@@ -701,9 +764,7 @@ def check_ceiling_saturation(d: dict[str, Any], flags: list[Flag]) -> None:
         if not isinstance(v, dict):
             continue
         kl = k.lower()
-        if not any(
-            s in kl for s in ("by_difficulty", "by_tier", "by_hardness", "by_level")
-        ):
+        if not any(s in kl for s in ("by_difficulty", "by_tier", "by_hardness", "by_level")):
             continue
         nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}
         if len(nums) >= 2 and min(nums.values()) >= CEIL:
@@ -761,8 +822,7 @@ def check_degenerate_separation(d: dict[str, Any], flags: list[Flag]) -> None:
         str(d.get(key, "")).lower() for key in ("honest_verdict", "experiment", "schema")
     )
     if not any(
-        marker in verdict
-        for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")
+        marker in verdict for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")
     ):
         return
 
@@ -840,9 +900,8 @@ def _documented_identical_controls(d: dict[str, Any]) -> bool:
             return True
         if isinstance(value, str):
             vl = value.lower()
-            if (
-                ("deliberately identical" in vl or "intentionally identical" in vl)
-                and ("control" in vl or "arm" in vl or "placebo" in vl)
+            if ("deliberately identical" in vl or "intentionally identical" in vl) and (
+                "control" in vl or "arm" in vl or "placebo" in vl
             ):
                 return True
     return False
@@ -918,16 +977,28 @@ def check_degenerate_controls(d: dict[str, Any], flags: list[Flag]) -> None:
 # would never self-label as a null, so requiring one of these is the load-bearing safety condition
 # for the control-vs-treatment carve-out below.
 _HONEST_NULL_VERDICT_TOKENS = (
-    "honest_null", "no_value_added", "no_lever_raises", "no_value", "no_improvement",
-    "no_metric_moved", "no_delta",
+    "honest_null",
+    "no_value_added",
+    "no_lever_raises",
+    "no_value",
+    "no_improvement",
+    "no_metric_moved",
+    "no_delta",
 )
 # Qualifier tokens that mark a metric key as one ARM of a control/treatment ablation (X_baseline vs
 # X_with_verifier vs X_integrated). A pair where at least one side carries one of these, in an artifact
 # that declares an honest null, is an EXPECTED ablation equality (the treatment changed nothing) — not
 # a coincidence between two distinct measurements.
 _CONTROL_TREATMENT_QUALIFIERS = (
-    "_baseline_reference", "_baseline", "_with_verifier", "_integrated", "_random_router",
-    "_control", "_treatment", "_reference", "_ablation",
+    "_baseline_reference",
+    "_baseline",
+    "_with_verifier",
+    "_integrated",
+    "_random_router",
+    "_control",
+    "_treatment",
+    "_reference",
+    "_ablation",
 )
 _DELTA_COVERAGE_STOP_TOKENS = frozenset(
     {
@@ -961,9 +1032,7 @@ def _has_control_treatment_qualifier(k: str) -> bool:
 
 
 def _is_explicit_zero(value: Any) -> bool:
-    return _is_finite_number(value) and math.isclose(
-        float(value), 0.0, rel_tol=0.0, abs_tol=1e-12
-    )
+    return _is_finite_number(value) and math.isclose(float(value), 0.0, rel_tol=0.0, abs_tol=1e-12)
 
 
 def _passing_positive_control_key(d: dict[str, Any]) -> str | None:
@@ -1052,8 +1121,10 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # Origin: exp4556 (HEADLINE generic_transfer null) + exp4560 (integration gate null) were
         # spuriously quarantined ~8x across .420/.421, excluding the project's two most important ARC
         # measurements from capstone aggregation. Mirrors the _is_identifier_field carve-out above.
-        if declared_null_delta is None and _is_declared_honest_null(d) and (
-            _has_control_treatment_qualifier(k1) or _has_control_treatment_qualifier(k2)
+        if (
+            declared_null_delta is None
+            and _is_declared_honest_null(d)
+            and (_has_control_treatment_qualifier(k1) or _has_control_treatment_qualifier(k2))
         ):
             continue
         # Skip count-coincidence pairs: both names imply counts AND
@@ -1068,12 +1139,7 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
             continue
         # Skip integer-value pairs entirely if either value is small
         # — small integer coincidence is uninformative.
-        if (
-            _is_integer_value(v1)
-            and _is_integer_value(v2)
-            and abs(v1) < 100
-            and abs(v2) < 100
-        ):
+        if _is_integer_value(v1) and _is_integer_value(v2) and abs(v1) < 100 and abs(v2) < 100:
             continue
         if _significant_digits_match(v1, v2, TAUTOLOGY_DIGITS):
             if declared_null_delta is not None:
@@ -1104,9 +1170,11 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
             # winner_generated 1/25->2/25 positive) was quarantined by 11
             # TAUTOLOGY flags, ~all the 0.04 baseline/delta arithmetic cascade
             # (baseline=0.04=1/25, treatment=0.08=2/25, delta=0.08-0.04=0.04).
-            if _is_structural_nonmeasurement(k1, v1, d) and _is_structural_nonmeasurement(
-                k2, v2, d
-            ) and declared_null_delta is None:
+            if (
+                _is_structural_nonmeasurement(k1, v1, d)
+                and _is_structural_nonmeasurement(k2, v2, d)
+                and declared_null_delta is None
+            ):
                 flags.append(
                     Flag(
                         kind="TAUTOLOGY",
@@ -1147,10 +1215,8 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
     # legitimately matches when convergence is reached. Allow.
     paired_prefixes = (("initial_", "final_"), ("baseline_", "best_"))
     for a, b in paired_prefixes:
-        if (k1.startswith(a) and k2.startswith(b)) or (
-            k1.startswith(b) and k2.startswith(a)
-        ):
-            if k1[len(a):] == k2[len(b):] or k1[len(b):] == k2[len(a):]:
+        if (k1.startswith(a) and k2.startswith(b)) or (k1.startswith(b) and k2.startswith(a)):
+            if k1[len(a) :] == k2[len(b) :] or k1[len(b) :] == k2[len(a) :]:
                 return True
     # Two same-type metrics of the same family coinciding is a legitimate
     # research outcome, not a bug. The canonical case is an ablation /
@@ -1184,11 +1250,22 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
 def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect implausibly perfect metrics (TPR/acc=1.0, error=0.0)."""
     perfect_score_fields = (
-        "tpr", "accuracy", "auroc", "f1", "precision", "recall",
-        "pass_rate", "success_rate", "agreement_rate",
+        "tpr",
+        "accuracy",
+        "auroc",
+        "f1",
+        "precision",
+        "recall",
+        "pass_rate",
+        "success_rate",
+        "agreement_rate",
     )
     perfect_error_fields = (
-        "error", "loss", "delta", "divergence", "violations",
+        "error",
+        "loss",
+        "delta",
+        "divergence",
+        "violations",
     )
 
     for k, v in d.items():
@@ -1222,10 +1299,7 @@ def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
                     Flag(
                         kind="IMPLAUSIBLE_PERFECT",
                         severity="info",
-                        detail=(
-                            f"{k}={vf} (exactly zero). Confirm this is "
-                            f"not a stub default."
-                        ),
+                        detail=(f"{k}={vf} (exactly zero). Confirm this is not a stub default."),
                     )
                 )
 
@@ -1234,21 +1308,19 @@ def check_sign_anomaly(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect optimization that went the wrong direction."""
     init_keys = [k for k in d if k.startswith("initial_") and _is_finite_number(d[k])]
     for ik in init_keys:
-        fk = "final_" + ik[len("initial_"):]
+        fk = "final_" + ik[len("initial_") :]
         if fk not in d or not _is_finite_number(d[fk]):
             continue
         iv = float(d[ik])
         fv = float(d[fk])
-        metric_name = ik[len("initial_"):]
+        metric_name = ik[len("initial_") :]
         # Energy / loss / error should DECREASE during optimization.
         decrease_expected = any(
-            m in metric_name.lower()
-            for m in ("energy", "loss", "error", "violation", "regret")
+            m in metric_name.lower() for m in ("energy", "loss", "error", "violation", "regret")
         )
         # Accuracy / reward / score should INCREASE.
         increase_expected = any(
-            m in metric_name.lower()
-            for m in ("accuracy", "reward", "score", "lift")
+            m in metric_name.lower() for m in ("accuracy", "reward", "score", "lift")
         )
 
         if decrease_expected and fv > iv:
@@ -1404,8 +1476,7 @@ def offline_arc_methodology_descriptor(d: dict[str, Any]) -> dict[str, Any] | No
         return None
 
     evidence_fields = [
-        key for key in OFFLINE_ARC_METHOD_DESCRIPTOR_KEYS
-        if _descriptor_key_present(d, key)
+        key for key in OFFLINE_ARC_METHOD_DESCRIPTOR_KEYS if _descriptor_key_present(d, key)
     ]
     if not evidence_fields or not d.get("reproducibility_checksum"):
         return None
@@ -1414,14 +1485,11 @@ def offline_arc_methodology_descriptor(d: dict[str, Any]) -> dict[str, Any] | No
     return {
         "kind": "offline_arc_methodology_descriptor",
         "substrate": (
-            VERIFIER_SCORING_SUBSTRATE
-            if _is_verifier_scoring_only(d)
-            else AGGREGATION_SUBSTRATE
+            VERIFIER_SCORING_SUBSTRATE if _is_verifier_scoring_only(d) else AGGREGATION_SUBSTRATE
         ),
         "evidence_fields": evidence_with_checksum,
         "reason": (
-            "offline ARC solver/reproduce/checkpoint methodology; no live model_specs "
-            "required"
+            "offline ARC solver/reproduce/checkpoint methodology; no live model_specs required"
         ),
     }
 
@@ -1632,9 +1700,7 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # check would be a category error.
     if _is_aggregation_only(d):
         return
-    has_model_spec = (
-        d.get("model_specs") or d.get("target_model") or d.get("models_tested")
-    )
+    has_model_spec = d.get("model_specs") or d.get("target_model") or d.get("models_tested")
     # Recognize singular (`random_seed`, `seed`) and plural
     # (`random_seeds_used`, `seeds`) forms. Multi-seed experiments
     # legitimately use the plural list-of-seeds form.
@@ -1690,9 +1756,14 @@ def check_implausible_tight_ci(d: dict[str, Any], flags: list[Flag]) -> None:
     # Look for fields named *_bootstrap_ci_95, *_ci, *_confidence_interval
     # whose value is a 2-element list [lower, upper].
     ci_field_suffixes = (
-        "_bootstrap_ci_95", "_bootstrap_ci_90", "_bootstrap_ci",
-        "_ci_95", "_ci_90", "_ci",
-        "_confidence_interval", "_credible_interval",
+        "_bootstrap_ci_95",
+        "_bootstrap_ci_90",
+        "_bootstrap_ci",
+        "_ci_95",
+        "_ci_90",
+        "_ci",
+        "_confidence_interval",
+        "_credible_interval",
     )
 
     n_seeds_raw = d.get("n_seeds") or d.get("seeds") or 0
@@ -1741,9 +1812,7 @@ def check_implausible_tight_ci(d: dict[str, Any], flags: list[Flag]) -> None:
         if midpoint < 0.01:
             continue
         if ci_width < flagging_threshold:
-            n_seeds_msg = (
-                f"n_seeds={n_seeds}" if n_seeds > 0 else "n_seeds unknown"
-            )
+            n_seeds_msg = f"n_seeds={n_seeds}" if n_seeds > 0 else "n_seeds unknown"
             flags.append(
                 Flag(
                     kind="IMPLAUSIBLE_TIGHT_CI",
@@ -1753,7 +1822,7 @@ def check_implausible_tight_ci(d: dict[str, Any], flags: list[Flag]) -> None:
                         f"{midpoint:.3g} ({n_seeds_msg}). Sample-variance "
                         f"floor at sigma>=0.05 and N>={n_seeds_for_floor} "
                         f"is ~{floor_full_width:.2g}; observed CI is "
-                        f"{floor_full_width/max(ci_width,1e-12):.0f}x tighter. "
+                        f"{floor_full_width / max(ci_width, 1e-12):.0f}x tighter. "
                         f"Likely deterministic-by-construction (should be "
                         f"disclosed in methodology_note) OR bootstrap bug "
                         f"(e.g., one seed reshuffled instead of N independent "
@@ -1883,6 +1952,229 @@ def check_circular_moat_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
         )
 
 
+# --- ARC live-agent self-solve discipline (2026-06-22, operator-directed; 2nd recurrence) ------------
+_ARC_OUTER_LOOP_INPUT_FLAGS = (
+    "used_env_source",
+    "read_game_source",
+    "offline_ground_truth_bfs",
+    "exhaustive_bfs_calibration",
+    "hand_calibrated_per_game",
+)
+_ARC_VALID_PROVENANCE = {"live_agent_self_discovery", "development_proxy", "outer_loop_re"}
+
+
+def _arc_claimed_level(d: dict[str, Any]) -> int | None:
+    best: int | None = None
+    for k in ("reproduced_levels", "reached_level", "levels_completed"):
+        v = d.get(k)
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            best = max(best if best is not None else 0, int(v))
+    return best
+
+
+def _is_arc_solve_claim(d: dict[str, Any]) -> bool:
+    """Narrowly: an artifact claiming the agent SOLVED a hidden-game level -- offline_reproduced True AND
+    a numeric level >= 1 AND a game id. Verifier-eval / oracle-distinct / aggregator ARC artifacts do
+    NOT have this shape, so this check leaves them untouched (no retroactive blast radius)."""
+    if d.get("offline_reproduced") is not True or not isinstance(d.get("game"), str):
+        return False
+    lvl = _arc_claimed_level(d)
+    return lvl is not None and lvl >= 1
+
+
+def _arc_registry_level(game: str) -> int | None:
+    """Best-effort: the levels_reproduced the registry already records for `game` (None if unknown)."""
+    try:
+        import yaml  # optional; if unavailable, the duplication sub-check is simply skipped
+
+        root = Path(__file__).resolve().parents[1]
+        reg = yaml.safe_load((root / "ops" / "arc_solve_registry.yaml").read_text())
+    except Exception:
+        return None
+    entries = (
+        reg if isinstance(reg, list) else (reg.get("games") if isinstance(reg, dict) else None)
+    )
+    if not isinstance(entries, list):
+        return None
+    best: int | None = None
+    for e in entries:
+        if isinstance(e, dict) and e.get("game") == game:
+            lv = e.get("levels_reproduced")
+            if isinstance(lv, (int, float)) and not isinstance(lv, bool):
+                best = max(best if best is not None else 0, int(lv))
+    return best
+
+
+# The outer-loop OFFLINE-GROUND-TRUTH calibration signature, keyed on the experiment NAME (not prose, so an
+# honest artifact whose methodology says "NO offline BFS" is not false-flagged). This is the exact pattern of
+# the 2nd recurrence: experiment_hazard_l3_calibration ran an exhaustive position-keyed real-env BFS to label
+# ground-truth (state, action, died) and hand-fit a model's lethal zone -- RE the live agent cannot run on a
+# hidden game (no exhaustive budget, no oracle). It is NOT a live solve regardless of structural shape.
+_ARC_CALIBRATION_NAME_RE = re.compile(
+    r"calibrat|ground[_-]?truth|exhaustive[_-]?bfs|position[_-]?keyed[_-]?bfs|bfs[_-]?ground",
+    re.IGNORECASE,
+)
+_ARC_GAME_SOLVE_CLAIM_RE = re.compile(
+    r"winpath|win[_-]?path|lethal|solv|\bl[1-9]\b|level[_-]?up", re.IGNORECASE
+)
+
+
+# Known ARC-AGI-3 game ids (distinctive 4-char tokens). Substring-matched (not \b-bounded) so a verdict
+# like "..._on_tu93_L3" -- where the id is wedged between underscores -- is still recognized as ARC.
+_ARC_GAME_IDS = (
+    "tu93",
+    "lp85",
+    "sc25",
+    "ka59",
+    "ls20",
+    "r11l",
+    "dc22",
+    "tr87",
+    "vc33",
+    "ar25",
+    "cn04",
+    "cd82",
+    "ft09",
+    "m0r0",
+    "sp80",
+    "su15",
+    "wa30",
+    "re86",
+    "sb26",
+    "bp35",
+    "lf52",
+    "tn36",
+)
+
+
+def _is_arc_artifact(d: dict[str, Any]) -> bool:
+    text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')} {d.get('mode', '')}".lower()
+    return isinstance(d.get("game"), str) or "arc" in text or any(g in text for g in _ARC_GAME_IDS)
+
+
+def _is_arc_outer_loop_calibration_solve(d: dict[str, Any]) -> bool:
+    """An ARC artifact that derives a game solve via an OFFLINE-GROUND-TRUTH BFS / per-game calibration --
+    detected from the experiment NAME signature OR a declared outer-loop input flag -- AND makes a game
+    solve/level claim. This catches the prose-only solve claim the structural _is_arc_solve_claim misses
+    (the 2nd-recurrence incident artifact). False-positive-guarded: keyed on the experiment NAME (not the
+    methodology prose) so an honest 'no offline BFS' note does not trip it."""
+    if not _is_arc_artifact(d):
+        return False
+    name = str(d.get("experiment", ""))
+    sig = bool(_ARC_CALIBRATION_NAME_RE.search(name)) or any(
+        d.get(k) is True for k in _ARC_OUTER_LOOP_INPUT_FLAGS
+    )
+    if not sig:
+        return False
+    claim_text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')}"
+    return bool(_ARC_GAME_SOLVE_CLAIM_RE.search(claim_text))
+
+
+def check_arc_outer_loop_solve(d: dict[str, Any], flags: list[Flag]) -> None:
+    """ARC live-agent self-solve discipline (2026-06-22, operator-directed; 2nd recurrence).
+
+    The ARC-AGI-3 deliverable is a LIVE agent that DISCOVERS solves to HIDDEN games on its own -- from
+    its OWN attempts + runtime RE -- NOT a human/outer-loop reverse-engineering the game (reading its
+    source, running an exhaustive offline ground-truth BFS, hand-calibrating a per-game model) and NOT a
+    parallel solver the live agent cannot reach. Twice an outer-loop session has built an off-path solver
+    and "solved" a game the live agent already solved. This is the artifact-side catch (the orphan-solver
+    lint is the commit-time HARD STOP; the milestone-close arc_self_solve_audit is the AI layer). An ARC
+    solve artifact must declare HOW the solve was produced; outer-loop / off-path / duplicate solves are
+    flagged. CRITICAL sub-checks only fire once provenance is DECLARED, so artifacts predating the
+    contract get at most a WARN (no retroactive quarantine). See CLAUDE.md "ARC Live-Path Reachability
+    Discipline" + "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent".
+    """
+    # Catch the offline-ground-truth-BFS / per-game CALIBRATION solve FIRST -- it makes a solve claim in
+    # PROSE without the structural offline_reproduced+game+level shape (the 2nd-recurrence incident artifact
+    # slipped through the structural gate). This fires regardless of provenance unless explicitly labeled
+    # outer_loop_re (where the outer_loop_re CRITICAL below already fires).
+    if _is_arc_outer_loop_calibration_solve(d) and d.get("solve_provenance") != "outer_loop_re":
+        flags.append(
+            Flag(
+                kind="ARC_OUTER_LOOP_SOLVE",
+                severity="critical",
+                detail=(
+                    "ARC game-solve derived via an OFFLINE-GROUND-TRUTH BFS / per-game calibration (the "
+                    "experiment name / declared inputs show it). The LIVE agent CANNOT run an exhaustive "
+                    "real-env ground-truth BFS on a HIDDEN game (no oracle, no exhaustive action budget), "
+                    "so this is outer-loop RE, NOT a live-agent solve. Set solve_provenance=outer_loop_re "
+                    "and do not headline it as solving the game; wire a live-runnable mechanism instead."
+                ),
+            )
+        )
+
+    if not _is_arc_solve_claim(d):
+        return
+    prov = d.get("solve_provenance")
+    if prov is None:
+        flags.append(
+            Flag(
+                kind="ARC_OUTER_LOOP_SOLVE",
+                severity="warn",
+                detail=(
+                    "ARC solve artifact does not declare solve_provenance (live_agent_self_discovery | "
+                    "development_proxy | outer_loop_re). The deliverable is the LIVE agent self-discovering "
+                    "hidden-game solves from its OWN attempts + runtime RE; undeclared provenance hides "
+                    "outer-loop / off-path RE. Declare solve_provenance."
+                ),
+            )
+        )
+        return
+    if prov not in _ARC_VALID_PROVENANCE:
+        flags.append(
+            Flag(
+                kind="ARC_OUTER_LOOP_SOLVE",
+                severity="critical",
+                detail=f"Unknown solve_provenance {prov!r}; must be one of {sorted(_ARC_VALID_PROVENANCE)}.",
+            )
+        )
+        return
+    if prov == "outer_loop_re":
+        flags.append(
+            Flag(
+                kind="ARC_OUTER_LOOP_SOLVE",
+                severity="critical",
+                detail=(
+                    "solve_provenance=outer_loop_re: a human/outer-loop hand-RE or off-path solve is NOT "
+                    "the deliverable and does NOT count as the live agent solving the game. The live agent "
+                    "must generate the solve from its OWN attempts + runtime RE (reachable from "
+                    "arc_competition_agent / arc_loop_solve). Wire the capability into the live path; do "
+                    "not headline an outer-loop solve."
+                ),
+            )
+        )
+    bad = [k for k in _ARC_OUTER_LOOP_INPUT_FLAGS if d.get(k) is True]
+    if bad and prov != "outer_loop_re":
+        flags.append(
+            Flag(
+                kind="ARC_OUTER_LOOP_SOLVE",
+                severity="critical",
+                detail=(
+                    f"solve_provenance={prov} but the artifact declares outer-loop-only inputs {bad}: "
+                    "reading the game source / running an offline exhaustive ground-truth BFS / "
+                    "hand-calibrating per game is RE the live agent CANNOT do on a HIDDEN game. Either set "
+                    "solve_provenance=outer_loop_re (and do not headline) or remove the dependency."
+                ),
+            )
+        )
+    if prov != "development_proxy":
+        lvl = _arc_claimed_level(d)
+        reg = _arc_registry_level(str(d.get("game")))
+        if lvl is not None and reg is not None and lvl <= reg:
+            flags.append(
+                Flag(
+                    kind="ARC_OUTER_LOOP_SOLVE",
+                    severity="critical",
+                    detail=(
+                        f"Re-solves {d.get('game')} L{lvl} but the registry already records "
+                        f"levels_reproduced={reg} for it -- no NEW live capability. A milestone must "
+                        "ADVANCE the live agent (a new level / a new game / a reusable method), not "
+                        "re-derive an already-solved level (CLAUDE.md ARC Incremental-Progress Scoping)."
+                    ),
+                )
+            )
+
+
 def verify_artifact(path: Path) -> dict[str, Any]:
     """Run all checks on a single artifact. Return a report dict."""
     try:
@@ -1965,6 +2257,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
+    check_arc_outer_loop_solve(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
     verdict = verdict_raw if isinstance(verdict_raw, str) else ""
@@ -1975,16 +2268,12 @@ def verify_artifact(path: Path) -> dict[str, Any]:
         "title": title[:80],
         "honest_verdict": verdict[:80],
         "flag_count": len(flags),
-        "max_severity": max(
-            (Flag.SEVERITY_RANK[f.severity] for f in flags), default=-1
-        ),
+        "max_severity": max((Flag.SEVERITY_RANK[f.severity] for f in flags), default=-1),
         "flags": [f.to_dict() for f in flags],
     }
 
 
-def sweep_milestone_range(
-    results_dir: Path, low: int, high: int
-) -> list[dict[str, Any]]:
+def sweep_milestone_range(results_dir: Path, low: int, high: int) -> list[dict[str, Any]]:
     """Verify all experiment_NNNN_*.json files where low <= NNNN <= high."""
     reports = []
     pattern = re.compile(r"experiment_(\d+)_.*\.json$")
@@ -2061,21 +2350,14 @@ def backfill_stamps(
             rep = verify_artifact(p)
         except Exception:
             continue
-        crit = [
-            f for f in rep.get("flags", [])
-            if str(f.get("severity", "")).lower() == "critical"
-        ]
+        crit = [f for f in rep.get("flags", []) if str(f.get("severity", "")).lower() == "critical"]
         if kinds_filter is not None:
             crit = [f for f in crit if f.get("kind") in kinds_filter]
         # Precision guard: DURATION_TOO_SHORT only counts when the artifact
         # affirmatively claims a live model run. Otherwise an aggregation/audit
         # artifact that merely references compute markers in prose would be
         # mislabeled (the operator's explicit false-positive concern).
-        crit = [
-            f
-            for f in crit
-            if f.get("kind") != "DURATION_TOO_SHORT" or _claims_live_model(d)
-        ]
+        crit = [f for f in crit if f.get("kind") != "DURATION_TOO_SHORT" or _claims_live_model(d)]
         if not crit:
             continue
         kinds = sorted({str(f.get("kind")) for f in crit})
@@ -2179,9 +2461,7 @@ def main(argv: list[str]) -> int:  # pragma: no cover
     else:
         print(f"Scanned {len(reports)} artifact(s); {len(flagged)} flagged.\n")
         for r in flagged:
-            sev_label = {2: "CRITICAL", 1: "WARN", 0: "INFO"}.get(
-                r.get("max_severity", -1), "?"
-            )
+            sev_label = {2: "CRITICAL", 1: "WARN", 0: "INFO"}.get(r.get("max_severity", -1), "?")
             print(
                 f"[{sev_label}] exp{r.get('exp_id')} ({r.get('title')}) -- "
                 f"{r.get('flag_count')} flag(s)"

@@ -3214,28 +3214,85 @@ now reachable from `arc_loop_solve` (so the lint passes). The natural next step
 is to feed the same pruner / `HazardAwareNavWorldModel.engine` into the SCORED
 `E3AgentPolicy.plan_in_model` path.
 
-**Mechanical enforcement.** `scripts/arc_orphan_solver_lint.py` (pre-commit hook
-`arc-orphan-solver-lint`, runs on any `python/carnot/agentic/arc_*.py` or
-`scripts/arc_loop_solve.py` change) computes the live import closure and refuses
-the commit if a solver-like module is orphaned. The allow-list (currently
-`arc_execution_guided_world_model`, `arc_world_model_synth` — pre-existing
-offline prototypes) is small and reasoned; adding to it is an assertion that the
-orphan is deliberate.
+**Self-solve provenance contract (2026-06-22, the 2nd-recurrence hardening).** The
+deeper principle the operator restated: *"We want to help the LIVE agent find ways
+of solving hidden games on its own — it needs to generate solves on its own and
+solve the hidden game levels based on its OWN attempts and RE of the game."* So an
+outer-loop session reverse-engineering a game (reading its source, running an
+exhaustive offline ground-truth BFS, hand-building a per-game model/adapter) and
+"solving" it is the ANTI-PATTERN even when the code is clean — that work does not
+make the LIVE agent better at self-discovery. Every ARC solve artifact (any
+artifact with `offline_reproduced: true` + a `game` + a level ≥ 1) MUST declare
+`solve_provenance`:
+
+| value | meaning | eligibility |
+|---|---|---|
+| `live_agent_self_discovery` | the live agent advanced via its OWN attempts + runtime RE (adapter-free explore/induce, or the scored E3 cascade) | headline / credit-eligible |
+| `development_proxy` | the offline dev twin (`arc_loop_solve` + a hand-registered `GameAdapter`) — a dev/registry proxy | allowed, but NOT proof the live agent self-discovers |
+| `outer_loop_re` | a human/outer-loop hand-RE or off-path solve | NOT the deliverable; flagged CRITICAL; never headline |
+
+Declaring outer-loop-only inputs (`used_env_source`, `read_game_source`,
+`offline_ground_truth_bfs`, `exhaustive_bfs_calibration`, `hand_calibrated_per_game`)
+on a non-`outer_loop_re` solve is a CRITICAL contradiction. Re-solving a level the
+registry already records is a CRITICAL duplicate.
+
+**Three-layer adversarial defense (aggressive — shipped 2026-06-22).**
+- **Layer 1a — commit-time HARD STOP:** `scripts/arc_orphan_solver_lint.py`
+  (pre-commit `arc-orphan-solver-lint`, on any `python/carnot/agentic/arc_*.py` or
+  `scripts/arc_loop_solve.py` change) computes the live import closure (absolute,
+  relative, and function-level imports) and refuses the commit if a solver-like
+  module under `python/carnot/agentic/` is orphaned. Allow-list is one reasoned
+  entry (`arc_execution_guided_world_model`). *Scope:* it scans agentic *modules*
+  — a self-contained solver written entirely under `scripts/experiments/` is NOT
+  scanned here; its solve ARTIFACT is what Layer 1b catches (below).
+- **Layer 1b — per-artifact mechanical:**
+  `adversarial_verify.check_arc_outer_loop_solve` flags ARC solve artifacts:
+  CRITICAL on an offline-ground-truth-BFS / per-game CALIBRATION solve (keyed on
+  the experiment NAME + a game-solve claim — this is the honesty-INDEPENDENT catch
+  for the 2nd-recurrence incident, which made a prose tu93-L3 solve claim with no
+  structural solve fields); CRITICAL on `outer_loop_re`, an outer-loop-input
+  contradiction, or a registry duplicate; WARN on undeclared `solve_provenance`.
+  CRITICAL → `flagged_adversarial` (the fabrication gate quarantines it, so an
+  outer-loop "solve" never logs a clean milestone success).
+- **Layer 2 — milestone-close AI audit:** `scripts/arc_self_solve_audit.py`
+  (wired into `_run_operational_retrospective`) — a mechanical pre-pass
+  (reachability + provenance) plus a hostile LLM review asking, per recent ARC
+  solve artifact, `SELF_DISCOVERY_ADVANCE | OUTER_LOOP_RE | OFF_PATH | DUPLICATE |
+  UNCLEAR`. Writes `ops/arc_self_solve_audit_report.md`; never edits.
+- **Layer 3 — this CLAUDE.md rule** (design-time contract the planner reads).
+
+**Residual (honest — not a closed system).** The mechanical layers are strongest
+against (i) off-path agentic solver *modules* (Layer 1a) and (ii) the
+offline-calibration / declared-outer-loop / duplicate solve *artifact* (Layer 1b,
+honesty-independent for the calibration class). They are WEAKER against a
+determined/careless session that writes a self-contained solver under
+`scripts/experiments/`, does NOT name its experiment `*calibration*`, declares no
+outer-loop input flags, and stamps `solve_provenance: live_agent_self_discovery`
+on a brand-new game — that case is caught only by Layer 2's hostile LLM review (and
+by an alert human reading the report), not mechanically. So: the provenance stamp
+is a contract, not a guarantee; do not treat a green Layer 1 as proof the live
+agent self-discovered a solve. When in doubt, the question is always "could the
+LIVE agent reproduce this on a hidden game from its own attempts?" — if no, it does
+not count, whatever the stamp says.
 
 **How to apply (planner + agent).** When a roadmap proposes ARC solve work:
-register the per-game knowledge as a `GameAdapter` and run it through
-`arc_loop_solve` (and ultimately `E3AgentPolicy`), not as a standalone
-experiment that the live agent never imports. Before proposing a "solve game X"
-task, confirm via the registry that X is not already solved at the target level.
+(1) register the per-game knowledge as a `GameAdapter` / feed it into the live
+`E3AgentPolicy` path — NOT a standalone experiment the live agent never imports;
+(2) before proposing "solve game X", confirm via the registry that X is not
+already solved at the target level; (3) add `solve_provenance` to the task's
+REQUIRED ARTIFACT FIELDS, and prefer `live_agent_self_discovery` work (the agent's
+own attempts + runtime RE) over outer-loop RE. Outer-loop RE that the live agent
+cannot reproduce on a hidden game is not progress toward the deliverable.
 
 **Cross-references:**
-- 2026-06-22 operator directive — origin
-- workflow `arc-mechanism-parity-audit` (this session) — the parity audit
-- `scripts/arc_orphan_solver_lint.py` + `.pre-commit-config.yaml:arc-orphan-solver-lint` — the lint
+- 2026-06-22 operator directives — origin (parity audit + "aggressively caught and stopped")
+- workflow `arc-mechanism-parity-audit` — the parity audit
+- `scripts/arc_orphan_solver_lint.py` + `.pre-commit-config.yaml:arc-orphan-solver-lint` — Layer 1a
+- `scripts/adversarial_verify.py:check_arc_outer_loop_solve` — Layer 1b (per-artifact)
+- `scripts/arc_self_solve_audit.py` + `ops/arc_self_solve_audit_report.md` — Layer 2 (milestone-close)
 - `python/carnot/agentic/arc_hazard_pruner.py` — the salvage (hazard as a live-path move-pruner)
-- `results/arc_hazard_prune_ab_tu93.json` — the states-expanded A/B
 - CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse Discipline" — the sibling reuse rule this sharpens
-- CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent" — the foundational framing this enforces mechanically
+- CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent" — the foundational framing this enforces
 
 ## Missing-Verifier Gap Logging (MANDATORY)
 
