@@ -433,6 +433,100 @@ def _is_structural_nonmeasurement(k: str, v: Any, d: dict[str, Any]) -> bool:
     return _is_reference_field(k) or _is_verified_arithmetic_delta(k, v, d)
 
 
+_SMALL_SHARED_DENOMINATOR_MAX = 100
+_RATE_METRIC_MARKERS = (
+    "rate",
+    "fraction",
+    "first_win",
+    "transfer",
+    "winner_generated",
+)
+_DENOMINATOR_KEY_MARKERS = (
+    "denominator",
+    "variant_attempts_count",
+    "winner_generated_attempted_count",
+    "variant_count",
+    "n_variants",
+    "total_variants",
+)
+
+
+def _is_rate_metric_field(k: str) -> bool:
+    """True for small-sample k/N ARC rate fields, not arbitrary floats."""
+    kl = k.lower()
+    return (
+        kl.endswith(("_rate", "_fraction"))
+        or "_rate_" in kl
+        or "_fraction_" in kl
+        or any(marker in kl for marker in _RATE_METRIC_MARKERS[2:])
+    )
+
+
+def _add_variant_denominators_from_value(
+    key: str,
+    value: Any,
+    out: set[int],
+) -> None:
+    """Collect explicit small variant denominators from counts or list lengths."""
+    kl = key.lower()
+    if _is_finite_number(value) and any(marker in kl for marker in _DENOMINATOR_KEY_MARKERS):
+        n = int(float(value))
+        if 1 < n <= _SMALL_SHARED_DENOMINATOR_MAX and float(value).is_integer():
+            out.add(n)
+        return
+    if isinstance(value, list):
+        if "variant" in kl and 1 < len(value) <= _SMALL_SHARED_DENOMINATOR_MAX:
+            out.add(len(value))
+        for item in value:
+            if isinstance(item, (dict, list)):
+                _add_variant_denominators_from_value(key, item, out)
+    elif isinstance(value, dict):
+        for nested_key, nested_value in value.items():
+            nested_path = f"{key}.{nested_key}" if key else str(nested_key)
+            _add_variant_denominators_from_value(nested_path, nested_value, out)
+
+
+def _variant_denominators(d: dict[str, Any]) -> set[int]:
+    """Return small variant denominators explicitly evidenced in the artifact."""
+    denominators: set[int] = set()
+    for key, value in d.items():
+        _add_variant_denominators_from_value(key, value, denominators)
+    return denominators
+
+
+def _is_fraction_over_denominator(v: float, denominator: int) -> bool:
+    if not (0.0 <= float(v) <= 1.0):
+        return False
+    numerator = float(v) * denominator
+    return abs(numerator - round(numerator)) <= 1.0e-8
+
+
+def _is_small_shared_denominator_rate_pair(
+    k1: str,
+    k2: str,
+    v1: float,
+    v2: float,
+    d: dict[str, Any],
+) -> bool:
+    """True for equal small k/N ARC rate metrics over the same denominator.
+
+    This is the rate-metric analogue of the identifier carve-out: two rates
+    ranging over the same 25 variants can collide because their numerators happen
+    to be equal. Require explicit denominator evidence so copied unrelated
+    high-precision metrics do not escape TAUTOLOGY by naming alone.
+    """
+    if not (_is_rate_metric_field(k1) and _is_rate_metric_field(k2)):
+        return False
+    if not _significant_digits_match(v1, v2, TAUTOLOGY_DIGITS):
+        return False
+    for denominator in _variant_denominators(d):
+        if _is_fraction_over_denominator(v1, denominator) and _is_fraction_over_denominator(
+            v2, denominator
+        ):
+            return True
+    return False
+
+
 _POSITIVE_CONTROL_NULL_VERDICT_MARKERS = (
     "honest_null",
     "null",
@@ -507,6 +601,11 @@ def _is_positive_control_null_claim(d: dict[str, Any], verdict: str) -> bool:
     verdict_declares_null = any(
         marker in verdict for marker in _POSITIVE_CONTROL_NULL_VERDICT_MARKERS
     )
+    if (
+        verdict.startswith(("success:", "success_", "shipped:", "shipped_", "passed:", "passed_"))
+        and not verdict_declares_null
+    ):
+        return False
     return verdict_declares_null or _has_positive_control_null_metric(d)
 
 
@@ -1109,6 +1208,14 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # this rule was false-flagging as TAUTOLOGY). Two identifiers agreeing
         # is structural, not a coincidence between two distinct measurements.
         if _is_identifier_field(k1) or _is_identifier_field(k2):
+            continue
+        # Skip small shared-denominator ARC rate metrics. A pair such as
+        # `winner_generated_rate=2/25` and `generic_transfer_rate=2/25`
+        # collides by arithmetic over the same variant set, not because two
+        # unrelated measured floats were copied. Require rate/fraction naming
+        # plus explicit small denominator evidence, mirroring the identifier
+        # carve-out while keeping unrelated high-precision metrics critical.
+        if _is_small_shared_denominator_rate_pair(k1, k2, v1, v2, d):
             continue
         declared_null_delta = _declared_null_delta_descriptor(d, k1, k2)
         # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
@@ -2052,6 +2159,105 @@ def _is_arc_artifact(d: dict[str, Any]) -> bool:
     return isinstance(d.get("game"), str) or "arc" in text or any(g in text for g in _ARC_GAME_IDS)
 
 
+_WORLD_MODEL_TRUST_RATE_KEYS = (
+    "world_model_trust_pass_rate",
+    "world_model_trust_pass_rate_new",
+    "world_model_trust_pass_rate_integrated",
+)
+_WORLD_MODEL_TRUST_VERDICT_MARKERS = (
+    "world_model_trust_energy_pass_rate_up",
+    "world_model_trust_pass_rate_up",
+    "integrated_world_model_trust_raised",
+)
+_GRID_CHANGING_CORRECT_KEYS = (
+    "n_correct_grid_changing_transitions",
+    "correct_grid_changing_transitions",
+    "grid_changing_transitions_correct",
+    "n_changes_correct",
+    "correct_changed_cells",
+    "new_correct_changed_cells",
+    "heldout_correct_changed_cells",
+)
+_WORLD_MODEL_METADATA_KEYS = frozenset(
+    {
+        "field_principles",
+        "required_artifact_fields",
+        "tests_added",
+        "tests_added_pass",
+    }
+)
+
+
+def _claims_world_model_trust_pass(d: dict[str, Any]) -> bool:
+    """True when an ARC artifact affirmatively claims a world-model trust pass."""
+    text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')}".lower()
+    if not (_is_arc_artifact(d) or "world_model_trust" in text):
+        return False
+    if any(marker in text for marker in _WORLD_MODEL_TRUST_VERDICT_MARKERS):
+        return True
+    numerator = d.get("trust_pass_numerator")
+    if _is_finite_number(numerator) and float(numerator) > 0:
+        return True
+    for key in _WORLD_MODEL_TRUST_RATE_KEYS:
+        value = d.get(key)
+        if _is_finite_number(value) and float(value) > 0.0:
+            return True
+    return False
+
+
+def _grid_changing_correct_evidence(value: Any) -> tuple[str, float] | None:
+    """Find positive evidence for at least one correctly predicted real change."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in _WORLD_MODEL_METADATA_KEYS:
+                continue
+            kl = str(key).lower()
+            if _is_finite_number(nested) and any(k in kl for k in _GRID_CHANGING_CORRECT_KEYS):
+                if float(nested) > 0.0:
+                    return str(key), float(nested)
+            found = _grid_changing_correct_evidence(nested)
+            if found is not None:
+                return found
+    elif isinstance(value, list):
+        for item in value:
+            found = _grid_changing_correct_evidence(item)
+            if found is not None:
+                return found
+    return None
+
+
+def check_world_model_trust_degeneracy(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Flag circular or degenerate ARC world-model trust-pass claims.
+
+    A trusted world model must be oracle-distinct and must correctly predict at
+    least one real grid-changing transition; otherwise an identity model can
+    pass on no-op-heavy corpora without learning dynamics.
+    """
+    if not _claims_world_model_trust_pass(d):
+        return
+    problems = []
+    if d.get("verifier_is_oracle") is not False:
+        problems.append(f"verifier_is_oracle={d.get('verifier_is_oracle')!r}, not False")
+    evidence = _grid_changing_correct_evidence(d)
+    if evidence is None:
+        problems.append("no positive correctly-predicted grid-changing transition evidence")
+    if not problems:
+        return
+    flags.append(
+        Flag(
+            kind="WORLD_MODEL_TRUST_DEGENERACY",
+            severity="critical",
+            detail=(
+                "World-model trust pass is degenerate or circular: "
+                + "; ".join(problems)
+                + ". A trust pass must declare verifier_is_oracle=false and show >=1 "
+                "correctly predicted grid-changing transition so identity/no-op models "
+                "cannot clear the gate."
+            ),
+        )
+    )
+
+
 def _is_arc_outer_loop_calibration_solve(d: dict[str, Any]) -> bool:
     """An ARC artifact that derives a game solve via an OFFLINE-GROUND-TRUTH BFS / per-game calibration --
     detected from the experiment NAME signature OR a declared outer-loop input flag -- AND makes a game
@@ -2257,6 +2463,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
+    check_world_model_trust_degeneracy(d, flags)
     check_arc_outer_loop_solve(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""

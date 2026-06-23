@@ -20533,3 +20533,41 @@ environment is missing, that target is blocked with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-4394 | Implemented (`python/carnot/agentic/arc_e3_fidelity_gate.py`, `results/experiment_4394_e3_deeper_fidelity_gate.py`) | Implemented (`tests/python/test_arc_e3_fidelity_gate.py`) |
+
+### REQ-VERIFY-4611: Adversarial Artifact Reader Hardening For Shared-Denominator Rates And World-Model Trust
+
+`scripts/adversarial_verify.py` SHALL treat small-sample ARC rate metrics that
+shared the same finite variant denominator as structural arithmetic rather than
+a critical TAUTOLOGY when both compared field names are rate/fraction,
+first-win, transfer, or winner-generated metrics. The carve-out SHALL be
+narrow: unrelated high-precision floating-point metrics with bit-identical
+values SHALL still emit critical TAUTOLOGY flags.
+
+The verifier SHALL also reject ARC artifacts claiming a world-model trust pass
+unless the artifact declares `verifier_is_oracle=false` and reports at least
+one correctly predicted grid-changing transition. Artifacts that omit the
+non-degenerate change evidence, report zero correct grid-changing transitions,
+or claim `verifier_is_oracle=true` SHALL receive a verifier flag for degenerate
+or circular world-model trust.
+
+### SCENARIO-VERIFY-4611: .424 Shared-Denominator Wins Survive While Degenerate Trust Is Flagged
+
+Given the `.424` artifacts
+`results/experiment_4592_generation_completeness_wiring.json`,
+`results/experiment_4597_integration_gate.json`, and
+`results/experiment_4598_winner_generated_rate_metric.json`, when
+`scripts/adversarial_verify.py` evaluates their TAUTOLOGY pairs, then equal
+`k/25` rate metrics such as `winner_generated_rate` and
+`generic_transfer_rate` do not produce critical TAUTOLOGY flags. Given an
+artifact with unrelated copied high-precision metrics, the verifier still emits
+a critical TAUTOLOGY. Given an ARC world-model trust artifact that claims a pass
+without `verifier_is_oracle=false` and at least one correctly predicted
+grid-changing transition, the verifier emits a degenerate/circular trust flag;
+with both declarations present and non-degenerate evidence positive, it does
+not.
+
+## Implementation Status (REQ-VERIFY-4611)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4611 | Implemented (`scripts/adversarial_verify.py`; `python/carnot/experiment_4611_adversarial_verify_hardening.py`; `results/experiment_4611_adversarial_verify_hardening.json`) | Implemented (`tests/python/test_adversarial_verify_hardening_4611.py`) |
