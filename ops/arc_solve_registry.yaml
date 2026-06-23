@@ -148,13 +148,17 @@ general_gotchas:
   operator: persistent_action_effect_memory_operator
   derived_from_games:
   - exp4568_clickability_action_effect_predictor
+  - exp4629_graduate_action_effect_predictor_live
   note: >-
     Exp 4573 persists A1's action-effect predictor as a reusable PersistentAEM
     operator: build a leave-one-game cross-game memory from cached frame/action
     effects, rank compatible action candidates by predicted effect with stable
     original-order tie-breaking, and report actions-to-first-levelup deltas
-    before any solve claim. A CNN predictor forward pass is not live LLM
-    inference; the persisted operator can also run from cached action-effect
+    before any solve claim. Exp 4632 extends the same primitive with the 4629
+    live action-effect ranker signal (`persistent_aem_plus_optional_cnn`) so the
+    scored E3 action-pruner reuses the target-excluded memory/scorer path rather
+    than re-deriving action effects. A CNN predictor forward pass is not live
+    LLM inference; the persisted operator can also run from cached action-effect
     rows without invoking the CNN. New levels still count only through
     arc_solver_kit.reproduce().
   transfer_dead_ends:
@@ -163,6 +167,10 @@ general_gotchas:
     bottleneck.
   - Leave-one-game transfer can be value-null when the held-out game's effective
     action family is not represented in the cached memory features.
+  - The 4629/4632 live ranker adds action-efficiency value only when the winning
+    target action is already in the generated candidate group; richer candidate
+    generation remains the residual bottleneck when all target candidates are
+    absent or equivalent under cached frame-change features.
   latest_exp4573_transfer:
     artifact: results/experiment_4573_primitive_persist_transfer.json
     transfer_games:
@@ -190,6 +198,42 @@ general_gotchas:
       leave-one-game rows; no new executable level was banked, so
       reproducible_total_levels is unchanged.
     reproducibility_checksum: sha256:40b6b9874717b0a9973e9e33addfba694337ee722656e4101335c6c44173bab1
+  latest_exp4632_transfer:
+    artifact: results/experiment_4632_primitive_persist_transfer.json
+    transfer_games:
+    - cd82
+    - sp80
+    - ka59
+    transfer_value_per_game:
+      cd82:
+        actions_delta: 1.0
+        solve_rate_lift: 0.0
+        first_win_rate_delta: 0.5
+        baseline_actions_to_first_levelup: 2.0
+        ranker_actions_to_first_levelup: 1.0
+        candidate_group_count: 12
+        target_game_excluded_from_memory: true
+      sp80:
+        actions_delta: 1.0
+        solve_rate_lift: 0.0
+        first_win_rate_delta: 0.4117647059
+        baseline_actions_to_first_levelup: 2.0
+        ranker_actions_to_first_levelup: 1.0
+        candidate_group_count: 17
+        target_game_excluded_from_memory: true
+      ka59:
+        actions_delta: 1.0
+        solve_rate_lift: 0.0
+        first_win_rate_delta: 0.3658536585
+        baseline_actions_to_first_levelup: 2.0
+        ranker_actions_to_first_levelup: 1.0
+        candidate_group_count: 41
+        target_game_excluded_from_memory: true
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is live action-pruner ordering over cached
+      target-excluded rows; no new executable level was banked, so
+      reproducible_total_levels is unchanged.
+    reproducibility_checksum: sha256:3b44341b2926a7ccdb9189f03aca4da9299f517cf66ee3004686c9a3a37c7d78
 - id: primitive_env_adaptive_resolve_operator
   operator: env_adaptive_resolve_operator
   derived_from_games:
