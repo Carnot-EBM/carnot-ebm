@@ -64,6 +64,53 @@ general_gotchas:
   - su15
   note: Exp 4438 records consolidated generic primitive graph_astar_action_cost from
     Exp 4436.
+- id: primitive_graded_goal_energy_search_heuristic_operator
+  operator: graded_goal_energy_search_heuristic_operator
+  derived_from_games:
+  - exp4020_goal_induction_separation
+  - exp4640_goal_energy_generation_live
+  note: >-
+    Exp 4644 persists A1's Exp4020 graded goal-energy search heuristic as a
+    reusable graph/frontier ranking primitive: compute lower-is-better
+    `alpha * navigation_energy + beta * graded_goal_energy`, keep depth and the
+    executable verifier outside the scoring function, and report live
+    solve-rate / first-win / action-efficiency lift before any solve claim. This
+    is a search heuristic, not an oracle; new levels count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - A graded goal-energy well can only add value when the generated frontier
+      already contains candidates whose visible target-satisfaction state is
+      more informative than the navigation heuristic. Exp4644's untuned cached
+      bp35/cd82/dc22 transfer rows showed zero solve-rate, first-win, and
+      action-efficiency lift, so the primitive is persisted as-built with the
+      transfer null characterized.
+  latest_exp4644_transfer:
+    artifact: results/experiment_4644_primitive_persist_transfer.json
+    transfer_games:
+    - bp35
+    - cd82
+    - dc22
+    transfer_value_per_game:
+      bp35:
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        action_efficiency_lift: 0.0
+        offline_reproduced_new_level: false
+      cd82:
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        action_efficiency_lift: 0.0
+        offline_reproduced_new_level: false
+      dc22:
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        action_efficiency_lift: 0.0
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value was null on untuned cached matched variants;
+      no new executable level was banked, so reproducible_total_levels is
+      unchanged.
+    reproducibility_checksum: sha256:64005ae35b67a176784c59bcad835c00a10e118bd0acb9dee3431a80fbc6a3f0
 - id: primitive_per_level_reinduction_operator
   operator: per_level_reinduction_operator
   derived_from_games:

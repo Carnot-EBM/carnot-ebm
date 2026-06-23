@@ -237,6 +237,23 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="graded_goal_energy_search_heuristic_operator",
+            derived_from_games=("exp4020_goal_induction_separation", "exp4640_goal_energy_generation_live"),
+            purpose=(
+                "Rank generated frontier candidates by a depth-preserving convex blend of "
+                "navigation energy and Exp4020 graded goal-satisfaction energy, then report "
+                "solve/first-win/action-efficiency lift before any solve claim."
+            ),
+            selector_tags=(
+                "goal_energy",
+                "graded_goal_satisfaction",
+                "search_heuristic",
+                "graph_explore",
+                "candidate_ranking",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="env_adaptive_resolve_operator",
             derived_from_games=("sc25", "exp4580_live_submission_gap_close"),
             purpose=(
@@ -343,6 +360,7 @@ def select_primitive_operators(
             "verifier_router_candidate_ranking_operator",
             "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
+            "graded_goal_energy_search_heuristic_operator",
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
             "active_data_collection",
@@ -388,6 +406,7 @@ def select_primitive_operators(
             "verifier_router_candidate_ranking_operator",
             "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
+            "graded_goal_energy_search_heuristic_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -403,6 +422,7 @@ def select_primitive_operators(
             "verifier_router_candidate_ranking_operator",
             "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
+            "graded_goal_energy_search_heuristic_operator",
             "object_centric_digest",
             "graph_astar_action_cost",
         )
@@ -416,6 +436,7 @@ def select_primitive_operators(
             "verifier_router_candidate_ranking_operator",
             "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
+            "graded_goal_energy_search_heuristic_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -436,6 +457,7 @@ def select_primitive_operators(
             "object_motion_world_model",
             "active_data_collection",
             "object_centric_digest",
+            "graded_goal_energy_search_heuristic_operator",
             "graph_astar_action_cost",
         )
     elif "keyboard" in action or "click" in action or "graph" in mechanic:
@@ -448,6 +470,7 @@ def select_primitive_operators(
             "verifier_router_candidate_ranking_operator",
             "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
+            "graded_goal_energy_search_heuristic_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
         )
@@ -461,6 +484,7 @@ def select_primitive_operators(
             "verifier_router_candidate_ranking_operator",
             "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
+            "graded_goal_energy_search_heuristic_operator",
             "object_centric_digest",
             "active_data_collection",
             "graph_astar_action_cost",
@@ -1272,6 +1296,135 @@ def persistent_action_effect_memory_operator(
         "actions_to_first_levelup_after": after,
         "actions_reduced": actions_reduced,
         "value_added": bool(actions_reduced > 0.0),
+    }
+
+
+def _goal_energy_candidate_state(candidate: Any) -> Any:
+    for key in ("goal_state", "visible_goal_state", "target_group_state", "state", "frame"):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return value
+    return candidate
+
+
+def _goal_energy_navigation(candidate: Any) -> float:
+    for key in (
+        "navigation_energy",
+        "arc_goal_distance",
+        "goal_distance",
+        "navigation",
+        "heuristic",
+        "search_energy",
+    ):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return 0.0
+    return 0.0
+
+
+def _call_goal_energy(goal_energy: Any, state: Any, candidate: Any) -> float:
+    if goal_energy is None:
+        for key in ("graded_goal_energy", "goal_energy"):
+            value = _candidate_field(candidate, key)
+            if value is not None:
+                try:
+                    return float(value)
+                except (TypeError, ValueError):
+                    return 1.0
+        return 1.0
+    try:
+        return float(goal_energy(state))
+    except Exception:
+        return 1.0
+
+
+def _goal_predicate_passes(goal_energy: Any, state: Any) -> bool:
+    predicate = getattr(goal_energy, "predicate_fires", None)
+    if not callable(predicate):
+        return False
+    try:
+        return bool(predicate(state))
+    except Exception:
+        return False
+
+
+def graded_goal_energy_search_heuristic_operator(
+    candidates: Sequence[Any],
+    *,
+    goal_energy: Any = None,
+    alpha: float = 0.9,
+    beta: float = 0.1,
+    target_key: str = "reaches_goal",
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4644: rank candidates by navigation + graded goal energy."""
+
+    if goal_energy is None:
+        try:
+            from carnot.agentic.arc_goal_energy_live import load_exp4020_goal_energy
+
+            goal_energy = load_exp4020_goal_energy(REPO)
+        except Exception:
+            goal_energy = None
+    weight_sum = float(alpha) + float(beta)
+    if abs(weight_sum - 1.0) > 1e-9:
+        raise ValueError("graded goal-energy operator requires alpha + beta == 1")
+
+    rows: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates):
+        state = _goal_energy_candidate_state(candidate)
+        navigation = _goal_energy_navigation(candidate)
+        graded = _call_goal_energy(goal_energy, state, candidate)
+        combined = float(alpha) * navigation + float(beta) * graded
+        row = dict(candidate) if isinstance(candidate, Mapping) else {"candidate": repr(candidate)}
+        row["candidate_id"] = str(
+            row.get("candidate_id") or _candidate_identifier(candidate, index)
+        )
+        row["navigation_energy"] = float(navigation)
+        row["graded_goal_energy"] = float(graded)
+        row["combined_goal_energy"] = float(combined)
+        row["goal_predicate_pass"] = _goal_predicate_passes(goal_energy, state)
+        row["original_index"] = int(index)
+        row["target"] = bool(
+            _candidate_truthy(candidate, target_key) or _candidate_reaches_goal(candidate)
+        )
+        rows.append(row)
+
+    ranked = sorted(
+        rows,
+        key=lambda row: (
+            float(1.0 if row.get("combined_goal_energy") is None else row["combined_goal_energy"]),
+            int(row["original_index"]),
+        ),
+    )
+
+    def first_target(items: Sequence[Mapping[str, Any]]) -> int | None:
+        for index, row in enumerate(items, start=1):
+            if row.get("target") is True:
+                return int(index)
+        return None
+
+    before = first_target(rows)
+    after = first_target(ranked)
+    lift = float(before - after) if before is not None and after is not None else 0.0
+    return {
+        "operator": "graded_goal_energy_search_heuristic_operator",
+        "score_source": "exp4020_graded_goal_satisfaction_energy"
+        if goal_energy is not None
+        else "cached_candidate_goal_energy",
+        "alpha": float(alpha),
+        "beta": float(beta),
+        "verifier_is_oracle": False,
+        "candidate_count": int(len(rows)),
+        "incoming_candidates": rows,
+        "ranked_candidates": ranked,
+        "best_candidate_id": str(ranked[0]["candidate_id"]) if ranked else "",
+        "actions_to_first_goal_before": before,
+        "actions_to_first_goal_after": after,
+        "action_efficiency_lift": lift,
+        "value_added": bool(lift > 0.0),
     }
 
 
