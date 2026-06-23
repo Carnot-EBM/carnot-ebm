@@ -1,0 +1,659 @@
+{
+  "actions_delta": 1.0,
+  "actions_delta_ci": [
+    1.0,
+    1.0
+  ],
+  "bare_control_passed": true,
+  "chosen_submitted_config": "frame_change_predictor_enabled:persistent_aem_plus_optional_cnn",
+  "duration_s": 11.783110202057287,
+  "efficiency_score_term": 1.0,
+  "experiment": "experiment_4629_graduate_action_effect_predictor_live",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "actions_delta": "bare - predictor (positive = fewer actions), emitted explicitly so a null (0) is annotated.",
+    "actions_delta_ci": "bootstrap CI on the actions delta; an efficiency claim requires the CI to exclude the bare baseline.",
+    "bare_control_passed": "the POSITIVE CONTROL -- the bare explorer ran on the SAME variants; an efficiency null is valid only then.",
+    "chosen_submitted_config": "the recommended SUBMITTED_AGENT_CONFIG change (predictor on, ranking mode) -- the A6 input; 'unchanged' if null.",
+    "efficiency_score_term": "the min(human/agent,1)^2 leaderboard efficiency term WITH the predictor (the score metric we have NONE of).",
+    "false_negative_risk_checked": "true with the bare control run -- a no-efficiency null is valid only then.",
+    "first_win_rate_delta": "predictor - bare first-win-rate; emitted explicitly so a null is annotated (efficiency must not cost solves).",
+    "honest_verdict": "terminal prefix; success: action_effect_predictor_graduated_live_efficiency_up_<n> OR complete: action_effect_predictor_graduated_no_live_efficiency_honest_null_gap_sharpened.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the CNN is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
+    "live_path_reachable": "HARD gate -- the predictor module is imported by arc_graph_explore (rich_action_candidates) AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT orphaned).",
+    "median_actions_to_first_levelup_bare": "the matched bare-explorer actions on the SAME variants (today's no-op-burning baseline).",
+    "median_actions_to_first_levelup_predictor": "the HEADLINE -- LIVE median actions-to-first-levelup WITH the action-effect predictor (lower = the score-term win).",
+    "null_delta_methodology_note": "present when actions_delta==0 -- states the equality is an honest no-value null, not a bug.",
+    "offline_reproduced": "any newly-solved variant must offline-reproduce to count.",
+    "parity_test_green": "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth.",
+    "preconditions_checked": "records resources verified (offline arcade, E3AgentPolicy + rich_action_candidates importable); pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reproducibility_checksum": "content-addressed hash catches silent drift on replay.",
+    "solve_provenance": "live_agent_self_discovery -- this improves the SCORED live agent's OWN action selection (arc_graph_explore/E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re.",
+    "solve_rate_preserved": "HARD gate -- ranking candidates by predicted frame-change must NOT drop solve-rate vs bare.",
+    "verifier_is_oracle": "MUST be false -- the action-effect predictor is a learned action-pruner, oracle-DISTINCT from the executable win-check (north-star \u00a75 action-pruner role)."
+  },
+  "first_win_rate_delta": 0.1836363636,
+  "honest_verdict": "success: action_effect_predictor_graduated_live_efficiency_up_1",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the CNN is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
+  "live_measurement": {
+    "action_reduction": true,
+    "actions_delta": 1.0,
+    "actions_delta_ci": [
+      1.0,
+      1.0
+    ],
+    "bare_control_passed": true,
+    "efficiency_score_term": 1.0,
+    "first_win_rate_bare": 0.4072727272727273,
+    "first_win_rate_delta": 0.1836363636,
+    "first_win_rate_predictor": 0.5909090909090909,
+    "heldout_candidate_group_count": 550,
+    "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+    "median_actions_to_first_levelup_bare": 2.0,
+    "median_actions_to_first_levelup_predictor": 1.0,
+    "paired_delta_count": 550,
+    "per_game": {
+      "ar25": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.0,
+        "first_win_rate_delta": 0.1860465116,
+        "first_win_rate_predictor": 0.18604651162790697,
+        "heldout_candidate_group_count": 43,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 43,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "bp35": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 1.0,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 1.0,
+        "heldout_candidate_group_count": 24,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 24,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "cd82": {
+        "action_reduction": true,
+        "actions_delta": 1.0,
+        "actions_delta_ci": [
+          1.0,
+          1.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.3333333333333333,
+        "first_win_rate_delta": 0.5,
+        "first_win_rate_predictor": 0.8333333333333334,
+        "heldout_candidate_group_count": 12,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 12,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "cn04": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.7647058823529411,
+        "first_win_rate_delta": 0.1764705882,
+        "first_win_rate_predictor": 0.9411764705882353,
+        "heldout_candidate_group_count": 17,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 17,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "dc22": {
+        "action_reduction": true,
+        "actions_delta": 1.0,
+        "actions_delta_ci": [
+          1.0,
+          1.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.3739130434782609,
+        "first_win_rate_delta": 0.1304347826,
+        "first_win_rate_predictor": 0.5043478260869565,
+        "heldout_candidate_group_count": 115,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 115,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "ft09": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.23076923076923078,
+        "first_win_rate_delta": 0.1538461538,
+        "first_win_rate_predictor": 0.38461538461538464,
+        "heldout_candidate_group_count": 13,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 13,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "g50t": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.6086956521739131,
+        "first_win_rate_delta": 0.1739130435,
+        "first_win_rate_predictor": 0.782608695652174,
+        "heldout_candidate_group_count": 23,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 23,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "ka59": {
+        "action_reduction": true,
+        "actions_delta": 1.0,
+        "actions_delta_ci": [
+          1.0,
+          1.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.14634146341463414,
+        "first_win_rate_delta": 0.3658536585,
+        "first_win_rate_predictor": 0.5121951219512195,
+        "heldout_candidate_group_count": 41,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 41,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "lf52": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 1.0,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 1.0,
+        "heldout_candidate_group_count": 5,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 5,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "lp85": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.16666666666666666,
+        "first_win_rate_delta": 0.0833333333,
+        "first_win_rate_predictor": 0.25,
+        "heldout_candidate_group_count": 12,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 12,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "ls20": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.0,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 0.0,
+        "heldout_candidate_group_count": 1,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 1,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "m0r0": {
+        "action_reduction": true,
+        "actions_delta": 1.0,
+        "actions_delta_ci": [
+          1.0,
+          1.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.32075471698113206,
+        "first_win_rate_delta": 0.2830188679,
+        "first_win_rate_predictor": 0.6037735849056604,
+        "heldout_candidate_group_count": 53,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 53,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "r11l": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": false,
+        "efficiency_score_term": 0.0,
+        "first_win_rate_bare": 0.0,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 0.0,
+        "heldout_candidate_group_count": 0,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": null,
+        "median_actions_to_first_levelup_predictor": null,
+        "paired_delta_count": 0,
+        "solve_rate_bare": 0.0,
+        "solve_rate_predictor": 0.0,
+        "solve_rate_preserved": true
+      },
+      "re86": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.9333333333333333,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 0.9333333333333333,
+        "heldout_candidate_group_count": 15,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 15,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "s5i5": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.28888888888888886,
+        "first_win_rate_delta": 0.0666666667,
+        "first_win_rate_predictor": 0.35555555555555557,
+        "heldout_candidate_group_count": 45,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 45,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "sb26": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.6666666666666666,
+        "first_win_rate_delta": 0.1111111111,
+        "first_win_rate_predictor": 0.7777777777777778,
+        "heldout_candidate_group_count": 9,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 9,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "sc25": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.2222222222222222,
+        "first_win_rate_delta": 0.2222222222,
+        "first_win_rate_predictor": 0.4444444444444444,
+        "heldout_candidate_group_count": 9,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 9,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "sk48": {
+        "action_reduction": true,
+        "actions_delta": 1.0,
+        "actions_delta_ci": [
+          1.0,
+          1.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.3235294117647059,
+        "first_win_rate_delta": 0.3235294118,
+        "first_win_rate_predictor": 0.6470588235294118,
+        "heldout_candidate_group_count": 34,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 34,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "sp80": {
+        "action_reduction": true,
+        "actions_delta": 1.0,
+        "actions_delta_ci": [
+          1.0,
+          1.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.35294117647058826,
+        "first_win_rate_delta": 0.4117647059,
+        "first_win_rate_predictor": 0.7647058823529411,
+        "heldout_candidate_group_count": 17,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 17,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "su15": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.7272727272727273,
+        "first_win_rate_delta": 0.1818181818,
+        "first_win_rate_predictor": 0.9090909090909091,
+        "heldout_candidate_group_count": 11,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 11,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "tn36": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 0.25,
+        "first_win_rate_bare": 0.2,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 0.2,
+        "heldout_candidate_group_count": 5,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 2.0,
+        "paired_delta_count": 5,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "tr87": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 1.0,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 1.0,
+        "heldout_candidate_group_count": 4,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 4,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "tu93": {
+        "action_reduction": false,
+        "actions_delta": 0.0,
+        "actions_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 1.0,
+        "first_win_rate_delta": 0.0,
+        "first_win_rate_predictor": 1.0,
+        "heldout_candidate_group_count": 16,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.0,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 16,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "vc33": {
+        "action_reduction": true,
+        "actions_delta": 0.5,
+        "actions_delta_ci": [
+          0.5,
+          0.5
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.3333333333333333,
+        "first_win_rate_delta": 0.1666666667,
+        "first_win_rate_predictor": 0.5,
+        "heldout_candidate_group_count": 6,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 2.0,
+        "median_actions_to_first_levelup_predictor": 1.5,
+        "paired_delta_count": 6,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      },
+      "wa30": {
+        "action_reduction": true,
+        "actions_delta": 0.5,
+        "actions_delta_ci": [
+          0.5,
+          0.5
+        ],
+        "bare_control_passed": true,
+        "efficiency_score_term": 1.0,
+        "first_win_rate_bare": 0.5,
+        "first_win_rate_delta": 0.25,
+        "first_win_rate_predictor": 0.75,
+        "heldout_candidate_group_count": 20,
+        "measurement_kind": "heldout_public_game_cached_transition_live_ranker",
+        "median_actions_to_first_levelup_bare": 1.5,
+        "median_actions_to_first_levelup_predictor": 1.0,
+        "paired_delta_count": 20,
+        "solve_rate_bare": 1.0,
+        "solve_rate_predictor": 1.0,
+        "solve_rate_preserved": true
+      }
+    },
+    "public_game_count": 25,
+    "solve_rate_bare": 1.0,
+    "solve_rate_predictor": 1.0,
+    "solve_rate_preserved": true
+  },
+  "live_path_checks": {
+    "arc_graph_explore_imports_arc_frame_change_predictor": true,
+    "arc_orphan_solver_lint": {
+      "command": [
+        ".venv/bin/python",
+        "scripts/arc_orphan_solver_lint.py"
+      ],
+      "output_tail": "OK: all solver-like ARC modules are reachable from the live agent path (30 modules in the live closure).\n",
+      "passed": true,
+      "returncode": 0
+    },
+    "e3_default_loader": "_load_submitted_frame_change_scorer",
+    "test_arc_submitted_agent_parity": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_arc_submitted_agent_parity.py",
+        "-q",
+        "--no-cov"
+      ],
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [11 items]\n\n...........                                                              [100%]\n============================== 11 passed in 5.17s ==============================\n",
+      "passed": true,
+      "returncode": 0
+    }
+  },
+  "live_path_reachable": true,
+  "median_actions_to_first_levelup_bare": 2.0,
+  "median_actions_to_first_levelup_predictor": 1.0,
+  "null_delta_methodology_note": null,
+  "offline_reproduced": {
+    "all_new_solves_reproduced": true,
+    "newly_solved_variants": []
+  },
+  "orphan_lint_green": true,
+  "parity_test_green": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "e3_policy_import": true,
+    "leaderboard_submission": false,
+    "offline_arcade_import": true,
+    "ok": true,
+    "rich_action_candidates_import": true,
+    "torch_import": true,
+    "torch_version": "2.11.0+cu128",
+    "transition_corpus_present": true,
+    "transition_effect_rows_loaded": 14628
+  },
+  "random_seed": 4629,
+  "reproducibility_checksum": "sha256:2bf91ee779082cde44bfaf0116b33fbece71976434eb89e7ae6a65c57ce6b97b",
+  "requirements": [
+    "REQ-ARC-FCP-4629"
+  ],
+  "scenarios": [
+    "SCENARIO-ARC-FCP-4629"
+  ],
+  "schema": "carnot.arc_action_effect_predictor_live_4629.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_rate_preserved": true,
+  "training_summary": {
+    "checkpoint": "results/experiment_4629_live_frame_change_cnn.pt",
+    "cnn_batches_trained": 8,
+    "cnn_checkpoint_written": true,
+    "cnn_examples_seen": 512,
+    "cnn_examples_used": 497,
+    "cnn_final_loss": 0.46566155180335045,
+    "frame_size": 64,
+    "hidden_channels": 8,
+    "memory_row_count": 14628,
+    "num_colors": 16
+  },
+  "verifier_is_oracle": false
+}

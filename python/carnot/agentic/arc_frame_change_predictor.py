@@ -23,6 +23,9 @@ from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
 TERMINAL_ACTION_IDS = (1, 2, 3, 4, 5)
 DEFAULT_NUM_COLORS = 16
 DEFAULT_FRAME_SIZE = 64
+REPO_ROOT = Path(__file__).resolve().parents[3]
+TRANSITION_CORPUS_RELATIVE_DIR = Path("data/arc_transition_corpus")
+LIVE_CNN_CHECKPOINT_RELATIVE_PATH = Path("results/experiment_4629_live_frame_change_cnn.pt")
 
 
 def frame_state_key(frame: Any) -> str:
@@ -195,6 +198,189 @@ class FrameChangeScorer:
         if action_id in TERMINAL_ACTION_IDS:
             return float(directional_change[action_id - 1].item())
         return 0.0
+
+
+@dataclass
+class LiveActionEffectScorer:
+    """REQ-ARC-FCP-4629: live scorer backed by persistent action effects and optional CNN."""
+
+    memory: Any | None = None
+    cnn_scorer: Any | None = None
+    memory_weight: float = 1.0
+    cnn_weight: float = 0.05
+    source: str = "persistent_aem_plus_optional_cnn"
+
+    def candidate_score(self, frame: Any, candidate: Any) -> float:
+        score = 0.0
+        if self.memory is not None:
+            try:
+                score += float(self.memory_weight) * float(self.memory.candidate_score(candidate))
+            except Exception:
+                pass
+        if self.cnn_scorer is not None:
+            try:
+                score += float(self.cnn_weight) * float(
+                    self.cnn_scorer.candidate_score(frame, candidate)
+                )
+            except Exception:
+                pass
+        return float(score)
+
+    def as_dict(self) -> dict[str, Any]:
+        memory = (
+            self.memory.as_dict()
+            if self.memory is not None and hasattr(self.memory, "as_dict")
+            else None
+        )
+        return {
+            "source": self.source,
+            "memory": memory,
+            "cnn_loaded": bool(self.cnn_scorer is not None),
+            "memory_weight": float(self.memory_weight),
+            "cnn_weight": float(self.cnn_weight),
+        }
+
+
+def _transition_frame_delta(before: Any, after: Any) -> float:
+    lhs = np.asarray(before)
+    rhs = np.asarray(after)
+    if lhs.shape != rhs.shape:
+        return 1.0
+    total = int(lhs.size)
+    if total <= 0:
+        return 0.0
+    return float(np.count_nonzero(lhs != rhs) / total)
+
+
+def load_cached_transition_effect_rows(
+    root: Path | str = REPO_ROOT,
+    *,
+    limit: int | None = None,
+    include_frames: bool = False,
+) -> list[dict[str, Any]]:
+    """REQ-ARC-FCP-4629: load local self-supervised action effects for live ranking."""
+
+    transition_dir = Path(root) / TRANSITION_CORPUS_RELATIVE_DIR
+    rows: list[dict[str, Any]] = []
+    for path in sorted(transition_dir.glob("*.npz")):
+        data = np.load(path, allow_pickle=False)
+        grids = data["grids"]
+        next_grids = data["next_grids"]
+        xs = data["xs"] if "xs" in data else np.full((grids.shape[0],), -1)
+        ys = data["ys"] if "ys" in data else np.full((grids.shape[0],), -1)
+        lb = data["lb"] if "lb" in data else np.zeros((grids.shape[0],), dtype=np.int16)
+        la = data["la"] if "la" in data else np.zeros((grids.shape[0],), dtype=np.int16)
+        for index in range(int(grids.shape[0])):
+            action_id = int(data["actions"][index])
+            grid = grids[index]
+            delta = _transition_frame_delta(grid, next_grids[index])
+            row: dict[str, Any] = {
+                "game": path.stem,
+                "env": path.stem,
+                "state_key": frame_state_key(grid),
+                "action_id": action_id,
+                "changed": bool(delta > 0.0),
+                "frame_delta": float(delta),
+                "level_progress": 1.0 if int(la[index]) > int(lb[index]) else 0.0,
+                "step_index": int(index),
+                "feature_source": "arc_transition_corpus",
+            }
+            if action_id == 6 and int(xs[index]) >= 0 and int(ys[index]) >= 0:
+                row["x"] = int(xs[index])
+                row["y"] = int(ys[index])
+            if include_frames:
+                row["frame"] = grid
+            rows.append(row)
+            if limit is not None and len(rows) >= int(limit):
+                return rows
+    return rows
+
+
+def save_live_frame_change_cnn_checkpoint(
+    model: nn.Module,
+    path: Path | str,
+    *,
+    num_colors: int = DEFAULT_NUM_COLORS,
+    size: int = DEFAULT_FRAME_SIZE,
+    hidden_channels: int = 24,
+) -> Path:
+    """REQ-ARC-FCP-4629: persist the locally trained small CNN for live loading."""
+
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(
+        {
+            "state_dict": model.state_dict(),
+            "num_colors": int(num_colors),
+            "size": int(size),
+            "hidden_channels": int(hidden_channels),
+        },
+        out,
+    )
+    return out
+
+
+def load_live_frame_change_cnn_scorer(
+    root: Path | str = REPO_ROOT,
+    *,
+    checkpoint_path: Path | str | None = None,
+    device: str = "cpu",
+) -> FrameChangeScorer | None:
+    """REQ-ARC-FCP-4629: load the graduated CNN scorer when the checkpoint exists."""
+
+    path = Path(checkpoint_path) if checkpoint_path is not None else LIVE_CNN_CHECKPOINT_RELATIVE_PATH
+    if not path.is_absolute():
+        path = Path(root) / path
+    if not path.exists():
+        return None
+    try:
+        try:
+            payload = torch.load(path, map_location="cpu", weights_only=True)
+        except TypeError:  # pragma: no cover - older torch compatibility.
+            payload = torch.load(path, map_location="cpu")
+        model = SmallFrameChangeCNN(
+            num_colors=int(payload.get("num_colors") or DEFAULT_NUM_COLORS),
+            hidden_channels=int(payload.get("hidden_channels") or 24),
+        )
+        model.load_state_dict(payload["state_dict"])
+        return FrameChangeScorer(
+            model,
+            num_colors=int(payload.get("num_colors") or DEFAULT_NUM_COLORS),
+            size=int(payload.get("size") or DEFAULT_FRAME_SIZE),
+            device=device,
+        )
+    except Exception:
+        return None
+
+
+def load_live_action_effect_scorer(
+    root: Path | str = REPO_ROOT,
+    *,
+    checkpoint_path: Path | str | None = None,
+    exclude_games: Sequence[str] = (),
+    use_memory: bool = True,
+    use_cnn: bool = True,
+) -> LiveActionEffectScorer | None:
+    """REQ-ARC-FCP-4629: assemble the live action-effect scorer for E3AgentPolicy."""
+
+    memory = None
+    if use_memory:
+        try:
+            from carnot.agentic.arc_solver_kit import PersistentAEM
+
+            rows = load_cached_transition_effect_rows(root)
+            if rows:
+                memory = PersistentAEM.from_effect_rows(rows, exclude_games=exclude_games)
+        except Exception:
+            memory = None
+    cnn_scorer = (
+        load_live_frame_change_cnn_scorer(root, checkpoint_path=checkpoint_path)
+        if use_cnn
+        else None
+    )
+    if memory is None and cnn_scorer is None:
+        return None
+    return LiveActionEffectScorer(memory=memory, cnn_scorer=cnn_scorer)
 
 
 @dataclass(frozen=True)

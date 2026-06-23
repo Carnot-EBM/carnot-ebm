@@ -22,6 +22,11 @@ from typing import Any, Optional
 from carnot.agentic.arc_agi3_live_adapter import (
     ArcAction, _action_candidates, _available_action_ids, _game_action, _game_over, _levels_completed,
 )
+from carnot.agentic.arc_frame_change_predictor import (
+    prune_arc_actions,
+    prune_arc_actions_by_prior_quantile,
+    rank_arc_actions,
+)
 from carnot.agentic.arc_agi3_world_model import GameGraph, frame_hash, grid_of, objects
 
 
@@ -102,8 +107,6 @@ def rich_action_candidates(
             seen.add(p)
             out.append(ArcAction(6, {"x": p[0], "y": p[1]}, "object_click"))
     if frame_change_scorer is not None and frame_change_prune_threshold is not None:
-        from carnot.agentic.arc_frame_change_predictor import prune_arc_actions
-
         out, _diagnostics = prune_arc_actions(
             frame,
             out,
@@ -111,14 +114,26 @@ def rich_action_candidates(
             threshold=frame_change_prune_threshold,
         )
     if action_prior is not None and action_prior_prune_quantile is not None:
-        from carnot.agentic.arc_frame_change_predictor import prune_arc_actions_by_prior_quantile
-
         out, _diagnostics = prune_arc_actions_by_prior_quantile(
             frame,
             out,
             prior=action_prior,
             prune_quantile=action_prior_prune_quantile,
         )
+    ranker_present = (
+        frame_change_scorer is not None
+        or action_prior is not None
+        or structural_energy_scorer is not None
+    )
+    if candidate_router is not None and out:
+        try:
+            if hasattr(candidate_router, "rank"):
+                ranked = candidate_router.rank(frame, out, previous_frame=previous_frame)
+            else:
+                ranked = candidate_router(frame, out)
+            out = list(ranked)
+        except Exception:
+            pass
     if (
         structural_energy_scorer is not None
         and frame_change_scorer is None
@@ -134,12 +149,10 @@ def rich_action_candidates(
                 score = -float(delta_energy)
             except Exception:
                 score = 0.0
-            scored.append((score, index, candidate))
+        scored.append((score, index, candidate))
         scored.sort(key=lambda row: (-row[0], row[1]))
         out = [candidate for _score, _index, candidate in scored]
-    elif frame_change_scorer is not None or action_prior is not None or structural_energy_scorer is not None:
-        from carnot.agentic.arc_frame_change_predictor import rank_arc_actions
-
+    elif ranker_present:
         out = rank_arc_actions(
             frame,
             out,
@@ -147,15 +160,6 @@ def rich_action_candidates(
             prior=action_prior,
             structural_energy_scorer=structural_energy_scorer,
         )
-    if candidate_router is not None and out:
-        try:
-            if hasattr(candidate_router, "rank"):
-                ranked = candidate_router.rank(frame, out, previous_frame=previous_frame)
-            else:
-                ranked = candidate_router(frame, out)
-            out = list(ranked)
-        except Exception:
-            pass
     return out
 
 

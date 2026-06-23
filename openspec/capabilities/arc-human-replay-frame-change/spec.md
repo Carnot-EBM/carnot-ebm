@@ -708,6 +708,60 @@ Required field principles:
 - `tests_added_pass`: principle "Tests Must Run and Assert -- both the not-flagged-on-CNN and still-flagged-on-fake-LLM cases."
 - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4629: Graduate Action-Effect Predictor Into The Scored Live Explorer
+
+Experiment 4629 SHALL write
+`results/experiment_4629_graduate_action_effect_predictor_live.json` after
+assembling the self-supervised small CNN action-effect predictor and the
+PersistentAEM cross-game action-effect memory from the local
+`(frame, action, next_frame)` transition corpus. The graduated scorer SHALL be
+reachable from the SCORED `E3AgentPolicy` path and consumed by
+`arc_graph_explore.rich_action_candidates` as a frame-only action-effect ranker,
+with the bare explorer order retained as the matched control and stable
+tie-break.
+
+When both a candidate router and the action-effect ranker are supplied, the
+candidate router MAY provide a stable tie-break order, but the action-effect
+ranker SHALL be the final ordering pass so predicted no-op actions are
+deprioritized on the submitted live path. The scorer SHALL use only rendered
+frames, action ids, click coordinates, and locally cached transition effects;
+it SHALL NOT inspect `env._game`, use an executable win-check as a scorer, call
+live LLMs, or require 3090-class hardware.
+
+Experiment 4629 SHALL compare the predictor-ranked live candidate ordering
+against the bare explorer order on the same held-out cached public-game
+candidate groups, reporting median actions-to-first-levelup, the
+`min(human/agent,1)^2` efficiency term, first-win-rate, solve-rate, and a
+bootstrap confidence interval on `actions_delta = bare - predictor`. A success
+verdict is allowed only when the action delta is positive with a CI excluding
+the bare baseline and solve-rate is preserved. If the matched bare control
+passes but the live efficiency delta is zero, the artifact SHALL report the
+honest null and leave `chosen_submitted_config` unchanged.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: action_effect_predictor_graduated_live_efficiency_up_<n> OR complete: action_effect_predictor_graduated_no_live_efficiency_honest_null_gap_sharpened."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the CNN is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the action-effect predictor is a learned action-pruner, oracle-DISTINCT from the executable win-check (north-star §5 action-pruner role)."
+- `solve_provenance`: principle "live_agent_self_discovery -- this improves the SCORED live agent's OWN action selection (arc_graph_explore/E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the predictor module is imported by arc_graph_explore (rich_action_candidates) AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT orphaned)."
+- `median_actions_to_first_levelup_predictor`: principle "the HEADLINE -- LIVE median actions-to-first-levelup WITH the action-effect predictor (lower = the score-term win)."
+- `median_actions_to_first_levelup_bare`: principle "the matched bare-explorer actions on the SAME variants (today's no-op-burning baseline)."
+- `actions_delta`: principle "bare - predictor (positive = fewer actions), emitted explicitly so a null (0) is annotated."
+- `efficiency_score_term`: principle "the min(human/agent,1)^2 leaderboard efficiency term WITH the predictor (the score metric we have NONE of)."
+- `actions_delta_ci`: principle "bootstrap CI on the actions delta; an efficiency claim requires the CI to exclude the bare baseline."
+- `first_win_rate_delta`: principle "predictor - bare first-win-rate; emitted explicitly so a null is annotated (efficiency must not cost solves)."
+- `solve_rate_preserved`: principle "HARD gate -- ranking candidates by predicted frame-change must NOT drop solve-rate vs bare."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the bare explorer ran on the SAME variants; an efficiency null is valid only then."
+- `false_negative_risk_checked`: principle "true with the bare control run -- a no-efficiency null is valid only then."
+- `null_delta_methodology_note`: principle "present when actions_delta==0 -- states the equality is an honest no-value null, not a bug."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (predictor on, ranking mode) -- the A6 input; 'unchanged' if null."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, E3AgentPolicy + rich_action_candidates importable); pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -717,6 +771,18 @@ change the frame
 When the behavior prior or scorer ranks the candidates
 Then the changing click is ordered ahead of no-op candidates
 And the legacy candidate order remains the tie-break for equal scores.
+
+### SCENARIO-ARC-FCP-4629: Submitted E3 Uses Live-Reachable Action-Effect Ranking
+
+Given local cached transition effects and a small trained CNN action-effect
+checkpoint are available
+When the submitted `E3AgentPolicy` builds its `StepwiseExplorer`
+Then the explorer receives a live action-effect scorer by default
+And `rich_action_candidates` applies that scorer as the final ordering pass
+after any candidate-router tie-break
+And experiment 4629 writes a terminal artifact with the matched bare control,
+bootstrap action-delta CI, parity-test result, orphan-lint result,
+`verifier_is_oracle=false`, and `solve_provenance=live_agent_self_discovery`.
 
 ### SCENARIO-ARC-FCP-4491: Missing Corpus Does Not Fabricate Results
 
