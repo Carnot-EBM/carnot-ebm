@@ -4430,3 +4430,45 @@ frontier distribution, then make every live use bounded and cached; only after
 those no-regression gates pass should SLOPE-style pruning or goal-conditioned
 dense value affect the scored agent.
 <!-- EXP4625-OFFLINE-LIVE-BRIDGE-SOTA-END -->
+
+<!-- EXP4637-INTRINSIC-ACTION-EFFECT-SOTA-START -->
+## 2026-06-23 Exp 4637 - .427 intrinsic-motivation/action-effect SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/intrinsic-motivation-action-effect-literature-2026-06-23.md`.
+
+**Filtered track:** dense online intrinsic motivation and action-effect
+prediction for the .427 live-exploration problem: replace raw surprise with
+learning progress, suppress noisy-TV transitions, and turn clickability /
+action-effect predictions into fewer wasted actions.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py` emitted focused ARC exploration and neural-guided
+search URLs. `scripts/sweep_semscholar.py` returned HTTP 429 for all five
+focused queries and no S2-only source was promoted. Low-concurrency
+WebSearch/WebFetch plus direct arXiv HTTP checks verified arXiv:2604.18701,
+arXiv:2509.25438, arXiv:2102.04399, arXiv:1705.05363, arXiv:1810.12894,
+arXiv:2601.10904, arXiv:2603.24621, arXiv:2512.24156, and arXiv:2605.05138.
+`/deep-research` was not invoked.
+
+**Methods marked ingested:** Curiosity-Critic cumulative prediction-error
+improvement, Learning Progress Monitoring, aleatoric-noise curiosity guards,
+ICM/RND prediction-error controls, ARC clickability/action-effect expansion,
+graph-based exploration, and executable-world-model action-effect planning.
+
+flagged_for_v428: curiosity_critic_learning_progress_dense_reward
+(arXiv:2604.18701 + arXiv:2509.25438)
+
+flagged_for_v428: noisy_tv_aware_action_effect_uncertainty_gate
+(arXiv:2102.04399 + arXiv:2509.25438)
+
+flagged_for_v428: clickability_action_effect_expansion_prior
+(arXiv:2601.10904 + arXiv:2603.24621)
+
+flagged_for_v428: graph_executable_world_model_action_effect_planner
+(arXiv:2512.24156 + arXiv:2605.05138)
+
+**Bottom line for .428:** build Curiosity-Critic/LPM-style learning-progress
+rewards over the existing action-effect predictor first, add the aleatoric guard
+before any scored-agent use, and evaluate graph/executable action-effect
+planning only behind matched action-efficiency no-regression gates.
+<!-- EXP4637-INTRINSIC-ACTION-EFFECT-SOTA-END -->

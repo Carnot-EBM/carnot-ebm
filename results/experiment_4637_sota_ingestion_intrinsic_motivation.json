@@ -1,0 +1,205 @@
+{
+  "citations_verified": {
+    "1705.05363": {
+      "http_status": 200,
+      "title": "Curiosity-driven Exploration by Self-supervised Prediction",
+      "url": "https://arxiv.org/abs/1705.05363"
+    },
+    "1810.12894": {
+      "http_status": 200,
+      "title": "Exploration by Random Network Distillation",
+      "url": "https://arxiv.org/abs/1810.12894"
+    },
+    "2102.04399": {
+      "http_status": 200,
+      "title": "How to Stay Curious while Avoiding Noisy TVs using Aleatoric Uncertainty Estimation",
+      "url": "https://arxiv.org/abs/2102.04399"
+    },
+    "2509.25438": {
+      "http_status": 200,
+      "title": "Beyond Noisy-TVs: Noise-Robust Exploration Via Learning Progress Monitoring",
+      "url": "https://arxiv.org/abs/2509.25438"
+    },
+    "2512.24156": {
+      "http_status": 200,
+      "title": "Graph-Based Exploration for ARC-AGI-3 Interactive Reasoning Tasks",
+      "url": "https://arxiv.org/abs/2512.24156"
+    },
+    "2601.10904": {
+      "http_status": 200,
+      "title": "ARC Prize 2025: Technical Report",
+      "url": "https://arxiv.org/abs/2601.10904"
+    },
+    "2603.24621": {
+      "http_status": 200,
+      "title": "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence",
+      "url": "https://arxiv.org/abs/2603.24621"
+    },
+    "2604.18701": {
+      "http_status": 200,
+      "title": "Curiosity-Critic: Cumulative Prediction Error Improvement as a Tractable Intrinsic Reward for World Model Training",
+      "url": "https://arxiv.org/abs/2604.18701"
+    },
+    "2605.05138": {
+      "http_status": 200,
+      "title": "Executable World Models for ARC-AGI-3 in the Era of Coding Agents",
+      "url": "https://arxiv.org/abs/2605.05138"
+    }
+  },
+  "deep_research_not_used": true,
+  "field_principles": {
+    "deep_research_not_used": {
+      "principle": "MUST be true -- /deep-research is banned in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch."
+    },
+    "flagged_for_next_roadmap": {
+      "principle": "the strongest method(s) flagged as candidate .428 inputs -- closes discover->ingest->plan->experiment."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: sota_ingestion_intrinsic_motivation_action_effect_mapped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor)."
+    },
+    "methods_mapped": {
+      "principle": "the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when -- the actionable ingestion (no citation = fabrication)."
+    },
+    "note_path": {
+      "principle": "docs/research-notes/intrinsic-motivation-action-effect-literature-2026-06-23.md -- the per-track note (the SOTA-Ingestion Cycle deliverable)."
+    },
+    "preconditions_checked": {
+      "principle": "records network reachability verified; pre-empts fabricated citations."
+    }
+  },
+  "flagged_for_next_roadmap": [
+    "flagged_for_v428: curiosity_critic_learning_progress_dense_reward (arXiv:2604.18701 + arXiv:2509.25438)",
+    "flagged_for_v428: noisy_tv_aware_action_effect_uncertainty_gate (arXiv:2102.04399 + arXiv:2509.25438)",
+    "flagged_for_v428: clickability_action_effect_expansion_prior (arXiv:2601.10904 + arXiv:2603.24621)",
+    "flagged_for_v428: graph_executable_world_model_action_effect_planner (arXiv:2512.24156 + arXiv:2605.05138)"
+  ],
+  "honest_verdict": "success: sota_ingestion_intrinsic_motivation_action_effect_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "the baseline critic mistakes hidden deterministic state for irreducible noise, logged transition classes are too sparse to learn the floor, or the intrinsic residual overwhelms first-win/action efficiency gates.",
+      "implement_cost_over_current_stack": "medium-high: log the A2 action-effect model's per-transition prediction error, train a small A1 dense-curiosity critic to estimate the asymptotic/noise-floor error for each transition class, and feed only the positive learning-progress residual into expansion priority.",
+      "maps_to_current_stack": "A1 dense-curiosity becomes a learnability estimator rather than a raw surprise score; A2 action-effect keeps the existing frame-change predictor but receives a dense reward for transitions whose error is still reducible.",
+      "method": "Curiosity-Critic / LPM dense learning-progress reward",
+      "roadmap_candidate": "flagged_for_v428: curiosity_critic_learning_progress_dense_reward (arXiv:2604.18701 + arXiv:2509.25438)",
+      "source_ids": [
+        "2604.18701",
+        "2509.25438"
+      ],
+      "track": "dense_online_intrinsic_reward"
+    },
+    {
+      "fails_when": "the variance head is undertrained, rare but decisive transitions look aleatoric early, or the guard suppresses the only probe that reveals a hidden register.",
+      "implement_cost_over_current_stack": "medium: add mean/variance or previous-error heads beside the A2 action-effect predictor, down-weight high-variance transitions, and use the guarded score as an A1 dense-curiosity eligibility mask.",
+      "maps_to_current_stack": "A1 dense-curiosity stops rewarding noisy-TV-like screen changes; A2 action-effect can still predict clickability, but only transitions classified as learnable receive exploration priority.",
+      "method": "Aleatoric-noise guard for curiosity and action-effect rewards",
+      "roadmap_candidate": "flagged_for_v428: noisy_tv_aware_action_effect_uncertainty_gate (arXiv:2102.04399 + arXiv:2509.25438)",
+      "source_ids": [
+        "2102.04399",
+        "2509.25438"
+      ],
+      "track": "epistemic_vs_aleatoric_filtering"
+    },
+    {
+      "fails_when": "raw prediction error chases stochastic animation, RND novelty decays before the useful mechanic is discovered, or the baseline improves coverage without reducing actions-to-first-win.",
+      "implement_cost_over_current_stack": "low-to-medium: reuse the current frame-delta/action-effect tensors to train an inverse-dynamics feature space for ICM and a fixed-target embedding for RND, then compare both against the existing A1 dense curiosity score under matched action budgets.",
+      "maps_to_current_stack": "A1 dense-curiosity gets a cheap baseline that validates whether any learned intrinsic reward beats raw prediction error; A2 action-effect uses the same transitions so no new environment substrate is needed.",
+      "method": "ICM/RND prediction-error curiosity as a cheap control floor",
+      "roadmap_candidate": "candidate_for_v428_control: icm_rnd_prediction_error_floor",
+      "source_ids": [
+        "1705.05363",
+        "1810.12894"
+      ],
+      "track": "prediction_error_baseline_floor"
+    },
+    {
+      "fails_when": "the predictor only ranks a fixed candidate pool, useful actions are not generated in the first place, or clickability improves frame change while failing to improve level completion and action count.",
+      "implement_cost_over_current_stack": "low-to-medium: keep the current A2 action-effect CNN as a candidate expansion prior, train it on cached human/self-play transition rows, and gate it by first-win action efficiency instead of treating it as a post-hoc reranker.",
+      "maps_to_current_stack": "A1 dense-curiosity supplies the dense learnability signal that tells the explorer when to keep probing; A2 action-effect turns the signal into fewer no-op or non-changing clicks under ARC-AGI-3's efficiency metric.",
+      "method": "Clickability / action-effect expansion prior under ARC efficiency scoring",
+      "roadmap_candidate": "flagged_for_v428: clickability_action_effect_expansion_prior (arXiv:2601.10904 + arXiv:2603.24621)",
+      "source_ids": [
+        "2601.10904",
+        "2603.24621"
+      ],
+      "track": "clickability_action_effect_expansion"
+    },
+    {
+      "fails_when": "state hashing aliases hidden registers, executable models pass prefix observations but fail held-out transitions, or graph exploration broadens coverage while spending more actions than the current live explorer.",
+      "implement_cost_over_current_stack": "medium-high: persist a graph of tested state-action pairs, route untested but learnable edges through A1 dense-curiosity, and promote only verified A2 action-effect transitions into executable planning or shortest-path reuse.",
+      "maps_to_current_stack": "A1 dense-curiosity chooses which frontier edges are worth testing; A2 action-effect supplies the transition predictions and the graph/world model prevents repeated actions that cannot change the state.",
+      "method": "Graph/executable-world-model action-effect planner",
+      "roadmap_candidate": "flagged_for_v428: graph_executable_world_model_action_effect_planner (arXiv:2512.24156 + arXiv:2605.05138)",
+      "source_ids": [
+        "2512.24156",
+        "2605.05138"
+      ],
+      "track": "state_graph_world_model_action_effect"
+    }
+  ],
+  "note_path": "docs/research-notes/intrinsic-motivation-action-effect-literature-2026-06-23.md",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/2604.18701",
+      "https://arxiv.org/abs/2509.25438",
+      "https://arxiv.org/abs/2102.04399",
+      "https://arxiv.org/abs/1705.05363",
+      "https://arxiv.org/abs/1810.12894",
+      "https://arxiv.org/abs/2601.10904",
+      "https://arxiv.org/abs/2603.24621",
+      "https://arxiv.org/abs/2512.24156",
+      "https://arxiv.org/abs/2605.05138"
+    ],
+    "bridge_diagnosis_note_read": true,
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "exp4625_artifact_read": true,
+    "leaderboard_submission": false,
+    "live_llm_inference": false,
+    "model_load": false,
+    "network_hf_models_reachable": true,
+    "offline_live_bridge_note_read": true,
+    "ops_docs_modified": false,
+    "research_conductor_modified": false,
+    "research_references_read": true,
+    "research_studying_read": true,
+    "sweep_clusters_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_arxiv_ids": [],
+    "sweep_semscholar_queries": [
+      "Curiosity-Critic cumulative prediction error improvement intrinsic reward 2604.18701",
+      "intrinsic curiosity module random network distillation prediction error curiosity exploration",
+      "learning progress epistemic aleatoric uncertainty exploration reinforcement learning",
+      "ARC-AGI-3 clickability action effect CNN ARC Prize 2025 2601.10904",
+      "Graph-Based Exploration ARC-AGI-3 2512.24156 Executable World Models 2605.05138"
+    ],
+    "sweep_semscholar_rate_limited_queries": [
+      "Curiosity-Critic cumulative prediction error improvement intrinsic reward 2604.18701",
+      "intrinsic curiosity module random network distillation prediction error curiosity exploration",
+      "learning progress epistemic aleatoric uncertainty exploration reinforcement learning",
+      "ARC-AGI-3 clickability action effect CNN ARC Prize 2025 2601.10904",
+      "Graph-Based Exploration ARC-AGI-3 2512.24156 Executable World Models 2605.05138"
+    ],
+    "sweep_semscholar_used": true,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/2604.18701",
+      "https://arxiv.org/abs/2509.25438",
+      "https://arxiv.org/abs/2102.04399",
+      "https://arxiv.org/abs/1705.05363",
+      "https://arxiv.org/abs/1810.12894",
+      "https://arxiv.org/abs/2601.10904",
+      "https://arxiv.org/abs/2603.24621",
+      "https://arxiv.org/abs/2512.24156",
+      "https://arxiv.org/abs/2605.05138"
+    ]
+  },
+  "random_seed": 4637
+}
