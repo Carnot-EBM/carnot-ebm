@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.427",
+  "generated_at": "2026-06-23T18:39:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked retro fields read 0/0/0, but on-disk ground truth read this turn shows the milestone ran fully: results/experiment_4627..4638 (12 experiments, 13 artifact files — exp4631 emits two; mtimes 2026-06-23T14:22:42Z->18:31:15Z UTC, ~248-min window) plus all 12 honest_verdict strings in ops/changelog. experiments_completed=0 and total_wall_time_minutes=0 are the recurring milestone-scoped timing-detector FALSE-ZERO (documented .363-.426, now extending to .427), NOT an empty or interrupted milestone. compute_bound_experiments_count=0 is independently CORRECT: every .427 substrate is verifier_ensemble_against_cached_candidates / aggregation_from_upstream_artifacts / hardware_smoke (the frozen sprint generator runs on the AMD iGPU, never the monitored 3090s), so both RTX 3090s idle at 0% (18:39:32Z snapshot, ~8 min post-last-commit) is correct and gpu_idle_on_compute_bound_tasks=null is correct.",
+  "bottlenecks_identified": [
+    "RECURRING OBSERVABILITY GAP (not execution): the milestone-scoped timing detector feeding this retro's TIMING DATA block false-reported '0 commits since activation' for the 5th+ consecutive ARC milestone (.363-.426, now .427), despite 12 experiments (exp4627-exp4638) committing over a ~248-min window. The retro is fed a 0/0/0 it cannot trust; the defect is observability, not throughput.",
+    "NO GPU BOTTLENECK: compute_bound_experiments_count=0 is genuine (no monitored-3090 live_llm_inference task ran — substrates are all verifier-scoring/aggregation/hardware-smoke and the generator is on the iGPU), so the 0% RTX 3090 utilization is correct idle behaviour, not waste. Per the GPU idle interpretation rule, GPU idle is NOT flagged."
+  ],
+  "improvements_suggested": [
+    "Move the shipped milestone-scoped-commit detector-wire from the standalone module to the conductor's retro TIMING-DATA prompt-assembly call site, so the retro receives the on-disk experiment list instead of a false zero (the exact recurring fix recommended .424->.426, still unshipped to the consumer).",
+    "Promote injected-timing == on-disk-artifact-count to a HARD retro-launch gate: refuse to launch a retro with experiments_completed=0 when results/experiment_*.json for the active milestone window exist on disk.",
+    "Stamp duration_s / inference_substrate / compute_bound on each experiment artifact at write time, so the retro can compute real wall-time and compute-bound counts directly from artifacts, independent of git-commit-message parsing.",
+    "No GPU/DualGPURunner change is warranted: ARC milestones run verifier-scoring/aggregation/hardware-smoke substrates plus an iGPU generator, so idle monitored 3090s are expected — do not propose GPU enforcement."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Ship the detector-wire to the conductor's retro prompt-assembly consumer (not only the standalone module) — this single fix ends the recurring .363-.427 false-zero and restores authoritative timing data for every future retro.",
+    "Gate retro launch on injected-timing == on-disk-artifact-count, so a false-zero is caught and corrected before the retro runs rather than narrated around afterwards.",
+    "Stamp duration_s/inference_substrate/compute_bound at artifact write time, making the retro's numbers derivable from artifacts and immune to commit-message-pattern drift."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "Execution this milestone was healthy — 12 experiments ran clean over ~4 hours and it was the strongest ARC result of the recent run (A2 graduated the action-effect predictor and raised live action efficiency; A3 banked ls20 L2, reproducible_total_levels 55->56; capstone exp4638 clean, LIVE re-check clean). The ONLY operational defect is the recurring timing-detector false-zero that hands this retro a 0/0/0 it cannot trust; the highest-leverage fix remains wiring the detector to the retro's prompt-assembly consumer, the same recommendation carried since .363 — so the cost is operator/retro reconciliation time, not experiment wall-time."
+}
