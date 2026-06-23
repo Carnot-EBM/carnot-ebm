@@ -9119,3 +9119,4 @@ c |
 | 2026-06-23 14:25 UTC | PHASE 0 (TRANSITION) -- archive .426 -> activate . | OK | 86 passed, 1 warning in 5.16s |
 | 2026-06-23 14:51 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 108 passed, 1 warning in 9.01s |
 | 2026-06-23 15:09 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 118 passed, 1 warning in 11.40s |
+| 2026-06-23 15:39 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 120 passed, 1 warning in 21.25s |
