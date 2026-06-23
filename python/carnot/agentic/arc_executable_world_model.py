@@ -697,21 +697,70 @@ def plan_in_model(
     *,
     max_nodes: int = 20000,
     max_depth: int = 40,
+    goal_energy=None,
 ) -> Optional[list]:
     """BFS a path to an is_level_complete state ENTIRELY INSIDE the induced model
     (engine is pure: grid,action,data -> grid; no environment). Returns the action
     sequence [{"action","data"}] that the model believes reaches a win, or None. This
     is the harness-friendly planner: the agent computes the plan with zero real actions,
     then executes it in the real env (few real actions = the EFFICIENCY win), halting if
-    reality diverges from the model."""
-    from collections import deque
+    reality diverges from the model.
 
+    GOAL-ENERGY (2026-06-23, closes GAP-ARCH-GOAL-NOT-VERIFIED): when ``goal_energy`` (grid -> float,
+    LOWER = closer to the induced win) is supplied, the search is BEST-FIRST by goal_energy -- it DESCENDS
+    toward the goal predicate instead of exploring blind breadth-first, so it reaches the win in FEWER
+    nodes (the action-efficiency win). ``goal_energy`` is induced per-game from the agent's OWN observed
+    win/non-win states (``arc_agi3_goal_induction.induce_goal_energy``), NOT a frozen transfer. Backward-
+    compatible: ``goal_energy=None`` keeps the exact original FIFO BFS. The terminal check stays
+    ``is_level_complete`` (the energy only orders the frontier); an ablation control is mandatory."""
     if is_level_complete is None:
         return None
     start = np.asarray(start_grid)
     seen = {to_ascii(start)}
-    q = deque([(start, [])])
     nodes = 0
+
+    if goal_energy is not None:
+        # BEST-FIRST by goal-energy: descend toward the induced goal predicate.
+        import heapq
+        import itertools
+
+        def _h(g):
+            try:
+                return float(goal_energy(g))
+            except Exception:
+                return 0.0
+
+        counter = itertools.count()
+        heap = [(_h(start), next(counter), start, [])]
+        while heap and nodes < max_nodes:
+            _, _, grid, path = heapq.heappop(heap)
+            if len(path) >= max_depth:
+                continue
+            for c in _model_candidates(grid):
+                try:
+                    ng = np.asarray(engine(grid.copy(), c["action"], c["data"]))
+                except Exception:
+                    continue
+                nodes += 1
+                if ng.shape != start.shape:
+                    continue
+                key = to_ascii(ng)
+                if key in seen:
+                    continue
+                seen.add(key)
+                npath = path + [c]
+                try:
+                    if bool(is_level_complete(ng)):
+                        return npath
+                except Exception:
+                    pass
+                heapq.heappush(heap, (_h(ng), next(counter), ng, npath))
+        return None
+
+    # ---- original blind FIFO BFS (goal_energy=None; unchanged) ----
+    from collections import deque
+
+    q = deque([(start, [])])
     while q and nodes < max_nodes:
         grid, path = q.popleft()
         if len(path) >= max_depth:
