@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.425",
+  "generated_at": "2026-06-23T09:01:49Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative milestone-scoped timing block reports 0 commits / 0 experiments / 0 compute-bound / 0 wall-min (locked fields 0/0/0/null, gpu_idle_on_compute_bound_tasks=null). This is the recurring milestone-scoped-detector FALSE-ZERO (documented .363-.424, now .425), NOT a true absence: on-disk ground truth read this turn (ls mtimes + capstone exp4614 and A1 exp4604 via summarize_artifact.py + changelog honest_verdict strings) reconciles experiments exp4604-exp4614 (12 artifacts) over 2026-06-23 01:43->04:54 UTC. No monitored-3090 compute-bound task ran (every substrate is verifier_ensemble_against_cached_candidates / aggregation_from_upstream_artifacts / hardware_smoke; the frozen Qwen3.5-9B-MTP sprint generator runs on the AMD iGPU per project policy, never the monitored 3090s), so compute_bound=0 and both RTX 3090s idle at the 09:01:49Z snapshot are BOTH correct.",
+  "bottlenecks_identified": [
+    "RECURRING false-zero milestone-scoped timing-detector gap (.363->.424, now .425): the detector that builds this retro's TIMING DATA block attributes 0 commits since activation, yet the conductor's own changelog records this milestone's commits (exp4604-exp4614). The shipped detector-wire repair reaches the standalone module but still never reaches the conductor's retro prompt-assembly consumer. This is an OBSERVABILITY failure, not an execution failure -- the retro is structurally blind to its own milestone.",
+    "No per-experiment wall-time is measurable from the retro's authoritative data because of the detector gap; bottleneck analysis is starved of input by construction.",
+    "Artifact-side note (NOT a GPU-idle bottleneck): the PRIMARY A1 trust-energy headline (exp4604) is flagged_adversarial / LIVE re-check CRITICAL (DURATION_TOO_SHORT, 0.44s on a verifier-scoring substrate that needs >=1.0s), so its pass-rate-up/first-win-up win was correctly quarantined out of the clean capstone -- the fabrication gate worked as designed."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site (the actual consumer that feeds this block) -- the repeatedly-identified root cause, fixed at the standalone module but never at the call site.",
+    "Promote injected==on-disk to a HARD retro-launch gate: refuse to launch the operational retro unless the injected TIMING DATA matches the on-disk milestone-scoped commit set, so a detector miss fails loudly instead of silently producing 0/0/0.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write time (experiment_template.py) so the retro can reconstruct timing artifact-side even when commit attribution misses (would have surfaced exp4604's sub-floor 0.44s verifier-scoring run automatically).",
+    "Encode the ARC-sprint expectation (frozen Qwen3.5-9B-MTP generator on the AMD iGPU, never the monitored 3090s) so idle-3090 snapshots during ARC milestones are not re-investigated each retro and DualGPURunner is not proposed for single-/no-GPU substrates."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the false-zero timing detector at the conductor's retro prompt-assembly call site (recurring root cause .363-.425) -- the one change that lets every future operational retro actually measure bottlenecks instead of re-deriving the same gap.",
+    "Add a HARD retro-launch gate asserting injected-timing == on-disk-commit-set, converting silent detector misses into loud failures.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write time so timing (and sub-floor-duration flags) are reconstructable independent of commit attribution."
+  ],
+  "estimated_time_savings_pct": 4,
+  "meta_reflection": "The operational story of .425 repeats .363-.424: execution proceeded (the conductor's changelog records exp4604-exp4614) but the retro's timing detector was blind to it (false-zero gap), so the locked fields read 0/0/0/null. The highest-leverage operational fix remains OBSERVABILITY -- wiring the detector into the retro's prompt-assembly consumer and hard-gating injected==on-disk -- not any experiment-speed change. Until that lands, each retro keeps re-deriving the same detector-gap diagnosis instead of analyzing real bottlenecks."
+}
