@@ -205,5 +205,18 @@
       "summarize_returncode": 0
     }
   },
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "live_solve_rate_bare=0.04 and live_solve_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "live_solve_rate_delta_vs_bare=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
