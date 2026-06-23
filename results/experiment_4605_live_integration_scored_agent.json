@@ -1462,5 +1462,28 @@
   },
   "submitted_to_leaderboard": false,
   "value_weight_used": 0.0,
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "warn",
+      "detail": "first_win_rate_bare=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta==0, null_delta_methodology_note, and bare_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "first_win_rate_bare=0.04 and solve_rate_bare=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "actions_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "first_win_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
