@@ -2942,6 +2942,62 @@ orphan-solver lint gates, writes `results/experiment_4645_integration_gate.json`
 and emits an honest null with the bare config if no clean lever raises a
 metric, including when bare and integrated metrics are exactly equal.
 
+### REQ-ARC-WMTE-4646: Canonical Live Multi-Level Solve-Rate Metric Helper
+
+Experiment 4646 SHALL provide a canonical helper that reads the A1 goal-energy
+artifact `results/experiment_4640_goal_energy_generation_live.json`, the A2
+action-effect expansion-prior artifact
+`results/experiment_4641_action_effect_expansion_prior_live.json`, the A6
+integration artifact `results/experiment_4645_integration_gate.json`, the live
+action-efficiency artifact
+`results/experiment_4634_live_action_efficiency_metric.json`, the
+offline-to-live co-metric artifact
+`results/experiment_4622_offline_to_live_transfer_ratio_metric.json`, and the
+ARC solve registry without loading a model. The helper SHALL compute
+`live_multi_level_solve_rate` as the count of live attempts reaching depth
+`>=2` divided by the count of live attempts. It SHALL expose a
+`depth_histogram` with `depth_0`, `depth_1`, `depth_2`, and `depth_3_plus`
+counts so the new-wall metric is auditable and not a single opaque aggregate.
+
+Experiment 4646 SHALL report `live_multi_level_solve_rate` side-by-side with the
+other ARC co-headline metrics in one canonical `coheadline_block`: reproducible
+total levels from `ops/arc_solve_registry.yaml`, live-submittable count,
+first-win-rate, `live_action_efficiency`, and
+`offline_to_live_transfer_ratio`. If no live attempt reaches depth `>=2`, the
+helper SHALL report `live_multi_level_solve_rate: 0.0` and include
+`null_delta_methodology_note` instead of fabricating a non-null value.
+
+Experiment 4646 SHALL write
+`results/experiment_4646_live_multi_level_solve_rate_metric.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `live_multi_level_solve_rate`, `depth_histogram`,
+`coheadline_block`, `tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: live_multi_level_solve_rate_metric_helper_shipped_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor)."
+- `live_multi_level_solve_rate`: principle "the canonical co-headline metric value (fraction of live attempts solving >=2 levels) -- the NEW WALL the generation levers must close."
+- `depth_histogram`: principle "the per-depth count of live attempts (depth 0/1/2/3+) -- explicit so the metric is auditable, not a single opaque number."
+- `coheadline_block`: principle "live_multi_level_solve_rate reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / live_action_efficiency / offline_to_live_transfer_ratio -- the single canonical metric surface."
+- `tests_added`: principle "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4646
+
+**Given** A1/A2 live artifacts with per-attempt `reached_level` or
+`depth_of_live_solve` values
+**When** the 4646 helper computes the live multi-level solve-rate metric
+**Then** it reports attempts with depth `>=2` divided by all attempted live
+rows, records the depth histogram, reports the value in the canonical
+coheadline block beside reproducible total levels, live-submittable count,
+first-win-rate, live action-efficiency, and offline-to-live transfer ratio, and
+emits `null_delta_methodology_note` with value `0.0` when no attempt reaches
+depth `>=2`.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2

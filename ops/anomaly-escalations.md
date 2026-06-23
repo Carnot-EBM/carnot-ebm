@@ -591,3 +591,18 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['WORLD_MODEL_TRUST_DEGENERACY'] on a non-negative verdict
 - artifact: results/experiment_4610_world_model_trust_pass_rate_metric.json
+
+## arc_loop_solve_lf52.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
+- artifact: results/arc_loop_solve_lf52.json
+
+## arc_loop_solve_r11l.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
+- artifact: results/arc_loop_solve_r11l.json
+
+## arc_loop_solve_vc33.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
+- artifact: results/arc_loop_solve_vc33.json
