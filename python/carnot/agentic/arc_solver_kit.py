@@ -474,7 +474,9 @@ def _candidate_generated(candidate: Any) -> bool:
         return True
     if _candidate_reaches_dispatch_win(candidate):
         return True
-    return bool(_candidate_field(candidate, "solution_labels") or _candidate_field(candidate, "labels"))
+    return bool(
+        _candidate_field(candidate, "solution_labels") or _candidate_field(candidate, "labels")
+    )
 
 
 def _candidate_reaches_dispatch_win(candidate: Any) -> bool:
@@ -521,7 +523,8 @@ def approach_dispatcher_operator(
         (
             candidate
             for candidate in candidate_rows
-            if _candidate_approach(candidate) == selected_approach and _candidate_generated(candidate)
+            if _candidate_approach(candidate) == selected_approach
+            and _candidate_generated(candidate)
         ),
         None,
     )
@@ -535,7 +538,9 @@ def approach_dispatcher_operator(
     if routed is None:
         dead_end = f"no generated candidate for routed approach {selected_approach}"
     elif not selected_winner:
-        dead_end = "dispatched candidate generated a proposal, but the verifier gate did not reach a win"
+        dead_end = (
+            "dispatched candidate generated a proposal, but the verifier gate did not reach a win"
+        )
     elif baseline_winner:
         dead_end = "baseline approach already generated the winning candidate"
     else:
@@ -812,7 +817,9 @@ def env_adaptive_resolve_operator(
     if not adaptive_actions:
         dead_end = "adaptive resolver produced no replayable actions for the symbolic plan."
     elif not adaptive_reached:
-        dead_end = "adaptive resolver produced actions, but the transfer verifier target was not reached."
+        dead_end = (
+            "adaptive resolver produced actions, but the transfer verifier target was not reached."
+        )
     elif frozen_reached:
         dead_end = "frozen replay already reached the transfer verifier target, so no drift recovery value was added."
     return {
@@ -3653,11 +3660,21 @@ class OfflineSolver:
         path_cost_weight: Optional[float] = None,
         branch_mode: str = "replay",
         env_factory: Optional[Callable[[], Any]] = None,
+        move_pruner: Optional[Any] = None,
     ) -> None:
         self.game_id = game_id
         self.action_labels = action_labels
         self.apply = apply
         self.state_key = state_key
+        # OPTIONAL MOVE-PRUNER (efficiency, north-star action-cost axis). When given, an object with
+        #   should_prune(frame, label) -> bool   (skip a predicted-dead-end edge BEFORE applying it)
+        #   observe(frame_before, label, frame_after, leveled_up)  (learn from the actual outcome)
+        # lets the search skip expansions it predicts are dead-ends (e.g. walking into a charging enemy),
+        # shrinking states_expanded. See arc_hazard_pruner.HazardMovePruner -- it fits a hazard model from
+        # the search's OWN observed deaths (no offline ground-truth), so it transfers to unseen games and
+        # NO-OPS when no hazard is present. Correctness-preserving: it only prunes edges the learned model
+        # predicts terminate the avatar; the reproduction gate remains the final authority.
+        self.move_pruner = move_pruner
         self.warmup_label = warmup_label  # an action to consume the no-op first slot (gotcha #4)
         self.max_nodes = max_nodes
         # BRANCH MODE — how the search navigates between nodes:
@@ -3749,11 +3766,19 @@ class OfflineSolver:
             if len(path) >= depth_cap:
                 continue
             self._replay(env, list(prefix) + path)
+            node_frame = self.last_frame
             for label in self._call_action_labels(env, path):
+                if self.move_pruner is not None and self.move_pruner.should_prune(
+                    node_frame, label
+                ):
+                    continue  # learned dead-end (e.g. walks into a charger) -- skip the expansion
                 f2 = self.apply(env, label, None)
                 self.last_frame = f2
                 nodes += 1
-                if frame_level(f2) > start_level:
+                leveled = frame_level(f2) > start_level
+                if self.move_pruner is not None:
+                    self.move_pruner.observe(node_frame, label, f2, leveled)
+                if leveled:
                     self.last_states_expanded = nodes
                     return path + [label], nodes
                 k = self._call_state_key(env)
@@ -3793,13 +3818,21 @@ class OfflineSolver:
                 continue
             env._game = copy.deepcopy(snap)  # restore this node's exact state
             self.last_frame = frame
+            node_frame = frame
             for label in self._call_action_labels(env, path):
+                if self.move_pruner is not None and self.move_pruner.should_prune(
+                    node_frame, label
+                ):
+                    continue  # learned dead-end -- skip the expansion
                 env._game = copy.deepcopy(snap)  # branch from the node for each child
                 self.last_frame = frame
                 f2 = self.apply(env, label, None)
                 self.last_frame = f2
                 nodes += 1
-                if frame_level(f2) > start_level:
+                leveled = frame_level(f2) > start_level
+                if self.move_pruner is not None:
+                    self.move_pruner.observe(node_frame, label, f2, leveled)
+                if leveled:
                     self.last_states_expanded = nodes
                     return path + [label], nodes
                 k = self._call_state_key(env)
@@ -3854,11 +3887,19 @@ class OfflineSolver:
             if len(path) >= depth_cap:
                 continue
             e_node = at(path)  # fresh env at the node (for action_labels)
+            node_frame = self.last_frame
             for label in self._call_action_labels(e_node, path):
+                if self.move_pruner is not None and self.move_pruner.should_prune(
+                    node_frame, label
+                ):
+                    continue  # learned dead-end (e.g. walks into a charger) -- skip the fresh-env eval
                 e_child = at(path + [label])
                 f2 = self.last_frame
                 nodes += 1
-                if frame_level(f2) > start_level:
+                leveled = frame_level(f2) > start_level
+                if self.move_pruner is not None:
+                    self.move_pruner.observe(node_frame, label, f2, leveled)
+                if leveled:
                     self.last_states_expanded = nodes
                     return path + [label], nodes
                 k = self._call_state_key(e_child)

@@ -1,0 +1,32 @@
+{
+  "experiment": "arc_hazard_prune_ab_tu93",
+  "honest_verdict": "success: hazard_move_pruner_wired_into_live_OfflineSolver_cuts_states_expanded_on_tu93_L3_preserving_the_solve",
+  "verifier_is_oracle": false,
+  "inference_substrate": "offline_arc_sim_no_quota",
+  "game": "tu93",
+  "target_level": 3,
+  "baseline": {
+    "states_expanded": 2947,
+    "reached_level": 3,
+    "offline_reproduced": true,
+    "hazard_prune": false
+  },
+  "hazard_pruned": {
+    "states_expanded": 2859,
+    "reached_level": 3,
+    "offline_reproduced": true,
+    "hazard_prune": true,
+    "pruner_stats": {
+      "observed": 2859,
+      "pruned": 88,
+      "n_deaths": 6,
+      "lethal_mode": "omni",
+      "trust": 1.0,
+      "specificity": 1.0,
+      "model_fitted": true
+    }
+  },
+  "states_expanded_reduction": 88,
+  "reduction_pct": 2.99,
+  "methodology_note": "A/B run of scripts/arc_loop_solve.py --game tu93 --target-level 3 with and without --no-hazard-prune. The pruner (arc_hazard_pruner.HazardMovePruner) fits a hazard model from the SEARCH'S OWN observed death transitions (no offline ground-truth BFS) and selects the toward/omni rung by IN-SAMPLE observed-transition trust (scored on those same observed deaths/safes, so optimistic -- a conservative gate, not a guarantee). The states-expanded reduction equals the pruned-move count (88). specificity 1.0 is on OBSERVED moves (no false-positive prune among moves the search actually saw); the reproduction gate is the correctness backstop and the L3 solve is preserved (reproduced=True). Modest magnitude: the pruner only saves death-move expansions; most of tu93's best-first search is non-lethal exploration the pruner cannot reduce."
+}

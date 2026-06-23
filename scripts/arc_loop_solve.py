@@ -17,6 +17,7 @@ Usage (what the conductor task calls):
   .venv/bin/python scripts/arc_loop_solve.py --game lp85 --target-level 3
   .venv/bin/python scripts/arc_loop_solve.py --auto
 """
+
 from __future__ import annotations
 
 import argparse
@@ -52,7 +53,7 @@ def _label_to_action(label: str) -> dict:
         return {"raw": label}
 
 
-def solve_adaptered(game: str, target_level: int) -> dict:
+def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> dict:
     ad = adapters.get_adapter(game)
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -72,9 +73,28 @@ def solve_adaptered(game: str, target_level: int) -> dict:
         verifier = ad.hand_verifier
         verifier_src = "hand_verifier_cold_start"
 
-    solver = kit.OfflineSolver(game, ad.action_labels, ad.apply, ad.state_key,
-                               warmup_label=ad.warmup_label, verifier=verifier,
-                               branch_mode=getattr(ad, "branch_mode", "replay"))
+    # EFFICIENCY: an online hazard move-pruner (fits a hazard model from the search's OWN observed
+    # deaths -- no offline ground-truth -- and skips moves it predicts walk into a charging enemy). It
+    # NO-OPS when no hazard is detected, so it is safe for any game; the win is that for a hazard game
+    # (tu93) the search stops wasting expansions on death-paths. This is the wired-in salvage of the
+    # outer-loop hazard-aware world model (arc_nav_world_model) onto the LIVE solve path.
+    move_pruner = None
+    if hazard_prune:
+        from carnot.agentic.arc_hazard_pruner import HazardMovePruner
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        move_pruner = HazardMovePruner(grid_of)
+
+    solver = kit.OfflineSolver(
+        game,
+        ad.action_labels,
+        ad.apply,
+        ad.state_key,
+        warmup_label=ad.warmup_label,
+        verifier=verifier,
+        branch_mode=getattr(ad, "branch_mode", "replay"),
+        move_pruner=move_pruner,
+    )
     f = solver._replay(env, [])
     cur = kit.frame_level(f)
     full, total_states, X, y = [], 0, [], []
@@ -86,7 +106,8 @@ def solve_adaptered(game: str, target_level: int) -> dict:
         search_reached = kit.frame_level(solver.last_frame)
         if ad.featurize is not None:
             Xi, yi = collect_trajectory_data(env, solver, full, path, ad.featurize)
-            X += Xi; y += yi
+            X += Xi
+            y += yi
         f = solver._replay(env, full + path)
         # Some games need fresh-env node evaluation because env.reset() is not
         # idempotent during search. In that case the searched winning frame is
@@ -102,14 +123,26 @@ def solve_adaptered(game: str, target_level: int) -> dict:
     ckpt_written = None
     if X and ad.featurize is not None:
         lv = LearnedVerifier(ad.featurize).fit(X, y)
-        lv.save(ckpt, meta={"trained_games": [game], "feature_names": "adapter_featurize",
-                            "provenance": f"arc_loop_solve {game}->L{cur}"})
+        lv.save(
+            ckpt,
+            meta={
+                "trained_games": [game],
+                "feature_names": "adapter_featurize",
+                "provenance": f"arc_loop_solve {game}->L{cur}",
+            },
+        )
         ckpt_written = str(ckpt.relative_to(REPO))
 
     return {
-        "game": game, "reached_level": cur, "moves": len(full),
-        "states_expanded": total_states, "verifier_src": verifier_src,
-        "offline_reproduced": bool(gate["reproduced"]), "reproduced_levels": cur,
+        "game": game,
+        "reached_level": cur,
+        "moves": len(full),
+        "states_expanded": total_states,
+        "verifier_src": verifier_src,
+        "hazard_prune": bool(hazard_prune),
+        "hazard_pruner_stats": (move_pruner.stats() if move_pruner is not None else None),
+        "offline_reproduced": bool(gate["reproduced"]),
+        "reproduced_levels": cur,
         "learned_verifier_checkpoint": ckpt_written,
         "selected_generic_operators": selected_generic_operators,
         "reproduction_gate": gate,
@@ -123,8 +156,9 @@ def solve_adaptered(game: str, target_level: int) -> dict:
     }
 
 
-def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60,
-                      warmup: bool = False) -> Optional[dict]:
+def solve_via_explore(
+    game: str, max_expansions: int = 6000, max_depth: int = 60, warmup: bool = False
+) -> Optional[dict]:
     """ADAPTER-FREE first contact: graph-explore the game; if it advances a level,
     CAPTURE the trajectory, reproduction-gate it, train a verifier from it, and
     persist the trajectory as the adapter SEED — so the next solve is the efficient
@@ -136,8 +170,9 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
 
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
-    traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=max_expansions,
-                                       max_depth=max_depth, warmup=warmup)
+    traj, lvl = graph_explore_solve_v2(
+        env, 0, max_expansions=max_expansions, max_depth=max_depth, warmup=warmup
+    )
     if traj is None:
         return None
 
@@ -154,19 +189,27 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
         g = grid_of(frame)
         nz = int((g != 0).sum())
         return [float(nz), float(len(set(g.flatten().tolist()))), float(g.shape[0] * g.shape[1])]
+
     X, y = [], []
     f = env.reset()
     if warmup and traj:
         f = apply(env, labels[0], f)
     for i, lab in enumerate(labels):
-        X.append(featurize_frame(f)); y.append(float(len(labels) - i))
+        X.append(featurize_frame(f))
+        y.append(float(len(labels) - i))
         f = apply(env, lab, f)
     ckpt = None
     if X:
         lv = LearnedVerifier(featurize_frame).fit(X, y)
         ckpt = CKPT_DIR / f"arc_verifier_{game}.json"
-        lv.save(ckpt, meta={"trained_games": [game], "feature_names": ["nonzero", "colors", "cells"],
-                            "provenance": f"graph_explore first-solve {game}->L{lvl}"})
+        lv.save(
+            ckpt,
+            meta={
+                "trained_games": [game],
+                "feature_names": ["nonzero", "colors", "cells"],
+                "provenance": f"graph_explore first-solve {game}->L{lvl}",
+            },
+        )
 
     # persist the captured trajectory as the adapter SEED
     seed = RESULTS / f"arc_explore_trajectory_{game}.json"
@@ -182,23 +225,29 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
         if gate["reproduced"] and traj:
             import types
             from carnot.agentic import arc_heuristic_select as hsel
+
             f2 = env.reset()
             if warmup:
                 f2 = apply(env, labels[0], f2)
             trans = []
-            for lab in (labels[1:] if warmup else labels):
+            for lab in labels[1:] if warmup else labels:
                 g0 = grid_of(f2)
                 f2 = apply(env, lab, f2)
                 trans.append(types.SimpleNamespace(grid=g0, next_grid=grid_of(f2)))
             heuristic_learned = hsel.select_and_learn(
-                game, grid_of(f2), trans, mask_hud=False, budget=max_expansions)
+                game, grid_of(f2), trans, mask_hud=False, budget=max_expansions
+            )
     except Exception:
         heuristic_learned = None
 
     return {
-        "game": game, "method": "graph_explore_adapter_free", "reached_level": lvl,
-        "moves": len(traj), "offline_reproduced": bool(gate["reproduced"]),
-        "reproduced_levels": lvl, "trajectory_seed": str(seed.relative_to(REPO)),
+        "game": game,
+        "method": "graph_explore_adapter_free",
+        "reached_level": lvl,
+        "moves": len(traj),
+        "offline_reproduced": bool(gate["reproduced"]),
+        "reproduced_levels": lvl,
+        "trajectory_seed": str(seed.relative_to(REPO)),
         "verifier_seed_checkpoint": (str(ckpt.relative_to(REPO)) if ckpt else None),
         "heuristic_learned": heuristic_learned,
         "next": "register a GameAdapter from the seed for verifier-routed re-solving",
@@ -209,14 +258,17 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
 def needs_re(game: str) -> dict:
     rec = learning.recommend_approach(game)
     return {
-        "game": game, "status": "needs_per_game_RE",
+        "game": game,
+        "status": "needs_per_game_RE",
         "transfer_recommendation": rec.get("recommended"),
         "selected_generic_operators": rec.get("selected_generic_operators"),
         "general_gotchas": rec.get("general_gotchas"),
         "guidance": rec.get("guidance"),
-        "instruction": ("Reverse-engineer this game's win/action/state DELTA reusing the routed "
-                        "recipe, register a GameAdapter in arc_game_adapters.py, then re-run "
-                        "this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline."),
+        "instruction": (
+            "Reverse-engineer this game's win/action/state DELTA reusing the routed "
+            "recipe, register a GameAdapter in arc_game_adapters.py, then re-run "
+            "this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline."
+        ),
         "mode": "standing_arc_loop_routing_only",
     }
 
@@ -232,6 +284,13 @@ def main(argv) -> int:
     ap.add_argument("--game")
     ap.add_argument("--auto", action="store_true")
     ap.add_argument("--target-level", type=int, default=3)
+    ap.add_argument(
+        "--no-hazard-prune",
+        dest="hazard_prune",
+        action="store_false",
+        help="disable the online hazard move-pruner (for A/B states-expanded measurement)",
+    )
+    ap.set_defaults(hazard_prune=True)
     args = ap.parse_args(argv)
     game = args.game or (pick_target() if args.auto else None)
     if not game:
@@ -239,13 +298,26 @@ def main(argv) -> int:
 
     print(f"== standing ARC loop: game={game} ==")
     if adapters.get_adapter(game):
-        out = solve_adaptered(game, args.target_level)        # verifier-routed (efficient)
+        out = solve_adaptered(
+            game, args.target_level, hazard_prune=args.hazard_prune
+        )  # verifier-routed
     else:
-        out = solve_via_explore(game) or needs_re(game)       # adapter-free first contact, else route to RE
+        out = solve_via_explore(game) or needs_re(
+            game
+        )  # adapter-free first contact, else route to RE
     RESULTS.mkdir(exist_ok=True)
     (RESULTS / f"arc_loop_solve_{game}.json").write_text(json.dumps(out, indent=2))
-    for k in ("status", "reached_level", "offline_reproduced", "reproduced_levels",
-              "states_expanded", "verifier_src", "learned_verifier_checkpoint"):
+    for k in (
+        "status",
+        "reached_level",
+        "offline_reproduced",
+        "reproduced_levels",
+        "states_expanded",
+        "hazard_prune",
+        "hazard_pruner_stats",
+        "verifier_src",
+        "learned_verifier_checkpoint",
+    ):
         if k in out:
             print(f"  {k}: {out[k]}")
     print(f"  wrote results/arc_loop_solve_{game}.json")

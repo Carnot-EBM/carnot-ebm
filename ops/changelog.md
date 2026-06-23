@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Mechanism-parity audit: hazard world model was ORPHANED + duplicated an already-solved level; SALVAGED as a live-path move-pruner + reachability lint — outer-loop, ultracode)
+
+Operator: "Is the mechanism we use in the outer loop the same one the live agent uses to find solves?
+Otherwise we are wasting the additional effort." Audited it (workflow `arc-mechanism-parity-audit`:
+6 mappers → synthesis → adversarial refutation; verdict `different_mechanism`, refutation `synthesis_holds`).
+The worry was JUSTIFIED. Write-up `docs/research-notes/arc-mechanism-parity-and-hazard-salvage-2026-06-22.md`.
+
+- FINDING: the hazard-aware nav world model (`arc_nav_world_model` / `HazardAwareNavWorldModel` /
+  `escalating_deepen`) was imported ONLY by `scripts/experiments/*` + its test — ZERO live-agent files. The
+  live agent ALREADY deep-solves tu93 to L3 (registry: L5) via the `_tu93` GameAdapter + verifier-routed
+  best-first search (re-confirmed live: reached_level 3, reproduced True, 2947 states, hand_verifier). So the
+  hazard line re-solved an already-solved level via a mechanism the live agent never calls, and its `omni`
+  rung was calibrated by an exhaustive real-env BFS a hidden-game agent cannot run. Operator was right.
+- SALVAGE (operator-chosen): `python/carnot/agentic/arc_hazard_pruner.py:HazardMovePruner` folds the hazard
+  model into the LIVE `OfflineSolver` as a move-pruner — fits from the search's OWN observed deaths (NO
+  offline BFS), selects the toward/omni rung by IN-SAMPLE observed-transition trust, no-ops when no hazard is
+  present. Wired a `move_pruner` hook into `OfflineSolver` (all 3 branch modes) + `arc_loop_solve.py`
+  (`--hazard-prune`, default on). A/B on tu93 L3 (`results/arc_hazard_prune_ab_tu93.json`): states_expanded
+  2947 → 2859 (−88 = the exact pruned-move count), L3 solve PRESERVED (reproduced, specificity 1.0). Modest
+  (~3%) but real, and now reachable from the live path. 5 new unit tests + 8 nav tests pass.
+- DISCIPLINE + LINT (operator-chosen): CLAUDE.md "ARC Live-Path Reachability Discipline" (registry-precheck
+  before any per-game RE; every ARC solver/world-model module must be reachable from a live entrypoint) +
+  `scripts/arc_orphan_solver_lint.py` (pre-commit `arc-orphan-solver-lint`) computing the live import closure.
+  Lint GREEN (24 modules in the closure; `arc_nav_world_model` now reachable via the pruner). Surfaced two
+  pre-existing offline prototypes (`arc_execution_guided_world_model`, `arc_world_model_synth`) — allow-listed
+  with reasons, flagged in known-issues for future review. Conductor STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (Facing-aware omni GENERALISES to an INDEPENDENT constructed charger game — new encoding + the UP facing — outer-loop, ultracode)
 
 Operator: "build the constructed second charger game." Done — the facing-aware omni rule transfers to a

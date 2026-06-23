@@ -268,6 +268,19 @@ repos:
         files: '^docs/index\.html$'
         pass_filenames: false
 
+      # ARC live-path reachability lint: every ARC world-model / solver module
+      # under python/carnot/agentic/ MUST be reachable from the LIVE agent path
+      # (scripts/arc_loop_solve.py or arc_competition_agent.py), else it is an
+      # ORPHAN that produces no live capability/efficiency -- the failure mode
+      # the hazard-aware nav world model fell into (2026-06-22). Per CLAUDE.md
+      # "ARC Live-Path Reachability Discipline".
+      - id: arc-orphan-solver-lint
+        name: ARC solver/world-model live-path reachability
+        entry: python3 scripts/arc_orphan_solver_lint.py
+        language: system
+        files: '^(python/carnot/agentic/arc_.*\.py|scripts/arc_loop_solve\.py)$'
+        pass_filenames: false
+
       # NOTE: the blog publish guard runs as a STANDALONE git pre-push hook
       # (scripts/git-hooks/pre-push, installed via scripts/install-git-hooks.sh),
       # NOT as a pre-commit hook. pre-commit's pre-push dispatcher stashes
