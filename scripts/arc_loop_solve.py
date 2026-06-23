@@ -152,6 +152,10 @@ def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> 
         # strings; "solution" normalizes them to metaharness-compatible action dicts.
         "solution_labels": list(full),
         "solution": [_label_to_action(lbl) for lbl in full],
+        # PROVENANCE (ARC live-agent self-solve discipline): this is the offline DEV TWIN solving via a
+        # hand-registered GameAdapter -- a development proxy, NOT the scored live agent self-discovering a
+        # hidden game. Declared so adversarial_verify can tell a dev-proxy re-run from an outer-loop solve.
+        "solve_provenance": "development_proxy",
         "mode": "standing_arc_loop_offline_no_quota",
     }
 
@@ -251,6 +255,10 @@ def solve_via_explore(
         "verifier_seed_checkpoint": (str(ckpt.relative_to(REPO)) if ckpt else None),
         "heuristic_learned": heuristic_learned,
         "next": "register a GameAdapter from the seed for verifier-routed re-solving",
+        # PROVENANCE (ARC live-agent self-solve discipline): adapter-FREE first contact -- the agent
+        # explored + induced the solve from its OWN attempts, with no hand-built per-game adapter. This is
+        # the live self-discovery path the deliverable is about.
+        "solve_provenance": "live_agent_self_discovery",
         "mode": "standing_arc_loop_graph_explore_no_quota",
     }
 
