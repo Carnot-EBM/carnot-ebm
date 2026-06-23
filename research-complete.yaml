@@ -46935,3 +46935,115 @@ milestones:
       + .425-B2-TAUTOLOGY-carveout guards. verifier_is_oracle: false on every included value claim.'
     deliverable: results/experiment_4614_capstone_v425.json
     result: OK (conductor)
+- id: 2026.06.426
+  title: 'CROSS THE OFFLINE->LIVE BRIDGE -- the representation is solved (0.725 LOO-AUROC) and the dense-gradient positive
+    (SpatialValueNet Q-head, 7.6x offline) is proven, but both REGRESS the live depth-first explorer; .426 DISAMBIGUATES why
+    (A1: compute-cost vs distribution-shift vs calibration) and GRADUATES the position-preserving value head from prototype
+    to the LIVE path (A2: replace the linear verifier that "actively misled", apply the A1 fix, measure first-win-rate/efficiency
+    on the SCORED E3AgentPolicy vs linear+bare controls); bank +1 level via self-play (A3, 55->56+); keep the package operator-resubmit-ready
+    (A4, beat 33)'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-23'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4615-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .425 -> activate .426; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .425 close-state (capability 55->55 flat; A1 trust-energy QUARANTINED [flagged_adversarial DURATION_TOO_SHORT
+      0.44s]; A2 live-integration HONEST NULL [first_win_delta 0, solve_rate 0.04 bare==integrated]; A3 dc22 NO-BANK; outer-loop
+      re-diagnosis: representation NOT the bottleneck [0.725], the OFFLINE->LIVE BRIDGE is -> the .426 pivot).'
+    deliverable: results/experiment_4615_archive_425_activate_426.json
+    result: OK (conductor)
+  - id: exp4616-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- DISAMBIGUATE THE OFFLINE->LIVE BRIDGE) -- a
+      controlled three-arm experiment isolating WHY a 0.725-LOO-AUROC discriminator / a 7.6x-offline SpatialValueNet Q-head
+      REGRESSES the live depth-first explorer: (1) COMPUTE-COST (value-per-frontier-node slows bounded-time search -> fewer
+      nodes -> fewer solves), (2) DISTRIBUTION-SHIFT (trained on winning-path, applied to off-path frontier states -> ~chance
+      where it matters), (3) CALIBRATION (a ranking is not a usable A* cost). Each arm has a matched control (bare BFS + the
+      value head as-is). Deliverable: the BINDING cause + the indicated fix, traceable (per-arm node-count, off-path AUROC,
+      rank->cost calibration error). verifier_is_oracle: false. retire_if_same_verdict.'
+    deliverable: results/experiment_4616_offline_live_bridge_disambiguation.json
+    result: OK (conductor)
+  - id: exp4617-a2
+    title: 'PHASE A2 (ARC NORTH STAR; HIGHEST MANDATORY; GAP-OFFLINE-LIVE-BRIDGE + GAP-LIVE-INTEGRATION) -- GRADUATE the position-preserving
+      SpatialValueNet (4x4 pool) from scripts/experiments into a LIVE-PATH-REACHABLE python/carnot/agentic module (arc_loop_solve
+      warm-start + fed to E3AgentPolicy -- NOT an orphaned solver), REPLACE the LINEAR LearnedVerifier warm-start that "actively
+      misled", apply the A1-diagnosed bridge fix (decision-point-only/cached for compute-cost; DAgger search-distribution
+      retrain for shift; isotonic calibration for calibration), and measure LIVE first-win-rate + actions-to-first-levelup
+      on the SCORED agent vs (i) the linear-verifier baseline and (ii) bare BFS (matched controls; bootstrap CI). Keep test_arc_submitted_agent_parity.py
+      + arc_orphan_solver_lint green. verifier_is_oracle: false. retire_if_same_verdict.'
+    deliverable: results/experiment_4617_graduate_spatial_value_head_live.json
+    result: OK (conductor)
+  - id: exp4618-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN-NAVIGATION game NOT deepened in
+      .421-.425 where the graduated Q-head routes faster (PREFER sk48 L1->L2 [graph_explore family, closest to graph_astar];
+      alternatives wa30/ls20/lf52/re86/bp35 L1->L2; SKIP ka59 [hidden-register], dc22-L2 [just-failed .425], cd82-L3/sp80-L3/su15-L3
+      [no grounded delta]) AND train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced new level
+      -> reproducible_total_levels 55 -> 56+.'
+    deliverable: results/experiment_4618_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4619-a4
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3''s new bank (+ any A2
+      newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit (beat the standing
+      33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive
+      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Submission stays operator-only.
+      verifier_is_oracle: false.'
+    deliverable: results/experiment_4619_refresh_submission_package.json
+    result: OK (conductor)
+  - id: exp4620-a5
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the milestone''s winning primitive
+      (A2 the graduated SpatialValueNet live-path bridge operator; OR the A1 bridge-fix helper [isotonic calibration / DAgger
+      search-distribution retrain / decision-point-only eval]) into arc_solver_kit / arc_solve_registry (ARC Solve Reproducibility
+      + Solver-Reuse Discipline), and measure CROSS-GAME TRANSFER: does the persisted primitive add value (live first-win
+      / efficiency lift) on games it was NOT tuned on? verifier_is_oracle: false.'
+    deliverable: results/experiment_4620_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4621-a6
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- consolidate whatever RAISED a
+      real metric (A2 graduated value head -> live first-win/efficiency; A3 new bank) into the SUBMITTED_AGENT_CONFIG + the
+      refreshed package; re-measure end-to-end on offline_to_live_transfer_ratio + first-win-rate + live-submittable count
+      (vs 33). If NONE raised a clean control-passed metric, keep the bare config + honest null. Keep test_arc_submitted_agent_parity.py
+      + arc_orphan_solver_lint green. verifier_is_oracle: false.'
+    deliverable: results/experiment_4621_integration_gate.json
+    result: OK (conductor)
+  - id: exp4622-b1
+    title: 'PHASE B1 (RESERVED INFRA; co-headline metric) -- add a canonical offline_to_live_transfer_ratio metric helper:
+      the LIVE first-win/efficiency lift attributable to the value head, reported SIDE-BY-SIDE with the offline LOO-AUROC
+      so the offline->live gap is explicit -- the direct measure of whether .426 crossed the bridge (the analogue of .425''s
+      world_model_trust_pass_rate). Report it with reproducible_total_levels, live-submittable count, first-win-rate, and
+      action efficiency. Asserting tests.'
+    deliverable: results/experiment_4622_offline_to_live_transfer_ratio_metric.json
+    result: OK (conductor)
+  - id: exp4623-b2
+    title: 'PHASE B2 (RESERVED INFRA; adversarial_verify hardening -- TWO reader-side guards) -- (1) an OFFLINE-VS-LIVE OVERCLAIM
+      guard: an ARC value/verifier artifact claiming a LIVE search win MUST report a measured LIVE metric, not substitute
+      an offline AUROC (the exact 0.503-vs-0.725 / offline-vs-live confusion the outer-loop just corrected); (2) a CALIBRATED
+      CHEAP-LEARNED-VALUE substrate floor so a legitimate fast CNN/linear value-head scoring run over cached candidates is
+      not DURATION_TOO_SHORT false-flagged (the .425 A1 0.44s regression), while a no-methodology fast run STILL fires. Reader/guard
+      only; edits adversarial_verify.py, never the conductor. Asserting tests for both.'
+    deliverable: results/experiment_4623_adversarial_verify_hardening.json
+    result: OK (conductor)
+  - id: exp4624-c
+    title: 'PHASE C (HARDWARE CONTINUITY; 1 per attached board) -- per-board reachability audit: KV260 (SSH reachability ONLY,
+      never host SD card), GateMate (openFPGALoader USB detect), PolarFire (SSH). Honest blocked_<board>_<reason> if a board
+      is down. Keeps each attached board visible per the Hardware-Task Continuity Discipline without burning a heavy slot
+      during the ARC sprint.'
+    deliverable: results/experiment_4624_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4625-d
+    title: 'PHASE D (SOTA INGESTION; 1 reserved slot) -- ingest OFFLINE->LIVE TRANSFER / DISTRIBUTION-SHIFT / CALIBRATION
+      SOTA mapped onto A1 (bridge disambiguation) + A2 (graduate the value head): DAgger / dataset aggregation (arXiv:1011.0686),
+      isotonic/Platt calibration for ranking->cost, learned-heuristic search (DeepCubeA/Q* arXiv:2102.04518, SLOPE arXiv:2406.04935),
+      goal-conditioned value (GoFAR arXiv:2206.03023). Real arXiv IDs only; map the strongest methods to the .427 roadmap.
+      /deep-research BANNED in the autonomous loop.'
+    deliverable: results/experiment_4625_sota_ingestion_offline_live_bridge.json
+    result: OK (conductor)
+  - id: exp4626-e
+    title: 'PHASE E (CAPSTONE) -- the .426 scorecard: did A1 ISOLATE the offline->live bridge cause (compute/shift/ calibration)?
+      Did A2 GRADUATE the SpatialValueNet to the live path and raise LIVE first-win-rate/efficiency on the SCORED agent vs
+      the linear baseline (crossing the bridge)? Did A3 bank +1 (55->56+)? Is the package operator-resubmit-ready above 33
+      (A4)? Report ALL co-headline metrics (offline_to_live_transfer_ratio, reproducible_total_levels, live-submittable, first-win-rate,
+      action efficiency). Skip flagged_adversarial; honor the positive-control + FALSE_NEGATIVE_RISK + .425-B2 TAUTOLOGY-carveout
+      + .426-B2 offline-vs-live guards. verifier_is_oracle: false on every included value claim.'
+    deliverable: results/experiment_4626_capstone_v426.json
+    result: OK (conductor)
