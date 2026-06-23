@@ -99,16 +99,13 @@ def test_bidt_5_baseline_vs_outcome_still_critical() -> None:
     assert len(_critical(d)) >= 1
 
 
-def test_bidt_6_real_exp4592_one_critical_remains() -> None:
-    """SCENARIO-BIDT-6: the real exp4592 drops from 11 critical to exactly ONE — the legitimate
-    two-treatment-outcome coincidence (generic_transfer_rate_with_wiring ==
-    winner_generated_rate_with_wiring) — with the baseline/delta cascade downgraded to WARN."""
+def test_bidt_6_real_exp4592_shared_denominator_rates_are_clean() -> None:
+    """SCENARIO-BIDT-6 + REQ-VERIFY-4611: exp4592 has no critical TAUTOLOGY after
+    shared-denominator rate collisions are recognized as structural k/N arithmetic."""
     d = json.loads((REPO / "results" / "experiment_4592_generation_completeness_wiring.json").read_text())
     assert "success:" in str(d.get("honest_verdict", ""))
     crit = _critical(d)
-    assert len(crit) == 1, [f.detail for f in crit]
-    assert "with_wiring" in crit[0].detail
-    assert len(_warn(d)) >= 8
+    assert crit == [], [f.detail for f in crit]
 
 
 def test_bidt_7_named_deltas_without_backing_arithmetic_still_critical() -> None:
