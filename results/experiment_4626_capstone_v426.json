@@ -1,0 +1,440 @@
+{
+  "binding_bridge_cause": "compute_cost",
+  "cited_upstream_artifacts": {
+    "A1": {
+      "artifact": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+      "exists": true,
+      "imported_fields": [
+        "binding_bridge_cause",
+        "positive_control_passed",
+        "false_negative_risk_checked"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "offline_live_bridge_disambiguation",
+      "sha256": "sha256:ad9683a36592efff83aacf313bce24ec99a8139f21dd194b56e0a71385b4a076"
+    },
+    "A2": {
+      "artifact": "results/experiment_4617_graduate_spatial_value_head_live.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "first_win_rate_graduated",
+        "first_win_rate_linear_baseline",
+        "first_win_delta",
+        "actions_delta"
+      ],
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "role": "graduate_spatial_value_head_live",
+      "sha256": "sha256:aeef82044ea2fd0e09e30c5d8445e094978913a525c93d939659c30b67b7af69"
+    },
+    "A3": {
+      "artifact": "results/experiment_4618_levelup_selfplay.json",
+      "exists": true,
+      "imported_fields": [
+        "reproduced_levels",
+        "offline_reproduced",
+        "reproduction_gate"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:8c5f96ff314d62fc2200299d0f5191129777bbfefed195989fad9c52583a19f6"
+    },
+    "A4": {
+      "artifact": "results/experiment_4619_refresh_submission_package.json",
+      "exists": true,
+      "imported_fields": [
+        "live_submittable_level_count",
+        "ready_for_operator_submit",
+        "offline_reproduced"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "refresh_submission_package",
+      "sha256": "sha256:e62d0fc0d663e9ac1e87a0f8ce9f7492012ebd961e77a7f8c873a0e147410178"
+    },
+    "A5": {
+      "artifact": "results/experiment_4620_primitive_persist_transfer.json",
+      "exists": true,
+      "imported_fields": [
+        "primitive_persisted",
+        "transfer_value_per_game",
+        "new_levels_banked"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:5cda313b7bc683dfa3b0824d6272b833b44c515d9e44ed46e4b8a28f4f6ed74e"
+    },
+    "A6": {
+      "artifact": "results/experiment_4621_integration_gate.json",
+      "exists": true,
+      "imported_fields": [
+        "offline_to_live_transfer_ratio_integrated",
+        "submitted_config_raised_metric_clean"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "integration_gate",
+      "sha256": "sha256:317be2cf76a3befbdc989cdfb2237c0d72cf6d30d0dbe6d05402115ac00fc90e"
+    },
+    "B1": {
+      "artifact": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json",
+      "exists": true,
+      "imported_fields": [
+        "offline_to_live_transfer_ratio",
+        "offline_auroc_component",
+        "live_lift_component"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "offline_to_live_transfer_ratio_metric",
+      "sha256": "sha256:6ce0ab6fff526e3fb13bd2b1230dcf9fb4feef610f67cc5ead992ea3454a6c59"
+    },
+    "B2": {
+      "artifact": "results/experiment_4623_adversarial_verify_hardening.json",
+      "exists": true,
+      "imported_fields": [
+        "offline_live_overclaim_guard_added",
+        "cheap_value_substrate_floor_added",
+        "tests_added"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "adversarial_verify_hardening",
+      "sha256": "sha256:c93a6db35237df7f60f4fac1184e2d95570f32288a6f3ff5b9b3dfdd427b26bf"
+    },
+    "REGISTRY": {
+      "artifact": "ops/arc_solve_registry.yaml",
+      "exists": true,
+      "imported_fields": [
+        "reproducible_total_levels"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "authoritative_registry",
+      "role": "authoritative_reproducible_total_levels",
+      "sha256": "sha256:a3d4128c62d2f372d23353c9685d003e22d34f5ee715643e396ae7bf71ba21ae"
+    }
+  },
+  "duration_s": 1.3925284500000998,
+  "experiment": "experiment_4626_capstone_v426",
+  "field_principles": {
+    "binding_bridge_cause": {
+      "principle": "which of {compute_cost, distribution_shift, calibration} A1 isolated (or inseparable) -- the diagnostic deliverable."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+    },
+    "first_win_rate_scored": {
+      "principle": "the A2 SCORED-agent live first-win-rate vs the linear baseline (did graduating the value head earn its place on the leaderboard path)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial / positive-control-failed artifact EXCLUDED + the guards applied (.425-B2 TAUTOLOGY carve-out, .426-B2 offline-vs-live) -- fabrication-gate + false-negative-risk compliance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: bridge_crossed_live_first_win_up_<n>_cause_<compute|shift|calibration> OR complete: bridge_characterized_cause_isolated_no_live_lift OR complete: bridge_characterized_capability_grew_55_to_<n>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "live_submittable_level_count": {
+      "principle": "the A4 operator-resubmit count (must stay > 33)."
+    },
+    "offline_to_live_transfer_ratio": {
+      "principle": "the HEADLINE co-metric (A1/A2/B1) -- did the offline verifier signal (0.725) transfer to a LIVE lift (the bridge crossed) or stay zero-live (bridge not crossed)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (upstream artifacts present, offline arcade); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "ready_for_operator_submit": {
+      "principle": "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; never submits (operator-only)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "reproducible_total_levels": {
+      "principle": "authoritative from the registry (A3 bank, 55->56+) -- did solve CAPABILITY grow."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "registry after - 55, emitted explicitly so a null is annotated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) -- a circular win would not count."
+    }
+  },
+  "first_win_rate_scored": {
+    "actions_delta": 0.0,
+    "bare_rate": 0.04,
+    "ci": {
+      "bootstrap_resamples": 1000,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "paired_percentile_bootstrap",
+      "point": 0.0,
+      "random_seed": 4617
+    },
+    "clean_value": null,
+    "delta_vs_linear_baseline": 0.0,
+    "headline_numbers_aggregated": false,
+    "linear_baseline_rate": 0.04,
+    "median_actions_to_first_levelup_graduated": 20.0,
+    "median_actions_to_first_levelup_linear_baseline": 20.0,
+    "quarantined_value": 0.04,
+    "reason": "flagged_adversarial_or_live_critical_excluded",
+    "solve_rate_graduated": 0.04,
+    "solve_rate_linear_baseline": 0.04,
+    "source": "results/experiment_4617_graduate_spatial_value_head_live.json"
+  },
+  "flagged_artifacts_handled": {
+    "excluded_artifacts": [
+      "results/experiment_4617_graduate_spatial_value_head_live.json"
+    ],
+    "excluded_details": [
+      {
+        "artifact": "results/experiment_4617_graduate_spatial_value_head_live.json",
+        "critical_flags": [],
+        "name": "A2",
+        "reason": "flagged_adversarial_or_live_critical_excluded"
+      }
+    ],
+    "failed_acceptance_gate_overrides": [],
+    "false_negative_risk_open_artifacts": [],
+    "guard_note": "Stamped flagged, live-critical, positive-control-failed, and false-negative-risk-open artifacts are excluded from clean headline claims. The .426 guard prevents an offline AUROC from being reported as a LIVE win without a LIVE metric.",
+    "offline_vs_live_overclaim_guard_active": true,
+    "positive_control_failed_artifacts": [],
+    "tautology_carveouts": [],
+    "tautology_null_delta_carveout_applied": true
+  },
+  "honest_verdict": "complete: bridge_characterized_cause_isolated_no_live_lift",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "live_submittable_level_count": 55,
+  "offline_to_live_transfer_ratio": {
+    "a2_included_in_headline": false,
+    "a2_live_claim_admissible": false,
+    "action_efficiency_lift_component": 0.0,
+    "bridge_crossed_clean": false,
+    "bridge_crossed_reported_by_b1": false,
+    "clean_value": 0.0,
+    "first_win_lift_component": 0.0,
+    "live_lift_component": 0.0,
+    "live_source": "results/experiment_4617_graduate_spatial_value_head_live.json",
+    "offline_auroc_component": 0.674466,
+    "quarantined_value": null,
+    "reason": "zero_or_inadmissible_live_lift_no_bridge_crossing",
+    "source": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "offline_arcade": true,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 55,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4626": true,
+    "summarize_artifact_py_used_for_live_flags": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "B2": true
+    }
+  },
+  "random_seed": 4626,
+  "ready_for_operator_submit": true,
+  "reproducibility_checksum": "sha256:271df065282b1ddbf8ec206a85977b2197ffd3a02deb837d12e3fdbb77a3f863",
+  "reproducible_total_levels": 55,
+  "reproducible_total_levels_delta": 0,
+  "result_path": "results/experiment_4626_capstone_v426.json",
+  "schema": "carnot.exp4626.capstone_v426.v1",
+  "scorecard": {
+    "A1": {
+      "artifact": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+      "binding_bridge_cause": "compute_cost",
+      "included_in_headline": true,
+      "indicated_fix": "decision-point-only eval/cached features for live frontier nodes",
+      "reason": "included_clean"
+    },
+    "A2": {
+      "artifact": "results/experiment_4617_graduate_spatial_value_head_live.json",
+      "first_win_rate_scored": {
+        "actions_delta": 0.0,
+        "bare_rate": 0.04,
+        "ci": {
+          "bootstrap_resamples": 1000,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "method": "paired_percentile_bootstrap",
+          "point": 0.0,
+          "random_seed": 4617
+        },
+        "clean_value": null,
+        "delta_vs_linear_baseline": 0.0,
+        "headline_numbers_aggregated": false,
+        "linear_baseline_rate": 0.04,
+        "median_actions_to_first_levelup_graduated": 20.0,
+        "median_actions_to_first_levelup_linear_baseline": 20.0,
+        "quarantined_value": 0.04,
+        "reason": "flagged_adversarial_or_live_critical_excluded",
+        "solve_rate_graduated": 0.04,
+        "solve_rate_linear_baseline": 0.04,
+        "source": "results/experiment_4617_graduate_spatial_value_head_live.json"
+      },
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_or_live_critical_excluded"
+    },
+    "A3": {
+      "artifact": "results/experiment_4618_levelup_selfplay.json",
+      "banked_plus_one": false,
+      "included_in_headline": true,
+      "offline_reproduced": false,
+      "registry_delta_vs_55": 0,
+      "registry_reproducible_total_levels": 55,
+      "reproduced_levels": 0
+    },
+    "A4": {
+      "artifact": "results/experiment_4619_refresh_submission_package.json",
+      "count_delta": 0,
+      "included_in_headline": true,
+      "live_submittable_level_count": 55,
+      "ready_for_operator_submit": true
+    },
+    "A5": {
+      "included_in_headline": true,
+      "new_levels_banked": 0,
+      "primitive_persisted": {
+        "derived_from_artifacts": [
+          "results/experiment_4616_offline_live_bridge_disambiguation.json",
+          "results/experiment_4617_graduate_spatial_value_head_live.json"
+        ],
+        "operator": "value_head_bridge_fix_operator",
+        "registry_general_gotcha_id": "primitive_value_head_bridge_fix_operator",
+        "source": "A1_bridge_fix_helper",
+        "source_tuning_games": [
+          "cn04",
+          "ls20",
+          "sk48"
+        ]
+      },
+      "transfer_games": [
+        "bp35",
+        "dc22",
+        "g50t"
+      ],
+      "value_added_games": [
+        "bp35",
+        "dc22"
+      ],
+      "verifier_is_oracle": false
+    },
+    "A6": {
+      "actions_delta_vs_bare": 0.0,
+      "first_win_rate_delta_vs_bare": 0.0,
+      "included_in_headline": true,
+      "offline_to_live_transfer_ratio_integrated": 0.0,
+      "parity_test_green": true,
+      "reason": "included_clean",
+      "submitted_config_raised_metric_clean": false
+    },
+    "B1": {
+      "artifact": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json",
+      "included_in_headline": true,
+      "offline_to_live_transfer_ratio": {
+        "a2_included_in_headline": false,
+        "a2_live_claim_admissible": false,
+        "action_efficiency_lift_component": 0.0,
+        "bridge_crossed_clean": false,
+        "bridge_crossed_reported_by_b1": false,
+        "clean_value": 0.0,
+        "first_win_lift_component": 0.0,
+        "live_lift_component": 0.0,
+        "live_source": "results/experiment_4617_graduate_spatial_value_head_live.json",
+        "offline_auroc_component": 0.674466,
+        "quarantined_value": null,
+        "reason": "zero_or_inadmissible_live_lift_no_bridge_crossing",
+        "source": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json"
+      },
+      "reason": "included_clean"
+    },
+    "B2": {
+      "artifact": "results/experiment_4623_adversarial_verify_hardening.json",
+      "included_in_headline": true,
+      "offline_vs_live_overclaim_guard_active": true,
+      "tautology_null_delta_carveout_available": true
+    },
+    "headline": {
+      "a3_bank_plus_one": false,
+      "a4_operator_resubmit_ready_above_33": true,
+      "bridge_crossed_clean": false,
+      "cause_isolated_clean": true,
+      "scored_first_win_or_efficiency_up_clean": false
+    },
+    "verifier_is_oracle_claim_audit": {
+      "A1": {
+        "artifact": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A2": {
+        "artifact": "results/experiment_4617_graduate_spatial_value_head_live.json",
+        "included_in_headline": false,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A4": {
+        "artifact": "results/experiment_4619_refresh_submission_package.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A5": {
+        "artifact": "results/experiment_4620_primitive_persist_transfer.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A6": {
+        "artifact": "results/experiment_4621_integration_gate.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "all_included_value_claims_false": true
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4626",
+    "SCENARIO-CAPSTONE-4626",
+    "SCENARIO-CAPSTONE-4626-FIELD-PRINCIPLES"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false
+}
