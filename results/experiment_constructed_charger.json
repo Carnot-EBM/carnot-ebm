@@ -1,0 +1,48 @@
+{
+  "experiment": "experiment_constructed_charger",
+  "honest_verdict": "success: facing_aware_omni_GENERALISES_to_a_constructed_charger_game_new_encoding_and_the_UP_facing_FN0_FP0_omni_deepens_where_charger_blind_nav_dies",
+  "verifier_is_oracle": false,
+  "inference_substrate": "constructed_ground_truth_charger_nav_offline",
+  "random_seed": 20260622,
+  "palette": {
+    "avatar": [
+      6,
+      7
+    ],
+    "charger": [
+      11,
+      13
+    ],
+    "wall": 1,
+    "door": 3,
+    "goal": 12,
+    "step": 5,
+    "reach": 8
+  },
+  "true_charger_facings": [
+    "(-1, 0)"
+  ],
+  "omni_recovered_facings": [
+    "(-1, 0)"
+  ],
+  "up_facer_recovered": true,
+  "omni_recovered_hazard_colors": [
+    11,
+    13
+  ],
+  "omni_center_color": 13,
+  "bfs_nodes": 10,
+  "n_labels": 40,
+  "n_deaths": 3,
+  "win_path_len": 10,
+  "omni_FN": 0,
+  "omni_FP": 0,
+  "omni_win_path_pruned": 0,
+  "calibration_clean": true,
+  "frozen_nav_deepened": false,
+  "omni_deepened": true,
+  "omni_reproduced_level": 1,
+  "omni_cracks_where_nav_dies": true,
+  "methodology_note": "GroundTruthChargerNav is an INDEPENDENT charger simulator (own state/physics, NOT the model's is_lethal), with a non-tu93 palette, step 5, and chargers of all four facings incl. UP. omni is fit from the constructed transitions, must RECOVER the facings from the new encoding, and is scored vs a position-keyed BFS ground truth (FN/FP/win-path-pruned) + a frozen-nav-dies / omni-deepens contrast. Controlled encoding+UP generalisation, complementing the tu93 real-game evidence.",
+  "duration_s": 1.3
+}
