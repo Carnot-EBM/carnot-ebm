@@ -602,6 +602,64 @@ exact-match gate
 CI, solve-rate preservation, residual zero-pass games, and a terminal honest
 verdict without treating the held-out trust energy as an oracle win-check.
 
+### REQ-ARC-WMTE-4608: Persist Winning Trust Primitive And Measure Untuned Transfer
+
+Experiment 4608 SHALL read
+`results/experiment_4604_world_model_trust_energy.json` and
+`results/experiment_4605_live_integration_scored_agent.json`, select the
+strongest measured reusable primitive, persist it in `arc_solver_kit`, and
+record the reusable asset in `ops/arc_solve_registry.yaml` under
+`general_gotchas`. Because experiment 4604 raised both
+`world_model_trust_pass_rate` and first-win-rate while experiment 4605 reported
+an honest first-win null, the expected winner is the A1 trust-energy gate
+persisted as `world_model_trust_energy_gate_operator` with registry gotcha
+`primitive_world_model_trust_energy_gate_operator`.
+
+The solver kit operator SHALL accept transition rows and world-model candidates,
+rank them with the change-weighted held-out trust energy, require
+`verifier_is_oracle=false`, reject identity/no-op degeneracy, and report value
+against the legacy binary exact-match gate before any solve claim. Experiment
+4608 SHALL apply the persisted primitive to two or more games not tuned in A1
+or A2, offline-reproduce any newly counted level through
+`arc_solver_kit.reproduce`, and write
+`results/experiment_4608_primitive_persist_transfer.json`.
+
+The artifact SHALL emit principle-annotated top-level fields for
+`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `primitive_persisted`, `transfer_games`,
+`transfer_value_per_game`, `offline_reproduced`, `registry_updated`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`. Required
+field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive RANKS/ROUTES (trust energy) or WIRES the verifier, oracle-distinct from the win-check."
+- `solve_provenance`: principle "development_proxy if a transfer solve is via the offline twin; live_agent_self_discovery if the persisted primitive improves the SCORED agent's own path. NOT outer_loop_re."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_value_per_game`: principle "the per-game value-add (trust-pass / first-win lift) -- the cross-game evidence the primitive generalizes."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+If no untuned transfer game shows positive trust-pass or first-win lift, the
+artifact SHALL report `complete: primitive_persisted_transfer_null_characterized`,
+persist the best-characterized primitive-as-built, record transfer dead-ends in
+the registry, and SHALL NOT increment `reproducible_total_levels`.
+
+#### SCENARIO-ARC-WMTE-4608
+
+**Given** the offline arcade precondition passes, A1 and A2 artifacts exist, and
+the A1 trust-energy gate has the stronger measured signal
+**When** experiment 4608 persists the solver-kit trust operator and measures it
+on at least two untuned transfer games
+**Then** the artifact records the persisted operator and registry gotcha, the
+untuned transfer games, per-game trust-pass or first-win value-add, offline
+reproduction accounting for any new level, a stable checksum, and a terminal
+success only when at least one transfer game adds value.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
