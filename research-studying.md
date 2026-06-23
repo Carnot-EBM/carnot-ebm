@@ -4393,3 +4393,40 @@ of candidate models, score it with multi-aspect trust energy, route only
 trusted models into A2, and use learned/goal-conditioned value strictly as a
 bounded search tie-breaker until no-regression gates pass.
 <!-- EXP4613-WORLD-MODEL-TRUST-SOTA-END -->
+
+<!-- EXP4625-OFFLINE-LIVE-BRIDGE-SOTA-START -->
+## 2026-06-23 Exp 4625 - .426 offline-live bridge SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/offline-live-bridge-literature-2026-06-23.md`.
+
+**Filtered track:** offline-to-live transfer for the graduated value head:
+distribution shift from winning-path training to live off-path frontiers,
+calibration of a ranking into a bounded cost, and compute-cost control for
+value-guided search.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py` emitted focused value/search and ARC exploration
+URLs. `scripts/sweep_semscholar.py` returned HTTP 500/429 for the five focused
+queries and no S2-only source was promoted. Low-concurrency WebSearch/WebFetch
+plus direct arXiv HTTP checks verified arXiv:1011.0686, arXiv:2604.11351,
+arXiv:1706.04599, arXiv:2102.04518, arXiv:2406.04935, arXiv:2206.03023,
+arXiv:2511.10264, and arXiv:2303.09477. `/deep-research` was not invoked.
+
+**Methods marked ingested:** DAgger / WM-DAgger search-distribution retraining,
+post-hoc value-to-cost calibration, cached decision-point Q*/limited-horizon
+heuristic evaluation, SLOPE/local-heuristic bounded pruning, and
+goal-conditioned offline value.
+
+flagged_for_v427: dagger_search_distribution_value_retraining
+(arXiv:1011.0686 + arXiv:2604.11351)
+
+flagged_for_v427: calibrated_value_to_cost_tiebreaker (arXiv:1706.04599)
+
+flagged_for_v427: decision_point_cached_qstar_value_head
+(arXiv:2102.04518 + arXiv:2511.10264)
+
+**Bottom line for .427:** first train or calibrate the value head on the live
+frontier distribution, then make every live use bounded and cached; only after
+those no-regression gates pass should SLOPE-style pruning or goal-conditioned
+dense value affect the scored agent.
+<!-- EXP4625-OFFLINE-LIVE-BRIDGE-SOTA-END -->
