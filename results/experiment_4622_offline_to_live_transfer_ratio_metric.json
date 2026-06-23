@@ -1,0 +1,126 @@
+{
+  "action_efficiency_lift_component": 0.0,
+  "bridge_crossed": false,
+  "coheadline_block": {
+    "action_efficiency_ci": [
+      1.0,
+      1.0
+    ],
+    "action_efficiency_lift_component": 0.0,
+    "action_efficiency_score": 1.0,
+    "first_win_lift_component": 0.0,
+    "first_win_rate": 0.04,
+    "live_lift_component": 0.0,
+    "live_submittable_level_count": 54,
+    "median_actions_to_first_levelup": 20.0,
+    "offline_auroc_component": 0.674466,
+    "offline_to_live_transfer_ratio": 0.0,
+    "reported_side_by_side": [
+      "offline_to_live_transfer_ratio",
+      "offline_auroc_component",
+      "live_lift_component",
+      "reproducible_total_levels",
+      "live_submittable_level_count",
+      "first_win_rate",
+      "action_efficiency_score"
+    ],
+    "reproducible_total_levels": 55,
+    "source_artifacts": {
+      "action_efficiency": "results/experiment_4574_action_efficiency_coheadline.json",
+      "live_submittable": "results/experiment_4586_live_submittable_coheadline.json",
+      "live_value_head": "results/experiment_4617_graduate_spatial_value_head_live.json",
+      "offline_auroc": "results/experiment_4545_cross_game_discrimination_v3.json",
+      "offline_bridge": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+      "registry": "ops/arc_solve_registry.yaml"
+    }
+  },
+  "duration_s": 1.020512,
+  "experiment": "experiment_4622_offline_to_live_transfer_ratio_metric",
+  "field_principles": {
+    "coheadline_block": {
+      "principle": "offline_to_live_transfer_ratio reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / action-efficiency -- the single canonical metric surface."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: offline_to_live_transfer_ratio_metric_helper_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor)."
+    },
+    "live_lift_component": {
+      "principle": "the LIVE first-win/efficiency lift the value head produces -- explicit so the metric does not hide the offline->live gap."
+    },
+    "offline_auroc_component": {
+      "principle": "the offline LOO-AUROC (the verifier signal) -- explicit so a high-offline/zero-live case is visibly the bridge-not-crossed state."
+    },
+    "offline_to_live_transfer_ratio": {
+      "principle": "the canonical co-headline metric value (live lift attributable to the value head, with the offline AUROC reported alongside)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+    }
+  },
+  "first_win_lift_component": 0.0,
+  "honest_verdict": "success: offline_to_live_transfer_ratio_metric_helper_shipped_tests_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor).",
+  "inference_substrate_detail": "aggregation_only_no_model_load",
+  "live_lift_breakdown": {
+    "baseline_first_win_rate": 0.04,
+    "baseline_median_actions_to_first_levelup": 20.0,
+    "graduated_first_win_rate": 0.04,
+    "graduated_median_actions_to_first_levelup": 20.0
+  },
+  "live_lift_component": 0.0,
+  "null_delta_methodology_note": "live_lift_component is zero while offline_auroc_component is reported explicitly; this is the bridge-not-crossed state, not a measurement bug.",
+  "offline_auroc_component": 0.674466,
+  "offline_to_live_transfer_ratio": 0.0,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "model_load_required": false,
+    "offline_arcade": true,
+    "offline_auroc_artifact_present": true,
+    "ok": true,
+    "registry_present": true,
+    "spec_has_req_4622": true
+  },
+  "random_seed": 4622,
+  "registry_reproducible_total_levels": 55,
+  "reproducibility_checksum": "sha256:f03de8f1b630ff0a4782bf0592d95fa2385ed8563a769c1e1777240634807d1c",
+  "schema": "carnot.exp4622.offline_to_live_transfer_ratio_metric.v1",
+  "source_artifacts": {
+    "live_value_head": "results/experiment_4617_graduate_spatial_value_head_live.json",
+    "offline_auroc": "results/experiment_4545_cross_game_discrimination_v3.json",
+    "offline_bridge": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+    "registry": "ops/arc_solve_registry.yaml"
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-4622",
+    "SCENARIO-ARC-WMTE-4622"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "assertions": [
+      "offline AUROC 0.72 plus zero live lift reports transfer ratio zero",
+      "offline AUROC 0.72 plus positive live first-win lift reports positive ratio",
+      "baseline-equal live lift emits null_delta_methodology_note"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4622_offline_to_live_transfer_ratio_metric.py -q --no-cov",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4622_offline_to_live_transfer_ratio_metric.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4622_offline_to_live_transfer_ratio_metric.py -q",
+      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4622_offline_to_live_transfer_ratio_metric.py' --fail-under=100 --show-missing"
+    ],
+    "passed": true,
+    "test_file": "tests/python/test_experiment_4622_offline_to_live_transfer_ratio_metric.py"
+  }
+}
