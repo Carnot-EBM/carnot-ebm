@@ -4,10 +4,27 @@
   "moves": 20,
   "states_expanded": 352,
   "verifier_src": "hand_verifier_cold_start",
+  "hazard_prune": false,
+  "hazard_pruner_stats": null,
   "offline_reproduced": true,
   "reproduced_levels": 1,
   "learned_verifier_checkpoint": null,
   "selected_generic_operators": [
+    {
+      "operator": "approach_dispatcher_operator",
+      "derived_from_games": [
+        "exp4592_generation_completeness_wiring"
+      ],
+      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
+      "selector_tags": [
+        "approach_dispatch",
+        "mechanic_router",
+        "candidate_generation",
+        "graph_explore",
+        "goal_distance",
+        "transfer"
+      ]
+    },
     {
       "operator": "per_level_reinduction_operator",
       "derived_from_games": [

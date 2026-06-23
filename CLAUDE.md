@@ -21,6 +21,7 @@ read only if debugging the enforcer):**
 - Adversarial Landing-Page (Layer 1) → `scripts/pages_fever_dream_lint.py`
 - Verdict Terminal-Prefix → `_verdict_is_untrustworthy()` classifier
 - Exclusion-Manifest Cross-Check → `_ensure_exclusion_manifest_loaded()`
+- ARC Live-Path Reachability → `scripts/arc_orphan_solver_lint.py`
 
 **HISTORICAL / SUPERSEDED (preserved per never-prune; not active guidance):**
 - Codex-Default for Experiments (2026-05) → superseded by Gemini-Default (2026-05-20)
@@ -3143,6 +3144,98 @@ gate, compounding across games.
 - `docs/research-notes/arc3-offline-reproducibility-audit-2026-06-16.md` — the audit that motivated this
 - CLAUDE.md "Adversarial Artifact Verification" + "Missing-Verifier Gap Logging" — sibling capture-don't-waste disciplines
 - CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" — the progress rule this makes durable
+
+## ARC Live-Path Reachability Discipline (MANDATORY)
+
+**Origin:** 2026-06-22 operator, after a session built a hazard-aware nav world
+model (`arc_nav_world_model`: induce a nav model from transitions → detect a
+charging-enemy from the agent's own deaths → route safe detours) across several
+milestones to "solve" tu93's charger levels:
+
+> "Is the mechanism we are using here in the outer loop the same mechanism that
+>  the live agent uses to find solves? Otherwise, it seems to me that we are
+>  intentionally wasting the additional effort we are spending doing this process."
+
+The audit (workflow `arc-mechanism-parity-audit`, verdict `different_mechanism`,
+adversarially `synthesis_holds`) found the worry fully justified:
+
+1. **Orphaned from the live path.** `arc_nav_world_model` /
+   `HazardAwareNavWorldModel` / `escalating_deepen` were imported ONLY by
+   `scripts/experiments/*` + tests — by ZERO live-agent files. Neither live
+   entrypoint's import closure contained them.
+2. **It re-solved an already-solved level.** tu93's live `GameAdapter` (`_tu93`
+   in `arc_game_adapters.py`) already DEEP-SOLVES tu93 to **L3 reproducibly**
+   (registry: L5) via plain verifier-routed best-first search over the 4 nav
+   actions + a player→goal Manhattan-distance verifier. The hazard model bought
+   no new capability; walking into a charger is just a dead-end the search
+   prunes by exploration.
+3. **Its calibration didn't transfer.** The `omni` lethal rung was validated by
+   an EXHAUSTIVE real-env BFS over tu93 L3 ground-truth labels — a thing a
+   hidden-game agent cannot run under an action budget.
+
+**The two LIVE entrypoints (memorize these — "the live agent" means reachable
+from one of them):**
+
+| Entrypoint | Role | Mechanism |
+|---|---|---|
+| `python/carnot/agentic/arc_competition_agent.py` (`make_carnot_agent` → `E3AgentPolicy`) | the **SCORED** Kaggle/hidden-game agent | per-action verifier-routed cascade over its OWN transitions: StepwiseExplorer → online world-model induction (`arc_live_ttt` / `LocalGGUFProposer`) gated by `WorldModelVerifier` → `e3.plan_in_model` |
+| `scripts/arc_loop_solve.py` (`OfflineSolver` + `GameAdapter`) | the **offline development twin** (registry/dev) | raw-action verifier-routed best-first search replayed in the offline sim, reproduction-gated |
+
+**The rule (two halves):**
+
+1. **Registry-precheck BEFORE any per-game RE / world-model solver work.** Before
+   building ANY solver/world-model for a game, check whether the live mechanism
+   already reaches the target level: run `arc_loop_solve.py --game X
+   --target-level N` (or read `ops/arc_solve_registry.yaml` `levels_reproduced`
+   + `adaptered_games()`). **If the live mechanism already reaches the level, do
+   NOT build a parallel solver for it.** Improve the live path instead (a better
+   `GameAdapter`, a verifier feature, a `plan_in_model` engine) — never a
+   separate planner the live agent can't call. This is the sharper, mechanical
+   form of the sibling "ARC Solve Reproducibility + Solver-Reuse Discipline"
+   ("reuse the kit; don't re-derive from zero").
+
+2. **Every ARC solver/world-model module MUST be live-path-reachable.** Any
+   module under `python/carnot/agentic/arc_*` that is solver-like (name matches
+   `*world_model*`, OR defines `escalating_deepen` / `plan_in_model` / a class
+   with both `.engine` and `.is_lethal`) MUST be in the transitive import
+   closure of the two live entrypoints, OR be explicitly allow-listed with a
+   reason. A solver mechanism the live agent cannot reach produces no live
+   capability and no live efficiency — it is wasted effort by construction.
+
+**What "salvage" looks like (the 2026-06-22 resolution).** The hazard work was
+salvaged as an **efficiency** contribution ON the live path, not a parallel
+solver: `arc_hazard_pruner.HazardMovePruner` fits a hazard model from the
+search's OWN observed deaths (no offline BFS; rung selected by in-sample
+observed-transition trust, used as a conservative gate) and is consumed by
+`OfflineSolver` as a move-pruner.
+Measured A/B on tu93 L3: states_expanded 2947 → 2859 (−88, the exact pruned-move
+count), L3 solve preserved (reproduced, specificity 1.0). Modest but real, and
+now reachable from `arc_loop_solve` (so the lint passes). The natural next step
+is to feed the same pruner / `HazardAwareNavWorldModel.engine` into the SCORED
+`E3AgentPolicy.plan_in_model` path.
+
+**Mechanical enforcement.** `scripts/arc_orphan_solver_lint.py` (pre-commit hook
+`arc-orphan-solver-lint`, runs on any `python/carnot/agentic/arc_*.py` or
+`scripts/arc_loop_solve.py` change) computes the live import closure and refuses
+the commit if a solver-like module is orphaned. The allow-list (currently
+`arc_execution_guided_world_model`, `arc_world_model_synth` — pre-existing
+offline prototypes) is small and reasoned; adding to it is an assertion that the
+orphan is deliberate.
+
+**How to apply (planner + agent).** When a roadmap proposes ARC solve work:
+register the per-game knowledge as a `GameAdapter` and run it through
+`arc_loop_solve` (and ultimately `E3AgentPolicy`), not as a standalone
+experiment that the live agent never imports. Before proposing a "solve game X"
+task, confirm via the registry that X is not already solved at the target level.
+
+**Cross-references:**
+- 2026-06-22 operator directive — origin
+- workflow `arc-mechanism-parity-audit` (this session) — the parity audit
+- `scripts/arc_orphan_solver_lint.py` + `.pre-commit-config.yaml:arc-orphan-solver-lint` — the lint
+- `python/carnot/agentic/arc_hazard_pruner.py` — the salvage (hazard as a live-path move-pruner)
+- `results/arc_hazard_prune_ab_tu93.json` — the states-expanded A/B
+- CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse Discipline" — the sibling reuse rule this sharpens
+- CLAUDE.md "ARC-AGI-3 IS a Live Hidden-Game Discovery Agent" — the foundational framing this enforces mechanically
 
 ## Missing-Verifier Gap Logging (MANDATORY)
 
