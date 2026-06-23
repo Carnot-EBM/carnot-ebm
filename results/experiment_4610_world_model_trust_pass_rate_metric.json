@@ -125,5 +125,14 @@
   "trust_pass_numerator": 6,
   "world_model_trust_pass_rate": 1.0,
   "world_model_trust_pass_rate_baseline": 0.0,
-  "world_model_trust_pass_rate_delta": 1.0
+  "world_model_trust_pass_rate_delta": 1.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "WORLD_MODEL_TRUST_DEGENERACY",
+      "severity": "critical",
+      "detail": "World-model trust pass is degenerate or circular: verifier_is_oracle=None, not False; no positive correctly-predicted grid-changing transition evidence. A trust pass must declare verifier_is_oracle=false and show >=1 correctly predicted grid-changing transition so identity/no-op models cannot clear the gate."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

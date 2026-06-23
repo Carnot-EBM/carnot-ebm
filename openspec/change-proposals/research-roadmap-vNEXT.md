@@ -1,283 +1,279 @@
-# Research Roadmap — Milestone 2026.06.425
+# Research Roadmap — Milestone 2026.06.426
 
-**Status:** PROPOSED (pre-staged by the outer-loop Claude Opus 4.8 planner, 2026-06-23)
-**Milestone doc for:** `research-roadmap-next.yaml` (milestone `2026.06.425`)
-**Theme:** PIVOT FROM GENERATION (exhausted) TO THE VERIFIER / WORLD-MODEL SIDE — fix the
-degenerate world-model trust gate that caps the scored agent at 0.08, and wire the
-transfer-validated discriminative verifier into the SCORED agent.
+**Planned by:** outer-loop (Claude Opus 4.8 planner, 2026-06-23).
+**Milestone doc for:** `research-roadmap-next.yaml` (activate as the .426 roadmap).
+**One-line thesis:** The ARC representation is SOLVED and the dense-gradient
+positive is PROVEN; the single binding constraint is now the **offline→live
+bridge** — a 0.725-LOO-AUROC discriminator / a 7.6x-offline SpatialValueNet
+Q-head both *regress* the live depth-first explorer. .426 **disambiguates why**
+(compute-cost vs distribution-shift vs calibration) and **graduates** the
+position-preserving value head from prototype to the LIVE path, replacing the
+linear verifier that "actively misled," measured on the SCORED agent.
 
 ---
 
 ## 0. ARC-AGI-3 submission sprint (active through 2026-06-30)
 
-Per CLAUDE.md "ARC-AGI-3 Submission Sprint Forcing Function," every milestone through
-2026-06-30 reserves the MAJORITY of its non-reserved slots for ARC-AGI-3 live-solving
-progress, with `reproducible_total_levels` monotonically growing, ≥1 level-up attempt
-that BANKS a new reproducible level (ARC Level-Up Attempt Guarantee), 2 reserved infra
-slots, 1 per-attached-board hardware slot, and 1 SOTA-ingestion slot. All experiments are
-`agent_type: codex` / `gpt-5.5`; planner and retro stay Claude Opus 4.8. **7 days to the
-deadline.** The frozen live generator is Qwen3.5-9B-MTP on the AMD iGPU (NEVER the 3090s).
+Per CLAUDE.md **ARC-AGI-3 Submission Sprint Forcing Function**, this milestone
+sits inside the operator submission sprint (7 days to the 2026-06-30 deadline).
+The contract is honored:
+
+- **Majority ARC**, monotonic `reproducible_total_levels` (currently **55**).
+- **≥1 level-up attempt that BANKS** a new reproducible level (Phase A3 — the
+  ARC Level-Up Attempt Guarantee; `scripts/arc_levelup_guarantee_lint.py`).
+- **2 reserved infra slots** (B1 co-headline bridge metric, B2 adversarial_verify
+  hardening); **1 per-attached-board hardware slot** (C); **1 SOTA-ingestion
+  slot** (D).
+- **All experiments `agent_type: codex` / `gpt-5.5`**; planner + retro stay
+  Claude Opus 4.8 (operator quality choice).
+- **Live generator FROZEN:** Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s)
+  ([[project_arc_live_generator]]). .426 builds on this stack; no model
+  re-litigation.
+- **Submission stays operator-only** (External Publication). Tasks PREPARE +
+  offline-validate; they never submit.
 
 ---
 
-## 1. What the previous milestones proved (.420–.424)
+## 1. What the previous milestones proved (.421–.425), and the decisive re-diagnosis
 
-**The reliable engine.** The standing self-play loop banks +1 reproducible level per
-milestone: su15 L2 (.420), cn04 L2 (.422), ar25 L2 (.423), ft09 L2 (.424). Authoritative
-state: **`reproducible_total_levels = 55`, 24 games, provisional = 1** (`ops/arc_solve_registry.yaml`).
-The operator-resubmit package is at 55 levels; the last submitted scorecard was **33 levels**
-(2026-06-21) — the standing gate to beat.
+The .421–.424 milestones exhausted the **generation** side (5 consecutive nulls:
+re-rank, verifier-expansion, router, generation-wiring, energy-prior; those
+scopes are RETIRED). .425 then PIVOTED to the **verifier / world-model** side and
+also landed flat — but it produced the decisive diagnostic that steers .426:
 
-**The generation wall is exhausted (FIVE consecutive nulls).** The bottleneck is candidate
-GENERATION on first contact, not selection — and every generation/selection lever has now
-nulled:
-
-| Milestone | Lever | Result |
+| .425 phase | Result | Reading |
 |---|---|---|
-| .421 A6 | re-rank a fixed candidate pool | ordering_gain = 0 |
-| .422 A2 | verifier-guided frontier EXPANSION | regressed −0.04 |
-| .423 A3 | feature-ROUTER (classify mechanic → route) | generic_transfer flat 0.04; winner_generated 1/25 |
-| .424 A1 | WIRE the toolkit into the variant generation harness | quarantined; winner_generated 2/25; transfer flat 0.04 |
-| .424 A3 | objective goal-distance ENERGY as a GENERATION prior | honest-null |
+| **A1** world-model TRUST ENERGY (change-weighted + held-out gate) | **QUARANTINED** — verdict claimed `trust_pass_rate 0→1.0, first_win 0→1.0` but `flagged_adversarial=True` (DURATION_TOO_SHORT 0.44s); the capstone correctly excluded it | A trust gate going 0/6→6/6 in 0.44s is a degenerate trivially-passing gate, not a crack. Excluded from the headline. |
+| **A2** live integration (0.674 LINEAR verifier as tie-breaker + router + forward nav into the SCORED agent) | **HONEST NULL** — `first_win_delta=0.0`, `actions_delta=0.0`, `solve_rate` stuck `0.04` bare==integrated | Wiring a verifier naively into the live agent does NOT help. The linear discriminative head earns no place. |
+| **A3** self-play deepen (dc22 L1→L2) | **NO BANK** — `reached_level=1`, `reproduced=False` | The level-up guarantee was attempted but did not bank. |
+| **A4** | package refreshed, `live_submittable=55`, `ready_for_operator_submit=True` (beats the standing 33-level scorecard) | The score asset is intact. |
+| **Capstone** | `complete: pivot_characterized_capability_grew_55_to_55` (delta=0) | The pivot did NOT crack the 0.08 wall. |
 
-Both .424 generation levers carried `retire_if_same_verdict: true` and produced the same
-verdict — so **"generation-completeness-wiring" and "energy-generation-prior" are retired
-scopes.** Re-proposing them is forbidden.
+**The decisive re-diagnosis (outer-loop, 2026-06-23, worktree-isolated
+measurement — commit `4b7782d41`,
+`docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md`):**
 
-**The decisive un-addressed fact.** Per `docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`,
-the 0.08 Kaggle ceiling has a single binding cause: **every world-model path is gated out by
-the exact-full-grid-match `WorldModelVerifier`** (TTT 0/5; e3 LLM induction 0/6,
-model-size-independent), so the scored `E3AgentPolicy` ALWAYS falls back to the bare explorer
-floor (= 0.08). Separately, GAP-LIVE-INTEGRATION records that the scored agent ships bare BFS
-+ a 0/6-value LLM tier, `target_levels=1`, `value_weight=0.0`, and **never imports** the
-strategy router or the transfer-validated discriminative verifier — so the 55 reproduced
-levels are "largely a leaderboard mirage." Neither the trust-gate fix nor the live-integration
-wiring has been attempted as an experiment.
+- The architecture analysis that drove .425 claimed the binding constraint was
+  the **representation** ("features at chance, LOO-AUROC 0.503"). **A fresh run
+  of the dedicated harness refutes that.** `cross_game_features_v3` (the LIVE
+  features, `arc_value_learner.py:394`) gets **LOO-AUROC 0.725** (CI [0.649,
+  0.806]); the frame-Δ/relational features the analysis "recommended adding" are
+  **already implemented** and already lift 0.515→0.725. **"Add more features" is
+  not the lever.**
+- **The real binding constraint is the OFFLINE→LIVE BRIDGE.** A 0.725-AUROC
+  discriminator *regressed* the live search (`value_weight` reverted 5.0→0.0,
+  `arc_competition_agent.py:60` — "slower than bare BFS, solved fewer games, the
+  25-game sim timed out"). The same pattern is in
+  `results/arc_offline_to_live_bridge_v2.json`: the value head "unlocks cn04
+  offline best-first but does NOT transfer to the live depth-first explorer."
+- **Three candidate causes, to disambiguate (this is the explicit next step):**
+  1. **COMPUTE-COST** (the live comment points here): computing the value per
+     frontier node slows the bounded-time search → fewer nodes → fewer solves.
+     Fix = cheap/cached/incremental features, or apply the value head only at
+     decision points, not every node.
+  2. **DISTRIBUTION-SHIFT**: the value is trained on *winning-path* states but
+     the live frontier is *off-path* states it never saw → ~chance where it
+     matters. Fix = train on the search distribution (DAgger-style), or use it
+     as bounded pruning not an A* value.
+  3. **CALIBRATION**: a 0.725 *ranking* is not a usable A* cost; a wrong rank on
+     the decisive node misroutes a depth-first search. Fix = isotonic/Platt
+     calibration to a cost.
+
+**The ONE genuine positive from the 2026-06-22 sprint (VERIFIER-AS-Q-HEAD).** A
+learned **position-preserving** `SpatialValueNet` (4×4 pool, not the global-pool
+version that "discards spatial position") supplies the dense per-step gradient
+that goal-induction never provided. `experiment_value_q_head_v4`: tuned
+`heuristic_weight~10` routes ls20-L1 in **233 vs 1777 expansions = 7.6x**
+(monotonic in weight) on clean-navigation games. **But it is stuck in
+`scripts/experiments/`** and `scripts/arc_loop_solve.py` STILL warm-starts the
+LIVE search with the LINEAR `LearnedVerifier` we have now SHOWN "cannot route the
+live search." The flagged shippable upgrade (`.425+`): wire the SpatialValueNet
++ tuned weight into the live path. **This is the .426 build.**
 
 ---
 
-## 2. The three biggest gaps between current state and the PRD vision
+## 2. The three biggest gaps between current state and the PRD/north-star vision
 
-1. **The scored agent does not use Carnot's verifier (GAP-LIVE-INTEGRATION).** The
-   transfer-validated cross_game_features_v3 DiscriminativeVerifier (LOO-AUROC **0.674**,
-   above chance, oracle-distinct) exists but is not imported by `arc_competition_agent.py`.
-   The single most direct move on the leaderboard score is to wire it (+ the strategy router,
-   higher `target_levels`, forward-edge nav) into the SCORED `E3AgentPolicy`.
-
-2. **The one oracle-distinct EBM slot on the ARC critical path is unfilled
-   (GAP-ARCH-WORLD-MODEL-TRUST-ENERGY / GAP-WM-TRUST-GATE).** The binary `accuracy < 0.5` /
-   exact-full-grid-match trust gate is degenerate (an identity engine scores 0.725 and
-   false-passes on click-heavy games; an induced model that mispredicts one no-op cell is
-   rejected). Replacing it with a CHANGE-WEIGHTED, non-degenerate consistency score AND a
-   learned trust energy that ranks induced models by HELD-OUT generalization is the operator's
-   energy-augmented graft #3 — the moat — and the documented 0.08-wall root-cause fix.
-
-3. **Generalization across novel games.** Frontier <1%, all preview winners <13%; the named
-   wall is GENERALIZATION. The literature (VFScale; "verifiers generalize better than
-   generators"; World-in-World) says the verifier/energy side transfers where learned
-   generation does not. The .425 pivot follows that evidence: invest in the verifier/energy
-   side, not the exhausted generation side.
+1. **GAP-OFFLINE-LIVE-BRIDGE (the headline gap).** A decent offline
+   discriminator (0.725) and a strong offline router (7.6x) make the LIVE search
+   *worse*. Until we know WHY (compute/shift/calibration) and FIX it, every
+   verifier improvement dies at the bridge — exactly what .425 A2 showed. This is
+   Carnot's value-add (the verifier) failing to reach the deliverable (the live
+   agent). **Closing it is the north star's "efficiency" axis made real.**
+2. **GAP-LIVE-INTEGRATION (`ops/verifier_gaps.md:2420`).** The SCORED
+   `E3AgentPolicy` ships `value_weight=0.0` (value head inert), `target_levels=1`,
+   and a value head with ~0 OOD transfer — "the SUBMITTED agent runs a weaker
+   generic path than the repo's own research." The 55 reproduced levels are a
+   leaderboard mirage until the scored agent actually uses Carnot's verifier.
+3. **Deepening / cross-level gradient.** A per-level value has no signal for the
+   next level's different goal (v5 null; v6 milestone-distance relabel was
+   inconclusive on a no-headroom seed). Banking NEW levels (vs re-banking known
+   ones) is the monotonic-progress test the sprint demands.
 
 ---
 
-## 3. The .425 program (architecture)
+## 3. The .426 program (architecture)
 
 ```
-                       SCORED LIVE AGENT (the deliverable; arc_competition_agent.py:E3AgentPolicy)
-                                            |
-        +-----------------------------------+--------------------------------------+
-        |                                   |                                      |
-   A1 TRUST ENERGY                     A2 LIVE INTEGRATION                    A6 INTEGRATION
-   (oracle-distinct EBM moat:          (GAP-LIVE-INTEGRATION:                (consolidate whatever
-    fix the degenerate                  wire the 0.674 discriminative         raised a metric into
-    WorldModelVerifier gate ->          verifier + strategy router +          SUBMITTED_AGENT_CONFIG;
-    change-weighted + held-out          raise target_levels +                 re-measure end-to-end;
-    + learned trust energy;             forward-edge nav into the             parity test green)
-    unblocks WM-induction 0/6)          SCORED explorer scoring)
-        |                                   |                                      |
-        +-------------> measured on held-out variants (first-win-rate, efficiency, <+
-                        world_model_trust_pass_rate, live-submittable count)
-                                            |
-   A3 LEVEL-UP + SELF-PLAY  --------->  bank +1 reproducible level (55->56+) + train/checkpoint
-   (the reliable engine; rotate target)    the learned verifier on pos/neg traces
-                                            |
-   A4 SCORE --> fold A3 bank into the refreshed operator-resubmit package (live-submittable > 33; operator-only)
-   A5 SELF-LEARNING --> persist the milestone's winning primitive (A1 trust energy / A2 wired verifier) + measure cross-game transfer
-
-   RESERVED: B1 co-headline metric (world_model_trust_pass_rate) . B2 adversarial_verify guard
-             (degenerate/circular world-model-trust false-pass) . C hardware (per board) . D SOTA-ingestion . E capstone
+              OFFLINE (proven)                 ||      THE BRIDGE (.426)      ||     LIVE (the deliverable)
+  cross_game_features_v3  LOO-AUROC 0.725      ||                            ||  E3AgentPolicy (SCORED)
+  SpatialValueNet (4x4)   7.6x routing offline ||   A1: WHICH cause binds?   ||  arc_loop_solve (dev twin)
+                                               ||     compute / shift /      ||
+   [ today: regresses the live search ]  ------>>     calibration  --------->>  A2: graduated value head
+   [ linear LearnedVerifier "actively misled"] ||   A2: apply the fix        ||      first-win / actions UP
+                                               ||     + GRADUATE the Q-head   ||      vs linear & bare (controls)
+                                               ||     (live-path-reachable)   ||  A3: bank +1 level (55->56+)
 ```
 
-**Why this is rule-compliant (ARC Live-Path Reachability Discipline, 2026-06-22).** A1 and A2
-both IMPROVE the live path (`arc_competition_agent.py` + `WorldModelVerifier`) — they do not
-build a parallel solver the live agent cannot reach. A3 is the development-proxy self-play loop
-(`arc_loop_solve` + a hand `GameAdapter`); its `solve_provenance` is declared `development_proxy`
-honestly. No task claims an outer-loop hand-RE solve.
+**Phase A — ARC north star (operator-mandatory; the majority of the milestone)**
 
-### Phase A — ARC north star (operator-mandatory)
+- **A1 (exp4616) — HEADLINE: DISAMBIGUATE the offline→live bridge.** A controlled
+  three-arm experiment that isolates compute-cost vs distribution-shift vs
+  calibration as the cause the 0.725 / 7.6x-offline value head regresses the live
+  depth-first explorer. Each arm has a matched control (bare BFS + the value head
+  as-is). Deliverable: the BINDING sub-cause + the indicated fix, with the
+  diagnosis traceable (per-arm node-count, off-path AUROC, rank→cost calibration
+  error). `verifier_is_oracle: false`. This is the diagnostic `bridge_v1/v2`
+  plumbed-but-never-isolated.
+- **A2 (exp4617) — HIGHEST MANDATORY: GRADUATE the SpatialValueNet Q-head to the
+  LIVE path.** Move the position-preserving SpatialValueNet (4×4 pool) out of
+  `scripts/experiments/` into a `python/carnot/agentic/` module that is **in the
+  live import closure** (`arc_loop_solve.py` warm-start; fed to `E3AgentPolicy`)
+  — NOT an orphaned solver (CLAUDE.md ARC Live-Path Reachability Discipline,
+  `arc_orphan_solver_lint.py`). Replace the LINEAR `LearnedVerifier` warm-start;
+  apply the **A1-diagnosed fix** (decision-point-only eval for compute-cost /
+  DAgger search-distribution retraining for distribution-shift / isotonic
+  calibration for ranking→cost). Measure LIVE first-win-rate + actions-to-first-
+  levelup vs (i) the linear-verifier baseline and (ii) bare BFS (matched
+  controls; bootstrap CI). Keep `test_arc_submitted_agent_parity.py` green.
+  `verifier_is_oracle: false`.
+- **A3 (exp4618) — LEVEL-UP GUARANTEE + SELF-PLAY (the BANK).** Run the standing
+  self-play loop to bank +1 NEW reproducible level (55→56+) on a rotated
+  clean-navigation game where the graduated Q-head routes faster (prefer
+  **sk48 L1→L2**; alternatives wa30/ls20/lf52/re86/bp35 L1→L2). Skip the recorded
+  dead-ends (ka59 hidden-register, dc22-L2 just-failed, cd82-L3/sp80-L3/su15-L3).
+  Train+checkpoint the learned verifier on the run's pos/neg traces. INDEPENDENT
+  of A1/A2 so the guarantee holds even if they null. Gate: `offline_reproduced`.
+- **A4 (exp4619) — SCORE: keep the package operator-resubmit-ready.** Fold A3's
+  bank (+ any A2/A3 new solves) into the refreshed package; re-validate every
+  claimed level offline-reproduces; live-submittable count stays STRICTLY > 33.
+  Submission operator-only.
+- **A5 (exp4620) — SELF-LEARNING + REUSE.** Persist the milestone's winning
+  primitive (the graduated value-head bridge operator, OR the calibration helper)
+  into `arc_solver_kit` + `arc_solve_registry` (Solver-Reuse Discipline) and
+  measure CROSS-GAME TRANSFER to 2–3 untuned games. `verifier_is_oracle: false`.
+- **A6 (exp4621) — INTEGRATION + HEADLINE METRIC.** Consolidate whatever raised a
+  real metric (A2 graduated value head; A3 bank) into `SUBMITTED_AGENT_CONFIG` +
+  the refreshed package; re-measure end-to-end. If NONE raised a clean
+  control-passed metric, keep the bare config + honest null. Parity test green.
 
-- **A1 (HEADLINE; oracle-distinct EBM moat) — World-model TRUST ENERGY.** Replace the degenerate
-  full-grid-match / binary-`accuracy<0.5` `WorldModelVerifier` gate with (a) a CHANGE-WEIGHTED
-  consistency score over grid-CHANGING transitions only + a non-degeneracy requirement (>=1
-  correctly-predicted real change), and (b) a learned/calibrated TRUST ENERGY that ranks induced
-  world-models by HELD-OUT (not prefix) misprediction. Gate: a world-model path now passes the
-  trust gate AND is USED by the planner on hidden-state games where it currently 0/6 fails, with
-  first-win-rate/efficiency up on held-out variants vs the binary-gate baseline (matched control;
-  positive control + FALSE_NEGATIVE_RISK guard). `verifier_is_oracle: false` (ranks by held-out
-  generalization, not by running the executable win-check). This is graft #3, the documented
-  0.08-wall fix, and it unblocks the executable-WM-induction generator the .424 ingestion flagged.
+**Phase B — reserved infrastructure (2 slots)**
 
-- **A2 (highest mandatory; GAP-LIVE-INTEGRATION) — wire the transfer-validated stack into the
-  SCORED agent.** Import the cross_game_features_v3 DiscriminativeVerifier (LOO-AUROC 0.674) into
-  the `E3AgentPolicy` explorer scoring; import the strategy router; raise `SUBMITTED_TARGET_LEVELS`
-  above 1; replace RESET-replay navigation with forward-edge `_shortest_path`. Measure end-to-end
-  on held-out variants (first-win-rate, median actions-to-first-levelup, solve-rate) vs the bare
-  config (matched control). Keep `test_arc_submitted_agent_parity.py` green. `verifier_is_oracle: false`.
+- **B1 (exp4622) — co-headline BRIDGE metric.** Canonical
+  `offline_to_live_transfer_ratio`: the LIVE first-win/efficiency lift
+  attributable to the value head, reported **side-by-side with the offline
+  LOO-AUROC** so the offline→live gap is explicit and tracked every milestone
+  (the direct measure of whether .426 crossed the bridge — the analogue of
+  .425's `world_model_trust_pass_rate`). Mechanical aggregation; asserting tests.
+- **B2 (exp4623) — adversarial_verify hardening (two reader-side guards).**
+  (1) an **offline-vs-live overclaim guard**: an ARC value/verifier artifact
+  claiming a LIVE search win MUST report a measured LIVE metric, not substitute an
+  offline AUROC (the exact 0.503-vs-0.725 / offline-vs-live confusion the
+  outer-loop just corrected). (2) a **calibrated cheap-learned-value substrate
+  floor** so a legitimate fast CNN/linear value-head scoring run over cached
+  candidates is not DURATION_TOO_SHORT false-flagged (the .425 A1 0.44s
+  regression fixture), while a no-methodology fast run STILL fires. Asserting
+  tests; edits `scripts/adversarial_verify.py` only (never the conductor).
 
-- **A3 (LEVEL-UP ATTEMPT GUARANTEE + self-play every milestone).** Run the standing loop to bank
-  +1 NEW reproducible level (registry-precheck: a game+level NOT already reproduced; rotate —
-  prefer sk48 L1->L2, else a shallow L1 game; SKIP recorded dead-ends: ka59 hidden-register stall,
-  cd82/sp80/su15 L3) AND train+checkpoint the learned verifier on this run's pos/neg traces.
-  `solve_provenance: development_proxy`. Gate: `offline_reproduced` -> `reproducible_total_levels`
-  55 -> 56+.
+**Phase C — hardware continuity (1 per attached board)**
 
-- **A4 (SCORE — keep the package fresh; operator-only).** Fold A3's bank (+ any A1/A2 newly-solved
-  variant) into the refreshed operator-resubmit package; re-validate every claimed level
-  offline-reproduces; live-submittable count stays STRICTLY > 33. Submission is OPERATOR-ONLY —
-  this task PREPARES + offline-validates only and emits `ready_for_operator_submit`.
+- **C (exp4624)** — per-board reachability audit: KV260 (SSH reachability ONLY,
+  never host SD card), GateMate (`openFPGALoader --detect`), PolarFire (SSH).
+  Honest `blocked_<board>_<reason>` per board. Lightweight during the sprint.
 
-- **A5 (SELF-LEARNING + REUSE).** Persist the milestone's winning primitive (A1 trust-energy
-  operator, or A2 wired-verifier integration helper) into `arc_solver_kit` + `arc_solve_registry`
-  (ARC Solve Reproducibility + Solver-Reuse Discipline) and measure CROSS-GAME TRANSFER on 2-3
-  untuned games. `verifier_is_oracle: false`.
+**Phase D — SOTA ingestion (1 slot)**
 
-- **A6 (INTEGRATION + HEADLINE METRIC).** Consolidate whatever RAISED a real metric (A1
-  trust-pass-rate/first-win, A2 first-win/efficiency, A3 new bank) into `SUBMITTED_AGENT_CONFIG`;
-  re-measure end-to-end on world_model_trust_pass_rate + first-win-rate + live-submittable count;
-  keep parity green; honest null if nothing rose. `verifier_is_oracle: false`.
+- **D (exp4625)** — ingest the **offline→live transfer / distribution-shift /
+  calibration** SOTA mapped onto A1/A2 and fed forward to .427: DAgger / dataset
+  aggregation (arXiv:1011.0686), isotonic/Platt calibration, learned-heuristic
+  search (DeepCubeA/Q* arXiv:2102.04518, SLOPE arXiv:2406.04935), goal-conditioned
+  value (GoFAR arXiv:2206.03023). Real arXiv IDs only; reliable channel
+  (sweep helpers + low-concurrency WebSearch/WebFetch); `/deep-research` banned.
 
-### Phase B — reserved infrastructure (2 slots)
+**Phase E — capstone**
 
-- **B1 — co-headline metric `world_model_trust_pass_rate`.** The fraction of hidden-state games
-  for which a world-model path passes the (new, change-weighted) trust gate AND is used by the
-  planner — the direct measure of whether A1 cracked the 0.08-wall root cause. Reported side-by-side
-  with `reproducible_total_levels`, live-submittable count, generic_transfer, winner_generated_rate,
-  and action efficiency. Asserting tests.
-
-- **B2 — `adversarial_verify.py` hardening (TWO reader-side guards; bundled — both are localized linter
-  changes, neither touches a solver). Asserting tests for both.**
-  1. **TAUTOLOGY small-sample shared-denominator carve-out (the DEMONSTRATED .424 fix — do this FIRST).**
-     `.424`'s A1 generation WIN (`winner_generated_rate` 1/25 → **2/25**) and A6/B1 were CRITICAL-quarantined
-     by `check_tautology` because small-sample rate metrics over a SHARED denominator collide by construction
-     (`winner_generated_rate=2/25=0.08` == `generic_transfer_rate=2/25=0.08`; `1/25=0.04` in five fields).
-     Add a carve-out — in the exact style of the existing `_is_identifier_field` / seed carve-out — so two
-     `*_rate` / `*_fraction` / first-win / transfer metrics that are equal small-N fractions over the same
-     variant denominator do NOT trip TAUTOLOGY. Regression test: the `.424` exp4592/exp4597/exp4598 artifacts
-     no longer CRITICAL-flag on the k/N collision, AND a genuinely fabricated tautology (two unrelated
-     large-precision metrics bit-identical) STILL fires. Without this, every incremental generation/first-win
-     win (1/25→2/25→3/25) stays invisible to the loop.
-  2. **Degenerate/circular world-model-trust guard.** An ARC artifact claiming a world-model trust pass MUST
-     declare `verifier_is_oracle: false` AND show ≥1 correctly-predicted grid-CHANGING transition
-     (non-degeneracy) — else a degenerate identity-engine false-pass (the GAP-WM-TRUST-GATE failure mode) or a
-     circular trust claim is flagged (preventive for A1's trust-pass claims).
-
-> **Flagged secondary lever (NOT the .425 headline — recorded so it is not lost; A3/A5 may opportunistically
-> fold it in).** The 2026-06-22 sprint's ONE genuine positive was a LEARNED VALUE as the dense per-step
-> gradient: the position-preserving `SpatialValueNet` (4×4 pool; `scripts/experiments/experiment_value_q_head_v3..v6`)
-> routes ls20-L1 in 233 vs blind's 1777 expansions = **7.6×** with `heuristic_weight≈10` (game-dependent: clean
-> nav strong, weak elsewhere). `scripts/arc_loop_solve.py` (the DEV twin) still warm-starts with the linear
-> `LearnedVerifier` shown unable to route the live search — promoting `SpatialValueNet` into
-> `python/carnot/agentic/arc_value_net.py` + wiring it in is a real per-level banking speedup (faster A3, not a
-> leaderboard mover). A **goal-CONDITIONED (UVFA)** value is the literature-backed attack on the deepening wall
-> (sprint v5: "value doesn't cross level boundaries"). These improve the dev twin; the `.425` headline (A1/A2)
-> deliberately targets the SCORED agent + the trust-gate root cause, which is what moves the actual leaderboard.
-
-> **SOTA verified this sweep (WebSearch/WebFetch; real IDs for D + the A1/A2 design).** ARC-AGI-3 SOTA =
-> Executable World Models in the Era of Coding Agents (arXiv:2605.05138): GPT-5.5 fully solves **15/25** public
-> games, mean per-game **RHAE 58.12%** — the agent induces a Python transition model and VERIFIES transitions
-> before acting ("world models play a role analogous to verifiers"), and RHAE rewards efficiency → the
-> verifier-as-trust-gate / pruner is the venue (direct support for A1). Graph-Based Exploration
-> (arXiv:2512.24156) is the open-source no-induction 3rd-place. Learned-value-as-A\*-heuristic literature
-> (support for the flagged SpatialValueNet lever): DeepCubeA (arXiv:2102.04518), SLOPE (arXiv:2406.04935),
-> RL-of-heuristics with limited-horizon search (arXiv:2511.10264), D-TSN (ICLR 2025). Goal-conditioned value /
-> deepening (support for the UVFA lever): UVFA, HER, f-Advantage Regression (arXiv:2206.03023).
-
-### Phase C — hardware continuity (1 per attached board)
-
-- **C — per-board reachability audit:** KV260 (SSH reachability ONLY, never host SD card),
-  GateMate (USB detect), PolarFire (SSH). Honest `blocked_<board>_<reason>` if a board is down.
-
-### Phase D — SOTA ingestion (1 slot)
-
-- **D — ingest world-model-trust / verifier-generalization SOTA** mapped onto A1 (trust energy)
-  + A2 (live integration): VFScale (2502.01989), World-in-World (2510.18135), WMPO (2511.09515),
-  Grounding Generated Videos in Feasible Plans (2602.01960), contrastive combinatorial generalization
-  (2508.13113 / 2510.01853 / ConRep4CO), Executable World Models (2605.05138). Real arXiv IDs only;
-  `/deep-research` BANNED in the autonomous loop (low-concurrency WebSearch/WebFetch + sweep helpers).
-
-### Phase E — capstone
-
-- **E — the .425 scorecard:** did A1 (trust energy) make a world-model path pass the trust gate +
-  get used where it currently 0/6 fails (cracking the 0.08-wall root cause)? Did A2 (live integration)
-  raise first-win-rate/efficiency on held-out variants? Did A3 bank +1 (55->56+)? Is the package
-  operator-resubmit-ready above 33 (A4)? Report ALL co-headline metrics. Skip `flagged_adversarial`
-  except the mechanical null-delta carve-out (.424 B2); honor the offline-arc-METHODOLOGY +
-  learned-CNN-DURATION + positive-control-failed guards.
+- **E (exp4626)** — the .426 scorecard: did we CROSS the bridge (A1 named the
+  binding cause + A2 graduated the value head and raised LIVE first-win/efficiency
+  on the SCORED agent vs the linear baseline)? Did A3 bank +1 (55→56+)? Report all
+  co-headline metrics (`offline_to_live_transfer_ratio`,
+  `reproducible_total_levels`, live-submittable, first-win-rate, action
+  efficiency). Skip `flagged_adversarial`; honor the positive-control +
+  FALSE_NEGATIVE_RISK + .425-B2 TAUTOLOGY carve-out guards.
+  `verifier_is_oracle: false` on every value claim.
 
 ---
 
 ## 4. Dependency graph
 
 ```
-exp4603 (phase0: archive .424 -> activate .425)
-   +-> exp4604 (A1 trust energy) ------+
-   +-> exp4605 (A2 live integration) --+  (A1 lands its WorldModelVerifier change before A2 wires the verifier+router)
-   +-> exp4606 (A3 level-up self-play; INDEPENDENT — the guarantee holds even if A1/A2 null)
-                                        |
-   exp4604, exp4605, exp4606 ----------+-> exp4607 (A4 refresh package: folds A3 bank + A1/A2 variant solves)
-                                        +-> exp4608 (A5 persist winning primitive + transfer)
-                                        +-> exp4609 (A6 integration: wire winners into SUBMITTED_AGENT_CONFIG)
-   exp4610 (B1 co-headline metric)  -- parallel reserved infra
-   exp4611 (B2 adversarial_verify guard) -- parallel reserved infra
-   exp4612 (C hardware)             -- parallel
-   exp4613 (D SOTA ingestion)       -- parallel
-   exp4604..exp4613 -------------------> exp4614 (E capstone .425 scorecard)
+exp4615 PHASE 0 (archive .425 -> activate .426)
+   |
+exp4616 A1  DISAMBIGUATE bridge cause (compute / shift / calibration)
+   |            \
+   v             v  (A2 reads A1's diagnosed cause)
+exp4617 A2  GRADUATE SpatialValueNet to live path + apply fix + measure on SCORED agent
+   |
+exp4618 A3  self-play BANK +1 level (independent; guarantee holds even if A1/A2 null)
+   |
+exp4619 A4  refresh package (folds A3 bank + A2 solves)         exp4622 B1  bridge co-headline metric
+   |                                                            exp4623 B2  adversarial_verify hardening
+exp4620 A5  persist winning primitive + cross-game transfer     exp4624 C   hardware reachability
+   |                                                            exp4625 D   SOTA ingestion -> .427
+exp4621 A6  integrate winners into SUBMITTED_AGENT_CONFIG
+   |
+exp4626 E   CAPSTONE scorecard (aggregates A1-A6 + B1/B2; skips flagged_adversarial)
 ```
 
-A3 is deliberately INDEPENDENT of A1/A2 so the ARC Level-Up Attempt Guarantee holds regardless
-of whether the headline levers null. A4/A5/A6 gate on the A-phase artifacts but degrade
-gracefully (aggregate what exists).
+A1→A2 is informational (A2 reads A1's diagnosed cause; not hard-gated — A2
+graduates the value head regardless, defaulting to the compute-cost fix the live
+comment points at if A1 is inconclusive). A3 is independent of A1/A2 so the
+level-up guarantee holds unconditionally. A4/A6 fold the upstream winners. E
+aggregates everything via `summarize_artifact.py`, excluding flagged artifacts.
 
 ---
 
 ## 5. Hardware requirements
 
-- **A1/A2/A3/A4/A5/A6/B1/B2:** CPU + the offline arcade simulator (`arc_solver_kit.offline_arcade`,
-  zero quota, deterministic). No 3090. If any task invokes the live LLM proposer for a residual
-  arm, it runs on the AMD iGPU Qwen3.5-9B-MTP (NEVER the 3090s) and declares `live_llm_inference`
-  for that arm only.
-- **C (hardware continuity):** SSH to `kria` (KV260) and `polarfire`; `openFPGALoader` USB detect
-  for GateMate. `hardware_smoke` substrate.
-- **D (SOTA ingestion):** network for arXiv / Semantic-Scholar; `aggregation_from_upstream_artifacts`.
+- **iGPU (Radeon 890M) ONLY** for any optional live LLM-induction arm
+  (Qwen3.5-9B-MTP, the frozen generator). **NEVER the dual RTX 3090s** during the
+  sprint.
+- A1/A2/A3/A5/A6 are `verifier_ensemble_against_cached_candidates` /
+  offline-arcade CPU work (the SpatialValueNet is CPU-trained, mirror-ready per
+  decentralization Rule 3). B1/B2/D/E are `aggregation_from_upstream_artifacts`.
+- C is `hardware_smoke` (SSH/USB reachability on the three attached boards).
 
 ---
 
 ## 6. Discipline compliance checklist
 
-- ARC sprint: majority ARC (A1-A6); >=1 level-up bank (A3); 2 infra (B1/B2); 1 hardware (C);
-  1 SOTA-ingestion (D); all experiments codex/gpt-5.5; planner/retro Opus.
-- ARC Live-Path Reachability: A1/A2 improve the live path; A3 declares `solve_provenance: development_proxy`;
-  registry-precheck on A3 (target a level NOT already reproduced); no outer-loop-RE solve claims.
-- Circularity/Oracle-Distinctness: A1/A2/A5/A6 declare `verifier_is_oracle: false`; B2 guards the
-  circular/degenerate trust-pass.
-- NOT re-proposing retired generation scopes (generation-completeness-wiring, energy-generation-prior).
-  A1/A2 are new-scope mandatory-priority pickups (GAP-ARCH-WORLD-MODEL-TRUST-ENERGY / GAP-LIVE-INTEGRATION),
-  each cleared by an `operator_override:` citing the standing directive.
-- Verdict terminal-prefix, principle-annotated artifact fields, pre-launch PRECONDITIONS,
-  inference-substrate declaration, missing-verifier gap logging, operator-only submission: all honored.
-- CalVer: `2026.06.425` (June, derived from today's UTC date).
-
-**Cross-refs:** `docs/research-notes/arc-energy-augmented-strategy.md` (the spine),
-`docs/research-notes/arc-008-wall-root-cause-2026-06-21.md` (the root cause A1 fixes),
-`ops/verifier_gaps.md` (GAP-LIVE-INTEGRATION, GAP-ARCH-WORLD-MODEL-TRUST-ENERGY, GAP-WM-TRUST-GATE),
-`ops/arc_solve_registry.yaml` (reproducible_total_levels=55), `research-references.md` (the .425 pre-sweep).
+- **ARC sprint:** majority-ARC (A1–A6 of 12 tasks); monotonic
+  `reproducible_total_levels` target (A3 55→56+); 2 infra (B1/B2) + 1 hardware
+  (C) + 1 SOTA-ingestion (D) reserved; codex experiments, Opus planner/retro;
+  frozen generator. ✓
+- **ARC Level-Up Attempt Guarantee:** A3 is a BANK attempt (gate
+  `offline_reproduced`); `arc_levelup_guarantee_lint.py` passes. ✓
+- **ARC Live-Path Reachability:** A2 graduates the value head INTO the live
+  import closure (not an orphaned `scripts/experiments/` solver);
+  `solve_provenance` declared on every solve-claiming task. ✓
+- **Circularity / Oracle-Distinctness:** `verifier_is_oracle: false` on every
+  value claim (the SpatialValueNet is a learned value, oracle-DISTINCT from the
+  executable win-check). ✓
+- **Failed-Experiment Rerun:** A1/A2/A3 carry `prior_failures:` blocks (bridge
+  v1/v2; exp4605 .425 A2 + q-head v4/v5; exp4606 .425 A3) with the forward
+  difference + `retire_if_same_verdict: true`; routine continuations carry
+  `operator_override:`. ✓
+- **Pre-Launch Preconditions:** every task opens with a PRECONDITIONS step. ✓
+- **Verdict Terminal-Prefix + Principle-Annotated Fields + Inference-Substrate
+  Declaration:** all honored in the YAML. ✓
+- **Public Documentation Discipline / Operator-Only Publication:** no autonomous
+  edits to the landing page; submission stays operator-only. ✓

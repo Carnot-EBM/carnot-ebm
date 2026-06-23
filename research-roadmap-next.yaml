@@ -1,0 +1,1010 @@
+milestone: 2026.06.426
+planned_by: >-
+  outer-loop (Claude Opus 4.8 planner, 2026-06-23). .425 closed flat (capstone
+  `pivot_characterized_capability_grew_55_to_55`, delta=0): A1 (world-model trust energy) was QUARANTINED
+  (flagged_adversarial DURATION_TOO_SHORT 0.44s -- a degenerate trivially-passing gate, correctly excluded);
+  A2 (wire the 0.674 LINEAR discriminative verifier as a tie-breaker + router + forward nav into the SCORED
+  E3AgentPolicy) was an HONEST NULL (first_win_delta=0, actions_delta=0, solve_rate stuck 0.04 bare==integrated);
+  A3 (dc22 L1->L2 self-play) did NOT bank (reached_level=1, reproduced=False). The DECISIVE input is the
+  outer-loop re-diagnosis (commit 4b7782d41, docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md):
+  the ARC representation is NOT the bottleneck (cross_game_features_v3 LOO-AUROC 0.725, not the 0.503 the .425
+  architecture analysis cited; the frame-Δ/relational features are already implemented and already lift 0.515->0.725).
+  The REAL binding constraint is the OFFLINE->LIVE BRIDGE: a 0.725 discriminator AND a 7.6x-offline SpatialValueNet
+  Q-head both REGRESS the live depth-first explorer (value_weight reverted 5->0; arc_offline_to_live_bridge_v2 "does
+  not transfer to the live depth-first explorer"). So .426 PIVOTS to the bridge: A1 DISAMBIGUATES the cause
+  (compute-cost vs distribution-shift vs calibration); A2 GRADUATES the position-preserving SpatialValueNet from
+  scripts/experiments into the LIVE path (replacing the LINEAR verifier that "actively misled") with the A1-diagnosed
+  fix, measured on the SCORED agent's first-win-rate/efficiency vs the linear baseline AND bare BFS. A3 banks +1 level
+  via self-play (55->56+). verifier_is_oracle: false on every value claim. Submission stays operator-only.
+milestone_title: 'CROSS THE OFFLINE->LIVE BRIDGE -- the representation is solved (0.725 LOO-AUROC) and the dense-gradient positive (SpatialValueNet Q-head, 7.6x offline) is proven, but both REGRESS the live depth-first explorer; .426 DISAMBIGUATES why (A1: compute-cost vs distribution-shift vs calibration) and GRADUATES the position-preserving value head from prototype to the LIVE path (A2: replace the linear verifier that "actively misled", apply the A1 fix, measure first-win-rate/efficiency on the SCORED E3AgentPolicy vs linear+bare controls); bank +1 level via self-play (A3, 55->56+); keep the package operator-resubmit-ready (A4, beat 33)'
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+theme: >-
+  THE 55 LEVELS ARE A LEADERBOARD MIRAGE UNTIL THE SCORED AGENT USES CARNOT'S VERIFIER -- and .425 proved a
+  verifier wired naively (tie-break + router) earns no place (A2 null), while the outer-loop re-diagnosis proved the
+  representation is NOT the bottleneck (0.725, not chance). The single binding constraint is the OFFLINE->LIVE BRIDGE:
+  a 0.725 offline discriminator + a 7.6x-offline SpatialValueNet Q-head both make the LIVE search WORSE. .426 HEADLINE
+  (A1): a controlled three-arm experiment isolating the binding cause -- COMPUTE-COST (value-per-node slows bounded-time
+  search), DISTRIBUTION-SHIFT (trained on winning-path, applied to off-path frontier), or CALIBRATION (a ranking is not
+  an A* cost). HIGHEST MANDATORY (A2; GAP-OFFLINE-LIVE-BRIDGE + GAP-LIVE-INTEGRATION): GRADUATE the position-preserving
+  SpatialValueNet (4x4 pool) from scripts/experiments into a LIVE-PATH-REACHABLE python/carnot/agentic module
+  (arc_loop_solve warm-start + fed to E3AgentPolicy -- NOT an orphaned solver), replace the LINEAR LearnedVerifier that
+  "actively misled", apply the A1-diagnosed fix, and measure LIVE first-win-rate/actions on the SCORED agent vs the
+  linear baseline AND bare BFS (matched controls). CAPABILITY (A3): self-play banks +1 NEW reproducible level
+  (55->56+) + trains the learned verifier. SCORE (A4): keep the refreshed package operator-resubmit-ready (beat 33).
+  Plus self-learning persist+transfer (A5), integration (A6), 2 infra (B1 offline_to_live_transfer_ratio co-headline
+  metric / B2 adversarial_verify hardening = offline-vs-live overclaim guard + cheap-value substrate floor), 1 hardware
+  (C), 1 SOTA-ingestion (D), capstone (E). verifier_is_oracle: false on every value claim. Submission stays operator-only.
+sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC; >=1 level-up
+  attempt that BANKS a new reproducible level (ARC Level-Up Attempt Guarantee, A3); 2 reserved infra (B1/B2); 1
+  per-board hardware (C); 1 SOTA-ingestion (D). All experiments codex/gpt-5.5; planner/retro stay Claude Opus.
+  7 days to deadline. The frozen live generator is Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s)."
+
+tasks:
+  - id: exp4615-phase0
+    milestone: 2026.06.426
+    title: 'PHASE 0 (TRANSITION) -- archive .425 -> activate .426; assert YAML parses + smart-subset pre-test
+      gate green; RECORD the TRUE .425 close-state (capability 55->55 flat; A1 trust-energy QUARANTINED
+      [flagged_adversarial DURATION_TOO_SHORT 0.44s]; A2 live-integration HONEST NULL [first_win_delta 0,
+      solve_rate 0.04 bare==integrated]; A3 dc22 NO-BANK; outer-loop re-diagnosis: representation NOT the
+      bottleneck [0.725], the OFFLINE->LIVE BRIDGE is -> the .426 pivot).'
+    priority: critical
+    track: transition
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4615_archive_425_activate_426.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v425-activate-v426
+      milestone-transition task -- false-positive scope-match vs every prior archive/activate task; structurally
+      never a doomed rerun (the activation guard is a SCRIPT, not the agent). Mechanical YAML archive +
+      next-milestone activation. Routes to codex (mechanical) per the archive/activate routing rule.'
+    prompt: |
+      CONTEXT ({date}). Milestone 2026.06.425 has completed. This task mechanically transitions to 2026.06.426
+      and RECORDS the true .425 close-state so the record is honest. Routine (codex).
+
+      IMPORTANT (lesson from prior PHASE 0 cascades): the conductor may have ALREADY archived/activated at its
+      own level. If so, the archive step is a no-op -- EXPECTED, not a failure. You MUST still WRITE the
+      deliverable artifact (the close-state record). Do NOT exit with "no file changes": the deliverable IS the
+      file change.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/research-roadmap.yaml (the .425 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .426 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=55)
+        - {project_root}/results/experiment_4614_capstone_v425.json (the .425 scorecard: pivot_characterized_capability_grew_55_to_55)
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the re-diagnosis -- the .426 pivot rationale)
+        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .426 design doc)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
+        1. Archive the .425 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .426 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        3. WRITE the deliverable recording the TRUE .425 close-state: capability FLAT (reproducible_total_levels 55->55, capstone delta=0); A1 (exp4604) world-model trust energy claimed trust_pass 0->1.0 / first_win 0->1.0 but was flagged_adversarial (DURATION_TOO_SHORT 0.44s, degenerate trivially-passing gate) and the capstone EXCLUDED it; A2 (exp4605) live-integration HONEST NULL (first_win_delta=0, actions_delta=0, solve_rate 0.04 bare==integrated -- the LINEAR verifier as tie-breaker+router earns no place); A3 (exp4606) dc22 L1->L2 NO-BANK (reached_level=1, reproduced=False); A4 package live_submittable=55 (beats 33), ready_for_operator_submit=True. RECORD the .426 pivot = the OFFLINE->LIVE BRIDGE (re-diagnosis: representation NOT the bottleneck, 0.725 LOO-AUROC; the bridge is -- A1 disambiguate compute/shift/calibration, A2 graduate the SpatialValueNet to the live path).
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+        preconditions_checked:
+          principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+        close_state_425:
+          principle: "the honest .425 numbers (capability flat 55->55; A1 quarantined; A2 null; A3 no-bank; A4 55>33) carried forward so the record does not drift."
+        v426_pivot:
+          principle: "the .426 headline rationale (PIVOT to the OFFLINE->LIVE BRIDGE: A1 disambiguate cause, A2 graduate the SpatialValueNet to the live path) recorded so the milestone intent is traceable."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4615_archive_425_activate_426.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4616-a1
+    milestone: 2026.06.426
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- DISAMBIGUATE THE OFFLINE->LIVE
+      BRIDGE) -- a controlled three-arm experiment isolating WHY a 0.725-LOO-AUROC discriminator / a 7.6x-offline
+      SpatialValueNet Q-head REGRESSES the live depth-first explorer: (1) COMPUTE-COST (value-per-frontier-node
+      slows bounded-time search -> fewer nodes -> fewer solves), (2) DISTRIBUTION-SHIFT (trained on winning-path,
+      applied to off-path frontier states -> ~chance where it matters), (3) CALIBRATION (a ranking is not a usable
+      A* cost). Each arm has a matched control (bare BFS + the value head as-is). Deliverable: the BINDING cause +
+      the indicated fix, traceable (per-arm node-count, off-path AUROC, rank->cost calibration error).
+      verifier_is_oracle: false. retire_if_same_verdict.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4616_offline_live_bridge_disambiguation.json
+    operator_override: '2026-06-23 outer-loop re-diagnosis (commit 4b7782d41, docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md):
+      the explicit next step is to disambiguate compute-cost vs distribution-shift vs calibration as the cause the
+      0.725 value head regresses the live search. NEW-scope mandatory-priority pickup (GAP-OFFLINE-LIVE-BRIDGE). The
+      forward difference vs the prior bridge work is ISOLATION of the binding cause (bridge_v1/v2 plumbed + observed
+      the failure but never isolated which of the three causes binds). Not a doomed rerun.'
+    prior_failures:
+      - experiment_id: arc_offline_to_live_bridge_v2
+        verdict: 'complete_bridge_plumbed_v2_unlocks_cn04_offline_best_first_but_does_not_transfer_to_live_depth_first_explorer'
+        addressed_by: 'bridge_v1/v2 PLUMBED the offline->live flywheel end-to-end and OBSERVED that the value head
+          unlocks offline best-first but does NOT transfer to the live depth-first explorer -- but they never
+          ISOLATED which of the three candidate causes (compute-cost / distribution-shift / calibration) binds.
+          This task is a controlled three-arm DIAGNOSTIC that isolates the cause with matched controls + traceable
+          per-arm evidence (node-count, off-path AUROC, rank->cost calibration error). If the diagnostic again
+          fails to isolate a single binding cause (all three null / inseparable), the disambiguation-by-arm approach
+          is retired and the bridge residual is logged as a verifier gap for a different attack.'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint HEADLINE -- the offline->live bridge is THE binding constraint). The decisive
+      finding (outer-loop, 2026-06-23): the ARC representation is NOT the bottleneck (cross_game_features_v3
+      LOO-AUROC 0.725, CI [0.649,0.806] -- not the 0.503 the .425 analysis cited). "Add more features" is NOT the
+      lever. The REAL constraint: a 0.725 discriminator AND a 7.6x-offline SpatialValueNet Q-head both REGRESS the
+      live depth-first explorer (value_weight reverted 5.0->0.0, arc_competition_agent.py:60 "slower than bare BFS,
+      solved fewer games, the 25-game sim timed out"; arc_offline_to_live_bridge_v2 "does not transfer to the live
+      depth-first explorer"). Three candidate causes to ISOLATE (this is the explicit next step): (1) COMPUTE-COST
+      -- computing the value per frontier node slows bounded-time search; (2) DISTRIBUTION-SHIFT -- trained on
+      winning-path states, applied to off-path frontier states it never saw; (3) CALIBRATION -- a 0.725 RANKING is
+      not a usable A* cost. NO 3090; any optional LLM arm runs on the iGPU Qwen3.5-9B-MTP and declares
+      live_llm_inference for THAT arm only. verifier_is_oracle: false (a learned value, oracle-DISTINCT from the
+      executable win-check). Honest result either way -- the DIAGNOSIS is the deliverable.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the re-diagnosis: the three candidate causes + the fixes they indicate)
+        - {project_root}/results/arc_offline_to_live_bridge_v2.json + {project_root}/results/arc_offline_to_live_bridge_v1.json (the plumbed-but-non-transferring bridge -- the prior characterization)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v3 ~line 394 [LOO-AUROC 0.725]; LearnedVerifier [the LINEAR head]; collect_trajectory_data [the winning-path training distribution -- the suspected distribution-shift source])
+        - {project_root}/scripts/experiments/experiment_value_q_head_v4.py (the SpatialValueNet 7.6x-offline routing positive) + experiment_value_q_head_v3.py (the position-preserving net)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy; value_weight=0.0 + the value_weight=5 REGRESSION comment ~line 60 -- the live depth-first explorer)
+        - {project_root}/python/carnot/experiment_4545_cross_game_discrimination_v3.py (the LOO-AUROC 0.725 harness; per-game variance 0.379->1.0)
+
+      TASK: a controlled three-arm experiment that ISOLATES the binding cause. Arm COMPUTE-COST: measure live
+      solves/first-win at equal WALL-CLOCK vs equal NODE-BUDGET (if the value head wins at equal nodes but loses at
+      equal wall-clock, compute-cost binds; fix = decision-point-only eval / cached features). Arm DISTRIBUTION-SHIFT:
+      measure the value head's AUROC on WINNING-PATH states vs on OFF-PATH FRONTIER states the live search actually
+      expands (if it is ~chance off-path, shift binds; fix = DAgger search-distribution retraining / use as bounded
+      pruning). Arm CALIBRATION: measure the rank->cost calibration error (is the 0.725 ranking monotone in true
+      steps-to-go; does an isotonic/Platt recalibration change the live routing?). Matched control = bare BFS + the
+      value head as-is. Emit the BINDING cause + the indicated fix. verifier_is_oracle: false.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features_v3, collect_trajectory_data"` exits 0.
+           ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
+        1. Build the three diagnostic arms (do NOT modify scripts/research_conductor.py): COMPUTE-COST (equal-wall-clock vs equal-node-budget on the clean-nav games where the value head wins offline), DISTRIBUTION-SHIFT (AUROC on winning-path vs live off-path frontier states), CALIBRATION (rank->cost monotonicity + an isotonic recalibration re-route). Use the existing SpatialValueNet (v3/v4) + cross_game_features_v3; do not invent a new representation.
+        2. Run each arm with its matched control (bare BFS + value-head-as-is) over the public games x held-out variants. Record per-arm traceable evidence: node-count at equal wall-clock, off-path vs on-path AUROC delta, calibration error + post-recalibration routing change.
+        3. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the bare-BFS arm IS the matched control. The DIAGNOSIS is valid only if the arms are separable on a corpus where the value head DOES win offline (else "no cause found" is uninformative -- confirm the offline win exists first; set positive_control_passed). Name the BINDING cause (or "inseparable / multi-cause" honestly) + the indicated fix for A2. Log the residual as a Missing-Verifier / bridge gap.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: bridge_cause_isolated_<compute|shift|calibration>_fix_identified OR complete: bridge_cause_inseparable_multi_cause_honest_residual_logged."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline value-head scoring + live-search arms over cached transitions (1s floor); if an LLM arm runs, declare live_llm_inference + the Qwen3.5-9B-MTP iGPU precondition (NEVER the 3090s)."
+        verifier_is_oracle:
+          principle: "MUST be false -- the SpatialValueNet is a learned value ranking states, oracle-DISTINCT from running the executable win-check."
+        binding_bridge_cause:
+          principle: "the HEADLINE -- which of {compute_cost, distribution_shift, calibration} binds (or 'inseparable_multi_cause'); the cause A2 fixes."
+        compute_cost_evidence:
+          principle: "value-head solves/first-win at equal NODE-budget vs equal WALL-CLOCK -- if it wins at equal nodes but loses at equal wall-clock, compute-cost binds."
+        distribution_shift_evidence:
+          principle: "the value head's AUROC on winning-path states vs on the live off-path frontier states it actually expands -- a large drop off-path means distribution-shift binds."
+        calibration_evidence:
+          principle: "rank->cost monotonicity + whether an isotonic/Platt recalibration changes the live routing -- a routing change from recalibration alone means calibration binds."
+        indicated_fix:
+          principle: "the concrete A2 fix the binding cause indicates (decision-point-only eval/cached features for compute-cost; DAgger search-distribution retraining/bounded-pruning for shift; isotonic calibration for calibration)."
+        offline_win_confirmed:
+          principle: "the POSITIVE CONTROL -- the value head DOES win offline on the diagnostic corpus (else 'no cause' is uninformative); a null is valid only if this passed."
+        positive_control_passed:
+          principle: "bare-BFS matched control ran AND the offline win exists; a no-separation null is valid only then (no broken-control / no-headroom trap)."
+        false_negative_risk_checked:
+          principle: "true with the matched control + offline-win confirmed -- a 'no cause found' null is valid only then."
+        per_game_variance:
+          principle: "the LOO-AUROC spread across games (0.379->1.0) -- whether the bridge cause is uniform or game-specific."
+        residual_bridge_gaps:
+          principle: "the Missing-Verifier / bridge gap logged for any cause not isolated -- the next-attack record."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent harness/corpus drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, value-learner importable); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4616_offline_live_bridge_disambiguation.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4617-a2
+    milestone: 2026.06.426
+    title: 'PHASE A2 (ARC NORTH STAR; HIGHEST MANDATORY; GAP-OFFLINE-LIVE-BRIDGE + GAP-LIVE-INTEGRATION) --
+      GRADUATE the position-preserving SpatialValueNet (4x4 pool) from scripts/experiments into a LIVE-PATH-REACHABLE
+      python/carnot/agentic module (arc_loop_solve warm-start + fed to E3AgentPolicy -- NOT an orphaned solver),
+      REPLACE the LINEAR LearnedVerifier warm-start that "actively misled", apply the A1-diagnosed bridge fix
+      (decision-point-only/cached for compute-cost; DAgger search-distribution retrain for shift; isotonic
+      calibration for calibration), and measure LIVE first-win-rate + actions-to-first-levelup on the SCORED agent
+      vs (i) the linear-verifier baseline and (ii) bare BFS (matched controls; bootstrap CI). Keep
+      test_arc_submitted_agent_parity.py + arc_orphan_solver_lint green. verifier_is_oracle: false. retire_if_same_verdict.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 160
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4617_graduate_spatial_value_head_live.json
+    operator_override: '2026-06-23 SHIPPABLE UPGRADE flagged in ops/known-issues.md (.425+): "wire SpatialValueNet +
+      a tuned weight into scripts/arc_loop_solve.py -- it currently warm-starts with the LINEAR LearnedVerifier which
+      we have now SHOWN cannot route the live search." + GAP-LIVE-INTEGRATION (ops/verifier_gaps.md ~2420, the
+      HIGHEST score lever). NEW-scope mandatory pickup: graduate the position-preserving value head to the LIVE path.
+      The forward difference vs prior nulls is the POSITION-PRESERVING SpatialValueNet (not the linear head that
+      misled) + the A1-DIAGNOSED targeted fix (not a naive tie-break) + live-path-reachability. Not a doomed rerun.'
+    prior_failures:
+      - experiment_id: exp4605-a2
+        verdict: 'complete: live_integration_no_value_honest_null_gap_sharpened'
+        addressed_by: 'exp4605 (.425 A2) wired the 0.674 LINEAR cross_game_features_v3 DiscriminativeVerifier as a
+          tie-breaker + router + forward nav and NULLED (first_win_delta=0, solve_rate 0.04 bare==integrated). This
+          task is DIFFERENT three ways: (1) it graduates the POSITION-PRESERVING SpatialValueNet (4x4 pool, the
+          7.6x-offline positive), NOT the linear head the .425 A2 used and that bridge_v2 showed "actively misled";
+          (2) it applies the A1-DIAGNOSED bridge fix (decision-point-only/cached for compute-cost, DAgger
+          retraining for shift, isotonic calibration for calibration), NOT a naive tie-break; (3) it ensures
+          live-path-reachability (arc_orphan_solver_lint). It carries matched linear + bare controls + the parity
+          test. If the graduated head + A1 fix still does not raise live first-win/efficiency with a passing control,
+          the value-head-to-live-path lever is retired for the sprint and the residual logged as a bridge gap.'
+        retire_if_same_verdict: true
+      - experiment_id: experiment_value_q_head_v5
+        verdict: 'complete: value_q_head_no_L2_deepening_honest_null_gap_sharpened'
+        addressed_by: 'v5 showed a per-level value does not DEEPEN (no cross-level gradient). This task does NOT
+          claim deepening -- it targets WITHIN-LEVEL first-win-rate/efficiency on the live SCORED agent (the
+          7.6x-offline routing positive from v4), which is the leaderboard lever (RHAE efficiency + more solves in
+          bounded time). Cross-level deepening is A3 self-play, not this task. If the graduated head does not raise
+          within-level live efficiency with a passing control, the lever is retired.'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint HIGHEST MANDATORY -- graduate the proven dense-gradient positive to the LIVE path).
+      The ONE genuine positive from the sprint: a position-preserving SpatialValueNet (4x4 pool, NOT the global-pool
+      version that discards spatial position) routes ls20-L1 in 233 vs 1777 expansions = 7.6x offline
+      (experiment_value_q_head_v4). BUT it is stuck in scripts/experiments/ and scripts/arc_loop_solve.py STILL
+      warm-starts the LIVE search with the LINEAR LearnedVerifier that we have now SHOWN "actively misled"
+      (arc_offline_to_live_bridge_v2). And .425 A2 proved that wiring the linear head naively into the SCORED agent
+      NULLS. So: GRADUATE the SpatialValueNet to the LIVE path AND apply the A1-diagnosed bridge fix. CRITICAL
+      DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the new value-head module MUST be in the LIVE import
+      closure (imported by scripts/arc_loop_solve.py AND reachable from arc_competition_agent.py's E3AgentPolicy) --
+      it is NOT allowed to be an orphaned scripts/experiments solver (arc_orphan_solver_lint will block the commit).
+      CRITICAL CONSTRAINT (arc_competition_agent.py:60): value_weight=5 ALREADY regressed -- wire the value as a
+      TIE-BREAKER (value_weight->0) or per the A1-indicated mode (decision-point-only / bounded-pruning), NEVER a
+      heavy A* weight. NO 3090; any optional LLM arm runs on the iGPU. verifier_is_oracle: false. Honest null with a
+      passing control if the graduated head + fix does not beat the linear baseline.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4616_offline_live_bridge_disambiguation.json (A1 -- the binding cause + indicated_fix to apply)
+        - {project_root}/python/carnot/agentic/arc_value_net.py (the CNN ValueNet -- has the GLOBAL-pool version; add/graduate the 4x4-pool SpatialValueNet variant here as the live-path module)
+        - {project_root}/scripts/experiments/experiment_value_q_head_v3.py + _v4.py (the position-preserving SpatialValueNet + tuned heuristic_weight~10 -- the prototype to graduate)
+        - {project_root}/scripts/arc_loop_solve.py (warm-starts with LearnedVerifier ~line 67-70 -- REPLACE with the graduated SpatialValueNet)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy; value_weight=0.0 + the value_weight=5 REGRESSION comment ~line 60; SUBMITTED_AGENT_CONFIG)
+        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green) + {project_root}/scripts/arc_orphan_solver_lint.py (the live-path-reachability lint the new module MUST pass)
+        - {project_root}/ops/verifier_gaps.md (GAP-LIVE-INTEGRATION ~2420 -- the gap this fills)
+
+      TASK: graduate the position-preserving SpatialValueNet into a LIVE-PATH-REACHABLE python/carnot/agentic module;
+      replace the linear LearnedVerifier warm-start in arc_loop_solve.py; wire the head into E3AgentPolicy per the
+      A1-indicated mode (tie-breaker / decision-point-only / calibrated); apply the A1 bridge fix. Measure LIVE
+      first-win-rate + median actions-to-first-levelup on held-out variants WITH the graduated head vs (i) the linear
+      baseline and (ii) bare BFS (matched controls; bootstrap CI). The WIN: live first-win-rate up (CI excludes the
+      linear baseline) OR strictly lower actions-to-first-levelup, solve-rate not dropped, parity + orphan-lint green.
+      verifier_is_oracle: false. Offline-reproduce any newly-solved variant.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy; from carnot.agentic.arc_value_net import ValueNet"` exits 0.
+           c. the A1 artifact (experiment_4616) exists; read its binding_bridge_cause + indicated_fix (if absent, default to the compute-cost fix per arc_competition_agent.py:60).
+           ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
+        1. Graduate the SpatialValueNet (do NOT modify scripts/research_conductor.py): add the 4x4-pool position-preserving variant to python/carnot/agentic/arc_value_net.py (or a new agentic module); import it from scripts/arc_loop_solve.py (REPLACE the LearnedVerifier warm-start) AND make it reachable from E3AgentPolicy. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` passes (the module is live-path-reachable, NOT orphaned).
+        2. Apply the A1-diagnosed fix + wire the head as a TIE-BREAKER (value_weight->0) or the A1-indicated mode (decision-point-only / isotonic-calibrated / DAgger-retrained) -- NEVER a heavy A* weight (honor the value_weight=5 regression). Keep the linear-verifier config + bare BFS as the no-regression matched controls.
+        3. Measure WITH the graduated head vs the linear baseline vs bare BFS on held-out variants x the public games: live first-win-rate, median actions-to-first-levelup, solve-rate. Bootstrap CI on the first-win delta. RUN test_arc_submitted_agent_parity.py -> green. Emit first_win_delta + actions_delta explicitly + a null_delta_methodology_note when 0. Offline-reproduce any newly-solved variant.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: spatial_value_head_graduated_live_first_win_up_<n> OR complete: spatial_value_head_graduated_no_live_value_honest_null_gap_sharpened."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); any LLM arm on the iGPU declares live_llm_inference."
+        verifier_is_oracle:
+          principle: "MUST be false -- the SpatialValueNet is a learned value, oracle-DISTINCT from the executable win-check."
+        solve_provenance:
+          principle: "live_agent_self_discovery -- this graduates the value head into the SCORED live agent's OWN path (arc_loop_solve warm-start + E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re."
+        value_head_live_path_reachable:
+          principle: "HARD gate -- the graduated module is imported by scripts/arc_loop_solve.py AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT an orphaned scripts/experiments solver, per the Live-Path Reachability Discipline)."
+        bridge_fix_applied:
+          principle: "the A1-indicated fix actually wired (decision-point-only/cached / DAgger-retrained / isotonic-calibrated) -- documents the targeted, not naive, integration."
+        first_win_rate_graduated:
+          principle: "the HEADLINE -- held-out LIVE first-win-rate WITH the graduated SpatialValueNet (> the linear baseline is the bridge crossed)."
+        first_win_rate_linear_baseline:
+          principle: "the matched LINEAR-verifier baseline on the SAME variants (today's warm-start that 'actively misled' -- the apples-to-apples control)."
+        first_win_rate_bare:
+          principle: "the bare-BFS control (no value head) -- the no-regression floor."
+        first_win_delta:
+          principle: "graduated - linear baseline (positive = the position-preserving head crosses the bridge), emitted explicitly so a null (0) is annotated."
+        first_win_ci:
+          principle: "bootstrap CI on the first-win delta; a claim above the linear baseline requires the CI to exclude it."
+        median_actions_to_first_levelup_graduated:
+          principle: "ACTION cost WITH the graduated head -- the leaderboard tiebreaker (RHAE rewards efficiency)."
+        actions_delta:
+          principle: "linear_actions - graduated (positive = fewer actions); emitted explicitly so a null is annotated."
+        value_weight_used:
+          principle: "MUST be ~0 (tie-breaker) or the A1-indicated bounded mode -- documents that this did NOT repeat the value_weight=5 regression."
+        parity_test_green:
+          principle: "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth."
+        bare_and_linear_controls_passed:
+          principle: "the POSITIVE CONTROLS -- graduated must beat the linear baseline on the SAME variants AND not drop below bare BFS; a null is valid only if both ran."
+        false_negative_risk_checked:
+          principle: "true with both controls run -- a no-value null is valid only then."
+        null_delta_methodology_note:
+          principle: "present when first_win_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+        solve_rate_preserved:
+          principle: "HARD gate -- graduating the head must NOT drop solve-rate vs bare BFS."
+        chosen_submitted_config:
+          principle: "the recommended SUBMITTED_AGENT_CONFIG (graduated head on, value mode, weight) -- the A6 input; 'unchanged' if null."
+        offline_reproduced:
+          principle: "any newly-solved variant must offline-reproduce to count."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, E3AgentPolicy + ValueNet importable, A1 artifact present); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4617_graduate_spatial_value_head_live.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4618-a3
+    milestone: 2026.06.426
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE)
+      -- run the standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN-NAVIGATION
+      game NOT deepened in .421-.425 where the graduated Q-head routes faster (PREFER sk48 L1->L2 [graph_explore
+      family, closest to graph_astar]; alternatives wa30/ls20/lf52/re86/bp35 L1->L2; SKIP ka59 [hidden-register],
+      dc22-L2 [just-failed .425], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the learned
+      verifier on pos/neg traces. Gate: offline_reproduced new level -> reproducible_total_levels 55 -> 56+.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4618_levelup_selfplay.json
+    operator_override: '2026-06-21 operator directive (CONTINUE the live-agent self-play + pos/neg-feedback loop,
+      "run the self-play loop EVERY milestone") + 2026-06-19 ARC Level-Up Attempt Guarantee (standing): versioned
+      lineage continuation of the deepen/self-play tasks (exp4593 ft09 L2, exp4581 ar25 L2, which SUCCEED). The
+      forward difference is the NEXT rotation target (a clean-nav game NOT deepened in .421-.425) + use of the
+      graduated SpatialValueNet routing from A2 + the verifier train/checkpoint on this run pos/neg traces. Not a
+      doomed rerun.'
+    prior_failures:
+      - experiment_id: exp4606-a3
+        verdict: 'complete: dc22_delta_identified_no_bank'
+        addressed_by: 'exp4606 (.425 A3) attempted dc22 L1->L2 and did NOT bank (reached_level=1, reproduced=False).
+          This task ROTATES to a DIFFERENT game -- a clean-navigation game NOT deepened in .421-.425 where the v4
+          SpatialValueNet 7.6x routing speedup applies (prefer sk48 L1->L2; alternatives wa30/ls20/lf52/re86/bp35)
+          -- and explicitly SKIPS dc22-L2 (the just-failed target) and the recorded dead-ends (ka59 hidden-register,
+          cd82-L3/sp80-L3/su15-L3 no-grounded-delta). If the rotated clean-nav deepen ALSO produces no bank, log the
+          per-game delta + dead-end in the registry and the level-up lever rotates again next milestone (the target
+          is retired, not the self-play loop).'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE + the self-improvement engine). CLAUDE.md mandates
+      >=1 task per roadmap that actually BANKS a new reproducible level, AND the operator's 2026-06-21 directive
+      mandates running the self-play loop EVERY milestone. This task does BOTH: bank +1 level AND train+checkpoint
+      the learned verifier on the run's positive (steps-to-go) + negative (off-path/dead-end) traces. INDEPENDENT of
+      A1/A2 so the guarantee holds even if they null. ALL 25 public games have >=L1 banked -- so this is a DEEPEN
+      (L1->L2), not a first-contact. TARGET ROTATION: ft09 was .424, ar25 .423, cn04 .422, m0r0 .421, dc22 (failed)
+      .425 -- rotate to a game NOT deepened in .421-.425. PREFER sk48 L1->L2 (graph_explore family, closest to the
+      proven graph_astar_action_cost primitive AND where the graduated SpatialValueNet from A2 routes clean-nav
+      faster); alternatives wa30/ls20/lf52/re86/bp35 L1->L2. Check the registry dead_ends per game FIRST and SKIP
+      stalled approaches: do NOT pick ka59 (hidden StepCounter), dc22-L2 (just failed .425), cd82/sp80/su15-L3
+      (no-grounded-L3-delta). USE the graduated SpatialValueNet routing from A2 (if A2 shipped it to arc_loop_solve)
+      to speed the search; the bank (offline-reproduced new level) is the gate, not the routing speedup.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> TRAIN+CHECKPOINT the learned verifier -> registry update; A2 may have graduated the SpatialValueNet warm-start here)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible levels=55 + per-game dead_ends; L1 games sk48/re86/bp35/dc22/g50t/vc33/r11l/s5i5/lf52/wa30/ls20/ka59; L2 games cd82/sp80/su15/m0r0/cn04/ar25/ft09)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate)
+        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -> route a deepen attempt to the closest solved recipe)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (the learned verifier trained on pos/neg traces; models/arc_verifier_<game>.json checkpoint)
+
+      TASK: bank a NEW level -- gate: offline_reproduced=true AND reproduced_levels>=1 -- via the self-play loop, AND
+      persist the trained/updated learned-verifier checkpoint. Prefer DEEPENING a rotated clean-nav game to its next
+      level (RE only the next-level win/action/state DELTA via a derive-from-env GameAdapter). Only OFFLINE-REPRODUCED
+      levels count. Skip the dead-ends already recorded per game.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Pick the rotation target (a clean-nav game NOT deepened in .421-.425; check registry dead_ends to skip stalled approaches; do NOT pick ka59 or dc22-L2). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
+        2. For a deepen: recommend_approach -> RE only the next-level delta -> register/extend the GameAdapter -> re-run the loop.
+        3. Run the reproduction gate (arc_solver_kit.reproduce). Only on reproduced=True, update ops/arc_solve_registry.yaml (win condition, action model, gotchas, dead-ends, solver module) + bump reproducible_total_levels.
+        4. TRAIN+CHECKPOINT the learned verifier on the run's pos/neg traces (the self-improvement step); persist models/arc_verifier_<game>.json (mirror-ready per CLAUDE.md decentralization rule 3). Record the verifier delta.
+        5. Record DEAD-ENDS (a search approach that stalled + why) in the registry entry so the next attempt skips them.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+        solve_provenance:
+          principle: "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."
+        offline_reproduced:
+          principle: "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+        reproduced_levels:
+          principle: "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
+        target_game:
+          principle: "the rotated game attempted -- traceable to the rotation discipline (a clean-nav game not deepened in .421-.425, not dc22/ka59)."
+        verifier_checkpoint_updated:
+          principle: "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+        registry_updated:
+          principle: "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4618_levelup_selfplay.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4619-a4
+    milestone: 2026.06.426
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3''s new bank
+      (+ any A2 newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit
+      (beat the standing 33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable
+      trajectory (or env-adaptive re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current
+      banked depth. Submission stays operator-only. verifier_is_oracle: false.'
+    priority: high
+    track: arc-north-star
+    max_turns: 120
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4619_refresh_submission_package.json
+    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1) + 2026-06-21 standing gate "beat 33 levels":
+      routine package-refresh continuation of the .425 A4 package-refresh (exp4607, which SUCCEEDED at 55) -- folds
+      THIS milestone''s A3 bank (55->56+) + any A2 new variant solves into the refreshed package and keeps it
+      operator-resubmit-ready. False-positive fuzzy-token scope-match vs prior package-prep/live-submit tasks
+      (exp4607/exp4595). Not a doomed rerun; submission stays operator-only (this task only PREPARES + offline-validates).'
+    prompt: |
+      CONTEXT ({date}, ARC sprint SCORE -- keep the operator-resubmit package fresh). The .425 A4 kept the package
+      at live_submittable=55 (beats 33), ready_for_operator_submit=True. This task keeps it current: fold A3's new
+      bank (reproducible_total_levels 55->56+) + any A2 newly-reproduced variant into the refreshed package,
+      re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver),
+      extend env-adaptive recovery to any newly version-drifted game, and confirm the live-submittable count stays
+      STRICTLY > 33. NO LLM at submit-time, zero quota (offline arcade + cached solves). Submission is OPERATOR-ONLY
+      (External Publication) -- this task PREPARES + offline-validates ONLY and emits ready_for_operator_submit.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4607_refresh_submission_package.json (the .425 A4 refreshed package + the env-adaptive re-solve pattern)
+        - {project_root}/scripts/arc3_live_submit.py (the live-submit driver: Mode-1 flat-replay; _latest_package; CLAIMED_FALLBACK)
+        - {project_root}/results/experiment_4618_levelup_selfplay.json (A3 -- this milestone's new bank to fold in)
+        - {project_root}/results/experiment_4617_graduate_spatial_value_head_live.json (A2 -- any newly-reproduced variant to fold in)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels + per-game reproduce entries)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0 AND `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Rebuild the validated submission package from the CURRENT registry (incl. this milestone's A3 bank + any A2 new solves). Record per-game claimed-vs-offline-reached so no level is claimed above its offline-reproduced depth (the claimed_caps discipline).
+        2. Re-validate: every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver) on a FRESH env. Extend env-adaptive re-solve (the persisted primitive_env_adaptive_resolve_operator) to any newly version-drifted game.
+        3. COUNT + GATE: the offline-reproduction-gated live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Emit count_delta vs the .425 A4 count (55) + a null_delta_methodology_note if unchanged. Do NOT submit -- emit ready_for_operator_submit + the refreshed package path.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: package_refreshed_live_submittable_<n>_above_33 OR complete: package_refreshed_unchanged_depth."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false -- packaging + env-adaptive replay bank already-earned solves (no circular moat claim)."
+        live_submittable_level_count:
+          principle: "the offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest leaderboard score, must stay > 33)."
+        live_submittable_count_prev:
+          principle: "55 -- the .425 A4 count, the apples-to-apples comparison."
+        count_delta:
+          principle: "live_submittable_level_count - 55 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."
+        levels_folded_in:
+          principle: "names the games whose new banks (A3 + A2 variant solves) were folded into the refreshed package this milestone."
+        refreshed_package_path:
+          principle: "the path to the refreshed validated package the operator's live-submit driver will load -- the deliverable the operator resubmits."
+        per_game_submittable:
+          principle: "per-game offline-reproduced level + has-trajectory + drift-robust flags -- the audit trail that no level is over-claimed above its offline depth."
+        ready_for_operator_submit:
+          principle: "True if the refreshed package's live-submittable count beats 33 and every claim is offline-reproduction-gated; the task NEVER submits (operator-only)."
+        offline_reproduced:
+          principle: "every claimed-submittable level must offline-reproduce to count (no frozen-trajectory over-claim)."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent registry/trajectory drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4619_refresh_submission_package.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4620-a5
+    milestone: 2026.06.426
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the milestone''s winning
+      primitive (A2 the graduated SpatialValueNet live-path bridge operator; OR the A1 bridge-fix helper [isotonic
+      calibration / DAgger search-distribution retrain / decision-point-only eval]) into arc_solver_kit /
+      arc_solve_registry (ARC Solve Reproducibility + Solver-Reuse Discipline), and measure CROSS-GAME TRANSFER: does
+      the persisted primitive add value (live first-win / efficiency lift) on games it was NOT tuned on?
+      verifier_is_oracle: false.'
+    priority: high
+    track: arc-north-star
+    max_turns: 120
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4620_primitive_persist_transfer.json
+    operator_override: '2026-06-16 ARC Solve Reproducibility + Solver-Reuse Discipline (standing, CLAUDE.md) +
+      2026-06-19 ARC sprint: NEW-scope self-learning/reuse continuation -- persist THIS milestone''s winning
+      primitive (A2 graduated value-head bridge / A1 bridge-fix helper) as reusable scaffolding + measure transfer;
+      false-positive fuzzy-token scope-match vs the prior persist tasks (exp4608 .425, exp4596 .424 which SUCCEEDED).
+      This is a DIFFERENT primitive (the offline->live value-head bridge), persisted and transfer-tested. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint SELF-LEARNING -- research-program.md mandates >=1 continuous-self-learning
+      experiment per milestone; this is Tier-2/Tier-3: consolidate the winning primitive into REUSABLE scaffolding so
+      the LIVE solver applies it to games it has never seen, per the ARC Solve Reproducibility + Solver-Reuse
+      Discipline). This milestone's candidate primitives: the A2 graduated SpatialValueNet live-path bridge (the
+      position-preserving value head wired into arc_loop_solve/E3AgentPolicy) and the A1 bridge-fix helper (isotonic
+      calibration / DAgger search-distribution retrain / decision-point-only eval). Persist whichever WON and measure
+      transfer to UNTUNED games. Degrade gracefully: if all nulled, persist the best-characterized primitive-as-built
+      + report the transfer null + what it would need to add value.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4617_graduate_spatial_value_head_live.json (A2: the graduated value head -- persist if it raised live first-win-rate)
+        - {project_root}/results/experiment_4616_offline_live_bridge_disambiguation.json (A1: the bridge-fix helper -- persist if the fix is reusable)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate -- where the primitive is persisted)
+        - {project_root}/ops/arc_solve_registry.yaml (general_gotchas + existing primitive_* operators -- extend, do not duplicate)
+        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -- the routing this primitive feeds)
+
+      TASK: (1) PERSIST the milestone's winning primitive (A2 graduated value-head bridge as a generic operator, OR
+      A1 bridge-fix helper) into arc_solver_kit + a general_gotcha in arc_solve_registry. (2) Measure CROSS-GAME
+      TRANSFER: apply the persisted primitive to 2-3 games it was NOT tuned on -- does it add value (the value head
+      lifts live first-win/efficiency on an untuned game)? Offline-reproduce any new level (arc_solver_kit.reproduce);
+      only reproduced levels count.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Read the A1/A2 artifacts; pick the primitive with the strongest measured signal. Persist it: add/extend a generic operator/helper in arc_solver_kit + a general_gotcha entry in ops/arc_solve_registry.yaml.
+        2. Measure transfer on 2-3 games NOT tuned in A1/A2: report the per-game value-add (live first-win / efficiency lift). Offline-reproduce any new level; only reproduced levels count.
+        3. Record the transfer result + dead-ends in the registry. If a new level was banked, bump reproducible_total_levels.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+        verifier_is_oracle:
+          principle: "MUST be false -- the persisted primitive RANKS/ROUTES (the value head) or RE-CALIBRATES, oracle-distinct from the win-check."
+        solve_provenance:
+          principle: "development_proxy if a transfer solve is via the offline twin; live_agent_self_discovery if the persisted primitive improves the SCORED agent's own path. NOT outer_loop_re."
+        primitive_persisted:
+          principle: "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+        transfer_games:
+          principle: "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+        transfer_value_per_game:
+          principle: "the per-game value-add (live first-win / efficiency lift) -- the cross-game evidence the primitive generalizes."
+        offline_reproduced:
+          principle: "only offline-reproduced new levels count toward reproducible_total_levels."
+        registry_updated:
+          principle: "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4620_primitive_persist_transfer.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4621-a6
+    milestone: 2026.06.426
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- consolidate whatever
+      RAISED a real metric (A2 graduated value head -> live first-win/efficiency; A3 new bank) into the
+      SUBMITTED_AGENT_CONFIG + the refreshed package; re-measure end-to-end on offline_to_live_transfer_ratio +
+      first-win-rate + live-submittable count (vs 33). If NONE raised a clean control-passed metric, keep the bare
+      config + honest null. Keep test_arc_submitted_agent_parity.py + arc_orphan_solver_lint green.
+      verifier_is_oracle: false.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 130
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4621_integration_gate.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing) + GAP-LIVE-INTEGRATION: routine
+      per-milestone INTEGRATION task (wire the milestone winners into SUBMITTED_AGENT_CONFIG + the refreshed package
+      + re-measure) -- the single-source-of-truth discipline (test_arc_submitted_agent_parity.py); false-positive
+      scope-match vs prior integration tasks (exp4609 .425, exp4597 .424). Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint INTEGRATION -- consolidate the milestone's real wins into the SCORED agent so the
+      next operator submission reflects them). Wire whatever RAISED a real metric this milestone into
+      SUBMITTED_AGENT_CONFIG + the refreshed package and re-measure end-to-end. If A2's graduated SpatialValueNet
+      raised live first-win-rate/efficiency, ship that config (value mode + weight per A2). If A3 banked a level, it
+      is already in the package (A4). If NONE raised a clean metric (each gated by its positive control +
+      FALSE_NEGATIVE_RISK), keep the bare config + emit an honest null. verifier_is_oracle: false. Keep
+      test_arc_submitted_agent_parity.py + arc_orphan_solver_lint green (the integrated config is the single source
+      of truth + live-path-reachable). Do NOT aggregate any flagged_adversarial upstream artifact's numbers (the
+      fabrication gate).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG -- the single source of truth to update)
+        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green) + {project_root}/scripts/arc_orphan_solver_lint.py (MUST pass)
+        - {project_root}/results/experiment_4617_graduate_spatial_value_head_live.json (A2 -- ship the graduated value-head config if clean + metric-raising)
+        - {project_root}/results/experiment_4618_levelup_selfplay.json (A3 -- the bank, already in the package)
+        - {project_root}/results/experiment_4619_refresh_submission_package.json (A4 -- the refreshed package this consolidates into)
+        - {project_root}/scripts/summarize_artifact.py (USE THIS to read each upstream artifact's honest_verdict + flagged_adversarial + gates BEFORE aggregating any number)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0 AND the A2/A3/A4 artifacts exist. Missing -> blocked_<resource>, EXIT.
+        1. For each upstream lever (A2/A3), read it via summarize_artifact.py: include ONLY if its honest_verdict is a clean success AND it is NOT flagged_adversarial AND its positive control passed. Quarantine the rest (report which, and why).
+        2. Wire the admitted winners into SUBMITTED_AGENT_CONFIG (graduated value head on, value mode + weight per A2). Re-measure end-to-end on held-out variants: offline_to_live_transfer_ratio, first-win-rate, median actions-to-first-levelup, live-submittable count.
+        3. RUN test_arc_submitted_agent_parity.py + `.venv/bin/python scripts/arc_orphan_solver_lint.py` -> both green. Emit each metric WITH its delta vs the bare/baseline + a null_delta_methodology_note where 0. If nothing clean raised a metric, keep the bare config + honest null.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: integrated_<metric>_raised_config_shipped OR complete: integration_no_clean_metric_bare_config_kept_honest_null."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false for every aggregated value claim -- the integrated levers are oracle-distinct."
+        levers_integrated:
+          principle: "names the upstream levers (A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- the audit trail."
+        flagged_artifacts_excluded:
+          principle: "names any flagged_adversarial / positive-control-failed upstream artifact NOT aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
+        offline_to_live_transfer_ratio_integrated:
+          principle: "the integrated bridge co-metric (B1's headline on the shipped config) -- did the offline->live bridge fix make it into the SCORED agent."
+        first_win_rate_integrated:
+          principle: "the integrated held-out first-win-rate on the shipped config (A2's effect)."
+        live_submittable_level_count_integrated:
+          principle: "the integrated live-submittable count (must stay > 33)."
+        parity_test_green:
+          principle: "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is the single source of truth."
+        orphan_lint_green:
+          principle: "HARD gate -- arc_orphan_solver_lint passes; the graduated value head stays live-path-reachable."
+        submitted_config_raised_metric_clean:
+          principle: "True only if a CLEAN (non-flagged, control-passed) lever raised a real metric on the SCORED config; false -> honest null, bare config kept."
+        null_delta_methodology_note:
+          principle: "present where any integrated delta == 0 -- states the equality is an honest no-value null, not a bug."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, upstream artifacts present); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4621_integration_gate.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4622-b1
+    milestone: 2026.06.426
+    title: 'PHASE B1 (RESERVED INFRA; co-headline metric) -- add a canonical offline_to_live_transfer_ratio metric
+      helper: the LIVE first-win/efficiency lift attributable to the value head, reported SIDE-BY-SIDE with the
+      offline LOO-AUROC so the offline->live gap is explicit -- the direct measure of whether .426 crossed the
+      bridge (the analogue of .425''s world_model_trust_pass_rate). Report it with reproducible_total_levels,
+      live-submittable count, first-win-rate, and action efficiency. Asserting tests.'
+    priority: high
+    track: infra
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4622_offline_to_live_transfer_ratio_metric.json
+    operator_override: '2026-06-23 reserved-infra co-headline-metric slot (the .426 analogue of .425 B1
+      world_model_trust_pass_rate): canonicalize offline_to_live_transfer_ratio so every future ARC milestone reports
+      whether the offline verifier signal transfers to the live agent. False-positive scope-match vs prior co-headline
+      metric tasks (exp4610 .425 B1). DIFFERENT metric (offline->live transfer, not world-model trust-pass). Mechanical
+      aggregation; not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, reserved infra slot -- the co-headline metric that makes the .426 bridge thesis MEASURABLE).
+      The .425/.426 work shows a strong offline verifier signal (LOO-AUROC 0.725, 7.6x offline routing) that does NOT
+      transfer to the live agent. The direct measure of whether A2 crossed that bridge is
+      offline_to_live_transfer_ratio = (LIVE first-win/efficiency lift attributable to the value head) reported
+      ALONGSIDE the offline LOO-AUROC, so the offline->live GAP is explicit and tracked every milestone. This task
+      builds the canonical helper that computes + reports it, so every future ARC milestone reports it alongside the
+      other co-headline metrics (reproducible_total_levels, live-submittable count, first-win-rate, action efficiency).
+      Mechanical aggregation over the A1/A2 artifacts + the registry; no model load.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4617_graduate_spatial_value_head_live.json (A2 -- the live first-win/efficiency source)
+        - {project_root}/results/experiment_4616_offline_live_bridge_disambiguation.json (A1 -- the offline AUROC + per-arm evidence)
+        - {project_root}/results/experiment_4610_world_model_trust_pass_rate_metric.json (the .425 B1 co-headline-metric pattern to mirror)
+        - {project_root}/scripts/summarize_artifact.py (the fixed reading-order discipline this metric complements)
+        - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels=55 -- a co-reported metric)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Build a canonical helper (a small module/function; do NOT modify scripts/research_conductor.py) that computes offline_to_live_transfer_ratio from the A2 artifact (live first-win/efficiency delta of the graduated head vs the linear/bare baseline) AND the offline AUROC (A1/exp4545), with BOTH numbers explicit (the offline signal AND the live lift -- so a high-offline/zero-live case is visibly the bridge-not-crossed state), plus a null_delta_methodology_note when the live lift is 0.
+        2. Report it side-by-side with the other co-headline metrics (reproducible_total_levels, live-submittable count, first-win-rate, action efficiency) in a single canonical block.
+        3. Write asserting tests (tests/python/) for the helper: a synthetic artifact with offline-AUROC 0.72 + live-lift 0.0 reports transfer_ratio ~0 with both numbers (bridge NOT crossed); a synthetic artifact with offline-AUROC 0.72 + positive live-lift reports a positive ratio (bridge crossed); the baseline-equal case sets the null_delta note.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: offline_to_live_transfer_ratio_metric_helper_shipped_tests_green."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor)."
+        offline_to_live_transfer_ratio:
+          principle: "the canonical co-headline metric value (live lift attributable to the value head, with the offline AUROC reported alongside)."
+        offline_auroc_component:
+          principle: "the offline LOO-AUROC (the verifier signal) -- explicit so a high-offline/zero-live case is visibly the bridge-not-crossed state."
+        live_lift_component:
+          principle: "the LIVE first-win/efficiency lift the value head produces -- explicit so the metric does not hide the offline->live gap."
+        coheadline_block:
+          principle: "offline_to_live_transfer_ratio reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / action-efficiency -- the single canonical metric surface."
+        tests_added:
+          principle: "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4622_offline_to_live_transfer_ratio_metric.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4623-b2
+    milestone: 2026.06.426
+    title: 'PHASE B2 (RESERVED INFRA; adversarial_verify hardening -- TWO reader-side guards) -- (1) an OFFLINE-VS-LIVE
+      OVERCLAIM guard: an ARC value/verifier artifact claiming a LIVE search win MUST report a measured LIVE metric,
+      not substitute an offline AUROC (the exact 0.503-vs-0.725 / offline-vs-live confusion the outer-loop just
+      corrected); (2) a CALIBRATED CHEAP-LEARNED-VALUE substrate floor so a legitimate fast CNN/linear value-head
+      scoring run over cached candidates is not DURATION_TOO_SHORT false-flagged (the .425 A1 0.44s regression), while
+      a no-methodology fast run STILL fires. Reader/guard only; edits adversarial_verify.py, never the conductor.
+      Asserting tests for both.'
+    priority: high
+    track: infra
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4623_adversarial_verify_hardening.json
+    operator_override: '2026-06-23 reserved-infra adversarial_verify-hardening slot: add TWO reader-side guards
+      relevant to the .426 bridge thesis. False-positive scope-match vs the .425 B2 adversarial_verify-hardening task
+      (exp4611, which SUCCEEDED -- a continuation, not a failed rerun). DIFFERENT guards (offline-vs-live overclaim +
+      calibrated cheap-value substrate, not the .425 TAUTOLOGY carve-out). Edits scripts/adversarial_verify.py (the
+      linter), never scripts/research_conductor.py. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, reserved infra slot -- harden adversarial_verify.py for the .426 bridge thesis). TWO localized
+      reader-side carve-outs in scripts/adversarial_verify.py (this is NOT scripts/research_conductor.py --
+      adversarial_verify.py is the linter; the existing _is_identifier_field / seed carve-out + the .425 small-sample
+      TAUTOLOGY carve-out are precedent for exactly this kind of fix).
+
+      THE MOTIVATION: (guard 1) the .426 milestone is ABOUT the offline->live gap -- the outer-loop just corrected an
+      analysis that cited an OFFLINE AUROC (0.503/0.725) as if it characterized the LIVE agent. An ARC artifact must
+      not be allowed to claim a LIVE search WIN while only reporting an offline AUROC; the LIVE metric (first-win-rate
+      / actions on the live agent) must be present. (guard 2) the .425 A1 (exp4604) was flagged DURATION_TOO_SHORT at
+      0.44s for a verifier-scoring substrate -- but a CNN/linear value-head forward pass over a few cached candidates
+      IS legitimately sub-second. A calibrated substrate floor must let a fast value-head scoring run pass IFF it
+      carries methodology (model_specs/random_seed/reproducibility_checksum), while a no-methodology 0.44s run still
+      fires (the genuine fabrication case).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/adversarial_verify.py (check_tautology; DURATION_TOO_SHORT logic + the substrate duration floors; _is_identifier_field + the .425 small-sample carve-out -- the EXACT pattern to mirror)
+        - {project_root}/results/experiment_4604_world_model_trust_energy.json (the .425 A1 artifact DURATION_TOO_SHORT-flagged at 0.44s -- the regression fixture for guard 2; check whether it carries methodology)
+        - {project_root}/results/experiment_4617_graduate_spatial_value_head_live.json (the .426 A2 artifact -- the live-metric-bearing exemplar guard 1 must NOT false-flag)
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the offline-vs-live confusion guard 1 prevents)
+        - {project_root}/ops/verifier_gaps.md (GAP-OFFLINE-LIVE-BRIDGE / GAP-LIVE-INTEGRATION -- the gaps these guards protect)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "import ast; ast.parse(open('{project_root}/scripts/adversarial_verify.py').read()); print('ok')"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Add the OFFLINE-VS-LIVE OVERCLAIM guard: an ARC artifact whose honest_verdict / headline claims a LIVE search win (first-win/efficiency/solve on the live agent) MUST carry a measured LIVE metric field (first_win_rate_* / actions_* / live_*), not only an offline AUROC. Flag a WARN (offline-substituted-for-live) when a live-win claim is backed only by an offline AUROC. Be NARROW: an artifact that HONESTLY reports an offline AUROC as an offline result (no live-win claim) does NOT fire.
+        2. Add the CALIBRATED CHEAP-LEARNED-VALUE substrate floor: a verifier-scoring artifact declaring a cheap learned-value/CNN/linear forward-pass over cached candidates may pass a sub-1s duration IFF it carries methodology (model_specs/random_seed/reproducibility_checksum + a value-head substrate marker); a no-methodology sub-second run STILL fires DURATION_TOO_SHORT (the genuine fabrication case -- the .425 A1 0.44s fixture must be classifiable).
+        3. Write asserting tests (tests/python/): (a) a live-win claim backed only by an offline AUROC WARN-fires guard 1; an honest offline-only result does NOT; (b) a methodology-bearing fast value-head scoring run does NOT DURATION_TOO_SHORT-fire; a no-methodology 0.44s run STILL fires. Run the focused tests + `.venv/bin/python scripts/adversarial_verify.py` on the .426 A2 fixture to confirm clean.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: adversarial_verify_hardened_offline_live_overclaim_guard_plus_cheap_value_substrate_tests_green."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor)."
+        offline_live_overclaim_guard_added:
+          principle: "the guard that a LIVE-win claim must carry a LIVE metric, not only an offline AUROC (the .426 bridge-thesis protection)."
+        cheap_value_substrate_floor_added:
+          principle: "the calibrated substrate floor so a methodology-bearing fast value-head scoring run is not DURATION_TOO_SHORT false-flagged (the .425 A1 regression fixture)."
+        honest_offline_result_not_flagged:
+          principle: "HARD -- an artifact honestly reporting an offline AUROC as an offline result (no live-win claim) does NOT fire guard 1 (narrow, not a hole)."
+        no_methodology_fast_run_still_fires:
+          principle: "HARD -- a no-methodology sub-second verifier-scoring run STILL fires DURATION_TOO_SHORT (guard 2 is narrow, the .425 A1 0.44s fabrication case stays catchable)."
+        tests_added:
+          principle: "the asserting tests (every test >=1 assertion; no skips) -- both guards are verified."
+        research_conductor_modified:
+          principle: "MUST be false -- this edits adversarial_verify.py (the linter), never scripts/research_conductor.py."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (adversarial_verify.py parses, fixtures present); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4623_adversarial_verify_hardening.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4624-c
+    milestone: 2026.06.426
+    title: 'PHASE C (HARDWARE CONTINUITY; 1 per attached board) -- per-board reachability audit: KV260 (SSH
+      reachability ONLY, never host SD card), GateMate (openFPGALoader USB detect), PolarFire (SSH). Honest
+      blocked_<board>_<reason> if a board is down. Keeps each attached board visible per the Hardware-Task Continuity
+      Discipline without burning a heavy slot during the ARC sprint.'
+    priority: medium
+    track: hardware
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: hardware_smoke
+    deliverable: results/experiment_4624_hardware_continuity.json
+    operator_override: '2026-05-18 Hardware-Task Continuity Discipline (standing, CLAUDE.md) + north-star.md §3
+      (KV260 near-terminal, others opportunistic): routine per-milestone per-board reachability audit -- false-positive
+      scope-match vs every prior hardware-continuity task (exp4612 .425); required forward work (keeps each attached
+      board visible) during the ARC sprint, not a doomed rerun. KV260 uses SSH reachability ONLY (never host SD card,
+      per the KV260 SSH-Not-SD-Card Discipline).'
+    prompt: |
+      CONTEXT ({date}, hardware-continuity reserved slot -- keep each attached board visible per the Hardware-Task
+      Continuity Discipline; lightweight during the ARC sprint). Audit reachability of the three attached boards and
+      record state. KV260 is near-terminal (north-star §3); this is a reachability + light energy-eval smoke or a
+      documentation-continuity record, NOT a heavy bring-up.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/ops/hardware-bringup-prep.md (current per-board bring-up state)
+        - {project_root}/ops/north-star.md (§3 hardware focus -- KV260 near-terminal, GateMate/PolarFire opportunistic)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per-board; record each in preconditions_checked):
+           - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exit 0 (SSH reachability ONLY -- NEVER a host SD-card-slot device check, per the KV260 SSH-Not-SD-Card Discipline; the board boots from its onboard microSD and the host has no role in its storage once booted).
+           - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exit 0.
+           - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GateMate IDCODE.
+           A board failing its check is NOT a task failure -- record blocked_<board>_<reason> for THAT board and continue.
+        1. For each reachable board, record its state: KV260 `ssh kria 'xmutil listapps'` (loaded overlay); PolarFire uptime; GateMate detected IDCODE. For KV260, optionally run a light energy-eval smoke (`ssh kria 'ls /dev/uio*'`) if the Carnot Ising overlay is loaded.
+        2. WRITE the deliverable recording per-board reachability + state (or blocked_<board>_<reason>). This satisfies the per-board continuity mandate for the milestone.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: hardware_continuity_<n>_of_3_boards_reachable (or complete:/blocked_ per board state)."
+        inference_substrate:
+          principle: "hardware_smoke -- SSH/USB reachability checks, per-board floor; declared so a fast real check is not DURATION_TOO_SHORT false-flagged."
+        boards_reachable:
+          principle: "per-board reachability (kv260/polarfire/gatemate) -- the continuity record that keeps each attached board visible per the discipline."
+        kv260_precondition:
+          principle: "MUST be the SSH-reachability check, NEVER a host SD-card-slot device check (the KV260 SSH-Not-SD-Card Discipline)."
+        per_board_state:
+          principle: "the recorded state per reachable board (loaded overlay / uptime / IDCODE) or blocked_<board>_<reason>."
+        preconditions_checked:
+          principle: "records WHICH board checks ran + their results; pre-empts silent-missing-hardware fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4624_hardware_continuity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4625-d
+    milestone: 2026.06.426
+    title: 'PHASE D (SOTA INGESTION; 1 reserved slot) -- ingest OFFLINE->LIVE TRANSFER / DISTRIBUTION-SHIFT /
+      CALIBRATION SOTA mapped onto A1 (bridge disambiguation) + A2 (graduate the value head): DAgger / dataset
+      aggregation (arXiv:1011.0686), isotonic/Platt calibration for ranking->cost, learned-heuristic search
+      (DeepCubeA/Q* arXiv:2102.04518, SLOPE arXiv:2406.04935), goal-conditioned value (GoFAR arXiv:2206.03023).
+      Real arXiv IDs only; map the strongest methods to the .427 roadmap. /deep-research BANNED in the autonomous loop.'
+    priority: medium
+    track: sota-ingestion
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4625_sota_ingestion_offline_live_bridge.json
+    operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (standing, CLAUDE.md -- reserve one ingestion slot
+      per bleeding-edge milestone): routine per-milestone SOTA-ingestion continuation scoped to THIS milestone''s
+      headline open problem (the offline->live bridge: distribution-shift / calibration / compute-cost); false-positive
+      scope-match vs prior SOTA-ingestion tasks (exp4613 .425). Not a doomed rerun; uses the reliable low-concurrency
+      channel, NOT /deep-research.'
+    prompt: |
+      CONTEXT ({date}, SOTA-ingestion reserved slot -- turn discovered SOTA into actionable methods mapped onto the
+      .426 headline open problem [the OFFLINE->LIVE BRIDGE: why a good offline verifier regresses the live search;
+      distribution-shift, calibration, compute-cost] and fed forward to the .427 roadmap). Use the RELIABLE channel
+      only: scripts/sweep_clusters.py / sweep_semscholar.py (arXiv / Semantic-Scholar APIs) + low-concurrency
+      WebSearch + WebFetch of the top 5-8 papers. /deep-research is BANNED in the autonomous loop (it rate-limited 4x
+      for ZERO output 2026-06-11). Cite REAL arXiv IDs for every method claim (no citation = fabrication per
+      adversarial_verify discipline).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4613_sota_ingestion_world_model_trust.json (the .425 ingestion -- flagged goal_conditioned_spatial_value_tiebreaker for .426; build forward)
+        - {project_root}/docs/research-notes/world-model-trust-literature-2026-06-23.md (the .425 ingestion note -- DeepCubeA/SLOPE/GoFAR already mapped; extend to the bridge/shift/calibration track)
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the three bridge causes the SOTA must address)
+        - {project_root}/research-studying.md / {project_root}/research-references.md (the discovered corpus to filter to the offline->live-bridge track + mark ingested)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "import urllib.request; urllib.request.urlopen('https://huggingface.co/api/models', timeout=10); print('net_ok')"` exits 0. No network -> honest_verdict blocked_network, EXIT.
+        1. Read the already-discovered corpus filtered to the offline->live-transfer / distribution-shift / calibration track. Run a FOCUSED fresh pass (sweep_clusters.py / sweep_semscholar.py + WebSearch/WebFetch the top 5-8): DAgger / dataset aggregation for imitation under distribution-shift (arXiv:1011.0686), isotonic/Platt calibration of a learned value into a cost, learned-heuristic A* (DeepCubeA/Q* arXiv:2102.04518), SLOPE learned pruning (arXiv:2406.04935), goal-conditioned offline value (GoFAR arXiv:2206.03023), + any fresh 2026 work on value-guided search transfer / amortized heuristic compute.
+        2. Synthesize a SOTA->experiment mapping artifact: the strongest 3-5 methods, what each would take to implement over the CURRENT A1 disambiguation / A2 graduated-value-head stack, and the pitfalls / where each fails. Template = docs/research-notes/world-model-trust-literature-2026-06-23.md (per-method note + a "bottom line for the .427 roadmap" section). Write it to docs/research-notes/offline-live-bridge-literature-2026-06-23.md.
+        3. CLOSE THE LOOP: update research-studying.md (mark ingested) and FLAG the strongest method(s) as candidate inputs for the .427 roadmap.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: sota_ingestion_offline_live_bridge_mapped."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor)."
+        methods_mapped:
+          principle: "the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when -- the actionable ingestion (no citation = fabrication)."
+        flagged_for_next_roadmap:
+          principle: "the strongest method(s) flagged as candidate .427 inputs -- closes discover->ingest->plan->experiment."
+        note_path:
+          principle: "docs/research-notes/offline-live-bridge-literature-2026-06-23.md -- the per-track note (the SOTA-Ingestion Cycle deliverable)."
+        deep_research_not_used:
+          principle: "MUST be true -- /deep-research is banned in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch."
+        preconditions_checked:
+          principle: "records network reachability verified; pre-empts fabricated citations."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4625_sota_ingestion_offline_live_bridge.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4626-e
+    milestone: 2026.06.426
+    title: 'PHASE E (CAPSTONE) -- the .426 scorecard: did A1 ISOLATE the offline->live bridge cause (compute/shift/
+      calibration)? Did A2 GRADUATE the SpatialValueNet to the live path and raise LIVE first-win-rate/efficiency on
+      the SCORED agent vs the linear baseline (crossing the bridge)? Did A3 bank +1 (55->56+)? Is the package
+      operator-resubmit-ready above 33 (A4)? Report ALL co-headline metrics (offline_to_live_transfer_ratio,
+      reproducible_total_levels, live-submittable, first-win-rate, action efficiency). Skip flagged_adversarial; honor
+      the positive-control + FALSE_NEGATIVE_RISK + .425-B2 TAUTOLOGY-carveout + .426-B2 offline-vs-live guards.
+      verifier_is_oracle: false on every included value claim.'
+    priority: critical
+    track: capstone
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4626_capstone_v426.json
+    operator_override: '2026-06-19 ARC sprint (standing) + capstones default to codex: routine per-milestone capstone
+      aggregation task -- false-positive scope-match vs every prior capstone (exp4614 .425); mechanical scorecard
+      aggregation over this milestone''s upstream artifacts. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint CAPSTONE -- the .426 scorecard). Aggregate this milestone's upstream artifacts into
+      an honest scorecard. The HEADLINE question: did we CROSS the offline->live bridge -- A1 isolated the binding
+      cause (compute/shift/calibration), and A2 graduated the SpatialValueNet to the live path and raised LIVE
+      first-win-rate/efficiency on the SCORED agent vs the linear baseline that "actively misled"? Read EVERY upstream
+      artifact via summarize_artifact.py BEFORE citing any number. Skip flagged_adversarial artifacts (the fabrication
+      gate). Honor the positive-control + FALSE_NEGATIVE_RISK guards (a degenerate null is not a clean result), the
+      .425-B2 TAUTOLOGY small-sample carve-out, and the .426-B2 offline-vs-live overclaim guard (a LIVE-win claim must
+      carry a LIVE metric, not only an offline AUROC).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/summarize_artifact.py (USE THIS for the fixed reading order on every upstream artifact)
+        - {project_root}/results/experiment_4616_offline_live_bridge_disambiguation.json (A1 -- the binding cause)
+        - {project_root}/results/experiment_4617_graduate_spatial_value_head_live.json (A2 -- the graduated head + live first-win delta vs linear baseline)
+        - {project_root}/results/experiment_4618_levelup_selfplay.json (A3 -- the bank)
+        - {project_root}/results/experiment_4619_refresh_submission_package.json (A4 -- live-submittable)
+        - {project_root}/results/experiment_4620_primitive_persist_transfer.json (A5), {project_root}/results/experiment_4621_integration_gate.json (A6)
+        - {project_root}/results/experiment_4622_offline_to_live_transfer_ratio_metric.json (B1), {project_root}/results/experiment_4623_adversarial_verify_hardening.json (B2)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: the A1-A6 + B1/B2 artifacts exist AND `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing upstream -> record it, aggregate what exists.
+        1. Read each upstream artifact via summarize_artifact.py: honest_verdict, flagged_adversarial, every acceptance_gate, positive_control, duration/substrate. EXCLUDE flagged_adversarial + positive-control-failed artifacts from the headline (report which + why).
+        2. Build the scorecard: offline_to_live_transfer_ratio (A1/A2/B1, with offline-AUROC + live-lift both explicit), reproducible_total_levels (registry, A3 bank, 55->56+), live_submittable_level_count (A4, >33), first_win_rate_scored (A2, vs linear baseline), action efficiency. Each included value claim verifier_is_oracle: false.
+        3. HEADLINE verdict: did we cross the bridge (A1 cause isolated + A2 live first-win/efficiency up on the SCORED agent vs the linear baseline)? Did A3 bank +1? Is A4 operator-resubmit-ready >33? Report cited_upstream_artifacts with sha256 + which were excluded. Submission stays operator-only.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: bridge_crossed_live_first_win_up_<n>_cause_<compute|shift|calibration> OR complete: bridge_characterized_cause_isolated_no_live_lift OR complete: bridge_characterized_capability_grew_55_to_<n>."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+        verifier_is_oracle:
+          principle: "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) -- a circular win would not count."
+        offline_to_live_transfer_ratio:
+          principle: "the HEADLINE co-metric (A1/A2/B1) -- did the offline verifier signal (0.725) transfer to a LIVE lift (the bridge crossed) or stay zero-live (bridge not crossed)."
+        binding_bridge_cause:
+          principle: "which of {compute_cost, distribution_shift, calibration} A1 isolated (or inseparable) -- the diagnostic deliverable."
+        reproducible_total_levels:
+          principle: "authoritative from the registry (A3 bank, 55->56+) -- did solve CAPABILITY grow."
+        reproducible_total_levels_delta:
+          principle: "registry after - 55, emitted explicitly so a null is annotated."
+        live_submittable_level_count:
+          principle: "the A4 operator-resubmit count (must stay > 33)."
+        first_win_rate_scored:
+          principle: "the A2 SCORED-agent live first-win-rate vs the linear baseline (did graduating the value head earn its place on the leaderboard path)."
+        flagged_artifacts_handled:
+          principle: "names any flagged_adversarial / positive-control-failed artifact EXCLUDED + the guards applied (.425-B2 TAUTOLOGY carve-out, .426-B2 offline-vs-live) -- fabrication-gate + false-negative-risk compliance."
+        cited_upstream_artifacts:
+          principle: "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+        ready_for_operator_submit:
+          principle: "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; never submits (operator-only)."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (upstream artifacts present, offline arcade); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4626_capstone_v426.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
