@@ -9111,3 +9111,4 @@ c |
 | 2026-06-23 12:10 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTE | OK | 87 passed, 1 warning in 6.54s |
 | 2026-06-23 12:22 UTC | PHASE B1 (RESERVED INFRA; co-headline metric) -- a | OK | 87 passed, 1 warning in 5.87s |
 | 2026-06-23 12:36 UTC | PHASE B2 (RESERVED INFRA; adversarial_verify harde | OK | 89 passed, 1 warning in 6.26s |
+| 2026-06-23 12:47 UTC | PHASE C (HARDWARE CONTINUITY; 1 per attached board | OK | 87 passed, 1 warning in 8.41s |
