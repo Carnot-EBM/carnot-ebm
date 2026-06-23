@@ -757,6 +757,58 @@ measurement rows
 the numerator, and emits a `null_delta_methodology_note` when the computed rate
 equals the baseline.
 
+### REQ-ARC-WMTE-4622: Canonical Offline-To-Live Transfer Ratio Metric Helper
+
+Experiment 4622 SHALL provide a canonical helper that reads the upstream
+offline verifier signal artifact, the A2 live graduated-value-head artifact,
+and the ARC solve registry without loading a model. The helper SHALL compute
+`offline_to_live_transfer_ratio` as the positive live lift attributable to the
+graduated value head divided by the offline AUROC component. The live lift
+SHALL be computed from the graduated arm versus the best matched linear/bare
+baseline: positive first-win-rate lift, or positive action-efficiency lift
+when first-win is equal. Both the `offline_auroc_component` and the
+`live_lift_component` SHALL be reported explicitly so a high-offline/zero-live
+case is visible as bridge-not-crossed rather than hidden in one scalar.
+
+Experiment 4622 SHALL report the transfer ratio side-by-side with the other
+ARC co-headline metrics in one canonical `coheadline_block`: reproducible total
+levels from `ops/arc_solve_registry.yaml`, live-submittable level count,
+first-win-rate, and action efficiency. When the live lift equals zero, the
+artifact SHALL include `null_delta_methodology_note`.
+
+Experiment 4622 SHALL write
+`results/experiment_4622_offline_to_live_transfer_ratio_metric.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `offline_to_live_transfer_ratio`,
+`offline_auroc_component`, `live_lift_component`, `coheadline_block`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: offline_to_live_transfer_ratio_metric_helper_shipped_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor)."
+- `offline_to_live_transfer_ratio`: principle "the canonical co-headline metric value (live lift attributable to the value head, with the offline AUROC reported alongside)."
+- `offline_auroc_component`: principle "the offline LOO-AUROC (the verifier signal) -- explicit so a high-offline/zero-live case is visibly the bridge-not-crossed state."
+- `live_lift_component`: principle "the LIVE first-win/efficiency lift the value head produces -- explicit so the metric does not hide the offline->live gap."
+- `coheadline_block`: principle "offline_to_live_transfer_ratio reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / action-efficiency -- the single canonical metric surface."
+- `tests_added`: principle "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4622
+
+**Given** an offline verifier artifact with explicit LOO-AUROC and an A2 live
+artifact with graduated, linear-baseline, and bare-control first-win/action
+metrics
+**When** the 4622 helper computes the transfer metric
+**Then** it reports `offline_auroc_component`, `live_lift_component`,
+`offline_to_live_transfer_ratio`, and a canonical `coheadline_block`; it emits a
+near-zero transfer ratio plus `null_delta_methodology_note` for high-offline
+AUROC and zero live lift, and emits a positive transfer ratio when the value
+head produces positive live first-win or efficiency lift.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
