@@ -660,6 +660,58 @@ untuned transfer games, per-game trust-pass or first-win value-add, offline
 reproduction accounting for any new level, a stable checksum, and a terminal
 success only when at least one transfer game adds value.
 
+### REQ-ARC-WMTE-4609: Submitted Agent Integration Gate Consolidation
+
+Experiment 4609 SHALL consolidate the ARC sprint integration candidates into
+the scored submitted agent configuration. The workflow SHALL run the offline
+arcade precondition and SHALL read A1, A2, A3, and A4 through
+`scripts/summarize_artifact.py` before importing any metric. A lever may be
+admitted only when its upstream artifact has a terminal success verdict, is not
+stamped or live-rechecked as adversarial, and passes its positive control. Any
+flagged-adversarial, positive-control-failed, false-negative-risk, or non-success
+artifact SHALL be quarantined and SHALL NOT contribute headline numbers.
+
+Experiment 4609 SHALL write `results/experiment_4609_integration_gate.json`
+with bare top-level fields for `honest_verdict`, `inference_substrate`,
+`verifier_is_oracle`, `levers_integrated`, `flagged_artifacts_excluded`,
+`world_model_trust_pass_rate_integrated`, `first_win_rate_integrated`,
+`median_actions_to_first_levelup_integrated`,
+`live_submittable_level_count_integrated`, `parity_test_green`,
+`submitted_config_raised_metric_clean`, `null_delta_methodology_note`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<metric>_raised_config_shipped OR complete: integration_no_clean_metric_bare_config_kept_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false for every aggregated value claim -- the integrated levers are oracle-distinct."
+- `levers_integrated`: principle "names the upstream levers (A1/A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- the audit trail."
+- `flagged_artifacts_excluded`: principle "names any flagged_adversarial / positive-control-failed upstream artifact NOT aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
+- `world_model_trust_pass_rate_integrated`: principle "the integrated world_model_trust_pass_rate (A1's headline metric on the shipped config) -- did the 0.08-wall fix make it into the SCORED agent."
+- `first_win_rate_integrated`: principle "the integrated held-out first-win-rate on the shipped config (A2's effect)."
+- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is the single source of truth."
+- `submitted_config_raised_metric_clean`: principle "True only if a CLEAN (non-flagged, control-passed) lever raised a real metric on the SCORED config; false -> honest null, bare config kept."
+- `null_delta_methodology_note`: principle "present where any integrated delta == 0 -- states the equality is an honest no-value null, not a bug."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, upstream artifacts present); pre-empts missing-resource fabrication."
+
+If no clean lever raises a scored-agent metric, the artifact SHALL report
+`complete: integration_no_clean_metric_bare_config_kept_honest_null`, SHALL keep
+`levers_integrated=[]`, SHALL leave `SUBMITTED_AGENT_CONFIG` unchanged from the
+bare submitted-control snapshot, and SHALL still report the clean A4
+live-submittable count without treating it as a raised config metric.
+
+#### SCENARIO-ARC-WMTE-4609
+
+**Given** A1 or A2 is flagged adversarial or fails its positive control, and A3
+does not offline-reproduce a new level
+**When** experiment 4609 runs the consolidation gate
+**Then** those upstream metrics are excluded, the submitted config records no
+clean raised metric, the parity test stays green, the live-submittable count is
+reported from the clean refreshed package, and the artifact emits an honest null
+with a stable checksum.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
