@@ -6,18 +6,12 @@
   "inference_substrate": "offline_arc_search_plus_induced_world_model",
   "random_seeds": [
     7,
-    20260622,
-    3,
-    42,
-    100
+    3
   ],
-  "n_seeds_hazard_aware_deepens_where_nav_dies": 5,
+  "n_seeds_hazard_aware_deepens_where_nav_dies": 2,
   "reproduced_seeds": [
     7,
-    20260622,
-    3,
-    42,
-    100
+    3
   ],
   "rows": [
     {
@@ -39,44 +33,6 @@
           6.125,
           6.125,
           6.125,
-          6.125
-        ]
-      },
-      "nav_arm": {
-        "reached_L1": true,
-        "planned": true,
-        "plan_len": 8,
-        "deepened": false,
-        "reproduced_level": 0,
-        "stop": "game_over",
-        "n_actions": 22
-      },
-      "hazard_aware_arm": {
-        "reached_L1": true,
-        "planned": true,
-        "plan_len": 10,
-        "deepened": true,
-        "reproduced_level": 2,
-        "stop": "level_up",
-        "n_actions": 28
-      },
-      "hazard_aware_deepens_where_nav_dies": true
-    },
-    {
-      "seed": 20260622,
-      "reached_L1": true,
-      "hazard_fit": {
-        "n_death_transitions": 1,
-        "hazard_colors": [
-          8,
-          15
-        ],
-        "hazard_axis": "row",
-        "charge_range": 6,
-        "axis_votes": {
-          "row": 1
-        },
-        "post_move_distances_at_death": [
           6.125
         ]
       },
@@ -139,89 +95,8 @@
         "n_actions": 28
       },
       "hazard_aware_deepens_where_nav_dies": true
-    },
-    {
-      "seed": 42,
-      "reached_L1": true,
-      "hazard_fit": {
-        "n_death_transitions": 3,
-        "hazard_colors": [
-          8,
-          15
-        ],
-        "hazard_axis": "row",
-        "charge_range": 6,
-        "axis_votes": {
-          "row": 3
-        },
-        "post_move_distances_at_death": [
-          6.125,
-          6.125,
-          6.125
-        ]
-      },
-      "nav_arm": {
-        "reached_L1": true,
-        "planned": true,
-        "plan_len": 8,
-        "deepened": false,
-        "reproduced_level": 0,
-        "stop": "game_over",
-        "n_actions": 22
-      },
-      "hazard_aware_arm": {
-        "reached_L1": true,
-        "planned": true,
-        "plan_len": 10,
-        "deepened": true,
-        "reproduced_level": 2,
-        "stop": "level_up",
-        "n_actions": 28
-      },
-      "hazard_aware_deepens_where_nav_dies": true
-    },
-    {
-      "seed": 100,
-      "reached_L1": true,
-      "hazard_fit": {
-        "n_death_transitions": 4,
-        "hazard_colors": [
-          8,
-          15
-        ],
-        "hazard_axis": "row",
-        "charge_range": 6,
-        "axis_votes": {
-          "row": 4
-        },
-        "post_move_distances_at_death": [
-          6.125,
-          6.125,
-          6.125,
-          6.125
-        ]
-      },
-      "nav_arm": {
-        "reached_L1": true,
-        "planned": true,
-        "plan_len": 8,
-        "deepened": false,
-        "reproduced_level": 0,
-        "stop": "game_over",
-        "n_actions": 22
-      },
-      "hazard_aware_arm": {
-        "reached_L1": true,
-        "planned": true,
-        "plan_len": 10,
-        "deepened": true,
-        "reproduced_level": 2,
-        "stop": "level_up",
-        "n_actions": 28
-      },
-      "hazard_aware_deepens_where_nav_dies": true
     }
   ],
   "methodology_note": "Both arms are re-induced from the SAME L2 transitions (goal colour inherited from L1, which is level-invariant). NAV plans into the charging enemy and dies; HAZARD_AWARE learns the line-charger (the object that MOVES at the instant of death) and predicts avatar-removal for a lethal move, so plan_in_model routes the safe detour. Reproduction-gated on a fresh env (reproduced_level>=2 = L2 solved + reproduced).",
-  "duration_s": 8.0
+  "duration_s": 3.4
 }

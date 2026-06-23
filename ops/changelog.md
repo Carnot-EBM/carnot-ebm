@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Facing-aware omni GENERALISES to an INDEPENDENT constructed charger game — new encoding + the UP facing — outer-loop, ultracode)
+
+Operator: "build the constructed second charger game." Done — the facing-aware omni rule transfers to a
+brand-new encoding and the one facing tu93 never exposed (UP), FN=0/FP=0 against an independent ground truth.
+Folded into `docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md`.
+
+- Built `scripts/experiments/experiment_constructed_charger.py`: `GroundTruthChargerNav`, an INDEPENDENT
+  charger game (its own state + physics, NOT the model's `is_lethal`) with a deliberately non-tu93 palette
+  (avatar 6/7, charger 11/13, wall 1, goal 12 — none of tu93's), a different step (5 vs 6), an UP-facing
+  charger (tu93 only ever showed left/right/down), and a WALLED MAZE (corridors + a detour bay, like tu93) so
+  the avatar's 3x3 footprint never overlaps the charger — closing the sprite-occlusion FN/FP an open field
+  exposes (avatar drawn over a charger erases it → facing unreadable; an earlier open-field draft gave FP=4
+  from exactly this).
+- RESULT: `HazardAwareNavWorldModel` fit from the constructed transitions (a) detects the charger
+  (`hazard_colors={11,13}`, learns `charge_range=8`), (b) **RECOVERS the UP facing `(-1,0)`** from the
+  centre-marker on the new sprite, (c) scores **FN=0 / FP=0 / win-path-unpruned** vs a position-keyed BFS
+  ground truth, and (d) **DEEPENS L0→L1** (reproduced) via the bay detour — while a charger-blind frozen nav
+  plans the straight path `[4,4,4,4]` and DIES at col 26. Verdict `success: ..._GENERALISES_..._UP_facing_FN0_FP0_...`.
+- Adversarial verification (before reporting): confirmed frozen nav *plans and dies* (not merely "no plan"),
+  omni's winning trail genuinely climbs to row 11 over the charger (uses the bay), and the charger is
+  detected as a hazard — not nav behaviour inherited. tu93 L3 calibration re-run: still FN=0/FP=0 (model file
+  untouched). 8 unit tests pass.
+- HONEST scope: the constructed kill rule is the *same physics family* as omni's predicate with *different
+  constants* — a CONTROLLED test of encoding+UP-facing+layout generalization, NOT an adversarial test of
+  arbitrary charger physics; it complements the tu93 real-game (genuine-unseen-physics) evidence. Artifact:
+  `results/experiment_constructed_charger.json`. Conductor STOPPED (operator session choice). Committed `[outer-loop]`.
+
 ## 2026-06-22 (Facing-aware omni validated on a 2nd charger config (tu93 L2); chargers tu93-specific in reachable set — outer-loop, ultracode)
 
 Operator: "test facing-aware omni on a second charger level." Done — the omni rule is CLEAN on a second
