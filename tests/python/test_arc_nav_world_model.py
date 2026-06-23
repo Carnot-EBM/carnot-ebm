@@ -166,19 +166,51 @@ def test_hazard_fit_excludes_the_door_colour():
     assert DOOR not in h.hazard_colors     # the door is excluded from hazard candidates
 
 
-def test_enter_mode_catches_perpendicular_step_on_that_toward_misses():
-    """REQ: lethal_mode='enter' flags a perpendicular step ONTO the charge line (tu93 L3 vertical chargers),
-    which lethal_mode='toward' (along-axis approach only) does not."""
+HAZ_CTR = 15  # the charger's centre-marker colour (its offset within the block encodes facing)
+
+
+def _haz_transitions_facing():
+    """Like _haz_transitions but the charger carries a colour-15 centre marker OFFSET to the LEFT of its
+    block centre -> it faces LEFT (charges horizontally, to the left)."""
+    tr = list(_transitions())
+    g0 = np.full((7, 9), WALL, dtype=int)
+    g0[3, 1] = AV
+    g0[3, 4:7] = HAZ; g0[2, 5] = HAZ; g0[4, 5] = HAZ  # noqa: E702  3x3 charger centred (3,5)
+    g0[3, 4] = HAZ_CTR                                  # marker offset LEFT of centre -> faces left
+    g1 = np.full((7, 9), WALL, dtype=int)              # avatar REMOVED (death)
+    g1[3, 2:5] = HAZ; g1[2, 3] = HAZ; g1[4, 3] = HAZ  # noqa: E702  charger charged left to ~(3,3)
+    g1[3, 2] = HAZ_CTR
+    for _ in range(3):
+        tr.append((g0, 4, g1, 0, 0))
+    return tr
+
+
+def _omni_model():
+    """A HazardAwareNavWorldModel with explicit params (the tiny test fixtures are below the fit's blob
+    thresholds for the centre marker, so we exercise the is_lethal facing logic directly)."""
     from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
-    base = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL)  # axis=row, range>0
-    # avatar 3 rows BELOW the charger's row (genuinely OFF the row: 3 > align_tol 2), same column band; an UP
-    # move (step 2) steps perpendicularly ONTO the charger's row band -> 'enter' lethal, 'toward' safe.
-    g = np.full((7, 9), WALL, dtype=int)
-    g[5, 5] = AV                            # row 5, charger centred row 2 -> 3 rows off-line before the move
-    g[1, 5] = HAZ; g[2, 4] = HAZ; g[2, 5] = HAZ  # noqa: E702
-    g[2, 6] = HAZ; g[3, 5] = HAZ  # noqa: E702  charger blob centred ~(2,5)
-    toward = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="toward")
-    enter = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="enter")
-    # action 1 = up = perpendicular step onto the charger's row band
-    assert toward.is_lethal(g, 1) is False
-    assert enter.is_lethal(g, 1) is True
+    return HazardAwareNavWorldModel(
+        displacement={1: (-6, 0), 2: (6, 0), 3: (0, -6), 4: (0, 6)},
+        avatar_colors=frozenset({AV}), bg_color=WALL, floor_color=FLOOR, wall_colors=frozenset({WALL}),
+        goal_color=GOAL, hazard_colors=frozenset({HAZ, HAZ_CTR}), hazard_center_color=HAZ_CTR,
+        hazard_axis="row", charge_range=6, lethal_mode="omni")
+
+
+def test_omni_mode_is_facing_directional():
+    """REQ: lethal_mode='omni' (calibrated vs tu93 L3) kills only when the avatar's destination is on a
+    charger's FACING line, on the side it faces, within range -- a perpendicular step ONTO that side is
+    lethal, landing BEHIND the charger (the side it does not face) is safe, and landing exactly ON the
+    charger (collision) is NOT lethal."""
+    m = _omni_model()
+    # charger 3x3 centred (10,20) with its colour-15 marker offset LEFT -> faces left (charges left).
+    def grid_with_avatar(ar, ac):
+        g = np.full((25, 40), FLOOR, dtype=int)      # open floor background (no walls to block the charge)
+        g[9:12, 19:22] = HAZ; g[10, 19] = HAZ_CTR  # noqa: E702  marker left of centre -> faces left
+        g[ar, ac] = AV
+        return g
+    # avatar to the charger's LEFT, off-row, an UP move ends it ON the charger's row, on the facing side, in range
+    assert m.is_lethal(grid_with_avatar(16, 14), 1) is True
+    # avatar BEHIND the charger (to its RIGHT, the side it does NOT face), aligned in range -> SAFE
+    assert m.is_lethal(grid_with_avatar(16, 26), 1) is False
+    # landing exactly ON the charger (collision) -> NOT lethal (it is defeated/passed, not a kill)
+    assert m.is_lethal(grid_with_avatar(16, 20), 1) is False

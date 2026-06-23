@@ -1,5 +1,29 @@
 # Carnot — Changelog
 
+## 2026-06-22 (tu93 L3 SOLVED: hazard interception zone CALIBRATED against the BFS path — outer-loop, ultracode)
+
+Operator: "calibrate the static interception zone against the BFS path." Done — the escalation loop now
+auto-deepens tu93 L1 → L2 → L3. Adversarial review (4th): SURVIVES (independently verified). Write-up
+`docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md`.
+
+- Built `scripts/experiments/experiment_hazard_l3_calibration.py` (committed, reproducible): position-keyed
+  real-env BFS over L3 → a 19-action winning path + 88 (state,action,died/safe) labels (5 deaths). Per-death
+  killer-charger attribution showed every death is the avatar's destination EXACTLY aligned with the killer
+  (row OR col offset 0) at distance 6, ON THE SIDE THE CHARGER FACES.
+- The charger's FACING is readable from the grid: its centre-marker (least-common hazard colour, tu93's 15)
+  is offset within the block in the facing direction (verified: 3 chargers, 3 facings matching the kills).
+- Calibrated `lethal_mode='omni'` (`arc_nav_world_model.py`): lethal iff the destination is on a charger's
+  FACING line, on the side it faces (signed, from the marker offset), at distance 1..reach — COLLISION-EXEMPT
+  (landing on a charger is safe). Removed 3 wrong earlier assumptions (perpendicular-step-on lethal;
+  facing-agnostic; collision lethal). Reproducible result: FN=0, FP=0, win-path-unpruned over 88 labels.
+- RESULT (`experiment_reinduction_hazard_loop.py`): the loop auto-deepens tu93 to L3 on 3/3 seeds, chain
+  L1(nav) → L2(hazard[toward]) → L3(hazard[omni]), reproduced L3 on a fresh env. 8 unit tests pass.
+- Adversarial review SURVIVES: 12 pristine-env replays all reach L3 (parity-robust); no hardcoding (facing
+  data-read); no leak (env's own counter). Honesty fixes it forced (now done): scoped as ROBUST-BUT-SINGLE-
+  LAYOUT (tu93 L3 is byte-identical across seeds; 3 seeds = 1 layout x3; one level of one game, NOT a general
+  hazard solver), and the FN=0 claim is now backed by the committed calibration script. Conductor left
+  STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (Hazard-aware L3 rung: robustness fixes + escalation rung; L3 over-claim RETRACTED — outer-loop, ultracode)
 
 Operator: "add the next escalation rung for L3." Added the rung + robustness fixes; an adversarial review
