@@ -811,7 +811,7 @@ memory: [[reference_matm_transactive_memory]].
 ### RETIRED 2026-06-23 (empirical null, per retire_if_same_verdict) — MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)
 
 **RETIRED before reaching the planner.** The outer loop prototyped this candidate end-to-end
-(branch `outer-loop/macro-vocab`; mechanism is parity-safe + 6 tests, but NOT merged) and it FAILED
+(prototype branch `outer-loop/macro-vocab`, since PURGED — mechanism was parity-safe + 6 tests, never merged) and it FAILED
 its own falsifiable gate ("bank a deeper level at equal budget") across FOUR test rounds: blind
 repeat-until-stable (7 games), prefix-to-L2 (2 games), run-dominated games (8 games), and the SMART
 version (log-length macros, no overshoot, per-DECISION budget isolating horizon-collapse from
@@ -824,8 +824,8 @@ ranking was on the *theory* that 0.04 is a depth wall; the empirics refute it. *
 horizon-collapse / macro-action / option-framework levers for this corpus without a NEW root cause
 (a depth-bound level that primitive search provably cannot reach). **Redirect:** the GUIDANCE-class
 levers already in flight — `.428` goal-energy / expansion-prior + the `.427` action-effect predictor.
-Full evidence: `docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md` (branch
-`outer-loop/macro-vocab`). retired_verdict:
+Full evidence (findings preserved on main): `docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md`
+(prototype branch purged). retired_verdict:
 `complete: macro_horizon_collapse_empirical_null_guidance_not_depth`.
 
 ### RETIRED 2026-06-23 (premise falsified pre-build, non-circular) — CLICK-HEATMAP-AS-GENERATOR (off-centroid click candidates)
@@ -844,7 +844,7 @@ candidate-coverage problem. **Do NOT build** a per-pixel click generator for thi
 macro lever also retired, BOTH PURSUE levers are empirically dead and the root cause is the same:
 the 0.04 wall is generation-GUIDANCE, not depth or coverage → concentrate `.429+` on the guidance
 class (`.428` goal-energy/expansion-prior, `.427` action-effect predictor). Evidence:
-`docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md` (branch `outer-loop/click-heatmap`).
+`docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md` (prototype branch `outer-loop/click-heatmap` purged; findings on main).
 retired_verdict: `complete: click_heatmap_generator_premise_falsified_guidance_not_coverage`.
 
 ### RESOLVED 2026-06-23 (measured — a provable live NO-OP) — CELL_RECALL TRUST-GATE FLIP (SOTA-avenues Avenue A)
@@ -870,8 +870,8 @@ no plan). The best cell_recall passers (sc25 0.80 / tn36 0.87) are `status: need
 offline-solved → no goal to inject). An injected-win test on lp85 (the one real L4 solve): `n_win_states=4`
 + gate-pass but BOTH full-memorization and CNN-only `plan_in_model` found NO plan (candidate-enum can't
 reproduce lp85's clicks → confounded isolation). The TTT-route is gated on directed-exploration-to-first-win
-(the generation-guidance wall `.428` goal-energy/expansion-prior attack). Branch `outer-loop/ttt-route`;
-`docs/research-notes/ttt-route-measured-blocked-2026-06-23.md`.
+(the generation-guidance wall `.428` goal-energy/expansion-prior attack). Prototype branch `outer-loop/ttt-route`
+purged; findings preserved on main: `docs/research-notes/ttt-route-measured-blocked-2026-06-23.md`.
 
 ### ~~NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)~~ — RETIRED (see above)
 
