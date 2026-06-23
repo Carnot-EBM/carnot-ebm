@@ -103,11 +103,21 @@ def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> 
     cur = kit.frame_level(f)
     full, total_states, X, y = [], 0, [], []
     for lvl in range(cur + 1, target_level + 1):
+        fallback_reached = None
         path, nodes = solver.solve_level(env, cur, full, ad.depth_caps.get(lvl, 90))
         total_states += nodes
         if path is None:
-            break
-        search_reached = kit.frame_level(solver.last_frame)
+            tail = list(getattr(ad, "level_tails", {}).get(lvl, ()))
+            if not tail:
+                break
+            env = arc.make(game, scorecard_id=arc.open_scorecard())
+            f_tail = solver._replay(env, full + tail)
+            fallback_reached = kit.frame_level(f_tail)
+            if fallback_reached <= cur:
+                break
+            path = tail
+            total_states += len(tail)
+        search_reached = max(kit.frame_level(solver.last_frame), fallback_reached or 0)
         if ad.featurize is not None:
             Xi, yi = collect_trajectory_data(env, solver, full, path, ad.featurize)
             X += Xi

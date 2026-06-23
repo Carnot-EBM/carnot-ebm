@@ -1,13 +1,46 @@
 {
   "game": "ft09",
-  "reached_level": 2,
-  "moves": 11,
-  "states_expanded": 11,
-  "verifier_src": "learned_checkpoint",
+  "reached_level": 3,
+  "moves": 25,
+  "states_expanded": 39,
+  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
+  "hazard_prune": false,
+  "hazard_pruner_stats": null,
   "offline_reproduced": true,
-  "reproduced_levels": 2,
+  "reproduced_levels": 3,
   "learned_verifier_checkpoint": "models/arc_verifier_ft09.json",
   "selected_generic_operators": [
+    {
+      "operator": "approach_dispatcher_operator",
+      "derived_from_games": [
+        "exp4592_generation_completeness_wiring"
+      ],
+      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
+      "selector_tags": [
+        "approach_dispatch",
+        "mechanic_router",
+        "candidate_generation",
+        "graph_explore",
+        "goal_distance",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "value_head_bridge_fix_operator",
+      "derived_from_games": [
+        "exp4616_offline_live_bridge_disambiguation"
+      ],
+      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
+      "selector_tags": [
+        "value_head",
+        "bridge_fix",
+        "decision_point",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
     {
       "operator": "per_level_reinduction_operator",
       "derived_from_games": [
@@ -76,14 +109,33 @@
       ]
     },
     {
+      "operator": "world_model_trust_energy_gate_operator",
+      "derived_from_games": [
+        "exp4604_world_model_trust_energy"
+      ],
+      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
+      "selector_tags": [
+        "world_model",
+        "trust_energy",
+        "hidden_state",
+        "candidate_ranking",
+        "verifier",
+        "transfer"
+      ]
+    },
+    {
       "operator": "persistent_action_effect_memory_operator",
       "derived_from_games": [
-        "exp4568_clickability_action_effect_predictor"
+        "exp4568_clickability_action_effect_predictor",
+        "exp4629_graduate_action_effect_predictor_live"
       ],
-      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
       "selector_tags": [
         "action_effect",
         "clickability",
+        "frame_change",
+        "live_action_pruner",
+        "persistent_aem_plus_optional_cnn",
         "candidate_ranking",
         "graph_explore",
         "click",
@@ -147,8 +199,8 @@
   ],
   "reproduction_gate": {
     "game": "ft09",
-    "reached_level": 2,
-    "claimed_level": 2,
+    "reached_level": 3,
+    "claimed_level": 3,
     "reproduced": true,
     "mode": "offline_reproduction_gate_no_quota"
   },
@@ -163,7 +215,21 @@
     "{\"action\":6,\"data\":{\"x\":22,\"y\":32}}",
     "{\"action\":6,\"data\":{\"x\":38,\"y\":32}}",
     "{\"action\":6,\"data\":{\"x\":30,\"y\":48}}",
-    "{\"action\":6,\"data\":{\"x\":22,\"y\":48}}"
+    "{\"action\":6,\"data\":{\"x\":22,\"y\":48}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":20}}",
+    "{\"action\":6,\"data\":{\"x\":44,\"y\":28}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":36}}",
+    "{\"action\":6,\"data\":{\"x\":44,\"y\":36}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":44}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":52}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":52}}",
+    "{\"action\":6,\"data\":{\"x\":36,\"y\":52}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":4}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":4}}",
+    "{\"action\":6,\"data\":{\"x\":36,\"y\":4}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":12}}",
+    "{\"action\":6,\"data\":{\"x\":12,\"y\":20}}",
+    "{\"action\":6,\"data\":{\"x\":12,\"y\":28}}"
   ],
   "solution": [
     {
@@ -242,7 +308,106 @@
         "x": 22,
         "y": 48
       }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 28,
+        "y": 20
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 44,
+        "y": 28
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 28,
+        "y": 36
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 44,
+        "y": 36
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 44
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 52
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 28,
+        "y": 52
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 36,
+        "y": 52
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 4
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 28,
+        "y": 4
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 36,
+        "y": 4
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 12
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 12,
+        "y": 20
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 12,
+        "y": 28
+      }
     }
   ],
+  "solve_provenance": "development_proxy",
   "mode": "standing_arc_loop_offline_no_quota"
 }

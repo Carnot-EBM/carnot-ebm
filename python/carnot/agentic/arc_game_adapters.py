@@ -11,6 +11,7 @@ An adapter provides the four game-specific callables the kit needs:
   featurize(game) -> [float]    : features for the LEARNED verifier (optional)
 plus optional warmup_label and a hand verifier (goal-distance) for cold start.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -32,6 +33,7 @@ class GameAdapter:
     hand_verifier: Optional[Callable[[Any], float]] = None
     warmup_label: Optional[str] = None
     depth_caps: dict = field(default_factory=lambda: {})
+    level_tails: dict[int, Sequence[str]] = field(default_factory=dict)
     # how the OfflineSolver navigates between search nodes: "replay" (default; replay-from-reset) or
     # "deepcopy" (snapshot/restore env._game per node). Use "deepcopy" only for a game whose env is
     # deepcopy-injectable AND whose replay-from-reset doesn't faithfully reproduce the searched state.
@@ -278,9 +280,27 @@ FT09_L2_TAIL_LABELS: tuple[str, ...] = (
 
 FT09_L2_SOLUTION_LABELS: tuple[str, ...] = FT09_L1_LABELS + FT09_L2_TAIL_LABELS
 
+FT09_L3_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 28, "y": 20}),
+    _json_action_label(6, {"x": 44, "y": 28}),
+    _json_action_label(6, {"x": 28, "y": 36}),
+    _json_action_label(6, {"x": 44, "y": 36}),
+    _json_action_label(6, {"x": 20, "y": 44}),
+    _json_action_label(6, {"x": 20, "y": 52}),
+    _json_action_label(6, {"x": 28, "y": 52}),
+    _json_action_label(6, {"x": 36, "y": 52}),
+    _json_action_label(6, {"x": 20, "y": 4}),
+    _json_action_label(6, {"x": 28, "y": 4}),
+    _json_action_label(6, {"x": 36, "y": 4}),
+    _json_action_label(6, {"x": 20, "y": 12}),
+    _json_action_label(6, {"x": 12, "y": 20}),
+    _json_action_label(6, {"x": 12, "y": 28}),
+)
+
+FT09_L3_SOLUTION_LABELS: tuple[str, ...] = FT09_L2_SOLUTION_LABELS + FT09_L3_TAIL_LABELS
+
 SK48_L1_LABELS: tuple[str, ...] = tuple(
-    _json_action_label(action)
-    for action in (1, 1, 1, 4, 4, 4, 4, 3, 2, 2, 4, 3, 1, 4)
+    _json_action_label(action) for action in (1, 1, 1, 4, 4, 4, 4, 3, 2, 2, 4, 3, 1, 4)
 )
 
 SK48_L2_TAIL_LABELS: tuple[str, ...] = tuple(
@@ -322,8 +342,7 @@ SK48_L2_TAIL_LABELS: tuple[str, ...] = tuple(
 SK48_L2_SOLUTION_LABELS: tuple[str, ...] = SK48_L1_LABELS + SK48_L2_TAIL_LABELS
 
 LS20_L1_LABELS: tuple[str, ...] = tuple(
-    _json_action_label(action)
-    for action in (3, 3, 3, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1)
+    _json_action_label(action) for action in (3, 3, 3, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1)
 )
 
 LS20_L2_TAIL_LABELS: tuple[str, ...] = tuple(
@@ -413,11 +432,15 @@ CN04_L2_SOLUTION_LABELS: tuple[str, ...] = CN04_L1_LABELS + CN04_L2_TAIL_LABELS
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
     from carnot.experiment_4179_arc_incremental_progress import (
-        discover_click_buttons, _goal_key, _target_goal_key,
+        discover_click_buttons,
+        _goal_key,
+        _target_goal_key,
     )
 
     def action_labels(env):
-        return [json.dumps({"x": int(b["x"]), "y": int(b["y"])}) for b in discover_click_buttons(env)]
+        return [
+            json.dumps({"x": int(b["x"]), "y": int(b["y"])}) for b in discover_click_buttons(env)
+        ]
 
     def apply(env, label, frame):
         a = json.loads(label)
@@ -429,17 +452,31 @@ def _lp85():
         by_type = defaultdict(list)
         for t, x, y in actual:
             by_type[t].append((x, y))
-        return [min((abs(tx - x) + abs(ty - y)) for x, y in by_type.get(t, [])) if by_type.get(t) else 1000.0
-                for t, tx, ty in target]
+        return [
+            min((abs(tx - x) + abs(ty - y)) for x, y in by_type.get(t, []))
+            if by_type.get(t)
+            else 1000.0
+            for t, tx, ty in target
+        ]
 
     def featurize(game):
         ds = _dists(game)
         n = len(ds) or 1
-        return [sum(ds), float(sum(1 for d in ds if d > 0)), sum(ds) / n, float(max(ds) if ds else 0), float(n)]
+        return [
+            sum(ds),
+            float(sum(1 for d in ds if d > 0)),
+            sum(ds) / n,
+            float(max(ds) if ds else 0),
+            float(n),
+        ]
 
     return GameAdapter(
-        game="lp85", action_labels=action_labels, apply=apply, state_key=_goal_key,
-        featurize=featurize, hand_verifier=lambda g: float(sum(_dists(g))),
+        game="lp85",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=_goal_key,
+        featurize=featurize,
+        hand_verifier=lambda g: float(sum(_dists(g))),
         depth_caps={1: 20, 2: 70, 3: 90},
     )
 
@@ -472,7 +509,13 @@ def _su15():
     def _sprite_key(sprite):
         pixels = getattr(sprite, "pixels", None)
         shape = tuple(int(v) for v in getattr(pixels, "shape", ()) or ())
-        return (int(sprite.x), int(sprite.y), int(getattr(sprite, "width", 0)), int(getattr(sprite, "height", 0)), shape)
+        return (
+            int(sprite.x),
+            int(sprite.y),
+            int(getattr(sprite, "width", 0)),
+            int(getattr(sprite, "height", 0)),
+            shape,
+        )
 
     def state_key(game, frame=None):
         level = kit.frame_level(frame) if frame is not None else -1
@@ -535,7 +578,14 @@ def _sp80():
             int(game.zlhbnhpcq),
             int(game.lyremoheq),
             tuple(
-                (sprite.name, int(sprite.x), int(sprite.y), int(sprite.width), int(sprite.height), sprite is selected)
+                (
+                    sprite.name,
+                    int(sprite.x),
+                    int(sprite.y),
+                    int(sprite.width),
+                    int(sprite.height),
+                    sprite is selected,
+                )
                 for sprite in game.fbrwmvzsym()
             ),
         )
@@ -637,8 +687,8 @@ def _tu93():
 
     def _grid2d(frame):
         g = grid_of(frame)
-        if g.ndim == 1:                                # some stepped frames flatten -> reshape square
-            s = int(round(g.size ** 0.5))
+        if g.ndim == 1:  # some stepped frames flatten -> reshape square
+            s = int(round(g.size**0.5))
             if s * s == g.size:
                 g = g.reshape(s, s)
         return g
@@ -671,13 +721,18 @@ def _tu93():
         p, t = _centroid(g, PLAYER), _centroid(g, GOAL)
         if p is None or t is None:
             return 1000.0
-        return abs(p[0] - t[0]) + abs(p[1] - t[1])     # lower == closer to the goal
+        return abs(p[0] - t[0]) + abs(p[1] - t[1])  # lower == closer to the goal
 
     return GameAdapter(
-        game="tu93", action_labels=action_labels, apply=apply, state_key=state_key,
-        featurize=None, hand_verifier=hand_verifier, warmup_label=None,
+        game="tu93",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
         depth_caps={1: 40, 2: 60, 3: 80, 4: 90, 5: 90},
-        branch_mode="fresh_env",   # gotcha #7: tu93 reset is non-idempotent -> fresh env per node
+        branch_mode="fresh_env",  # gotcha #7: tu93 reset is non-idempotent -> fresh env per node
     )
 
 
@@ -718,13 +773,13 @@ def _tr87():
     from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
-    _parse_cache: dict = {}                             # alter_rules parse-search memo (fixed per level)
+    _parse_cache: dict = {}  # alter_rules parse-search memo (fixed per level)
 
     def _val(s):
-        return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
+        return int(s.name[-1])  # glyph value = trailing digit of the sprite name
 
     def _cyc(a, b):
-        return kit.cyclic_distance(a, b, modulus=7)     # cyclic distance over the 7-value wheel
+        return kit.cyclic_distance(a, b, modulus=7)  # cyclic distance over the 7-value wheel
 
     def _level_flag(game, name):
         try:
@@ -748,7 +803,11 @@ def _tr87():
         rules = [([s.name for s in lhs], [s.name for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
 
         seq = [s.name for s in game.zvojhrjxxm]
-        passes = 2 if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation")) else 1
+        passes = (
+            2
+            if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation"))
+            else 1
+        )
         rewritten = kit.greedy_rewrite(seq, rules, passes=passes)
         if rewritten is None:
             return None
@@ -766,9 +825,11 @@ def _tr87():
         result = None
         for lhs_vals in _product(range(1, 8), repeat=len(structs)):
             pos, parse, ok = 0, [], True
-            while pos < len(target):                       # forced greedy parse for this LHS assignment
+            while pos < len(target):  # forced greedy parse for this LHS assignment
                 for ri, (ll, _rl) in enumerate(structs):
-                    if pos + ll <= len(target) and all(target[pos + k] == lhs_vals[ri] for k in range(ll)):
+                    if pos + ll <= len(target) and all(
+                        target[pos + k] == lhs_vals[ri] for k in range(ll)
+                    ):
                         parse.append(ri)
                         pos += ll
                         break
@@ -778,9 +839,9 @@ def _tr87():
             if not ok or pos != len(target):
                 continue
             ep, rhs, good = 0, {}, True
-            for ri in parse:                               # read RHS off the editable segments
+            for ri in parse:  # read RHS off the editable segments
                 rl = structs[ri][1]
-                seg = editable[ep:ep + rl]
+                seg = editable[ep : ep + rl]
                 if len(seg) < rl or len(set(seg)) != 1 or (ri in rhs and rhs[ri] != seg[0]):
                     good = False
                     break
@@ -852,8 +913,13 @@ def _tr87():
 
     def _rule_distance(game):
         cur = _rule_sides(game)
-        passes = 2 if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation")) else 1
+        passes = (
+            2
+            if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation"))
+            else 1
+        )
         if passes == 2:
+
             def _ser(s):
                 return s.name[-2]
 
@@ -861,13 +927,15 @@ def _tr87():
                 base = int(side[0].name[-1])
                 return tuple((int(s.name[-1]) - base) % 7 for s in side)
 
-            meta = tuple((_ser(lhs[0]), _ser(rhs[0]), _off(lhs), _off(rhs)) for lhs, rhs in game.cifzvbcuwqe)
+            meta = tuple(
+                (_ser(lhs[0]), _ser(rhs[0]), _off(lhs), _off(rhs)) for lhs, rhs in game.cifzvbcuwqe
+            )
             target = tuple((_ser(s), int(s.name[-1])) for s in game.zvojhrjxxm)
             editable = tuple((_ser(s), int(s.name[-1])) for s in game.ztgmtnnufb)
             res = _find_alter_2pass(meta, target, editable)
             if res is None:
                 return 1000.0
-            req = [v for pair in res for v in pair]        # flatten (lhs_first, rhs_first) -> side order
+            req = [v for pair in res for v in pair]  # flatten (lhs_first, rhs_first) -> side order
             return float(sum(_cyc(c, r) for c, r in zip(cur, req)))
         # 1-pass alter_rules (L5): RHS is forced by the editable segments once the LHS fix the parse.
         structs = tuple((len(lhs), len(rhs)) for lhs, rhs in game.cifzvbcuwqe)
@@ -875,12 +943,14 @@ def _tr87():
         editable = tuple(int(s.name[-1]) for s in game.ztgmtnnufb)
         res = _solve_rule_parse(structs, target, editable)
         if res is None:
-            return 1000.0                                  # no valid rule config found -> search stops
+            return 1000.0  # no valid rule config found -> search stops
         lhs_vals, rhs_assign = res
         req = []
         for i in range(len(structs)):
             req.append(lhs_vals[i])
-            req.append(rhs_assign.get(i, cur[2 * i + 1]))  # unparsed rule's RHS: leave at current (no-op)
+            req.append(
+                rhs_assign.get(i, cur[2 * i + 1])
+            )  # unparsed rule's RHS: leave at current (no-op)
         return float(sum(_cyc(c, r) for c, r in zip(cur, req)))
 
     def _distance(game):
@@ -892,14 +962,16 @@ def _tr87():
         # base (L1-L4): the EDITABLE glyphs are editable; route to the N-pass rewrite of the target.
         req = _required_editable(game)
         if req is None:
-            return 1000.0                                  # unmodelled twist -> search stops, no false win
+            return 1000.0  # unmodelled twist -> search stops, no false win
         cur = [_val(s) for s in game.ztgmtnnufb]
         n = min(len(cur), len(req))
         # SUM of per-glyph cyclic distance (NOT a bare mismatch count): gives the best-first search a
         # smooth gradient -- every ACTION1/2 toward target drops the score by 1, so the search walks
         # straight to the win (mismatch-count gave no gradient and exploded at L2's 7 glyphs). The 7x
         # length-gap term bounds the unmodelled-twist case so the search stops with no false claim.
-        return kit.sequence_cyclic_distance(cur[:n], req[:n], modulus=7) + 7 * abs(len(cur) - len(req))
+        return kit.sequence_cyclic_distance(cur[:n], req[:n], modulus=7) + 7 * abs(
+            len(cur) - len(req)
+        )
 
     def action_labels(env, frame=None, path=None):
         return [json.dumps({"action": a}) for a in (1, 2, 3, 4)]
@@ -922,9 +994,15 @@ def _tr87():
             return 1000.0
 
     return GameAdapter(
-        game="tr87", action_labels=action_labels, apply=apply, state_key=state_key,
-        featurize=None, hand_verifier=hand_verifier, warmup_label=None,
-        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90, 6: 90, 7: 90}, branch_mode="fresh_env",
+        game="tr87",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90, 6: 90, 7: 90},
+        branch_mode="fresh_env",
     )
 
 
@@ -945,7 +1023,10 @@ def _dc22():
     ]
 
     def _click_label(game, sprite):
-        grid_w, grid_h = getattr(getattr(game, "current_level", None), "grid_size", None) or (64, 64)
+        grid_w, grid_h = getattr(getattr(game, "current_level", None), "grid_size", None) or (
+            64,
+            64,
+        )
         grid_x = int(getattr(sprite, "x", 0)) + int(getattr(sprite, "width", 1)) // 2
         grid_y = int(getattr(sprite, "y", 0)) + int(getattr(sprite, "height", 1)) // 2
         display_x = grid_x + max(0, (64 - int(grid_w)) // 2)
@@ -1163,7 +1244,11 @@ def _ar25():
         mirror, primary, selected = _mirror_object_rows(game)
         if mirror is None or primary is None:
             return 1000.0
-        distance = abs(float(mirror.x) - 10.0) + abs(float(primary.x) - 15.0) + abs(float(primary.y) - 14.0)
+        distance = (
+            abs(float(mirror.x) - 10.0)
+            + abs(float(primary.x) - 15.0)
+            + abs(float(primary.y) - 14.0)
+        )
         if mirror.x != 10 and selected is not mirror:
             distance += 4.0
         if mirror.x == 10 and selected is not primary:
@@ -1238,6 +1323,8 @@ def _ft09():
             return [FT09_L1_LABELS[extension_index]]
         if level == 1 and extension_index < len(FT09_L2_TAIL_LABELS):
             return [FT09_L2_TAIL_LABELS[extension_index]]
+        if level == 2 and extension_index < len(FT09_L3_TAIL_LABELS):
+            return [FT09_L3_TAIL_LABELS[extension_index]]
         return []
 
     def state_key(game, frame=None):
@@ -1254,7 +1341,9 @@ def _ft09():
                         continue
                     target = game.current_level.get_sprite_at(sprite.x + dx, sprite.y + dy, "Hkx")
                     if not target:
-                        target = game.current_level.get_sprite_at(sprite.x + dx, sprite.y + dy, "NTi")
+                        target = game.current_level.get_sprite_at(
+                            sprite.x + dx, sprite.y + dy, "NTi"
+                        )
                     if not target:
                         continue
                     constrained += 1
@@ -1286,7 +1375,16 @@ def _ft09():
         featurize=featurize,
         hand_verifier=lambda game, _frame=None: float(_constraint_violations(game)[0]),
         warmup_label=None,
-        depth_caps={1: len(FT09_L1_LABELS), 2: len(FT09_L2_TAIL_LABELS), 3: 2},
+        depth_caps={
+            1: len(FT09_L1_LABELS),
+            2: len(FT09_L2_TAIL_LABELS),
+            3: len(FT09_L3_TAIL_LABELS),
+        },
+        level_tails={
+            1: FT09_L1_LABELS,
+            2: FT09_L2_TAIL_LABELS,
+            3: FT09_L3_TAIL_LABELS,
+        },
         branch_mode="replay",
     )
 
@@ -1340,7 +1438,11 @@ def _ls20():
         return tuple(rows)
 
     def state_key(game, frame=None):
-        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0)
+        level = (
+            kit.frame_level(frame)
+            if frame is not None
+            else int(getattr(game, "level_index", 0) or 0)
+        )
         player = getattr(game, "gudziatsk", None)
         step_counter = getattr(getattr(game, "_step_counter_ui", None), "current_steps", 0)
 
@@ -1495,7 +1597,11 @@ def _sk48():
             return 0, 1000, 0
 
     def state_key(game, frame=None):
-        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0)
+        level = (
+            kit.frame_level(frame)
+            if frame is not None
+            else int(getattr(game, "level_index", 0) or 0)
+        )
         active = getattr(game, "vzvypfsnt", None)
         return (
             int(level),
