@@ -154,3 +154,31 @@ def test_hazard_aware_engine_predicts_avatar_removal_on_lethal_move():
     assert not np.any(out == AV)           # the avatar was removed (dead-end grid)
     # moving the other way (away from the charger) is NOT lethal
     assert m.is_lethal(g, 3) is False
+
+
+def test_hazard_fit_excludes_the_door_colour():
+    """REQ: the door colour (passable, everywhere) must NOT be learned as a hazard, even though door blobs
+    sit near the avatar -- only the object that MOVES at death is the charger."""
+    from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+    m = InducedNavWorldModel.fit(_transitions())
+    assert m.door_color == DOOR            # the base model captures the passable door colour
+    h = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL)
+    assert DOOR not in h.hazard_colors     # the door is excluded from hazard candidates
+
+
+def test_enter_mode_catches_perpendicular_step_on_that_toward_misses():
+    """REQ: lethal_mode='enter' flags a perpendicular step ONTO the charge line (tu93 L3 vertical chargers),
+    which lethal_mode='toward' (along-axis approach only) does not."""
+    from carnot.agentic.arc_nav_world_model import HazardAwareNavWorldModel
+    base = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL)  # axis=row, range>0
+    # avatar 3 rows BELOW the charger's row (genuinely OFF the row: 3 > align_tol 2), same column band; an UP
+    # move (step 2) steps perpendicularly ONTO the charger's row band -> 'enter' lethal, 'toward' safe.
+    g = np.full((7, 9), WALL, dtype=int)
+    g[5, 5] = AV                            # row 5, charger centred row 2 -> 3 rows off-line before the move
+    g[1, 5] = HAZ; g[2, 4] = HAZ; g[2, 5] = HAZ  # noqa: E702
+    g[2, 6] = HAZ; g[3, 5] = HAZ            # charger blob centred ~(2,5)
+    toward = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="toward")
+    enter = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="enter")
+    # action 1 = up = perpendicular step onto the charger's row band
+    assert toward.is_lethal(g, 1) is False
+    assert enter.is_lethal(g, 1) is True

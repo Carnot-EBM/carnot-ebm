@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-06-22 (Hazard-aware L3 rung: robustness fixes + escalation rung; L3 over-claim RETRACTED — outer-loop, ultracode)
+
+Operator: "add the next escalation rung for L3." Added the rung + robustness fixes; an adversarial review
+caught and CORRECTED an over-claim. Write-up `docs/research-notes/hazard-aware-L3-next-rung-2026-06-22.md`.
+
+- tu93 L3 investigated live: THREE charging enemies (vs L2's one), and VERTICAL chargers (L2's was horizontal).
+- Robustness fixes (real, L2 intact, unit-tested 8 pass): (1) door-colour exclusion — `InducedNavWorldModel`
+  learns the passable `door_color` and the hazard fit excludes it (doors were wrongly flagged as hazards →
+  L3 `no_plan`); (2) conservative charge-range floor = max(observed, move step) (L3 under-estimated 5 vs true
+  6); (3) charger line-of-sight (a wall shields the avatar from a charge).
+- Escalation rung: `HazardAwareNavWorldModel.lethal_mode ∈ {toward, enter}`; `enter` also flags a
+  perpendicular step ONTO the charge line (L3's vertical chargers kill those). The loop escalates
+  nav → hazard[toward] → hazard[enter], taking the first rung that deepens.
+- RESULT: deepens tu93 L1→L2 (toward rung, reproduced, every seed). At L3 both current static rungs are
+  exhausted (toward UNDER-prunes → dies; enter OVER-prunes → no path).
+- **Over-claim RETRACTED (adversarial review):** the first draft said "L3 needs DYNAMIC charge-state
+  modelling." The reviewer probed the live env: the L3 chargers are STATIC-until-triggered (deterministic on
+  avatar position) and a position-keyed real-env BFS finds a VERIFIED 19-action winning path — so L3 IS
+  statically solvable; the rungs are merely MIS-PARAMETERISED lethal-zones (enter over-prunes ~6 safe moves).
+  Corrected: the next step is a calibrated static interception zone, NOT dynamic modelling. Artifact verdict +
+  note say exactly this. Adversarial-verify clean. Conductor left STOPPED. Committed `[outer-loop]`.
+
 ## 2026-06-22 (Hazard fit WIRED into the re-induction loop at the trigger — outer-loop, ultracode)
 
 Operator: "wire the hazard fit into the re-induction loop at the trigger." Integrated the re-induction
