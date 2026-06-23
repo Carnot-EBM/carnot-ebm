@@ -2870,6 +2870,70 @@ beats the uniform-energy ablation, preserves offline reproduction for newly
 solved variants, and keeps the live-path lint green; otherwise the artifact
 MUST emit an honest null with explicit zero deltas and residual bridge gaps.
 
+### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
+
+Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2
+primitive into reusable solver scaffolding. If A1's Exp4020 graded
+goal-satisfaction energy has the strongest clean signal, or if all upstreams
+are value-null and A1 is the best-characterized primitive-as-built, the workflow
+SHALL persist `graded_goal_energy_search_heuristic_operator` in
+`arc_solver_kit` and add or extend the matching
+`primitive_graded_goal_energy_search_heuristic_operator` `general_gotchas`
+registry row without duplicating existing primitive entries. If A2's
+action-effect expansion prior is the stronger clean signal, the workflow SHALL
+record why the existing action-effect primitive was extended instead. The
+persisted primitive SHALL be oracle-distinct from the win-check: it may
+rank/generated frontier candidates by convex
+`alpha * navigation + beta * graded_goal_energy`, but it SHALL NOT call the
+executable verifier to score candidates.
+
+Experiment 4644 SHALL apply the persisted primitive to at least two games that
+were not used to tune the selected upstream primitive, using cached live/offline
+candidate measurements when live quota is unavailable. For every transfer game
+it SHALL report solve-rate delta, first-win delta, and action-efficiency lift
+where those quantities are measurable. Any newly claimed level SHALL pass
+`arc_solver_kit.reproduce`; only reproduced new levels count toward
+`reproducible_total_levels`. If no transfer game improves, the artifact SHALL
+persist the primitive-as-built, report
+`complete: primitive_persisted_transfer_null_characterized`, and record the
+transfer dead-ends in the registry.
+
+The terminal artifact
+`results/experiment_4644_primitive_persist_transfer.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `solve_provenance`,
+`primitive_persisted`, `transfer_games`, `transfer_value_per_game`,
+`offline_reproduced`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive directs goal-energy generation or prunes/expands actions, oracle-distinct from the win-check."
+- `solve_provenance`: principle "development_proxy if a transfer solve is via the offline twin; live_agent_self_discovery if the persisted primitive improves the SCORED agent's own path. NOT outer_loop_re."
+- `primitive_persisted`: principle "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+- `transfer_games`: principle "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+- `transfer_value_per_game`: principle "the per-game value-add (live solve-rate / first-win / action-efficiency lift) -- the cross-game evidence the primitive generalizes."
+- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
+- `registry_updated`: principle "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4644
+
+**Given** the A1 and A2 live artifacts are present, `offline_arcade()` imports,
+the `arc-world-model-trust-energy` spec declares `REQ-ARC-WMTE-4644`, and the
+registry contains the persisted primitive gotcha
+**When** Experiment 4644 selects the strongest clean upstream primitive, runs
+the reusable operator on untuned transfer games, and validates any newly claimed
+level through `arc_solver_kit.reproduce`
+**Then** the artifact reports either a value-added transfer success for the
+first improving game or an honest characterized null, keeps
+`verifier_is_oracle=false`, names the operator and registry gotcha, records
+per-game value/dead-end details, and writes a stable checksum.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored
