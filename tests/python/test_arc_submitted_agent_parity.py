@@ -67,10 +67,7 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert exp.candidate_router is not None
     assert exp.frame_change_scorer is not None
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
-    assert (
-        SUBMITTED_AGENT_CONFIG["frame_change_ranking_mode"]
-        == "persistent_aem_plus_optional_cnn"
-    )
+    assert SUBMITTED_AGENT_CONFIG["frame_change_ranking_mode"] == "persistent_aem_plus_optional_cnn"
     assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["verifier_is_oracle"] is False
 
@@ -96,14 +93,14 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
 
 
 def test_req_capstone_4597_submitted_config_points_at_refreshed_package():
-    """REQ-CAPSTONE-4597: submitted metadata names the refreshed live package."""
+    """REQ-ARC-WMTE-4633: submitted metadata names the refreshed live package."""
 
     assert (
         SUBMITTED_AGENT_CONFIG["live_submit_package_path"]
-        == "results/experiment_4595_submission_package_operator_resubmit.json"
+        == "results/experiment_4631_submission_package_operator_resubmit.json"
     )
     assert (
-        SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4595_refresh_submission_package"
+        SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4631_refresh_submission_package"
     )
 
 

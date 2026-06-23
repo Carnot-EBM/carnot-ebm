@@ -2525,6 +2525,74 @@ untuned transfer games, per-game solve-rate/action-efficiency value-add,
 offline reproduction accounting for any new level, a stable checksum, and a
 terminal success only when at least one transfer game adds value.
 
+### REQ-ARC-WMTE-4633: Consolidate Clean ARC Sprint Wins Into The Scored Agent
+
+Experiment 4633 SHALL consolidate the 2026-06-23 ARC integration sprint into
+the scored submitted agent configuration. The workflow SHALL first verify
+`arc_solver_kit.offline_arcade()` and the presence of
+`results/experiment_4628_dense_curiosity_progress_loop.json`,
+`results/experiment_4629_graduate_action_effect_predictor_live.json`,
+`results/experiment_4630_levelup_selfplay.json`, and
+`results/experiment_4631_refresh_submission_package.json`. It SHALL read A1,
+A2, and A3 through `scripts/summarize_artifact.py` before aggregating any
+number. A lever may be admitted into `SUBMITTED_AGENT_CONFIG` only when its
+upstream artifact has a terminal success verdict, is not stamped or
+live-rechecked as adversarial, passes its positive control, and raises a real
+scored-agent metric. Any flagged-adversarial, positive-control-failed,
+false-negative-risk, or non-success artifact SHALL be quarantined and SHALL NOT
+contribute headline numbers.
+
+If Experiment 4628 cleanly raises live solve-rate or coverage, the workflow
+SHALL ship its dense curiosity progress loop setting in
+`SUBMITTED_AGENT_CONFIG`. If Experiment 4629 cleanly raises live
+action-efficiency, the workflow SHALL ship its `persistent_aem_plus_optional_cnn`
+action-effect ranking setting in `SUBMITTED_AGENT_CONFIG`. If Experiment 4630
+cleanly banks a level, the workflow SHALL rely on the refreshed Experiment 4631
+package that already folded it in. If no clean upstream lever raises a
+scored-agent metric, the workflow SHALL keep the bare submitted config, rerun
+the parity and orphan-lint gates, and emit an honest null. The gate SHALL never
+submit to the leaderboard and SHALL write
+`results/experiment_4633_integration_gate.json`.
+
+Experiment 4633 SHALL emit bare top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `levers_integrated`,
+`flagged_artifacts_excluded`, `live_solve_rate_integrated`,
+`action_efficiency_integrated`,
+`offline_to_live_transfer_ratio_integrated`,
+`live_submittable_level_count_integrated`, `parity_test_green`,
+`orphan_lint_green`, `submitted_config_raised_metric_clean`,
+`null_delta_methodology_note`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<metric>_raised_config_shipped OR complete: integration_no_clean_metric_bare_config_kept_honest_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false for every aggregated value claim -- the integrated levers are oracle-distinct."
+- `levers_integrated`: principle "names the upstream levers (A1/A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- the audit trail."
+- `flagged_artifacts_excluded`: principle "names any flagged_adversarial / positive-control-failed upstream artifact NOT aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
+- `live_solve_rate_integrated`: principle "the integrated held-out live solve-rate on the shipped config (A1's effect)."
+- `action_efficiency_integrated`: principle "the integrated median actions-to-first-levelup + efficiency term on the shipped config (A2's effect)."
+- `offline_to_live_transfer_ratio_integrated`: principle "the integrated bridge co-metric on the shipped config -- did the offline verifier signal transfer to the SCORED agent."
+- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is the single source of truth."
+- `orphan_lint_green`: principle "HARD gate -- arc_orphan_solver_lint passes; the graduated A1/A2 modules stay live-path-reachable."
+- `submitted_config_raised_metric_clean`: principle "True only if a CLEAN (non-flagged, control-passed) lever raised a real metric on the SCORED config; false -> honest null, bare config kept."
+- `null_delta_methodology_note`: principle "present where any integrated delta == 0 -- states the equality is an honest no-value null, not a bug."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, upstream artifacts present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4633
+
+**Given** the offline arcade precondition passes, Experiments 4628 through 4631
+exist, and A1/A2/A3 have been summarized through `scripts/summarize_artifact.py`
+**When** experiment 4633 audits the upstream levers and re-measures the shipped
+submitted configuration
+**Then** it wires only clean metric-raising levers into
+`SUBMITTED_AGENT_CONFIG`, excludes flagged or failed-control artifacts from all
+aggregated numbers, runs the submitted-agent parity and orphan-solver lint
+gates, writes `results/experiment_4633_integration_gate.json`, and emits an
+honest null with the bare config if no clean lever raises a metric.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored
