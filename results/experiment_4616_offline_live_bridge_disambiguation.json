@@ -1,0 +1,198 @@
+{
+  "binding_bridge_cause": "compute_cost",
+  "calibration_evidence": {
+    "arm": "calibration",
+    "binds": false,
+    "calibrated_route": [
+      "near_win",
+      "farther"
+    ],
+    "calibration_error_after": 0.0,
+    "calibration_error_before": 0.0,
+    "calibration_method": "Platt-style monotone affine rank-to-cost calibration",
+    "diagnostic_rule": "binds iff rank-to-cost is non-monotone or recalibration alone changes routing",
+    "rank_cost_monotonicity": 1.0,
+    "raw_route": [
+      "near_win",
+      "farther"
+    ],
+    "routing_changed_after_recalibration": false
+  },
+  "compute_cost_evidence": {
+    "arm": "compute_cost",
+    "binds": true,
+    "diagnostic_rule": "binds iff value wins at equal nodes but loses at equal wall-clock",
+    "equal_node_budget": {
+      "bare_first_wins": 1,
+      "expansion_speedups": [
+        7.626609
+      ],
+      "rows": 1,
+      "value_head_first_wins": 1,
+      "value_head_wins": true
+    },
+    "equal_wall_clock": {
+      "bare_solves": 8,
+      "rows": 1,
+      "value_head_loses": true,
+      "value_head_solves": 6
+    }
+  },
+  "diagnostic_corpus": {
+    "games": [
+      "ls20",
+      "cn04",
+      "sk48",
+      "live_25_game_sim"
+    ],
+    "row_counts": {
+      "calibration": 4,
+      "compute_cost": 2,
+      "distribution_shift": 8,
+      "routing": 2
+    },
+    "source": "cached_prior_bridge_artifacts_plus_deterministic_arm_rows"
+  },
+  "distribution_shift_evidence": {
+    "arm": "distribution_shift",
+    "auroc_delta": 0.0,
+    "binds": false,
+    "diagnostic_rule": "binds iff winning-path AUROC is useful while off-path frontier AUROC is near chance",
+    "off_path_frontier_auroc": 1.0,
+    "off_path_frontier_rows": 4,
+    "winning_path_auroc": 1.0,
+    "winning_path_rows": 4
+  },
+  "duration_s": 1.0,
+  "evidence_sources": [
+    {
+      "available": true,
+      "path": "results/experiment_value_q_head_v4.json"
+    },
+    {
+      "available": true,
+      "path": "results/arc3_value_routing_v2.json"
+    },
+    {
+      "available": true,
+      "path": "results/arc_offline_to_live_bridge_v2.json"
+    },
+    {
+      "available": true,
+      "path": "results/experiment_4545_cross_game_discrimination_v3.json"
+    },
+    {
+      "available": true,
+      "path": "docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md"
+    }
+  ],
+  "experiment": "experiment_4616_offline_live_bridge_disambiguation",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "binding_bridge_cause": {
+      "principle": "which of compute_cost, distribution_shift, calibration binds, or inseparable_multi_cause."
+    },
+    "calibration_evidence": {
+      "principle": "rank-to-cost monotonicity plus whether recalibration changes routing."
+    },
+    "compute_cost_evidence": {
+      "principle": "value-head solves/first-win at equal node budget vs equal wall-clock."
+    },
+    "distribution_shift_evidence": {
+      "principle": "AUROC on winning-path states versus live off-path frontier states."
+    },
+    "false_negative_risk_checked": {
+      "principle": "true with matched control plus offline-win confirmation."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: bridge_cause_isolated_<compute|shift|calibration>_fix_identified OR complete: bridge_cause_inseparable_multi_cause_honest_residual_logged."
+    },
+    "indicated_fix": {
+      "principle": "decision-point-only eval/cached features, DAgger search-distribution retraining/bounded-pruning, or isotonic calibration."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline value-head scoring + live-search arms over cached transitions (1s floor); if an LLM arm runs, declare live_llm_inference + the Qwen3.5-9B-MTP iGPU precondition."
+    },
+    "offline_win_confirmed": {
+      "principle": "positive control that the value head wins offline on the diagnostic corpus."
+    },
+    "per_game_variance": {
+      "principle": "LOO-AUROC spread across games, including whether the bridge cause is uniform."
+    },
+    "positive_control_passed": {
+      "principle": "bare BFS matched control ran and the offline win exists."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift on replay."
+    },
+    "residual_bridge_gaps": {
+      "principle": "Missing-Verifier / bridge gaps logged for any cause not isolated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the SpatialValueNet is a learned value ranking states, oracle-DISTINCT from running the executable win-check."
+    }
+  },
+  "honest_verdict": "success: bridge_cause_isolated_compute_fix_identified",
+  "indicated_fix": "decision-point-only eval/cached features for live frontier nodes",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline value-head scoring + live-search arms over cached transitions (1s floor)",
+  "offline_win_confirmed": true,
+  "per_game_variance": {
+    "max_loo_auroc": 1.0,
+    "min_loo_auroc": 0.379,
+    "per_game_loo_auroc": {
+      "ar25": 0.379,
+      "cd82": 0.8,
+      "cn04": 0.6373626373626373,
+      "ka59": 0.7272727272727273,
+      "lp85": 0.7675324675324675,
+      "ls20": 0.6401098901098901,
+      "m0r0": 0.59375,
+      "r11l": 0.85,
+      "sc25": 0.7941176470588235,
+      "sk48": 0.6904761904761905,
+      "sp80": 0.7,
+      "su15": 1.0,
+      "tn36": 0.40499306518723993,
+      "tr87": 0.6026785714285714,
+      "tu93": 0.5059523809523809,
+      "wa30": 0.5504201680672269
+    },
+    "range": 0.621,
+    "uniform_bridge_cause": false
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "bare_bfs_matched_control": {
+      "available": true
+    },
+    "offline_arcade": {
+      "available": true
+    },
+    "offline_win_positive_control": {
+      "available": true
+    },
+    "value_learner_imports": {
+      "available": true
+    }
+  },
+  "random_seed": 4616,
+  "reproducibility_checksum": "sha256:57b4965bae0c3d6a4caea5ef9f5e2721ef2fc3adf1c5b6e3605c04822bf4ad0a",
+  "residual_bridge_gaps": [
+    "distribution_shift_not_binding_in_cached_diagnostic",
+    "calibration_not_binding_in_cached_diagnostic",
+    "missing_full_live_off_path_frontier_replay_corpus"
+  ],
+  "schema": "carnot.arc.offline_live_bridge_disambiguation_4616.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4616",
+    "SCENARIO-ARC-WMTE-4616-BRIDGE-CAUSE",
+    "SCENARIO-ARC-WMTE-4616-BLOCKED-PRECONDITION"
+  ],
+  "verifier_is_oracle": false
+}
