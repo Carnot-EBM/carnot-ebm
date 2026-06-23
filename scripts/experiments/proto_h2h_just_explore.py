@@ -8,10 +8,15 @@ offline env (arc_solver_kit.offline_arcade) instead of the online HTTP API. Our 
 core (FrameProcessor + GraphExplorer + the 5 salience tiers) runs UNCHANGED. We map our
 `levels_completed -> FrameData.score` (our frame has no `.score`).
 
-CAVEAT (documented, not hidden): the two systems navigate differently -- just-explore live-shortest-path,
-ours replay-from-reset -- but that is a real feature difference between the systems, and budget = total
-env.step calls (the real interaction cost) for BOTH. Preflights: (a) shim-validity (replay lp85's banked
-trajectory, assert score increments at each level-up); (b) best-of-3 seeds for the stochastic SOTA arm.
+CAVEAT (documented, not hidden -- corrected per the 2026-06-23 adversarial audit): the two systems
+navigate differently -- just-explore live-shortest-path, ours replay-from-reset. The nominal "budget" is
+NOT equal env interaction: graph_explore_solve_v2's max_expansions counts only its own env.step calls, but
+replay-from-reset does MANY uncounted env.step+reset per expansion, so at nominal-equal "1000" the bare
+explorer does a MEASURED ~4x MORE real env interaction than just-explore (4.2x lp85 / 4.4x bp35). That
+asymmetry HANDICAPS just-explore, so any just-explore win here is a conservative LOWER BOUND (it wins while
+touching the env ~1/4 as much). Preflights: (a) shim-validity (replay lp85's banked trajectory, assert
+score increments at each level-up); (b) best-of-3 seeds for the stochastic SOTA arm (report median too --
+best-of-3 inflates the win COUNT, not the existence).
 """
 
 from __future__ import annotations
