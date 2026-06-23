@@ -847,6 +847,23 @@ class (`.428` goal-energy/expansion-prior, `.427` action-effect predictor). Evid
 `docs/research-notes/click-heatmap-generator-falsified-2026-06-23.md` (branch `outer-loop/click-heatmap`).
 retired_verdict: `complete: click_heatmap_generator_premise_falsified_guidance_not_coverage`.
 
+### RESOLVED 2026-06-23 (measured — a provable live NO-OP) — CELL_RECALL TRUST-GATE FLIP (SOTA-avenues Avenue A)
+
+**RESOLVED, do NOT default the flag on expecting a lift.** The `.427`-improvement / SOTA-avenues
+analysis flagged the already-built `CARNOT_ARC_TRUST_METRIC=cell_recall` gate (softens the exact-match
+world-model trust gate) as the cheap PURSUE_HIGH lever, never A/B'd live. The outer loop MEASURED it
+(`results/proto_trust_gate_flip_analysis.json`): the flag governs the e3 LLM/DSL-induction path, where
+**0/6 gap-1 games are exact-FAIL+cell_recall-PASS** — the induced dynamics have `cell_recall ≈ 0`
+(cn04 0.015, cd82 0.0, sc25 0.055), i.e. WRONG not imperfect-but-useful, so the gate decision is
+identical under both metrics → agent byte-identical → **live first-win provably unchanged**. The live
+induce→plan wall is **induction QUALITY, not the trust gate** (what `.428` A1/A2 goal-energy /
+expansion-prior already attack). **Sharper genuinely-untested follow-on (GPU-gated):** the TTT
+learned-dynamics path (a DIFFERENT mechanism the flag does NOT govern) flips 4 games FAIL→PASS (ka59
+0.91 / sc25 0.80 / tn36 0.87 / lp85 0.59 cell_recall) — those models ARE imperfect-but-useful; the real
+lever is to ROUTE live trust to the TTT dynamics on those games (sc25/tn36/lp85; ka59 is hidden-state)
+and measure whether a trusted TTT model drives `plan_in_model` to a live win. Needs the TTT CNN wired
+into the live plan path. Evidence: `docs/research-notes/trust-gate-flip-measured-noop-2026-06-23.md`.
+
 ### ~~NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)~~ — RETIRED (see above)
 
 **Origin:** 2026-06-23 operator flag after the "how do we improve the .427 result?" analysis
