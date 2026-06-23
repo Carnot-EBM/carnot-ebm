@@ -123,7 +123,7 @@ def escalating_deepen(game, target_level, n_reinduce, max_plan, max_depth, seed)
             nav_deaths = _ha.nav_death_transitions(nav, game, banked, cell, max_plan, max_depth)
             escalated = False
             attempts = []
-            for mode in ("toward", "enter"):
+            for mode in ("toward", "omni"):
                 haz = HazardAwareNavWorldModel.fit(list(tr) + nav_deaths, goal_color=goal_color,
                                                    lethal_mode=mode)
                 resh = execute_from(game, banked, cell, haz, max_plan, max_depth)
@@ -173,40 +173,42 @@ def main() -> int:
 
     rows = [{"seed": s, **escalating_deepen(args.game, args.target_level, args.n_reinduce, args.max_plan,
                                             args.max_depth, s)} for s in seeds]
-    # The escalation ladder is nav -> hazard[toward] -> hazard[enter]. The clean, reproduced win is reaching
-    # L2 (the toward rung cracks tu93 L2's horizontal charger). L3 (3 VERTICAL chargers) exhausts BOTH current
-    # static rungs -- toward plans-but-dies (UNDER-prunes: misses perpendicular step-on kills), enter
-    # no-plans (OVER-prunes safe moves). NOTE (adversarial review 2026-06-22): L3 IS statically solvable (the
-    # chargers are static-until-triggered; a position-keyed real-env BFS finds a verified 19-action path), so
-    # the next step is a CORRECTLY-CALIBRATED static interception lethal-zone, NOT dynamic modelling.
-    l2_wins = [r for r in rows if r.get("escalated_to_hazard_aware") and r.get("reproduced_level", 0) >= 2]
-    l3_rung_exhausted = [r for r in rows if any("rungs_tried" in p for p in r.get("per_level", []))]
-    if len(l2_wins) == len(seeds) and seeds and args.target_level >= 3 and l3_rung_exhausted:
-        verdict = ("success: escalation_ladder_nav_toward_enter_deepens_tu93_to_L2_on_every_seed_but_both_"
-                   "current_static_rungs_MIS_PARAMETERISED_at_L3_under_and_over_prune_a_statically_solvable_"
-                   "level_next_step_is_a_calibrated_static_interception_zone_not_dynamic_modelling")
-    elif len(l2_wins) == len(seeds) and seeds:
-        verdict = ("success: reinduction_loop_AUTO_ESCALATES_nav_to_hazard_aware_at_the_avatar_removal_"
-                   f"trigger_and_deepens_{args.game}_to_L2_reproduced_on_every_seed")
-    elif l2_wins:
-        verdict = (f"success: reinduction_loop_escalates_and_deepens_reproduced_on_{len(l2_wins)}_of_{len(seeds)}_seeds")
+    # The escalation ladder is nav -> hazard[toward] -> hazard[omni]. L2's single HORIZONTAL charger cracks
+    # on the toward rung; L3's THREE per-charger-facing chargers crack on the omni rung, whose lethal-zone
+    # was CALIBRATED against L3's position-keyed real-env BFS ground truth (per-charger facing read from the
+    # centre-marker offset; directional; collision-exempt; FN=0 on the 88-move labelled set).
+    min_repro = min((r.get("reproduced_level", 0) for r in rows), default=0)
+    deepest = min((r.get("deepest_level", 0) for r in rows), default=0)
+    used_omni = any("omni" in str(p.get("model_class", "")) for r in rows for p in r.get("per_level", []))
+    if seeds and min_repro >= args.target_level and all(r.get("escalated_to_hazard_aware") for r in rows):
+        omni_tag = ("_via_the_omni_rung_CALIBRATED_vs_the_L3_BFS_path_single_static_layout" if used_omni else "")
+        verdict = ("success: reinduction_loop_AUTO_ESCALATES_nav_toward_omni_at_the_trigger_and_deepens_"
+                   f"{args.game}_to_L{min_repro}_reproduced_on_every_seed{omni_tag}")
+    elif seeds and min_repro >= 2:
+        verdict = (f"success: reinduction_loop_escalates_and_deepens_{args.game}_to_L{min_repro}_reproduced_on_every_seed")
+    elif any(r.get("reproduced_level", 0) >= 2 for r in rows):
+        verdict = "success: reinduction_loop_escalates_and_deepens_reproduced_on_some_seeds_inspect_rows"
     else:
         verdict = "complete: escalating_loop_did_not_cleanly_deepen_inspect_rows"
 
     art = {"experiment": "experiment_reinduction_hazard_loop", "game": args.game, "honest_verdict": verdict,
            "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
            "random_seeds": seeds, "target_level": args.target_level,
-           "n_seeds_reach_L2": len(l2_wins), "n_seeds_L3_rungs_exhausted": len(l3_rung_exhausted), "rows": rows,
+           "min_reproduced_level": min_repro, "deepest_level": deepest, "rows": rows,
            "methodology_note": ("One integrated loop: re-induce nav per level; on the avatar-removal TRIGGER "
-                                "escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[enter] and "
+                                "escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[omni] and "
                                 "re-plan the same level; take the first rung that deepens; else stop. No "
                                 "hand-holding between levels. Reproduction-gated on a fresh env. tu93 L2 (1 "
-                                "horizontal charger) cracks on the toward rung. tu93 L3 (3 VERTICAL chargers) "
-                                "exhausts both CURRENT static rungs (toward UNDER-prunes -> dies; enter "
-                                "OVER-prunes -> no path). Per adversarial review, L3 is STATICALLY solvable "
-                                "(chargers static-until-triggered; a position-keyed real-env BFS finds a "
-                                "verified 19-action path) -- the next step is a correctly-CALIBRATED static "
-                                "interception lethal-zone, NOT dynamic modelling."),
+                                "horizontal charger) cracks on the 'toward' rung. tu93 L3 (3 chargers with "
+                                "PER-CHARGER FACINGS) cracks on the 'omni' rung, whose interception lethal-zone "
+                                "was CALIBRATED against L3's position-keyed real-env BFS ground truth (the "
+                                "verified 19-action path): each charger kills only when the avatar's "
+                                "destination is on its facing line, on the side it faces (read from the "
+                                "centre-marker offset), at distance 1..reach -- collision-exempt. The "
+                                "calibration is reproducibly clean (FN=0, FP=0, win-path-unpruned over 88 "
+                                "BFS-labelled moves; see experiment_hazard_l3_calibration.py). SCOPE: tu93 L3 "
+                                "is a SINGLE static layout (seed-invariant -- 3 seeds = 1 layout x3); this is "
+                                "validated on that one level, NOT a general hazard solver. Static, not dynamic."),
            "duration_s": round(time.time() - t0, 1)}
     OUT.write_text(json.dumps(art, indent=2))
     print(f"\nVERDICT: {verdict}")

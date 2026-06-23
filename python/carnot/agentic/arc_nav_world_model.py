@@ -330,11 +330,15 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
     hazard_colors: frozenset = frozenset()
     hazard_axis: Optional[str] = None       # 'row' (horizontal charger) or 'col' (vertical charger)
     charge_range: int = 0                   # max post-move along-line distance at which the charge intercepts
+    hazard_center_color: Optional[int] = None  # the charger's centre-marker colour; its OFFSET within the
+    #                                            block gives the per-charger FACING (used by 'omni')
     align_tol: int = 2                      # how close to the hazard's line counts as "on the line"
-    lethal_mode: str = "toward"             # 'toward' (charge only on along-axis approach; tu93 L2 horizontal
-    #                                         charger) or 'enter' (ALSO on a perpendicular step ONTO the line;
-    #                                         tu93 L3 vertical chargers). An escalation rung tries 'toward'
-    #                                         first and falls back to 'enter' when a toward-plan still dies.
+    lethal_mode: str = "toward"             # escalation rungs (the loop tries them in order, first that
+    #   'toward' : charge on a TOWARD move along the single learned axis (tu93 L2's horizontal charger).
+    #   'omni'   : OMNIDIRECTIONAL -- charge on a toward move along EITHER axis (row or col) + a collision
+    #              (ending on the charger). Calibrated against tu93 L3's BFS ground truth: its 3 chargers
+    #              kill on row-approach, col-approach, AND collision; a perpendicular step-ONTO the line is
+    #              SAFE (so 'enter'/step_onto was wrong and is removed).
     hazard_fit: dict = field(default_factory=dict)
 
     @classmethod
@@ -415,17 +419,47 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
         # charge), whereas a slight over-estimate only routes a little wider.
         step = max((abs(dy) + abs(dx) for (dy, dx) in base.displacement.values()), default=0)
         charge_range = max(int(round(max(post_dists))) if post_dists else 0, step if post_dists else 0)
+        # The charger's CENTRE marker (the least-common hazard colour, e.g. tu93's colour-15 inside the
+        # colour-8 ring) is OFFSET within the block in the direction the charger FACES -- so per-charger
+        # facing is readable from the grid (calibrated vs tu93 L3: 15 offset in col => faces horizontal /
+        # charges along its row; offset in row => faces vertical / charges along its column).
+        hazard_center_color = None
+        if hazard_colors and deaths:
+            cnt = Counter()
+            for g0, _a, _g1 in deaths:
+                for c in hazard_colors:
+                    cnt[c] += int((g0 == c).sum())
+            hazard_center_color = min(cnt, key=cnt.get) if cnt else None
         hazard_fit = {"n_death_transitions": len(deaths), "hazard_colors": sorted(hazard_colors),
                       "hazard_axis": hazard_axis, "charge_range": charge_range, "move_step": step,
+                      "hazard_center_color": hazard_center_color,
                       "axis_votes": dict(axis_votes), "post_move_distances_at_death": sorted(post_dists)}
         return cls(displacement=base.displacement, avatar_colors=base.avatar_colors, bg_color=base.bg_color,
                    floor_color=base.floor_color, wall_colors=base.wall_colors, goal_color=base.goal_color,
                    door_color=base.door_color, fit_quality=base.fit_quality, hazard_colors=hazard_colors,
                    hazard_axis=hazard_axis, charge_range=charge_range, lethal_mode=lethal_mode,
-                   hazard_fit=hazard_fit)
+                   hazard_center_color=hazard_center_color, hazard_fit=hazard_fit)
 
     def _hazard_blobs(self, grid):
         return _blobs(_color_cells(grid, self.hazard_colors)) if self.hazard_colors else []
+
+    def _charger_facing(self, grid, hy, hx):
+        """The charger's FACING DIRECTION as a unit (fdy, fdx), read from its centre-marker offset within the
+        block: the marker is offset in the direction the charger faces (and charges). e.g. tu93 a marker
+        offset +column => faces right (charges along its row, to the right); +row => faces down. Returns None
+        if no marker found (then 'omni' falls back to all directions for that charger)."""
+        if self.hazard_center_color is None:
+            return None
+        g = np.asarray(grid)
+        ys, xs = np.where(g == self.hazard_center_color)
+        near = [(int(y), int(x)) for y, x in zip(ys, xs) if abs(y - hy) <= 4 and abs(x - hx) <= 4]
+        if not near:
+            return None
+        my, mx = near[0]
+        ody, odx = my - hy, mx - hx
+        if abs(odx) >= abs(ody):
+            return (0, 1 if odx > 0 else -1)   # faces along the row (horizontal charger)
+        return (1 if ody > 0 else -1, 0)       # faces along the column (vertical charger)
 
     def is_lethal(self, grid, action):
         """A nav move is lethal if it leaves the avatar ON a hazard's charge line (perpendicular offset within
@@ -445,21 +479,36 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
         bcy, bcx = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2   # avatar centre BEFORE the move
         acy, acx = bcy + dy, bcx + dx                         # avatar centre AFTER the move
         g = np.asarray(grid)
+        tol, rng = self.align_tol, self.charge_range
         for (hy, hx, _sz) in self._hazard_blobs(grid):
-            if self.hazard_axis == "row":
-                on_line = abs(acy - hy) <= self.align_tol     # avatar ends on the hazard's row
-                toward = (hx - bcx) * dx > 0                  # moving along the row toward the charger
-                step_onto = abs(bcy - hy) > self.align_tol    # was OFF the row before (a perpendicular step-on)
-                dist = abs(acx - hx)
+            on_row = abs(acy - hy) <= tol          # avatar ends ALIGNED on the charger's row
+            on_col = abs(acx - hx) <= tol          # avatar ends ALIGNED on the charger's column
+            if self.lethal_mode == "omni":
+                # FACING-AWARE (calibrated vs tu93 L3's BFS ground truth): each charger kills only when the
+                # avatar's DESTINATION is on the charger's facing line (aligned on the perpendicular axis),
+                # on the SIDE it faces, within reach -- regardless of the avatar's own approach direction (a
+                # perpendicular step ONTO the line is just as lethal; collision is the zero-distance case).
+                # The facing DIRECTION (not just axis) is read from the centre-marker offset; using the
+                # signed direction (a charger does not kill what is behind it) is what stops the over-pruning
+                # that forbade the BFS win path.
+                # NB: landing exactly ON a charger (distance 0) is NOT lethal in tu93 L3 (it defeats/passes
+                # the charger) -- every observed death is a charge INTERCEPTION at distance 1..reach on the
+                # charger's facing side, so the lethal zone is strictly 0 < dist <= reach.
+                f = self._charger_facing(grid, hy, hx)
+                if f is None:
+                    lethal = (on_row and 0 < abs(acx - hx) <= rng) or (on_col and 0 < abs(acy - hy) <= rng)
+                elif f[0] == 0:                                   # horizontal charger (faces left/right)
+                    lethal = on_row and 0 < (acx - hx) * f[1] <= rng
+                else:                                             # vertical charger (faces up/down)
+                    lethal = on_col and 0 < (acy - hy) * f[0] <= rng
             else:
-                on_line = abs(acx - hx) <= self.align_tol     # avatar ends on the hazard's column
-                toward = (hy - bcy) * dy > 0                  # moving along the column toward the charger
-                step_onto = abs(bcx - hx) > self.align_tol    # was OFF the column before
-                dist = abs(acy - hy)
-            # 'toward': charge only on along-axis approach (tu93 L2 horizontal charger tolerates perpendicular
-            # step-ons). 'enter': ALSO charge on a perpendicular step ONTO the line (tu93 L3 vertical chargers).
-            trig = toward or (self.lethal_mode == "enter" and step_onto)
-            if on_line and trig and dist <= self.charge_range and self._charge_unobstructed(g, hy, hx, acy, acx):
+                # 'toward' (single learned axis): charge only on an along-axis approach (tu93 L2's horizontal
+                # charger tolerates the perpendicular step-on / on-line-not-approaching cases).
+                if self.hazard_axis == "row":
+                    lethal = on_row and (hx - bcx) * dx > 0 and abs(acx - hx) <= rng
+                else:
+                    lethal = on_col and (hy - bcy) * dy > 0 and abs(acy - hy) <= rng
+            if lethal and self._charge_unobstructed(g, hy, hx, acy, acx):
                 return True
         return False
 

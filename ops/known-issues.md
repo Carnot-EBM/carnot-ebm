@@ -1003,6 +1003,23 @@ operator: "add the next escalation rung for L3").** Write-up
   over-prunes ~6 safe moves). Next step = a CALIBRATED static interception zone (mark only the exact
   interception cells), or fall back to position-keyed real-env search per level. NOT dynamic.
 
+**tu93 L3 SOLVED — interception zone CALIBRATED against the BFS path (2026-06-22, outer-loop, ultracode —
+operator: "calibrate the static interception zone against the BFS path").** DONE. Adversarial review (4th):
+SURVIVES. Write-up `docs/research-notes/hazard-aware-L3-calibrated-2026-06-22.md`.
+- `experiment_hazard_l3_calibration.py` (committed, reproducible): position-keyed real-env BFS over L3 → a
+  19-action win path + 88 labelled moves (5 deaths). Per-death killer-charger attribution: every death is the
+  destination EXACTLY aligned with the killer at distance 6, ON THE SIDE IT FACES.
+- Charger FACING is read from the grid (centre-marker offset within the block, signed direction). Calibrated
+  `lethal_mode='omni'`: lethal iff destination on a charger's FACING line, facing side, dist 1..reach,
+  COLLISION-EXEMPT. Reproducible: FN=0, FP=0, win-path-unpruned.
+- RESULT: the loop auto-deepens tu93 L1→L2→L3 on 3/3 seeds (chain nav→hazard[toward]→hazard[omni]), reproduced
+  L3. 8 unit tests pass. Review SURVIVES (12 pristine-env replays reach L3; no hardcoding; no leak).
+- SCOPE (honest): ROBUST-BUT-SINGLE-LAYOUT — tu93 L3 is byte-identical across seeds (3 seeds = 1 layout x3);
+  validated on ONE level of ONE game, NOT a general hazard solver. The facing mechanic is general; test on a
+  2nd charger game to generalize.
+- **Next**: test facing-aware omni on a 2nd charger level (generalize); push to L4+; drop the loop into the
+  standing solver.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
