@@ -808,7 +808,27 @@ it ran no k-ablation — its step-reductions are not evidence for the Carnot ver
 within-game. Full spec: `docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`;
 memory: [[reference_matm_transactive_memory]].
 
-### NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse) — build ON the .427 bridge-crossing
+### RETIRED 2026-06-23 (empirical null, per retire_if_same_verdict) — MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)
+
+**RETIRED before reaching the planner.** The outer loop prototyped this candidate end-to-end
+(branch `outer-loop/macro-vocab`; mechanism is parity-safe + 6 tests, but NOT merged) and it FAILED
+its own falsifiable gate ("bank a deeper level at equal budget") across FOUR test rounds: blind
+repeat-until-stable (7 games), prefix-to-L2 (2 games), run-dominated games (8 games), and the SMART
+version (log-length macros, no overshoot, per-DECISION budget isolating horizon-collapse from
+env-cost; 5 keyboard-run games incl. ar25 run-10 / cn04 run-9). `any_macro_deeper=False` every time;
+on some games macros HURT (ls20: control L1, macro L0). **Root cause (decisive): the 0.04 live
+solve-rate is a generation-GUIDANCE wall, NOT a horizon/depth wall.** Real solutions are interleaved
+sequences of fixed-count runs of *different* actions, so the search is breadth/guidance-bound; macros
+multiply branching (24 vs 4 candidates) without a guiding signal → strictly worse. The PURSUE_HIGH
+ranking was on the *theory* that 0.04 is a depth wall; the empirics refute it. **Do NOT re-propose**
+horizon-collapse / macro-action / option-framework levers for this corpus without a NEW root cause
+(a depth-bound level that primitive search provably cannot reach). **Redirect:** the GUIDANCE-class
+lever — the click-heatmap-as-GENERATOR below (adds candidates the centroid pool omits), and the
+`.428` goal-energy / expansion-prior already in flight. Full evidence:
+`docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md` (on the branch). retired_verdict:
+`complete: macro_horizon_collapse_empirical_null_guidance_not_depth`.
+
+### ~~NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)~~ — RETIRED (see above)
 
 **Origin:** 2026-06-23 operator flag after the "how do we improve the .427 result?" analysis
 (17-agent adversarial workflow, `docs/research-notes/arc-improve-bridge-result-2026-06-23.md`). `.427`
