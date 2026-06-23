@@ -102,6 +102,48 @@ general_gotchas:
       gain was unmeasurable/value-null.
   - sc25: no cached candidate reached the offline reproduction gate, so ordering
       gain was unmeasurable/value-null.
+- id: primitive_world_model_trust_energy_gate_operator
+  operator: world_model_trust_energy_gate_operator
+  derived_from_games:
+  - exp4604_world_model_trust_energy
+  note: >-
+    Exp 4608 persists A1's change-weighted trust-energy gate as reusable
+    world-model scaffolding: rank executable model candidates by held-out
+    changed-cell consistency, reject identity/no-op degeneracy, compare against
+    the legacy binary exact-match gate, and report trust-pass or first-win lift
+    before any solve claim. This is a rank/route primitive, not an oracle; new
+    levels still count only through arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Transfer value is a trust-pass/routing lift over cached untuned world-model
+      candidates; no new executable level is banked unless the resulting path
+      passes arc_solver_kit.reproduce().
+  latest_exp4608_transfer:
+    artifact: results/experiment_4608_primitive_persist_transfer.json
+    transfer_games:
+    - bp35
+    - dc22
+    - g50t
+    transfer_value_per_game:
+      bp35:
+        trust_pass: true
+        binary_gate_pass: false
+        first_win_lift: true
+        offline_reproduced_new_level: false
+      dc22:
+        trust_pass: true
+        binary_gate_pass: false
+        first_win_lift: true
+        offline_reproduced_new_level: false
+      g50t:
+        trust_pass: true
+        binary_gate_pass: false
+        first_win_lift: true
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is trust-gate selection over cached
+      verifier/reproduction-gated fixtures; no new executable level was banked,
+      so reproducible_total_levels is unchanged.
+    reproducibility_checksum: sha256:696c801588e07f003a8d4af06ff9ebed58ea2a5601f7c59e60f5a47847786d6e
 - id: primitive_persistent_action_effect_memory_operator
   operator: persistent_action_effect_memory_operator
   derived_from_games:

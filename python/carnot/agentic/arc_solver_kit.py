@@ -177,6 +177,23 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="world_model_trust_energy_gate_operator",
+            derived_from_games=("exp4604_world_model_trust_energy",),
+            purpose=(
+                "Rank executable world-model candidates by change-weighted held-out trust "
+                "energy, reject identity/no-op degeneracy, and report value against the "
+                "legacy binary exact-match gate before solve claims."
+            ),
+            selector_tags=(
+                "world_model",
+                "trust_energy",
+                "hidden_state",
+                "candidate_ranking",
+                "verifier",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="persistent_action_effect_memory_operator",
             derived_from_games=("exp4568_clickability_action_effect_predictor",),
             purpose=(
@@ -298,6 +315,7 @@ def select_primitive_operators(
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
+            "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
             "cast_grid_phase_fsm_world_model",
             "object_motion_world_model",
@@ -341,6 +359,7 @@ def select_primitive_operators(
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
+            "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
@@ -354,6 +373,7 @@ def select_primitive_operators(
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
+            "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
             "object_centric_digest",
             "graph_astar_action_cost",
@@ -365,6 +385,7 @@ def select_primitive_operators(
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
+            "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
             "object_centric_digest",
             "active_data_collection",
@@ -381,6 +402,7 @@ def select_primitive_operators(
     ):
         names = (
             "approach_dispatcher_operator",
+            "world_model_trust_energy_gate_operator",
             "object_motion_world_model",
             "active_data_collection",
             "object_centric_digest",
@@ -393,6 +415,7 @@ def select_primitive_operators(
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
+            "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
             "graph_astar_action_cost",
             "object_centric_digest",
@@ -404,6 +427,7 @@ def select_primitive_operators(
             "llm_proposer_reinduction_operator",
             "env_adaptive_resolve_operator",
             "verifier_router_candidate_ranking_operator",
+            "world_model_trust_energy_gate_operator",
             "persistent_action_effect_memory_operator",
             "object_centric_digest",
             "active_data_collection",
@@ -467,6 +491,120 @@ def _candidate_public_dict(candidate: Any) -> dict[str, Any]:
         return dict(candidate)
     data = getattr(candidate, "__dict__", None)
     return dict(data) if isinstance(data, Mapping) else {"repr": repr(candidate)}
+
+
+def _world_model_candidate_engine(candidate: Any) -> Callable[[Any, int, Any], Any] | None:
+    engine = _candidate_field(candidate, "engine")
+    return engine if callable(engine) else None
+
+
+def _world_model_candidate_name(candidate: Any, index: int) -> str:
+    for key in ("name", "candidate", "candidate_id", "id"):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return str(value)
+    return _candidate_identifier(candidate, index)
+
+
+def _world_model_candidate_public(candidate: Any) -> dict[str, Any]:
+    public = _candidate_public_dict(candidate)
+    return {
+        str(key): getattr(value, "__name__", repr(value)) if callable(value) else value
+        for key, value in public.items()
+    }
+
+
+def _world_model_score_public(row: Any) -> dict[str, Any]:
+    return {
+        "candidate": str(row.candidate.name),
+        "prefix_accuracy": round(float(row.prefix_accuracy), 6),
+        "heldout_accuracy": round(float(row.heldout_accuracy), 6),
+        "prefix_change_consistency": round(float(row.prefix_change_consistency), 6),
+        "heldout_change_consistency": round(float(row.heldout_change_consistency), 6),
+        "trust_energy": round(float(row.trust_energy), 6),
+        "trust_pass": bool(row.trust_pass),
+        "binary_gate_pass": bool(row.binary_gate_pass),
+        "correct_changed_cells": int(row.correct_changed_cells),
+        "true_changed_cells": int(row.true_changed_cells),
+        "nondegenerate": bool(row.nondegenerate),
+    }
+
+
+def world_model_trust_energy_gate_operator(
+    transitions: Sequence[Any],
+    candidates: Sequence[Any] | Mapping[str, Any],
+    *,
+    baseline_threshold: float = 0.5,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4608: reusable oracle-distinct trust gate for world models."""
+
+    from carnot.agentic.arc_world_model_trust_energy import (
+        WorldModelCandidate,
+        select_trusted_world_model,
+    )
+
+    candidate_rows = list(candidates.values()) if isinstance(candidates, Mapping) else list(candidates or [])
+    world_model_candidates: list[WorldModelCandidate] = []
+    public_by_name: dict[str, dict[str, Any]] = {}
+    for index, candidate in enumerate(candidate_rows):
+        engine = _world_model_candidate_engine(candidate)
+        if engine is None:
+            continue
+        name = _world_model_candidate_name(candidate, index)
+        world_model_candidates.append(WorldModelCandidate(name, engine))
+        public_by_name[name] = _world_model_candidate_public(candidate)
+
+    if not transitions or not world_model_candidates:
+        return {
+            "operator": "world_model_trust_energy_gate_operator",
+            "candidate_count": len(candidate_rows),
+            "selected_candidate_name": "",
+            "baseline_candidate_name": None,
+            "trust_pass": False,
+            "binary_gate_pass": False,
+            "trust_pass_added": False,
+            "value_added": False,
+            "selected_score": None,
+            "rows": [],
+            "selected_candidate": None,
+            "dead_end": "no transitions or executable world-model candidates",
+            "verifier_is_oracle": False,
+        }
+
+    selection = select_trusted_world_model(
+        list(transitions),
+        world_model_candidates,
+        hidden_state=True,
+        baseline_threshold=float(baseline_threshold),
+    )
+    selected = selection.selected_score
+    baseline_row = next((row for row in selection.rows if row.binary_gate_pass), None)
+    selected_binary_pass = bool(selected.binary_gate_pass)
+    trust_pass_added = bool(selected.trust_pass and not selected_binary_pass)
+    value_added = bool(trust_pass_added)
+    if not selected.trust_pass:
+        dead_end = "selected world model did not pass held-out trust energy"
+    elif selected_binary_pass:
+        dead_end = "legacy binary exact-match gate already passed the selected world model"
+    else:
+        dead_end = ""
+
+    selected_name = str(selection.selected.name)
+    return {
+        "operator": "world_model_trust_energy_gate_operator",
+        "candidate_count": len(world_model_candidates),
+        "selected_candidate_name": selected_name,
+        "baseline_candidate_name": baseline_row.candidate.name if baseline_row is not None else None,
+        "trust_pass": bool(selected.trust_pass),
+        "binary_gate_pass": selected_binary_pass,
+        "trust_pass_added": trust_pass_added,
+        "value_added": value_added,
+        "selected_score": _world_model_score_public(selected),
+        "rows": [_world_model_score_public(row) for row in selection.rows],
+        "selected_candidate": public_by_name.get(selected_name, {"name": selected_name}),
+        "dead_end": dead_end,
+        "verifier_is_oracle": False,
+    }
 
 
 def _candidate_generated(candidate: Any) -> bool:
