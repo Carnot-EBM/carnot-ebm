@@ -69,6 +69,7 @@ class InducedNavWorldModel:
     floor_color: int            # colour left behind when the avatar leaves a cell
     wall_colors: frozenset      # colours that BLOCK a move when present in the swept mid-gap
     goal_color: Optional[int]   # colour whose coverage by the avatar completes the level (None if unknown)
+    door_color: Optional[int] = None  # the passable colour the avatar moves THROUGH on a successful move
     fit_quality: dict = field(default_factory=dict)  # diagnostics: n_moves fitted, displacement agreement, etc.
 
     # ---- fitting -------------------------------------------------------------------------------------
@@ -181,6 +182,14 @@ class InducedNavWorldModel:
             p_move = moved_gap[col] / n_moved if n_moved else 0.0
             if p_block - p_move > 0.5:   # strongly predicts a blocked move when present in the swept gap
                 wall_colors.add(col)
+        # DOOR colour: the passable colour the avatar moves THROUGH on a successful move (the dominant
+        # moved-gap colour that is not a wall / bg / floor / avatar). Captured so hazard fitting can EXCLUDE
+        # it -- doors are everywhere, and a naive hazard detector would otherwise flag them as lethal.
+        door_color = None
+        for col, _cnt in moved_gap.most_common():
+            if col not in wall_colors and col != bg and col != floor_color and col not in avatar_colors:
+                door_color = col
+                break
 
         # 5) GOAL colour: prefer the colour the avatar COVERS at a level-up; else a small, STATIONARY,
         #    distinctive colour (not bg/floor/avatar/wall) -- the classic reach-the-marker goal.
@@ -223,11 +232,12 @@ class InducedNavWorldModel:
             "wall_colors": sorted(wall_colors),
             "floor_color": floor_color,
             "goal_color": goal_color,
+            "door_color": door_color,
             "displacement": {a: list(d) for a, d in displacement.items()},
         }
         return cls(displacement=displacement, avatar_colors=frozenset(avatar_colors), bg_color=bg,
                    floor_color=floor_color, wall_colors=frozenset(wall_colors), goal_color=goal_color,
-                   fit_quality=fit_quality)
+                   door_color=door_color, fit_quality=fit_quality)
 
     # ---- the induced model: engine + win predicate (plan_in_model interface) -------------------------
 
@@ -321,10 +331,14 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
     hazard_axis: Optional[str] = None       # 'row' (horizontal charger) or 'col' (vertical charger)
     charge_range: int = 0                   # max post-move along-line distance at which the charge intercepts
     align_tol: int = 2                      # how close to the hazard's line counts as "on the line"
+    lethal_mode: str = "toward"             # 'toward' (charge only on along-axis approach; tu93 L2 horizontal
+    #                                         charger) or 'enter' (ALSO on a perpendicular step ONTO the line;
+    #                                         tu93 L3 vertical chargers). An escalation rung tries 'toward'
+    #                                         first and falls back to 'enter' when a toward-plan still dies.
     hazard_fit: dict = field(default_factory=dict)
 
     @classmethod
-    def fit(cls, transitions, goal_color=None) -> "HazardAwareNavWorldModel":
+    def fit(cls, transitions, goal_color=None, lethal_mode="toward") -> "HazardAwareNavWorldModel":
         """Fit nav params + a line-charger hazard. `goal_color` (if given) OVERRIDES the auto-detected goal
         -- the goal colour is level-invariant in reach-goal games, so when re-inducing at a deeper level
         (whose data may contain no level-up to anchor goal detection) the caller passes the L1 goal."""
@@ -334,6 +348,8 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
             base.goal_color = goal_color
             base.fit_quality["goal_color"] = goal_color
         structural = {base.bg_color, base.floor_color, base.goal_color} | set(base.avatar_colors) | set(base.wall_colors)
+        if base.door_color is not None:
+            structural.add(base.door_color)   # doors are passable + everywhere -> never a hazard
         # death transitions: avatar present in g0, ABSENT in g1, and NOT a level-up (those also clear the avatar)
         deaths = []
         for g0, a, g1, lb, la in rows:
@@ -392,22 +408,31 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
                 hazard_colors = frozenset(set(hazard_colors) | {c for c in inside if c not in structural
                                                                 and c != base.bg_color})
         hazard_axis = axis_votes.most_common(1)[0][0] if axis_votes else None
-        charge_range = int(max(post_dists)) if post_dists else 0
+        # CONSERVATIVE charge range: an INTERCEPTING charger reaches at least its own one-move step (the
+        # enemy is a mirror of the avatar and moves the same step). The observed death distances are a lower
+        # bound (a sparse sample can under-estimate the true reach by ~1 cell), so floor the range at the
+        # avatar's move step -- under-estimating the range is fatal (the planner walks a "safe" move into a
+        # charge), whereas a slight over-estimate only routes a little wider.
+        step = max((abs(dy) + abs(dx) for (dy, dx) in base.displacement.values()), default=0)
+        charge_range = max(int(round(max(post_dists))) if post_dists else 0, step if post_dists else 0)
         hazard_fit = {"n_death_transitions": len(deaths), "hazard_colors": sorted(hazard_colors),
-                      "hazard_axis": hazard_axis, "charge_range": charge_range,
+                      "hazard_axis": hazard_axis, "charge_range": charge_range, "move_step": step,
                       "axis_votes": dict(axis_votes), "post_move_distances_at_death": sorted(post_dists)}
         return cls(displacement=base.displacement, avatar_colors=base.avatar_colors, bg_color=base.bg_color,
                    floor_color=base.floor_color, wall_colors=base.wall_colors, goal_color=base.goal_color,
-                   fit_quality=base.fit_quality, hazard_colors=hazard_colors, hazard_axis=hazard_axis,
-                   charge_range=charge_range, hazard_fit=hazard_fit)
+                   door_color=base.door_color, fit_quality=base.fit_quality, hazard_colors=hazard_colors,
+                   hazard_axis=hazard_axis, charge_range=charge_range, lethal_mode=lethal_mode,
+                   hazard_fit=hazard_fit)
 
     def _hazard_blobs(self, grid):
         return _blobs(_color_cells(grid, self.hazard_colors)) if self.hazard_colors else []
 
     def is_lethal(self, grid, action):
-        """A nav move is lethal if it leaves the avatar ON a hazard's charge line (within align_tol of the
-        hazard's row/col), MOVING TOWARD it, and within charge_range -> the charger intercepts and removes
-        the avatar."""
+        """A nav move is lethal if it leaves the avatar ON a hazard's charge line (perpendicular offset within
+        align_tol of the hazard's row/col) AND within charge_range along that line -> the charger intercepts
+        and removes the avatar. The approach DIRECTION does not matter: the avatar can enter the lethal zone by
+        moving along the line toward the hazard OR by stepping perpendicularly ONTO the line (tu93 L3's
+        vertical chargers kill on a perpendicular step-on, which a 'must move toward' rule wrongly missed)."""
         if not self.hazard_colors or self.hazard_axis is None or self.charge_range <= 0:
             return False
         a = int(action)
@@ -417,21 +442,43 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
         if bb is None:
             return False
         dy, dx = self.displacement[a]
-        acy = (bb[0] + bb[2]) / 2 + dy
-        acx = (bb[1] + bb[3]) / 2 + dx
         bcy, bcx = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2   # avatar centre BEFORE the move
+        acy, acx = bcy + dy, bcx + dx                         # avatar centre AFTER the move
+        g = np.asarray(grid)
         for (hy, hx, _sz) in self._hazard_blobs(grid):
             if self.hazard_axis == "row":
-                on_line = abs(acy - hy) <= self.align_tol
-                toward = (hx - bcx) * dx > 0           # moving along the row toward the hazard
+                on_line = abs(acy - hy) <= self.align_tol     # avatar ends on the hazard's row
+                toward = (hx - bcx) * dx > 0                  # moving along the row toward the charger
+                step_onto = abs(bcy - hy) > self.align_tol    # was OFF the row before (a perpendicular step-on)
                 dist = abs(acx - hx)
             else:
-                on_line = abs(acx - hx) <= self.align_tol
-                toward = (hy - bcy) * dy > 0
+                on_line = abs(acx - hx) <= self.align_tol     # avatar ends on the hazard's column
+                toward = (hy - bcy) * dy > 0                  # moving along the column toward the charger
+                step_onto = abs(bcx - hx) > self.align_tol    # was OFF the column before
                 dist = abs(acy - hy)
-            if on_line and toward and dist <= self.charge_range:
+            # 'toward': charge only on along-axis approach (tu93 L2 horizontal charger tolerates perpendicular
+            # step-ons). 'enter': ALSO charge on a perpendicular step ONTO the line (tu93 L3 vertical chargers).
+            trig = toward or (self.lethal_mode == "enter" and step_onto)
+            if on_line and trig and dist <= self.charge_range and self._charge_unobstructed(g, hy, hx, acy, acx):
                 return True
         return False
+
+    def _charge_unobstructed(self, g, hy, hx, acy, acx):
+        """The charger can only intercept if its straight charge along the axis to the avatar is NOT blocked
+        by a wall (line-of-sight). Without this, the model forbids on-line-within-range cells that are
+        actually SAFE because a wall shields them -- the over-pruning that left tu93 L3 with no plan."""
+        if not self.wall_colors:
+            return True
+        H, W = g.shape
+        if self.hazard_axis == "row":
+            r = int(round((hy + acy) / 2))
+            c0, c1 = sorted((int(round(hx)), int(round(acx))))
+            seg = g[max(0, r), max(0, c0 + 1):c1] if 0 <= r < H else np.array([])
+        else:
+            c = int(round((hx + acx) / 2))
+            r0, r1 = sorted((int(round(hy)), int(round(acy))))
+            seg = g[max(0, r0 + 1):r1, max(0, c)] if 0 <= c < W else np.array([])
+        return not bool(np.any(np.isin(seg, list(self.wall_colors))))
 
     def engine(self, grid, action, data=None):
         if self.is_lethal(grid, action):

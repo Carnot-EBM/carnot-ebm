@@ -988,6 +988,21 @@ Write-up `docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md`.
 - **Next**: add the next escalation rung (pursuer/proximity/multi-hazard hazard classes; non-reach-goal win
   vocab) to push past L3; drop the loop into the standing solver as the level-boundary behaviour.
 
+**L3 ESCALATION RUNG + ROBUSTNESS FIXES; L3 OVER-CLAIM RETRACTED (2026-06-22, outer-loop, ultracode —
+operator: "add the next escalation rung for L3").** Write-up
+`docs/research-notes/hazard-aware-L3-next-rung-2026-06-22.md`.
+- tu93 L3 = THREE VERTICAL chargers (vs L2's one horizontal). Robustness fixes (L2 intact, 8 tests pass):
+  door-colour exclusion (doors were flagged as hazards → L3 no_plan), conservative charge-range floor,
+  charger line-of-sight. Escalation rung: `lethal_mode ∈ {toward,enter}` (`enter` catches perpendicular
+  step-ons); loop ladder nav → hazard[toward] → hazard[enter].
+- RESULT: deepens L1→L2 (toward), reproduced. L3 exhausts both current static rungs (toward under-prunes →
+  dies; enter over-prunes → no path).
+- **OVER-CLAIM RETRACTED**: first draft said "L3 needs DYNAMIC modelling" — adversarial review refuted it.
+  The L3 chargers are STATIC-until-triggered (position-deterministic) and a position-keyed real-env BFS finds
+  a VERIFIED 19-action win → L3 is STATICALLY solvable; the rungs are MIS-PARAMETERISED lethal-zones (enter
+  over-prunes ~6 safe moves). Next step = a CALIBRATED static interception zone (mark only the exact
+  interception cells), or fall back to position-keyed real-env search per level. NOT dynamic.
+
 ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
 
 **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")

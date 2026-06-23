@@ -1,18 +1,17 @@
 {
   "experiment": "experiment_reinduction_hazard_loop",
   "game": "tu93",
-  "honest_verdict": "success: reinduction_loop_AUTO_ESCALATES_nav_to_hazard_aware_at_the_avatar_removal_trigger_and_deepens_tu93_to_L2_reproduced_on_every_seed",
+  "honest_verdict": "success: escalation_ladder_nav_toward_enter_deepens_tu93_to_L2_on_every_seed_but_both_current_static_rungs_MIS_PARAMETERISED_at_L3_under_and_over_prune_a_statically_solvable_level_next_step_is_a_calibrated_static_interception_zone_not_dynamic_modelling",
   "verifier_is_oracle": false,
   "inference_substrate": "offline_arc_search_plus_induced_world_model",
   "random_seeds": [
     7,
     20260622,
-    3,
-    42,
-    100
+    3
   ],
-  "target_level": 2,
-  "n_seeds_escalate_and_reproduce": 5,
+  "target_level": 3,
+  "n_seeds_reach_L2": 3,
+  "n_seeds_L3_rungs_exhausted": 3,
   "rows": [
     {
       "seed": 7,
@@ -27,7 +26,7 @@
         },
         {
           "level_reached": 2,
-          "model_class": "hazard_aware",
+          "model_class": "hazard_aware[toward]",
           "escalated_from": "nav_avatar_removed",
           "hazard_fit": {
             "n_death_transitions": 6,
@@ -37,6 +36,7 @@
             ],
             "hazard_axis": "row",
             "charge_range": 6,
+            "move_step": 6,
             "axis_votes": {
               "row": 6
             },
@@ -50,6 +50,61 @@
             ]
           },
           "plan_len": 10
+        },
+        {
+          "level_stalled": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "rungs_tried": [
+            {
+              "lethal_mode": "toward",
+              "hazard_fit": {
+                "n_death_transitions": 4,
+                "hazard_colors": [
+                  8,
+                  15
+                ],
+                "hazard_axis": "col",
+                "charge_range": 6,
+                "move_step": 6,
+                "axis_votes": {
+                  "col": 4
+                },
+                "post_move_distances_at_death": [
+                  1.0,
+                  5.0,
+                  5.0,
+                  5.0
+                ]
+              },
+              "stop": "game_over_avatar_removed",
+              "plan_len": 9
+            },
+            {
+              "lethal_mode": "enter",
+              "hazard_fit": {
+                "n_death_transitions": 4,
+                "hazard_colors": [
+                  8,
+                  15
+                ],
+                "hazard_axis": "col",
+                "charge_range": 6,
+                "move_step": 6,
+                "axis_votes": {
+                  "col": 4
+                },
+                "post_move_distances_at_death": [
+                  1.0,
+                  5.0,
+                  5.0,
+                  5.0
+                ]
+              },
+              "stop": "no_plan_in_model",
+              "plan_len": null
+            }
+          ]
         }
       ],
       "n_banked_actions": 28,
@@ -68,7 +123,7 @@
         },
         {
           "level_reached": 2,
-          "model_class": "hazard_aware",
+          "model_class": "hazard_aware[toward]",
           "escalated_from": "nav_avatar_removed",
           "hazard_fit": {
             "n_death_transitions": 5,
@@ -78,6 +133,7 @@
             ],
             "hazard_axis": "row",
             "charge_range": 6,
+            "move_step": 6,
             "axis_votes": {
               "row": 5
             },
@@ -90,6 +146,71 @@
             ]
           },
           "plan_len": 10
+        },
+        {
+          "level_stalled": 2,
+          "model_class": "hazard_aware",
+          "escalated_from": "nav_avatar_removed",
+          "rungs_tried": [
+            {
+              "lethal_mode": "toward",
+              "hazard_fit": {
+                "n_death_transitions": 9,
+                "hazard_colors": [
+                  8,
+                  15
+                ],
+                "hazard_axis": "col",
+                "charge_range": 6,
+                "move_step": 6,
+                "axis_votes": {
+                  "col": 9
+                },
+                "post_move_distances_at_death": [
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0
+                ]
+              },
+              "stop": "game_over_avatar_removed",
+              "plan_len": 9
+            },
+            {
+              "lethal_mode": "enter",
+              "hazard_fit": {
+                "n_death_transitions": 9,
+                "hazard_colors": [
+                  8,
+                  15
+                ],
+                "hazard_axis": "col",
+                "charge_range": 6,
+                "move_step": 6,
+                "axis_votes": {
+                  "col": 9
+                },
+                "post_move_distances_at_death": [
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0
+                ]
+              },
+              "stop": "no_plan_in_model",
+              "plan_len": null
+            }
+          ]
         }
       ],
       "n_banked_actions": 28,
@@ -108,7 +229,7 @@
         },
         {
           "level_reached": 2,
-          "model_class": "hazard_aware",
+          "model_class": "hazard_aware[toward]",
           "escalated_from": "nav_avatar_removed",
           "hazard_fit": {
             "n_death_transitions": 3,
@@ -118,6 +239,7 @@
             ],
             "hazard_axis": "row",
             "charge_range": 6,
+            "move_step": 6,
             "axis_votes": {
               "row": 3
             },
@@ -128,92 +250,73 @@
             ]
           },
           "plan_len": 10
-        }
-      ],
-      "n_banked_actions": 28,
-      "escalated_to_hazard_aware": true
-    },
-    {
-      "seed": 42,
-      "reached_L1": true,
-      "deepest_level": 2,
-      "reproduced_level": 2,
-      "per_level": [
-        {
-          "level_reached": 1,
-          "model_class": "nav",
-          "via": "reach_level_one"
         },
         {
-          "level_reached": 2,
+          "level_stalled": 2,
           "model_class": "hazard_aware",
           "escalated_from": "nav_avatar_removed",
-          "hazard_fit": {
-            "n_death_transitions": 6,
-            "hazard_colors": [
-              8,
-              15
-            ],
-            "hazard_axis": "row",
-            "charge_range": 6,
-            "axis_votes": {
-              "row": 6
+          "rungs_tried": [
+            {
+              "lethal_mode": "toward",
+              "hazard_fit": {
+                "n_death_transitions": 7,
+                "hazard_colors": [
+                  8,
+                  15
+                ],
+                "hazard_axis": "col",
+                "charge_range": 6,
+                "move_step": 6,
+                "axis_votes": {
+                  "col": 7
+                },
+                "post_move_distances_at_death": [
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0
+                ]
+              },
+              "stop": "game_over_avatar_removed",
+              "plan_len": 9
             },
-            "post_move_distances_at_death": [
-              6.125,
-              6.125,
-              6.125,
-              6.125,
-              6.125,
-              6.125
-            ]
-          },
-          "plan_len": 10
-        }
-      ],
-      "n_banked_actions": 28,
-      "escalated_to_hazard_aware": true
-    },
-    {
-      "seed": 100,
-      "reached_L1": true,
-      "deepest_level": 2,
-      "reproduced_level": 2,
-      "per_level": [
-        {
-          "level_reached": 1,
-          "model_class": "nav",
-          "via": "reach_level_one"
-        },
-        {
-          "level_reached": 2,
-          "model_class": "hazard_aware",
-          "escalated_from": "nav_avatar_removed",
-          "hazard_fit": {
-            "n_death_transitions": 4,
-            "hazard_colors": [
-              8,
-              15
-            ],
-            "hazard_axis": "row",
-            "charge_range": 6,
-            "axis_votes": {
-              "row": 4
-            },
-            "post_move_distances_at_death": [
-              6.125,
-              6.125,
-              6.125,
-              6.125
-            ]
-          },
-          "plan_len": 10
+            {
+              "lethal_mode": "enter",
+              "hazard_fit": {
+                "n_death_transitions": 7,
+                "hazard_colors": [
+                  8,
+                  15
+                ],
+                "hazard_axis": "col",
+                "charge_range": 6,
+                "move_step": 6,
+                "axis_votes": {
+                  "col": 7
+                },
+                "post_move_distances_at_death": [
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0,
+                  5.0
+                ]
+              },
+              "stop": "no_plan_in_model",
+              "plan_len": null
+            }
+          ]
         }
       ],
       "n_banked_actions": 28,
       "escalated_to_hazard_aware": true
     }
   ],
-  "methodology_note": "One integrated loop: re-induce nav per level; on the TRIGGER (a game-over with the avatar REMOVED = the hazard signature) escalate to a hazard-aware re-fit (its signal is the trigger's own death) and re-plan the same level; continue. No hand-holding between levels. Reproduction-gated on a fresh env. Scope: the hazard class handles the line-charger (tu93 L2); other hazard types are future primitives.",
-  "duration_s": 8.2
+  "methodology_note": "One integrated loop: re-induce nav per level; on the avatar-removal TRIGGER escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[enter] and re-plan the same level; take the first rung that deepens; else stop. No hand-holding between levels. Reproduction-gated on a fresh env. tu93 L2 (1 horizontal charger) cracks on the toward rung. tu93 L3 (3 VERTICAL chargers) exhausts both CURRENT static rungs (toward UNDER-prunes -> dies; enter OVER-prunes -> no path). Per adversarial review, L3 is STATICALLY solvable (chargers static-until-triggered; a position-keyed real-env BFS finds a verified 19-action path) -- the next step is a correctly-CALIBRATED static interception lethal-zone, NOT dynamic modelling.",
+  "duration_s": 11.0
 }
