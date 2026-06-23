@@ -9138,3 +9138,4 @@ c |
 | 2026-06-23 21:39 UTC | PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; o | OK | 110 passed, 1 warning in 9.57s |
 | 2026-06-23 21:54 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTE | OK | 117 passed, 1 warning in 12.74s |
 | 2026-06-23 22:11 UTC | PHASE B1 (RESERVED INFRA; co-headline metric) -- a | OK | 88 passed, 1 warning in 5.66s |
+| 2026-06-23 22:26 UTC | PHASE B2 (RESERVED INFRA; adversarial_verify harde | OK | 92 passed, 1 warning in 8.02s |
