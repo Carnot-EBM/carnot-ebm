@@ -53,12 +53,35 @@ Every fairness axis biases AGAINST just-explore **except** best-of-3:
    first-contact (what matters for hidden games), and **bp35 is genuinely unsolved** — JE first-contacts
    it to L1 where we get L0.
 
-## What this green-lights (the extractable lever, ~1–2 days)
-Port just-explore's **exploration schedule** into our `rich_action_candidates` / explorer and A/B it:
-- The **5-tier salience-deferred exhaustion** (`heuristic_agent.py:866-898`, N_GROUPS=5) — bucket
-  candidates (T0 = salient color ∈ {6..15} AND medium-width 2≤w,h≤32) and emit tier-ascending, instead of
-  our flat `area*(1+1/color_rarity)` sort that up-ranks the giant background blob.
-- The strict global frontier-exhaustion ordering (`graph_explorer.py:384`).
+## FOLLOW-UP (2026-06-23, same day): the tier-schedule graft is a NULL — the candidate ordering is NOT the edge
+Grafted just-explore's verbatim 5-tier salience schedule into `rich_action_candidates`
+(`CARNOT_ARC_TIER_SCHEDULE=1`, default off = byte-identical; smoke confirms it front-loads a salient
+button over a big dull blob). A/B vs the flat sort on the 5 win-games + 7 regression games
+(`results/proto_tier_ab.json`): **tier NEVER beats flat (budget 1000 AND 4000), zero regression →
+`TIER_NULL_no_win`.** Candidate ORDERING is not what makes just-explore win.
+
+**The fair-budget (4000) retest decomposes the head-to-head gap and partly retracts it:**
+- **ft09, r11l (+ vc33)** solve with the FLAT order once given 4× budget — they were the **offline
+  replay-overhead budget artifact** the audit flagged (our `graph_explore_solve_v2` does ~4× less forward
+  exploration per nominal budget because it replays-from-reset). The **live `E3AgentPolicy` is stateful**
+  (no replay overhead), so these were **not real gaps for the live agent**.
+- **bp35, m0r0** stay at L0 even at 4× budget = a **genuine** capability gap — but the tier schedule does
+  **not** close it. just-explore's edge there is a **deeper mechanism** (its strict global
+  frontier-exhaustion `_maybe_advance_group` cross-node bookkeeping + live stateful navigation), not the
+  candidate schedule.
+
+**Net correction:** the head-to-head's headline ("JE schedule beats our bare explorer on 5 games") was
+mostly the offline replay-overhead budget artifact (3/5) + a real but **un-extracted** frontier/navigation
+gap (bp35/m0r0, 2/5). The cheap extractable piece (the tier schedule) is a null. Closing bp35/m0r0 would
+require porting just-explore's **stateful frontier-exhaustion explorer** (`graph_explorer.py:384`,
+`heuristic_agent.py` frontier logic) — a deeper, uncertain port, NOT a 1–2 day schedule graft. The graft
+is parity-safe and preserved on branch `outer-loop/tier-schedule` as a building block if that deeper port
+is pursued. **Do not over-claim a marked-improvement win from SOTA schedule extraction — it did not
+materialize.**
+
+## ~~What this green-lights~~ (SUPERSEDED by the FOLLOW-UP above — the tier schedule nulled)
+~~Port just-explore's exploration schedule into `rich_action_candidates`: the 5-tier salience-deferred
+exhaustion + the strict global frontier-exhaustion ordering.~~
 Gate: the grafted schedule reaches a first level-up on ≥2 of {bp35, ft09, m0r0, r11l, vc33} that our
 current `rich_action_candidates` ordering misses, zero regression on solved games. This is the genuine
 SOTA-extraction win the week was looking for — and bp35 (unsolved) is the highest-value target.
