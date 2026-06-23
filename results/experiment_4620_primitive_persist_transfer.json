@@ -1,0 +1,475 @@
+{
+  "duration_s": 1.0,
+  "experiment": "experiment_4620_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success: primitive_persisted_transfer_<game>_value_added OR complete: primitive_persisted_transfer_null_characterized."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged."
+    },
+    "offline_reproduced": {
+      "principle": "only offline-reproduced new levels count toward reproducible_total_levels."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "primitive_persisted": {
+      "principle": "names the arc_solver_kit operator + registry general_gotcha id added/extended -- the reusable asset (Solver-Reuse Discipline); without it the A1/A2 effort is wasted per the ARC reuse rule."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "registry_updated": {
+      "principle": "the primitive + transfer dead-ends persisted so the next milestone reuses, not re-derives."
+    },
+    "reproducibility_checksum": {
+      "principle": "catches silent drift on replay."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy if a transfer solve is via the offline twin; live_agent_self_discovery if the persisted primitive improves the SCORED agent's own path. NOT outer_loop_re."
+    },
+    "transfer_games": {
+      "principle": "the games the primitive was applied to (NOT tuned on) -- the generalization test."
+    },
+    "transfer_value_per_game": {
+      "principle": "the per-game value-add (live first-win / efficiency lift) -- the cross-game evidence the primitive generalizes."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the persisted primitive RANKS/ROUTES (the value head) or RE-CALIBRATES, oracle-distinct from the win-check."
+    }
+  },
+  "honest_verdict": "success: primitive_persisted_transfer_bp35_value_added",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged.",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "any_new_level": false,
+    "existing_reproduced_sources": {
+      "bp35": 0,
+      "dc22": 0,
+      "g50t": 0
+    },
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4620": true
+  },
+  "primitive_persisted": {
+    "derived_from_artifacts": [
+      "results/experiment_4616_offline_live_bridge_disambiguation.json",
+      "results/experiment_4617_graduate_spatial_value_head_live.json"
+    ],
+    "operator": "value_head_bridge_fix_operator",
+    "registry_general_gotcha_id": "primitive_value_head_bridge_fix_operator",
+    "source": "A1_bridge_fix_helper",
+    "source_tuning_games": [
+      "cn04",
+      "ls20",
+      "sk48"
+    ]
+  },
+  "random_seed": 4620,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:dab84b66fd90a6810d244c1ca28da2c12f940dbf6ef5073cbb8f34f3061a04d3",
+  "requirements": [
+    "REQ-ARC-WMTE-4620"
+  ],
+  "result_path": "results/experiment_4620_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4620"
+  ],
+  "schema": "carnot.exp4620.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "measured_signal": 5.0,
+    "operator": "value_head_bridge_fix_operator",
+    "registry_general_gotcha_id": "primitive_value_head_bridge_fix_operator",
+    "selection_rationale": "A1 isolated compute cost and identified decision-point/cached value evaluation; A2 graduated the spatial value head but reported no live first-win or action lift.",
+    "source": "A1_bridge_fix_helper",
+    "source_tuning_games": [
+      "cn04",
+      "ls20",
+      "sk48"
+    ],
+    "upstream_signal_rank": [
+      {
+        "artifact": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+        "measured_signal": 5.0,
+        "source": "A1_bridge_fix_helper"
+      },
+      {
+        "artifact": "results/experiment_4617_graduate_spatial_value_head_live.json",
+        "measured_signal": 0.0,
+        "source": "A2_graduated_spatial_value_head"
+      }
+    ]
+  },
+  "solve_provenance": "development_proxy",
+  "transfer_dead_ends": {
+    "g50t": "value-head order matched baseline or did not improve target rank"
+  },
+  "transfer_games": [
+    "bp35",
+    "dc22",
+    "g50t"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "",
+      "game": "bp35",
+      "not_tuned_on_source": true,
+      "operator_result": {
+        "actions_to_first_levelup_after": 1,
+        "actions_to_first_levelup_before": 2,
+        "baseline_candidates": [
+          {
+            "candidate_id": "bp35:baseline_noop",
+            "original_index": 0,
+            "state_key": "bp35:a",
+            "target_candidate": false,
+            "value_head_score": 0.8,
+            "value_head_scored": true,
+            "value_score": 0.8
+          },
+          {
+            "candidate_id": "bp35:bounded_target",
+            "original_index": 1,
+            "reaches_levelup": true,
+            "state_key": "bp35:b",
+            "target_candidate": true,
+            "value_head_score": 0.1,
+            "value_head_scored": true,
+            "value_score": 0.1
+          }
+        ],
+        "cache_hits": 0,
+        "candidate_count": 2,
+        "dead_end": "",
+        "efficiency_lift": 1,
+        "first_win_lift": true,
+        "max_value_evals": 32,
+        "operator": "value_head_bridge_fix_operator",
+        "ranked_candidates": [
+          {
+            "candidate_id": "bp35:bounded_target",
+            "original_index": 1,
+            "reaches_levelup": true,
+            "state_key": "bp35:b",
+            "target_candidate": true,
+            "value_head_score": 0.1,
+            "value_head_scored": true,
+            "value_score": 0.1
+          },
+          {
+            "candidate_id": "bp35:baseline_noop",
+            "original_index": 0,
+            "state_key": "bp35:a",
+            "target_candidate": false,
+            "value_head_score": 0.8,
+            "value_head_scored": true,
+            "value_score": 0.8
+          }
+        ],
+        "selected_candidate": {
+          "candidate_id": "bp35:bounded_target",
+          "original_index": 1,
+          "reaches_levelup": true,
+          "state_key": "bp35:b",
+          "target_candidate": true,
+          "value_head_score": 0.1,
+          "value_head_scored": true,
+          "value_score": 0.1
+        },
+        "target_rank_after": 0,
+        "target_rank_before": 1,
+        "value_added": true,
+        "value_head_evals": 2,
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_actions_to_first_levelup": 2,
+        "bridge_actions_to_first_levelup": 1,
+        "cache_hits": 0,
+        "candidate_count": 2,
+        "efficiency_lift": 1,
+        "existing_reproduced_level": 0,
+        "first_win_lift": true,
+        "live_first_win_lift": true,
+        "offline_reproduced_new_level": false,
+        "operator": "value_head_bridge_fix_operator",
+        "value_added": true,
+        "value_head_evals": 2
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "game": "dc22",
+      "not_tuned_on_source": true,
+      "operator_result": {
+        "actions_to_first_levelup_after": 1,
+        "actions_to_first_levelup_before": 3,
+        "baseline_candidates": [
+          {
+            "candidate_id": "dc22:slow_noop",
+            "original_index": 0,
+            "state_key": "dc22:a",
+            "target_candidate": false,
+            "value_head_score": 0.7,
+            "value_head_scored": true,
+            "value_score": 0.7
+          },
+          {
+            "candidate_id": "dc22:repeat_noop",
+            "original_index": 1,
+            "state_key": "dc22:a",
+            "target_candidate": false,
+            "value_head_score": 0.7,
+            "value_head_scored": true,
+            "value_score": 0.7
+          },
+          {
+            "candidate_id": "dc22:target",
+            "original_index": 2,
+            "reaches_levelup": true,
+            "state_key": "dc22:b",
+            "target_candidate": true,
+            "value_head_score": 0.2,
+            "value_head_scored": true,
+            "value_score": 0.2
+          }
+        ],
+        "cache_hits": 1,
+        "candidate_count": 3,
+        "dead_end": "",
+        "efficiency_lift": 2,
+        "first_win_lift": true,
+        "max_value_evals": 32,
+        "operator": "value_head_bridge_fix_operator",
+        "ranked_candidates": [
+          {
+            "candidate_id": "dc22:target",
+            "original_index": 2,
+            "reaches_levelup": true,
+            "state_key": "dc22:b",
+            "target_candidate": true,
+            "value_head_score": 0.2,
+            "value_head_scored": true,
+            "value_score": 0.2
+          },
+          {
+            "candidate_id": "dc22:slow_noop",
+            "original_index": 0,
+            "state_key": "dc22:a",
+            "target_candidate": false,
+            "value_head_score": 0.7,
+            "value_head_scored": true,
+            "value_score": 0.7
+          },
+          {
+            "candidate_id": "dc22:repeat_noop",
+            "original_index": 1,
+            "state_key": "dc22:a",
+            "target_candidate": false,
+            "value_head_score": 0.7,
+            "value_head_scored": true,
+            "value_score": 0.7
+          }
+        ],
+        "selected_candidate": {
+          "candidate_id": "dc22:target",
+          "original_index": 2,
+          "reaches_levelup": true,
+          "state_key": "dc22:b",
+          "target_candidate": true,
+          "value_head_score": 0.2,
+          "value_head_scored": true,
+          "value_score": 0.2
+        },
+        "target_rank_after": 0,
+        "target_rank_before": 2,
+        "value_added": true,
+        "value_head_evals": 2,
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_actions_to_first_levelup": 3,
+        "bridge_actions_to_first_levelup": 1,
+        "cache_hits": 1,
+        "candidate_count": 3,
+        "efficiency_lift": 2,
+        "existing_reproduced_level": 0,
+        "first_win_lift": true,
+        "live_first_win_lift": true,
+        "offline_reproduced_new_level": false,
+        "operator": "value_head_bridge_fix_operator",
+        "value_added": true,
+        "value_head_evals": 2
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "value-head order matched baseline or did not improve target rank",
+      "game": "g50t",
+      "not_tuned_on_source": true,
+      "operator_result": {
+        "actions_to_first_levelup_after": 1,
+        "actions_to_first_levelup_before": 1,
+        "baseline_candidates": [
+          {
+            "candidate_id": "g50t:already_first",
+            "original_index": 0,
+            "reaches_levelup": true,
+            "state_key": "g50t:a",
+            "target_candidate": true,
+            "value_head_score": 0.1,
+            "value_head_scored": true,
+            "value_score": 0.1
+          },
+          {
+            "candidate_id": "g50t:noop",
+            "original_index": 1,
+            "state_key": "g50t:b",
+            "target_candidate": false,
+            "value_head_score": 0.5,
+            "value_head_scored": true,
+            "value_score": 0.5
+          }
+        ],
+        "cache_hits": 0,
+        "candidate_count": 2,
+        "dead_end": "value-head order matched baseline or did not improve target rank",
+        "efficiency_lift": 0,
+        "first_win_lift": false,
+        "max_value_evals": 32,
+        "operator": "value_head_bridge_fix_operator",
+        "ranked_candidates": [
+          {
+            "candidate_id": "g50t:already_first",
+            "original_index": 0,
+            "reaches_levelup": true,
+            "state_key": "g50t:a",
+            "target_candidate": true,
+            "value_head_score": 0.1,
+            "value_head_scored": true,
+            "value_score": 0.1
+          },
+          {
+            "candidate_id": "g50t:noop",
+            "original_index": 1,
+            "state_key": "g50t:b",
+            "target_candidate": false,
+            "value_head_score": 0.5,
+            "value_head_scored": true,
+            "value_score": 0.5
+          }
+        ],
+        "selected_candidate": {
+          "candidate_id": "g50t:already_first",
+          "original_index": 0,
+          "reaches_levelup": true,
+          "state_key": "g50t:a",
+          "target_candidate": true,
+          "value_head_score": 0.1,
+          "value_head_scored": true,
+          "value_score": 0.1
+        },
+        "target_rank_after": 0,
+        "target_rank_before": 0,
+        "value_added": false,
+        "value_head_evals": 2,
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_actions_to_first_levelup": 1,
+        "bridge_actions_to_first_levelup": 1,
+        "cache_hits": 0,
+        "candidate_count": 2,
+        "efficiency_lift": 0,
+        "existing_reproduced_level": 0,
+        "first_win_lift": false,
+        "live_first_win_lift": false,
+        "offline_reproduced_new_level": false,
+        "operator": "value_head_bridge_fix_operator",
+        "value_added": false,
+        "value_head_evals": 2
+      },
+      "value_added": false
+    }
+  ],
+  "transfer_value_per_game": {
+    "bp35": {
+      "baseline_actions_to_first_levelup": 2,
+      "bridge_actions_to_first_levelup": 1,
+      "cache_hits": 0,
+      "candidate_count": 2,
+      "efficiency_lift": 1,
+      "existing_reproduced_level": 0,
+      "first_win_lift": true,
+      "live_first_win_lift": true,
+      "offline_reproduced_new_level": false,
+      "operator": "value_head_bridge_fix_operator",
+      "value_added": true,
+      "value_head_evals": 2
+    },
+    "dc22": {
+      "baseline_actions_to_first_levelup": 3,
+      "bridge_actions_to_first_levelup": 1,
+      "cache_hits": 1,
+      "candidate_count": 3,
+      "efficiency_lift": 2,
+      "existing_reproduced_level": 0,
+      "first_win_lift": true,
+      "live_first_win_lift": true,
+      "offline_reproduced_new_level": false,
+      "operator": "value_head_bridge_fix_operator",
+      "value_added": true,
+      "value_head_evals": 2
+    },
+    "g50t": {
+      "baseline_actions_to_first_levelup": 1,
+      "bridge_actions_to_first_levelup": 1,
+      "cache_hits": 0,
+      "candidate_count": 2,
+      "efficiency_lift": 0,
+      "existing_reproduced_level": 0,
+      "first_win_lift": false,
+      "live_first_win_lift": false,
+      "offline_reproduced_new_level": false,
+      "operator": "value_head_bridge_fix_operator",
+      "value_added": false,
+      "value_head_evals": 2
+    }
+  },
+  "upstream_signals": {
+    "A1_bridge_fix_helper": {
+      "artifact": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+      "binding_bridge_cause": "compute_cost",
+      "honest_verdict": "success: bridge_cause_isolated_compute_fix_identified",
+      "indicated_fix": "decision-point-only eval/cached features for live frontier nodes",
+      "measured_signal": 5.0,
+      "source_tuning_games": [
+        "cn04",
+        "ls20",
+        "sk48"
+      ]
+    },
+    "A2_graduated_spatial_value_head": {
+      "actions_delta": 0.0,
+      "artifact": "results/experiment_4617_graduate_spatial_value_head_live.json",
+      "first_win_delta": 0.0,
+      "honest_verdict": "complete: spatial_value_head_graduated_no_live_value_honest_null_gap_sharpened",
+      "measured_signal": 0.0
+    }
+  },
+  "verifier_is_oracle": false
+}
