@@ -1,3 +1,91 @@
+## 2026-06-23 — .425 planning sweep — SHIP THE ONE GENUINE POSITIVE: a LEARNED VALUE (verifier-as-Q-head / SpatialValueNet) supplies the dense per-step gradient the energy-heuristic / QD / LLM-goal-induction levers all lacked (7.6x routing on clean-nav ls20); wire it into the live solver, attack the deepening gradient wall with a GOAL-CONDITIONED value, fix the TAUTOLOGY false-positive that quarantined .424's real generation win
+
+Added by the .425 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-23). The `.424` capstone
+(exp4602, `complete: generation_wall_persists_residual_logged_capability_grew`) closed at
+`reproducible_total_levels` = **55** (A2 banked ft09 L1→L2), `live_submittable_level_count` = **55**
+(beats the standing 33-level submitted scorecard), `ready_for_operator_submit=True`. Two decisive facts
+the `.425` plan is built on:
+
+1. **The .424 generation win was REAL but TAUTOLOGY-QUARANTINED (infra false-positive).** A1 wiring raised
+   `winner_generated_rate` 1/25 → **2/25** (`winner_generated_delta=0.04`, no-wiring control passed), but
+   `adversarial_verify.check_tautology` CRITICAL-flagged it because `winner_generated_rate=0.08` and
+   `generic_transfer_rate=0.08` are both 2/25 and "agree to >5 sig figs." Small-sample rate metrics over a
+   shared denominator (k/25) collide BY CONSTRUCTION; this is not fabrication. The same false-positive
+   quarantined A6 (integration) and B1 (the metric task) on 0.04==0.04. **Every incremental generation win
+   (1/25→2/25→3/25) will keep getting quarantined until the linter learns the carve-out** — exactly the
+   identifier/seed carve-out pattern already in `adversarial_verify.py` (`_is_identifier_field`), extended
+   to small-sample shared-denominator rate metrics. This is the `.425` B1 infra fix.
+
+2. **The 2026-06-22 outer-loop sprint found ONE genuine positive: a LEARNED VALUE = the dense gradient.**
+   All three cheap energy-config-space levers NULLED on the hard tail (energy-as-A\*-heuristic =
+   perception-gated; energy-as-fitness QD = goal-starved; LLM/Claude goal-induction = a static first-contact
+   grid does not determine the win — FUNDAMENTAL, not the model). The unifying diagnosis: every goal-induction
+   path yields a sparse/terminal signal; the deep levels need a DENSE per-step steering gradient. A **learned
+   value IS that gradient** (`scripts/experiments/experiment_value_q_head_v3..v6`): the position-preserving
+   `SpatialValueNet` (4×4 pool, vs the global-pool `arc_value_net.py` and the linear `LearnedVerifier` that
+   "actively misled") discriminates sharply and, with `heuristic_weight≈10`, routes ls20-L1 in **233 vs
+   blind's 1777 expansions = 7.6x** (monotonic in weight). Game-dependent (ls20 7.6x clean-nav, tu93 1.23x
+   nav+parity, su15 1.28x weak); strong only where the gradient is directly-followable. **SHIPPABLE UPGRADE
+   FLAGGED for `.425`:** `scripts/arc_loop_solve.py` still warm-starts with the LINEAR `LearnedVerifier`
+   (shown unable to route the live search) — wire `SpatialValueNet` + a tuned weight in. This is the `.425`
+   A1 headline.
+
+**Literature verified this sweep (WebSearch/WebFetch; real IDs for the B1/A1/A3/SOTA-ingestion tasks):**
+- **ARC-AGI-3 SOTA confirmed — Executable World Models in the Era of Coding Agents (arXiv:2605.05138).**
+  GPT-5.5 fully solves **15/25** public games, mean per-game **RHAE 58.12%** (GPT-5.4: 8/25, 41.29%); the
+  agent induces a Python transition model and VERIFIES transitions before acting ("world models play a role
+  analogous to verifiers"). RHAE scoring rewards efficiency → the verifier-as-pruner / value-routed search
+  is the venue. Graph-Based Exploration (arXiv:2512.24156) is the open-source no-induction 3rd-place. ARC-AGI-3
+  technical report: arXiv:2603.24621. Frontier LLMs were <1% at release; humans solve all. This is the
+  external confirmation that the project's induce→verify→plan-in-model direction is the winning architecture.
+- **Learned value as an A\* heuristic (DIRECT support for A1):** "A\* Search Without Expansions: Learning
+  Heuristic Functions with Deep Q-Networks" (DeepCubeA, arXiv:2102.04518); SLOPE — Search with Learned
+  Optimal Pruning-based Expansion (arXiv:2406.04935); "Beyond Single-Step Updates: RL of Heuristics with
+  Limited-Horizon Search" (arXiv:2511.10264, recent); Differentiable Tree Search Networks (D-TSN, ICLR 2025);
+  "Learning Local Heuristics for Search-Based Navigation Planning" (arXiv:2303.09477). A learned value shaping
+  the expansion order of an unchanged classical search to cut node expansions is a well-trodden, sound method —
+  the SpatialValueNet 7.6x result sits squarely in this literature.
+- **Goal-conditioned value for the deepening wall (DIRECT support for A3):** UVFA (state-goal value
+  approximation), HER / hindsight relabeling, f-Advantage Regression (arXiv:2206.03023), Accelerating
+  Goal-Conditioned RL (ICLR 2025). The `.425` deepening bottleneck is precisely a multi-goal problem — a
+  per-level value has no signal for L2's different goal (sprint v5). A **goal-CONDITIONED** value (UVFA-style,
+  conditioned on the level's induced goal) is the principled fix that lets the dense gradient CROSS level
+  boundaries.
+
+**The `.425` design — ADOPTED from the pre-staged outer-loop doc + enriched (Pre-Staged Roadmap Convention;
+the pre-staged session had the deeper root-cause context).** The GENERATION wall is exhausted (5 nulls; the
+.424 generation scopes carried `retire_if_same_verdict` and are retired). The decisive un-addressed fact
+(`docs/research-notes/arc-008-wall-root-cause-2026-06-21.md`): the 0.08 Kaggle ceiling has a SINGLE binding
+cause — the SCORED `E3AgentPolicy` is gated out of every world-model path by the degenerate exact-full-grid-
+match `WorldModelVerifier` (TTT 0/5, e3 LLM induction 0/6) and falls back to the bare-explorer 0.08 floor;
+AND the scored agent ships `value_weight=0.0`, `SUBMITTED_TARGET_LEVELS=1`, and NEVER imports the strategy
+router or the transfer-validated 0.674 discriminative verifier — so the 55 reproduced levels are "largely a
+leaderboard mirage." So `.425` **PIVOTS to the verifier/world-model side** (the project's actual moat + the
+leaderboard deliverable), under the sprint (majority-ARC; monotonic `reproducible_total_levels`; codex
+experiments; Opus planner/retro; 7 days to deadline):
+- **A1 (HEADLINE; oracle-distinct EBM moat):** replace the degenerate `WorldModelVerifier` trust gate with a
+  CHANGE-WEIGHTED consistency score (over grid-CHANGING transitions only, ≥1 correctly-predicted real change
+  required) + a learned TRUST ENERGY that ranks induced world-models by HELD-OUT generalization — the
+  documented 0.08-wall fix, `verifier_is_oracle: false`. Unblocks the executable-WM-induction generator.
+- **A2 (highest mandatory; GAP-LIVE-INTEGRATION):** wire the 0.674 cross_game_features_v3 DiscriminativeVerifier
+  + the strategy router + higher `target_levels` + forward-edge nav into the SCORED `E3AgentPolicy`. NOTE: a
+  naive `value_weight=5` was already tried and REGRESSED (slower, fewer games) — wire the value as a TIE-BREAKER
+  (weight→0, can't regress) + the router, not a heavy A* weight. Keep `test_arc_submitted_agent_parity.py` green.
+- **A3 (LEVEL-UP + self-play):** bank +1 reproducible level (prefer `sk48` L1→L2) + train/checkpoint the verifier.
+  `reproducible_total_levels` 55 → 56+. `solve_provenance: development_proxy`.
+- **B1 (INFRA — adversarial_verify hardening, 2 guards):** (a) the **TAUTOLOGY small-sample shared-denominator
+  carve-out** (the demonstrated .424 quarantine fix — above), AND (b) a degenerate/circular world-model-trust
+  guard (preventive for A1's trust-pass claims). **B2 (INFRA):** the `world_model_trust_pass_rate` co-headline
+  metric (A1's success measure).
+- **A4/A5/A6** (refresh package / persist+transfer / integrate winners into `SUBMITTED_AGENT_CONFIG`), **C**
+  (KV260 SSH continuity), **D** (SOTA-ingestion: world-model-trust + verifier-generalization + the
+  learned-heuristic-search refs above), **E** capstone.
+- **Flagged secondary lever (NOT the headline; A3/A5 may opportunistically fold in):** wire the
+  position-preserving `SpatialValueNet` (the sprint's genuine 7.6× routing positive) into the DEV solver
+  `scripts/arc_loop_solve.py` (it still uses the linear `LearnedVerifier`), and explore a GOAL-CONDITIONED
+  (UVFA) value for the deepening wall. These improve the dev-twin banking rate; the `.425` headline is the
+  SCORED-agent verifier integration that moves the actual leaderboard.
+
 ## 2026-06-22 — .424 planning sweep — GENERATION COMPLETENESS: the .423 feature-ROUTER NULLED (winner generated for only 1/25 held-out variants; 15/24 misses because the routed approach `goal_distance_astar` is `variant_wired=False` — a mechanical wiring gap, not modeling); the un-tried fix is to WIRE the toolkit into the held-out generation harness so the selected approach actually RUNS
 
 Added by the .424 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-22). The .423 scorecard
