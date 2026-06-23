@@ -66,8 +66,14 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert exp.target_levels > 1
     assert exp.candidate_router is not None
     assert exp.frame_change_scorer is not None
+    assert exp.action_effect_expansion_prior is not None
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["frame_change_ranking_mode"] == "persistent_aem_plus_optional_cnn"
+    assert SUBMITTED_AGENT_CONFIG["action_effect_expansion_prior_enabled"] is True
+    assert (
+        SUBMITTED_AGENT_CONFIG["action_effect_expansion_prior_mode"]
+        == "persistent_aem_plus_optional_cnn_frontier_prior"
+    )
     assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
     assert exp.goal_bias is not None
     assert exp.goal_bias_label == "exp4020_graded_goal_satisfaction_energy"
@@ -89,9 +95,11 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
     assert exp.value_weight == 0.0
     assert exp.frame_change_scorer is not None
     assert exp.frame_change_prune_threshold is None
+    assert exp.action_effect_expansion_prior is not None
     assert exp.goal_bias is not None
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["frame_change_prune_threshold"] is None
+    assert SUBMITTED_AGENT_CONFIG["action_effect_expansion_prior_enabled"] is True
     assert exp.action_prior is None
     assert exp.action_prior_prune_quantile is None
     assert SUBMITTED_AGENT_CONFIG["strategy_router_enabled"] is True

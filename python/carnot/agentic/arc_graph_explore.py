@@ -29,6 +29,7 @@ from carnot.agentic.arc_agi3_live_adapter import (
     _levels_completed,
 )
 from carnot.agentic.arc_frame_change_predictor import (
+    ActionEffectExpansionPrior,
     prune_arc_actions,
     prune_arc_actions_by_prior_quantile,
     rank_arc_actions,
@@ -288,6 +289,11 @@ def graph_explore_solve_v2(
     goal_energy_beta: float = 0.1,
     emit_plan_only_when_goal_predicate_fires: bool = False,
     expansion_priority=None,
+    frame_change_scorer=None,
+    frame_change_prune_threshold: float | None = None,
+    action_prior=None,
+    action_prior_prune_quantile: float | None = None,
+    action_effect_expansion_prior: Any | bool | None = None,
     candidate_router=None,
     structural_energy_scorer=None,
     stats: Optional[dict] = None,
@@ -321,6 +327,11 @@ def graph_explore_solve_v2(
     `heuristic`, but is named for the verifier-guided expansion use case to keep it
     distinct from action candidate re-ranking.
 
+    `action_effect_expansion_prior` is the REQ-ARC-FCP-4641 hook: when enabled
+    with the same frame-change scorer used for candidate ranking, frontier
+    states whose remaining untested actions are predicted to change the frame
+    are expanded before predicted no-op branches.
+
     `goal_energy` is the REQ-ARC-WMTE-4640 hook: Exp4020's visible-state
     goal-satisfaction energy can be convex-combined with the navigation heuristic as
     alpha*navigation + beta*goal_energy. When
@@ -346,6 +357,10 @@ def graph_explore_solve_v2(
     def _candidates(frame, previous_frame=None):
         return rich_action_candidates(
             frame,
+            frame_change_scorer=frame_change_scorer,
+            frame_change_prune_threshold=frame_change_prune_threshold,
+            action_prior=action_prior,
+            action_prior_prune_quantile=action_prior_prune_quantile,
             structural_energy_scorer=structural_energy_scorer,
             candidate_router=candidate_router,
             previous_frame=previous_frame,
@@ -373,7 +388,12 @@ def graph_explore_solve_v2(
             stats["max_expansions"] = int(max_expansions)
             stats["proposal_prior_enabled"] = structural_energy_scorer is not None
             stats["expansion_priority_enabled"] = (
-                expansion_priority is not None or heuristic is not None
+                expansion_priority is not None
+                or heuristic is not None
+                or action_effect_frontier_prior is not None
+            )
+            stats["action_effect_expansion_prior_enabled"] = (
+                action_effect_frontier_prior is not None
             )
             stats["goal_energy_enabled"] = goal_energy is not None
             stats["goal_energy_alpha"] = (
@@ -383,6 +403,13 @@ def graph_explore_solve_v2(
             stats["goal_predicate_gate_enabled"] = bool(emit_plan_only_when_goal_predicate_fires)
             stats.setdefault("goal_predicate_plan_emitted", False)
         return traj, lvl
+
+    if hasattr(action_effect_expansion_prior, "frontier_priority"):
+        action_effect_frontier_prior = action_effect_expansion_prior
+    elif action_effect_expansion_prior and frame_change_scorer is not None:
+        action_effect_frontier_prior = ActionEffectExpansionPrior(frame_change_scorer)
+    else:
+        action_effect_frontier_prior = None
 
     navigation_scorer = expansion_priority if expansion_priority is not None else heuristic
     if goal_energy is not None:
@@ -410,7 +437,7 @@ def graph_explore_solve_v2(
         if stats is not None and emit_plan_only_when_goal_predicate_fires:
             stats["goal_predicate_plan_emitted"] = True
 
-    if priority_scorer is None:
+    if priority_scorer is None and action_effect_frontier_prior is None:
         # --- pure BFS (UNCHANGED from the original; preserves the proven 8/11 solves) ---
         frontier = deque([h0])  # BFS order ⇒ shortest path first
         while frontier and expansions < max_expansions:
@@ -451,15 +478,33 @@ def graph_explore_solve_v2(
     import heapq
     import itertools
 
-    def _h(frame) -> float:
-        try:
-            return heuristic_weight * float(priority_scorer(frame))
-        except Exception:
-            return 1e9  # a broken heuristic must never crash the search
+    def _priority_value(frame, candidates) -> float:
+        value = 0.0
+        if priority_scorer is not None:
+            try:
+                if hasattr(priority_scorer, "frontier_priority"):
+                    base = priority_scorer.frontier_priority(frame, candidates)
+                else:
+                    base = priority_scorer(frame)
+                value += heuristic_weight * float(base)
+            except Exception:
+                value += 1e9  # a broken heuristic must never crash the search
+        if action_effect_frontier_prior is not None:
+            try:
+                value += float(action_effect_frontier_prior.frontier_priority(frame, candidates))
+            except Exception:
+                pass
+        return float(value)
 
     counter = itertools.count()
     # priority = g (depth) + h (weighted goal-distance); root popped first regardless
-    heap = [(len(states[h0]["path"]) + _h(f0), next(counter), h0)]
+    heap = [
+        (
+            len(states[h0]["path"]) + _priority_value(f0, states[h0]["untested"]),
+            next(counter),
+            h0,
+        )
+    ]
     while heap and expansions < max_expansions:
         _, _, h = heapq.heappop(heap)
         st = states.get(h)
@@ -491,7 +536,15 @@ def graph_explore_solve_v2(
                             "untested": _candidates(nf, previous_frame=f_here),
                             "frame": nf,
                         }
-                        heapq.heappush(heap, (len(traj) + _h(nf), next(counter), nh))
+                        heapq.heappush(
+                            heap,
+                            (
+                                len(traj)
+                                + _priority_value(nf, states[nh]["untested"]),
+                                next(counter),
+                                nh,
+                            ),
+                        )
             if expansions >= max_expansions:
                 break
     return _ret(None, best)

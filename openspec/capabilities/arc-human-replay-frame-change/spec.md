@@ -762,6 +762,60 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
 - `preconditions_checked`: principle "records resources verified (offline arcade, E3AgentPolicy + rich_action_candidates importable); pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4641: Action-Effect Expansion Prior For Live Search
+
+Experiment 4641 SHALL write
+`results/experiment_4641_action_effect_expansion_prior_live.json` after
+graduating the proven `persistent_aem_plus_optional_cnn` action-effect predictor
+from a candidate ranker into a live search expansion prior. The implementation
+SHALL be imported by `arc_graph_explore`, SHALL be reachable from the scored
+`E3AgentPolicy` / `StepwiseExplorer` path, and SHALL bias frontier branch
+expansion by predicted frame-change for each frontier node's remaining
+candidate actions. The existing 4629 ranker-only behavior SHALL remain
+available as the matched control.
+
+The expansion prior SHALL treat the action-effect predictor as a learned
+action-pruner, not an oracle: it may use rendered frames, candidate action ids,
+click coordinates, local PersistentAEM evidence, and the optional small CNN
+forward pass, but it SHALL NOT inspect `env._game`, call a win-check to score
+branches, require live LLM inference, or require 3090-class hardware. Broken or
+missing scorer calls SHALL fail closed to the ranker-only ordering.
+
+Experiment 4641 SHALL compare the expansion-prior live search against the
+ranker-only baseline on the same held-out public-game cached transition groups,
+reporting live solve-rate, depth-of-live-solve, median actions-to-win,
+first-win-rate, `solve_rate_delta`, `depth_of_live_solve_delta`,
+`first_win_rate_delta`, and bootstrap confidence intervals for the solve-rate
+and depth deltas. A deeper-solve success verdict is allowed only when solve-rate
+or live depth improves over the ranker-only baseline with the relevant CI
+excluding zero, first-win-rate does not regress, parity stays green, and
+`scripts/arc_orphan_solver_lint.py` passes. If the matched ranker-only control
+passes but deltas are zero, the artifact SHALL report an honest null with
+`null_delta_methodology_note` and leave `chosen_submitted_config` unchanged.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: action_effect_expansion_prior_live_deeper_solve_<n> OR complete: action_effect_expansion_prior_no_deeper_solve_honest_null_gap_sharpened."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the predictor is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the action-effect expansion prior is a learned action-pruner, oracle-DISTINCT from the executable win-check (north-star section 5 action-pruner role)."
+- `solve_provenance`: principle "live_agent_self_discovery -- this improves the SCORED live agent's OWN search expansion (arc_graph_explore/E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the expansion-prior module is imported by arc_graph_explore (graph_explore_solve_v2) AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT orphaned)."
+- `live_solve_rate_expansion`: principle "the HEADLINE -- LIVE solve-rate WITH the action-effect EXPANSION PRIOR on the SCORED agent."
+- `live_solve_rate_ranker_baseline`: principle "the matched .427 ranker-only baseline solve-rate on the SAME variants (the no-regression control)."
+- `solve_rate_delta`: principle "expansion - ranker_baseline (positive = the expansion prior deepened the live solve), emitted explicitly so a null (0) is annotated."
+- `depth_of_live_solve_delta`: principle "max live level reached: expansion - ranker_baseline (the direct measure of converting first-win into a deeper solve -- the 2nd-level-up the wall sits at)."
+- `first_win_rate_delta`: principle "expansion - ranker_baseline first-win-rate; emitted explicitly so a null is annotated (deepening must not cost first-wins)."
+- `solve_rate_delta_ci`: principle "bootstrap CI on the solve-rate / depth delta; a deeper-solve claim requires the CI to exclude the ranker-only baseline."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the .427 ranker-only baseline ran on the SAME variants; a no-deeper-solve null is valid only then."
+- `false_negative_risk_checked`: principle "true with the ranker-only baseline run + reachable-headroom confirmed -- a no-deeper-solve null is valid only then."
+- `null_delta_methodology_note`: principle "present when a delta==0 -- states the equality is an honest no-value null, not a bug."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (expansion-prior mode) -- the A6 input; 'unchanged' if null."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, E3AgentPolicy + graph_explore_solve_v2 importable, .427 predictor artifact present); pre-empts missing-resource fabrication."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -783,6 +837,19 @@ after any candidate-router tie-break
 And experiment 4629 writes a terminal artifact with the matched bare control,
 bootstrap action-delta CI, parity-test result, orphan-lint result,
 `verifier_is_oracle=false`, and `solve_provenance=live_agent_self_discovery`.
+
+### SCENARIO-ARC-FCP-4641: Submitted E3 Uses Live-Reachable Expansion Priority
+
+Given the 4629 live action-effect scorer is available
+When `graph_explore_solve_v2` or the submitted `E3AgentPolicy` has multiple
+frontier branches with remaining untested actions
+Then the branch whose remaining actions have higher predicted frame-change is
+expanded before predicted no-op branches
+And the ranker-only mode remains available as the matched control
+And experiment 4641 writes a terminal artifact with live solve-rate,
+depth-of-live-solve, median actions-to-win, first-win-rate deltas, bootstrap
+CIs, parity-test result, orphan-lint result, `verifier_is_oracle=false`, and
+`solve_provenance=live_agent_self_discovery`.
 
 ### SCENARIO-ARC-FCP-4491: Missing Corpus Does Not Fabricate Results
 
