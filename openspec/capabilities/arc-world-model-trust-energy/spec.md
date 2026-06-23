@@ -1093,6 +1093,62 @@ including `2604.18701`, `2509.25438`, `2102.04399`, `1705.05363`,
 flag one or more `.428` roadmap candidates, record all network and citation
 preconditions checked, and record that `/deep-research` was not used.
 
+### REQ-ARC-WMTE-4649: Energy-Fitness Generator SOTA Ingestion For .429
+
+Experiment 4649 SHALL synthesize the 2026-06-23 SOTA ingestion focused on the
+.428 headline open problem: turn the current goal-energy heuristic and
+action-effect expansion prior into a next generator via energy-as-fitness
+quality-diversity evolution, macro-action vocabulary induction, and
+hierarchical subgoal search. The workflow SHALL read
+`results/experiment_4637_sota_ingestion_intrinsic_motivation.json`,
+`docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md`,
+`ops/verifier_gaps.md`, `research-studying.md`, and
+`research-references.md`. It SHALL use only the reliable channel
+(`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
+low-concurrency WebSearch/WebFetch, and direct arXiv HTTP checks) and SHALL NOT
+invoke `/deep-research`. If the Hugging Face network precondition is blocked,
+the workflow SHALL report `blocked_network` rather than fabricate citations.
+
+Experiment 4649 SHALL write
+`docs/research-notes/energy-fitness-generator-literature-2026-06-23.md` and
+`results/experiment_4649_sota_ingestion_energy_fitness_generator.json`. The
+artifact SHALL include `honest_verdict`, `inference_substrate`,
+`methods_mapped`, `flagged_for_next_roadmap`, `note_path`,
+`deep_research_not_used`, `preconditions_checked`, `citations_verified`,
+`random_seed`, and `field_principles`. The success verdict SHALL be
+`success: sota_ingestion_energy_fitness_generator_mapped`, the substrate SHALL
+be `aggregation_from_upstream_artifacts`, and `deep_research_not_used` SHALL be
+true. Each mapped method SHALL cite real arXiv IDs and SHALL include the
+implementation cost over the current goal-energy / action-effect stack plus a
+concrete `fails_when` condition.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_energy_fitness_generator_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when -- the actionable ingestion (no citation = fabrication).`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .429 inputs -- closes discover->ingest->plan->experiment.`
+- `note_path`: principle `docs/research-notes/energy-fitness-generator-literature-2026-06-23.md -- the per-track note (the SOTA-Ingestion Cycle deliverable).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is banned in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4649: Energy-Fitness, Macro, And Hierarchical Methods Map Onto .429 Inputs
+
+Given the network precondition succeeds and the .427 intrinsic/action-effect
+corpus plus the energy-config-space menu are readable
+When experiment 4649 ingests focused papers for bidirectional evolutionary
+search, quality-diversity under sparse rewards and deceptive fitness,
+empowerment/eigenoption macro-action induction, hierarchical latent-world-model
+planning, subgoal-guided policy heuristic search, PoE-World factored executable
+models, and executable ARC world-model planning
+Then the note and JSON artifact map three to five strongest methods onto the
+current goal-energy / action-effect stack, cite real arXiv IDs including
+`2605.28814`, `2308.05483`, `2504.01915`, `2605.27130`, `2107.07031`,
+`2502.02962`, `2302.04693`, `1810.04586`, `1710.11089`, `2604.03208`,
+`2506.07255`, `2504.04366`, `2505.10819`, and `2605.05138`, flag one or more
+`.429` roadmap candidates, record all network and citation preconditions
+checked, and record that `/deep-research` was not used.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
