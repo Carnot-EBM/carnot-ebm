@@ -14,13 +14,19 @@ and is the right architecture for the rest — upgradeable toward the full SOTA
 (frame segmentation + shortest-path-to-untested-state-action) without changing the
 loop wiring.
 """
+
 from __future__ import annotations
 
 import random
 from typing import Any, Optional
 
 from carnot.agentic.arc_agi3_live_adapter import (
-    ArcAction, _action_candidates, _available_action_ids, _game_action, _game_over, _levels_completed,
+    ArcAction,
+    _action_candidates,
+    _available_action_ids,
+    _game_action,
+    _game_over,
+    _levels_completed,
 )
 from carnot.agentic.arc_frame_change_predictor import (
     prune_arc_actions,
@@ -28,6 +34,7 @@ from carnot.agentic.arc_frame_change_predictor import (
     rank_arc_actions,
 )
 from carnot.agentic.arc_agi3_world_model import GameGraph, frame_hash, grid_of, objects
+from carnot.agentic.arc_goal_energy_live import make_goal_energy_heuristic
 
 
 def _components_detailed(grid) -> list:
@@ -91,10 +98,12 @@ def rich_action_candidates(
         comps = _components_detailed(grid)
         if by_salience and comps:
             from collections import Counter
+
             color_cells = Counter(int(v) for v in grid.flatten().tolist())
             # salience: big segments + globally-rare colors score highest
-            comps.sort(key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))),
-                       reverse=True)
+            comps.sort(
+                key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))), reverse=True
+            )
         pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
         if not pts:
             h, w = grid.shape
@@ -175,6 +184,7 @@ def discover_hud_mask(env, warmup: bool, n_probe: int = 4):
     a drifting mask would alias states mid-search. Returns a bool mask or None."""
     import numpy as np
     from arcengine import GameAction
+
     base = grid_of(_warm(env, warmup))
     cands = [c for c in _action_candidates(_warm(env, warmup))]
     seen_keys, probes = set(), []
@@ -206,18 +216,27 @@ def _warm(env, do_warmup):
         ids = [c.action_id for c in _action_candidates(f)]
         if ids:
             from arcengine import GameAction
+
             f = env.step(_game_action(GameAction, ids[0]), data=None)
     return f
 
 
-def graph_explore_solve(env: Any, start_level: int = 0, *, max_actions: int = 140,
-                        restarts: int = 60, warmup: bool = False, seed: int = 0) -> tuple[Optional[list], int]:
+def graph_explore_solve(
+    env: Any,
+    start_level: int = 0,
+    *,
+    max_actions: int = 140,
+    restarts: int = 60,
+    warmup: bool = False,
+    seed: int = 0,
+) -> tuple[Optional[list], int]:
     """Explore adapter-free until a level beyond `start_level` completes. Returns
     (trajectory, reached_level). trajectory = [{"action": id, "data": {...}|None}]."""
     from arcengine import GameAction
+
     rng = random.Random(seed)
     graph = GameGraph("explore")
-    global_tested: set = set()           # (state_hash, action_key) tried across restarts
+    global_tested: set = set()  # (state_hash, action_key) tried across restarts
     best_level = start_level
 
     for _ in range(restarts):
@@ -233,33 +252,46 @@ def graph_explore_solve(env: Any, start_level: int = 0, *, max_actions: int = 14
             pool = fresh if fresh else cands
             sel = pool[0] if fresh else pool[rng.randrange(len(pool))]
             global_tested.add((cur, sel.key))
-            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
-                          reasoning={"policy": "graph_explore_adapter_free"})
+            nf = env.step(
+                _game_action(GameAction, sel.action_id),
+                data=sel.data,
+                reasoning={"policy": "graph_explore_adapter_free"},
+            )
             if nf is None:
                 break
             traj.append({"action": int(sel.action_id), "data": sel.data})
             lvl = _levels_completed(nf)
             if lvl > start_level:
-                return traj, lvl                       # solved +1, return the winning trajectory
+                return traj, lvl  # solved +1, return the winning trajectory
             best_level = max(best_level, lvl)
             if _game_over(nf):
-                break                                  # dead end; restart
+                break  # dead end; restart
             f = nf
             cur = frame_hash(grid_of(f))
             graph.see_node(cur, f)
     return None, best_level
 
 
-def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: int = 6000,
-                           warmup: bool = False, max_depth: int = 60,
-                           prefix: Optional[list] = None,
-                           mask_hud: bool = False,
-                           heuristic=None, heuristic_weight: float = 1.0,
-                           expansion_priority=None,
-                           candidate_router=None,
-                           structural_energy_scorer=None,
-                           stats: Optional[dict] = None
-                           ) -> tuple[Optional[list], int]:
+def graph_explore_solve_v2(
+    env: Any,
+    start_level: int = 0,
+    *,
+    max_expansions: int = 6000,
+    warmup: bool = False,
+    max_depth: int = 60,
+    prefix: Optional[list] = None,
+    mask_hud: bool = False,
+    heuristic=None,
+    heuristic_weight: float = 1.0,
+    goal_energy=None,
+    goal_energy_alpha: float = 0.9,
+    goal_energy_beta: float = 0.1,
+    emit_plan_only_when_goal_predicate_fires: bool = False,
+    expansion_priority=None,
+    candidate_router=None,
+    structural_energy_scorer=None,
+    stats: Optional[dict] = None,
+) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
     state-transition graph and take the SHORTEST PATH to a state with an untested
     state-action pair (BFS frontier), navigating by replay-from-reset (deepcopy-
@@ -288,6 +320,12 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     scorer (lower = expand earlier). It uses the same bounded best-first queue as
     `heuristic`, but is named for the verifier-guided expansion use case to keep it
     distinct from action candidate re-ranking.
+
+    `goal_energy` is the REQ-ARC-WMTE-4640 hook: Exp4020's visible-state
+    goal-satisfaction energy can be convex-combined with the navigation heuristic as
+    alpha*navigation + beta*goal_energy. When
+    `emit_plan_only_when_goal_predicate_fires` is true, a level-up trajectory is
+    returned only if the visible predicate fires on the terminal frame.
     """
     from collections import deque
     from arcengine import GameAction
@@ -311,7 +349,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
             structural_energy_scorer=structural_energy_scorer,
             candidate_router=candidate_router,
             previous_frame=previous_frame,
-        )   # salience-ordered, all objects (fixes r11l)
+        )  # salience-ordered, all objects (fixes r11l)
 
     def replay(path):
         f = _warm(env, warmup)
@@ -319,7 +357,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
             f = env.step(_game_action(GameAction, act["action"]), data=act.get("data"))
         return f
 
-    f0 = replay(prefix)                 # root at the post-prefix state (L0 if no prefix)
+    f0 = replay(prefix)  # root at the post-prefix state (L0 if no prefix)
     h0 = node_id(f0)
     states = {h0: {"path": list(prefix), "untested": _candidates(f0), "frame": f0}}
     best = start_level
@@ -334,14 +372,47 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
             stats["states"] = len(states)
             stats["max_expansions"] = int(max_expansions)
             stats["proposal_prior_enabled"] = structural_energy_scorer is not None
-            stats["expansion_priority_enabled"] = expansion_priority is not None or heuristic is not None
+            stats["expansion_priority_enabled"] = (
+                expansion_priority is not None or heuristic is not None
+            )
+            stats["goal_energy_enabled"] = goal_energy is not None
+            stats["goal_energy_alpha"] = (
+                float(goal_energy_alpha) if goal_energy is not None else 0.0
+            )
+            stats["goal_energy_beta"] = float(goal_energy_beta) if goal_energy is not None else 0.0
+            stats["goal_predicate_gate_enabled"] = bool(emit_plan_only_when_goal_predicate_fires)
+            stats.setdefault("goal_predicate_plan_emitted", False)
         return traj, lvl
 
-    priority_scorer = expansion_priority if expansion_priority is not None else heuristic
+    navigation_scorer = expansion_priority if expansion_priority is not None else heuristic
+    if goal_energy is not None:
+        priority_scorer = make_goal_energy_heuristic(
+            navigation_energy=navigation_scorer,
+            goal_energy=goal_energy,
+            alpha=float(goal_energy_alpha),
+            beta=float(goal_energy_beta),
+        )
+    else:
+        priority_scorer = navigation_scorer
+
+    def _predicate_allows_emit(frame) -> bool:
+        if not emit_plan_only_when_goal_predicate_fires:
+            return True
+        predicate = getattr(priority_scorer, "predicate_fires", None)
+        allowed = bool(callable(predicate) and predicate(frame))
+        if stats is not None and not allowed:
+            stats["goal_predicate_rejected_levelups"] = (
+                int(stats.get("goal_predicate_rejected_levelups") or 0) + 1
+            )
+        return allowed
+
+    def _mark_goal_plan_emitted() -> None:
+        if stats is not None and emit_plan_only_when_goal_predicate_fires:
+            stats["goal_predicate_plan_emitted"] = True
 
     if priority_scorer is None:
         # --- pure BFS (UNCHANGED from the original; preserves the proven 8/11 solves) ---
-        frontier = deque([h0])          # BFS order ⇒ shortest path first
+        frontier = deque([h0])  # BFS order ⇒ shortest path first
         while frontier and expansions < max_expansions:
             h = frontier[0]
             st = states[h]
@@ -349,21 +420,25 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
                 frontier.popleft()
                 continue
             sel = st["untested"].pop(0)
-            f_here = replay(st["path"])          # navigate to this state
-            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
-                          reasoning={"policy": "graph_explore_v2_shortest_path"})
+            f_here = replay(st["path"])  # navigate to this state
+            nf = env.step(
+                _game_action(GameAction, sel.action_id),
+                data=sel.data,
+                reasoning={"policy": "graph_explore_v2_shortest_path"},
+            )
             expansions += 1
             if nf is None:
                 continue
             traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
             lvl = _levels_completed(nf)
-            if lvl > start_level:
+            if lvl > start_level and _predicate_allows_emit(nf):
+                _mark_goal_plan_emitted()
                 return _ret(traj, lvl)
             best = max(best, lvl)
             if _game_over(nf):
                 continue
             nh = node_id(nf)
-            if nh not in states:        # new state ⇒ add to graph + frontier
+            if nh not in states:  # new state ⇒ add to graph + frontier
                 states[nh] = {
                     "path": traj,
                     "untested": _candidates(nf, previous_frame=f_here),
@@ -380,7 +455,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
         try:
             return heuristic_weight * float(priority_scorer(frame))
         except Exception:
-            return 1e9                   # a broken heuristic must never crash the search
+            return 1e9  # a broken heuristic must never crash the search
 
     counter = itertools.count()
     # priority = g (depth) + h (weighted goal-distance); root popped first regardless
@@ -394,19 +469,23 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
         # each state expanded once, in priority order)
         while st["untested"]:
             sel = st["untested"].pop(0)
-            f_here = replay(st["path"])          # navigate to this state
-            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
-                          reasoning={"policy": "graph_explore_v2_heuristic_guided"})
+            f_here = replay(st["path"])  # navigate to this state
+            nf = env.step(
+                _game_action(GameAction, sel.action_id),
+                data=sel.data,
+                reasoning={"policy": "graph_explore_v2_heuristic_guided"},
+            )
             expansions += 1
             if nf is not None:
                 traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
                 lvl = _levels_completed(nf)
-                if lvl > start_level:
+                if lvl > start_level and _predicate_allows_emit(nf):
+                    _mark_goal_plan_emitted()
                     return _ret(traj, lvl)
                 best = max(best, lvl)
                 if not _game_over(nf):
                     nh = node_id(nf)
-                    if nh not in states:    # new state ⇒ add with A* priority g+h
+                    if nh not in states:  # new state ⇒ add with A* priority g+h
                         states[nh] = {
                             "path": traj,
                             "untested": _candidates(nf, previous_frame=f_here),
@@ -426,6 +505,7 @@ def cell_count_distance(win):
     over-estimates move-distance and sends A* greedy → use `misplaced_region_distance` instead.
     The `arc_heuristic_select` router picks between the two by per-action cell impact."""
     import numpy as np
+
     win_arr = np.asarray(win)
 
     def goal_distance(grid) -> float:
@@ -460,6 +540,7 @@ def misplaced_region_distance(win, connectivity: int = 8):
     is the move-distance lever that unlocks them."""
     import numpy as np
     import scipy.ndimage as ndi
+
     win_arr = np.asarray(win)
     structure = np.ones((3, 3), dtype=int) if connectivity == 8 else None
 
@@ -469,10 +550,16 @@ def misplaced_region_distance(win, connectivity: int = 8):
     return goal_distance
 
 
-def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: int = 30000,
-                           warmup: bool = False, max_depth: int = 80,
-                           verifier=None, stats: Optional[dict] = None
-                           ) -> tuple[Optional[list], int]:
+def graph_explore_solve_v3(
+    env: Any,
+    start_level: int = 0,
+    *,
+    max_expansions: int = 30000,
+    warmup: bool = False,
+    max_depth: int = 80,
+    verifier=None,
+    stats: Optional[dict] = None,
+) -> tuple[Optional[list], int]:
     """Value/novelty-guided graph-explore for DEEP games (e.g. wa30 ~33-deep keyboard)
     where uniform BFS exhausts its budget before reaching the win. Best-first over the
     frontier by: an optional VERIFIER (predicted steps-to-go on the frame, the learned
@@ -496,7 +583,7 @@ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: in
 
     def priority(frame, depth):
         if verifier is not None:
-            return float(verifier(frame))          # lower predicted steps-to-go = better
+            return float(verifier(frame))  # lower predicted steps-to-go = better
         return float(region_visits[coarse(frame)] - 0.25 * depth)  # novelty, push deeper
 
     f0 = _warm(env, warmup)
@@ -525,8 +612,11 @@ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: in
         while st["untested"]:
             sel = st["untested"].pop(0)
             replay(st["path"])
-            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
-                          reasoning={"policy": "graph_explore_v3_value_guided"})
+            nf = env.step(
+                _game_action(GameAction, sel.action_id),
+                data=sel.data,
+                reasoning={"policy": "graph_explore_v3_value_guided"},
+            )
             expansions += 1
             if nf is None:
                 continue
@@ -539,7 +629,7 @@ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: in
                 continue
             nh = frame_hash(grid_of(nf))
             if nh == here_hash or nh in states:
-                continue                            # no-op (wall bump) or seen ⇒ skip
+                continue  # no-op (wall bump) or seen ⇒ skip
             states[nh] = {"path": traj, "untested": rich_action_candidates(nf)}
             reg = coarse(nf)
             region_visits[reg] = region_visits.get(reg, 0) + 1
@@ -553,4 +643,5 @@ def trajectory_labels(traj: list) -> list[str]:
     """Encode a captured trajectory as replayable labels (for the reproduction gate
     / a trajectory-replay adapter)."""
     import json
+
     return [json.dumps(step) for step in traj]
