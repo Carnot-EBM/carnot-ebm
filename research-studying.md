@@ -4472,3 +4472,49 @@ rewards over the existing action-effect predictor first, add the aleatoric guard
 before any scored-agent use, and evaluate graph/executable action-effect
 planning only behind matched action-efficiency no-regression gates.
 <!-- EXP4637-INTRINSIC-ACTION-EFFECT-SOTA-END -->
+
+<!-- EXP4649-ENERGY-FITNESS-GENERATOR-SOTA-START -->
+## 2026-06-23 Exp 4649 - .428 energy-fitness generator SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/energy-fitness-generator-literature-2026-06-23.md`.
+
+**Filtered track:** energy-as-fitness QD evolution, macro-action vocabulary
+induction, hierarchical subgoal search, and factored executable world models for
+the .428 generation wall: turn goal-energy plus action-effect from rankers into
+candidate generators for .429.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py` emitted focused ARC exploration and neural-guided
+search URLs. `scripts/sweep_semscholar.py` returned HTTP 429 for four focused
+queries and no S2-only source was promoted. Low-concurrency WebSearch/WebFetch
+plus direct arXiv HTTP checks verified arXiv:2605.28814, arXiv:2308.05483,
+arXiv:2504.01915, arXiv:2605.27130, arXiv:2107.07031, arXiv:2502.02962,
+arXiv:2302.04693, arXiv:1810.04586, arXiv:1710.11089, arXiv:2604.03208,
+arXiv:2506.07255, arXiv:2504.04366, arXiv:2505.10819, and arXiv:2605.05138.
+`/deep-research` was not invoked.
+
+**Methods marked ingested:** BES/QD action-sequence evolution, sparse/deceptive
+QD controls, empowerment/eigenoption/proto-goal macro induction, hierarchical
+latent-world-model/subgoal search, PoE-World factored executable modeling, and
+fresh distributed QD scaling.
+
+flagged_for_v429: energy_as_fitness_qd_bes_action_sequence_generator
+(arXiv:2605.28814 + arXiv:2308.05483 + arXiv:2504.01915)
+
+flagged_for_v429: macro_action_vocabulary_empowerment_options
+(arXiv:2107.07031 + arXiv:2502.02962 + arXiv:2302.04693 + arXiv:1710.11089)
+
+flagged_for_v429: hierarchical_subgoal_search_over_goal_energy
+(arXiv:2604.03208 + arXiv:2506.07255 + arXiv:2504.04366)
+
+flagged_for_v429: poe_world_factored_executable_model_planner
+(arXiv:2505.10819 + arXiv:2605.05138)
+
+flagged_for_v429: distributed_qd_mutation_ensemble_later_scaling
+(arXiv:2605.27130 + arXiv:2605.28814)
+
+**Bottom line for .429:** attempt single-node energy-as-fitness QD over
+action-sequence fragments first, pair it with a macro-action vocabulary to
+collapse horizon, then add hierarchical subgoals and PoE-World only behind
+replay-verified action-effect gates; keep distributed QD as a later scaling arm.
+<!-- EXP4649-ENERGY-FITNESS-GENERATOR-SOTA-END -->
