@@ -1,0 +1,548 @@
+{
+  "cited_upstream_artifacts": {
+    "A1": {
+      "artifact": "results/experiment_4640_goal_energy_generation_live.json",
+      "duration_s": 1.713147,
+      "exists": true,
+      "honest_verdict": "complete: goal_energy_no_live_lift_honest_null_gap_sharpened",
+      "imported_fields": [],
+      "included_in_headline": false,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); no live_llm_inference",
+      "quarantined_fields_reported": [
+        "live_solve_rate_goal_energy",
+        "live_solve_rate_baseline",
+        "solve_rate_delta",
+        "first_win_rate_delta"
+      ],
+      "read_via_summarize_artifact": true,
+      "reason": "uniform_energy_ablation_failed",
+      "role": "goal_energy_generation_live",
+      "sha256": "sha256:34c43c077b1fdb61d6442666ba9586dcf9a4d10161667476c8f20dbb9e7955b0"
+    },
+    "A2": {
+      "artifact": "results/experiment_4641_action_effect_expansion_prior_live.json",
+      "duration_s": 9.571860684081912,
+      "exists": true,
+      "honest_verdict": "complete: action_effect_expansion_prior_no_deeper_solve_honest_null_gap_sharpened",
+      "imported_fields": [
+        "live_solve_rate_expansion",
+        "live_solve_rate_ranker_baseline",
+        "depth_of_live_solve_delta"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the predictor is a small conv net (CPU/iGPU), declared so a fast forward-pass is not DURATION_TOO_SHORT false-flagged.",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "action_effect_expansion_prior_live",
+      "sha256": "sha256:a06ceb53abaad34d5e9e5ed1bb4849d174f1e2149ef27c4fd80f6b7ebb58a887"
+    },
+    "A3": {
+      "artifact": "results/experiment_4642_levelup_selfplay.json",
+      "duration_s": null,
+      "exists": true,
+      "honest_verdict": "success: ft09_L3_offline_reproduced",
+      "imported_fields": [
+        "reproduced_levels",
+        "offline_reproduced",
+        "reproduction_gate"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:9a0be4260556a840d38a180dbf208d6a8e98a85e148f8cf103ac9820cbcb5697"
+    },
+    "A4": {
+      "artifact": "results/experiment_4643_refresh_submission_package.json",
+      "duration_s": 0.482491,
+      "exists": true,
+      "honest_verdict": "success: package_refreshed_live_submittable_57_above_33",
+      "imported_fields": [
+        "live_submittable_level_count",
+        "ready_for_operator_submit",
+        "offline_reproduced"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor).",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "refresh_submission_package",
+      "sha256": "sha256:78bce5bad8057ab28e35b104c4cd92cd794bb5733f8cd547ff495040681cd169"
+    },
+    "A5": {
+      "artifact": "results/experiment_4644_primitive_persist_transfer.json",
+      "duration_s": 0.666918,
+      "exists": true,
+      "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+      "imported_fields": [
+        "primitive_persisted",
+        "transfer_value_per_game"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates for the offline transfer; declared so a fast real run is not DURATION_TOO_SHORT/METHODOLOGY false-flagged.",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:2619d754cfd089e29952be601d0a4b44daf1450fb34c3b046430512d1f348fa7"
+    },
+    "A6": {
+      "artifact": "results/experiment_4645_integration_gate.json",
+      "duration_s": 9.29071,
+      "exists": true,
+      "honest_verdict": "success: integrated_live_submittable_raised_config_shipped",
+      "imported_fields": [
+        "live_multi_level_solve_rate_integrated",
+        "live_submittable_level_count_integrated"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor).",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "integration_gate",
+      "sha256": "sha256:f4d97812eb2e75142977e316ae8e80d4562c3158c30e22894a6f9235a61ace97"
+    },
+    "B1": {
+      "artifact": "results/experiment_4646_live_multi_level_solve_rate_metric.json",
+      "duration_s": 0.938391,
+      "exists": true,
+      "honest_verdict": "success: live_multi_level_solve_rate_metric_helper_shipped_tests_green",
+      "imported_fields": [
+        "live_multi_level_solve_rate",
+        "coheadline_block"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor).",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "live_multi_level_solve_rate_metric",
+      "sha256": "sha256:e4cdf6c56ae685be89e44ca36f6d34f16031097a766dd28b969041e62418eaea"
+    },
+    "B2": {
+      "artifact": "results/experiment_4647_adversarial_verify_hardening.json",
+      "duration_s": 0.025279024033807218,
+      "exists": true,
+      "honest_verdict": "success: adversarial_verify_hardened_goal_energy_ablation_guard_tests_green.",
+      "imported_fields": [
+        "goal_energy_ablation_guard_added",
+        "honest_ablation_not_flagged",
+        "tests_added"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts -- reads the fixtures + edits the linter, no model load (100us floor).",
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "adversarial_verify_goal_energy_ablation_guard",
+      "sha256": "sha256:deb0ffdbfc064d4548afefd7363f115e41b2710ef496cc387be03d1f1599704d"
+    },
+    "REGISTRY": {
+      "artifact": "ops/arc_solve_registry.yaml",
+      "exists": true,
+      "imported_fields": [
+        "reproducible_total_levels"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "read_via_summarize_artifact": false,
+      "reason": "authoritative_registry",
+      "role": "authoritative_reproducible_total_levels",
+      "sha256": "sha256:d10186c68688abf7850acd2183c98fb4f641f523d4ad37497b73f74a1c4fa253"
+    }
+  },
+  "duration_s": 1.0801757239969447,
+  "experiment": "experiment_4650_capstone_v428",
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+    },
+    "first_win_rate_scored": {
+      "principle": "the A1/A2 SCORED-agent live first-win-rate vs baseline (0.591 .427 baseline; must not regress)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial / positive-control-failed / ablation-failed artifact EXCLUDED + the guards applied (.425-B2 TAUTOLOGY, .426-B2 offline-vs-live, .427-B2 intrinsic-reward, .428-B2 goal-energy-ablation) -- fabrication-gate + false-negative-risk compliance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: bridge_extended_live_<solverate|multilevel>_up_<n> OR complete: energy_generation_levers_characterized_no_live_lift OR complete: capability_grew_56_to_<n>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "live_action_efficiency": {
+      "principle": "the A2 leaderboard score term (min(human/agent,1)^2) -- did the generation levers hold/raise efficiency."
+    },
+    "live_multi_level_solve_rate": {
+      "principle": "the A2/B1 >=2-level live solve-rate (the new wall) -- did the expansion prior deepen the live solve."
+    },
+    "live_solve_rate_delta": {
+      "principle": "the A1 SCORED-agent live solve-rate delta vs baseline (did ENERGY-DRIVEN generation cross the bridge for SOLVE) -- valid only if the uniform-energy ablation was beaten."
+    },
+    "live_submittable_level_count": {
+      "principle": "the A4 operator-resubmit count (must stay > 33)."
+    },
+    "offline_to_live_transfer_ratio": {
+      "principle": "the bridge co-metric (A1/A2) -- did the offline signal transfer to a LIVE lift (bridge crossed) or stay zero-live."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (upstream artifacts present, offline arcade); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "ready_for_operator_submit": {
+      "principle": "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; never submits (operator-only)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "reproducible_total_levels": {
+      "principle": "authoritative from the registry (A3 bank, 56->57+) -- did solve CAPABILITY grow."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "registry after - 56, emitted explicitly so a null is annotated."
+    },
+    "uniform_energy_ablation_passed": {
+      "principle": "the A1 energy-specific control -- a goal-energy headline is valid only if the graded energy beat the uniform-energy ablation (.428-B2 guard)."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) -- a circular win would not count."
+    }
+  },
+  "first_win_rate_scored": {
+    "a1_first_win_delta": 0.0,
+    "a1_goal_energy_rate": 0.0,
+    "a2_delta_vs_ranker": 0.0,
+    "a2_expansion_rate": 1.0,
+    "clean_value": 0.590909,
+    "coheadline_rate": 0.590909,
+    "delta_vs_427_baseline": 0.0,
+    "quarantined_value": null,
+    "reason": "clean_scored_first_win_context",
+    "regressed_vs_427_baseline": false,
+    "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json",
+    "v427_baseline": 0.590909
+  },
+  "flagged_artifacts_handled": {
+    "ablation_failed_artifacts": [
+      {
+        "artifact": "results/experiment_4640_goal_energy_generation_live.json",
+        "name": "A1"
+      }
+    ],
+    "excluded_artifacts": [
+      "results/experiment_4640_goal_energy_generation_live.json"
+    ],
+    "excluded_details": [
+      {
+        "artifact": "results/experiment_4640_goal_energy_generation_live.json",
+        "critical_flags": [],
+        "name": "A1",
+        "reason": "uniform_energy_ablation_failed"
+      }
+    ],
+    "failed_acceptance_gate_overrides": [],
+    "false_negative_risk_open_artifacts": [],
+    "guard_note": "Stamped flagged, live-critical, positive-control-failed, false-negative-risk-open, and A1 uniform-energy-ablation-failed artifacts are excluded from clean headline claims.",
+    "guards_applied": {
+      ".425-B2 TAUTOLOGY": true,
+      ".426-B2 offline-vs-live": true,
+      ".427-B2 intrinsic-reward": true,
+      ".428-B2 goal-energy-ablation": true
+    },
+    "positive_control_failed_artifacts": []
+  },
+  "honest_verdict": "complete: capability_grew_56_to_57",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "live_action_efficiency": {
+    "a2_included_in_headline": true,
+    "b1_included_in_headline": true,
+    "clean_value": 0.758102,
+    "leaderboard_score_term": 0.758102,
+    "live_source": "results/experiment_4641_action_effect_expansion_prior_live.json",
+    "quarantined_value": null,
+    "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json"
+  },
+  "live_multi_level_solve_rate": {
+    "a2_included_in_headline": true,
+    "b1_included_in_headline": true,
+    "bridge_crossed_clean": false,
+    "clean_value": 0.0,
+    "delta_vs_ranker_baseline": 0.0,
+    "depth_of_live_solve_delta": 0.0,
+    "first_win_rate_expansion": 1.0,
+    "first_win_regressed_vs_427_baseline": false,
+    "live_attempt_count": 50,
+    "live_multi_level_solve_rate": 0.0,
+    "live_source": "results/experiment_4641_action_effect_expansion_prior_live.json",
+    "multi_level_attempt_count": 0,
+    "quarantined_value": null,
+    "ranker_baseline_multi_level_rate": 0.0,
+    "reason": "zero_or_inadmissible_multi_level_lift",
+    "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json"
+  },
+  "live_solve_rate_delta": {
+    "bridge_crossed_clean": false,
+    "clean_value": null,
+    "first_win_rate_delta": 0.0,
+    "headline_numbers_aggregated": false,
+    "live_solve_rate_baseline": 0.04,
+    "live_solve_rate_goal_energy": 0.04,
+    "quarantined_value": 0.0,
+    "reason": "uniform_energy_ablation_failed",
+    "solve_rate_delta": 0.0,
+    "source": "results/experiment_4640_goal_energy_generation_live.json",
+    "uniform_energy_ablation_passed": false
+  },
+  "live_submittable_level_count": 57,
+  "offline_to_live_transfer_ratio": {
+    "a1_live_lift_component": 0.0,
+    "a2_multi_level_lift_component": 0.0,
+    "bridge_crossed_clean": false,
+    "clean_value": 0.0,
+    "method": "max(A1 clean solve/first-win lift, A2 clean multi-level lift, B1 coheadline ratio)",
+    "quarantined_value": null,
+    "reported_coheadline_component": 0.0,
+    "source": "A1/A2/B1"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "offline_arcade": true,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 57,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4650": true,
+    "summarize_artifact_py_used_for_live_flags": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "B2": true
+    }
+  },
+  "random_seed": 4650,
+  "ready_for_operator_submit": true,
+  "reproducibility_checksum": "sha256:0bebff2b76d583e39b00c4db5ac3c3e6889e225ce6a9437e35267e39b29174d6",
+  "reproducible_total_levels": 57,
+  "reproducible_total_levels_delta": 1,
+  "result_path": "results/experiment_4650_capstone_v428.json",
+  "schema": "carnot.exp4650.capstone_v428.v1",
+  "scorecard": {
+    "A1": {
+      "artifact": "results/experiment_4640_goal_energy_generation_live.json",
+      "included_in_headline": false,
+      "live_solve_rate_delta": {
+        "bridge_crossed_clean": false,
+        "clean_value": null,
+        "first_win_rate_delta": 0.0,
+        "headline_numbers_aggregated": false,
+        "live_solve_rate_baseline": 0.04,
+        "live_solve_rate_goal_energy": 0.04,
+        "quarantined_value": 0.0,
+        "reason": "uniform_energy_ablation_failed",
+        "solve_rate_delta": 0.0,
+        "source": "results/experiment_4640_goal_energy_generation_live.json",
+        "uniform_energy_ablation_passed": false
+      },
+      "reason": "uniform_energy_ablation_failed",
+      "uniform_energy_ablation_passed": false
+    },
+    "A2": {
+      "artifact": "results/experiment_4641_action_effect_expansion_prior_live.json",
+      "first_win_rate_scored": {
+        "a1_first_win_delta": 0.0,
+        "a1_goal_energy_rate": 0.0,
+        "a2_delta_vs_ranker": 0.0,
+        "a2_expansion_rate": 1.0,
+        "clean_value": 0.590909,
+        "coheadline_rate": 0.590909,
+        "delta_vs_427_baseline": 0.0,
+        "quarantined_value": null,
+        "reason": "clean_scored_first_win_context",
+        "regressed_vs_427_baseline": false,
+        "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json",
+        "v427_baseline": 0.590909
+      },
+      "included_in_headline": true,
+      "live_multi_level_solve_rate": {
+        "a2_included_in_headline": true,
+        "b1_included_in_headline": true,
+        "bridge_crossed_clean": false,
+        "clean_value": 0.0,
+        "delta_vs_ranker_baseline": 0.0,
+        "depth_of_live_solve_delta": 0.0,
+        "first_win_rate_expansion": 1.0,
+        "first_win_regressed_vs_427_baseline": false,
+        "live_attempt_count": 50,
+        "live_multi_level_solve_rate": 0.0,
+        "live_source": "results/experiment_4641_action_effect_expansion_prior_live.json",
+        "multi_level_attempt_count": 0,
+        "quarantined_value": null,
+        "ranker_baseline_multi_level_rate": 0.0,
+        "reason": "zero_or_inadmissible_multi_level_lift",
+        "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json"
+      },
+      "reason": "included_clean"
+    },
+    "A3": {
+      "artifact": "results/experiment_4642_levelup_selfplay.json",
+      "banked_plus_one": true,
+      "included_in_headline": true,
+      "offline_reproduced": true,
+      "registry_delta_vs_56": 1,
+      "registry_reproducible_total_levels": 57,
+      "reproduced_levels": 1
+    },
+    "A4": {
+      "artifact": "results/experiment_4643_refresh_submission_package.json",
+      "count_delta": 1,
+      "included_in_headline": true,
+      "levels_folded_in": [
+        "ft09"
+      ],
+      "live_submittable_level_count": 57,
+      "ready_for_operator_submit": true
+    },
+    "A5": {
+      "artifact": "results/experiment_4644_primitive_persist_transfer.json",
+      "included_in_headline": true,
+      "primitive_persisted": {
+        "derived_from_artifacts": [
+          "results/experiment_4640_goal_energy_generation_live.json",
+          "results/experiment_4641_action_effect_expansion_prior_live.json",
+          "results/experiment_4020_goal_induction_separation.json"
+        ],
+        "operator": "graded_goal_energy_search_heuristic_operator",
+        "registry_general_gotcha_id": "primitive_graded_goal_energy_search_heuristic_operator",
+        "source": "A1_goal_energy_heuristic",
+        "source_tuning_games": [
+          "r11l"
+        ]
+      },
+      "transfer_games": [
+        "bp35",
+        "cd82",
+        "dc22"
+      ]
+    },
+    "A6": {
+      "artifact": "results/experiment_4645_integration_gate.json",
+      "included_in_headline": true,
+      "live_multi_level_solve_rate_integrated": 0.0,
+      "live_submittable_level_count_integrated": 57
+    },
+    "B1": {
+      "artifact": "results/experiment_4646_live_multi_level_solve_rate_metric.json",
+      "included_in_headline": true,
+      "live_multi_level_solve_rate": {
+        "a2_included_in_headline": true,
+        "b1_included_in_headline": true,
+        "bridge_crossed_clean": false,
+        "clean_value": 0.0,
+        "delta_vs_ranker_baseline": 0.0,
+        "depth_of_live_solve_delta": 0.0,
+        "first_win_rate_expansion": 1.0,
+        "first_win_regressed_vs_427_baseline": false,
+        "live_attempt_count": 50,
+        "live_multi_level_solve_rate": 0.0,
+        "live_source": "results/experiment_4641_action_effect_expansion_prior_live.json",
+        "multi_level_attempt_count": 0,
+        "quarantined_value": null,
+        "ranker_baseline_multi_level_rate": 0.0,
+        "reason": "zero_or_inadmissible_multi_level_lift",
+        "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json"
+      }
+    },
+    "B2": {
+      "artifact": "results/experiment_4647_adversarial_verify_hardening.json",
+      "goal_energy_ablation_guard_active": true,
+      "included_in_headline": true
+    },
+    "headline": {
+      "a1_live_solve_rate_or_first_win_up_clean": false,
+      "a2_live_multi_level_up_clean": false,
+      "a3_bank_plus_one": true,
+      "a4_operator_resubmit_ready_above_33": true,
+      "bridge_extended_by_energy_driven_generation": false,
+      "crossing_source": "none",
+      "submission_operator_only": true
+    },
+    "live_action_efficiency": {
+      "a2_included_in_headline": true,
+      "b1_included_in_headline": true,
+      "clean_value": 0.758102,
+      "leaderboard_score_term": 0.758102,
+      "live_source": "results/experiment_4641_action_effect_expansion_prior_live.json",
+      "quarantined_value": null,
+      "source": "results/experiment_4646_live_multi_level_solve_rate_metric.json"
+    },
+    "offline_to_live_transfer_ratio": {
+      "a1_live_lift_component": 0.0,
+      "a2_multi_level_lift_component": 0.0,
+      "bridge_crossed_clean": false,
+      "clean_value": 0.0,
+      "method": "max(A1 clean solve/first-win lift, A2 clean multi-level lift, B1 coheadline ratio)",
+      "quarantined_value": null,
+      "reported_coheadline_component": 0.0,
+      "source": "A1/A2/B1"
+    },
+    "verifier_is_oracle_claim_audit": {
+      "A1": {
+        "artifact": "results/experiment_4640_goal_energy_generation_live.json",
+        "included_in_headline": false,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A2": {
+        "artifact": "results/experiment_4641_action_effect_expansion_prior_live.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A4": {
+        "artifact": "results/experiment_4643_refresh_submission_package.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A5": {
+        "artifact": "results/experiment_4644_primitive_persist_transfer.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A6": {
+        "artifact": "results/experiment_4645_integration_gate.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "all_included_value_claims_false": true
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4650",
+    "SCENARIO-CAPSTONE-4650",
+    "SCENARIO-CAPSTONE-4650-FIELD-PRINCIPLES"
+  ],
+  "submitted_to_leaderboard": false,
+  "uniform_energy_ablation_passed": false,
+  "verifier_is_oracle": false
+}
