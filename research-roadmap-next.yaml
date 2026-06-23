@@ -1,0 +1,1008 @@
+milestone: 2026.06.429
+planned_by: >-
+  outer-loop (Claude Opus 4.8 planner, 2026-06-23). .428 grew capability 56->57 (A3 banked ft09 L3) but BOTH
+  energy-driven GENERATION levers NULLED on live solve-rate: A1 (exp4640) graded is_goal as a live goal-ENERGY
+  heuristic failed the uniform-energy ablation (excluded from headline); A2 (exp4641) action-effect ranker->expansion-prior
+  showed no_deeper_solve (depth_delta 0, live_multi_level_solve_rate 0.0). This continues the .427 pattern: a GENERATION
+  lever crossed the bridge for EFFICIENCY/first-win (0.407->0.591), but NOTHING has crossed for SOLVE-RATE/DEPTH -- the
+  multi-level live solve-rate is stuck at 0.0-0.04. Across 2026-06-23 the outer loop FALSIFIED four candidate levers on
+  real code/data: macro-action horizon-collapse RETIRED (corpus is breadth/guidance-bound not depth-bound), click-heatmap
+  off-centroid generator RETIRED (99.1% of human effective clicks are centroid-covered), just-explore schedule-extraction
+  CLOSED (mostly offline replay-overhead artifact), goal-energy heuristic NULL. The wall is LOCALIZED: generation GUIDANCE
+  (which action/object, in what order, to chain a 2nd live level-up) -- NOT depth, NOT coverage, NOT exploration schedule,
+  NOT representation (cross_game_features_v3 is LOO-AUROC 0.725). .429 attacks it with the two surviving best-motivated
+  levers, both on the SCORED E3AgentPolicy, both verifier_is_oracle:false, both live-path-reachable: A1 (HEADLINE; de-risked)
+  productionizes the PROVEN compute-cost fix (scipy.ndimage.label, 13ms->0.64ms/node, identical output, AUROC unchanged
+  0.725; outer-loop handoff commit 0de16b09e) so the 0.725-AUROC discriminator becomes affordable live, then RAISES
+  value_weight off the 0.0 floor (the arc_competition_agent.py:68-78 comment literally prescribes this) and proves the
+  value head GUIDES the live search with NO timeout (disambiguating the prior value-head nulls as cost-vs-signal); A2
+  (operator energy-config menu #2, the next sequenced generation lever, SOTA-flagged #1 by exp4649) wires energy-as-fitness
+  QD/MAP-Elites evolution over action-SEQUENCES (fitness = goal-energy + action-effect cell-recall + efficiency) to GENERATE
+  a winner the best-first search never proposed, gated on winner_generated + beating a random-mutation ablation. A3 banks +1
+  reproducible level (57->58+) + trains the learned verifier; A4 keeps the package operator-resubmit-ready (>33). Plus
+  self-learning persist+transfer (A5), SUBMITTED_AGENT_CONFIG integration (A6), 2 infra (B1 value-routing CI-gate +
+  distribution-shift-vs-calibration diagnostic / B2 adversarial_verify QD-ablation + value-routing-cost guards), 1 hardware
+  (C), 1 SOTA-ingestion (D), capstone (E). Submission stays operator-only. ARC Prize Milestone #1 deadline is 2026-06-30 (7 days).
+milestone_title: 'GENERATION GUIDANCE -- .428 grew capability 56->57 (ft09 L3) but BOTH energy-GENERATION levers NULLED on
+  live solve-rate (goal-energy ablation-failed; expansion-prior no-deeper-solve), and a week of outer-loop falsification
+  RETIRED macro-depth + click-coverage + just-explore-schedule, LOCALIZING the 0.04 wall to generation GUIDANCE (not depth,
+  not coverage, not representation -- cross_game_features_v3 is 0.725 AUROC). .429 takes the two surviving best-motivated
+  levers on the SCORED agent: A1 (HEADLINE; de-risked) productionizes the PROVEN compute-cost fix (scipy.ndimage.label,
+  13ms->0.64ms/node, identical output, AUROC unchanged) so the 0.725-AUROC discriminator is AFFORDABLE live, raises
+  value_weight off the 0.0 floor (the code comment prescribes it), and proves the value head GUIDES the live search with no
+  timeout; A2 (operator energy-config menu #2, SOTA-flagged) wires energy-as-fitness QD/MAP-Elites evolution over action
+  SEQUENCES to GENERATE a winner the search never proposed (winner_generated gate + random-mutation ablation). Both
+  verifier_is_oracle:false, both live-path-reachable. A3 banks +1 (57->58+) + trains the learned verifier; A4 keeps the
+  package >33. Plus persist+transfer (A5), SUBMITTED_AGENT_CONFIG integration (A6), 2 infra (B1 value-routing CI-gate +
+  dist-shift/calibration diagnostic / B2 adversarial_verify QD-ablation + value-routing-cost guards), 1 hardware (C), 1
+  SOTA-ingestion (D), capstone (E). 7 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+theme: >-
+  The 0.04 live multi-level solve-rate is a GENERATION-GUIDANCE wall, now localized by a week of outer-loop falsification
+  (macro-depth, click-coverage, just-explore-schedule, goal-energy all dead). .429 attacks the two surviving levers on the
+  SCORED E3AgentPolicy. A1 (HEADLINE) makes the 0.725-AUROC discriminator AFFORDABLE live via the PROVEN compute-cost fix
+  (scipy.ndimage.label, 13ms->0.64ms, identical output) and RAISES value_weight off 0.0 so the value head finally GUIDES the
+  live search without the timeout that caused the prior value-head nulls -- a direct outer-loop->conductor productionization
+  handoff. A2 (operator energy-config menu #2) wires energy-as-fitness QD/MAP-Elites evolution over action-SEQUENCES
+  (fitness = goal-energy + action-effect cell-recall + efficiency; mutation insert/delete/swap/splice + crossover; behavior
+  descriptors for diverse niches) to GENERATE a winner the best-first search never proposed -- population-based generation
+  with diversity (NOT the dead horizon-collapse macros, NOT the nulled single-rollout goal-energy heuristic), the bet being
+  that population-seeding + non-null QD priority escapes the de-novo-generation failure. Gates are sharp and ablation-guarded:
+  A1 must beat the value_weight=0 baseline with no timeout (CI); A2 must produce winner_generated the search missed AND beat a
+  random-mutation/no-energy-fitness ablation. CAPABILITY (A3): self-play banks +1 reproducible level (57->58+) + trains the
+  learned verifier. SCORE (A4): keep the package operator-resubmit-ready (>33). Plus persist+transfer (A5), integration into
+  SUBMITTED_AGENT_CONFIG (A6), 2 infra (B1/B2), 1 hardware (C), 1 SOTA-ingestion (D), capstone (E). verifier_is_oracle:false on
+  every value claim; solve_provenance on every ARC solve task; submission operator-only. 7 days to the ARC Prize Milestone #1
+  deadline (2026-06-30).
+sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC; >=1 level-up attempt that
+  BANKS a new reproducible level (ARC Level-Up Attempt Guarantee, A3); 2 reserved infra (B1/B2); 1 per-board hardware (C); 1
+  SOTA-ingestion (D). All experiments codex/gpt-5.5; planner/retro stay Claude Opus. 7 days to the ARC Prize Milestone #1
+  deadline ($25K). The frozen live generator is Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s); any LLM arm declares
+  live_llm_inference for that arm only."
+
+tasks:
+  - id: exp4651-phase0
+    milestone: 2026.06.429
+    title: 'PHASE 0 (TRANSITION) -- archive .428 -> activate .429; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .428 close-state (capability grew 56->57 via A3 ft09 L3, but BOTH energy-GENERATION levers NULLED: A1
+      goal-energy uniform-ablation-failed, A2 expansion-prior no-deeper-solve; live multi-level solve-rate still 0.0; package
+      live_submittable 57>33). The .429 pivot -> GENERATION GUIDANCE: A1 productionize the PROVEN compute-cost value-routing
+      fix (affordable 0.725-AUROC discriminator GUIDES live), A2 energy-as-fitness QD evolution (operator menu #2).'
+    priority: critical
+    track: transition
+    max_turns: 30
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4651_archive_428_activate_429.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v428-activate-v429
+      milestone-transition task -- false-positive scope-match vs every prior archive/activate task; structurally never a
+      doomed rerun (the activation guard is a SCRIPT, not the agent). Mechanical YAML archive + next-milestone activation.
+      Routes to codex (mechanical) per the archive/activate routing rule.'
+    prompt: |
+      CONTEXT ({date}). Milestone 2026.06.428 has completed. This task mechanically transitions to 2026.06.429 and RECORDS
+      the true .428 close-state so the record is honest. Routine (codex).
+
+      IMPORTANT (lesson from prior PHASE 0 cascades): the conductor may have ALREADY archived/activated at its own level. If
+      so, the archive step is a no-op -- EXPECTED, not a failure. You MUST still WRITE the deliverable artifact (the
+      close-state record). Do NOT exit with "no file changes": the deliverable IS the file change.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/research-roadmap.yaml (the .428 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .429 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=57)
+        - {project_root}/results/experiment_4650_capstone_v428.json (the .428 scorecard: capability_grew_56_to_57; both energy-generation levers nulled)
+        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .429 design doc)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
+        1. Archive the .428 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .429 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        3. WRITE the deliverable recording the TRUE .428 close-state: A3 (exp4642) banked ft09 L3 (reproducible_total_levels 56->57); A1 (exp4640) graded goal-energy heuristic NULLED (uniform_energy_ablation_failed -> excluded from headline; live solve-rate 0.04==0.04); A2 (exp4641) action-effect expansion-prior NULLED (no_deeper_solve, depth_delta 0, live_multi_level_solve_rate 0.0, first-win held 0.59); A4 (exp4643) package live_submittable=57 (>33), ready_for_operator_submit=True; A5/A6/B1/B2 shipped. RECORD the .429 pivot = GENERATION GUIDANCE: A1 productionizes the PROVEN compute-cost fix (scipy.ndimage.label 13ms->0.64ms, identical output, AUROC 0.725) -> raises value_weight off 0.0 so the discriminator GUIDES live with no timeout; A2 energy-as-fitness QD evolution (operator menu #2, the next sequenced generation lever) -> winner_generated gate.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+        preconditions_checked:
+          principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+        close_state_428:
+          principle: "the honest .428 numbers (A3 56->57; A1/A2 both energy-generation NULLS; A4 57>33) carried forward so the record does not drift."
+        v429_pivot:
+          principle: "the .429 headline rationale (PIVOT to GENERATION GUIDANCE: A1 productionize the compute-cost value-routing fix; A2 energy-as-fitness QD evolution) recorded so the milestone intent is traceable."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4651_archive_428_activate_429.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4652-a1
+    milestone: 2026.06.429
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- de-risked outer-loop->conductor handoff) --
+      PRODUCTIONIZE the PROVEN compute-cost fix so the 0.725-AUROC cross_game_features_v3 discriminator is AFFORDABLE live
+      (replace the pure-python flood fill in arc_agi3_world_model.objects() + arc_value_learner._component_stats_from_grid
+      with scipy.ndimage.label + a pure-python FALLBACK; output verified IDENTICAL; 13ms->0.64ms/node), route by the cheap
+      v2+frame-D subset, RAISE value_weight off the 0.0 floor on the SCORED E3AgentPolicy, and PROVE the live
+      first-win/solve-rate goes UP with NO timeout vs the value_weight=0 baseline (bootstrap CI). Live-path-reachable
+      (arc_orphan_solver_lint). verifier_is_oracle:false. retire_if_same_verdict.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4652_value_routing_cost_fix_live.json
+    operator_override: '2026-06-23 outer-loop->conductor PRODUCTIONIZATION handoff (arc-feature-cost-prototype-handoff-2026-06-23.md,
+      worktree outer-loop/repr-prototype commit 0de16b09e): the proven scipy.ndimage.label cheap-feature fix (13ms->0.64ms/node,
+      output verified identical over 40 grids, AUROC unchanged 0.725) is handed to the conductor to productionize + raise
+      value_weight. Versioned lineage continuation of the value-head lever whose prior nulls (.425/.426) were CONFOUNDED by
+      compute-cost (the 25-game sim timed out -> value_weight reverted 5->0); the forward difference is FIXING that named root
+      cause so the value signal is finally testable live. The arc_competition_agent.py:68-78 comment literally prescribes
+      "raise value_weight ONLY [after the cost fix]." Not a doomed rerun.'
+    prior_failures:
+      - experiment_id: exp4617-a2
+        verdict: 'complete: spatial_value_head_graduated_no_live_value_honest_null_gap_sharpened'
+        addressed_by: 'exp4617 (.426 A2) graduated a value head as a frontier ranker and nulled; the live value_weight was
+          reverted 5->0 (arc_competition_agent.py:68-78) because computing cross_game_features_v3 per node cost 13ms -> the
+          25-game sim TIMED OUT -> value-routing solved fewer games in bounded time. The null was CONFOUNDED by compute-cost,
+          NOT proven to be a weak signal (the representation is LOO-AUROC 0.725, above chance, per
+          arc-representation-not-the-bottleneck-2026-06-23.md). This task FIXES the named root cause: productionize the PROVEN
+          scipy.ndimage.label fix (13ms->0.64ms/node, output verified IDENTICAL, AUROC unchanged) so the 25-game sim no longer
+          times out, then RAISE value_weight off 0.0 and measure whether the affordable value head raises live first-win/solve-rate
+          with NO timeout vs the value_weight=0 baseline. The forward difference is the compute-cost fix that removes the timeout
+          confound -- a different experiment, not a blind rerun. If the AFFORDABLE value head STILL nulls live solve-rate with a
+          passing no-timeout control, the residual cause is distribution-shift/calibration (B1 localizes it), value-routing-as-guidance
+          is retired for the sprint, and the residual is logged as a bridge gap.'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint HEADLINE -- the de-risked outer-loop->conductor handoff). The live value head was reverted
+      (value_weight 5.0 -> 0.0, arc_competition_agent.py:68-78) NOT because the representation is weak -- cross_game_features_v3
+      is LOO-AUROC 0.725, above chance -- but because computing it per frontier node cost 13ms (a pure-python 4-connectivity
+      flood fill, 4.5M list.append/node) -> the 25-game sim TIMED OUT -> value-routing solved fewer games in bounded time. An
+      outer-loop prototype (arc-feature-cost-prototype-handoff-2026-06-23.md, worktree outer-loop/repr-prototype, commit
+      0de16b09e) PROVED the fix: replace the flood fill in arc_agi3_world_model.objects() + arc_value_learner._component_stats_from_grid
+      with scipy.ndimage.label (vectorised C) with a pure-python FALLBACK (the Kaggle kernel may lack scipy), output verified
+      IDENTICAL over 40 random grids, AUROC unchanged 0.7248, per-node cost 13ms -> 0.64-0.87ms (0.64ms x 5000 nodes = 3.2s, was
+      the 38s timeout). The code comment literally prescribes the sequel: "raise value_weight ONLY [after the cost fix]." THIS
+      TASK productionizes the fix, routes by the cheap v2+frame-D subset (0.64ms, the highest-AUROC 0.742 class -- drop the
+      dead-weight `action` 0.488 + `predicate_distance` 0.536 classes), raises value_weight off the 0.0 floor on the SCORED
+      E3AgentPolicy, and proves the live first-win/solve-rate goes UP with NO timeout vs the value_weight=0 baseline. CRITICAL
+      DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in the LIVE modules (arc_agi3_world_model /
+      arc_value_learner / arc_competition_agent), imported by E3AgentPolicy -- arc_orphan_solver_lint stays green. NO 3090; the
+      value head is a small CPU computation. verifier_is_oracle:false (the value head is a learned discriminator, oracle-DISTINCT
+      from the executable win-check). Honest null with a passing no-timeout control if the affordable value head does not raise
+      live generation -- then the residual cause is distribution-shift/calibration (logged for B1/.430). Offline-reproduce any
+      newly-solved variant. If the worktree branch outer-loop/repr-prototype is reachable you MAY cherry-pick it; otherwise
+      RE-IMPLEMENT the documented fix from the handoff spec (self-contained).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/docs/research-notes/arc-feature-cost-prototype-handoff-2026-06-23.md (the EXACT fix spec + productionization steps + the honest "may partially null" caveat)
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the 0.725-AUROC re-diagnosis + the three residual causes compute-cost/distribution-shift/calibration)
+        - {project_root}/python/carnot/agentic/arc_agi3_world_model.py (objects() ~61 -- the flood fill to replace with scipy.ndimage.label + fallback) + {project_root}/python/carnot/agentic/arc_value_learner.py (_component_stats_from_grid ~163, cross_game_features_v3 ~424 -- the same flood fill + the v2/frame-D/action/predicate feature classes)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (value_weight=0.0 at ~242 + the reversion comment at lines 68-78 -- "raise value_weight ONLY after the cost fix"; E3AgentPolicy is the SCORED live path)
+        - {project_root}/scripts/arc_orphan_solver_lint.py (the live-path-reachability lint -- stays green) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+
+      TASK: productionize the proven compute-cost fix in the LIVE modules (scipy.ndimage.label + pure-python fallback; output
+      verified identical), route the value head by the cheap v2+frame-D subset, raise value_weight off 0.0 on the SCORED
+      E3AgentPolicy, and measure LIVE first-win-rate + multi-level solve-rate + per-node feature cost + whether the 25-game sim
+      times out, WITH value_weight>0 (cost-fixed) vs the value_weight=0 baseline, with bootstrap CI. The WIN: live first-win OR
+      solve-rate up (CI excludes the baseline) AND no timeout AND per-node cost < 1ms. verifier_is_oracle:false. Offline-reproduce
+      any newly-solved variant.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy; from carnot.agentic import arc_agi3_world_model, arc_value_learner"` exits 0.
+           c. `.venv/bin/python -c "import scipy.ndimage; print('scipy_ok')"` exits 0 (the fast path; the pure-python fallback covers its absence at Kaggle runtime).
+           ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
+        1. Replace the pure-python flood fill in arc_agi3_world_model.objects() + arc_value_learner._component_stats_from_grid with scipy.ndimage.label (with a pure-python FALLBACK when scipy is absent). PROVE output IDENTICAL (assert equal over >=40 random grids; downstream features order-invariant). Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green (live modules, not orphaned).
+        2. Route the value head by the cheap v2+frame-D subset (drop `action`/0.488 + `predicate_distance`/0.536). Raise value_weight off the 0.0 floor in arc_competition_agent.py on the SCORED E3AgentPolicy (a light dense bias -- honor the prior value_weight=5 timeout; pick the weight that does NOT time out). Optionally apply the value head only at decision points + a frame-hash cache (the handoff's further-headroom notes).
+        3. Measure LIVE first-win-rate, multi-level solve-rate, per-node feature cost (ms), and 25-game-sim wall-time/timeout, WITH value_weight>0 (cost-fixed) vs the value_weight=0 baseline on held-out variants x public games. Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the baseline ran on a corpus with reachable headroom; emit first_win/solve-rate/cost deltas explicitly + a null_delta_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any newly-solved variant. If the affordable value head still nulls, log the residual (distribution-shift vs calibration) as the B1/.430 diagnostic target.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: value_routing_cost_fixed_live_<firstwin|solverate>_up_<n> OR complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the value head is a small CPU computation, no live_llm_inference."
+        verifier_is_oracle:
+          principle: "MUST be false -- cross_game_features_v3 is a learned discriminator (LOO-AUROC 0.725), oracle-DISTINCT from the executable win-check."
+        solve_provenance:
+          principle: "live_agent_self_discovery -- this improves the SCORED live agent's OWN search guidance (E3AgentPolicy value-routing); NOT a parallel solver, NOT outer_loop_re."
+        live_path_reachable:
+          principle: "HARD gate -- the changed modules are in the live import closure (arc_agi3_world_model/arc_value_learner/arc_competition_agent <- E3AgentPolicy); arc_orphan_solver_lint passes."
+        feature_output_identical_verified:
+          principle: "the scipy.ndimage.label fix MUST produce IDENTICAL component stats to the pure-python flood fill (asserted over >=40 random grids) -- a pure speedup, not a behavior change."
+        per_node_feature_cost_ms:
+          principle: "the productionized per-node cost (must be < 1ms; was 13ms) -- the load-bearing number that removes the 25-game-sim timeout."
+        sim_timed_out:
+          principle: "MUST be false with the cost fix + value_weight>0 -- the timeout was the named root cause of the prior value-head reversion."
+        value_weight_set:
+          principle: "the value_weight raised off the 0.0 floor (the prescribed sequel to the cost fix); records the chosen dense-bias weight that does not time out."
+        live_first_win_rate_value_routed:
+          principle: "the HEADLINE -- LIVE first-win-rate WITH the cost-fixed value head at value_weight>0 on the SCORED agent."
+        live_solve_rate_value_routed:
+          principle: "LIVE multi-level (>=2) solve-rate WITH value-routing (the deeper wall -- does affordable guidance chain a 2nd level-up)."
+        live_baseline_value_weight_zero:
+          principle: "the matched value_weight=0 baseline first-win + solve-rate on the SAME variants (the no-regression control)."
+        first_win_rate_delta:
+          principle: "value_routed - baseline first-win-rate (positive = affordable guidance crossed the bridge), emitted explicitly so a null (0) is annotated."
+        solve_rate_delta:
+          principle: "value_routed - baseline multi-level solve-rate; emitted explicitly so a null is annotated."
+        live_lift_ci:
+          principle: "bootstrap CI on the chosen live-lift metric; a claim above baseline requires the CI to exclude it."
+        bare_control_passed:
+          principle: "the POSITIVE CONTROL -- the value_weight=0 baseline ran on a corpus with reachable headroom; a no-lift null is valid only then."
+        false_negative_risk_checked:
+          principle: "true with the no-timeout cost control + baseline + reachable-headroom confirmed -- a 'no lift' null is valid only then."
+        residual_cause_hypothesis:
+          principle: "if the affordable value head still nulls, names the residual cause (distribution_shift | calibration) -- the B1/.430 diagnostic target; 'none' if it lifted."
+        null_delta_methodology_note:
+          principle: "present when a delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+        chosen_submitted_config:
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (cost-fix on, value_weight value, feature subset) -- the A6 input; 'unchanged' if null."
+        parity_test_green:
+          principle: "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth."
+        offline_reproduced:
+          principle: "any newly-solved variant must offline-reproduce to count."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent harness/corpus drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, E3AgentPolicy + world-model + value-learner importable, scipy present); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4652_value_routing_cost_fix_live.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4653-a2
+    milestone: 2026.06.429
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; energy-config menu #2 -- the GENERATION lever) -- wire
+      ENERGY-AS-FITNESS QD/MAP-Elites evolution over multi-action SEQUENCES on the SCORED E3AgentPolicy: a population archive
+      mutated (insert/delete/swap/splice) + crossover, scored by goal-energy + action-effect cell-recall + first-win efficiency,
+      with action-effect behavior descriptors for diverse niches, to GENERATE a winning sequence the best-first search never
+      proposed. Measure winner_generated + live solve-rate/depth vs the search-only baseline AND a random-mutation/no-energy-
+      fitness ablation (bootstrap CI). NOT macro-horizon-collapse (RETIRED), NOT the single-rollout goal-energy heuristic
+      (NULLED). Live-path-reachable. verifier_is_oracle:false. retire_if_same_verdict.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 160
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4653_energy_fitness_qd_generation_live.json
+    operator_override: '2026-06-22 operator directive (memory project_arc_energy_config_space, TOP-PRIORITY): the energy-config-space
+      menu sequences #1 goal-energy (.428, nulled) -> #6 macro vocabulary (retired 2026-06-23) -> #2 energy-as-fitness QD evolution.
+      Both prerequisites are now resolved, so #2 is the operator''s EXPLICIT next sequenced lever ("THIRD, depends on #1+#6 ...
+      highest direct leverage on winner_generated ... the generative-fitness tier"), independently SOTA-flagged #1 for .429 by the
+      .428 ingestion (exp4649: arXiv:2605.28814 + 2308.05483 + 2504.01915). NEW-scope mandatory pickup. The forward difference vs
+      the dead macro lever is population-based GENERATION with diversity (not horizon-collapse), and vs the nulled goal-energy
+      heuristic is a population search scored by energy fitness (not a single rollout).'
+    prior_failures:
+      - experiment_id: exp4640-a1
+        verdict: 'complete: goal_energy_no_live_lift_honest_null_gap_sharpened'
+        addressed_by: 'exp4640 (.428 A1) wired the graded is_goal as a single-rollout goal-ENERGY HEURISTIC and nulled
+          (uniform_energy_ablation_failed); the macro-vocab lever (energy-config #6) was separately RETIRED 2026-06-23 (the corpus
+          is breadth/guidance-bound, not depth-bound). This task is the operator''s energy-config menu #2, FUNDAMENTALLY DIFFERENT
+          from both: it is energy-as-fitness QD/MAP-Elites EVOLUTION over multi-action SEQUENCES -- a POPULATION-BASED GENERATOR with
+          behavioral DIVERSITY (mutation insert/delete/swap/splice + crossover; fitness = goal-energy + action-effect cell-recall +
+          efficiency) that GENERATES a NEW winning sequence the best-first search never proposed. It is NOT a single-rollout heuristic
+          (the nulled .428 A1) and NOT horizon-collapse macros (the retired #6). Per the operator''s note it "lives under the P0.1
+          shadow" (energy fails to generate de-novo); the bet is that population-seeding + non-null QD priority + diversity escapes it.
+          The falsifiable gate: on >=1 hard game (cell_recall-reachable), QD puts a winner in the pool (winner_generated,
+          offline-reproduced) the search misses at equal budget AND beats a random-mutation/no-energy-fitness ablation. If QD ALSO
+          nulls winner_generated with a passing random-mutation ablation, the energy-as-fitness generator is retired for the sprint
+          and the residual logged as a bridge gap.'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint -- the operator''s energy-config menu #2, the GENERATION lever). The 0.04 live multi-level
+      solve-rate is a generation-GUIDANCE wall: the right candidates are in the pool but the agent does not chain a 2nd live
+      level-up. Reranking levers (.425/.426/.427 value heads, .428 goal-energy + expansion-prior) all nulled -- the wall is
+      make-a-winner-appear, not select. The operator's energy-config-space directive (memory project_arc_energy_config_space,
+      arc-generation-wall-energy-config-space-2026-06-22.md) sequences a 3-step menu: #1 goal-energy (.428, nulled) -> #6 macro
+      vocabulary (retired 2026-06-23, the corpus is breadth-bound not depth-bound) -> #2 ENERGY-AS-FITNESS QD EVOLUTION, "the
+      generative-fitness tier, highest direct leverage on winner_generated." Both prerequisites are resolved, so #2 is the next
+      sequenced lever, SOTA-flagged #1 by the .428 ingestion (exp4649). THE JOB: wrap the goal-energy + action-effect rollouts in a
+      MAP-Elites-style QD ARCHIVE over multi-action SEQUENCES -- mutation (insert/delete/swap/splice) + shared-state crossover;
+      fitness = goal-energy delta + action-effect cell-recall + first-win action-efficiency; behavior descriptors from action-effect
+      predictions for diverse niches -- so the population GENERATES a winning sequence the best-first search never proposed. This is
+      NOT macro-horizon-collapse (RETIRED -- do not plan over composite macros) and NOT the single-rollout goal-energy heuristic
+      (NULLED). CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the QD generator MUST be in the live import closure
+      (arc_graph_explore / E3AgentPolicy) -- NOT an orphaned scripts/experiments solver (arc_orphan_solver_lint blocks the commit).
+      NO 3090; the QD scorer is CPU. verifier_is_oracle:false (goal-energy + action-effect predict from VISIBLE state, oracle-DISTINCT
+      from the executable win-check). HONEST CAVEAT (operator's note): #2 "lives under the P0.1 shadow" -- energy provably fails to
+      generate de-novo; the bet is population-seeding + non-null QD priority + diversity escapes it; an energy-fitness win MUST beat a
+      random-mutation/no-energy-fitness ablation (else it is the search, not the energy). Honest null with passing controls if it does
+      not generate a winner. Offline-reproduce any newly-generated winner.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/docs/research-notes/arc-generation-wall-energy-config-space-2026-06-22.md (section #2 -- the EXACT energy-as-fitness QD spec + the P0.1-shadow risk + the >=2-of-8-hard-games winner_generated gate)
+        - {project_root}/docs/research-notes/energy-fitness-generator-literature-2026-06-23.md + {project_root}/results/experiment_4649_sota_ingestion_energy_fitness_generator.json (the SOTA-flagged QD/BES method map: arXiv:2605.28814 BES, 2308.05483 QD-under-sparsity, 2504.01915 unsupervised-QD; with fails_when)
+        - {project_root}/python/carnot/agentic/arc_agi3_goal_induction.py + {project_root}/python/carnot/agentic/arc_goal_predicate_separation.py + {project_root}/results/experiment_4020_goal_induction_separation.json (the graded is_goal -> the goal-energy fitness term)
+        - {project_root}/python/carnot/agentic/arc_frame_change_predictor.py (the action-effect predictor -> the transition-feasibility + cell-recall fitness term + behavior descriptors) + {project_root}/python/carnot/agentic/arc_competition_agent.py (cell_recall ~1801-1809; E3AgentPolicy; SUBMITTED_AGENT_CONFIG)
+        - {project_root}/python/carnot/agentic/arc_graph_explore.py (graph_explore_solve_v2 + rich_action_candidates -- where the QD pool injects) + {project_root}/scripts/arc_orphan_solver_lint.py (live-path lint) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate -- a generated winner counts only if offline-reproduced)
+
+      TASK: build the energy-as-fitness QD generator as a LIVE-PATH-REACHABLE python/carnot/agentic module: a MAP-Elites archive
+      over multi-action sequences, mutation + crossover, fitness = goal-energy + action-effect cell-recall + first-win efficiency,
+      behavior descriptors from action-effect, injecting generated sequences into the SCORED E3AgentPolicy search pool. Measure
+      winner_generated (the QD-generated winning sequence appears in the pool where best-first did not reach it), LIVE solve-rate,
+      depth-of-live-solve, and actions-to-win on cell_recall-reachable hard games, WITH energy-fitness QD vs (a) the search-only
+      baseline and (b) a RANDOM-MUTATION/no-energy-fitness ablation. Bootstrap CI. The WIN: >=1 winner_generated the search missed
+      (offline-reproduced) AND the energy-fitness QD beats the random-mutation ablation (CI excludes it), no first-win regression.
+      verifier_is_oracle:false.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           b. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy; from carnot.agentic import arc_graph_explore, arc_agi3_goal_induction, arc_frame_change_predictor"` exits 0.
+           c. `.venv/bin/python -c "import json; json.load(open('{project_root}/results/experiment_4020_goal_induction_separation.json'))"` exits 0 (the goal-energy fitness asset present).
+           ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
+        1. Build the energy-as-fitness QD generator (do NOT modify scripts/research_conductor.py) in a python/carnot/agentic module imported by arc_graph_explore AND reachable from E3AgentPolicy: a MAP-Elites archive over action sequences, mutation (insert/delete/swap/splice) + shared-state crossover, fitness = goal-energy + action-effect cell-recall + efficiency, behavior descriptors from action-effect. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` passes (NOT orphaned).
+        2. Inject the QD-generated sequences into the SCORED E3AgentPolicy search pool (additive -- primitives stay, cannot regress correctness). Keep the search-only mode as one matched control and a RANDOM-MUTATION/no-energy-fitness QD as the second (energy-specific) control. Charge the QD induction cost to the QD arm (fair budget).
+        3. Measure WITH energy-fitness QD vs (a) search-only and (b) random-mutation ablation on cell_recall-reachable hard games: winner_generated (the structural, n-independent primary gate), live solve-rate, depth, actions-to-win. Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the games are pre-confirmed cell_recall-reachable (headroom exists); emit winner_generated + solve_rate/depth deltas explicitly + a null_delta_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any generated winner via arc_solver_kit.reproduce. Log the residual as a Missing-Verifier / bridge gap if QD nulls.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: energy_fitness_qd_winner_generated_<n> OR complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the QD scorer (goal-energy + action-effect CNN forward-pass) is CPU, declared so a fast pass is not DURATION_TOO_SHORT false-flagged; no live_llm_inference."
+        verifier_is_oracle:
+          principle: "MUST be false -- goal-energy + action-effect predict the win from VISIBLE state, oracle-DISTINCT from running the executable win-check."
+        solve_provenance:
+          principle: "live_agent_self_discovery -- the QD generator improves the SCORED live agent's OWN candidate generation (arc_graph_explore/E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re."
+        live_path_reachable:
+          principle: "HARD gate -- the QD module is imported by arc_graph_explore AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT orphaned)."
+        winner_generated:
+          principle: "the HEADLINE primary gate (structural, n-independent) -- the QD-generated winning sequence appears in the pool where best-first did NOT reach it at equal budget; offline-reproduced."
+        winner_generated_count:
+          principle: "the integer count of new winners the QD generator put in the pool that the search-only baseline missed (>=1 is the win)."
+        live_solve_rate_qd:
+          principle: "LIVE multi-level solve-rate WITH the energy-fitness QD generator on the SCORED agent."
+        live_solve_rate_search_baseline:
+          principle: "the matched search-only baseline solve-rate on the SAME games (the no-regression control)."
+        solve_rate_delta:
+          principle: "qd - search_baseline (positive = QD generation crossed the bridge), emitted explicitly so a null (0) is annotated."
+        random_mutation_ablation_passed:
+          principle: "the ENERGY-SPECIFIC control -- the energy-fitness QD win must beat a random-mutation/no-energy-fitness QD (else it is the search/branching, not the energy fitness, doing the work)."
+        qd_lift_ci:
+          principle: "bootstrap CI on winner_generated / solve-rate vs the random-mutation ablation; a claim requires the CI to exclude it."
+        first_win_rate_delta:
+          principle: "qd - search_baseline first-win-rate; emitted explicitly so a regression is caught (generation must not cost first-wins)."
+        bare_control_passed:
+          principle: "the POSITIVE CONTROL -- the games are pre-confirmed cell_recall-reachable (headroom exists); a no-winner null is valid only then."
+        false_negative_risk_checked:
+          principle: "true with the search-only baseline + random-mutation ablation + reachable-headroom confirmed -- a 'no winner' null is valid only then."
+        p01_shadow_note:
+          principle: "records the operator's honest caveat -- #2 lives under the P0.1 de-novo-generation shadow; the bet is population-seeding + diversity escapes it. States whether the bet paid off."
+        null_delta_methodology_note:
+          principle: "present when a delta==0 / winner_generated false -- states the equality is an honest no-value null, not a bug."
+        chosen_submitted_config:
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (QD generator on, archive/mutation params) -- the A6 input; 'unchanged' if null."
+        parity_test_green:
+          principle: "HARD gate -- test_arc_submitted_agent_parity.py passes."
+        offline_reproduced:
+          principle: "any QD-generated winner must offline-reproduce (arc_solver_kit.reproduce) to count."
+        residual_bridge_gaps:
+          principle: "the Missing-Verifier / bridge gap logged if QD nulls -- the next-attack record."
+        random_seed:
+          principle: "determinism precondition for reproducibility (QD mutation RNG seeded)."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent harness/corpus drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, E3AgentPolicy + explorer + goal-induction + action-effect importable, exp4020 asset present); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4653_energy_fitness_qd_generation_live.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4654-a3
+    milestone: 2026.06.429
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .424-.428
+      (PREFER a first-contact L1->L2 of bp35/re86/sb26/vc33 [clean unsolved/shallow public games]; alternatives r11l/g50t/lf52/s5i5
+      L1->L2 or m0r0/cn04 L2->L3; SKIP ft09 [just deepened .428], ls20 [.427], sk48 [failed .426], dc22 [failed .425], ka59
+      [hidden StepCounter], wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the
+      learned verifier on pos/neg traces. Gate: offline_reproduced new level -> reproducible_total_levels 57 -> 58+.
+      verifier_is_oracle:false.'
+    priority: critical
+    track: arc-north-star
+    max_turns: 150
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4654_levelup_selfplay.json
+    operator_override: '2026-06-21 operator directive (CONTINUE the live-agent self-play + pos/neg-feedback loop, "run the
+      self-play loop EVERY milestone") + 2026-06-19 ARC Level-Up Attempt Guarantee (standing): versioned lineage continuation of
+      the deepen/self-play tasks (exp4642 ft09 L3, exp4630 ls20 L2, exp4581 ar25 L2, which SUCCEED). The forward difference is the
+      NEXT rotation target (a clean game NOT deepened in .424-.428) + use of any A1 value-routing / A2 QD live improvements + the
+      verifier train/checkpoint on this run pos/neg traces. Not a doomed rerun.'
+    prior_failures:
+      - experiment_id: exp4618-a3
+        verdict: 'complete: sk48_delta_identified_no_bank'
+        addressed_by: 'exp4618 (.426 A3) attempted sk48 L1->L2 and did NOT bank; exp4606 (.425 A3) attempted dc22 and did NOT
+          bank. This task ROTATES to a DIFFERENT clean game NOT deepened in .424-.428 (PREFER bp35/re86/sb26/vc33 first-contact
+          L1->L2; alternatives r11l/g50t/lf52/s5i5 L1->L2 or m0r0/cn04 L2->L3) and explicitly SKIPS ft09 (just deepened .428),
+          ls20 (.427), sk48 (failed .426), dc22 (failed .425), ka59 (hidden StepCounter), wa30 (hidden-state-bound), and
+          cd82-L3/sp80-L3/su15-L3 (no-grounded-delta). If the rotated deepen ALSO produces no bank, log the per-game delta +
+          dead-end in the registry and the level-up target rotates again next milestone (the target is retired, not the self-play loop).'
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE + the self-improvement engine). CLAUDE.md mandates >=1 task per
+      roadmap that actually BANKS a new reproducible level, AND the operator's 2026-06-21 directive mandates running the self-play
+      loop EVERY milestone. This task does BOTH: bank +1 level AND train+checkpoint the learned verifier on the run's positive
+      (steps-to-go) + negative (off-path/dead-end) traces. INDEPENDENT of A1/A2 so the guarantee holds even if they null. ALL 25
+      public games have >=L1 banked -- so this is a DEEPEN (L1->L2), except a deeper first-contact L1->L2 on a clean game. TARGET
+      ROTATION: ft09 was .428, ls20 .427, sk48(failed) .426, dc22(failed) .425 -- rotate to a game NOT deepened in .424-.428.
+      PREFER bp35/re86/sb26/vc33 L1->L2 (clean first-contact / shallow public games -- bp35/re86/sb26 are the genuine
+      hard-to-bank targets); alternatives r11l/g50t/lf52/s5i5 L1->L2 or m0r0/cn04 L2->L3. Check the registry dead_ends per game
+      FIRST and SKIP stalled approaches: do NOT pick ft09 (just deepened .428), ls20 (.427), sk48 (failed .426), dc22 (failed
+      .425), ka59 (hidden StepCounter), wa30 (hidden-state-bound), cd82/sp80/su15-L3 (no-grounded-L3-delta). USE any A1
+      value-routing / A2 QD live improvement from arc_loop_solve (if they shipped) to speed the search; the bank
+      (offline-reproduced new level) is the gate, not the routing speedup.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> TRAIN+CHECKPOINT the learned verifier -> registry update; A1/A2 may have wired live improvements here)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=57 + per-game dead_ends; L1 games incl r11l/g50t/bp35/re86/sb26/lf52/vc33/s5i5/sk48/dc22/wa30/ka59; L2 games ls20/cd82/sp80/su15/m0r0/cn04/ar25; ft09 L3)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate)
+        - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -> route a deepen attempt to the closest solved recipe)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (the learned verifier trained on pos/neg traces; models/arc_verifier_<game>.json checkpoint)
+
+      TASK: bank a NEW level -- gate: offline_reproduced=true AND reproduced_levels>=1 -- via the self-play loop, AND persist the
+      trained/updated learned-verifier checkpoint. Prefer the rotated clean game's next level (RE only the next-level
+      win/action/state DELTA via a derive-from-env GameAdapter). Only OFFLINE-REPRODUCED levels count. Skip the dead-ends already
+      recorded per game.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Pick the rotation target (PREFER bp35/re86/sb26/vc33 L1->L2; a clean game NOT deepened in .424-.428; check registry dead_ends to skip stalled approaches; do NOT pick ft09/ls20/sk48/dc22/ka59/wa30). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
+        2. For a deepen: recommend_approach -> RE only the next-level delta -> register/extend the GameAdapter -> re-run the loop.
+        3. Run the reproduction gate (arc_solver_kit.reproduce). Only on reproduced=True, update ops/arc_solve_registry.yaml (win condition, action model, gotchas, dead-ends, solver module) + bump reproducible_total_levels.
+        4. TRAIN+CHECKPOINT the learned verifier on the run's pos/neg traces (the self-improvement step); persist models/arc_verifier_<game>.json (mirror-ready per CLAUDE.md decentralization rule 3). Record the verifier delta.
+        5. Record DEAD-ENDS (a search approach that stalled + why) in the registry entry so the next attempt skips them.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+        verifier_is_oracle:
+          principle: "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
+        solve_provenance:
+          principle: "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."
+        offline_reproduced:
+          principle: "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+        reproduced_levels:
+          principle: "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
+        target_game:
+          principle: "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .424-.428, not ft09/ls20/sk48/dc22/ka59/wa30)."
+        verifier_checkpoint_updated:
+          principle: "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+        registry_updated:
+          principle: "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4654_levelup_selfplay.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4655-a4
+    milestone: 2026.06.429
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3''s new bank (+ any A1/A2
+      newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit (beat the standing
+      33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive
+      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Submission stays
+      operator-only. verifier_is_oracle:false.'
+    priority: high
+    track: arc-north-star
+    max_turns: 120
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4655_refresh_submission_package.json
+    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1) + 2026-06-21 standing gate "beat 33 levels": routine
+      package-refresh continuation of the .428 A4 package-refresh (exp4643, which SUCCEEDED at 57) -- folds THIS milestone''s A3
+      bank (57->58+) + any A1/A2 new variant solves into the refreshed package and keeps it operator-resubmit-ready. False-positive
+      fuzzy-token scope-match vs prior package-prep/live-submit tasks (exp4643/exp4631). Not a doomed rerun; submission stays
+      operator-only (this task only PREPARES + offline-validates).'
+    prompt: |
+      CONTEXT ({date}, ARC sprint SCORE -- keep the operator-resubmit package fresh). The .428 A4 kept the package at
+      live_submittable=57 (beats 33), ready_for_operator_submit=True. This task keeps it current: fold A3's new bank
+      (reproducible_total_levels 57->58+) + any A1/A2 newly-reproduced variant into the refreshed package, re-validate every
+      claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver), extend env-adaptive recovery to
+      any newly version-drifted game, and confirm the live-submittable count stays STRICTLY > 33. NO LLM at submit-time, zero quota
+      (offline arcade + cached solves). Submission is OPERATOR-ONLY (External Publication) -- this task PREPARES + offline-validates
+      ONLY and emits ready_for_operator_submit. ARC Prize Milestone #1 deadline is 2026-06-30 (7 days) -- keep the package
+      submit-ready for the operator.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4643_refresh_submission_package.json (the .428 A4 refreshed package + the env-adaptive re-solve pattern)
+        - {project_root}/scripts/arc3_live_submit.py (the live-submit driver: Mode-1 flat-replay; _latest_package; CLAIMED_FALLBACK)
+        - {project_root}/results/experiment_4654_levelup_selfplay.json (A3 -- this milestone's new bank to fold in)
+        - {project_root}/results/experiment_4652_value_routing_cost_fix_live.json + {project_root}/results/experiment_4653_energy_fitness_qd_generation_live.json (A1/A2 -- any newly-reproduced variant to fold in)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels + per-game reproduce entries)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0 AND `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Rebuild the validated submission package from the CURRENT registry (incl. this milestone's A3 bank + any A1/A2 new solves). Record per-game claimed-vs-offline-reached so no level is claimed above its offline-reproduced depth (the claimed_caps discipline).
+        2. Re-validate: every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver) on a FRESH env. Extend env-adaptive re-solve (the persisted primitive_env_adaptive_resolve_operator) to any newly version-drifted game.
+        3. COUNT + GATE: the offline-reproduction-gated live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Emit count_delta vs the .428 A4 count (57) + a null_delta_methodology_note if unchanged. Do NOT submit -- emit ready_for_operator_submit + the refreshed package path.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: package_refreshed_live_submittable_<n>_above_33 OR complete: package_refreshed_unchanged_depth."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false -- packaging + env-adaptive replay bank already-earned solves (no circular moat claim)."
+        live_submittable_level_count:
+          principle: "the offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest leaderboard score, must stay > 33)."
+        live_submittable_count_prev:
+          principle: "57 -- the .428 A4 count, the apples-to-apples comparison."
+        count_delta:
+          principle: "live_submittable_level_count - 57 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."
+        levels_folded_in:
+          principle: "names the games whose new banks (A3 + A1/A2 variant solves) were folded into the refreshed package this milestone."
+        refreshed_package_path:
+          principle: "the path to the refreshed validated package the operator's live-submit driver will load -- the deliverable the operator resubmits."
+        per_game_submittable:
+          principle: "per-game offline-reproduced level + has-trajectory + drift-robust flags -- the audit trail that no level is over-claimed above its offline depth."
+        ready_for_operator_submit:
+          principle: "True if the refreshed package's live-submittable count beats 33 and every claim is offline-reproduction-gated; the task NEVER submits (operator-only)."
+        offline_reproduced:
+          principle: "every claimed-submittable level must offline-reproduce to count (no frozen-trajectory over-claim)."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent registry/trajectory drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4655_refresh_submission_package.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4656-a5
+    milestone: 2026.06.429
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone''s winning A1/A2 primitive (the
+      productionized value-routing cost-fix operator OR the energy-as-fitness QD generator, whichever cleared its gate) as a
+      reusable arc_solver_kit primitive + registry general_gotcha, and measure cross-game transfer value (characterize the null
+      honestly if transfer is value-null). verifier_is_oracle:false.'
+    priority: high
+    track: arc-north-star
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4656_primitive_persist_transfer.json
+    operator_override: '2026-06-16 ARC Solve Reproducibility + Solver-Reuse Discipline (standing: capture reusable scaffolding,
+      do not re-derive) + the self-learning ethos: routine persist+transfer continuation of the .428 A5 (exp4644, which persisted
+      the graded_goal_energy_search_heuristic_operator + characterized the transfer null). The forward difference is THIS
+      milestone''s winning primitive (value-routing cost-fix or energy-fitness QD) + a fresh transfer measurement. False-positive
+      fuzzy-token scope-match vs prior persist tasks. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint SELF-LEARNING). The project ethos is capture-as-reusable-scaffolding: a winning primitive is
+      persisted into arc_solver_kit + ops/arc_solve_registry.yaml so the LIVE solver reuses it, never re-derives it. This task
+      persists THIS milestone's winning A1/A2 primitive and measures cross-game transfer. If BOTH A1 and A2 nulled, persist the
+      strongest characterized component (e.g. the productionized cheap-feature cost-fix, which is a real reusable speedup even if
+      value-routing nulled) and characterize the transfer null honestly -- a characterized null is valid (per the .428 A5 pattern).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4644_primitive_persist_transfer.json (the .428 A5 persist+transfer pattern + the transfer-null characterization schema)
+        - {project_root}/results/experiment_4652_value_routing_cost_fix_live.json + {project_root}/results/experiment_4653_energy_fitness_qd_generation_live.json (A1/A2 -- the candidate primitives to persist; read their chosen_submitted_config + honest_verdict)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (where reusable primitives live) + {project_root}/ops/arc_solve_registry.yaml (general_gotchas -- where the persisted operator + transfer_dead_ends are recorded)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Pick the primitive: the A1 value-routing cost-fix operator if it cleared its gate, else the A2 QD generator if it cleared its gate, else the strongest characterized component (the cheap-feature cost-fix is a real reusable speedup regardless).
+        2. Persist it as a reusable arc_solver_kit primitive + an ops/arc_solve_registry.yaml general_gotcha (operator id + derived_from_artifacts + a clear reuse note).
+        3. Measure cross-game transfer on >=3 cached games (the persisted operator applied to held-out games): report the transfer value per game (solve-rate/first-win/efficiency delta + offline_reproduced_new_level). Characterize the transfer null honestly with a residual_dead_end if value-null.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false -- the persisted primitive ranks/routes/generates, oracle-distinct from the executable win-check."
+        primitive_persisted:
+          principle: "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+        transfer_games:
+          principle: "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+        transfer_value_per_game:
+          principle: "per-game solve-rate/first-win/efficiency delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+        offline_reproduced_new_level:
+          principle: "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+        residual_dead_end:
+          principle: "the characterized transfer-null residual if value is zero (the next-attack record); per the .428 A5 pattern."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4656_primitive_persist_transfer.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4657-a6
+    milestone: 2026.06.429
+    title: 'PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone''s winning A1/A2 config (value-routing cost-fix +
+      value_weight, and/or the energy-fitness QD generator) into SUBMITTED_AGENT_CONFIG as the single source of truth, re-measure
+      the integrated live first-win + multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, and keep
+      test_arc_submitted_agent_parity green. If both A1/A2 nulled, integrate ''unchanged'' and record why. verifier_is_oracle:false.'
+    priority: high
+    track: arc-north-star
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4657_integration_gate.json
+    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1, single-source-of-truth SUBMITTED_AGENT_CONFIG): routine
+      integration-gate continuation of the .428 A6 (exp4645, which integrated the action-efficiency config + kept parity green).
+      The forward difference is THIS milestone''s winning A1/A2 config. False-positive fuzzy-token scope-match vs prior
+      integration-gate tasks. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint INTEGRATION -- single source of truth). SUBMITTED_AGENT_CONFIG is the one config the scored
+      Kaggle agent loads; every milestone's winning lever must be folded in (or explicitly 'unchanged') so the deployed agent and
+      the measured agent never diverge. This task integrates this milestone's winning A1/A2 config and re-measures the integrated
+      live first-win + multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, keeping the parity test green.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4645_integration_gate.json (the .428 A6 integration pattern)
+        - {project_root}/results/experiment_4652_value_routing_cost_fix_live.json + {project_root}/results/experiment_4653_energy_fitness_qd_generation_live.json (A1/A2 chosen_submitted_config -- the configs to integrate)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG + E3AgentPolicy + value_weight) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy, SUBMITTED_AGENT_CONFIG"` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Fold the winning A1 config (cost-fix on, value_weight value, feature subset) and/or A2 config (QD generator on, params) into SUBMITTED_AGENT_CONFIG. If both A1/A2 nulled, set 'unchanged' and record why.
+        2. Re-measure the integrated live first-win-rate + multi-level solve-rate + live-submittable count end-to-end on the SCORED E3AgentPolicy vs the pre-integration config (no regression).
+        3. RUN test_arc_submitted_agent_parity.py -> green (the integrated config is the single source of truth the scored kernel loads).
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+        verifier_is_oracle:
+          principle: "MUST be false -- the integrated value-routing/QD signals are oracle-distinct from the executable win-check."
+        config_integrated:
+          principle: "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+        live_first_win_rate_integrated:
+          principle: "the integrated SCORED-agent live first-win-rate (no regression vs pre-integration)."
+        live_multi_level_solve_rate_integrated:
+          principle: "the integrated SCORED-agent multi-level (>=2) live solve-rate (the deeper wall)."
+        live_submittable_level_count_integrated:
+          principle: "the integrated live-submittable count (must stay > 33)."
+        parity_test_green:
+          principle: "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4657_integration_gate.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4658-b1
+    milestone: 2026.06.429
+    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship a value-routing live CI-gate (the cost-fixed value head must not silently
+      regress the 25-game sim back into a timeout, and a live first-win/solve-rate floor) PLUS a distribution-shift-vs-calibration
+      diagnostic probe that, if A1''s affordable value head still nulls, localizes the residual cause (train-on-search-distribution
+      DAgger-lite vs isotonic/Platt calibration) so .430 attacks the right one. Tests green. verifier_is_oracle:false.'
+    priority: high
+    track: infra
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4658_value_routing_cigate_diagnostic.json
+    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint, 2 reserved infra per milestone) + the
+      arc-representation-not-the-bottleneck-2026-06-23.md call to disambiguate compute-cost (A1 fixes) vs distribution-shift vs
+      calibration as the residual cause of the offline-discriminator-hurts-live gap. Novel infra; false-positive fuzzy-token
+      scope-match vs prior infra/metric-helper tasks (exp4646/exp4634). Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint INFRA slot 1). A1 productionizes the compute-cost fix + raises value_weight. Two infra needs
+      follow: (1) a CI-gate so the cost-fixed value head can NOT silently regress (the 25-game sim must not time out again, and the
+      live first-win/solve-rate must not drop below a floor) -- a guard so a future change can't quietly revert the value_weight
+      win; (2) a diagnostic that, IF A1's affordable value head still nulls live solve-rate, localizes the residual cause so .430
+      attacks the right one: DISTRIBUTION-SHIFT (the verifier trained on winning-path states but the live frontier is off-path ->
+      train on search-distribution states, DAgger-lite) vs CALIBRATION (a 0.725 ranking is not a usable A* cost -> isotonic/Platt).
+      This directly serves the next milestone -- it converts A1's honest null (if any) into a localized .430 target.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4652_value_routing_cost_fix_live.json (A1 -- read residual_cause_hypothesis + per_node_feature_cost_ms + sim_timed_out + the solve-rate deltas)
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the three residual causes: compute-cost/distribution-shift/calibration, with the per-cause fix)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v3 + the learned verifier; collect_trajectory_data winning-path-only training -- the distribution-shift source) + {project_root}/python/carnot/agentic/arc_competition_agent.py (value_weight + the 25-game sim)
+        - {project_root}/results/experiment_4646_live_multi_level_solve_rate_metric.json (the .428 B1 metric helper to extend, not duplicate)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_value_learner, arc_competition_agent"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
+        1. Ship the value-routing CI-gate: a test/helper that fails if the cost-fixed value-routed 25-game sim times out OR the live first-win/solve-rate drops below the A1-established floor (guards against silent regression of the value_weight win). Add unit tests.
+        2. Ship the distribution-shift-vs-calibration diagnostic: given A1's artifact, run (a) a DAgger-lite probe (re-score the value head on off-path search-distribution states vs winning-path states -> a distribution-shift score) and (b) an isotonic/Platt calibration probe (does calibrating the 0.725 ranking to a cost change the live routing decision) -> emit which cause dominates as the .430 target.
+        3. Add tests; confirm green.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: value_routing_cigate_plus_diagnostic_shipped_tests_green."
+        inference_substrate:
+          principle: "verifier_ensemble_against_cached_candidates -- offline value-head re-scoring + a small sim re-run (1s floor); no live_llm_inference."
+        verifier_is_oracle:
+          principle: "MUST be false -- the value head/diagnostic are oracle-distinct from the executable win-check."
+        cigate_added:
+          principle: "the CI-gate that fails on a value-routing timeout-regression or live first-win/solve-rate floor breach (guards the A1 win)."
+        distribution_shift_score:
+          principle: "the DAgger-lite off-path-vs-winning-path value-head score gap (high = distribution-shift is the residual cause)."
+        calibration_changes_routing:
+          principle: "whether isotonic/Platt calibration of the 0.725 ranking changes the live routing decision (true = calibration is a residual cause)."
+        dominant_residual_cause:
+          principle: "the localized .430 target (distribution_shift | calibration | none_a1_lifted) -- converts A1's null into a sharp next-milestone attack."
+        tests_added:
+          principle: "the unit tests added for the CI-gate + diagnostic (Tests Must Run and Assert)."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4658_value_routing_cigate_diagnostic.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4659-b2
+    milestone: 2026.06.429
+    title: 'PHASE B2 (INFRA -- reserved slot 2; adversarial_verify hardening) -- extend adversarial_verify with two guards for
+      the .429 lever class: (1) QD-WITHOUT-RANDOM-MUTATION-ABLATION -- a QD/energy-fitness generation win that does NOT report a
+      passing random-mutation/no-energy-fitness ablation is flagged (it may be the search/branching, not the energy); (2)
+      VALUE-ROUTING-WITHOUT-COST-CONTROL -- a value-routing live win that does NOT report per_node_feature_cost_ms + sim_timed_out
+      is flagged (the win may be the removed timeout, not the signal). Honest ablation-passing artifacts NOT flagged. Tests green.'
+    priority: high
+    track: infra
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4659_adversarial_verify_hardening.json
+    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint) + the .425-.428 B2 adversarial_verify-hardening lineage
+      (TAUTOLOGY, offline-vs-live, intrinsic-reward, goal-energy-ablation guards). The forward difference is the .429 lever class:
+      QD-generation + value-routing. False-positive fuzzy-token scope-match vs prior adversarial_verify-hardening tasks
+      (exp4647/exp4635/exp4623). Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint INFRA slot 2). Each milestone .425-.428 added a B2 guard to adversarial_verify so the new
+      lever's over-claim is mechanically caught (the fabrication-gate quarantines flagged artifacts). .429's two levers need their
+      own guards: (1) the energy-as-fitness QD generator (A2) -- a "winner_generated / solve-rate up" claim must beat a
+      random-mutation/no-energy-fitness ablation, else it is the search/branching not the energy; (2) the value-routing cost-fix
+      (A1) -- a "live first-win/solve-rate up" claim must report per_node_feature_cost_ms + sim_timed_out=false, else the "win" may
+      just be the removed timeout (a baseline that now finishes), not a real signal lift. Add both as CRITICAL-when-overclaiming /
+      WARN-when-omitted guards, with honest ablation-passing artifacts NOT flagged (false-positive guarded, like the .428
+      goal-energy-ablation guard).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4647_adversarial_verify_hardening.json (the .428 B2 goal-energy-ablation guard pattern -- the exact add-a-guard + false-positive-guard + tests structure to mirror)
+        - {project_root}/scripts/adversarial_verify.py (where the guards live: check_circular_moat_overclaim, the .428 goal-energy-ablation guard -- add the two new guards alongside)
+        - {project_root}/results/experiment_4653_energy_fitness_qd_generation_live.json + {project_root}/results/experiment_4652_value_routing_cost_fix_live.json (the A2/A1 artifacts the guards must classify correctly: honest-ablation-passing -> NOT flagged; over-claim-without-ablation -> flagged)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "import scripts.adversarial_verify"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
+        1. Add the QD-WITHOUT-RANDOM-MUTATION-ABLATION guard: CRITICAL when an artifact claims a QD/energy-fitness generation win (winner_generated true / solve_rate_delta > 0) but random_mutation_ablation_passed is false/absent; WARN when the ablation field is omitted on a QD claim.
+        2. Add the VALUE-ROUTING-WITHOUT-COST-CONTROL guard: CRITICAL when an artifact claims a value-routing live win (first_win_rate_delta/solve_rate_delta > 0) but per_node_feature_cost_ms / sim_timed_out are absent or sim_timed_out is true; WARN when omitted.
+        3. Verify the HONEST A1/A2 artifacts (which DO report their ablation/cost controls) are NOT flagged (false-positive guard). Add unit tests for both guards (flag the over-claim fixture, pass the honest fixture). Confirm green.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: adversarial_verify_hardened_qd_ablation_and_value_routing_cost_guards_tests_green."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+        qd_ablation_guard_added:
+          principle: "the QD-WITHOUT-RANDOM-MUTATION-ABLATION guard (a QD generation win must beat a random-mutation ablation, else flagged)."
+        value_routing_cost_guard_added:
+          principle: "the VALUE-ROUTING-WITHOUT-COST-CONTROL guard (a value-routing win must report per-node cost + no-timeout, else flagged)."
+        honest_artifacts_not_flagged:
+          principle: "the honest A1/A2 artifacts (which report their controls) are NOT flagged -- false-positive guard (like the .428 goal-energy-ablation guard)."
+        tests_added:
+          principle: "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified; pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4659_adversarial_verify_hardening.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4660-c
+    milestone: 2026.06.429
+    title: 'PHASE C (HARDWARE CONTINUITY -- 1 per-board slot) -- per-board reachability audit (KV260 via ssh kria [SSH-only,
+      NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag --detect) so each attached board
+      stays visible per the Hardware-Task Continuity Discipline. Record per-board state (loaded overlay / uptime / IDCODE) or
+      blocked_<board>_<reason>. No bitstream build, no fabric-acceleration claim.'
+    priority: medium
+    track: hardware
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: hardware_smoke
+    deliverable: results/experiment_4660_hardware_continuity.json
+    operator_override: '2026-05-18 Hardware-Task Continuity Discipline (standing: >=1 task per attached board per milestone until
+      terminal state): routine per-board reachability audit, versioned continuation of the .428 C (exp4648, kv260+polarfire
+      reachable, gatemate USB undetected). KV260 precondition is SSH-only per the KV260 SSH-Not-SD-Card Discipline (NEVER a host
+      host-SD-card device check). False-positive fuzzy-token scope-match vs prior hardware-continuity tasks. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint -- the 1 reserved per-board hardware-continuity slot). The Hardware-Task Continuity Discipline
+      mandates >=1 task per attached board every milestone until each board hits its terminal state, so the FPGAs stay visible
+      during the ARC sprint. This is a reachability AUDIT (no bitstream build, no fabric-acceleration claim). KV260 MUST use the
+      SSH-reachability precondition, NEVER a host SD-card device check (the KV260 SSH-Not-SD-Card Discipline).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4648_hardware_continuity.json (the .428 C audit schema: per_board_reachability + per_board_state + kv260_precondition ssh-only)
+        - {project_root}/ops/hardware-bringup-prep.md (per-board bring-up state) + the CLAUDE.md "Pre-Launch Preconditions" board-reachability table
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (the audit IS the precondition checks): run each board's reachability probe and record exit codes.
+           a. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria true` (exit 0 = reachable). NEVER a host SD-card block-device probe (SSH-only per the KV260 SSH-Not-SD-Card Discipline).
+           b. PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true` (exit 0 = reachable).
+           c. GateMate: `openFPGALoader -c dirtyJtag --detect` (IDCODE present = reachable).
+        1. For each reachable board, capture per-board state (kv260: `ssh kria 'xmutil listapps'` loaded overlay; polarfire: `ssh polarfire uptime`; gatemate: the --detect IDCODE) or blocked_<board>_<reason>.
+        2. Record the continuity audit -- do NOT build a bitstream, do NOT claim fabric acceleration.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: hardware_continuity_<n>_of_3_boards_reachable (or complete:/blocked_ per board state)."
+        inference_substrate:
+          principle: "hardware_smoke -- SSH/USB reachability checks, per-board floor; declared so a fast real check is not DURATION_TOO_SHORT false-flagged."
+        kv260_precondition:
+          principle: "MUST be the SSH-reachability check (ssh kria true), NEVER a host SD-card-slot device check (KV260 SSH-Not-SD-Card Discipline)."
+        boards_reachable:
+          principle: "per-board reachability (kv260/polarfire/gatemate) -- the continuity record that keeps each attached board visible."
+        per_board_state:
+          principle: "the recorded state per reachable board (loaded overlay / uptime / IDCODE) or blocked_<board>_<reason>."
+        reachable_board_count:
+          principle: "the integer count of reachable boards (the at-a-glance continuity number)."
+        speedup_claim_made:
+          principle: "MUST be false -- this is a reachability audit, not a fabric-acceleration claim (no fabrication)."
+        preconditions_checked:
+          principle: "records WHICH board checks ran + their results; pre-empts silent-missing-hardware fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4660_hardware_continuity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4661-d
+    milestone: 2026.06.429
+    title: 'PHASE D (SOTA-INGESTION -> .430) -- focused literature pass on the SURVIVING generation-guidance class (the wall is
+      localized: macro-depth + click-coverage + just-explore-schedule + goal-energy heuristic all DIED this week). Map the
+      strongest 3-5 SOTA methods for chaining a 2nd live level-up (hierarchical-subgoal-search-over-goal-energy / PoE-World
+      factored-executable-model / distribution-shift DAgger value-routing), with arXiv IDs + implement-cost + fails_when, and FLAG
+      the strongest for .430. Reliable sweep + WebSearch/WebFetch only; /deep-research BANNED.'
+    priority: medium
+    track: sota-ingestion
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4661_sota_ingestion_generation_guidance.json
+    operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (STANDING: reserve a SOTA-ingestion slot per bleeding-edge
+      milestone) + the ARC sprint headline (generation-guidance). Routine ingestion continuation of the .428 D (exp4649, which
+      mapped the energy-fitness QD family). The forward difference is the .430 direction (the surviving generation-guidance class
+      after this week killed macro/click/schedule/goal-energy). False-positive fuzzy-token scope-match vs prior SOTA-ingestion
+      tasks. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint -- the 1 reserved SOTA-ingestion slot, feeding .430). The generation wall is now LOCALIZED:
+      four candidate levers DIED this week (macro-action horizon-collapse RETIRED, click-heatmap off-centroid generator RETIRED,
+      just-explore schedule-extraction CLOSED, goal-energy heuristic NULL), and the .429 headline attacks generation-GUIDANCE
+      (A1 affordable value-routing, A2 energy-fitness QD). This task ingests the SURVIVING SOTA directions for chaining a 2nd live
+      level-up and flags the strongest for .430. RELIABLE channel ONLY: scripts/sweep_clusters.py / sweep_semscholar.py (arXiv /
+      Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top 5-8 papers. /deep-research is BANNED in the autonomous
+      loop. Every method claim MUST cite a REAL arXiv ID (no citation = fabrication).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4649_sota_ingestion_energy_fitness_generator.json + {project_root}/docs/research-notes/energy-fitness-generator-literature-2026-06-23.md (the .428 ingestion + the surviving flagged tracks: hierarchical-subgoal-search 2604.03208/2506.07255/2504.04366, PoE-World 2505.10819/2605.05138, factored-executable-model)
+        - {project_root}/research-studying.md + {project_root}/research-references.md (the already-discovered corpus to filter; mark ingested)
+        - {project_root}/docs/research-notes/macro-vocab-prototype-finding-2026-06-23.md + click-heatmap-generator-falsified-2026-06-23.md + h2h-just-explore-vs-bare-explorer-2026-06-23.md (the DEAD levers -- do NOT re-flag these)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `curl -sf -o /dev/null https://huggingface.co/api/models` exits 0 (network) AND `.venv/bin/python scripts/sweep_clusters.py --help` exits 0. Missing -> blocked_<resource>, EXIT.
+        1. Read the already-discovered corpus filtered to generation-guidance + run a FOCUSED fresh sweep (sweep_clusters.py / sweep_semscholar.py) on hierarchical-subgoal-search / factored-executable-world-model / distribution-shift-corrected value-routing. WebSearch/WebFetch the top 5-8.
+        2. Synthesize the strongest 3-5 methods: per-method what it would take over the CURRENT stack (A1 value-routing + A2 QD + the live E3 path) + where each fails. Write the per-track note. Do NOT re-flag the DEAD levers (macro/click/schedule/goal-energy heuristic).
+        3. FLAG the strongest method(s) as candidate .430 inputs (flagged_for_v430) + update research-studying.md (mark ingested). Every method cites a real arXiv ID.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: sota_ingestion_generation_guidance_mapped."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor)."
+        deep_research_not_used:
+          principle: "MUST be true -- /deep-research is BANNED in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch."
+        methods_mapped:
+          principle: "the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when (no citation = fabrication)."
+        citations_verified:
+          principle: "each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations."
+        flagged_for_next_roadmap:
+          principle: "the strongest method(s) flagged as candidate .430 inputs (flagged_for_v430) -- closes discover->ingest->plan->experiment."
+        dead_levers_not_reflagged:
+          principle: "names the DEAD levers (macro/click/schedule/goal-energy heuristic) confirmed NOT re-flagged -- honors the week's falsifications."
+        note_path:
+          principle: "the per-track research-note path (the SOTA-Ingestion Cycle deliverable)."
+        preconditions_checked:
+          principle: "records network reachability verified; pre-empts fabricated citations."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4661_sota_ingestion_generation_guidance.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4662-e
+    milestone: 2026.06.429
+    title: 'PHASE E (CAPSTONE .429) -- aggregate the scorecard + the HEADLINE DECISION: did the AFFORDABLE value head (A1) cross
+      the bridge for live first-win/solve-rate, did energy-as-fitness QD (A2) GENERATE a winner the search missed, did A3 bank +1
+      (57->58+)? Skip flagged_adversarial / ablation-failed / control-failed artifacts. Confirm verifier_is_oracle:false on every
+      included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
+    priority: high
+    track: capstone
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4662_capstone_v429.json
+    operator_override: '2026-06-19 ARC sprint (capstone per milestone, codex-routed): routine capstone continuation of the .428
+      capstone (exp4650, capability_grew_56_to_57). The forward difference is the .429 scorecard (value-routing cost-fix + QD
+      generation + the next bank). False-positive fuzzy-token scope-match vs prior capstone tasks. Not a doomed rerun.'
+    prompt: |
+      CONTEXT ({date}, ARC sprint CAPSTONE .429). Aggregate the milestone scorecard + the HEADLINE DECISION. Read EVERY upstream
+      artifact via `python3 scripts/summarize_artifact.py` (Reading-Results Discipline) -- never eyeball raw JSON. SKIP any
+      flagged_adversarial / ablation-failed / positive-control-failed artifact from the headline (fabrication-gate +
+      false-negative-risk compliance): A1's value-routing win counts ONLY if it reports per_node_feature_cost_ms + sim_timed_out=false
+      + a CI excluding the value_weight=0 baseline; A2's QD win counts ONLY if winner_generated AND random_mutation_ablation_passed.
+      The authoritative reproducible_total_levels is the REGISTRY header (A3 bank). Confirm verifier_is_oracle:false on every included
+      value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 NEVER substituted). Submission operator-only (leaderboard_submission=false).
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/results/experiment_4650_capstone_v428.json (the .428 capstone schema to mirror)
+        - {project_root}/scripts/summarize_artifact.py (the MANDATORY reading path) + {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/publication_gate.py (G1-G4)
+        - the .429 upstream artifacts: results/experiment_4652 (A1 value-routing), 4653 (A2 QD), 4654 (A3 bank), 4655 (A4 package), 4656 (A5 transfer), 4657 (A6 integration), 4658 (B1), 4659 (B2) + {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `.venv/bin/python -c "import json,yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0 AND every cited upstream artifact exists. Missing -> blocked_<resource>, EXIT.
+        1. Read each upstream artifact via summarize_artifact.py; record honest_verdict + flagged/ablation/control status + sha256. EXCLUDE flagged/ablation-failed/control-failed artifacts from the headline.
+        2. Aggregate the headline: A1 value-routing live first-win/solve-rate delta (only if cost-controlled + CI-clean) + A2 winner_generated (only if random-mutation-ablation-passed) + A3 reproducible_total_levels_delta + A4 live-submittable count. Compute the bridge_crossed_for_solve decision.
+        3. Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Emit the operator-only submission status (leaderboard_submission=false).
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: bridge_crossed_live_<firstwin|solverate|winner_generated>_up_<n> OR complete: generation_guidance_levers_characterized_no_live_solve_lift OR complete: capability_grew_57_to_<n>."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+        cited_upstream_artifacts:
+          principle: "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+        a1_value_routing_live_lift:
+          principle: "the A1 affordable-value-head live first-win/solve-rate delta -- counted ONLY if cost-controlled (per_node_cost + no-timeout) + CI excludes the value_weight=0 baseline."
+        a2_winner_generated:
+          principle: "the A2 energy-fitness QD winner_generated -- counted ONLY if random_mutation_ablation_passed (else the search/branching, not the energy)."
+        reproducible_total_levels:
+          principle: "authoritative from the registry (A3 bank, 57->58+) -- did solve CAPABILITY grow."
+        reproducible_total_levels_delta:
+          principle: "registry after - 57, emitted explicitly so a null is annotated."
+        bridge_crossed_for_solve:
+          principle: "the headline decision -- did ANY .429 lever cross the offline->live bridge for SOLVE-RATE/DEPTH (the 0.04 wall), or did generation-guidance get characterized as another honest null."
+        live_submittable_level_count:
+          principle: "the A4 operator-resubmit count (must stay > 33)."
+        flagged_artifacts_handled:
+          principle: "names any flagged_adversarial / ablation-failed / control-failed artifact EXCLUDED + the guards applied (.428-B2 goal-energy + .429-B2 QD-ablation/value-routing-cost) -- fabrication-gate + false-negative-risk compliance."
+        verifier_is_oracle:
+          principle: "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
+        paper_ready:
+          principle: "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .429 headline."
+        leaderboard_submission:
+          principle: "MUST be false -- submission is operator-only (External Publication Discipline)."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash catches silent drift on replay."
+        preconditions_checked:
+          principle: "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4662_capstone_v429.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
