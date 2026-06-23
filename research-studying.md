@@ -4357,3 +4357,39 @@ flagged_for_v425: executable_world_model_energy_config_space_generation_prior
 generator, and use objective energy as a trust/goal/repair prior inside
 generation rather than another final reranker.
 <!-- EXP4601-GENERATION-SOTA-END -->
+
+<!-- EXP4613-WORLD-MODEL-TRUST-SOTA-START -->
+## 2026-06-23 Exp 4613 - .425 world-model trust SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/world-model-trust-literature-2026-06-23.md`.
+
+**Filtered track:** world-model trust energy, scored-agent verifier
+integration, closed-loop model utility, learned heuristic search, and
+goal-conditioned value for level-to-level generalization.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py` emitted focused world-model/search URLs. Semantic
+Scholar returned HTTP 429 for the five focused queries, so no S2-only source was
+promoted. Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks
+verified arXiv:2605.05138, arXiv:2502.01989, arXiv:2510.18135,
+arXiv:2511.09515, arXiv:2102.04518, arXiv:2406.04935, arXiv:2206.03023, and
+arXiv:2502.20379. `/deep-research` was not invoked.
+
+**Methods marked ingested:** executable world-model induction plus
+multi-verifier trust energy; VFScale as an intrinsic-energy control;
+closed-loop world-model utility plus imagined policy repair; learned
+value/pruning search; and goal-conditioned value learning. Note: arXiv:2206.03023
+is GoFAR, not a UVFA/HER primary paper, so it is used as the goal-conditioned
+offline value reference rather than mislabeled.
+
+flagged_for_v426: executable_world_model_plus_multi_verifier_trust_energy
+(arXiv:2605.05138 + arXiv:2502.20379)
+
+flagged_for_v426: goal_conditioned_spatial_value_tiebreaker
+(arXiv:2102.04518 + arXiv:2406.04935 + arXiv:2206.03023)
+
+**Bottom line for .426:** make executable world-model induction the A1 source
+of candidate models, score it with multi-aspect trust energy, route only
+trusted models into A2, and use learned/goal-conditioned value strictly as a
+bounded search tie-breaker until no-regression gates pass.
+<!-- EXP4613-WORLD-MODEL-TRUST-SOTA-END -->

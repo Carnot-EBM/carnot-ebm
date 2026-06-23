@@ -1970,3 +1970,52 @@ Then it integrates only A2 levers that raise CORE per-level efficiency by
 reaching a deeper CORE level, rejects retired action-trimming levers, records
 the 8-game gate measurement and held-out solve rate, and reports an honest null
 when no lever beats `2.0074`.
+
+### REQ-ARC-WMTE-4613: World-Model Trust Literature Ingestion For .426
+
+Experiment 4613 SHALL synthesize the focused 2026-06-23 SOTA ingestion for the
+world-model trust-energy and scored-agent verifier-integration track. The
+workflow SHALL read the prior Exp 4601 ingestion, `research-studying.md`,
+`research-references.md`, and the 2026-06-11 search-layer note, SHALL use the
+reliable channel (`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
+and low-concurrency WebSearch/WebFetch), and SHALL NOT invoke `/deep-research`.
+If the required network reachability precondition fails, the workflow SHALL
+write an honest blocked-network verdict instead of fabricating citations.
+
+Experiment 4613 SHALL write
+`docs/research-notes/world-model-trust-literature-2026-06-23.md` and
+`results/experiment_4613_sota_ingestion_world_model_trust.json`. The artifact
+SHALL include `honest_verdict`, `inference_substrate`, `methods_mapped`,
+`flagged_for_next_roadmap`, `note_path`, `deep_research_not_used`,
+`preconditions_checked`, `citations_verified`, `random_seed`, and
+`field_principles`. The success verdict SHALL be
+`success: sota_ingestion_world_model_trust_mapped`, the substrate SHALL be
+`aggregation_from_upstream_artifacts`, and `deep_research_not_used` SHALL be
+true. Each mapped method SHALL cite real arXiv IDs and SHALL include the
+implementation cost over the current A1 trust-energy / A2 live-integration
+stack plus a concrete `fails_when` condition.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_world_model_trust_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when -- the actionable ingestion (no citation = fabrication).`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .426 inputs -- closes discover->ingest->plan->experiment.`
+- `note_path`: principle `docs/research-notes/world-model-trust-literature-2026-06-23.md -- the per-track note (the SOTA-Ingestion Cycle deliverable).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is banned in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4613: SOTA Methods Map Onto A1/A2 And Flag .426 Inputs
+
+Given the network precondition succeeds and the prior .424/.425 corpus is
+readable
+When experiment 4613 ingests the focused papers for executable world models,
+verifier scaling, closed-loop world-model evaluation, world-model policy
+optimization, learned-heuristic search, learned pruning, and goal-conditioned
+value functions
+Then the note and JSON artifact map three to five strongest methods onto the
+current A1 trust-energy / A2 scored-agent integration stack, cite real arXiv IDs
+including `2605.05138`, `2502.01989`, `2510.18135`, `2511.09515`,
+`2102.04518`, `2406.04935`, `2206.03023`, and `2502.20379`, flag one or more
+`.426` roadmap candidates, record all network and citation preconditions
+checked, and record that `/deep-research` was not used.
