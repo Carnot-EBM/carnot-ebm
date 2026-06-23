@@ -1,0 +1,452 @@
+{
+  "cited_upstream_artifacts": {
+    "A1": {
+      "artifact": "results/experiment_4604_world_model_trust_energy.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "world_model_trust_pass_rate_new",
+        "trust_pass_numerator",
+        "trust_pass_denominator",
+        "first_win_rate_new"
+      ],
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "role": "world_model_trust_energy",
+      "sha256": "sha256:f49092c38643e383e3d053a8d50482e1804c13258e3bfd92095ef18173df94c8"
+    },
+    "A2": {
+      "artifact": "results/experiment_4605_live_integration_scored_agent.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "first_win_rate_integrated",
+        "first_win_rate_bare",
+        "first_win_delta"
+      ],
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "role": "live_integration_scored_agent",
+      "sha256": "sha256:184e4cf46e6b560c781d82da7ce1187dc83b851b0e30588d026d8e3a9d3be517"
+    },
+    "A3": {
+      "artifact": "results/experiment_4606_levelup_selfplay.json",
+      "exists": true,
+      "imported_fields": [
+        "reproduced_levels",
+        "offline_reproduced"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:a9ac4b8ff278a0686884c03b0ac0f4e04317d49067fbcfcfffa2680ede5885c5"
+    },
+    "A4": {
+      "artifact": "results/experiment_4607_refresh_submission_package.json",
+      "exists": true,
+      "imported_fields": [
+        "live_submittable_level_count",
+        "ready_for_operator_submit",
+        "offline_reproduced"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "refresh_submission_package",
+      "sha256": "sha256:17d7aad9e478b0bc1eac123db14778c4d69cba473dcaf3750a2c2e7a4e892dde"
+    },
+    "A5": {
+      "artifact": "results/experiment_4608_primitive_persist_transfer.json",
+      "exists": true,
+      "imported_fields": [
+        "transfer_games",
+        "transfer_value_per_game",
+        "new_levels_banked"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:d4c4dc1faa0b3050325e5eee1514d12a6a384966d61aa40b107d60a1d3d928d4"
+    },
+    "A6": {
+      "artifact": "results/experiment_4609_integration_gate.json",
+      "exists": true,
+      "imported_fields": [
+        "submitted_config_raised_metric_clean",
+        "parity_test_green"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "integration_gate",
+      "sha256": "sha256:382dbc0c2d531c91720cd8811e1a670360afefa89d2cab5a538503ba5a5b0c87"
+    },
+    "B1": {
+      "artifact": "results/experiment_4610_world_model_trust_pass_rate_metric.json",
+      "exists": true,
+      "imported_fields": [],
+      "included_in_headline": false,
+      "quarantined_fields_reported": [
+        "world_model_trust_pass_rate",
+        "trust_pass_numerator",
+        "trust_pass_denominator"
+      ],
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "role": "world_model_trust_pass_rate_metric",
+      "sha256": "sha256:729051199af30af6ec33567086f3430d027cb50b73fabd3ce6ef66605f9f4595"
+    },
+    "B2": {
+      "artifact": "results/experiment_4611_adversarial_verify_hardening.json",
+      "exists": true,
+      "imported_fields": [
+        "tautology_carveout_added",
+        "wm_trust_guard_added",
+        "tests_added"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "included_clean",
+      "role": "adversarial_verify_hardening",
+      "sha256": "sha256:6d4dc2733a869043d7b34aec0b436e3ad57f27629aa211e2dc92011246e79585"
+    },
+    "REGISTRY": {
+      "artifact": "ops/arc_solve_registry.yaml",
+      "exists": true,
+      "imported_fields": [
+        "reproducible_total_levels"
+      ],
+      "included_in_headline": true,
+      "quarantined_fields_reported": [],
+      "reason": "authoritative_registry",
+      "role": "authoritative_reproducible_total_levels",
+      "sha256": "sha256:f51795f11e7c9fecf67b4087fd2bf56488c13d326a4383938905427cdb469fad"
+    }
+  },
+  "duration_s": 1.1199330079834908,
+  "experiment": "experiment_4614_capstone_v425",
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+    },
+    "first_win_rate_scored": {
+      "principle": "the A2 SCORED-agent first-win-rate (did the live-integration earn its place on the leaderboard path)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial / positive-control-failed artifact EXCLUDED + the .425-B2 TAUTOLOGY carve-out applied (so a real k/n win is not re-quarantined) -- fabrication-gate + false-negative-risk compliance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: pivot_cracked_0.08_wall_trust_pass_<n>_first_win_up OR complete: pivot_characterized_capability_grew_55_to_<n>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "live_submittable_level_count": {
+      "principle": "the A4 operator-resubmit count (must stay > 33)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (upstream artifacts present, offline arcade); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "ready_for_operator_submit": {
+      "principle": "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; never submits (operator-only)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "reproducible_total_levels": {
+      "principle": "authoritative from the registry (A3 bank, 55->56+) -- did solve CAPABILITY grow."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "registry after - 55, emitted explicitly so a null is annotated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) -- a circular win would not count."
+    },
+    "world_model_trust_pass_rate": {
+      "principle": "the HEADLINE co-metric (A1/B1) -- did a world-model path pass the new gate + get used where the binary gate 0/6 fails (the 0.08-wall crack)."
+    }
+  },
+  "first_win_rate_scored": {
+    "bare_rate": 0.04,
+    "ci": {
+      "bootstrap_resamples": 1000,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "paired_percentile_bootstrap",
+      "point": 0.0,
+      "random_seed": 4605
+    },
+    "clean_value": null,
+    "delta": 0.0,
+    "headline_numbers_aggregated": false,
+    "quarantined_value": 0.04,
+    "reason": "flagged_adversarial_or_live_critical_excluded",
+    "source": "results/experiment_4605_live_integration_scored_agent.json"
+  },
+  "flagged_artifacts_handled": {
+    "excluded_artifacts": [
+      "results/experiment_4604_world_model_trust_energy.json",
+      "results/experiment_4605_live_integration_scored_agent.json",
+      "results/experiment_4610_world_model_trust_pass_rate_metric.json"
+    ],
+    "excluded_details": [
+      {
+        "artifact": "results/experiment_4604_world_model_trust_energy.json",
+        "critical_flags": [
+          {
+            "detail": "duration_s=0.44 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+            "kind": "DURATION_TOO_SHORT"
+          }
+        ],
+        "name": "A1",
+        "reason": "flagged_adversarial_or_live_critical_excluded"
+      },
+      {
+        "artifact": "results/experiment_4605_live_integration_scored_agent.json",
+        "critical_flags": [],
+        "name": "A2",
+        "reason": "flagged_adversarial_or_live_critical_excluded"
+      },
+      {
+        "artifact": "results/experiment_4610_world_model_trust_pass_rate_metric.json",
+        "critical_flags": [
+          {
+            "detail": "World-model trust pass is degenerate or circular: verifier_is_oracle=None, not False; no positive correctly-predicted grid-changing transition evidence. A trust pass must declare verifier_is_oracle=false and show >=1 correctly predicted grid-changing transition so identity/no-op models cannot clear the gate.",
+            "kind": "WORLD_MODEL_TRUST_DEGENERACY"
+          }
+        ],
+        "name": "B1",
+        "reason": "flagged_adversarial_or_live_critical_excluded"
+      }
+    ],
+    "failed_acceptance_gate_overrides": [],
+    "false_negative_risk_open_artifacts": [],
+    "guard_note": "Stamped flagged, live-critical, positive-control-failed, and false-negative-risk-open artifacts are excluded from clean headline claims; B2 only exempts real small-sample k/n TAUTOLOGY flags.",
+    "positive_control_failed_artifacts": [],
+    "tautology_carveouts": [],
+    "tautology_small_sample_carveout_applied": true,
+    "world_model_trust_guard_active": true
+  },
+  "honest_verdict": "complete: pivot_characterized_capability_grew_55_to_55",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "live_submittable_level_count": 55,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "offline_arcade": true,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 55,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4614": true,
+    "summarize_artifact_py_used_for_live_flags": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "B2": true
+    }
+  },
+  "random_seed": 4614,
+  "ready_for_operator_submit": true,
+  "reproducibility_checksum": "sha256:7d6c8ddd308dc76cb2cee756dcc9afe40756b38f4761f9db2e7155e0ea674a1c",
+  "reproducible_total_levels": 55,
+  "reproducible_total_levels_delta": 0,
+  "result_path": "results/experiment_4614_capstone_v425.json",
+  "schema": "carnot.exp4614.capstone_v425.v1",
+  "scorecard": {
+    "A1": {
+      "artifact": "results/experiment_4604_world_model_trust_energy.json",
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "trust_metric": {
+        "baseline": 0.0,
+        "binary_gate_failures": "0/6",
+        "clean_value": null,
+        "delta": 1.0,
+        "headline_numbers_aggregated": false,
+        "planner_used_required": true,
+        "quarantined_sources": [
+          "results/experiment_4604_world_model_trust_energy.json",
+          "results/experiment_4610_world_model_trust_pass_rate_metric.json"
+        ],
+        "quarantined_value": 1.0,
+        "reason": "world_model_trust_sources_excluded_or_not_oracle_distinct",
+        "source": null,
+        "trust_pass_denominator": 6,
+        "trust_pass_numerator": 6
+      }
+    },
+    "A2": {
+      "artifact": "results/experiment_4605_live_integration_scored_agent.json",
+      "first_win_rate_scored": {
+        "bare_rate": 0.04,
+        "ci": {
+          "bootstrap_resamples": 1000,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "method": "paired_percentile_bootstrap",
+          "point": 0.0,
+          "random_seed": 4605
+        },
+        "clean_value": null,
+        "delta": 0.0,
+        "headline_numbers_aggregated": false,
+        "quarantined_value": 0.04,
+        "reason": "flagged_adversarial_or_live_critical_excluded",
+        "source": "results/experiment_4605_live_integration_scored_agent.json"
+      },
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_or_live_critical_excluded"
+    },
+    "A3": {
+      "artifact": "results/experiment_4606_levelup_selfplay.json",
+      "included_in_headline": true,
+      "offline_reproduced": false,
+      "registry_delta_vs_55": 0,
+      "registry_reproducible_total_levels": 55,
+      "reproduced_levels": 0
+    },
+    "A4": {
+      "artifact": "results/experiment_4607_refresh_submission_package.json",
+      "count_delta": 0,
+      "included_in_headline": true,
+      "live_submittable_level_count": 55,
+      "ready_for_operator_submit": true
+    },
+    "A5": {
+      "included_in_headline": true,
+      "new_levels_banked": 0,
+      "transfer_games": [
+        "bp35",
+        "dc22",
+        "g50t"
+      ],
+      "value_added_games": [
+        "bp35",
+        "dc22",
+        "g50t"
+      ],
+      "verifier_is_oracle": false
+    },
+    "A6": {
+      "actions_delta_vs_bare": 0.0,
+      "first_win_rate_integrated": 0.0,
+      "included_in_headline": true,
+      "parity_test_green": true,
+      "reason": "included_clean",
+      "submitted_config_raised_metric_clean": false,
+      "world_model_trust_pass_rate_integrated": 0.0
+    },
+    "B1": {
+      "artifact": "results/experiment_4610_world_model_trust_pass_rate_metric.json",
+      "included_in_headline": false,
+      "reason": "flagged_adversarial_or_live_critical_excluded"
+    },
+    "B2": {
+      "artifact": "results/experiment_4611_adversarial_verify_hardening.json",
+      "included_in_headline": true,
+      "tautology_small_sample_carveout_applied": true,
+      "world_model_trust_guard_active": true
+    },
+    "action_efficiency": {
+      "ci": [
+        1.0,
+        1.0
+      ],
+      "clean_value": 1.0,
+      "context_only": true,
+      "source": "results/experiment_4610_world_model_trust_pass_rate_metric.json"
+    },
+    "generic_transfer": {
+      "ci": [
+        0.0,
+        0.1
+      ],
+      "clean_value": 0.04,
+      "context_only": true,
+      "source": "results/experiment_4610_world_model_trust_pass_rate_metric.json"
+    },
+    "headline": {
+      "a3_bank_plus_one": false,
+      "a4_operator_resubmit_ready_above_33": true,
+      "pivot_cracked_0_08_wall_clean": false,
+      "scored_first_win_rate_raised_clean": false
+    },
+    "verifier_is_oracle_claim_audit": {
+      "A1": {
+        "artifact": "results/experiment_4604_world_model_trust_energy.json",
+        "included_in_headline": false,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A2": {
+        "artifact": "results/experiment_4605_live_integration_scored_agent.json",
+        "included_in_headline": false,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A4": {
+        "artifact": "results/experiment_4607_refresh_submission_package.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A5": {
+        "artifact": "results/experiment_4608_primitive_persist_transfer.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "A6": {
+        "artifact": "results/experiment_4609_integration_gate.json",
+        "included_in_headline": true,
+        "oracle_distinct": true,
+        "verifier_is_oracle": false
+      },
+      "all_included_value_claims_false": true
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4614",
+    "SCENARIO-CAPSTONE-4614",
+    "SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false,
+  "world_model_trust_pass_rate": {
+    "baseline": 0.0,
+    "binary_gate_failures": "0/6",
+    "clean_value": null,
+    "delta": 1.0,
+    "headline_numbers_aggregated": false,
+    "planner_used_required": true,
+    "quarantined_sources": [
+      "results/experiment_4604_world_model_trust_energy.json",
+      "results/experiment_4610_world_model_trust_pass_rate_metric.json"
+    ],
+    "quarantined_value": 1.0,
+    "reason": "world_model_trust_sources_excluded_or_not_oracle_distinct",
+    "source": null,
+    "trust_pass_denominator": 6,
+    "trust_pass_numerator": 6
+  }
+}
