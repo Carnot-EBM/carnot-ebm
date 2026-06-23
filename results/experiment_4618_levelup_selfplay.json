@@ -1,0 +1,91 @@
+{
+  "dead_ends_recorded": [
+    "prior sk48 routing-only chain-permutation attempt did not bank L2; this run replaced it with a grounded chain-color reorder adapter.",
+    "sk48 standing loop reached L1, not beyond prior L1"
+  ],
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
+    "target_game": "the rotated game attempted -- traceable to the rotation discipline (a clean-nav game not deepened in .421-.425, not dc22/ka59).",
+    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+  },
+  "honest_verdict": "complete: sk48_delta_identified_no_bank",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": false,
+  "preconditions_checked": [
+    "arc_solver_kit.offline_arcade()"
+  ],
+  "prior_reproduced_level": 1,
+  "random_seed": 4618,
+  "reached_level": 1,
+  "registry_updated": false,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "a63f6d98ac8d4ef63b00023be3330fc47f0b1735e9dee31a468c008f15232078",
+  "reproducible_total_levels_after": 55,
+  "reproducible_total_levels_before": 55,
+  "reproduction_gate": {
+    "claimed_level": 1,
+    "game": "sk48",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "solution_labels": [
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":3}",
+    "{\"action\":2}",
+    "{\"action\":2}",
+    "{\"action\":4}",
+    "{\"action\":3}",
+    "{\"action\":1}",
+    "{\"action\":4}"
+  ],
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-CAPSTONE-4618",
+    "SCENARIO-CAPSTONE-4618"
+  ],
+  "standing_loop_result_path": "results/arc_loop_solve_sk48.json",
+  "states_expanded": 44,
+  "target_game": "sk48",
+  "target_selection": {
+    "preferred_targets": [
+      "sk48",
+      "wa30",
+      "ls20",
+      "lf52",
+      "re86",
+      "bp35"
+    ],
+    "prior_sk48_dead_end": "sk48 remained routing/search-progress only; no offline L2 bank.",
+    "rotation_rule": "clean-nav_L1_not_deepened_in_421_425_and_not_dc22_ka59",
+    "selected": "sk48",
+    "skipped": []
+  },
+  "verifier_checkpoint_updated": true,
+  "verifier_delta": {
+    "after_sha256": "1df872578c1b27ea6078e0cc4889ffa0ee4aeef1c7009b17035eaae22603dbad",
+    "before_sha256": null,
+    "checkpoint_path": "models/arc_verifier_sk48.json",
+    "negative_trace_notes": [
+      "prior sk48 routing-only chain-permutation attempt did not bank L2; this run replaced it with a grounded chain-color reorder adapter.",
+      "sk48 standing loop reached L1, not beyond prior L1"
+    ],
+    "positive_trace_steps": 14,
+    "sha_changed": true,
+    "updated": true
+  }
+}

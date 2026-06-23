@@ -278,6 +278,49 @@ FT09_L2_TAIL_LABELS: tuple[str, ...] = (
 
 FT09_L2_SOLUTION_LABELS: tuple[str, ...] = FT09_L1_LABELS + FT09_L2_TAIL_LABELS
 
+SK48_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(action)
+    for action in (1, 1, 1, 4, 4, 4, 4, 3, 2, 2, 4, 3, 1, 4)
+)
+
+SK48_L2_TAIL_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(action)
+    for action in (
+        1,
+        1,
+        4,
+        4,
+        4,
+        4,
+        4,
+        1,
+        4,
+        3,
+        3,
+        1,
+        4,
+        4,
+        3,
+        3,
+        3,
+        1,
+        4,
+        4,
+        4,
+        3,
+        3,
+        3,
+        3,
+        1,
+        4,
+        4,
+        4,
+        4,
+    )
+)
+
+SK48_L2_SOLUTION_LABELS: tuple[str, ...] = SK48_L1_LABELS + SK48_L2_TAIL_LABELS
+
 CN04_L1_LABELS: tuple[str, ...] = (
     _json_action_label(2),
     _json_action_label(4),
@@ -1119,7 +1162,7 @@ def _ka59():
         hand_verifier=lambda _game, _frame=None: 0.0,
         warmup_label=None,
         depth_caps={1: len(l1_labels), 2: 2, 3: 2},
-        branch_mode="replay",
+        branch_mode="fresh_env",
     )
 
 
@@ -1190,9 +1233,119 @@ def _ft09():
     )
 
 
+def _sk48():
+    """sk48 -- chain-color reorder L1->L2 delta registered from the offline env."""
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+    from carnot.agentic import arc_solver_kit as kit
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(SK48_L1_LABELS):
+            return [SK48_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(SK48_L2_TAIL_LABELS):
+            return [SK48_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        action = int(row["action"])
+        data = row.get("data") if isinstance(row.get("data"), dict) else None
+        return env.step(_game_action(GameAction, action), data=data)
+
+    def _sprite_row(sprite):
+        return (
+            str(getattr(sprite, "name", "")),
+            int(getattr(sprite, "x", 0)),
+            int(getattr(sprite, "y", 0)),
+            int(getattr(sprite, "rotation", 0)),
+            _sprite_color(sprite),
+            bool(getattr(sprite, "visible", True)),
+        )
+
+    def _chain_rows(game):
+        rows = []
+        for head, chain in getattr(game, "mwfajkguqx", {}).items():
+            rows.append(
+                (
+                    _sprite_row(head),
+                    tuple(_sprite_row(segment) for segment in chain),
+                    _sprite_row(getattr(game, "xpmcmtbcv", {}).get(head)),
+                )
+            )
+        return tuple(sorted(rows))
+
+    def _match_counts(game):
+        try:
+            game.gvtmoopqgy()
+            pairs = getattr(game, "xpmcmtbcv", {})
+            seen = getattr(game, "vjfbwggsd", {})
+            guides = getattr(game, "jdojcthkf", {})
+            missing = 0
+            mismatched = 0
+            matched = 0
+            for active, paired in pairs.items():
+                active_seen = list(seen.get(active, []) or [])
+                paired_seen = list(seen.get(paired, []) or [])
+                required = max(len(guides.get(paired, []) or []), len(paired_seen))
+                for index in range(required):
+                    if index >= len(active_seen) or index >= len(paired_seen):
+                        missing += 1
+                    elif _sprite_color(active_seen[index]) == _sprite_color(paired_seen[index]):
+                        matched += 1
+                    else:
+                        mismatched += 1
+            return matched, mismatched, missing
+        except Exception:
+            return 0, 1000, 0
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0)
+        active = getattr(game, "vzvypfsnt", None)
+        return (
+            int(level),
+            _sprite_row(active),
+            _chain_rows(game),
+            int(getattr(game, "qiercdohl", 0) or 0),
+            int(getattr(game, "lgdrixfno", -1) or -1),
+        )
+
+    def hand_verifier(game, frame=None):
+        del frame
+        _matched, mismatched, missing = _match_counts(game)
+        return float(mismatched + missing)
+
+    def featurize(game):
+        matched, mismatched, missing = _match_counts(game)
+        active = getattr(game, "vzvypfsnt", None)
+        return [
+            float(mismatched),
+            float(missing),
+            float(matched),
+            float(len(getattr(game, "mwfajkguqx", {}) or {})),
+            float(len((getattr(game, "mwfajkguqx", {}) or {}).get(active, []) or [])),
+            float(getattr(game, "qiercdohl", 0) or 0),
+        ]
+
+    return GameAdapter(
+        game="sk48",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: len(SK48_L1_LABELS), 2: len(SK48_L2_TAIL_LABELS), 3: 2},
+        branch_mode="fresh_env",
+    )
+
+
 _BUILDERS = {
     "ar25": _ar25,
     "ft09": _ft09,
+    "sk48": _sk48,
     "ka59": _ka59,
     "cn04": _cn04,
     "su15": _su15,
