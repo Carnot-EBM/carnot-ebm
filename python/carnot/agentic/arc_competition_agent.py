@@ -1477,7 +1477,15 @@ class E3AgentPolicy:
                     self._world_model_candidates(engine, is_done),
                     hidden_state=True,
                 )
-                if self.world_model_trust_selection.selected_score.heldout_accuracy < 0.5:
+                trust_score = self.world_model_trust_selection.selected_score
+                attempt["trust_energy"] = round(float(trust_score.trust_energy), 6)
+                attempt["heldout_change_consistency"] = round(
+                    float(trust_score.heldout_change_consistency), 6
+                )
+                attempt["heldout_accuracy"] = round(float(trust_score.heldout_accuracy), 6)
+                attempt["correct_changed_cells"] = int(trust_score.correct_changed_cells)
+                attempt["binary_gate_pass"] = bool(trust_score.binary_gate_pass)
+                if not trust_score.trust_pass:
                     attempt["skipped"] = "hidden_state_trust_below_threshold"
                     return
                 engine = self.world_model_trust_selection.selected.engine
