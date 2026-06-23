@@ -863,6 +863,15 @@ learned-dynamics path (a DIFFERENT mechanism the flag does NOT govern) flips 4 g
 lever is to ROUTE live trust to the TTT dynamics on those games (sc25/tn36/lp85; ka59 is hidden-state)
 and measure whether a trusted TTT model drives `plan_in_model` to a live win. Needs the TTT CNN wired
 into the live plan path. Evidence: `docs/research-notes/trust-gate-flip-measured-noop-2026-06-23.md`.
+**UPDATE 2026-06-23 — TTT-route MEASURED, blocked (not a quick win).** Already wired
+(`arc_ttt_solve_loop.ttt_solve`, pieces 1+2+3); the live loop hits the **exploration-to-first-win wall**
+(sc25 `first_levelup_actions=None`, `plan_attempts=0` — naive explore never reaches a win → no goal →
+no plan). The best cell_recall passers (sc25 0.80 / tn36 0.87) are `status: needs_per_game_RE` (NOT
+offline-solved → no goal to inject). An injected-win test on lp85 (the one real L4 solve): `n_win_states=4`
++ gate-pass but BOTH full-memorization and CNN-only `plan_in_model` found NO plan (candidate-enum can't
+reproduce lp85's clicks → confounded isolation). The TTT-route is gated on directed-exploration-to-first-win
+(the generation-guidance wall `.428` goal-energy/expansion-prior attack). Branch `outer-loop/ttt-route`;
+`docs/research-notes/ttt-route-measured-blocked-2026-06-23.md`.
 
 ### ~~NEW 2026-06-23 (.429+ candidate — operator-flagged; ARC sprint sub-direction, the PRIZE = grow live solve-rate): MACRO-ACTION VOCABULARY INDUCTION (horizon collapse)~~ — RETIRED (see above)
 
