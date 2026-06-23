@@ -46715,3 +46715,114 @@ milestones:
       guard + the positive-control-failed guard.'
     deliverable: results/experiment_4590_capstone_v423.json
     result: OK (conductor)
+- id: 2026.06.424
+  title: 'GENERATION COMPLETENESS -- finally attack the candidate-GENERATION wall directly: WIRE the toolkit approaches into
+    the held-out generation harness so the SELECTED approach actually RUNS and GENERATES the winner (winner_generated 1/25
+    -> up; the un-tried fix after re-ranking/routing/verifier-expansion all nulled), add an objective goal-distance ENERGY
+    generation prior for the residual; keep the 53-level package operator-resubmit-ready (beat 33) and bank +1 more level'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-23'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4591-phase0
+    title: PHASE 0 (TRANSITION) -- archive .423 -> activate .424; assert YAML parses + smart-subset pre-test gate green; RECORD
+      the TRUE .423 close-state (A1 closed the live-submission gap to 53 [count_delta=20, env-adaptive recovered sc25]; A2
+      banked ar25 L2 -> reproducible_total_levels=54; A3 feature-ROUTER null generic_transfer=0.04 with winner_generated=1/25
+      [15/24 misses are variant_wired=False]; A4 diversity-floor no transfer; generation-not-ranking quadruply-confirmed;
+      the .424 pivot = WIRE the toolkit into the generation harness).
+    deliverable: results/experiment_4591_archive_423_activate_424.json
+    result: OK (conductor)
+  - id: exp4592-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- GENERATION COMPLETENESS) -- WIRE the toolkit
+      approaches into the held-out variant generation harness (measure_generic_transfer_over_variants''s variant_runner):
+      dispatch each held-out variant to its mechanic-class approach so the SELECTED approach actually RUNS and GENERATES candidates
+      -- goal_distance_solve for avatar_navigation+click_connect (the 15 variant_wired=False misses), graph_explore_solve_v2+diversity
+      for graph classes, the iGPU LLM reasoner for the residual tail. Gate: winner_generated_rate STRICTLY > 1/25 AND generic_transfer
+      > 0.04 (CI excl 0.04) OR lower actions-to-first-levelup, solve-rate not dropped, vs the no-wiring matched control. verifier_is_oracle:
+      false. retire_if_same_verdict.'
+    deliverable: results/experiment_4592_generation_completeness_wiring.json
+    result: OK (conductor)
+  - id: exp4593-a2
+    title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve --auto or a rotation target) to bank +1 NEW reproducible level on a game NOT
+      deepened in .420-.423 (ar25 was .423, cn04 .422, m0r0 .421; prefer sk48 L1->L2 graph/world-model family, or another
+      shallow L1 game; SKIP ka59 [hidden-register stall] / cd82-L3 / sp80-L3 / su15-L3 recorded dead-ends) AND train+checkpoint
+      the learned verifier on pos/neg traces. Gate: offline_reproduced new level -> reproducible_total_levels 54 -> 55+.'
+    deliverable: results/experiment_4593_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4594-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; DEEP MOAT -- ENERGY-AUGMENTED GENERATION) -- an OBJECTIVE goal-distance
+      / structural-progress ENERGY as a GENERATION PRIOR that biases the explorer''s action proposals toward the goal, for
+      the WIRED-BUT-STILL-FAILING classes (keyboard_graph systematic_bfs, 7 unsolved) + the no-avatar config/click tail. The
+      operator''s 2026-06-20 energy-augmented-ARC spine. This is a GENERATION prior over game-agnostic structure, NOT a learned-value
+      best-first EXPANSION priority (which regressed .422 A2). Measure winner_generated_rate + ACTION cost WITH the energy
+      prior vs WITHOUT, with a matched control. verifier_is_oracle: false. retire_if_same_verdict.'
+    deliverable: results/experiment_4594_goal_energy_generation_prior.json
+    result: OK (conductor)
+  - id: exp4595-a4
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A2''s new bank (+ any A1/A3
+      newly-reproduced variant solves) into the refreshed submission package; keep it ready_for_operator_submit (beat the
+      standing 33-level scorecard); extend the env-adaptive re-solve recovery to any newly version-drifted game. The live-submittable
+      count must stay STRICTLY > 33 and reflect current banked depth. Submission stays operator-only. verifier_is_oracle:
+      false.'
+    deliverable: results/experiment_4595_refresh_submission_package.json
+    result: OK (conductor)
+  - id: exp4596-a5
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the milestone''s winning primitive
+      (A1 the mechanic-class -> approach DISPATCHER as a reusable generic operator; OR A3 the goal-distance ENERGY generation
+      prior) into arc_solver_kit / arc_solve_registry (ARC Solve Reproducibility + Solver-Reuse Discipline; SkillComposer-style
+      consolidation arXiv:2606.06079), and measure CROSS-GAME TRANSFER: does the persisted primitive add value on games it
+      was NOT tuned on? verifier_is_oracle: false.'
+    deliverable: results/experiment_4596_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4597-a6
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- wire whatever RAISED a real metric
+      (A1 wired dispatch -> winner_generated_rate/generic_transfer; A3 goal-energy prior; A2 new bank) into the SUBMITTED
+      agent + the refreshed package; re-measure end-to-end on winner_generated_rate + generic_transfer (baseline 0.04) + live-submittable
+      count (vs 33). If NONE raised a metric, keep the bare config + honest null. Keep test_arc_submitted_agent_parity.py
+      green. verifier_is_oracle: false.'
+    deliverable: results/experiment_4597_integration_gate.json
+    result: OK (conductor)
+  - id: exp4598-b1
+    title: PHASE B1 (RESERVED INFRA) -- formalize winner_generated_rate (the fraction of held-out variants for which SOME
+      approach GENERATED the winning candidate) as a capstone CO-HEADLINE metric, distinct from generic_transfer (solve-rate)
+      and from reproducible_total_levels (banked capability). winner_generated_rate is the direct measure of the generation-vs-ranking
+      gap the .424 headline attacks (1/25 baseline). Surfaces it side-by-side with reproducible_total_levels + live-submittable
+      count + generic_transfer + action efficiency. Asserting tests.
+    deliverable: results/experiment_4598_winner_generated_rate_metric.json
+    result: OK (conductor)
+  - id: exp4599-b2
+    title: 'PHASE B2 (RESERVED INFRA) -- TAUTOLOGY null-delta false-flag guard in adversarial_verify.py: an artifact declaring
+      an EXPLICIT null-delta (a *_delta field == 0) WITH a null_delta_methodology_note AND a passing positive control is a
+      DECLARED honest null, NOT a bug -- downgrade its two-equal-metrics TAUTOLOGY from CRITICAL to annotated-WARN so the
+      capstone READS it instead of EXCLUDING it (the recurring .423 A3/A4/A6 false-exclusion: with_X=baseline=0.04 tripped
+      CRITICAL TAUTOLOGY). Keep TAUTOLOGY CRITICAL for genuinely-distinct-metric bit-identity with no declared null-delta.
+      Asserting tests.'
+    deliverable: results/experiment_4599_tautology_null_delta_guard.json
+    result: OK (conductor)
+  - id: exp4600-c
+    title: PHASE C (HARDWARE CONTINUITY; operator MANDATORY; one task per attached board) -- KV260 (SSH reachability only,
+      NEVER host SD card), GateMate (USB detect), PolarFire (SSH). Per-board continuity audit; honest blocked_<board>_<reason>
+      if a board is unreachable.
+    deliverable: results/experiment_4600_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4601-d
+    title: PHASE D (SOTA-INGESTION; reserved; bleeding-edge track = candidate GENERATION / world-model induction on novel
+      games) -- ingest SOTA on inducing/generating a solution on FIRST CONTACT with an unseen interactive game (Code World
+      Models 2510.04542, Adaptive World Models in Novel Games 2507.12821, One Life to Learn symbolic WM 2510.12088, predictive-WM
+      exploration 2502.13200, ScreenExplorer 2505.19095, Sensi curriculum test-time learning 2603.17683, LLM exploration-oracle
+      2502.00225, Executable World Models 2605.05138, SkillGen 2605.10999), mapped onto the .424 A1 (wire-the-toolkit generation)
+      + A3 (energy generation prior) headlines. Emit a SOTA->experiment mapping note with real arXiv IDs + flag the strongest
+      method for .425.
+    deliverable: results/experiment_4601_sota_ingestion_generation.json
+    result: OK (conductor)
+  - id: exp4602-e
+    title: 'PHASE E (CAPSTONE .424) -- the scorecard: did A1 WIRING the toolkit into the generation harness raise winner_generated_rate
+      above 1/25 AND generic_transfer above 0.04 (the generation wall)? Did the A3 goal-energy generation prior help the wired-but-failing
+      classes? Did A2 grow reproducible_total_levels (54->55+)? Is the refreshed package still operator-resubmit-ready above
+      33 (A4)? Report ALL co-headline metrics (reproducible_total_levels + live-submittable count + generic_transfer w/ CI
+      + action efficiency + winner_generated_rate [B1]). Skip flagged_adversarial EXCEPT the annotated null-delta carve-out
+      (now mechanical via the .424 B2 guard); honor the .423 B2 offline-arc-METHODOLOGY + .422 B2 learned-CNN + positive-control-failed
+      guards.'
+    deliverable: results/experiment_4602_capstone_v424.json
+    result: OK (conductor)
