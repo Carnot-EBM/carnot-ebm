@@ -93,3 +93,20 @@ Realistic week outcome: graft the tier schedule, A/B on the 5 win-games, aim to 
 possibly the other 3 unsolved games re86/sb26/lf52 the degraded JE didn't reach but a de-degraded one
 might). Cross-refs: `sota-rapid-accel-levers-2026-06-23.md`, branch `outer-loop/h2h-just-explore`,
 `/home/ianblenke/arc-sota-refs/arc-agi-3-just-explore` (arXiv:2512.24156).
+
+## DIAGNOSIS of the 2 'genuine gaps' (bp35/m0r0): they DISSOLVE -- thread closed
+Captured just-explore's winning trajectories on bp35/m0r0 (`results/proto_bp35_diag.json`):
+- **bp35: just-explore reaches only L0** (seed 0, budget 2000). Its head-to-head L1 was a low-probability
+  best-of-3 seed, NOT a robust capability -- bp35 is hard for it too. Not an extractable target.
+- **m0r0: L1 is a 93-action MIXED keyboard+click sequence** (longest same-action run 3) reached only after
+  854 actions of stateful exploration. just-explore's edge is exploration DEPTH our replay-from-reset
+  offline explorer can't reach within budget -- and we already solve m0r0->L2 via a per-game adapter.
+- ft09/r11l: 42-44 long click sequences = confirmed budget-artifact (our explorer reaches at 4x budget).
+
+**Conclusion: the just-explore head-to-head yields NO robust extractable capability gap for the LIVE
+agent.** Every apparent win is seed-noise (bp35) or offline replay-overhead depth (m0r0/ft09/r11l) -- and
+the live `E3AgentPolicy` is STATEFUL (no replay overhead), so it does not share the offline explorer's
+handicap. **Methodology caveat for any future SOTA head-to-head (e.g. StochasticGoose):** comparing a
+stateful SOTA agent to our offline replay-from-reset `graph_explore_solve_v2` is confounded by the ~4x
+replay overhead; a fair LEADER head-to-head must compare against the LIVE stateful `E3AgentPolicy`, not
+the bare offline explorer. The just-explore extraction thread is CLOSED (no lever).
