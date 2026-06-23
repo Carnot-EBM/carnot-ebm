@@ -1,0 +1,84 @@
+{
+  "question": "does flipping CARNOT_ARC_TRUST_METRIC=cell_recall lift live first-win?",
+  "governed_path": "e3_llm_dsl_induction (the live env-var gate path)",
+  "e3_path_gate_flips": 0,
+  "e3_path_per_game": [
+    {
+      "game": "cn04",
+      "exact_accuracy": 0.1333,
+      "cell_recall": 0.0146,
+      "exact_gate": "FAIL",
+      "cell_gate": "FAIL",
+      "flips_fail_to_pass": false
+    },
+    {
+      "game": "sc25",
+      "exact_accuracy": 0.35,
+      "cell_recall": 0.0547,
+      "exact_gate": "FAIL",
+      "cell_gate": "FAIL",
+      "flips_fail_to_pass": false
+    },
+    {
+      "game": "ar25",
+      "exact_accuracy": 0.6667,
+      "cell_recall": 0.8567,
+      "exact_gate": "PASS",
+      "cell_gate": "PASS",
+      "flips_fail_to_pass": false
+    },
+    {
+      "game": "cd82",
+      "exact_accuracy": 0.1917,
+      "cell_recall": 0.0,
+      "exact_gate": "FAIL",
+      "cell_gate": "FAIL",
+      "flips_fail_to_pass": false
+    },
+    {
+      "game": "ka59",
+      "exact_accuracy": 0.1667,
+      "cell_recall": 0.4628,
+      "exact_gate": "FAIL",
+      "cell_gate": "FAIL",
+      "flips_fail_to_pass": false
+    }
+  ],
+  "ttt_path_gate_flips": 4,
+  "ttt_path_per_game": [
+    {
+      "game": "cd82",
+      "exact": 0.0,
+      "cell_recall": 0.3299,
+      "flips_fail_to_pass": false
+    },
+    {
+      "game": "ka59",
+      "exact": 0.0,
+      "cell_recall": 0.9119,
+      "flips_fail_to_pass": true
+    },
+    {
+      "game": "sc25",
+      "exact": 0.0,
+      "cell_recall": 0.7975,
+      "flips_fail_to_pass": true
+    },
+    {
+      "game": "tn36",
+      "exact": 0.0,
+      "cell_recall": 0.8714,
+      "flips_fail_to_pass": true
+    },
+    {
+      "game": "lp85",
+      "exact": 0.0,
+      "cell_recall": 0.5898,
+      "flips_fail_to_pass": true
+    }
+  ],
+  "live_first_win_provably_unchanged": true,
+  "VERDICT": "DEAD_live_gate_flip_is_a_noop_induction_quality_is_the_wall",
+  "why": "On the e3 path the flag governs, ZERO gap-1 games are exact-FAIL+cell_recall-PASS: the LLM/DSL-induced dynamics have cell_recall ~0 (cn04 0.0146, cd82 0.0, sc25 0.0547) -- they are WRONG, not imperfect-but-useful, so neither gate trusts them and flipping changes no decision -> identical agent -> identical first-win. Induction QUALITY is the wall, not the gate.",
+  "sharper_untested_lever": "The TTT learned-dynamics path flips 4 games FAIL->PASS (ka59 0.91, sc25 0.80, tn36 0.87, lp85 0.59 cell_recall) -- those models ARE imperfect-but-useful. The real lever is to ROUTE live trust to the TTT dynamics on those games (not flip the gate on the e3 path), then measure whether a trusted TTT model drives plan_in_model to a live win. That needs the TTT CNN wired into the live plan path + a GPU run -- genuinely untested."
+}
