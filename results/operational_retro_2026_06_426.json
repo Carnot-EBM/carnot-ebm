@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.426",
+  "generated_at": "2026-06-23T13:21:55Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked numeric fields read 0 because the milestone-scoped TIMING-DATA detector again reported a FALSE-ZERO for 2026.06.426 (the same recurring bug seen .363-.425); on-disk ground truth read this turn shows the full ARC-sprint phase set exp4615 (archive/activate) through exp4626 (capstone) ran -- ~12 artifacts over roughly 06:09->09:13 local (~3h, ~184 min). This was a normal-throughput milestone (~15 min/experiment avg), not a slow one and not an empty one.",
+  "bottlenecks_identified": [
+    "RECURRING DATA-INTEGRITY BUG (highest leverage): the conductor's milestone-scoped timing detector injected '0 experiments / 0 wall-min' into the retro prompt while the filesystem shows exp4615-exp4626 actually ran. The retro's authoritative numbers are wrong at the source; the locked fields are pinned to that false-zero per the locked-field contract.",
+    "No per-experiment wall-time bottleneck exists: ~12 experiments in ~184 min is healthy throughput; no single slow experiment to cite.",
+    "No compute-bound task ran on a MONITORED GPU: the ARC live generator is the frozen Qwen3.5-9B-MTP on the AMD iGPU (per project policy), and the capstone is aggregation-only. So both RTX 3090s idle at 0% is CORRECT, not a bug -- gpu_idle_on_compute_bound_tasks is null and DualGPURunner is inapplicable this milestone."
+  ],
+  "improvements_suggested": [
+    "Wire the on-disk artifact detector (ls results/experiment_*.json mtimes since activation, or the per-phase scorecard) into the conductor's retro TIMING-DATA prompt-assembly call site so the retro receives real exp ranges and durations instead of a false-zero. This is the single highest-leverage operational fix and has been carried for 60+ milestones.",
+    "Add a HARD retro-launch gate: if injected experiment count == 0 but on-disk artifacts newer than activation exist, refuse to launch the retro with the false-zero and re-derive from disk.",
+    "Stamp duration_s + inference_substrate + a compute_bound flag at artifact WRITE time so milestone-scoped timing aggregation is trivial and tamper-evident, removing the dependency on git-commit-window heuristics.",
+    "Keep both idle RTX 3090s reserved for parallel compute-bound work; engage DualGPURunner (carnot.pipeline.dual_gpu_harness) only when a task loads 2+ models on the monitored cards (not applicable this milestone)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped retro timing detector (on-disk re-derivation + injected==on-disk launch gate) so retrospectives stop reporting false-zeros and the operational record is trustworthy.",
+    "Stamp duration_s/inference_substrate/compute_bound at artifact write time to make per-milestone timing aggregation deterministic.",
+    "Leave the locked numeric fields untouched per contract, but record the on-disk ground truth (exp4615-exp4626, ~184 min) in the changelog and research-log so the milestone is not falsely logged as empty."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The recurring lesson holds: the operational bottleneck this milestone is not wall time (throughput was healthy at ~15 min/experiment) but DATA INTEGRITY -- a retro driven by a false-zero detector cannot analyze efficiency it cannot see. The honest move is to pin the locked fields to the contract value while reconstructing reality from disk for the narrative, and to finally wire the on-disk detector into the conductor so the next 60 milestones don't repeat this reconciliation by hand."
+}
