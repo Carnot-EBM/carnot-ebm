@@ -27,6 +27,8 @@ from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
+import carnot.agentic.arc_solve_learning as arc_solve_learning
+import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
     MAX_REFINEMENT_ROUNDS,
@@ -64,9 +66,9 @@ MAX_ACTIONS = 200
 # default solve-rate with the v3 head at weight>0 (+ a possible lazy/cheap eval); raise value_weight ONLY
 # if it beats bare-BFS on solve-rate AND finishes in budget. Until then: v3 head loaded, weight 0 (cheap).
 SUBMITTED_VALUE_WEIGHT = 0.0
-# Exp 4524 measured the fixed 8-game local gate and found the run-to-completion control banks only L1 on
-# every CORE solve; target 1 stops at the scored gate target instead of burning the post-level-up tail.
-SUBMITTED_TARGET_LEVELS = 1
+# Exp 4605 wires the live scored path to attempt deeper levels. The verifier stays a tie-breaker
+# (`value_weight=0`) so depth remains primary; deeper target levels only keep the loop alive after L1.
+SUBMITTED_TARGET_LEVELS = 3
 # Smart grace-period early-stop: stop this many moves after the LAST level-up if no new level appears
 # (cuts the fruitless post-solve tail, WITHOUT capping the configured scored target). None = disabled.
 SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
@@ -75,8 +77,9 @@ SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
 SUBMITTED_LAZY_VALUE_TOP_K = 4
 SUBMITTED_FRONTIER_BATCH_SIZE: int | str = 1
-SUBMITTED_NAVIGATION_COST_TIEBREAK = False
+SUBMITTED_NAVIGATION_COST_TIEBREAK = True
 _DEFAULT_VALUE_HEAD = object()
+_DEFAULT_CANDIDATE_ROUTER = object()
 
 
 def load_solutions() -> dict[str, list[dict]]:
@@ -156,6 +159,30 @@ def _route_explore_budget(route: dict[str, Any]) -> int:
     if route.get("uses_goal_distance_heuristic") is False:
         return SUBMITTED_ROUTED_EXPLORE_BUDGET
     return SUBMITTED_GRAPH_EXPLORE_BUDGET
+
+
+def _recommend_live_approach(game_id: str, *, mechanic: Optional[str] = None) -> dict[str, Any]:
+    """Return the solve-learning recommendation, falling back to the lightweight strategy router."""
+
+    try:
+        rec = arc_solve_learning.recommend_approach(game_id, mechanic=mechanic)
+        if isinstance(rec, dict) and isinstance(rec.get("strategy"), dict):
+            return rec
+    except Exception as exc:
+        return {
+            "error": f"recommend_approach_failed:{type(exc).__name__}",
+            "strategy": arc_strategy_router.route_for_game(game_id, mechanic=mechanic),
+        }
+    return {"strategy": arc_strategy_router.route_for_game(game_id, mechanic=mechanic)}
+
+
+def _load_submitted_candidate_router() -> Any | None:
+    """Load the Exp4545 v3 discriminative router as a safe candidate-order tie-breaker."""
+
+    try:
+        return arc_discriminative_router.load_cross_game_discriminative_router(root=REPO)
+    except Exception:
+        return None
 
 
 class StepwiseExplorer:
@@ -265,6 +292,7 @@ class StepwiseExplorer:
         # costing the efficient wins. Measured: hybrid 3/11 vs structured 1/11, lp85 kept efficient (eff 2.0069).
         import os as _os
         import random as _random
+
         self._hybrid_diversity = _os.environ.get("CARNOT_ARC_EXPLORE_DIVERSITY", "0") != "0"
         self._stall_threshold = int(_os.environ.get("CARNOT_ARC_EXPLORE_STALL", "150"))
         self._div_topk = int(_os.environ.get("CARNOT_ARC_EXPLORE_DIV_TOPK", "8"))
@@ -580,15 +608,21 @@ class StepwiseExplorer:
 
     @staticmethod
     def _same_path_step(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
-        return int(left.get("action")) == int(right.get("action")) and left.get("data") == right.get("data")
+        return int(left.get("action")) == int(right.get("action")) and left.get(
+            "data"
+        ) == right.get("data")
 
     @classmethod
-    def _path_is_prefix(cls, prefix: Sequence[Mapping[str, Any]], path: Sequence[Mapping[str, Any]]) -> bool:
+    def _path_is_prefix(
+        cls, prefix: Sequence[Mapping[str, Any]], path: Sequence[Mapping[str, Any]]
+    ) -> bool:
         if len(prefix) > len(path):
             return False
         return all(cls._same_path_step(left, right) for left, right in zip(prefix, path))
 
-    def _record_forward_edge(self, origin: Optional[str], action: Mapping[str, Any], next_hash: str) -> None:
+    def _record_forward_edge(
+        self, origin: Optional[str], action: Mapping[str, Any], next_hash: str
+    ) -> None:
         if origin is None or next_hash == origin:
             return
         act = {"action": int(action["action"]), "data": action.get("data")}
@@ -807,7 +841,9 @@ class StepwiseExplorer:
             self.awaiting = {"origin": self.cur, "action": item["kind"], "data": item["data"]}
         return (item["kind"], item["data"])
 
-    def _drop_queued_action_from_current_frontier(self, origin: Optional[str], item: Mapping[str, Any]) -> None:
+    def _drop_queued_action_from_current_frontier(
+        self, origin: Optional[str], item: Mapping[str, Any]
+    ) -> None:
         if origin is None:
             return
         node = self.graph.get(origin)
@@ -820,7 +856,9 @@ class StepwiseExplorer:
                 return
 
     def _pop_frontier_batch(self, node: dict) -> list[dict]:
-        limit = len(node["untested"]) if self.frontier_batch_size is None else self.frontier_batch_size
+        limit = (
+            len(node["untested"]) if self.frontier_batch_size is None else self.frontier_batch_size
+        )
         count = min(int(limit), len(node["untested"]))
         actions = node["untested"][:count]
         del node["untested"][:count]
@@ -832,7 +870,11 @@ class StepwiseExplorer:
         top-K -- the injection that recovers the structure-missed wins (r11l/sp80) the depth-first ride over-
         commits past. Flag OFF -> always pop(0) -> byte-identical to the submitted behavior."""
         lst = node["untested"]
-        if self._hybrid_diversity and self._steps_since_progress > self._stall_threshold and len(lst) > 1:
+        if (
+            self._hybrid_diversity
+            and self._steps_since_progress > self._stall_threshold
+            and len(lst) > 1
+        ):
             return lst.pop(self._div_rng.randrange(min(len(lst), self._div_topk)))
         return lst.pop(0)
 
@@ -840,7 +882,7 @@ class StepwiseExplorer:
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
             return ("RESET", None)
         self._ingest(latest)
-        if self._hybrid_diversity and latest is not None:   # track stall for the diversity injection
+        if self._hybrid_diversity and latest is not None:  # track stall for the diversity injection
             _lvl = _level_of(latest)
             if _lvl > self._nm_best_level:
                 self._nm_best_level = _lvl
@@ -1082,13 +1124,20 @@ class E3AgentPolicy:
         lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
-        candidate_router: Any | None = None,
+        candidate_router: Any = _DEFAULT_CANDIDATE_ROUTER,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
         if value_head is _DEFAULT_VALUE_HEAD:
             value_head = load_cross_game_value_head()
-        self.strategy_route = arc_strategy_router.route_for_game(self.short)
+        if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
+            candidate_router = _load_submitted_candidate_router()
+        self.approach_recommendation = _recommend_live_approach(self.short)
+        self.strategy_route = dict(
+            self.approach_recommendation.get("strategy")
+            or arc_strategy_router.route_for_game(self.short)
+        )
+        self.approach_recommendation["strategy"] = self.strategy_route
         self._route_from_frame_checked = False
         self.mechanic_detector = mechanic_detector or _frame_only_mechanic_hint
         self.dsl_model = ObjectDeltaModel(self.short)
@@ -1149,9 +1198,18 @@ class E3AgentPolicy:
             mechanic = mechanic.get("mechanic")
         if not mechanic or mechanic == "unknown":
             return
-        routed = arc_strategy_router.route_for_game(self.short, mechanic=str(mechanic))
+        recommendation = _recommend_live_approach(self.short, mechanic=str(mechanic))
+        routed = dict(
+            recommendation.get("strategy")
+            or arc_strategy_router.route_for_game(
+                self.short,
+                mechanic=str(mechanic),
+            )
+        )
         if routed.get("name") != self.strategy_route.get("name"):
             self.strategy_route = routed
+            recommendation["strategy"] = routed
+            self.approach_recommendation = recommendation
             self.explore_budget = min(self.explore_budget, _route_explore_budget(routed))
 
     def _fit_dsl_model(self) -> None:
@@ -1195,7 +1253,9 @@ class E3AgentPolicy:
         self._observed_level = level
         return events
 
-    def _begin_level_goal_episode(self, completed_level: int, *, frames_seen: int) -> dict[str, Any]:
+    def _begin_level_goal_episode(
+        self, completed_level: int, *, frames_seen: int
+    ) -> dict[str, Any]:
         next_goal = int(completed_level) + 1
         self._current_goal_level = next_goal
         self._episode_transition_start = len(self.transitions)
@@ -1418,6 +1478,7 @@ class E3AgentPolicy:
             # induction. Non-fatal -- never breaks the existing path. The prior is models/arc_dynamics_prior.pt.
             try:
                 from carnot.agentic.arc_live_ttt import gated_engine_from_transitions
+
                 _eng, _isdone, _diag = gated_engine_from_transitions(self.short, active_transitions)
                 attempt["ttt_prior_engine"] = _diag
                 if _eng is not None and self.root_grid is not None:
@@ -1492,6 +1553,7 @@ class E3AgentPolicy:
                 is_done = self.world_model_trust_selection.selected.is_level_complete or is_done
             else:
                 import os
+
                 vr = e3.WorldModelVerifier(active_transitions).score(engine)
                 # CARNOT_ARC_TRUST_METRIC=cell_recall gates on GRADED changed-cell recall instead of the
                 # exact-FULL-GRID match (the coordinated-redesign lever for the 0.08 wall: exact-match reads
@@ -1543,12 +1605,26 @@ SUBMITTED_AGENT_CONFIG = {
     "frontier_batch_size": SUBMITTED_FRONTIER_BATCH_SIZE,
     "navigation_cost_tiebreak": SUBMITTED_NAVIGATION_COST_TIEBREAK,
     "router_wired": True,
+    "solve_learning_router_wired": True,
+    "strategy_router_enabled": True,
+    "discriminative_router_wired": True,
+    "discriminative_candidate_router_enabled": True,
+    "candidate_router": "cross_game_discriminative_v3_tiebreaker",
+    "verifier_is_oracle": False,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
     "live_submit_package_path": "results/experiment_4595_submission_package_operator_resubmit.json",
     "live_submit_source": "experiment_4595_refresh_submission_package",
     "feature_router_enabled": False,
     "explore_diversity_default": False,
+    "bare_control_config": {
+        "policy": "E3AgentPolicy",
+        "target_levels": 1,
+        "value_weight": 0.0,
+        "search_mode": SUBMITTED_SEARCH_MODE,
+        "candidate_router": None,
+        "navigation_cost_tiebreak": False,
+    },
 }
 
 
@@ -1588,6 +1664,10 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
                     search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),
                     lazy_value_top_k=int(SUBMITTED_AGENT_CONFIG["lazy_value_top_k"]),
+                    frontier_batch_size=SUBMITTED_AGENT_CONFIG["frontier_batch_size"],
+                    navigation_cost_tiebreak=bool(
+                        SUBMITTED_AGENT_CONFIG["navigation_cost_tiebreak"]
+                    ),
                 )
                 if cascade
                 else CarnotAgentPolicy(gid, load_solutions())

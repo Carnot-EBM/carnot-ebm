@@ -18,7 +18,11 @@ import pytest
 from carnot import experiment_4551_offline_live_proposer_parity as exp4551
 from carnot.agentic import arc_competition_agent as m
 from carnot.agentic.arc_competition_agent import (
-    E3AgentPolicy, SUBMITTED_AGENT_CONFIG, StepwiseExplorer, make_carnot_agent)
+    E3AgentPolicy,
+    SUBMITTED_AGENT_CONFIG,
+    StepwiseExplorer,
+    make_carnot_agent,
+)
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -45,7 +49,7 @@ def test_submission_defaults_to_e3_cascade_not_banked_replay():
 
 
 def test_shipped_explorer_config_matches_single_source_of_truth():
-    """REQ-REPORT-4475-LIVE-STACK: shipped explorer config is the declared default."""
+    """REQ-CAPSTONE-4605: shipped explorer config is the declared integrated default."""
     # the live explorer config must equal the declared SUBMITTED_AGENT_CONFIG; any silent change to the
     # E3AgentPolicy/StepwiseExplorer defaults fails here until SUBMITTED_AGENT_CONFIG is consciously updated.
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
@@ -59,21 +63,27 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     # weight>0 was a measured regression (per-node v3 eval too slow). Pin it to 0 until .416 shows a
     # weight>0 beats bare-BFS live AND finishes in budget. (NOT `> 0` — that asserted the regression.)
     assert exp.value_weight == 0.0
-    assert exp.target_levels == 1
+    assert exp.target_levels > 1
+    assert exp.candidate_router is not None
+    assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["verifier_is_oracle"] is False
 
 
-def test_req_arc_wmte_4548_null_a1_a4_levers_are_not_submitted_by_default():
-    """REQ-ARC-WMTE-4548: null A1/A4 levers stay off the submitted path."""
+def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
+    """REQ-CAPSTONE-4605: value weight stays zero while router/deepening ship."""
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     exp = pol.explorer
 
-    assert SUBMITTED_AGENT_CONFIG["target_levels"] == 1
-    assert exp.target_levels == 1
+    assert SUBMITTED_AGENT_CONFIG["target_levels"] > 1
+    assert exp.target_levels > 1
+    assert SUBMITTED_AGENT_CONFIG["value_weight"] == 0.0
+    assert exp.value_weight == 0.0
     assert exp.frame_change_scorer is None
     assert exp.frame_change_prune_threshold is None
     assert exp.action_prior is None
     assert exp.action_prior_prune_quantile is None
-    assert SUBMITTED_AGENT_CONFIG["feature_router_enabled"] is False
+    assert SUBMITTED_AGENT_CONFIG["strategy_router_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["explore_diversity_default"] is False
 
 
@@ -84,27 +94,40 @@ def test_req_capstone_4597_submitted_config_points_at_refreshed_package():
         SUBMITTED_AGENT_CONFIG["live_submit_package_path"]
         == "results/experiment_4595_submission_package_operator_resubmit.json"
     )
-    assert SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4595_refresh_submission_package"
+    assert (
+        SUBMITTED_AGENT_CONFIG["live_submit_source"] == "experiment_4595_refresh_submission_package"
+    )
 
 
 def test_wired_flags_reflect_actual_imports():
-    """REQ-REPORT-4475-LIVE-STACK: shipped config declares real router/DSL imports."""
+    """REQ-CAPSTONE-4605: shipped config declares real router/verifier/DSL imports."""
     # router_wired / world_model_dsl_wired must match whether the modules are ACTUALLY referenced in the
     # submission module -- catches BOTH "wired the module but left the flag stale" AND "flag claims wired
     # but the import is missing". This is the exact gap that shipped bare BFS at 0.08.
     src = inspect.getsource(m)
     assert SUBMITTED_AGENT_CONFIG["router_wired"] == _imports("arc_strategy_router", src), (
-        "router_wired flag disagrees with whether arc_strategy_router is imported in the submission path")
-    assert SUBMITTED_AGENT_CONFIG["world_model_dsl_wired"] == _imports("arc_world_model_dsl", src), (
-        "world_model_dsl_wired flag disagrees with whether arc_world_model_dsl is imported")
+        "router_wired flag disagrees with whether arc_strategy_router is imported in the submission path"
+    )
+    assert SUBMITTED_AGENT_CONFIG["solve_learning_router_wired"] == _imports(
+        "arc_solve_learning", src
+    ), "solve_learning_router_wired flag disagrees with whether arc_solve_learning is imported"
+    assert SUBMITTED_AGENT_CONFIG["discriminative_router_wired"] == _imports(
+        "arc_discriminative_router", src
+    ), (
+        "discriminative_router_wired flag disagrees with whether arc_discriminative_router is imported"
+    )
+    assert SUBMITTED_AGENT_CONFIG["world_model_dsl_wired"] == _imports(
+        "arc_world_model_dsl", src
+    ), "world_model_dsl_wired flag disagrees with whether arc_world_model_dsl is imported"
 
 
 def test_e3_policy_builds_strategy_route_and_world_model_dsl():
-    """SCENARIO-REPORT-4475-LIVE-STACK-PARITY: E3 first contact has router + DSL state."""
+    """SCENARIO-CAPSTONE-4605: E3 first contact has router + DSL state."""
     pol = E3AgentPolicy("tn36", proposer=None, value_head=lambda _frame: 0.0)
     assert pol.strategy_route["game"] == "tn36"
     assert pol.strategy_route["name"] == "program_editor"
     assert pol.strategy_route["uses_goal_distance_heuristic"] is False
+    assert pol.approach_recommendation["strategy"] == pol.strategy_route
     assert pol.dsl_model.game_id == "tn36"
     assert pol.explore_budget < SUBMITTED_AGENT_CONFIG["graph_explore_budget"]
 
@@ -210,17 +233,14 @@ def test_scenario_arc_wmte_4551_artifact_records_fixture_results(tmp_path: Path)
         write=True,
     )
 
-    assert artifact["honest_verdict"] == (
-        "shipped: offline_live_proposer_parity_guard_added"
-    )
+    assert artifact["honest_verdict"] == ("shipped: offline_live_proposer_parity_guard_added")
     assert artifact["inference_substrate"] == exp4551.INFERENCE_SUBSTRATE
     assert artifact["proposer_config_mismatch_detected"] is True
-    assert artifact["fixture_results"]["disabled_induction_mismatch"][
-        "proposer_config_mismatch"
-    ] is True
-    assert artifact["fixture_results"]["matched_config_clean"][
-        "proposer_config_mismatch"
-    ] is False
+    assert (
+        artifact["fixture_results"]["disabled_induction_mismatch"]["proposer_config_mismatch"]
+        is True
+    )
+    assert artifact["fixture_results"]["matched_config_clean"]["proposer_config_mismatch"] is False
     assert artifact["tests_added_pass"]["passed"] is True
     assert exp4551.validate_artifact(artifact) == []
 
