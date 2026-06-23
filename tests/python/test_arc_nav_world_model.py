@@ -176,7 +176,7 @@ def test_enter_mode_catches_perpendicular_step_on_that_toward_misses():
     g = np.full((7, 9), WALL, dtype=int)
     g[5, 5] = AV                            # row 5, charger centred row 2 -> 3 rows off-line before the move
     g[1, 5] = HAZ; g[2, 4] = HAZ; g[2, 5] = HAZ  # noqa: E702
-    g[2, 6] = HAZ; g[3, 5] = HAZ            # charger blob centred ~(2,5)
+    g[2, 6] = HAZ; g[3, 5] = HAZ  # noqa: E702  charger blob centred ~(2,5)
     toward = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="toward")
     enter = HazardAwareNavWorldModel.fit(_haz_transitions(), goal_color=GOAL, lethal_mode="enter")
     # action 1 = up = perpendicular step onto the charger's row band
