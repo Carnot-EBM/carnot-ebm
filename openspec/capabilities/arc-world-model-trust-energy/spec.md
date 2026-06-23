@@ -2019,3 +2019,75 @@ including `2605.05138`, `2502.01989`, `2510.18135`, `2511.09515`,
 `2102.04518`, `2406.04935`, `2206.03023`, and `2502.20379`, flag one or more
 `.426` roadmap candidates, record all network and citation preconditions
 checked, and record that `/deep-research` was not used.
+
+### REQ-ARC-WMTE-4616: Offline-To-Live Bridge Cause Disambiguation
+
+Experiment 4616 SHALL diagnose why the learned ARC value head transfers
+offline but regresses the live depth-first explorer. The runner SHALL first
+check that `arc_solver_kit.offline_arcade()` and the `LearnedVerifier`,
+`cross_game_features_v3`, and `collect_trajectory_data` imports are available.
+If either precondition fails, it SHALL write a blocked artifact with
+`honest_verdict` beginning `blocked_`, include `preconditions_checked`, and
+SHALL NOT fabricate bridge evidence.
+
+The experiment SHALL evaluate three controlled arms against the matched bare
+BFS control and the value-head-as-is control over the diagnostic corpus where
+the value head has an offline routing win: compute-cost, distribution-shift,
+and calibration. The compute-cost arm SHALL compare value-head solves or
+first-win at equal node budget versus equal wall-clock budget. The
+distribution-shift arm SHALL compare the value head's AUROC on winning-path
+states against off-path frontier states that the live search expands. The
+calibration arm SHALL measure rank-to-true-steps monotonicity and whether
+post-hoc isotonic/Platt-style calibration alone changes the live routing. A
+diagnosis is valid only when the bare BFS control ran and the offline value-head
+win is confirmed.
+
+Experiment 4616 SHALL write
+`results/experiment_4616_offline_live_bridge_disambiguation.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `binding_bridge_cause`,
+`compute_cost_evidence`, `distribution_shift_evidence`,
+`calibration_evidence`, `indicated_fix`, `offline_win_confirmed`,
+`positive_control_passed`, `false_negative_risk_checked`,
+`per_game_variance`, `residual_bridge_gaps`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. The artifact SHALL
+set `verifier_is_oracle=false` because the SpatialValueNet/value head is a
+learned ranking signal, oracle-distinct from the executable win-check.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: bridge_cause_isolated_<compute|shift|calibration>_fix_identified OR complete: bridge_cause_inseparable_multi_cause_honest_residual_logged."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline value-head scoring + live-search arms over cached transitions (1s floor); if an LLM arm runs, declare live_llm_inference + the Qwen3.5-9B-MTP iGPU precondition."
+- `verifier_is_oracle`: principle "MUST be false -- the SpatialValueNet is a learned value ranking states, oracle-DISTINCT from running the executable win-check."
+- `binding_bridge_cause`: principle "which of compute_cost, distribution_shift, calibration binds, or inseparable_multi_cause."
+- `compute_cost_evidence`: principle "value-head solves/first-win at equal node budget vs equal wall-clock."
+- `distribution_shift_evidence`: principle "AUROC on winning-path states versus live off-path frontier states."
+- `calibration_evidence`: principle "rank-to-cost monotonicity plus whether recalibration changes routing."
+- `indicated_fix`: principle "decision-point-only eval/cached features, DAgger search-distribution retraining/bounded-pruning, or isotonic calibration."
+- `offline_win_confirmed`: principle "positive control that the value head wins offline on the diagnostic corpus."
+- `positive_control_passed`: principle "bare BFS matched control ran and the offline win exists."
+- `false_negative_risk_checked`: principle "true with matched control plus offline-win confirmation."
+- `per_game_variance`: principle "LOO-AUROC spread across games, including whether the bridge cause is uniform."
+- `residual_bridge_gaps`: principle "Missing-Verifier / bridge gaps logged for any cause not isolated."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4616-BRIDGE-CAUSE
+
+**Given** the offline arcade and value learner imports are available, the
+diagnostic corpus confirms an offline value-head routing win, and the matched
+bare BFS control runs
+**When** experiment 4616 evaluates compute-cost, distribution-shift, and
+calibration arms
+**Then** it reports the binding bridge cause when exactly one arm crosses its
+diagnostic threshold, otherwise reports `inseparable_multi_cause`, records the
+corresponding indicated fix, keeps `verifier_is_oracle=false`, and emits a
+stable checksum.
+
+#### SCENARIO-ARC-WMTE-4616-BLOCKED-PRECONDITION
+
+**Given** the offline arcade or value-learner imports are unavailable
+**When** experiment 4616 runs its precondition check
+**Then** it writes a blocked artifact with `preconditions_checked`, a terminal
+`blocked_` verdict, no fabricated bridge evidence, and a stable checksum.
