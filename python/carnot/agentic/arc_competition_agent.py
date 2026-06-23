@@ -30,6 +30,7 @@ import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
+from carnot.agentic.arc_frame_change_predictor import load_live_action_effect_scorer
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
@@ -80,8 +81,11 @@ SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
 SUBMITTED_LAZY_VALUE_TOP_K = 4
 SUBMITTED_FRONTIER_BATCH_SIZE: int | str = 1
 SUBMITTED_NAVIGATION_COST_TIEBREAK = True
+SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED = True
+SUBMITTED_FRAME_CHANGE_RANKING_MODE = "persistent_aem_plus_optional_cnn"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
+_DEFAULT_FRAME_CHANGE_SCORER = object()
 
 
 def load_solutions() -> dict[str, list[dict]]:
@@ -183,6 +187,17 @@ def _load_submitted_candidate_router() -> Any | None:
 
     try:
         return arc_discriminative_router.load_cross_game_discriminative_router(root=REPO)
+    except Exception:
+        return None
+
+
+def _load_submitted_frame_change_scorer() -> Any | None:
+    """REQ-ARC-FCP-4629: load the live action-effect scorer for the submitted E3 path."""
+
+    if not SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED:
+        return None
+    try:
+        return load_live_action_effect_scorer(root=REPO)
     except Exception:
         return None
 
@@ -1241,7 +1256,7 @@ class E3AgentPolicy:
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
         search_mode: str = SUBMITTED_SEARCH_MODE,
         mechanic_detector=None,
-        frame_change_scorer: Any | None = None,
+        frame_change_scorer: Any = _DEFAULT_FRAME_CHANGE_SCORER,
         frame_change_prune_threshold: float | None = None,
         action_prior: Any | None = None,
         action_prior_prune_quantile: float | None = None,
@@ -1262,6 +1277,8 @@ class E3AgentPolicy:
             value_head = load_cross_game_value_head()
         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
             candidate_router = _load_submitted_candidate_router()
+        if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
+            frame_change_scorer = _load_submitted_frame_change_scorer()
         self.approach_recommendation = _recommend_live_approach(self.short)
         self.strategy_route = dict(
             self.approach_recommendation.get("strategy")
@@ -1745,6 +1762,9 @@ SUBMITTED_AGENT_CONFIG = {
     "lazy_value_top_k": SUBMITTED_LAZY_VALUE_TOP_K,
     "frontier_batch_size": SUBMITTED_FRONTIER_BATCH_SIZE,
     "navigation_cost_tiebreak": SUBMITTED_NAVIGATION_COST_TIEBREAK,
+    "frame_change_predictor_enabled": SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED,
+    "frame_change_ranking_mode": SUBMITTED_FRAME_CHANGE_RANKING_MODE,
+    "frame_change_prune_threshold": None,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

@@ -65,6 +65,12 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert exp.value_weight == 0.0
     assert exp.target_levels > 1
     assert exp.candidate_router is not None
+    assert exp.frame_change_scorer is not None
+    assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
+    assert (
+        SUBMITTED_AGENT_CONFIG["frame_change_ranking_mode"]
+        == "persistent_aem_plus_optional_cnn"
+    )
     assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["verifier_is_oracle"] is False
 
@@ -78,8 +84,10 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
     assert exp.target_levels > 1
     assert SUBMITTED_AGENT_CONFIG["value_weight"] == 0.0
     assert exp.value_weight == 0.0
-    assert exp.frame_change_scorer is None
+    assert exp.frame_change_scorer is not None
     assert exp.frame_change_prune_threshold is None
+    assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
+    assert SUBMITTED_AGENT_CONFIG["frame_change_prune_threshold"] is None
     assert exp.action_prior is None
     assert exp.action_prior_prune_quantile is None
     assert SUBMITTED_AGENT_CONFIG["strategy_router_enabled"] is True
@@ -151,7 +159,9 @@ def test_stepwise_explorer_prefers_forward_shortest_path_over_reset():
 
     assert exp.next_move([], None) == (7, None)
     assert exp.next_move([], None) == (2, {"x": 1, "y": 2})
-    assert exp.awaiting == {"origin": "B", "action": 2, "data": {"x": 1, "y": 2}}
+    assert exp.awaiting["origin"] == "B"
+    assert exp.awaiting["action"] == 2
+    assert exp.awaiting["data"] == {"x": 1, "y": 2}
 
 
 def test_req_arc_wmte_4551_spec_declares_offline_live_proposer_parity_guard():
