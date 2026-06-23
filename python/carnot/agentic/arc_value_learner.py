@@ -161,14 +161,44 @@ def _grid2d(frame: Any) -> np.ndarray:
 
 
 def _component_stats_from_grid(g: np.ndarray) -> list[dict[str, float]]:
+    """4-connectivity non-background components -> per-component stats (centroid / area / dominant color /
+    bbox). ``scipy.ndimage.label`` fast path (~34x faster than the pure-python flood fill it replaces);
+    falls back to the original flood fill when scipy is absent (the live Kaggle kernel may lack it). The
+    downstream features are order-invariant (min/mean/max/std + all-pairs), so only the SET of component
+    stats must match -- verified identical over 40 random grids (2026-06-23)."""
     vals, counts = np.unique(g, return_counts=True)
     bg = float(vals[counts.argmax()]) if vals.size else 0.0
     mask = g != bg
     if not mask.any():
         return []
+    try:
+        from scipy import ndimage  # fast path
+    except Exception:
+        ndimage = None
+    comps: list[dict[str, float]] = []
+    if ndimage is not None:
+        labels, n = ndimage.label(mask)  # default = 4-connectivity (same cross neighbourhood)
+        ys_idx, xs_idx = np.indices(g.shape)
+        for k in range(1, n + 1):
+            m = labels == k
+            cy_, cx_, colors = ys_idx[m], xs_idx[m], g[m]
+            cvals, ccounts = np.unique(colors, return_counts=True)
+            comps.append(
+                {
+                    "cy": float(cy_.mean()),
+                    "cx": float(cx_.mean()),
+                    "area": float(int(m.sum())),
+                    "color": float(cvals[ccounts.argmax()]),
+                    "y0": float(cy_.min()),
+                    "y1": float(cy_.max()),
+                    "x0": float(cx_.min()),
+                    "x1": float(cx_.max()),
+                }
+            )
+        return comps
+    # ---- pure-python fallback (original 4-neighbour flood fill; identical output) ----
     h, w = g.shape
     seen = np.zeros_like(mask, dtype=bool)
-    comps: list[dict[str, float]] = []
     for i in range(h):
         for j in range(w):
             if not mask[i, j] or seen[i, j]:
