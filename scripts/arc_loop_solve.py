@@ -31,7 +31,8 @@ sys.path.insert(0, str(REPO / "python"))
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic import arc_game_adapters as adapters
 from carnot.agentic import arc_solve_learning as learning
-from carnot.agentic.arc_value_learner import LearnedVerifier, collect_trajectory_data
+from carnot.agentic.arc_value_learner import collect_trajectory_data
+from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_graph_explore import graph_explore_solve_v2, trajectory_labels
 
 CKPT_DIR = REPO / "models"
@@ -40,6 +41,15 @@ RESULTS = REPO / "results"
 
 def _ckpt_path(game: str) -> Path:
     return CKPT_DIR / f"arc_verifier_{game}.json"
+
+
+def _live_verifier_for_adapter(game: str, adapter):
+    """Return the live warm-start verifier for an adaptered solve."""
+
+    spatial = load_live_spatial_value_head(root=REPO, game=game)
+    if spatial is not None:
+        return spatial, "spatial_value_head_live_checkpoint"
+    return adapter.hand_verifier, "hand_verifier_cold_start_no_spatial_checkpoint"
 
 
 def _label_to_action(label: str) -> dict:
@@ -64,14 +74,8 @@ def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> 
         )
     ]
 
-    # warm-start the search with a saved LEARNED verifier if present, else hand verifier
-    ckpt = _ckpt_path(game)
-    if ckpt.exists() and ad.featurize is not None:
-        verifier = LearnedVerifier.load(ckpt, ad.featurize)
-        verifier_src = "learned_checkpoint"
-    else:
-        verifier = ad.hand_verifier
-        verifier_src = "hand_verifier_cold_start"
+    # Warm-start with the graduated position-preserving spatial value head when present.
+    verifier, verifier_src = _live_verifier_for_adapter(game, ad)
 
     # EFFICIENCY: an online hazard move-pruner (fits a hazard model from the search's OWN observed
     # deaths -- no offline ground-truth -- and skips moves it predicts walk into a charging enemy). It
@@ -122,6 +126,9 @@ def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> 
     # TRAIN + CHECKPOINT the learned verifier (self-improvement for next run)
     ckpt_written = None
     if X and ad.featurize is not None:
+        from carnot.agentic.arc_value_learner import LearnedVerifier
+
+        ckpt = _ckpt_path(game)
         lv = LearnedVerifier(ad.featurize).fit(X, y)
         lv.save(
             ckpt,

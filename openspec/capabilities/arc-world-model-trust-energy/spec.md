@@ -2091,3 +2091,101 @@ stable checksum.
 **When** experiment 4616 runs its precondition check
 **Then** it writes a blocked artifact with `preconditions_checked`, a terminal
 `blocked_` verdict, no fabricated bridge evidence, and a stable checksum.
+
+### REQ-ARC-WMTE-4617: Graduate Spatial Value Head Into Live Path
+
+Experiment 4617 SHALL graduate the position-preserving `SpatialValueNet` from
+the experiment-only value-Q-head scripts into a live-path-reachable
+`carnot.agentic` module. The graduated head SHALL keep a coarse 4x4 spatial map
+before the scalar MLP head, SHALL expose the same `frame -> float` lower-is-better
+contract as the existing `ValueNet`, and SHALL be loadable from live model
+checkpoints without importing any `scripts/experiments/*` module.
+
+The live integration SHALL replace the linear `LearnedVerifier` warm-start in
+`scripts/arc_loop_solve.py` with the graduated spatial checkpoint loader and
+SHALL make the same module reachable from `E3AgentPolicy`. The live scored path
+SHALL apply the experiment-4616 compute-cost bridge fix by using cached,
+decision-point-only/bounded value evaluation or an inert tie-breaker
+configuration; it SHALL NOT ship the known-regressed heavy `value_weight=5`
+A* mode. The `scripts/arc_orphan_solver_lint.py` live-path reachability gate
+SHALL pass after the integration.
+
+Experiment 4617 SHALL measure the graduated spatial head against the current
+linear baseline and a bare BFS control on matched held-out public-game variants.
+It SHALL report live first-win-rate, median actions-to-first-level-up, solve-rate,
+and a paired bootstrap confidence interval on the first-win delta. A success
+claim SHALL require the graduated arm to beat the linear baseline with confidence
+or to reduce actions-to-first-level-up while preserving solve-rate and not
+dropping below bare BFS. Otherwise it SHALL emit an honest null.
+
+Experiment 4617 SHALL write
+`results/experiment_4617_graduate_spatial_value_head_live.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `solve_provenance`,
+`value_head_live_path_reachable`, `bridge_fix_applied`,
+`first_win_rate_graduated`, `first_win_rate_linear_baseline`,
+`first_win_rate_bare`, `first_win_delta`, `first_win_ci`,
+`median_actions_to_first_levelup_graduated`, `actions_delta`,
+`value_weight_used`, `parity_test_green`, `bare_and_linear_controls_passed`,
+`false_negative_risk_checked`, `solve_rate_preserved`,
+`chosen_submitted_config`, `offline_reproduced`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. When
+`first_win_delta == 0`, the artifact SHALL include
+`null_delta_methodology_note`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: spatial_value_head_graduated_live_first_win_up_<n> OR complete: spatial_value_head_graduated_no_live_value_honest_null_gap_sharpened."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); any LLM arm on the iGPU declares live_llm_inference."
+- `verifier_is_oracle`: principle "MUST be false -- the SpatialValueNet is a learned value, oracle-DISTINCT from the executable win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- this graduates the value head into the SCORED live agent's OWN path (arc_loop_solve warm-start + E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re."
+- `value_head_live_path_reachable`: principle "HARD gate -- the graduated module is imported by scripts/arc_loop_solve.py AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT an orphaned scripts/experiments solver, per the Live-Path Reachability Discipline)."
+- `bridge_fix_applied`: principle "the A1-indicated fix actually wired (decision-point-only/cached / DAgger-retrained / isotonic-calibrated) -- documents the targeted, not naive, integration."
+- `first_win_rate_graduated`: principle "the HEADLINE -- held-out LIVE first-win-rate WITH the graduated SpatialValueNet (> the linear baseline is the bridge crossed)."
+- `first_win_rate_linear_baseline`: principle "the matched LINEAR-verifier baseline on the SAME variants (today's warm-start that 'actively misled' -- the apples-to-apples control)."
+- `first_win_rate_bare`: principle "the bare-BFS control (no value head) -- the no-regression floor."
+- `first_win_delta`: principle "graduated - linear baseline (positive = the position-preserving head crosses the bridge), emitted explicitly so a null (0) is annotated."
+- `first_win_ci`: principle "bootstrap CI on the first-win delta; a claim above the linear baseline requires the CI to exclude it."
+- `median_actions_to_first_levelup_graduated`: principle "ACTION cost WITH the graduated head -- the leaderboard tiebreaker (RHAE rewards efficiency)."
+- `actions_delta`: principle "linear_actions - graduated (positive = fewer actions); emitted explicitly so a null is annotated."
+- `value_weight_used`: principle "MUST be ~0 (tie-breaker) or the A1-indicated bounded mode -- documents that this did NOT repeat the value_weight=5 regression."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth."
+- `bare_and_linear_controls_passed`: principle "the POSITIVE CONTROLS -- graduated must beat the linear baseline on the SAME variants AND not drop below bare BFS; a null is valid only if both ran."
+- `false_negative_risk_checked`: principle "true with both controls run -- a no-value null is valid only then."
+- `null_delta_methodology_note`: principle "present when first_win_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+- `solve_rate_preserved`: principle "HARD gate -- graduating the head must NOT drop solve-rate vs bare BFS."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG (graduated head on, value mode, weight) -- the A6 input; 'unchanged' if null."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, E3AgentPolicy + ValueNet importable, A1 artifact present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4617-LIVE-PATH
+
+**Given** the offline arcade, `E3AgentPolicy`, `ValueNet`, and the experiment-4616
+A1 artifact are available
+**When** experiment 4617 integrates the graduated spatial value head
+**Then** `SpatialValueNet` is importable from the live `carnot.agentic` module,
+`scripts/arc_loop_solve.py` imports the spatial checkpoint loader instead of the
+linear `LearnedVerifier` warm-start, `E3AgentPolicy` can reach the same loader,
+the A1 decision-point/cached bridge fix is active, `value_weight` is not the
+known-regressed heavy A* weight, and `scripts/arc_orphan_solver_lint.py` passes.
+
+#### SCENARIO-ARC-WMTE-4617-MATCHED-CONTROLS
+
+**Given** the graduated, linear-baseline, and bare-BFS arms run on the same
+held-out variants
+**When** experiment 4617 builds its result artifact
+**Then** the artifact reports first-win-rate, solve-rate, median
+actions-to-first-level-up, paired bootstrap CI, explicit `first_win_delta` and
+`actions_delta`, sets `verifier_is_oracle=false`, requires offline reproduction
+for any newly solved variant, and emits `null_delta_methodology_note` when the
+graduated and linear first-win rates are equal.
+
+#### SCENARIO-ARC-WMTE-4617-BLOCKED-PRECONDITION
+
+**Given** the offline arcade, live policy imports, value-net imports, or A1
+artifact are unavailable
+**When** experiment 4617 runs its precondition check
+**Then** it writes a blocked artifact with `preconditions_checked`, a terminal
+`blocked_` verdict, no fabricated live-value evidence, and a stable checksum.

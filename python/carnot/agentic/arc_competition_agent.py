@@ -29,6 +29,7 @@ from typing import Any, Mapping, Optional, Sequence
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
+from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
     MAX_REFINEMENT_ROUNDS,
@@ -978,11 +979,9 @@ class StepwiseExplorer:
         return self.explored_out
 
 
-def load_cross_game_value_head():
-    """BRIDGE loader: the frame-only cross-game value head (frame -> predicted steps-to-next-level-up),
-    trained offline on ALL banked solves by scripts/arc_cross_game_verifier_train.py. Returns a callable
-    the StepwiseExplorer routes its frontier with on an UNSEEN game, or None if not yet trained. This is
-    the offline->live distillation: continued offline solves retrain it and the live agent inherits them."""
+def _load_linear_cross_game_value_head():
+    """Legacy linear value-head loader kept as the matched control/fallback."""
+
     from pathlib import Path
 
     models = Path(__file__).resolve().parents[3] / "models"
@@ -1010,6 +1009,20 @@ def load_cross_game_value_head():
     except Exception:
         return None
     return None
+
+
+def load_cross_game_value_head():
+    """BRIDGE loader for the frame-only cross-game value head.
+
+    Prefer the graduated position-preserving SpatialValueNet when a live checkpoint exists. If no
+    spatial checkpoint is available, fall back to the legacy linear checkpoint so older local setups keep
+    running and experiment 4617 can measure that baseline explicitly.
+    """
+
+    spatial = load_live_spatial_value_head()
+    if spatial is not None:
+        return spatial
+    return _load_linear_cross_game_value_head()
 
 
 class CarnotAgentPolicy:
