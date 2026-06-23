@@ -869,6 +869,57 @@ value-head, CNN, or linear forward pass
 `reproducibility_checksum` are present; the same fast run without methodology
 still fires `DURATION_TOO_SHORT`.
 
+### REQ-ARC-WMTE-4625: Offline-To-Live Bridge SOTA Ingestion For .427
+
+Experiment 4625 SHALL synthesize the 2026-06-23 SOTA ingestion focused on the
+.426 headline open problem: why a good offline verifier or value head regresses
+the live search under distribution shift, calibration error, and compute cost.
+The workflow SHALL read the Exp 4613 world-model trust ingestion artifact and
+note, `docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md`,
+`research-studying.md`, and `research-references.md`. It SHALL use only the
+reliable channel (`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
+low-concurrency WebSearch/WebFetch, and direct arXiv HTTP checks) and SHALL NOT
+invoke `/deep-research`. If the Hugging Face network precondition is blocked,
+the workflow SHALL report `blocked_network` rather than fabricate citations.
+
+Experiment 4625 SHALL write
+`docs/research-notes/offline-live-bridge-literature-2026-06-23.md` and
+`results/experiment_4625_sota_ingestion_offline_live_bridge.json`. The artifact
+SHALL include `honest_verdict`, `inference_substrate`, `methods_mapped`,
+`flagged_for_next_roadmap`, `note_path`, `deep_research_not_used`,
+`preconditions_checked`, `citations_verified`, `random_seed`, and
+`field_principles`. The success verdict SHALL be
+`success: sota_ingestion_offline_live_bridge_mapped`, the substrate SHALL be
+`aggregation_from_upstream_artifacts`, and `deep_research_not_used` SHALL be
+true. Each mapped method SHALL cite real arXiv IDs and SHALL include the
+implementation cost over the current A1 disambiguation / A2 graduated-value-head
+stack plus a concrete `fails_when` condition.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_offline_live_bridge_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when -- the actionable ingestion (no citation = fabrication).`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .427 inputs -- closes discover->ingest->plan->experiment.`
+- `note_path`: principle `docs/research-notes/offline-live-bridge-literature-2026-06-23.md -- the per-track note (the SOTA-Ingestion Cycle deliverable).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is banned in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4625: Offline-To-Live Bridge Methods Map Onto A1/A2 And Flag .427 Inputs
+
+Given the network precondition succeeds and the .425/.426 bridge corpus is
+readable
+When experiment 4625 ingests focused papers for DAgger-style search-distribution
+retraining, post-hoc value calibration, learned-heuristic A*/Q* search,
+SLOPE-style pruning, goal-conditioned offline value, and amortized/local
+heuristic compute
+Then the note and JSON artifact map three to five strongest methods onto the
+current A1 disambiguation / A2 graduated-value-head stack, cite real arXiv IDs
+including `1011.0686`, `2604.11351`, `1706.04599`, `2102.04518`,
+`2406.04935`, `2206.03023`, `2511.10264`, and `2303.09477`, flag one or more
+`.427` roadmap candidates, record all network and citation preconditions
+checked, and record that `/deep-research` was not used.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
