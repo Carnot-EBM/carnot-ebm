@@ -2362,6 +2362,14 @@ MULTI_LEVEL_WITHOUT_NONDEGENERATE_METRIC_KIND = (
 MULTI_LEVEL_NONDEGENERATE_METRIC_OMITTED_KIND = (
     "multi-level-nondegenerate-metric-omitted"
 )
+SUBGOAL_SEARCH_WITHOUT_DECOMPOSITION_EVIDENCE_KIND = (
+    "subgoal-search-without-decomposition-evidence"
+)
+SUBGOAL_DECOMPOSITION_EVIDENCE_OMITTED_KIND = (
+    "subgoal-decomposition-evidence-omitted"
+)
+GENERATION_COVERAGE_WITHOUT_BASELINE_KIND = "generation-coverage-without-baseline"
+GENERATION_COVERAGE_BASELINE_OMITTED_KIND = "generation-coverage-baseline-omitted"
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -2894,6 +2902,107 @@ _MULTI_LEVEL_RATE_KEYS = (
     "live_multi_level_solve_rate",
     "multi_level_solve_rate",
 )
+_SUBGOAL_SEARCH_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "solve_provenance",
+    "chosen_submitted_config",
+)
+_SUBGOAL_SEARCH_CONTEXT_MARKERS = (
+    "hierarchical_subgoal",
+    "hierarchical subgoal",
+    "subgoal_search",
+    "subgoal search",
+    "subgoal-search",
+    "subgoal planner",
+    "runtime subgoal",
+    "subgoal decomposition",
+)
+_SUBGOAL_SEARCH_WIN_MARKERS = (
+    "success:",
+    "new_level",
+    "new level",
+    "reached l",
+    "reached_l",
+    "reached level",
+    "reached_level",
+    "generic_agent_reached_level",
+    "levelup",
+    "level-up",
+    "level up",
+)
+_SUBGOAL_SEARCH_NULL_TEXT_MARKERS = (
+    "complete:",
+    "no_new_level",
+    "no new level",
+    "no_level",
+    "no level",
+    "no_deepening",
+    "no deepening",
+    "residual",
+    "null",
+    "unchanged",
+    "regressed",
+    "blocked",
+)
+_SUBGOAL_SEARCH_REQUIRED_EVIDENCE_KEYS = (
+    "subgoal_decomposition",
+    "per_subgoal_reachable",
+    "no_subgoal_ablation_reached_level",
+    "random_subgoal_ablation_reached_level",
+    "offline_reproduced",
+)
+_GENERATION_COVERAGE_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "solve_provenance",
+    "chosen_submitted_config",
+    "residual_bridge_gap",
+)
+_GENERATION_COVERAGE_CONTEXT_MARKERS = (
+    "candidate_generation_coverage",
+    "candidate-generation coverage",
+    "candidate generation coverage",
+    "coverage_delta",
+    "coverage delta",
+    "coverage-up",
+    "coverage up",
+    "factored planner",
+    "factored subgoal planner",
+    "poe_world_factored",
+    "product planner",
+)
+_GENERATION_COVERAGE_WIN_MARKERS = (
+    "success:",
+    "coverage_up",
+    "coverage-up",
+    "coverage up",
+    "coverage rose",
+    "coverage rise",
+    "coverage lift",
+    "lift",
+    "improv",
+    "_up",
+    " up",
+)
+_GENERATION_COVERAGE_NULL_TEXT_MARKERS = (
+    "complete:",
+    "no_coverage_gain",
+    "no coverage gain",
+    "no_gain",
+    "no gain",
+    "null",
+    "residual",
+    "unchanged",
+    "regressed",
+    "blocked",
+)
+_GENERATION_COVERAGE_POSITIVE_METRIC_KEYS = (
+    "coverage_delta",
+    "candidate_generation_coverage_delta",
+)
+_GENERATION_COVERAGE_VALUE_KEYS = (
+    "candidate_generation_coverage",
+    "candidate_generation_coverage_factored",
+)
 
 
 def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
@@ -3309,6 +3418,199 @@ def check_multilevel_nondegenerate_metric_overclaim(
     )
 
 
+def _subgoal_search_text(d: dict[str, Any]) -> str:
+    return f"{_claim_text(d, _SUBGOAL_SEARCH_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+
+
+def _has_subgoal_search_context(d: dict[str, Any]) -> bool:
+    text = _subgoal_search_text(d)
+    return _is_arc_artifact(d) and _has_marker(text, _SUBGOAL_SEARCH_CONTEXT_MARKERS)
+
+
+def _claims_subgoal_search_new_level_win(d: dict[str, Any]) -> bool:
+    if not _has_subgoal_search_context(d):
+        return False
+    text = _subgoal_search_text(d)
+    if _has_marker(text, _SUBGOAL_SEARCH_NULL_TEXT_MARKERS):
+        return False
+    reproduced = _max_real_field_number(d, "reproduced_levels")
+    if reproduced is not None and reproduced >= 1.0:
+        return True
+    reached = _max_real_field_number(d, "generic_agent_reached_level")
+    return (
+        reached is not None
+        and reached > 0.0
+        and _has_marker(text, _SUBGOAL_SEARCH_WIN_MARKERS)
+    )
+
+
+def _nontrivial_subgoal_decomposition(value: Any) -> bool:
+    if isinstance(value, list):
+        meaningful = [item for item in value if item not in (None, "")]
+        if len(meaningful) >= 2:
+            return True
+        return any(_nontrivial_subgoal_decomposition(item) for item in meaningful)
+    if isinstance(value, dict):
+        nested_values = [
+            nested
+            for key, nested in value.items()
+            if key not in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS and nested not in (None, "")
+        ]
+        if len(nested_values) >= 2:
+            return True
+        return any(_nontrivial_subgoal_decomposition(item) for item in nested_values)
+    if isinstance(value, str):
+        return value.count("->") >= 2
+    return False
+
+
+def _has_nontrivial_subgoal_decomposition(d: dict[str, Any]) -> bool:
+    return any(
+        _nontrivial_subgoal_decomposition(value)
+        for value in _real_field_values(d, "subgoal_decomposition")
+    )
+
+
+def _real_field_all_true(d: dict[str, Any], wanted_key: str) -> bool:
+    leaves = [
+        leaf
+        for value in _real_field_values(d, wanted_key)
+        for leaf in _bool_leaf_values(value)
+    ]
+    return bool(leaves) and all(leaf is True for leaf in leaves)
+
+
+def _subgoal_ablations_strictly_lower(d: dict[str, Any]) -> bool:
+    reached = _max_real_field_number(d, "generic_agent_reached_level")
+    no_subgoal = _max_real_field_number(d, "no_subgoal_ablation_reached_level")
+    random_subgoal = _max_real_field_number(d, "random_subgoal_ablation_reached_level")
+    return (
+        reached is not None
+        and no_subgoal is not None
+        and random_subgoal is not None
+        and no_subgoal < reached
+        and random_subgoal < reached
+    )
+
+
+def check_subgoal_search_decomposition_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag subgoal-search wins missing decomposition and ablation evidence."""
+    if not _claims_subgoal_search_new_level_win(d):
+        return
+    omitted = [
+        key
+        for key in _SUBGOAL_SEARCH_REQUIRED_EVIDENCE_KEYS
+        if not _real_field_values(d, key)
+    ]
+    if omitted:
+        flags.append(
+            Flag(
+                kind=SUBGOAL_DECOMPOSITION_EVIDENCE_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "subgoal-decomposition-evidence-omitted: hierarchical "
+                    f"subgoal-search new-level claim omits {', '.join(omitted)}. "
+                    "Report subgoal_decomposition, per_subgoal_reachable, "
+                    "no_subgoal_ablation_reached_level, "
+                    "random_subgoal_ablation_reached_level, and "
+                    "offline_reproduced before crediting a subgoal-search win."
+                ),
+            )
+        )
+    evidence_ok = (
+        _has_nontrivial_subgoal_decomposition(d)
+        and _real_field_all_true(d, "per_subgoal_reachable")
+        and _subgoal_ablations_strictly_lower(d)
+        and _real_field_has_true(d, "offline_reproduced")
+    )
+    if evidence_ok:
+        return
+    flags.append(
+        Flag(
+            kind=SUBGOAL_SEARCH_WITHOUT_DECOMPOSITION_EVIDENCE_KIND,
+            severity="critical",
+            detail=(
+                "subgoal-search-without-decomposition-evidence: artifact claims "
+                "a generic-agent new-level win via hierarchical subgoal search "
+                "without proving a nontrivial subgoal_decomposition, true "
+                "per_subgoal_reachable evidence, no_subgoal_ablation_reached_level "
+                "and random_subgoal_ablation_reached_level both strictly lower "
+                "than generic_agent_reached_level, and offline_reproduced=true. "
+                "The apparent win may be flat search mislabeled as subgoal "
+                "search, or a 'subgoal' that is only the global goal."
+            ),
+        )
+    )
+
+
+def _generation_coverage_text(d: dict[str, Any]) -> str:
+    return (
+        f"{_claim_text(d, _GENERATION_COVERAGE_CLAIM_TEXT_KEYS)} "
+        f"{_field_name_text(d)}"
+    )
+
+
+def _has_generation_coverage_context(d: dict[str, Any]) -> bool:
+    text = _generation_coverage_text(d)
+    return _is_arc_artifact(d) and _has_marker(text, _GENERATION_COVERAGE_CONTEXT_MARKERS)
+
+
+def _claims_generation_coverage_up(d: dict[str, Any]) -> bool:
+    if not _has_generation_coverage_context(d):
+        return False
+    text = _generation_coverage_text(d)
+    if _has_marker(text, _GENERATION_COVERAGE_NULL_TEXT_MARKERS):
+        return False
+    for key in _GENERATION_COVERAGE_POSITIVE_METRIC_KEYS:
+        value = _max_real_field_number(d, key)
+        if value is not None and value > 0.0:
+            return True
+    if not _has_marker(text, _GENERATION_COVERAGE_WIN_MARKERS):
+        return False
+    return any(
+        (value := _max_real_field_number(d, key)) is not None and value > 0.0
+        for key in _GENERATION_COVERAGE_VALUE_KEYS
+    )
+
+
+def check_generation_coverage_baseline_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag coverage-up claims that do not report the flat-search baseline."""
+    if not _claims_generation_coverage_up(d):
+        return
+    if _real_field_values(d, "candidate_generation_coverage_flat_baseline"):
+        return
+    flags.append(
+        Flag(
+            kind=GENERATION_COVERAGE_BASELINE_OMITTED_KIND,
+            severity="warn",
+            detail=(
+                "generation-coverage-baseline-omitted: candidate-generation "
+                "coverage-up claim omits candidate_generation_coverage_flat_baseline. "
+                "Report the matched flat-search baseline before crediting "
+                "coverage lift to generation."
+            ),
+        )
+    )
+    flags.append(
+        Flag(
+            kind=GENERATION_COVERAGE_WITHOUT_BASELINE_KIND,
+            severity="critical",
+            detail=(
+                "generation-coverage-without-baseline: artifact claims "
+                "candidate-generation coverage rose but does not report "
+                "candidate_generation_coverage_flat_baseline. The coverage "
+                "number is unfalsifiable without the matched flat-search "
+                "control because a candidate pool can always contain the winner "
+                "without demonstrating a generation gain."
+            ),
+        )
+    )
+
+
 _WORLD_MODEL_TRUST_RATE_KEYS = (
     "world_model_trust_pass_rate",
     "world_model_trust_pass_rate_new",
@@ -3615,6 +3917,8 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_value_routing_cost_control_overclaim(d, flags)
     check_l2_goal_induction_satisfiability_overclaim(d, flags)
     check_multilevel_nondegenerate_metric_overclaim(d, flags)
+    check_subgoal_search_decomposition_overclaim(d, flags)
+    check_generation_coverage_baseline_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
