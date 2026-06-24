@@ -195,5 +195,23 @@
     "world_model_dsl_wired": true
   },
   "submitted_to_leaderboard": false,
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "live_first_win_rate_integrated=0.04 and live_first_win_rate_pre_integration=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "live_first_win_rate_delta_vs_pre_integration=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "live_multi_level_solve_rate_delta_vs_pre_integration=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
