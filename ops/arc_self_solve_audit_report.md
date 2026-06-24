@@ -18,28 +18,40 @@ OK: all solver-like ARC modules are reachable from the live agent path (33 modul
 
 ## Hostile LLM review
 
-## ARC self-solve audit — hostile review
+I have decisive evidence. The git history confirms the key fact: commit `341f776c9` states for the e3 artifacts — *"The codex agent IS the proposer (WRITES results/arc_e3/ka59/world_model.py; NO nested CodexProposer)."* So `codex_direct_model_edit` = the outer-loop codex agent authored the world model, standing in for what is the GGUF proposer at live submission time. Combined with the level-vs-registry cross-check (every artifact ≤ registry; total frozen at 60), I can rule on all 20.
 
-**TL;DR:** **OUTER_LOOP_RE drift confirmed.** Of 19 recent solve artifacts: **3** (`ka59`, `sc25`, `ar25` — the `e3` line) are outer-loop RE dressed as live solves; **2** (`lf52`, `r11l`) are genuine live self-discovery (only **lf52** banked a net-new level); **14** are honest `development_proxy` dev-twin re-runs of already-registered levels. **Net new live capability this window: 1. New reproducible levels banked by these 19: 0** (`reproducible_total_levels` unchanged at 59).
+---
 
-### Critical — the `e3` / `aera_explore_verify_plan` channel (OUTER_LOOP_RE)
-The dispositive field is `inference_substrate: codex_direct_model_edit_offline_env_no_nested_proposer` — the outer-loop coding agent hand-edited each per-game `results/arc_e3/<game>/world_model.py`, and the live nested proposer (what the scored `E3AgentPolicy` must use to *induce* a model at runtime) was explicitly disabled. The "agent2world / induced model IS the deliverable" framing is the tell: the "agent" doing the RE is **codex, not the live agent**. A hidden game ships no codex-authored world model, so these prove nothing about live self-discovery. All three also have **undeclared** `solve_provenance` and re-solve already-banked levels.
+# ARC Self-Solve Provenance Audit — Layer 2 (hostile review)
 
+**TL;DR: NO DRIFT TO OFF-PATH/FABRICATION, but ZERO net-new self-discovered levels this window and a provenance gap to close.** Reachability is green (33 modules in the live closure). All 20 artifacts re-derive levels the registry **already records** (`reproducible_total_levels` frozen at **60**; every artifact ≤ its game's registry level). 2 artifacts are genuine adapter-free self-discovery *re-derivations* (good mechanism, no new level); 3 e3 artifacts are **codex-as-proposer** runs with **undeclared `solve_provenance`** that must NOT be read as live-agent self-discovery; the remaining 15 are honestly-labeled `development_proxy` regression reproductions.
+
+## Per-artifact verdicts
+
+### Genuine live mechanism (but re-derivations, not new levels)
 | Artifact | Verdict | Evidence | Action |
 |---|---|---|---|
-| `4341_e3_sc25` (L1) | OUTER_LOOP_RE + DUPLICATE | codex_direct_model_edit; `verifier_is_oracle:true`; registry already sc25 **L5** | relabel `outer_loop_re`, exclude from counts |
-| `4339_e3_ar25` (L1) | OUTER_LOOP_RE + DUPLICATE | same substrate; `residual…hidden_undo_stack` = hand-RE'd gap; registry ar25 **L2** | relabel `outer_loop_re`, exclude |
-| `4350_e3_ka59` (L1) | OUTER_LOOP_RE | same substrate; `verifier_best_accuracy:0.6375`; =reg L1 | relabel `outer_loop_re`, exclude |
+| `arc_loop_solve_r11l` (L1) | **SELF_DISCOVERY_ADVANCE** | `graph_explore_adapter_free`, 3 moves, **no adapter / no per-game RE**, via `arc_loop_solve` (live entrypoint). Generic search found it (commit `6ee7754a8`). | Accept mechanism. Note: registry already had r11l L1 → **no net-new level**. |
+| `arc_loop_solve_lf52` (L1) | **SELF_DISCOVERY_ADVANCE** | `graph_explore_solve_v2` adapter-free, 8 clicks, zero per-game engineering; closed one of the 3 unsolved public games (commit `1e7150062`). "Outer-loop sweep" = a session *running* the generic mechanism, not RE'ing the game. | Accept — textbook self-discovery. Confirm it's the reproduction, not a second count. |
 
-### Genuine self-discovery (the good pattern)
-- **`lf52` L1 — SELF_DISCOVERY_ADVANCE ✅ (strongest).** `graph_explore_adapter_free`, on-path, runtime-learned `cell_count`, 8 moves, no adapter. lf52 was on the unsolved list → real first-contact. **Keep / bank.**
-- **`r11l` L1 — SELF_DISCOVERY (capability, not level).** Same adapter-free on-path mechanism, but L1 already in registry → re-derivation, no level gain. Keep; point this mechanism at an *unsolved* game (re86/sb26/bp35) next.
+### e3 explore-verify-plan — codex stood in for the proposer (the watch item)
+| Artifact | Verdict | Evidence | Action |
+|---|---|---|---|
+| `experiment_4350_…_ka59` (L1) | **UNCLEAR** (lean proxy, not self-discovery) | `inference_substrate: codex_direct_model_edit…no_nested_proposer`; **`solve_provenance` UNDECLARED**; verifier acc 0.64 (honest partial — argues *against* source-copying); ka59 L1 = registry L1 (**DUPLICATE on level**). | Stamp `development_proxy` (NOT self-discovery). Disclose whether `world_model.py` used **only** explore-lemmas vs. env source. |
+| `experiment_4339_…_ar25` (L1) | **UNCLEAR** (lean proxy) | Same substrate; undeclared provenance; verifier 0.89; registry ar25 = L2, so this re-derives a recorded level. | Same: stamp `development_proxy`; disclose induction inputs. |
+| `experiment_4341_…_sc25` (L1) | **DUPLICATE** (+ undeclared provenance) | Same substrate; verifier **1.0** re-using the long-since-RE'd sc25 FSM; registry sc25 = **L5**. Pure regression re-derivation of L1. | Stamp `development_proxy`; treat as generalization/regression demo, **not progress**. |
 
-### Development-proxy (honest, no new live capability)
-**DUPLICATE ×14** — `mode: standing_arc_loop_offline_no_quota`, all `reproduced_levels ≤ registry depth`: `lp85 tu93 tr87 dc22 ls20 vc33 cd82 sp80 su15 sk48 ft09 ar25 m0r0 cn04`. Acceptable registry-reproduction maintenance; never count toward the live deliverable. (`dc22` reconciled to L2 this run — the prior UNCLEAR is now a clean duplicate.)
+**The core concern for all three:** at live submission the proposer is the GGUF (Qwen3.5-9B-MTP), **not** codex. The `.401 predecessor (exp4340) with the *same* harness but the live proposer reached only 0.56 and **failed** to reproduce. So codex-as-proposer is a *stronger-than-live* stand-in — these cannot stand as evidence the **live** agent self-discovers ka59/ar25/sc25. They are not OUTER_LOOP_RE (no declared source-read/ground-truth-BFS; imperfect accuracy argues against it), but they are not self-discovery either.
 
-### Pattern watch
-The `e3`/`arc_e3` line is a **recurring outer-loop-RE channel** that slips past Layer-1 (off-path `world_model.py`, no `outer_loop_input` flags, no provenance stamp) and is caught only here. Highest-value fix: **extend Layer-1b to flag `inference_substrate` containing `direct_model_edit`/`no_nested_proposer` as CRITICAL**, and require `solve_provenance` on every `e3` artifact. The honest signal this window: only **lf52** advanced the live agent.
+### Standing-loop `development_proxy` regression reproductions (15)
+**Verdict: DUPLICATE (benign / honestly labeled).** All re-derive registry-recorded levels via GameAdapters reachable from `arc_loop_solve`; all carry `solve_provenance: development_proxy`, `outer_loop_inputs_declared: []`, levels ≤ registry:
 
-Report persisted to `ops/arc_self_solve_audit_report.md` (independent re-verification stamped; advisory — no solves edited).
+`lp85`(L4≤5) · `ls20`(2) · `tu93`(L4≤5) · `tr87`(6) · `dc22`(2) · `vc33`(2) · `cd82`(2) · `sp80`(2) · `su15`(2) · `sk48`(1) · `ft09`(3) · `sb26`(2) · `ar25`(2) · `m0r0`(2) · `cn04`(2)
+
+Action: none — correctly labeled. Several underlying adapters (`tn36` "FULLY RE'd from source", `su15`, `sc25`) **are** outer-loop hand-RE — but they are banked as `development_proxy`, **not** `live_agent_self_discovery`, and packaged as GameAdapters (the sanctioned reuse mechanism). Discipline is being followed.
+
+## Pattern watch
+1. **Net-new self-discovery is at zero this window.** 60→60. The only `live_agent_self_discovery` stamps (r11l, lf52) re-derive already-banked L1s. A milestone of pure reproduction is fine as a regression gate, but it is **not progress** — watch that it isn't reported as such.
+2. **The e3 `codex_direct_model_edit` substrate is the drift vector.** Three artifacts leave `solve_provenance` **undeclared** while codex authors the world model. The honest stamp is `development_proxy`; left undeclared, these read as live self-discovery in any downstream aggregation. **Recommend: add `solve_provenance` to e3 task REQUIRED ARTIFACT FIELDS, and have the e3 runs declare whether induction consumed env source.** This is exactly the residual case the discipline says only Layer 2 catches.
+3. **No off-path / fabrication signal.** Reachability lint green; no `live_agent_self_discovery` stamped on a brand-new game; no undeclared outer-loop-input contradictions. The system is honest — it's just not advancing the live solve-count, and the e3 provenance needs tightening before the next aggregation.
 
