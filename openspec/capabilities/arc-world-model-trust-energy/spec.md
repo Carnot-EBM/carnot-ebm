@@ -3824,6 +3824,73 @@ A1-established floor
 **Then** it fails with the regressed metric names. Given measurements at or
 above both floors, it passes.
 
+### REQ-ARC-WMTE-4671: Adversarial Verify L2 Goal And Multi-Level Metric Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the .430 A1 L2
+goal-induction claim and the multi-level solve-rate metric from two degenerate
+overclaims. An ARC artifact that claims a generic agent reached L2 through
+runtime goal induction, including `generic_agent_reached_level >= 2` or an L2
+text claim paired with positive `reproduced_levels`, SHALL report
+`goal_predicate_satisfiable=true` and `l2_plan_reaches_goal=true`. If such a
+win is claimed while either field is absent or false, the reader SHALL emit a
+CRITICAL flag of kind
+`l2-goal-induction-without-satisfiability-check`. If such a claim omits either
+field, the reader SHALL also emit a WARN flag of kind
+`l2-goal-satisfiability-check-omitted`.
+
+An ARC artifact that reports a positive `live_multi_level_solve_rate` or
+`multi_level_solve_rate` SHALL also report a nondegenerate metric harness:
+`metric_harness_fixed` with `target_levels >= 2` and
+`break_at_first_win=false`, or equivalent top-level harness fields. If the
+positive multi-level solve-rate is reported while this harness evidence is
+absent or invalid, the reader SHALL emit a CRITICAL flag of kind
+`multi-level-without-nondegenerate-metric`. If the harness evidence is omitted,
+the reader SHALL also emit a WARN flag of kind
+`multi-level-nondegenerate-metric-omitted`.
+
+The honest .430 A1 artifact,
+`results/experiment_4664_l2_goal_predicate_induction_live.json`, SHALL NOT fire
+either new guard because it does not overclaim L2 success and it reports the
+satisfiability and fixed-harness controls.
+
+Experiment 4671 SHALL write
+`results/experiment_4671_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `l2_goal_satisfiability_guard_added`,
+`multilevel_metric_guard_added`, `honest_artifacts_not_flagged`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_l2_goal_and_multilevel_metric_guards_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+- `l2_goal_satisfiability_guard_added`: principle "the L2-GOAL-INDUCTION-WITHOUT-SATISFIABILITY-CHECK guard (an L2-via-induction win must report a satisfiable goal + reachable plan, else flagged as a possible degenerate-goal vacuous pass)."
+- `multilevel_metric_guard_added`: principle "the MULTI-LEVEL-WITHOUT-NONDEGENERATE-METRIC guard (a multi-level solve-rate claim must report the fixed target_levels>=2/no-break harness, else flagged as the degenerate 0.0-by-construction metric)."
+- `honest_artifacts_not_flagged`: principle "the honest A1 artifact (which reports its satisfiability + harness controls) is NOT flagged -- false-positive guard (like the .429 QD-ablation guard)."
+- `tests_added`: principle "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4671-L2-GOAL-SATISFIABILITY
+
+**Given** an ARC artifact claims a generic-agent L2 win through runtime goal
+induction
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when it lacks
+`goal_predicate_satisfiable=true` or `l2_plan_reaches_goal=true`,
+WARN-flagged when either field is omitted, and not flagged when both controls
+are reported true.
+
+#### SCENARIO-ARC-WMTE-4671-MULTI-LEVEL-NONDEGENERATE-METRIC
+
+**Given** an ARC artifact reports a positive multi-level solve-rate
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when it lacks a fixed
+`target_levels>=2` and no-break harness, WARN-flagged when that harness is
+omitted, and not flagged when the fixed harness is reported.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2
