@@ -1,0 +1,77 @@
+{
+  "budget": 800,
+  "arm": "real",
+  "games": {
+    "lp85": {
+      "game": "lp85",
+      "max_rel_level": 1,
+      "levelup_at_action": {
+        "1": 20
+      },
+      "actions_used": 794,
+      "budget": 800,
+      "exhausted_budget": false,
+      "explorer_explored_out": false,
+      "state_coverage": 215,
+      "induction_fired": true,
+      "final_phase": "explore",
+      "transitions_collected": 792,
+      "plan_len": 0,
+      "n_induction_attempts": 1,
+      "induction_attempts": [
+        {
+          "reason": "level_up_reinduction",
+          "goal_level": 2,
+          "skipped": "proposer_failed",
+          "planned": false,
+          "plan_length": 0,
+          "heldout_accuracy": null,
+          "verify_cell_recall": null,
+          "refinement_rounds_used": 2,
+          "n_goal_candidates": 1,
+          "n_dynamics_candidates": 1,
+          "n_counterexamples": 1,
+          "first_counterexample_kind": "no_reachable_plan",
+          "transition_count": 1,
+          "rounds": [
+            {
+              "round": 1,
+              "action": "induce",
+              "proposer_ok": true,
+              "heldout_accuracy": 1.0,
+              "heldout_threshold": 1.0,
+              "accepted": true,
+              "plan_length": 0,
+              "plan_reaches_goal": false,
+              "skipped": null,
+              "cx_kind": "no_reachable_plan"
+            },
+            {
+              "round": 2,
+              "action": "refactor",
+              "proposer_ok": false,
+              "heldout_accuracy": null,
+              "heldout_threshold": null,
+              "accepted": null,
+              "plan_length": null,
+              "plan_reaches_goal": null,
+              "skipped": "proposer_failed",
+              "cx_kind": null
+            }
+          ]
+        }
+      ],
+      "induction_skip_reasons": {
+        "proposer_failed": 1
+      },
+      "stalled_at_L1": true,
+      "reached_L2_plus": false,
+      "wall_s": 1053.0
+    }
+  },
+  "reached_L2_plus": [],
+  "stalled_at_L1": [
+    "lp85"
+  ],
+  "VERDICT": "EXPLORATION_NEVER_DEEPENS_2nd_win_needs_goal_induction_proposer"
+}

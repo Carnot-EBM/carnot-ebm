@@ -155,42 +155,57 @@ The `level_up_reinduction` (the ONLY path that fires at a level-up; `_induce_and
    round0 induce OK -> held-out gate FAIL -> round1 `refactor` -> `proposer_failed`. Run B (gate=0.5):
    round0 `induce` -> `proposer_failed` outright (gate never reached). The induce is near a reliability
    threshold; from ~1 transition it often cannot write a valid L2 world-model engine.
-4. **Strict held-out gate (downstream).** When induce DOES produce code, the reinduction branch hard-codes
-   `heldout_accuracy >= 1.0` (EXACT full-grid match), with NO escape hatch (the standard branch uses 0.5 +
-   `CARNOT_ARC_TRUST_METRIC=cell_recall`). [BASELINE_ROUND0_HELDOUT]
-5. **Zero-positive goal (downstream).** The L2 window has zero L2-win positives -> the induce prompt's
-   WIN-STATE block is absent -> the LLM writes `is_level_complete` for L2 from no exemplar, and it is
-   never verified (the held-out gate checks DYNAMICS only) -> a degenerate/unsatisfiable predicate ->
-   `plan_in_model` returns empty.
+4. **The held-out gate is a RED HERRING — it passes VACUOUSLY.** When the proposer DOES succeed (the
+   canonical baseline run), the induced dynamics model scored `heldout_accuracy=1.0` and was `accepted=True`
+   AT the strict 1.0 bar. But with `trans=1` the held-out split (~1/3 of 1) is ~EMPTY, so `1.0` is a vacuous
+   pass on no data — the gate protects nothing and blocks nothing. **Relaxing the gate (the cheap lever)
+   therefore cannot help: it already passes.**
+5. **THE BINDING CONSTRAINT — the degenerate L2 GOAL PREDICATE (`no_reachable_plan`).** With a gate-passing
+   dynamics model, `plan_in_model` returned `plan_len=0`, `reaches_goal=False`, counterexample kind
+   **`no_reachable_plan`**. The L2 window has zero L2-win positives -> the induce prompt's WIN-STATE block is
+   absent -> the LLM writes `is_level_complete` for L2 from NO exemplar, and it is never verified (the
+   held-out gate checks DYNAMICS only) -> an unsatisfiable goal predicate -> the planner can NEVER reach it.
+   This is the true wall: the dynamics model is fine, the gate passes, but **there is no satisfiable goal to
+   plan toward.** (round2 refactor then `proposer_failed`, but the decisive signal is round1's `no_reachable_plan`.)
 
-Net is invariant across 4 clean runs: **plan_len=0, maxL=1, no deepening.**
+Net is invariant across 4 clean runs: **plan_len=0, maxL=1, no deepening** — and when the pipeline gets as
+far as it can (proposer OK, dynamics model gate-accepted), it dies at `no_reachable_plan` = the degenerate goal.
 
 ### Lever ablations — cheap env-gated knobs do NOT close the wall
 
 | Lever | Config | Result | Why |
 |---|---|---|---|
-| (baseline) submitted | K=1, gate=1.0 | plan=0; round0 gate-fail then round1 `proposer_failed` | the compound wall |
-| relax held-out gate | K=1, gate=0.5 | plan=0; `induce` `proposer_failed` | proposer failed UPSTREAM of the gate -> gate moot |
-| delay evidence | K=25, gate=0.5 | plan=0; **BACKFIRED** — explorer hits `explored_out` at ~5 post-L1 transitions, so a STALL induction (standard branch) preempts the reinduction -> `proposer_failed` | there is NOT enough post-L1 evidence to gather (explorer exhausts at ~5) |
+| (baseline) submitted | K=1, gate=1.0 | plan=0; round1 induce OK, **gate PASSED (heldout=1.0 vacuous)**, `plan_in_model` -> **`no_reachable_plan`**; round2 refactor `proposer_failed` | **degenerate L2 goal predicate** (zero positives) -> planner can't reach goal |
+| relax held-out gate | K=1, gate=0.5 | plan=0; `induce` `proposer_failed` (intermittent) | gate is a NO-OP (it already passes vacuously); irrelevant lever |
+| delay evidence | K=25, gate=0.5 | plan=0; **BACKFIRED** — explorer hits `explored_out` at ~5 post-L1 transitions, a STALL induction (standard branch) preempts the reinduction -> `proposer_failed` | there is NOT enough post-L1 evidence to gather (explorer exhausts at ~5) |
 
 Two parity-safe env-gated knobs were prototyped on the `outer-loop/bp35-diag` branch (both default ==
 submitted behavior): `CARNOT_ARC_REINDUCTION_HELDOUT` (relax the 1.0 gate) and
-`CARNOT_ARC_REINDUCTION_MIN_EVIDENCE` (delay the one-shot). **Neither closes the wall** — the binding
-constraint is the 9B proposer generating a valid L2 engine from ~1 transition, which no flag fixes.
+`CARNOT_ARC_REINDUCTION_MIN_EVIDENCE` (delay the one-shot). **Neither closes the wall, and the baseline
+proves WHY the cheap gate knob can't:** the gate already passes vacuously (heldout=1.0 on ~0 held-out
+data); the wall is downstream at `no_reachable_plan` = the **degenerate L2 goal predicate**.
 
 ### Conclusion + recommendation
 
-The L1->L2 deepening wall is **COMPOUND** (evidence starvation + one-shot trigger + intermittent proposer
-failure + strict gate + zero-positive goal), NOT a single cheap flip. The `.429 generation-guidance pivot
-is correctly aimed but closing this needs PIPELINE work, prioritized:
-1. **Evidence + re-arm:** don't fire the one-shot at `trans=1`; gather more post-boundary evidence AND
-   re-arm reinduction as evidence accrues so a failed first attempt isn't terminal — PAIRED with deeper
-   exploration / `plan_in_model` from the CURRENT post-L1 grid (the explorer exhausts L1 at ~5 transitions,
-   so naive evidence-delay alone backfires into a stall).
-2. **Dedicated L2-goal induction** with the L1 win-grid as a structural exemplar (fixes the zero-positive
-   goal; the root-cause workflow's top lever, effort L).
-3. **Proposer robustness** at the induction tier (the binding constraint here): better induce prompt, more
-   evidence, retry-on-`proposer_failed`, or a stronger model for induction only.
+**The binding constraint is the DEGENERATE L2 GOAL PREDICATE, not the gate and not (mainly) the proposer
+dynamics.** When the pipeline runs as far as it can (proposer OK, dynamics model gate-accepted), it dies at
+`no_reachable_plan` because the L2 `is_level_complete` is induced from ZERO L2-win positives and is never
+verified -> unsatisfiable -> the planner has no reachable goal. Evidence starvation (`trans=1`) compounds
+it: it makes the gate vacuous AND starves the goal induction of any L2 structural evidence. The `.429
+generation-guidance pivot is correctly aimed; the highest-leverage fix is:
+
+1. **Dedicated L2-goal-predicate induction (THE fix).** Synthesize the L2 goal from structural evidence,
+   passing the **L1 win-grid as an exemplar** of "what a level-complete state looks like" into the L2 induce
+   prompt's WIN-STATE block (currently absent because there is no L2 positive yet). Verify the induced goal
+   is non-degenerate (satisfiable on at least one reachable grid) before planning — the held-out gate checks
+   DYNAMICS only, so a constant-False goal sails through today. (Root-cause workflow's top lever.)
+2. **Evidence + re-arm (secondary).** Don't fire the one-shot at `trans=1`; gather more post-boundary
+   evidence AND re-arm reinduction as evidence accrues — PAIRED with deeper exploration / `plan_in_model`
+   from the CURRENT post-L1 grid (the explorer exhausts L1 at ~5 transitions, so naive evidence-delay alone
+   backfires into a stall).
+3. **Proposer robustness (tertiary).** `induce`/`refactor` intermittently `proposer_failed`; a
+   retry-on-`proposer_failed` or stronger induction-tier model reduces the variance, but is NOT the wall.
+   The cheap gate-relax knob is a NO-OP here — do not pursue it.
 
 **Strategic reframe for the 2026-06-30 submission:** multi-level DEPTH is proposer-bound and expensive to
 fix; FIRST-WIN breadth (0.59 across games) is the cheaper ROI. Per-game-adapter depth is `development_proxy`
