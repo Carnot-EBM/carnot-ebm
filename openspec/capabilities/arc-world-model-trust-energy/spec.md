@@ -1626,6 +1626,66 @@ no-regression deltas versus the pre-integration config,
 `verifier_is_oracle=false`, `parity_test_green=true`, and a stable
 reproducibility checksum.
 
+### REQ-ARC-WMTE-4669: ARC Sprint A1/A2 Submitted Config Integration Gate
+
+Experiment 4669 SHALL read the previous integration gate
+`results/experiment_4657_integration_gate.json`, the L2 goal-predicate
+induction artifact
+`results/experiment_4664_l2_goal_predicate_induction_live.json`, and the
+DAgger-lite value-routing artifact
+`results/experiment_4665_dagger_distribution_shift_value_routing.json`. The
+gate SHALL audit whether the A1 L2-goal-induction submitted config
+(win-grid exemplar injection, goal-predicate satisfiability check, and fixed
+multi-level harness) or the A2 distribution-corrected value-head submitted
+config (checkpoint, positive `value_weight`, and
+`cross_game_features_v3:v2_plus_frame_delta` feature subset) is actually
+recommended by the upstream artifact and folded into `SUBMITTED_AGENT_CONFIG`.
+If both upstream artifacts are null or explicitly `unchanged`, the gate SHALL
+record `config_integrated` as unchanged with the reason instead of fabricating
+an integration.
+
+Experiment 4669 SHALL re-measure or reuse the fixed cached live measurements
+for the scored `E3AgentPolicy` against the pre-integration config, and SHALL
+write `results/experiment_4669_integration_gate.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `config_integrated`,
+`live_first_win_rate_integrated`,
+`live_multi_level_solve_rate_integrated`,
+`live_submittable_level_count_integrated`, `parity_test_green`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`. The
+artifact SHALL also include the A1/A2 audit, pre-integration comparison
+metrics, no-regression status, source artifact paths/checksums, the parity-test
+result, `submitted_to_leaderboard=false`, and spec refs. The verifier SHALL
+remain oracle-distinct from the executable win-check.
+
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the integrated L2-goal-induction / value-routing signals are oracle-distinct from the executable win-check."
+- `config_integrated`: principle "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+- `live_first_win_rate_integrated`: principle "the integrated SCORED-agent live first-win-rate (no regression vs pre-integration)."
+- `live_multi_level_solve_rate_integrated`: principle "the integrated SCORED-agent multi-level (>=2) live solve-rate (the deeper wall) -- measured on the FIXED non-degenerate harness."
+- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4669
+
+**Given** `SUBMITTED_AGENT_CONFIG` imports with `E3AgentPolicy`, the 4657
+pre-integration comparison artifact is present, and the 4664/4665 A1/A2
+artifacts are readable
+**When** Experiment 4669 audits the upstream chosen submitted configs and runs
+the submitted-agent parity test
+**Then** the result artifact reports either the exact A1/A2 config folded into
+the single source of truth or an unchanged reason when both levers are null,
+reports live first-win rate, fixed-harness multi-level solve rate, live
+submittable count greater than 33, no-regression versus the pre-integration
+config, `verifier_is_oracle=false`, `parity_test_green=true`, and a stable
+reproducibility checksum.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
