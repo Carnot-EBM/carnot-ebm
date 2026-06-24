@@ -9171,3 +9171,5 @@ c |
 | 2026-06-24 08:38 UTC | PHASE C (HARDWARE CONTINUITY -- 1 per-board slot)  | OK | 86 passed, 1 warning in 5.60s |
 | 2026-06-24 08:53 UTC | PHASE D (SOTA-INGESTION -> .431) -- focused litera | OK | 114 passed, 1 warning in 6.06s |
 | 2026-06-24 09:09 UTC | PHASE E (CAPSTONE .430) -- aggregate the scorecard | OK | 88 passed, 1 warning in 6.68s |
+| 2026-06-24 10:06 UTC | Plan milestone 2026.06.431 | OK | 12 tasks proposed |
+| 2026-06-24 10:08 UTC | Milestone 2026.06.431 activated | OK | 12 tasks queued |
