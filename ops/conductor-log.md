@@ -9193,3 +9193,4 @@ c |
 | 2026-06-24 17:22 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 112 passed, 1 warning in 6.82s |
 | 2026-06-24 17:44 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- RETARGETED per  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-24 17:59 UTC | PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+tr | OK | 110 passed, 1 warning in 6.63s |
+| 2026-06-24 19:22 UTC | PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold thi | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: bmitted_config |

@@ -4550,6 +4550,65 @@ fixed-harness multi-level solve rate, live submittable count greater than 33,
 no-regression versus the pre-integration config, `verifier_is_oracle=false`,
 `parity_test_green=true`, and a stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4693: Submitted A1/A2 Integration Gate For Directed Exploration
+
+Experiment 4693 SHALL read the controllable-novelty proposal artifact
+`results/experiment_4688_controllable_novelty_proposal_policy_live.json` and
+the program-synthesis action-effect proposal-filter artifact
+`results/experiment_4689_program_synthesis_action_effect_proposal_filter.json`.
+The gate SHALL audit whether the A1 controllable-novelty submitted config
+(`controllable_novelty_proposal_enabled`, novelty weight, and novelty
+temperature) or the A2 program-synthesis proposal-filter submitted config
+(`program_synthesis_proposal_filter_enabled`,
+`program_synthesis_proposal_filter_trust_threshold`) cleared its upstream
+success gate and is actually folded into `SUBMITTED_AGENT_CONFIG`. If both
+upstream artifacts are null or explicitly `unchanged`, the gate SHALL record
+`config_integrated` as unchanged with the reason, SHALL set
+`config_changed=false`, and SHALL state that identical pre/post measurements are
+by construction rather than a finding.
+
+Experiment 4693 SHALL re-measure the integrated held-out first-win rate and
+multi-level deepen rate on the scored `E3AgentPolicy` by invoking the
+Experiment 4605 held-out lane with deepening enabled. The artifact at
+`results/experiment_4693_integration_gate.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `config_integrated`,
+`config_changed`, `first_win_rate_integrated`,
+`multi_level_deepen_rate_integrated`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. The artifact SHALL
+also include the A1/A2 audit, pre-integration comparison metrics,
+no-regression status, source artifact paths/checksums, the scored-lane
+measurement, the parity-test result, `submitted_to_leaderboard=false`, and spec
+refs. The verifier SHALL remain oracle-distinct from the executable win-check.
+
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure on the held-out lane (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the integrated controllable-novelty / proposal-filter signals are oracle-distinct from the executable win-check."
+- `config_integrated`: principle "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+- `config_changed`: principle "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding) -- pre-empts the .430 A6 TAUTOLOGY flag."
+- `first_win_rate_integrated`: principle "the integrated SCORED-agent held-out first-win-rate (no regression vs pre-integration) -- the retargeted scored-lane metric."
+- `multi_level_deepen_rate_integrated`: principle "the integrated SCORED-agent multi-level deepen-rate (the deeper scored lever) -- measured on the held-out lane."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4693
+
+**Given** `SUBMITTED_AGENT_CONFIG` imports with `E3AgentPolicy`, the 4688/4689
+A1/A2 artifacts are readable, and the 4605 scored held-out lane is available
+**When** Experiment 4693 audits the upstream chosen submitted configs, measures
+the scored held-out lane with deepening enabled, and runs the submitted-agent
+parity test
+**Then** the result artifact reports either the exact A1/A2 config folded into
+the single source of truth or an unchanged reason when both levers are null,
+reports `config_changed` truthfully, reports held-out first-win rate and
+multi-level deepen rate, reports no regression versus the pre-integration
+config, sets `verifier_is_oracle=false`, requires `parity_test_green=true`, and
+emits a stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4682: Candidate-Generation Coverage CI Gate And Honest First-Win Floor
 
 Experiment 4682 SHALL provide a deterministic CI-gate at
