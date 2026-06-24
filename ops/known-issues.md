@@ -11,6 +11,59 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-24 (MANDATORY-NEXT-MILESTONE, operator-directed pre-stage): RETARGET PHASE-A4 — gate readiness on the HELD-OUT first-win lane, NOT replay-package freshness
+
+**Operator 2026-06-24** (clean audit, workflow `wf_b7ea354a-5a3`): retarget the conductor's PHASE-A4 from
+replay-package freshness to the held-out generic first-win lane — the only thing that actually scores.
+
+**The diagnosis (the dev-proxy-vs-scored conflation).** PHASE-A4 ("SCORE -- KEEP THE PACKAGE FRESH") gates
+readiness on `live_submittable_level_count > 33` (via `python/carnot/live_submittable_metrics.py` /
+`experiment_4595`). That metric is the depth of the offline-reproduced REPLAY PACKAGE — and the replay path
+(`scripts/arc3_live_submit.py`) scores **~0** on the HIDDEN leaderboard. Worse,
+`experiment_4595_refresh_submission_package.py:97` literally annotates the count
+`"(the honest leaderboard score, must stay > 33)"` — baking the conflation straight into the spec. Beating
+33 reproduced replay levels does NOT move the leaderboard.
+
+**What ACTUALLY scores.** The Kaggle COMPETITION kernel (`scripts/kaggle/submission_kernel/main.py`) runs
+the LIVE generic agent (`make_carnot_agent` -> `E3AgentPolicy`) on hidden OOD games; first-win/deepening on
+those is what scores. FIRST SCORED SUBMISSION = **0.08** public leaderboard (2026-06-19 23:40Z, ref
+53862349, "carnot v1.1", kernel v3; flat across v3->v5). The held-out PROXY for that lane is
+`python/carnot/experiment_4605_live_integration_scored_agent.py` — it runs the LITERAL
+`SUBMITTED_AGENT_CONFIG` (parity-hard-gated) over color-permuted variants; current baseline
+`first_win_rate_integrated = 0.04`, CI [0,0], parity green.
+
+**RETARGET A4 (the task to build).** Stop gating readiness on "beat 33 levels" / package-freshness; gate it
+on the `experiment_4605` HELD-OUT GENERIC FIRST-WIN (plus the new deepening field) vs the last-submission
+baseline, with a bootstrap-CI-excludes-0 improvement criterion. Keep the replay package as a FLOOR artifact
+(reproduce + ship it) but do NOT treat its level count as the leaderboard score, and strip the "honest
+leaderboard score" annotation from the spec. `agent_type: codex` (ARC sprint). `retire_if_same_verdict:
+true` on any A4 readiness claim that STILL cites the replay count as "the score" — that framing is the
+retired dead-end.
+
+**Falsifiable gate.** Readiness=true IFF `parity_test_green` AND `experiment_4605` `first_win_rate_integrated`
+improved vs the last-submission baseline (bootstrap-CI lower bound > 0), OR (explicitly) held flat with an
+honest "no leaderboard-relevant change this milestone" note. NEVER readiness=true purely on
+`live_submittable_level_count > 33`.
+
+**REQUIRED ARTIFACT FIELDS (principle-annotated).**
+- `first_win_rate_integrated` — principle: "the held-out generic first-win on color-permuted variants is the
+  only offline proxy that tracks the scored leaderboard lane; the replay count does not."
+- `first_win_ci_lower` — principle: "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion;
+  a point estimate alone is gameable by a single lucky variant."
+- `multi_level_deepen_rate_integrated` — principle: "deepening past L1 is the second scored lever (the L2
+  goal-predicate wall); tracking it held-out keeps A4 honest about depth without using the replay count."
+- `parity_test_green` — principle: "the held-out proxy is only valid if the measured agent is byte-for-byte
+  the SUBMITTED_AGENT_CONFIG; a parity miss invalidates any readiness claim."
+- `replay_package_floor_reproduced` — principle: "the replay package stays a reproduced FLOOR artifact, but
+  its level count is explicitly NOT the leaderboard score."
+- `honest_verdict` — principle: "must start with a terminal prefix (complete:/success:/passed:/shipped:) so
+  the reconciler classifies it as terminal."
+
+**Cross-references:** audit `wf_b7ea354a-5a3`; `scripts/kaggle/submission_kernel/main.py` (scored kernel);
+`python/carnot/experiment_4605_live_integration_scored_agent.py` (held-out proxy); ref 53862349 (0.08);
+`python/carnot/experiment_4595_refresh_submission_package.py:97` (the conflation to strip);
+`scripts/arc3_live_submit.py` (the replay path that scores ~0).
+
 ### 2026-06-24 (MANDATORY-NEXT-MILESTONE .430, operator-directed pre-stage): L2-GOAL-PREDICATE INDUCTION — fix the multi-level (L1->L2) live-deepening wall
 
 **Operator 2026-06-24** asked to pre-stage the L2-goal-induction fix for multi-level live deepening to

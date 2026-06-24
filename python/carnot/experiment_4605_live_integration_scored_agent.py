@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 import hashlib
 import json
+import os
 from pathlib import Path
 import random
 import statistics
@@ -42,6 +43,45 @@ DEFAULT_VARIANT_IDS = (1,)
 DEFAULT_BUDGET = 200
 DEFAULT_BOOTSTRAPS = 1000
 TERMINAL_PREFIXES = ("success:", "complete:", "passed:", "shipped:", "blocked_")
+
+# Env-gated knobs (both default to the committed behavior so the conductor's parity/baseline run is
+# byte-unchanged; they exist only so the operator can opt into a wider sweep / deepening measurement).
+VARIANT_IDS_ENV = "CARNOT_ARC_GATE_VARIANT_IDS"
+DEEPEN_ENV = "CARNOT_ARC_GATE_DEEPEN"
+
+# Principle annotations for the OPT-IN deepening fields. Kept OUT of FIELD_PRINCIPLES on purpose:
+# FIELD_PRINCIPLES drives both REQUIRED_ARTIFACT_FIELDS (always-required) and the spec-coverage test
+# (test_req_capstone_4605_spec_declares_live_integration_contract asserts every FIELD_PRINCIPLES entry
+# is in capstone/spec.md). These fields appear ONLY when CARNOT_ARC_GATE_DEEPEN=1, so they must not be
+# always-required nor force a spec edit -- they live in their own annotated dict instead.
+DEEPENING_FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
+    "multi_level_solve_rate": {
+        "principle": (
+            "fraction of variant attempts that reach depth>=2 (a SECOND level-up) under the ridden "
+            "target_levels -- the multi-level deepening signal the live deepening wall blocks."
+        )
+    },
+    "depth_histogram": {
+        "principle": (
+            "count of variant attempts by max reproduced depth (keys '0','1','2','3+') -- shows where "
+            "attempts stall, distinguishing no-first-win from first-win-but-no-deepen."
+        )
+    },
+    "median_actions_to_second_levelup": {
+        "principle": (
+            "median actions to the SECOND level-up among attempts that reached depth>=2 (null when none "
+            "deepen) -- the RHAE-style action cost of deepening, the leaderboard tiebreaker."
+        )
+    },
+    "deepening_methodology_note": {
+        "principle": (
+            "HONEST scope note -- this gate silences the LLM proposer (matched offline run), so the "
+            "measured deepening is the EXPLORATION-ONLY FLOOR (~0 per the multi-level diagnosis: "
+            "exploration alone does not chain a 2nd level-up); the shipped cascade=True live-proposer "
+            "deepening needs a separate proposer-wired run."
+        )
+    },
+}
 SPEC_REFS = [
     "REQ-CAPSTONE-4605",
     "SCENARIO-CAPSTONE-4605",
@@ -275,6 +315,73 @@ def _rate(count: int, total: int) -> float:
 def _median(values: Sequence[int | float]) -> float | None:
     clean = [float(value) for value in values]
     return float(statistics.median(clean)) if clean else None
+
+
+def _deepen_enabled(env: Mapping[str, str] | None = None) -> bool:
+    """True only when CARNOT_ARC_GATE_DEEPEN is set to a non-'0' value (default OFF)."""
+
+    source = os.environ if env is None else env
+    return source.get(DEEPEN_ENV, "0") != "0"
+
+
+def resolve_variant_ids(
+    variant_ids: Sequence[int] | None,
+    *,
+    env: Mapping[str, str] | None = None,
+) -> tuple[int, ...]:
+    """Resolve the variant ids: explicit arg wins; else CARNOT_ARC_GATE_VARIANT_IDS (comma-separated)
+    when set; else the committed DEFAULT_VARIANT_IDS. Keeps the committed default byte-stable."""
+
+    if variant_ids is not None:
+        return tuple(int(item) for item in variant_ids)
+    source = os.environ if env is None else env
+    raw = source.get(VARIANT_IDS_ENV, "").strip()
+    if not raw:
+        return tuple(DEFAULT_VARIANT_IDS)
+    parsed = tuple(int(token) for token in raw.replace(",", " ").split() if token.strip())
+    return parsed or tuple(DEFAULT_VARIANT_IDS)
+
+
+def _attempt_depth(attempt: Mapping[str, Any]) -> int:
+    """Max reproduced depth for an attempt = reached_level - start_level, floored at 0.
+
+    Falls back to first-win semantics (depth 1 on a solved attempt) when no explicit depth field is
+    present, so a first-win-only (deepen-OFF) attempt row reads depth 1 if ever summarized."""
+
+    explicit = attempt.get("depth_reached")
+    if explicit is not None and not isinstance(explicit, bool):
+        try:
+            return max(0, int(explicit))
+        except (TypeError, ValueError):
+            pass
+    return 1 if _truthy_solved(attempt) else 0
+
+
+def deepening_summary(attempts: Sequence[Mapping[str, Any]]) -> JsonDict:
+    """SCENARIO-CAPSTONE-4605-DEEPEN: aggregate multi-level deepening metrics from attempts.
+
+    Emitted ONLY when CARNOT_ARC_GATE_DEEPEN=1. depth_histogram buckets attempts by max reproduced
+    depth; multi_level_solve_rate is the fraction reaching depth>=2; median_actions_to_second_levelup
+    is the median action cost of the second level-up among attempts that deepened."""
+
+    rows = [dict(attempt) for attempt in attempts if attempt.get("attempted") is True]
+    histogram = {"0": 0, "1": 0, "2": 0, "3+": 0}
+    deepened = 0
+    second_actions: list[int] = []
+    for row in rows:
+        depth = _attempt_depth(row)
+        bucket = "3+" if depth >= 3 else str(depth)
+        histogram[bucket] = histogram.get(bucket, 0) + 1
+        if depth >= 2:
+            deepened += 1
+            actions = _positive_int(row.get("actions_to_second_levelup"))
+            if actions is not None:
+                second_actions.append(actions)
+    return {
+        "multi_level_solve_rate": _rate(deepened, len(rows)),
+        "depth_histogram": histogram,
+        "median_actions_to_second_levelup": _median(second_actions),
+    }
 
 
 def measurement_from_attempts(attempts: Sequence[Mapping[str, Any]]) -> JsonDict:
@@ -511,6 +618,17 @@ def build_artifact(
             "first_win_delta is zero after running the matched bare control on the same variants; "
             "this is an honest no-value null for first-win-rate, not a measurement bug."
         )
+    if _deepen_enabled():
+        # OPT-IN: ride-to-target-levels deepening measurement on the integrated (ridden) variants.
+        # Default OFF leaves the artifact above byte-unchanged.
+        deepen = deepening_summary(integrated_measurement.get("variant_attempts", []))
+        artifact["multi_level_solve_rate"] = deepen["multi_level_solve_rate"]
+        artifact["depth_histogram"] = deepen["depth_histogram"]
+        artifact["median_actions_to_second_levelup"] = deepen["median_actions_to_second_levelup"]
+        artifact["deepening_methodology_note"] = DEEPENING_FIELD_PRINCIPLES[
+            "deepening_methodology_note"
+        ]["principle"]
+        artifact["deepening_field_principles"] = DEEPENING_FIELD_PRINCIPLES
     artifact["reproducibility_checksum"] = payload_checksum(artifact)
     return artifact
 
@@ -645,6 +763,10 @@ def run_variant_attempt(
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     env = VariantEnv(env, game, int(spec["variant"]), reflect=spec.get("reflect"))
     policy = _policy_for_mode(mode, game)
+    # DEEPEN (opt-in, integrated arm only): ride past the first level-up to SUBMITTED_TARGET_LEVELS so
+    # we can measure a SECOND level-up. Default OFF (and bare control always) keeps the first-win-break
+    # path byte-identical to the committed behavior.
+    ride_to_deepen = _deepen_enabled() and mode != "bare"
     frames: list[Any] = []
     latest = None
     labels: list[str] = []
@@ -652,6 +774,8 @@ def run_variant_attempt(
     start_level: int | None = None
     reached = 0
     actions_to_first: int | None = None
+    actions_to_second: int | None = None
+    max_reached = 0
     for _index in range(int(budget)):
         if policy.is_done(frames, latest):
             break
@@ -670,11 +794,19 @@ def run_variant_attempt(
             start_level = _level_of_frame(latest)
         reached = _level_of_frame(latest)
         if start_level is not None and reached > start_level:
-            actions_to_first = actions
-            break
+            depth = reached - start_level
+            if actions_to_first is None:
+                actions_to_first = actions
+            if depth >= 2 and actions_to_second is None:
+                actions_to_second = actions
+            max_reached = max(max_reached, reached)
+            if not ride_to_deepen:
+                break
         frames.append(latest)
         if latest is None:
             break
+    if ride_to_deepen and start_level is not None and max_reached > start_level:
+        reached = max_reached
     claimed = reached if start_level is not None and reached > start_level else 0
     gate: JsonDict = {
         "game": game,
@@ -686,7 +818,7 @@ def run_variant_attempt(
     if claimed > 0 and labels:
         gate = dict(kit.reproduce(game, labels, _apply_action_label, claimed_level=claimed))
     solved = bool(gate.get("reproduced")) and int(gate.get("reached_level") or 0) >= claimed >= 1
-    return {
+    row: JsonDict = {
         "game": game,
         "variant_signature": spec["variant_signature"],
         "variant": int(spec["variant"]),
@@ -703,6 +835,16 @@ def run_variant_attempt(
         "blocked_reason": "",
         "policy_mode": mode,
     }
+    if ride_to_deepen:
+        # Additive deepening fields on the integrated attempt; gated so the deepen-OFF row is unchanged.
+        reproduced_depth = (
+            max(0, int(gate.get("reached_level") or 0) - int(start_level or 0)) if solved else 0
+        )
+        row["depth_reached"] = reproduced_depth
+        row["actions_to_second_levelup"] = (
+            actions_to_second if solved and reproduced_depth >= 2 else None
+        )
+    return row
 
 
 def default_variant_runner_factory(mode: str) -> VariantRunner:  # pragma: no cover - ARC runtime.
@@ -788,7 +930,7 @@ def run(
     root: Path | str = REPO_ROOT,
     preconditions_checked: Mapping[str, Any] | None = None,
     public_games: Sequence[str] | None = None,
-    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
+    variant_ids: Sequence[int] | None = None,
     budget: int = DEFAULT_BUDGET,
     variant_runner_factory: VariantRunnerFactory = default_variant_runner_factory,
     parity_check: ParityCheck = run_parity_check,
@@ -797,6 +939,8 @@ def run(
 ) -> JsonDict:
     started = now()
     root_path = Path(root)
+    # Explicit variant_ids wins; otherwise CARNOT_ARC_GATE_VARIANT_IDS when set, else DEFAULT_VARIANT_IDS.
+    resolved_variant_ids = resolve_variant_ids(variant_ids)
     checks = dict(preconditions_checked or check_preconditions(root_path))
     if not checks.get("ok", True):
         artifact = _blocked_artifact(
@@ -806,7 +950,7 @@ def run(
         games = list(public_games if public_games is not None else _public_games(root_path))
         integrated, bare = measure_policy_pair(
             public_games=games,
-            variant_ids=variant_ids,
+            variant_ids=resolved_variant_ids,
             budget=budget,
             variant_runner_factory=variant_runner_factory,
         )

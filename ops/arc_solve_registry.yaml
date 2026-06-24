@@ -1413,7 +1413,20 @@ live_submissions:
     (16->18 games incl recovered dc22/vc33; honest flat-replay-capped claims). Only miss: sc25 ->
     LIVE L0 (claimed L1; offline-reproduced L1 but live version-drift on hash 635fd71a -- +1 follow-up).
     The gate for the next online play: beat 33 levels.'
-prior_submitted_baseline_levels: 33
+- date: '2026-06-19'
+  mode: competition_kernel_live_agent   # the LIVE E3AgentPolicy on the hidden gateway -- the SCORED path
+  public_leaderboard_score: 0.08
+  ref: '53862349'
+  kernel: 'iancblenke/carnot-arc-agi3-submission v3'
+  driver: scripts/kaggle/submission_kernel/main.py
+  note: 'FIRST SCORED hidden-leaderboard submission (flat across kernel v3->v5). This -- NOT the replay
+    scorecards -- is the authoritative last-submission baseline. The 13/33 "levels" entries are public-game
+    REPLAYS (arc3_live_submit.py) that score ~0 on hidden; reproducible_total_levels is a dev proxy, not the score.'
+# scored_leaderboard_baseline is the authoritative last-submission baseline (the competition-kernel
+# live-agent hidden-leaderboard score). prior_submitted_baseline_levels below is a REPLAY-package level
+# count that scores ~0 on the hidden leaderboard -- NOT the leaderboard score.
+scored_leaderboard_baseline: 0.08
+prior_submitted_baseline_levels: 33  # REPLAY-package level count, scores ~0 on hidden -- NOT the leaderboard score
 learning_loop:
   transfer_routing: python/carnot/agentic/arc_solve_learning.py
   verifier_routed_search: python/carnot/agentic/arc_solver_kit.py
