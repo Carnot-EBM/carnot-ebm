@@ -237,6 +237,24 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="controllable_novelty_embedding_operator",
+            derived_from_games=("exp4688_controllable_novelty_proposal_policy_live",),
+            purpose=(
+                "Embed controllable action-effect deltas for intrinsic proposal novelty, "
+                "reject cosmetic/raw-frame novelty when the controllability gate is active, "
+                "and report transfer value before any solve claim."
+            ),
+            selector_tags=(
+                "controllable_novelty",
+                "directed_exploration",
+                "intrinsic_proposal",
+                "candidate_generation",
+                "action_effect",
+                "graph_explore",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -556,6 +574,7 @@ def select_primitive_operators(
                 expanded.append("cheap_value_routing_cost_fix_operator")
                 expanded.append("dagger_off_path_data_collection_operator")
                 expanded.append("programmatic_expert_trust_weighting_operator")
+                expanded.append("controllable_novelty_embedding_operator")
         names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
@@ -1258,6 +1277,103 @@ def programmatic_expert_trust_weighting_operator(
         "best_trust": float(public_rows[0]["trust"]) if public_rows else 0.0,
         "expert_trust_weights": public_rows,
         "coverage_ready": bool(kept_rows),
+        "residual": residual,
+        "verifier_is_oracle": False,
+    }
+
+
+def _controllable_novelty_int(row: Any, key: str) -> int:
+    value = _candidate_field(row, key, 0)
+    if isinstance(value, bool):
+        return 0
+    try:
+        return max(0, int(value))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _controllable_novelty_bool(row: Any, key: str, default: bool = False) -> bool:
+    value = _candidate_field(row, key, default)
+    return bool(value) if isinstance(value, bool) else bool(default)
+
+
+def _controllable_novelty_min(value: Any) -> int:
+    if isinstance(value, bool):
+        return 1 if value else 1
+    try:
+        return max(1, int(value))
+    except (TypeError, ValueError):
+        return 1
+
+
+def _controllable_novelty_public_row(row: Any, index: int, min_observed: int) -> dict[str, Any]:
+    observed = _controllable_novelty_int(row, "observed_effects")
+    embeddings = _controllable_novelty_int(row, "episodic_embeddings")
+    candidate_scores = _controllable_novelty_int(row, "candidate_scores")
+    rnd_updates = _controllable_novelty_int(row, "rnd_updates")
+    gate_on = _controllable_novelty_bool(row, "controllability_gate_on", True)
+    raw_frame = _controllable_novelty_bool(row, "raw_frame_novelty", False)
+    usable = bool(gate_on and not raw_frame and observed >= min_observed and embeddings > 0)
+    if usable:
+        rejection_reason = ""
+    elif raw_frame or not gate_on:
+        rejection_reason = "raw_frame_or_cosmetic_novelty"
+    else:
+        rejection_reason = "insufficient_controllable_effect_embeddings"
+    novelty_signal = float(observed + embeddings) + 0.001 * float(candidate_scores + rnd_updates)
+    return {
+        "game": str(_candidate_field(row, "game", "") or ""),
+        "policy_mode": str(_candidate_field(row, "policy_mode", f"novelty_{index}") or f"novelty_{index}"),
+        "observed_effects": int(observed),
+        "episodic_embeddings": int(embeddings),
+        "candidate_scores": int(candidate_scores),
+        "rnd_updates": int(rnd_updates),
+        "controllability_gate_on": bool(gate_on),
+        "raw_frame_novelty": bool(raw_frame),
+        "usable": bool(usable),
+        "novelty_signal": round(float(novelty_signal), 6),
+        "rejection_reason": rejection_reason,
+    }
+
+
+def controllable_novelty_embedding_operator(
+    novelty_rows: Sequence[Any],
+    *,
+    min_observed_effects: int = 1,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4692: reusable controllable action-effect novelty embedder."""
+
+    min_observed = _controllable_novelty_min(min_observed_effects)
+    public_rows = [
+        _controllable_novelty_public_row(row, index, min_observed)
+        for index, row in enumerate(list(novelty_rows))
+    ]
+    public_rows.sort(
+        key=lambda row: (
+            not bool(row["usable"]),
+            -float(row["novelty_signal"]),
+            str(row["game"]),
+            str(row["policy_mode"]),
+        )
+    )
+    usable_rows = [row for row in public_rows if row["usable"]]
+    if usable_rows:
+        residual = ""
+    elif not public_rows:
+        residual = "no_controllable_novelty_rows"
+    elif any(row["rejection_reason"] == "raw_frame_or_cosmetic_novelty" for row in public_rows):
+        residual = "cosmetic_novelty_not_controllable"
+    else:
+        residual = "no_controllable_effect_embeddings"
+    return {
+        "operator": "controllable_novelty_embedding_operator",
+        "embedding_row_count": len(public_rows),
+        "usable_embedding_count": len(usable_rows),
+        "rejected_embedding_count": len(public_rows) - len(usable_rows),
+        "min_observed_effects": int(min_observed),
+        "best_novelty_signal": float(public_rows[0]["novelty_signal"]) if public_rows else 0.0,
+        "controllable_novelty_embeddings": public_rows,
+        "coverage_ready": bool(usable_rows),
         "residual": residual,
         "verifier_is_oracle": False,
     }

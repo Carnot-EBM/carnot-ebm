@@ -554,6 +554,57 @@ general_gotchas:
       programmatic expert trust-weighting gate is persisted as reusable
       generation scaffolding, but the residual bridge gap is inducing
       replay-stable experts that expose winning candidates on new games.
+- id: primitive_controllable_novelty_embedding_operator
+  operator: controllable_novelty_embedding_operator
+  derived_from_games:
+  - exp4688_controllable_novelty_proposal_policy_live
+  derived_from_artifacts:
+  - results/experiment_4688_controllable_novelty_proposal_policy_live.json
+  - results/experiment_4689_program_synthesis_action_effect_proposal_filter.json
+  note: >-
+    Exp 4692 persists the .433 controllable-novelty embedding primitive as
+    reusable directed-exploration scaffolding: live proposal candidates are
+    embedded through controllable action-effect deltas, raw-frame/cosmetic
+    novelty is rejected when the controllability gate is on, and the resulting
+    intrinsic novelty signal is reused before value-ranking or frontier
+    selection. Both .433 A1 and A2 selected unchanged submitted config and
+    banked no level, so this captures the strongest characterized reusable
+    generation component rather than fabricating value. The primitive
+    generates/ranks/embeds candidates only; new levels still count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Cached held-out transfer can remain value-null when the controllable
+      novelty embedding creates a strong action-effect signal but the winning
+      prefix is still absent from the generated proposal pool.
+  latest_exp4692_transfer:
+    artifact: results/experiment_4692_primitive_persist_transfer.json
+    transfer_games:
+    - bp35
+    - cd82
+    - dc22
+    transfer_value_per_game:
+      bp35:
+        candidate_generation_coverage_delta: 0.0
+        first_win_rate_delta: 0.0
+        live_solve_rate_delta: 0.0
+        offline_reproduced_new_level: false
+      cd82:
+        candidate_generation_coverage_delta: 0.0
+        first_win_rate_delta: 0.0
+        live_solve_rate_delta: 0.0
+        offline_reproduced_new_level: false
+      dc22:
+        candidate_generation_coverage_delta: 0.0
+        first_win_rate_delta: 0.0
+        live_solve_rate_delta: 0.0
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is null on cached held-out games; the
+      controllable-novelty embedding operator is persisted as reusable
+      directed-exploration scaffolding, but the residual bridge gap is making
+      the novelty signal propose a winning prefix instead of revisiting
+      non-winning controllable states.
+    reproducibility_checksum: sha256:e15b6945aaba76bc4d8dec319d76bfb3d2e21ef77e5d5db3aaa44b99ddebe89c
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
