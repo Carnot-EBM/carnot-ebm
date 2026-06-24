@@ -1,0 +1,296 @@
+{
+  "duration_s": 1.0,
+  "experiment": "experiment_4680_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+    },
+    "offline_reproduced_new_level": {
+      "principle": "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "primitive_persisted": {
+      "principle": "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "residual_dead_end": {
+      "principle": "the characterized transfer-null residual if value is zero (the next-attack record); per the .430 A5 pattern."
+    },
+    "transfer_games": {
+      "principle": "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+    },
+    "transfer_value_per_game": {
+      "principle": "per-game coverage/solve-rate/first-win delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the persisted primitive generates/ranks/induces, oracle-distinct from the executable win-check."
+    }
+  },
+  "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor).",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "counted_toward_reproducible_total_levels": 0,
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "offline_reproduced_new_level": false,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4680": true
+  },
+  "primitive_operator_result": {
+    "best_trust": 0.0,
+    "coverage_ready": false,
+    "expert_count": 0,
+    "expert_trust_weights": [],
+    "kept_expert_count": 0,
+    "operator": "programmatic_expert_trust_weighting_operator",
+    "rejected_expert_count": 0,
+    "residual": "expert_factors_not_independent",
+    "trust_threshold": 0.75,
+    "verifier_is_oracle": false
+  },
+  "primitive_persisted": {
+    "derived_from_artifacts": [
+      "results/experiment_4676_hierarchical_subgoal_search_live.json",
+      "results/experiment_4677_poe_world_factored_subgoal_planner.json"
+    ],
+    "operator": "programmatic_expert_trust_weighting_operator",
+    "registry_general_gotcha_id": "primitive_programmatic_expert_trust_weighting_operator",
+    "reuse_note": "reuse held-out programmatic-expert trust weighting before product-model planning",
+    "source": "A2_programmatic_expert_trust_weighting"
+  },
+  "random_seed": 4680,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:13eb9ab207b41075ce67553db228bd674d7fd89fb5b00e588c42811a8d5bfb8b",
+  "requirements": [
+    "REQ-ARC-WMTE-4680"
+  ],
+  "residual_dead_end": "Persisted programmatic expert trust-weighting operator had zero transfer lift on cached held-out games; the residual bridge gap is inducing replay-stable experts that make winning candidates appear on new games.",
+  "result_path": "results/experiment_4680_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4680-PERSIST-STRONGEST-COMPONENT",
+    "SCENARIO-ARC-WMTE-4680-TRANSFER-MEASUREMENT"
+  ],
+  "schema": "carnot.exp4680.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "measured_signal": 8.0,
+    "operator": "programmatic_expert_trust_weighting_operator",
+    "registry_general_gotcha_id": "primitive_programmatic_expert_trust_weighting_operator",
+    "selection_rationale": "both A1 and A2 were value-null; persist the strongest characterized component, the programmatic-expert trust-weighting generation gate.",
+    "source": "A2_programmatic_expert_trust_weighting",
+    "upstream_signal_rank": [
+      {
+        "artifact": "results/experiment_4677_poe_world_factored_subgoal_planner.json",
+        "best_trust": 0.0,
+        "expert_count": 8,
+        "kept_expert_count": 0,
+        "measured_signal": 8.0,
+        "source": "A2_programmatic_expert_trust_weighting"
+      },
+      {
+        "artifact": "results/experiment_4676_hierarchical_subgoal_search_live.json",
+        "measured_signal": 0.0,
+        "reachable_subgoal_count": 0,
+        "source": "A1_hierarchical_subgoal_search",
+        "subgoal_count": 0
+      }
+    ]
+  },
+  "transfer_dead_ends": {
+    "bp35": "no cached programmatic-expert transfer rows for this held-out game",
+    "cd82": "no cached programmatic-expert transfer rows for this held-out game",
+    "dc22": "no cached programmatic-expert transfer rows for this held-out game"
+  },
+  "transfer_games": [
+    "bp35",
+    "cd82",
+    "dc22"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "no cached programmatic-expert transfer rows for this held-out game",
+      "game": "bp35",
+      "operator_result": {
+        "best_trust": 0.0,
+        "coverage_ready": false,
+        "expert_count": 0,
+        "expert_trust_weights": [],
+        "kept_expert_count": 0,
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "rejected_expert_count": 0,
+        "residual": "expert_factors_not_independent",
+        "trust_threshold": 0.75,
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_reached_level": 0,
+        "best_trust": 0.0,
+        "candidate_generation_coverage_delta": 0.0,
+        "coverage_ready": false,
+        "expert_count": 0,
+        "factored_reached_level": 0,
+        "first_win_rate_delta": 0.0,
+        "kept_expert_count": 0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "value_added": false
+      },
+      "value_added": false
+    },
+    {
+      "dead_end": "no cached programmatic-expert transfer rows for this held-out game",
+      "game": "cd82",
+      "operator_result": {
+        "best_trust": 0.0,
+        "coverage_ready": false,
+        "expert_count": 0,
+        "expert_trust_weights": [],
+        "kept_expert_count": 0,
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "rejected_expert_count": 0,
+        "residual": "expert_factors_not_independent",
+        "trust_threshold": 0.75,
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_reached_level": 0,
+        "best_trust": 0.0,
+        "candidate_generation_coverage_delta": 0.0,
+        "coverage_ready": false,
+        "expert_count": 0,
+        "factored_reached_level": 0,
+        "first_win_rate_delta": 0.0,
+        "kept_expert_count": 0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "value_added": false
+      },
+      "value_added": false
+    },
+    {
+      "dead_end": "no cached programmatic-expert transfer rows for this held-out game",
+      "game": "dc22",
+      "operator_result": {
+        "best_trust": 0.0,
+        "coverage_ready": false,
+        "expert_count": 0,
+        "expert_trust_weights": [],
+        "kept_expert_count": 0,
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "rejected_expert_count": 0,
+        "residual": "expert_factors_not_independent",
+        "trust_threshold": 0.75,
+        "verifier_is_oracle": false
+      },
+      "transfer_value": {
+        "baseline_reached_level": 0,
+        "best_trust": 0.0,
+        "candidate_generation_coverage_delta": 0.0,
+        "coverage_ready": false,
+        "expert_count": 0,
+        "factored_reached_level": 0,
+        "first_win_rate_delta": 0.0,
+        "kept_expert_count": 0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "value_added": false
+      },
+      "value_added": false
+    }
+  ],
+  "transfer_value_per_game": {
+    "bp35": {
+      "baseline_reached_level": 0,
+      "best_trust": 0.0,
+      "candidate_generation_coverage_delta": 0.0,
+      "coverage_ready": false,
+      "expert_count": 0,
+      "factored_reached_level": 0,
+      "first_win_rate_delta": 0.0,
+      "kept_expert_count": 0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "programmatic_expert_trust_weighting_operator",
+      "value_added": false
+    },
+    "cd82": {
+      "baseline_reached_level": 0,
+      "best_trust": 0.0,
+      "candidate_generation_coverage_delta": 0.0,
+      "coverage_ready": false,
+      "expert_count": 0,
+      "factored_reached_level": 0,
+      "first_win_rate_delta": 0.0,
+      "kept_expert_count": 0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "programmatic_expert_trust_weighting_operator",
+      "value_added": false
+    },
+    "dc22": {
+      "baseline_reached_level": 0,
+      "best_trust": 0.0,
+      "candidate_generation_coverage_delta": 0.0,
+      "coverage_ready": false,
+      "expert_count": 0,
+      "factored_reached_level": 0,
+      "first_win_rate_delta": 0.0,
+      "kept_expert_count": 0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "programmatic_expert_trust_weighting_operator",
+      "value_added": false
+    }
+  },
+  "upstream_signals": {
+    "A1_hierarchical_subgoal_search": {
+      "artifact": "results/experiment_4676_hierarchical_subgoal_search_live.json",
+      "component_signal": 0.0,
+      "honest_verdict": "complete: hierarchical_subgoal_no_new_level_residual_value_head_still_not_separating",
+      "measured_signal": 0.0,
+      "reachable_subgoal_count": 0,
+      "subgoal_count": 0
+    },
+    "A2_programmatic_expert_trust_weighting": {
+      "artifact": "results/experiment_4677_poe_world_factored_subgoal_planner.json",
+      "best_trust": 0.0,
+      "chosen_submitted_config": "unchanged",
+      "component_signal": 8.0,
+      "expert_count": 8,
+      "honest_verdict": "complete: poe_world_factored_planner_no_coverage_gain_residual_logged",
+      "kept_expert_count": 0,
+      "measured_signal": 0.0,
+      "residual_bridge_gap": "experts_overfit_prefix"
+    }
+  },
+  "verifier_is_oracle": false
+}

@@ -506,6 +506,54 @@ general_gotchas:
       DAgger-lite collection operator is persisted as reusable search-distribution
       correction scaffolding, but the residual bridge gap is converting corrected
       off-path labels into value-routing decisions that expose new candidates.
+- id: primitive_programmatic_expert_trust_weighting_operator
+  operator: programmatic_expert_trust_weighting_operator
+  derived_from_games:
+  - exp4677_poe_world_factored_subgoal_planner
+  derived_from_artifacts:
+  - results/experiment_4676_hierarchical_subgoal_search_live.json
+  - results/experiment_4677_poe_world_factored_subgoal_planner.json
+  note: >-
+    Exp 4680 persists the .432 programmatic expert trust-weighting generation
+    primitive as reusable live-solver scaffolding: generated object-level
+    experts are ranked by held-out transition trust, only replay-stable factors
+    are admitted to product-model planning, and prefix-overfit experts are
+    rejected before any solve claim. Both .432 A1 and A2 selected unchanged
+    submitted config and banked no level, so this captures the strongest
+    characterized reusable generation component rather than fabricating value.
+    The primitive generates/ranks/filters candidates only; new levels still
+    count only through arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Cached held-out transfer can remain value-null when no replay-stable expert
+      rows exist for the held-out game, or when all generated experts overfit
+      the proposer prefix and fail held-out transition trust.
+  latest_exp4680_transfer:
+    artifact: results/experiment_4680_primitive_persist_transfer.json
+    transfer_games:
+    - bp35
+    - cd82
+    - dc22
+    transfer_value_per_game:
+      bp35:
+        candidate_generation_coverage_delta: 0.0
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        offline_reproduced_new_level: false
+      cd82:
+        candidate_generation_coverage_delta: 0.0
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        offline_reproduced_new_level: false
+      dc22:
+        candidate_generation_coverage_delta: 0.0
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is null on cached held-out games; the
+      programmatic expert trust-weighting gate is persisted as reusable
+      generation scaffolding, but the residual bridge gap is inducing
+      replay-stable experts that expose winning candidates on new games.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
