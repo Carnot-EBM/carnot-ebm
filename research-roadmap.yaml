@@ -243,7 +243,7 @@ tasks:
       RND-style lifelong novelty score (cross-episode novelty); (c) an intrinsic proposal bonus that reshapes the
       explorer's action-proposal distribution BEFORE value-ranking; (d) a small family of exploration temperatures
       within the same live E3 budget; (e) live E3 replay-verifies via arc_solver_kit.reproduce. MEASURE on >=1
-      clean L1-only game (PREFER a hard clean game from {bp35,re86,s5i5,g50t,r11l,lf52}): does the controllable-novelty
+      clean L1-only game (PREFER a hard clean game from {{bp35,re86,s5i5,g50t,r11l,lf52}}): does the controllable-novelty
       proposal policy make a winning L1 trajectory APPEAR where flat exploration does not -- does the GENERIC live
       agent reach a NEW level, offline-reproduced. CONTROLS (mandatory): a matched NO-NOVELTY-BONUS ablation (same
       budget, no intrinsic bonus) AND a COSMETIC-NOVELTY ablation (controllability gate OFF, raw-frame novelty) --
@@ -389,7 +389,7 @@ tasks:
       EXISTING CODE TO READ FIRST:
         - {project_root}/docs/research-notes/directed-exploration-sota-ingestion-2026-06-24.md (the program_synthesis_action_effect_proposal_filter mapping: induce action->effect programs + held-out transition rejection + proposal pruning; PoE-World arXiv:2505.10819 + arXiv:2102.11137 -- the spec; "must include held-out transition rejection because A2 already exposed experts_overfit_prefix")
         - {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (.431 A2 -- read candidate_generation_coverage_factored=0.0, residual_bridge_gap=experts_overfit_prefix, expert_trust_weights: the prefix-overfit experts this fixes via held-out rejection)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json IF PRESENT (A1 -- read generic_first_win_by_config + residual to share the confirmed target game) -- else PREFER a hard clean L1-only game from {bp35,re86,s5i5,g50t,r11l,lf52}
+        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json IF PRESENT (A1 -- read generic_first_win_by_config + residual to share the confirmed target game) -- else PREFER a hard clean L1-only game from {{bp35,re86,s5i5,g50t,r11l,lf52}}
         - {project_root}/python/carnot/agentic/arc_executable_world_model.py (the executable world model + plan_in_model ~693 -- where induced action->effect programs attach) + {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction -- the LLM induction of action->effect programs) + {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy + StepwiseExplorer -- where the surviving programs PRUNE the proposal set)
         - {project_root}/scripts/arc_orphan_solver_lint.py + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
 
