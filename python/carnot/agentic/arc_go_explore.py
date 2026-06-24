@@ -19,8 +19,10 @@ gradient it is still searching a large space -- expected to crack the shallower-
 (wa30 at depth 33 with stateful pick/place is the hardest). The LLM-as-reasoner gradient (propose sub-goals)
 is the SOTA-flagged next layer on top of this archive.
 """
+
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from typing import Any, Optional
 
 import numpy as np
@@ -38,11 +40,141 @@ def _coarse_cell(grid: np.ndarray, level: int, bins: int = 6) -> tuple:
     sig = []
     for i in range(bins):
         for j in range(bins):
-            block = g[ys[i]:max(ys[i] + 1, ys[i + 1]), xs[j]:max(xs[j] + 1, xs[j + 1])]
+            block = g[ys[i] : max(ys[i] + 1, ys[i + 1]), xs[j] : max(xs[j] + 1, xs[j + 1])]
             # dominant colour of the block (mode) -- robust coarse signature
             vals, counts = np.unique(block, return_counts=True)
             sig.append(int(vals[counts.argmax()]) if vals.size else 0)
     return (level, tuple(sig))
+
+
+def _frame_grid(frame: Any) -> np.ndarray:
+    if isinstance(frame, np.ndarray):
+        return frame
+    if hasattr(frame, "frame"):
+        return np.asarray(getattr(frame, "frame"))
+    try:
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        return np.asarray(grid_of(frame))
+    except Exception:
+        return np.asarray([])
+
+
+def _frame_level(frame: Any) -> int:
+    try:
+        from carnot.agentic.arc_agi3_live_adapter import _levels_completed
+
+        return int(_levels_completed(frame))
+    except Exception:
+        return int(getattr(frame, "levels_completed", 0) or 0)
+
+
+def _normalise_prefix(path: Sequence[Mapping[str, Any]] | None) -> list[dict[str, Any]]:
+    return [
+        {"action": int(step["action"]), "data": step.get("data")}
+        for step in list(path or [])
+        if isinstance(step, Mapping) and step.get("action") is not None
+    ]
+
+
+class GoExploreReplayArchive:
+    """Live replay-prefix archive for first-return-then-explore scheduling.
+
+    The live environment cannot teleport to archived states, so every selected
+    cell is represented by a reset-replayable action prefix.
+    """
+
+    def __init__(self, *, enabled: bool = True, bins: int = 6, max_cells: int = 256) -> None:
+        self.enabled = bool(enabled)
+        self.bins = max(1, int(bins))
+        self.max_cells = max(1, int(max_cells))
+        self._cells: dict[tuple, dict[str, Any]] = {}
+        self._observations = 0
+        self._selected_prefixes = 0
+
+    def observe(self, frame: Any, path: Sequence[Mapping[str, Any]] | None) -> None:
+        if not self.enabled:
+            return
+        grid = _frame_grid(frame)
+        if grid.ndim != 2 or grid.size == 0:
+            return
+        prefix = _normalise_prefix(path)
+        key = _coarse_cell(grid, _frame_level(frame), bins=self.bins)
+        self._observations += 1
+        existing = self._cells.get(key)
+        if existing is not None and len(existing["prefix"]) <= len(prefix):
+            existing["seen"] = int(existing.get("seen", 0)) + 1
+            return
+        if len(self._cells) >= self.max_cells and key not in self._cells:
+            worst = max(
+                self._cells,
+                key=lambda cell: (
+                    int(self._cells[cell].get("visits", 0)),
+                    -int(self._cells[cell].get("depth", 0)),
+                ),
+            )
+            del self._cells[worst]
+        self._cells[key] = {
+            "prefix": prefix,
+            "visits": 0,
+            "depth": len(prefix),
+            "seen": 1,
+        }
+
+    def select_prefix(
+        self,
+        *,
+        current_path: Sequence[Mapping[str, Any]] | None = None,
+    ) -> list[dict[str, Any]]:
+        if not self.enabled or not self._cells:
+            return []
+        current = _normalise_prefix(current_path)
+        eligible = [
+            entry
+            for entry in self._cells.values()
+            if entry.get("prefix") and entry.get("prefix") != current
+        ]
+        if not eligible:
+            return []
+        selected = min(
+            eligible,
+            key=lambda entry: (
+                int(entry.get("visits", 0)),
+                -int(entry.get("depth", 0)),
+                tuple((step["action"], repr(step.get("data"))) for step in entry["prefix"]),
+            ),
+        )
+        selected["visits"] = int(selected.get("visits", 0)) + 1
+        self._selected_prefixes += 1
+        return [dict(step) for step in selected["prefix"]]
+
+    def diagnostics(self) -> dict[str, Any]:
+        return {
+            "enabled": bool(self.enabled),
+            "stored_cells": int(len(self._cells)),
+            "observations": int(self._observations),
+            "selected_prefixes": int(self._selected_prefixes),
+            "max_depth": max(
+                (int(entry.get("depth", 0)) for entry in self._cells.values()), default=0
+            ),
+            "verifier_is_oracle": False,
+        }
+
+
+def coerce_go_explore_archive(value: Any) -> GoExploreReplayArchive | None:
+    if value is None or value is False:
+        return None
+    if isinstance(value, GoExploreReplayArchive):
+        return value
+    if isinstance(value, Mapping):
+        return GoExploreReplayArchive(
+            enabled=bool(value.get("enabled", True)),
+            bins=int(value.get("bins", 6)),
+            max_cells=int(value.get("max_cells", 256)),
+        )
+    if value is True:
+        return GoExploreReplayArchive()
+    return None
 
 
 def go_explore_solve(
@@ -98,7 +230,9 @@ def go_explore_solve(
         if full_action_set:
             avail = list(getattr(frame, "available_actions", []) or range(1, 7))
             for aid in avail:
-                if int(aid) != 6 and int(aid) not in have_types:   # 6 = click (already object-centric)
+                if (
+                    int(aid) != 6 and int(aid) not in have_types
+                ):  # 6 = click (already object-centric)
                     cands.append(type(cands[0])(action_id=int(aid), data=None) if cands else None)
         return [c for c in cands if c is not None]
 
@@ -124,7 +258,9 @@ def go_explore_solve(
         iters += 1
         # SELECT: weight under-visited + deeper (frontier) cells higher (affordance for progress)
         keys = list(archive.keys())
-        weights = [1.0 / (1 + archive[k]["visits"]) * (1.0 + 0.15 * archive[k]["depth"]) for k in keys]
+        weights = [
+            1.0 / (1 + archive[k]["visits"]) * (1.0 + 0.15 * archive[k]["depth"]) for k in keys
+        ]
         tot = sum(weights) or 1.0
         r = rng.random() * tot
         acc = 0.0

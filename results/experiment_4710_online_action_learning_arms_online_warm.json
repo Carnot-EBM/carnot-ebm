@@ -1,7 +1,7 @@
 {
   "arm": "online-warm",
-  "bare_first_win_rate": 0.0,
-  "duration_s": 105.203,
+  "bare_first_win_rate": 0.04,
+  "duration_s": 608.389,
   "experiment": "experiment_4710_online_action_learning_arms",
   "field_principles": {
     "arm": "Which scorer arm was measured. The 'frozen' arm is the byte-identical exp4605 baseline. Online arms adapt the CNN from the agent's own transitions per episode.",
@@ -15,17 +15,20 @@
     "solve_provenance": "development_proxy: solves are produced by the offline development twin (arc_loop offline sim + GameAdapter), NOT by the scored Kaggle E3 cascade. Not headline.",
     "verifier_is_oracle": "False: the scorer is oracle-DISTINCT (learned CNN + PersistentAEM, NOT the game's own level-up oracle). A true value would indicate circularity."
   },
-  "first_win_rate": 0.0,
-  "honest_verdict": "complete: arm=online-warm first_win_rate=0.0000 matches bare (null delta)",
+  "first_win_rate": 0.04,
+  "honest_verdict": "complete: arm=online-warm first_win_rate=0.0400 matches bare (null delta)",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
-  "per_game_solved": [],
+  "per_game_solved": [
+    "lp85"
+  ],
   "random_seed": 4710,
-  "reproducibility_checksum": "sha256:f7a29f3dff2c5b3b99271f3832764cb467dd84566b6aa324afb95db66aecaf1c",
+  "reproducibility_checksum": "sha256:2f3d305d4db1b75184ac9c25e71cc77445b0fe5dd48d75c36bb7f0cc51b9cc03",
   "schema": "carnot.exp4710.online_action_learning_arms.v1",
   "scorer_diagnostics": {
-    "errors": 0,
-    "fits": 100,
-    "observed": 575
+    "errors": 79442,
+    "fits": 935,
+    "n_scorers": 25,
+    "observed": 4737
   },
   "solve_provenance": "development_proxy",
   "spec_refs": [
@@ -34,7 +37,7 @@
   ],
   "variant_attempts": [
     {
-      "actions": 24,
+      "actions": 199,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -57,7 +60,7 @@
       "variant_signature": "ar25~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -80,7 +83,7 @@
       "variant_signature": "bp35~color01"
     },
     {
-      "actions": 24,
+      "actions": 197,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -103,7 +106,7 @@
       "variant_signature": "cd82~color01"
     },
     {
-      "actions": 24,
+      "actions": 196,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -126,7 +129,7 @@
       "variant_signature": "cn04~color01"
     },
     {
-      "actions": 24,
+      "actions": 197,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -149,7 +152,7 @@
       "variant_signature": "dc22~color01"
     },
     {
-      "actions": 24,
+      "actions": 194,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -172,7 +175,7 @@
       "variant_signature": "ft09~color01"
     },
     {
-      "actions": 24,
+      "actions": 197,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -195,7 +198,7 @@
       "variant_signature": "g50t~color01"
     },
     {
-      "actions": 24,
+      "actions": 197,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -218,7 +221,7 @@
       "variant_signature": "ka59~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -241,30 +244,90 @@
       "variant_signature": "lf52~color01"
     },
     {
-      "actions": 24,
-      "actions_to_first_levelup": null,
+      "actions": 59,
+      "actions_to_first_levelup": 59,
       "attempted": true,
       "blocked_reason": "",
-      "first_win": false,
+      "first_win": true,
       "game": "lp85",
       "kind": "color",
       "policy_mode": "integrated",
-      "reached_level": 0,
+      "reached_level": 1,
       "reflect": null,
       "reproduction_gate": {
-        "claimed_level": 0,
+        "claimed_level": 1,
         "game": "lp85",
-        "mode": "offline_reproduction_gate_no_solution",
-        "reached_level": 0,
-        "reproduced": false
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true
       },
-      "solution_labels": [],
-      "solved": false,
+      "solution_labels": [
+        "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
+        "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
+        "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}",
+        "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
+        "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}",
+        "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+      ],
+      "solved": true,
       "variant": 1,
       "variant_signature": "lp85~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -287,7 +350,7 @@
       "variant_signature": "ls20~color01"
     },
     {
-      "actions": 24,
+      "actions": 198,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -310,7 +373,7 @@
       "variant_signature": "m0r0~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -333,7 +396,7 @@
       "variant_signature": "r11l~color01"
     },
     {
-      "actions": 24,
+      "actions": 196,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -356,7 +419,7 @@
       "variant_signature": "re86~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -379,7 +442,7 @@
       "variant_signature": "s5i5~color01"
     },
     {
-      "actions": 24,
+      "actions": 199,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -402,7 +465,7 @@
       "variant_signature": "sb26~color01"
     },
     {
-      "actions": 24,
+      "actions": 199,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -425,7 +488,7 @@
       "variant_signature": "sc25~color01"
     },
     {
-      "actions": 24,
+      "actions": 199,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -448,7 +511,7 @@
       "variant_signature": "sk48~color01"
     },
     {
-      "actions": 24,
+      "actions": 193,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -471,7 +534,7 @@
       "variant_signature": "sp80~color01"
     },
     {
-      "actions": 24,
+      "actions": 193,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -494,7 +557,7 @@
       "variant_signature": "su15~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -517,7 +580,7 @@
       "variant_signature": "tn36~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -540,7 +603,7 @@
       "variant_signature": "tr87~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -563,7 +626,7 @@
       "variant_signature": "tu93~color01"
     },
     {
-      "actions": 24,
+      "actions": 195,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",
@@ -586,7 +649,7 @@
       "variant_signature": "vc33~color01"
     },
     {
-      "actions": 24,
+      "actions": 197,
       "actions_to_first_levelup": null,
       "attempted": true,
       "blocked_reason": "",

@@ -124,6 +124,7 @@ def _is_solver_like(path: Path) -> str | None:
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef) and node.name in (
             "escalating_deepen",
+            "go_explore_solve",
             "plan_in_model",
         ):
             return f"defines solver function {node.name}()"

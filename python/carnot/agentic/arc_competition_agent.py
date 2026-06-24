@@ -31,9 +31,11 @@ import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
+from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
+from carnot.agentic.arc_go_explore import coerce_go_explore_archive
 from carnot.agentic.arc_program_synthesis_filter import (
     coerce_program_synthesis_filter,
     induce_action_effect_proposal_filter,
@@ -107,6 +109,12 @@ SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED = False
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD = 0.75
+SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED = False
+SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE = (
+    "frequency_prior_from_cross_game_first_contact_traces"
+)
+SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
+SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -285,6 +293,10 @@ class StepwiseExplorer:
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
         program_synthesis_filter: Any | None = None,
+        amortized_first_contact_prior: Any | bool | None = (
+            SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
+        ),
+        go_explore_archive: Any | bool | None = SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -412,9 +424,15 @@ class StepwiseExplorer:
             object_centric_proposal
         )
         self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
+        self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
+            amortized_first_contact_prior
+        )
+        self.go_explore_archive = coerce_go_explore_archive(go_explore_archive)
         self._qd_sequences_injected = 0
         self._qd_actions_injected = 0
         self._qd_generation_errors = 0
+        self._go_explore_prefixes_injected = 0
+        self._go_explore_actions_injected = 0
 
     @staticmethod
     def _normalize_frontier_batch_size(value: int | str | None) -> int | None:
@@ -654,6 +672,23 @@ class StepwiseExplorer:
             return {"enabled": False}
         return self.object_centric_proposal_policy.diagnostics()
 
+    def amortized_prior_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-4701: expose first-contact prior diagnostics."""
+
+        if self.amortized_first_contact_prior is None:
+            return {"enabled": False}
+        return self.amortized_first_contact_prior.diagnostics()
+
+    def go_explore_archive_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-4701: expose return-then-explore prefix archive diagnostics."""
+
+        if self.go_explore_archive is None:
+            return {"enabled": False}
+        out = self.go_explore_archive.diagnostics()
+        out["prefixes_injected"] = int(self._go_explore_prefixes_injected)
+        out["actions_injected"] = int(self._go_explore_actions_injected)
+        return out
+
     def set_program_synthesis_filter(self, proposal_filter: Any | None) -> None:
         """REQ-ARC-WMTE-4689: install held-out-validated action-effect pruning."""
 
@@ -784,19 +819,28 @@ class StepwiseExplorer:
         # the LiveActionEffectScorer (frozen shipped scorer) is a no-op here -- it has no
         # propose_enabled attribute so the default False short-circuits the whole block.
         fcs = self.frame_change_scorer
-        if fcs is not None and getattr(fcs, "propose_enabled", False) and hasattr(fcs, "propose_coords"):
+        if (
+            fcs is not None
+            and getattr(fcs, "propose_enabled", False)
+            and hasattr(fcs, "propose_coords")
+        ):
             try:
                 existing = {
-                    (int(r["action"]), (r.get("data") or {}).get("x"), (r.get("data") or {}).get("y"))
+                    (
+                        int(r["action"]),
+                        (r.get("data") or {}).get("x"),
+                        (r.get("data") or {}).get("y"),
+                    )
                     for r in rows
                 }
-                for (px, py) in fcs.propose_coords(frame):
+                for px, py in fcs.propose_coords(frame):
                     key = (6, px, py)
                     if key not in existing:
                         rows.append({"action": 6, "data": {"x": int(px), "y": int(py)}})
                         existing.add(key)
             except Exception:
                 pass
+        rows = self._apply_amortized_prior_order(frame, rows, path=path)
         if self.object_centric_proposal_policy is not None:
             rows = self._apply_object_centric_proposal_order(
                 frame,
@@ -806,6 +850,19 @@ class StepwiseExplorer:
         if self.program_synthesis_filter is not None:
             rows = self.program_synthesis_filter.rank_candidates(frame, rows)
         return self._apply_controllable_novelty_order(frame, rows)
+
+    def _apply_amortized_prior_order(
+        self,
+        frame: Any,
+        candidates: Sequence[Mapping[str, Any]],
+        *,
+        path: Sequence[Mapping[str, Any]] | None = None,
+    ) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4701: rank first-contact proposals before search consumes them."""
+
+        if self.amortized_first_contact_prior is None:
+            return [dict(row) for row in candidates]
+        return self.amortized_first_contact_prior.rank_candidates(frame, candidates, path=path)
 
     def _apply_object_centric_proposal_order(
         self,
@@ -1023,6 +1080,7 @@ class StepwiseExplorer:
                             or self.qd_generator is not None
                             or self.controllable_novelty_policy is not None
                             or self.object_centric_proposal_policy is not None
+                            or self.go_explore_archive is not None
                             else frame_for_value
                         ),
                         "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
@@ -1053,12 +1111,17 @@ class StepwiseExplorer:
                         or self.qd_generator is not None
                         or self.controllable_novelty_policy is not None
                         or self.object_centric_proposal_policy is not None
+                        or self.go_explore_archive is not None
                         else frame_for_value
                     ),
                     "previous_frame": None,
                     "discriminative_features": features,
                 },
             )
+        if self.go_explore_archive is not None and not over:
+            node = self.graph.get(h)
+            if node is not None:
+                self.go_explore_archive.observe(latest, node.get("path") or [])
 
     def _frontier(self) -> Optional[str]:
         # BRIDGE: A*-style frontier order -- priority = depth + value_weight*value. value_weight=0 is
@@ -1126,6 +1189,7 @@ class StepwiseExplorer:
                         and self.qd_generator is None
                         and self.controllable_novelty_policy is None
                         and self.object_centric_proposal_policy is None
+                        and self.go_explore_archive is None
                     ):
                         node["frame"] = None
 
@@ -1356,6 +1420,27 @@ class StepwiseExplorer:
         }
         return (int(first["action"]), first.get("data"))
 
+    def _go_explore_replay_sequence(
+        self,
+        *,
+        current_path: Sequence[Mapping[str, Any]] | None = None,
+    ) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4701: ask the archive for a reset-replayable return prefix."""
+
+        if self.go_explore_archive is None:
+            return []
+        return self.go_explore_archive.select_prefix(current_path=current_path)
+
+    def _begin_go_explore_replay(self, sequence: Sequence[Mapping[str, Any]]) -> tuple:
+        self._go_explore_prefixes_injected += 1
+        self._go_explore_actions_injected += len(sequence)
+        self.pending = [{"kind": "RESET", "data": None, "probe": False}]
+        self.pending += [
+            {"kind": int(step["action"]), "data": step.get("data"), "probe": False}
+            for step in sequence
+        ]
+        return self._serve()
+
     def next_move(self, frames, latest) -> tuple:
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
             return ("RESET", None)
@@ -1371,6 +1456,14 @@ class StepwiseExplorer:
             return self._serve()
         over = latest is not None and self._game_over(latest)
         cur_node = self.graph.get(self.cur) if not over else None
+        if (
+            self.go_explore_archive is not None
+            and cur_node
+            and (not cur_node["untested"] or len(cur_node["path"]) >= self.max_depth)
+        ):
+            replay = self._go_explore_replay_sequence(current_path=cur_node.get("path") or [])
+            if replay:
+                return self._begin_go_explore_replay(replay)
         # 1) DEPTH-first ride (search_mode="depth_first_ride", default): expand the current state's
         #    untested SALIENT actions while under the depth cap (no nav cost; reaches the deep wins
         #    lp85/sp80 need — BFS-order regressed those). best_first SKIPS this and always expands the
@@ -1696,10 +1789,16 @@ class E3AgentPolicy:
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
-        program_synthesis_filter: Any | bool | None = SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED,
+        program_synthesis_filter: Any
+        | bool
+        | None = SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED,
         program_synthesis_filter_trust_threshold: float = (
             SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
         ),
+        amortized_first_contact_prior: Any | bool | None = (
+            SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
+        ),
+        go_explore_archive: Any | bool | None = SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
         subgoal_search: bool = False,
         subgoal_budget: int = 3,
         factored_planner: bool = False,
@@ -1776,6 +1875,8 @@ class E3AgentPolicy:
             controllable_novelty=controllable_novelty,
             object_centric_proposal=object_centric_proposal,
             program_synthesis_filter=initial_program_filter,
+            amortized_first_contact_prior=amortized_first_contact_prior,
+            go_explore_archive=go_explore_archive,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -2124,15 +2225,11 @@ class E3AgentPolicy:
                     self.explorer.set_program_synthesis_filter(filter_result.proposal_filter)
                     attempt["program_synthesis_filter_used"] = True
                     attempt["program_synthesis_filter_residual"] = filter_result.residual
-                    attempt["heldout_programs_kept"] = int(
-                        filter_result.heldout_programs_kept
-                    )
+                    attempt["heldout_programs_kept"] = int(filter_result.heldout_programs_kept)
                     attempt["heldout_programs_rejected"] = int(
                         filter_result.heldout_programs_rejected
                     )
-                    attempt["program_trust_weights"] = list(
-                        filter_result.program_trust_weights
-                    )
+                    attempt["program_trust_weights"] = list(filter_result.program_trust_weights)
                     attempt["program_synthesis_filter_diagnostics"] = (
                         self.explorer.program_synthesis_filter_diagnostics()
                     )
@@ -2381,6 +2478,10 @@ SUBMITTED_AGENT_CONFIG = {
     "program_synthesis_proposal_filter_trust_threshold": (
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
     ),
+    "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
+    "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
+    "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
+    "go_explore_archive_mode": SUBMITTED_GO_EXPLORE_ARCHIVE_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,
