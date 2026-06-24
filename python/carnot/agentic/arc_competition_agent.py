@@ -23,6 +23,7 @@ the generalizing path for held-out games.
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 
@@ -65,15 +66,10 @@ CLAIMED = {
     "sk48": 1,
 }
 MAX_ACTIONS = 200
-# value_weight=0.0 (reverted from 5.0, 2026-06-20): the v3 cross-game value head (LOO-AUROC 0.674,
-# loaded by load_cross_game_value_head) IS wired and used as a frontier TIEBREAKER. But weight>0 makes
-# the search pay the (now richer/more-expensive v3) value eval on EVERY node -> measured REGRESSION:
-# value_weight=5 was slower than bare BFS and solved fewer games in bounded time (the 25-game sim timed
-# out 20/25; A1's own benchmark delta=0.0; bridge w5 regressed 8->6). The head's offline LOO of 0.674 is
-# NOT yet shown to help LIVE routing enough to justify the per-node cost. .416 re-measures the submitted-
-# default solve-rate with the v3 head at weight>0 (+ a possible lazy/cheap eval); raise value_weight ONLY
-# if it beats bare-BFS on solve-rate AND finishes in budget. Until then: v3 head loaded, weight 0 (cheap).
-SUBMITTED_VALUE_WEIGHT = 0.0
+# REQ-LEARN-4652: value_weight is raised off the 0.0 floor only after the component-labeling cost fix.
+# The live route uses the cheap v2+frame-delta subset plus frame-hash caching, not full v3 per node.
+SUBMITTED_VALUE_WEIGHT = 1e-12
+SUBMITTED_VALUE_HEAD_FEATURE_SUBSET = "cross_game_features_v3:v2_plus_frame_delta"
 # Exp 4605 wires the live scored path to attempt deeper levels. The verifier stays a tie-breaker
 # (`value_weight=0`) so depth remains primary; deeper target levels only keep the loop alive after L1.
 SUBMITTED_TARGET_LEVELS = 3
@@ -681,7 +677,12 @@ class StepwiseExplorer:
         except Exception:
             return False
 
-    def _value(self, frame, node_hash: str | None = None) -> float:
+    def _value(
+        self,
+        frame,
+        node_hash: str | None = None,
+        previous_frame: Any | None = None,
+    ) -> float:
         """Frame-only learned progress score (predicted steps-to-next-level-up; LOWER == closer).
         0.0 when no value head -> the frontier falls back to shallowest-first. Never crashes the loop.
         Also 0.0 when value_weight==0: at weight 0 the value term is multiplied by 0 in the frontier
@@ -699,7 +700,10 @@ class StepwiseExplorer:
             self._value_cache_hits += 1
             return self._value_cache[node_hash]
         try:
-            value = float(self.value_head(frame))
+            try:
+                value = float(self.value_head(frame, previous_frame=previous_frame))
+            except TypeError:
+                value = float(self.value_head(frame))
         except Exception:
             value = 0.0
         self._value_head_evals += 1
@@ -780,7 +784,8 @@ class StepwiseExplorer:
                 # action actually CHANGED state — a no-op self-edge is useless to navigate)
                 self._record_forward_edge(o["origin"], act, h)
                 if h not in self.graph:
-                    opath = self.graph.get(o["origin"], {}).get("path", [])
+                    origin_node = self.graph.get(o["origin"], {})
+                    opath = origin_node.get("path", [])
                     features = self._record_discriminative_sample(
                         latest,
                         label=1,
@@ -800,6 +805,7 @@ class StepwiseExplorer:
                             or self.action_effect_expansion_prior is not None
                             else frame_for_value
                         ),
+                        "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
                         "discriminative_features": features,
                     }
         self.cur = h
@@ -825,6 +831,7 @@ class StepwiseExplorer:
                         or self.action_effect_expansion_prior is not None
                         else frame_for_value
                     ),
+                    "previous_frame": None,
                     "discriminative_features": features,
                 },
             )
@@ -882,7 +889,11 @@ class StepwiseExplorer:
             )[: self.lazy_value_top_k]
             for h, node, _depth, _on_path, _action_effect, _goal_bias, _curiosity in cheap_ranked:
                 if node.get("value") is None:
-                    node["value"] = self._value(node.get("frame"), node_hash=h)
+                    node["value"] = self._value(
+                        node.get("frame"),
+                        node_hash=h,
+                        previous_frame=node.get("previous_frame"),
+                    )
                     if (
                         self.goal_bias is None
                         and self.dense_curiosity is None
@@ -1013,6 +1024,7 @@ class StepwiseExplorer:
                 "data": item["data"],
                 "grid": self._grid_for_hash(origin),
                 "level_before": int(self.best_level),
+                "previous_frame": self.graph.get(origin, {}).get("frame"),
             }
         else:
             # nav / RESET-replay step (probe:False): attribute its forward edge from the CURRENT state so
@@ -1026,6 +1038,7 @@ class StepwiseExplorer:
                 "data": item["data"],
                 "grid": self._grid_for_hash(self.cur),
                 "level_before": int(self.best_level),
+                "previous_frame": self.graph.get(self.cur, {}).get("frame"),
             }
         return (item["kind"], item["data"])
 
@@ -1098,6 +1111,7 @@ class StepwiseExplorer:
                 "data": a["data"],
                 "grid": self._grid_for_hash(self.cur),
                 "level_before": int(self.best_level),
+                "previous_frame": self.graph.get(self.cur, {}).get("frame"),
             }
             return (a["action"], a["data"])
         # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
@@ -1117,6 +1131,7 @@ class StepwiseExplorer:
                 "data": a["data"],
                 "grid": self._grid_for_hash(self.cur),
                 "level_before": int(self.best_level),
+                "previous_frame": self.graph.get(self.cur, {}).get("frame"),
             }
             return (a["action"], a["data"])
         batch = self._pop_frontier_batch(node)
@@ -1178,24 +1193,71 @@ class StepwiseExplorer:
         return self.explored_out
 
 
-def _load_linear_cross_game_value_head():
-    """Legacy linear value-head loader kept as the matched control/fallback."""
+def _value_routing_feature_indices() -> list[int]:
+    """REQ-LEARN-4652: full-v3 indices kept by the cheap live value route."""
 
-    from pathlib import Path
+    from carnot.agentic.arc_value_learner import cross_game_feature_slices_v3
 
-    models = Path(__file__).resolve().parents[3] / "models"
+    slices = cross_game_feature_slices_v3()
+    out: list[int] = []
+    for name in ("v2", "frame_delta"):
+        start, stop = slices[name]
+        out.extend(range(start, stop))
+    return out
+
+
+class _SlicedLinearValueHead:
+    """Linear value head over the REQ-LEARN-4652 v2+frame-delta subset."""
+
+    feature_subset = SUBMITTED_VALUE_HEAD_FEATURE_SUBSET
+    verifier_is_oracle = False
+
+    def __init__(self, weights: Sequence[float], bias: float) -> None:
+        self.weights = [float(value) for value in weights]
+        self.bias = float(bias)
+
+    def __call__(self, frame: Any, previous_frame: Any | None = None) -> float:
+        from carnot.agentic.arc_value_learner import cross_game_features_v3_value_routing
+
+        features = cross_game_features_v3_value_routing(frame, previous_frame=previous_frame)
+        if len(features) != len(self.weights):
+            return 0.0
+        value = sum(weight * float(feature) for weight, feature in zip(self.weights, features))
+        return float(max(0.0, value + self.bias))
+
+
+def _load_sliced_v3_value_head(path: Path) -> _SlicedLinearValueHead | None:
+    from carnot.agentic.arc_value_learner import cross_game_feature_slices_v3
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    weights = [float(value) for value in payload.get("weights") or []]
+    if not weights:
+        return None
+    indices = _value_routing_feature_indices()
+    full_width = max(stop for _start, stop in cross_game_feature_slices_v3().values())
+    if len(weights) == full_width + 1:
+        return _SlicedLinearValueHead([weights[index] for index in indices], weights[-1])
+    if len(weights) == len(indices) + 1:
+        return _SlicedLinearValueHead(weights[:-1], weights[-1])
+    return None
+
+
+def _load_linear_cross_game_value_head(root: Path | str = REPO):
+    """Legacy linear value-head loader, with REQ-LEARN-4652 cheap-v3 slicing first."""
+
+    models = Path(root) / "models"
     try:
         from carnot.agentic.arc_value_learner import (
             LearnedVerifier,
             cross_game_features,
             cross_game_features_v2,
-            cross_game_features_v3,
         )
 
         v3 = models / "arc_verifier_cross_game_v3.json"
         if v3.exists():
-            v = LearnedVerifier.load(v3, cross_game_features_v3)
-            return lambda frame: v(frame)
+            sliced = _load_sliced_v3_value_head(v3)
+            if sliced is not None:
+                return sliced
         # prefer the RICHER v2 head (spatial occupancy; it routed cn04 where v1's 5 scalars could not)
         v2 = models / "arc_verifier_cross_game_v2.json"
         if v2.exists():
@@ -1864,6 +1926,7 @@ SUBMITTED_AGENT_CONFIG = {
     "discriminative_candidate_router_enabled": True,
     "candidate_router": "cross_game_discriminative_v3_tiebreaker",
     "verifier_is_oracle": False,
+    "value_head_feature_subset": SUBMITTED_VALUE_HEAD_FEATURE_SUBSET,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
     "dense_curiosity_progress_loop_enabled": False,

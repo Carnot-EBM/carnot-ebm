@@ -91,7 +91,7 @@ def test_req_capstone_4605_spec_declares_live_integration_contract() -> None:
 
 
 def test_req_capstone_4605_submitted_policy_wires_safe_live_stack(monkeypatch) -> None:
-    """REQ-CAPSTONE-4605: submitted E3 uses router tie-breaks without value weight."""
+    """REQ-CAPSTONE-4605/REQ-LEARN-4652: submitted E3 uses bounded value routing."""
 
     from carnot.agentic import arc_competition_agent as comp
     from carnot.agentic.arc_discriminative_router import CrossGameDiscriminativeCandidateRouter
@@ -109,13 +109,17 @@ def test_req_capstone_4605_submitted_policy_wires_safe_live_stack(monkeypatch) -
 
     policy = comp.E3AgentPolicy("tn36", proposer=None, value_head=lambda _frame: 0.0)
 
-    assert policy.explorer.value_weight == 0.0
+    assert policy.explorer.value_weight == comp.SUBMITTED_VALUE_WEIGHT
+    assert 0.0 < policy.explorer.value_weight <= 1e-9
     assert policy.explorer.target_levels > 1
     assert policy.explorer.navigation_cost_tiebreak is True
     assert policy.explorer.candidate_router is stub_router
     assert policy.approach_recommendation["strategy"]["game"] == "tn36"
     assert policy.strategy_route == policy.approach_recommendation["strategy"]
-    assert comp.SUBMITTED_AGENT_CONFIG["value_weight"] == 0.0
+    assert comp.SUBMITTED_AGENT_CONFIG["value_weight"] == comp.SUBMITTED_VALUE_WEIGHT
+    assert comp.SUBMITTED_AGENT_CONFIG["value_head_feature_subset"] == (
+        "cross_game_features_v3:v2_plus_frame_delta"
+    )
     assert comp.SUBMITTED_AGENT_CONFIG["target_levels"] > 1
     assert comp.SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
     assert comp.SUBMITTED_AGENT_CONFIG["verifier_is_oracle"] is False
@@ -152,10 +156,10 @@ def test_req_capstone_4605_artifact_success_can_come_from_actions_delta() -> Non
     assert artifact["solve_rate_preserved"] is True
     assert artifact["bare_control_passed"] is True
     assert artifact["false_negative_risk_checked"] is True
-    assert artifact["value_weight_used"] == 0.0
+    assert 0.0 < artifact["value_weight_used"] <= 1e-9
     assert "null_delta_methodology_note" in artifact
     assert artifact["chosen_submitted_config"]["target_levels"] > 1
-    assert artifact["chosen_submitted_config"]["value_weight"] == 0.0
+    assert 0.0 < artifact["chosen_submitted_config"]["value_weight"] <= 1e-9
     assert mod.artifact_schema_errors(artifact) == []
 
 
