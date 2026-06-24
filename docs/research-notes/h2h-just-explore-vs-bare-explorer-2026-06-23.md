@@ -110,3 +110,24 @@ handicap. **Methodology caveat for any future SOTA head-to-head (e.g. Stochastic
 stateful SOTA agent to our offline replay-from-reset `graph_explore_solve_v2` is confounded by the ~4x
 replay overhead; a fair LEADER head-to-head must compare against the LIVE stateful `E3AgentPolicy`, not
 the bare offline explorer. The just-explore extraction thread is CLOSED (no lever).
+
+## NAVIGATION question RESOLVED -- the explorer ALREADY does stateful depth-first nav (no lever)
+Followed up on the "is just-explore's stateful navigation an extractable lever" hypothesis by reading the
+LIVE explorer's navigation (`StepwiseExplorer.next_move`, `arc_competition_agent.py:1069-1143`,
+`SUBMITTED_SEARCH_MODE="depth_first_ride"`):
+- **It rides forward depth-first**: step 1 (1088-1102) expands the CURRENT state's untested salient
+  actions directly, no navigation cost. (`_nav_forward_steps` does NOT count these ride steps -- it only
+  counts step-2 frontier-jumps -- so the earlier "nav_forward_steps~0 => it never rides forward" read was
+  WRONG.)
+- **It reset-replays ONLY on backtrack** (1124-1143): when the current branch is exhausted and the next
+  frontier is NOT forward-reachable (an ancestor/sibling in an irreversible env), reset+replay is the only
+  navigation -- just-explore hits the identical constraint (no undo/snapshot live).
+This IS just-explore's action-efficient navigation. So there is **no stateful-navigation lever to build --
+the explorer already implements it.** The earlier "fair live-vs-just-explore" harness result (live worse)
+was a BUDGET-UNIT mismatch (live counted in actions/env.steps; the bare `graph_explore_solve_v2` counted
+in EXPANSIONS = ~4x env.steps), not a real gap.
+
+**THREAD DEFINITIVELY CLOSED.** Investigated from four angles -- tier schedule (null), bp35/m0r0 trajectory
+diagnosis (seed-noise + a deep 93-action mixed solve, not portable), fair-live harness (budget-unit
+artifact), and the navigation internals (already stateful). No clean extractable lever from just-explore.
+The week's real work is the conductor's `.429` energy-driven-generation + banking levels (now 57).
