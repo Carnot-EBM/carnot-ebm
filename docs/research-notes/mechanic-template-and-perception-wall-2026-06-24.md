@@ -35,6 +35,22 @@ identity**: lp85's rotation recolors the board, tu93 leaves a trail, r11l has no
 generic goal predicate — template OR LLM-induced — cannot reliably reconstruct the object-relational win
 condition from those pixels.
 
+## RECONCILIATION (2026-06-24, post-commit correction — do NOT over-read "perception is the bottleneck")
+
+This note's framing must be NARROWED to match the project's measured evidence. `arc-representation-not-the-bottleneck-2026-06-23.md`
+(`experiment_4545_cross_game_discrimination_v3`, 794-row corpus) MEASURED that the live VALUE/DISCRIMINATION
+representation is ADEQUATE: v3_full live features LOO-AUROC **0.725** (not the 0.503 "chance" figure), and
+v2+object-relational = 0.657 — i.e. the agent CAN extract coarse object-relational signal from the grid for
+state-ranking. So "perception is the bottleneck" is FALSE for value/discrimination.
+
+The precise, defensible claim here is the narrower one: **generic GOAL-PREDICATE GROUNDING** (recovering the
+EXACT objects + their target relations to evaluate an object-relational `is_level_complete`) is blocked by grid
+object-identity loss FOR COMPLEX-RENDERING GAMES (lp85's full recolor; r11l's no-anchor; tu93's trail). Coarse
+object-relational STATS (adequate for value) ≠ exact object-identity recovery (needed for an exact goal). The
+two are compatible: the grid supports the former, not the latter, for these games. Treat the items below as the
+GOAL-GROUNDING failure mode, not a blanket "perception" verdict — and reach_target's fully-visible-goal games
+(tu93/dc22) may still be grid-groundable with a better detector than the naive color-centroid one built here.
+
 ## Why this UNIFIES the five lever nulls
 
 Every multi-level lever this week died on the same root cause, now named:
@@ -45,8 +61,9 @@ Every multi-level lever this week died on the same root cause, now named:
 - **conductor A2 PoE-World factored** — "no coverage gain": factored over grid features, not objects.
 - **#4 mechanic-template** — the template needs object structure the grid doesn't expose.
 
-The L1->L2 wall (and generic ARC generalization broadly) is fundamentally a **PERCEPTION / object-identity
-problem**: recovering stable structural objects (pieces, goals, player, walls) from the rendered grid, across
+The L1->L2 wall, AT THE GOAL-GROUNDING LAYER (see RECONCILIATION above — NOT the value/discrimination layer,
+which is measured-adequate), is an **object-identity** problem: recovering stable structural objects (pieces,
+goals, player, walls) from the rendered grid PRECISELY ENOUGH to evaluate an object-relational goal, across
 frames, despite recoloring/trails/rendering. This matches the project's prior independent finding that
 **perception is the binding constraint** (`project_arc_live_agent_learning_gaps`: frame-only order-1 features
 LOO ≈ chance). Goal-induction, search, and planning all sit *downstream* of an object-perception layer the
