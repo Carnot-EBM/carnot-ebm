@@ -1,113 +1,121 @@
-milestone: 2026.06.430
+milestone: 2026.06.431
 planned_by: >-
-  outer-loop (Claude Opus 4.8 planner, 2026-06-24). .429 grew capability 57->58 (A3 banked vc33 L3->L2) but BOTH
-  generation-GUIDANCE levers NULLED on live solve-rate AGAIN: A1 (exp4652) productionized the PROVEN compute-cost fix
-  (scipy.ndimage.label, per-node <1ms, no timeout -- the cost fix WORKED) but raising value_weight gave
-  first_win_rate_delta=0.0/solve_rate_delta=0.0; A2 (exp4653) energy-as-fitness QD generated no_winner_generated. The live
-  multi-level solve-rate is still 0.0 -- the 5th consecutive milestone where a lever crosses for first-win/efficiency but
-  NOTHING crosses for SOLVE-RATE/DEPTH. THE DECISIVE NEW INPUT: a clean-Qwen, fully-instrumented outer-loop diagnosis
-  (multi-level-deepening-diagnostic-2026-06-23.md, commit 8bb8a4cfd; root-cause workflow wf_fcab5470-68f) PINPOINTED the wall
-  and the operator PRE-STAGED the fix (known-issues 2026-06-24). The binding constraint is the DEGENERATE L2 GOAL PREDICATE:
-  the live level_up_reinduction pipeline dies at no_reachable_plan because the L2 is_level_complete is induced from ZERO L2-win
-  positives (the induce prompt's WIN-STATE block is absent at the L2 boundary) and is NEVER verified (the held-out gate checks
-  DYNAMICS only) -> unsatisfiable goal -> the planner has no reachable goal. The cheap levers are DEAD (gate-relax is a NO-OP
-  vacuous-pass; evidence-delay BACKFIRES into explored_out). PLUS the live_multi_level_solve_rate metric is a HARNESS ARTIFACT
-  (the rollout breaks at the first level-up -> depth>=2 is impossible by construction). And .429 B1 (exp4658) LOCALIZED A1's
-  value-routing null to DISTRIBUTION_SHIFT (score 0.699, calibration_changes_routing=False), not calibration. .430 attacks the
-  multi-level wall from TWO independent measured high-confidence mechanisms, both on the SCORED E3AgentPolicy, both
-  verifier_is_oracle:false, both live-path-reachable: A1 (HEADLINE; operator pre-staged) fixes L2-GOAL-PREDICATE INDUCTION
-  (capture the L1 win-grid as the WIN-STATE exemplar + add a GOAL-satisfiability check before planning) AND fixes the degenerate
-  metric harness, gated on the GENERIC live agent reaching L2 on lp85 AND sc25 offline-reproduced (live_agent_self_discovery --
-  the real ARC deliverable); A2 attacks A1's .429 value-routing null at its localized cause via DAgger-lite (re-train the value
-  head on the SEARCH-DISTRIBUTION off-path states the agent actually visits). A3 banks +1 reproducible level (58->59+) + trains
-  the learned verifier; A4 keeps the package operator-resubmit-ready (>33). Plus persist+transfer (A5), SUBMITTED_AGENT_CONFIG
-  integration (A6), 2 infra (B1 multi-level-harness CI-gate + port-hygiene guard / B2 adversarial_verify L2-goal +
-  degenerate-metric guards), 1 hardware (C), 1 SOTA-ingestion (D, structural-deepening fallback for .431), capstone (E).
-  Submission operator-only. SOTA confirms both .430 directions (A1: arXiv:2511.19355/2506.06303/2603.09036 LLM goal/reward
-  induction; A2: arXiv:2605.12913/1011.0686/2506.23793 DAgger distribution-shift). ARC Prize Milestone #1 deadline 2026-06-30 (6 days).
-milestone_title: 'L2-GOAL-PREDICATE INDUCTION -- the multi-level wall is the DEGENERATE L2 GOAL PREDICATE (diagnosed
-  clean-Qwen instrumented, operator pre-staged). .429 grew capability 57->58 (A3 vc33 L2) but BOTH generation-guidance levers
-  NULLED on live solve-rate (value-routing no-live-lift [residual localized to DISTRIBUTION_SHIFT 0.699 by B1]; energy-fitness
-  QD no-winner), live multi-level solve-rate STILL 0.0. .430 attacks the wall from TWO independent measured mechanisms on the
-  SCORED E3AgentPolicy: A1 (HEADLINE; operator pre-staged) fixes L2-goal induction -- capture the L1 win-grid as the missing
-  WIN-STATE exemplar + add a GOAL-satisfiability check before planning (the held-out gate checks DYNAMICS only, so a
-  constant-False goal sails through -> no_reachable_plan) + fix the degenerate live_multi_level_solve_rate harness
-  (target_levels>=2, no early break, non-colliding Qwen port), gated on the GENERIC live agent reaching L2 on lp85 AND sc25
-  offline-reproduced (live_agent_self_discovery); A2 attacks A1''s value-routing null at its B1-localized cause via DAgger-lite
-  (re-train the value head on search-distribution off-path states). Both verifier_is_oracle:false, both live-path-reachable. A3
-  banks +1 (58->59+) + trains the verifier; A4 keeps the package >33. Plus persist+transfer (A5), integration (A6), 2 infra
-  (B1/B2), 1 hardware (C), 1 SOTA-ingestion (D), capstone (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+  outer-loop (Claude Opus 4.8 planner, 2026-06-24). .430 grew capability 58->59 (A3 banked dc22 L2) but
+  bridge_crossed_for_solve=FALSE for the 6th consecutive milestone: BOTH headline mechanisms NULLED on live
+  SOLVE-RATE. A1 (exp4664) L2-goal-predicate induction closed
+  complete:l2_goal_induction_no_deepening_residual_single_exemplar_goal_insufficient -- win_state_exemplar_injected=false,
+  goal_predicate_satisfiable={lp85:false,sc25:false}, bare_control_passed=false (sc25 reached only L0 generically),
+  retire_if_same_verdict FIRED (the precise L2-goal-induction fix is RETIRED). A2 (exp4665) DAgger-lite distribution-shift
+  value-routing corrected the shift score 0.699->0.0 mechanically but gave first_win_rate_delta=0.0, solve_rate_delta=0.0,
+  residual missing_verifier_gap_live_frontier_not_separated. THE DECISIVE NEW INPUT: A2's honest fixed-harness measurement
+  shows the GENERIC E3AgentPolicy reaches first-win on only 1 of 25 public games (lp85) -- first_win_rate=0.04, NOT the ~0.59
+  the .430 roadmap assumed; the corrected and baseline value heads BOTH score 0.04 because the agent fails to reach L1 on
+  24/25 games regardless of how candidates are ranked. THE WALL IS UPSTREAM OF SELECTION. Three threads converge: (1) A2's
+  residual missing_verifier_gap_live_frontier_not_separated; (2) the registry transfer_dead_ends, verbatim on >=5 persisted
+  primitives -- "candidate generation remains the residual bottleneck"; (3) the 2026-06-23 re-diagnosis
+  (arc-representation-not-the-bottleneck-2026-06-23.md, SUPERSEDES the perception memory) ruling out representation (v3
+  LOO-AUROC 0.725), compute-cost (fixed .429), and distribution-shift (fixed .430) -- all fixed, STILL no live lift. The
+  operator named it 2026-06-22 (energy-config-space): the wall is MAKE-A-WINNER-APPEAR, NOT SELECT. .431 STOPS adding
+  selection levers and attacks GENERATION via the SOTA-flagged structural methods (the .429/.430 D ingestion +
+  structural-deepening-sota-ingestion-2026-06-24.md flagged these for .431): A1 (HEADLINE) hierarchical subgoal search over
+  the live E3 frontier (arXiv:2604.03208/2506.07255/2504.04366/2605.12913/1011.0686) reusing .430 A1 goal-induction as a
+  subgoal PROPOSER + .430 A2 value head as a within-subgoal TIE-BREAKER, gated on a STEP-1 decisive diagnostic that resolves
+  0.04-vs-0.59 and pinpoints L1-first-contact vs L2-deepening (offline-null-may-be-a-harness-artifact discipline); A2 (second
+  independent generation mechanism) PoE-World factored-executable subgoal planner (arXiv:2505.10819/2605.05138). A3 banks +1
+  (59->60+) + trains the verifier; A4 keeps the package operator-resubmit-ready (>33). Plus persist+transfer (A5),
+  SUBMITTED_AGENT_CONFIG integration (A6), 2 infra (B1 generation-coverage CI-metric + honest first-win floor / B2
+  adversarial_verify subgoal-decomposition + coverage-baseline guards), 1 hardware (C), 1 SOTA-ingestion (D, directed-exploration
+  fallback for .432), capstone (E). Submission operator-only. verifier_is_oracle:false on every value claim. ARC Prize Milestone
+  #1 deadline 2026-06-30 (6 days).
+milestone_title: 'CANDIDATE GENERATION ("make-a-winner-appear"), NOT SELECTION -- six milestones (.425-.430) of verifier/selection
+  levers all NULLED on live solve-rate. .430 grew capability 58->59 (A3 dc22 L2) but BOTH headline mechanisms nulled: A1
+  L2-goal-induction RETIRED (single_exemplar_goal_insufficient, control-failed), A2 DAgger-lite corrected the distribution-shift
+  0.699->0.0 but gave ZERO live lift (missing_verifier_gap_live_frontier_not_separated). The honest fixed-harness generic
+  first-win is 0.04 (1/25 games, only lp85), NOT 0.59 -- the wall is UPSTREAM of selection. The convergent residual (A2
+  live-frontier-not-separated + the registry "candidate generation remains the residual bottleneck" + the operator''s 2026-06-22
+  make-a-winner-appear steer) relocates the wall to GENERATION; the representation is done (v3 LOO-AUROC 0.725), compute-cost +
+  distribution-shift are fixed. .431 PIVOTS to the SOTA-flagged structural generation methods: A1 (HEADLINE) hierarchical
+  subgoal search over the live E3 frontier reusing the .430 levers as COMPONENTS (goal-induction->subgoal proposer; value
+  head->within-subgoal tie-breaker), gated on a STEP-1 decisive diagnostic (resolve 0.04-vs-0.59; L1-first-contact vs
+  L2-deepening); A2 (second mechanism) PoE-World factored-executable subgoal planner. A3 banks +1 (59->60+) + trains the
+  verifier; A4 keeps the package >33. Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware (C), 1
+  SOTA-ingestion (D), capstone (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 theme: >-
-  The 0.0 live multi-level solve-rate is the DEGENERATE L2 GOAL PREDICATE (clean-Qwen instrumented diagnosis, operator
-  pre-staged). The live level_up_reinduction dies at no_reachable_plan: the L2 is_level_complete is induced from ZERO L2-win
-  positives (WIN-STATE block absent at the boundary) and never verified (held-out gate is DYNAMICS-only) -> unsatisfiable. .430
-  attacks it from TWO independent measured mechanisms. A1 (HEADLINE; operator pre-staged) is the precise fix: (1) capture the
-  L1 win-grid at _begin_level_goal_episode and inject it as the WIN-STATE exemplar into the L2 induce prompt
-  (arc_executable_world_model._transitions_block, which only emits WIN STATE when a transition has level_after>level_before --
-  absent at L2), labeled "a state that COMPLETED the previous level; the next likely looks structurally similar"; (2) add a
-  GOAL-satisfiability check (reject a constant-False is_level_complete with counterexample degenerate_goal_predicate, refine);
-  (3) FIX the degenerate metric harness (target_levels>=2, drop the break-at-first-win, construct the proposer on a
-  non-colliding port + verify via /props it serves Qwen not the gemma squatting 8919). Gate: generic live agent reaches L2 on
-  lp85 AND sc25, offline-reproduced. A2 attacks A1''s .429 value-routing null at its B1-localized cause (DISTRIBUTION_SHIFT
-  0.699): DAgger-lite -- re-collect value training data on the off-path search-distribution states the live agent visits,
-  re-train the win-reachability head, re-route, measure live first-win/solve-rate vs the winning-path-trained baseline. Gates
-  are sharp + control-guarded: A1 needs a non-degenerate goal (True on >=1 reachable grid) AND a reachable plan AND an
-  offline-reproduced generic L2; A2 needs a CI excluding the .429 baseline AND a dropped distribution-shift score. CAPABILITY
-  (A3): self-play banks +1 reproducible level (58->59+) + trains the learned verifier. SCORE (A4): keep the package
+  The 6th consecutive bridge_crossed_for_solve=FALSE proved the wall is CANDIDATE GENERATION, not SELECTION. .430 A1
+  L2-goal-induction nulled+retired (single_exemplar_goal_insufficient, sc25 reached only L0 generically); .430 A2 DAgger-lite
+  corrected the distribution-shift 0.699->0.0 but gave ZERO live lift (missing_verifier_gap_live_frontier_not_separated). A2's
+  honest measurement shows the generic agent reaches first-win on only 1/25 games (lp85; first_win_rate=0.04 NOT 0.59) -- the
+  value head changes nothing because the winner is not in the candidate pool. The representation is done (v3 0.725),
+  compute-cost+distribution-shift are fixed. The operator named the wall 2026-06-22: make-a-winner-appear, not select. .431
+  attacks GENERATION from TWO independent SOTA-flagged structural mechanisms on the SCORED E3AgentPolicy, both
+  verifier_is_oracle:false, both live-path-reachable. A1 (HEADLINE) is hierarchical subgoal search over the live E3 frontier:
+  STEP 1 a decisive diagnostic (resolve 0.04-vs-0.59; pinpoint L1-first-contact vs L2-deepening -- the
+  offline-null-may-be-a-harness-artifact discipline), STEP 2 a bounded subgoal-search prototype targeting the CONFIRMED wall
+  (mine subgoals from failed search trees + .430 A1 goal-induction as the subgoal PROPOSER; bounded low-level search per
+  subgoal with .430 A2 value head as the within-subgoal TIE-BREAKER; live E3 replay-verifies). Gate: the GENERIC agent reaches
+  a NEW level where flat search fails, offline-reproduced, with a no-subgoal AND a random-subgoal ablation that do NOT. A2 is
+  the PoE-World factored-executable subgoal planner (programmatic object-experts weighted by held-out transition trust; product
+  model; subgoal-conditioned plan) -- the strongest answer to A2's no-winner residual because a factored feasibility model is
+  what the .429 energy-fitness QD lacked. Gate: candidate-generation COVERAGE up (the winner now appears in the pool where the
+  matched flat baseline did not generate it) AND a live first-win/solve lift (CI excludes baseline), offline-reproduced.
+  CAPABILITY (A3): self-play banks +1 reproducible level (59->60+) + trains the learned verifier. SCORE (A4): keep the package
   operator-resubmit-ready (>33). Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware (C), 1
-  SOTA-ingestion (D), capstone (E). verifier_is_oracle:false on every value claim; solve_provenance on every ARC solve task;
-  submission operator-only. DEAD-ENDS (do NOT propose): held-out-gate-relax (NO-OP), evidence-delay (BACKFIRE). 6 days to the
-  ARC Prize Milestone #1 deadline (2026-06-30).
+  SOTA-ingestion (D), capstone (E). verifier_is_oracle:false on every value claim; solve_provenance on every ARC solve;
+  submission operator-only. RETIRED (do NOT re-propose): the precise .430 A1 L2-goal-induction single-global-predicate fix
+  (single_exemplar_goal_insufficient); the .429 flat energy-fitness QD (no_winner). 6 days to the ARC Prize Milestone #1
+  deadline (2026-06-30).
 sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1-A6); >=1 level-up attempt
   that BANKS a new reproducible level (ARC Level-Up Attempt Guarantee, A3); self-play loop EVERY milestone (A3 trains+checkpoints
   the verifier); 2 reserved infra (B1/B2); 1 per-board hardware (C); 1 SOTA-ingestion (D). All experiments codex/gpt-5.5;
   planner/retro stay Claude Opus. 6 days to the ARC Prize Milestone #1 deadline ($25K). The frozen live generator is
-  Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s); A1's induction arm declares live_llm_inference for that arm only."
+  Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s); A1/A2 induction arms declare live_llm_inference for that arm only and construct
+  the proposer on a FREE port + /props-verify Qwen (the port-8919 gemma-squat confound)."
 
 tasks:
-  - id: exp4663-phase0
-    milestone: 2026.06.430
-    title: 'PHASE 0 (TRANSITION) -- archive .429 -> activate .430; assert YAML parses + smart-subset pre-test gate green;
-      RECORD the TRUE .429 close-state (capability grew 57->58 via A3 vc33 L2, but BOTH generation-guidance levers NULLED on
-      live solve-rate: A1 value-routing no-live-lift [B1 localized residual=DISTRIBUTION_SHIFT 0.699], A2 energy-fitness QD
-      no-winner; live multi-level solve-rate still 0.0; package live_submittable 58>33). The .430 pivot -> L2-GOAL-PREDICATE
-      INDUCTION: A1 capture the L1 win-grid exemplar + goal-satisfiability check + fix the degenerate metric harness; A2
-      DAgger-lite distribution-shift value-routing.'
+  - id: exp4675-phase0
+    milestone: 2026.06.431
+    title: 'PHASE 0 (TRANSITION) -- archive .430 -> activate .431; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .430 close-state (capability grew 58->59 via A3 dc22 L2, but bridge_crossed_for_solve=FALSE for the 6th
+      consecutive milestone: A1 L2-goal-induction NULL+RETIRED [win_state_exemplar_injected=false, control-failed,
+      single_exemplar_goal_insufficient]; A2 DAgger-lite corrected the distribution-shift 0.699->0.0 but ZERO live lift
+      [missing_verifier_gap_live_frontier_not_separated]; the honest generic first-win is 0.04 [1/25 games, only lp85] NOT 0.59;
+      package live_submittable=59>33; paper_ready=True). The .431 pivot -> CANDIDATE GENERATION (make-a-winner-appear, not
+      select): A1 hierarchical subgoal search, A2 PoE-World factored-executable subgoal planner.'
     priority: critical
     track: transition
     max_turns: 30
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4663_archive_429_activate_430.json
-    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v429-activate-v430
+    deliverable: results/experiment_4675_archive_430_activate_431.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v430-activate-v431
       milestone-transition task -- false-positive scope-match vs every prior archive/activate task; structurally never a
       doomed rerun (the activation guard is a SCRIPT, not the agent). Mechanical YAML archive + next-milestone activation.
       Routes to codex (mechanical) per the archive/activate routing rule.'
     prompt: |
-      CONTEXT ({date}). Milestone 2026.06.429 has completed. This task mechanically transitions to 2026.06.430 and RECORDS
-      the true .429 close-state so the record is honest. Routine (codex).
+      CONTEXT ({date}). Milestone 2026.06.430 has completed. This task mechanically transitions to 2026.06.431 and RECORDS
+      the true .430 close-state so the record is honest. Routine (codex).
 
       IMPORTANT (lesson from prior PHASE 0 cascades): the conductor may have ALREADY archived/activated at its own level. If
       so, the archive step is a no-op -- EXPECTED, not a failure. You MUST still WRITE the deliverable artifact (the
       close-state record). Do NOT exit with "no file changes": the deliverable IS the file change.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/research-roadmap.yaml (the .429 roadmap to archive)
-        - {project_root}/research-roadmap-next.yaml (THIS .430 roadmap to activate)
-        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=58)
-        - {project_root}/results/experiment_4662_capstone_v429.json (the .429 scorecard: capability_grew_57_to_58; both generation-guidance levers nulled)
-        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .430 design doc)
+        - {project_root}/research-roadmap.yaml (the .430 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .431 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=59)
+        - {project_root}/results/experiment_4674_capstone_v430.json (the .430 scorecard: capability_grew_58_to_59; bridge_crossed_for_solve=False)
+        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .431 design doc)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
            b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
            Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
-        1. Archive the .429 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
-        2. Activate .430 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
-        3. WRITE the deliverable recording the TRUE .429 close-state: A3 (exp4654) banked vc33 L2 (reproducible_total_levels 57->58); A1 (exp4652) value-routing cost-fix WORKED (per-node <1ms, no timeout) but raising value_weight NULLED live solve-rate (first_win_rate_delta=0.0, solve_rate_delta=0.0); B1 (exp4658) localized the residual to DISTRIBUTION_SHIFT (score 0.699, calibration_changes_routing=False); A2 (exp4653) energy-fitness QD NULLED (no_winner_generated); A4 (exp4655) package live_submittable=58 (>33), ready_for_operator_submit=True; capstone (exp4662) paper_ready=True (FoVer 0.9131 frozen). RECORD the .430 pivot = L2-GOAL-PREDICATE INDUCTION: A1 (the diagnosed root cause -- degenerate L2 goal predicate) capture the L1 win-grid exemplar + goal-satisfiability check + fix the degenerate metric harness; A2 DAgger-lite distribution-shift value-routing (the B1-localized cause).
+        1. Archive the .430 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .431 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        3. WRITE the deliverable recording the TRUE .430 close-state: A3 (exp4666) banked dc22 L2 (reproducible_total_levels 58->59); A1 (exp4664) L2-goal-induction NULL+RETIRED (win_state_exemplar_injected=false, goal_predicate_satisfiable={lp85:false,sc25:false}, bare_control_passed=false [sc25 reached only L0 generically], retire_if_same_verdict fired); A2 (exp4665) DAgger-lite corrected the distribution-shift 0.699->0.0 but gave first_win_rate_delta=0.0/solve_rate_delta=0.0 (residual missing_verifier_gap_live_frontier_not_separated); the honest fixed-harness generic first-win is 0.04 (1/25 games, only lp85), NOT 0.59; A4 (exp4667) package live_submittable=59 (>33), ready_for_operator_submit=True; capstone (exp4674) bridge_crossed_for_solve=False, paper_ready=True (FoVer 0.9131 frozen). RECORD the .431 pivot = CANDIDATE GENERATION (make-a-winner-appear, not select): A1 hierarchical subgoal search over the live E3 frontier (reuse .430 A1 goal-induction as the subgoal proposer + .430 A2 value head as the within-subgoal tie-breaker), gated on a STEP-1 diagnostic resolving 0.04-vs-0.59; A2 PoE-World factored-executable subgoal planner.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
@@ -116,23 +124,24 @@ tasks:
           principle: "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
         preconditions_checked:
           principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
-        close_state_429:
-          principle: "the honest .429 numbers (A3 57->58; A1/A2 both generation-guidance NULLS; B1 localized DISTRIBUTION_SHIFT; A4 58>33) carried forward so the record does not drift."
-        v430_pivot:
-          principle: "the .430 headline rationale (PIVOT to L2-GOAL-PREDICATE INDUCTION: A1 win-grid exemplar + goal-satisfiability + harness fix; A2 DAgger-lite distribution-shift value-routing) recorded so the milestone intent is traceable."
+        close_state_430:
+          principle: "the honest .430 numbers (A3 58->59; A1 NULL+RETIRED; A2 shift-corrected-no-lift; generic first-win 0.04 not 0.59; A4 59>33; bridge_crossed=False) carried forward so the record does not drift."
+        v431_pivot:
+          principle: "the .431 headline rationale (PIVOT to CANDIDATE GENERATION: A1 hierarchical subgoal search reusing the .430 levers as components; A2 PoE-World factored-executable subgoal planner) recorded so the milestone intent is traceable."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4663_archive_429_activate_430.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4675_archive_430_activate_431.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4664-a1
-    milestone: 2026.06.430
-    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- operator pre-staged 2026-06-24) -- FIX
-      L2-GOAL-PREDICATE INDUCTION so the GENERIC live agent chains a 2nd level-up: (1) capture the L1 win-grid at
-      _begin_level_goal_episode and inject it as the missing WIN-STATE exemplar into the L2 induce prompt
-      (arc_executable_world_model._transitions_block), (2) add a GOAL-satisfiability check before planning (reject a
-      constant-False is_level_complete), (3) FIX the degenerate live_multi_level_solve_rate harness (target_levels>=2, no
-      early break, non-colliding Qwen port via /props). Gate: on lp85 AND sc25 the L1->L2 reinduction yields a non-degenerate
-      goal AND a reachable plan AND the generic live agent reaches L2, offline-reproduced. live_llm_inference.
+  - id: exp4676-a1
+    milestone: 2026.06.431
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- the GENERATION pivot) -- HIERARCHICAL SUBGOAL
+      SEARCH over the live E3 frontier. STEP 1 (decisive diagnostic, do FIRST): resolve the generic first-win 0.04-vs-0.59
+      discrepancy and pinpoint whether the live wall is L1-FIRST-CONTACT or L2-DEEPENING (across configs: explore vs
+      value_routed, action budgets, the variant set) -- offline-null-may-be-a-harness-artifact discipline. STEP 2: build a
+      bounded subgoal-search prototype targeting the CONFIRMED wall -- mine candidate subgoals from failed search trees + reuse
+      .430 A1 goal-induction as a subgoal PROPOSER (NOT one global terminal predicate) + .430 A2 value head as the
+      within-subgoal TIE-BREAKER; live E3 replay-verifies. Gate: the GENERIC live agent reaches a NEW level where flat search
+      fails, offline-reproduced, with a no-subgoal AND a random-subgoal ablation that do NOT. live_llm_inference.
       live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
     priority: critical
     track: arc-north-star
@@ -140,125 +149,130 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4664_l2_goal_predicate_induction_live.json
+    deliverable: results/experiment_4676_hierarchical_subgoal_search_live.json
     prior_failures:
-      - experiment_id: exp4653-a2
-        verdict: 'complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened'
-        addressed_by: 'exp4653 (.429 A2 energy-fitness QD), exp4652 (.429 A1 value-routing), exp4641 (.428 expansion-prior),
-          exp4640 (.428 goal-energy) all NULLED on live multi-level SOLVE-RATE -- but every one was a RERANKING / generation-FITNESS
-          lever that assumed the right candidate is in the pool and just needs scoring. The clean-Qwen instrumented diagnosis
-          (multi-level-deepening-diagnostic-2026-06-23.md, commit 8bb8a4cfd; root-cause workflow wf_fcab5470-68f) proved the wall
-          is FUNDAMENTALLY DIFFERENT: the live level_up_reinduction dies at no_reachable_plan because the L2 is_level_complete is
-          induced from ZERO L2-win positives (the WIN-STATE block in arc_executable_world_model._transitions_block:308-311 only
-          emits when a transition has level_after>level_before, absent at the L2 boundary) and is NEVER verified (the held-out gate
-          checks DYNAMICS only) -> an UNSATISFIABLE goal predicate. This task is the operator-pre-staged (known-issues 2026-06-24)
-          PRECISE fix for THAT root cause -- capture the L1 win-grid as the missing WIN-STATE exemplar + add a goal-satisfiability
-          check -- NOT another reranking/generation-fitness lever. It also FIXES the degenerate live_multi_level_solve_rate harness
-          (the metric breaks at the first level-up, so depth>=2 was impossible to measure). The cheap levers are KNOWN DEAD (do NOT
-          re-attempt): gate-relax is a NO-OP (vacuous pass), evidence-delay BACKFIRES (explored_out at ~5 transitions). If the
-          win-grid-exemplar + satisfiability fix STILL yields no reachable L2 plan on lp85 AND sc25 with passing controls, the
-          residual is documented (the goal cannot be induced from a single L1 exemplar, or the L2 dynamics model is wrong), the
-          structural subgoal-search lever (D-flagged) takes over in .431, and this precise fix retires.'
+      - experiment_id: exp4664-a1
+        verdict: 'complete: l2_goal_induction_no_deepening_residual_single_exemplar_goal_insufficient'
+        addressed_by: 'exp4664 (.430 A1) attacked the multi-level wall by inducing ONE global L2 goal predicate (capture the L1
+          win-grid exemplar + a goal-satisfiability check) and NULLED: win_state_exemplar_injected=false,
+          goal_predicate_satisfiable={lp85:false,sc25:false}, bare_control_passed=false (sc25 reached only L0 generically),
+          retire_if_same_verdict FIRED -- so the precise single-global-predicate goal-induction fix is RETIRED. THIS task is a
+          STRUCTURALLY DIFFERENT mechanism, not a re-run: hierarchical subgoal SEARCH (arXiv:2604.03208/2506.07255/2504.04366)
+          makes a multi-step winner APPEAR by decomposing the goal into a SEQUENCE of reachable subgoals and running bounded
+          low-level search per subgoal -- the .430 goal-induction becomes a subgoal PROPOSER (one of several near-goal
+          candidates), NOT the single global terminal predicate that nulled. It also reuses the .430 A2 distribution-corrected
+          value head as a LOCAL within-subgoal tie-breaker (the residual missing_verifier_gap_live_frontier_not_separated is
+          attacked by restricting the value head to a small subgoal-local candidate set instead of the global frontier). And it
+          resolves the 0.04-vs-0.59 first-win measurement (STEP 1) before targeting a level, so it does not inherit the .430
+          framing that assumed first-win ~0.59. If hierarchical subgoal search ALSO produces no offline-reproduced new generic
+          level with passing no-subgoal AND random-subgoal ablations, the residual is documented (subgoal decomposition makes
+          the winner appear in the pool but bounded low-level search still cannot reach the subgoal | the proposed subgoals are
+          visually plausible but mechanically irrelevant), the PoE-World factored planner (A2) and the .432 directed-exploration
+          fallback (D-flagged) take over, and this precise lever retires.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint HEADLINE -- operator pre-staged 2026-06-24, known-issues). The live first-win rate is ~0.59
-      but the live multi-level (>=2 levels on a fresh game) rate is ~0: the GENERIC E3AgentPolicy reaches L1 by exploration but
-      NEVER deepens to L2. A clean-Qwen, fully-instrumented outer-loop diagnosis (multi-level-deepening-diagnostic-2026-06-23.md,
-      commit 8bb8a4cfd; root-cause workflow wf_fcab5470-68f) PINPOINTED why, ending the lever-guessing: the
-      level_up_reinduction path (arc_competition_agent.py _induce_and_plan ~1800 -> arc_llm_reinduction.execute_bounded_llm_reinduction)
-      runs as far as it can (proposer OK, dynamics model PASSES the strict 1.0 held-out gate -- but VACUOUSLY, ~0 held-out data)
-      and then dies at plan_in_model -> no_reachable_plan (arc_llm_reinduction.py:114). ROOT CAUSE: at the level-up the
-      active-transition window has ZERO L2-win positives, so the induce prompt's WIN-STATE block is ABSENT
-      (arc_executable_world_model.py:_transitions_block ~288, line 308: `win = next((t for t in trans if t.level_after >
-      t.level_before), None)` -> emits the "WIN STATE" block ~311 ONLY when such a transition exists). The LLM therefore writes
-      is_level_complete for L2 from NO positive exemplar, and that goal predicate is NEVER verified (the held-out gate checks
-      DYNAMICS only) -> unsatisfiable/degenerate -> the planner can never reach it. DEAD-ENDS (measured, do NOT re-attempt):
-      relaxing the held-out gate (CARNOT_ARC_REINDUCTION_HELDOUT<1.0) is a NO-OP (the gate already passes vacuously); delaying
-      the one-shot (CARNOT_ARC_REINDUCTION_MIN_EVIDENCE>1) BACKFIRES (the explorer hits explored_out at ~5 post-L1 transitions
-      -> a stall-induction preempts the reinduction). THE FIX (operator pre-staged): (1) capture the level-up grid as a
-      WIN-STATE exemplar, (2) verify the induced GOAL is satisfiable before planning, (3) FIX the degenerate metric harness
-      first so the fix is measurable. CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in the LIVE
-      modules (arc_competition_agent / arc_llm_reinduction / arc_executable_world_model), imported by E3AgentPolicy --
-      arc_orphan_solver_lint stays green. live_llm_inference: the induction loads Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s).
-      verifier_is_oracle:false (the induced goal predicate is oracle-DISTINCT from the executable reproduction win-check).
-      solve_provenance:live_agent_self_discovery -- this is the REAL ARC deliverable: the generic agent reaching L2 from its OWN
-      runtime induction (a generic-agent L2, NOT a hand-built GameAdapter development_proxy). Honest null with passing controls
-      if the fix does not close the wall.
+      CONTEXT ({date}, ARC sprint HEADLINE -- the GENERATION pivot). Six milestones (.425-.430) of verifier/SELECTION levers
+      (goal-energy, expansion-prior, value-routing cost-fix, energy-fitness QD, L2-goal-induction, DAgger distribution-shift) all
+      NULLED on live SOLVE-RATE. The .430 honest fixed-harness measurement (exp4665) shows the GENERIC E3AgentPolicy reaches
+      first-win on only 1 of 25 public games (lp85) -- first_win_rate=0.04, NOT the ~0.59 the .430 roadmap assumed; the
+      distribution-corrected value head and the .429 baseline BOTH score 0.04 because the agent fails to reach L1 on 24/25 games
+      regardless of how candidates are ranked. THE WALL IS UPSTREAM OF SELECTION. The convergent residual -- A2's
+      missing_verifier_gap_live_frontier_not_separated + the registry transfer_dead_ends ("candidate generation remains the
+      residual bottleneck", recurring verbatim on >=5 persisted primitives) + the 2026-06-23 re-diagnosis ruling out
+      representation (v3 LOO-AUROC 0.725), compute-cost (fixed .429), and distribution-shift (fixed .430) -- relocates the wall
+      to CANDIDATE GENERATION. The operator named it (2026-06-22 energy-config-space): the wall is MAKE-A-WINNER-APPEAR, not
+      select. The SOTA ingestion (structural-deepening-sota-ingestion-2026-06-24.md) flags hierarchical subgoal search as the
+      build-FIRST .431 lever: turn the .430 A1 goal-induction into a subgoal PROPOSER and restrict the .430 A2 value head to a
+      LOCAL within-subgoal tie-breaker. CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in the LIVE
+      modules (arc_competition_agent / arc_llm_reinduction / arc_executable_world_model / arc_value_learner), imported by
+      E3AgentPolicy -- arc_orphan_solver_lint stays green; test_arc_submitted_agent_parity stays green. live_llm_inference: the
+      subgoal-proposer induction loads Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s). verifier_is_oracle:false (the subgoal
+      proposer + value head are oracle-DISTINCT from the executable reproduction win-check). solve_provenance:
+      live_agent_self_discovery -- a generic-agent NEW level from its OWN runtime subgoal decomposition is the REAL ARC
+      deliverable (NOT a hand-built GameAdapter development_proxy). Honest null with passing ablations if the fix does not close
+      the wall.
 
-      NOTE the PORT-8919 CONFOUND (load-bearing for a correct local measurement): LocalGGUFProposer.port defaults to 8919, and a
-      persistent gemma-4-12B-it llama-server squats 8919 on this box -> any "Qwen" proposer run silently talks to gemma. CONSTRUCT
-      the proposer on a FREE port (e.g. 8920) + verify via /props it served Qwen3.5-9B-MTP, not gemma. On Kaggle (fresh env) this
-      is moot; locally it confounds every generation measurement.
+      STEP-1 DIAGNOSTIC IS MANDATORY AND COMES FIRST (offline-null-may-be-a-harness-artifact discipline). The 0.04-vs-0.59
+      discrepancy means the strategy depends on an unresolved measurement: if the generic agent only reaches L1 on lp85, the wall
+      is L1-FIRST-CONTACT (and subgoal search must target reaching L1 on a hard clean game); if it reaches L1 broadly, the wall
+      is L2-DEEPENING. Measure generic first-win + multi-level across configs (explore vs value_routed; action budgets e.g.
+      200/400/800; the variant set) and RECORD which wall is binding. Build STEP 2 against the CONFIRMED wall.
+
+      NOTE the PORT-8919 CONFOUND: LocalGGUFProposer.port defaults to 8919 and a persistent gemma-4-12B-it llama-server squats
+      8919 -> any "Qwen" run silently talks to gemma. CONSTRUCT the proposer on a FREE port (e.g. 8920) + verify via /props it
+      served Qwen3.5-9B-MTP. On Kaggle (fresh env) this is moot; locally it confounds every generation measurement.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/docs/research-notes/multi-level-deepening-diagnostic-2026-06-23.md (the FULL root-cause: degenerate L2 goal predicate + the metric-harness artifact + the dead cheap levers + the port confound -- the spec for this task)
-        - {project_root}/python/carnot/agentic/arc_executable_world_model.py (_transitions_block ~288, line 308 win-detection + 311 the "WIN STATE" block to inject the L1 exemplar into; plan_in_model ~693 -- where no_reachable_plan originates)
-        - {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction ~148; no_reachable_plan ~114 -- add the goal-satisfiability check between induce-accept and plan)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (_begin_level_goal_episode ~1645 -- capture the L1 win-grid here; _should_enter_induction ~1676 returns "level_up_reinduction" ~1682; next_move ~1759; _induce_and_plan ~1800)
-        - {project_root}/scripts/experiments/proto_multilevel_diag.py + {project_root}/results/experiment_4646_live_multi_level_solve_rate_metric.json + {project_root}/python/carnot/experiment_4628_dense_curiosity_progress_loop.py (run_variant_attempt: the break-at-first-win + target_levels=1 -- the degenerate metric harness to fix)
-        - {project_root}/scripts/arc_orphan_solver_lint.py (live-path lint -- stays green) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green) + {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate)
+        - {project_root}/docs/research-notes/structural-deepening-sota-ingestion-2026-06-24.md (the SOTA mapping: hierarchical subgoal search -> goal-induction-as-subgoal-proposer + value-head-as-local-tiebreaker; arXiv:2604.03208/2506.07255/2504.04366/2605.12913/1011.0686 -- the spec for this task)
+        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (representation is done, 0.725; the offline->live bridge is the gap) + {project_root}/docs/research-notes/multi-level-deepening-diagnostic-2026-06-23.md (the L1->L2 reinduction path + the degenerate metric harness + the port confound)
+        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json (.430 A1 -- read win_state_exemplar_injected, goal_predicate_satisfiable, generic_agent_reached_level, residual_cause_hypothesis: the single-global-predicate fix that retired) + {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (.430 A2 -- read live_baseline_winning_path_trained.measurement: the 1/25 first-win reality + the per-game reached_level=0 rows)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy; _begin_level_goal_episode ~1645; _should_enter_induction ~1676; _induce_and_plan ~1800; value_weight ~241) + {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction ~148; no_reachable_plan ~114 -- where subgoal decomposition replaces the single global goal) + {project_root}/python/carnot/agentic/arc_executable_world_model.py (plan_in_model ~693 -- the bounded low-level search per subgoal) + {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v3 ~432; the distribution-corrected value head from .430 A2)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate + where the subgoal-search primitive will be persisted) + {project_root}/scripts/arc_orphan_solver_lint.py (live-path lint, stays green) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
 
-      TASK: in the LIVE modules, (1) capture the L1 win-grid (the state that just completed level k-1) at _begin_level_goal_episode
-      and thread it into the L2 reinduction's WIN-STATE block (arc_executable_world_model._transitions_block), explicitly labeled
-      "a state that COMPLETED the previous level; the next level's completion likely looks structurally similar"; (2) add a
-      GOAL-satisfiability check after induce-accept and BEFORE planning -- evaluate the induced is_level_complete over the
-      reachable grids plan_in_model visits (or a sampled rollout); if it is never True (constant-False/unsatisfiable), REJECT with
-      counterexample kind degenerate_goal_predicate and refine; (3) FIX the degenerate metric harness (target_levels>=2, drop the
-      break-at-first-win, construct the proposer on a non-colliding port + /props-verify Qwen). Then MEASURE: on lp85 AND sc25 (both
-      reach L1 by exploration; L2 reachable per registry), does the L1->L2 reinduction produce a non-degenerate is_level_complete
-      (True on >=1 reachable grid) AND does plan_in_model return a non-empty plan with reaches_goal=True AND does the GENERIC live
-      agent reach L2, offline-reproduced via arc_solver_kit.reproduce. The WIN: a generic-agent L2 on lp85 and/or sc25,
-      offline-reproduced (live_agent_self_discovery). verifier_is_oracle:false.
+      TASK: STEP 1 -- run the decisive diagnostic (generic first-win + multi-level across configs) and RECORD the binding wall
+      (L1-first-contact vs L2-deepening) with the /props-verified Qwen proposer. STEP 2 -- in the LIVE modules, implement a
+      bounded HIERARCHICAL SUBGOAL SEARCH: (a) mine candidate subgoals from failed search trees + the .430 A1 goal-induction
+      (now a subgoal PROPOSER emitting several near-goal candidate predicates, not one global terminal predicate); (b) run a
+      bounded low-level search (plan_in_model) per selected subgoal, chaining legs start->subgoal->...->goal; (c) use the .430 A2
+      distribution-corrected value head ONLY as a within-subgoal local tie-breaker; (d) live E3 replay-verifies via
+      arc_solver_kit.reproduce. MEASURE on the diagnostic-confirmed target game(s): does subgoal search make a winner APPEAR
+      where flat search does not -- does the GENERIC live agent reach a NEW level, offline-reproduced. CONTROLS (mandatory): a
+      matched NO-SUBGOAL (flat search, same budget) ablation AND a RANDOM-SUBGOAL ablation -- both must FAIL where subgoal search
+      succeeds (else the "win" is a flat-search win mislabeled, or a subgoal that is just the global goal). The WIN: a
+      generic-agent NEW level via subgoal decomposition, offline-reproduced, ablations failing. verifier_is_oracle:false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. Qwen3.5-9B-MTP GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/` returns non-empty; else honest_verdict blocked_model_not_cached_qwen, EXIT.
            b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
-           c. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy; from carnot.agentic import arc_llm_reinduction, arc_executable_world_model"` exits 0.
-           d. Construct LocalGGUFProposer on a FREE port (e.g. 8920) + verify via /props it serves Qwen3.5-9B-MTP (NOT the gemma squatting 8919). If /props shows gemma or the server is unreachable -> honest_verdict blocked_qwen_proposer_port, EXIT.
+           c. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy; from carnot.agentic import arc_llm_reinduction, arc_executable_world_model, arc_value_learner"` exits 0.
+           d. Construct LocalGGUFProposer on a FREE port (e.g. 8920) + verify via /props it serves Qwen3.5-9B-MTP (NOT the gemma squatting 8919). If /props shows gemma or unreachable -> honest_verdict blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT (no fabrication). (--no-cov on focused pytest.)
-        1. Capture the L1 win-grid at _begin_level_goal_episode (arc_competition_agent.py) and thread it into _transitions_block (arc_executable_world_model.py) so the L2 induce prompt's WIN-STATE block carries the L1 exemplar with the "previous-level-complete; next likely structurally similar" label. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
-        2. Add the GOAL-satisfiability check in arc_llm_reinduction.execute_bounded_llm_reinduction (after induce-accept, before plan): evaluate is_level_complete over reachable grids; reject constant-False with counterexample degenerate_goal_predicate and refine. The held-out gate (DYNAMICS-only) is untouched -- this adds the missing GOAL verification.
-        3. FIX the degenerate metric harness: target_levels>=2 + no break-at-first-win + the non-colliding /props-verified Qwen proposer (so live_multi_level_solve_rate can move at all).
-        4. Measure on lp85 AND sc25: goal_predicate_satisfiable, l2_plan_len, l2_plan_reaches_goal, generic-agent reached_level, offline_reproduced via arc_solver_kit.reproduce. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: both games reach L1 + have L2 reachable per registry (headroom exists); emit the per-game results + a null_methodology_note when a goal stays degenerate. RUN test_arc_submitted_agent_parity.py -> green. If the fix nulls, log the residual (single-exemplar goal-induction insufficient | L2 dynamics wrong) as the .431/B1 target.
+        1. STEP 1 DIAGNOSTIC: measure generic first-win + multi-level across configs (explore vs value_routed; budgets 200/400/800; variant set). RECORD wall_diagnosis (l1_first_contact | l2_deepening) + the per-config first-win/solve-rate. This resolves 0.04-vs-0.59 and selects the STEP-2 target.
+        2. Implement hierarchical subgoal search in the LIVE modules (subgoal mining from failed trees + .430 A1 goal-induction as proposer; bounded low-level search per subgoal in plan_in_model; .430 A2 value head as within-subgoal tie-breaker). Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
+        3. MEASURE on the diagnostic-confirmed target: generic-agent reached_level via subgoal search, offline_reproduced via arc_solver_kit.reproduce, vs the NO-SUBGOAL (flat) and RANDOM-SUBGOAL ablations. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the target has reachable headroom (it reaches L1 by exploration OR L2 is registry-reachable); emit per-config results + a null_methodology_note when no new level. RUN test_arc_submitted_agent_parity.py -> green. If it nulls, log the residual (bounded_search_cannot_reach_subgoal | subgoals_mechanically_irrelevant) as the .432/A2 target.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: l2_goal_induction_generic_agent_reached_L2_<games> OR complete: l2_goal_induction_no_deepening_residual_<cause>."
+          principle: "terminal prefix; success: hierarchical_subgoal_generic_agent_new_level_<game>_L<n> OR complete: hierarchical_subgoal_no_new_level_residual_<cause>."
         inference_substrate:
-          principle: "live_llm_inference -- the L2 induction loads + runs the Qwen3.5-9B-MTP GGUF (60s duration floor); declared honestly because the induction arm is a real LLM run."
+          principle: "live_llm_inference -- the subgoal-proposer induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the proposer arm is a real LLM run."
         verifier_is_oracle:
-          principle: "MUST be false -- the induced is_level_complete goal predicate is oracle-DISTINCT from the executable reproduction win-check."
+          principle: "MUST be false -- the subgoal proposer + value head are oracle-DISTINCT from the executable reproduction win-check."
         solve_provenance:
-          principle: "live_agent_self_discovery -- a generic-agent L2 via the fixed runtime induction is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re."
+          principle: "live_agent_self_discovery -- a generic-agent new level via runtime subgoal decomposition is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re."
         live_path_reachable:
-          principle: "HARD gate -- the changed modules (arc_competition_agent/arc_llm_reinduction/arc_executable_world_model) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
-        win_state_exemplar_injected:
-          principle: "the L1 win-grid captured at _begin_level_goal_episode and injected into the L2 induce prompt's WIN-STATE block (the missing positive exemplar -- the precise root-cause fix)."
-        goal_predicate_satisfiable:
-          principle: "the held-out gate checks DYNAMICS only; a constant-False goal sails through today and yields no_reachable_plan. This field records the induced L2 goal is True on >=1 reachable grid -- the missing verification."
-        l2_plan_len:
-          principle: "plan_len=0 was the measured failure; non-empty is the fix working."
-        l2_plan_reaches_goal:
-          principle: "reaches_goal=False (no_reachable_plan) was the measured failure; True is the fix working."
-        metric_harness_fixed:
-          principle: "the degenerate live_multi_level_solve_rate harness fixed (target_levels>=2 + no early break + non-colliding /props-verified Qwen port) so any lever is measurable -- depth>=2 was impossible by construction before."
-        proposer_served_model:
-          principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard so the measurement is on the declared model."
+          principle: "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+        wall_diagnosis:
+          principle: "STEP-1 result -- l1_first_contact | l2_deepening; resolves 0.04-vs-0.59 so subgoal search targets the binding wall (offline-null-may-be-a-harness-artifact discipline)."
+        generic_first_win_by_config:
+          principle: "per-config (explore vs value_routed x budget) generic first-win + multi-level rate -- the honest measurement the prior 0.59-vs-0.04 ambiguity demanded."
+        subgoal_decomposition:
+          principle: "the subgoal sequence the proposer emitted for the target (the make-a-winner-appear evidence: a multi-step winner assembled from reachable legs)."
+        per_subgoal_reachable:
+          principle: "per-subgoal whether bounded low-level search reached it -- the mechanism check (a winner appears only if each leg is reachable)."
         generic_agent_reached_level:
-          principle: "per-game (lp85, sc25) the deepest level the GENERIC live agent reached via the fixed induction -- the headline (>=2 is the win)."
+          principle: "the deepest level the GENERIC live agent reached via subgoal search on the target -- the headline (a NEW level is the win)."
         offline_reproduced:
-          principle: "a generic L2 counts only if offline-reproduced via arc_solver_kit.reproduce (ARC Solve Reproducibility); a live-only trajectory is provisional."
+          principle: "a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce (ARC Solve Reproducibility); a live-only trajectory is provisional."
         reproduced_levels:
-          principle: "the integer new-level count the generic agent banked offline (>=1 at L2 is the bridge crossed)."
+          principle: "the integer new-level count the generic agent banked offline (>=1 is the bridge crossed for solve)."
+        no_subgoal_ablation_reached_level:
+          principle: "the matched flat-search (no-subgoal) ablation's reached_level -- MUST be lower than subgoal search for the win to be attributable to decomposition (not flat search)."
+        random_subgoal_ablation_reached_level:
+          principle: "the random-subgoal ablation's reached_level -- MUST be lower than the induced-subgoal search for the win to be attributable to the proposer (not just having any subgoal)."
         residual_cause_hypothesis:
-          principle: "if the fix nulls, names the residual (single_exemplar_goal_insufficient | l2_dynamics_wrong) -- the .431 target; 'none' if it crossed."
+          principle: "if it nulls, names the residual (bounded_search_cannot_reach_subgoal | subgoals_mechanically_irrelevant | value_head_still_not_separating) -- the .432 target; 'none' if it crossed."
         null_methodology_note:
-          principle: "present when a goal stays degenerate / no L2 -- states the null is honest (passing controls), not a measurement bug."
+          principle: "present when no new level -- states the null is honest (passing ablations + reachable headroom), not a measurement bug."
         bare_control_passed:
-          principle: "the POSITIVE CONTROL -- lp85/sc25 reach L1 + have L2 reachable per registry (headroom exists); a no-L2 null is valid only then."
+          principle: "the POSITIVE CONTROL -- the target has reachable headroom (reaches L1 by exploration OR L2 registry-reachable); a no-new-level null is valid only then."
         false_negative_risk_checked:
-          principle: "true with both games' L1 reach + registry-L2-reachable confirmed -- a 'no deepening' null is valid only then."
+          principle: "true with the ablations run + reachable-headroom confirmed -- a 'no new level' null is valid only then."
+        proposer_served_model:
+          principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard."
+        chosen_submitted_config:
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (subgoal search on, subgoal budget) -- the A6 input; 'unchanged' if null."
         parity_test_green:
           principle: "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
         random_seed:
@@ -268,180 +282,206 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4664_l2_goal_predicate_induction_live.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4676_hierarchical_subgoal_search_live.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4665-a2
-    milestone: 2026.06.430
-    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; B1-localized) -- DAgger-lite DISTRIBUTION-SHIFT
-      value-routing: .429 B1 (exp4658) localized A1''s value-routing live null to DISTRIBUTION_SHIFT (score 0.699,
-      calibration_changes_routing=False), NOT compute-cost (fixed) and NOT calibration. Re-collect value training data on the
-      SEARCH-DISTRIBUTION (off-path frontier) states the live agent actually visits (DAgger-lite, arXiv:1011.0686/2605.12913),
-      re-train the win-reachability head, keep the affordable cheap-feature routing, and measure live first-win/solve-rate vs
-      the .429 winning-path-trained baseline. Gate: live first-win OR solve-rate up (CI excludes baseline) AND distribution-shift
-      score drops. Live-path-reachable. verifier_is_oracle:false. retire_if_same_verdict.'
+  - id: exp4677-a2
+    milestone: 2026.06.431
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; second independent GENERATION mechanism) -- PoE-World
+      FACTORED-EXECUTABLE SUBGOAL PLANNER: induce small programmatic object-level experts (precondition/effect) from the live
+      transitions, weight by held-out transition trust, compose only replay-stable factors, and plan subgoal-conditioned
+      sequences through the product model (.430 A1 goal-induction proposes the subgoal predicates each factor must make
+      reachable; .430 A2 value head scores which product-model states deserve live expansion; live E3 executes+audits). The
+      strongest answer to the .430 A2 no-winner residual because a factored feasibility model is what the .429 energy-fitness QD
+      lacked. Gate: candidate-generation COVERAGE up (the winner appears in the pool where the matched flat baseline did not
+      generate it) AND a live first-win/solve lift (CI excludes baseline), offline-reproduced. Live-path-reachable.
+      live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict. arXiv:2505.10819/2605.05138.'
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4665_dagger_distribution_shift_value_routing.json
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4677_poe_world_factored_subgoal_planner.json
     prior_failures:
-      - experiment_id: exp4652-a1
-        verdict: 'complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration'
-        addressed_by: 'exp4652 (.429 A1) productionized the PROVEN compute-cost fix (scipy.ndimage.label, per-node <1ms, no
-          timeout) and raised value_weight off 0.0, but the affordable value head STILL nulled live solve-rate
-          (first_win_rate_delta=0.0, solve_rate_delta=0.0). .429 B1 (exp4658) then LOCALIZED the residual cause: it measured
-          distribution_shift_score=0.699 and calibration_changes_routing=False -> dominant_residual_cause=DISTRIBUTION_SHIFT. The
-          win-reachability value head (arc_value_learner.py:558, label 1=on-winning-path/0=off-path, trained by
-          collect_trajectory_data:477 on winning-path states) is applied to an OFF-PATH live frontier. THIS task is the precise,
-          measured fix for THAT localized cause -- DAgger-lite: re-collect value training data on the search-distribution
-          (off-path frontier) states the live agent actually visits, re-train the head, re-route. The forward difference is a
-          DIFFERENT training distribution (search-distribution, not winning-path), not a blind re-run of the .429 value head. If
-          the distribution-corrected value head ALSO nulls live first-win/solve-rate with a passing CI control AND the
-          distribution-shift score does NOT drop, value-routing-as-guidance is retired for the sprint and the residual logged as
-          a bridge gap (the structural subgoal-search lever, D-flagged, takes over in .431).'
+      - experiment_id: exp4653-a2
+        verdict: 'complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened'
+        addressed_by: 'exp4653 (.429 A2) ran a FLAT energy-as-fitness QD/MAP-Elites over action sequences and generated
+          no_winner the best-first search missed -- because QD mutates blindly without a feasibility model of which mutations are
+          mechanically valid. THIS task is the structural fix the .429 D + .430 D ingestion flagged: PoE-World
+          (arXiv:2505.10819 + 2605.05138) gives generation the FACTORED EXECUTABLE FEASIBILITY MODEL that QD lacked -- induce
+          small programmatic object-level precondition/effect experts, weight by held-out transition trust, and plan
+          subgoal-conditioned sequences THROUGH the product model so only mechanically valid candidates are emitted. Different
+          mechanism (factored programmatic world-model composition), not a re-run of blind QD. If the factored planner ALSO
+          generates no winner the flat baseline missed (coverage delta 0) with a passing control, programmatic-expert
+          composition is retired for the sprint and the residual logged (expert factors not independent | product-model plans
+          live-invalid).'
+        retire_if_same_verdict: true
+      - experiment_id: exp4665-a2
+        verdict: 'complete: dagger_distribution_corrected_no_live_lift_residual_logged'
+        addressed_by: 'exp4665 (.430 A2) corrected the value head''s distribution shift (0.699->0.0) but gave ZERO live lift,
+          residual missing_verifier_gap_live_frontier_not_separated -- the value head can only RANK a candidate pool that never
+          contains the winner. THIS task attacks the residual at its source (GENERATION, not selection): instead of re-ranking
+          the existing pool, the PoE-World factored planner MAKES new mechanically-valid candidates APPEAR via product-model
+          subgoal-conditioned planning, and reuses the .430 A2 value head only to score which product-model states deserve live
+          expansion (the local-scoring role its corrected signal can actually serve). Forward difference: a generation mechanism
+          (factored executable planner) vs a selection mechanism (value re-ranking). If coverage still does not rise above the
+          matched flat baseline, the residual is logged as the .432 Missing-Verifier/generation gap and this lever retires.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint -- the B1-localized second attack on the multi-level wall). .429 A1 (exp4652) fixed the value
-      head's compute cost (per-node <1ms, no timeout) but raising value_weight STILL nulled live first-win/solve-rate. .429 B1
-      (exp4658) ran the disambiguation: distribution_shift_score=0.699, calibration_changes_routing=False ->
-      dominant_residual_cause=DISTRIBUTION_SHIFT. The cause is now KNOWN: the win-reachability value head
-      (arc_value_learner.py:558) is trained on WINNING-PATH states (collect_trajectory_data:477, label 1=on-path/0=off-path) but
-      applied to the OFF-PATH live frontier the depth-first explorer actually visits -- classic covariate/distribution shift. The
-      fix is DAgger-lite (dataset aggregation; arXiv:1011.0686, and 2605.12913 "Revisiting DAgger in the Era of LLM-Agents"):
-      iteratively aggregate value-head training labels on the states the LEARNER (the live explorer) visits, not just the expert
-      winning path. CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in the LIVE modules
-      (arc_value_learner / arc_competition_agent), imported by E3AgentPolicy -- arc_orphan_solver_lint stays green. NO 3090 / NO
-      LLM: the value head is a CPU logistic computation; re-collecting search-distribution states uses the offline-arcade
-      exploration (no LLM load) -> verifier_ensemble_against_cached_candidates. verifier_is_oracle:false (the value head is a
-      learned discriminator, oracle-DISTINCT from the executable win-check). Honest null with a passing control if the
-      distribution-corrected head does not lift live generation. This is the SECOND independent mechanism vs A1's LLM-goal-induction
-      path -- if A1 nulls, A2 may cross.
+      CONTEXT ({date}, ARC sprint -- the SECOND independent generation mechanism). A1 attacks the make-a-winner-appear wall via
+      hierarchical subgoal SEARCH; A2 attacks it via FACTORED EXECUTABLE MODELING. The .429 energy-fitness QD (exp4653) generated
+      no_winner because it mutated action sequences blindly without a feasibility model; the .430 DAgger value-routing (exp4665)
+      gave no lift because re-ranking cannot help when the winner is absent from the pool. PoE-World (arXiv:2505.10819
+      "Compositional World Modeling with Products of Programmatic Experts" + 2605.05138 "Executable World Models for ARC-AGI-3")
+      is the strongest structural answer: induce SMALL PROGRAMMATIC object-level experts (each a precondition/effect rule over
+      one object class), weight them by held-out transition TRUST (keep only replay-stable factors), compose them into a PRODUCT
+      MODEL, and plan SUBGOAL-CONDITIONED sequences through that model so the emitted candidates are mechanically valid by
+      construction. The .430 A1 goal-induction proposes the subgoal predicates each factor must make reachable; the .430 A2
+      distribution-corrected value head scores which product-model states deserve live expansion; live E3 executes and audits
+      every emitted plan (the hard replay gate). CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in
+      the LIVE modules (arc_executable_world_model / arc_llm_reinduction / arc_competition_agent), imported by E3AgentPolicy --
+      arc_orphan_solver_lint stays green; parity stays green. live_llm_inference: the programmatic-expert induction loads
+      Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s; free port + /props-verify). verifier_is_oracle:false (the programmatic experts
+      + value head are oracle-DISTINCT from the executable reproduction win-check). solve_provenance: live_agent_self_discovery
+      (the generic agent's OWN runtime factored-model planning). Honest null with a passing control if the factored planner does
+      not raise candidate coverage. This is the SECOND mechanism vs A1 -- if A1's subgoal search nulls, A2 may cross.
+
+      THE KEY METRIC IS CANDIDATE-GENERATION COVERAGE, not just solve-rate: does the winning action/plan now APPEAR in the
+      generated pool where the matched FLAT-SEARCH baseline did not generate it? Coverage is the make-a-winner-appear signal;
+      the live first-win/solve lift is the downstream confirmation.
+
+      NOTE the PORT-8919 CONFOUND: construct the LLM proposer on a FREE port (e.g. 8920) + /props-verify Qwen3.5-9B-MTP (not the
+      gemma squatting 8919).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4658_value_routing_cigate_diagnostic.json (B1 -- read distribution_shift_score, calibration_changes_routing, dominant_residual_cause; the DAgger-lite vs isotonic probe details)
-        - {project_root}/docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md (the three residual causes; the per-cause fix -- DAgger-lite for distribution-shift)
-        - {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v3 ~432; cross_game_features_v3_value_routing ~455; collect_trajectory_data ~477 -- the winning-path-only training to extend with off-path frontier states; the win-reachability classifier ~558)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (value_weight ~241 + the cost-fix comment ~70-78; E3AgentPolicy -- the SCORED live path + the search frontier the off-path states come from)
-        - {project_root}/results/experiment_4652_value_routing_cost_fix_live.json (the .429 A1 baseline numbers + chosen feature subset -- keep the affordable routing) + {project_root}/scripts/arc_orphan_solver_lint.py (live-path lint) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/docs/research-notes/structural-deepening-sota-ingestion-2026-06-24.md (the PoE-World mapping: programmatic object-experts + held-out trust weighting + product-model subgoal-conditioned planning; arXiv:2505.10819 + 2605.05138 -- the spec for this task; "QD needs a factored feasibility model before it mutates")
+        - {project_root}/results/experiment_4677_hierarchical_subgoal_search_live.json IF PRESENT (A1 -- read wall_diagnosis + subgoal_decomposition to share the confirmed target game) -- else use lp85 (the one game with generic L1) + one hard clean L1-only game
+        - {project_root}/python/carnot/agentic/arc_executable_world_model.py (the executable world model + plan_in_model ~693 -- where the product model and subgoal-conditioned planning attach) + {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction -- the LLM induction of programmatic experts)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (the .430 A2 distribution-corrected value head -- scores product-model states for live expansion) + {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy -- the scored live path)
+        - {project_root}/results/experiment_4653_energy_fitness_qd_generation_live.json (.429 A2 -- the blind-QD no_winner the factored model fixes) + {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (.430 A2 -- the missing_verifier_gap residual) + {project_root}/scripts/arc_orphan_solver_lint.py + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
 
-      TASK: implement DAgger-lite for the win-reachability value head in the LIVE modules: re-collect value training data on the
-      SEARCH-DISTRIBUTION (off-path frontier) states the live explorer visits (aggregate with the existing winning-path data),
-      re-train the head, keep the affordable cheap-feature routing from .429 A1, and re-route the SCORED E3AgentPolicy. MEASURE
-      live first-win-rate + multi-level solve-rate WITH the distribution-corrected head vs (a) the .429 winning-path-trained
-      baseline, AND re-measure the distribution-shift score (B1's probe) before/after. Bootstrap CI. The WIN: live first-win OR
-      solve-rate up (CI excludes the baseline) AND the distribution-shift score drops (the correction took). verifier_is_oracle:false.
-      Offline-reproduce any newly-solved variant.
+      TASK: implement a bounded PoE-World factored-executable subgoal planner in the LIVE modules: (1) induce small programmatic
+      object-level precondition/effect experts from the live transitions (LLM proposer); (2) weight each expert by held-out
+      transition trust and keep only replay-stable factors; (3) compose into a product model; (4) plan subgoal-conditioned
+      sequences through the product model (.430 A1 goal-induction supplies the subgoal predicates; .430 A2 value head scores
+      which product-model states deserve live expansion); (5) live E3 executes+audits every emitted plan. MEASURE on the target
+      game(s): candidate-generation COVERAGE (does the winner appear in the generated pool where the matched flat baseline did
+      not) + live first-win/solve-rate WITH the factored planner vs the matched flat-search baseline. Bootstrap CI. The WIN:
+      coverage up (the winner now generated) AND a live first-win OR solve-rate lift (CI excludes the flat baseline) on >=1 game,
+      offline-reproduced. verifier_is_oracle:false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
-           a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
-           b. `.venv/bin/python -c "from carnot.agentic import arc_value_learner, arc_competition_agent"` exits 0.
-           c. `.venv/bin/python -c "import json; json.load(open('{project_root}/results/experiment_4658_value_routing_cigate_diagnostic.json'))"` exits 0 (the B1 localization present).
-           ANY missing -> honest_verdict blocked_<resource>, populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
-        1. DAgger-lite data collection: roll out the live explorer on the offline arcade, collect the OFF-PATH frontier states it visits, label them (win-reachability via the executable reproduction oracle for training labels only -- the head itself stays oracle-distinct at inference), aggregate with the existing winning-path dataset. Re-train the win-reachability head. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
-        2. Route the SCORED E3AgentPolicy with the distribution-corrected head (keep the .429 affordable cheap-feature subset + the value_weight that did not time out). Keep the .429 winning-path-trained head as the matched baseline control.
-        3. Measure live first-win-rate + multi-level solve-rate WITH the distribution-corrected head vs the .429 baseline on held-out variants x public games; re-run B1's distribution-shift probe before/after. Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the baseline ran on a corpus with reachable headroom; emit the first-win/solve-rate deltas + the shift-score delta explicitly + a null_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any newly-solved variant. If it still nulls, log the residual (the value head's signal does not separate reachable from distractor at the live frontier even on-distribution) as the .431/Missing-Verifier gap.
+           a. Qwen3.5-9B-MTP GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/` non-empty; else blocked_model_not_cached_qwen, EXIT.
+           b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           c. `.venv/bin/python -c "from carnot.agentic import arc_executable_world_model, arc_llm_reinduction, arc_value_learner, arc_competition_agent"` exits 0.
+           d. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
+           ANY missing -> populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
+        1. Induce the programmatic object-experts (precondition/effect), weight by held-out transition trust, compose the product model (keep only replay-stable factors). Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
+        2. Plan subgoal-conditioned sequences through the product model (.430 A1 goal-induction supplies subgoal predicates; .430 A2 value head scores product-model states for live expansion); live E3 executes+audits.
+        3. Measure candidate-generation COVERAGE (winner-in-pool) + live first-win/solve-rate vs the matched flat-search baseline on the target game(s). Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the matched baseline ran on a corpus with reachable headroom; emit the coverage delta + first-win/solve deltas explicitly + a null_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any newly-solved variant. If coverage still does not rise, log the residual (expert_factors_not_independent | product_model_plans_live_invalid | experts_overfit_prefix) as the .432 generation gap.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: dagger_distribution_shift_value_routing_live_<firstwin|solverate>_up_<n> OR complete: dagger_distribution_corrected_no_live_lift_residual_logged."
+          principle: "terminal prefix; success: poe_world_factored_planner_coverage_up_live_<firstwin|solverate>_lift_<game> OR complete: poe_world_factored_planner_no_coverage_gain_residual_logged."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- offline-arcade DAgger data collection + value-head re-train + live-search measurement over cached variants (1s floor); the value head is CPU, no live_llm_inference."
+          principle: "live_llm_inference -- the programmatic-expert induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor)."
         verifier_is_oracle:
-          principle: "MUST be false -- the win-reachability value head is a learned discriminator, oracle-DISTINCT from the executable win-check (the oracle is used only to LABEL training data, not at inference)."
+          principle: "MUST be false -- the programmatic experts + value head are oracle-DISTINCT from the executable reproduction win-check."
         solve_provenance:
-          principle: "live_agent_self_discovery -- this improves the SCORED live agent's OWN search guidance (E3AgentPolicy value-routing); NOT a parallel solver, NOT outer_loop_re."
+          principle: "live_agent_self_discovery -- the generic agent's OWN runtime factored-model planning; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
         live_path_reachable:
-          principle: "HARD gate -- the changed modules (arc_value_learner/arc_competition_agent) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
-        distribution_shift_score_before:
-          principle: "B1's measured 0.699 -- the localized residual cause this task attacks."
-        distribution_shift_score_after:
-          principle: "the post-DAgger shift score -- a DROP is the evidence the correction took (the mechanism worked) independent of the live lift."
-        shift_score_delta:
-          principle: "after - before (negative = shift reduced), emitted explicitly so a null is annotated."
-        live_first_win_rate_corrected:
-          principle: "the live first-win-rate WITH the distribution-corrected value head on the SCORED agent."
-        live_solve_rate_corrected:
-          principle: "the live multi-level (>=2) solve-rate WITH the distribution-corrected head (the deeper wall)."
-        live_baseline_winning_path_trained:
-          principle: "the matched .429 winning-path-trained value head first-win + solve-rate on the SAME variants (the no-regression control)."
+          principle: "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+        candidate_generation_coverage_factored:
+          principle: "does the winning action/plan APPEAR in the factored-planner-generated pool -- the make-a-winner-appear signal (the metric that distinguishes generation from selection)."
+        candidate_generation_coverage_flat_baseline:
+          principle: "the matched flat-search baseline coverage -- a coverage CLAIM requires the factored coverage to exceed it (the winner generated where flat search did not)."
+        coverage_delta:
+          principle: "factored - flat coverage (positive = the winner now appears); emitted explicitly so a null (0) is annotated."
+        live_first_win_rate_factored:
+          principle: "the live first-win-rate WITH the factored planner on the SCORED agent."
+        live_solve_rate_factored:
+          principle: "the live multi-level (>=2) solve-rate WITH the factored planner."
+        live_baseline_flat_search:
+          principle: "the matched flat-search baseline first-win + solve-rate on the SAME games (the no-regression control)."
         first_win_rate_delta:
-          principle: "corrected - baseline first-win-rate (positive = distribution correction crossed the bridge), emitted explicitly so a null (0) is annotated."
+          principle: "factored - baseline first-win-rate; emitted explicitly so a null is annotated."
         solve_rate_delta:
-          principle: "corrected - baseline multi-level solve-rate; emitted explicitly so a null is annotated."
+          principle: "factored - baseline multi-level solve-rate; emitted explicitly so a null is annotated."
         live_lift_ci:
           principle: "bootstrap CI on the chosen live-lift metric; a claim above baseline requires the CI to exclude it."
+        expert_trust_weights:
+          principle: "the held-out transition trust per induced expert -- only replay-stable factors are composed (no brittle-expert fabrication)."
         bare_control_passed:
-          principle: "the POSITIVE CONTROL -- the baseline ran on a corpus with reachable headroom; a no-lift null is valid only then."
+          principle: "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable headroom; a no-coverage-gain null is valid only then."
         false_negative_risk_checked:
-          principle: "true with the matched baseline + reachable-headroom confirmed -- a 'no lift' null is valid only then."
+          principle: "true with the matched flat baseline + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
         null_methodology_note:
-          principle: "present when a delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+          principle: "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
         chosen_submitted_config:
-          principle: "the recommended SUBMITTED_AGENT_CONFIG change (distribution-corrected head on, value_weight, feature subset) -- the A6 input; 'unchanged' if null."
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (factored planner on, trust threshold) -- the A6 input; 'unchanged' if null."
+        proposer_served_model:
+          principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
         parity_test_green:
           principle: "HARD gate -- test_arc_submitted_agent_parity.py passes."
         offline_reproduced:
           principle: "any newly-solved variant must offline-reproduce to count."
         residual_bridge_gap:
-          principle: "the Missing-Verifier / bridge gap logged if the corrected head still nulls -- the .431 next-attack record."
+          principle: "the .432 generation gap logged if coverage does not rise (expert_factors_not_independent | product_model_plans_live_invalid)."
         random_seed:
-          principle: "determinism precondition for reproducibility (DAgger sampling RNG seeded)."
+          principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
           principle: "content-addressed hash catches silent harness/corpus drift on replay."
         preconditions_checked:
-          principle: "records resources verified (offline arcade, value-learner + agent importable, B1 artifact present); pre-empts missing-resource fabrication."
+          principle: "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4665_dagger_distribution_shift_value_routing.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4677_poe_world_factored_subgoal_planner.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4666-a3
-    milestone: 2026.06.430
+  - id: exp4678-a3
+    milestone: 2026.06.431
     title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
-      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .425-.429
-      (PREFER a first-contact L1->L2 of bp35/re86/sb26 [the genuine hard-to-bank clean public games]; alternatives
-      r11l/g50t/lf52/s5i5 L1->L2 or m0r0/cn04 L2->L3; SKIP vc33 [.429], ft09 [.428], ls20 [.427], sk48 [.426], dc22 [.425],
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .426-.430
+      (PREFER a first-contact L1->L2 of a hard clean public game from the L1-only set bp35/re86/sb26/s5i5/g50t/r11l/lf52;
+      alternatives m0r0/cn04/ar25 L2->L3; SKIP dc22 [.430], vc33 [.429], ft09 [.428], ls20 [.427], sk48 [.426 failed],
       ka59/wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the learned verifier on
-      pos/neg traces. Gate: offline_reproduced new level -> reproducible_total_levels 58 -> 59+. verifier_is_oracle:false.'
+      pos/neg traces. Gate: offline_reproduced new level -> reproducible_total_levels 59 -> 60+. verifier_is_oracle:false.'
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4666_levelup_selfplay.json
+    deliverable: results/experiment_4678_levelup_selfplay.json
     prior_failures:
       - experiment_id: exp4618-a3
         verdict: 'complete: sk48_delta_identified_no_bank'
-        addressed_by: 'exp4618 (.426 A3) attempted sk48 L1->L2 and did NOT bank; exp4606 (.425 A3) attempted dc22 and did NOT
-          bank. This task ROTATES to a DIFFERENT clean game NOT deepened in .425-.429 (PREFER bp35/re86/sb26 first-contact
-          L1->L2 -- the genuine hard-to-bank clean public games; alternatives r11l/g50t/lf52/s5i5 L1->L2 or m0r0/cn04 L2->L3) and
-          explicitly SKIPS vc33 (.429), ft09 (.428), ls20 (.427), sk48 (.426), dc22 (.425), ka59/wa30 (hidden-state-bound), and
-          cd82-L3/sp80-L3/su15-L3 (no-grounded-delta). It may use any A1/A2 live improvement (the fixed L2-goal induction /
-          distribution-corrected value head) to speed the search; the bank (offline-reproduced new level) is the gate, not the
-          routing speedup. If the rotated deepen ALSO produces no bank, log the per-game delta + dead-end in the registry and the
-          level-up target rotates again next milestone (the target is retired, not the self-play loop).'
+        addressed_by: 'exp4618 (.426 A3) attempted sk48 L1->L2 and did NOT bank. This task ROTATES to a DIFFERENT clean game NOT
+          deepened in .426-.430 (PREFER bp35/re86/sb26/s5i5/g50t/r11l/lf52 first-contact L1->L2 -- hard clean public games;
+          alternatives m0r0/cn04/ar25 L2->L3) and explicitly SKIPS dc22 (.430), vc33 (.429), ft09 (.428), ls20 (.427), sk48
+          (.426), ka59/wa30 (hidden-state-bound), and cd82-L3/sp80-L3/su15-L3 (no grounded delta). It may use any A1/A2 live
+          improvement (hierarchical subgoal search / the factored planner) to speed the search; the bank (offline-reproduced new
+          level) is the gate, not the routing speedup. If the rotated deepen ALSO produces no bank, log the per-game delta +
+          dead-end in the registry and the level-up target rotates again next milestone (the target is retired, not the
+          self-play loop).'
         retire_if_same_verdict: true
     prompt: |
       CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE + the self-improvement engine). CLAUDE.md mandates >=1 task per
       roadmap that actually BANKS a new reproducible level, AND the operator's 2026-06-21 directive mandates running the self-play
       loop EVERY milestone. This task does BOTH: bank +1 level AND train+checkpoint the learned verifier on the run's positive
       (steps-to-go) + negative (off-path/dead-end) traces. INDEPENDENT of A1/A2 so the guarantee holds even if they null. ALL 25
-      public games have >=L1 banked -- so this is a DEEPEN (L1->L2), except a deeper first-contact L1->L2 on a clean game. TARGET
-      ROTATION: vc33 was .429, ft09 .428, ls20 .427, sk48(failed) .426, dc22(failed) .425 -- rotate to a game NOT deepened in
-      .425-.429. PREFER bp35/re86/sb26 L1->L2 (the genuine hard-to-bank clean public games); alternatives r11l/g50t/lf52/s5i5
-      L1->L2 or m0r0/cn04 L2->L3. Check the registry dead_ends per game FIRST and SKIP stalled approaches: do NOT pick vc33
-      (.429), ft09 (.428), ls20 (.427), sk48 (.426), dc22 (.425), ka59/wa30 (hidden-state-bound), cd82/sp80/su15-L3
-      (no-grounded-L3-delta). USE any A1 L2-goal-induction / A2 distribution-corrected value-routing live improvement from
-      arc_loop_solve (if they shipped) to speed the search; the bank (offline-reproduced new level) is the gate, not the routing
-      speedup.
+      public games have >=L1 banked -- so this is a DEEPEN (L1->L2), preferring a deeper first-contact L1->L2 on a HARD clean game
+      from the L1-only set. TARGET ROTATION: dc22 was .430, vc33 .429, ft09 .428, ls20 .427, sk48(failed) .426 -- rotate to a game
+      NOT deepened in .426-.430. PREFER bp35/re86/sb26/s5i5/g50t/r11l/lf52 L1->L2 (the genuine hard-to-bank clean public games);
+      alternatives m0r0/cn04/ar25 L2->L3. Check the registry dead_ends per game FIRST and SKIP stalled approaches: do NOT pick
+      dc22 (.430), vc33 (.429), ft09 (.428), ls20 (.427), sk48 (.426), ka59/wa30 (hidden-state-bound), cd82/sp80/su15-L3
+      (no-grounded-L3-delta). USE any A1 hierarchical-subgoal / A2 factored-planner live improvement from arc_loop_solve (if they
+      shipped) to speed the search; the bank (offline-reproduced new level) is the gate, not the routing speedup.
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> TRAIN+CHECKPOINT the learned verifier -> registry update; A1/A2 may have wired live improvements here)
-        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=58 + per-game dead_ends; L1 games incl r11l/g50t/bp35/re86/sb26/lf52/s5i5/sk48/dc22/wa30/ka59; L2 games ls20/cd82/sp80/su15/m0r0/cn04/ar25/vc33; ft09 L3)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=59 + per-game dead_ends; L1-only games: r11l/wa30/s5i5/lf52/sk48/ka59/g50t/sb26/re86/bp35; L2 games incl ls20/cd82/sp80/su15/m0r0/cn04/ar25/vc33/dc22; ft09 L3)
         - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate)
         - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -> route a deepen attempt to the closest solved recipe)
         - {project_root}/python/carnot/agentic/arc_value_learner.py (the learned verifier trained on pos/neg traces; models/arc_verifier_<game>.json checkpoint)
@@ -453,7 +493,7 @@ tasks:
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Pick the rotation target (PREFER bp35/re86/sb26 L1->L2; a clean game NOT deepened in .425-.429; check registry dead_ends to skip stalled approaches; do NOT pick vc33/ft09/ls20/sk48/dc22/ka59/wa30). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
+        1. Pick the rotation target (PREFER bp35/re86/sb26/s5i5/g50t/r11l/lf52 L1->L2; a clean game NOT deepened in .426-.430; check registry dead_ends to skip stalled approaches; do NOT pick dc22/vc33/ft09/ls20/sk48/ka59/wa30). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
         2. For a deepen: recommend_approach -> RE only the next-level delta -> register/extend the GameAdapter -> re-run the loop.
         3. Run the reproduction gate (arc_solver_kit.reproduce). Only on reproduced=True, update ops/arc_solve_registry.yaml (win condition, action model, gotchas, dead-ends, solver module) + bump reproducible_total_levels.
         4. TRAIN+CHECKPOINT the learned verifier on the run's pos/neg traces (the self-improvement step); persist models/arc_verifier_<game>.json (mirror-ready per CLAUDE.md decentralization rule 3). Record the verifier delta.
@@ -473,7 +513,7 @@ tasks:
         reproduced_levels:
           principle: "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
         target_game:
-          principle: "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .425-.429, not vc33/ft09/ls20/sk48/dc22/ka59/wa30)."
+          principle: "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .426-.430, not dc22/vc33/ft09/ls20/sk48/ka59/wa30)."
         verifier_checkpoint_updated:
           principle: "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
         registry_updated:
@@ -485,15 +525,15 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4666_levelup_selfplay.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4678_levelup_selfplay.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4667-a4
-    milestone: 2026.06.430
+  - id: exp4679-a4
+    milestone: 2026.06.431
     title: 'PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3''s new bank (+ any A1/A2
       newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit (beat the standing
       33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive
-      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Submission stays
+      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth (>=59). Submission stays
       operator-only. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
@@ -501,34 +541,34 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4667_refresh_submission_package.json
+    deliverable: results/experiment_4679_refresh_submission_package.json
     operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1) + 2026-06-21 standing gate "beat 33 levels": routine
-      package-refresh continuation of the .429 A4 package-refresh (exp4655, which SUCCEEDED at 58) -- folds THIS milestone''s A3
-      bank (58->59+) + any A1/A2 new variant solves into the refreshed package and keeps it operator-resubmit-ready. False-positive
-      fuzzy-token scope-match vs prior package-prep/live-submit tasks (exp4655/exp4643). Not a doomed rerun; submission stays
+      package-refresh continuation of the .430 A4 package-refresh (exp4667, which SUCCEEDED at 59) -- folds THIS milestone''s A3
+      bank (59->60+) + any A1/A2 new variant solves into the refreshed package and keeps it operator-resubmit-ready. False-positive
+      fuzzy-token scope-match vs prior package-prep/live-submit tasks (exp4667/exp4655). Not a doomed rerun; submission stays
       operator-only (this task only PREPARES + offline-validates).'
     prompt: |
-      CONTEXT ({date}, ARC sprint SCORE -- keep the operator-resubmit package fresh). The .429 A4 kept the package at
-      live_submittable=58 (beats 33), ready_for_operator_submit=True. This task keeps it current: fold A3's new bank
-      (reproducible_total_levels 58->59+) + any A1/A2 newly-reproduced variant into the refreshed package, re-validate every
-      claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver), extend env-adaptive recovery to
-      any newly version-drifted game, and confirm the live-submittable count stays STRICTLY > 33. NO LLM at submit-time, zero quota
-      (offline arcade + cached solves). Submission is OPERATOR-ONLY (External Publication) -- this task PREPARES + offline-validates
-      ONLY and emits ready_for_operator_submit. ARC Prize Milestone #1 deadline is 2026-06-30 (6 days) -- keep the package
-      submit-ready for the operator.
+      CONTEXT ({date}, ARC sprint SCORE -- keep the operator-resubmit package fresh). The .430 A4 kept the package at
+      live_submittable=59 (beats 33), ready_for_operator_submit=True. This task keeps it current: fold A3's new bank
+      (reproducible_total_levels 59->60+) + any A1/A2 newly-reproduced variant into the refreshed package, re-validate every
+      claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver), extend env-adaptive recovery
+      to any newly version-drifted game, and confirm the live-submittable count stays STRICTLY > 33. NO LLM at submit-time, zero
+      quota (offline arcade + cached solves). Submission is OPERATOR-ONLY (External Publication) -- this task PREPARES +
+      offline-validates ONLY and emits ready_for_operator_submit. ARC Prize Milestone #1 deadline is 2026-06-30 (6 days) -- keep
+      the package submit-ready for the operator.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4655_refresh_submission_package.json (the .429 A4 refreshed package + the env-adaptive re-solve pattern)
+        - {project_root}/results/experiment_4667_refresh_submission_package.json (the .430 A4 refreshed package + the env-adaptive re-solve pattern)
         - {project_root}/scripts/arc3_live_submit.py (the live-submit driver: Mode-1 flat-replay; _latest_package; CLAIMED_FALLBACK)
-        - {project_root}/results/experiment_4666_levelup_selfplay.json (A3 -- this milestone's new bank to fold in)
-        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json + {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (A1/A2 -- any newly-reproduced variant to fold in)
+        - {project_root}/results/experiment_4678_levelup_selfplay.json (A3 -- this milestone's new bank to fold in)
+        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json + {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (A1/A2 -- any newly-reproduced variant to fold in)
         - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels + per-game reproduce entries)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0 AND `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0. Missing -> blocked_<resource>, EXIT.
         1. Rebuild the validated submission package from the CURRENT registry (incl. this milestone's A3 bank + any A1/A2 new solves). Record per-game claimed-vs-offline-reached so no level is claimed above its offline-reproduced depth (the claimed_caps discipline).
         2. Re-validate: every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive re-solver) on a FRESH env. Extend env-adaptive re-solve (the persisted primitive_env_adaptive_resolve_operator) to any newly version-drifted game.
-        3. COUNT + GATE: the offline-reproduction-gated live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Emit count_delta vs the .429 A4 count (58) + a null_delta_methodology_note if unchanged. Do NOT submit -- emit ready_for_operator_submit + the refreshed package path.
+        3. COUNT + GATE: the offline-reproduction-gated live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Emit count_delta vs the .430 A4 count (59) + a null_delta_methodology_note if unchanged. Do NOT submit -- emit ready_for_operator_submit + the refreshed package path.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
@@ -540,9 +580,9 @@ tasks:
         live_submittable_level_count:
           principle: "the offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest leaderboard score, must stay > 33)."
         live_submittable_count_prev:
-          principle: "58 -- the .429 A4 count, the apples-to-apples comparison."
+          principle: "59 -- the .430 A4 count, the apples-to-apples comparison."
         count_delta:
-          principle: "live_submittable_level_count - 58 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."
+          principle: "live_submittable_level_count - 59 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."
         levels_folded_in:
           principle: "names the games whose new banks (A3 + A1/A2 variant solves) were folded into the refreshed package this milestone."
         refreshed_package_path:
@@ -560,45 +600,46 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4667_refresh_submission_package.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4679_refresh_submission_package.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4668-a5
-    milestone: 2026.06.430
-    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone''s winning A1/A2 primitive (the
-      L2-goal-predicate-induction operator [win-grid exemplar + satisfiability check] OR the DAgger-lite distribution-corrected
-      value-routing operator, whichever cleared its gate) as a reusable arc_solver_kit primitive + registry general_gotcha, and
-      measure cross-game transfer value (characterize the null honestly if transfer is value-null). verifier_is_oracle:false.'
+  - id: exp4680-a5
+    milestone: 2026.06.431
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone''s winning A1/A2 GENERATION
+      primitive (the hierarchical-subgoal-search operator [subgoal proposer + bounded per-subgoal search + within-subgoal value
+      tie-breaker] OR the PoE-World factored-executable subgoal planner, whichever cleared its gate) as a reusable
+      arc_solver_kit primitive + registry general_gotcha, and measure cross-game transfer value (characterize the null honestly
+      if transfer is value-null). verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4668_primitive_persist_transfer.json
+    deliverable: results/experiment_4680_primitive_persist_transfer.json
     operator_override: '2026-06-16 ARC Solve Reproducibility + Solver-Reuse Discipline (standing: capture reusable scaffolding,
-      do not re-derive) + the self-learning ethos: routine persist+transfer continuation of the .429 A5 (exp4656, which persisted
-      the cheap_value_routing_cost_fix_operator + characterized the transfer null). The forward difference is THIS milestone''s
-      winning primitive (L2-goal-induction or DAgger-lite value-routing) + a fresh transfer measurement. False-positive
-      fuzzy-token scope-match vs prior persist tasks. Not a doomed rerun.'
+      do not re-derive) + the self-learning ethos: routine persist+transfer continuation of the .430 A5 (exp4668, which persisted
+      the DAgger off-path data-collection operator + characterized the transfer null). The forward difference is THIS milestone''s
+      winning GENERATION primitive (hierarchical subgoal search or the PoE-World factored planner) + a fresh transfer measurement.
+      False-positive fuzzy-token scope-match vs prior persist tasks. Not a doomed rerun.'
     prompt: |
       CONTEXT ({date}, ARC sprint SELF-LEARNING). The project ethos is capture-as-reusable-scaffolding: a winning primitive is
       persisted into arc_solver_kit + ops/arc_solve_registry.yaml so the LIVE solver reuses it, never re-derives it. This task
-      persists THIS milestone's winning A1/A2 primitive and measures cross-game transfer. If BOTH A1 and A2 nulled, persist the
-      strongest characterized component (e.g. the L2-goal-induction win-grid-exemplar mechanism, which is a real reusable
-      reinduction primitive even if it did not bank an L2; or the DAgger-lite off-path data-collection operator) and characterize
-      the transfer null honestly -- a characterized null is valid (per the .429 A5 pattern).
+      persists THIS milestone's winning A1/A2 GENERATION primitive and measures cross-game transfer. If BOTH A1 and A2 nulled,
+      persist the strongest characterized component (e.g. the subgoal-mining-from-failed-trees mechanism, or the
+      programmatic-expert-trust-weighting mechanism, both real reusable generation primitives even if they did not bank a level)
+      and characterize the transfer null honestly -- a characterized null is valid (per the .430 A5 pattern).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4656_primitive_persist_transfer.json (the .429 A5 persist+transfer pattern + the transfer-null characterization schema)
-        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json + {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (A1/A2 -- the candidate primitives to persist; read their chosen_submitted_config + honest_verdict)
+        - {project_root}/results/experiment_4668_primitive_persist_transfer.json (the .430 A5 persist+transfer pattern + the transfer-null characterization schema)
+        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json + {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (A1/A2 -- the candidate primitives to persist; read their chosen_submitted_config + honest_verdict)
         - {project_root}/python/carnot/agentic/arc_solver_kit.py (where reusable primitives live) + {project_root}/ops/arc_solve_registry.yaml (general_gotchas -- where the persisted operator + transfer_dead_ends are recorded)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Pick the primitive: the A1 L2-goal-induction operator if it cleared its gate, else the A2 DAgger-lite distribution-corrected value-routing operator if it cleared its gate, else the strongest characterized component (the win-grid-exemplar reinduction mechanism / the DAgger off-path data-collection operator is a real reusable primitive regardless).
+        1. Pick the primitive: the A1 hierarchical-subgoal-search operator if it cleared its gate, else the A2 PoE-World factored-planner operator if it cleared its gate, else the strongest characterized component (subgoal-mining / programmatic-expert-trust-weighting is a real reusable generation primitive regardless).
         2. Persist it as a reusable arc_solver_kit primitive + an ops/arc_solve_registry.yaml general_gotcha (operator id + derived_from_artifacts + a clear reuse note).
-        3. Measure cross-game transfer on >=3 cached games (the persisted operator applied to held-out games): report the transfer value per game (solve-rate/first-win/efficiency delta + offline_reproduced_new_level). Characterize the transfer null honestly with a residual_dead_end if value-null.
+        3. Measure cross-game transfer on >=3 cached games (the persisted operator applied to held-out games): report the transfer value per game (coverage/solve-rate/first-win delta + offline_reproduced_new_level). Characterize the transfer null honestly with a residual_dead_end if value-null.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
@@ -606,17 +647,17 @@ tasks:
         inference_substrate:
           principle: "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
         verifier_is_oracle:
-          principle: "MUST be false -- the persisted primitive ranks/routes/induces, oracle-distinct from the executable win-check."
+          principle: "MUST be false -- the persisted primitive generates/ranks/induces, oracle-distinct from the executable win-check."
         primitive_persisted:
           principle: "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
         transfer_games:
           principle: "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
         transfer_value_per_game:
-          principle: "per-game solve-rate/first-win/efficiency delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+          principle: "per-game coverage/solve-rate/first-win delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
         offline_reproduced_new_level:
           principle: "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
         residual_dead_end:
-          principle: "the characterized transfer-null residual if value is zero (the next-attack record); per the .429 A5 pattern."
+          principle: "the characterized transfer-null residual if value is zero (the next-attack record); per the .430 A5 pattern."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -624,41 +665,42 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4668_primitive_persist_transfer.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4680_primitive_persist_transfer.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4669-a6
-    milestone: 2026.06.430
-    title: 'PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone''s winning A1/A2 config (the L2-goal-induction fix
-      [win-grid exemplar + satisfiability check + fixed metric harness] and/or the DAgger-lite distribution-corrected
-      value-routing) into SUBMITTED_AGENT_CONFIG as the single source of truth, re-measure the integrated live first-win +
-      multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, and keep test_arc_submitted_agent_parity green. If both
-      A1/A2 nulled, integrate ''unchanged'' and record why. verifier_is_oracle:false.'
+  - id: exp4681-a6
+    milestone: 2026.06.431
+    title: 'PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone''s winning A1/A2 config (the hierarchical-subgoal-search
+      settings and/or the PoE-World factored-planner settings) into SUBMITTED_AGENT_CONFIG as the single source of truth,
+      re-measure the integrated live first-win + multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, and keep
+      test_arc_submitted_agent_parity green. If both A1/A2 nulled, integrate ''unchanged'' and record why. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4669_integration_gate.json
+    deliverable: results/experiment_4681_integration_gate.json
     operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1, single-source-of-truth SUBMITTED_AGENT_CONFIG): routine
-      integration-gate continuation of the .429 A6 (exp4657, which integrated the winning .429 config + kept parity green). The
-      forward difference is THIS milestone''s winning A1/A2 config (L2-goal induction + DAgger-lite value-routing). False-positive
-      fuzzy-token scope-match vs prior integration-gate tasks. Not a doomed rerun.'
+      integration-gate continuation of the .430 A6 (exp4669, which integrated the winning .430 config + kept parity green). The
+      forward difference is THIS milestone''s winning A1/A2 config (hierarchical subgoal search + the factored planner).
+      False-positive fuzzy-token scope-match vs prior integration-gate tasks. Not a doomed rerun.'
     prompt: |
       CONTEXT ({date}, ARC sprint INTEGRATION -- single source of truth). SUBMITTED_AGENT_CONFIG is the one config the scored
       Kaggle agent loads; every milestone's winning lever must be folded in (or explicitly 'unchanged') so the deployed agent and
       the measured agent never diverge. This task integrates this milestone's winning A1/A2 config and re-measures the integrated
-      live first-win + multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, keeping the parity test green.
+      live first-win + multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, keeping the parity test green. NOTE the
+      .430 A6 was flagged TAUTOLOGY (integrated==pre-integration to >5 sig figs because the config was 'unchanged'); if 'unchanged'
+      here, report it as 'unchanged' with the reason rather than presenting identical numbers as a finding.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4657_integration_gate.json (the .429 A6 integration pattern)
-        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json + {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (A1/A2 chosen_submitted_config -- the configs to integrate)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG + E3AgentPolicy + value_weight + the level_up_reinduction path) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/results/experiment_4669_integration_gate.json (the .430 A6 integration pattern -- and its TAUTOLOGY flag when unchanged)
+        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json + {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (A1/A2 chosen_submitted_config -- the configs to integrate)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG + E3AgentPolicy + value_weight + the level_up_reinduction / subgoal-search path) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy, SUBMITTED_AGENT_CONFIG"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Fold the winning A1 config (L2-goal-induction win-grid-exemplar + satisfiability check on, fixed metric harness) and/or A2 config (distribution-corrected value head on, value_weight, feature subset) into SUBMITTED_AGENT_CONFIG. If both A1/A2 nulled, set 'unchanged' and record why.
+        1. Fold the winning A1 config (hierarchical subgoal search on, subgoal budget) and/or A2 config (factored planner on, trust threshold) into SUBMITTED_AGENT_CONFIG. If both A1/A2 nulled, set 'unchanged' and record why (do NOT present identical pre/post numbers as a finding -- the .430 A6 TAUTOLOGY lesson).
         2. Re-measure the integrated live first-win-rate + multi-level solve-rate + live-submittable count end-to-end on the SCORED E3AgentPolicy vs the pre-integration config (no regression).
         3. RUN test_arc_submitted_agent_parity.py -> green (the integrated config is the single source of truth the scored kernel loads).
 
@@ -668,9 +710,11 @@ tasks:
         inference_substrate:
           principle: "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
         verifier_is_oracle:
-          principle: "MUST be false -- the integrated L2-goal-induction / value-routing signals are oracle-distinct from the executable win-check."
+          principle: "MUST be false -- the integrated subgoal-search / factored-planner signals are oracle-distinct from the executable win-check."
         config_integrated:
           principle: "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+        config_changed:
+          principle: "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding) -- pre-empts the .430 A6 TAUTOLOGY flag."
         live_first_win_rate_integrated:
           principle: "the integrated SCORED-agent live first-win-rate (no regression vs pre-integration)."
         live_multi_level_solve_rate_integrated:
@@ -686,15 +730,16 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4669_integration_gate.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4681_integration_gate.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4670-b1
-    milestone: 2026.06.430
-    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the MULTI-LEVEL-HARNESS CI-gate: lock in A1''s fixed
-      live_multi_level_solve_rate rollout (target_levels>=2, NO break-at-first-win) so the metric can NEVER silently revert to the
-      degenerate 0.0-by-construction value, PLUS a PROPOSER-PORT-HYGIENE guard (a "Qwen" generation measurement must verify via
-      /props it served Qwen, not the gemma squatting 8919), PLUS a first-win/multi-level floor. Unit tests green.
+  - id: exp4682-b1
+    milestone: 2026.06.431
+    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the CANDIDATE-GENERATION-COVERAGE CI-metric + the HONEST GENERIC-FIRST-WIN
+      floor: (1) a metric/gate that measures whether the winning action/plan is PRESENT in the generated candidate pool (coverage)
+      so generation improvement is mechanically trackable -- the generation analog of the .430 multi-level-harness gate; (2) lock
+      in the HONEST generic-first-win measurement (the 0.04 reality on the standard config) so a future change can NEITHER
+      silently regress it NOR silently inflate it via a permissive harness; (3) a generation-coverage floor. Unit tests green.
       verifier_is_oracle:false.'
     priority: high
     track: infra
@@ -702,51 +747,52 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4670_multilevel_harness_cigate.json
-    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint, 2 reserved infra per milestone) + the
-      multi-level-deepening-diagnostic-2026-06-23.md Finding 1 (the live_multi_level_solve_rate metric is a degenerate
-      0.0-by-construction harness artifact: the rollout breaks at the first level-up) + the port-8919 gemma-squat confound. Novel
-      infra (guards the A1 measurement substrate); false-positive fuzzy-token scope-match vs prior infra/metric-helper tasks
-      (exp4658/exp4646). Not a doomed rerun.'
+    deliverable: results/experiment_4682_generation_coverage_cigate.json
+    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint, 2 reserved infra per milestone) + the .430 finding that the
+      wall is candidate generation (A2 missing_verifier_gap_live_frontier_not_separated; generic first-win honest=0.04 not 0.59).
+      Novel infra (the generation-coverage analog of the .430 B1 multi-level-harness CI-gate; guards the A1/A2 measurement
+      substrate so a permissive harness cannot silently inflate generic first-win, and so a future change cannot silently regress
+      generation coverage). False-positive fuzzy-token scope-match vs prior infra/metric-helper tasks (exp4670/exp4658). Not a
+      doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint INFRA slot 1). The multi-level-deepening diagnosis (Finding 1) proved the
-      live_multi_level_solve_rate metric was a HARNESS ARTIFACT: the rollout (experiment_4628 run_variant_attempt) breaks at the
-      FIRST level-up (target_levels=1 + break), so depth>=2 is structurally IMPOSSIBLE in the metric's input -- the rate was a
-      constant 0.0 no matter how capable the agent is, and the .429 levers were measured against a metric that could not move. A1
-      fixes the harness (target_levels>=2, no early break, non-colliding Qwen port). THIS infra task LOCKS THAT IN so it can never
-      silently regress: (1) a CI-gate that FAILS if the multi-level rollout ever reverts to target_levels<2 or break-at-first-win
-      (the degenerate-metric regression); (2) a PROPOSER-PORT-HYGIENE guard -- a generation measurement claiming "Qwen" must
-      assert /props served Qwen3.5-9B-MTP, not the gemma squatting port 8919 (the silent-wrong-model confound); (3) a
-      first-win/multi-level floor so a future change can't quietly drop live performance. This directly guards A1's measurement
-      substrate -- without it the headline metric can silently re-degenerate.
+      CONTEXT ({date}, ARC sprint INFRA slot 1). .430 proved the wall is CANDIDATE GENERATION: the value head can only RANK a pool
+      that never contains the winner (A2 residual missing_verifier_gap_live_frontier_not_separated), and the honest fixed-harness
+      generic first-win is 0.04 (1/25 games), NOT the 0.59 the .430 roadmap assumed -- a measurement the loop optimized against
+      for several milestones without understanding its denominator. .431's A1/A2 attack generation; this infra task LOCKS IN the
+      ability to measure it honestly and prevents silent regression OR silent inflation: (1) a CANDIDATE-GENERATION-COVERAGE
+      metric/gate -- "is the winning action/plan present in the GENERATED pool" -- so a generation improvement is mechanically
+      trackable (the analog of .430 B1's multi-level-harness gate, but for the pool not the rollout); (2) lock in the HONEST
+      generic-first-win measurement (the standard config: the variant set + action budget that yields 0.04) so a future change
+      can neither quietly drop it below the floor NOR quietly inflate it by switching to a permissive harness (a degenerate-easy
+      variant or an unbounded budget); (3) a generation-coverage floor. This directly guards A1/A2's measurement substrate.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/docs/research-notes/multi-level-deepening-diagnostic-2026-06-23.md (Finding 1 -- the degenerate metric; the port-8919 confound; the harness fix spec)
-        - {project_root}/python/carnot/experiment_4628_dense_curiosity_progress_loop.py (run_variant_attempt -- the break-at-first-win + target_levels=1 to guard against) + {project_root}/results/experiment_4646_live_multi_level_solve_rate_metric.json (the .429 B1 metric helper to extend, not duplicate)
-        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json (A1 -- read metric_harness_fixed + proposer_served_model; the fixed rollout this CI-gate locks in)
-        - {project_root}/scripts/experiments/proto_multilevel_diag.py (the clean multi-level rollout reference with target_levels>=2 + no break)
+        - {project_root}/results/experiment_4670_multilevel_harness_cigate.json (the .430 B1 multi-level-harness CI-gate + port-hygiene guard pattern to mirror -- the exact add-a-gate + unit-tests structure)
+        - {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (the live_baseline_winning_path_trained.measurement: the 1/25 first-win=0.04 standard config to lock in)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (the candidate generation + the value head -- where coverage is measured) + {project_root}/python/carnot/experiment_4628_dense_curiosity_progress_loop.py (run_variant_attempt -- the standard variant/budget config the honest first-win is measured against)
+        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json IF PRESENT (A1 -- read generic_first_win_by_config + candidate-generation coverage fields the gate locks in)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
-        1. Ship the degenerate-metric CI-gate: a test/helper that FAILS if the multi-level rollout config has target_levels<2 OR a break-at-first-win (so live_multi_level_solve_rate can never again be a constant 0.0 by construction). Add unit tests (a degenerate-config fixture -> fails; the fixed-config fixture -> passes).
-        2. Ship the proposer-port-hygiene guard: a helper that, given a generation-measurement artifact claiming a model, asserts proposer_served_model matches the claimed model (catches the port-8919 gemma-squat). Add a unit test (a gemma-on-8919 fixture flagged; a /props-verified-Qwen fixture passes).
-        3. Ship the first-win/multi-level floor CI-gate (a future change can't drop live first-win/solve-rate below the A1-established floor). Add unit tests; confirm green.
+        1. Ship the candidate-generation-coverage metric/gate: a helper that, given a search trace + the known winning action/plan, computes whether the winner is PRESENT in the generated candidate pool (coverage), and a CI-gate that compares a method's coverage vs a matched flat baseline. Add unit tests (a winner-in-pool fixture -> coverage=1; a winner-absent fixture -> coverage=0; a coverage-up-vs-baseline fixture -> gate passes).
+        2. Lock in the HONEST generic-first-win measurement: a helper that records the STANDARD config (variant set + action budget) and FAILS if a first-win measurement uses a permissive harness (a degenerate-easy variant subset or an unbounded budget) that would inflate the 0.04 reality. Add a unit test (a permissive-harness fixture flagged; the standard config passes).
+        3. Ship the generation-coverage floor CI-gate (a future change cannot drop generation coverage below the A1-established floor). Add unit tests; confirm green.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: multilevel_harness_cigate_plus_port_hygiene_shipped_tests_green."
+          principle: "terminal prefix; success: generation_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- harness-config + artifact checks + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses a mock/NoOp proposer)."
+          principle: "verifier_ensemble_against_cached_candidates -- coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp proposer)."
         verifier_is_oracle:
           principle: "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
-        degenerate_metric_cigate_added:
-          principle: "the CI-gate that FAILS on target_levels<2 / break-at-first-win (the multi-level metric can never re-degenerate to 0.0-by-construction)."
-        port_hygiene_guard_added:
-          principle: "the guard that a 'Qwen' generation measurement must verify proposer_served_model==Qwen (catches the port-8919 gemma-squat silent-wrong-model confound)."
-        first_win_floor_cigate_added:
-          principle: "the floor CI-gate that fails on a live first-win/multi-level solve-rate regression below the A1 floor."
+        coverage_metric_added:
+          principle: "the candidate-generation-coverage metric/gate (is the winner present in the generated pool; coverage-up-vs-flat-baseline) -- the generation analog of the .430 multi-level-harness gate."
+        honest_firstwin_floor_added:
+          principle: "the gate that a generic-first-win measurement must use the STANDARD config (variant set + action budget) -- catches a permissive harness silently inflating the 0.04 reality."
+        coverage_floor_cigate_added:
+          principle: "the floor CI-gate that fails on a generation-coverage regression below the A1 floor."
         tests_added:
-          principle: "the unit tests added for all three guards (Tests Must Run and Assert: flag the degenerate/wrong-model/regression fixtures, pass the honest fixtures)."
+          principle: "the unit tests added for all three guards (Tests Must Run and Assert: flag the winner-absent / permissive-harness / regression fixtures, pass the honest fixtures)."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -754,61 +800,63 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4670_multilevel_harness_cigate.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4682_generation_coverage_cigate.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4671-b2
-    milestone: 2026.06.430
+  - id: exp4683-b2
+    milestone: 2026.06.431
     title: 'PHASE B2 (INFRA -- reserved slot 2; adversarial_verify hardening) -- extend adversarial_verify with two guards for
-      the .430 lever class: (1) L2-GOAL-INDUCTION-WITHOUT-SATISFIABILITY-CHECK -- a "reached L2 via induction" claim that does NOT
-      report goal_predicate_satisfiable + l2_plan_reaches_goal is flagged (it may be a degenerate-goal vacuous pass); (2)
-      MULTI-LEVEL-WITHOUT-NONDEGENERATE-METRIC -- a multi-level solve-rate claim that does NOT report the fixed harness
-      (target_levels>=2 + no early break) is flagged (the metric may be the degenerate 0.0-by-construction). Honest artifacts NOT
-      flagged. Tests green.'
+      the .431 GENERATION lever class: (1) SUBGOAL-SEARCH-WITHOUT-DECOMPOSITION-EVIDENCE -- a "reached a new level via subgoal
+      search" claim that does NOT report the subgoal decomposition + per-subgoal reachability + the no-subgoal AND random-subgoal
+      ablations + offline_reproduced is flagged (it may be a flat-search win mislabeled, or a "subgoal" that is just the global
+      goal); (2) GENERATION-COVERAGE-WITHOUT-BASELINE -- a candidate-generation-coverage claim that does NOT report the matched
+      flat-search baseline coverage is flagged. Honest artifacts NOT flagged. Tests green.'
     priority: high
     track: infra
     max_turns: 80
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4671_adversarial_verify_hardening.json
-    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint) + the .425-.429 B2 adversarial_verify-hardening lineage
-      (TAUTOLOGY, offline-vs-live, intrinsic-reward, goal-energy-ablation, QD-ablation/value-routing-cost guards). The forward
-      difference is the .430 lever class: L2-goal-induction + the degenerate-multi-level-metric. False-positive fuzzy-token
-      scope-match vs prior adversarial_verify-hardening tasks (exp4659/exp4647). Not a doomed rerun.'
+    deliverable: results/experiment_4683_adversarial_verify_hardening.json
+    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint) + the .425-.430 B2 adversarial_verify-hardening lineage
+      (TAUTOLOGY, offline-vs-live, intrinsic-reward, goal-energy-ablation, QD-ablation/value-routing-cost, L2-goal-satisfiability/
+      multi-level-metric guards). The forward difference is the .431 GENERATION lever class: subgoal-decomposition-evidence +
+      generation-coverage-baseline. False-positive fuzzy-token scope-match vs prior adversarial_verify-hardening tasks
+      (exp4671/exp4659). Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint INFRA slot 2). Each milestone .425-.429 added a B2 guard to adversarial_verify so the new
-      lever's over-claim is mechanically caught (the fabrication-gate quarantines flagged artifacts). .430's two levers need their
-      own guards: (1) the L2-goal-induction lever (A1) -- a "the generic agent reached L2 via induction" claim must report
-      goal_predicate_satisfiable=true + l2_plan_reaches_goal=true, else it may be the degenerate-goal vacuous pass the diagnosis
-      identified (a constant-False goal that sails through the DYNAMICS-only held-out gate); (2) the multi-level solve-rate metric
-      -- a "multi-level solve-rate" claim must report the FIXED harness (target_levels>=2 + no break-at-first-win), else the metric
-      may be the degenerate 0.0-by-construction artifact (Finding 1). Add both as CRITICAL-when-overclaiming /
-      WARN-when-omitted guards, with honest artifacts NOT flagged (false-positive guarded, like the .429 goal-energy-ablation /
-      QD-ablation guards).
+      CONTEXT ({date}, ARC sprint INFRA slot 2). Each milestone .425-.430 added a B2 guard to adversarial_verify so the new
+      lever's over-claim is mechanically caught (the fabrication-gate quarantines flagged artifacts). .431's two GENERATION
+      levers need their own guards: (1) the hierarchical-subgoal-search lever (A1) -- a "the generic agent reached a new level via
+      subgoal search" claim must report the subgoal decomposition + per-subgoal reachability + the no-subgoal AND random-subgoal
+      ablations (both lower than subgoal search) + offline_reproduced, else it may be a flat-search win mislabeled as a subgoal
+      win, or a "subgoal" that is just the global goal (no decomposition); (2) the candidate-generation-coverage metric -- a
+      "coverage up" claim must report the matched FLAT-SEARCH baseline coverage, else the coverage number is unfalsifiable (a
+      pool that always "contained" the winner shows no generation gain). Add both as CRITICAL-when-overclaiming /
+      WARN-when-omitted guards, with honest artifacts NOT flagged (false-positive guarded, like the .430 L2-goal-satisfiability /
+      multi-level-metric guards).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4659_adversarial_verify_hardening.json (the .429 B2 QD-ablation/value-routing-cost guard pattern -- the exact add-a-guard + false-positive-guard + tests structure to mirror)
-        - {project_root}/scripts/adversarial_verify.py (where the guards live: check_circular_moat_overclaim, the .429 QD-ablation + value-routing-cost guards -- add the two new guards alongside)
-        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json (the A1 artifact the guards must classify correctly: reports goal_predicate_satisfiable + l2_plan_reaches_goal + metric_harness_fixed -> NOT flagged; a hypothetical over-claim omitting them -> flagged)
+        - {project_root}/results/experiment_4671_adversarial_verify_hardening.json (the .430 B2 L2-goal-satisfiability/multi-level-metric guard pattern -- the exact add-a-guard + false-positive-guard + tests structure to mirror)
+        - {project_root}/scripts/adversarial_verify.py (where the guards live: check_circular_moat_overclaim, the .430 L2-goal-satisfiability + multi-level-metric guards -- add the two new guards alongside)
+        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json (the A1 artifact the guards must classify correctly: reports subgoal_decomposition + per_subgoal_reachable + no_subgoal_ablation_reached_level + random_subgoal_ablation_reached_level + offline_reproduced -> NOT flagged; a hypothetical over-claim omitting them -> flagged) + {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (reports candidate_generation_coverage_flat_baseline -> NOT flagged; omitting it -> flagged)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "import scripts.adversarial_verify"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
-        1. Add the L2-GOAL-INDUCTION-WITHOUT-SATISFIABILITY-CHECK guard: CRITICAL when an artifact claims a multi-level induction win (generic_agent_reached_level>=2 / reproduced_levels>=1 at L2 via induction) but goal_predicate_satisfiable / l2_plan_reaches_goal are absent or false; WARN when omitted on such a claim.
-        2. Add the MULTI-LEVEL-WITHOUT-NONDEGENERATE-METRIC guard: CRITICAL when an artifact claims a multi-level solve-rate > 0 but does NOT report metric_harness_fixed / the target_levels>=2 + no-early-break harness; WARN when omitted.
-        3. Verify the HONEST A1 artifact (which DOES report goal_predicate_satisfiable + l2_plan_reaches_goal + metric_harness_fixed) is NOT flagged (false-positive guard). Add unit tests for both guards (flag the over-claim fixture, pass the honest fixture). Confirm green.
+        1. Add the SUBGOAL-SEARCH-WITHOUT-DECOMPOSITION-EVIDENCE guard: CRITICAL when an artifact claims a subgoal-search new-level win (generic_agent_reached_level up / reproduced_levels>=1 via subgoal search) but subgoal_decomposition / per_subgoal_reachable / no_subgoal_ablation_reached_level / random_subgoal_ablation_reached_level / offline_reproduced are absent or the ablations are NOT strictly lower; WARN when omitted on such a claim.
+        2. Add the GENERATION-COVERAGE-WITHOUT-BASELINE guard: CRITICAL when an artifact claims candidate-generation coverage up but does NOT report candidate_generation_coverage_flat_baseline (the matched control); WARN when omitted.
+        3. Verify the HONEST A1/A2 artifacts (which DO report the decomposition/ablations and the flat-baseline coverage) are NOT flagged (false-positive guard). Add unit tests for both guards (flag the over-claim fixture, pass the honest fixture). Confirm green.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: adversarial_verify_hardened_l2_goal_and_multilevel_metric_guards_tests_green."
+          principle: "terminal prefix; success: adversarial_verify_hardened_subgoal_decomposition_and_coverage_baseline_guards_tests_green."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
-        l2_goal_satisfiability_guard_added:
-          principle: "the L2-GOAL-INDUCTION-WITHOUT-SATISFIABILITY-CHECK guard (an L2-via-induction win must report a satisfiable goal + reachable plan, else flagged as a possible degenerate-goal vacuous pass)."
-        multilevel_metric_guard_added:
-          principle: "the MULTI-LEVEL-WITHOUT-NONDEGENERATE-METRIC guard (a multi-level solve-rate claim must report the fixed target_levels>=2/no-break harness, else flagged as the degenerate 0.0-by-construction metric)."
+        subgoal_decomposition_guard_added:
+          principle: "the SUBGOAL-SEARCH-WITHOUT-DECOMPOSITION-EVIDENCE guard (a subgoal-search win must report the decomposition + per-subgoal reachability + passing no-subgoal AND random-subgoal ablations + offline_reproduced, else flagged as a possible flat-search win mislabeled)."
+        coverage_baseline_guard_added:
+          principle: "the GENERATION-COVERAGE-WITHOUT-BASELINE guard (a coverage-up claim must report the matched flat-search baseline coverage, else flagged as unfalsifiable)."
         honest_artifacts_not_flagged:
-          principle: "the honest A1 artifact (which reports its satisfiability + harness controls) is NOT flagged -- false-positive guard (like the .429 QD-ablation guard)."
+          principle: "the honest A1/A2 artifacts (which report their decomposition/ablations + flat-baseline coverage) are NOT flagged -- false-positive guard (like the .430 multi-level-metric guard)."
         tests_added:
           principle: "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
         random_seed:
@@ -818,11 +866,11 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4671_adversarial_verify_hardening.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4683_adversarial_verify_hardening.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4672-c
-    milestone: 2026.06.430
+  - id: exp4684-c
+    milestone: 2026.06.431
     title: 'PHASE C (HARDWARE CONTINUITY -- 1 per-board slot) -- per-board reachability audit (KV260 via ssh kria [SSH-only,
       NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag --detect) so each attached board
       stays visible per the Hardware-Task Continuity Discipline. Record per-board state (loaded overlay / uptime / IDCODE) or
@@ -833,9 +881,9 @@ tasks:
     agent_type: codex
     model: gpt-5.5
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4672_hardware_continuity.json
+    deliverable: results/experiment_4684_hardware_continuity.json
     operator_override: '2026-05-18 Hardware-Task Continuity Discipline (standing: >=1 task per attached board per milestone until
-      terminal state): routine per-board reachability audit, versioned continuation of the .429 C (exp4660). KV260 precondition
+      terminal state): routine per-board reachability audit, versioned continuation of the .430 C (exp4672). KV260 precondition
       is SSH-only per the KV260 SSH-Not-SD-Card Discipline (NEVER a host SD-card device check). False-positive fuzzy-token
       scope-match vs prior hardware-continuity tasks. Not a doomed rerun.'
     prompt: |
@@ -845,7 +893,7 @@ tasks:
       SSH-reachability precondition, NEVER a host SD-card device check (the KV260 SSH-Not-SD-Card Discipline).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4660_hardware_continuity.json (the .429 C audit schema: per_board_reachability + per_board_state + kv260_precondition ssh-only)
+        - {project_root}/results/experiment_4672_hardware_continuity.json (the .430 C audit schema: per_board_reachability + per_board_state + kv260_precondition ssh-only)
         - {project_root}/ops/hardware-bringup-prep.md (per-board bring-up state) + the CLAUDE.md "Pre-Launch Preconditions" board-reachability table
 
       CONCRETE STEPS:
@@ -874,55 +922,56 @@ tasks:
         preconditions_checked:
           principle: "records WHICH board checks ran + their results; pre-empts silent-missing-hardware fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4672_hardware_continuity.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4684_hardware_continuity.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4673-d
-    milestone: 2026.06.430
-    title: 'PHASE D (SOTA-INGESTION -> .431) -- focused literature pass on the STRUCTURAL multi-level-deepening fallback (if A1
-      L2-goal-induction + A2 distribution-shift value-routing both null, the next lever is a bigger architectural move). Map the
-      strongest 3-5 SOTA methods -- hierarchical-subgoal-search over the live E3 frontier (arXiv:2604.03208/2506.07255/2504.04366)
-      + PoE-World factored-executable-model subgoal planner (2505.10819/2605.05138) -- with arXiv IDs + implement-cost +
-      fails_when, and FLAG the strongest for .431. Reliable sweep + WebSearch/WebFetch only; /deep-research BANNED.'
+  - id: exp4685-d
+    milestone: 2026.06.431
+    title: 'PHASE D (SOTA-INGESTION -> .432) -- focused literature pass on the NEXT fallback if .431''s GENERATION levers (A1
+      hierarchical subgoal + A2 PoE-World factored planner) null: learned / intrinsic-motivation DIRECTED EXPLORATION for
+      L1-first-contact generation (the agent reaches first-win on only 1/25 games -- it needs better exploration to MAKE the
+      winning trajectory APPEAR at L1) + program-synthesis action-model induction. Map the strongest 3-5 SOTA methods with arXiv
+      IDs + implement-cost-over-current-stack + fails_when, and FLAG the strongest for .432. Reliable sweep + WebSearch/WebFetch
+      only; /deep-research BANNED.'
     priority: medium
     track: sota-ingestion
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4673_sota_ingestion_structural_deepening.json
+    deliverable: results/experiment_4685_sota_ingestion_directed_exploration.json
     operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (STANDING: reserve a SOTA-ingestion slot per bleeding-edge
-      milestone) + the ARC sprint headline (multi-level deepening). Routine ingestion continuation of the .429 D (exp4661, which
-      flagged hierarchical-subgoal-search + PoE-World for .430). The forward difference is the .431 direction (the STRUCTURAL
-      deepening fallback if .430''s two precise levers null) -- deepening the .429-flagged tracks with implement-cost-over-current
-      -stack + a primitive-level method map. False-positive fuzzy-token scope-match vs prior SOTA-ingestion tasks. Not a doomed rerun.'
+      milestone) + the ARC sprint headline (candidate generation). Routine ingestion continuation of the .430 D (exp4673, which
+      flagged hierarchical-subgoal-search + PoE-World for .431). The forward difference is the .432 direction (DIRECTED EXPLORATION
+      for L1-first-contact generation, the deeper wall the .430 honest first-win=0.04 measurement exposed) -- a NEW track, not a
+      deepening of the .431 tracks. False-positive fuzzy-token scope-match vs prior SOTA-ingestion tasks. Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint -- the 1 reserved SOTA-ingestion slot, feeding .431). .430 attacks the multi-level wall from two
-      PRECISE measured levers (A1 L2-goal-induction, A2 distribution-shift value-routing). IF both null, the next lever is a bigger
-      STRUCTURAL move. The .429 D ingestion already flagged the two strongest tracks for .430 but they were deferred in favor of
-      the precise levers; this task DEEPENS them into an implementable .431 plan: (1) hierarchical-subgoal-search over the live E3
-      frontier (arXiv:2604.03208 + 2506.07255 + 2504.04366) -- a high-level subgoal layer above the frontier where A1's induced
-      goal + A2's value head are the tie-breaker/proposer inside each bounded subgoal search; (2) PoE-World factored-executable-model
-      subgoal planner (2505.10819 + 2605.05138) -- induce small programmatic experts for object-level preconditions/effects,
-      weight by held-out transition trust, plan subgoal-conditioned sequences through the product model. RELIABLE channel ONLY:
-      scripts/sweep_clusters.py / sweep_semscholar.py (arXiv / Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top
-      5-8 papers. /deep-research is BANNED in the autonomous loop. Every method claim MUST cite a REAL arXiv ID (no citation =
+      CONTEXT ({date}, ARC sprint -- the 1 reserved SOTA-ingestion slot, feeding .432). .431 attacks the make-a-winner-appear wall
+      from two STRUCTURAL generation levers (A1 hierarchical subgoal search, A2 PoE-World factored planner). IF both null, the
+      .430 honest measurement (generic first-win 0.04 = only 1/25 games reach L1) points at a DEEPER generation wall: the agent
+      cannot even MAKE a winning L1 trajectory appear on 24/25 games -- a DIRECTED-EXPLORATION problem (the explorer's action
+      proposal distribution does not cover the winning trajectory). This task maps the strongest SOTA for THAT next wall: (1)
+      learned / intrinsic-motivation DIRECTED EXPLORATION (novelty/curiosity/empowerment-driven action proposal so the winning
+      trajectory enters the candidate distribution at L1 first-contact); (2) PROGRAM-SYNTHESIS action-model induction (induce the
+      per-game action->effect program so the explorer proposes mechanically-relevant actions, not blind clicks). RELIABLE channel
+      ONLY: scripts/sweep_clusters.py / sweep_semscholar.py (arXiv / Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the
+      top 5-8 papers. /deep-research is BANNED in the autonomous loop. Every method claim MUST cite a REAL arXiv ID (no citation =
       fabrication).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4661_sota_ingestion_generation_guidance.json + {project_root}/docs/research-notes/generation-guidance-sota-ingestion-2026-06-24.md (the .429 ingestion + the two flagged tracks: hierarchical-subgoal-search 2604.03208/2506.07255/2504.04366, PoE-World 2505.10819/2605.05138)
-        - {project_root}/results/experiment_4664_l2_goal_predicate_induction_live.json + {project_root}/results/experiment_4665_dagger_distribution_shift_value_routing.json (A1/A2 -- read their honest_verdict + residual_cause to scope the .431 fallback precisely)
+        - {project_root}/results/experiment_4673_sota_ingestion_structural_deepening.json + {project_root}/docs/research-notes/structural-deepening-sota-ingestion-2026-06-24.md (the .430 ingestion + the two structural tracks .431 is building -- to scope the .432 fallback BEYOND them)
+        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json + {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (A1/A2 -- read their honest_verdict + wall_diagnosis + residual to scope the .432 fallback precisely: if the wall is L1-first-contact, directed exploration is the lever)
         - {project_root}/research-studying.md + {project_root}/research-references.md (the already-discovered corpus to filter; mark ingested)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `curl -sf -o /dev/null https://huggingface.co/api/models` exits 0 (network) AND `.venv/bin/python scripts/sweep_clusters.py --help` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Read the .429-flagged tracks + run a FOCUSED fresh sweep (sweep_clusters.py / sweep_semscholar.py) on hierarchical-subgoal-search / factored-executable-world-model / subgoal-conditioned planning. WebSearch/WebFetch the top 5-8.
-        2. Synthesize the strongest 3-5 methods: per-method what it would take over the CURRENT stack (A1 L2-goal-induction + A2 distribution-corrected value-routing + the live E3 path) + where each fails. Write the per-track note. Scope precisely to the A1/A2 residual (read their artifacts).
-        3. FLAG the strongest method(s) as candidate .431 inputs (flagged_for_v431) + update research-studying.md (mark ingested). Every method cites a real arXiv ID.
+        1. Read the .431 A1/A2 residuals + run a FOCUSED fresh sweep (sweep_clusters.py / sweep_semscholar.py) on directed-exploration / intrinsic-motivation / novelty-search / empowerment + program-synthesis action-model induction for interactive agents. WebSearch/WebFetch the top 5-8.
+        2. Synthesize the strongest 3-5 methods: per-method what it would take over the CURRENT stack (the live E3 explorer + A1 subgoal search + A2 factored planner) + where each fails. Write the per-track note. Scope precisely to the A1/A2 residual + the L1-first-contact wall.
+        3. FLAG the strongest method(s) as candidate .432 inputs (flagged_for_v432) + update research-studying.md (mark ingested). Every method cites a real arXiv ID.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: sota_ingestion_structural_deepening_mapped."
+          principle: "terminal prefix; success: sota_ingestion_directed_exploration_mapped."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor)."
         deep_research_not_used:
@@ -932,79 +981,82 @@ tasks:
         citations_verified:
           principle: "each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations."
         flagged_for_next_roadmap:
-          principle: "the strongest method(s) flagged as candidate .431 inputs (flagged_for_v431) -- closes discover->ingest->plan->experiment."
+          principle: "the strongest method(s) flagged as candidate .432 inputs (flagged_for_v432) -- closes discover->ingest->plan->experiment."
         note_path:
           principle: "the per-track research-note path (the SOTA-Ingestion Cycle deliverable)."
         preconditions_checked:
           principle: "records network reachability verified; pre-empts fabricated citations."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4673_sota_ingestion_structural_deepening.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4685_sota_ingestion_directed_exploration.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4674-e
-    milestone: 2026.06.430
-    title: 'PHASE E (CAPSTONE .430) -- aggregate the scorecard + the HEADLINE DECISION: did L2-GOAL-PREDICATE INDUCTION (A1)
-      cross the bridge for live multi-level solve (the GENERIC agent reaches L2 on lp85/sc25 offline-reproduced), did DAgger-lite
-      distribution-shift value-routing (A2) lift live first-win/solve-rate (CI excludes baseline + shift-score drops), did A3
-      bank +1 (58->59+)? Skip flagged_adversarial / control-failed / vacuous-goal artifacts. Confirm verifier_is_oracle:false on
-      every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
+  - id: exp4686-e
+    milestone: 2026.06.431
+    title: 'PHASE E (CAPSTONE .431) -- aggregate the scorecard + the HEADLINE DECISION: did CANDIDATE GENERATION cross the
+      offline->live bridge for SOLVE-RATE/DEPTH where six milestones of SELECTION could not -- did hierarchical subgoal search
+      (A1) make the GENERIC agent reach a NEW level (offline-reproduced, no-subgoal AND random-subgoal ablations failing), did the
+      PoE-World factored planner (A2) raise candidate-generation coverage + lift live first-win/solve (CI excludes baseline), did
+      A3 bank +1 (59->60+)? Skip flagged_adversarial / control-failed / decomposition-missing artifacts. Confirm
+      verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission
+      operator-only.'
     priority: high
     track: capstone
     max_turns: 40
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4674_capstone_v430.json
-    operator_override: '2026-06-19 ARC sprint (capstone per milestone, codex-routed): routine capstone continuation of the .429
-      capstone (exp4662, capability_grew_57_to_58). The forward difference is the .430 scorecard (L2-goal induction + DAgger-lite
-      value-routing + the next bank). False-positive fuzzy-token scope-match vs prior capstone tasks. Not a doomed rerun.'
+    deliverable: results/experiment_4686_capstone_v431.json
+    operator_override: '2026-06-19 ARC sprint (capstone per milestone, codex-routed): routine capstone continuation of the .430
+      capstone (exp4674, capability_grew_58_to_59). The forward difference is the .431 scorecard (hierarchical subgoal search +
+      PoE-World factored planner + the next bank). False-positive fuzzy-token scope-match vs prior capstone tasks. Not a doomed
+      rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint CAPSTONE .430). Aggregate the milestone scorecard + the HEADLINE DECISION. Read EVERY upstream
+      CONTEXT ({date}, ARC sprint CAPSTONE .431). Aggregate the milestone scorecard + the HEADLINE DECISION. Read EVERY upstream
       artifact via `python3 scripts/summarize_artifact.py` (Reading-Results Discipline) -- never eyeball raw JSON. SKIP any
-      flagged_adversarial / control-failed / vacuous-goal artifact from the headline (fabrication-gate + false-negative-risk +
-      the .430-B2 guards compliance): A1's L2-induction win counts ONLY if it reports goal_predicate_satisfiable=true +
-      l2_plan_reaches_goal=true + offline_reproduced + the FIXED metric harness (NOT the degenerate 0.0-by-construction metric);
-      A2's value-routing win counts ONLY if the CI excludes the .429 winning-path baseline AND the distribution-shift score
-      dropped. The authoritative reproducible_total_levels is the REGISTRY header (A3 bank). Confirm verifier_is_oracle:false on
-      every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 NEVER substituted). Submission operator-only
-      (leaderboard_submission=false).
+      flagged_adversarial / control-failed / decomposition-missing artifact from the headline (fabrication-gate +
+      false-negative-risk + the .431-B2 guards compliance): A1's subgoal-search win counts ONLY if it reports
+      subgoal_decomposition + per_subgoal_reachable + the no-subgoal AND random-subgoal ablations BOTH strictly lower +
+      offline_reproduced; A2's factored-planner win counts ONLY if coverage_delta>0 (the winner appears where the flat baseline
+      did not) AND the live-lift CI excludes the flat baseline. The authoritative reproducible_total_levels is the REGISTRY header
+      (A3 bank). Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 NEVER
+      substituted). Submission operator-only (leaderboard_submission=false).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4662_capstone_v429.json (the .429 capstone schema to mirror)
+        - {project_root}/results/experiment_4674_capstone_v430.json (the .430 capstone schema to mirror)
         - {project_root}/scripts/summarize_artifact.py (the MANDATORY reading path) + {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/publication_gate.py (G1-G4)
-        - the .430 upstream artifacts: results/experiment_4664 (A1 L2-goal induction), 4665 (A2 DAgger value-routing), 4666 (A3 bank), 4667 (A4 package), 4668 (A5 transfer), 4669 (A6 integration), 4670 (B1), 4671 (B2) + {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)
+        - the .431 upstream artifacts: results/experiment_4676 (A1 hierarchical subgoal search), 4677 (A2 PoE-World factored planner), 4678 (A3 bank), 4679 (A4 package), 4680 (A5 transfer), 4681 (A6 integration), 4682 (B1), 4683 (B2) + {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "import json,yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0 AND every cited upstream artifact exists. Missing -> blocked_<resource>, EXIT.
-        1. Read each upstream artifact via summarize_artifact.py; record honest_verdict + flagged/control/vacuous-goal status + sha256. EXCLUDE flagged/control-failed/vacuous-goal artifacts from the headline.
-        2. Aggregate the headline: A1 generic-agent-reached-L2 (only if goal_predicate_satisfiable + l2_plan_reaches_goal + offline_reproduced + fixed-harness) + A2 live first-win/solve-rate delta (only if CI-clean + shift-score dropped) + A3 reproducible_total_levels_delta + A4 live-submittable count. Compute the bridge_crossed_for_solve decision.
+        1. Read each upstream artifact via summarize_artifact.py; record honest_verdict + flagged/control/decomposition-missing status + sha256. EXCLUDE flagged/control-failed/decomposition-missing artifacts from the headline.
+        2. Aggregate the headline: A1 generic-agent-reached-new-level (only if subgoal_decomposition + per_subgoal_reachable + both ablations strictly lower + offline_reproduced) + A2 coverage_delta + live first-win/solve delta (only if coverage_delta>0 AND CI excludes the flat baseline) + A3 reproducible_total_levels_delta + A4 live-submittable count. Compute the bridge_crossed_for_solve decision.
         3. Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Emit the operator-only submission status (leaderboard_submission=false).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: bridge_crossed_live_generic_L2_<games> OR complete: multi_level_deepening_levers_characterized_no_live_L2 OR complete: capability_grew_58_to_<n>."
+          principle: "terminal prefix; success: bridge_crossed_live_generic_new_level_via_generation_<games> OR complete: candidate_generation_levers_characterized_no_live_new_level OR complete: capability_grew_59_to_<n>."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
         cited_upstream_artifacts:
           principle: "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
-        a1_generic_agent_reached_l2:
-          principle: "the A1 L2-goal-induction result -- the generic agent's deepest level on lp85/sc25, counted ONLY if goal_predicate_satisfiable + l2_plan_reaches_goal + offline_reproduced + the FIXED non-degenerate metric harness."
-        a2_value_routing_live_lift:
-          principle: "the A2 DAgger-lite distribution-corrected value-routing live first-win/solve-rate delta -- counted ONLY if the CI excludes the .429 baseline AND the distribution-shift score dropped."
+        a1_hierarchical_subgoal_new_level:
+          principle: "the A1 result -- the generic agent's new level via subgoal search, counted ONLY if subgoal_decomposition + per_subgoal_reachable + the no-subgoal AND random-subgoal ablations BOTH strictly lower + offline_reproduced."
+        a2_factored_planner_coverage_and_lift:
+          principle: "the A2 result -- coverage_delta (winner-now-generated) + live first-win/solve lift, counted ONLY if coverage_delta>0 AND the live-lift CI excludes the matched flat baseline."
         reproducible_total_levels:
-          principle: "authoritative from the registry (A3 bank, 58->59+) -- did solve CAPABILITY grow."
+          principle: "authoritative from the registry (A3 bank, 59->60+) -- did solve CAPABILITY grow."
         reproducible_total_levels_delta:
-          principle: "registry after - 58, emitted explicitly so a null is annotated."
+          principle: "registry after - 59, emitted explicitly so a null is annotated."
         bridge_crossed_for_solve:
-          principle: "the headline decision -- did A1 (L2-goal induction) or A2 (distribution-shift value-routing) cross the offline->live bridge for SOLVE-RATE/DEPTH (the GENERIC agent reaches L2), or did multi-level deepening get characterized as another honest null."
+          principle: "the headline decision -- did GENERATION (A1 subgoal search / A2 factored planner) cross the offline->live bridge for SOLVE-RATE/DEPTH (the GENERIC agent reaches a NEW level via candidate-generation improvement), or did the generation levers get characterized as another honest null (the 7th milestone)."
         live_submittable_level_count:
           principle: "the A4 operator-resubmit count (must stay > 33)."
         flagged_artifacts_handled:
-          principle: "names any flagged_adversarial / control-failed / vacuous-goal artifact EXCLUDED + the guards applied (.429-B2 QD-ablation/value-routing-cost + .430-B2 L2-goal-satisfiability/multi-level-metric) -- fabrication-gate + false-negative-risk compliance."
+          principle: "names any flagged_adversarial / control-failed / decomposition-missing artifact EXCLUDED + the guards applied (.430-B2 L2-goal/multi-level-metric + .431-B2 subgoal-decomposition/coverage-baseline) -- fabrication-gate + false-negative-risk compliance."
         verifier_is_oracle:
           principle: "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
         paper_ready:
-          principle: "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .430 headline."
+          principle: "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .431 headline."
         leaderboard_submission:
           principle: "MUST be false -- submission is operator-only (External Publication Discipline)."
         random_seed:
@@ -1014,5 +1066,5 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4674_capstone_v430.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4686_capstone_v431.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
