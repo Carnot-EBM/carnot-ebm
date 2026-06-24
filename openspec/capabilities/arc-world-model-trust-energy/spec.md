@@ -1525,6 +1525,121 @@ one of `winning_prefix_still_not_proposed`,
 `controllability_embedding_rewards_non_winning_controllable_states`, or
 `novelty_revisits_dead_states` as the next residual.
 
+### REQ-ARC-WMTE-4689: Program-Synthesis Action-Effect Proposal Filter
+
+Experiment 4689 SHALL implement the `.432` A2 program-synthesis
+action-effect proposal filter from REQ-ARC-WMTE-4685 in the live
+`E3AgentPolicy` import closure. The live agent SHALL induce small per-game
+action-to-effect programs from its own observed transition prefixes using the
+Qwen3.5-9B-MTP local proposer on a free non-8919 port, validate every induced
+program against held-out transitions that were not shown in the proposal
+prefix, and reject every program that fails held-out validation. Only surviving
+held-out-validated programs SHALL be allowed to prune primitive live explorer
+proposals.
+
+The filter SHALL use surviving programs to keep mechanically relevant primitive
+clicks or key actions, where mechanical relevance means at least one trusted
+program applies to the candidate action and predicts a visible state effect.
+The filter MAY fall back to the unfiltered candidate set when no trusted program
+matches any candidate, but it SHALL record that fallback as a no-prune event.
+The induced programs and the proposal filter SHALL remain oracle-distinct from
+the executable reproduction win-check; a proposal may enter the pool because a
+program predicts an effect, but a solve only counts after live execution and
+offline reproduction accepts it.
+
+Experiment 4689 SHALL measure candidate-generation coverage against a matched
+blind-proposal baseline on the same target games. Coverage is the fraction of
+attempts where the known winning action or plan appears in the generated pool.
+A generation claim SHALL require
+`candidate_generation_coverage_filter >
+candidate_generation_coverage_blind_baseline`, so the winning plan appeared in
+the filter-pruned pool where blind sweeping did not. A downstream first-win
+claim SHALL additionally require a positive held-out first-win-rate delta with
+bootstrap CI excluding the blind baseline on at least one game. If coverage
+does not rise, the artifact SHALL report an honest null and log exactly one
+residual bridge gap from `heldout_transitions_too_sparse` or
+`program_cannot_target_winning_action`.
+
+Before measurement, experiment 4689 SHALL verify that the Qwen3.5-9B-MTP GGUF
+is cached, `arc_solver_kit.offline_arcade()` initializes, the live
+`arc_executable_world_model`, `arc_llm_reinduction`, and
+`arc_competition_agent` modules import, and the proposer `/props` endpoint
+reports Qwen3.5-9B-MTP rather than Gemma. If any precondition fails, it SHALL
+write a blocked artifact with `preconditions_checked` populated rather than
+fabricate a run. The live-path lint and submitted-agent parity test are hard
+gates.
+
+The artifact at
+`results/experiment_4689_program_synthesis_action_effect_proposal_filter.json`
+SHALL include `honest_verdict`, `inference_substrate`,
+`verifier_is_oracle`, `solve_provenance`, `live_path_reachable`,
+`candidate_generation_coverage_filter`,
+`candidate_generation_coverage_blind_baseline`, `coverage_delta`,
+`heldout_programs_kept`, `heldout_programs_rejected`,
+`live_first_win_rate_filter`, `live_baseline_blind_proposal`,
+`first_win_rate_delta`, `live_lift_ci`, `bare_control_passed`,
+`false_negative_risk_checked`, `null_methodology_note`,
+`chosen_submitted_config`, `proposer_served_model`, `parity_test_green`,
+`offline_reproduced`, `residual_bridge_gap`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_<game> OR complete: program_synthesis_filter_no_coverage_gain_residual_logged."
+- `inference_substrate`: principle "live_llm_inference -- the program-synthesis induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the induced action->effect programs are oracle-DISTINCT from the executable reproduction win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- the generic agent's OWN runtime program induction; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `candidate_generation_coverage_filter`: principle "does the winning action/plan APPEAR in the filter-pruned proposal pool -- the make-a-winner-appear signal (the metric that distinguishes generation from selection)."
+- `candidate_generation_coverage_blind_baseline`: principle "the matched BLIND-PROPOSAL baseline coverage -- a coverage CLAIM requires the filter coverage to exceed it (the winner proposed where blind sweeping did not)."
+- `coverage_delta`: principle "filter - blind coverage (positive = the winner now proposed); emitted explicitly so a null (0) is annotated."
+- `heldout_programs_kept`: principle "the count of induced action->effect programs that PASSED held-out transition validation (only these prune proposals -- the experts_overfit_prefix fix)."
+- `heldout_programs_rejected`: principle "the count REJECTED for failing held-out transitions -- proves held-out rejection actually ran (no prefix-overfit program survived)."
+- `live_first_win_rate_filter`: principle "the held-out first-win-rate WITH the proposal filter on the SCORED agent."
+- `live_baseline_blind_proposal`: principle "the matched blind-proposal baseline first-win on the SAME games (the no-regression control)."
+- `first_win_rate_delta`: principle "filter - baseline first-win-rate; emitted explicitly so a null is annotated."
+- `live_lift_ci`: principle "bootstrap CI on the first-win lift; a claim above baseline requires the CI to exclude it."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable L1 headroom; a no-coverage-gain null is valid only then."
+- `false_negative_risk_checked`: principle "true with the matched blind baseline + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
+- `null_methodology_note`: principle "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (proposal filter on, held-out trust threshold) -- the A6 input; 'unchanged' if null."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `residual_bridge_gap`: principle "the .433 generation gap logged if coverage does not rise (heldout_transitions_too_sparse | program_cannot_target_winning_action)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4689-HELDOUT-REJECTION
+
+Given observed transition prefixes, held-out transitions, and proposed small
+action-effect programs
+When the program-synthesis proposal filter validates the programs
+Then every program that fails held-out transitions is rejected, every surviving
+program is counted in `heldout_programs_kept`, every rejected program is counted
+in `heldout_programs_rejected`, and only surviving programs can prune live
+primitive proposals.
+
+#### SCENARIO-ARC-WMTE-4689-PROPOSAL-PRUNING
+
+Given held-out-validated action-effect programs and a live explorer candidate
+set
+When the live `StepwiseExplorer` generates primitive proposals
+Then the proposal filter keeps candidates with trusted predicted effects,
+prunes mechanically irrelevant candidates before controllable novelty or value
+ranking, records diagnostics, and falls back to the unfiltered set only when no
+candidate has a trusted predicted effect.
+
+#### SCENARIO-ARC-WMTE-4689-COVERAGE-CONTROL
+
+Given the proposal filter and a matched blind-proposal baseline on the same
+target games
+When experiment 4689 measures generated candidate pools
+Then the artifact reports filter coverage, blind coverage, explicit coverage
+delta, held-out kept/rejected counts, first-win delta, bootstrap CI, and an
+honest null note plus residual when the winning plan does not newly appear.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness

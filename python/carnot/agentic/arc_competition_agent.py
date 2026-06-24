@@ -34,6 +34,10 @@ import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
+from carnot.agentic.arc_program_synthesis_filter import (
+    coerce_program_synthesis_filter,
+    induce_action_effect_proposal_filter,
+)
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     load_live_action_effect_scorer,
@@ -98,6 +102,8 @@ SUBMITTED_QD_GENERATION_ENABLED = False
 SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
 SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
 SUBMITTED_CONTROLLABLE_NOVELTY_MODE = "episodic_knn_plus_rnd_action_effect_embedding"
+SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED = False
+SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD = 0.75
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -274,6 +280,7 @@ class StepwiseExplorer:
         goal_bias_lower_is_better: bool = True,
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
+        program_synthesis_filter: Any | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -397,6 +404,7 @@ class StepwiseExplorer:
             controllable_novelty,
             action_effect_scorer=self.frame_change_scorer,
         )
+        self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         self._qd_sequences_injected = 0
         self._qd_actions_injected = 0
         self._qd_generation_errors = 0
@@ -632,6 +640,18 @@ class StepwiseExplorer:
             return {"enabled": False}
         return self.controllable_novelty_policy.diagnostics()
 
+    def set_program_synthesis_filter(self, proposal_filter: Any | None) -> None:
+        """REQ-ARC-WMTE-4689: install held-out-validated action-effect pruning."""
+
+        self.program_synthesis_filter = coerce_program_synthesis_filter(proposal_filter)
+
+    def program_synthesis_filter_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-4689: expose held-out counts and pruning diagnostics."""
+
+        if self.program_synthesis_filter is None:
+            return {"enabled": False}
+        return self.program_synthesis_filter.diagnostics()
+
     def _curiosity_score(self, node_hash: str) -> float:
         if self.dense_curiosity is None:
             return 0.0
@@ -739,6 +759,8 @@ class StepwiseExplorer:
             self._adaptive_budget_history.append(decision.as_dict())
             candidates = gated
         rows = [{"action": int(c.action_id), "data": c.data} for c in candidates]
+        if self.program_synthesis_filter is not None:
+            rows = self.program_synthesis_filter.rank_candidates(frame, rows)
         return self._apply_controllable_novelty_order(frame, rows)
 
     def _apply_controllable_novelty_order(
@@ -1574,6 +1596,10 @@ class E3AgentPolicy:
         goal_bias: Any = _DEFAULT_GOAL_BIAS,
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
+        program_synthesis_filter: Any | bool | None = SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED,
+        program_synthesis_filter_trust_threshold: float = (
+            SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
+        ),
         subgoal_search: bool = False,
         subgoal_budget: int = 3,
         factored_planner: bool = False,
@@ -1588,6 +1614,12 @@ class E3AgentPolicy:
         self.subgoal_budget = max(1, int(subgoal_budget))
         self.factored_planner = bool(factored_planner)
         self.factored_trust_threshold = max(0.0, min(1.0, float(factored_trust_threshold)))
+        self.program_synthesis_filter_enabled = bool(program_synthesis_filter)
+        self.program_synthesis_filter_trust_threshold = max(
+            0.0,
+            min(1.0, float(program_synthesis_filter_trust_threshold)),
+        )
+        initial_program_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
             candidate_router = _load_submitted_candidate_router()
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
@@ -1642,6 +1674,7 @@ class E3AgentPolicy:
             goal_bias_lower_is_better=True,
             qd_generator=qd_generator,
             controllable_novelty=controllable_novelty,
+            program_synthesis_filter=initial_program_filter,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -1978,6 +2011,33 @@ class E3AgentPolicy:
             return
 
         try:
+            if self.program_synthesis_filter_enabled:
+                try:
+                    filter_result = induce_action_effect_proposal_filter(
+                        game=self.short,
+                        transitions=active_transitions,
+                        proposer=self._proposer(),
+                        cell=self.cell,
+                        trust_threshold=self.program_synthesis_filter_trust_threshold,
+                    )
+                    self.explorer.set_program_synthesis_filter(filter_result.proposal_filter)
+                    attempt["program_synthesis_filter_used"] = True
+                    attempt["program_synthesis_filter_residual"] = filter_result.residual
+                    attempt["heldout_programs_kept"] = int(
+                        filter_result.heldout_programs_kept
+                    )
+                    attempt["heldout_programs_rejected"] = int(
+                        filter_result.heldout_programs_rejected
+                    )
+                    attempt["program_trust_weights"] = list(
+                        filter_result.program_trust_weights
+                    )
+                    attempt["program_synthesis_filter_diagnostics"] = (
+                        self.explorer.program_synthesis_filter_diagnostics()
+                    )
+                except Exception as filter_exc:
+                    attempt["program_synthesis_filter_used"] = False
+                    attempt["program_synthesis_filter_error"] = repr(filter_exc)[:160]
             # PRIOR-WARM-STARTED LEARNED ENGINE (2026-06-21): try the per-game world model LEARNED from the
             # played transitions (warm-started from the cross-game CNN prior that transfers 5/5 to unseen
             # games), GATED by the same >=0.5 held-out trust bar the LLM path uses. If it earns trust and
@@ -2212,6 +2272,12 @@ SUBMITTED_AGENT_CONFIG = {
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
     "controllable_novelty_proposal_enabled": SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
     "controllable_novelty_proposal_mode": SUBMITTED_CONTROLLABLE_NOVELTY_MODE,
+    "program_synthesis_proposal_filter_enabled": (
+        SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED
+    ),
+    "program_synthesis_proposal_filter_trust_threshold": (
+        SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
+    ),
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

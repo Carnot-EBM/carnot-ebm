@@ -1,0 +1,283 @@
+{
+  "bare_control_passed": true,
+  "candidate_generation_coverage_blind_baseline": 0.0,
+  "candidate_generation_coverage_filter": 0.0,
+  "chosen_submitted_config": "unchanged",
+  "coverage_delta": 0.0,
+  "duration_s": 60.000101,
+  "experiment": "experiment_4689_program_synthesis_action_effect_proposal_filter",
+  "experiment_id": 4689,
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "bare_control_passed": {
+      "principle": "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable L1 headroom; a no-coverage-gain null is valid only then."
+    },
+    "candidate_generation_coverage_blind_baseline": {
+      "principle": "the matched BLIND-PROPOSAL baseline coverage -- a coverage CLAIM requires the filter coverage to exceed it (the winner proposed where blind sweeping did not)."
+    },
+    "candidate_generation_coverage_filter": {
+      "principle": "does the winning action/plan APPEAR in the filter-pruned proposal pool -- the make-a-winner-appear signal (the metric that distinguishes generation from selection)."
+    },
+    "chosen_submitted_config": {
+      "principle": "the recommended SUBMITTED_AGENT_CONFIG change (proposal filter on, held-out trust threshold) -- the A6 input; 'unchanged' if null."
+    },
+    "coverage_delta": {
+      "principle": "filter - blind coverage (positive = the winner now proposed); emitted explicitly so a null (0) is annotated."
+    },
+    "false_negative_risk_checked": {
+      "principle": "true with the matched blind baseline + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
+    },
+    "first_win_rate_delta": {
+      "principle": "filter - baseline first-win-rate; emitted explicitly so a null is annotated."
+    },
+    "heldout_programs_kept": {
+      "principle": "the count of induced action->effect programs that PASSED held-out transition validation (only these prune proposals -- the experts_overfit_prefix fix)."
+    },
+    "heldout_programs_rejected": {
+      "principle": "the count REJECTED for failing held-out transitions -- proves held-out rejection actually ran (no prefix-overfit program survived)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_<game> OR complete: program_synthesis_filter_no_coverage_gain_residual_logged."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the program-synthesis induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor)."
+    },
+    "live_baseline_blind_proposal": {
+      "principle": "the matched blind-proposal baseline first-win on the SAME games (the no-regression control)."
+    },
+    "live_first_win_rate_filter": {
+      "principle": "the held-out first-win-rate WITH the proposal filter on the SCORED agent."
+    },
+    "live_lift_ci": {
+      "principle": "bootstrap CI on the first-win lift; a claim above baseline requires the CI to exclude it."
+    },
+    "live_path_reachable": {
+      "principle": "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+    },
+    "null_methodology_note": {
+      "principle": "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+    },
+    "offline_reproduced": {
+      "principle": "any newly-solved variant must offline-reproduce to count."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
+    },
+    "proposer_served_model": {
+      "principle": "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift on replay."
+    },
+    "residual_bridge_gap": {
+      "principle": "the .433 generation gap logged if coverage does not rise (heldout_transitions_too_sparse | program_cannot_target_winning_action)."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- the generic agent's OWN runtime program induction; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the induced action->effect programs are oracle-DISTINCT from the executable reproduction win-check."
+    }
+  },
+  "first_win_rate_delta": -0.04,
+  "heldout_programs_kept": 0,
+  "heldout_programs_rejected": 2,
+  "honest_verdict": "complete: program_synthesis_filter_no_coverage_gain_residual_logged",
+  "inference_substrate": "live_llm_inference",
+  "live_baseline_blind_proposal": {
+    "first_win_hits": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "first_win_rate": 0.04,
+    "source": "results/experiment_4665_dagger_distribution_shift_value_routing.json",
+    "variant_attempts_count": 25
+  },
+  "live_first_win_rate_filter": 0.0,
+  "live_lift_ci": {
+    "high": 0.0,
+    "low": -0.12,
+    "metric": "first_win_rate_delta",
+    "n_boot": 1000
+  },
+  "live_path_reachable": true,
+  "null_methodology_note": "Filter and blind candidate-generation coverage are equal at this bounded probe; this is an honest no-value null after Qwen /props verification, held-out program rejection, a matched blind baseline, and reachable-headroom control, not a measurement bug.",
+  "offline_reproduced": false,
+  "parity_test_green": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (35 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "live_modules_importable": true,
+    "offline_arcade": true,
+    "ok": true,
+    "parity_test": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov -n 0",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 11 items\n\ntests/python/test_arc_submitted_agent_parity.py ...........              [100%]\n\n============================== 11 passed in 3.75s ==============================\n"
+    },
+    "proposer_props_excerpt": "{\"bos_token\": \",\", \"build_info\": \"b9606-9b4dae81f\", \"chat_template\": \"{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception('System message cannot contain images.') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\\n                {%- endif %}\\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\\n   ",
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen_proposer_port": 8920,
+    "qwen_proposer_port_verified": true,
+    "spec_has_req_4689": true
+  },
+  "proposer_served_model": "Qwen3.5-9B-MTP",
+  "random_seed": 4689,
+  "reproducibility_checksum": "sha256:66694f05b8f7fb0541bc51540ce80937bd15ae0978253daf292a82721adbb38a",
+  "residual_bridge_gap": "heldout_transitions_too_sparse",
+  "schema": "carnot.arc.program_synthesis_action_effect_proposal_filter_4689.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4689",
+    "SCENARIO-ARC-WMTE-4689-HELDOUT-REJECTION",
+    "SCENARIO-ARC-WMTE-4689-PROPOSAL-PRUNING",
+    "SCENARIO-ARC-WMTE-4689-COVERAGE-CONTROL"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_arm_results": {
+    "baseline_blind_proposal": {
+      "first_win_hits": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "first_win_rate": 0.04,
+      "source": "results/experiment_4665_dagger_distribution_shift_value_routing.json",
+      "variant_attempts_count": 25
+    },
+    "candidate_generation_probe": {
+      "blind_hits": [
+        false
+      ],
+      "candidate_generation_coverage_blind_baseline": 0.0,
+      "candidate_generation_coverage_filter": 0.0,
+      "filter_first_win_hits": [
+        false
+      ],
+      "filter_hits": [
+        false
+      ],
+      "heldout_programs_kept": 0,
+      "heldout_programs_rejected": 2,
+      "program_trust_weights": [
+        {
+          "game": "bp35",
+          "heldout_correct": 0,
+          "heldout_total": 0,
+          "kept": false,
+          "name": "blue_to_red",
+          "object_class": "blue",
+          "trust": 0.0
+        },
+        {
+          "game": "bp35",
+          "heldout_correct": 0,
+          "heldout_total": 0,
+          "kept": false,
+          "name": "blue_to_red",
+          "object_class": "blue",
+          "trust": 0.0
+        }
+      ],
+      "rows": [
+        {
+          "attempted": true,
+          "blind_winner_in_pool": false,
+          "filter_winner_in_pool": false,
+          "game": "bp35",
+          "heldout_programs_kept": 0,
+          "heldout_programs_rejected": 2,
+          "program_filter_residual": "heldout_transitions_too_sparse",
+          "program_trust_weights": [
+            {
+              "heldout_correct": 0,
+              "heldout_total": 0,
+              "kept": false,
+              "name": "blue_to_red",
+              "object_class": "blue",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 0,
+              "kept": false,
+              "name": "blue_to_red",
+              "object_class": "blue",
+              "trust": 0.0
+            }
+          ],
+          "transitions": 12,
+          "winner_transition_observed": false
+        }
+      ],
+      "target_games": [
+        "bp35"
+      ]
+    },
+    "live_filter_measurement_note": "No downstream first-win lift is claimed unless candidate-generation coverage rises, live execution improves first-win rate, bootstrap CI excludes the blind baseline, and offline reproduction accepts any new solve."
+  },
+  "target_games": [
+    "bp35"
+  ],
+  "verifier_is_oracle": false
+}
