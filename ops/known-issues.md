@@ -4,6 +4,89 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-06-24 (MANDATORY-NEXT-MILESTONE, operator-directed leader-gap analysis): GOAL-FREE ONLINE ACTION-LEARNING loop — the leader's loop, weighed against the multi-level wall
+
+**Origin:** operator asked to gap-analyze the leaderboard #1 (StochasticGoose ~1.21) vs our live agent
+(0.08) and identify the forward path. Workflow `wf_dd932102-24e` (verdict CONFIRMED, hand-verified in code);
+full synthesis `docs/research-notes/leader-gap-online-action-learning-vs-multilevel-wall-2026-06-24.md`.
+**This is the highest-leverage ARC lever for the 2026-06-30 deadline. Build it; do not re-derive the gap.**
+
+**The gap (confirmed in code).** StochasticGoose TRAINS an action-effect CNN ONLINE per game on free
+self-supervised labels (`reward=1.0 if frame changed else 0.0`), Adam lr=1e-4 BCE every 5 actions, a 200k
+hash-deduped buffer, a **CNN coordinate head that PROPOSES clicks** (hierarchical sample), and a **per-level
+reset**. It has **NO goal predicate and NO planner** — it explores toward frame-change and the environment's
+score drives per-level reset, so it deepens multi-level *for free*. OURS uses a FROZEN cross-game prior
+(`results/experiment_4629_live_frame_change_cnn.pt`, eval/no_grad) as a RE-RANKER of object-centroid
+candidates; our one online CNN (`arc_live_ttt.CNNDynamics`) is GATED OUT on hidden games
+(`gated_engine_from_transitions` default `trust_metric="exact"`, `arc_competition_agent.py:2049`) because it
+targets the EXACT next grid (~55% cell-acc → trust ~0) and, even when it passes, still plans-toward-goal
+(`:2053`) so it inherits the goal-grounding wall.
+
+**Why this is the move (it crosses BOTH walls).** The L1→L2 wall (`.430` below) is the degenerate L2 goal
+predicate — a self-inflicted consequence of our goal-induction-first design. The leader proves the wall is
+NOT fundamental: a goal-FREE reward-driven loop deepens multi-level without ever inducing a win condition.
+And the leader learns an EASY target (binary "did something change?") where ours gates itself out on a HARD
+one (exact next grid). The workflow's #1 ranked lever (online *re-ranker*) buys first-win but NOT the wall;
+the lever that buys both is the leader's loop: online CNN as the **driver** of action+coordinate selection,
+not a re-ranker.
+
+**THE TASK TO BUILD.** Add a **goal-free online-exploration policy** to the live cascade (`cascade=True`, so
+additive — do NOT rip out the goal-induction path):
+1. **Online binary-frame-change CNN** with a **coordinate head that proposes clicks** (top-k heatmap pixels
+   as ACTION6, hierarchical action-then-coord sample). Self-supervised free labels (`frame_changed`), Adam
+   lr=1e-4 BCE every ~5 actions, hash-deduped experience buffer. Hooks: `_load_submitted_frame_change_scorer`
+   (`arc_competition_agent.py:216`) for the scorer term + `_candidates` (`:720`) for CNN-proposed coords +
+   an `observe/train` per step in `StepwiseExplorer`.
+2. **Reward-driven per-level reset to the cross-game PRIOR (not random)** — our differentiation vs a pure
+   copy: warm-start + online-adapt should dominate the leader's random-init reset; the A/B must test both
+   reset targets.
+3. (cheap floor, may ship first) flip `gated_engine_from_transitions` default to
+   `trust_metric="cell_recall"` so the EXISTING online CNN un-gates (`arc_live_ttt.py:382/407`).
+
+**Falsifiable acceptance gate.** On the `experiment_4605` held-out color-permuted variant harness, arms
+`{frozen, online-scratch, online-warm-from-prior}`, B≈100: **online-warm beats frozen by ≥+0.05 held-out
+first-win rate**, AND a multi-level probe on lp85/sc25 reaches L2 offline-reproduced
+(`arc_solver_kit.reproduce`) as a genuine `live_agent_self_discovery` deepening. `retire_if_same_verdict:
+true` — if online-warm does not beat frozen by +0.05 AND no L2 deepens, document the residual (CPU-latency
+bound, or per-game online signal too sparse under the action budget) and retire.
+
+**PRECONDITIONS (step 0):** `python -c "import torch; assert torch.cuda.is_available()"` for offline
+training arms (the live Kaggle path is CPU — **wall-clock-measure** a CNN Adam step every 5 actions on CPU
+before claiming Kaggle-viability; the synth flagged this as the #1 risk). Qwen frozen generator unaffected
+(this is the action-effect CNN, not the LLM).
+
+**REQUIRED ARTIFACT FIELDS (principle-annotated):**
+- `online_warm_first_win`, `online_scratch_first_win`, `frozen_first_win: float` — principle: "the +0.05
+  online-warm-over-frozen gate is the whole bet; three arms isolate whether the win is online-learning vs
+  warm-start vs neither."
+- `cpu_train_step_ms: float` — principle: "the Kaggle path is CPU under a 12h/600-RPM cap; an online step
+  too slow to run every 5 actions makes the leader's loop infeasible regardless of offline gains."
+- `goal_free_l2_reached: bool` + `offline_reproduced: bool` + `reproduced_levels: int` — principle: "a
+  goal-free L2 deepening is the proof the wall is crossed by demoting goal-induction, not fixing it; only
+  reproduced levels count."
+- `solve_provenance: live_agent_self_discovery|development_proxy` — principle: "a generic-agent goal-free L2
+  is self-discovery; an adapter is a dev proxy that does not prove the live loop."
+- `verifier_is_oracle: false` — principle: "the online frame-change CNN is oracle-distinct (it does not run
+  the win-check); per the circularity discipline this is gate-eligible."
+- `inference_substrate: live_llm_inference` (live arm) / `verifier_ensemble_against_cached_candidates`
+  (offline harness arm) — principle: "duration floor matches the substrate."
+- `honest_verdict` — terminal-prefix (`complete:`/`success:`); a null is
+  `complete: online_action_learning_no_first_win_lift_residual_<cause>`.
+
+**Agent routing:** `agent_type: codex` (ARC Submission Sprint default). Touches `arc_competition_agent.py` +
+`arc_frame_change_predictor.py` + a new online-scorer module — if the planner judges it needs Claude's
+multi-file choreography it may set `requires_claude_verified: true`, but default codex.
+
+**Live-path-reachable by construction** (modifies `E3AgentPolicy`/`StepwiseExplorer`, in the scored agent's
+import closure — `arc_orphan_solver_lint` passes). Counts toward the ARC sprint majority AND the Level-Up
+Attempt Guarantee. **Relationship to `.430` (L2-goal-predicate fix) below:** these are COMPLEMENTARY, not
+duplicates — `.430` tries to *fix* goal-grounding; this lever *demotes* it. If this goal-free loop lands a
+live L2, it is the stronger result (it proves the wall is architectural); prefer it. Per the north star
+(`project_arc_agi3_north_star`), the energy verifier then layers ON this working loop as a router/pruner
+(generator induces, verifier prunes) — that moat work follows the deadline.
+
+---
+
 - Initial active mandatory priority entries audited: `24`
 - Current active priority index count: `7`
 - Trim fraction: `0.7083`
