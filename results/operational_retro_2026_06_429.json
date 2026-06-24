@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.429",
+  "generated_at": "2026-06-24T04:49:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative TIMING DATA block reported 0 experiment commits since activation, so the locked numeric fields are 0/0/0/null. This is the RECURRING false-zero DETECTOR gap (documented .363-.428), NOT an empty or stalled milestone: the milestone-scoped timing detector reaches a standalone module but never the conductor's retro prompt-assembly consumer that feeds the retro TIMING DATA block, so it false-reports 0 even when the milestone executed normally. With compute_bound_experiments_count=0, both RTX 3090s idle at 0% is CORRECT behaviour, not a stall.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY, not execution: the milestone-scoped timing detector again false-reported 0 commits since activation (the recurring false-zero gap, .363-.428), so this retro has no per-experiment timing signal to rank. The execution itself was not bottlenecked by the detector — only the retrospective's visibility into it was.",
+    "NOT a GPU-utilization bottleneck: compute_bound_experiments_count=0, so 0% utilization on both GPUs is expected. Per the GPU IDLE INTERPRETATION RULE, idle GPUs are only a bug when at least one compute-bound (GGUF/CUDA/requires_gpu) task is present; none was. The milestone's substrates are verifier-ensemble-against-cached-candidates and aggregation (CPU/iGPU), with the frozen sprint generator on the AMD iGPU — never the monitored 3090s.",
+    "DualGPURunner is not applicable: no task loaded 2+ models in parallel on the 3090s, so there is nothing to dual-schedule. No DualGPURunner enforcement gap exists this milestone."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site (the consumer that actually feeds the retro TIMING DATA block) so the milestone-scoped commit count is populated when the retro runs — this closes the recurring false-zero gap at its root.",
+    "Promote injected-timing == on-disk-artifacts to a HARD retro-launch gate: refuse to launch the retro (or stamp it 'detector-gap') when the injected commit count is 0 but experiment artifacts exist on disk since the activation SHA.",
+    "Add write-time duration_s / inference_substrate / compute_bound stamping to every artifact so the retro can rank by real durations and correctly classify GPU expectations without re-deriving substrate post-hoc."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the milestone-scoped timing detector into the conductor's retro prompt-assembly path (not just the standalone module) — the single recurring fix that has been the top action .363-.428.",
+    "Gate retro launch on injected-timing == on-disk-artifact agreement so a false-zero detector reading is caught mechanically before a full retro is generated against empty numbers.",
+    "Keep GPU-idle and DualGPURunner checks gated on compute_bound_experiments_count>0 (as they correctly were here) so verifier-scoring / aggregation / iGPU-generator milestones never produce spurious 'GPU idle' bottleneck flags."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring false-zero detector gap is an observability defect, not a wall-time inefficiency — there is no compute to reclaim, so estimated_time_savings_pct is honestly 0. The compounding cost is epistemic: every milestone since .363 spends retro budget re-explaining the same zeros instead of analyzing real timing, and the single root fix (wire the detector into the retro prompt-assembly consumer) has been the top action for ~60 milestones without landing."
+}
