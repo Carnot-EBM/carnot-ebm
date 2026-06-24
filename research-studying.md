@@ -4560,3 +4560,40 @@ transition-factor trust is available. Do not re-open macro depth, off-centroid
 click coverage, just-explore schedule extraction, or standalone goal-energy
 heuristics.
 <!-- EXP4661-GENERATION-GUIDANCE-SOTA-END -->
+
+<!-- EXP4673-STRUCTURAL-DEEPENING-SOTA-START -->
+## 2026-06-24 Exp 4673 - .431 structural-deepening SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/structural-deepening-sota-ingestion-2026-06-24.md`.
+
+**Filtered track:** structural fallback after A1 L2-goal-induction closed with
+`single_exemplar_goal_insufficient` and A2 distribution-corrected value-routing
+closed with `missing_verifier_gap_live_frontier_not_separated`. The ingestion
+deepens the `.429` flagged tracks into implementable `.431` candidates rather
+than re-running scalar value routing.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py --help` exited cleanly. `scripts/sweep_clusters.py`
+emitted the neural-guided-search and ARC-exploration cluster URLs.
+`scripts/sweep_semscholar.py` returned HTTP 429 for the three focused queries
+and no S2-only source was promoted. Low-concurrency WebSearch/WebFetch plus
+direct arXiv HTTP checks verified arXiv:2604.03208, arXiv:2506.07255,
+arXiv:2504.04366, arXiv:2505.10819, arXiv:2605.05138, arXiv:2605.12913,
+arXiv:2604.11351, and arXiv:1011.0686. `/deep-research` was not invoked.
+
+**Methods marked ingested:** hierarchical subgoal search over live E3, failed
+search-tree subgoal proposal with value tie-breaking, PoE-World/factored
+executable world-model planning, and WM-DAgger trust-weighted
+subgoal-conditioned value routing.
+
+flagged_for_v431: hierarchical_subgoal_e3_frontier_with_a1_a2_tiebreakers
+(arXiv:2604.03208 + arXiv:2506.07255 + arXiv:2504.04366 + arXiv:2605.12913 + arXiv:1011.0686)
+
+flagged_for_v431: poe_world_factored_executable_subgoal_planner
+(arXiv:2505.10819 + arXiv:2605.05138)
+
+**Bottom line for .431:** make the hierarchical subgoal layer the primary
+structural move. Use A1's induced goal signal as a subgoal proposer, A2's value
+head as a bounded local tie-breaker, and live E3 as the executor. Keep PoE-World
+as the stronger alternate when enough transition trust exists to factor effects.
+<!-- EXP4673-STRUCTURAL-DEEPENING-SOTA-END -->
