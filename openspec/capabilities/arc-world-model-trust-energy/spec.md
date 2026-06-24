@@ -3758,6 +3758,72 @@ first-win-rate, live action-efficiency, and offline-to-live transfer ratio, and
 emits `null_delta_methodology_note` with value `0.0` when no attempt reaches
 depth `>=2`.
 
+### REQ-ARC-WMTE-4670: Multi-Level Harness CI Gate And Proposer Port Hygiene
+
+Experiment 4670 SHALL provide a deterministic CI-gate at
+`python/carnot/experiment_4670_multilevel_harness_cigate.py` that locks in the
+Exp 4664 multi-level measurement substrate. The gate SHALL fail if the
+multi-level rollout configuration targets fewer than two levels, or if source
+inspection finds a break-at-first-level-up branch in the rollout body. This
+prevents the prior degenerate metric where `live_multi_level_solve_rate` was
+structurally forced to `0.0` before a second level-up could be attempted.
+
+The gate SHALL also validate generation-measurement artifacts that claim Qwen:
+the artifact must include a `/props`-verified `proposer_served_model` matching
+Qwen3.5-9B-MTP. A Qwen-claimed artifact served by gemma on port 8919 SHALL fail
+the guard instead of silently contributing wrong-model measurements.
+
+The gate SHALL enforce first-win and multi-level performance floors derived
+from the fixed A1 measurement artifact so future harness changes cannot quietly
+drop live first-win or depth `>=2` rates below the A1-established floor. The
+floor helper SHALL be deterministic and testable on synthetic regression and
+honest fixtures without live LLM inference.
+
+Experiment 4670 SHALL write
+`results/experiment_4670_multilevel_harness_cigate.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`,
+`degenerate_metric_cigate_added`, `port_hygiene_guard_added`,
+`first_win_floor_cigate_added`, `tests_added`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: multilevel_harness_cigate_plus_port_hygiene_shipped_tests_green."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- harness-config + artifact checks + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses a mock/NoOp proposer)."
+- `verifier_is_oracle`: principle "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+- `degenerate_metric_cigate_added`: principle "the CI-gate that FAILS on target_levels<2 / break-at-first-win (the multi-level metric can never re-degenerate to 0.0-by-construction)."
+- `port_hygiene_guard_added`: principle "the guard that a 'Qwen' generation measurement must verify proposer_served_model==Qwen (catches the port-8919 gemma-squat silent-wrong-model confound)."
+- `first_win_floor_cigate_added`: principle "the floor CI-gate that fails on a live first-win/multi-level solve-rate regression below the A1 floor."
+- `tests_added`: principle "the unit tests added for all three guards (Tests Must Run and Assert: flag the degenerate/wrong-model/regression fixtures, pass the honest fixtures)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4670-DEGENERATE-METRIC-GATE
+
+**Given** a multi-level rollout fixture with `target_levels=1` or a
+break-at-first-level-up branch
+**When** the Exp 4670 CI-gate validates the rollout configuration
+**Then** it fails with explicit degenerate-metric errors. Given a fixed rollout
+with `target_levels>=2` and no first-win break, the same gate passes.
+
+#### SCENARIO-ARC-WMTE-4670-PORT-HYGIENE
+
+**Given** a generation-measurement artifact that claims Qwen but reports
+`proposer_served_model` as gemma from port 8919
+**When** the Exp 4670 port-hygiene guard runs
+**Then** it fails. Given a `/props`-verified Qwen3.5-9B-MTP artifact on a
+non-colliding port, it passes.
+
+#### SCENARIO-ARC-WMTE-4670-FIRST-WIN-FLOOR
+
+**Given** live first-win or multi-level solve-rate measurements below the
+A1-established floor
+**When** the Exp 4670 performance-floor guard runs
+**Then** it fails with the regressed metric names. Given measurements at or
+above both floors, it passes.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2
