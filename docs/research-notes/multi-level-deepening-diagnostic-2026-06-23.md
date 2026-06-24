@@ -128,3 +128,75 @@ Code: `scripts/experiments/proto_multilevel_diag.py`; data: `results/proto_multi
 (+ `_real.json`). Cross-refs: `results/experiment_4646_live_multi_level_solve_rate_metric.json`
 (the degenerate metric), `h2h-just-explore-vs-bare-explorer-2026-06-23.md` (the prior thread),
 `ops/arc_solve_registry.yaml` (the per-game adapter context).
+
+---
+
+## DECISIVE FOLLOW-UP (same session): clean-Qwen + per-round instrumentation + lever ablations
+
+Re-ran with the **port confound fixed** (constructed `LocalGGUFProposer(port=8920, repo_substr='Qwen3.5-9B-MTP', ...)`
+explicitly; verified via `/props` that the server served `Qwen3.5-9B-Q4_K_M.gguf`, NOT gemma — gemma on
+8919 untouched) and the induce->plan pipeline **fully instrumented** (capture `policy.induction_attempts`
+with per-round `proposer_ok`/`heldout_accuracy`/`accepted`/`plan_length`/`skipped`/`counterexample`). A
+4-agent root-cause workflow (`arc-multilevel-induction-rootcause`) cross-checked the code paths.
+
+### The L1->L2 reinduction is ONE-SHOT, EVIDENCE-STARVED, and proposer-unreliable
+
+The `level_up_reinduction` (the ONLY path that fires at a level-up; `_induce_and_plan` line ~1800 ->
+`execute_bounded_llm_reinduction`) fails as a COMPOUND, not a single gate:
+
+1. **Evidence starvation.** Trigger is `len(transitions) > _episode_transition_start` -> fires after
+   **exactly 1 post-boundary transition** (measured `transition_count=1`). The 9B LLM is asked to induce
+   L2 *dynamics AND goal* from ONE example.
+2. **One-shot.** After the single attempt, `induced=True` + `_level_reinduction_pending` clears; the agent
+   NEVER re-induces for L2 even as it keeps exploring L1 (`n_induction_attempts=1`, every run). The single
+   shot is fired at the moment of LEAST evidence.
+3. **Proposer unreliability (the binding constraint that keeps surfacing).** Qwen3.5-9B `induce()`/`refactor()`
+   intermittently returns `ok=False` (fails to emit a parseable `engine`+`is_level_complete`). Run A:
+   round0 induce OK -> held-out gate FAIL -> round1 `refactor` -> `proposer_failed`. Run B (gate=0.5):
+   round0 `induce` -> `proposer_failed` outright (gate never reached). The induce is near a reliability
+   threshold; from ~1 transition it often cannot write a valid L2 world-model engine.
+4. **Strict held-out gate (downstream).** When induce DOES produce code, the reinduction branch hard-codes
+   `heldout_accuracy >= 1.0` (EXACT full-grid match), with NO escape hatch (the standard branch uses 0.5 +
+   `CARNOT_ARC_TRUST_METRIC=cell_recall`). [BASELINE_ROUND0_HELDOUT]
+5. **Zero-positive goal (downstream).** The L2 window has zero L2-win positives -> the induce prompt's
+   WIN-STATE block is absent -> the LLM writes `is_level_complete` for L2 from no exemplar, and it is
+   never verified (the held-out gate checks DYNAMICS only) -> a degenerate/unsatisfiable predicate ->
+   `plan_in_model` returns empty.
+
+Net is invariant across 4 clean runs: **plan_len=0, maxL=1, no deepening.**
+
+### Lever ablations — cheap env-gated knobs do NOT close the wall
+
+| Lever | Config | Result | Why |
+|---|---|---|---|
+| (baseline) submitted | K=1, gate=1.0 | plan=0; round0 gate-fail then round1 `proposer_failed` | the compound wall |
+| relax held-out gate | K=1, gate=0.5 | plan=0; `induce` `proposer_failed` | proposer failed UPSTREAM of the gate -> gate moot |
+| delay evidence | K=25, gate=0.5 | plan=0; **BACKFIRED** — explorer hits `explored_out` at ~5 post-L1 transitions, so a STALL induction (standard branch) preempts the reinduction -> `proposer_failed` | there is NOT enough post-L1 evidence to gather (explorer exhausts at ~5) |
+
+Two parity-safe env-gated knobs were prototyped on the `outer-loop/bp35-diag` branch (both default ==
+submitted behavior): `CARNOT_ARC_REINDUCTION_HELDOUT` (relax the 1.0 gate) and
+`CARNOT_ARC_REINDUCTION_MIN_EVIDENCE` (delay the one-shot). **Neither closes the wall** — the binding
+constraint is the 9B proposer generating a valid L2 engine from ~1 transition, which no flag fixes.
+
+### Conclusion + recommendation
+
+The L1->L2 deepening wall is **COMPOUND** (evidence starvation + one-shot trigger + intermittent proposer
+failure + strict gate + zero-positive goal), NOT a single cheap flip. The `.429 generation-guidance pivot
+is correctly aimed but closing this needs PIPELINE work, prioritized:
+1. **Evidence + re-arm:** don't fire the one-shot at `trans=1`; gather more post-boundary evidence AND
+   re-arm reinduction as evidence accrues so a failed first attempt isn't terminal — PAIRED with deeper
+   exploration / `plan_in_model` from the CURRENT post-L1 grid (the explorer exhausts L1 at ~5 transitions,
+   so naive evidence-delay alone backfires into a stall).
+2. **Dedicated L2-goal induction** with the L1 win-grid as a structural exemplar (fixes the zero-positive
+   goal; the root-cause workflow's top lever, effort L).
+3. **Proposer robustness** at the induction tier (the binding constraint here): better induce prompt, more
+   evidence, retry-on-`proposer_failed`, or a stronger model for induction only.
+
+**Strategic reframe for the 2026-06-30 submission:** multi-level DEPTH is proposer-bound and expensive to
+fix; FIRST-WIN breadth (0.59 across games) is the cheaper ROI. Per-game-adapter depth is `development_proxy`
+(doesn't transfer to hidden games); generic-agent depth needs the pipeline work above. For the deadline,
+maximizing first-win COVERAGE likely beats chasing L2.
+
+Data: `results/proto_multilevel_diag_real_K1gate05.json`, `_K25gate05.json`, `_baseline.json`. Levers:
+`outer-loop/bp35-diag` (`_should_enter_induction` MIN_EVIDENCE knob; `_induce_and_plan` HELDOUT knob).
+Root-cause workflow: `arc-multilevel-induction-rootcause` (wf_fcab5470-68f).
