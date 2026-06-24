@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.431",
+  "generated_at": "2026-06-24T14:55:31Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation, so the locked numeric fields are 0 / 0 / 0 / null. This is the KNOWN recurring false-zero detector gap (documented .363-.430), NOT a truly empty milestone: on-disk, .431 ran 12 experiments (exp4675-exp4686, 13 artifact files -- exp4679 emits two) over a ~268-min wall window (06:20:31->10:48:11 EDT). No monitored-RTX-3090 compute-bound task ran -- the two live_llm_inference levers ran on the AMD iGPU frozen sprint generator (Qwen3.5-9B-MTP) per the ARC sprint discipline, and the rest are verifier-scoring / aggregation / hardware-smoke -- so compute_bound=0 and both idle 3090s are CORRECT, not a bug.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY, not execution: the authoritative milestone-scoped timing detector again false-reported 0 commits since activation (the recurring false-zero gap, .363-.430, now extending to .431). On-disk the milestone ran 12 experiments (exp4675-exp4686) over ~268 min, so the retro's TIMING DATA block is blind to the real run. This makes the locked total_wall_time_minutes / experiments_completed read 0 despite a full ~4h28m run.",
+    "GPU idle (both RTX 3090s at 0% util) is explicitly NOT flagged as a bottleneck: compute_bound_experiments_count is 0 because no monitored-3090 task ran. The longest task, exp4676 hierarchical-subgoal-search (live_llm_inference, ~3442s / ~57 min) and exp4677 (~60s) both ran on the AMD iGPU frozen sprint generator (Qwen3.5-9B-MTP), never the monitored 3090s, per the ARC sprint discipline. gpu_idle_on_compute_bound_tasks stays null (no compute-bound task to evaluate, so the idle claim is correctly not asserted).",
+    "Minor: the ~57-min A1 hierarchical-subgoal live run (exp4676) nulled with reason subgoal_decomposition_missing (subgoal_decomposition_present=false, generic + both ablations reached level 0). That iGPU generation time produced no usable decomposition -- a cheap decomposition-present precondition BEFORE the expensive live run would short-circuit this class."
+  ],
+  "improvements_suggested": [
+    "MOVE the already-shipped milestone-scoped timing detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site, so the retro reads the real on-disk commit range (exp4675-exp4686 here) instead of a false zero. This is the single recurring operational fix carried .426->.431 and unblocks accurate retro numbers.",
+    "Promote injected-timing == on-disk-artifact-count to a HARD retro-launch gate: refuse to launch an operational retro whose TIMING DATA shows 0 commits while >=1 experiment_*.json exists in the milestone's commit range.",
+    "Add a cheap decomposition-present precondition (>=1 subgoal produced) BEFORE the expensive A1 hierarchical-subgoal live_llm_inference run, so a structurally-missing decomposition (exp4676, ~57 min) is short-circuited instead of paying full iGPU generation cost for a guaranteed null.",
+    "Stamp duration_s + inference_substrate + compute_bound at artifact write time on EVERY artifact (exp4678 and exp4685 have no duration_s field), so substrate classification and slowest-experiment ranking are mechanical rather than per-file re-reads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site (recurring .426->.431) -- this closes the false-zero gap that makes every recent operational retro's locked numbers read 0/0/0/null despite a full ~268-min, 12-experiment run.",
+    "Add a decomposition-present precondition before the A1 hierarchical-subgoal live run -- the single concrete wall-time lever this milestone (~57 min of iGPU generation on exp4676 reclaimable when subgoal_decomposition is structurally missing).",
+    "Promote injected==on-disk to a HARD retro-launch gate + write-time duration_s/inference_substrate/compute_bound stamping, so a false-zero TIMING DATA block cannot silently produce an all-zeros retro and substrate routing is auditable."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "Execution was substrate-correct: no monitored-3090 idle on a compute-bound task (the live levers correctly used the iGPU sprint generator), so the locked 0/0/0/null reflect a timing-detector blind spot, not wasted compute. The one concrete wall-time lever (~15% of the milestone window) is a decomposition-present precondition before the ~57-min A1 hierarchical-subgoal run (exp4676), which nulled on subgoal_decomposition_missing. The dominant recurring action remains closing the false-zero timing-detector gap so future operational retros analyze the real run instead of an all-zeros artifact."
+}
