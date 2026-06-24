@@ -17,9 +17,10 @@ steps-to-go (LOWER = closer to win), the score OfflineSolver descends.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 
@@ -472,6 +473,335 @@ def cross_game_features_v3_value_routing(
         *cross_game_features_v2(frame),
         *_frame_delta_features(g, frame, previous_frame),
     ]
+
+
+@dataclass
+class ObjectCentricProposalConfig:
+    """REQ-ARC-WMTE-4700: deployable object-slot proposal conditioning."""
+
+    enabled: bool = True
+    neighborhood_radius: int = 2
+    max_slots: int = 256
+    max_augmented_clicks: int = 192
+    slot_score_weight: float = 1.0
+    offpath_effect_bonus: float = 0.25
+    no_op_penalty: float = 0.4
+
+
+def _dominant_background(g: np.ndarray) -> float:
+    vals, counts = np.unique(g, return_counts=True)
+    return float(vals[counts.argmax()]) if vals.size else 0.0
+
+
+def _clip_point(x: float, y: float, g: np.ndarray) -> tuple[int, int]:
+    h, w = g.shape
+    return max(0, min(w - 1, int(round(x)))), max(0, min(h - 1, int(round(y))))
+
+
+def _candidate_action_id(candidate: Any) -> int:
+    try:
+        if isinstance(candidate, Mapping):
+            return int(candidate.get("action", candidate.get("action_id", 0)) or 0)
+        return int(getattr(candidate, "action", getattr(candidate, "action_id", 0)) or 0)
+    except Exception:
+        return 0
+
+
+def _candidate_data(candidate: Any) -> Any:
+    if isinstance(candidate, Mapping):
+        return candidate.get("data")
+    return getattr(candidate, "data", None)
+
+
+def _proposal_key(candidate: Mapping[str, Any]) -> tuple[Any, ...]:
+    action = int(candidate.get("action") or 0)
+    data = candidate.get("data")
+    if action == 6 and isinstance(data, Mapping):
+        return (6, int(data.get("x", -1)), int(data.get("y", -1)))
+    return (action,)
+
+
+def _as_candidate_row(candidate: Any) -> dict[str, Any]:
+    return {"action": _candidate_action_id(candidate), "data": _candidate_data(candidate)}
+
+
+def object_centric_proposal_features(
+    frame: Any,
+    *,
+    previous_frame: Any | None = None,
+    action_id: Any | None = None,
+    goal_frame: Any | None = None,
+) -> list[float]:
+    """REQ-ARC-WMTE-4700: object/relational proposal features with action context.
+
+    This is the deployable proposal-side view: v2 context plus object
+    correspondences, frame delta, and the candidate action. Goal context remains
+    optional and is normally absent in live exploration.
+    """
+
+    return cross_game_features_v3(
+        frame,
+        previous_frame=previous_frame,
+        action_id=action_id,
+        goal_frame=goal_frame,
+    )
+
+
+def object_centric_slots(
+    frame: Any,
+    *,
+    previous_frame: Any | None = None,
+    neighborhood_radius: int = 2,
+    max_slots: int = 256,
+) -> list[dict[str, Any]]:
+    """REQ-ARC-WMTE-4700: connected-component slots plus relational gap keypoints."""
+
+    _ = previous_frame
+    g = _grid2d(frame)
+    comps = _component_stats_from_grid(g)
+    if not comps:
+        return []
+    bg = _dominant_background(g)
+    color_counts = {float(v): int((g == v).sum()) for v in np.unique(g)}
+    slots: dict[tuple[int, int], dict[str, Any]] = {}
+
+    def add_slot(
+        x: float,
+        y: float,
+        *,
+        slot_type: str,
+        color: float,
+        base_score: float,
+        distance: float = 0.0,
+    ) -> None:
+        px, py = _clip_point(x, y, g)
+        rarity = 1.0 / (1.0 + float(color_counts.get(float(color), 0)))
+        local = g[max(0, py - 1) : py + 2, max(0, px - 1) : px + 2]
+        local_density = float((local != bg).mean()) if local.size else 0.0
+        score = float(base_score + rarity + 0.35 * local_density - 0.05 * distance)
+        key = (px, py)
+        existing = slots.get(key)
+        if existing is not None and float(existing["score"]) >= score:
+            return
+        slots[key] = {
+            "x": int(px),
+            "y": int(py),
+            "slot_type": slot_type,
+            "support_color": int(color),
+            "score": score,
+            "local_object_density": local_density,
+        }
+
+    radius = max(0, int(neighborhood_radius))
+    for comp in comps:
+        color = float(comp["color"])
+        area = float(comp["area"])
+        base = 1.0 + min(area, 64.0) / 64.0
+        add_slot(
+            comp["cx"],
+            comp["cy"],
+            slot_type="component_centroid",
+            color=color,
+            base_score=base,
+        )
+        add_slot(
+            (comp["x0"] + comp["x1"]) / 2.0,
+            (comp["y0"] + comp["y1"]) / 2.0,
+            slot_type="component_bbox_center",
+            color=color,
+            base_score=base - 0.05,
+        )
+        if radius <= 0:
+            continue
+        cx, cy = _clip_point(comp["cx"], comp["cy"], g)
+        for dy in range(-radius, radius + 1):
+            for dx in range(-radius, radius + 1):
+                distance = abs(dx) + abs(dy)
+                if distance == 0 or distance > radius:
+                    continue
+                px, py = cx + dx, cy + dy
+                if not (0 <= py < g.shape[0] and 0 <= px < g.shape[1]):
+                    continue
+                if float(g[py, px]) != bg:
+                    continue
+                add_slot(
+                    px,
+                    py,
+                    slot_type="object_neighborhood_gap",
+                    color=color,
+                    base_score=0.85 + (radius - distance + 1) / max(1.0, radius + 1.0),
+                    distance=float(distance),
+                )
+
+    by_color: dict[float, list[dict[str, float]]] = {}
+    for comp in comps:
+        by_color.setdefault(float(comp["color"]), []).append(comp)
+    for color, color_comps in by_color.items():
+        if len(color_comps) < 2:
+            continue
+        for i, left in enumerate(color_comps):
+            for right in color_comps[i + 1 :]:
+                dy = abs(left["cy"] - right["cy"])
+                dx = abs(left["cx"] - right["cx"])
+                if max(dx, dy) > 12 or min(dx, dy) > 2:
+                    continue
+                add_slot(
+                    (left["cx"] + right["cx"]) / 2.0,
+                    (left["cy"] + right["cy"]) / 2.0,
+                    slot_type="object_constellation_gap",
+                    color=color,
+                    base_score=1.2,
+                    distance=float(dx + dy),
+                )
+
+    return sorted(
+        slots.values(),
+        key=lambda row: (-float(row["score"]), row["slot_type"], int(row["y"]), int(row["x"])),
+    )[: max(1, int(max_slots))]
+
+
+class ObjectCentricProposalPolicy:
+    """REQ-ARC-WMTE-4700: proposal augmenter/ranker for live StepwiseExplorer."""
+
+    verifier_is_oracle = False
+
+    def __init__(
+        self,
+        config: ObjectCentricProposalConfig | Mapping[str, Any] | None = None,
+    ) -> None:
+        if config is None:
+            self.config = ObjectCentricProposalConfig()
+        elif isinstance(config, ObjectCentricProposalConfig):
+            self.config = config
+        else:
+            self.config = ObjectCentricProposalConfig(**dict(config))
+        self._candidate_scores = 0
+        self._augmented_candidates = 0
+        self._last_slot_count = 0
+        self._transition_observations = 0
+        self._effect_by_key: dict[tuple[Any, ...], list[int]] = {}
+
+    def _calibration_score(self, row: Mapping[str, Any]) -> float:
+        stats = self._effect_by_key.get(_proposal_key(row))
+        if not stats:
+            return 0.0
+        changed, total = stats
+        if total <= 0:
+            return 0.0
+        effect_rate = float(changed) / float(total)
+        return (
+            self.config.offpath_effect_bonus * effect_rate
+            - self.config.no_op_penalty * (1.0 - effect_rate)
+        )
+
+    def _slot_lookup(self, slots: Sequence[Mapping[str, Any]]) -> dict[tuple[int, int], Mapping[str, Any]]:
+        return {(int(slot["x"]), int(slot["y"])): slot for slot in slots}
+
+    def rank_candidates(
+        self,
+        frame: Any,
+        candidates: Sequence[Any],
+        *,
+        previous_frame: Any | None = None,
+    ) -> list[dict[str, Any]]:
+        if not self.config.enabled:
+            return [_as_candidate_row(candidate) for candidate in candidates]
+        rows = [_as_candidate_row(candidate) for candidate in candidates]
+        seen = {_proposal_key(row) for row in rows}
+        slots = object_centric_slots(
+            frame,
+            previous_frame=previous_frame,
+            neighborhood_radius=self.config.neighborhood_radius,
+            max_slots=self.config.max_slots,
+        )
+        self._last_slot_count = len(slots)
+        for slot in slots[: max(0, int(self.config.max_augmented_clicks))]:
+            row = {"action": 6, "data": {"x": int(slot["x"]), "y": int(slot["y"])}}
+            key = _proposal_key(row)
+            if key in seen:
+                continue
+            row["object_centric_augmented"] = True
+            rows.append(row)
+            seen.add(key)
+            self._augmented_candidates += 1
+
+        slot_by_xy = self._slot_lookup(slots)
+        scored: list[tuple[float, int, dict[str, Any]]] = []
+        for index, row in enumerate(rows):
+            score = 0.0
+            slot = None
+            if int(row.get("action") or 0) == 6 and isinstance(row.get("data"), Mapping):
+                x = int(row["data"].get("x", -1))
+                y = int(row["data"].get("y", -1))
+                slot = slot_by_xy.get((x, y))
+                if slot is not None:
+                    score += self.config.slot_score_weight * float(slot.get("score") or 0.0)
+            action_features = _action_features(row.get("action"))
+            if action_features and action_features[0] > 0:
+                score += 0.01
+            score += self._calibration_score(row)
+            out = dict(row)
+            out["object_centric_proposal_score"] = float(score)
+            if slot is not None:
+                out["object_centric_slot"] = dict(slot)
+            scored.append((float(score), index, out))
+            self._candidate_scores += 1
+        scored.sort(key=lambda item: (-item[0], item[1]))
+        return [row for _score, _index, row in scored]
+
+    def record_transition(
+        self,
+        previous_frame: Any,
+        next_frame: Any,
+        action: Mapping[str, Any],
+    ) -> None:
+        if not self.config.enabled:
+            return
+        try:
+            before = _grid2d(previous_frame)
+            after = _grid2d(next_frame)
+            changed = int(before.shape != after.shape or bool((before != after).any()))
+        except Exception:
+            changed = 0
+        row = _as_candidate_row(action)
+        key = _proposal_key(row)
+        stats = self._effect_by_key.setdefault(key, [0, 0])
+        stats[0] += changed
+        stats[1] += 1
+        self._transition_observations += 1
+
+    def diagnostics(self) -> dict[str, Any]:
+        return {
+            "enabled": bool(self.config.enabled),
+            "representation": "connected_components_object_slots_plus_correspondence_action_context",
+            "candidate_scores": int(self._candidate_scores),
+            "augmented_candidates": int(self._augmented_candidates),
+            "last_slot_count": int(self._last_slot_count),
+            "offpath_transition_observations": int(self._transition_observations),
+            "offpath_calibrated": self._transition_observations > 0,
+            "neighborhood_radius": int(self.config.neighborhood_radius),
+            "max_augmented_clicks": int(self.config.max_augmented_clicks),
+            "verifier_is_oracle": False,
+        }
+
+
+def coerce_object_centric_proposal_policy(
+    value: Any,
+) -> ObjectCentricProposalPolicy | None:
+    """REQ-ARC-WMTE-4700: normalize opt-in object-centric proposal config."""
+
+    if value is None or value is False:
+        return None
+    if isinstance(value, ObjectCentricProposalPolicy):
+        return value if value.config.enabled else None
+    if value is True:
+        return ObjectCentricProposalPolicy()
+    if isinstance(value, ObjectCentricProposalConfig):
+        return ObjectCentricProposalPolicy(value) if value.enabled else None
+    if isinstance(value, Mapping):
+        config = ObjectCentricProposalConfig(**dict(value))
+        return ObjectCentricProposalPolicy(config) if config.enabled else None
+    return None
 
 
 def collect_trajectory_data(

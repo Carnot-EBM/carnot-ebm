@@ -1640,6 +1640,105 @@ Then the artifact reports filter coverage, blind coverage, explicit coverage
 delta, held-out kept/rejected counts, first-win delta, bootstrap CI, and an
 honest null note plus residual when the winning plan does not newly appear.
 
+### REQ-ARC-WMTE-4700: Object-Centric Perception Proposal Diagnostic
+
+Experiment 4700 SHALL implement the `.434` perception pivot in the live
+`E3AgentPolicy` import closure. The live `StepwiseExplorer` SHALL expose an
+opt-in object-centric proposal policy that augments and ranks primitive
+candidate actions before value-ranking or frontier selection consumes them. The
+deployable representation SHALL derive connected-component object slots from
+the visible frame, infer object-correspondence summaries against the previous
+frame, include action-context features, and propose relational slot keypoints
+such as component centroids and local object-constellation gaps without reading
+the executable win predicate.
+
+The experiment SHALL run a sensitivity/ceiling diagnostic before claiming any
+deployable fix. On at least one clean L1 target, preferably one of `bp35`,
+`re86`, `s5i5`, `g50t`, or `r11l`, it SHALL measure proposal coverage of the
+known reachable winning L1 trajectory under three representations:
+`order1`, `object_centric`, and `upper_bound_ceiling`. The `order1`
+representation SHALL preserve the existing frame-only proposal ordering. The
+`object_centric` representation SHALL use only deployable object/relational
+frame features. The `upper_bound_ceiling` representation MAY use ground-truth
+object correspondence or winning-prefix annotations as a diagnostic ceiling,
+but SHALL be labeled as non-deployable and SHALL NOT count as a solve claim.
+`perception_is_the_wall` SHALL be true only when the upper-bound ceiling raises
+winning-prefix proposal coverage where `order1` does not.
+
+If the diagnostic is perception-sensitive, Experiment 4700 SHALL measure the
+deployable object-centric proposal policy in live generic E3 exploration against
+a matched order-1 representation ablation with the same budget. Any positive
+claim SHALL require the object-centric arm to reach a new level, the offline
+`arc_solver_kit.reproduce` gate to reproduce that level, and the order-1
+ablation to fail under the same budget. Otherwise the artifact SHALL report an
+honest null with one residual cause from
+`object_decomposition_correct_but_winning_action_not_proposable`,
+`offpath_calibration_insufficient`, or `perception_not_the_wall_search_is`.
+
+Before measurement, Experiment 4700 SHALL verify that the Qwen3.5-9B-MTP GGUF
+is cached, `arc_solver_kit.offline_arcade()` initializes, the live
+`E3AgentPolicy` / `StepwiseExplorer` / value-learner / frame-change modules
+import, and `LocalGGUFProposer` on a free non-8919 port reports Qwen through
+`/props`. If those preconditions fail, it SHALL write a blocked artifact with
+`preconditions_checked` populated rather than fabricate a run. The live-path
+lint and submitted-agent parity test are hard gates.
+
+The artifact at
+`results/experiment_4700_object_centric_perception_proposal_live.json` SHALL
+include `honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `live_path_reachable`, `perception_is_the_wall`,
+`proposal_coverage_by_representation`, `generic_agent_reached_level`,
+`offline_reproduced`, `reproduced_levels`,
+`order1_ablation_reached_level`, `offpath_calibrated`,
+`residual_cause_hypothesis`, `null_methodology_note`,
+`bare_control_passed`, `false_negative_risk_checked`,
+`proposer_served_model`, `chosen_submitted_config`,
+`parity_test_green`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, and `field_principles`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: object_centric_perception_generic_agent_new_level_<game>_L<n> OR complete: object_centric_perception_no_new_level_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference -- the live E3 explorer's world-model induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the live agent runs a real LLM during exploration. model_specs MUST name the GGUF."
+- `verifier_is_oracle`: principle "MUST be false -- the perception representation is oracle-DISTINCT from the executable reproduction win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- a generic-agent new level via runtime object-centric exploration is the REAL deliverable, NOT a hand-built GameAdapter and NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the changed modules (StepwiseExplorer / arc_value_learner) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `perception_is_the_wall`: principle "the DECISIVE diagnostic result -- does an upper-bound representation raise proposal-coverage of the winning L1 trajectory where order-1 does not."
+- `proposal_coverage_by_representation`: principle "proposal-coverage of the winning L1 trajectory under {order-1, deployable object-centric, upper-bound ceiling}."
+- `generic_agent_reached_level`: principle "the deepest level the GENERIC live agent reached via object-centric proposal conditioning on the target."
+- `offline_reproduced`: principle "a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce."
+- `reproduced_levels`: principle "the integer new-level count the generic agent banked offline."
+- `order1_ablation_reached_level`: principle "the matched ORDER-1-REPRESENTATION ablation's reached_level."
+- `offpath_calibrated`: principle "true -- the deployable representation was calibrated on the LIVE off-path search distribution, including dead-ends."
+- `residual_cause_hypothesis`: principle "if it nulls, names the residual (object_decomposition_correct_but_winning_action_not_proposable | offpath_calibration_insufficient | perception_not_the_wall_search_is); 'none' if it crossed."
+- `null_methodology_note`: principle "present when no new level -- states the null is honest (order-1 ablation + reachable L1 headroom + the diagnostic finding), not a measurement bug."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the target has a reachable winning L1 trajectory offline."
+- `false_negative_risk_checked`: principle "true with the order-1 ablation run + reachable-L1-headroom confirmed."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma)."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (object-centric proposal conditioning on, representation params); 'unchanged' if null."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4700-PROPOSAL-DIAGNOSTIC
+
+Given a clean L1 target with a reachable offline winning trajectory
+When Experiment 4700 compares order-1, deployable object-centric, and
+upper-bound ceiling proposal representations
+Then it reports proposal coverage for each representation, sets
+`perception_is_the_wall` from the upper-bound-vs-order1 coverage lift, labels
+the ceiling as non-deployable, and makes no solve claim from the ceiling arm.
+
+#### SCENARIO-ARC-WMTE-4700-LIVE-WIRING
+
+Given the diagnostic is perception-sensitive and live-path preconditions pass
+When the live `StepwiseExplorer` runs with object-centric proposal conditioning
+and a matched order-1 ablation
+Then the artifact counts a new level only if live exploration reaches it,
+offline reproduction verifies it, and the order-1 ablation fails; otherwise it
+records an honest residual for the next milestone.
+
 ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
 
 Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2

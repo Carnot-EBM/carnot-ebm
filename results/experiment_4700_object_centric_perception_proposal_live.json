@@ -1,0 +1,380 @@
+{
+  "bare_control_passed": true,
+  "chosen_submitted_config": "unchanged",
+  "duration_s": 60.000083,
+  "experiment": "experiment_4700_object_centric_perception_proposal_live",
+  "experiment_id": 4700,
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "bare_control_passed": {
+      "principle": "the POSITIVE CONTROL -- the target has a reachable winning L1 trajectory offline."
+    },
+    "chosen_submitted_config": {
+      "principle": "the recommended SUBMITTED_AGENT_CONFIG change (object-centric proposal conditioning on, representation params); 'unchanged' if null."
+    },
+    "false_negative_risk_checked": {
+      "principle": "true with the order-1 ablation run + reachable-L1-headroom confirmed."
+    },
+    "generic_agent_reached_level": {
+      "principle": "the deepest level the GENERIC live agent reached via object-centric proposal conditioning on the target."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: object_centric_perception_generic_agent_new_level_<game>_L<n> OR complete: object_centric_perception_no_new_level_residual_<cause>."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the live E3 explorer's world-model induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the live agent runs a real LLM during exploration. model_specs MUST name the GGUF."
+    },
+    "live_path_reachable": {
+      "principle": "HARD gate -- the changed modules (StepwiseExplorer / arc_value_learner) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+    },
+    "null_methodology_note": {
+      "principle": "present when no new level -- states the null is honest (order-1 ablation + reachable L1 headroom + the diagnostic finding), not a measurement bug."
+    },
+    "offline_reproduced": {
+      "principle": "a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce."
+    },
+    "offpath_calibrated": {
+      "principle": "true -- the deployable representation was calibrated on the LIVE off-path search distribution, including dead-ends."
+    },
+    "order1_ablation_reached_level": {
+      "principle": "the matched ORDER-1-REPRESENTATION ablation's reached_level."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes."
+    },
+    "perception_is_the_wall": {
+      "principle": "the DECISIVE diagnostic result -- does an upper-bound representation raise proposal-coverage of the winning L1 trajectory where order-1 does not."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
+    },
+    "proposal_coverage_by_representation": {
+      "principle": "proposal-coverage of the winning L1 trajectory under {order-1, deployable object-centric, upper-bound ceiling}."
+    },
+    "proposer_served_model": {
+      "principle": "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma)."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproduced_levels": {
+      "principle": "the integer new-level count the generic agent banked offline."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift on replay."
+    },
+    "residual_cause_hypothesis": {
+      "principle": "if it nulls, names the residual (object_decomposition_correct_but_winning_action_not_proposable | offpath_calibration_insufficient | perception_not_the_wall_search_is); 'none' if it crossed."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- a generic-agent new level via runtime object-centric exploration is the REAL deliverable, NOT a hand-built GameAdapter and NOT outer_loop_re."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the perception representation is oracle-DISTINCT from the executable reproduction win-check."
+    }
+  },
+  "generic_agent_reached_level": 0,
+  "honest_verdict": "complete: object_centric_perception_no_new_level_residual_offpath_calibration_insufficient",
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "model_specs": "Qwen3.5-9B-MTP GGUF",
+  "null_methodology_note": "The diagnostic used a reachable L1 target, matched order-1 ablation, and a non-deployable upper-bound ceiling. No new level is claimed unless the deployable object-centric live arm reaches and offline-reproduces it while order-1 fails.",
+  "offline_reproduced": false,
+  "offpath_calibrated": true,
+  "order1_ablation_reached_level": 0,
+  "parity_test_green": true,
+  "perception_is_the_wall": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (35 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "live_modules_importable": true,
+    "offline_arcade": true,
+    "ok": true,
+    "parity_test": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov -n 0",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 11 items\n\ntests/python/test_arc_submitted_agent_parity.py ...........              [100%]\n\n============================== 11 passed in 5.52s ==============================\n"
+    },
+    "proposer_props_excerpt": "{\"bos_token\": \",\", \"build_info\": \"b9606-9b4dae81f\", \"chat_template\": \"{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception('System message cannot contain images.') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\\n                {%- endif %}\\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\\n   ",
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen_proposer_port": 8920,
+    "qwen_proposer_port_verified": true,
+    "spec_has_req_4700": true
+  },
+  "proposal_coverage_by_representation": {
+    "object_centric": {
+      "coverage": 1.0,
+      "covered_steps": 4,
+      "deployable": true,
+      "proposal_scope": "full_pool",
+      "representation": "object_centric",
+      "step_hits": [
+        {
+          "candidate_count": 186,
+          "hit": true,
+          "rank": 59,
+          "step": 0,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 7,
+              "y": 36
+            }
+          }
+        },
+        {
+          "candidate_count": 186,
+          "hit": true,
+          "rank": 161,
+          "step": 1,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 34,
+              "y": 20
+            }
+          }
+        },
+        {
+          "candidate_count": 148,
+          "hit": true,
+          "rank": 12,
+          "step": 2,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 59
+            }
+          }
+        },
+        {
+          "candidate_count": 148,
+          "hit": true,
+          "rank": 77,
+          "step": 3,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 42,
+              "y": 20
+            }
+          }
+        }
+      ],
+      "top_k": 0,
+      "total_steps": 4
+    },
+    "order1": {
+      "coverage": 0.75,
+      "covered_steps": 3,
+      "deployable": true,
+      "proposal_scope": "full_pool",
+      "representation": "order1",
+      "step_hits": [
+        {
+          "candidate_count": 34,
+          "hit": true,
+          "rank": 7,
+          "step": 0,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 7,
+              "y": 36
+            }
+          }
+        },
+        {
+          "candidate_count": 34,
+          "hit": false,
+          "rank": null,
+          "step": 1,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 34,
+              "y": 20
+            }
+          }
+        },
+        {
+          "candidate_count": 26,
+          "hit": true,
+          "rank": 6,
+          "step": 2,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 59
+            }
+          }
+        },
+        {
+          "candidate_count": 26,
+          "hit": true,
+          "rank": 19,
+          "step": 3,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 42,
+              "y": 20
+            }
+          }
+        }
+      ],
+      "top_k": 0,
+      "total_steps": 4
+    },
+    "upper_bound_ceiling": {
+      "ceiling_kind": "ground_truth_winning_prefix_diagnostic_only",
+      "coverage": 1.0,
+      "covered_steps": 4,
+      "deployable": false,
+      "proposal_scope": "full_pool",
+      "representation": "upper_bound_ceiling",
+      "solve_claim": false,
+      "step_hits": [
+        {
+          "candidate_count": 186,
+          "hit": true,
+          "rank": 0,
+          "step": 0,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 7,
+              "y": 36
+            }
+          }
+        },
+        {
+          "candidate_count": 186,
+          "hit": true,
+          "rank": 0,
+          "step": 1,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 34,
+              "y": 20
+            }
+          }
+        },
+        {
+          "candidate_count": 148,
+          "hit": true,
+          "rank": 0,
+          "step": 2,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 27,
+              "y": 59
+            }
+          }
+        },
+        {
+          "candidate_count": 148,
+          "hit": true,
+          "rank": 0,
+          "step": 3,
+          "winner": {
+            "action": 6,
+            "data": {
+              "x": 42,
+              "y": 20
+            }
+          }
+        }
+      ],
+      "top_k": 0,
+      "total_steps": 4
+    }
+  },
+  "proposer_served_model": "Qwen3.5-9B-MTP",
+  "random_seed": 4700,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:f45054f893751ad33fdbb95db20a875f84a11df961c5e4b619e5dcec85330180",
+  "residual_cause_hypothesis": "offpath_calibration_insufficient",
+  "schema": "carnot.arc.object_centric_perception_proposal_live_4700.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4700",
+    "SCENARIO-ARC-WMTE-4700-PROPOSAL-DIAGNOSTIC",
+    "SCENARIO-ARC-WMTE-4700-LIVE-WIRING"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_arm_results": {
+    "object_centric": {
+      "actions": 156,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "budget": 160,
+      "game": "r11l",
+      "generic_agent_reached_level": 0,
+      "object_centric_proposal_diagnostics": {
+        "augmented_candidates": 6913,
+        "candidate_scores": 8477,
+        "enabled": true,
+        "last_slot_count": 175,
+        "max_augmented_clicks": 192,
+        "neighborhood_radius": 2,
+        "offpath_calibrated": true,
+        "offpath_transition_observations": 155,
+        "representation": "connected_components_object_slots_plus_correspondence_action_context",
+        "verifier_is_oracle": false
+      },
+      "offline_reproduced": false,
+      "policy_mode": "object_centric_proposal",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "r11l",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": []
+    },
+    "order1_ablation": {
+      "actions": 156,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "budget": 160,
+      "game": "r11l",
+      "generic_agent_reached_level": 0,
+      "object_centric_proposal_diagnostics": {
+        "enabled": false
+      },
+      "offline_reproduced": false,
+      "policy_mode": "order1_representation_ablation",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "r11l",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": []
+    }
+  },
+  "target_game": "r11l",
+  "verifier_is_oracle": false
+}
