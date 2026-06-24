@@ -4597,3 +4597,41 @@ structural move. Use A1's induced goal signal as a subgoal proposer, A2's value
 head as a bounded local tie-breaker, and live E3 as the executor. Keep PoE-World
 as the stronger alternate when enough transition trust exists to factor effects.
 <!-- EXP4673-STRUCTURAL-DEEPENING-SOTA-END -->
+
+<!-- EXP4685-DIRECTED-EXPLORATION-SOTA-START -->
+## 2026-06-24 Exp 4685 - .432 directed-exploration SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/directed-exploration-sota-ingestion-2026-06-24.md`.
+
+**Filtered track:** fallback beyond the `.431` A1 hierarchical subgoal search
+and A2 PoE-World planner. A1 closed at `wall_diagnosis=l1_first_contact` with
+`value_head_still_not_separating`; A2 closed with
+`candidate_generation_coverage_factored=0.0` and `experts_overfit_prefix`.
+The live gap is now action-proposal coverage: make a winning L1 trajectory
+appear before A1/A2 can select, decompose, or plan over it.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py --help` exited cleanly. `scripts/sweep_clusters.py`
+emitted the ARC exploration and neural-guided-search cluster URLs.
+`scripts/sweep_semscholar.py` returned HTTP 429 for the four focused queries
+and no S2-only source was promoted. Low-concurrency WebSearch/WebFetch plus
+direct arXiv HTTP checks verified arXiv:2002.06038, arXiv:1810.12894,
+arXiv:2005.05960, arXiv:1712.06560, arXiv:2502.10077, arXiv:2603.02045,
+arXiv:2102.11137, and arXiv:2505.10819. `/deep-research` was not invoked.
+
+**Methods marked ingested:** episodic controllable-novelty policy family,
+Plan2Explore-style disagreement plus empowerment, novelty/QD replayable action
+prefix archives, strategy-guided language-action exploration, and
+program-synthesis action-effect proposal filtering.
+
+flagged_for_v432: controllable_novelty_e3_proposal_policy
+(arXiv:2002.06038 + arXiv:1810.12894 + arXiv:2603.02045)
+
+flagged_for_v432: program_synthesis_action_effect_proposal_filter
+(arXiv:2505.10819 + arXiv:2102.11137)
+
+**Bottom line for .432:** build the controllable-novelty proposal policy first
+because it directly attacks the L1-first-contact distribution gap. Add the
+program-synthesis action-effect filter as the second arm when enough trusted
+prefix transitions exist to avoid the A2 `experts_overfit_prefix` failure.
+<!-- EXP4685-DIRECTED-EXPLORATION-SOTA-END -->
