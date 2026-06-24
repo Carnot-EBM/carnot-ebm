@@ -4165,6 +4165,78 @@ the artifact reports exactly one newly reproduced level.
 win-condition/action-model/gotcha/dead-end/checkpoint metadata, and bumps the
 total to 60.
 
+### REQ-ARC-WMTE-4679: Refresh Operator-Resubmit Package From Current Registry
+
+Experiment 4679 SHALL rebuild the ARC operator-resubmit package from the
+current `ops/arc_solve_registry.yaml`, using
+`results/experiment_4667_refresh_submission_package.json` and
+`results/experiment_4667_submission_package_operator_resubmit.json` as the .430
+A4 baseline. It SHALL fold in the current milestone's A3 bank from
+`results/experiment_4678_levelup_selfplay.json` and any newly offline-reproduced
+A1/A2 variant solve found in
+`results/experiment_4676_hierarchical_subgoal_search_live.json` or
+`results/experiment_4677_poe_world_factored_subgoal_planner.json`. The rebuilt
+package SHALL enforce claimed-caps discipline: no per-game submitted claim may
+exceed the current registry reproduced depth, the reproduced depth reported by
+the offline gate, or the replay/adaptive path depth.
+
+Experiment 4679 SHALL re-validate every claimed submittable level on a fresh
+offline environment by requiring either a replayable banked trajectory or the
+persisted `primitive_env_adaptive_resolve_operator` resolver for version-drifted
+games. Any newly version-drifted game that lacks a replayable trajectory SHALL
+be represented through `env_adaptive_recovery` only when the registry exposes
+that primitive transfer; otherwise it SHALL be excluded rather than over-claimed.
+
+Experiment 4679 SHALL write
+`results/experiment_4679_refresh_submission_package.json` and
+`results/experiment_4679_submission_package_operator_resubmit.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`,
+`live_submittable_level_count`, `live_submittable_count_prev`, `count_delta`,
+`levels_folded_in`, `refreshed_package_path`, `per_game_submittable`,
+`ready_for_operator_submit`, `offline_reproduced`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. The
+`live_submittable_count_prev` SHALL be 59, `count_delta` SHALL equal
+`live_submittable_level_count - 59`, a zero delta SHALL include a
+`null_delta_methodology_note`, and `ready_for_operator_submit` SHALL be true only
+when the count is strictly greater than 33 and every counted row is
+offline-reproduction gated. The task SHALL NOT submit to the leaderboard.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: package_refreshed_live_submittable_<n>_above_33 OR complete: package_refreshed_unchanged_depth."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- packaging + env-adaptive replay bank already-earned solves (no circular moat claim)."
+- `live_submittable_level_count`: principle "the offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest leaderboard score, must stay > 33)."
+- `live_submittable_count_prev`: principle "59 -- the .430 A4 count, the apples-to-apples comparison."
+- `count_delta`: principle "live_submittable_level_count - 59 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."
+- `levels_folded_in`: principle "names the games whose new banks (A3 + A1/A2 variant solves) were folded into the refreshed package this milestone."
+- `refreshed_package_path`: principle "the path to the refreshed validated package the operator's live-submit driver will load -- the deliverable the operator resubmits."
+- `per_game_submittable`: principle "per-game offline-reproduced level + has-trajectory + drift-robust flags -- the audit trail that no level is over-claimed above its offline depth."
+- `ready_for_operator_submit`: principle "True if the refreshed package's live-submittable count beats 33 and every claim is offline-reproduction-gated; the task NEVER submits (operator-only)."
+- `offline_reproduced`: principle "every claimed-submittable level must offline-reproduce to count (no frozen-trajectory over-claim)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent registry/trajectory drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4679-REGISTRY-REFRESH
+
+**Given** the .430 A4 package is live-submittable at 59 and the current registry
+contains the Exp4678 `sb26` L2 bank
+**When** Experiment 4679 rebuilds from the current registry
+**Then** it folds `sb26` into the refreshed package only up to the offline
+reproduced depth, emits `count_delta == live_submittable_level_count - 59`, and
+marks the package ready for operator submit without performing submission.
+
+#### SCENARIO-ARC-WMTE-4679-REPLAY-ADAPTIVE-GATE
+
+**Given** a game has a current reproduced depth but no fresh replayable
+trajectory
+**When** Experiment 4679 validates the package rows
+**Then** the game counts only if it has a persisted env-adaptive resolver, every
+counted row records the trajectory/adaptive path audit, and rows without either
+path are excluded from the live-submittable count.
+
 ### REQ-ARC-WMTE-4671: Adversarial Verify L2 Goal And Multi-Level Metric Hardening
 
 The `scripts/adversarial_verify.py` reader SHALL protect the .430 A1 L2
