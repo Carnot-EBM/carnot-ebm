@@ -1282,6 +1282,64 @@ derived-from artifacts, per-game transfer deltas, `verifier_is_oracle=false`,
 strict new-level reproduction accounting, a stable checksum, and an honest
 residual dead-end when transfer value is null.
 
+### REQ-ARC-WMTE-4657: Submitted A1/A2 Integration Gate
+
+Experiment 4657 SHALL read
+`results/experiment_4652_value_routing_cost_fix_live.json` and
+`results/experiment_4653_energy_fitness_qd_generation_live.json`, fold the
+admissible A1/A2 submitted-agent configuration into
+`SUBMITTED_AGENT_CONFIG`, and re-measure the scored `E3AgentPolicy` config
+against the pre-integration submitted config. The gate SHALL treat the A1
+cost-fixed value-routing path as integrated only when the submitted config has
+the artifact's positive `value_weight_set`, the declared cheap
+`cross_game_features_v3:v2_plus_frame_delta` feature subset, and
+`verifier_is_oracle=false`. The gate SHALL treat A2 as unchanged when its
+`chosen_submitted_config` is `unchanged` or when the submitted config keeps QD
+generation disabled.
+
+Experiment 4657 SHALL write
+`results/experiment_4657_integration_gate.json` with principle-annotated
+top-level fields for `honest_verdict`, `inference_substrate`,
+`verifier_is_oracle`, `config_integrated`,
+`live_first_win_rate_integrated`,
+`live_multi_level_solve_rate_integrated`,
+`live_submittable_level_count_integrated`, `parity_test_green`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`. The
+artifact SHALL also record the pre-integration comparison config, first-win and
+multi-level deltas versus that config, the A1/A2 integration audit, the parity
+test command result, `submitted_to_leaderboard=false`, and a stable checksum.
+If both A1 and A2 remain null or unchanged, the artifact SHALL emit
+`complete: integration_unchanged_both_levers_null`; otherwise a successful
+parity-green no-regression integration SHALL emit
+`success: integrated_<config>_shipped_parity_green`.
+
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the integrated value-routing/QD signals are oracle-distinct from the executable win-check."
+- `config_integrated`: principle "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+- `live_first_win_rate_integrated`: principle "the integrated SCORED-agent live first-win-rate (no regression vs pre-integration)."
+- `live_multi_level_solve_rate_integrated`: principle "the integrated SCORED-agent multi-level (>=2) live solve-rate (the deeper wall)."
+- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4657
+
+**Given** the offline arcade and submitted-agent import preconditions pass, the
+A1 and A2 artifacts are readable, and `SUBMITTED_AGENT_CONFIG` is the scored
+`E3AgentPolicy` source of truth
+**When** Experiment 4657 folds in A1/A2 and runs the submitted-agent parity
+test
+**Then** the result artifact reports the integrated config, live first-win
+rate, live multi-level solve rate, live-submittable count greater than 33,
+no-regression deltas versus the pre-integration config,
+`verifier_is_oracle=false`, `parity_test_green=true`, and a stable
+reproducibility checksum.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
