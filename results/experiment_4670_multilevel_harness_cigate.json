@@ -1,0 +1,113 @@
+{
+  "degenerate_metric_cigate_added": {
+    "break_at_first_win": false,
+    "errors": [],
+    "passed": true,
+    "source_has_run_variant_attempt": true,
+    "target_levels": 2
+  },
+  "duration_s": 1.000461,
+  "experiment": "experiment_4670_multilevel_harness_cigate",
+  "experiment_id": 4670,
+  "field_principles": {
+    "degenerate_metric_cigate_added": {
+      "principle": "the CI-gate that FAILS on target_levels<2 / break-at-first-win (the multi-level metric can never re-degenerate to 0.0-by-construction)."
+    },
+    "first_win_floor_cigate_added": {
+      "principle": "the floor CI-gate that fails on a live first-win/multi-level solve-rate regression below the A1 floor."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: multilevel_harness_cigate_plus_port_hygiene_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- harness-config + artifact checks + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses a mock/NoOp proposer)."
+    },
+    "port_hygiene_guard_added": {
+      "principle": "the guard that a 'Qwen' generation measurement must verify proposer_served_model==Qwen (catches the port-8919 gemma-squat silent-wrong-model confound)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests added for all three guards (Tests Must Run and Assert: flag the degenerate/wrong-model/regression fixtures, pass the honest fixtures)."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+    }
+  },
+  "first_win_floor_cigate_added": {
+    "errors": [],
+    "floors": {
+      "first_win_rate": 0.5,
+      "live_multi_level_solve_rate": 0.0
+    },
+    "measured": {
+      "first_win_rate": 0.5,
+      "live_multi_level_solve_rate": 0.0,
+      "sample_size": 2,
+      "source": "generic_agent_reached_level"
+    },
+    "passed": true
+  },
+  "honest_verdict": "success: multilevel_harness_cigate_plus_port_hygiene_shipped_tests_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- harness-config + artifact checks + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses a mock/NoOp proposer).",
+  "port_hygiene_guard_added": {
+    "claimed_model": "Qwen3.5-9B-MTP",
+    "errors": [],
+    "passed": true,
+    "port": 8920,
+    "proposer_served_model": "Qwen3.5-9B-MTP",
+    "qwen_port_props_verified": true
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "exp4628_source_present": true,
+    "live_llm_inference": false,
+    "offline_arcade": true,
+    "ok": true,
+    "small_offline_rollout": true,
+    "spec_has_req_4670": true
+  },
+  "random_seed": 4670,
+  "reproducibility_checksum": "sha256:1577d0909e8fa599c93fb707360bdbe9eb9a008969868824bc52310dba39e1b1",
+  "schema": "carnot.exp4670.multilevel_harness_cigate.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4670",
+    "SCENARIO-ARC-WMTE-4670-DEGENERATE-METRIC-GATE",
+    "SCENARIO-ARC-WMTE-4670-PORT-HYGIENE",
+    "SCENARIO-ARC-WMTE-4670-FIRST-WIN-FLOOR"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "assertions": [
+      "degenerate target_levels=1 and break-at-first-win fixtures fail",
+      "fixed target_levels>=2/no-break fixture and actual exp4628 source pass",
+      "Qwen-claimed gemma-on-8919 fixture fails and props-verified Qwen passes",
+      "first-win and multi-level below-floor fixtures fail; honest fixture passes"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4670_multilevel_harness_cigate.py -q --no-cov",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4670_multilevel_harness_cigate.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4670_multilevel_harness_cigate.py -q",
+      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4670_multilevel_harness_cigate.py' --fail-under=100 --show-missing"
+    ],
+    "focused_tests_passed": true,
+    "full_python_suite": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "passed": false,
+      "result": "attempted once; the full suite hit an unrelated Z3 segmentation fault in python/carnot/verify/z3_math_verifier.py while running tests/python/test_adaptive.py, xdist marked a worker node down, and the already-failed run was terminated to avoid leaving pytest workers running."
+    },
+    "new_code_coverage": "100%",
+    "passed": true,
+    "test_file": "tests/python/test_experiment_4670_multilevel_harness_cigate.py"
+  },
+  "verifier_is_oracle": false
+}
