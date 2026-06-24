@@ -2370,6 +2370,14 @@ SUBGOAL_DECOMPOSITION_EVIDENCE_OMITTED_KIND = (
 )
 GENERATION_COVERAGE_WITHOUT_BASELINE_KIND = "generation-coverage-without-baseline"
 GENERATION_COVERAGE_BASELINE_OMITTED_KIND = "generation-coverage-baseline-omitted"
+NOVELTY_PROPOSAL_WITHOUT_ABLATION_KIND = "novelty-proposal-without-ablation"
+NOVELTY_PROPOSAL_ABLATION_OMITTED_KIND = "novelty-proposal-ablation-omitted"
+PROPOSAL_FILTER_WITHOUT_HELDOUT_REJECTION_KIND = (
+    "proposal-filter-without-heldout-rejection"
+)
+PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND = (
+    "proposal-filter-heldout-rejection-omitted"
+)
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -3003,6 +3011,104 @@ _GENERATION_COVERAGE_VALUE_KEYS = (
     "candidate_generation_coverage",
     "candidate_generation_coverage_factored",
 )
+_NOVELTY_PROPOSAL_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "solve_provenance",
+    "chosen_submitted_config",
+    "residual_cause_hypothesis",
+)
+_NOVELTY_PROPOSAL_CONTEXT_MARKERS = (
+    "controllable_novelty",
+    "controllable novelty",
+    "novelty proposal",
+    "novelty_bonus",
+    "novelty bonus",
+    "controllability_gate",
+    "controllability gate",
+    "no_novelty_ablation_reached_level",
+    "cosmetic_novelty_ablation_reached_level",
+)
+_NOVELTY_PROPOSAL_WIN_MARKERS = (
+    "success:",
+    "new_level",
+    "new level",
+    "reached l",
+    "reached_l",
+    "reached level",
+    "reached_level",
+    "generic_agent_reached_level",
+    "levelup",
+    "level-up",
+    "level up",
+)
+_NOVELTY_PROPOSAL_NULL_TEXT_MARKERS = (
+    "complete:",
+    "no_new_level",
+    "no new level",
+    "no_level",
+    "no level",
+    "residual",
+    "null",
+    "unchanged",
+    "regressed",
+    "blocked",
+)
+_NOVELTY_PROPOSAL_REQUIRED_EVIDENCE_KEYS = (
+    "no_novelty_ablation_reached_level",
+    "cosmetic_novelty_ablation_reached_level",
+    "offline_reproduced",
+)
+_PROPOSAL_FILTER_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "solve_provenance",
+    "chosen_submitted_config",
+    "residual_bridge_gap",
+)
+_PROPOSAL_FILTER_CONTEXT_MARKERS = (
+    "program_synthesis",
+    "program synthesis",
+    "proposal_filter",
+    "proposal filter",
+    "action-effect proposal filter",
+    "action effect proposal filter",
+    "candidate_generation_coverage_filter",
+    "heldout_programs",
+    "held-out",
+    "heldout",
+)
+_PROPOSAL_FILTER_WIN_MARKERS = (
+    "success:",
+    "coverage_up",
+    "coverage-up",
+    "coverage up",
+    "coverage rose",
+    "coverage rise",
+    "coverage lift",
+    "lift",
+    "improv",
+    "_up",
+    " up",
+)
+_PROPOSAL_FILTER_NULL_TEXT_MARKERS = (
+    "complete:",
+    "no_coverage_gain",
+    "no coverage gain",
+    "no_gain",
+    "no gain",
+    "null",
+    "residual",
+    "unchanged",
+    "regressed",
+    "blocked",
+)
+_PROPOSAL_FILTER_POSITIVE_METRIC_KEYS = (
+    "coverage_delta",
+    "candidate_generation_coverage_delta",
+)
+_PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS = (
+    "heldout_programs_rejected",
+    "candidate_generation_coverage_blind_baseline",
+)
 
 
 def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
@@ -3611,6 +3717,180 @@ def check_generation_coverage_baseline_overclaim(
     )
 
 
+def _novelty_proposal_text(d: dict[str, Any]) -> str:
+    return f"{_claim_text(d, _NOVELTY_PROPOSAL_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+
+
+def _has_novelty_proposal_context(d: dict[str, Any]) -> bool:
+    text = _novelty_proposal_text(d)
+    return _is_arc_artifact(d) and _has_marker(text, _NOVELTY_PROPOSAL_CONTEXT_MARKERS)
+
+
+def _claims_controllable_novelty_new_level_win(d: dict[str, Any]) -> bool:
+    if not _has_novelty_proposal_context(d):
+        return False
+    text = _novelty_proposal_text(d)
+    if _has_marker(text, _NOVELTY_PROPOSAL_NULL_TEXT_MARKERS):
+        return False
+    reproduced = _max_real_field_number(d, "reproduced_levels")
+    if reproduced is not None and reproduced >= 1.0:
+        return True
+    reached = _max_real_field_number(d, "generic_agent_reached_level")
+    return (
+        reached is not None
+        and reached > 0.0
+        and _has_marker(text, _NOVELTY_PROPOSAL_WIN_MARKERS)
+    )
+
+
+def _novelty_ablations_strictly_lower(d: dict[str, Any]) -> bool:
+    reached = _max_real_field_number(d, "generic_agent_reached_level")
+    no_novelty = _max_real_field_number(d, "no_novelty_ablation_reached_level")
+    cosmetic = _max_real_field_number(d, "cosmetic_novelty_ablation_reached_level")
+    return (
+        reached is not None
+        and no_novelty is not None
+        and cosmetic is not None
+        and no_novelty < reached
+        and cosmetic < reached
+    )
+
+
+def check_novelty_proposal_ablation_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag controllable-novelty wins missing lower novelty ablations."""
+    if not _claims_controllable_novelty_new_level_win(d):
+        return
+    omitted = [
+        key
+        for key in _NOVELTY_PROPOSAL_REQUIRED_EVIDENCE_KEYS
+        if not _real_field_values(d, key)
+    ]
+    if omitted:
+        flags.append(
+            Flag(
+                kind=NOVELTY_PROPOSAL_ABLATION_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "novelty-proposal-ablation-omitted: controllable-novelty "
+                    f"new-level claim omits {', '.join(omitted)}. Report "
+                    "no_novelty_ablation_reached_level, "
+                    "cosmetic_novelty_ablation_reached_level, and "
+                    "offline_reproduced before crediting a controllable-novelty win."
+                ),
+            )
+        )
+    if _novelty_ablations_strictly_lower(d) and _real_field_has_true(
+        d, "offline_reproduced"
+    ):
+        return
+    flags.append(
+        Flag(
+            kind=NOVELTY_PROPOSAL_WITHOUT_ABLATION_KIND,
+            severity="critical",
+            detail=(
+                "novelty-proposal-without-ablation: artifact claims a "
+                "generic-agent new-level win via controllable novelty without "
+                "proving no_novelty_ablation_reached_level and "
+                "cosmetic_novelty_ablation_reached_level are both strictly "
+                "lower than generic_agent_reached_level, and "
+                "offline_reproduced=true. The apparent win may be flat "
+                "exploration mislabeled as controllable novelty, or the "
+                "controllability gate may add nothing over cosmetic novelty."
+            ),
+        )
+    )
+
+
+def _proposal_filter_text(d: dict[str, Any]) -> str:
+    return f"{_claim_text(d, _PROPOSAL_FILTER_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+
+
+def _has_proposal_filter_context(d: dict[str, Any]) -> bool:
+    text = _proposal_filter_text(d)
+    return _is_arc_artifact(d) and _has_marker(text, _PROPOSAL_FILTER_CONTEXT_MARKERS)
+
+
+def _claims_proposal_filter_coverage_up(d: dict[str, Any]) -> bool:
+    if not _has_proposal_filter_context(d):
+        return False
+    text = _proposal_filter_text(d)
+    if _has_marker(text, _PROPOSAL_FILTER_NULL_TEXT_MARKERS):
+        return False
+    for key in _PROPOSAL_FILTER_POSITIVE_METRIC_KEYS:
+        value = _max_real_field_number(d, key)
+        if value is not None and value > 0.0:
+            return True
+    filter_coverage = _max_real_field_number(d, "candidate_generation_coverage_filter")
+    blind_baseline = _max_real_field_number(
+        d, "candidate_generation_coverage_blind_baseline"
+    )
+    if (
+        filter_coverage is not None
+        and blind_baseline is not None
+        and filter_coverage > blind_baseline
+    ):
+        return True
+    return (
+        filter_coverage is not None
+        and filter_coverage > 0.0
+        and _has_marker(text, _PROPOSAL_FILTER_WIN_MARKERS)
+    )
+
+
+def _has_finite_real_field_number(d: dict[str, Any], wanted_key: str) -> bool:
+    return _max_real_field_number(d, wanted_key) is not None
+
+
+def check_proposal_filter_heldout_rejection_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag program-synthesis coverage wins missing held-out rejection evidence."""
+    if not _claims_proposal_filter_coverage_up(d):
+        return
+    omitted = [
+        key
+        for key in _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS
+        if not _real_field_values(d, key)
+    ]
+    if omitted:
+        flags.append(
+            Flag(
+                kind=PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "proposal-filter-heldout-rejection-omitted: "
+                    "program-synthesis coverage-up claim omits "
+                    f"{', '.join(omitted)}. Report heldout_programs_rejected "
+                    "and candidate_generation_coverage_blind_baseline before "
+                    "crediting proposal-filter coverage lift."
+                ),
+            )
+        )
+    evidence_ok = all(
+        _has_finite_real_field_number(d, key)
+        for key in _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS
+    )
+    if evidence_ok:
+        return
+    flags.append(
+        Flag(
+            kind=PROPOSAL_FILTER_WITHOUT_HELDOUT_REJECTION_KIND,
+            severity="critical",
+            detail=(
+                "proposal-filter-without-heldout-rejection: artifact claims "
+                "program-synthesis candidate-generation coverage rose without "
+                "reporting finite heldout_programs_rejected and "
+                "candidate_generation_coverage_blind_baseline fields. The "
+                "coverage number is unfalsifiable without proof that held-out "
+                "rejection actually ran and without the matched blind-proposal "
+                "baseline; it may be experts_overfit_prefix leakage."
+            ),
+        )
+    )
+
+
 _WORLD_MODEL_TRUST_RATE_KEYS = (
     "world_model_trust_pass_rate",
     "world_model_trust_pass_rate_new",
@@ -3919,6 +4199,8 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_multilevel_nondegenerate_metric_overclaim(d, flags)
     check_subgoal_search_decomposition_overclaim(d, flags)
     check_generation_coverage_baseline_overclaim(d, flags)
+    check_novelty_proposal_ablation_overclaim(d, flags)
+    check_proposal_filter_heldout_rejection_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)

@@ -1,0 +1,158 @@
+{
+  "duration_s": 0.02774029306601733,
+  "experiment": "experiment_4695_adversarial_verify_hardening",
+  "field_principles": {
+    "honest_artifacts_not_flagged": {
+      "principle": "the honest A1/A2 artifacts (which report their ablations + held-out rejection + blind-baseline coverage) are NOT flagged -- false-positive guard (like the .431 coverage-baseline guard)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_hardened_novelty_ablation_and_proposal_filter_heldout_guards_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+    },
+    "novelty_ablation_guard_added": {
+      "principle": "the NOVELTY-PROPOSAL-WITHOUT-ABLATION guard (a controllable-novelty win must report the no-novelty-bonus AND cosmetic-novelty ablations strictly lower + offline_reproduced, else flagged as a possible flat-exploration win mislabeled / controllability-gate-adds-nothing)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "proposal_filter_heldout_guard_added": {
+      "principle": "the PROPOSAL-FILTER-WITHOUT-HELDOUT-REJECTION guard (a coverage-up claim must report the held-out rejected-program count AND the matched blind-proposal baseline, else flagged as unfalsifiable / experts_overfit_prefix-unguarded)."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+    }
+  },
+  "honest_artifacts_not_flagged": true,
+  "honest_verdict": "success: adversarial_verify_hardened_novelty_ablation_and_proposal_filter_heldout_guards_tests_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
+  "novelty_ablation_guard_added": true,
+  "novelty_ablation_guard_report": {
+    "a1_fixture_flags": [
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a1_guarded_flags": [],
+    "a2_fixture_flags": [
+      {
+        "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a2_guarded_flags": [],
+    "invalid_ablation_flags": [
+      {
+        "detail": "novelty-proposal-without-ablation: artifact claims a generic-agent new-level win via controllable novelty without proving no_novelty_ablation_reached_level and cosmetic_novelty_ablation_reached_level are both strictly lower than generic_agent_reached_level, and offline_reproduced=true. The apparent win may be flat exploration mislabeled as controllable novelty, or the controllability gate may add nothing over cosmetic novelty.",
+        "kind": "novelty-proposal-without-ablation",
+        "severity": "critical"
+      }
+    ],
+    "omitted_evidence_flags": [
+      {
+        "detail": "novelty-proposal-ablation-omitted: controllable-novelty new-level claim omits no_novelty_ablation_reached_level, cosmetic_novelty_ablation_reached_level, offline_reproduced. Report no_novelty_ablation_reached_level, cosmetic_novelty_ablation_reached_level, and offline_reproduced before crediting a controllable-novelty win.",
+        "kind": "novelty-proposal-ablation-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "novelty-proposal-without-ablation: artifact claims a generic-agent new-level win via controllable novelty without proving no_novelty_ablation_reached_level and cosmetic_novelty_ablation_reached_level are both strictly lower than generic_agent_reached_level, and offline_reproduced=true. The apparent win may be flat exploration mislabeled as controllable novelty, or the controllability gate may add nothing over cosmetic novelty.",
+        "kind": "novelty-proposal-without-ablation",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_evidence_flags": []
+  },
+  "preconditions_checked": {
+    "adversarial_verify_import_ok": true,
+    "adversarial_verify_parse_ok": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "fixtures_present": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4695": true
+  },
+  "proposal_filter_heldout_guard_added": true,
+  "proposal_filter_heldout_guard_report": {
+    "a1_fixture_flags": [
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a1_guarded_flags": [],
+    "a2_fixture_flags": [
+      {
+        "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a2_guarded_flags": [],
+    "omitted_evidence_flags": [
+      {
+        "detail": "proposal-filter-heldout-rejection-omitted: program-synthesis coverage-up claim omits heldout_programs_rejected, candidate_generation_coverage_blind_baseline. Report heldout_programs_rejected and candidate_generation_coverage_blind_baseline before crediting proposal-filter coverage lift.",
+        "kind": "proposal-filter-heldout-rejection-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "proposal-filter-without-heldout-rejection: artifact claims program-synthesis candidate-generation coverage rose without reporting finite heldout_programs_rejected and candidate_generation_coverage_blind_baseline fields. The coverage number is unfalsifiable without proof that held-out rejection actually ran and without the matched blind-proposal baseline; it may be experts_overfit_prefix leakage.",
+        "kind": "proposal-filter-without-heldout-rejection",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_evidence_flags": []
+  },
+  "random_seed": 4695,
+  "reproducibility_checksum": "sha256:58da6dce1272b2132844cb477a3e78d1fbd5bb9562120984eaf14efbe7668099",
+  "result_path": "results/experiment_4695_adversarial_verify_hardening.json",
+  "schema": "carnot.exp4695.adversarial_verify_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4695",
+    "SCENARIO-ARC-WMTE-4695-NOVELTY-ABLATION",
+    "SCENARIO-ARC-WMTE-4695-PROPOSAL-FILTER-HELDOUT"
+  ],
+  "tests_added": {
+    "assertions": [
+      "Controllable-novelty new-level claim omitting ablations emits omitted warn and critical overclaim flag",
+      "Controllable-novelty new-level claim whose no-novelty ablation is not lower emits critical overclaim flag",
+      "Controllable-novelty new-level claim with lower ablations and offline reproduction is not false-flagged",
+      "Program-synthesis coverage-up claim omitting heldout_programs_rejected and blind baseline emits omitted warn and critical flag",
+      "Coverage-up claim with heldout_programs_rejected and candidate_generation_coverage_blind_baseline is not false-flagged",
+      "Honest .432 A1/A2 artifacts do not fire the new guarded kinds"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_hardening_4695.py -q --no-cov",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4695_adversarial_verify_hardening.py' -m pytest --override-ini addopts='' tests/python/test_adversarial_verify_hardening_4695.py -q",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_4688_controllable_novelty_proposal_policy_live.json results/experiment_4689_program_synthesis_action_effect_proposal_filter.json"
+    ],
+    "passed": true,
+    "test_files": [
+      "tests/python/test_adversarial_verify_hardening_4695.py"
+    ]
+  }
+}
