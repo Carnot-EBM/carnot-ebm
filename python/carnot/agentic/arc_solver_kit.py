@@ -45,6 +45,7 @@ from __future__ import annotations
 import copy
 import heapq
 import itertools
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Hashable, Mapping, Optional, Sequence
@@ -194,6 +195,24 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
                 "value_routing",
                 "cost_fix",
                 "candidate_ranking",
+                "graph_explore",
+                "live_path",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
+            operator="dagger_off_path_data_collection_operator",
+            derived_from_games=("exp4665_dagger_distribution_shift_value_routing",),
+            purpose=(
+                "Collect and relabel live-frontier off-path rows against reproduced action "
+                "prefixes so DAgger-lite value heads train on the search distribution rather "
+                "than winning-path states only."
+            ),
+            selector_tags=(
+                "dagger",
+                "off_path",
+                "search_distribution",
+                "value_head",
                 "graph_explore",
                 "live_path",
                 "transfer",
@@ -517,6 +536,7 @@ def select_primitive_operators(
             expanded.append(name)
             if name == "value_head_bridge_fix_operator":
                 expanded.append("cheap_value_routing_cost_fix_operator")
+                expanded.append("dagger_off_path_data_collection_operator")
         names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
@@ -1022,6 +1042,117 @@ def cheap_value_routing_cost_fix_operator(
     result["cost_fix_applied"] = feature_cost is None or feature_cost < 1.0
     result["verifier_is_oracle"] = False
     return result
+
+
+def _dagger_path_step_label(step: Any) -> str | None:
+    action = _candidate_field(step, "action")
+    if action is None:
+        return None
+    try:
+        action_id = int(action)
+    except (TypeError, ValueError):
+        return None
+    return json.dumps(
+        {"action": action_id, "data": _candidate_field(step, "data")},
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def _dagger_clean_path(path: Any) -> list[dict[str, Any]]:
+    if not isinstance(path, Sequence) or isinstance(path, (str, bytes)):
+        return []
+    clean: list[dict[str, Any]] = []
+    for step in path:
+        action = _candidate_field(step, "action")
+        try:
+            action_id = int(action)
+        except (TypeError, ValueError):
+            continue
+        clean.append({"action": action_id, "data": _candidate_field(step, "data")})
+    return clean
+
+
+def _dagger_features(row: Any) -> list[float]:
+    features = _candidate_field(row, "features", [])
+    if not isinstance(features, Sequence) or isinstance(features, (str, bytes)):
+        return []
+    clean: list[float] = []
+    for value in features:
+        try:
+            clean.append(float(value))
+        except (TypeError, ValueError):
+            return []
+    return clean
+
+
+def _dagger_label(row: Any) -> float:
+    try:
+        return 1.0 if float(_candidate_field(row, "label", 0.0) or 0.0) >= 0.5 else 0.0
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def dagger_off_path_data_collection_operator(
+    frontier_rows: Sequence[Any],
+    *,
+    winning_labels: Sequence[str] = (),
+    winning_rows: Sequence[Any] = (),
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4668: reusable DAgger-lite off-path data collector."""
+
+    clean_winning = [str(label) for label in winning_labels if label is not None]
+    winning_prefixes = {tuple(clean_winning[: index + 1]) for index in range(len(clean_winning))}
+    if clean_winning:
+        winning_prefixes.add(())
+
+    relabeled: list[dict[str, Any]] = []
+    for row in frontier_rows:
+        features = _dagger_features(row)
+        if not features:
+            continue
+        path = _dagger_clean_path(_candidate_field(row, "path", []))
+        labels = tuple(label for label in (_dagger_path_step_label(step) for step in path) if label)
+        label = 1.0 if labels in winning_prefixes else 0.0
+        relabeled.append(
+            {
+                "source": str(_candidate_field(row, "source", "search_distribution")),
+                "features": features,
+                "label": label,
+                "path": path,
+                "relabel_source": "executable_reproduction_prefix",
+            }
+        )
+
+    aggregate = list(relabeled)
+    for row in winning_rows:
+        features = _dagger_features(row)
+        if not features:
+            continue
+        aggregate.append(
+            {
+                "source": str(_candidate_field(row, "source", "winning_path") or "winning_path"),
+                "features": features,
+                "label": _dagger_label(row),
+                "path": _dagger_clean_path(_candidate_field(row, "path", [])),
+                "relabel_source": str(_candidate_field(row, "relabel_source", "winning_path")),
+            }
+        )
+
+    positives = sum(1 for row in aggregate if float(row["label"]) >= 0.5)
+    negatives = len(aggregate) - positives
+    return {
+        "operator": "dagger_off_path_data_collection_operator",
+        "frontier_count": len(frontier_rows),
+        "relabeled_frontier_count": len(relabeled),
+        "aggregate_total_count": len(aggregate),
+        "positive_count": int(positives),
+        "negative_count": int(negatives),
+        "winning_path_count": sum(1 for row in aggregate if row["source"] == "winning_path"),
+        "off_path_negative_count": sum(1 for row in relabeled if float(row["label"]) < 0.5),
+        "rows": aggregate,
+        "verifier_is_oracle": False,
+    }
 
 
 def _effect_row_field(row: Any, key: str, default: Any = None) -> Any:

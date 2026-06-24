@@ -1506,6 +1506,68 @@ derived-from artifacts, per-game transfer deltas, `verifier_is_oracle=false`,
 strict new-level reproduction accounting, a stable checksum, and an honest
 residual dead-end when transfer value is null.
 
+### REQ-ARC-WMTE-4668: Primitive Persist Transfer For .430 A1/A2
+
+Experiment 4668 SHALL read
+`results/experiment_4664_l2_goal_predicate_induction_live.json` and
+`results/experiment_4665_dagger_distribution_shift_value_routing.json`, select
+the strongest reusable primitive from the .430 A1/A2 milestone, and persist it
+as durable solver scaffolding. If the A1 L2-goal-induction operator clears its
+generic-agent L2 gate, the persisted primitive SHALL be the A1 goal-predicate
+induction operator. If A1 does not clear and the A2 DAgger-lite
+distribution-corrected value-routing operator clears its live-lift gate, the
+persisted primitive SHALL be the A2 corrected value-routing operator. If both
+are value-null, the workflow SHALL persist the strongest characterized reusable
+component, with the expected fallback being the DAgger-lite off-path
+data-collection operator because it reduced the measured search-distribution
+shift while remaining oracle-distinct from the executable win-check.
+
+The persisted fallback primitive SHALL be registered in `arc_solver_kit` as
+`dagger_off_path_data_collection_operator`, selected by
+`select_primitive_operators()` for graph-explore/live-path transfer, and recorded
+under `ops/arc_solve_registry.yaml` `general_gotchas` as
+`primitive_dagger_off_path_data_collection_operator` with the source artifacts
+and a clear reuse note. Experiment 4668 SHALL apply the persisted operator to at
+least three held-out cached games and report per-game solve-rate delta,
+first-win delta, action-efficiency delta, and `offline_reproduced_new_level`.
+If no game shows positive transfer value, the artifact SHALL report a
+characterized null with a residual dead-end and SHALL NOT increment reproducible
+total levels.
+
+Experiment 4668 SHALL write
+`results/experiment_4668_primitive_persist_transfer.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `primitive_persisted`,
+`transfer_games`, `transfer_value_per_game`, `offline_reproduced_new_level`,
+`residual_dead_end`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive ranks/routes/induces, oracle-distinct from the executable win-check."
+- `primitive_persisted`: principle "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+- `transfer_games`: principle "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+- `transfer_value_per_game`: principle "per-game solve-rate/first-win/efficiency delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+- `offline_reproduced_new_level`: principle "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+- `residual_dead_end`: principle "the characterized transfer-null residual if value is zero (the next-attack record); per the .429 A5 pattern."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4668
+
+**Given** the offline arcade precondition passes, the A1/A2 artifacts are
+readable, the DAgger off-path primitive is registered in `arc_solver_kit`, and
+the registry contains the persisted primitive gotcha
+**When** Experiment 4668 selects the strongest reusable .430 component and
+measures transfer on at least three cached games
+**Then** it writes the 4668 result artifact with the persisted operator,
+derived-from artifacts, per-game transfer deltas, `verifier_is_oracle=false`,
+strict new-level reproduction accounting, a stable checksum, and an honest
+residual dead-end when transfer value is null.
+
 ### REQ-ARC-WMTE-4657: Submitted A1/A2 Integration Gate
 
 Experiment 4657 SHALL read
