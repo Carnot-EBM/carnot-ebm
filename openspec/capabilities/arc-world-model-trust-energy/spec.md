@@ -1222,6 +1222,71 @@ actions-to-win, first-win deltas, random-mutation ablation status, bootstrap CI,
 offline reproduction status for any generated winner, and an honest null note
 when no new winner is generated.
 
+### REQ-ARC-WMTE-4659: Adversarial Verify QD Ablation And Value-Routing Cost Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the .429 A2
+energy-as-fitness QD claim and the .429 A1 value-routing cost-fix claim from
+over-attribution. An ARC artifact that claims a QD / energy-fitness generation
+win through `winner_generated=true`, `winner_generated_count > 0`, or
+`solve_rate_delta > 0` SHALL report `random_mutation_ablation_passed=true`.
+If the win is claimed while `random_mutation_ablation_passed` is false or
+absent, the reader SHALL emit a CRITICAL flag of kind
+`qd-without-random-mutation-ablation`. If a QD / energy-fitness live-generation
+claim omits `random_mutation_ablation_passed`, the reader SHALL emit a WARN flag
+of kind `qd-random-mutation-ablation-omitted`.
+
+An ARC artifact that claims a value-routing live first-win or solve-rate lift
+through `first_win_rate_delta > 0` or `solve_rate_delta > 0` SHALL report a
+finite `per_node_feature_cost_ms` and `sim_timed_out=false`. If a value-routing
+live win is claimed while either cost-control field is absent or
+`sim_timed_out` is true, the reader SHALL emit a CRITICAL flag of kind
+`value-routing-without-cost-control`. If a value-routing live claim omits either
+cost-control field, the reader SHALL emit a WARN flag of kind
+`value-routing-cost-control-omitted`.
+
+The honest .429 A1/A2 artifacts,
+`results/experiment_4652_value_routing_cost_fix_live.json` and
+`results/experiment_4653_energy_fitness_qd_generation_live.json`, SHALL NOT fire
+either new guard because they report the relevant controls and do not overclaim
+positive live lift.
+
+Experiment 4659 SHALL write
+`results/experiment_4659_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `qd_ablation_guard_added`,
+`value_routing_cost_guard_added`, `honest_artifacts_not_flagged`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_qd_ablation_and_value_routing_cost_guards_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+- `qd_ablation_guard_added`: principle "the QD-WITHOUT-RANDOM-MUTATION-ABLATION guard (a QD generation win must beat a random-mutation ablation, else flagged)."
+- `value_routing_cost_guard_added`: principle "the VALUE-ROUTING-WITHOUT-COST-CONTROL guard (a value-routing win must report per-node cost + no-timeout, else flagged)."
+- `honest_artifacts_not_flagged`: principle "the honest A1/A2 artifacts (which report their controls) are NOT flagged -- false-positive guard (like the .428 goal-energy-ablation guard)."
+- `tests_added`: principle "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4659-QD-RANDOM-MUTATION-ABLATION
+
+**Given** an ARC artifact claims an energy-fitness QD generation win
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when
+`random_mutation_ablation_passed` is false or absent, WARN-flagged when that
+field is omitted, and not flagged when the ablation passes.
+
+#### SCENARIO-ARC-WMTE-4659-VALUE-ROUTING-COST-CONTROL
+
+**Given** an ARC artifact claims a value-routing live first-win or solve-rate
+lift
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when it lacks a finite
+`per_node_feature_cost_ms` or `sim_timed_out=false`, WARN-flagged when either
+field is omitted, and not flagged when both controls are reported.
+
 ### REQ-ARC-WMTE-4656: Primitive Persist Transfer For .429 A1/A2
 
 Experiment 4656 SHALL read
