@@ -1,0 +1,277 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "8e6bd8957ad6c8f1eb8cf172426dd204bda411a5254ee41b46ba2b7c5dc80a4e",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "wall_diagnosis",
+        "generic_first_win_by_config",
+        "generic_agent_reached_level",
+        "subgoal_decomposition",
+        "chosen_submitted_config"
+      ],
+      "path": "results/experiment_4676_hierarchical_subgoal_search_live.json",
+      "sha256": "0c3016d5ddd801d29791df62be13ab995908e953aea91bc4262c0f1d4608bf30",
+      "source": "experiment_4676_hierarchical_subgoal_search_live"
+    },
+    {
+      "fields_imported": [
+        "candidate_generation_coverage_factored",
+        "coverage_delta",
+        "first_win_rate_delta",
+        "residual_bridge_gap",
+        "chosen_submitted_config"
+      ],
+      "path": "results/experiment_4677_poe_world_factored_subgoal_planner.json",
+      "sha256": "be67f2ed5b6ba21c191f4cbd7db12247240600b0054f31d2b921c54171b95ca2",
+      "source": "experiment_4677_poe_world_factored_subgoal_planner"
+    },
+    {
+      "fields_imported": [
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels"
+      ],
+      "path": "results/experiment_4678_levelup_selfplay.json",
+      "sha256": "efed62a1257068a7c272772e7cf35a5c0c440a77592f2e762a11ed2de1a2c27f",
+      "source": "experiment_4678_levelup_selfplay"
+    },
+    {
+      "fields_imported": [
+        "live_submittable_level_count",
+        "ready_for_operator_submit"
+      ],
+      "path": "results/experiment_4679_refresh_submission_package.json",
+      "sha256": "ea8120a169a3707e13e7560ca4d0420ee507325c1cb91b1c9dce105ed76b9268",
+      "source": "experiment_4679_refresh_submission_package"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "reproducible_total_levels",
+        "bridge_crossed_for_solve",
+        "live_submittable_level_count",
+        "paper_ready",
+        "publication_gate"
+      ],
+      "path": "results/experiment_4686_capstone_v431.json",
+      "sha256": "8331d9a48109329fa35ef9f516a91ca2e4bd8d5acf97107907bf4678c0641b52",
+      "source": "experiment_4686_capstone_v431"
+    },
+    {
+      "fields_imported": [
+        "2026.06.432 pivot"
+      ],
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "94d0d36efdfb12aa225edd3a962df49b0912268931bbcad40d20037b0de4c0b4",
+      "source": "research_roadmap_vnext_design"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "d552fa81d1968ed0a71a30312d3084006e9e7081b66acfb5f05a9c204c2566af",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_431": {
+    "a1_hierarchical_subgoal_search": {
+      "chosen_submitted_config": "unchanged",
+      "generic_agent_reached_level": 0,
+      "generic_first_win_count": 1,
+      "generic_first_win_games": 25,
+      "generic_first_win_rate": 0.04,
+      "honest_verdict": "complete: hierarchical_subgoal_no_new_level_residual_value_head_still_not_separating",
+      "residual": "value_head_still_not_separating",
+      "subgoal_decomposition": [],
+      "wall_diagnosis": "l1_first_contact",
+      "winning_games": [
+        "lp85"
+      ]
+    },
+    "a2_poe_world_factored_planner": {
+      "candidate_generation_coverage_factored": 0.0,
+      "chosen_submitted_config": "unchanged",
+      "coverage_delta": 0.0,
+      "first_win_rate_delta": -0.04,
+      "honest_verdict": "complete: poe_world_factored_planner_no_coverage_gain_residual_logged",
+      "residual": "experts_overfit_prefix"
+    },
+    "a3_level_bank_sb26": {
+      "honest_verdict": "success: sb26_L2_offline_reproduced",
+      "offline_reproduced": true,
+      "prior_reproducible_total_levels": 59,
+      "reproducible_total_after": 60,
+      "reproducible_total_delta": 1,
+      "target_game": "sb26",
+      "target_level": 2
+    },
+    "a4_submission_package": {
+      "beats_submission_baseline": 33,
+      "live_submittable_level_count": 60,
+      "ready_for_operator_submit": true
+    },
+    "capstone": {
+      "bridge_crossed_for_solve": false,
+      "frozen_fover_auroc": 0.9131,
+      "paper_ready": true
+    },
+    "source_capstone_honest_verdict": "complete: capability_grew_59_to_60"
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4687_archive_431_activate_432",
+  "experiment_id": 4687,
+  "field_provenance": {
+    "close_state_431": {
+      "principle": "the honest .431 numbers (A3 59->60; A1 wall=l1_first_contact + nulled; A2 coverage 0 + experts_overfit_prefix; both unchanged; A4 60>33; bridge_crossed=False) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    },
+    "v432_pivot": {
+      "principle": "the .432 headline rationale (PIVOT to DIRECTED EXPLORATION: A1 controllable-novelty proposal policy; A2 program-synthesis action-effect proposal filter; A4 retargeted to the held-out first-win lane) recorded so the milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "complete: archive_431_activate_432_true_close_state_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "a1_4676": {
+      "available": true,
+      "path": "results/experiment_4676_hierarchical_subgoal_search_live.json"
+    },
+    "a2_4677": {
+      "available": true,
+      "path": "results/experiment_4677_poe_world_factored_subgoal_planner.json"
+    },
+    "a3_4678": {
+      "available": true,
+      "path": "results/experiment_4678_levelup_selfplay.json"
+    },
+    "a4_4679": {
+      "available": true,
+      "path": "results/experiment_4679_refresh_submission_package.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.432",
+      "milestone_before_activation": "2026.06.432",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "capstone_4686": {
+      "available": true,
+      "path": "results/experiment_4686_capstone_v431.json"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 60
+    },
+    "research_complete_yaml": {
+      "available": true,
+      "contains_2026_06_431": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('yaml_ok')\"",
+      "literal_precondition_passed": false,
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4687_archive_431_activate_432.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 5.00s\n"
+    },
+    "vnext_design": {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  },
+  "random_seed": 4687,
+  "reproducibility_checksum": "sha256:524e0ac5c1bd206f4f5b43d729fac608fca4d4e613b7c02dc44704516d476312",
+  "result_path": "results/experiment_4687_archive_431_activate_432.json",
+  "schema": "carnot.archive_activation.v431_to_v432_4687.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4687",
+    "SCENARIO-CAPSTONE-4687",
+    "SCENARIO-CAPSTONE-4687-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4687-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.432",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "research_complete_contains_2026.06.431",
+    "archived_milestone": "2026.06.431"
+  },
+  "v432_pivot": {
+    "a1": {
+      "components": [
+        "NGU",
+        "RND",
+        "Strategy-Guided Exploration"
+      ],
+      "lever": "controllable_novelty_e3_proposal_policy",
+      "target": "reshape_explorer_action_proposal_distribution"
+    },
+    "a2": {
+      "lever": "program_synthesis_action_effect_proposal_filter",
+      "mandatory_gate": "held_out_transition_rejection"
+    },
+    "a4_retarget": {
+      "first_scored_submission_baseline": 0.08,
+      "not_replay_package_depth": true,
+      "readiness_lane": "experiment_4605_held_out_first_win"
+    },
+    "headline_rationale": "DIRECTED EXPLORATION",
+    "operator_frame": "make_a_winning_l1_trajectory_appear_in_the_pool"
+  }
+}
