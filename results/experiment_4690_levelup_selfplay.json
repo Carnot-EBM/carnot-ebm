@@ -1,20 +1,68 @@
 {
-  "game": "lf52",
-  "reached_level": 2,
-  "moves": 42,
-  "states_expanded": 42,
-  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
-  "hazard_prune": false,
-  "hazard_pruner_stats": null,
+  "dead_ends_recorded": [
+    "bp35: no_grounded_next_level_adapter_for_platformer_delta",
+    "re86: sprite_overlay_L2_delta_not_adaptered_this_run",
+    "s5i5: marker_coverage_L2_delta_not_adaptered_this_run",
+    "g50t: target_offset_L2_delta_not_adaptered_this_run",
+    "r11l: prefix_rooted_graph_search_stalled_at_L1",
+    "sb26: recently_deepened_or_operator_skip_list",
+    "dc22: recently_deepened_or_operator_skip_list",
+    "vc33: recently_deepened_or_operator_skip_list",
+    "ft09: recently_deepened_or_operator_skip_list",
+    "ls20: recently_deepened_or_operator_skip_list",
+    "sk48: recently_deepened_or_operator_skip_list",
+    "ka59: recently_deepened_or_operator_skip_list",
+    "wa30: recently_deepened_or_operator_skip_list",
+    "cd82: no_grounded_L3_delta",
+    "sp80: no_grounded_L3_delta",
+    "su15: no_grounded_L3_delta",
+    "lf52: adapter-free graph explore banked L1 only; L2 requires GameAdapter rail delta"
+  ],
+  "experiment": "experiment_4690_levelup_selfplay",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
+    "target_game": "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .427-.431, not sb26/dc22/vc33/ft09/ls20/sk48/ka59/wa30).",
+    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone).",
+    "verifier_is_oracle": "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
+  },
+  "honest_verdict": "success: lf52_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "offline_reproduced": true,
-  "reproduced_levels": 2,
-  "learned_verifier_checkpoint": "models/arc_verifier_lf52.json",
+  "preconditions_checked": [
+    "arc_solver_kit.offline_arcade()",
+    "standing_loop_result_or_run:results/arc_loop_solve_lf52.json"
+  ],
+  "prior_reproduced_level": 1,
+  "random_seed": 4690,
+  "reached_level": 2,
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "0522cc0b1993a66e8076d45d4e8ebdaf25d65882e0319f52156a08c6a542523c",
+  "reproducible_total_levels_after": 61,
+  "reproducible_total_levels_before": 60,
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "lf52",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.exp4690.levelup_selfplay.v1",
+  "schema_errors": [],
   "selected_generic_operators": [
     {
-      "operator": "approach_dispatcher_operator",
       "derived_from_games": [
         "exp4592_generation_completeness_wiring"
       ],
+      "operator": "approach_dispatcher_operator",
       "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
       "selector_tags": [
         "approach_dispatch",
@@ -26,11 +74,11 @@
       ]
     },
     {
-      "operator": "value_head_bridge_fix_operator",
       "derived_from_games": [
         "exp4616_offline_live_bridge_disambiguation",
         "exp4652_value_routing_cost_fix_live"
       ],
+      "operator": "value_head_bridge_fix_operator",
       "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
       "selector_tags": [
         "value_head",
@@ -43,10 +91,10 @@
       ]
     },
     {
-      "operator": "cheap_value_routing_cost_fix_operator",
       "derived_from_games": [
         "exp4652_value_routing_cost_fix_live"
       ],
+      "operator": "cheap_value_routing_cost_fix_operator",
       "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
       "selector_tags": [
         "value_head",
@@ -60,10 +108,10 @@
       ]
     },
     {
-      "operator": "dagger_off_path_data_collection_operator",
       "derived_from_games": [
         "exp4665_dagger_distribution_shift_value_routing"
       ],
+      "operator": "dagger_off_path_data_collection_operator",
       "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
       "selector_tags": [
         "dagger",
@@ -76,10 +124,10 @@
       ]
     },
     {
-      "operator": "programmatic_expert_trust_weighting_operator",
       "derived_from_games": [
         "exp4677_poe_world_factored_subgoal_planner"
       ],
+      "operator": "programmatic_expert_trust_weighting_operator",
       "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
       "selector_tags": [
         "programmatic_expert",
@@ -92,13 +140,13 @@
       ]
     },
     {
-      "operator": "per_level_reinduction_operator",
       "derived_from_games": [
         "lp85",
         "m0r0",
         "sp80",
         "vc33"
       ],
+      "operator": "per_level_reinduction_operator",
       "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
       "selector_tags": [
         "reinduction",
@@ -109,13 +157,13 @@
       ]
     },
     {
-      "operator": "llm_proposer_reinduction_operator",
       "derived_from_games": [
         "lp85",
         "m0r0",
         "sp80",
         "vc33"
       ],
+      "operator": "llm_proposer_reinduction_operator",
       "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
       "selector_tags": [
         "reinduction",
@@ -127,11 +175,11 @@
       ]
     },
     {
-      "operator": "env_adaptive_resolve_operator",
       "derived_from_games": [
         "sc25",
         "exp4580_live_submission_gap_close"
       ],
+      "operator": "env_adaptive_resolve_operator",
       "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
       "selector_tags": [
         "env_adaptive",
@@ -143,10 +191,10 @@
       ]
     },
     {
-      "operator": "verifier_router_candidate_ranking_operator",
       "derived_from_games": [
         "exp4556_cached_generic_transfer"
       ],
+      "operator": "verifier_router_candidate_ranking_operator",
       "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
       "selector_tags": [
         "verifier_router",
@@ -159,10 +207,10 @@
       ]
     },
     {
-      "operator": "world_model_trust_energy_gate_operator",
       "derived_from_games": [
         "exp4604_world_model_trust_energy"
       ],
+      "operator": "world_model_trust_energy_gate_operator",
       "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
       "selector_tags": [
         "world_model",
@@ -174,11 +222,11 @@
       ]
     },
     {
-      "operator": "persistent_action_effect_memory_operator",
       "derived_from_games": [
         "exp4568_clickability_action_effect_predictor",
         "exp4629_graduate_action_effect_predictor_live"
       ],
+      "operator": "persistent_action_effect_memory_operator",
       "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
       "selector_tags": [
         "action_effect",
@@ -194,11 +242,11 @@
       ]
     },
     {
-      "operator": "graded_goal_energy_search_heuristic_operator",
       "derived_from_games": [
         "exp4020_goal_induction_separation",
         "exp4640_goal_energy_generation_live"
       ],
+      "operator": "graded_goal_energy_search_heuristic_operator",
       "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
       "selector_tags": [
         "goal_energy",
@@ -210,13 +258,13 @@
       ]
     },
     {
-      "operator": "object_centric_digest",
       "derived_from_games": [
         "g50t",
         "lp85",
         "tn36",
         "ka59"
       ],
+      "operator": "object_centric_digest",
       "purpose": "Connected-component object summary for routing, grounding, and active data.",
       "selector_tags": [
         "object",
@@ -226,13 +274,13 @@
       ]
     },
     {
-      "operator": "active_data_collection",
       "derived_from_games": [
         "ar25",
         "ka59",
         "ft09",
         "sc25"
       ],
+      "operator": "active_data_collection",
       "purpose": "Balanced action/object coverage plan for offline transition collection.",
       "selector_tags": [
         "active_data",
@@ -242,7 +290,6 @@
       ]
     },
     {
-      "operator": "graph_astar_action_cost",
       "derived_from_games": [
         "tu93",
         "lp85",
@@ -253,6 +300,7 @@
         "sk48",
         "su15"
       ],
+      "operator": "graph_astar_action_cost",
       "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
       "selector_tags": [
         "graph_explore",
@@ -263,13 +311,6 @@
       ]
     }
   ],
-  "reproduction_gate": {
-    "game": "lf52",
-    "reached_level": 2,
-    "claimed_level": 2,
-    "reproduced": true,
-    "mode": "offline_reproduction_gate_no_quota"
-  },
   "solution_labels": [
     "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
     "{\"action\":6,\"data\":{\"x\":30,\"y\":19}}",
@@ -314,198 +355,146 @@
     "{\"action\":6,\"data\":{\"x\":38,\"y\":52}}",
     "{\"action\":6,\"data\":{\"x\":50,\"y\":52}}"
   ],
-  "solution": [
-    {
-      "action": 6,
-      "data": {
-        "x": 18,
-        "y": 19
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 30,
-        "y": 19
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 30,
-        "y": 19
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 42,
-        "y": 19
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 42,
-        "y": 19
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 42,
-        "y": 31
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 42,
-        "y": 31
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 42,
-        "y": 43
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 14,
-        "y": 16
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 26,
-        "y": 16
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 26,
-        "y": 16
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 38,
-        "y": 16
-      }
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 38,
-        "y": 16
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 50,
-        "y": 16
-      }
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 38,
-        "y": 52
-      }
-    },
-    {
-      "action": 6,
-      "data": {
-        "x": 50,
-        "y": 52
-      }
-    }
-  ],
   "solve_provenance": "development_proxy",
-  "mode": "standing_arc_loop_offline_no_quota"
+  "spec_refs": [
+    "REQ-ARC-WMTE-4690",
+    "SCENARIO-ARC-WMTE-4690-ROTATED-TARGET",
+    "SCENARIO-ARC-WMTE-4690-BANK-AND-CHECKPOINT",
+    "SCENARIO-ARC-WMTE-4690-REGISTRY-GATE"
+  ],
+  "standing_loop_result_path": "results/arc_loop_solve_lf52.json",
+  "states_expanded": 42,
+  "target_game": "lf52",
+  "target_selection": {
+    "fallback_exception": false,
+    "no_grounded_delta_targets": [
+      "cd82",
+      "sp80",
+      "su15"
+    ],
+    "preferred_targets": [
+      "bp35",
+      "re86",
+      "s5i5",
+      "g50t",
+      "r11l",
+      "lf52"
+    ],
+    "prohibited_targets": [
+      "sb26",
+      "dc22",
+      "vc33",
+      "ft09",
+      "ls20",
+      "sk48",
+      "ka59",
+      "wa30"
+    ],
+    "registry_game_count": 25,
+    "registry_level_before": 1,
+    "requested_alternatives": [
+      "m0r0",
+      "cn04",
+      "ar25"
+    ],
+    "rotation_conflict": false,
+    "rotation_rule": "prefer bp35/re86/s5i5/g50t/r11l/lf52; skip sb26/dc22/vc33/ft09/ls20/sk48/ka59/wa30 and known no-grounded-delta L3 targets",
+    "selected": "lf52",
+    "selection_reason": "lf52 is a clean L1-only public game, not deepened in .427-.431, and its L2 rail-carried peg-jump delta reproduced offline through the gate",
+    "skipped": [
+      {
+        "game": "bp35",
+        "reason": "no_grounded_next_level_adapter_for_platformer_delta"
+      },
+      {
+        "game": "re86",
+        "reason": "sprite_overlay_L2_delta_not_adaptered_this_run"
+      },
+      {
+        "game": "s5i5",
+        "reason": "marker_coverage_L2_delta_not_adaptered_this_run"
+      },
+      {
+        "game": "g50t",
+        "reason": "target_offset_L2_delta_not_adaptered_this_run"
+      },
+      {
+        "game": "r11l",
+        "reason": "prefix_rooted_graph_search_stalled_at_L1"
+      },
+      {
+        "game": "sb26",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "dc22",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "vc33",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "ft09",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "ls20",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "sk48",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "ka59",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "wa30",
+        "reason": "recently_deepened_or_operator_skip_list"
+      },
+      {
+        "game": "cd82",
+        "reason": "no_grounded_L3_delta"
+      },
+      {
+        "game": "sp80",
+        "reason": "no_grounded_L3_delta"
+      },
+      {
+        "game": "su15",
+        "reason": "no_grounded_L3_delta"
+      }
+    ]
+  },
+  "verifier_checkpoint_updated": true,
+  "verifier_delta": {
+    "after_sha256": "5b8f4234ed670ac3fab33a01f353f91ea5959d7a13fbf3cbb5cdc97c0ac3e7db",
+    "before_sha256": "436061d530ac33900e7c813001712f5b28b5f17aaf9c42dcde9f345c5770430a",
+    "checkpoint_path": "models/arc_verifier_lf52.json",
+    "negative_trace_notes": [
+      "bp35: no_grounded_next_level_adapter_for_platformer_delta",
+      "re86: sprite_overlay_L2_delta_not_adaptered_this_run",
+      "s5i5: marker_coverage_L2_delta_not_adaptered_this_run",
+      "g50t: target_offset_L2_delta_not_adaptered_this_run",
+      "r11l: prefix_rooted_graph_search_stalled_at_L1",
+      "sb26: recently_deepened_or_operator_skip_list",
+      "dc22: recently_deepened_or_operator_skip_list",
+      "vc33: recently_deepened_or_operator_skip_list",
+      "ft09: recently_deepened_or_operator_skip_list",
+      "ls20: recently_deepened_or_operator_skip_list",
+      "sk48: recently_deepened_or_operator_skip_list",
+      "ka59: recently_deepened_or_operator_skip_list",
+      "wa30: recently_deepened_or_operator_skip_list",
+      "cd82: no_grounded_L3_delta",
+      "sp80: no_grounded_L3_delta",
+      "su15: no_grounded_L3_delta",
+      "lf52: adapter-free graph explore banked L1 only; L2 requires GameAdapter rail delta"
+    ],
+    "positive_trace_steps": 42,
+    "sha_changed": true,
+    "updated": true
+  },
+  "verifier_is_oracle": false
 }
