@@ -1,0 +1,216 @@
+{
+  "citations_verified": {
+    "1011.0686": {
+      "http_status": 200,
+      "title": "A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning",
+      "url": "https://arxiv.org/abs/1011.0686"
+    },
+    "1706.04599": {
+      "http_status": 200,
+      "title": "On Calibration of Modern Neural Networks",
+      "url": "https://arxiv.org/abs/1706.04599"
+    },
+    "2102.04518": {
+      "http_status": 200,
+      "title": "A* Search Without Expansions: Learning Heuristic Functions with Deep Q-Networks",
+      "url": "https://arxiv.org/abs/2102.04518"
+    },
+    "2308.05483": {
+      "http_status": 200,
+      "title": "Quality Diversity under Sparse Reward and Sparse Interaction",
+      "url": "https://arxiv.org/abs/2308.05483"
+    },
+    "2504.01915": {
+      "http_status": 200,
+      "title": "Overcoming Deceptiveness in Fitness Optimization with Unsupervised Quality-Diversity",
+      "url": "https://arxiv.org/abs/2504.01915"
+    },
+    "2504.04366": {
+      "http_status": 200,
+      "title": "Solving Sokoban using Hierarchical Reinforcement Learning with Landmarks",
+      "url": "https://arxiv.org/abs/2504.04366"
+    },
+    "2505.10819": {
+      "http_status": 200,
+      "title": "PoE-World: Compositional World Modeling with Products of Programmatic Experts",
+      "url": "https://arxiv.org/abs/2505.10819"
+    },
+    "2506.07255": {
+      "http_status": 200,
+      "title": "Subgoal-Guided Policy Heuristic Search with Learned Subgoals",
+      "url": "https://arxiv.org/abs/2506.07255"
+    },
+    "2604.03208": {
+      "http_status": 200,
+      "title": "Hierarchical Planning with Latent World Models",
+      "url": "https://arxiv.org/abs/2604.03208"
+    },
+    "2604.11351": {
+      "http_status": 200,
+      "title": "WM-DAgger: Enabling Efficient Data Aggregation for Imitation Learning",
+      "url": "https://arxiv.org/abs/2604.11351"
+    },
+    "2605.05138": {
+      "http_status": 200,
+      "title": "Executable World Models for ARC-AGI-3 in the Era of Coding Agents",
+      "url": "https://arxiv.org/abs/2605.05138"
+    },
+    "2605.28814": {
+      "http_status": 200,
+      "title": "Self-Improving Language Models with Bidirectional Evolutionary Search",
+      "url": "https://arxiv.org/abs/2605.28814"
+    }
+  },
+  "dead_levers_not_reflagged": [
+    "macro-action horizon-collapse RETIRED",
+    "click-heatmap off-centroid generator RETIRED",
+    "just-explore schedule-extraction CLOSED",
+    "goal-energy heuristic NULL"
+  ],
+  "deep_research_not_used": true,
+  "field_principles": {
+    "citations_verified": {
+      "principle": "each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations."
+    },
+    "dead_levers_not_reflagged": {
+      "principle": "names the DEAD levers (macro/click/schedule/goal-energy heuristic) confirmed NOT re-flagged -- honors the week's falsifications."
+    },
+    "deep_research_not_used": {
+      "principle": "MUST be true -- /deep-research is BANNED in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch."
+    },
+    "flagged_for_next_roadmap": {
+      "principle": "the strongest method(s) flagged as candidate .430 inputs (flagged_for_v430) -- closes discover->ingest->plan->experiment."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: sota_ingestion_generation_guidance_mapped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor)."
+    },
+    "methods_mapped": {
+      "principle": "the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when (no citation = fabrication)."
+    },
+    "note_path": {
+      "principle": "the per-track research-note path (the SOTA-Ingestion Cycle deliverable)."
+    },
+    "preconditions_checked": {
+      "principle": "records network reachability verified; pre-empts fabricated citations."
+    }
+  },
+  "flagged_for_next_roadmap": [
+    "flagged_for_v430: hierarchical_subgoal_e3_frontier_with_distribution_shift_value_routing (arXiv:2604.03208 + arXiv:2506.07255 + arXiv:2504.04366 + arXiv:1011.0686 + arXiv:2604.11351 + arXiv:1706.04599)",
+    "flagged_for_v430: poe_world_factored_executable_subgoal_planner (arXiv:2505.10819 + arXiv:2605.05138)"
+  ],
+  "honest_verdict": "success: sota_ingestion_generation_guidance_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "the subgoal miner proposes visual states that are not goal relevant, value routing is still shifted from live frontier states, QD spends budget around an unreachable landmark, or live E3 replay rejects the subgoal path.",
+      "implement_cost_over_current_stack": "medium: add a high-level subgoal layer above the current live E3 frontier, mine failed A1/A2 search trees for subgoal candidates, route each subgoal through bounded low-level search, and keep replay checks plus matched no-regression controls.",
+      "maps_to_current_stack": "A1 value-routing supplies a calibrated low-cost tie-breaker inside each subgoal search, A2 energy-fitness QD becomes a subgoal-conditioned sequence proposer rather than a standalone archive, and live E3 remains the replay-verified executor and parity surface.",
+      "method": "Hierarchical subgoal search over the live E3 frontier",
+      "roadmap_candidate": "flagged_for_v430: hierarchical_subgoal_e3_frontier_with_distribution_shift_value_routing (arXiv:2604.03208 + arXiv:2506.07255 + arXiv:2504.04366 + arXiv:1011.0686 + arXiv:2604.11351 + arXiv:1706.04599)",
+      "source_ids": [
+        "2604.03208",
+        "2506.07255",
+        "2504.04366",
+        "2605.05138"
+      ],
+      "track": "hierarchical_subgoal_search_live_e3_frontier"
+    },
+    {
+      "fails_when": "expert factors are not independent, rare interactions are smoothed away by the product, generated experts overfit prefix transitions, or the soft plan yields actions that live E3 cannot replay.",
+      "implement_cost_over_current_stack": "medium-high: induce small programmatic experts for object-level preconditions and effects, weight them by held-out transition trust, compose only replay-stable factors, and plan subgoal-conditioned candidate sequences through the product model.",
+      "maps_to_current_stack": "A1 value-routing scores which expert-predicted states deserve live expansion, A2 energy-fitness QD mutates only sequences that the factored executable model marks feasible, and live E3 adjudicates every emitted plan through its normal action/replay path.",
+      "method": "PoE-World factored executable model subgoal planner",
+      "roadmap_candidate": "flagged_for_v430: poe_world_factored_executable_subgoal_planner (arXiv:2505.10819 + arXiv:2605.05138)",
+      "source_ids": [
+        "2505.10819",
+        "2605.05138"
+      ],
+      "track": "poe_world_factored_executable_model_planner"
+    },
+    {
+      "fails_when": "the aggregated frontier data is too small, calibration collapses under hidden-state games, cached Q-values become stale after level-up, or the router only reorders candidates that A2 and live E3 still fail to generate.",
+      "implement_cost_over_current_stack": "medium: collect live-frontier states from A1 and A2 failures, use DAgger-style aggregation to retrain or recalibrate the value router on off-path states, convert scores to bounded cost deltas, and cache decision-point evaluations so routing stays affordable.",
+      "maps_to_current_stack": "A1 value-routing stops applying a winning-path value head to shifted live frontier states, A2 energy-fitness QD receives calibrated subgoal costs instead of raw goal-energy ranking, and live E3 keeps primitive actions plus parity gates as the scored integration point.",
+      "method": "Distribution-shift-corrected value routing for subgoal frontiers",
+      "roadmap_candidate": "flagged_for_v430: hierarchical_subgoal_e3_frontier_with_distribution_shift_value_routing (arXiv:2604.03208 + arXiv:2506.07255 + arXiv:2504.04366 + arXiv:1011.0686 + arXiv:2604.11351 + arXiv:1706.04599)",
+      "source_ids": [
+        "1011.0686",
+        "2604.11351",
+        "1706.04599",
+        "2102.04518"
+      ],
+      "track": "distribution_shift_corrected_value_routing"
+    }
+  ],
+  "note_path": "docs/research-notes/generation-guidance-sota-ingestion-2026-06-24.md",
+  "preconditions_checked": {
+    "a1_value_routing_artifact_read": true,
+    "a2_energy_fitness_qd_artifact_read": true,
+    "agents_md_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/1011.0686",
+      "https://arxiv.org/abs/1706.04599",
+      "https://arxiv.org/abs/2102.04518",
+      "https://arxiv.org/abs/2308.05483",
+      "https://arxiv.org/abs/2504.01915",
+      "https://arxiv.org/abs/2504.04366",
+      "https://arxiv.org/abs/2505.10819",
+      "https://arxiv.org/abs/2506.07255",
+      "https://arxiv.org/abs/2604.03208",
+      "https://arxiv.org/abs/2604.11351",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2605.28814"
+    ],
+    "codex_md_read": true,
+    "dead_lever_notes_read": [
+      "macro-action horizon-collapse RETIRED",
+      "click-heatmap off-centroid generator RETIRED",
+      "just-explore schedule-extraction CLOSED",
+      "goal-energy heuristic NULL"
+    ],
+    "deep_research_invoked": false,
+    "exp4649_artifact_read": true,
+    "exp4649_note_read": true,
+    "leaderboard_submission": false,
+    "live_llm_inference": false,
+    "model_load": false,
+    "network_hf_models_reachable": true,
+    "ops_docs_modified": false,
+    "research_conductor_modified": false,
+    "research_references_read": true,
+    "research_studying_read": true,
+    "sweep_clusters_help_ok": true,
+    "sweep_clusters_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_arxiv_ids": [],
+    "sweep_semscholar_queries": [
+      "hierarchical subgoal search learned subgoals latent world model ARC 2604.03208 2506.07255 2504.04366",
+      "factored executable world model product of experts programmatic experts ARC 2505.10819 2605.05138",
+      "distribution shift corrected value routing affordable value routing offline to live 1011.0686 2604.11351 1706.04599 2102.04518"
+    ],
+    "sweep_semscholar_rate_limited_queries": [
+      "hierarchical subgoal search learned subgoals latent world model ARC 2604.03208 2506.07255 2504.04366",
+      "factored executable world model product of experts programmatic experts ARC 2505.10819 2605.05138",
+      "distribution shift corrected value routing affordable value routing offline to live 1011.0686 2604.11351 1706.04599 2102.04518"
+    ],
+    "sweep_semscholar_used": true,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/2604.03208",
+      "https://arxiv.org/abs/2506.07255",
+      "https://arxiv.org/abs/2504.04366",
+      "https://arxiv.org/abs/2505.10819",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/1011.0686",
+      "https://arxiv.org/abs/2604.11351",
+      "https://arxiv.org/abs/1706.04599"
+    ]
+  },
+  "random_seed": 4661
+}

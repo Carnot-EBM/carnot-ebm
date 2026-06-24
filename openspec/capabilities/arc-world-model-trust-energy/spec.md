@@ -1149,6 +1149,70 @@ current goal-energy / action-effect stack, cite real arXiv IDs including
 `.429` roadmap candidates, record all network and citation preconditions
 checked, and record that `/deep-research` was not used.
 
+### REQ-ARC-WMTE-4661: Generation-Guidance SOTA Ingestion For .430
+
+Experiment 4661 SHALL synthesize the 2026-06-24 SOTA ingestion focused on the
+localized `.429` generation-guidance wall after the macro-action
+horizon-collapse, off-centroid click-heatmap generator, just-explore
+schedule-extraction, and standalone goal-energy heuristic levers were retired
+or nulled. The workflow SHALL read
+`results/experiment_4649_sota_ingestion_energy_fitness_generator.json`,
+`docs/research-notes/energy-fitness-generator-literature-2026-06-23.md`,
+`research-studying.md`, `research-references.md`, and the three 2026-06-23
+dead-lever notes for macro vocabularies, click heatmaps, and just-explore. It
+SHALL also read the current A1 value-routing and A2 energy-fitness QD artifacts
+before describing implementation cost over the current stack.
+
+The workflow SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch, and direct arXiv HTTP checks. It SHALL NOT invoke
+`/deep-research`. If `https://huggingface.co/api/models` or
+`.venv/bin/python scripts/sweep_clusters.py --help` fails, the workflow SHALL
+report `blocked_network` or `blocked_sweep_clusters` rather than fabricate
+citations.
+
+Experiment 4661 SHALL write
+`docs/research-notes/generation-guidance-sota-ingestion-2026-06-24.md` and
+`results/experiment_4661_sota_ingestion_generation_guidance.json`. The
+artifact SHALL include `honest_verdict`, `inference_substrate`,
+`deep_research_not_used`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `dead_levers_not_reflagged`, `note_path`,
+`preconditions_checked`, `random_seed`, and `field_principles`. The success
+verdict SHALL be `success: sota_ingestion_generation_guidance_mapped`, the
+substrate SHALL be `aggregation_from_upstream_artifacts`, and
+`deep_research_not_used` SHALL be true. Each mapped method SHALL cite real
+arXiv IDs and SHALL include the implementation cost over the current A1
+value-routing, A2 energy-fitness QD, and live E3 stack plus a concrete
+`fails_when` condition.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_generation_guidance_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is BANNED in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when (no citation = fabrication).`
+- `citations_verified`: principle `each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations.`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .430 inputs (flagged_for_v430) -- closes discover->ingest->plan->experiment.`
+- `dead_levers_not_reflagged`: principle `names the DEAD levers (macro/click/schedule/goal-energy heuristic) confirmed NOT re-flagged -- honors the week's falsifications.`
+- `note_path`: principle `the per-track research-note path (the SOTA-Ingestion Cycle deliverable).`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4661: Surviving Guidance Methods Map Onto .430 Inputs
+
+Given the network and sweep-helper preconditions succeed and the .428/.429
+generation artifacts plus dead-lever notes are readable
+When experiment 4661 ingests focused papers for hierarchical subgoal search,
+factored executable world models, and distribution-shift-corrected value
+routing
+Then the note and JSON artifact map three to five strongest methods onto the
+current A1 value-routing / A2 energy-fitness QD / live E3 stack, cite real
+arXiv IDs including `2604.03208`, `2506.07255`, `2504.04366`, `2505.10819`,
+`2605.05138`, `1011.0686`, `2604.11351`, `1706.04599`, `2102.04518`,
+`2605.28814`, `2308.05483`, and `2504.01915`, flag one or more
+`flagged_for_v430` roadmap candidates, record the macro/click/schedule/
+goal-energy heuristic levers as not re-flagged, record all network and
+citation preconditions checked, and record that `/deep-research` was not used.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
