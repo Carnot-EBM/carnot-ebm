@@ -4518,3 +4518,45 @@ action-sequence fragments first, pair it with a macro-action vocabulary to
 collapse horizon, then add hierarchical subgoals and PoE-World only behind
 replay-verified action-effect gates; keep distributed QD as a later scaling arm.
 <!-- EXP4649-ENERGY-FITNESS-GENERATOR-SOTA-END -->
+
+<!-- EXP4661-GENERATION-GUIDANCE-SOTA-START -->
+## 2026-06-24 Exp 4661 - .429 generation-guidance SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/generation-guidance-sota-ingestion-2026-06-24.md`.
+
+**Filtered track:** surviving generation-guidance directions for chaining a
+second live level-up after A1 value-routing and A2 energy-fitness QD both
+returned no live lift: hierarchical subgoal search, PoE/factored executable
+world models, and distribution-shift-corrected value routing.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py --help` exited cleanly. `scripts/sweep_clusters.py`
+emitted focused ARC exploration and neural-guided-search URLs.
+`scripts/sweep_semscholar.py` returned HTTP 429 for the three focused queries
+and no S2-only source was promoted. Low-concurrency WebSearch/WebFetch plus
+direct arXiv HTTP checks verified arXiv:2604.03208, arXiv:2506.07255,
+arXiv:2504.04366, arXiv:2505.10819, arXiv:2605.05138, arXiv:1011.0686,
+arXiv:2604.11351, arXiv:1706.04599, arXiv:2102.04518, arXiv:2605.28814,
+arXiv:2308.05483, and arXiv:2504.01915. `/deep-research` was not invoked.
+
+**Dead levers confirmed not re-flagged:** macro-action horizon-collapse
+RETIRED; click-heatmap off-centroid generator RETIRED; just-explore
+schedule-extraction CLOSED; goal-energy heuristic NULL.
+
+**Methods marked ingested:** hierarchical subgoal search over live E3,
+PoE-World/factored executable world-model planning, and DAgger/calibrated
+distribution-shift-corrected value routing for subgoal frontiers.
+
+flagged_for_v430: hierarchical_subgoal_e3_frontier_with_distribution_shift_value_routing
+(arXiv:2604.03208 + arXiv:2506.07255 + arXiv:2504.04366 + arXiv:1011.0686 + arXiv:2604.11351 + arXiv:1706.04599)
+
+flagged_for_v430: poe_world_factored_executable_subgoal_planner
+(arXiv:2505.10819 + arXiv:2605.05138)
+
+**Bottom line for .430:** make hierarchical subgoals the primary .430 input,
+with DAgger/calibrated value routing as the affordable low-level guide; keep
+PoE-World/factored executable planning as the stronger second candidate when
+transition-factor trust is available. Do not re-open macro depth, off-centroid
+click coverage, just-explore schedule extraction, or standalone goal-energy
+heuristics.
+<!-- EXP4661-GENERATION-GUIDANCE-SOTA-END -->
