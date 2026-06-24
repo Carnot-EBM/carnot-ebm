@@ -1,0 +1,124 @@
+{
+  "calibration_changes_routing": false,
+  "ci_gate": {
+    "baseline_attempt_count": 25,
+    "baseline_attempt_timeout_count": 0,
+    "errors": [],
+    "expected_attempts": 25,
+    "first_win_floor": 0.04,
+    "first_win_rate": 0.04,
+    "passed": true,
+    "sim_timed_out": false,
+    "solve_rate": 0.0,
+    "solve_rate_floor": 0.0,
+    "value_routed_attempt_count": 25,
+    "value_routed_attempt_timeout_count": 0
+  },
+  "cigate_added": {
+    "baseline_attempt_count": 25,
+    "baseline_attempt_timeout_count": 0,
+    "errors": [],
+    "expected_attempts": 25,
+    "first_win_floor": 0.04,
+    "first_win_rate": 0.04,
+    "passed": true,
+    "sim_timed_out": false,
+    "solve_rate": 0.0,
+    "solve_rate_floor": 0.0,
+    "value_routed_attempt_count": 25,
+    "value_routed_attempt_timeout_count": 0
+  },
+  "diagnostic": {
+    "calibration_changes_routing": false,
+    "calibration_probe": {
+      "calibrated_best_candidate": "lp85~color01",
+      "calibration_changes_routing": false,
+      "calibration_method": "isotonic_increasing_cost",
+      "candidate_count": 25,
+      "isotonic_error": 0.0,
+      "live_candidate_count": 25,
+      "raw_best_candidate": "lp85~color01"
+    },
+    "distribution_shift_probe": {
+      "distribution_shift_score": 0.699108,
+      "off_path_count": 24,
+      "off_path_mean_score": 196.083333,
+      "winning_path_count": 1,
+      "winning_path_mean_score": 59.0
+    },
+    "distribution_shift_score": 0.699108,
+    "distribution_shift_threshold": 0.25,
+    "dominant_residual_cause": "distribution_shift"
+  },
+  "distribution_shift_score": 0.699108,
+  "dominant_residual_cause": "distribution_shift",
+  "duration_s": 1.50731,
+  "experiment": "experiment_4658_value_routing_cigate_diagnostic",
+  "field_principles": {
+    "calibration_changes_routing": {
+      "principle": "whether isotonic/Platt calibration of the 0.725 ranking changes the live routing decision (true = calibration is a residual cause)."
+    },
+    "cigate_added": {
+      "principle": "the CI-gate that fails on a value-routing timeout-regression or live first-win/solve-rate floor breach (guards the A1 win)."
+    },
+    "distribution_shift_score": {
+      "principle": "the DAgger-lite off-path-vs-winning-path value-head score gap (high = distribution-shift is the residual cause)."
+    },
+    "dominant_residual_cause": {
+      "principle": "the localized .430 target (distribution_shift | calibration | none_a1_lifted) -- converts A1's null into a sharp next-milestone attack."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: value_routing_cigate_plus_diagnostic_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline value-head re-scoring + a small sim re-run (1s floor); no live_llm_inference."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests added for the CI-gate + diagnostic (Tests Must Run and Assert)."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the value head/diagnostic are oracle-distinct from the executable win-check."
+    }
+  },
+  "honest_verdict": "success: value_routing_cigate_plus_diagnostic_shipped_tests_green.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline value-head re-scoring + a small sim re-run (1s floor); no live_llm_inference.",
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "agentic_imports": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "live_llm_inference": false,
+    "ok": true,
+    "spec_has_req_4658": true
+  },
+  "random_seed": 4658,
+  "reproducibility_checksum": "sha256:06cfe5811cf7119f04eeac8d52f601503d3df2227fad14eba8cb6a953c78c711",
+  "schema": "carnot.exp4658.value_routing_cigate_diagnostic.v1",
+  "source_artifact": "results/experiment_4652_value_routing_cost_fix_live.json",
+  "source_artifact_checksum": "sha256:90ccbe51ddebe5a2c1e2e15032842eb9ddd9d6dbc66da4c6e04861d5a07d93ee",
+  "spec_refs": [
+    "REQ-LEARN-4658",
+    "SCENARIO-LEARN-4658-CIGATE",
+    "SCENARIO-LEARN-4658-DIAGNOSTIC"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "passed": true,
+    "spec_refs": [
+      "REQ-LEARN-4658",
+      "SCENARIO-LEARN-4658-CIGATE",
+      "SCENARIO-LEARN-4658-DIAGNOSTIC"
+    ],
+    "test_file": "tests/python/test_experiment_4658_value_routing_cigate_diagnostic.py"
+  },
+  "verifier_is_oracle": false
+}

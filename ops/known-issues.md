@@ -11,6 +11,104 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-24 (MANDATORY-NEXT-MILESTONE .430, operator-directed pre-stage): L2-GOAL-PREDICATE INDUCTION — fix the multi-level (L1->L2) live-deepening wall
+
+**Operator 2026-06-24** asked to pre-stage the L2-goal-induction fix for multi-level live deepening to
+the roadmap. A clean-Qwen, fully-instrumented outer-loop diagnosis (committed `8bb8a4cfd`; note
+`docs/research-notes/multi-level-deepening-diagnostic-2026-06-23.md`; artifacts
+`results/proto_multilevel_diag_real_{baseline,K1gate05,K25gate05}.json`; root-cause workflow
+`wf_fcab5470-68f`) PINPOINTED the wall. **Build this fix; do NOT re-derive the diagnosis or re-run the
+dead-end levers below.**
+
+**The wall (measured, not assumed).** The live first-win rate is ~0.59 but the live multi-level
+(>=2 levels on a fresh game) rate is ~0 — the generic `E3AgentPolicy` reaches L1 by exploration but
+never deepens to L2. The `level_up_reinduction` path (`_induce_and_plan` ->
+`arc_llm_reinduction.execute_bounded_llm_reinduction`) fails as follows on the canonical submitted-config
+baseline (lp85, Qwen3.5-9B-MTP verified via /props on a clean port):
+
+```
+round1 induce: proposer_ok=True  heldout_accuracy=1.0  ACCEPTED=True  plan_len=0  reaches_goal=False  cx=no_reachable_plan
+```
+
+The induced DYNAMICS model PASSES the strict 1.0 held-out gate, but `plan_in_model` returns
+`no_reachable_plan`. **The binding constraint is the L2 GOAL PREDICATE, not the dynamics gate** (this is
+DISTINCT from the 0.08 first-win exact-match `WorldModelVerifier` dynamics wall mapped in
+`arc-008-wall-root-cause-2026-06-21.md` + the `CARNOT_ARC_TRUST_METRIC=cell_recall` knob — that is a
+DYNAMICS gate; this is a GOAL gate). Root cause: at the level-up, the active-transition window resets to
+post-boundary transitions, which contain ZERO L2-win positives, so the induce prompt's WIN-STATE block is
+absent (`arc_executable_world_model.py` `_transitions_block` ~L308 only emits WIN STATE when an active
+transition has `level_after>level_before`). The LLM therefore writes `is_level_complete` for L2 from NO
+positive exemplar, and that goal predicate is NEVER verified (the held-out gate checks DYNAMICS only) ->
+unsatisfiable/degenerate -> the planner has no reachable goal. Evidence starvation compounds it: the
+reinduction is ONE-SHOT and fires at `trans=1` (`_should_enter_induction`:
+`len(transitions) > _episode_transition_start`), so the gate is also VACUOUS (~0 held-out data ->
+heldout=1.0 proves nothing) and the goal induction has no L2 evidence.
+
+**THE FIX (the task to build).**
+1. **Capture the level-up grid as a WIN-STATE exemplar.** On `_begin_level_goal_episode` (the level-up),
+   store the grid observed at the boundary (the state that just completed level k-1). Pass it into the L2
+   reinduction's induce prompt WIN-STATE block, explicitly labeled as "a state that COMPLETED the previous
+   level; the next level's completion likely looks structurally similar" — so the LLM induces a
+   non-degenerate `is_level_complete` from a real positive exemplar instead of from nothing.
+2. **Verify the induced GOAL is satisfiable before planning.** Add a GOAL-satisfiability check (the
+   held-out gate is DYNAMICS-only): evaluate the induced `is_level_complete` over the reachable grids
+   `plan_in_model` visits (or a sampled rollout); if it is never True (constant-False / unsatisfiable),
+   REJECT the goal predicate with counterexample kind `degenerate_goal_predicate` and refine, instead of
+   silently handing a planner that returns `no_reachable_plan`.
+
+**Falsifiable acceptance gate.** On lp85 AND sc25 (both reach L1 by exploration; L2 reachable per registry):
+the L1->L2 reinduction produces an `is_level_complete` that is True on >=1 reachable grid (non-degenerate)
+AND `plan_in_model` returns a non-empty plan with `reaches_goal=True` AND the GENERIC live agent reaches
+L2, **offline-reproduced** via `arc_solver_kit.reproduce` (this would be a genuine
+`live_agent_self_discovery` L2 — NOT a development_proxy adapter solve). `retire_if_same_verdict: true`:
+if the goal stays degenerate / plan stays empty after the exemplar+satisfiability fix, the residual is
+documented (the goal cannot be induced from a single L1-exemplar, or the L2 dynamics model is wrong) and
+the task retires rather than re-proposing the same fix.
+
+**DEAD-ENDS (measured this session — do NOT propose these):** (a) relaxing the held-out gate
+(`CARNOT_ARC_REINDUCTION_HELDOUT`<1.0) is a NO-OP — the gate already passes vacuously; (b) delaying the
+one-shot (`CARNOT_ARC_REINDUCTION_MIN_EVIDENCE`>1) BACKFIRES — the explorer hits `explored_out` at ~5
+post-L1 transitions, so a stall-induction preempts the reinduction. Both env-knobs are parity-safe
+prototypes preserved on branch `outer-loop/bp35-diag` (`bfd565922`) but neither closes the wall; the GOAL
+predicate (above) is the lever.
+
+**PRECONDITIONS (step 0 of the task prompt):** Qwen3.5-9B-MTP GGUF cached
+(`ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/`); else
+`blocked_model_not_cached_qwen`. NOTE the port-8919 confound: a persistent gemma server squats the
+hardcoded `LocalGGUFProposer` port 8919 — a local measurement MUST construct the proposer on a free port
+(e.g. 8920) + verify via `/props` it served Qwen, not gemma (on Kaggle this is moot). Verify induced code
+runs in the gVisor/in-proc exec path as usual.
+
+**REQUIRED ARTIFACT FIELDS (principle-annotated):**
+- `goal_predicate_satisfiable: bool` — principle: "the held-out gate checks DYNAMICS only; a constant-False
+  goal sails through today and yields no_reachable_plan. This field records that the induced L2 goal is True
+  on >=1 reachable grid — the missing verification."
+- `l2_plan_len: int` + `l2_plan_reaches_goal: bool` — principle: "plan_len=0/reaches_goal=False was the
+  measured failure; non-empty + reaches_goal is the fix working."
+- `offline_reproduced: bool` + `reproduced_levels: int` — principle: "a solve not reproducible offline is
+  wasted effort; only reproduced levels count (ARC Solve Reproducibility discipline)."
+- `solve_provenance: live_agent_self_discovery|development_proxy` — principle: "a generic-agent L2 via the
+  fixed induction is self-discovery; an adapter L2 is a dev proxy that does not prove the live fix."
+- `inference_substrate: live_llm_inference` — principle: "loads + runs the Qwen GGUF; 60s duration floor."
+- `honest_verdict` — MUST start `complete:`/`success:` (terminal-prefix discipline); a null (goal still
+  degenerate) is still `complete: l2_goal_induction_no_deepening_residual_<cause>`.
+
+**Agent routing:** `agent_type: codex` per the ARC Submission Sprint default (experiments stay codex;
+planner/retro stay Claude Opus). This touches the live induce path across `arc_competition_agent.py` +
+`arc_llm_reinduction.py` + `arc_executable_world_model.py`; if the planner judges it needs Claude's
+multi-file choreography it may set `requires_claude_verified: true`, but the default is codex.
+
+**Live-path-reachable by construction** (it modifies `E3AgentPolicy`/`arc_llm_reinduction`, both in the
+scored agent's import closure — `arc_orphan_solver_lint` passes). Counts toward the ARC sprint majority
+(it is live multi-level deepening) AND satisfies the Level-Up Attempt Guarantee (its gate banks an L2 if
+the fix works). Strategic note for the planner: multi-level DEPTH is goal/proposer-bound; if this fix
+nulls, first-win BREADTH (0.59) is the cheaper ROI for the 2026-06-30 deadline — but try the goal fix
+first, it is the precise, measured lever. **This may also be subsumed by the `.429 A2 energy-as-fitness QD
+lever** (which GENERATES winning sequences directly, bypassing the goal-predicate planner) — if `.429 A2
+lands a live L2, re-scope or retire this task rather than duplicating.
+
+---
+
 ### 2026-06-20 (STRATEGIC DIRECTIVE, operator "lean into energy models that augment others' approaches"): energy-augmented ARC is the research spine
 
 **Operator 2026-06-20:** lean into the ENERGY-MODEL possibilities that AUGMENT the leaderboard winners'
