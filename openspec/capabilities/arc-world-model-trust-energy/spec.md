@@ -1640,6 +1640,74 @@ Then the artifact reports filter coverage, blind coverage, explicit coverage
 delta, held-out kept/rejected counts, first-win delta, bootstrap CI, and an
 honest null note plus residual when the winning plan does not newly appear.
 
+### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
+
+Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2
+directed-exploration primitive into `arc_solver_kit` and
+`ops/arc_solve_registry.yaml`, then measure cross-game transfer on at least
+three cached held-out games. If Experiment 4688's controllable-novelty proposal
+policy cleared its success gate, Experiment 4692 SHALL persist that
+controllable-novelty operator. Else if Experiment 4689's program-synthesis
+action-effect proposal filter cleared its success gate, it SHALL persist that
+held-out-validated action-effect filter operator. If both are value-null, the
+experiment SHALL persist the strongest characterized reusable component instead.
+For the cached `.433` artifacts, that component is the controllable-novelty
+embedding mechanism from Experiment 4688: it embeds controllable action-effect
+deltas, rejects raw-frame/cosmetic novelty when the controllability gate is on,
+and exposes an oracle-distinct intrinsic proposal score for live exploration.
+
+The persisted primitive SHALL remain oracle-distinct from the executable
+win-check. It may generate, rank, embed, induce, or filter candidate actions,
+but a new level SHALL count only when the offline reproduction gate accepts it.
+The transfer measurement SHALL apply the persisted operator to cached held-out
+games and SHALL report, per game, candidate-coverage delta, live solve-rate
+delta, first-win delta, and `offline_reproduced_new_level`. A zero-value
+transfer is valid only when recorded with a residual dead-end for the next
+attack.
+
+Experiment 4692 SHALL write
+`results/experiment_4692_primitive_persist_transfer.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `primitive_persisted`,
+`transfer_games`, `transfer_value_per_game`, `offline_reproduced_new_level`,
+`residual_dead_end`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive generates/ranks/induces, oracle-distinct from the executable win-check."
+- `primitive_persisted`: principle "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+- `transfer_games`: principle "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+- `transfer_value_per_game`: principle "per-game coverage/first-win/solve-rate delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+- `offline_reproduced_new_level`: principle "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+- `residual_dead_end`: principle "the characterized transfer-null residual if value is zero (the next-attack record); per the .431 A5 pattern."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4692-PERSIST-STRONGEST-COMPONENT
+
+**Given** Experiments 4688 and 4689 both report complete value-null verdicts
+and `chosen_submitted_config=unchanged`
+**When** Experiment 4692 selects the reusable primitive
+**Then** it persists `controllable_novelty_embedding_operator` under the
+registry gotcha id `primitive_controllable_novelty_embedding_operator`,
+records the 4688/4689 source artifacts, and explains that this captures
+characterized directed-exploration scaffolding rather than fabricating a banked
+level.
+
+#### SCENARIO-ARC-WMTE-4692-TRANSFER-MEASUREMENT
+
+**Given** cached held-out games and the persisted controllable-novelty
+embedding operator
+**When** Experiment 4692 measures transfer
+**Then** each game reports coverage, first-win, solve-rate, and offline
+reproduction deltas, and a zero-value run emits
+`complete: primitive_persisted_transfer_null_characterized` with a
+`residual_dead_end`.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
