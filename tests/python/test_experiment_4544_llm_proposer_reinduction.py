@@ -15,6 +15,7 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[2]
 SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
+pytestmark = pytest.mark.memory_watchdog_skip
 
 
 def _levels(lp85: int = 1, m0r0: int = 1, sp80: int = 1, vc33: int = 1) -> dict[str, int]:
@@ -163,7 +164,11 @@ def test_req_arc_wmte_4544_bounded_refinement_stops_on_reachable_plan() -> None:
     assert result.verifier_is_oracle is False
     assert result.goal_candidate_names == ["loaded"]
     assert result.dynamics_candidate_names == ["loaded"]
-    assert result.counterexamples[0]["kind"] in {"no_reachable_plan", "plan_execution"}
+    assert result.counterexamples[0]["kind"] in {
+        "degenerate_goal_predicate",
+        "no_reachable_plan",
+        "plan_execution",
+    }
 
 
 def test_req_arc_wmte_4544_bounded_refinement_caps_at_three_rounds() -> None:
@@ -213,7 +218,7 @@ def test_req_arc_wmte_4544_bounded_refinement_caps_at_three_rounds() -> None:
     assert result.planned is False
     assert result.refinement_rounds_used == 3
     assert [row["round"] for row in result.rounds] == [1, 2, 3]
-    assert result.skipped == "no_reachable_plan_after_refinement"
+    assert result.skipped == "degenerate_goal_predicate"
 
 
 def test_req_arc_wmte_4544_honest_null_records_proposer_value(tmp_path: Path) -> None:
@@ -258,7 +263,9 @@ def test_req_arc_wmte_4544_success_requires_l2_efficiency_preservation_and_repla
     artifact = exp4544.build_artifact(
         preconditions_checked=_preconditions(),
         offline_dsl_baseline=_measurement("offline_dsl_baseline", levels=_levels(lp85=1)),
-        llm_proposer=_measurement("llm_proposer", levels=_levels(lp85=2), efficiency=3.125, planned=True),
+        llm_proposer=_measurement(
+            "llm_proposer", levels=_levels(lp85=2), efficiency=3.125, planned=True
+        ),
         llm_proposer_value={"count": 1, "opportunities": 1, "rate": 1.0, "events": ["lp85:L2"]},
         positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
         offline_reproduction={"reproduced": True, "game": "lp85", "reached_level": 2},
@@ -327,7 +334,10 @@ def test_scenario_arc_wmte_4544_run_writes_injected_measurements(tmp_path: Path)
     assert artifact["result_path"] == exp4544.RESULT_RELATIVE_PATH
     assert artifact["positive_control_passed"] is True
     assert artifact["false_negative_risk_checked"] is True
-    assert json.loads((tmp_path / exp4544.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
+    assert (
+        json.loads((tmp_path / exp4544.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
+        == artifact
+    )
 
 
 def test_scenario_arc_wmte_4544_e3_policy_records_llm_refinement(monkeypatch) -> None:
@@ -413,66 +423,90 @@ def test_req_arc_wmte_4544_helper_defensive_branches() -> None:
     assert [row.name for row in rows] == ["direct", "mapping", "tuple"]
 
     grid = np.array([[0]], dtype=np.int16)
-    assert _plan_reaches_goal(engine=noop, goal=None, start_grid=grid, plan=[])["counterexample"][
-        "kind"
-    ] == "missing_goal_predicate"
-    assert _plan_reaches_goal(
-        engine=noop,
-        goal=lambda current: bool(np.asarray(current)[0, 0] == 0),
-        start_grid=grid,
-        plan=[],
-    )["reaches_goal"] is True
+    assert (
+        _plan_reaches_goal(engine=noop, goal=None, start_grid=grid, plan=[])["counterexample"][
+            "kind"
+        ]
+        == "missing_goal_predicate"
+    )
+    assert (
+        _plan_reaches_goal(
+            engine=noop,
+            goal=lambda current: bool(np.asarray(current)[0, 0] == 0),
+            start_grid=grid,
+            plan=[],
+        )["reaches_goal"]
+        is True
+    )
 
     def bad_goal(_grid):
         raise RuntimeError("goal boom")
 
-    assert _plan_reaches_goal(engine=noop, goal=bad_goal, start_grid=grid, plan=[])[
-        "counterexample"
-    ]["kind"] == "goal_predicate_error"
+    assert (
+        _plan_reaches_goal(engine=noop, goal=bad_goal, start_grid=grid, plan=[])["counterexample"][
+            "kind"
+        ]
+        == "goal_predicate_error"
+    )
 
     def bad_engine(_grid, _action, _data):
         raise RuntimeError("engine boom")
 
-    assert _plan_reaches_goal(
-        engine=bad_engine,
-        goal=lambda _grid: False,
-        start_grid=grid,
-        plan=[{"action": 1, "data": None}],
-    )["counterexample"]["kind"] == "plan_execution"
-    assert _plan_reaches_goal(
-        engine=noop,
-        goal=bad_goal,
-        start_grid=grid,
-        plan=[{"action": 1, "data": None}],
-    )["counterexample"]["kind"] == "goal_predicate_error"
-    assert _plan_reaches_goal(
-        engine=noop,
-        goal=lambda _grid: False,
-        start_grid=grid,
-        plan=[{"action": 1, "data": None}],
-    )["counterexample"]["reason"] == "plan_finished_before_goal"
+    assert (
+        _plan_reaches_goal(
+            engine=bad_engine,
+            goal=lambda _grid: False,
+            start_grid=grid,
+            plan=[{"action": 1, "data": None}],
+        )["counterexample"]["kind"]
+        == "plan_execution"
+    )
+    assert (
+        _plan_reaches_goal(
+            engine=noop,
+            goal=bad_goal,
+            start_grid=grid,
+            plan=[{"action": 1, "data": None}],
+        )["counterexample"]["kind"]
+        == "goal_predicate_error"
+    )
+    assert (
+        _plan_reaches_goal(
+            engine=noop,
+            goal=lambda _grid: False,
+            start_grid=grid,
+            plan=[{"action": 1, "data": None}],
+        )["counterexample"]["reason"]
+        == "plan_finished_before_goal"
+    )
 
     proposer = SimpleNamespace(model_specs="Qwen3.5-9B-MTP GGUF (/m.gguf)")
-    assert execute_bounded_llm_reinduction(
-        game="fixture",
-        transitions=[SimpleNamespace()],
-        cell=1,
-        root_grid=None,
-        proposer=proposer,
-        candidate_provider=lambda _engine, _goal: [],
-        load_engine=lambda _game: (noop, lambda _grid: False),
-        plan_in_model=lambda _engine, _goal, _grid: None,
-    ).skipped == "missing_root_grid"
-    assert execute_bounded_llm_reinduction(
-        game="fixture",
-        transitions=[],
-        cell=1,
-        root_grid=grid,
-        proposer=proposer,
-        candidate_provider=lambda _engine, _goal: [],
-        load_engine=lambda _game: (noop, lambda _grid: False),
-        plan_in_model=lambda _engine, _goal, _grid: None,
-    ).skipped == "no_active_transitions"
+    assert (
+        execute_bounded_llm_reinduction(
+            game="fixture",
+            transitions=[SimpleNamespace()],
+            cell=1,
+            root_grid=None,
+            proposer=proposer,
+            candidate_provider=lambda _engine, _goal: [],
+            load_engine=lambda _game: (noop, lambda _grid: False),
+            plan_in_model=lambda _engine, _goal, _grid: None,
+        ).skipped
+        == "missing_root_grid"
+    )
+    assert (
+        execute_bounded_llm_reinduction(
+            game="fixture",
+            transitions=[],
+            cell=1,
+            root_grid=grid,
+            proposer=proposer,
+            candidate_provider=lambda _engine, _goal: [],
+            load_engine=lambda _game: (noop, lambda _grid: False),
+            plan_in_model=lambda _engine, _goal, _grid: None,
+        ).skipped
+        == "no_active_transitions"
+    )
 
 
 def test_req_arc_wmte_4544_helper_failure_paths() -> None:
@@ -503,7 +537,10 @@ def test_req_arc_wmte_4544_helper_failure_paths() -> None:
         root_grid=np.array([[0]], dtype=np.int16),
         proposer=Fails(),
         candidate_provider=lambda _engine, _goal: [],
-        load_engine=lambda _game: (lambda grid, _action, _data: np.asarray(grid), lambda _grid: False),
+        load_engine=lambda _game: (
+            lambda grid, _action, _data: np.asarray(grid),
+            lambda _grid: False,
+        ),
         plan_in_model=lambda _engine, _goal, _grid: None,
     )
     assert failed.skipped == "proposer_failed"
@@ -565,13 +602,17 @@ def test_req_arc_wmte_4544_experiment_helper_branches() -> None:
     assert normal["deepest_level_by_game"]["lp85"] == 2
     assert normal["deepest_level_by_game"]["m0r0"] == 1
     assert normal["core_efficiency"] == 1.25
-    assert exp4544.characterize_llm_proposer_value({}, {"per_game": ["bad", {"game": "lp85"}]})[
-        "rate"
-    ] == 0.0
+    assert (
+        exp4544.characterize_llm_proposer_value({}, {"per_game": ["bad", {"game": "lp85"}]})["rate"]
+        == 0.0
+    )
     assert exp4544.refinement_rounds_from_measurement(sparse)["sp80"] == [3]
-    assert exp4544.positive_control_from_live(
-        {"invoked": False, "reachable_plan": False, "dsl_reachable_plan": False}
-    )["passed"] is False
+    assert (
+        exp4544.positive_control_from_live(
+            {"invoked": False, "reachable_plan": False, "dsl_reachable_plan": False}
+        )["passed"]
+        is False
+    )
     assert exp4544._default_barrier(
         llm_proposer=normal,
         positive_control_passed=True,
@@ -652,7 +693,9 @@ def test_req_arc_wmte_4544_schema_error_branches_and_blocked_run(
     success = exp4544.build_artifact(
         preconditions_checked=_preconditions(),
         offline_dsl_baseline=_measurement("offline_dsl_baseline", levels=_levels(lp85=1)),
-        llm_proposer=_measurement("llm_proposer", levels=_levels(lp85=2), efficiency=3.2, planned=True),
+        llm_proposer=_measurement(
+            "llm_proposer", levels=_levels(lp85=2), efficiency=3.2, planned=True
+        ),
         llm_proposer_value={"count": 1, "opportunities": 1, "rate": 1.0, "events": ["lp85:L2"]},
         positive_control={"passed": True, "reachable_plan": True, "dsl_reachable_plan": False},
         offline_reproduction={"reproduced": True, "reached_level": 2},
@@ -691,7 +734,9 @@ def test_req_arc_wmte_4544_schema_error_branches_and_blocked_run(
         now=lambda: 1.0,
     )
     assert blocked["honest_verdict"] == "blocked_llm_proposer_reinduction_precondition"
-    assert json.loads((tmp_path / exp4544.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == blocked
+    assert (
+        json.loads((tmp_path / exp4544.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == blocked
+    )
 
     monkeypatch.setattr(exp4544, "artifact_schema_errors", lambda _artifact: ["forced"])
     with pytest.raises(ValueError):

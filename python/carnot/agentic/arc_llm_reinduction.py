@@ -1,12 +1,14 @@
 """Bounded live-LLM re-induction helper for ARC level-up episodes.
 
 Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544,
-REQ-ARC-WMTE-4557, SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST.
+REQ-ARC-WMTE-4557, SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST,
+REQ-ARC-WMTE-4664, SCENARIO-ARC-WMTE-4664-GOAL-SATISFIABILITY.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import inspect
 from types import SimpleNamespace
 from typing import Any, Callable, Mapping, Sequence
 
@@ -37,6 +39,8 @@ class LlmReinductionResult:
     model_specs: str = ""
     heldout_accuracy: float | None = None
     accepted_by_heldout_verifier: bool = False
+    goal_predicate_satisfiable: bool = False
+    goal_satisfiability: dict[str, Any] = field(default_factory=dict)
     rounds: list[dict[str, Any]] = field(default_factory=list)
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
     skipped: str = ""
@@ -80,6 +84,37 @@ def _normalise_candidates(rows: Sequence[Any], engine: Any, goal: Any) -> list[W
 
 def _counterexample_result(counterexample: Mapping[str, Any]) -> Any:
     return SimpleNamespace(n=1, n_correct=0, accuracy=0.0, mismatches=[dict(counterexample)])
+
+
+def _supports_kwarg(fn: Any, name: str) -> bool:
+    try:
+        signature = inspect.signature(fn)
+    except (TypeError, ValueError):
+        return False
+    return any(
+        param.kind is inspect.Parameter.VAR_KEYWORD or param.name == name
+        for param in signature.parameters.values()
+    )
+
+
+def _call_induce(
+    proposer: Any,
+    game: str,
+    transitions: Sequence[Any],
+    cell: int,
+    previous_level_complete_grid: np.ndarray | None,
+) -> tuple[bool, str]:
+    if previous_level_complete_grid is not None and _supports_kwarg(
+        proposer.induce,
+        "previous_level_complete_grid",
+    ):
+        return proposer.induce(
+            game,
+            list(transitions),
+            int(cell),
+            previous_level_complete_grid=np.asarray(previous_level_complete_grid),
+        )
+    return proposer.induce(game, list(transitions), int(cell))
 
 
 def _proposal_prefix(transitions: Sequence[Any]) -> list[Any]:
@@ -145,6 +180,108 @@ def _plan_reaches_goal(
     }
 
 
+def _goal_satisfiability_check(
+    *,
+    engine: Callable[[np.ndarray, int, Any], np.ndarray],
+    goal: Callable[[np.ndarray], bool] | None,
+    start_grid: np.ndarray,
+    max_nodes: int = 20000,
+    max_depth: int = 40,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4664: reject constant-false goals before invoking the planner."""
+
+    if goal is None:
+        return {
+            "satisfiable": False,
+            "counterexample": {"kind": "missing_goal_predicate"},
+            "reachable_grids_evaluated": 0,
+        }
+
+    from collections import Counter, deque
+    from carnot.agentic.arc_executable_world_model import to_ascii
+
+    start = np.asarray(start_grid)
+
+    def _probe_candidates(grid: np.ndarray) -> list[dict[str, Any]]:
+        candidates = [{"action": action, "data": None} for action in (1, 2, 3, 4, 5)]
+        flat = [int(value) for value in np.asarray(grid).flatten().tolist()]
+        background = Counter(flat).most_common(1)[0][0] if flat else 0
+        coords = np.argwhere(np.asarray(grid) != background)
+        if coords.size == 0:
+            coords = np.argwhere(np.asarray(grid) != 0)
+        for r, c in coords[:32]:
+            candidates.append({"action": 6, "data": {"x": int(c), "y": int(r)}})
+        return candidates
+
+    def _eval_goal(grid: np.ndarray, depth: int, evaluated: int) -> dict[str, Any] | None:
+        try:
+            if bool(goal(grid)):
+                return {
+                    "satisfiable": True,
+                    "reachable_grids_evaluated": int(evaluated),
+                    "first_true_depth": int(depth),
+                    "counterexample": {},
+                }
+        except Exception as exc:
+            return {
+                "satisfiable": False,
+                "reachable_grids_evaluated": int(evaluated),
+                "counterexample": {
+                    "kind": "goal_predicate_error",
+                    "error": repr(exc)[:160],
+                },
+            }
+        return None
+
+    evaluated = 1
+    start_result = _eval_goal(start, 0, evaluated)
+    if start_result is not None:
+        return start_result
+
+    seen = {to_ascii(start)}
+    q = deque([(start, 0)])
+    engine_errors = 0
+    while q and evaluated < int(max_nodes):
+        grid, depth = q.popleft()
+        if depth >= int(max_depth):
+            continue
+        for candidate in _probe_candidates(grid):
+            try:
+                next_grid = np.asarray(
+                    engine(grid.copy(), int(candidate["action"]), candidate.get("data"))
+                )
+            except Exception:
+                engine_errors += 1
+                continue
+            if next_grid.shape != start.shape:
+                continue
+            key = to_ascii(next_grid)
+            if key in seen:
+                continue
+            seen.add(key)
+            evaluated += 1
+            result = _eval_goal(next_grid, depth + 1, evaluated)
+            if result is not None:
+                return result
+            q.append((next_grid, depth + 1))
+            if evaluated >= int(max_nodes):
+                break
+
+    return {
+        "satisfiable": False,
+        "reachable_grids_evaluated": int(evaluated),
+        "engine_errors": int(engine_errors),
+        "max_nodes": int(max_nodes),
+        "max_depth": int(max_depth),
+        "counterexample": {
+            "kind": "degenerate_goal_predicate",
+            "reachable_grids_evaluated": int(evaluated),
+            "max_nodes": int(max_nodes),
+            "max_depth": int(max_depth),
+        },
+    }
+
+
 def execute_bounded_llm_reinduction(
     *,
     game: str,
@@ -158,6 +295,7 @@ def execute_bounded_llm_reinduction(
     max_rounds: int = MAX_REFINEMENT_ROUNDS,
     min_heldout_accuracy: float = 0.0,
     proposal_transitions: Sequence[Any] | None = None,
+    previous_level_complete_grid: np.ndarray | None = None,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -192,6 +330,8 @@ def execute_bounded_llm_reinduction(
     last_selected = ""
     last_engine = None
     last_goal = None
+    last_goal_satisfiable = False
+    last_goal_satisfiability: dict[str, Any] = {}
     last_heldout_accuracy: float | None = None
     last_accepted = False
     skipped = "no_reachable_plan_after_refinement"
@@ -199,7 +339,13 @@ def execute_bounded_llm_reinduction(
     for round_index in range(rounds_limit):
         round_no = round_index + 1
         if round_index == 0:
-            ok, message = proposer.induce(game, induction_evidence, int(cell))
+            ok, message = _call_induce(
+                proposer,
+                game,
+                induction_evidence,
+                int(cell),
+                previous_level_complete_grid,
+            )
             action = "induce"
         else:
             ok, message = proposer.refactor(game, _counterexample_result(last_counterexample))
@@ -262,6 +408,27 @@ def execute_bounded_llm_reinduction(
                 row["skipped"] = "heldout_transition_verification_failed"
                 rounds.append(row)
                 continue
+            goal_check = _goal_satisfiability_check(
+                engine=selected.engine,
+                goal=selected_goal,
+                start_grid=np.asarray(root_grid),
+            )
+            last_goal_satisfiable = bool(goal_check.get("satisfiable"))
+            last_goal_satisfiability = dict(goal_check)
+            row["goal_predicate_satisfiable"] = bool(last_goal_satisfiable)
+            row["goal_satisfiability"] = {
+                key: value for key, value in goal_check.items() if key != "counterexample"
+            }
+            if not last_goal_satisfiable:
+                last_counterexample = dict(
+                    goal_check.get("counterexample") or {"kind": "degenerate_goal_predicate"}
+                )
+                counterexamples.append(last_counterexample)
+                row["counterexample"] = dict(last_counterexample)
+                row["skipped"] = str(last_counterexample.get("kind") or "degenerate_goal_predicate")
+                skipped = row["skipped"]
+                rounds.append(row)
+                continue
             plan = plan_in_model(selected.engine, selected_goal, np.asarray(root_grid))
             check = _plan_reaches_goal(
                 engine=selected.engine,
@@ -270,7 +437,10 @@ def execute_bounded_llm_reinduction(
                 plan=plan,
             )
         except Exception as exc:
-            last_counterexample = {"kind": "selection_or_planning_exception", "error": repr(exc)[:160]}
+            last_counterexample = {
+                "kind": "selection_or_planning_exception",
+                "error": repr(exc)[:160],
+            }
             counterexamples.append(last_counterexample)
             row["skipped"] = last_counterexample["kind"]
             rounds.append(row)
@@ -297,6 +467,8 @@ def execute_bounded_llm_reinduction(
                 model_specs=specs,
                 heldout_accuracy=last_heldout_accuracy,
                 accepted_by_heldout_verifier=last_accepted,
+                goal_predicate_satisfiable=last_goal_satisfiable,
+                goal_satisfiability=last_goal_satisfiability,
                 rounds=rounds,
                 counterexamples=counterexamples,
                 skipped="",
@@ -319,6 +491,8 @@ def execute_bounded_llm_reinduction(
         model_specs=specs,
         heldout_accuracy=last_heldout_accuracy,
         accepted_by_heldout_verifier=last_accepted,
+        goal_predicate_satisfiable=last_goal_satisfiable,
+        goal_satisfiability=last_goal_satisfiability,
         rounds=rounds,
         counterexamples=counterexamples,
         skipped=skipped,

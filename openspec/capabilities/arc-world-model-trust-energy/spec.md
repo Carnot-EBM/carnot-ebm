@@ -531,6 +531,101 @@ Family-B verifier threshold enabled
 `heldout_transition_verification_failed` counterexample is recorded, and the
 proposer receives at most three total refinement rounds.
 
+### REQ-ARC-WMTE-4664: L2 Goal Predicate Satisfiability and Multi-Level Harness Fix
+
+The live E3 L1-to-L2 re-induction path SHALL pass the grid that completed the
+previous level into the next-level LLM induction prompt as a WIN-STATE exemplar
+even when the active post-boundary transition window has no next-level win
+positive. The prompt SHALL label that grid as "a state that COMPLETED the
+previous level; the next level's completion likely looks structurally similar"
+so the generated `is_level_complete(grid)` is conditioned on a positive
+level-complete exemplar without treating it as a verified L2 oracle.
+
+After an executable world-model candidate clears the existing held-out DYNAMICS
+gate and before planning, the bounded LLM re-induction helper SHALL evaluate
+the induced `is_level_complete` predicate over the reachable grids produced by
+the accepted model from the current start grid. If the predicate is never true
+over that reachable set, the helper SHALL reject the candidate with a
+counterexample of kind `degenerate_goal_predicate`, feed it into the bounded
+refinement loop, and SHALL NOT call the planner for that candidate. The
+held-out transition verifier remains DYNAMICS-only; this requirement adds the
+missing GOAL satisfiability verification.
+
+The live multi-level measurement harness SHALL be able to measure depth `>=2`:
+its E3 policies SHALL target at least two levels, the rollout SHALL continue
+after the first level-up until the policy is done or the budget expires, and
+any local live proposer used for the LLM arm SHALL run on a non-colliding port
+with `/props` verification that the served model is Qwen3.5-9B-MTP rather than
+the persistent gemma server on port 8919.
+
+Experiment 4664 SHALL write
+`results/experiment_4664_l2_goal_predicate_induction_live.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `solve_provenance`,
+`live_path_reachable`, `win_state_exemplar_injected`,
+`goal_predicate_satisfiable`, `l2_plan_len`, `l2_plan_reaches_goal`,
+`metric_harness_fixed`, `proposer_served_model`,
+`generic_agent_reached_level`, `offline_reproduced`, `reproduced_levels`,
+`residual_cause_hypothesis`, `bare_control_passed`,
+`false_negative_risk_checked`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. If no target reaches
+L2 or any goal predicate remains degenerate, the artifact SHALL include
+`null_methodology_note` explaining the honest null and residual cause.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: "terminal prefix; success: l2_goal_induction_generic_agent_reached_L2_<games> OR complete: l2_goal_induction_no_deepening_residual_<cause>."
+- `inference_substrate`: "live_llm_inference -- the L2 induction loads + runs the Qwen3.5-9B-MTP GGUF (60s duration floor); declared honestly because the induction arm is a real LLM run."
+- `verifier_is_oracle`: "MUST be false -- the induced is_level_complete goal predicate is oracle-DISTINCT from the executable reproduction win-check."
+- `solve_provenance`: "live_agent_self_discovery -- a generic-agent L2 via the fixed runtime induction is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re."
+- `live_path_reachable`: "HARD gate -- the changed modules (arc_competition_agent/arc_llm_reinduction/arc_executable_world_model) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `win_state_exemplar_injected`: "the L1 win-grid captured at _begin_level_goal_episode and injected into the L2 induce prompt's WIN-STATE block (the missing positive exemplar -- the precise root-cause fix)."
+- `goal_predicate_satisfiable`: "the held-out gate checks DYNAMICS only; a constant-False goal sails through today and yields no_reachable_plan. This field records the induced L2 goal is True on >=1 reachable grid -- the missing verification."
+- `l2_plan_len`: "plan_len=0 was the measured failure; non-empty is the fix working."
+- `l2_plan_reaches_goal`: "reaches_goal=False (no_reachable_plan) was the measured failure; True is the fix working."
+- `metric_harness_fixed`: "the degenerate live_multi_level_solve_rate harness fixed (target_levels>=2 + no early break + non-colliding /props-verified Qwen port) so any lever is measurable -- depth>=2 was impossible by construction before."
+- `proposer_served_model`: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard so the measurement is on the declared model."
+- `generic_agent_reached_level`: "per-game (lp85, sc25) the deepest level the GENERIC live agent reached via the fixed induction -- the headline (>=2 is the win)."
+- `offline_reproduced`: "a generic L2 counts only if offline-reproduced via arc_solver_kit.reproduce (ARC Solve Reproducibility); a live-only trajectory is provisional."
+- `reproduced_levels`: "the integer new-level count the generic agent banked offline (>=1 at L2 is the bridge crossed)."
+- `residual_cause_hypothesis`: "if the fix nulls, names the residual (single_exemplar_goal_insufficient | l2_dynamics_wrong) -- the .431 target; 'none' if it crossed."
+- `null_methodology_note`: "present when a goal stays degenerate / no L2 -- states the null is honest (passing controls), not a measurement bug."
+- `bare_control_passed`: "the POSITIVE CONTROL -- lp85/sc25 reach L1 + have L2 reachable per registry (headroom exists); a no-L2 null is valid only then."
+- `false_negative_risk_checked`: "true with both games' L1 reach + registry-L2-reachable confirmed -- a 'no deepening' null is valid only then."
+- `parity_test_green`: "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: "determinism precondition for reproducibility."
+- `reproducibility_checksum`: "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4664-WIN-STATE-EXEMPLAR
+
+**Given** a level-up boundary was observed and the active L2 transition window
+contains no L2 win positive
+**When** the live E3 policy starts the next-level goal episode and invokes
+executable world-model induction
+**Then** the induction prompt includes the captured previous-level-complete grid
+in a WIN-STATE block with the structural-similarity label required by
+REQ-ARC-WMTE-4664.
+
+#### SCENARIO-ARC-WMTE-4664-GOAL-SATISFIABILITY
+
+**Given** an induced executable dynamics model passes the held-out transition
+gate but its `is_level_complete` predicate is false on every reachable grid
+sampled from the accepted model
+**When** bounded LLM re-induction evaluates the candidate
+**Then** the candidate is rejected before planning with counterexample kind
+`degenerate_goal_predicate`, refinement is attempted within the K<=3 bound, and
+a later candidate may plan only after the goal predicate is satisfiable on at
+least one reachable grid.
+
+#### SCENARIO-ARC-WMTE-4664-METRIC-HARNESS
+
+**Given** the live multi-level metric harness rolls out E3 policy attempts
+**When** a game reaches its first level-up before the action budget is exhausted
+**Then** the rollout does not break at that first level-up, the policy targets
+at least two levels, and the measurement can record a depth `>=2` attempt when
+the generic live agent reaches L2.
+
 ### REQ-ARC-WMTE-4604: Change-Weighted Trust Energy Gate
 
 The live hidden-state `E3AgentPolicy` world-model gate SHALL replace the
