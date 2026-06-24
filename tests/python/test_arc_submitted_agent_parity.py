@@ -84,6 +84,10 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert SUBMITTED_AGENT_CONFIG["goal_energy_alpha"] == 0.9
     assert SUBMITTED_AGENT_CONFIG["goal_energy_beta"] == 0.1
     assert SUBMITTED_AGENT_CONFIG["verifier_is_oracle"] is False
+    assert pol.subgoal_search == SUBMITTED_AGENT_CONFIG["hierarchical_subgoal_search_enabled"]
+    assert pol.subgoal_budget == SUBMITTED_AGENT_CONFIG["hierarchical_subgoal_budget"]
+    assert pol.factored_planner == SUBMITTED_AGENT_CONFIG["factored_planner_enabled"]
+    assert pol.factored_trust_threshold == SUBMITTED_AGENT_CONFIG["factored_trust_threshold"]
 
 
 def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():

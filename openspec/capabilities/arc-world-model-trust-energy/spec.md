@@ -4154,6 +4154,66 @@ reproduction deltas, and a zero-value run emits
 `complete: primitive_persisted_transfer_null_characterized` with a
 `residual_dead_end`.
 
+### REQ-ARC-WMTE-4681: Submitted A1/A2 Integration Gate For Structural Deepening
+
+Experiment 4681 SHALL read the previous submitted integration gate
+`results/experiment_4669_integration_gate.json`, the hierarchical-subgoal
+artifact `results/experiment_4676_hierarchical_subgoal_search_live.json`, and
+the PoE-World factored-planner artifact
+`results/experiment_4677_poe_world_factored_subgoal_planner.json`. The gate
+SHALL audit whether the A1 hierarchical subgoal-search submitted config
+(`hierarchical_subgoal_search_enabled`, `hierarchical_subgoal_budget`) or the A2
+factored-planner submitted config (`factored_planner_enabled`,
+`factored_trust_threshold`) cleared its upstream success gate and is actually
+folded into `SUBMITTED_AGENT_CONFIG`. If both upstream artifacts are null or
+explicitly `unchanged`, the gate SHALL record `config_integrated` as unchanged
+with the reason and SHALL set `config_changed=false`; in that case identical
+pre/post measurements are by construction and SHALL NOT be presented as a
+metric finding.
+
+Experiment 4681 SHALL re-measure or reuse the fixed cached live measurements
+for the scored `E3AgentPolicy` against the pre-integration config, and SHALL
+write `results/experiment_4681_integration_gate.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `config_integrated`,
+`config_changed`, `live_first_win_rate_integrated`,
+`live_multi_level_solve_rate_integrated`,
+`live_submittable_level_count_integrated`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. The artifact SHALL
+also include the A1/A2 audit, pre-integration comparison metrics,
+no-regression status, source artifact paths/checksums, the parity-test result,
+`submitted_to_leaderboard=false`, and spec refs. The verifier SHALL remain
+oracle-distinct from the executable win-check.
+
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the integrated subgoal-search / factored-planner signals are oracle-distinct from the executable win-check."
+- `config_integrated`: principle "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+- `config_changed`: principle "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding) -- pre-empts the .430 A6 TAUTOLOGY flag."
+- `live_first_win_rate_integrated`: principle "the integrated SCORED-agent live first-win-rate (no regression vs pre-integration)."
+- `live_multi_level_solve_rate_integrated`: principle "the integrated SCORED-agent multi-level (>=2) live solve-rate (the deeper wall) -- measured on the FIXED non-degenerate harness."
+- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4681
+
+**Given** `SUBMITTED_AGENT_CONFIG` imports with `E3AgentPolicy`, the 4669
+pre-integration comparison artifact is present, and the 4676/4677 A1/A2
+artifacts are readable
+**When** Experiment 4681 audits the upstream chosen submitted configs and runs
+the submitted-agent parity test
+**Then** the result artifact reports either the exact A1/A2 config folded into
+the single source of truth or an unchanged reason when both levers are null,
+reports `config_changed` truthfully, reports live first-win rate,
+fixed-harness multi-level solve rate, live submittable count greater than 33,
+no-regression versus the pre-integration config, `verifier_is_oracle=false`,
+`parity_test_green=true`, and a stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4678: Level-Up Self-Play Bank With Verifier Checkpoint
 
 Experiment 4678 SHALL bank one new reproducible ARC public-game level through
