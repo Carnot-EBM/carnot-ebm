@@ -47522,3 +47522,131 @@ milestones:
       on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
     deliverable: results/experiment_4674_capstone_v430.json
     result: OK (conductor)
+- id: 2026.06.431
+  title: 'CANDIDATE GENERATION ("make-a-winner-appear"), NOT SELECTION -- six milestones (.425-.430) of verifier/selection
+    levers all NULLED on live solve-rate. .430 grew capability 58->59 (A3 dc22 L2) but BOTH headline mechanisms nulled: A1
+    L2-goal-induction RETIRED (single_exemplar_goal_insufficient, control-failed), A2 DAgger-lite corrected the distribution-shift
+    0.699->0.0 but gave ZERO live lift (missing_verifier_gap_live_frontier_not_separated). The honest fixed-harness generic
+    first-win is 0.04 (1/25 games, only lp85), NOT 0.59 -- the wall is UPSTREAM of selection. The convergent residual (A2
+    live-frontier-not-separated + the registry "candidate generation remains the residual bottleneck" + the operator''s 2026-06-22
+    make-a-winner-appear steer) relocates the wall to GENERATION; the representation is done (v3 LOO-AUROC 0.725), compute-cost
+    + distribution-shift are fixed. .431 PIVOTS to the SOTA-flagged structural generation methods: A1 (HEADLINE) hierarchical
+    subgoal search over the live E3 frontier reusing the .430 levers as COMPONENTS (goal-induction->subgoal proposer; value
+    head->within-subgoal tie-breaker), gated on a STEP-1 decisive diagnostic (resolve 0.04-vs-0.59; L1-first-contact vs L2-deepening);
+    A2 (second mechanism) PoE-World factored-executable subgoal planner. A3 banks +1 (59->60+) + trains the verifier; A4 keeps
+    the package >33. Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware (C), 1 SOTA-ingestion (D),
+    capstone (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-24'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4675-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .430 -> activate .431; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .430 close-state (capability grew 58->59 via A3 dc22 L2, but bridge_crossed_for_solve=FALSE for the
+      6th consecutive milestone: A1 L2-goal-induction NULL+RETIRED [win_state_exemplar_injected=false, control-failed, single_exemplar_goal_insufficient];
+      A2 DAgger-lite corrected the distribution-shift 0.699->0.0 but ZERO live lift [missing_verifier_gap_live_frontier_not_separated];
+      the honest generic first-win is 0.04 [1/25 games, only lp85] NOT 0.59; package live_submittable=59>33; paper_ready=True).
+      The .431 pivot -> CANDIDATE GENERATION (make-a-winner-appear, not select): A1 hierarchical subgoal search, A2 PoE-World
+      factored-executable subgoal planner.'
+    deliverable: results/experiment_4675_archive_430_activate_431.json
+    result: OK (conductor)
+  - id: exp4676-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- the GENERATION pivot) -- HIERARCHICAL SUBGOAL
+      SEARCH over the live E3 frontier. STEP 1 (decisive diagnostic, do FIRST): resolve the generic first-win 0.04-vs-0.59
+      discrepancy and pinpoint whether the live wall is L1-FIRST-CONTACT or L2-DEEPENING (across configs: explore vs value_routed,
+      action budgets, the variant set) -- offline-null-may-be-a-harness-artifact discipline. STEP 2: build a bounded subgoal-search
+      prototype targeting the CONFIRMED wall -- mine candidate subgoals from failed search trees + reuse .430 A1 goal-induction
+      as a subgoal PROPOSER (NOT one global terminal predicate) + .430 A2 value head as the within-subgoal TIE-BREAKER; live
+      E3 replay-verifies. Gate: the GENERIC live agent reaches a NEW level where flat search fails, offline-reproduced, with
+      a no-subgoal AND a random-subgoal ablation that do NOT. live_llm_inference. live_agent_self_discovery. verifier_is_oracle:false.
+      retire_if_same_verdict.'
+    deliverable: results/experiment_4676_hierarchical_subgoal_search_live.json
+    result: OK (conductor)
+  - id: exp4677-a2
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; second independent GENERATION mechanism) -- PoE-World FACTORED-EXECUTABLE
+      SUBGOAL PLANNER: induce small programmatic object-level experts (precondition/effect) from the live transitions, weight
+      by held-out transition trust, compose only replay-stable factors, and plan subgoal-conditioned sequences through the
+      product model (.430 A1 goal-induction proposes the subgoal predicates each factor must make reachable; .430 A2 value
+      head scores which product-model states deserve live expansion; live E3 executes+audits). The strongest answer to the
+      .430 A2 no-winner residual because a factored feasibility model is what the .429 energy-fitness QD lacked. Gate: candidate-generation
+      COVERAGE up (the winner appears in the pool where the matched flat baseline did not generate it) AND a live first-win/solve
+      lift (CI excludes baseline), offline-reproduced. Live-path-reachable. live_agent_self_discovery. verifier_is_oracle:false.
+      retire_if_same_verdict. arXiv:2505.10819/2605.05138.'
+    deliverable: results/experiment_4677_poe_world_factored_subgoal_planner.json
+    result: OK (conductor)
+  - id: exp4678-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .426-.430
+      (PREFER a first-contact L1->L2 of a hard clean public game from the L1-only set bp35/re86/sb26/s5i5/g50t/r11l/lf52;
+      alternatives m0r0/cn04/ar25 L2->L3; SKIP dc22 [.430], vc33 [.429], ft09 [.428], ls20 [.427], sk48 [.426 failed], ka59/wa30
+      [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the learned verifier on pos/neg
+      traces. Gate: offline_reproduced new level -> reproducible_total_levels 59 -> 60+. verifier_is_oracle:false.'
+    deliverable: results/experiment_4678_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4679-a4
+    title: PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3's new bank (+ any A1/A2
+      newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit (beat the standing
+      33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive
+      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth (>=59). Submission stays
+      operator-only. verifier_is_oracle:false.
+    deliverable: results/experiment_4679_refresh_submission_package.json
+    result: OK (conductor)
+  - id: exp4680-a5
+    title: PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone's winning A1/A2 GENERATION
+      primitive (the hierarchical-subgoal-search operator [subgoal proposer + bounded per-subgoal search + within-subgoal
+      value tie-breaker] OR the PoE-World factored-executable subgoal planner, whichever cleared its gate) as a reusable arc_solver_kit
+      primitive + registry general_gotcha, and measure cross-game transfer value (characterize the null honestly if transfer
+      is value-null). verifier_is_oracle:false.
+    deliverable: results/experiment_4680_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4681-a6
+    title: PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone's winning A1/A2 config (the hierarchical-subgoal-search
+      settings and/or the PoE-World factored-planner settings) into SUBMITTED_AGENT_CONFIG as the single source of truth,
+      re-measure the integrated live first-win + multi-level solve-rate end-to-end on the SCORED E3AgentPolicy, and keep test_arc_submitted_agent_parity
+      green. If both A1/A2 nulled, integrate 'unchanged' and record why. verifier_is_oracle:false.
+    deliverable: results/experiment_4681_integration_gate.json
+    result: OK (conductor)
+  - id: exp4682-b1
+    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the CANDIDATE-GENERATION-COVERAGE CI-metric + the HONEST GENERIC-FIRST-WIN
+      floor: (1) a metric/gate that measures whether the winning action/plan is PRESENT in the generated candidate pool (coverage)
+      so generation improvement is mechanically trackable -- the generation analog of the .430 multi-level-harness gate; (2)
+      lock in the HONEST generic-first-win measurement (the 0.04 reality on the standard config) so a future change can NEITHER
+      silently regress it NOR silently inflate it via a permissive harness; (3) a generation-coverage floor. Unit tests green.
+      verifier_is_oracle:false.'
+    deliverable: results/experiment_4682_generation_coverage_cigate.json
+    result: OK (conductor)
+  - id: exp4683-b2
+    title: 'PHASE B2 (INFRA -- reserved slot 2; adversarial_verify hardening) -- extend adversarial_verify with two guards
+      for the .431 GENERATION lever class: (1) SUBGOAL-SEARCH-WITHOUT-DECOMPOSITION-EVIDENCE -- a "reached a new level via
+      subgoal search" claim that does NOT report the subgoal decomposition + per-subgoal reachability + the no-subgoal AND
+      random-subgoal ablations + offline_reproduced is flagged (it may be a flat-search win mislabeled, or a "subgoal" that
+      is just the global goal); (2) GENERATION-COVERAGE-WITHOUT-BASELINE -- a candidate-generation-coverage claim that does
+      NOT report the matched flat-search baseline coverage is flagged. Honest artifacts NOT flagged. Tests green.'
+    deliverable: results/experiment_4683_adversarial_verify_hardening.json
+    result: OK (conductor)
+  - id: exp4684-c
+    title: PHASE C (HARDWARE CONTINUITY -- 1 per-board slot) -- per-board reachability audit (KV260 via ssh kria [SSH-only,
+      NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag --detect) so each attached
+      board stays visible per the Hardware-Task Continuity Discipline. Record per-board state (loaded overlay / uptime / IDCODE)
+      or blocked_<board>_<reason>. No bitstream build, no fabric-acceleration claim.
+    deliverable: results/experiment_4684_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4685-d
+    title: 'PHASE D (SOTA-INGESTION -> .432) -- focused literature pass on the NEXT fallback if .431''s GENERATION levers
+      (A1 hierarchical subgoal + A2 PoE-World factored planner) null: learned / intrinsic-motivation DIRECTED EXPLORATION
+      for L1-first-contact generation (the agent reaches first-win on only 1/25 games -- it needs better exploration to MAKE
+      the winning trajectory APPEAR at L1) + program-synthesis action-model induction. Map the strongest 3-5 SOTA methods
+      with arXiv IDs + implement-cost-over-current-stack + fails_when, and FLAG the strongest for .432. Reliable sweep + WebSearch/WebFetch
+      only; /deep-research BANNED.'
+    deliverable: results/experiment_4685_sota_ingestion_directed_exploration.json
+    result: OK (conductor)
+  - id: exp4686-e
+    title: 'PHASE E (CAPSTONE .431) -- aggregate the scorecard + the HEADLINE DECISION: did CANDIDATE GENERATION cross the
+      offline->live bridge for SOLVE-RATE/DEPTH where six milestones of SELECTION could not -- did hierarchical subgoal search
+      (A1) make the GENERIC agent reach a NEW level (offline-reproduced, no-subgoal AND random-subgoal ablations failing),
+      did the PoE-World factored planner (A2) raise candidate-generation coverage + lift live first-win/solve (CI excludes
+      baseline), did A3 bank +1 (59->60+)? Skip flagged_adversarial / control-failed / decomposition-missing artifacts. Confirm
+      verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission
+      operator-only.'
+    deliverable: results/experiment_4686_capstone_v431.json
+    result: OK (conductor)
