@@ -43,6 +43,8 @@ from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
     MAX_REFINEMENT_ROUNDS,
     execute_bounded_llm_reinduction,
+    plan_hierarchical_subgoals,
+    propose_hierarchical_subgoals,
 )
 from carnot.agentic.arc_world_model_trust_energy import (
     HIDDEN_STATE_GAME_IDS,
@@ -1532,11 +1534,16 @@ class E3AgentPolicy:
         dense_curiosity_discount: float = 0.5,
         goal_bias: Any = _DEFAULT_GOAL_BIAS,
         qd_generator: Any | bool | None = None,
+        subgoal_search: bool = False,
+        subgoal_budget: int = 3,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
         if value_head is _DEFAULT_VALUE_HEAD:
             value_head = load_cross_game_value_head()
+        self.value_head = value_head
+        self.subgoal_search = bool(subgoal_search)
+        self.subgoal_budget = max(1, int(subgoal_budget))
         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
             candidate_router = _load_submitted_candidate_router()
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
@@ -1968,6 +1975,9 @@ class E3AgentPolicy:
                     max_rounds=MAX_REFINEMENT_ROUNDS,
                     min_heldout_accuracy=1.0,
                     previous_level_complete_grid=self._previous_level_complete_grid,
+                    enable_subgoal_search=self.subgoal_search,
+                    subgoal_budget=self.subgoal_budget,
+                    value_head=self.value_head,
                 )
                 attempt.update(
                     {
@@ -1986,6 +1996,11 @@ class E3AgentPolicy:
                         is not None,
                         "goal_predicate_satisfiable": bool(outcome.goal_predicate_satisfiable),
                         "goal_satisfiability": dict(outcome.goal_satisfiability),
+                        "subgoal_search_used": bool(
+                            outcome.subgoal_search_used or outcome.subgoal_decomposition
+                        ),
+                        "subgoal_decomposition": list(outcome.subgoal_decomposition),
+                        "per_subgoal_reachable": list(outcome.per_subgoal_reachable),
                     }
                 )
                 if outcome.goal_predicate is not None:
@@ -2043,6 +2058,33 @@ class E3AgentPolicy:
                 self.plan = plan
                 attempt["planned"] = True
                 attempt["plan_length"] = len(plan)
+                return
+            if self.subgoal_search:
+                subgoals = propose_hierarchical_subgoals(
+                    game=self.short,
+                    transitions=active_transitions,
+                    proposer=self._proposer(),
+                    previous_level_complete_grid=self._previous_level_complete_grid,
+                    max_subgoals=self.subgoal_budget,
+                )
+                subgoal_result = plan_hierarchical_subgoals(
+                    engine=engine,
+                    final_goal=is_done,
+                    start_grid=self.root_grid,
+                    subgoals=subgoals,
+                    plan_in_model=e3.plan_in_model,
+                    value_head=self.value_head,
+                    max_subgoals=self.subgoal_budget,
+                )
+                attempt["subgoal_search_used"] = True
+                attempt["subgoal_decomposition"] = list(subgoal_result.subgoal_decomposition)
+                attempt["per_subgoal_reachable"] = list(subgoal_result.per_subgoal_reachable)
+                attempt["subgoal_residual"] = subgoal_result.residual
+                attempt["hierarchical_plan_length"] = len(subgoal_result.plan)
+                if subgoal_result.planned:
+                    self.plan = list(subgoal_result.plan)
+                    attempt["planned"] = True
+                    attempt["plan_length"] = len(self.plan)
         except Exception:
             attempt["skipped"] = "exception"
             return
@@ -2093,6 +2135,8 @@ SUBMITTED_AGENT_CONFIG = {
     "value_head_feature_subset": SUBMITTED_VALUE_HEAD_FEATURE_SUBSET,
     "value_head_checkpoint": DAGGER_VALUE_HEAD_RELATIVE_PATH,
     "value_head_distribution_corrected": True,
+    "hierarchical_subgoal_search_enabled": False,
+    "hierarchical_subgoal_budget": 3,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
     "dense_curiosity_progress_loop_enabled": False,

@@ -3888,6 +3888,107 @@ A1-established floor
 **Then** it fails with the regressed metric names. Given measurements at or
 above both floors, it passes.
 
+### REQ-ARC-WMTE-4676: Hierarchical Subgoal Search Over Live E3 Frontier
+
+Experiment 4676 SHALL first run the fixed live diagnostic across the generic
+E3 agent's first-win and multi-level behavior before selecting the intervention
+target. The diagnostic SHALL compare explore and value-routed configurations
+over action budgets `200`, `400`, and `800` on the public variant set, SHALL
+record per-config first-win and multi-level rates, and SHALL classify the
+binding wall as `l1_first_contact` when generic first contact remains sparse or
+`l2_deepening` when first contact is broad but deeper levels do not appear. Any
+local LLM proposer used by the diagnostic or intervention SHALL be constructed
+on a non-colliding port and `/props`-verified as Qwen3.5-9B-MTP, not the gemma
+server commonly resident on port 8919.
+
+The live `E3AgentPolicy` level-up induction path SHALL expose a bounded
+hierarchical subgoal-search option. The option SHALL mine candidate subgoal
+predicates from failed live search states, SHALL allow the .430 A1 LLM
+goal-induction tier to act as a subgoal proposer that emits several near-goal
+candidate predicates instead of only one terminal predicate, and SHALL call the
+existing executable `plan_in_model` low-level planner for each selected leg in
+the chain `start -> subgoal(s) -> goal`. The .430 A2 distribution-corrected
+value head MAY be used only as a local within-subgoal tie-breaker and SHALL NOT
+replace the executable reproduction gate.
+
+Experiment 4676 SHALL measure the diagnostic-selected target against three
+matched arms: induced hierarchical subgoals, no-subgoal flat search with the
+same budget, and random-subgoal search with the same budget. A success claim
+SHALL require the generic live agent to reach a new level through runtime
+subgoal decomposition, replay that trajectory through
+`arc_solver_kit.reproduce`, and show both matched ablations reaching a lower
+level. If no new level is reached, the artifact SHALL report the null as
+complete with one of `bounded_search_cannot_reach_subgoal`,
+`subgoals_mechanically_irrelevant`, or `value_head_still_not_separating`.
+
+Experiment 4676 SHALL write
+`results/experiment_4676_hierarchical_subgoal_search_live.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `solve_provenance`,
+`live_path_reachable`, `wall_diagnosis`, `generic_first_win_by_config`,
+`subgoal_decomposition`, `per_subgoal_reachable`,
+`generic_agent_reached_level`, `offline_reproduced`, `reproduced_levels`,
+`no_subgoal_ablation_reached_level`,
+`random_subgoal_ablation_reached_level`, `residual_cause_hypothesis`,
+`null_methodology_note`, `bare_control_passed`,
+`false_negative_risk_checked`, `proposer_served_model`,
+`chosen_submitted_config`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: hierarchical_subgoal_generic_agent_new_level_<game>_L<n> OR complete: hierarchical_subgoal_no_new_level_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference -- the subgoal-proposer induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the proposer arm is a real LLM run."
+- `verifier_is_oracle`: principle "MUST be false -- the subgoal proposer + value head are oracle-DISTINCT from the executable reproduction win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- a generic-agent new level via runtime subgoal decomposition is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `wall_diagnosis`: principle "STEP-1 result -- l1_first_contact | l2_deepening; resolves 0.04-vs-0.59 so subgoal search targets the binding wall."
+- `generic_first_win_by_config`: principle "per-config (explore vs value_routed x budget) generic first-win + multi-level rate -- the honest measurement the prior 0.59-vs-0.04 ambiguity demanded."
+- `subgoal_decomposition`: principle "the subgoal sequence the proposer emitted for the target (the make-a-winner-appear evidence: a multi-step winner assembled from reachable legs)."
+- `per_subgoal_reachable`: principle "per-subgoal whether bounded low-level search reached it -- the mechanism check."
+- `generic_agent_reached_level`: principle "the deepest level the GENERIC live agent reached via subgoal search on the target -- the headline (a NEW level is the win)."
+- `offline_reproduced`: principle "a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce."
+- `reproduced_levels`: principle "the integer new-level count the generic agent banked offline (>=1 is the bridge crossed for solve)."
+- `no_subgoal_ablation_reached_level`: principle "the matched flat-search ablation's reached_level -- MUST be lower than subgoal search for an attributable win."
+- `random_subgoal_ablation_reached_level`: principle "the random-subgoal ablation's reached_level -- MUST be lower than induced subgoal search for an attributable win."
+- `residual_cause_hypothesis`: principle "if it nulls, names the residual (bounded_search_cannot_reach_subgoal | subgoals_mechanically_irrelevant | value_head_still_not_separating) -- the .432 target; 'none' if it crossed."
+- `null_methodology_note`: principle "present when no new level -- states the null is honest (passing ablations + reachable headroom), not a measurement bug."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the target has reachable headroom (reaches L1 by exploration OR L2 is registry-reachable)."
+- `false_negative_risk_checked`: principle "true with the ablations run + reachable-headroom confirmed -- a no-new-level null is valid only then."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (subgoal search on, subgoal budget) -- 'unchanged' if null."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4676-DIAGNOSTIC
+
+**Given** the fixed live E3 measurement harness and a `/props`-verified Qwen
+proposer on a free port
+**When** experiment 4676 sweeps explore/value-routed modes over budgets 200,
+400, and 800
+**Then** it records first-win and multi-level rates for each config and
+classifies the binding wall before selecting the subgoal-search target.
+
+#### SCENARIO-ARC-WMTE-4676-HIERARCHICAL-PLAN
+
+**Given** an executable world model, a final goal predicate, and candidate
+subgoal predicates mined from live failed-search states or proposed by the A1
+induction tier
+**When** hierarchical subgoal search runs
+**Then** it invokes bounded `plan_in_model` for each selected leg, chains the
+reachable legs, records per-subgoal reachability, and uses the A2 value head
+only to break ties among subgoals within the same leg.
+
+#### SCENARIO-ARC-WMTE-4676-ABLATIONS
+
+**Given** a target where hierarchical subgoal search reaches a new level
+**When** the matched no-subgoal and random-subgoal ablations run with the same
+budget
+**Then** both ablations must reach a lower level before the artifact can claim
+the new level is attributable to induced subgoal decomposition.
+
 ### REQ-ARC-WMTE-4671: Adversarial Verify L2 Goal And Multi-Level Metric Hardening
 
 The `scripts/adversarial_verify.py` reader SHALL protect the .430 A1 L2

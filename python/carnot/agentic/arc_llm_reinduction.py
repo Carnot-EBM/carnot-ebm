@@ -2,7 +2,8 @@
 
 Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544,
 REQ-ARC-WMTE-4557, SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST,
-REQ-ARC-WMTE-4664, SCENARIO-ARC-WMTE-4664-GOAL-SATISFIABILITY.
+REQ-ARC-WMTE-4664, SCENARIO-ARC-WMTE-4664-GOAL-SATISFIABILITY,
+REQ-ARC-WMTE-4676, SCENARIO-ARC-WMTE-4676-HIERARCHICAL-PLAN.
 """
 
 from __future__ import annotations
@@ -24,6 +25,29 @@ MAX_REFINEMENT_ROUNDS = 3
 
 
 @dataclass
+class SubgoalCandidate:
+    """REQ-ARC-WMTE-4676: one oracle-distinct candidate predicate for a local leg."""
+
+    name: str
+    predicate: Callable[[np.ndarray], bool]
+    source: str
+    score: float = 0.0
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class HierarchicalSubgoalPlanResult:
+    """REQ-ARC-WMTE-4676: planned low-level legs plus mechanism diagnostics."""
+
+    planned: bool
+    plan: list[dict[str, Any]] = field(default_factory=list)
+    subgoal_decomposition: list[dict[str, Any]] = field(default_factory=list)
+    per_subgoal_reachable: list[dict[str, Any]] = field(default_factory=list)
+    final_grid: np.ndarray | None = None
+    residual: str = ""
+
+
+@dataclass
 class LlmReinductionResult:
     """Result of the GOAL+DYNAMICS proposer plus verifier-guided refinement loop."""
 
@@ -41,6 +65,9 @@ class LlmReinductionResult:
     accepted_by_heldout_verifier: bool = False
     goal_predicate_satisfiable: bool = False
     goal_satisfiability: dict[str, Any] = field(default_factory=dict)
+    subgoal_decomposition: list[dict[str, Any]] = field(default_factory=list)
+    per_subgoal_reachable: list[dict[str, Any]] = field(default_factory=list)
+    subgoal_search_used: bool = False
     rounds: list[dict[str, Any]] = field(default_factory=list)
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
     skipped: str = ""
@@ -126,6 +153,234 @@ def _proposal_prefix(transitions: Sequence[Any]) -> list[Any]:
     n_heldout = max(1, int(round(len(rows) / 3.0)))
     n_heldout = min(n_heldout, len(rows) - 1)
     return rows[:-n_heldout]
+
+
+def _normalise_subgoal_candidates(rows: Sequence[Any]) -> list[SubgoalCandidate]:
+    candidates: list[SubgoalCandidate] = []
+    for index, row in enumerate(rows):
+        if isinstance(row, SubgoalCandidate):
+            candidates.append(row)
+        elif isinstance(row, Mapping):
+            predicate = row.get("predicate") or row.get("is_level_complete")
+            if callable(predicate):
+                candidates.append(
+                    SubgoalCandidate(
+                        name=str(row.get("name") or f"subgoal_{index}"),
+                        predicate=predicate,
+                        source=str(row.get("source") or "a1_goal_induction"),
+                        score=float(row.get("score") or 0.0),
+                        metadata=dict(row.get("metadata") or {}),
+                    )
+                )
+        else:
+            try:
+                name, predicate, *rest = row
+            except Exception:
+                continue
+            if callable(predicate):
+                metadata = rest[1] if len(rest) > 1 and isinstance(rest[1], Mapping) else {}
+                candidates.append(
+                    SubgoalCandidate(
+                        name=str(name),
+                        predicate=predicate,
+                        source="a1_goal_induction",
+                        score=float(rest[0]) if rest else 0.0,
+                        metadata=dict(metadata),
+                    )
+                )
+    return candidates
+
+
+def _exact_grid_predicate(target: np.ndarray) -> Callable[[np.ndarray], bool]:
+    target_grid = np.asarray(target).copy()
+
+    def _predicate(grid: np.ndarray) -> bool:
+        candidate = np.asarray(grid)
+        return candidate.shape == target_grid.shape and bool(np.array_equal(candidate, target_grid))
+
+    return _predicate
+
+
+def _nonzero_count_predicate(target: np.ndarray) -> Callable[[np.ndarray], bool]:
+    target_count = int(np.count_nonzero(np.asarray(target)))
+
+    def _predicate(grid: np.ndarray) -> bool:
+        return int(np.count_nonzero(np.asarray(grid))) >= target_count
+
+    return _predicate
+
+
+def propose_hierarchical_subgoals(
+    *,
+    game: str,
+    transitions: Sequence[Any],
+    proposer: Any,
+    previous_level_complete_grid: np.ndarray | None = None,
+    max_subgoals: int = 4,
+) -> list[SubgoalCandidate]:
+    """REQ-ARC-WMTE-4676: mine failed-tree states and optional A1 subgoal proposals."""
+
+    candidates: list[SubgoalCandidate] = []
+    provider = getattr(proposer, "propose_subgoals", None)
+    if callable(provider):
+        try:
+            proposed = provider(
+                game=game,
+                transitions=list(transitions),
+                previous_level_complete_grid=previous_level_complete_grid,
+                max_subgoals=max_subgoals,
+            )
+        except TypeError:
+            proposed = provider(game, list(transitions))
+        candidates.extend(_normalise_subgoal_candidates(list(proposed or [])))
+
+    for index, transition in enumerate(list(transitions)[-int(max_subgoals) :]):
+        grid = getattr(transition, "next_grid", None)
+        if grid is None:
+            continue
+        grid_array = np.asarray(grid).copy()
+        candidates.append(
+            SubgoalCandidate(
+                name=f"failed_tree_state_{index}",
+                predicate=_exact_grid_predicate(grid_array),
+                source="failed_search_tree",
+                score=0.4 + 0.01 * index,
+                metadata={
+                    "nonzero_cells": int(np.count_nonzero(grid_array)),
+                    "shape": list(grid_array.shape),
+                },
+            )
+        )
+
+    if previous_level_complete_grid is not None:
+        exemplar = np.asarray(previous_level_complete_grid).copy()
+        candidates.append(
+            SubgoalCandidate(
+                name="previous_level_complete_shape",
+                predicate=_nonzero_count_predicate(exemplar),
+                source="previous_level_complete_exemplar",
+                score=0.6,
+                metadata={
+                    "nonzero_cells": int(np.count_nonzero(exemplar)),
+                    "shape": list(exemplar.shape),
+                },
+            )
+        )
+
+    deduped: list[SubgoalCandidate] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        key = f"{candidate.source}:{candidate.name}"
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(candidate)
+        if len(deduped) >= int(max_subgoals):
+            break
+    return deduped
+
+
+def _apply_model_plan(
+    engine: Callable[[np.ndarray, int, Any], np.ndarray],
+    start_grid: np.ndarray,
+    plan: Sequence[Mapping[str, Any]] | None,
+) -> np.ndarray:
+    grid = np.asarray(start_grid)
+    for step in list(plan or []):
+        grid = np.asarray(engine(grid.copy(), int(step["action"]), step.get("data")))
+    return grid
+
+
+def _candidate_sort_key(
+    candidate: SubgoalCandidate,
+    value_head: Callable[[np.ndarray], float] | None,
+) -> tuple[float, float, str]:
+    local_value = 0.0
+    target_grid = candidate.metadata.get("target_grid")
+    if value_head is not None and target_grid is not None:
+        try:
+            local_value = float(value_head(np.asarray(target_grid)))
+        except Exception:
+            local_value = 0.0
+    return (float(candidate.score), local_value, candidate.name)
+
+
+def plan_hierarchical_subgoals(
+    *,
+    engine: Callable[[np.ndarray, int, Any], np.ndarray],
+    final_goal: Callable[[np.ndarray], bool],
+    start_grid: np.ndarray,
+    subgoals: Sequence[SubgoalCandidate],
+    plan_in_model: Callable[[Any, Any, np.ndarray], list[dict[str, Any]] | None],
+    value_head: Callable[[np.ndarray], float] | None = None,
+    max_subgoals: int = 3,
+) -> HierarchicalSubgoalPlanResult:
+    """SCENARIO-ARC-WMTE-4676-HIERARCHICAL-PLAN: chain bounded low-level plans."""
+
+    ordered = sorted(
+        list(subgoals),
+        key=lambda candidate: _candidate_sort_key(candidate, value_head),
+        reverse=True,
+    )[: max(0, int(max_subgoals))]
+    current = np.asarray(start_grid)
+    full_plan: list[dict[str, Any]] = []
+    decomposition: list[dict[str, Any]] = []
+    reachable: list[dict[str, Any]] = []
+
+    for candidate in ordered:
+        leg = plan_in_model(engine, candidate.predicate, current)
+        reached = leg is not None
+        row = {
+            "name": candidate.name,
+            "source": candidate.source,
+            "reachable": bool(reached),
+            "plan_length": len(leg or []),
+            "score": round(float(candidate.score), 6),
+        }
+        reachable.append(dict(row))
+        decomposition.append(dict(row))
+        if not reached:
+            return HierarchicalSubgoalPlanResult(
+                planned=False,
+                plan=full_plan,
+                subgoal_decomposition=decomposition,
+                per_subgoal_reachable=reachable,
+                final_grid=current,
+                residual="bounded_search_cannot_reach_subgoal",
+            )
+        full_plan.extend(dict(step) for step in list(leg or []))
+        current = _apply_model_plan(engine, current, leg)
+
+    final_leg = plan_in_model(engine, final_goal, current)
+    final_reached = final_leg is not None
+    final_row = {
+        "name": "final_goal",
+        "source": "terminal_goal_predicate",
+        "reachable": bool(final_reached),
+        "plan_length": len(final_leg or []),
+        "score": 1.0,
+    }
+    reachable.append(dict(final_row))
+    decomposition.append(dict(final_row))
+    if not final_reached:
+        return HierarchicalSubgoalPlanResult(
+            planned=False,
+            plan=full_plan,
+            subgoal_decomposition=decomposition,
+            per_subgoal_reachable=reachable,
+            final_grid=current,
+            residual="subgoals_mechanically_irrelevant",
+        )
+    full_plan.extend(dict(step) for step in list(final_leg or []))
+    final_grid = _apply_model_plan(engine, current, final_leg)
+    return HierarchicalSubgoalPlanResult(
+        planned=True,
+        plan=full_plan,
+        subgoal_decomposition=decomposition,
+        per_subgoal_reachable=reachable,
+        final_grid=final_grid,
+        residual="none",
+    )
 
 
 def _plan_reaches_goal(
@@ -296,6 +551,10 @@ def execute_bounded_llm_reinduction(
     min_heldout_accuracy: float = 0.0,
     proposal_transitions: Sequence[Any] | None = None,
     previous_level_complete_grid: np.ndarray | None = None,
+    enable_subgoal_search: bool = False,
+    subgoal_budget: int = 3,
+    value_head: Callable[[np.ndarray], float] | None = None,
+    subgoal_candidates: Sequence[SubgoalCandidate] | None = None,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -473,6 +732,56 @@ def execute_bounded_llm_reinduction(
                 counterexamples=counterexamples,
                 skipped="",
             )
+        if enable_subgoal_search:
+            candidates = list(subgoal_candidates or []) or propose_hierarchical_subgoals(
+                game=game,
+                transitions=list(transitions),
+                proposer=proposer,
+                previous_level_complete_grid=previous_level_complete_grid,
+                max_subgoals=max(1, int(subgoal_budget)),
+            )
+            subgoal_result = plan_hierarchical_subgoals(
+                engine=selected.engine,
+                final_goal=selected_goal,
+                start_grid=np.asarray(root_grid),
+                subgoals=candidates,
+                plan_in_model=plan_in_model,
+                value_head=value_head,
+                max_subgoals=max(1, int(subgoal_budget)),
+            )
+            row.update(
+                {
+                    "subgoal_search_used": True,
+                    "subgoal_decomposition": list(subgoal_result.subgoal_decomposition),
+                    "per_subgoal_reachable": list(subgoal_result.per_subgoal_reachable),
+                    "subgoal_residual": subgoal_result.residual,
+                    "hierarchical_plan_length": len(subgoal_result.plan),
+                }
+            )
+            if subgoal_result.planned:
+                rounds.append(row)
+                return LlmReinductionResult(
+                    planned=True,
+                    plan=list(subgoal_result.plan),
+                    goal_predicate=selected_goal,
+                    engine=selected.engine,
+                    selected_candidate_name=selected.name,
+                    goal_candidate_names=list(names),
+                    dynamics_candidate_names=list(names),
+                    refinement_rounds_used=round_no,
+                    verifier_is_oracle=False,
+                    model_specs=specs,
+                    heldout_accuracy=last_heldout_accuracy,
+                    accepted_by_heldout_verifier=last_accepted,
+                    goal_predicate_satisfiable=last_goal_satisfiable,
+                    goal_satisfiability=last_goal_satisfiability,
+                    subgoal_decomposition=list(subgoal_result.subgoal_decomposition),
+                    per_subgoal_reachable=list(subgoal_result.per_subgoal_reachable),
+                    subgoal_search_used=True,
+                    rounds=rounds,
+                    counterexamples=counterexamples,
+                    skipped="",
+                )
         last_counterexample = dict(check["counterexample"])
         counterexamples.append(last_counterexample)
         row["counterexample"] = dict(last_counterexample)
