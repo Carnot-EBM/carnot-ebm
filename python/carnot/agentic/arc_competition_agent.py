@@ -71,6 +71,7 @@ MAX_ACTIONS = 200
 # The live route uses the cheap v2+frame-delta subset plus frame-hash caching, not full v3 per node.
 SUBMITTED_VALUE_WEIGHT = 1e-12
 SUBMITTED_VALUE_HEAD_FEATURE_SUBSET = "cross_game_features_v3:v2_plus_frame_delta"
+DAGGER_VALUE_HEAD_RELATIVE_PATH = "models/arc_dagger_value_routing_v3.json"
 # Exp 4605 wires the live scored path to attempt deeper levels. The verifier stays a tie-breaker
 # (`value_weight=0`) so depth remains primary; deeper target levels only keep the loop alive after L1.
 SUBMITTED_TARGET_LEVELS = 3
@@ -308,6 +309,7 @@ class StepwiseExplorer:
         self._disc_X: list[list[float]] = []
         self._disc_y: list[float] = []
         self._disc_seen: set[tuple[int, str]] = set()
+        self._disc_rows: list[dict[str, Any]] = []
         self._disc_samples_since_fit = 0
         self._disc_negative_sources: dict[str, int] = {}
         self._disc_fit_count = 0
@@ -399,7 +401,7 @@ class StepwiseExplorer:
             return None
         return max(1, int(value))
 
-    def _disc_features(self, frame) -> Optional[list[float]]:
+    def _disc_features(self, frame, previous_frame: Any | None = None) -> Optional[list[float]]:
         if not self.online_discriminative:
             return None
         try:
@@ -407,7 +409,14 @@ class StepwiseExplorer:
                 from carnot.agentic.arc_value_learner import cross_game_features_v2
 
                 self.discriminative_featurizer = cross_game_features_v2
-            return [float(v) for v in self.discriminative_featurizer(frame)]
+            try:
+                values = self.discriminative_featurizer(
+                    frame,
+                    previous_frame=previous_frame,
+                )
+            except TypeError:
+                values = self.discriminative_featurizer(frame)
+            return [float(v) for v in values]
         except Exception:
             return None
 
@@ -415,11 +424,13 @@ class StepwiseExplorer:
         self,
         frame,
         *,
+        previous_frame: Any | None = None,
         label: int,
         source: str,
         node_hash: Optional[str] = None,
+        path: Sequence[Mapping[str, Any]] | None = None,
     ) -> Optional[list[float]]:
-        features = self._disc_features(frame)
+        features = self._disc_features(frame, previous_frame=previous_frame)
         if features is None:
             return None
         self._record_discriminative_features(
@@ -427,6 +438,7 @@ class StepwiseExplorer:
             label=label,
             source=source,
             node_hash=node_hash or self._hash(frame),
+            path=path,
         )
         return features
 
@@ -437,6 +449,7 @@ class StepwiseExplorer:
         label: int,
         source: str,
         node_hash: str,
+        path: Sequence[Mapping[str, Any]] | None = None,
     ) -> None:
         if features is None:
             return
@@ -449,6 +462,19 @@ class StepwiseExplorer:
         self._disc_samples_since_fit += 1
         if int(label) == 0:
             self._disc_negative_sources[source] = self._disc_negative_sources.get(source, 0) + 1
+        self._disc_rows.append(
+            {
+                "features": [float(v) for v in features],
+                "label": float(label),
+                "source": str(source),
+                "node_hash": str(node_hash),
+                "path": [
+                    {"action": int(step["action"]), "data": step.get("data")}
+                    for step in (path or [])
+                    if isinstance(step, Mapping) and step.get("action") is not None
+                ],
+            }
+        )
         self._maybe_fit_discriminator()
 
     def _maybe_fit_discriminator(self) -> None:
@@ -506,6 +532,11 @@ class StepwiseExplorer:
             "frontier_pruned": int(self._disc_frontier_pruned),
             "prune_threshold": float(self.discriminative_prune_threshold),
         }
+
+    def search_distribution_samples(self) -> list[dict[str, Any]]:
+        """REQ-LEARN-4665: expose live frontier samples for DAgger-lite aggregation."""
+
+        return [dict(row) for row in self._disc_rows]
 
     def adaptive_budget_diagnostics(self) -> dict[str, Any]:
         return {
@@ -796,11 +827,16 @@ class StepwiseExplorer:
                 except Exception:
                     pass
             if over:
+                origin_node = self.graph.get(o["origin"], {})
+                act = {"action": o["action"], "data": o["data"]}
+                new_path = list(origin_node.get("path", [])) + [act]
                 self._record_discriminative_sample(
                     latest,
+                    previous_frame=o.get("previous_frame") or origin_node.get("frame"),
                     label=0,
                     source="game_over",
                     node_hash=h,
+                    path=new_path,
                 )
             else:
                 act = {"action": o["action"], "data": o["data"]}
@@ -810,13 +846,15 @@ class StepwiseExplorer:
                 if h not in self.graph:
                     origin_node = self.graph.get(o["origin"], {})
                     opath = origin_node.get("path", [])
+                    new_path = opath + [act]
                     features = self._record_discriminative_sample(
                         latest,
+                        previous_frame=o.get("previous_frame") or origin_node.get("frame"),
                         label=1,
                         source="alive_frontier",
                         node_hash=h,
+                        path=new_path,
                     )
-                    new_path = opath + [act]
                     value, frame_for_value = self._initial_value(latest)
                     self.graph[h] = {
                         "path": new_path,
@@ -841,6 +879,7 @@ class StepwiseExplorer:
                 label=1,
                 source="root",
                 node_hash=h,
+                path=[],
             )
             value, frame_for_value = self._initial_value(latest)
             self.graph.setdefault(
@@ -878,6 +917,7 @@ class StepwiseExplorer:
                     label=0,
                     source="frontier_exhausted",
                     node_hash=h,
+                    path=node.get("path") or [],
                 )
                 continue
             on_path = self._node_on_path_proba(node)
@@ -1329,11 +1369,15 @@ def _load_linear_cross_game_value_head(root: Path | str = REPO):
     models = Path(root) / "models"
     try:
         from carnot.agentic.arc_value_learner import (
+            DaggerWinReachabilityValueHead,
             LearnedVerifier,
             cross_game_features,
             cross_game_features_v2,
         )
 
+        dagger = Path(root) / DAGGER_VALUE_HEAD_RELATIVE_PATH
+        if dagger.exists():
+            return DaggerWinReachabilityValueHead.load(dagger)
         v3 = models / "arc_verifier_cross_game_v3.json"
         if v3.exists():
             sliced = _load_sliced_v3_value_head(v3)
@@ -2047,6 +2091,8 @@ SUBMITTED_AGENT_CONFIG = {
     "candidate_router": "cross_game_discriminative_v3_tiebreaker",
     "verifier_is_oracle": False,
     "value_head_feature_subset": SUBMITTED_VALUE_HEAD_FEATURE_SUBSET,
+    "value_head_checkpoint": DAGGER_VALUE_HEAD_RELATIVE_PATH,
+    "value_head_distribution_corrected": True,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
     "dense_curiosity_progress_loop_enabled": False,

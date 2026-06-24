@@ -14398,6 +14398,87 @@ and calibrates cached ranking scores into costs
 
 ---
 
+## REQ-LEARN-4665: ARC DAgger-Lite Distribution-Shift Value Routing
+
+The ARC value-routing workflow SHALL aggregate win-reachability value-head
+training data from the search distribution induced by the live `E3AgentPolicy`
+explorer, not only from replayed winning-path states. The DAgger-lite collector
+SHALL roll out the live explorer on offline-arcade variants, log frontier states
+from the live import path, relabel those rows with executable reproduction
+evidence for training only, aggregate them with the existing winning-path
+dataset, and train a cheap `v2 + frame_delta` win-reachability value head whose
+inference remains oracle-distinct.
+
+The submitted live value route SHALL prefer the DAgger-corrected cheap-feature
+head when its checkpoint is present, while retaining the .429 winning-path
+trained head as a matched baseline control. Exp 4665 SHALL compare corrected
+live first-win and multi-level solve-rate against the .429 value-routed baseline
+on the same cached public-game variants, re-run the distribution-shift probe
+before and after aggregation, report bootstrap confidence intervals, and write
+`results/experiment_4665_dagger_distribution_shift_value_routing.json`.
+
+### SCENARIO-LEARN-4665-DAGGER-DATA: Live Frontier Rows Enter Training
+
+**Given** the live `StepwiseExplorer` visits frontier states during an offline
+arcade rollout
+**When** Exp 4665 collects DAgger-lite training rows
+**Then** the rows include source, feature vector, node path, and relabeled
+win-reachability label, and the aggregate dataset contains both winning-path
+positives and search-distribution off-path negatives.
+
+### SCENARIO-LEARN-4665-LIVE-ROUTE: Corrected Head Is Live-Reachable
+
+**Given** a DAgger-corrected cheap-feature checkpoint is present
+**When** `load_cross_game_value_head()` builds the submitted E3 value route
+**Then** it loads the distribution-corrected head before the .429
+winning-path-trained baseline, keeps `verifier_is_oracle=false`, and preserves
+the `v2 + frame_delta` feature subset.
+
+### SCENARIO-LEARN-4665-ARTIFACT: Lift Or Null Is Reported Honestly
+
+**Given** the B1 localization artifact and the .429 A1 baseline artifact are
+present
+**When** Exp 4665 measures the corrected value route against the same variants
+**Then** the artifact reports before/after distribution-shift score, first-win
+and solve-rate deltas, bootstrap CI, live-path lint, parity test status,
+offline reproduction for any newly solved variant, and a residual bridge gap
+when no live lift crosses the confidence gate.
+
+### REQ-LEARN-4665 Field Principles
+
+- `honest_verdict`: terminal prefix; success: dagger_distribution_shift_value_routing_live_<firstwin|solverate>_up_<n> OR complete: dagger_distribution_corrected_no_live_lift_residual_logged.
+- `inference_substrate`: verifier_ensemble_against_cached_candidates -- offline-arcade DAgger data collection + value-head re-train + live-search measurement over cached variants (1s floor); the value head is CPU, no live_llm_inference.
+- `verifier_is_oracle`: MUST be false -- the win-reachability value head is a learned discriminator, oracle-DISTINCT from the executable win-check (the oracle is used only to LABEL training data, not at inference).
+- `solve_provenance`: live_agent_self_discovery -- this improves the SCORED live agent's OWN search guidance (E3AgentPolicy value-routing); NOT a parallel solver, NOT outer_loop_re.
+- `live_path_reachable`: HARD gate -- the changed modules (arc_value_learner/arc_competition_agent) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes.
+- `distribution_shift_score_before`: B1's measured 0.699 -- the localized residual cause this task attacks.
+- `distribution_shift_score_after`: the post-DAgger shift score -- a DROP is the evidence the correction took (the mechanism worked) independent of the live lift.
+- `shift_score_delta`: after - before (negative = shift reduced), emitted explicitly so a null is annotated.
+- `live_first_win_rate_corrected`: the live first-win-rate WITH the distribution-corrected value head on the SCORED agent.
+- `live_solve_rate_corrected`: the live multi-level (>=2) solve-rate WITH the distribution-corrected head (the deeper wall).
+- `live_baseline_winning_path_trained`: the matched .429 winning-path-trained value head first-win + solve-rate on the SAME variants (the no-regression control).
+- `first_win_rate_delta`: corrected - baseline first-win-rate (positive = distribution correction crossed the bridge), emitted explicitly so a null (0) is annotated.
+- `solve_rate_delta`: corrected - baseline multi-level solve-rate; emitted explicitly so a null is annotated.
+- `live_lift_ci`: bootstrap CI on the chosen live-lift metric; a claim above baseline requires the CI to exclude it.
+- `bare_control_passed`: the POSITIVE CONTROL -- the baseline ran on a corpus with reachable headroom; a no-lift null is valid only then.
+- `false_negative_risk_checked`: true with the matched baseline + reachable-headroom confirmed -- a 'no lift' null is valid only then.
+- `null_methodology_note`: present when a delta==0 -- states the equality is an honest no-value null, not a measurement bug.
+- `chosen_submitted_config`: the recommended SUBMITTED_AGENT_CONFIG change (distribution-corrected head on, value_weight, feature subset) -- the A6 input; 'unchanged' if null.
+- `parity_test_green`: HARD gate -- test_arc_submitted_agent_parity.py passes.
+- `offline_reproduced`: any newly-solved variant must offline-reproduce to count.
+- `residual_bridge_gap`: the Missing-Verifier / bridge gap logged if the corrected head still nulls -- the .431 next-attack record.
+- `random_seed`: determinism precondition for reproducibility (DAgger sampling RNG seeded).
+- `reproducibility_checksum`: content-addressed hash catches silent harness/corpus drift on replay.
+- `preconditions_checked`: records resources verified (offline arcade, value-learner + agent importable, B1 artifact present); pre-empts missing-resource fabrication.
+
+## Implementation Status (REQ-LEARN-4665)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4665 | Planned (`python/carnot/agentic/arc_value_learner.py`, `python/carnot/agentic/arc_competition_agent.py`, `python/carnot/experiment_4665_dagger_distribution_shift_value_routing.py`, `results/experiment_4665_dagger_distribution_shift_value_routing.json`) | Planned (`tests/python/test_experiment_4665_dagger_distribution_shift_value_routing.py`, `tests/python/test_arc_submitted_agent_parity.py`) |
+
+---
+
 ## REQ-LEARN-4353: ARC Learned Action-Cost Heuristic Improves Held-Out Actions-To-Solve
 
 **Given** at least five reproduced ARC-AGI-3 solved levels with loadable action
