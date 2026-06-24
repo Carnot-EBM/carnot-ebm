@@ -1,0 +1,130 @@
+{
+  "dead_ends_recorded": [
+    "bp35: no_grounded_next_level_adapter",
+    "re86: no_grounded_next_level_adapter",
+    "sb26: no_grounded_next_level_adapter",
+    "m0r0: standing_loop_repeated_prior_L2",
+    "cn04: standing_loop_repeated_prior_L2"
+  ],
+  "experiment": "experiment_4654_levelup_selfplay",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
+    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
+    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
+    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
+    "reproducibility_checksum": "catches silent drift on replay.",
+    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
+    "target_game": "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .424-.428, not ft09/ls20/sk48/dc22/ka59/wa30).",
+    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone).",
+    "verifier_is_oracle": "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
+  },
+  "honest_verdict": "success: vc33_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_reproduced": true,
+  "preconditions_checked": [
+    "arc_solver_kit.offline_arcade()"
+  ],
+  "prior_reproduced_level": 1,
+  "random_seed": 4654,
+  "reached_level": 2,
+  "registry_updated": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436",
+  "reproducible_total_levels_after": 58,
+  "reproducible_total_levels_before": 57,
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "vc33",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema_errors": [],
+  "solution_labels": [
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}"
+  ],
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4654",
+    "SCENARIO-ARC-WMTE-4654"
+  ],
+  "standing_loop_result_path": "results/arc_loop_solve_vc33.json",
+  "states_expanded": 10,
+  "target_game": "vc33",
+  "target_selection": {
+    "fallback_exception": false,
+    "preferred_targets": [
+      "bp35",
+      "re86",
+      "sb26",
+      "vc33"
+    ],
+    "prohibited_targets": [
+      "ft09",
+      "ls20",
+      "sk48",
+      "dc22",
+      "ka59",
+      "wa30",
+      "cd82",
+      "sp80",
+      "su15"
+    ],
+    "registry_game_count": 25,
+    "registry_level_before": 1,
+    "rotation_rule": "skip_ft09_ls20_sk48_dc22_ka59_wa30_and_no_grounded_L3_rows",
+    "selected": "vc33",
+    "selection_reason": "vc33 is an allowed clean L1 target with a grounded next-level support-clearance delta; bp35/re86/sb26 have no grounded L2 adapter yet",
+    "skipped": [
+      {
+        "game": "bp35",
+        "reason": "no_grounded_next_level_adapter"
+      },
+      {
+        "game": "re86",
+        "reason": "no_grounded_next_level_adapter"
+      },
+      {
+        "game": "sb26",
+        "reason": "no_grounded_next_level_adapter"
+      },
+      {
+        "game": "m0r0",
+        "reason": "standing_loop_repeated_prior_L2"
+      },
+      {
+        "game": "cn04",
+        "reason": "standing_loop_repeated_prior_L2"
+      }
+    ]
+  },
+  "verifier_checkpoint_updated": true,
+  "verifier_delta": {
+    "after_sha256": "d60fbd8fc6d14e36a57681aca9104c837d73776536e74d74ae92f662e4ef95cd",
+    "before_sha256": "d72d79e343147a9b2d84de5ff08b5ef3656e2c17e2c3816672be9631fedde7d8",
+    "checkpoint_path": "models/arc_verifier_vc33.json",
+    "negative_trace_notes": [
+      "bp35: no_grounded_next_level_adapter",
+      "re86: no_grounded_next_level_adapter",
+      "sb26: no_grounded_next_level_adapter",
+      "m0r0: standing_loop_repeated_prior_L2",
+      "cn04: standing_loop_repeated_prior_L2"
+    ],
+    "positive_trace_steps": 10,
+    "sha_changed": true,
+    "updated": true
+  },
+  "verifier_is_oracle": false
+}

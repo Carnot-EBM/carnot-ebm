@@ -2655,6 +2655,62 @@ writes the required principle-annotated artifact with an explicit fallback excep
 and reports `verifier_is_oracle=false` with
 `solve_provenance=development_proxy`.
 
+### REQ-ARC-WMTE-4654: Rotated Clean Level-Up Self-Play Bank
+
+Experiment 4654 SHALL satisfy the ARC sprint level-up attempt guarantee by
+running the standing ARC self-play loop on a rotation target that was not
+deepened in attempts `.424` through `.428`, accepting a bank only when
+`arc_solver_kit.reproduce()` offline-reproduces a level above the target game's
+current `ops/arc_solve_registry.yaml` row and the run persists a learned-verifier
+checkpoint. The workflow SHALL verify `arc_solver_kit.offline_arcade()` before
+the solve, inspect registry dead-end evidence, skip `ft09`, `ls20`, `sk48`,
+`dc22`, `ka59`, `wa30`, and the no-grounded-L3-delta rows `cd82`, `sp80`, and
+`su15`, and record why the preferred hard L1 targets `bp35`, `re86`, and `sb26`
+were skipped for this milestone.
+
+For the clean bank, `vc33` L2 SHALL extend the support-clearance config adapter
+from the offline environment state. After the reproduced L1 prefix
+`lower_click * 3`, the adapter SHALL click the L2 support controls at display
+coordinate `(1,25)` twice and `(1,45)` five times, using the level camera
+display-to-grid transform, and SHALL replay the full path through
+`scripts/arc_loop_solve.py --game vc33 --target-level 2`. The standing loop
+SHALL run the reproduction gate and checkpoint `models/arc_verifier_vc33.json`
+from the positive steps-to-go trace plus the recorded off-path/dead-end evidence.
+
+Experiment 4654 SHALL write
+`results/experiment_4654_levelup_selfplay.json` with bare top-level fields for
+`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`,
+`verifier_checkpoint_updated`, `registry_updated`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
+- `solve_provenance`: principle "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
+- `target_game`: principle "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .424-.428, not ft09/ls20/sk48/dc22/ka59/wa30)."
+- `verifier_checkpoint_updated`: principle "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4654
+
+**Given** the offline ARC environment is importable, the registry records `vc33`
+as reproduced through L1, the preferred hard L1 targets lack a grounded
+next-level adapter for this milestone, and prohibited recent/dead-end targets
+remain skipped
+**When** experiment 4654 runs the standing loop on `vc33` with target level 2
+**Then** the loop reaches L2 through offline reproduction, updates
+`models/arc_verifier_vc33.json`, records the registry bank from total 57 to 58,
+writes the required principle-annotated artifact without using an oracle verifier,
+and reports `solve_provenance=development_proxy`.
+
 #### SCENARIO-ARC-WMTE-4616-BLOCKED-PRECONDITION
 
 **Given** the offline arcade or value-learner imports are unavailable

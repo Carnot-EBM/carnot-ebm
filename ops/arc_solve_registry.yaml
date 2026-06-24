@@ -1064,49 +1064,49 @@ games:
       the current registry depth.
 - game: vc33
   reproducibility: reproduced
-  levels_reproduced: 1
-  solver: python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes
-    first contact through a generic config-rule verifier.
-  gotchas: []
-  dead_ends:
-  - gap_id: GAP-4423-VC33-UNSELECTABLE-FIRST-CONTACT
-    status: filled
-    game: vc33
-    failure_mode: needs_per_game_RE
-    missing_discriminator: selectable verifier that distinguishes the target's winning
-      delta from the explored non-winning states
-    candidate_design: derive a selectable verifier from the routed solved-game delta
-    routed_recipe:
-      game: s5i5
-      solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7
-        + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays
-        it through arc_solver_kit.reproduce.
-      win_condition: 'L1 marker-coverage config: controlled marker sprites tagged
-        0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi.
-        L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].'
-      action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal
-        controlled marker x by +3; v_extend click (22,47) increases the vertical controlled
-        marker y by +3.
-    loop_result_summary:
-      offline_reproduced: false
-      reproduced_levels: 0
-      mode: standing_arc_loop_routing_only
-    filled_by: experiment_4446_drive_generic_first_contact_bank
-    filled_artifact: results/experiment_4446_drive_generic_first_contact_bank.json
-    filled_summary: config_rule_verifier support-clearance digest reproduced vc33
-      L1 offline
+  levels_reproduced: 2
   mechanic_class: config_support_clearance
-  win_condition: 'L1 support-clearance config: lower click control shifts the paired
-    supports until the active piece clears the blocking goal color; next_level fires
-    on replay.'
-  action_model: ACTION6 click-only; lower_click display coordinate (61,33), repeated
-    3 times.
-  reproduce: arc_solver_kit.reproduce(vc33, ['lower_click']*3, apply_vc33_label, claimed_level=1)
-  latest_exp4446_reproduce:
-    artifact: results/experiment_4446_drive_generic_first_contact_bank.json
+  win_condition: >-
+    L1+L2 support-clearance config: controlled support clicks shift paired wall
+    segments until the active colored piece no longer has a blocking wall aligned
+    with its target-color sprite; the executable ielczunthe predicate then fires
+    next_level on replay.
+  action_model: >-
+    ACTION6 click-only on display coordinates derived from the camera transform.
+    L1 clicks lower_click (61,33) three times. L2 clicks the support controls at
+    (1,25) twice and (1,45) five times.
+  solver: >-
+    GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py +
+    scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2
+    gate.
+  reproduce: >-
+    Exp4654 results/experiment_4654_levelup_selfplay.json re-gated
+    results/arc_loop_solve_vc33.json offline_reproduced=True, reached_level=2,
+    banked +1 over the current L1 registry row, checksum 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436.
+  learned_verifier_checkpoint: models/arc_verifier_vc33.json trained by scripts/arc_loop_solve.py
+    on the vc33 L1+L2 positive steps-to-go trace and the recorded preferred
+    target dead-end notes.
+  gotchas:
+  - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls
+    at display y=25 and y=45 map to grid y=12 and y=22.
+  - The L2 delta is not symmetric with L1: only the middle-lower support twice
+    and the bottom support five times reaches the support-clearance predicate.
+  - The learned verifier is a routing/checkpoint artifact only; the executable
+    reproduction gate remains the oracle-distinct authority.
+  dead_ends:
+  - bp35, re86, and sb26 remain preferred hard targets but have no grounded
+    next-level adapter in this milestone.
+  - m0r0 and cn04 standing-loop L3 probes repeated their prior L2 gates.
+  - ft09, ls20, sk48, dc22, ka59, wa30, cd82, sp80, and su15 are skipped by the
+    operator's rotation exclusions or no-grounded-L3-delta rule.
+  latest_exp4654_levelup_selfplay:
+    artifact: results/experiment_4654_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_vc33.json
     offline_reproduced: true
-    reproduced_levels: 1
-    reproducibility_checksum: 9efad6691defba556f546914c006879b777f70debc1da3c531eaef25b49eb361
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_vc33.json
+    reproducibility_checksum: 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436
 - game: g50t
   reproducibility: reproduced
   levels_reproduced: 1
@@ -1288,7 +1288,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 57
+reproducible_total_levels: 58
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
