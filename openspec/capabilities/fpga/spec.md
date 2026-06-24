@@ -11270,6 +11270,94 @@ loaded, and no bitstream-build or speedup claim.
 
 ---
 
+### REQ-HW-4660
+
+**Title:** Hardware continuity audit MUST record KV260, PolarFire, and GateMate reachability for Exp 4660
+
+**Description:**
+Experiment 4660 MUST produce `results/experiment_4660_hardware_continuity.json`
+as a lightweight hardware-continuity audit for the three attached boards during
+the ARC sprint. The audit is a reachability plus light state record, not a
+bitstream build, flash attempt, benchmark, or fabric-acceleration claim. It MUST
+run each board's reachability probe, record exit codes, capture state only for
+reachable boards, and continue after an individual board fails by recording that
+board as `blocked_<board>_<reason>`.
+
+The only valid preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; this MUST be
+  the SSH-reachability check and MUST NOT be replaced by a host SD-card-slot
+  device check.
+- PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`; reachability requires a
+  successful command and a GateMate GM1Ax IDCODE such as `0x20000001`.
+
+For each reachable board, the experiment MUST record current board state:
+
+- KV260: `ssh kria 'xmutil listapps'` to record the loaded overlay, and
+  optionally `ssh kria 'ls /dev/uio*'` as a light energy-eval smoke when the
+  Carnot Ising overlay is loaded.
+- PolarFire: `ssh polarfire uptime`.
+- GateMate: the detected GateMate IDCODE.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; success: hardware_continuity_<n>_of_3_boards_reachable (or complete:/blocked_ per board state).`
+- `inference_substrate`: `hardware_smoke -- SSH/USB reachability checks, per-board floor; declared so a fast real check is not DURATION_TOO_SHORT false-flagged.`
+- `kv260_precondition`: `MUST be the SSH-reachability check (ssh kria true), NEVER a host SD-card-slot device check (KV260 SSH-Not-SD-Card Discipline).`
+- `boards_reachable`: `per-board reachability (kv260/polarfire/gatemate) -- the continuity record that keeps each attached board visible.`
+- `per_board_state`: `the recorded state per reachable board (loaded overlay / uptime / IDCODE) or blocked_<board>_<reason>.`
+- `reachable_board_count`: `the integer count of reachable boards (the at-a-glance continuity number).`
+- `speedup_claim_made`: `MUST be false -- this is a reachability audit, not a fabric-acceleration claim (no fabrication).`
+- `preconditions_checked`: `records WHICH board checks ran + their results; pre-empts silent-missing-hardware fabrication.`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4660_hardware_continuity.py`
+  writes `results/experiment_4660_hardware_continuity.json`.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `honest_verdict` is `success: hardware_continuity_<n>_of_3_boards_reachable`
+  where `<n>` is the number of reachable boards.
+- `preconditions_checked` records exactly the KV260 SSH BatchMode command,
+  PolarFire SSH BatchMode command, and GateMate DirtyJTAG detect command listed
+  above.
+- `boards_reachable` is keyed by `kv260`, `polarfire`, and `gatemate`.
+- `kv260_precondition` records the KV260 SSH command and contains no host
+  `/dev/mmcblk*` storage check.
+- `per_board_state` records the KV260 loaded overlay transcript, PolarFire
+  uptime transcript, and GateMate IDCODE for reachable boards; unreachable
+  boards are recorded as `blocked_kv260_ssh_unreachable`,
+  `blocked_polarfire_ssh_timeout`, or `blocked_gatemate_usb_undetected`.
+- A reachable KV260 with a Carnot Ising overlay records the optional light
+  energy-eval UIO smoke command `ssh kria 'ls /dev/uio*'`.
+- The artifact includes `random_seed=4660`, `spec_refs`, `field_principles`,
+  `duration_s`, `fabric_acceleration_claimed=false`,
+  `speedup_claim_made=false`, `bitstream_build_attempted=false`, and a stable
+  `reproducibility_checksum`.
+- The artifact contains no host SD-card block-device precondition.
+
+**Implementation status:** Pending (Exp 4660)
+
+---
+
+### SCENARIO-HW-4660
+
+**Scenario:** Exp 4660 records attached-board reachability and light state without heavy bring-up.
+
+**Given:** The hardware-continuity task requires KV260 SSH reachability only,
+PolarFire SSH reachability, and GateMate DirtyJTAG GateMate IDCODE detection.
+**When:** Experiment 4660 runs the three required preconditions and then records
+state only for boards that are reachable.
+**Then:** It writes `results/experiment_4660_hardware_continuity.json` with a
+terminal-prefixed board-count `honest_verdict`, `inference_substrate` equal to
+`hardware_smoke`, principle-annotated required fields, one state or blocked row
+per attached board, optional KV260 UIO smoke only when a Carnot Ising overlay is
+loaded, and no bitstream-build or speedup claim.
+
+**Implementation status:** Pending (Exp 4660)
+
+---
+
 ### SCENARIO-HW-4624
 
 **Scenario:** Exp 4624 records attached-board reachability and light state without heavy bring-up.
