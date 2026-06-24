@@ -47165,3 +47165,128 @@ milestones:
       included value claim.'
     deliverable: results/experiment_4638_capstone_v427.json
     result: OK (conductor)
+- id: 2026.06.428
+  title: 'ENERGY DRIVES GENERATION -- .427 crossed the offline->live bridge on EFFICIENCY via a GENERATION lever (the action-effect
+    predictor: first-win 0.407->0.591, actions 2->1), confirming a THIRD time that generation levers cross and rerankers do
+    not (the wall is make-a-winner-appear, not select). .428 takes the operator''s explicit cheapest-first energy lever, unwired
+    for three milestones: A1 (HEADLINE) wires exp4020''s graded is_goal (precision 1.0) as a LIVE goal-ENERGY heuristic in
+    graph_explore_solve_v2 (the per-game well the rollout descends; oracle-distinct; closes GAP-ARCH-GOAL-NOT-VERIFIED; energy
+    IS ground truth as the live generation driver) on top of the proven action-effect predictor; A2 deepens that predictor
+    from a candidate RANKER to a search EXPANSION PRIOR (SOTA-D #3) to convert the +0.18 first-win into a deeper live solve.
+    Both on the SCORED agent vs matched controls + a uniform-energy ablation, both live-path-reachable, both verifier_is_oracle:
+    false. A3 banks +1 (56->57+); package operator-resubmit-ready above 33 (A4). Plus self-learning persist+transfer (A5),
+    SUBMITTED_AGENT_CONFIG integration (A6), 2 infra (B1 live_multi_level_solve_rate co-headline metric / B2 GOAL-ENERGY-WITHOUT-ABLATION
+    guard), 1 hardware (C), 1 SOTA-ingestion (D), capstone (E). 7 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-24'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4639-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .427 -> activate .428; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .427 close-state (the bridge was CROSSED for the first time: A2 action-effect predictor raised live
+      first-win 0.407->0.591 [+0.18] and halved actions-to-first-levelup 2->1, transferred [A5 cd82 +0.5]; A1 dense curiosity
+      NULLED on solve-rate a 3rd time [0.04==0.04] +2 coverage; A3 banked ls20 L2 [55->56]; capstone bridge_crossed_live_efficiency_up_1).
+      The .428 pivot -> ENERGY DRIVES GENERATION: wire exp4020 graded is_goal as a LIVE goal-ENERGY heuristic (operator menu
+      #1) + deepen the action-effect predictor to a search EXPANSION PRIOR.'
+    deliverable: results/experiment_4639_archive_427_activate_428.json
+    result: OK (conductor)
+  - id: exp4640-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- ENERGY DRIVES GENERATION; closes GAP-ARCH-GOAL-NOT-VERIFIED)
+      -- wire exp4020''s graded is_goal (held-out precision 1.0) as a LIVE goal-ENERGY term in the graph_explore_solve_v2
+      search heuristic (a convex combination alpha*arc_goal_distance + beta*graded-is_goal-energy; emit a plan only when the
+      predicate fires), on top of the .427-proven action-effect predictor, on the SCORED E3AgentPolicy. The graded is_goal
+      energy is the per-game well the rollout descends -- it DIRECTS generation toward goal-reaching states (NOT a frontier
+      reranker). Measure live solve-rate + actions-to-win + first-win-rate vs the action-effect-only baseline AND a uniform-energy
+      ablation control (bootstrap CI). Live-path-reachable (arc_orphan_solver_lint). verifier_is_oracle: false. retire_if_same_verdict.'
+    deliverable: results/experiment_4640_goal_energy_generation_live.json
+    result: OK (conductor)
+  - id: exp4641-a2
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; SOTA-D #3 -- deepen the .427 proven winner) -- GRADUATE
+      the .427-proven action-effect/frame-change predictor from a candidate RANKER to a search EXPANSION PRIOR on the SCORED
+      E3AgentPolicy (predicted frame-change prioritizes which BRANCHES the best-first search EXPANDS -> directs generation
+      toward effective action SEQUENCES, not just the next action), and measure whether it converts the .427 +0.18 first-win
+      into a DEEPER live solve (a 2nd live level-up / higher live solve-rate) vs the .427 ranker-only baseline (matched control;
+      bootstrap CI). SOTA-D flagged clickability_action_effect_ expansion_prior (arXiv:2601.10904 + arXiv:2603.24621). Live-path-reachable
+      (arc_orphan_solver_lint). verifier_is_oracle: false. retire_if_same_verdict.'
+    deliverable: results/experiment_4641_action_effect_expansion_prior_live.json
+    result: OK (conductor)
+  - id: exp4642-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .422-.427
+      (PREFER r11l L1->L2 or g50t L1->L2 or bp35 L1->L2 [first-contact L1 games with a clean mechanic]; alternatives re86/lf52/vc33/s5i5
+      L1->L2 or m0r0/cn04 L2->L3; SKIP ls20 [just deepened .427], sk48 [failed .426], dc22 [failed .425], ka59 [hidden StepCounter],
+      wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the learned verifier on
+      pos/neg traces. Gate: offline_reproduced new level -> reproducible_total_levels 56 -> 57+. verifier_is_oracle: false.'
+    deliverable: results/experiment_4642_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4643-a4
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3''s new bank (+ any A1/A2
+      newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit (beat the standing
+      33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive
+      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Submission stays operator-only.
+      verifier_is_oracle: false.'
+    deliverable: results/experiment_4643_refresh_submission_package.json
+    result: OK (conductor)
+  - id: exp4644-a5
+    title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; operator MANDATORY) -- persist the milestone''s winning primitive
+      (A1 the graded goal-ENERGY heuristic operator; OR A2 the action-effect EXPANSION-PRIOR operator) into arc_solver_kit
+      / arc_solve_registry (ARC Solve Reproducibility + Solver-Reuse Discipline), and measure CROSS-GAME TRANSFER: does the
+      persisted primitive add value (live solve-rate / first-win / action-efficiency lift) on games it was NOT tuned on? verifier_is_oracle:
+      false.'
+    deliverable: results/experiment_4644_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4645-a6
+    title: 'PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTEGRATION + HEADLINE METRIC) -- consolidate whatever RAISED a
+      real metric (A1 graded goal-energy -> live solve-rate/first-win; A2 expansion prior -> deeper live solve; A3 new bank)
+      into the SUBMITTED_AGENT_CONFIG + the refreshed package; re-measure end-to-end on live solve-rate + live_multi_level_solve_rate
+      + action efficiency + offline_to_live_transfer_ratio + live-submittable count (vs 33). If NONE raised a clean control-passed
+      metric (each gated by its positive control + uniform-energy ablation), keep the bare config + honest null. Avoid the
+      .427 solve-rate TAUTOLOGY (a bare==integrated equality is a null, not a fabrication). Keep test_arc_submitted_agent_parity.py
+      + arc_orphan_solver_lint green. verifier_is_oracle: false.'
+    deliverable: results/experiment_4645_integration_gate.json
+    result: OK (conductor)
+  - id: exp4646-b1
+    title: 'PHASE B1 (RESERVED INFRA; co-headline metric) -- add a canonical live_multi_level_solve_rate metric helper: the
+      fraction of live attempts that solve >=2 levels (the NEW WALL -- .427 reached first-win 0.59 but multi-level solve-rate
+      is 0.04), reported SIDE-BY-SIDE with reproducible_total_levels, live-submittable count, first-win-rate, live_action_efficiency,
+      and offline_to_live_transfer_ratio. This is the metric that distinguishes "reached the first level-up" from "solved
+      multiple levels live" -- the gap A1/A2 must close. Asserting tests.'
+    deliverable: results/experiment_4646_live_multi_level_solve_rate_metric.json
+    result: OK (conductor)
+  - id: exp4647-b2
+    title: 'PHASE B2 (RESERVED INFRA; adversarial_verify hardening -- the GOAL-ENERGY-WITHOUT-ABLATION guard) -- add a reader-side
+      guard: an ARC artifact claiming an ENERGY-DRIVEN-GENERATION win (graded goal-energy / energy heuristic / energy-as-fitness
+      raised live solve-rate/first-win) MUST report a UNIFORM-ENERGY ABLATION control that did NOT achieve it -- a win backed
+      only by "energy-on beat the baseline" with no uniform/random-energy ablation WARN-fires (it might be the SEARCH, not
+      the energy). Be NARROW: an artifact that HONESTLY reports the ablation (energy beats uniform) does NOT fire; an artifact
+      reporting an energy magnitude as a diagnostic (no win claim) does NOT fire. Reader/guard only; edits adversarial_verify.py,
+      never the conductor. Asserting tests.'
+    deliverable: results/experiment_4647_adversarial_verify_hardening.json
+    result: OK (conductor)
+  - id: exp4648-c
+    title: 'PHASE C (HARDWARE CONTINUITY; 1 per attached board) -- per-board reachability audit: KV260 (SSH reachability ONLY,
+      never host SD card), GateMate (openFPGALoader USB detect), PolarFire (SSH). Honest blocked_<board>_<reason> if a board
+      is down. Keeps each attached board visible per the Hardware-Task Continuity Discipline without burning a heavy slot
+      during the ARC sprint.'
+    deliverable: results/experiment_4648_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4649-d
+    title: 'PHASE D (SOTA INGESTION; 1 reserved slot) -- ingest ENERGY-AS-FITNESS / QUALITY-DIVERSITY-EVOLUTION / MACRO-ACTION-VOCABULARY
+      / HIERARCHICAL-SEARCH SOTA mapped onto the .428 generation thesis (the next generator after the goal-energy + expansion-prior
+      levers): energy-as-fitness QD evolution over action sequences (MAP-Elites/FunSearch, arXiv:2605.28814), macro-action
+      vocabulary / empowerment (arXiv:2107.07031, arXiv:2502.02962), hierarchical/subgoal search (GAP-ARCH-NO-HIERARCHICAL-SEARCH),
+      PoE-World executable model (arXiv:2605.05138). Real arXiv IDs only; map the strongest methods to the .429 roadmap. /deep-research
+      BANNED in the autonomous loop.'
+    deliverable: results/experiment_4649_sota_ingestion_energy_fitness_generator.json
+    result: OK (conductor)
+  - id: exp4650-e
+    title: 'PHASE E (CAPSTONE) -- the .428 scorecard: did A1''s graded goal-ENERGY heuristic raise LIVE solve-rate/first-win
+      on the SCORED agent vs the baseline AND beat the uniform-energy ablation (cross the bridge via ENERGY-DRIVEN GENERATION,
+      the operator menu #1 lever)? Did A2''s action-effect EXPANSION PRIOR deepen the live solve (live_multi_level_solve_rate
+      up)? Did A3 bank +1 (56->57+)? Is the package operator-resubmit-ready above 33 (A4)? Report ALL co-headline metrics
+      (live solve-rate, live_multi_level_solve_rate, live_action_efficiency, offline_to_live_transfer_ratio, reproducible_total_levels,
+      live-submittable, first-win-rate). Skip flagged_adversarial; honor the positive-control + FALSE_NEGATIVE_RISK + .425-B2
+      TAUTOLOGY + .426-B2 offline-vs-live + .427-B2 intrinsic-reward + .428-B2 goal-energy-ablation guards. verifier_is_oracle:
+      false on every included value claim.'
+    deliverable: results/experiment_4650_capstone_v428.json
+    result: OK (conductor)
