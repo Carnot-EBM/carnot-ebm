@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.430",
+  "generated_at": "2026-06-24T09:16:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped TIMING DATA reported 0 commits since activation, so the locked fields are 0/0/0/null -- but this is the RECURRING FALSE-ZERO DETECTOR GAP documented every milestone since .363, NOT an empty milestone. On-disk results + the committed changelog show .430 actually ran 12 experiments (exp4663-exp4674, 13 artifact files; exp4667 emits two) over a ~194-min window (2026-06-24T05:52:55Z->09:07:16Z UTC). Capstone exp4674 = 'capability_grew_58_to_59' (reproducible_total_levels 58->59 via A3 dc22 L2 offline-reproduced). gpu_idle_on_compute_bound_tasks=null is correct: no monitored-3090 compute-bound task ran -- the one live_llm_inference task (A1, exp4664, 254s) ran on the AMD iGPU frozen ARC sprint generator (Qwen3.5-9B-MTP), not the monitored RTX 3090s, so both idle 3090s are correct behaviour.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY GAP (the milestone's only real bottleneck): the authoritative milestone-scoped timing detector again false-reported '0 commits since activation' while 12 experiments (exp4663-exp4674) exist on disk. This recurs continuously since .363 because the shipped detector-wire reaches the standalone module but never the conductor's retro TIMING-DATA prompt-assembly call site that feeds this retro's data block. It is an observability artifact, not an execution stall.",
+    "Retro reconciliation cost: because the timing block reads zero, the true milestone state (exp range, wall window, per-task verdicts/substrates) must be reconstructed by reading on-disk artifacts each milestone instead of being supplied by the detector."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro's authoritative block reflects on-disk commits (the recurring fix recommended .426-.429, still unwired).",
+    "Promote injected==on-disk to a HARD retro-launch gate: refuse to generate an operational retro whose TIMING DATA reports 0 commits when >=1 experiment artifact exists since activation.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write-time so the retro can mechanically distinguish 3090-monitored compute-bound tasks from iGPU / CPU / aggregation tasks without re-reading each file.",
+    "No GPU action required: per the GPU IDLE INTERPRETATION RULE, gpu_idle_on_compute_bound_tasks is null because no 3090-monitored compute-bound task ran; both 3090s idle is correct (the live generation task runs on the AMD iGPU per the frozen sprint stack)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the timing detector into the conductor's retro prompt-assembly so TIMING DATA stops false-reporting 0 -- single highest-leverage fix, recurring since .363 and now extended to .430.",
+    "Gate retro-launch on injected-timing == on-disk-commit-count; block the empty-data retro path when experiments exist since activation.",
+    "Stamp inference_substrate / compute_bound at artifact write-time so GPU-efficiency analysis is mechanical rather than inferred per milestone."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The locked 0/0/0/null are a milestone-scoped timing DETECTOR artifact (the false-zero gap recurring since .363), not an idle milestone: .430 executed 12 experiments cleanly over ~194 min and grew capability 58->59 (A3 dc22 L2 reproduced), while both offline->live bridge levers were honest nulls (A1 L2 goal-induction reached no deepening / single-exemplar goal insufficient; A2 DAgger distribution-corrected but no live lift). Compute efficiency is a non-issue -- the single live_llm_inference task ran on the AMD iGPU sprint generator, not the monitored 3090s -- so the highest-value operational fix remains wiring the timing detector into the retro prompt-assembly so the authoritative block stops reading zero."
+}
