@@ -33,6 +33,7 @@ import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
+from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     load_live_action_effect_scorer,
@@ -95,6 +96,8 @@ SUBMITTED_GOAL_ENERGY_ALPHA = 0.9
 SUBMITTED_GOAL_ENERGY_BETA = 0.1
 SUBMITTED_QD_GENERATION_ENABLED = False
 SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
+SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
+SUBMITTED_CONTROLLABLE_NOVELTY_MODE = "episodic_knn_plus_rnd_action_effect_embedding"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -270,6 +273,7 @@ class StepwiseExplorer:
         goal_bias_label: str = "",
         goal_bias_lower_is_better: bool = True,
         qd_generator: Any | bool | None = None,
+        controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -388,6 +392,10 @@ class StepwiseExplorer:
             qd_generator,
             action_effect_scorer=self.frame_change_scorer,
             goal_energy=self.goal_bias,
+        )
+        self.controllable_novelty_policy = coerce_controllable_novelty_policy(
+            controllable_novelty,
+            action_effect_scorer=self.frame_change_scorer,
         )
         self._qd_sequences_injected = 0
         self._qd_actions_injected = 0
@@ -617,6 +625,13 @@ class StepwiseExplorer:
             diagnostics["generator"] = self.qd_generator.diagnostics()
         return diagnostics
 
+    def controllable_novelty_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-4688: expose proposal-novelty gate and memory diagnostics."""
+
+        if self.controllable_novelty_policy is None:
+            return {"enabled": False}
+        return self.controllable_novelty_policy.diagnostics()
+
     def _curiosity_score(self, node_hash: str) -> float:
         if self.dense_curiosity is None:
             return 0.0
@@ -723,7 +738,19 @@ class StepwiseExplorer:
                 self._adaptive_budget_expanded_count += 1
             self._adaptive_budget_history.append(decision.as_dict())
             candidates = gated
-        return [{"action": int(c.action_id), "data": c.data} for c in candidates]
+        rows = [{"action": int(c.action_id), "data": c.data} for c in candidates]
+        return self._apply_controllable_novelty_order(frame, rows)
+
+    def _apply_controllable_novelty_order(
+        self,
+        frame: Any,
+        candidates: Sequence[Mapping[str, Any]],
+    ) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4688: apply intrinsic proposal bonus before value ranking."""
+
+        if self.controllable_novelty_policy is None:
+            return [dict(row) for row in candidates]
+        return self.controllable_novelty_policy.rank_candidates(frame, candidates)
 
     @staticmethod
     def _game_over(frame) -> bool:
@@ -828,6 +855,16 @@ class StepwiseExplorer:
                     )
                 except Exception:
                     pass
+            if self.controllable_novelty_policy is not None and o.get("grid") is not None:
+                try:
+                    action = {"action": int(o["action"]), "data": o.get("data")}
+                    self.controllable_novelty_policy.record_transition(
+                        o.get("previous_frame") or o.get("grid"),
+                        latest,
+                        action,
+                    )
+                except Exception:
+                    pass
             if over:
                 origin_node = self.graph.get(o["origin"], {})
                 act = {"action": o["action"], "data": o["data"]}
@@ -868,6 +905,7 @@ class StepwiseExplorer:
                             or self.dense_curiosity is not None
                             or self.action_effect_expansion_prior is not None
                             or self.qd_generator is not None
+                            or self.controllable_novelty_policy is not None
                             else frame_for_value
                         ),
                         "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
@@ -896,6 +934,7 @@ class StepwiseExplorer:
                         or self.dense_curiosity is not None
                         or self.action_effect_expansion_prior is not None
                         or self.qd_generator is not None
+                        or self.controllable_novelty_policy is not None
                         else frame_for_value
                     ),
                     "previous_frame": None,
@@ -1534,6 +1573,7 @@ class E3AgentPolicy:
         dense_curiosity_discount: float = 0.5,
         goal_bias: Any = _DEFAULT_GOAL_BIAS,
         qd_generator: Any | bool | None = None,
+        controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
         subgoal_search: bool = False,
         subgoal_budget: int = 3,
         factored_planner: bool = False,
@@ -1601,6 +1641,7 @@ class E3AgentPolicy:
             goal_bias_label=GOAL_ENERGY_SOURCE if goal_bias is not None else "",
             goal_bias_lower_is_better=True,
             qd_generator=qd_generator,
+            controllable_novelty=controllable_novelty,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -2169,6 +2210,8 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_beta": SUBMITTED_GOAL_ENERGY_BETA,
     "qd_generation_enabled": SUBMITTED_QD_GENERATION_ENABLED,
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
+    "controllable_novelty_proposal_enabled": SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
+    "controllable_novelty_proposal_mode": SUBMITTED_CONTROLLABLE_NOVELTY_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,
