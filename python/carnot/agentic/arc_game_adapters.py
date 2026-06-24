@@ -299,6 +299,22 @@ FT09_L3_TAIL_LABELS: tuple[str, ...] = (
 
 FT09_L3_SOLUTION_LABELS: tuple[str, ...] = FT09_L2_SOLUTION_LABELS + FT09_L3_TAIL_LABELS
 
+VC33_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": 61, "y": 33}) for _ in range(3)
+)
+
+VC33_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 1, "y": 25}),
+    _json_action_label(6, {"x": 1, "y": 25}),
+    _json_action_label(6, {"x": 1, "y": 45}),
+    _json_action_label(6, {"x": 1, "y": 45}),
+    _json_action_label(6, {"x": 1, "y": 45}),
+    _json_action_label(6, {"x": 1, "y": 45}),
+    _json_action_label(6, {"x": 1, "y": 45}),
+)
+
+VC33_L2_SOLUTION_LABELS: tuple[str, ...] = VC33_L1_LABELS + VC33_L2_TAIL_LABELS
+
 SK48_L1_LABELS: tuple[str, ...] = tuple(
     _json_action_label(action) for action in (1, 1, 1, 4, 4, 4, 4, 3, 2, 2, 4, 3, 1, 4)
 )
@@ -1389,6 +1405,96 @@ def _ft09():
     )
 
 
+def _vc33():
+    """vc33 -- support-clearance config puzzle, deepened from L1 to L2."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(VC33_L1_LABELS):
+            return [VC33_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(VC33_L2_TAIL_LABELS):
+            return [VC33_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        data = row.get("data") if isinstance(row.get("data"), dict) else None
+        return env.step(_game_action(GameAction, int(row["action"])), data=data)
+
+    def _sprite_rows(game, tag):
+        try:
+            sprites = game.current_level.get_sprites_by_tag(tag)
+        except Exception:
+            return ()
+        rows = []
+        for sprite in sprites:
+            rows.append(
+                (
+                    str(getattr(sprite, "name", "")),
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    int(getattr(sprite, "width", 0)),
+                    int(getattr(sprite, "height", 0)),
+                    _sprite_color(sprite),
+                )
+            )
+        return tuple(sorted(rows))
+
+    def _support_distance(game):
+        # `ielczunthe` is the executable support-clearance predicate. The wall
+        # width residual gives the learned verifier a smooth route before it flips.
+        try:
+            if bool(game.ielczunthe()):
+                return 0.0
+        except Exception:
+            pass
+        walls = _sprite_rows(game, "0043nzrtobajqi")
+        width_residual = sum(max(0, int(row[3]) - 2) for row in walls)
+        return float(max(1, width_residual))
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0))
+        return (
+            int(level),
+            _frame_grid_state_key(frame),
+            _sprite_rows(game, "0022jvmlspyigc"),
+            _sprite_rows(game, "0043nzrtobajqi"),
+            _sprite_rows(game, "0016uciqlhjlom"),
+            _sprite_rows(game, "0010gnulkywfpz"),
+        )
+
+    def featurize(game):
+        supports = _sprite_rows(game, "0022jvmlspyigc")
+        walls = _sprite_rows(game, "0043nzrtobajqi")
+        support_sum = sum(row[1] + row[2] for row in supports)
+        wall_area = sum(row[3] * row[4] for row in walls)
+        return [
+            float(getattr(game, "level_index", 0) or 0),
+            _support_distance(game),
+            float(len(supports)),
+            float(wall_area),
+            float(support_sum),
+        ]
+
+    return GameAdapter(
+        game="vc33",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=lambda game, _frame=None: _support_distance(game),
+        warmup_label=None,
+        depth_caps={1: len(VC33_L1_LABELS), 2: len(VC33_L2_TAIL_LABELS), 3: 2},
+        level_tails={1: VC33_L1_LABELS, 2: VC33_L2_TAIL_LABELS},
+        branch_mode="replay",
+    )
+
+
 def _ls20():
     """ls20 -- clean navigation plus visible shape/color/rotation target matching.
 
@@ -1656,6 +1762,7 @@ _BUILDERS = {
     "dc22": _dc22,
     "cd82": _cd82,
     "m0r0": _m0r0,
+    "vc33": _vc33,
 }
 
 
