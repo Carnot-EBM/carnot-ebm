@@ -4093,6 +4093,67 @@ target games
 coverage delta, live first-win and solve-rate deltas, bootstrap CI, and an
 honest null note when the winning plan does not newly appear.
 
+### REQ-ARC-WMTE-4680: Persist Milestone Generation Primitive And Transfer Null
+
+Experiment 4680 SHALL persist the strongest reusable `.432` A1/A2 generation
+component into `arc_solver_kit` and `ops/arc_solve_registry.yaml`, then measure
+cross-game transfer on at least three cached held-out games. If Experiment 4676
+or 4677 cleared its success gate, the cleared hierarchical-subgoal or
+PoE-World factored-planner operator SHALL be persisted. If both are value-null,
+the experiment SHALL persist the strongest characterized component instead. For
+the `.432` artifacts this component is the programmatic-expert trust-weighting
+gate from Experiment 4677: it ranks generated object-level experts by held-out
+transition trust, keeps only replay-stable experts, and rejects overfit prefix
+experts before product-model planning.
+
+The persisted primitive SHALL be oracle-distinct from the executable
+win-check. It may generate, rank, induce, or filter candidate experts, but a
+new level SHALL count only when the offline reproduction gate accepts it. The
+transfer measurement SHALL apply the persisted operator to cached held-out games
+and SHALL report, per game, candidate-coverage delta, live solve-rate delta,
+first-win delta, and `offline_reproduced_new_level`. A zero-value transfer is
+valid only when recorded with a residual dead-end for the next attack.
+
+Experiment 4680 SHALL write
+`results/experiment_4680_primitive_persist_transfer.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `primitive_persisted`,
+`transfer_games`, `transfer_value_per_game`, `offline_reproduced_new_level`,
+`residual_dead_end`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive generates/ranks/induces, oracle-distinct from the executable win-check."
+- `primitive_persisted`: principle "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+- `transfer_games`: principle "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+- `transfer_value_per_game`: principle "per-game coverage/solve-rate/first-win delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+- `offline_reproduced_new_level`: principle "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+- `residual_dead_end`: principle "the characterized transfer-null residual if value is zero (the next-attack record); per the .430 A5 pattern."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4680-PERSIST-STRONGEST-COMPONENT
+
+**Given** Experiment 4676 and 4677 both report complete value-null verdicts
+**When** Experiment 4680 selects the reusable primitive
+**Then** it persists `programmatic_expert_trust_weighting_operator` under the
+registry gotcha id `primitive_programmatic_expert_trust_weighting_operator`,
+records the 4676/4677 source artifacts, and explains that this captures
+characterized generation scaffolding rather than fabricating a banked level.
+
+#### SCENARIO-ARC-WMTE-4680-TRANSFER-MEASUREMENT
+
+**Given** cached held-out games and the persisted expert-trust operator
+**When** Experiment 4680 measures transfer
+**Then** each game reports coverage, solve-rate, first-win, and offline
+reproduction deltas, and a zero-value run emits
+`complete: primitive_persisted_transfer_null_characterized` with a
+`residual_dead_end`.
+
 ### REQ-ARC-WMTE-4678: Level-Up Self-Play Bank With Verifier Checkpoint
 
 Experiment 4678 SHALL bank one new reproducible ARC public-game level through

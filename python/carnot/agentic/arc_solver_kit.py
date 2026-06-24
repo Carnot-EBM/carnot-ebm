@@ -219,6 +219,24 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="programmatic_expert_trust_weighting_operator",
+            derived_from_games=("exp4677_poe_world_factored_subgoal_planner",),
+            purpose=(
+                "Rank generated programmatic object experts by held-out transition trust, "
+                "keep only replay-stable factors for product-model planning, and report "
+                "overfit-prefix residuals before any solve claim."
+            ),
+            selector_tags=(
+                "programmatic_expert",
+                "trust_weighting",
+                "factored_planner",
+                "candidate_generation",
+                "world_model",
+                "graph_explore",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -537,6 +555,7 @@ def select_primitive_operators(
             if name == "value_head_bridge_fix_operator":
                 expanded.append("cheap_value_routing_cost_fix_operator")
                 expanded.append("dagger_off_path_data_collection_operator")
+                expanded.append("programmatic_expert_trust_weighting_operator")
         names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
@@ -1151,6 +1170,95 @@ def dagger_off_path_data_collection_operator(
         "winning_path_count": sum(1 for row in aggregate if row["source"] == "winning_path"),
         "off_path_negative_count": sum(1 for row in relabeled if float(row["label"]) < 0.5),
         "rows": aggregate,
+        "verifier_is_oracle": False,
+    }
+
+
+def _programmatic_expert_number(value: Any, default: float = 0.0) -> float:
+    if isinstance(value, bool):
+        return float(default)
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
+def _programmatic_expert_int(row: Any, key: str) -> int:
+    value = _candidate_field(row, key, 0)
+    if isinstance(value, bool):
+        return 0
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _programmatic_expert_trust(row: Any) -> float:
+    trust = _candidate_field(row, "trust")
+    if trust is not None:
+        return max(0.0, min(1.0, _programmatic_expert_number(trust)))
+    total = _programmatic_expert_int(row, "heldout_total")
+    if total <= 0:
+        return 0.0
+    correct = _programmatic_expert_int(row, "heldout_correct")
+    return max(0.0, min(1.0, float(correct) / float(total)))
+
+
+def _programmatic_expert_public_row(row: Any, index: int, threshold: float) -> dict[str, Any]:
+    trust = _programmatic_expert_trust(row)
+    heldout_total = _programmatic_expert_int(row, "heldout_total")
+    heldout_correct = _programmatic_expert_int(row, "heldout_correct")
+    kept = bool(heldout_total > 0 and trust >= threshold)
+    public = {
+        "name": str(_candidate_field(row, "name", f"expert_{index}") or f"expert_{index}"),
+        "object_class": str(_candidate_field(row, "object_class", "unknown") or "unknown"),
+        "trust": round(float(trust), 6),
+        "heldout_correct": int(heldout_correct),
+        "heldout_total": int(heldout_total),
+        "kept": kept,
+    }
+    game = _candidate_field(row, "game")
+    if game:
+        public["game"] = str(game)
+    source_kept = _candidate_field(row, "kept")
+    if isinstance(source_kept, bool):
+        public["source_kept"] = bool(source_kept)
+    return public
+
+
+def programmatic_expert_trust_weighting_operator(
+    expert_rows: Sequence[Any],
+    *,
+    trust_threshold: float = 0.75,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4680: reusable held-out trust gate for generated experts."""
+
+    threshold = max(0.0, min(1.0, _programmatic_expert_number(trust_threshold, 0.75)))
+    public_rows = [
+        _programmatic_expert_public_row(row, index, threshold)
+        for index, row in enumerate(list(expert_rows))
+    ]
+    public_rows.sort(
+        key=lambda row: (
+            -float(row["trust"]),
+            str(row["name"]),
+            str(row.get("object_class") or ""),
+        )
+    )
+    kept_rows = [row for row in public_rows if row["kept"]]
+    residual = ""
+    if not kept_rows:
+        residual = "experts_overfit_prefix" if public_rows else "expert_factors_not_independent"
+    return {
+        "operator": "programmatic_expert_trust_weighting_operator",
+        "expert_count": len(public_rows),
+        "kept_expert_count": len(kept_rows),
+        "rejected_expert_count": len(public_rows) - len(kept_rows),
+        "trust_threshold": round(float(threshold), 6),
+        "best_trust": float(public_rows[0]["trust"]) if public_rows else 0.0,
+        "expert_trust_weights": public_rows,
+        "coverage_ready": bool(kept_rows),
+        "residual": residual,
         "verifier_is_oracle": False,
     }
 
