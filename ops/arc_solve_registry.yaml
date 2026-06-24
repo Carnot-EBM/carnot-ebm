@@ -410,6 +410,54 @@ general_gotchas:
     residual_dead_end: Transfer value is bounded decision-point value ranking over
       cached untuned candidates; no new executable level was banked, so
       reproducible_total_levels is unchanged.
+- id: primitive_cheap_value_routing_cost_fix_operator
+  operator: cheap_value_routing_cost_fix_operator
+  derived_from_games:
+  - exp4652_value_routing_cost_fix_live
+  derived_from_artifacts:
+  - results/experiment_4652_value_routing_cost_fix_live.json
+  - results/experiment_4653_energy_fitness_qd_generation_live.json
+  note: >-
+    Exp 4656 persists the .429 cheap-feature value-routing cost fix as reusable
+    live-solver scaffolding: use the output-identical scipy/fallback connected
+    component speedup, route value-head calls through the cheap
+    cross_game_features_v3:v2_plus_frame_delta subset, keep lazy frame-hash
+    caching, and report solve-rate / first-win / action-efficiency deltas before
+    any solve claim. A1 and A2 both selected `unchanged` for submitted config, so
+    this captures the strongest characterized reusable component rather than
+    fabricating transfer value. This is ranking/routing scaffolding, not a win
+    oracle; new levels still count only through arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Cached held-out transfer can remain value-null when the candidate generator
+      does not expose a better first-win or multi-level candidate for the cheap
+      value route to rank.
+  latest_exp4656_transfer:
+    artifact: results/experiment_4656_primitive_persist_transfer.json
+    transfer_games:
+    - bp35
+    - cd82
+    - dc22
+    transfer_value_per_game:
+      bp35:
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        action_efficiency_lift: 0.0
+        offline_reproduced_new_level: false
+      cd82:
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        action_efficiency_lift: 0.0
+        offline_reproduced_new_level: false
+      dc22:
+        live_solve_rate_delta: 0.0
+        first_win_rate_delta: 0.0
+        action_efficiency_lift: 0.0
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is null on cached held-out games; the
+      cheap-feature cost fix is persisted as reusable speedup, but candidate
+      generation/value calibration remains the residual and reproducible_total_levels
+      is unchanged.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:

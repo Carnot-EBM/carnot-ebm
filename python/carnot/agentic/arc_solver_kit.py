@@ -161,7 +161,10 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
         ),
         PrimitiveOperator(
             operator="value_head_bridge_fix_operator",
-            derived_from_games=("exp4616_offline_live_bridge_disambiguation",),
+            derived_from_games=(
+                "exp4616_offline_live_bridge_disambiguation",
+                "exp4652_value_routing_cost_fix_live",
+            ),
             purpose=(
                 "Apply the offline-to-live value-head bridge fix by scoring only bounded "
                 "decision points, caching repeated state scores, and reporting first-win or "
@@ -171,6 +174,25 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
                 "value_head",
                 "bridge_fix",
                 "decision_point",
+                "candidate_ranking",
+                "graph_explore",
+                "live_path",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
+            operator="cheap_value_routing_cost_fix_operator",
+            derived_from_games=("exp4652_value_routing_cost_fix_live",),
+            purpose=(
+                "Reuse the productionized cheap value-routing substrate: v2+frame-delta "
+                "features, bounded lazy value-head scoring, and frame-hash caching before "
+                "reporting solve/first-win/action-efficiency lift."
+            ),
+            selector_tags=(
+                "value_head",
+                "cheap_feature",
+                "value_routing",
+                "cost_fix",
                 "candidate_ranking",
                 "graph_explore",
                 "live_path",
@@ -489,6 +511,13 @@ def select_primitive_operators(
             "active_data_collection",
             "graph_astar_action_cost",
         )
+    if "value_head_bridge_fix_operator" in names and "cheap_value_routing_cost_fix_operator" not in names:
+        expanded: list[str] = []
+        for name in names:
+            expanded.append(name)
+            if name == "value_head_bridge_fix_operator":
+                expanded.append("cheap_value_routing_cost_fix_operator")
+        names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
 
@@ -954,6 +983,45 @@ def value_head_bridge_fix_operator(
         "dead_end": dead_end,
         "verifier_is_oracle": False,
     }
+
+
+def cheap_value_routing_cost_fix_operator(
+    candidates: Sequence[Any] | Mapping[str, Any],
+    *,
+    value_head: Callable[[Any], float] | None = None,
+    score_key: str = "value_head_score",
+    target_key: str = "reaches_levelup",
+    decision_point_key: str = "decision_point",
+    state_key: str = "state_key",
+    max_value_evals: int = 32,
+    first_win_budget: int | None = None,
+    feature_subset: str = "cross_game_features_v3:v2_plus_frame_delta",
+    per_node_feature_cost_ms: float | None = None,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4656: persisted cheap-feature value-routing cost fix."""
+
+    ranked = value_head_bridge_fix_operator(
+        candidates,
+        value_head=value_head,
+        score_key=score_key,
+        target_key=target_key,
+        decision_point_key=decision_point_key,
+        state_key=state_key,
+        max_value_evals=max_value_evals,
+        first_win_budget=first_win_budget,
+    )
+    try:
+        feature_cost = None if per_node_feature_cost_ms is None else float(per_node_feature_cost_ms)
+    except (TypeError, ValueError):
+        feature_cost = None
+    result = dict(ranked)
+    result["base_operator"] = ranked.get("operator")
+    result["operator"] = "cheap_value_routing_cost_fix_operator"
+    result["feature_subset"] = str(feature_subset)
+    result["per_node_feature_cost_ms"] = feature_cost
+    result["cost_fix_applied"] = feature_cost is None or feature_cost < 1.0
+    result["verifier_is_oracle"] = False
+    return result
 
 
 def _effect_row_field(row: Any, key: str, default: Any = None) -> Any:
