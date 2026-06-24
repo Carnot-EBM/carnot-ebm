@@ -43,6 +43,7 @@ from carnot.agentic.arc_frame_change_predictor import (
     load_live_action_effect_scorer,
 )
 from carnot.agentic.arc_goal_energy_live import GOAL_ENERGY_SOURCE
+from carnot.agentic.arc_value_learner import coerce_object_centric_proposal_policy
 from carnot.agentic.arc_value_net import load_live_spatial_value_head
 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
@@ -102,6 +103,8 @@ SUBMITTED_QD_GENERATION_ENABLED = False
 SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
 SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
 SUBMITTED_CONTROLLABLE_NOVELTY_MODE = "episodic_knn_plus_rnd_action_effect_embedding"
+SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
+SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED = False
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD = 0.75
 _DEFAULT_VALUE_HEAD = object()
@@ -280,6 +283,7 @@ class StepwiseExplorer:
         goal_bias_lower_is_better: bool = True,
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
+        object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
         program_synthesis_filter: Any | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
@@ -403,6 +407,9 @@ class StepwiseExplorer:
         self.controllable_novelty_policy = coerce_controllable_novelty_policy(
             controllable_novelty,
             action_effect_scorer=self.frame_change_scorer,
+        )
+        self.object_centric_proposal_policy = coerce_object_centric_proposal_policy(
+            object_centric_proposal
         )
         self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         self._qd_sequences_injected = 0
@@ -640,6 +647,13 @@ class StepwiseExplorer:
             return {"enabled": False}
         return self.controllable_novelty_policy.diagnostics()
 
+    def object_centric_proposal_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-4700: expose object-slot proposal diagnostics."""
+
+        if self.object_centric_proposal_policy is None:
+            return {"enabled": False}
+        return self.object_centric_proposal_policy.diagnostics()
+
     def set_program_synthesis_filter(self, proposal_filter: Any | None) -> None:
         """REQ-ARC-WMTE-4689: install held-out-validated action-effect pruning."""
 
@@ -717,7 +731,12 @@ class StepwiseExplorer:
         except Exception:
             return None
 
-    def _candidates(self, frame, path: Sequence[dict] | None = None) -> list[dict]:
+    def _candidates(
+        self,
+        frame,
+        path: Sequence[dict] | None = None,
+        previous_frame: Any | None = None,
+    ) -> list[dict]:
         from carnot.agentic.arc_graph_explore import rich_action_candidates
 
         action_prior = self.action_prior
@@ -730,6 +749,7 @@ class StepwiseExplorer:
             action_prior=action_prior,
             action_prior_prune_quantile=self.action_prior_prune_quantile,
             candidate_router=self.candidate_router,
+            previous_frame=previous_frame,
         )
         if self.adaptive_budget_threshold is not None and candidates:
             from carnot.agentic.arc_adaptive_budget import apply_adaptive_budget
@@ -777,9 +797,32 @@ class StepwiseExplorer:
                         existing.add(key)
             except Exception:
                 pass
+        if self.object_centric_proposal_policy is not None:
+            rows = self._apply_object_centric_proposal_order(
+                frame,
+                rows,
+                previous_frame=previous_frame,
+            )
         if self.program_synthesis_filter is not None:
             rows = self.program_synthesis_filter.rank_candidates(frame, rows)
         return self._apply_controllable_novelty_order(frame, rows)
+
+    def _apply_object_centric_proposal_order(
+        self,
+        frame: Any,
+        candidates: Sequence[Mapping[str, Any]],
+        *,
+        previous_frame: Any | None = None,
+    ) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4700: augment/rank proposals with object-centric slots."""
+
+        if self.object_centric_proposal_policy is None:
+            return [dict(row) for row in candidates]
+        return self.object_centric_proposal_policy.rank_candidates(
+            frame,
+            candidates,
+            previous_frame=previous_frame,
+        )
 
     def _apply_controllable_novelty_order(
         self,
@@ -905,6 +948,16 @@ class StepwiseExplorer:
                     )
                 except Exception:
                     pass
+            if self.object_centric_proposal_policy is not None and o.get("grid") is not None:
+                try:
+                    action = {"action": int(o["action"]), "data": o.get("data")}
+                    self.object_centric_proposal_policy.record_transition(
+                        o.get("previous_frame") or o.get("grid"),
+                        latest,
+                        action,
+                    )
+                except Exception:
+                    pass
             # OBSERVE hook (REQ-ARC-OAE-4710): feed realized (before, action, after) triples to
             # an online scorer that supports observe_transition.  The LiveActionEffectScorer (the
             # frozen shipped scorer) does NOT have this method, so the check `hasattr(fcs, ...)`
@@ -956,7 +1009,11 @@ class StepwiseExplorer:
                     value, frame_for_value = self._initial_value(latest)
                     self.graph[h] = {
                         "path": new_path,
-                        "untested": self._candidates(latest, path=new_path),
+                        "untested": self._candidates(
+                            latest,
+                            path=new_path,
+                            previous_frame=o.get("previous_frame") or origin_node.get("frame"),
+                        ),
                         "value": value,
                         "frame": (
                             latest
@@ -965,6 +1022,7 @@ class StepwiseExplorer:
                             or self.action_effect_expansion_prior is not None
                             or self.qd_generator is not None
                             or self.controllable_novelty_policy is not None
+                            or self.object_centric_proposal_policy is not None
                             else frame_for_value
                         ),
                         "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
@@ -985,7 +1043,7 @@ class StepwiseExplorer:
                 h,
                 {
                     "path": [],
-                    "untested": self._candidates(latest, path=[]),
+                    "untested": self._candidates(latest, path=[], previous_frame=None),
                     "value": value,
                     "frame": (
                         latest
@@ -994,6 +1052,7 @@ class StepwiseExplorer:
                         or self.action_effect_expansion_prior is not None
                         or self.qd_generator is not None
                         or self.controllable_novelty_policy is not None
+                        or self.object_centric_proposal_policy is not None
                         else frame_for_value
                     ),
                     "previous_frame": None,
@@ -1064,6 +1123,9 @@ class StepwiseExplorer:
                         self.goal_bias is None
                         and self.dense_curiosity is None
                         and self.action_effect_expansion_prior is None
+                        and self.qd_generator is None
+                        and self.controllable_novelty_policy is None
+                        and self.object_centric_proposal_policy is None
                     ):
                         node["frame"] = None
 
@@ -1633,6 +1695,7 @@ class E3AgentPolicy:
         goal_bias: Any = _DEFAULT_GOAL_BIAS,
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
+        object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
         program_synthesis_filter: Any | bool | None = SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED,
         program_synthesis_filter_trust_threshold: float = (
             SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
@@ -1711,6 +1774,7 @@ class E3AgentPolicy:
             goal_bias_lower_is_better=True,
             qd_generator=qd_generator,
             controllable_novelty=controllable_novelty,
+            object_centric_proposal=object_centric_proposal,
             program_synthesis_filter=initial_program_filter,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
@@ -2309,6 +2373,8 @@ SUBMITTED_AGENT_CONFIG = {
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
     "controllable_novelty_proposal_enabled": SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
     "controllable_novelty_proposal_mode": SUBMITTED_CONTROLLABLE_NOVELTY_MODE,
+    "object_centric_proposal_enabled": SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
+    "object_centric_proposal_mode": SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE,
     "program_synthesis_proposal_filter_enabled": (
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED
     ),
