@@ -762,16 +762,59 @@ games:
     current adapter has no grounded L3 delta.
 - game: lf52
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: first-solve L1 adapter-free (outer-loop generic sweep 2026-06-20); previously one of
-    the 3 unsolved public games. 8 ACTION6 clicks advance level 0->1.
-  action_model: ACTION6 click-only; clicks (18,19),(30,19)x2,(42,19)x2,(42,31)x2,(42,43) -- a
-    unit-positioning placement sequence (survey class = unit-positioning).
-  solver: results/arc_explore_trajectory_lf52.json (graph_explore_solve_v2 adapter-free, 8 actions);
-    verifier seed models/arc_verifier_lf52.json (heuristic cell_count).
-  reproduce: re-gated reproduced=True L1 (arc_solver_kit.reproduce inside arc_loop_solve + independent
-    ground-truth replay level 0->1 on a fresh env, 2026-06-20).
-  gotchas: []
+  levels_reproduced: 2
+  mechanic_class: rail_carried_peg_jump
+  win_condition: >-
+    L1 adapter-free seed plus L2 rail-carried peg-jump removal. L2 starts with
+    five fozwvlovdui pegs and one hupkpseyuim2 carrier on a rail; repeated
+    select-handle jumps remove crossed pegs until one remains and next_level
+    fires.
+  action_model: >-
+    ACTION6 selects a peg or an exposed jump handle. ACTION1-4 move the rail
+    carrier so a rail cell becomes a legal landing square. L2 tail:
+    select/jump top pegs at (14,16)->(26,16) and (26,16)->(38,16), move the
+    carrier along the rail, jump (38,16)->(50,16), rail-carry the remaining peg
+    to the lower row, then jump (38,52)->(50,52).
+  solver: >-
+    GameAdapter _lf52 in python/carnot/agentic/arc_game_adapters.py plus
+    scripts/arc_loop_solve.py --game lf52 --target-level 2 --no-hazard-prune.
+  reproduce: >-
+    Exp4690 results/experiment_4690_levelup_selfplay.json re-gated
+    results/arc_loop_solve_lf52.json offline_reproduced=True, reached_level=2,
+    banked +1 over the prior L1 registry row, checksum 0522cc0b1993a66e8076d45d4e8ebdaf25d65882e0319f52156a08c6a542523c.
+  learned_verifier_checkpoint: models/arc_verifier_lf52.json
+  gotchas:
+  - The hupkpseyuim2 carrier is not a peg; it moves on rails and can carry a peg
+    after a jump, creating legal landing cells that are not static dots.
+  - The learned verifier checkpoint routes/ranks future search only; the
+    executable offline reproduction gate remains the oracle-distinct authority.
+  dead_ends:
+  - bp35: no_grounded_next_level_adapter_for_platformer_delta
+  - re86: sprite_overlay_L2_delta_not_adaptered_this_run
+  - s5i5: marker_coverage_L2_delta_not_adaptered_this_run
+  - g50t: target_offset_L2_delta_not_adaptered_this_run
+  - r11l: prefix_rooted_graph_search_stalled_at_L1
+  - sb26: recently_deepened_or_operator_skip_list
+  - dc22: recently_deepened_or_operator_skip_list
+  - vc33: recently_deepened_or_operator_skip_list
+  - ft09: recently_deepened_or_operator_skip_list
+  - ls20: recently_deepened_or_operator_skip_list
+  - sk48: recently_deepened_or_operator_skip_list
+  - ka59: recently_deepened_or_operator_skip_list
+  - wa30: recently_deepened_or_operator_skip_list
+  - cd82: no_grounded_L3_delta
+  - sp80: no_grounded_L3_delta
+  - su15: no_grounded_L3_delta
+  - lf52: adapter-free graph explore banked L1 only; L2 requires GameAdapter rail delta
+  latest_exp4690_levelup_selfplay:
+    artifact: results/experiment_4690_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_lf52.json
+    offline_reproduced: true
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_lf52.json
+    target_rotation: clean_L1_only_not_deepened_in_427_431
+    reproducibility_checksum: 0522cc0b1993a66e8076d45d4e8ebdaf25d65882e0319f52156a08c6a542523c
 - game: sp80
   reproducibility: reproduced
   levels_reproduced: 2
@@ -1453,7 +1496,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 60
+reproducible_total_levels: 61
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

@@ -476,6 +476,59 @@ SB26_L2_TAIL_LABELS: tuple[str, ...] = (
 
 SB26_L2_SOLUTION_LABELS: tuple[str, ...] = SB26_L1_LABELS + SB26_L2_TAIL_LABELS
 
+LF52_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": x, "y": y})
+    for x, y in (
+        (18, 19),
+        (30, 19),
+        (30, 19),
+        (42, 19),
+        (42, 19),
+        (42, 31),
+        (42, 31),
+        (42, 43),
+    )
+)
+
+LF52_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 14, "y": 16}),
+    _json_action_label(6, {"x": 26, "y": 16}),
+    _json_action_label(6, {"x": 26, "y": 16}),
+    _json_action_label(6, {"x": 38, "y": 16}),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(1),
+    _json_action_label(1),
+    _json_action_label(1),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 38, "y": 16}),
+    _json_action_label(6, {"x": 50, "y": 16}),
+    _json_action_label(4),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(2),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 38, "y": 52}),
+    _json_action_label(6, {"x": 50, "y": 52}),
+)
+
+LF52_L2_SOLUTION_LABELS: tuple[str, ...] = LF52_L1_LABELS + LF52_L2_TAIL_LABELS
+
 
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
@@ -1883,10 +1936,131 @@ def _sk48():
     )
 
 
+# ---------------- lf52 (rail-carried peg-jump; L1 seed + L2 delta) ----------------
+def _lf52():
+    """lf52 -- peg-jump removal with a rail-carried landing cell."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(LF52_L1_LABELS):
+            return [LF52_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(LF52_L2_TAIL_LABELS):
+            return [LF52_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
+
+    def _objects(grid, names):
+        rows = []
+        getter = getattr(grid, "ndtvadsrqf", None)
+        for name in names:
+            for obj in getter(name) if callable(getter) else []:
+                cdpcbbnfdp = getattr(obj, "cdpcbbnfdp", (0, 0))
+                rows.append(
+                    (
+                        str(getattr(obj, "name", name)),
+                        int(getattr(obj, "grid_x", 0)),
+                        int(getattr(obj, "grid_y", 0)),
+                        int(cdpcbbnfdp[0]),
+                        int(cdpcbbnfdp[1]),
+                    )
+                )
+        return tuple(sorted(rows))
+
+    def _carrier_cells(grid):
+        rows = []
+        getter = getattr(grid, "whdmasyorl", None)
+        for obj in getter("hupkpseyuim2") if callable(getter) else []:
+            cdpcbbnfdp = getattr(obj, "cdpcbbnfdp", (0, 0))
+            rows.append(
+                (
+                    int(getattr(obj, "grid_x", 0)),
+                    int(getattr(obj, "grid_y", 0)),
+                    int(cdpcbbnfdp[0]),
+                    int(cdpcbbnfdp[1]),
+                )
+            )
+        return tuple(sorted(rows))
+
+    def _selected_row(core):
+        selected = getattr(getattr(core, "wpwvsglgmb", None), "qoifrofmiu", None)
+        if selected is None:
+            return None
+        cdpcbbnfdp = getattr(selected, "cdpcbbnfdp", (0, 0))
+        return (
+            str(getattr(selected, "name", "")),
+            int(getattr(selected, "grid_x", 0)),
+            int(getattr(selected, "grid_y", 0)),
+            int(cdpcbbnfdp[0]),
+            int(cdpcbbnfdp[1]),
+        )
+
+    def state_key(game, frame=None):
+        core = game.ikhhdzfmarl
+        grid = core.hncnfaqaddg
+        return (
+            kit.frame_level(frame) if frame is not None else -1,
+            int(getattr(core, "whtqurkphir", 0) or 0),
+            _objects(grid, ("fozwvlovdui", "fozwvlovdui_red", "fozwvlovdui_blue")),
+            _carrier_cells(grid),
+            _selected_row(core),
+            tuple(int(v) for v in getattr(grid, "cdpcbbnfdp", (0, 0))),
+            bool(getattr(core, "zvcnglshzcx", False)),
+            bool(getattr(core, "yxhdgwykzi", False)),
+            bool(getattr(core, "iajuzrgttrv", False)),
+            bool(getattr(core, "evxflhofing", False)),
+        )
+
+    def featurize(game):
+        core = game.ikhhdzfmarl
+        grid = core.hncnfaqaddg
+        pegs = _objects(grid, ("fozwvlovdui", "fozwvlovdui_red", "fozwvlovdui_blue"))
+        carriers = _carrier_cells(grid)
+        selected = _selected_row(core)
+        offset = tuple(int(v) for v in getattr(grid, "cdpcbbnfdp", (0, 0)))
+        return [
+            float(len(pegs)),
+            float(getattr(core, "asqvqzpfdi", 0) or 0),
+            float(len(carriers)),
+            float(selected is not None),
+            float(max(0, int(getattr(core, "whtqurkphir", 1) or 1) - 1)),
+            float(offset[0] if offset else 0),
+            float(offset[1] if len(offset) > 1 else 0),
+        ]
+
+    def hand_verifier(game, _frame=None):
+        core = game.ikhhdzfmarl
+        pegs = len(
+            _objects(core.hncnfaqaddg, ("fozwvlovdui", "fozwvlovdui_red", "fozwvlovdui_blue"))
+        )
+        return float(max(0, pegs - 1) * 10 + (0 if _selected_row(core) else 1))
+
+    return GameAdapter(
+        game="lf52",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: len(LF52_L1_LABELS), 2: len(LF52_L2_TAIL_LABELS), 3: 2},
+        level_tails={1: LF52_L1_LABELS, 2: LF52_L2_TAIL_LABELS},
+        branch_mode="fresh_env",
+    )
+
+
 _BUILDERS = {
     "ar25": _ar25,
     "ft09": _ft09,
     "sk48": _sk48,
+    "lf52": _lf52,
     "ka59": _ka59,
     "cn04": _cn04,
     "su15": _su15,
