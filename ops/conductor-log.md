@@ -9184,3 +9184,4 @@ c |
 | 2026-06-24 14:04 UTC | PHASE B2 (INFRA -- reserved slot 2; adversarial_ve | OK | 91 passed, 1 warning in 7.81s |
 | 2026-06-24 14:15 UTC | PHASE C (HARDWARE CONTINUITY -- 1 per-board slot)  | OK | 86 passed, 1 warning in 6.64s |
 | 2026-06-24 14:29 UTC | PHASE D (SOTA-INGESTION -> .432) -- focused litera | OK | 114 passed, 1 warning in 6.53s |
+| 2026-06-24 14:51 UTC | PHASE E (CAPSTONE .431) -- aggregate the scorecard | OK | 88 passed, 1 warning in 5.07s |
