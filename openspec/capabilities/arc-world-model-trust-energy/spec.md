@@ -1308,6 +1308,70 @@ arXiv IDs including `2604.03208`, `2506.07255`, `2504.04366`, `2505.10819`,
 goal-energy heuristic levers as not re-flagged, record all network and
 citation preconditions checked, and record that `/deep-research` was not used.
 
+### REQ-ARC-WMTE-4673: Structural Deepening SOTA Ingestion For .431
+
+Experiment 4673 SHALL deepen the `.429` structural fallback after the precise
+`.430` levers both failed to produce a live multi-level lift. The workflow SHALL
+read `results/experiment_4661_sota_ingestion_generation_guidance.json`,
+`docs/research-notes/generation-guidance-sota-ingestion-2026-06-24.md`,
+`results/experiment_4664_l2_goal_predicate_induction_live.json`,
+`results/experiment_4665_dagger_distribution_shift_value_routing.json`,
+`research-studying.md`, and `research-references.md` before scoping the `.431`
+candidate methods. The synthesis SHALL explicitly carry forward the A1 residual
+`single_exemplar_goal_insufficient` / unsatisfiable L2 goal predicates and the
+A2 residual `missing_verifier_gap_live_frontier_not_separated` / zero live-lift
+distribution-corrected value routing.
+
+The workflow SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch of the top five to eight papers, and direct arXiv HTTP
+checks. It SHALL NOT invoke `/deep-research`. If
+`https://huggingface.co/api/models` or
+`.venv/bin/python scripts/sweep_clusters.py --help` fails, the workflow SHALL
+report `blocked_network` or `blocked_sweep_clusters` rather than fabricate
+citations.
+
+Experiment 4673 SHALL write
+`docs/research-notes/structural-deepening-sota-ingestion-2026-06-24.md` and
+`results/experiment_4673_sota_ingestion_structural_deepening.json`. The
+artifact SHALL include `honest_verdict`, `inference_substrate`,
+`deep_research_not_used`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `note_path`, `preconditions_checked`,
+`random_seed`, and `field_principles`. The success verdict SHALL be
+`success: sota_ingestion_structural_deepening_mapped`, the substrate SHALL be
+`aggregation_from_upstream_artifacts`, and `deep_research_not_used` SHALL be
+true. Each mapped method SHALL cite real arXiv IDs and SHALL include the
+implementation cost over the current A1 L2-goal-induction, A2
+distribution-corrected value-routing, and live E3 stack plus a concrete
+`fails_when` condition and residual-scope note. No method claim is valid without
+a verified arXiv ID.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_structural_deepening_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is BANNED in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when (no citation = fabrication).`
+- `citations_verified`: principle `each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations.`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .431 inputs (flagged_for_v431) -- closes discover->ingest->plan->experiment.`
+- `note_path`: principle `the per-track research-note path (the SOTA-Ingestion Cycle deliverable).`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4673: Structural Fallback Maps Onto .431 Inputs
+
+Given the network and sweep-helper preconditions succeed and the .429 D
+ingestion plus A1/A2 `.430` residual artifacts are readable
+When experiment 4673 ingests focused papers for hierarchical subgoal search,
+factored executable world models, and subgoal-conditioned distribution-shift
+value routing
+Then the note and JSON artifact map three to five strongest methods onto the
+current A1 L2-goal-induction / A2 distribution-corrected value-routing / live
+E3 stack, cite real arXiv IDs including `2604.03208`, `2506.07255`,
+`2504.04366`, `2505.10819`, `2605.05138`, `2605.12913`, `2604.11351`, and
+`1011.0686`, flag one or more `flagged_for_v431` roadmap candidates, record
+all network and citation preconditions checked, record the A1/A2 residual scope,
+and record that `/deep-research` was not used.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
