@@ -1708,6 +1708,75 @@ reproduction deltas, and a zero-value run emits
 `complete: primitive_persisted_transfer_null_characterized` with a
 `residual_dead_end`.
 
+### REQ-ARC-WMTE-4697: Amortized-Exploration SOTA Ingestion For .433
+
+Experiment 4697 SHALL map the `.433` fallback after the `.432` directed
+exploration arms fail to make a transferable hidden-game first-contact prior.
+The workflow SHALL read
+`results/experiment_4685_sota_ingestion_directed_exploration.json`,
+`docs/research-notes/directed-exploration-sota-ingestion-2026-06-24.md`,
+`results/experiment_4688_controllable_novelty_proposal_policy_live.json`,
+`results/experiment_4689_program_synthesis_action_effect_proposal_filter.json`,
+`python/carnot/agentic/arc_go_explore.py`, `research-studying.md`, and
+`research-references.md` before scoping methods. The synthesis SHALL explicitly
+carry forward the `.432` residuals
+`winning_prefix_still_not_proposed` and
+`heldout_transitions_too_sparse`, plus the scored hidden-game transfer wall:
+per-game directed exploration is re-derived from scratch and therefore can
+still fail when a first scored hidden-game submission remains at 0.08.
+
+The workflow SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch of the top five to eight papers, and direct arXiv HTTP
+checks. It SHALL NOT invoke `/deep-research`. If
+`https://huggingface.co/api/models` or
+`.venv/bin/python scripts/sweep_clusters.py --help` fails, the workflow SHALL
+report `blocked_network` or `blocked_sweep_clusters` rather than fabricate
+citations.
+
+Experiment 4697 SHALL write
+`docs/research-notes/amortized-exploration-sota-ingestion-2026-06-24.md` and
+`results/experiment_4697_sota_ingestion_amortized_exploration.json`. The
+artifact SHALL include `honest_verdict`, `inference_substrate`,
+`deep_research_not_used`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `note_path`, `preconditions_checked`,
+`random_seed`, and `field_principles`. The success verdict SHALL be
+`success: sota_ingestion_amortized_exploration_mapped`, the substrate SHALL be
+`aggregation_from_upstream_artifacts`, and `deep_research_not_used` SHALL be
+true. Each mapped method SHALL cite real arXiv IDs and SHALL include the
+implementation cost over the current live E3 explorer, A1 controllable-novelty
+proposal policy, A2 program-synthesis action-effect filter, and existing
+`arc_go_explore.py` archive, plus a concrete `fails_when` condition and a
+cross-game transfer residual-scope note. No method claim is valid without a
+verified arXiv ID.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_amortized_exploration_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is BANNED in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when (no citation = fabrication).`
+- `citations_verified`: principle `each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations.`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .433 inputs (flagged_for_v433) -- closes discover->ingest->plan->experiment.`
+- `note_path`: principle `the per-track research-note path (the SOTA-Ingestion Cycle deliverable).`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4697: Amortized Exploration Maps Onto .433 Inputs
+
+Given the network and sweep-helper preconditions succeed and the `.432` A1/A2
+residual artifacts are readable
+When experiment 4697 ingests focused papers for amortized/meta exploration,
+learned exploration priors, in-context exploration, language-agent adaptation,
+and Go-Explore return-then-explore archives
+Then the note and JSON artifact map three to five strongest methods onto the
+current live E3 explorer / A1 controllable-novelty proposal policy / A2
+program-synthesis action-effect filter / `arc_go_explore.py` stack, cite real
+arXiv IDs including `1802.07245`, `1901.10995`, `2004.12919`, `2008.02790`,
+`2210.14215`, `2310.09971`, `2601.19810`, and `2603.03680`, flag one or more
+`flagged_for_v433` roadmap candidates, record all network and citation
+preconditions checked, record the `.432` null residual plus scored hidden-game
+transfer scope, and record that `/deep-research` was not used.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
