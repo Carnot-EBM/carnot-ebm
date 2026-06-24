@@ -1,0 +1,206 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "5dadfc9fa57441fbb7f18fdda5530763ead2b383f9415be999702b9cd4aa4f37",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "a1_value_routing_live_lift",
+        "a2_winner_generated",
+        "reproducible_total_levels",
+        "live_submittable_level_count",
+        "paper_ready",
+        "scorecard",
+        "publication_gate"
+      ],
+      "path": "results/experiment_4662_capstone_v429.json",
+      "sha256": "1848aae4e443bd78d1fec86bc5491954c77e81d31bd789fe7a048465e145c27e",
+      "source": "experiment_4662_capstone_v429"
+    },
+    {
+      "fields_imported": [
+        "2026.06.430 pivot"
+      ],
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "02699e4c3d5889b7207a0c3b465108832bb539ae44dafc239113255c40a3cf57",
+      "source": "research_roadmap_vnext_design"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "e91ae56fd73bc72bdc8f02060732f0872614c7b625874d0b30773ccf86aff707",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_429": {
+    "a1_value_routing_cost_fix": {
+      "cost_fix_worked": true,
+      "first_win_rate_delta": 0.0,
+      "per_node_feature_cost_ms": 0.397451,
+      "per_node_feature_cost_under_1ms": true,
+      "sim_timed_out": false,
+      "solve_rate_delta": 0.0,
+      "value_weight_live_lift_nulled": true
+    },
+    "a2_energy_fitness_qd": {
+      "null_reason": "no_winner_generated",
+      "winner_generated": false
+    },
+    "a3_level_bank_vc33": {
+      "honest_verdict": "success: vc33_L2_offline_reproduced",
+      "offline_reproduced": true,
+      "prior_reproduced_level": 1,
+      "reproducible_total_after": 58,
+      "reproducible_total_before": 57,
+      "reproducible_total_delta": 1,
+      "target_game": "vc33",
+      "target_level": 2
+    },
+    "a4_submission_package": {
+      "beats_submission_baseline": 33,
+      "live_submittable_level_count": 58,
+      "ready_for_operator_submit": true
+    },
+    "b1_residual_localization": {
+      "calibration_changes_routing": false,
+      "distribution_shift_score": 0.699,
+      "dominant_residual_cause": "DISTRIBUTION_SHIFT"
+    },
+    "capstone": {
+      "frozen_fover_auroc": 0.9131,
+      "paper_ready": true
+    },
+    "source_capstone_honest_verdict": "complete: capability_grew_57_to_58"
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4663_archive_429_activate_430",
+  "experiment_id": 4663,
+  "field_provenance": {
+    "close_state_429": {
+      "principle": "the honest .429 numbers (A3 57->58; A1/A2 both generation-guidance NULLS; B1 localized DISTRIBUTION_SHIFT; A4 58>33) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    },
+    "v430_pivot": {
+      "principle": "the .430 headline rationale (PIVOT to L2-GOAL-PREDICATE INDUCTION: A1 win-grid exemplar + goal-satisfiability + harness fix; A2 DAgger-lite distribution-shift value-routing) recorded so the milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "complete: archive_429_activate_430_true_close_state_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "preconditions_checked": {
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.430",
+      "milestone_before_activation": "2026.06.430",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "capstone_4662": {
+      "available": true,
+      "path": "results/experiment_4662_capstone_v429.json"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 58
+    },
+    "research_complete_yaml": {
+      "available": true,
+      "contains_2026_06_429": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('yaml_ok')\"",
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4663_archive_429_activate_430.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 5.13s\n"
+    },
+    "vnext_design": {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  },
+  "random_seed": 4663,
+  "reproducibility_checksum": "sha256:8f30e71303cd7d3ca1059e8a74757ef1dc534e3408a79e2a215884e78fad19bf",
+  "result_path": "results/experiment_4663_archive_429_activate_430.json",
+  "schema": "carnot.archive_activation.v429_to_v430_4663.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4663",
+    "SCENARIO-CAPSTONE-4663",
+    "SCENARIO-CAPSTONE-4663-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4663-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.430",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "research_complete_contains_2026.06.429",
+    "archived_milestone": "2026.06.429"
+  },
+  "v430_pivot": {
+    "a1": {
+      "add_goal_satisfiability_check": true,
+      "capture_l1_win_grid_exemplar": true,
+      "diagnosed_root_cause": "degenerate_l2_goal_predicate",
+      "fix_degenerate_metric_harness": true
+    },
+    "a2": {
+      "lever": "DAgger-lite_distribution_shift_value_routing",
+      "targets_b1_localized_cause": "DISTRIBUTION_SHIFT"
+    },
+    "headline_rationale": "L2-GOAL-PREDICATE INDUCTION"
+  }
+}
