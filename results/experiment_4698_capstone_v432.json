@@ -1,0 +1,584 @@
+{
+  "a1_controllable_novelty_new_level": {
+    "ablations_strictly_lower": false,
+    "cosmetic_novelty_ablation_reached_level": 0,
+    "generic_agent_reached_level": 0,
+    "headline_counted": false,
+    "no_novelty_ablation_reached_level": 0,
+    "offline_reproduced": false,
+    "reason": "generic_agent_did_not_reach_new_level",
+    "reproduced_levels": 0,
+    "source": "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+    "target_games": [
+      "bp35"
+    ]
+  },
+  "a2_program_synthesis_coverage_and_lift": {
+    "candidate_generation_coverage_blind_baseline": 0.0,
+    "candidate_generation_coverage_filter": 0.0,
+    "coverage_delta": 0.0,
+    "first_win_rate_delta": -0.04,
+    "headline_counted": false,
+    "heldout_first_win_ci_excludes_blind_baseline": false,
+    "heldout_programs_kept": 0,
+    "heldout_programs_rejected": 2,
+    "heldout_programs_rejected_reported": true,
+    "live_lift_ci": {
+      "high": 0.0,
+      "low": -0.12,
+      "metric": "first_win_rate_delta",
+      "n_boot": 1000
+    },
+    "offline_reproduced": false,
+    "reason": "coverage_delta_not_positive",
+    "source": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
+    "target_games": [
+      "bp35"
+    ],
+    "winner_newly_proposed_vs_blind": false
+  },
+  "bridge_crossed_for_solve": false,
+  "cited_upstream_artifacts": {
+    "A1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 60.000427,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed",
+      "imported_fields": [
+        "generic_agent_reached_level",
+        "no_novelty_ablation_reached_level",
+        "cosmetic_novelty_ablation_reached_level",
+        "offline_reproduced",
+        "reproduced_levels"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "live_llm_inference",
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "name": "A1",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "controllable_novelty_proposal_policy_live",
+      "sha256": "sha256:48927da3f9d483f4936d56a1e572e9eb1d0f937ca0cc4c532781c5254c62013f",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 1
+    },
+    "A2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 60.000101,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: program_synthesis_filter_no_coverage_gain_residual_logged",
+      "imported_fields": [
+        "candidate_generation_coverage_filter",
+        "candidate_generation_coverage_blind_baseline",
+        "coverage_delta",
+        "heldout_programs_rejected",
+        "first_win_rate_delta",
+        "live_lift_ci"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "live_llm_inference",
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "name": "A2",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "program_synthesis_action_effect_proposal_filter",
+      "sha256": "sha256:bf6220a9da8c56c8e357b17bb8e12067f42f0a0c67d5534393fb07a8c799a184",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 1
+    },
+    "A3": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4690_levelup_selfplay.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": null,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "success: lf52_L2_offline_reproduced",
+      "imported_fields": [
+        "reproduced_levels",
+        "offline_reproduced",
+        "reproduction_gate"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A3",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:396d7decac03f48ee7183f988e66b90cb94211a5aa92b520d5346d1214acfa65",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A4": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4691_held_out_first_win_readiness.json",
+      "control_failed": false,
+      "critical_flags": [
+        {
+          "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "duration_s": 422.684729,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+      "imported_fields": [
+        "first_win_rate_integrated",
+        "first_win_baseline",
+        "first_win_ci_lower",
+        "replay_count_is_not_the_score",
+        "ready_for_operator_submit"
+      ],
+      "included_in_headline": false,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
+      "live_critical": true,
+      "live_flags": [
+        {
+          "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "name": "A4",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "role": "held_out_first_win_readiness",
+      "sha256": "sha256:0a44d5b164ae09321aaef4f89853c0d958c58b5c9c676ecc40fa9c40328d2662",
+      "stamped_flagged_adversarial": true,
+      "summary_exit_code": 2
+    },
+    "A5": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4692_primitive_persist_transfer.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 1.0,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+      "imported_fields": [
+        "primitive_persisted",
+        "offline_reproduced_new_level",
+        "transfer_value_per_game"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor).",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A5",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:38fcddeba15f1e85c40ab846443d07c81dacd421e00defd18c750c517334ebd4",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A6": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4693_integration_gate.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 1.298035,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: integration_unchanged_both_levers_null",
+      "imported_fields": [
+        "config_changed",
+        "first_win_rate_integrated",
+        "multi_level_deepen_rate_integrated"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure on the held-out lane (1s floor).",
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "multi_level_deepen_rate_delta_vs_pre_integration=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "name": "A6",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "integration_gate",
+      "sha256": "sha256:a83b612bee2e4668d7292884ace5186df6ed66286e2400538a9acbb86def2833",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "B1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4694_proposal_coverage_cigate.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 1.878677,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "success: proposal_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green",
+      "imported_fields": [
+        "proposal_coverage_metric_added",
+        "honest_firstwin_floor_added",
+        "tests_added"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- proposal-coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp explorer).",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B1",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "proposal_coverage_cigate",
+      "sha256": "sha256:b6096475752335d9e1d512e5ce39c15bfc1a8672b51691fc8a54a93245fbf93e",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "B2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4695_adversarial_verify_hardening.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 0.02774029306601733,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "success: adversarial_verify_hardened_novelty_ablation_and_proposal_filter_heldout_guards_tests_green.",
+      "imported_fields": [
+        "novelty_ablation_guard_added",
+        "proposal_filter_heldout_guard_added",
+        "tests_added"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B2",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "adversarial_verify_novelty_and_filter_guards",
+      "sha256": "sha256:1abee251a3a7d4fec925ecbb6598f3b8e8430918591b033249bbeac13f998de2",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    }
+  },
+  "duration_s": 0.210055,
+  "experiment": "experiment_4698_capstone_v432",
+  "field_principles": {
+    "a1_controllable_novelty_new_level": {
+      "principle": "the A1 result -- the generic agent's new level via controllable novelty, counted ONLY if the no-novelty-bonus AND cosmetic-novelty ablations BOTH strictly lower + offline_reproduced."
+    },
+    "a2_program_synthesis_coverage_and_lift": {
+      "principle": "the A2 result -- coverage_delta (winner-now-proposed) + held-out first-win lift, counted ONLY if coverage_delta>0 AND heldout_programs_rejected reported AND the CI excludes the blind-proposal baseline."
+    },
+    "bridge_crossed_for_solve": {
+      "principle": "the headline decision -- did DIRECTED EXPLORATION (A1 controllable-novelty / A2 program-synthesis filter) cross the offline->live bridge for L1-first-contact (the GENERIC agent reaches a NEW level via a widened proposal distribution), or did the directed-exploration levers get characterized as another honest null (the 8th milestone)."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied (.431-B2 subgoal-decomposition/coverage-baseline + .432-B2 novelty-ablation/proposal-filter-heldout) -- fabrication-gate + false-negative-risk compliance."
+    },
+    "held_out_first_win_readiness": {
+      "principle": "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline (bootstrap-CI), the only proxy that tracks the scored lane (NOT the replay count)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: bridge_crossed_live_generic_new_level_via_directed_exploration_<games> OR complete: directed_exploration_levers_characterized_no_live_new_level OR complete: capability_grew_60_to_<n>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "leaderboard_submission": {
+      "principle": "MUST be false -- submission is operator-only (External Publication Discipline)."
+    },
+    "paper_ready": {
+      "principle": "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .432 headline."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "reproducible_total_levels": {
+      "principle": "authoritative from the registry (A3 bank, 60->61+) -- did solve CAPABILITY grow."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "registry after - 60, emitted explicitly so a null is annotated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
+    }
+  },
+  "flagged_artifacts_handled": {
+    "ablation_missing_artifacts": [],
+    "control_failed_artifacts": [],
+    "excluded_artifacts": [
+      "results/experiment_4691_held_out_first_win_readiness.json"
+    ],
+    "excluded_details": [
+      {
+        "artifact": "results/experiment_4691_held_out_first_win_readiness.json",
+        "critical_flags": [
+          {
+            "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY"
+          }
+        ],
+        "name": "A4",
+        "reason": "flagged_adversarial_or_live_critical_excluded"
+      }
+    ],
+    "failed_acceptance_gate_overrides": [],
+    "false_negative_risk_open_artifacts": [],
+    "flagged_adversarial_artifacts": [
+      {
+        "artifact": "results/experiment_4691_held_out_first_win_readiness.json",
+        "name": "A4"
+      }
+    ],
+    "guard_note": "Stamped flagged, live-critical, control-failed, ablation-missing, and false-negative-risk-open artifacts are excluded from clean headline claims.",
+    "guards_applied": {
+      ".431-B2 subgoal-decomposition/coverage-baseline": true,
+      ".432-B1 proposal-coverage-cigate": true,
+      ".432-B2 novelty-ablation": true,
+      ".432-B2 proposal-filter-heldout": true
+    },
+    "oracle_not_distinct_artifacts": [],
+    "positive_control_failed_artifacts": []
+  },
+  "held_out_first_win_readiness": {
+    "first_win_baseline": 0.04,
+    "first_win_ci_lower": 0.0,
+    "first_win_delta_vs_baseline": 0.0,
+    "first_win_rate_integrated": 0.04,
+    "headline_counted": false,
+    "multi_level_deepen_rate_integrated": 0.0,
+    "ready_for_operator_submit": false,
+    "reason": "flagged_adversarial_or_live_critical_excluded",
+    "replay_count_is_not_the_score": true,
+    "replay_floor_live_submittable_level_count": 60,
+    "source": "results/experiment_4691_held_out_first_win_readiness.json"
+  },
+  "honest_verdict": "complete: capability_grew_60_to_61",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "paper_ready": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 61,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4698": true,
+    "summarize_artifact_py_available": true,
+    "summarize_artifact_py_used_for_every_upstream": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "B2": true
+    }
+  },
+  "publication_gate": {
+    "fover_09131_never_substituted": true,
+    "frozen_fover_auroc": 0.9131,
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4698,
+  "reproducibility_checksum": "sha256:c5859dc54843570cdef0ba9d3972af3dc96d2ba049f420cd73e84ad4beb519a1",
+  "reproducible_total_levels": 61,
+  "reproducible_total_levels_delta": 1,
+  "result_path": "results/experiment_4698_capstone_v432.json",
+  "schema": "carnot.exp4698.capstone_v432.v1",
+  "scorecard": {
+    "A1": {
+      "ablations_strictly_lower": false,
+      "cosmetic_novelty_ablation_reached_level": 0,
+      "generic_agent_reached_level": 0,
+      "headline_counted": false,
+      "no_novelty_ablation_reached_level": 0,
+      "offline_reproduced": false,
+      "reason": "generic_agent_did_not_reach_new_level",
+      "reproduced_levels": 0,
+      "source": "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+      "target_games": [
+        "bp35"
+      ]
+    },
+    "A2": {
+      "candidate_generation_coverage_blind_baseline": 0.0,
+      "candidate_generation_coverage_filter": 0.0,
+      "coverage_delta": 0.0,
+      "first_win_rate_delta": -0.04,
+      "headline_counted": false,
+      "heldout_first_win_ci_excludes_blind_baseline": false,
+      "heldout_programs_kept": 0,
+      "heldout_programs_rejected": 2,
+      "heldout_programs_rejected_reported": true,
+      "live_lift_ci": {
+        "high": 0.0,
+        "low": -0.12,
+        "metric": "first_win_rate_delta",
+        "n_boot": 1000
+      },
+      "offline_reproduced": false,
+      "reason": "coverage_delta_not_positive",
+      "source": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
+      "target_games": [
+        "bp35"
+      ],
+      "winner_newly_proposed_vs_blind": false
+    },
+    "A3": {
+      "artifact_reproduced_levels": 1,
+      "clean": true,
+      "registry_authoritative_total_levels": 61,
+      "source": "results/experiment_4690_levelup_selfplay.json"
+    },
+    "A4": {
+      "first_win_baseline": 0.04,
+      "first_win_ci_lower": 0.0,
+      "first_win_delta_vs_baseline": 0.0,
+      "first_win_rate_integrated": 0.04,
+      "headline_counted": false,
+      "multi_level_deepen_rate_integrated": 0.0,
+      "ready_for_operator_submit": false,
+      "reason": "flagged_adversarial_or_live_critical_excluded",
+      "replay_count_is_not_the_score": true,
+      "replay_floor_live_submittable_level_count": 60,
+      "source": "results/experiment_4691_held_out_first_win_readiness.json"
+    },
+    "A5": {
+      "clean": true,
+      "verdict": "complete: primitive_persisted_transfer_null_characterized"
+    },
+    "A6": {
+      "clean": true,
+      "first_win_rate_integrated": 0.04,
+      "multi_level_deepen_rate_integrated": 0.0,
+      "reason": "included_clean"
+    },
+    "B1": {
+      "clean": true,
+      "proposal_coverage_metric_added": true
+    },
+    "B2": {
+      "clean": true,
+      "guards_applied": {
+        ".431-B2 subgoal-decomposition/coverage-baseline": true,
+        ".432-B1 proposal-coverage-cigate": true,
+        ".432-B2 novelty-ablation": true,
+        ".432-B2 proposal-filter-heldout": true
+      }
+    },
+    "headline": {
+      "bridge_crossed_for_solve": false,
+      "crossing_source": "none",
+      "registry_total_authoritative": true,
+      "submission_operator_only": true
+    },
+    "verifier_oracle_checks": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A5": true,
+      "A6": true
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4698",
+    "SCENARIO-CAPSTONE-4698",
+    "SCENARIO-CAPSTONE-4698-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4698-FIELD-PRINCIPLES"
+  ],
+  "verifier_is_oracle": false
+}
