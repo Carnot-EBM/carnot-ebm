@@ -4635,3 +4635,40 @@ because it directly attacks the L1-first-contact distribution gap. Add the
 program-synthesis action-effect filter as the second arm when enough trusted
 prefix transitions exist to avoid the A2 `experts_overfit_prefix` failure.
 <!-- EXP4685-DIRECTED-EXPLORATION-SOTA-END -->
+
+<!-- EXP4697-AMORTIZED-EXPLORATION-SOTA-START -->
+## 2026-06-24 Exp 4697 - .433 amortized-exploration SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/amortized-exploration-sota-ingestion-2026-06-24.md`.
+
+**Filtered track:** fallback beyond `.432` per-game directed exploration. A1
+controllable novelty closed with `winning_prefix_still_not_proposed`; A2
+program synthesis closed with `heldout_transitions_too_sparse`. The next wall
+is `hidden-game transfer`: first-contact behavior must transfer to unseen scored
+games instead of being rediscovered from scratch on each game.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py --help` exited cleanly. `scripts/sweep_clusters.py`
+emitted the ARC exploration and neural-guided-search cluster URLs.
+`scripts/sweep_semscholar.py` returned HTTP 429 for the four focused queries
+and no S2-only source was promoted. Low-concurrency WebSearch/WebFetch plus
+direct arXiv HTTP checks verified arXiv:2210.14215, arXiv:2310.09971,
+arXiv:2601.19810, arXiv:1802.07245, arXiv:2008.02790, arXiv:2603.03680,
+arXiv:1901.10995, and arXiv:2004.12919. `/deep-research` was not invoked.
+
+**Methods marked ingested:** in-context exploration-prior distillation,
+self-imposed-goal / structured-noise meta exploration, decoupled
+meta-explore/exploit language-agent adaptation, and Go-Explore return-then-
+explore archive upgrade.
+
+flagged_for_v433: in_context_exploration_prior_from_first_contact_traces
+(arXiv:2210.14215 + arXiv:2310.09971 + arXiv:2601.19810)
+
+flagged_for_v433: arc_go_explore_return_then_explore_archive_upgrade
+(arXiv:1901.10995 + arXiv:2004.12919)
+
+**Bottom line for .433:** build the in-context exploration prior first because
+it directly amortizes rare successful first-contact behavior across games. Keep
+the Go-Explore archive as the structural companion because it already exists in
+`arc_go_explore.py` and provides replayable return points for deeper probing.
+<!-- EXP4697-AMORTIZED-EXPLORATION-SOTA-END -->
