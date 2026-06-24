@@ -11,6 +11,25 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-24 (MANDATORY-NEXT-MILESTONE, operator-directed "fix it"): A6 integration task MUST emit the honest-null markers the TAUTOLOGY carve-out reads
+
+PHASE A6 (INTEGRATION) recurringly logged FLAGGED across `.429/`.430/`.431 on an HONEST equality:
+`live_first_win_rate_integrated == live_first_win_rate_pre_integration` (delta=0.0 because the A1/A2 levers
+nulled). adversarial_verify's TAUTOLOGY carve-out (`_declared_null_delta_descriptor`) ALREADY exempts this
+(downgrades CRITICAL->WARN) but ONLY if the artifact emits the markers it reads — the integration module
+emitted a `tautology_guard` PROSE field under a name the linter does not read. **FIX (no gate weakening —
+satisfy the existing strict carve-out): the A6 integration `build_artifact` MUST emit, when both deltas are
+~0:** `null_delta_methodology_note` (non-empty, why delta=0 is an honest no-change) AND
+`positive_control_passed: bool(parity_test_green AND no_regression_vs_pre_integration)`. The positive control
+GATES the exemption: an UNVALIDATED integration (parity failed / regression) is NOT excused, so a fabricator
+cannot dodge by merely claiming "no change". Shipped on `experiment_4681_integration_gate.py:build_artifact`
+(the copy-exemplar for future A6 modules); pinned by
+`tests/python/test_adversarial_verify_control_treatment_null.py` CTNULL-5 (markers -> WARN not quarantined)
++ CTNULL-6 (no passing control -> still CRITICAL). Do NOT re-introduce a `tautology_guard`-style prose field
+the linter ignores. Cross-ref: `scripts/adversarial_verify.py:check_tautology` (~L1234-1282).
+
+---
+
 ### 2026-06-24 (MANDATORY-NEXT-MILESTONE, operator-directed pre-stage): RETARGET PHASE-A4 — gate readiness on the HELD-OUT first-win lane, NOT replay-package freshness
 
 **Operator 2026-06-24** (clean audit, workflow `wf_b7ea354a-5a3`): retarget the conductor's PHASE-A4 from

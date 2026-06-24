@@ -75,3 +75,52 @@ def test_scenario_ctnull_carveout_requires_both_conditions() -> None:
     assert _critical_tautology({**base, "honest_verdict": "complete: no_value_added_honest_null"}) == []
     # qualifier but celebratory verdict -> flagged
     assert len(_critical_tautology({**base, "honest_verdict": "success: verifier_wins"})) >= 1
+
+
+def _warn_tautology(d: dict) -> list:
+    flags: list = []
+    av.check_tautology(d, flags)
+    return [f for f in flags if f.kind == "TAUTOLOGY" and f.severity == "warn"]
+
+
+# The integration gate writes a verdict (`integration_unchanged_both_levers_null`) that lacks a Path-1
+# honest-null TOKEN, so it does not clear via the verdict-qualifier carve-out above. It instead carries the
+# Path-2 DESCRIPTOR markers (null_delta_methodology_note + positive_control_passed + a covering zero delta),
+# which DOWNGRADE the CRITICAL TAUTOLOGY to WARN (not quarantined). Origin: the .429/.430/.431 A6 integration
+# phase recurringly logged FLAGGED on the honest `*_integrated == *_pre_integration` (delta=0 because the A1/A2
+# levers nulled). Fixed by emitting the markers the carve-out reads -- NOT by weakening the gate.
+
+def test_scenario_ctnull_5_integration_parity_with_markers_downgraded_not_quarantined() -> None:
+    """SCENARIO-CTNULL-5: integrated==pre_integration (delta=0) carrying the descriptor markers is
+    DOWNGRADED CRITICAL->WARN -- surfaced for audit but NOT quarantined."""
+    d = {
+        "experiment": "integration_gate",
+        "honest_verdict": "complete: integration_unchanged_both_levers_null",
+        "live_first_win_rate_integrated": 0.04,
+        "live_first_win_rate_pre_integration": 0.04,
+        "live_first_win_rate_delta_vs_pre_integration": 0.0,
+        "no_regression_vs_pre_integration": True,
+        "positive_control_passed": True,
+        "null_delta_methodology_note": (
+            "honest no-change: levers nulled; integrated==pre is the expected ablation equality; "
+            "parity + no_regression are the passing positive control confirming the measurement is real."
+        ),
+    }
+    assert _critical_tautology(d) == []           # not quarantined
+    assert len(_warn_tautology(d)) >= 1           # still surfaced as WARN for audit
+
+
+def test_scenario_ctnull_6_integration_parity_without_passing_control_still_critical() -> None:
+    """SCENARIO-CTNULL-6 (SAFETY GATE): the SAME equality WITHOUT a passing positive control (parity failed
+    or a regression) STILL flags CRITICAL -- an UNVALIDATED measurement is not excused. The positive control
+    is the anti-fabrication gate: a fabricator cannot dodge by merely claiming 'no change'."""
+    d = {
+        "experiment": "integration_gate",
+        "honest_verdict": "complete: integration_unchanged_both_levers_null",
+        "live_first_win_rate_integrated": 0.04,
+        "live_first_win_rate_pre_integration": 0.04,
+        "live_first_win_rate_delta_vs_pre_integration": 0.0,
+        "null_delta_methodology_note": "claims no change but the measurement is not validated",
+        "positive_control_passed": False,   # measurement NOT validated -> equality NOT excused
+    }
+    assert len(_critical_tautology(d)) >= 1
