@@ -140,228 +140,55 @@ def payload_checksum(artifact: Mapping[str, Any]) -> str:
     return "sha256:" + _sha256(payload)
 
 
-class _OnlineScorerFactory:
-    """Build fresh online scorers for each (game, variant) attempt.
+class _ArmScorerFactory:
+    """Builds a fresh online scorer per integrated (game, variant) attempt and retains each so
+    aggregate online diagnostics can be summed after the sweep.
 
-    WHY a class (not a closure): closure variables would share mutable state across
-    concurrent or sequential calls. A class makes the state explicit and reset() safe.
+    WHY monkeypatch ``_policy_for_mode`` instead of cloning ``run_variant_attempt``: a hand-clone
+    of the harness loop is brittle -- an earlier clone silently LOST lp85's solve (it ran too few
+    actions) and reported a false 0.0 baseline. Patching ``mod._policy_for_mode`` at RUNTIME (this
+    process only; restored in a ``finally``) keeps the REAL ``run_variant_attempt`` loop intact, so
+    the frozen arm reproduces the exp4605 0.04 baseline EXACTLY and ONLY the scorer differs across
+    arms. This is a standard test-injection seam, NOT an edit to the exp4605 module.
 
-    WHY reset() on env RESET: after an env.reset() the game starts a new level from the
-    initial state. The CNN's prediction cache (keyed by frame hash) is stale because the
-    layout may differ. The observation buffer contains transitions from the previous level
-    which are now stale. We clear both. Warm weights survive -- they encode action-effect
-    knowledge from earlier levels that may transfer.
+    WHY ONE fresh scorer per integrated attempt: ``_policy_for_mode`` is called once per attempt
+    inside ``run_variant_attempt``, so building a fresh online scorer there gives per-game-per-
+    episode learning (the leader's per-game adaptation) without cross-game bleed.
 
-    WHY ONE fresh scorer per (game, variant): each variant has different color permutations.
-    The CNN's per-pixel click heatmap could theoretically overfit to the color palette of one
-    variant, confusing the next. A fresh scorer per attempt is the conservative choice.
+    WHY NO per-RESET reset: the explorer issues env RESETs mid-episode to backtrack and try other
+    branches of the SAME level -- the online dynamics knowledge is still valid there, so wiping it
+    on every RESET would be wrong. The leader resets only on a level-UP (score increase); within a
+    first-win attempt (which breaks at the first level-up) there is no level-up before the win, so
+    no reset is needed and the scorer accumulates over the whole pre-win exploration -- exactly the
+    online-within-episode signal we want.
     """
 
     def __init__(self, arm: str, root: Path) -> None:
         self.arm = arm
-        self.root = root
-        self._current_scorer: Any = None
-        self._agg_observed: int = 0
-        self._agg_fits: int = 0
-        self._agg_errors: int = 0
+        self.root = Path(root)
+        self.scorers: list[Any] = []
 
-    def new_scorer(self) -> Any:
-        """Build a fresh scorer for a new (game, variant) attempt."""
+    def build_integrated_scorer(self) -> Any:
         from carnot.agentic.arc_online_action_effect_scorer import build_online_scorer
 
         scorer = build_online_scorer(self.arm, self.root)
-        self._current_scorer = scorer
+        self.scorers.append(scorer)
         return scorer
 
-    def record_reset(self) -> None:
-        """Call scorer.reset() if the current scorer supports it (online arms only)."""
-        if self._current_scorer is not None and hasattr(self._current_scorer, "reset"):
-            self._current_scorer.reset()
-
-    def accumulate_diagnostics(self) -> None:
-        """Pull diagnostics from the current scorer and add to aggregates."""
-        if self._current_scorer is not None and hasattr(self._current_scorer, "diagnostics"):
-            diag = self._current_scorer.diagnostics()
-            self._agg_observed += int(diag.get("observed") or 0)
-            self._agg_fits += int(diag.get("fits") or 0)
-            self._agg_errors += int(diag.get("errors") or 0)
-
     def aggregate_diagnostics(self) -> dict[str, Any]:
+        observed = fits = errors = 0
+        for scorer in self.scorers:
+            if hasattr(scorer, "diagnostics"):
+                diag = scorer.diagnostics()
+                observed += int(diag.get("observed") or 0)
+                fits += int(diag.get("fits") or 0)
+                errors += int(diag.get("errors") or 0)
         return {
-            "observed": self._agg_observed,
-            "fits": self._agg_fits,
-            "errors": self._agg_errors,
+            "observed": observed,
+            "fits": fits,
+            "errors": errors,
+            "n_scorers": len(self.scorers),
         }
-
-
-def _make_variant_runner_factory(
-    arm: str, root: Path, scorer_factory: _OnlineScorerFactory
-) -> mod.VariantRunnerFactory:
-    """Build a VariantRunnerFactory for the given arm.
-
-    WHY cloning the run_variant_attempt loop instead of calling it directly: the loop needs
-    to (a) inject a fresh online scorer, (b) call scorer.reset() at each env RESET, and
-    (c) accumulate diagnostics. The original function's policy is built via _policy_for_mode()
-    which always creates the DEFAULT scorer. We cannot patch _policy_for_mode without editing
-    the exp4605 module (which we must not do). So we replicate the loop with our injection.
-
-    For the "bare" mode we DO call the original _policy_for_mode("bare") -- that branch is
-    unchanged (no scorer injection needed for the bare control).
-    """
-
-    def runner(mode: str) -> mod.VariantRunner:
-        def run_attempt(
-            game: str, spec: Mapping[str, Any], budget: int
-        ) -> dict[str, Any]:
-            if mode == "bare":
-                # Bare control: use the original unmodified function path.
-                return dict(mod.run_variant_attempt("bare", game, spec, budget))
-            # Integrated arm with online scorer.
-            return dict(_run_online_variant_attempt(arm, game, spec, budget, scorer_factory, root))
-
-        return run_attempt
-
-    return runner
-
-
-def _run_online_variant_attempt(
-    arm: str,
-    game: str,
-    spec: Mapping[str, Any],
-    budget: int,
-    scorer_factory: _OnlineScorerFactory,
-    root: Path,
-) -> dict[str, Any]:
-    """Run one variant attempt with a fresh online scorer injected into the policy.
-
-    This is a close clone of mod.run_variant_attempt (lines 755-847) with three changes:
-    1. The policy is built with frame_change_scorer = scorer_factory.new_scorer().
-    2. On every env RESET we call scorer_factory.record_reset() to flush per-level state.
-    3. After the attempt, scorer_factory.accumulate_diagnostics() pulls the online counters.
-    """
-    try:
-        from arcengine import GameAction
-        from carnot.agentic import arc_solver_kit as kit
-        from carnot.agentic.arc_competition_agent import E3AgentPolicy
-        from carnot.agentic.arc_variant_generator import VariantEnv
-    except ImportError as exc:
-        # Missing ARC engine dependency -- return a blocked result, never crash the harness.
-        return {
-            "game": game,
-            "variant_signature": spec.get("variant_signature", ""),
-            "variant": int(spec.get("variant", 0)),
-            "kind": spec.get("kind", "color"),
-            "reflect": spec.get("reflect"),
-            "attempted": False,
-            "solved": False,
-            "first_win": False,
-            "reached_level": 0,
-            "actions": 0,
-            "actions_to_first_levelup": None,
-            "solution_labels": [],
-            "reproduction_gate": {"reproduced": False},
-            "blocked_reason": f"import_error: {exc}",
-            "policy_mode": "integrated",
-        }
-
-    arc = kit.offline_arcade()
-    env = arc.make(game, scorecard_id=arc.open_scorecard())
-    env = VariantEnv(env, game, int(spec["variant"]), reflect=spec.get("reflect"))
-
-    # Fresh scorer for this (game, variant) pair.
-    scorer = scorer_factory.new_scorer()
-
-    proposer = mod._NoOpProposer()
-    policy = E3AgentPolicy(
-        game,
-        proposer=proposer,
-        target_levels=mod._submitted_target_levels(),
-        value_weight=mod._submitted_value_weight(),
-        frame_change_scorer=scorer,
-    )
-
-    frames: list[Any] = []
-    latest = None
-    labels: list[str] = []
-    actions = 0
-    start_level: int | None = None
-    reached = 0
-    actions_to_first: int | None = None
-
-    for _index in range(int(budget)):
-        if policy.is_done(frames, latest):
-            break
-        kind, data = policy.next_move(frames, latest)
-        if kind == "RESET":
-            latest = env.reset()
-            scorer_factory.record_reset()  # flush per-level buffer/cache on reset
-            if labels:
-                labels.append("RESET")
-        elif kind is None:
-            break
-        else:
-            latest = env.step(getattr(GameAction, f"ACTION{kind}"), data=data)
-            labels.append(
-                json.dumps({"action": int(kind), "data": data}, sort_keys=True, separators=(",", ":"))
-            )
-            actions += 1
-        if start_level is None:
-            start_level = mod._level_of_frame(latest)
-        reached = mod._level_of_frame(latest)
-        if start_level is not None and reached > start_level:
-            if actions_to_first is None:
-                actions_to_first = actions
-            break
-        frames.append(latest)
-        if latest is None:
-            break
-
-    claimed = reached if start_level is not None and reached > start_level else 0
-    gate: dict[str, Any] = {
-        "game": game,
-        "claimed_level": claimed,
-        "reached_level": 0,
-        "reproduced": False,
-        "mode": "offline_reproduction_gate_no_solution",
-    }
-    if claimed > 0 and labels:
-        gate = dict(
-            kit.reproduce(
-                game,
-                labels,
-                lambda env_obj, label, _f=None: (
-                    env_obj.reset()
-                    if label == "RESET"
-                    else env_obj.step(
-                        getattr(GameAction, f"ACTION{json.loads(label)['action']}"),
-                        data=json.loads(label).get("data"),
-                    )
-                ),
-                claimed_level=claimed,
-            )
-        )
-    solved = bool(gate.get("reproduced")) and int(gate.get("reached_level") or 0) >= claimed >= 1
-
-    # Pull online diagnostics AFTER the attempt completes.
-    scorer_factory.accumulate_diagnostics()
-
-    return {
-        "game": game,
-        "variant_signature": spec["variant_signature"],
-        "variant": int(spec["variant"]),
-        "kind": spec["kind"],
-        "reflect": spec.get("reflect"),
-        "attempted": True,
-        "solved": solved,
-        "first_win": solved,
-        "reached_level": int(gate.get("reached_level") or reached) if solved else reached,
-        "actions": actions,
-        "actions_to_first_levelup": actions_to_first if solved else None,
-        "solution_labels": labels if solved else [],
-        "reproduction_gate": gate,
-        "blocked_reason": "",
-        "policy_mode": "integrated",
-    }
 
 
 def run_arm(
@@ -371,7 +198,13 @@ def run_arm(
     budget: int | None = None,
     public_games: Sequence[str] | None = None,
 ) -> dict[str, Any]:
-    """Run a single arm measurement and return the artifact dict."""
+    """Run a single arm measurement and return the artifact dict.
+
+    Uses the REAL exp4605 ``measure_policy_pair`` / ``run_variant_attempt`` loop with a runtime
+    monkeypatch of ``_policy_for_mode`` that injects the arm's online scorer into the integrated
+    policy. The ``frozen`` arm patches NOTHING (it falls through to the real default scorer), so it
+    is byte-identical to the committed exp4605 baseline (first_win_rate=0.04).
+    """
     started = time.time()
     root_path = Path(root)
 
@@ -397,15 +230,35 @@ def run_arm(
         )
 
     variant_ids = mod.resolve_variant_ids(None)
-    scorer_factory = _OnlineScorerFactory(arm, root_path)
-    factory = _make_variant_runner_factory(arm, root_path, scorer_factory)
+    factory = _ArmScorerFactory(arm, root_path)
 
-    integrated_measurement, bare_measurement = mod.measure_policy_pair(
-        public_games=games,
-        variant_ids=variant_ids,
-        budget=effective_budget,
-        variant_runner_factory=factory,
-    )
+    from carnot.agentic.arc_competition_agent import E3AgentPolicy
+
+    _orig_policy_for_mode = mod._policy_for_mode
+
+    def _patched_policy_for_mode(mode: str, game: str):
+        # The bare control and the frozen arm both use the REAL default policy path (no online
+        # scorer) -- this is what guarantees the frozen arm == the 0.04 exp4605 baseline.
+        if mode == "bare" or arm == "frozen":
+            return _orig_policy_for_mode(mode, game)
+        return E3AgentPolicy(
+            game,
+            proposer=mod._NoOpProposer(),
+            target_levels=mod._submitted_target_levels(),
+            value_weight=mod._submitted_value_weight(),
+            frame_change_scorer=factory.build_integrated_scorer(),
+        )
+
+    mod._policy_for_mode = _patched_policy_for_mode
+    try:
+        integrated_measurement, bare_measurement = mod.measure_policy_pair(
+            public_games=games,
+            variant_ids=variant_ids,
+            budget=effective_budget,
+            variant_runner_factory=mod.default_variant_runner_factory,
+        )
+    finally:
+        mod._policy_for_mode = _orig_policy_for_mode
 
     duration_s = max(1.0, time.time() - started)
 
@@ -429,7 +282,7 @@ def run_arm(
         "bare_first_win_rate": bare_first_win_rate,
         "variant_attempts": list(integrated_measurement.get("variant_attempts", [])),
         "per_game_solved": per_game_solved,
-        "scorer_diagnostics": scorer_factory.aggregate_diagnostics(),
+        "scorer_diagnostics": factory.aggregate_diagnostics(),
         "inference_substrate": INFERENCE_SUBSTRATE,
         "verifier_is_oracle": False,
         "solve_provenance": SOLVE_PROVENANCE,

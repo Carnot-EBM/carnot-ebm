@@ -321,6 +321,33 @@ def _frame_to_tensor_safe(frame: Any) -> "torch.Tensor | None":
         return None
 
 
+_MEMORY_CACHE: dict[str, Any] = {}
+
+
+def _load_cached_memory(root: Path) -> Any | None:
+    """Load (once, then cache by repo root) the frozen PersistentAEM cross-game prior.
+
+    The memory term is identical for every (game, variant) attempt within a sweep, so reloading
+    the transition corpus per attempt is pure waste. Cached by str(root) so a different repo path
+    (e.g. a worktree) gets its own entry. Returns None on any failure (the scorer degrades to
+    CNN-only, exactly as the pre-cache code did).
+    """
+    key = str(Path(root).resolve())
+    if key in _MEMORY_CACHE:
+        return _MEMORY_CACHE[key]
+    memory = None
+    try:
+        from carnot.agentic.arc_solver_kit import PersistentAEM
+
+        rows = load_cached_transition_effect_rows(root)
+        if rows:
+            memory = PersistentAEM.from_effect_rows(rows)
+    except Exception:
+        memory = None
+    _MEMORY_CACHE[key] = memory
+    return memory
+
+
 def build_online_scorer(arm: str, root: Path) -> Any:
     """REQ-ARC-OAE-4710: factory function that returns the correct scorer for a given arm.
 
@@ -348,16 +375,11 @@ def build_online_scorer(arm: str, root: Path) -> Any:
         scorer = load_live_action_effect_scorer(root)
         return scorer
 
-    # For all online arms: load the memory (frozen cross-game prior).
-    memory = None
-    try:
-        from carnot.agentic.arc_solver_kit import PersistentAEM
-
-        rows = load_cached_transition_effect_rows(root)
-        if rows:
-            memory = PersistentAEM.from_effect_rows(rows)
-    except Exception:
-        memory = None
+    # For all online arms: load the memory (frozen cross-game prior). The PersistentAEM is the
+    # SAME static cross-game object for every (game, variant) attempt, so building it once and
+    # caching it (keyed by repo root) avoids re-reading the ~14k-row transition corpus 25x+ per
+    # arm. Only the CNN differs per scorer; the memory is shared & frozen.
+    memory = _load_cached_memory(root)
 
     if arm == "online-scratch":
         # Fresh random CNN -- no checkpoint, hidden_channels=8 to match exp4629's architecture.
