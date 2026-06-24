@@ -650,3 +650,104 @@ class DiscriminativeVerifier:
         v.sd = np.asarray(d["sd"], dtype=float)
         v.n_samples = int(d.get("n_samples", 0))
         return v
+
+
+DAGGER_WIN_REACHABILITY_VALUE_HEAD_SCHEMA = (
+    "carnot_arc_dagger_win_reachability_value_head_v1"
+)
+DAGGER_WIN_REACHABILITY_FEATURE_SUBSET = "cross_game_features_v3:v2_plus_frame_delta"
+
+
+class DaggerWinReachabilityValueHead:
+    """REQ-LEARN-4665: cheap DAgger-corrected win-reachability value route.
+
+    The underlying model is the existing logistic `DiscriminativeVerifier`, but
+    the live frontier wants a lower-is-better value term. This wrapper exposes
+    `1 - P(win-reachable)` as a tiny CPU cost while keeping the learned head
+    oracle-distinct from the executable reproduction oracle used for labels.
+    """
+
+    feature_subset = DAGGER_WIN_REACHABILITY_FEATURE_SUBSET
+    verifier_is_oracle = False
+
+    def __init__(self, verifier: DiscriminativeVerifier) -> None:
+        self.verifier = verifier
+
+    @property
+    def n_samples(self) -> int:
+        return int(self.verifier.n_samples)
+
+    def proba_features(self, features: Sequence[float]) -> float:
+        return float(self.verifier.proba_features(features))
+
+    def cost_features(self, features: Sequence[float]) -> float:
+        return float(max(0.0, min(1.0, 1.0 - self.proba_features(features))))
+
+    def __call__(self, frame: Any, previous_frame: Any | None = None) -> float:
+        features = cross_game_features_v3_value_routing(frame, previous_frame=previous_frame)
+        return self.cost_features(features)
+
+    def save(self, path: str | Path, meta: dict | None = None) -> Path:
+        if self.verifier.w is None or self.verifier.mu is None or self.verifier.sd is None:
+            raise ValueError("nothing to save: DAgger value head is untrained")
+        payload = {
+            "schema": DAGGER_WIN_REACHABILITY_VALUE_HEAD_SCHEMA,
+            "kind": "dagger_win_reachability_value_head",
+            "weights": self.verifier.w.tolist(),
+            "mu": self.verifier.mu.tolist(),
+            "sd": self.verifier.sd.tolist(),
+            "feature_subset": self.feature_subset,
+            "feature_names": cross_game_feature_names_v3_value_routing(),
+            "n_samples": self.verifier.n_samples,
+            "verifier_is_oracle": False,
+            "provenance": (meta or {}).get("provenance"),
+            "trained_games": (meta or {}).get("trained_games"),
+            "spec_refs": (meta or {}).get("spec_refs"),
+        }
+        out = Path(path)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        return out
+
+    @classmethod
+    def load(cls, path: str | Path) -> "DaggerWinReachabilityValueHead":
+        payload = json.loads(Path(path).read_text(encoding="utf-8"))
+        if payload.get("schema") != DAGGER_WIN_REACHABILITY_VALUE_HEAD_SCHEMA:
+            raise ValueError("not a DAgger win-reachability value-head checkpoint")
+        verifier = DiscriminativeVerifier(lambda row: row)
+        verifier.w = np.asarray(payload["weights"], dtype=float)
+        verifier.mu = np.asarray(payload["mu"], dtype=float)
+        verifier.sd = np.asarray(payload["sd"], dtype=float)
+        verifier.n_samples = int(payload.get("n_samples", 0))
+        return cls(verifier)
+
+
+def fit_dagger_win_reachability_value_head(
+    x_rows: Sequence[Sequence[float]],
+    y_rows: Sequence[float],
+    *,
+    iters: int = 800,
+    lr: float = 0.5,
+    l2: float = 1e-3,
+) -> DaggerWinReachabilityValueHead:
+    """REQ-LEARN-4665: fit the DAgger-lite live-frontier discriminator."""
+
+    x_list = [[float(v) for v in row] for row in x_rows]
+    y_list = [float(v) for v in y_rows]
+    if not x_list:
+        raise ValueError("DAgger value head requires at least one feature row")
+    positives = sum(1 for value in y_list if value >= 0.5)
+    negatives = len(y_list) - positives
+    if positives <= 0 or negatives <= 0:
+        raise ValueError("DAgger value head requires positive and negative labels")
+    width = len(x_list[0])
+    if any(len(row) != width for row in x_list):
+        raise ValueError("DAgger value head feature rows must have a stable width")
+    verifier = DiscriminativeVerifier(lambda row: row).fit(
+        x_list,
+        y_list,
+        iters=iters,
+        lr=lr,
+        l2=l2,
+    )
+    return DaggerWinReachabilityValueHead(verifier)
