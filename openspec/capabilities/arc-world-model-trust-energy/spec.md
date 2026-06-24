@@ -3989,6 +3989,110 @@ budget
 **Then** both ablations must reach a lower level before the artifact can claim
 the new level is attributable to induced subgoal decomposition.
 
+### REQ-ARC-WMTE-4677: PoE-World Factored Executable Subgoal Planner
+
+Experiment 4677 SHALL implement the `.431` A2 PoE-World structural fallback as
+a live-path-reachable factored executable planner. The implementation SHALL
+induce small programmatic object-level experts from live transitions, where each
+expert carries an explicit precondition, effect rule, object class, and held-out
+transition trust weight. Expert induction SHALL use the live local proposer on a
+non-colliding port and SHALL `/props`-verify that the served model is
+Qwen3.5-9B-MTP rather than the gemma server commonly resident on port 8919. The
+planner SHALL keep only replay-stable factors whose held-out trust meets the
+configured threshold, compose those factors into a product executable model, and
+use that product model to generate mechanically valid subgoal-conditioned action
+sequences.
+
+The product-model planner SHALL accept A1-style subgoal predicates and the final
+goal predicate, SHALL use the .430 A2 value head only to score which
+product-model states or subgoals deserve live expansion, and SHALL keep the
+programmatic experts plus value head oracle-distinct from the executable
+reproduction win-check. Any plan emitted by the factored planner SHALL be
+executed by the live E3 path and audited by replay; the product model may
+generate candidates, but it SHALL NOT count a solve unless the live
+execution/reproduction gate accepts it.
+
+Experiment 4677 SHALL measure candidate-generation coverage against the matched
+flat-search baseline on the same target games: `candidate_generation_coverage`
+is the fraction of attempts where the winning action or plan appears in the
+generated candidate pool. A positive generation claim SHALL require factored
+coverage to exceed flat coverage and the winning plan to appear in the factored
+pool where flat search did not. A downstream live-lift claim SHALL additionally
+require a positive first-win-rate or multi-level solve-rate delta with bootstrap
+CI excluding the flat baseline on at least one game. If coverage does not rise,
+the artifact SHALL report an honest null with one residual bridge gap from
+`expert_factors_not_independent`, `product_model_plans_live_invalid`, or
+`experts_overfit_prefix`.
+
+Experiment 4677 SHALL write
+`results/experiment_4677_poe_world_factored_subgoal_planner.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `solve_provenance`,
+`live_path_reachable`, `candidate_generation_coverage_factored`,
+`candidate_generation_coverage_flat_baseline`, `coverage_delta`,
+`live_first_win_rate_factored`, `live_solve_rate_factored`,
+`live_baseline_flat_search`, `first_win_rate_delta`, `solve_rate_delta`,
+`live_lift_ci`, `expert_trust_weights`, `bare_control_passed`,
+`false_negative_risk_checked`, `null_methodology_note`,
+`chosen_submitted_config`, `proposer_served_model`, `parity_test_green`,
+`offline_reproduced`, `residual_bridge_gap`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: poe_world_factored_planner_coverage_up_live_<firstwin|solverate>_lift_<game> OR complete: poe_world_factored_planner_no_coverage_gain_residual_logged."
+- `inference_substrate`: principle "live_llm_inference -- the programmatic-expert induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the programmatic experts + value head are oracle-DISTINCT from the executable reproduction win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- the generic agent's OWN runtime factored-model planning; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `candidate_generation_coverage_factored`: principle "does the winning action/plan APPEAR in the factored-planner-generated pool -- the make-a-winner-appear signal (the metric that distinguishes generation from selection)."
+- `candidate_generation_coverage_flat_baseline`: principle "the matched flat-search baseline coverage -- a coverage CLAIM requires the factored coverage to exceed it (the winner generated where flat search did not)."
+- `coverage_delta`: principle "factored - flat coverage (positive = the winner now appears); emitted explicitly so a null (0) is annotated."
+- `live_first_win_rate_factored`: principle "the live first-win-rate WITH the factored planner on the SCORED agent."
+- `live_solve_rate_factored`: principle "the live multi-level (>=2) solve-rate WITH the factored planner."
+- `live_baseline_flat_search`: principle "the matched flat-search baseline first-win + solve-rate on the SAME games (the no-regression control)."
+- `first_win_rate_delta`: principle "factored - baseline first-win-rate; emitted explicitly so a null is annotated."
+- `solve_rate_delta`: principle "factored - baseline multi-level solve-rate; emitted explicitly so a null is annotated."
+- `live_lift_ci`: principle "bootstrap CI on the chosen live-lift metric; a claim above baseline requires the CI to exclude it."
+- `expert_trust_weights`: principle "the held-out transition trust per induced expert -- only replay-stable factors are composed (no brittle-expert fabrication)."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable headroom; a no-coverage-gain null is valid only then."
+- `false_negative_risk_checked`: principle "true with the matched flat baseline + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
+- `null_methodology_note`: principle "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (factored planner on, trust threshold) -- the A6 input; 'unchanged' if null."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `residual_bridge_gap`: principle "the .432 generation gap logged if coverage does not rise (expert_factors_not_independent | product_model_plans_live_invalid)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4677-TRUSTED-FACTORS
+
+**Given** live transition records and a programmatic-expert proposer
+**When** Experiment 4677 induces object-level precondition/effect experts
+**Then** each expert is scored on a held-out transition suffix, only
+replay-stable experts above the trust threshold are composed, and the artifact
+records their trust weights.
+
+#### SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING
+
+**Given** trusted programmatic experts, A1-style subgoal predicates, a final
+goal predicate, and an A2 value head
+**When** the factored product planner runs
+**Then** it composes the experts into an executable product model, plans through
+subgoal-conditioned legs, records reachability for each leg, and emits only
+candidate plans that can be audited by live E3 execution.
+
+#### SCENARIO-ARC-WMTE-4677-COVERAGE-CONTROL
+
+**Given** the factored planner and a matched flat-search baseline on the same
+target games
+**When** Experiment 4677 measures generated candidate pools
+**Then** the artifact reports factored coverage, flat coverage, explicit
+coverage delta, live first-win and solve-rate deltas, bootstrap CI, and an
+honest null note when the winning plan does not newly appear.
+
 ### REQ-ARC-WMTE-4671: Adversarial Verify L2 Goal And Multi-Level Metric Hardening
 
 The `scripts/adversarial_verify.py` reader SHALL protect the .430 A1 L2
