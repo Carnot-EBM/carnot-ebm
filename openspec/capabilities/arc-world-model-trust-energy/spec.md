@@ -4499,6 +4499,79 @@ are reported true.
 `target_levels>=2` and no-break harness, WARN-flagged when that harness is
 omitted, and not flagged when the fixed harness is reported.
 
+### REQ-ARC-WMTE-4683: Adversarial Verify Subgoal And Coverage-Baseline Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the `.431` A1
+hierarchical-subgoal-search lever and A2 candidate-generation-coverage metric
+from two degenerate overclaims. An ARC artifact that claims a generic live
+agent reached a new level via hierarchical subgoal search, including positive
+`reproduced_levels` or a `generic_agent_reached_level` success claim in a
+subgoal-search context, SHALL report `subgoal_decomposition`,
+`per_subgoal_reachable`, `no_subgoal_ablation_reached_level`,
+`random_subgoal_ablation_reached_level`, and `offline_reproduced=true`.
+The reported decomposition SHALL be nontrivial, per-subgoal reachability SHALL
+be true, and both matched ablation levels SHALL be strictly lower than the
+subgoal-search reached level. If such a win is claimed while any evidence is
+absent, false, degenerate, or not strictly lower, the reader SHALL emit a
+CRITICAL flag of kind `subgoal-search-without-decomposition-evidence`. If such
+a claim omits any required evidence field, the reader SHALL also emit a WARN
+flag of kind `subgoal-decomposition-evidence-omitted`.
+
+An ARC artifact that claims candidate-generation coverage rose, including a
+positive `candidate_generation_coverage_*` improvement claim or positive
+`coverage_delta` in a generation-coverage context, SHALL report the matched
+flat-search baseline field `candidate_generation_coverage_flat_baseline`. If
+the coverage-up claim omits that matched baseline, the reader SHALL emit a
+CRITICAL flag of kind `generation-coverage-without-baseline` and a WARN flag
+of kind `generation-coverage-baseline-omitted`.
+
+The honest `.431` artifacts,
+`results/experiment_4676_hierarchical_subgoal_search_live.json` and
+`results/experiment_4677_poe_world_factored_subgoal_planner.json`, SHALL NOT
+fire either new guard. The former is an honest no-new-level null that reports
+the subgoal/ablation fields, and the latter reports the matched flat-search
+coverage baseline.
+
+Experiment 4683 SHALL write
+`results/experiment_4683_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `subgoal_decomposition_guard_added`,
+`coverage_baseline_guard_added`, `honest_artifacts_not_flagged`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_subgoal_decomposition_and_coverage_baseline_guards_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+- `subgoal_decomposition_guard_added`: principle "the SUBGOAL-SEARCH-WITHOUT-DECOMPOSITION-EVIDENCE guard (a subgoal-search win must report the decomposition + per-subgoal reachability + passing no-subgoal AND random-subgoal ablations + offline_reproduced, else flagged as a possible flat-search win mislabeled)."
+- `coverage_baseline_guard_added`: principle "the GENERATION-COVERAGE-WITHOUT-BASELINE guard (a coverage-up claim must report the matched flat-search baseline coverage, else flagged as unfalsifiable)."
+- `honest_artifacts_not_flagged`: principle "the honest A1/A2 artifacts (which report their decomposition/ablations + flat-baseline coverage) are NOT flagged -- false-positive guard (like the .430 multi-level-metric guard)."
+- `tests_added`: principle "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4683-SUBGOAL-DECOMPOSITION
+
+**Given** an ARC artifact claims a generic-agent new-level win through
+hierarchical subgoal search
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when it lacks a nontrivial
+`subgoal_decomposition`, true `per_subgoal_reachable`, strictly lower
+`no_subgoal_ablation_reached_level` and
+`random_subgoal_ablation_reached_level`, or `offline_reproduced=true`;
+WARN-flagged when any required evidence field is omitted; and not flagged when
+all required evidence is reported and both ablations are lower.
+
+#### SCENARIO-ARC-WMTE-4683-COVERAGE-BASELINE
+
+**Given** an ARC artifact claims candidate-generation coverage rose
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged and WARN-flagged when it omits
+`candidate_generation_coverage_flat_baseline`, and not flagged when the
+matched flat-search baseline coverage is reported.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2

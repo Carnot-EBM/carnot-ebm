@@ -1,0 +1,178 @@
+{
+  "coverage_baseline_guard_added": true,
+  "coverage_baseline_guard_report": {
+    "a1_fixture_flags": [
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      },
+      {
+        "detail": "value-routing-cost-control-omitted: value-routing live claim omits per_node_feature_cost_ms, sim_timed_out. Report finite per_node_feature_cost_ms and sim_timed_out=false before attributing live lift to value routing.",
+        "kind": "value-routing-cost-control-omitted",
+        "severity": "warn"
+      }
+    ],
+    "a1_guarded_flags": [],
+    "a2_fixture_flags": [
+      {
+        "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "solve_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a2_guarded_flags": [],
+    "missing_baseline_flags": [
+      {
+        "detail": "generation-coverage-baseline-omitted: candidate-generation coverage-up claim omits candidate_generation_coverage_flat_baseline. Report the matched flat-search baseline before crediting coverage lift to generation.",
+        "kind": "generation-coverage-baseline-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "generation-coverage-without-baseline: artifact claims candidate-generation coverage rose but does not report candidate_generation_coverage_flat_baseline. The coverage number is unfalsifiable without the matched flat-search control because a candidate pool can always contain the winner without demonstrating a generation gain.",
+        "kind": "generation-coverage-without-baseline",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_baseline_flags": []
+  },
+  "duration_s": 0.08223680593073368,
+  "experiment": "experiment_4683_adversarial_verify_hardening",
+  "field_principles": {
+    "coverage_baseline_guard_added": {
+      "principle": "the GENERATION-COVERAGE-WITHOUT-BASELINE guard (a coverage-up claim must report the matched flat-search baseline coverage, else flagged as unfalsifiable)."
+    },
+    "honest_artifacts_not_flagged": {
+      "principle": "the honest A1/A2 artifacts (which report their decomposition/ablations + flat-baseline coverage) are NOT flagged -- false-positive guard (like the .430 multi-level-metric guard)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_hardened_subgoal_decomposition_and_coverage_baseline_guards_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "subgoal_decomposition_guard_added": {
+      "principle": "the SUBGOAL-SEARCH-WITHOUT-DECOMPOSITION-EVIDENCE guard (a subgoal-search win must report the decomposition + per-subgoal reachability + passing no-subgoal AND random-subgoal ablations + offline_reproduced, else flagged as a possible flat-search win mislabeled)."
+    },
+    "tests_added": {
+      "principle": "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+    }
+  },
+  "honest_artifacts_not_flagged": true,
+  "honest_verdict": "success: adversarial_verify_hardened_subgoal_decomposition_and_coverage_baseline_guards_tests_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
+  "preconditions_checked": {
+    "adversarial_verify_import_ok": true,
+    "adversarial_verify_parse_ok": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "fixtures_present": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4683": true
+  },
+  "random_seed": 4683,
+  "reproducibility_checksum": "sha256:9bc6e0886a4cd7fc0de5bd316b5b7e7d45c9a1b592df4d8e8a64c98c450d75e4",
+  "result_path": "results/experiment_4683_adversarial_verify_hardening.json",
+  "schema": "carnot.exp4683.adversarial_verify_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4683",
+    "SCENARIO-ARC-WMTE-4683-SUBGOAL-DECOMPOSITION",
+    "SCENARIO-ARC-WMTE-4683-COVERAGE-BASELINE"
+  ],
+  "subgoal_decomposition_guard_added": true,
+  "subgoal_decomposition_guard_report": {
+    "a1_fixture_flags": [
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      },
+      {
+        "detail": "value-routing-cost-control-omitted: value-routing live claim omits per_node_feature_cost_ms, sim_timed_out. Report finite per_node_feature_cost_ms and sim_timed_out=false before attributing live lift to value routing.",
+        "kind": "value-routing-cost-control-omitted",
+        "severity": "warn"
+      }
+    ],
+    "a1_guarded_flags": [],
+    "a2_fixture_flags": [
+      {
+        "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "solve_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a2_guarded_flags": [],
+    "invalid_ablation_flags": [
+      {
+        "detail": "subgoal-search-without-decomposition-evidence: artifact claims a generic-agent new-level win via hierarchical subgoal search without proving a nontrivial subgoal_decomposition, true per_subgoal_reachable evidence, no_subgoal_ablation_reached_level and random_subgoal_ablation_reached_level both strictly lower than generic_agent_reached_level, and offline_reproduced=true. The apparent win may be flat search mislabeled as subgoal search, or a 'subgoal' that is only the global goal.",
+        "kind": "subgoal-search-without-decomposition-evidence",
+        "severity": "critical"
+      }
+    ],
+    "omitted_evidence_flags": [
+      {
+        "detail": "subgoal-decomposition-evidence-omitted: hierarchical subgoal-search new-level claim omits subgoal_decomposition, per_subgoal_reachable, no_subgoal_ablation_reached_level, random_subgoal_ablation_reached_level, offline_reproduced. Report subgoal_decomposition, per_subgoal_reachable, no_subgoal_ablation_reached_level, random_subgoal_ablation_reached_level, and offline_reproduced before crediting a subgoal-search win.",
+        "kind": "subgoal-decomposition-evidence-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "subgoal-search-without-decomposition-evidence: artifact claims a generic-agent new-level win via hierarchical subgoal search without proving a nontrivial subgoal_decomposition, true per_subgoal_reachable evidence, no_subgoal_ablation_reached_level and random_subgoal_ablation_reached_level both strictly lower than generic_agent_reached_level, and offline_reproduced=true. The apparent win may be flat search mislabeled as subgoal search, or a 'subgoal' that is only the global goal.",
+        "kind": "subgoal-search-without-decomposition-evidence",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_evidence_flags": []
+  },
+  "tests_added": {
+    "assertions": [
+      "Subgoal-search new-level claim omitting decomposition evidence emits omitted warn and critical overclaim flag",
+      "Subgoal-search new-level claim whose no-subgoal ablation is not lower emits critical overclaim flag",
+      "Subgoal-search new-level claim with decomposition, reachability, lower ablations, and offline reproduction is not false-flagged",
+      "Candidate-generation coverage-up claim omitting candidate_generation_coverage_flat_baseline emits omitted warn and critical overclaim flag",
+      "Coverage-up claim with candidate_generation_coverage_flat_baseline is not false-flagged",
+      "Honest .431 A1/A2 artifacts do not fire the new guarded kinds"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_hardening_4683.py -q --no-cov",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4683_adversarial_verify_hardening.py' -m pytest --override-ini addopts='' tests/python/test_adversarial_verify_hardening_4683.py -q",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_4676_hierarchical_subgoal_search_live.json results/experiment_4677_poe_world_factored_subgoal_planner.json"
+    ],
+    "passed": true,
+    "test_files": [
+      "tests/python/test_adversarial_verify_hardening_4683.py"
+    ]
+  }
+}
