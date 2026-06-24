@@ -5045,6 +5045,87 @@ all required evidence is reported and both ablations are lower.
 `candidate_generation_coverage_flat_baseline`, and not flagged when the
 matched flat-search baseline coverage is reported.
 
+### REQ-ARC-WMTE-4695: Adversarial Verify Directed-Exploration Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the `.432` A1
+controllable-novelty proposal lever and A2 program-synthesis proposal-filter
+lever from two degenerate overclaims. An ARC artifact that claims a generic
+live agent reached a new level via controllable novelty, including positive
+`reproduced_levels` or a `generic_agent_reached_level` success claim in a
+controllable-novelty context, SHALL report
+`no_novelty_ablation_reached_level`,
+`cosmetic_novelty_ablation_reached_level`, and
+`offline_reproduced=true`. Both ablation reached levels SHALL be strictly
+lower than the controllable-novelty policy's `generic_agent_reached_level`.
+If such a win is claimed while any evidence is absent, false, or not strictly
+lower, the reader SHALL emit a CRITICAL flag of kind
+`novelty-proposal-without-ablation`. If such a claim omits any required
+evidence field, the reader SHALL also emit a WARN flag of kind
+`novelty-proposal-ablation-omitted`.
+
+An ARC artifact that claims program-synthesis proposal-filter
+candidate-generation coverage rose, including a positive `coverage_delta`, a
+positive `candidate_generation_coverage_filter` coverage-up success claim, or
+filter coverage exceeding the blind baseline in a program-synthesis context,
+SHALL report finite `heldout_programs_rejected` and finite
+`candidate_generation_coverage_blind_baseline`. If such a coverage-up claim
+does not report either required field, the reader SHALL emit a CRITICAL flag
+of kind `proposal-filter-without-heldout-rejection`. If such a claim omits any
+required evidence field, the reader SHALL also emit a WARN flag of kind
+`proposal-filter-heldout-rejection-omitted`.
+
+The honest `.432` artifacts,
+`results/experiment_4688_controllable_novelty_proposal_policy_live.json` and
+`results/experiment_4689_program_synthesis_action_effect_proposal_filter.json`,
+SHALL NOT fire either new guard. The former reports the no-novelty and
+cosmetic-novelty ablations plus `offline_reproduced`, and the latter reports
+held-out rejected-program counts plus the matched blind-proposal coverage
+baseline.
+
+Experiment 4695 SHALL write
+`results/experiment_4695_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `novelty_ablation_guard_added`,
+`proposal_filter_heldout_guard_added`, `honest_artifacts_not_flagged`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_novelty_ablation_and_proposal_filter_heldout_guards_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+- `novelty_ablation_guard_added`: principle "the NOVELTY-PROPOSAL-WITHOUT-ABLATION guard (a controllable-novelty win must report the no-novelty-bonus AND cosmetic-novelty ablations strictly lower + offline_reproduced, else flagged as a possible flat-exploration win mislabeled / controllability-gate-adds-nothing)."
+- `proposal_filter_heldout_guard_added`: principle "the PROPOSAL-FILTER-WITHOUT-HELDOUT-REJECTION guard (a coverage-up claim must report the held-out rejected-program count AND the matched blind-proposal baseline, else flagged as unfalsifiable / experts_overfit_prefix-unguarded)."
+- `honest_artifacts_not_flagged`: principle "the honest A1/A2 artifacts (which report their ablations + held-out rejection + blind-baseline coverage) are NOT flagged -- false-positive guard (like the .431 coverage-baseline guard)."
+- `tests_added`: principle "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4695-NOVELTY-ABLATION
+
+**Given** an ARC artifact claims a generic-agent new-level win through
+controllable novelty
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when it lacks strictly lower
+`no_novelty_ablation_reached_level` and
+`cosmetic_novelty_ablation_reached_level` values or
+`offline_reproduced=true`; WARN-flagged when any required evidence field is
+omitted; and not flagged when all required evidence is reported and both
+ablations are lower.
+
+#### SCENARIO-ARC-WMTE-4695-PROPOSAL-FILTER-HELDOUT
+
+**Given** an ARC artifact claims program-synthesis proposal-filter
+candidate-generation coverage rose
+**When** `adversarial_verify.py` checks the artifact
+**Then** the artifact is CRITICAL-flagged when it lacks finite
+`heldout_programs_rejected` or
+`candidate_generation_coverage_blind_baseline`; WARN-flagged when either
+required evidence field is omitted; and not flagged when both the held-out
+rejected-program count and matched blind-proposal baseline coverage are
+reported.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2
