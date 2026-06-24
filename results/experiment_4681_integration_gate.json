@@ -1,0 +1,206 @@
+{
+  "a1_a2_config_audit": {
+    "a1": {
+      "chosen_submitted_config": "unchanged",
+      "gate_cleared": false,
+      "generic_agent_reached_level": 0,
+      "integrated": false,
+      "lever": "A1",
+      "offline_reproduced": false,
+      "reason": "chosen_submitted_config_unchanged",
+      "reproduced_levels": 0,
+      "submitted_hierarchical_subgoal_budget": 3,
+      "submitted_hierarchical_subgoal_search_enabled": false
+    },
+    "a2": {
+      "chosen_submitted_config": "unchanged",
+      "coverage_delta": 0.0,
+      "first_win_rate_delta": -0.04,
+      "gate_cleared": false,
+      "integrated": false,
+      "lever": "A2",
+      "reason": "chosen_submitted_config_unchanged",
+      "solve_rate_delta": 0.0,
+      "submitted_factored_planner_enabled": false,
+      "submitted_factored_trust_threshold": 0.75
+    },
+    "config_changed": false,
+    "config_integrated": "unchanged: A1 chosen_submitted_config_unchanged; A2 chosen_submitted_config_unchanged",
+    "levers_integrated": []
+  },
+  "config_changed": false,
+  "config_integrated": "unchanged: A1 chosen_submitted_config_unchanged; A2 chosen_submitted_config_unchanged",
+  "duration_s": 1.252898,
+  "experiment": "experiment_4681_integration_gate",
+  "field_principles": {
+    "config_changed": {
+      "principle": "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding) -- pre-empts the .430 A6 TAUTOLOGY flag."
+    },
+    "config_integrated": {
+      "principle": "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
+    },
+    "live_first_win_rate_integrated": {
+      "principle": "the integrated SCORED-agent live first-win-rate (no regression vs pre-integration)."
+    },
+    "live_multi_level_solve_rate_integrated": {
+      "principle": "the integrated SCORED-agent multi-level (>=2) live solve-rate (the deeper wall) -- measured on the FIXED non-degenerate harness."
+    },
+    "live_submittable_level_count_integrated": {
+      "principle": "the integrated live-submittable count (must stay > 33)."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the integrated subgoal-search / factored-planner signals are oracle-distinct from the executable win-check."
+    }
+  },
+  "honest_verdict": "complete: integration_unchanged_both_levers_null",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor).",
+  "live_first_win_rate_delta_vs_pre_integration": 0.0,
+  "live_first_win_rate_integrated": 0.04,
+  "live_first_win_rate_pre_integration": 0.04,
+  "live_multi_level_solve_rate_delta_vs_pre_integration": 0.0,
+  "live_multi_level_solve_rate_integrated": 0.0,
+  "live_multi_level_solve_rate_pre_integration": 0.0,
+  "live_submittable_level_count_integrated": 59,
+  "metrics_delta_audit": {
+    "live_first_win_rate_delta_vs_pre_integration": 0.0,
+    "live_first_win_rate_integrated": 0.04,
+    "live_first_win_rate_pre_integration": 0.04,
+    "live_multi_level_solve_rate_delta_vs_pre_integration": 0.0,
+    "live_multi_level_solve_rate_integrated": 0.0,
+    "live_multi_level_solve_rate_pre_integration": 0.0,
+    "live_submittable_level_count_integrated": 59,
+    "measurement_sources": {
+      "a1_hierarchical_first_win_rate": 0.0,
+      "a1_hierarchical_multi_level_rate": 0.0,
+      "a2_factored_first_win_rate": 0.0,
+      "a2_factored_multi_level_rate": 0.0,
+      "package_live_submittable_level_count": 60,
+      "previous_gate": "results/experiment_4669_integration_gate.json"
+    },
+    "metric_measurement_note": "config_changed=false; first-win, multi-level, and live-submittable metrics remain equal to the pre-integration config by construction.",
+    "no_regression_vs_pre_integration": true
+  },
+  "no_regression_vs_pre_integration": true,
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [11 items]\n\n...........                                                              [100%]\n============================== 11 passed in 5.15s ==============================\n"
+  },
+  "parity_test_green": true,
+  "pre_integration_config": {
+    "live_first_win_rate": 0.04,
+    "live_multi_level_solve_rate": 0.0,
+    "live_submittable_level_count": 59,
+    "source": "results/experiment_4669_integration_gate.json"
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "ok": true,
+    "package_artifact_present": true,
+    "previous_gate_artifact_present": true,
+    "spec_has_req_4681": true,
+    "submitted_agent_import": true
+  },
+  "random_seed": 4681,
+  "reproducibility_checksum": "sha256:b4dbab06432e4b4bf30ca37fa0340565f88d921519ad9d801df449bdddc34589",
+  "schema": "carnot.exp4681.integration_gate.v1",
+  "source_artifact_checksums": {
+    "a1": "sha256:46749cc615e6bf3a5e759c8d1d75a38f2f99e9a1305cb0d2b38c467addf89d76",
+    "a2": "sha256:590fc639a0c158ac36cea5163fd43ea09eba40b878b0b47938651ff49a87d278",
+    "package": "ddbc32bcd1ceb1ef13ce8698e28570fc1f73ef23ae8d3b5d9df9a69e01c22985",
+    "previous_gate": "sha256:7133283a4882a129c4e8e3b1f30d9c938df71f04ccca38377794dd453ef8a57c"
+  },
+  "source_artifacts": {
+    "a1": "results/experiment_4676_hierarchical_subgoal_search_live.json",
+    "a2": "results/experiment_4677_poe_world_factored_subgoal_planner.json",
+    "package": "results/experiment_4679_refresh_submission_package.json",
+    "previous_gate": "results/experiment_4669_integration_gate.json"
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-4681",
+    "SCENARIO-ARC-WMTE-4681"
+  ],
+  "submitted_agent_config": {
+    "action_effect_expansion_prior_enabled": true,
+    "action_effect_expansion_prior_mode": "persistent_aem_plus_optional_cnn_frontier_prior",
+    "bare_control_config": {
+      "action_effect_expansion_prior_enabled": false,
+      "candidate_router": null,
+      "goal_energy_enabled": false,
+      "navigation_cost_tiebreak": false,
+      "policy": "E3AgentPolicy",
+      "search_mode": "depth_first_ride",
+      "target_levels": 1,
+      "value_weight": 0.0
+    },
+    "candidate_router": "cross_game_discriminative_v3_tiebreaker",
+    "cascade": true,
+    "dense_curiosity_discount": 0.5,
+    "dense_curiosity_progress_loop_enabled": false,
+    "dense_curiosity_weight": 0.15,
+    "discriminative_candidate_router_enabled": true,
+    "discriminative_router_wired": true,
+    "explore_diversity_default": false,
+    "factored_planner_enabled": false,
+    "factored_trust_threshold": 0.75,
+    "feature_router_enabled": false,
+    "frame_change_predictor_enabled": true,
+    "frame_change_prune_threshold": null,
+    "frame_change_ranking_mode": "persistent_aem_plus_optional_cnn",
+    "frontier_batch_size": 1,
+    "goal_energy_alpha": 0.9,
+    "goal_energy_beta": 0.1,
+    "goal_energy_enabled": true,
+    "goal_energy_source": "exp4020_graded_goal_satisfaction_energy",
+    "goal_energy_wired": true,
+    "graph_explore_budget": 80,
+    "hierarchical_subgoal_budget": 3,
+    "hierarchical_subgoal_search_enabled": false,
+    "lazy_value_top_k": 4,
+    "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
+    "live_submit_source": "experiment_4643_refresh_submission_package",
+    "navigation_cost_tiebreak": true,
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "qd_generation_enabled": false,
+    "qd_generation_mode": "energy_fitness_map_elites_sequence_generator",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "solve_learning_router_wired": true,
+    "strategy_router_enabled": true,
+    "target_levels": 3,
+    "value_head_checkpoint": "models/arc_dagger_value_routing_v3.json",
+    "value_head_distribution_corrected": true,
+    "value_head_feature_subset": "cross_game_features_v3:v2_plus_frame_delta",
+    "value_weight": 1e-12,
+    "verifier_is_oracle": false,
+    "world_model_dsl_wired": true
+  },
+  "submitted_to_leaderboard": false,
+  "tautology_guard": "config_changed=false: pre/post measurements are identical BY CONSTRUCTION (not a finding).",
+  "verifier_is_oracle": false
+}
