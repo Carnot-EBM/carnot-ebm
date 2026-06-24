@@ -9180,3 +9180,4 @@ c |
 | 2026-06-24 12:54 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAG | OK | 88 passed, 1 warning in 8.41s |
 | 2026-06-24 13:18 UTC | PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+tr | OK | 110 passed, 1 warning in 7.98s |
 | 2026-06-24 13:37 UTC | PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold thi | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-06-24 13:51 UTC | PHASE B1 (INFRA -- reserved slot 1) -- ship the CA | OK | 88 passed, 1 warning in 7.59s |
