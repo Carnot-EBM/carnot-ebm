@@ -3,7 +3,8 @@
 Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544,
 REQ-ARC-WMTE-4557, SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST,
 REQ-ARC-WMTE-4664, SCENARIO-ARC-WMTE-4664-GOAL-SATISFIABILITY,
-REQ-ARC-WMTE-4676, SCENARIO-ARC-WMTE-4676-HIERARCHICAL-PLAN.
+REQ-ARC-WMTE-4676, SCENARIO-ARC-WMTE-4676-HIERARCHICAL-PLAN,
+REQ-ARC-WMTE-4677, SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING.
 """
 
 from __future__ import annotations
@@ -68,6 +69,8 @@ class LlmReinductionResult:
     subgoal_decomposition: list[dict[str, Any]] = field(default_factory=list)
     per_subgoal_reachable: list[dict[str, Any]] = field(default_factory=list)
     subgoal_search_used: bool = False
+    factored_planner_used: bool = False
+    expert_trust_weights: list[dict[str, Any]] = field(default_factory=list)
     rounds: list[dict[str, Any]] = field(default_factory=list)
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
     skipped: str = ""
@@ -555,6 +558,8 @@ def execute_bounded_llm_reinduction(
     subgoal_budget: int = 3,
     value_head: Callable[[np.ndarray], float] | None = None,
     subgoal_candidates: Sequence[SubgoalCandidate] | None = None,
+    enable_factored_planner: bool = False,
+    factored_trust_threshold: float = 0.75,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -782,6 +787,79 @@ def execute_bounded_llm_reinduction(
                     counterexamples=counterexamples,
                     skipped="",
                 )
+        if enable_factored_planner:
+            try:
+                from carnot.agentic.arc_executable_world_model import (
+                    induce_programmatic_object_experts,
+                    plan_factored_subgoal_sequence,
+                )
+
+                expert_result = induce_programmatic_object_experts(
+                    game=game,
+                    transitions=list(transitions),
+                    proposer=proposer,
+                    cell=int(cell),
+                    trust_threshold=float(factored_trust_threshold),
+                )
+                candidates = list(subgoal_candidates or []) or propose_hierarchical_subgoals(
+                    game=game,
+                    transitions=list(transitions),
+                    proposer=proposer,
+                    previous_level_complete_grid=previous_level_complete_grid,
+                    max_subgoals=max(1, int(subgoal_budget)),
+                )
+                factored_result = plan_factored_subgoal_sequence(
+                    start_grid=np.asarray(root_grid),
+                    final_goal=selected_goal,
+                    experts=expert_result.experts,
+                    subgoals=candidates,
+                    value_head=value_head,
+                    max_subgoals=max(1, int(subgoal_budget)),
+                )
+                row.update(
+                    {
+                        "factored_planner_used": True,
+                        "expert_trust_weights": list(expert_result.expert_trust_weights),
+                        "factored_subgoal_decomposition": list(
+                            factored_result.subgoal_decomposition
+                        ),
+                        "factored_per_subgoal_reachable": list(
+                            factored_result.per_subgoal_reachable
+                        ),
+                        "factored_plan_length": len(factored_result.plan),
+                        "factored_residual": factored_result.residual
+                        or expert_result.residual,
+                    }
+                )
+                if factored_result.planned:
+                    rounds.append(row)
+                    return LlmReinductionResult(
+                        planned=True,
+                        plan=list(factored_result.plan),
+                        goal_predicate=selected_goal,
+                        engine=selected.engine,
+                        selected_candidate_name=selected.name,
+                        goal_candidate_names=list(names),
+                        dynamics_candidate_names=list(names),
+                        refinement_rounds_used=round_no,
+                        verifier_is_oracle=False,
+                        model_specs=specs,
+                        heldout_accuracy=last_heldout_accuracy,
+                        accepted_by_heldout_verifier=last_accepted,
+                        goal_predicate_satisfiable=last_goal_satisfiable,
+                        goal_satisfiability=last_goal_satisfiability,
+                        subgoal_decomposition=list(factored_result.subgoal_decomposition),
+                        per_subgoal_reachable=list(factored_result.per_subgoal_reachable),
+                        factored_planner_used=True,
+                        expert_trust_weights=list(expert_result.expert_trust_weights),
+                        rounds=rounds,
+                        counterexamples=counterexamples,
+                        skipped="",
+                    )
+            except Exception as exc:
+                row["factored_planner_used"] = True
+                row["factored_residual"] = "product_model_plans_live_invalid"
+                row["factored_error"] = repr(exc)[:160]
         last_counterexample = dict(check["counterexample"])
         counterexamples.append(last_counterexample)
         row["counterexample"] = dict(last_counterexample)

@@ -1536,6 +1536,8 @@ class E3AgentPolicy:
         qd_generator: Any | bool | None = None,
         subgoal_search: bool = False,
         subgoal_budget: int = 3,
+        factored_planner: bool = False,
+        factored_trust_threshold: float = 0.75,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
@@ -1544,6 +1546,8 @@ class E3AgentPolicy:
         self.value_head = value_head
         self.subgoal_search = bool(subgoal_search)
         self.subgoal_budget = max(1, int(subgoal_budget))
+        self.factored_planner = bool(factored_planner)
+        self.factored_trust_threshold = max(0.0, min(1.0, float(factored_trust_threshold)))
         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
             candidate_router = _load_submitted_candidate_router()
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
@@ -1978,6 +1982,8 @@ class E3AgentPolicy:
                     enable_subgoal_search=self.subgoal_search,
                     subgoal_budget=self.subgoal_budget,
                     value_head=self.value_head,
+                    enable_factored_planner=self.factored_planner,
+                    factored_trust_threshold=self.factored_trust_threshold,
                 )
                 attempt.update(
                     {
@@ -2001,6 +2007,8 @@ class E3AgentPolicy:
                         ),
                         "subgoal_decomposition": list(outcome.subgoal_decomposition),
                         "per_subgoal_reachable": list(outcome.per_subgoal_reachable),
+                        "factored_planner_used": bool(outcome.factored_planner_used),
+                        "expert_trust_weights": list(outcome.expert_trust_weights),
                     }
                 )
                 if outcome.goal_predicate is not None:
@@ -2085,6 +2093,42 @@ class E3AgentPolicy:
                     self.plan = list(subgoal_result.plan)
                     attempt["planned"] = True
                     attempt["plan_length"] = len(self.plan)
+            if self.factored_planner:
+                expert_result = e3.induce_programmatic_object_experts(
+                    game=self.short,
+                    transitions=active_transitions,
+                    proposer=self._proposer(),
+                    cell=self.cell,
+                    trust_threshold=self.factored_trust_threshold,
+                )
+                subgoals = propose_hierarchical_subgoals(
+                    game=self.short,
+                    transitions=active_transitions,
+                    proposer=self._proposer(),
+                    previous_level_complete_grid=self._previous_level_complete_grid,
+                    max_subgoals=self.subgoal_budget,
+                )
+                factored_result = e3.plan_factored_subgoal_sequence(
+                    start_grid=self.root_grid,
+                    final_goal=is_done,
+                    experts=expert_result.experts,
+                    subgoals=subgoals,
+                    value_head=self.value_head,
+                    max_subgoals=self.subgoal_budget,
+                )
+                attempt["factored_planner_used"] = True
+                attempt["expert_trust_weights"] = list(expert_result.expert_trust_weights)
+                attempt["factored_subgoal_decomposition"] = list(
+                    factored_result.subgoal_decomposition
+                )
+                attempt["factored_per_subgoal_reachable"] = list(
+                    factored_result.per_subgoal_reachable
+                )
+                attempt["factored_residual"] = factored_result.residual or expert_result.residual
+                if factored_result.planned:
+                    self.plan = list(factored_result.plan)
+                    attempt["planned"] = True
+                    attempt["plan_length"] = len(self.plan)
         except Exception:
             attempt["skipped"] = "exception"
             return
@@ -2137,6 +2181,8 @@ SUBMITTED_AGENT_CONFIG = {
     "value_head_distribution_corrected": True,
     "hierarchical_subgoal_search_enabled": False,
     "hierarchical_subgoal_budget": 3,
+    "factored_planner_enabled": False,
+    "factored_trust_threshold": 0.75,
     "world_model_dsl_wired": True,
     "online_discriminative": True,
     "dense_curiosity_progress_loop_enabled": False,

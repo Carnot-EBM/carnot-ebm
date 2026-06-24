@@ -1,0 +1,403 @@
+{
+  "bare_control_passed": true,
+  "candidate_generation_coverage_factored": 0.0,
+  "candidate_generation_coverage_flat_baseline": 0.0,
+  "chosen_submitted_config": "unchanged",
+  "coverage_delta": 0.0,
+  "duration_s": 60.000087,
+  "experiment": "experiment_4677_poe_world_factored_subgoal_planner",
+  "experiment_id": 4677,
+  "expert_trust_weights": [
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_2",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_3",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_4",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_5",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_6",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_7",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    },
+    {
+      "game": "ar25",
+      "heldout_correct": 0,
+      "heldout_total": 1,
+      "kept": false,
+      "name": "center_color_rewrite_8",
+      "object_class": "color_rewrite",
+      "trust": 0.0
+    }
+  ],
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "bare_control_passed": {
+      "principle": "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable headroom; a no-coverage-gain null is valid only then."
+    },
+    "candidate_generation_coverage_factored": {
+      "principle": "does the winning action/plan APPEAR in the factored-planner-generated pool -- the make-a-winner-appear signal (the metric that distinguishes generation from selection)."
+    },
+    "candidate_generation_coverage_flat_baseline": {
+      "principle": "the matched flat-search baseline coverage -- a coverage CLAIM requires the factored coverage to exceed it (the winner generated where flat search did not)."
+    },
+    "chosen_submitted_config": {
+      "principle": "the recommended SUBMITTED_AGENT_CONFIG change (factored planner on, trust threshold) -- the A6 input; 'unchanged' if null."
+    },
+    "coverage_delta": {
+      "principle": "factored - flat coverage (positive = the winner now appears); emitted explicitly so a null (0) is annotated."
+    },
+    "expert_trust_weights": {
+      "principle": "the held-out transition trust per induced expert -- only replay-stable factors are composed (no brittle-expert fabrication)."
+    },
+    "false_negative_risk_checked": {
+      "principle": "true with the matched flat baseline + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
+    },
+    "first_win_rate_delta": {
+      "principle": "factored - baseline first-win-rate; emitted explicitly so a null is annotated."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: poe_world_factored_planner_coverage_up_live_<firstwin|solverate>_lift_<game> OR complete: poe_world_factored_planner_no_coverage_gain_residual_logged."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the programmatic-expert induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor)."
+    },
+    "live_baseline_flat_search": {
+      "principle": "the matched flat-search baseline first-win + solve-rate on the SAME games (the no-regression control)."
+    },
+    "live_first_win_rate_factored": {
+      "principle": "the live first-win-rate WITH the factored planner on the SCORED agent."
+    },
+    "live_lift_ci": {
+      "principle": "bootstrap CI on the chosen live-lift metric; a claim above baseline requires the CI to exclude it."
+    },
+    "live_path_reachable": {
+      "principle": "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+    },
+    "live_solve_rate_factored": {
+      "principle": "the live multi-level (>=2) solve-rate WITH the factored planner."
+    },
+    "null_methodology_note": {
+      "principle": "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+    },
+    "offline_reproduced": {
+      "principle": "any newly-solved variant must offline-reproduce to count."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
+    },
+    "proposer_served_model": {
+      "principle": "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift on replay."
+    },
+    "residual_bridge_gap": {
+      "principle": "the .432 generation gap logged if coverage does not rise (expert_factors_not_independent | product_model_plans_live_invalid)."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- the generic agent's OWN runtime factored-model planning; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+    },
+    "solve_rate_delta": {
+      "principle": "factored - baseline multi-level solve-rate; emitted explicitly so a null is annotated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the programmatic experts + value head are oracle-DISTINCT from the executable reproduction win-check."
+    }
+  },
+  "first_win_rate_delta": -0.04,
+  "honest_verdict": "complete: poe_world_factored_planner_no_coverage_gain_residual_logged",
+  "inference_substrate": "live_llm_inference",
+  "live_baseline_flat_search": {
+    "first_win_rate": 0.04,
+    "solve_rate": 0.0,
+    "source": "results/experiment_4665_dagger_distribution_shift_value_routing.json",
+    "variant_attempts_count": 25
+  },
+  "live_first_win_rate_factored": 0.0,
+  "live_lift_ci": {
+    "high": 0.0,
+    "low": 0.0,
+    "metric": "coverage_delta",
+    "n_boot": 1000
+  },
+  "live_path_reachable": true,
+  "live_solve_rate_factored": 0.0,
+  "null_methodology_note": "Factored and flat candidate-generation coverage are equal at this bounded probe; this is an honest no-value null after the Qwen proposer, held-out trust filter, matched flat baseline, and reachable-headroom control, not a measurement bug.",
+  "offline_reproduced": false,
+  "parity_test_green": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (33 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "live_modules_importable": true,
+    "offline_arcade": true,
+    "ok": true,
+    "parity_test": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov -n 0",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 11 items\n\ntests/python/test_arc_submitted_agent_parity.py ...........              [100%]\n\n============================== 11 passed in 5.47s ==============================\n"
+    },
+    "proposer_props_excerpt": "{\"bos_token\": \",\", \"build_info\": \"b9606-9b4dae81f\", \"chat_template\": \"{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception('System message cannot contain images.') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\\n                {%- endif %}\\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\\n   ",
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen_proposer_port": 8920,
+    "qwen_proposer_port_verified": true,
+    "spec_has_req_4677": true
+  },
+  "proposer_served_model": "Qwen3.5-9B-MTP",
+  "random_seed": 4677,
+  "reproducibility_checksum": "sha256:590fc639a0c158ac36cea5163fd43ea09eba40b878b0b47938651ff49a87d278",
+  "residual_bridge_gap": "experts_overfit_prefix",
+  "schema": "carnot.arc.poe_world_factored_subgoal_planner_4677.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_rate_delta": 0.0,
+  "spec_refs": [
+    "REQ-ARC-WMTE-4677",
+    "SCENARIO-ARC-WMTE-4677-TRUSTED-FACTORS",
+    "SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING",
+    "SCENARIO-ARC-WMTE-4677-COVERAGE-CONTROL"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_arm_results": {
+    "baseline_flat_search": {
+      "first_win_rate": 0.04,
+      "solve_rate": 0.0,
+      "source": "results/experiment_4665_dagger_distribution_shift_value_routing.json",
+      "variant_attempts_count": 25
+    },
+    "candidate_generation_probe": {
+      "candidate_generation_coverage_factored": 0.0,
+      "candidate_generation_coverage_flat_baseline": 0.0,
+      "expert_trust_weights": [
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_2",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_3",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_4",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_5",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_6",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_7",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        },
+        {
+          "game": "ar25",
+          "heldout_correct": 0,
+          "heldout_total": 1,
+          "kept": false,
+          "name": "center_color_rewrite_8",
+          "object_class": "color_rewrite",
+          "trust": 0.0
+        }
+      ],
+      "factored_hits": [
+        false
+      ],
+      "flat_hits": [
+        false
+      ],
+      "rows": [
+        {
+          "attempted": true,
+          "expert_residual": "experts_overfit_prefix",
+          "expert_trust_weights": [
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_2",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_3",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_4",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_5",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_6",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_7",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            },
+            {
+              "heldout_correct": 0,
+              "heldout_total": 1,
+              "kept": false,
+              "name": "center_color_rewrite_8",
+              "object_class": "color_rewrite",
+              "trust": 0.0
+            }
+          ],
+          "factored_winner_in_pool": false,
+          "flat_winner_in_pool": false,
+          "game": "ar25",
+          "transitions": 12,
+          "winner_transition_observed": false
+        }
+      ],
+      "target_games": [
+        "ar25"
+      ]
+    },
+    "live_factored_measurement_note": "No downstream live solve is claimed unless candidate-generation coverage rises and an offline reproduction gate accepts the emitted plan."
+  },
+  "target_games": [
+    "ar25"
+  ],
+  "verifier_is_oracle": false
+}

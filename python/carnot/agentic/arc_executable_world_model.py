@@ -33,7 +33,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Mapping, Optional, Sequence
 
 import numpy as np
 
@@ -82,6 +82,501 @@ class Transition:
     next_grid: np.ndarray  # logical grid AFTER
     level_before: int
     level_after: int
+
+
+@dataclass
+class ProgrammaticExpert:
+    """REQ-ARC-WMTE-4677: one small object-level precondition/effect factor."""
+
+    name: str
+    object_class: str
+    precondition: Callable[[np.ndarray, int, Any], bool]
+    effect: Callable[[np.ndarray, int, Any], np.ndarray]
+    action: int | None = None
+    trust: float = 0.0
+    heldout_correct: int = 0
+    heldout_total: int = 0
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def applies(self, grid: np.ndarray, action: int, data: Any = None) -> bool:
+        if self.action is not None and int(action) != int(self.action):
+            return False
+        try:
+            return bool(self.precondition(np.asarray(grid), int(action), data))
+        except Exception:
+            return False
+
+    def predict(self, grid: np.ndarray, action: int, data: Any = None) -> np.ndarray:
+        return np.asarray(self.effect(np.asarray(grid).copy(), int(action), data))
+
+    def summary(self, *, kept: bool) -> dict[str, Any]:
+        return {
+            "name": self.name,
+            "object_class": self.object_class,
+            "trust": round(float(self.trust), 6),
+            "heldout_correct": int(self.heldout_correct),
+            "heldout_total": int(self.heldout_total),
+            "kept": bool(kept),
+        }
+
+
+@dataclass
+class ProgrammaticExpertInductionResult:
+    """REQ-ARC-WMTE-4677: trusted factors plus the rejected-factor ledger."""
+
+    experts: list[ProgrammaticExpert]
+    expert_trust_weights: list[dict[str, Any]]
+    proposer_used: bool = False
+    llm_proposal_ok: bool = False
+    residual: str = ""
+
+
+@dataclass
+class FactoredSubgoalPlanResult:
+    """SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING: product-model plan diagnostics."""
+
+    planned: bool
+    plan: list[dict[str, Any]] = field(default_factory=list)
+    subgoal_decomposition: list[dict[str, Any]] = field(default_factory=list)
+    per_subgoal_reachable: list[dict[str, Any]] = field(default_factory=list)
+    expert_trust_weights: list[dict[str, Any]] = field(default_factory=list)
+    final_grid: np.ndarray | None = None
+    residual: str = ""
+
+
+def _color_rewrite_expert(
+    *,
+    name: str,
+    object_class: str,
+    action: int | None,
+    from_color: int,
+    to_color: int,
+    metadata: Mapping[str, Any] | None = None,
+) -> ProgrammaticExpert:
+    src = int(from_color)
+    dst = int(to_color)
+    action_id = None if action is None else int(action)
+
+    def _precondition(grid: np.ndarray, candidate_action: int, _data: Any) -> bool:
+        return (action_id is None or int(candidate_action) == action_id) and bool(
+            np.any(np.asarray(grid) == src)
+        )
+
+    def _effect(grid: np.ndarray, _candidate_action: int, _data: Any) -> np.ndarray:
+        out = np.asarray(grid).copy()
+        out[out == src] = dst
+        return out
+
+    return ProgrammaticExpert(
+        name=name,
+        object_class=object_class,
+        precondition=_precondition,
+        effect=_effect,
+        action=action_id,
+        metadata={"kind": "color_rewrite", "from_color": src, "to_color": dst, **dict(metadata or {})},
+    )
+
+
+def _exact_delta_expert(transition: Transition, index: int) -> ProgrammaticExpert:
+    base = np.asarray(transition.grid).copy()
+    target = np.asarray(transition.next_grid).copy()
+    action_id = int(transition.action)
+    changed = np.argwhere(base != target)
+    signature = [(int(r), int(c), int(base[r, c]), int(target[r, c])) for r, c in changed]
+
+    def _precondition(grid: np.ndarray, candidate_action: int, _data: Any) -> bool:
+        candidate = np.asarray(grid)
+        return (
+            int(candidate_action) == action_id
+            and candidate.shape == base.shape
+            and all(int(candidate[r, c]) == before for r, c, before, _after in signature)
+        )
+
+    def _effect(grid: np.ndarray, _candidate_action: int, _data: Any) -> np.ndarray:
+        out = np.asarray(grid).copy()
+        for r, c, _before, after in signature:
+            out[r, c] = after
+        return out
+
+    colors = sorted({int(after) for _r, _c, _before, after in signature})
+    return ProgrammaticExpert(
+        name=f"exact_delta_action_{action_id}_{index}",
+        object_class="cells_" + "_".join(str(color) for color in colors[:4]),
+        precondition=_precondition,
+        effect=_effect,
+        action=action_id,
+        metadata={"kind": "exact_delta", "changed_cells": len(signature)},
+    )
+
+
+def _normalise_programmatic_experts(rows: Sequence[Any]) -> list[ProgrammaticExpert]:
+    experts: list[ProgrammaticExpert] = []
+    for index, row in enumerate(rows):
+        if isinstance(row, ProgrammaticExpert):
+            experts.append(row)
+            continue
+        if not isinstance(row, Mapping):
+            continue
+        precondition = row.get("precondition")
+        effect = row.get("effect")
+        if callable(precondition) and callable(effect):
+            experts.append(
+                ProgrammaticExpert(
+                    name=str(row.get("name") or f"expert_{index}"),
+                    object_class=str(row.get("object_class") or row.get("object") or "object"),
+                    precondition=precondition,
+                    effect=effect,
+                    action=(None if row.get("action") is None else int(row["action"])),
+                    metadata=dict(row.get("metadata") or {}),
+                )
+            )
+            continue
+        if row.get("kind") == "color_rewrite" or {
+            "from_color",
+            "to_color",
+        }.issubset(row.keys()):
+            experts.append(
+                _color_rewrite_expert(
+                    name=str(row.get("name") or f"color_rewrite_{index}"),
+                    object_class=str(row.get("object_class") or f"color_{row.get('from_color')}"),
+                    action=(None if row.get("action") is None else int(row["action"])),
+                    from_color=int(row["from_color"]),
+                    to_color=int(row["to_color"]),
+                    metadata=dict(row.get("metadata") or {}),
+                )
+            )
+    return experts
+
+
+def _stratified_prefix_heldout(
+    transitions: Sequence[Transition],
+    heldout_fraction: float,
+) -> tuple[list[Transition], list[Transition]]:
+    rows = list(transitions)
+    if len(rows) < 2:
+        return rows, rows
+    n_suffix = max(1, int(round(len(rows) * max(0.0, min(1.0, heldout_fraction)))))
+    heldout_indices = set(range(max(0, len(rows) - n_suffix), len(rows)))
+    by_action: dict[int, list[int]] = {}
+    for i, transition in enumerate(rows):
+        by_action.setdefault(int(transition.action), []).append(i)
+    for indices in by_action.values():
+        if len(indices) > 1:
+            heldout_indices.add(indices[-1])
+    prefix = [row for i, row in enumerate(rows) if i not in heldout_indices]
+    heldout = [row for i, row in enumerate(rows) if i in heldout_indices]
+    return (prefix or rows[:1], heldout or rows[-1:])
+
+
+def _fallback_experts_from_transitions(transitions: Sequence[Transition]) -> list[ProgrammaticExpert]:
+    experts: list[ProgrammaticExpert] = []
+    seen: set[tuple[Any, ...]] = set()
+    for index, transition in enumerate(transitions):
+        before = np.asarray(transition.grid)
+        after = np.asarray(transition.next_grid)
+        if before.shape != after.shape or np.array_equal(before, after):
+            continue
+        changed = before != after
+        from_values = sorted({int(v) for v in before[changed].flatten().tolist()})
+        to_values = sorted({int(v) for v in after[changed].flatten().tolist()})
+        if len(from_values) == 1 and len(to_values) == 1:
+            key = ("color", int(transition.action), from_values[0], to_values[0])
+            if key in seen:
+                continue
+            seen.add(key)
+            experts.append(
+                _color_rewrite_expert(
+                    name=f"color_{from_values[0]}_to_{to_values[0]}_action_{int(transition.action)}",
+                    object_class=f"color_{from_values[0]}",
+                    action=int(transition.action),
+                    from_color=from_values[0],
+                    to_color=to_values[0],
+                    metadata={"source": "transition_color_delta"},
+                )
+            )
+        else:
+            key = ("exact", int(transition.action), to_ascii(before))
+            if key in seen:
+                continue
+            seen.add(key)
+            experts.append(_exact_delta_expert(transition, index))
+    return experts
+
+
+def _score_expert_on_transitions(
+    expert: ProgrammaticExpert,
+    transitions: Sequence[Transition],
+) -> ProgrammaticExpert:
+    total = 0
+    correct = 0
+    for transition in transitions:
+        if not expert.applies(transition.grid, int(transition.action), transition.data):
+            continue
+        total += 1
+        try:
+            pred = expert.predict(transition.grid, int(transition.action), transition.data)
+        except Exception:
+            continue
+        if pred.shape == np.asarray(transition.next_grid).shape and np.array_equal(
+            pred,
+            np.asarray(transition.next_grid),
+        ):
+            correct += 1
+    expert.heldout_total = int(total)
+    expert.heldout_correct = int(correct)
+    expert.trust = float(correct) / float(total) if total else 0.0
+    return expert
+
+
+def induce_programmatic_object_experts(
+    *,
+    game: str,
+    transitions: Sequence[Transition],
+    proposer: Any = None,
+    cell: int = 1,
+    trust_threshold: float = 0.75,
+    heldout_fraction: float = 0.34,
+    max_experts: int = 8,
+) -> ProgrammaticExpertInductionResult:
+    """REQ-ARC-WMTE-4677: induce factors, weight by held-out trust, keep stable ones."""
+
+    rows = list(transitions)
+    if not rows:
+        return ProgrammaticExpertInductionResult(
+            experts=[],
+            expert_trust_weights=[],
+            residual="experts_overfit_prefix",
+        )
+    prefix, heldout = _stratified_prefix_heldout(rows, heldout_fraction)
+    proposed_rows: list[Any] = []
+    proposer_used = False
+    llm_ok = False
+    provider = getattr(proposer, "induce_programmatic_experts", None)
+    if callable(provider):
+        proposer_used = True
+        try:
+            proposed_rows = list(
+                provider(
+                    game=game,
+                    transitions=list(prefix),
+                    heldout_transitions=list(heldout),
+                    cell=int(cell),
+                    max_experts=int(max_experts),
+                )
+                or []
+            )
+            llm_ok = bool(proposed_rows)
+        except TypeError:
+            try:
+                proposed_rows = list(provider(game, list(prefix)) or [])
+                llm_ok = bool(proposed_rows)
+            except Exception:
+                proposed_rows = []
+        except Exception:
+            proposed_rows = []
+    experts = _normalise_programmatic_experts(proposed_rows)
+    if not experts:
+        experts.extend(_fallback_experts_from_transitions(prefix))
+
+    deduped: list[ProgrammaticExpert] = []
+    seen: set[str] = set()
+    for expert in experts:
+        key = json.dumps(
+            {
+                "name": expert.name,
+                "action": expert.action,
+                "object_class": expert.object_class,
+                "metadata": expert.metadata,
+            },
+            sort_keys=True,
+            default=str,
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(expert)
+        if len(deduped) >= int(max_experts):
+            break
+
+    threshold = max(0.0, min(1.0, float(trust_threshold)))
+    kept: list[ProgrammaticExpert] = []
+    weights: list[dict[str, Any]] = []
+    for expert in deduped:
+        scored = _score_expert_on_transitions(expert, heldout)
+        is_kept = scored.heldout_total > 0 and scored.trust >= threshold
+        if is_kept:
+            kept.append(scored)
+        weights.append(scored.summary(kept=is_kept))
+
+    residual = "" if kept else ("experts_overfit_prefix" if deduped else "expert_factors_not_independent")
+    return ProgrammaticExpertInductionResult(
+        experts=kept,
+        expert_trust_weights=weights,
+        proposer_used=proposer_used,
+        llm_proposal_ok=llm_ok,
+        residual=residual,
+    )
+
+
+class ProductWorldModel:
+    """REQ-ARC-WMTE-4677: executable product composition of trusted factors."""
+
+    def __init__(self, experts: Sequence[ProgrammaticExpert]) -> None:
+        self.experts = list(experts)
+
+    def engine(self, grid: np.ndarray, action: int, data: Any = None) -> np.ndarray:
+        start = np.asarray(grid)
+        out = start.copy()
+        trust = np.full(start.shape, -1.0, dtype=float)
+        for expert in self.experts:
+            if not expert.applies(start, int(action), data):
+                continue
+            pred = expert.predict(start, int(action), data)
+            if pred.shape != start.shape:
+                continue
+            changed = pred != start
+            stronger = changed & (float(expert.trust) >= trust)
+            out[stronger] = pred[stronger]
+            trust[stronger] = float(expert.trust)
+        return out
+
+
+def _normalise_factored_subgoals(rows: Sequence[Any]) -> list[dict[str, Any]]:
+    subgoals: list[dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        if isinstance(row, Mapping):
+            predicate = row.get("predicate") or row.get("is_level_complete")
+            if callable(predicate):
+                subgoals.append(
+                    {
+                        "name": str(row.get("name") or f"subgoal_{index}"),
+                        "predicate": predicate,
+                        "source": str(row.get("source") or "a1_goal_induction"),
+                        "score": float(row.get("score") or 0.0),
+                    }
+                )
+            continue
+        predicate = getattr(row, "predicate", None)
+        if callable(predicate):
+            subgoals.append(
+                {
+                    "name": str(getattr(row, "name", f"subgoal_{index}")),
+                    "predicate": predicate,
+                    "source": str(getattr(row, "source", "a1_goal_induction")),
+                    "score": float(getattr(row, "score", 0.0) or 0.0),
+                }
+            )
+    return subgoals
+
+
+def _apply_factored_plan(
+    engine: Callable[[np.ndarray, int, Any], np.ndarray],
+    start_grid: np.ndarray,
+    plan: Sequence[Mapping[str, Any]] | None,
+) -> np.ndarray:
+    grid = np.asarray(start_grid)
+    for step in list(plan or []):
+        grid = np.asarray(engine(grid.copy(), int(step["action"]), step.get("data")))
+    return grid
+
+
+def plan_factored_subgoal_sequence(
+    *,
+    start_grid: np.ndarray,
+    final_goal: Callable[[np.ndarray], bool],
+    experts: Sequence[ProgrammaticExpert],
+    subgoals: Sequence[Any] = (),
+    value_head: Callable[[np.ndarray], float] | None = None,
+    max_subgoals: int = 3,
+    max_nodes: int = 20000,
+    max_depth: int = 40,
+) -> FactoredSubgoalPlanResult:
+    """SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING: plan through the product model."""
+
+    product = ProductWorldModel(experts)
+    current = np.asarray(start_grid)
+    full_plan: list[dict[str, Any]] = []
+    decomposition: list[dict[str, Any]] = []
+    reachable_rows: list[dict[str, Any]] = []
+    weights = [expert.summary(kept=True) for expert in experts]
+
+    def _leg(goal: Callable[[np.ndarray], bool], grid: np.ndarray) -> list[dict[str, Any]] | None:
+        try:
+            if bool(goal(np.asarray(grid))):
+                return []
+        except Exception:
+            return None
+        return plan_in_model(
+            product.engine,
+            goal,
+            np.asarray(grid),
+            max_nodes=max_nodes,
+            max_depth=max_depth,
+            goal_energy=value_head,
+        )
+
+    ordered = sorted(
+        _normalise_factored_subgoals(subgoals),
+        key=lambda row: (float(row.get("score") or 0.0), str(row.get("name") or "")),
+        reverse=True,
+    )[: max(0, int(max_subgoals))]
+    for subgoal in ordered:
+        leg = _leg(subgoal["predicate"], current)
+        reached = leg is not None
+        row = {
+            "name": subgoal["name"],
+            "source": subgoal["source"],
+            "reachable": bool(reached),
+            "plan_length": len(leg or []),
+            "score": round(float(subgoal.get("score") or 0.0), 6),
+        }
+        decomposition.append(dict(row))
+        reachable_rows.append(dict(row))
+        if not reached:
+            return FactoredSubgoalPlanResult(
+                planned=False,
+                plan=full_plan,
+                subgoal_decomposition=decomposition,
+                per_subgoal_reachable=reachable_rows,
+                expert_trust_weights=weights,
+                final_grid=current,
+                residual="product_model_plans_live_invalid",
+            )
+        full_plan.extend(dict(step) for step in leg)
+        current = _apply_factored_plan(product.engine, current, leg)
+
+    final_leg = _leg(final_goal, current)
+    final_reached = final_leg is not None
+    final_row = {
+        "name": "final_goal",
+        "source": "terminal_goal_predicate",
+        "reachable": bool(final_reached),
+        "plan_length": len(final_leg or []),
+        "score": 1.0,
+    }
+    decomposition.append(dict(final_row))
+    reachable_rows.append(dict(final_row))
+    if not final_reached:
+        return FactoredSubgoalPlanResult(
+            planned=False,
+            plan=full_plan,
+            subgoal_decomposition=decomposition,
+            per_subgoal_reachable=reachable_rows,
+            expert_trust_weights=weights,
+            final_grid=current,
+            residual="product_model_plans_live_invalid",
+        )
+    full_plan.extend(dict(step) for step in final_leg)
+    final_grid = _apply_factored_plan(product.engine, current, final_leg)
+    return FactoredSubgoalPlanResult(
+        planned=True,
+        plan=full_plan,
+        subgoal_decomposition=decomposition,
+        per_subgoal_reachable=reachable_rows,
+        expert_trust_weights=weights,
+        final_grid=final_grid,
+        residual="none",
+    )
 
 
 def collect_transitions(
@@ -705,6 +1200,52 @@ class LocalGGUFProposer:
             refactor_prompt(game, vr)
             + "\n\nReturn ONLY the corrected ```python file.\n```python\n",
         )
+
+    def induce_programmatic_experts(
+        self,
+        *,
+        game: str,
+        transitions: Sequence[Transition],
+        heldout_transitions: Sequence[Transition] | None = None,
+        cell: int = 1,
+        max_experts: int = 8,
+    ) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4677: ask the local GGUF for small serializable expert rules."""
+
+        examples = _transitions_block(list(transitions), k=min(6, max(1, len(transitions))))
+        prompt = f"""You are proposing SMALL programmatic object-level experts for ARC-AGI-3 game '{game}'.
+
+Each expert must be a SERIALIZABLE dictionary with:
+  name, object_class, kind='color_rewrite', action, from_color, to_color.
+
+Use only the observed transitions. Prefer simple object/color rewrite factors that can be
+held-out replay verified. Do not include brittle grid-sized programs. Return a Python code
+block defining:
+
+def expert_rules():
+    return [{{...}}, ...]
+
+Limit to {int(max_experts)} experts. Actions are integer ARC actions; click data is in pixel
+coords where one logical cell is {int(cell)} pixels.
+
+OBSERVED PREFIX TRANSITIONS:
+{examples}
+"""
+        ok, code = self.generate(
+            prompt + "\n```python\n",
+            required=("expert_rules",),
+            validate=None,
+            tries=1,
+        )
+        if not ok:
+            return []
+        namespace: dict[str, Any] = {}
+        try:
+            exec(code, {"np": np, "numpy": np}, namespace)
+            rows = namespace["expert_rules"]()
+        except Exception:
+            return []
+        return [dict(row) for row in list(rows or []) if isinstance(row, Mapping)]
 
 
 def _extract_python(text: str) -> str:
