@@ -1876,6 +1876,116 @@ arXiv IDs including `1802.07245`, `1901.10995`, `2004.12919`, `2008.02790`,
 preconditions checked, record the `.432` null residual plus scored hidden-game
 transfer scope, and record that `/deep-research` was not used.
 
+### REQ-ARC-WMTE-4701: Amortized First-Contact Prior Plus Go-Explore Live Wiring
+
+Experiment 4701 SHALL implement the second `.433` candidate-generation lever in
+the live `E3AgentPolicy` import closure. The live `StepwiseExplorer` SHALL accept
+an opt-in amortized first-contact action prior distilled from successful and
+near-miss cross-game first-contact traces. If sequence-model training is not
+available within the experiment budget, the prior MAY degrade to a deterministic
+frequency prior over reusable first-contact action families, but it SHALL still
+derive from logged cross-game trace rows rather than game-specific IDs. The prior
+SHALL rank or seed candidate actions before the per-game explorer starts from an
+empty prior.
+
+The live explorer SHALL also consume `arc_go_explore.py` as a first-class
+return-then-explore archive producer. The archive SHALL store replayable prefixes
+for reached cells, select under-visited/frontier cells, replay the selected prefix
+from reset, and then explore onward. `arc_go_explore.py` SHALL be reachable from
+the transitive import closure of `E3AgentPolicy`, and
+`scripts/arc_orphan_solver_lint.py` SHALL classify `go_explore_solve()` as a
+solver-like surface so the wiring remains mechanically enforced.
+
+Experiment 4701 SHALL measure candidate-generation coverage against a matched
+NO-PRIOR baseline on the same target game or games. Coverage is the fraction of
+attempts where the known winning action or plan appears in the generated
+pool/archive. A coverage claim SHALL require
+`candidate_generation_coverage_with_prior >
+candidate_generation_coverage_no_prior_baseline`, so the winning plan appears
+with the amortized prior plus archive where the empty-prior explorer did not. A
+downstream first-win claim SHALL additionally require a positive held-out
+first-win-rate delta with bootstrap CI excluding the no-prior baseline on at
+least one game. If coverage does not rise, the artifact SHALL report an honest
+null and log exactly one residual bridge gap from
+`cross_game_traces_encode_game_ids`, `archive_expands_dead_cells_no_goal_gradient`,
+or `replay_cannot_restore_cell`.
+
+Before measurement, Experiment 4701 SHALL verify that the Qwen3.5-9B-MTP GGUF is
+cached, `arc_solver_kit.offline_arcade()` initializes, `arc_go_explore` and
+`arc_competition_agent` import, and a `LocalGGUFProposer` on a free non-8919 port
+reports Qwen3.5-9B-MTP through `/props`. The Qwen proposer SHALL run through the
+iGPU/HIP launcher, not a 3090 CUDA override. If any precondition fails, the
+experiment SHALL write a blocked artifact with `preconditions_checked` populated
+rather than fabricate a run.
+
+The artifact at
+`results/experiment_4701_amortized_exploration_prior_go_explore_live.json` SHALL
+include `honest_verdict`, `inference_substrate`, `model_specs`,
+`verifier_is_oracle`, `solve_provenance`, `live_path_reachable`,
+`go_explore_now_live_reachable`,
+`candidate_generation_coverage_with_prior`,
+`candidate_generation_coverage_no_prior_baseline`, `coverage_delta`,
+`live_first_win_rate_with_prior`, `live_baseline_no_prior`,
+`first_win_rate_delta`, `live_lift_ci`, `no_prior_ablation_failed`,
+`bare_control_passed`, `false_negative_risk_checked`,
+`null_methodology_note`, `chosen_submitted_config`, `proposer_served_model`,
+`parity_test_green`, `offline_reproduced`, `residual_bridge_gap`,
+`random_seed`, `reproducibility_checksum`, `preconditions_checked`, and
+`field_principles`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: amortized_prior_go_explore_coverage_up_heldout_firstwin_lift_<game> OR complete: amortized_prior_go_explore_no_coverage_gain_residual_logged."
+- `inference_substrate`: principle "live_llm_inference -- the amortized-prior distillation / LLM-proposed first moves load + run the Qwen3.5-9B-MTP GGUF (60s floor); model_specs MUST name the GGUF."
+- `verifier_is_oracle`: principle "MUST be false -- the amortized prior + archive are oracle-DISTINCT from the executable reproduction win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- the generic agent's OWN runtime exploration; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- arc_go_explore is now in the E3AgentPolicy import closure (no longer orphaned); arc_orphan_solver_lint passes."
+- `go_explore_now_live_reachable`: principle "true -- arc_go_explore.py is wired into the live E3 path (was ORPHANED); the orphan-lint confirms it (the residual-effort-not-wasted fix)."
+- `candidate_generation_coverage_with_prior`: principle "does the winning action/plan APPEAR in the {amortized-prior + archive} pool -- the make-a-winner-appear signal (distinguishes generation from selection)."
+- `candidate_generation_coverage_no_prior_baseline`: principle "the matched NO-PRIOR baseline coverage -- a coverage CLAIM requires the prior+archive coverage to exceed it (the winner generated where the empty-prior explorer did not)."
+- `coverage_delta`: principle "with-prior - no-prior coverage (positive = the winner now generated); emitted explicitly so a null (0) is annotated."
+- `live_first_win_rate_with_prior`: principle "the held-out first-win-rate WITH the amortized prior + archive on the SCORED agent."
+- `live_baseline_no_prior`: principle "the matched no-prior baseline first-win on the SAME games (the no-regression control + the ablation)."
+- `first_win_rate_delta`: principle "with-prior - baseline first-win-rate; emitted explicitly so a null is annotated."
+- `live_lift_ci`: principle "bootstrap CI on the first-win lift; a claim above baseline requires the CI to exclude it."
+- `no_prior_ablation_failed`: principle "true -- the matched NO-PRIOR ablation does NOT win where the prior+archive does; proves the win is attributable to the amortized prior, not the archive coverage alone."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable L1 headroom; a no-coverage-gain null is valid only then."
+- `false_negative_risk_checked`: principle "true with the no-prior ablation + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
+- `null_methodology_note`: principle "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (amortized prior on, archive on, return-then-explore params) -- the A6 input; 'unchanged' if null."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `offline_reproduced`: principle "any newly-solved variant must offline-reproduce to count."
+- `residual_bridge_gap`: principle "the .434 generation gap logged if coverage does not rise (cross_game_traces_encode_game_ids | archive_expands_dead_cells_no_goal_gradient | replay_cannot_restore_cell)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4701-LIVE-WIRING
+
+Given the Qwen/free-port, offline arcade, OpenSpec, and live import
+preconditions pass
+When Experiment 4701 constructs the live `E3AgentPolicy` with the amortized
+first-contact prior and Go-Explore prefix archive enabled
+Then `StepwiseExplorer` seeds proposal ordering from the amortized prior,
+injects replayable archive prefixes before falling back to empty-prior
+exploration, exposes prior/archive diagnostics, and
+`scripts/arc_orphan_solver_lint.py` confirms `arc_go_explore.py` is reachable
+from the live agent path.
+
+#### SCENARIO-ARC-WMTE-4701-COVERAGE-ABLATION
+
+Given a target with reachable L1 headroom and a matched no-prior baseline
+When Experiment 4701 measures proposal/archive coverage and held-out first-win
+rate
+Then the artifact reports coverage with prior, coverage without prior, the
+coverage delta, first-win lift with bootstrap CI, whether the no-prior ablation
+failed, and either recommends the submitted config only after the prior+archive
+arm wins and offline-reproduces while the no-prior arm fails, or records one of
+`cross_game_traces_encode_game_ids`,
+`archive_expands_dead_cells_no_goal_gradient`, or
+`replay_cannot_restore_cell` as the residual.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
