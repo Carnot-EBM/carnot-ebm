@@ -35,6 +35,7 @@ from carnot.agentic.arc_frame_change_predictor import (
     rank_arc_actions,
 )
 from carnot.agentic.arc_agi3_world_model import GameGraph, frame_hash, grid_of, objects
+from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_goal_energy_live import make_goal_energy_heuristic
 
 
@@ -347,6 +348,7 @@ def graph_explore_solve_v2(
     action_prior=None,
     action_prior_prune_quantile: float | None = None,
     action_effect_expansion_prior: Any | bool | None = None,
+    qd_generator: Any | bool | None = None,
     candidate_router=None,
     structural_energy_scorer=None,
     stats: Optional[dict] = None,
@@ -390,6 +392,10 @@ def graph_explore_solve_v2(
     alpha*navigation + beta*goal_energy. When
     `emit_plan_only_when_goal_predicate_fires` is true, a level-up trajectory is
     returned only if the visible predicate fires on the terminal frame.
+
+    `qd_generator` is the REQ-ARC-WMTE-4653 hook: an additive MAP-Elites
+    multi-action sequence generator. It injects a generated sequence into the
+    same scored pool while leaving primitive actions available as the fallback.
     """
     from collections import deque
     from arcengine import GameAction
@@ -430,6 +436,13 @@ def graph_explore_solve_v2(
     states = {h0: {"path": list(prefix), "untested": _candidates(f0), "frame": f0}}
     best = start_level
     expansions = 0
+    qd_search_generator = coerce_qd_generator(
+        qd_generator,
+        action_effect_scorer=frame_change_scorer,
+        goal_energy=goal_energy,
+    )
+    qd_sequences_injected = 0
+    qd_actions_injected = 0
 
     def _ret(traj, lvl):
         # record search cost so an A/B can measure the heuristic's EFFICIENCY win
@@ -455,6 +468,11 @@ def graph_explore_solve_v2(
             stats["goal_energy_beta"] = float(goal_energy_beta) if goal_energy is not None else 0.0
             stats["goal_predicate_gate_enabled"] = bool(emit_plan_only_when_goal_predicate_fires)
             stats.setdefault("goal_predicate_plan_emitted", False)
+            stats["qd_generation_enabled"] = qd_search_generator is not None
+            stats["qd_sequences_injected"] = int(qd_sequences_injected)
+            stats["qd_actions_injected"] = int(qd_actions_injected)
+            if qd_search_generator is not None and hasattr(qd_search_generator, "diagnostics"):
+                stats["qd_generation_diagnostics"] = qd_search_generator.diagnostics()
         return traj, lvl
 
     if hasattr(action_effect_expansion_prior, "frontier_priority"):
@@ -490,6 +508,63 @@ def graph_explore_solve_v2(
         if stats is not None and emit_plan_only_when_goal_predicate_fires:
             stats["goal_predicate_plan_emitted"] = True
 
+    def _next_qd_sequence(frame, node: dict) -> list[dict]:
+        nonlocal qd_sequences_injected, qd_actions_injected
+        if qd_search_generator is None or node.get("qd_sequence_injected"):
+            return []
+        candidates = list(node.get("untested") or [])
+        if not candidates:
+            return []
+        try:
+            sequence = qd_search_generator.best_sequence(
+                frame,
+                candidates,
+                goal_energy=goal_energy,
+                action_effect_scorer=frame_change_scorer,
+                min_len=2,
+            )
+        except Exception:
+            return []
+        rows = [dict(step) for step in sequence if step.get("action") is not None]
+        if len(rows) < 2:
+            return []
+        node["qd_sequence_injected"] = True
+        qd_sequences_injected += 1
+        qd_actions_injected += len(rows)
+        return rows
+
+    def _apply_qd_sequence(state: dict, frame_here, sequence: list[dict], *, policy: str):
+        nonlocal expansions, best
+        traj = list(state["path"])
+        nf = frame_here
+        for step in sequence:
+            nf = env.step(
+                _game_action(GameAction, int(step["action"])),
+                data=step.get("data"),
+                reasoning={"policy": policy, "generator": "energy_fitness_qd"},
+            )
+            expansions += 1
+            if nf is None:
+                return True, None
+            traj = traj + [{"action": int(step["action"]), "data": step.get("data")}]
+            lvl = _levels_completed(nf)
+            if lvl > start_level and _predicate_allows_emit(nf):
+                _mark_goal_plan_emitted()
+                return True, _ret(traj, lvl)
+            best = max(best, lvl)
+            if _game_over(nf) or expansions >= max_expansions:
+                return True, None
+        if nf is not None and not _game_over(nf):
+            nh = node_id(nf)
+            if nh not in states:
+                states[nh] = {
+                    "path": traj,
+                    "untested": _candidates(nf, previous_frame=frame_here),
+                    "frame": nf,
+                }
+                return True, ("new_state", nh)
+        return True, None
+
     if priority_scorer is None and action_effect_frontier_prior is None:
         # --- pure BFS (UNCHANGED from the original; preserves the proven 8/11 solves) ---
         frontier = deque([h0])  # BFS order ⇒ shortest path first
@@ -499,8 +574,23 @@ def graph_explore_solve_v2(
             if not st["untested"] or len(st["path"]) >= max_depth:
                 frontier.popleft()
                 continue
-            sel = st["untested"].pop(0)
             f_here = replay(st["path"])  # navigate to this state
+            qd_sequence = _next_qd_sequence(f_here, st)
+            if qd_sequence:
+                handled, result = _apply_qd_sequence(
+                    st,
+                    f_here,
+                    qd_sequence,
+                    policy="graph_explore_v2_qd_sequence",
+                )
+                if isinstance(result, tuple) and result and result[0] != "new_state":
+                    return result
+                if isinstance(result, tuple) and result and result[0] == "new_state":
+                    frontier.append(result[1])
+                if handled and expansions >= max_expansions:
+                    break
+                continue
+            sel = st["untested"].pop(0)
             nf = env.step(
                 _game_action(GameAction, sel.action_id),
                 data=sel.data,
@@ -566,8 +656,33 @@ def graph_explore_solve_v2(
         # fully expand this (most-promising) state's untested actions (A* graph search:
         # each state expanded once, in priority order)
         while st["untested"]:
-            sel = st["untested"].pop(0)
             f_here = replay(st["path"])  # navigate to this state
+            qd_sequence = _next_qd_sequence(f_here, st)
+            if qd_sequence:
+                handled, result = _apply_qd_sequence(
+                    st,
+                    f_here,
+                    qd_sequence,
+                    policy="graph_explore_v2_heuristic_qd_sequence",
+                )
+                if isinstance(result, tuple) and result and result[0] != "new_state":
+                    return result
+                if isinstance(result, tuple) and result and result[0] == "new_state":
+                    nh = result[1]
+                    new_state = states[nh]
+                    heapq.heappush(
+                        heap,
+                        (
+                            len(new_state["path"])
+                            + _priority_value(new_state["frame"], new_state["untested"]),
+                            next(counter),
+                            nh,
+                        ),
+                    )
+                if handled and expansions >= max_expansions:
+                    break
+                continue
+            sel = st["untested"].pop(0)
             nf = env.step(
                 _game_action(GameAction, sel.action_id),
                 data=sel.data,
