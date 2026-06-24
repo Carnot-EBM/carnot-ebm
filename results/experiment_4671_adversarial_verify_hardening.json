@@ -1,0 +1,139 @@
+{
+  "duration_s": 0.03054283605888486,
+  "experiment": "experiment_4671_adversarial_verify_hardening",
+  "field_principles": {
+    "honest_artifacts_not_flagged": {
+      "principle": "the honest A1 artifact (which reports its satisfiability + harness controls) is NOT flagged -- false-positive guard (like the .429 QD-ablation guard)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_hardened_l2_goal_and_multilevel_metric_guards_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+    },
+    "l2_goal_satisfiability_guard_added": {
+      "principle": "the L2-GOAL-INDUCTION-WITHOUT-SATISFIABILITY-CHECK guard (an L2-via-induction win must report a satisfiable goal + reachable plan, else flagged as a possible degenerate-goal vacuous pass)."
+    },
+    "multilevel_metric_guard_added": {
+      "principle": "the MULTI-LEVEL-WITHOUT-NONDEGENERATE-METRIC guard (a multi-level solve-rate claim must report the fixed target_levels>=2/no-break harness, else flagged as the degenerate 0.0-by-construction metric)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+    }
+  },
+  "honest_artifacts_not_flagged": true,
+  "honest_verdict": "success: adversarial_verify_hardened_l2_goal_and_multilevel_metric_guards_tests_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
+  "l2_goal_satisfiability_guard_added": true,
+  "l2_goal_satisfiability_guard_report": {
+    "a1_fixture_flags": [
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a1_guarded_flags": [],
+    "false_control_flags": [
+      {
+        "detail": "l2-goal-induction-without-satisfiability-check: artifact claims a generic-agent L2 win via goal induction, but does not report goal_predicate_satisfiable=true and l2_plan_reaches_goal=true. The apparent L2 win may be a constant-False degenerate-goal vacuous pass through the DYNAMICS-only held-out gate.",
+        "kind": "l2-goal-induction-without-satisfiability-check",
+        "severity": "critical"
+      }
+    ],
+    "omitted_control_flags": [
+      {
+        "detail": "l2-goal-satisfiability-check-omitted: L2 goal-induction win claim omits goal_predicate_satisfiable, l2_plan_reaches_goal. Report goal_predicate_satisfiable=true and l2_plan_reaches_goal=true before crediting an L2-via-induction win.",
+        "kind": "l2-goal-satisfiability-check-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "l2-goal-induction-without-satisfiability-check: artifact claims a generic-agent L2 win via goal induction, but does not report goal_predicate_satisfiable=true and l2_plan_reaches_goal=true. The apparent L2 win may be a constant-False degenerate-goal vacuous pass through the DYNAMICS-only held-out gate.",
+        "kind": "l2-goal-induction-without-satisfiability-check",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_control_flags": []
+  },
+  "multilevel_metric_guard_added": true,
+  "multilevel_metric_guard_report": {
+    "a1_fixture_flags": [
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "a1_guarded_flags": [],
+    "invalid_harness_flags": [
+      {
+        "detail": "multi-level-without-nondegenerate-metric: artifact reports a positive multi-level solve-rate without a fixed target_levels>=2 and break_at_first_win=false harness. The metric may be the degenerate 0.0-by-construction artifact rather than evidence that the live agent can attempt depth >=2.",
+        "kind": "multi-level-without-nondegenerate-metric",
+        "severity": "critical"
+      }
+    ],
+    "missing_harness_flags": [
+      {
+        "detail": "multi-level-nondegenerate-metric-omitted: positive multi-level solve-rate claim omits metric_harness_fixed or equivalent target_levels/break_at_first_win fields.",
+        "kind": "multi-level-nondegenerate-metric-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "multi-level-without-nondegenerate-metric: artifact reports a positive multi-level solve-rate without a fixed target_levels>=2 and break_at_first_win=false harness. The metric may be the degenerate 0.0-by-construction artifact rather than evidence that the live agent can attempt depth >=2.",
+        "kind": "multi-level-without-nondegenerate-metric",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_harness_flags": []
+  },
+  "preconditions_checked": {
+    "adversarial_verify_import_ok": true,
+    "adversarial_verify_parse_ok": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "fixtures_present": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4671": true
+  },
+  "random_seed": 4671,
+  "reproducibility_checksum": "sha256:21ba70a89d09591fb0eee257f63ada20984dd7a3e31b36cc323a74095288109f",
+  "result_path": "results/experiment_4671_adversarial_verify_hardening.json",
+  "schema": "carnot.exp4671.adversarial_verify_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4671",
+    "SCENARIO-ARC-WMTE-4671-L2-GOAL-SATISFIABILITY",
+    "SCENARIO-ARC-WMTE-4671-MULTI-LEVEL-NONDEGENERATE-METRIC"
+  ],
+  "tests_added": {
+    "assertions": [
+      "L2 goal-induction win omitting satisfiability controls emits omitted warn and critical overclaim flag",
+      "L2 goal-induction win with false goal_predicate_satisfiable emits critical overclaim flag",
+      "L2 goal-induction win with goal_predicate_satisfiable=true and l2_plan_reaches_goal=true is not false-flagged",
+      "positive multi-level solve-rate omitting metric_harness_fixed emits omitted warn and critical overclaim flag",
+      "positive multi-level solve-rate with target_levels<2/break-at-first-win emits critical overclaim flag",
+      "honest A1 artifact does not fire the new guarded kinds"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_hardening_4671.py -q --no-cov",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4671_adversarial_verify_hardening.py' -m pytest --override-ini addopts='' tests/python/test_adversarial_verify_hardening_4671.py -q",
+      ".venv/bin/python scripts/adversarial_verify.py results/experiment_4664_l2_goal_predicate_induction_live.json"
+    ],
+    "passed": true,
+    "test_files": [
+      "tests/python/test_adversarial_verify_hardening_4671.py"
+    ]
+  }
+}

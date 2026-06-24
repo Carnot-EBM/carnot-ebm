@@ -2352,6 +2352,16 @@ QD_WITHOUT_RANDOM_MUTATION_ABLATION_KIND = "qd-without-random-mutation-ablation"
 QD_RANDOM_MUTATION_ABLATION_OMITTED_KIND = "qd-random-mutation-ablation-omitted"
 VALUE_ROUTING_WITHOUT_COST_CONTROL_KIND = "value-routing-without-cost-control"
 VALUE_ROUTING_COST_CONTROL_OMITTED_KIND = "value-routing-cost-control-omitted"
+L2_GOAL_INDUCTION_WITHOUT_SATISFIABILITY_CHECK_KIND = (
+    "l2-goal-induction-without-satisfiability-check"
+)
+L2_GOAL_SATISFIABILITY_CHECK_OMITTED_KIND = "l2-goal-satisfiability-check-omitted"
+MULTI_LEVEL_WITHOUT_NONDEGENERATE_METRIC_KIND = (
+    "multi-level-without-nondegenerate-metric"
+)
+MULTI_LEVEL_NONDEGENERATE_METRIC_OMITTED_KIND = (
+    "multi-level-nondegenerate-metric-omitted"
+)
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -2836,6 +2846,54 @@ _VALUE_ROUTING_BASELINE_PAIRS = (
     ("live_solve_rate_value_routed", "live_solve_rate_baseline"),
     ("solve_rate_value_routed", "solve_rate_baseline"),
 )
+_L2_GOAL_INDUCTION_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "solve_provenance",
+    "residual_cause_hypothesis",
+)
+_L2_GOAL_INDUCTION_CONTEXT_MARKERS = (
+    "l2_goal_induction",
+    "l2 goal induction",
+    "goal_induction",
+    "goal induction",
+    "runtime induction",
+    "runtime_induction",
+    "re-induction",
+    "reinduction",
+    "induced goal",
+    "induced_goal",
+)
+_L2_CLAIM_MARKERS = (
+    "l2",
+    "level 2",
+    "level_2",
+    "level-2",
+    "multi-level",
+    "multi_level",
+)
+_L2_WIN_TEXT_MARKERS = (
+    "success:",
+    "reached l2",
+    "reached_l2",
+    "level 2 reached",
+    "level_2_reached",
+    "generic_agent_reached_l2",
+    "generic_agent_reached_level",
+)
+_L2_NULL_TEXT_MARKERS = (
+    "no_deepening",
+    "no deepening",
+    "no_l2",
+    "no l2",
+    "residual",
+    "blocked",
+    "null",
+    "complete:",
+)
+_MULTI_LEVEL_RATE_KEYS = (
+    "live_multi_level_solve_rate",
+    "multi_level_solve_rate",
+)
 
 
 def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
@@ -3042,6 +3100,210 @@ def check_value_routing_cost_control_overclaim(
                 "per_node_feature_cost_ms and sim_timed_out=false; a timeout "
                 "or missing cost control means the apparent win may be the "
                 "baseline finally finishing rather than a real signal lift."
+            ),
+        )
+    )
+
+
+def _numeric_leaf_values(value: Any) -> list[float]:
+    if _is_finite_number(value):
+        return [float(value)]
+    if isinstance(value, dict):
+        values: list[float] = []
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            values.extend(_numeric_leaf_values(nested))
+        return values
+    if isinstance(value, list):
+        values: list[float] = []
+        for item in value:
+            values.extend(_numeric_leaf_values(item))
+        return values
+    return []
+
+
+def _bool_leaf_values(value: Any) -> list[bool]:
+    if isinstance(value, bool):
+        return [value]
+    if isinstance(value, dict):
+        values: list[bool] = []
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            values.extend(_bool_leaf_values(nested))
+        return values
+    if isinstance(value, list):
+        values: list[bool] = []
+        for item in value:
+            values.extend(_bool_leaf_values(item))
+        return values
+    return []
+
+
+def _max_real_field_number(d: dict[str, Any], wanted_key: str) -> float | None:
+    values: list[float] = []
+    for value in _real_field_values(d, wanted_key):
+        values.extend(_numeric_leaf_values(value))
+    return max(values) if values else None
+
+
+def _real_field_has_true(d: dict[str, Any], wanted_key: str) -> bool:
+    return any(
+        leaf is True
+        for value in _real_field_values(d, wanted_key)
+        for leaf in _bool_leaf_values(value)
+    )
+
+
+def _l2_goal_induction_text(d: dict[str, Any]) -> str:
+    return f"{_claim_text(d, _L2_GOAL_INDUCTION_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+
+
+def _has_l2_goal_induction_context(d: dict[str, Any]) -> bool:
+    text = _l2_goal_induction_text(d)
+    return _is_arc_artifact(d) and _has_marker(text, _L2_GOAL_INDUCTION_CONTEXT_MARKERS)
+
+
+def _claims_l2_goal_induction_win(d: dict[str, Any]) -> bool:
+    if not _has_l2_goal_induction_context(d):
+        return False
+    text = _l2_goal_induction_text(d)
+    reached_level = _max_real_field_number(d, "generic_agent_reached_level")
+    if reached_level is not None and reached_level >= 2.0:
+        return True
+    reproduced = _max_real_field_number(d, "reproduced_levels")
+    if reproduced is None or reproduced <= 0.0:
+        return False
+    if not _has_marker(text, _L2_CLAIM_MARKERS):
+        return False
+    if _has_marker(text, _L2_NULL_TEXT_MARKERS):
+        return False
+    return _has_marker(text, _L2_WIN_TEXT_MARKERS)
+
+
+def check_l2_goal_induction_satisfiability_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag L2 induction wins missing satisfiable-goal and reachable-plan controls."""
+    if not _claims_l2_goal_induction_win(d):
+        return
+    goal_values = _real_field_values(d, "goal_predicate_satisfiable")
+    plan_values = _real_field_values(d, "l2_plan_reaches_goal")
+    omitted = []
+    if not goal_values:
+        omitted.append("goal_predicate_satisfiable")
+    if not plan_values:
+        omitted.append("l2_plan_reaches_goal")
+    if omitted:
+        flags.append(
+            Flag(
+                kind=L2_GOAL_SATISFIABILITY_CHECK_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "l2-goal-satisfiability-check-omitted: L2 goal-induction "
+                    f"win claim omits {', '.join(omitted)}. Report "
+                    "goal_predicate_satisfiable=true and l2_plan_reaches_goal=true "
+                    "before crediting an L2-via-induction win."
+                ),
+            )
+        )
+    if _real_field_has_true(d, "goal_predicate_satisfiable") and _real_field_has_true(
+        d, "l2_plan_reaches_goal"
+    ):
+        return
+    flags.append(
+        Flag(
+            kind=L2_GOAL_INDUCTION_WITHOUT_SATISFIABILITY_CHECK_KIND,
+            severity="critical",
+            detail=(
+                "l2-goal-induction-without-satisfiability-check: artifact "
+                "claims a generic-agent L2 win via goal induction, but does "
+                "not report goal_predicate_satisfiable=true and "
+                "l2_plan_reaches_goal=true. The apparent L2 win may be a "
+                "constant-False degenerate-goal vacuous pass through the "
+                "DYNAMICS-only held-out gate."
+            ),
+        )
+    )
+
+
+def _has_positive_multilevel_solve_rate(d: dict[str, Any]) -> bool:
+    for key in _MULTI_LEVEL_RATE_KEYS:
+        for value in _real_field_values(d, key):
+            if any(number > 0.0 for number in _numeric_leaf_values(value)):
+                return True
+    return False
+
+
+def _harness_target_levels(value: Any, d: dict[str, Any]) -> float | None:
+    candidates = _numeric_leaf_values(value.get("target_levels")) if isinstance(value, dict) else []
+    if not candidates:
+        top_level = _max_real_field_number(d, "target_levels")
+        return top_level
+    return max(candidates)
+
+
+def _harness_break_at_first_win(value: Any, d: dict[str, Any]) -> list[bool]:
+    values = _bool_leaf_values(value.get("break_at_first_win")) if isinstance(value, dict) else []
+    if values:
+        return values
+    return [
+        leaf
+        for candidate in _real_field_values(d, "break_at_first_win")
+        for leaf in _bool_leaf_values(candidate)
+    ]
+
+
+def _has_fixed_multilevel_metric_harness(d: dict[str, Any]) -> bool:
+    harness_values = _real_field_values(d, "metric_harness_fixed")
+    candidates = harness_values or [d]
+    for value in candidates:
+        target_levels = _harness_target_levels(value, d)
+        break_values = _harness_break_at_first_win(value, d)
+        if target_levels is not None and target_levels >= 2.0 and any(
+            flag is False for flag in break_values
+        ):
+            return True
+    return False
+
+
+def check_multilevel_nondegenerate_metric_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag positive multi-level solve-rate claims missing the fixed harness."""
+    if not _is_arc_artifact(d):
+        return
+    if not _has_positive_multilevel_solve_rate(d):
+        return
+    harness_values = _real_field_values(d, "metric_harness_fixed")
+    has_equivalent_top_level = bool(
+        _real_field_values(d, "target_levels") and _real_field_values(d, "break_at_first_win")
+    )
+    if not harness_values and not has_equivalent_top_level:
+        flags.append(
+            Flag(
+                kind=MULTI_LEVEL_NONDEGENERATE_METRIC_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "multi-level-nondegenerate-metric-omitted: positive "
+                    "multi-level solve-rate claim omits metric_harness_fixed "
+                    "or equivalent target_levels/break_at_first_win fields."
+                ),
+            )
+        )
+    if _has_fixed_multilevel_metric_harness(d):
+        return
+    flags.append(
+        Flag(
+            kind=MULTI_LEVEL_WITHOUT_NONDEGENERATE_METRIC_KIND,
+            severity="critical",
+            detail=(
+                "multi-level-without-nondegenerate-metric: artifact reports a "
+                "positive multi-level solve-rate without a fixed "
+                "target_levels>=2 and break_at_first_win=false harness. The "
+                "metric may be the degenerate 0.0-by-construction artifact "
+                "rather than evidence that the live agent can attempt depth >=2."
             ),
         )
     )
@@ -3351,6 +3613,8 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_goal_energy_ablation_overclaim(d, flags)
     check_qd_random_mutation_ablation_overclaim(d, flags)
     check_value_routing_cost_control_overclaim(d, flags)
+    check_l2_goal_induction_satisfiability_overclaim(d, flags)
+    check_multilevel_nondegenerate_metric_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
