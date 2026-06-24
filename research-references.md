@@ -43,6 +43,29 @@ DECISIVE input is the operator's clean-Qwen instrumented diagnosis
   factored-executable-model subgoal planner (`arXiv:2505.10819` + `2605.05138`) — the bigger
   architectural levers to attempt in `.431 if A1/A2 null.
 
+**`.431 planning pass (2026-06-24) — the GENERATION pivot is now the HEADLINE, not a fallback.** Both
+`.430 levers nulled on live SOLVE-RATE (A1 L2-goal-induction `single_exemplar_goal_insufficient`,
+positive-control-failed, RETIRED; A2 DAgger-lite dropped the distribution-shift score 0.699→0.0 but gave
+ZERO live lift, residual `missing_verifier_gap_live_frontier_not_separated`). Six consecutive milestones
+(`.425–`.430) of verifier/SELECTION levers all nulled. The convergent residual — A2's
+"live-frontier-not-separated", the registry `transfer_dead_ends` ("candidate generation remains the
+residual bottleneck", recurring across ≥5 persisted primitives), and the operator's 2026-06-22
+energy-config-space steer ("the wall is **make-a-winner-appear, not select**") — relocates the wall from
+SELECTION to **CANDIDATE GENERATION**. The 2026-06-23 re-diagnosis
+(`arc-representation-not-the-bottleneck-2026-06-23.md`) independently rules out the representation
+(v3 LOO-AUROC 0.725, "add more features is not the lever") and rules out compute-cost (fixed `.429) and
+distribution-shift (fixed `.430). `.431 therefore promotes the structural GENERATION methods to the
+headline: **hierarchical subgoal search** (`arXiv:2604.03208` + `2506.07255` + `2504.04366`) with the
+`.430 levers reused as COMPONENTS (goal-induction → subgoal proposer; value head → within-subgoal
+tie-breaker), and **PoE-World factored-executable subgoal planner** (`arXiv:2505.10819` + `2605.05138`)
+as the second independent generation mechanism. **`arXiv:2604.11351`** ("WM-DAgger: Enabling Efficient
+Data Aggregation for Imitation Learning with World Models", 2026) is the support mechanism for
+subgoal-conditioned value retraining once a subgoal/product-model scaffold exists — NOT a standalone
+value-weight run. CAUTION carried into `.431 A1 step 1: the honest fixed-harness generic first-win is
+**0.04 (1/25 games, only lp85)**, not the 0.59 the `.430 roadmap assumed — a decisive diagnostic must
+resolve whether the live wall is L1-first-contact or L2-deepening before the subgoal search targets a
+level (offline-null-may-be-a-harness-artifact discipline).
+
 **Bottom line for the `.430 roadmap:** attack the multi-level wall from TWO independent, measured,
 high-confidence mechanisms — A1 the LLM-goal-induction path (capture the L1 win-grid exemplar + a
 goal-satisfiability check) and A2 the learned-value-routing path (DAgger-lite distribution-shift

@@ -4,72 +4,67 @@
 # docs_audit_report — 2026-06-24
 
 ## TL;DR (stranger's 30-second take)
-The hero is genuinely good — I understand what Carnot does and how to install it within 10 seconds. But the moment I scroll to "Evidence" I hit a wall of undefined benchmark acronyms and three different HumanEval numbers, and if I glance at the footer the license flat-out contradicts the hero. A skeptical stranger keeps reading the top half, then starts doubting the numbers and the basic facts — which is the opposite of what an evidence section is supposed to do.
+The hero is genuinely strong — I know what Carnot does, that it's open source, and how to install it within five seconds. But the moment I scroll, I hit a wall of insider acronyms, a string of suspiciously-perfect numbers, a blog that mostly advertises how often the project caught *itself* fabricating results, and — the kicker — the page tells me it's MIT-0 at the top and Apache 2.0 at the bottom. A skeptical stranger keeps reading for ~10 seconds, then starts distrusting the page and closes the tab.
 
 ## TOP 3 PROBLEMS
-1. **License contradiction** — hero badge + `<meta>` say "MIT-0"; footer says "Apache 2.0 License". The single most basic trust fact about an open-source project disagrees with itself.
-2. **"Evidence" section is undefined-acronym soup with self-contradicting headline numbers** — FoVer / SVAMP / CRANE / VeriCoT / CCTU / PRM-BiasBench / HalluGuard / GSM8K all unglossed, and HumanEval shows up three times with three different improvements (+3.0, +18pp, +15pp). A stranger reads it as cherry-picked.
-3. **Suspiciously perfect numbers, plus the page narrating its own retraction** — `1.0` TP rate, `60/60`, a `0.125 → 0.90` AUC jump (0.125 is *below* random), and the hero literally says "Repinned from v2 0.9857 after pre-submission adversarial audit." The page surfaces a withdrawn number on its own front door.
+1. **License contradiction** — hero badge + meta say "MIT-0", footer says "Apache 2.0 License." A direct self-contradiction on the single most adoption-critical fact.
+2. **The page reads like a project with a fabrication problem** — Results admits it "catches fabricated artifacts," 4 of 7 blog cards are about retractions / "Caught Cheating" / regex-in-a-costume / fatal flaws, and several headline numbers are suspiciously perfect (60/60, TP 0.5→1.0, 0.90 vs a sub-random 0.125 baseline). Hostile read: "why are they advertising how often their own system cheats, and why are these numbers so clean?"
+3. **Dense insider jargon everywhere** — FoVer, CCTU, SVAMP, VeriCoT, CRANE, HalluGuard v3, PREM, TTC, "k=5", "382 milestones", "operator", "repinned from v2", "publication gate." The body talks to project insiders, not to the stranger the page exists to convert.
 
 ## DETAILED FINDINGS
 
 ### Bloat
-- Honest assessment: **no hard word-count violations.** No bento card exceeds ~120 words; the longest ("Why Energy-Based?", ~80 words; "Code", ~70 words) are fine. Result cards are all well under 60 words. Footer is one line. So bloat-by-the-numbers is clean.
-- **Nav bar — 12 text links + 2 buttons (lines 264–285)** — suggested cap ~6–7. "Get Started / Tutorial / Concepts / API / Problem / Capabilities / Results / Quick Start / Report / Paper / Writing / Roadmap" is more than a stranger will scan; it dilutes the two links that matter (Tutorial, GitHub).
-- **Results grid — 12 cards (lines 518–577)** — under the 20-card cap, but because every card is a different undefined benchmark, the *cognitive* load reads like 20+. A stranger skims none of them.
-- **"Seven capabilities, one framework" (line 416)** sets up "what you can check" (line 415), but 3 of the 7 cards — Research operations, APIs & portable memory, Test-Time Compute & PREM — are not things you check. The promise and the contents don't match.
+- **Results grid** — 12 result cards, each tagged with a different unexplained benchmark acronym — a stranger skims *none* of them. Cap to ~5–6 strongest, anchored cards.
+- **Nav bar** — 12 text links + 2 buttons — too many choices; suggest ~5–6.
+- **Results section-desc** — ~50 words of defensive provenance hedging ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows are labeled by provenance…") reads as internal disclaimer/legalese. Trim hard.
+- **Preprint section-desc** — ~78 words — trim to ~40.
+- **Hero embedded "Recent progress" card** — a ~60-word result card structurally jammed into the hero stats bar; at the 60-word cap and out of place.
 
 ### Internal jargon
-- **Stats bar (line 308)** — "Verifier AUROC — FoVer math step-errors (5-seed)". A stranger does not know what *FoVer* is, what *AUROC* means, or why "5-seed" matters. This is the single headline number and it's wrapped in three pieces of jargon.
-- **"Recent progress" card (line 312)** — "5-seed dual-condition; architecture-only 0.8947", "Repinned from v2 0.9857". *dual-condition*, *architecture-only*, *v2*, *Repinned* are all insider terms.
-- **Evidence cards (lines 549–574)** — `EstimationVerifier SVAMP AUC`, `0.125 FoVer baseline`, `CRANE vs rigid grammar`, `VeriCoT equation-style CoT`, `GSM8K extraction TP rate`, `PRM-BiasBench-style attacks`, `k=5 ensemble`, `HalluGuard v3`, `CCTU constrained micro-benchmark`. None of these benchmarks or terms is defined anywhere on the page. A conference stranger knows maybe one of them.
-- **`AUROC` vs `AUC`** used interchangeably (line 308 vs lines 549–550) with no definition of either.
-- **Code-object names as marketing copy (lines 487, 489)** — `VerdictRecord`, `SessionMemory`. These mean nothing to someone who hasn't read the API.
-- **"paper-v6" in a section heading (line 584)** — "Carnot position paper (paper-v6)". A stranger doesn't know v1–v5 and shouldn't have to; the internal version label leaks onto a public heading.
-- **Blog card (line 696)** — "docstring citing arXiv:2601.18753 NTK" / "sleep-padded its wall-clock". Acceptable inside a blog teaser, but dense.
+- **Hero stats** — "382 Completed milestones", "4,060 Experiment runs" — vanity/internal metrics; "milestones" means nothing to an outsider (and 382 of them faintly suggests churn).
+- **Hero stat + r-card** — "FoVer", "5-seed dual-condition", "architecture-only 0.8947", "Repinned from v2 0.9857" — "FoVer", "dual-condition", and especially "Repinned from v2" are internal-status language a stranger can't parse.
+- **Features → "Typed constraints" & Results → "Tool use"** — "CCTU" used twice, never expanded.
+- **Features → "TTC & PREM" card** — "scales Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance … intrinsic motivation for continuous self-learning." Worst single jargon offender — opaque *and* hand-wavy.
+- **Results cards** — "EstimationVerifier", "SVAMP", "VeriCoT", "CRANE", "HalluGuard v3", "PRM-BiasBench-style", "k=5 ensemble" (flag syntax), "Ising sampler", "publication gate." A stranger knows none of these.
+- **Preprint section** — "paper-v6", "non-operator environment", "operator-initiated upload." "Operator" is an internal project role; "pending operator-initiated upload" reads like a Jira status.
 
 ### Per-milestone narrative
-- **Stats bar (line 306)** — "382 Completed milestones." *Milestones* is internal project-management vocabulary; to a stranger this number is meaningless and faintly self-referential.
-- **"Recent progress" card (line 312)** — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like a changelog/retro entry, not landing-page copy. It narrates internal process history (audit → repin) that the audience didn't ask for.
-- The "Recent progress" framing itself (line 310) is status-report tone ("Recent progress") rather than a value statement.
+- **Hero "Recent progress" r-card** — "Repinned from v2 0.9857 after pre-submission adversarial audit" is a retrospective/changelog sentence, not landing-page copy.
+- **Preprint card** — "The arXiv submission is prepared but pending operator-initiated upload" is internal status reporting (and quietly admits the "preprint" isn't actually posted).
+- **Blog tags** — "Three Deep Think Rounds Missed" surfaces an internal/tooling process term ("Deep Think") in a headline.
 
 ### Inconsistencies
-- **License: "MIT-0" (lines 7, 291) vs "Apache 2.0 License" (line 766).** Direct contradiction. This is a factual, not stylistic, problem.
-- **Three HumanEval pass-rate deltas:** "+3.0 points" (line 520, full HumanEval), "66% → 84% (+18pp)" (line 545, HumanEval-50), "70% → 85% (+15pp)" (line 555, HumanEval-50). The conditions differ, but the page never reconciles them — a skimmer sees one benchmark with wildly different self-reported gains and concludes the numbers are soft.
-- **AUROC vs AUC** naming (line 308 vs 549) — same family of metric, two names, looks careless.
-- **Meter-bar semantics are inconsistent** — `+3.0 points` → 14.6% bar; `+4.9 points` → 66.7% bar; `+18pp` → 84% bar (the *after* value, not the delta); `0.90 AUC` → 90% (the metric itself); `4% → 12%` → 12% bar. The bars encode different things (delta, after-value, raw metric) at different scales, so +4.9 visually dwarfs +3.0 despite being comparable. Visually misleading to anyone skimming the bars instead of the text.
-- **Two near-identical "~0.91" numbers for different things** — 0.9131 verifier AUROC (FoVer) and "0.91 AUROC (publication gate)" prompt-injection (line 530). Easy to conflate; nothing distinguishes them at a glance.
+- **License:** "MIT-0" (hero badge + two meta tags) vs **"Apache 2.0 License"** (footer copyright). Must reconcile.
+- **Which AUROC is THE number?** 0.9131 (FoVer, hero), 0.8947 (architecture-only), 0.9857 (retracted v2), and 0.91 (prompt-injection classifier, Results). Four AUROC-ish figures; a skimmer cannot tell which is the headline and conflates the prompt-injection 0.91 with the FoVer 0.9131.
+- **Arithmetic example drifts:** problem card shows "47 + 28 = 7", other copy uses "= 76", correct stated as "75." The "= 7" looks like a typo to a stranger rather than a mid-generation illustration.
+- **Experiment count:** hero "4,060 Experiment runs" vs dogfooding blog "639 experiments." Explainable by date, but unexplained on the page.
+- **Rust vs Python story:** the Python tab shows verify/repair of LLM output (the headline product); the Rust tab shows low-level `IsingModel`/`LangevinSampler` energy sampling — a completely different capability. A stranger asking "can I use this in Rust?" comes away thinking the actual product isn't available there.
+- **Framing:** section says "Seven capabilities … what you can check," but 3 of 7 cards (Research operations, APIs & memory, TTC/PREM) are not things you check.
 
 ### Missing essentials
-- **Who maintains it?** — Only "© 2026 Ian Blenke" in the footer (line 766). No org, no team, no "maintained by", no contact/affiliation. For a stranger deciding whether to depend on this, "one person?" is an open question the page leaves hanging.
-- **License is present but broken** (see Inconsistencies) — so effectively a stranger *cannot* answer "what's the license?" with confidence.
-- **Why trust the numbers?** — Partially answered ("backed by a checked-in experiment artifact", reproducibility note in Preprint), but undercut by the acronym soup and the perfect scores. The trust scaffolding exists but the evidence cards don't cash it.
-- *Present and good:* one-sentence "what it does" (lines 294–297) and install command (line 296). No complaints there.
+- **License** — present but self-contradictory (see above); for adoption this is effectively "missing/unreliable."
+- **Who maintains it** — only a footer copyright ("Ian Blenke"). A stranger can't tell if this is a sustained project or one person; no team/affiliation/contact.
+- **Why trust the numbers** — partially addressed (reproducibility claim for FoVer is good), but undercut by jargon and perfect scores with no sample sizes/FPR on most cards.
 
 ### Fabrication signals
-- **`GSM8K extraction TP rate: 0.5 → 1.0` (line 560)** — a perfect 1.0 with no sample size and a 100% meter. Classic too-good signal.
-- **`k=5 ensemble catches 60/60 attacks` (line 565)** — 100% on n=60, no false-positive rate shown. Perfect-score-on-small-sample.
-- **`0.90 AUC (vs 0.125 FoVer baseline)` (line 550)** — a 7.2× jump, and the baseline 0.125 is *below* random (0.5). A reader who knows AUC sees a sub-chance baseline and a near-perfect result and distrusts both.
-- **`99.3% of wrong code flagged` (line 431)** on 164 problems — very high; no false-positive companion number, so it reads as one-sided.
-- **`2.0× speedup, identical losses` (line 540)** — "identical" is an absolute claim that invites doubt; "matching losses (Δ < x)" would read as more credible.
-- Meta-signal: the page *itself* flags a prior fabrication-class issue ("Repinned from v2 0.9857", plus blog titles "Caught Cheating", "Regex in an NTK Costume"). Honest, but on the landing page it primes a stranger to wonder which *current* numbers haven't been audited yet.
-
-### Structural / rendering bugs (bonus — a stranger sees the result)
-- **"Recent progress" r-card is nested *inside* `.stats-bar` (lines 304–315)**, which is a `display:flex` row labeled `aria-label="Project headline numbers"`. A content card jammed into the stat flexbox will render awkwardly and pollutes the accessibility label. There's also a stray extra `</div>` at line 314.
-- **TTC & PREM card appears after a `</div>` that closes the features bento-grid (lines 494–501)** — it looks orphaned outside the grid container, so it likely renders full-width/misaligned below the others.
+- **Results → Adversarial audit:** "k=5 ensemble catches 60/60 attacks" — perfect score, n=60, no false-positive rate.
+- **Results → Math extraction:** "GSM8K extraction TP rate: 0.5 → 1.0" — a perfect 1.0 with no sample size.
+- **Results → Math reasoning:** "0.90 AUC (vs 0.125 FoVer baseline)" — a baseline AUC of 0.125 is *below random* (0.5), which is bizarre and makes the 0.90 look cherry-picked or mislabeled.
+- **Blog → Dogfooding:** "Zero false positives" — another suspiciously absolute claim.
+- (Anchored, lower concern: "99.3% of wrong code flagged" cites the 164-problem HumanEval set, which is a credible anchor.)
 
 ## WHAT'S WORKING
-- **The hero nails the job-to-be-done.** "LLMs sometimes produce answers that sound right but aren't… checks whether an answer is internally consistent — and suggests a fix" plus the `47 + 28 = 76` example is concrete, honest, and instantly legible. Best part of the page.
-- **The "Extract → Check → Repair" + "Why Energy-Based?" flow (lines 360–407)** explains a physics-derived idea in plain language without acronyms — exactly the register the Evidence section should have matched.
+- **Hero is excellent:** one clear sentence on what Carnot does, the 47+28 worked example, the install line (`pip install carnot-ebm`), and the license badge all land in the first screen.
+- **Honesty/provenance instinct is real:** "every number backed by a checked-in artifact" and the independently-reproduced FoVer claim are exactly the kind of trust anchors a skeptic wants — they're just buried under jargon and undercut by the perfect-score cards.
+- **Blog writing quality is high** — the titles are sharp; the problem is *selection/placement*, not craft.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Fix the license contradiction immediately** — decide MIT-0 vs Apache 2.0 and make hero (line 291), `<meta>` (line 7), and footer (line 766) all agree. This is a 2-minute edit and a hard credibility bug.
-2. **Rewrite the Evidence cards for a stranger.** Drop or footnote the internal benchmark names; lead each card with what it *means* ("Catches math step-errors", not "EstimationVerifier SVAMP AUC"). Define AUROC once. Pick one metric name (AUROC *or* AUC), not both.
-3. **Reconcile the three HumanEval numbers** into one card with explicit conditions, or cut two of them. Three different gains on the "same" benchmark is the thing that makes a skeptic bounce.
-4. **Cut or anchor the perfect scores.** For `1.0` TP rate and `60/60`, add sample size + a false-positive number, or move them off the front page. A landing page should lead with credible-looking numbers, not perfect ones.
-5. **Remove the retraction narrative from the hero** ("Repinned from v2 0.9857…"). State the current number cleanly; leave the audit story to the linked blog post.
-6. **Fix the two structural bugs** — pull the "Recent progress" card out of `.stats-bar` into its own block, and move the TTC card inside the features grid (or delete it; it's the weakest, most jargon-dense card and breaks the "what you can check" promise).
-7. **Add a real "who's behind this" line** — even one sentence (maintainer + affiliation/contact) under the footer name would materially raise trust.
-8. **Trim the nav to ~6 links** and drop "382 Completed milestones" from the stats bar — replace with an externally-meaningful number if you have one (downloads, GitHub stars, models on HF).
-
-*Advisory only — no edits made to `docs/index.html`, per the operator-curated landing-page discipline.*
+1. **Fix the license contradiction now** — reconcile the footer ("Apache 2.0") with the hero/meta ("MIT-0") to a single, correct license. Highest-priority, lowest-effort.
+2. **Cut the Results grid to ~5–6 cards**, each with a plain-English tag and a sample size; drop or expand every bare acronym (FoVer, CCTU, SVAMP, VeriCoT, CRANE, PRM-BiasBench).
+3. **Audit the perfect-score cards** (60/60, TP 1.0, "Zero false positives") and the 0.125 baseline — add n and FPR, or remove them; they read as fabrication signals to a skeptic.
+4. **Pick one headline AUROC** and disambiguate it from the prompt-injection 0.91; drop the retracted "0.9857" / "repinned from v2" from the hero entirely.
+5. **De-jargon the body** — remove "milestones," "operator," "publication gate," "dual-condition," "paper-v6," and the TTC/PREM card (or rewrite it in plain English).
+6. **Rebalance the blog row** — leading with four "we caught ourselves cheating/retracting" posts signals a quality problem; surface the theory/results posts first and move the self-audit cluster deeper or behind "See all posts."
+7. **Reconcile the Rust example** to show verification, or explicitly label the Rust tab as "the low-level energy core" so the product story stays consistent.
+8. **Add a one-line maintainer/affiliation** so the stranger knows who stands behind it.
+9. **Trim the nav** to ~5–6 essential links.
