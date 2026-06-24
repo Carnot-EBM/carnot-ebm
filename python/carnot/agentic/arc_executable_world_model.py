@@ -162,7 +162,9 @@ class WorldModelVerifier:
         self, engine: Callable[[np.ndarray, int, Optional[dict]], np.ndarray], max_mismatch: int = 8
     ) -> VerifyResult:
         n_correct, mism = 0, []
-        cell_recalls: list[float] = []   # per-CHANGED-transition fraction of changed cells predicted right
+        cell_recalls: list[
+            float
+        ] = []  # per-CHANGED-transition fraction of changed cells predicted right
         for i, t in enumerate(self.transitions):
             try:
                 pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
@@ -285,7 +287,12 @@ def _rle_delta(g0: np.ndarray, g1: np.ndarray) -> str:
     return " ".join(runs) if runs else "(no change)"
 
 
-def _transitions_block(trans: list[Transition], k: int = 8) -> str:
+def _transitions_block(
+    trans: list[Transition],
+    k: int = 8,
+    *,
+    previous_level_complete_grid: Optional[np.ndarray] = None,
+) -> str:
     """Compact transition encoding for the induce prompt: ONE full grid (the layout) +
     per-transition DELTAS (changed cells), + the full WIN state if observed. Prefers
     grid-CHANGING transitions; keeps a couple of no-ops. Small enough for a local model's
@@ -311,10 +318,23 @@ def _transitions_block(trans: list[Transition], k: int = 8) -> str:
             "WIN STATE (full grid of a level-complete state — is_level_complete must return True here):\n"
             + to_ascii(win.next_grid)
         )
+    elif previous_level_complete_grid is not None:
+        out.append(
+            "WIN STATE EXEMPLAR (full grid of a state that COMPLETED the previous level; "
+            "the next level's completion likely looks structurally similar. Use this as a "
+            "positive level-complete shape exemplar, not as an oracle for the exact next grid):\n"
+            + to_ascii(np.asarray(previous_level_complete_grid))
+        )
     return "\n".join(out)
 
 
-def induce_prompt(game: str, trans: list[Transition], cell: int) -> str:
+def induce_prompt(
+    game: str,
+    trans: list[Transition],
+    cell: int,
+    *,
+    previous_level_complete_grid: Optional[np.ndarray] = None,
+) -> str:
     h, w = trans[0].grid.shape
     colors = sorted(set(int(v) for t in trans for v in t.grid.flatten().tolist()))
     return f"""You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game '{game}'.
@@ -346,7 +366,7 @@ Use only numpy + stdlib. Do not read files or network. Make engine() pure and
 deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
-{_transitions_block(trans)}
+{_transitions_block(trans, previous_level_complete_grid=previous_level_complete_grid)}
 """
 
 
@@ -373,9 +393,24 @@ class CodexProposer:
     timeout: int = 420
     offline_legal: bool = False
 
-    def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
+    def induce(
+        self,
+        game: str,
+        trans: list[Transition],
+        cell: int,
+        *,
+        previous_level_complete_grid: Optional[np.ndarray] = None,
+    ) -> tuple[bool, str]:
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
-        return _codex(induce_prompt(game, trans, cell), self.timeout)
+        return _codex(
+            induce_prompt(
+                game,
+                trans,
+                cell,
+                previous_level_complete_grid=previous_level_complete_grid,
+            ),
+            self.timeout,
+        )
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
         return _codex(refactor_prompt(game, vr), self.timeout)
@@ -544,7 +579,9 @@ class LocalGGUFProposer:
             "-m",
             path,
             "-ngl",
-            str(self.n_gpu_layers),  # 999=all-GPU (default); lower spills weights to system RAM (frees VRAM)
+            str(
+                self.n_gpu_layers
+            ),  # 999=all-GPU (default); lower spills weights to system RAM (frees VRAM)
             "-c",
             str(self.n_ctx),
             "--port",
@@ -643,10 +680,22 @@ class LocalGGUFProposer:
             self._proc.terminate()
             self._proc = None
 
-    def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
+    def induce(
+        self,
+        game: str,
+        trans: list[Transition],
+        cell: int,
+        *,
+        previous_level_complete_grid: Optional[np.ndarray] = None,
+    ) -> tuple[bool, str]:
         return self._gen_to_file(
             game,
-            induce_prompt(game, trans, cell)
+            induce_prompt(
+                game,
+                trans,
+                cell,
+                previous_level_complete_grid=previous_level_complete_grid,
+            )
             + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
         )
 

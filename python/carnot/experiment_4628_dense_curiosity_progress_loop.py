@@ -41,6 +41,7 @@ RANDOM_SEED = 4628
 DEFAULT_VARIANT_IDS = (1,)
 DEFAULT_BUDGET = 200
 DEFAULT_BOOTSTRAPS = 1000
+MULTI_LEVEL_TARGET_LEVELS = 2
 TERMINAL_PREFIXES = ("success:", "complete:", "passed:", "shipped:", "blocked_")
 SPEC_REFS = [
     "REQ-CAPSTONE-4628",
@@ -57,6 +58,7 @@ LOOP_CONFIG: JsonDict = {
     "candidate_router": None,
     "navigation_cost_tiebreak": False,
     "llm_arm": "disabled_noop_proposer_for_matched_offline_measurement",
+    "target_levels": MULTI_LEVEL_TARGET_LEVELS,
 }
 BARE_CONTROL_CONFIG: JsonDict = {
     "policy": "E3AgentPolicy",
@@ -66,6 +68,7 @@ BARE_CONTROL_CONFIG: JsonDict = {
     "candidate_router": None,
     "navigation_cost_tiebreak": False,
     "llm_arm": "disabled_noop_proposer_for_matched_offline_measurement",
+    "target_levels": MULTI_LEVEL_TARGET_LEVELS,
 }
 
 FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
@@ -114,12 +117,8 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
     "live_solve_rate_bare": {
         "principle": "the matched bare-explorer solve-rate on the SAME variants."
     },
-    "solve_rate_delta": {
-        "principle": "loop - bare, emitted explicitly so a null is annotated."
-    },
-    "state_coverage_delta": {
-        "principle": "distinct win-relevant states reached: loop - bare."
-    },
+    "solve_rate_delta": {"principle": "loop - bare, emitted explicitly so a null is annotated."},
+    "state_coverage_delta": {"principle": "distinct win-relevant states reached: loop - bare."},
     "first_win_rate_delta": {
         "principle": "loop - bare first-win-rate, emitted explicitly so a null is annotated."
     },
@@ -203,7 +202,11 @@ def _sha256(value: Any) -> str:
 
 def _public_games(root: Path) -> list[str]:  # pragma: no cover - filesystem boundary.
     env_dir = root / "environment_files"
-    return [] if not env_dir.is_dir() else sorted(path.name for path in env_dir.iterdir() if path.is_dir())
+    return (
+        []
+        if not env_dir.is_dir()
+        else sorted(path.name for path in env_dir.iterdir() if path.is_dir())
+    )
 
 
 def _variant_signature(game: str, variant_id: int) -> str:
@@ -397,7 +400,8 @@ def build_artifact(
     live_solve_rate_bare = float(bare_measurement.get("solve_rate") or 0.0)
     solve_rate_delta = round(live_solve_rate_loop - live_solve_rate_bare, 6)
     state_coverage_delta = int(
-        (loop_measurement.get("state_coverage") or 0) - (bare_measurement.get("state_coverage") or 0)
+        (loop_measurement.get("state_coverage") or 0)
+        - (bare_measurement.get("state_coverage") or 0)
     )
     first_win_rate_delta = round(
         float(loop_measurement.get("first_win_rate") or 0.0)
@@ -414,7 +418,9 @@ def build_artifact(
     live_path_reachable = bool(live_path_check.get("passed")) and bool(
         preconditions_checked.get("arc_orphan_solver_lint_passed", True)
     )
-    bare_control_passed = _same_variant_control(loop_measurement, bare_measurement) and _reachable_headroom(
+    bare_control_passed = _same_variant_control(
+        loop_measurement, bare_measurement
+    ) and _reachable_headroom(
         loop_measurement,
         bare_measurement,
     )
@@ -441,7 +447,11 @@ def build_artifact(
             "first_win_rate_delta": "firstwin",
         }[chosen_metric]
         up_count = (
-            int(round(metric_value * max(1, int(loop_measurement.get("variant_attempts_count") or 0))))
+            int(
+                round(
+                    metric_value * max(1, int(loop_measurement.get("variant_attempts_count") or 0))
+                )
+            )
             if chosen_metric != "state_coverage_delta"
             else int(metric_value)
         )
@@ -469,7 +479,9 @@ def build_artifact(
         "first_win_rate_delta": first_win_rate_delta,
         "live_lift_ci": ci,
         "bare_control_passed": bool(bare_control_passed),
-        "false_negative_risk_checked": bool(bare_control_passed and _reachable_headroom(loop_measurement, bare_measurement)),
+        "false_negative_risk_checked": bool(
+            bare_control_passed and _reachable_headroom(loop_measurement, bare_measurement)
+        ),
         "chosen_submitted_config": dict(LOOP_CONFIG) if success else "unchanged",
         "offline_reproduced": bool(offline_reproduced),
         "random_seed": int(random_seed),
@@ -483,7 +495,9 @@ def build_artifact(
         "live_path_check": dict(live_path_check),
         "residual_bridge_gaps": []
         if success
-        else ["Missing-Verifier / bridge gap: dense online progress did not lift matched live exploration."],
+        else [
+            "Missing-Verifier / bridge gap: dense online progress did not lift matched live exploration."
+        ],
         "field_principles": FIELD_PRINCIPLES,
         "spec_refs": list(SPEC_REFS),
         "duration_s": round(float(duration_s), 6),
@@ -518,7 +532,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     return errors
 
 
-def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - live boundary.
+def check_preconditions(
+    root: Path | str = REPO_ROOT,
+) -> JsonDict:  # pragma: no cover - live boundary.
     root_path = Path(root)
     checks: JsonDict = {
         "agents_md_read": (root_path / "AGENTS.md").exists(),
@@ -582,7 +598,7 @@ def _policy_for_mode(mode: str, game: str):  # pragma: no cover - ARC runtime.
         return E3AgentPolicy(
             game,
             proposer=proposer,
-            target_levels=1,
+            target_levels=MULTI_LEVEL_TARGET_LEVELS,
             value_head=None,
             value_weight=0.0,
             candidate_router=None,
@@ -594,7 +610,7 @@ def _policy_for_mode(mode: str, game: str):  # pragma: no cover - ARC runtime.
     return E3AgentPolicy(
         game,
         proposer=proposer,
-        target_levels=1,
+        target_levels=MULTI_LEVEL_TARGET_LEVELS,
         value_head=None,
         value_weight=0.0,
         candidate_router=None,
@@ -653,9 +669,8 @@ def run_variant_attempt(
         if start_level is None:
             start_level = _level_of(latest)
         reached = _level_of(latest)
-        if start_level is not None and reached > start_level:
+        if start_level is not None and reached > start_level and actions_to_first is None:
             actions_to_first = actions
-            break
         frames.append(latest)
         if latest is None:
             break

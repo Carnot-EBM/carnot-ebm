@@ -1142,8 +1142,7 @@ class StepwiseExplorer:
         first = sequence[0]
         rest = sequence[1:]
         self.pending = [
-            {"kind": int(step["action"]), "data": step.get("data"), "probe": True}
-            for step in rest
+            {"kind": int(step["action"]), "data": step.get("data"), "probe": True} for step in rest
         ]
         self.awaiting = {
             "origin": self.cur,
@@ -1500,8 +1499,7 @@ class E3AgentPolicy:
             frame_change_scorer = _load_submitted_frame_change_scorer()
         if action_effect_expansion_prior is None:
             action_effect_expansion_prior = bool(
-                SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED
-                and frame_change_scorer is not None
+                SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED and frame_change_scorer is not None
             )
         if goal_bias is _DEFAULT_GOAL_BIAS:
             goal_bias = _load_submitted_goal_energy_bias()
@@ -1567,6 +1565,7 @@ class E3AgentPolicy:
         self._observed_level: Optional[int] = None
         self._start_level: Optional[int] = None
         self._current_goal_level: Optional[int] = None
+        self._previous_level_complete_grid: Any = None
         self._episode_transition_start = 0
         self._episode_dsl_transition_start = 0
         self._level_reinduction_pending = False
@@ -1633,17 +1632,30 @@ class E3AgentPolicy:
             return []
         events: list[dict[str, Any]] = []
         start = int(self._start_level or 0)
+        completed_grid = None
+        try:
+            from carnot.agentic.arc_agi3_world_model import grid_of
+            from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
+
+            cell = detect_cell(grid_of(latest))
+            completed_grid = to_logical(grid_of(latest), cell)
+        except Exception:
+            completed_grid = None
         for new_level in range(self._observed_level + 1, level + 1):
             relative = new_level - start
             if relative >= self.target_levels:
                 continue
-            event = self._begin_level_goal_episode(new_level, frames_seen=frames_seen)
+            event = self._begin_level_goal_episode(
+                new_level,
+                frames_seen=frames_seen,
+                completed_grid=completed_grid,
+            )
             events.append(event)
         self._observed_level = level
         return events
 
     def _begin_level_goal_episode(
-        self, completed_level: int, *, frames_seen: int
+        self, completed_level: int, *, frames_seen: int, completed_grid: Any = None
     ) -> dict[str, Any]:
         next_goal = int(completed_level) + 1
         self._current_goal_level = next_goal
@@ -1657,6 +1669,15 @@ class E3AgentPolicy:
         self.world_model_trust_selection = None
         self.dsl_energy = None
         self.explorer.set_goal_bias(None, label="")
+        if completed_grid is not None:
+            try:
+                import numpy as np
+
+                self._previous_level_complete_grid = np.asarray(completed_grid).copy()
+            except Exception:
+                self._previous_level_complete_grid = None
+        else:
+            self._previous_level_complete_grid = None
         event = {
             "trigger": "level_up",
             "completed_level": int(completed_level),
@@ -1664,6 +1685,7 @@ class E3AgentPolicy:
             "transition_start": int(self._episode_transition_start),
             "dsl_transition_start": int(self._episode_dsl_transition_start),
             "frames_seen": int(frames_seen),
+            "win_state_exemplar_captured": self._previous_level_complete_grid is not None,
         }
         self.level_induction_events.append(event)
         return event
@@ -1881,7 +1903,14 @@ class E3AgentPolicy:
                         return
             except Exception as _ttt_e:
                 attempt["ttt_prior_engine_error"] = repr(_ttt_e)[:120]
-            if attempt["reason"] == "level_up_reinduction":
+            next_level_episode = (
+                self._previous_level_complete_grid is not None
+                and self._current_goal_level is not None
+                and self._start_level is not None
+                and int(self._current_goal_level) > int(self._start_level) + 1
+            )
+            if attempt["reason"] == "level_up_reinduction" or next_level_episode:
+                attempt["reason"] = "level_up_reinduction"
                 self._fit_dsl_model()
                 outcome = execute_bounded_llm_reinduction(
                     game=self.short,
@@ -1894,6 +1923,7 @@ class E3AgentPolicy:
                     plan_in_model=e3.plan_in_model,
                     max_rounds=MAX_REFINEMENT_ROUNDS,
                     min_heldout_accuracy=1.0,
+                    previous_level_complete_grid=self._previous_level_complete_grid,
                 )
                 attempt.update(
                     {
@@ -1908,6 +1938,10 @@ class E3AgentPolicy:
                         "refinement_rounds": list(outcome.rounds),
                         "counterexamples": list(outcome.counterexamples),
                         "verifier_is_oracle": bool(outcome.verifier_is_oracle),
+                        "win_state_exemplar_injected": self._previous_level_complete_grid
+                        is not None,
+                        "goal_predicate_satisfiable": bool(outcome.goal_predicate_satisfiable),
+                        "goal_satisfiability": dict(outcome.goal_satisfiability),
                     }
                 )
                 if outcome.goal_predicate is not None:
