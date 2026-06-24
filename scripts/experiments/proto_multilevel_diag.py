@@ -46,13 +46,85 @@ def _gid(arc, short):
     raise RuntimeError(f"{short} unavailable")
 
 
+# Clean-port Qwen proposer: the live _proposer() hardcodes port 8919, which a persistent gemma-4-12B
+# server squats on this box -> our first real-arm run silently reused GEMMA, not Qwen (the confound).
+# Construct the proposer EXPLICITLY with the SAME live config but a free port so it spawns a fresh Qwen
+# server. MULTILEVEL_PORT overrides the port; MULTILEVEL_QWEN_GGUF overrides the model path.
+_QWEN_GGUF = os.environ.get(
+    "MULTILEVEL_QWEN_GGUF",
+    os.path.expanduser(
+        "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/"
+        "9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    ),
+)
+_PORT = int(os.environ.get("MULTILEVEL_PORT", "8920"))
+
+
+def _clean_qwen_proposer():
+    """Real Qwen3.5-9B-MTP proposer on a FREE port (matches arc_competition_agent._proposer config)."""
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+
+    return LocalGGUFProposer(
+        repo_substr="Qwen3.5-9B-MTP",
+        model_path=_QWEN_GGUF if os.path.exists(_QWEN_GGUF) else None,
+        port=_PORT,
+        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        kv_quant="q8_0",
+        no_think_prefix="/no_think\n",
+        max_tokens=2560,
+        n_gpu_layers=int(os.environ.get("CARNOT_ARC_NGL", "999")),
+    )
+
+
+def _slim_attempts(attempts):
+    """Keep the diagnostic fields from each induction attempt; drop bulky round/counterexample blobs to
+    a count + the first counterexample kind (enough to see WHY without exploding the artifact)."""
+    out = []
+    for a in attempts:
+        cxs = a.get("counterexamples") or []
+        # per-round held-out accuracy: is the induced model CLOSE to the gate (gate-fixable) or garbage?
+        rounds = a.get("refinement_rounds") or []
+        round_summ = [{
+            "round": r.get("round"), "action": r.get("action"), "proposer_ok": r.get("proposer_ok"),
+            "heldout_accuracy": r.get("heldout_accuracy"), "heldout_threshold": r.get("heldout_threshold"),
+            "accepted": r.get("accepted_by_heldout_verifier"), "plan_length": r.get("plan_length"),
+            "plan_reaches_goal": r.get("plan_reaches_goal"), "skipped": r.get("skipped"),
+            "cx_kind": (r.get("counterexample") or {}).get("kind"),
+        } for r in rounds if isinstance(r, dict)]
+        out.append({
+            "reason": a.get("reason"),
+            "goal_level": a.get("goal_level"),
+            "skipped": a.get("skipped") or ("" if a.get("planned") else "planned_false_no_skip"),
+            "planned": bool(a.get("planned")),
+            "plan_length": a.get("plan_length"),
+            "heldout_accuracy": a.get("heldout_accuracy") or a.get("verify_accuracy"),
+            "verify_cell_recall": a.get("verify_cell_recall"),
+            "refinement_rounds_used": a.get("refinement_rounds_used"),
+            "n_goal_candidates": len(a.get("goal_candidate_names") or []),
+            "n_dynamics_candidates": len(a.get("dynamics_candidate_names") or []),
+            "n_counterexamples": len(cxs),
+            "first_counterexample_kind": (cxs[0].get("kind") if cxs and isinstance(cxs[0], dict) else None),
+            "transition_count": a.get("transition_count"),
+            "rounds": round_summ,
+        })
+    return out
+
+
+def _skip_histogram(attempts):
+    hist = {}
+    for a in attempts:
+        key = a.get("skipped") or ("planned_ok" if a.get("planned") else "planned_false_no_skip")
+        hist[key] = hist.get(key, 0) + 1
+    return hist
+
+
 def diagnose(arc, short, budget, target_levels=5):
-    """Roll the LIVE submitted-config policy (noop proposer) to budget; record per-level-up action idx."""
+    """Roll the LIVE submitted-config policy to budget; record per-level-up action idx + induction decomp."""
     gid = _gid(arc, short)
     env = arc.make(gid, scorecard_id=arc.open_scorecard())
     # SUBMITTED defaults EXCEPT: target_levels raised so it won't stop at L1.
-    # noop arm -> NoOpProposer (exploration-only); real arm -> proposer=None lazily loads LocalGGUFProposer.
-    proposer = None if _ARM == "real" else _NoOpProposer()
+    # noop arm -> NoOpProposer (exploration-only); real arm -> clean Qwen proposer on a free port.
+    proposer = _clean_qwen_proposer() if _ARM == "real" else _NoOpProposer()
     policy = E3AgentPolicy(gid, proposer=proposer, target_levels=int(target_levels))
     frames: list = []
     latest = None
@@ -96,6 +168,13 @@ def diagnose(arc, short, budget, target_levels=5):
         "final_phase": str(getattr(policy, "phase", "?")),
         "transitions_collected": int(len(getattr(policy, "transitions", []) or [])),
         "plan_len": int(len(getattr(policy, "plan", []) or [])),
+        # FULL induction decomposition -- WHY each induction produced (or failed to produce) a plan.
+        # Each attempt records: reason, skipped(=missing_root/no_transitions/proposer_failed/
+        # heldout_transition_verification_failed/no_reachable_plan_after_refinement/exception), planned,
+        # plan_length, heldout_accuracy, goal/dynamics_candidate_names, refinement_rounds_used, counterexamples.
+        "n_induction_attempts": int(len(getattr(policy, "induction_attempts", []) or [])),
+        "induction_attempts": _slim_attempts(getattr(policy, "induction_attempts", []) or []),
+        "induction_skip_reasons": _skip_histogram(getattr(policy, "induction_attempts", []) or []),
         "stalled_at_L1": reached == 1,
         "reached_L2_plus": reached >= 2,
         "wall_s": round(time.time() - t0, 1),
@@ -121,8 +200,8 @@ def main() -> int:
             continue
         out["games"][short] = r
         print(f"  {short:6} maxL={r['max_rel_level']} at={r['levelup_at_action']} "
-              f"acts={r['actions_used']}/{budget} induced={r['induction_fired']} "
-              f"phase={r['final_phase']} plan={r['plan_len']} cov={r['state_coverage']} "
+              f"acts={r['actions_used']}/{budget} n_induce={r.get('n_induction_attempts')} "
+              f"skips={r.get('induction_skip_reasons')} plan={r['plan_len']} "
               f"({r['wall_s']}s)", flush=True)
     reached2 = sorted(g for g, v in out["games"].items() if v.get("reached_L2_plus"))
     stalled = sorted(g for g, v in out["games"].items() if v.get("stalled_at_L1"))
