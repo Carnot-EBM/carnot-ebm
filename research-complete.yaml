@@ -47405,3 +47405,120 @@ milestones:
       on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
     deliverable: results/experiment_4662_capstone_v429.json
     result: OK (conductor)
+- id: 2026.06.430
+  title: 'L2-GOAL-PREDICATE INDUCTION -- the multi-level wall is the DEGENERATE L2 GOAL PREDICATE (diagnosed clean-Qwen instrumented,
+    operator pre-staged). .429 grew capability 57->58 (A3 vc33 L2) but BOTH generation-guidance levers NULLED on live solve-rate
+    (value-routing no-live-lift [residual localized to DISTRIBUTION_SHIFT 0.699 by B1]; energy-fitness QD no-winner), live
+    multi-level solve-rate STILL 0.0. .430 attacks the wall from TWO independent measured mechanisms on the SCORED E3AgentPolicy:
+    A1 (HEADLINE; operator pre-staged) fixes L2-goal induction -- capture the L1 win-grid as the missing WIN-STATE exemplar
+    + add a GOAL-satisfiability check before planning (the held-out gate checks DYNAMICS only, so a constant-False goal sails
+    through -> no_reachable_plan) + fix the degenerate live_multi_level_solve_rate harness (target_levels>=2, no early break,
+    non-colliding Qwen port), gated on the GENERIC live agent reaching L2 on lp85 AND sc25 offline-reproduced (live_agent_self_discovery);
+    A2 attacks A1''s value-routing null at its B1-localized cause via DAgger-lite (re-train the value head on search-distribution
+    off-path states). Both verifier_is_oracle:false, both live-path-reachable. A3 banks +1 (58->59+) + trains the verifier;
+    A4 keeps the package >33. Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware (C), 1 SOTA-ingestion
+    (D), capstone (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-24'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4663-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .429 -> activate .430; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .429 close-state (capability grew 57->58 via A3 vc33 L2, but BOTH generation-guidance levers NULLED
+      on live solve-rate: A1 value-routing no-live-lift [B1 localized residual=DISTRIBUTION_SHIFT 0.699], A2 energy-fitness
+      QD no-winner; live multi-level solve-rate still 0.0; package live_submittable 58>33). The .430 pivot -> L2-GOAL-PREDICATE
+      INDUCTION: A1 capture the L1 win-grid exemplar + goal-satisfiability check + fix the degenerate metric harness; A2 DAgger-lite
+      distribution-shift value-routing.'
+    deliverable: results/experiment_4663_archive_429_activate_430.json
+    result: OK (conductor)
+  - id: exp4664-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- operator pre-staged 2026-06-24) -- FIX L2-GOAL-PREDICATE
+      INDUCTION so the GENERIC live agent chains a 2nd level-up: (1) capture the L1 win-grid at _begin_level_goal_episode
+      and inject it as the missing WIN-STATE exemplar into the L2 induce prompt (arc_executable_world_model._transitions_block),
+      (2) add a GOAL-satisfiability check before planning (reject a constant-False is_level_complete), (3) FIX the degenerate
+      live_multi_level_solve_rate harness (target_levels>=2, no early break, non-colliding Qwen port via /props). Gate: on
+      lp85 AND sc25 the L1->L2 reinduction yields a non-degenerate goal AND a reachable plan AND the generic live agent reaches
+      L2, offline-reproduced. live_llm_inference. live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
+    deliverable: results/experiment_4664_l2_goal_predicate_induction_live.json
+    result: OK (conductor)
+  - id: exp4665-a2
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; B1-localized) -- DAgger-lite DISTRIBUTION-SHIFT value-routing:
+      .429 B1 (exp4658) localized A1''s value-routing live null to DISTRIBUTION_SHIFT (score 0.699, calibration_changes_routing=False),
+      NOT compute-cost (fixed) and NOT calibration. Re-collect value training data on the SEARCH-DISTRIBUTION (off-path frontier)
+      states the live agent actually visits (DAgger-lite, arXiv:1011.0686/2605.12913), re-train the win-reachability head,
+      keep the affordable cheap-feature routing, and measure live first-win/solve-rate vs the .429 winning-path-trained baseline.
+      Gate: live first-win OR solve-rate up (CI excludes baseline) AND distribution-shift score drops. Live-path-reachable.
+      verifier_is_oracle:false. retire_if_same_verdict.'
+    deliverable: results/experiment_4665_dagger_distribution_shift_value_routing.json
+    result: OK (conductor)
+  - id: exp4666-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .425-.429
+      (PREFER a first-contact L1->L2 of bp35/re86/sb26 [the genuine hard-to-bank clean public games]; alternatives r11l/g50t/lf52/s5i5
+      L1->L2 or m0r0/cn04 L2->L3; SKIP vc33 [.429], ft09 [.428], ls20 [.427], sk48 [.426], dc22 [.425], ka59/wa30 [hidden-state-bound],
+      cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced
+      new level -> reproducible_total_levels 58 -> 59+. verifier_is_oracle:false.'
+    deliverable: results/experiment_4666_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4667-a4
+    title: PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAGE FRESH; operator MANDATORY) -- fold A3's new bank (+ any A1/A2
+      newly-reproduced variant) into the refreshed submission package; keep it ready_for_operator_submit (beat the standing
+      33-level scorecard); re-validate every claimed level offline-reproduces AND has a replayable trajectory (or env-adaptive
+      re-solver). The live-submittable count must stay STRICTLY > 33 and reflect current banked depth. Submission stays operator-only.
+      verifier_is_oracle:false.
+    deliverable: results/experiment_4667_refresh_submission_package.json
+    result: OK (conductor)
+  - id: exp4668-a5
+    title: PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone's winning A1/A2 primitive (the
+      L2-goal-predicate-induction operator [win-grid exemplar + satisfiability check] OR the DAgger-lite distribution-corrected
+      value-routing operator, whichever cleared its gate) as a reusable arc_solver_kit primitive + registry general_gotcha,
+      and measure cross-game transfer value (characterize the null honestly if transfer is value-null). verifier_is_oracle:false.
+    deliverable: results/experiment_4668_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4669-a6
+    title: PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone's winning A1/A2 config (the L2-goal-induction fix
+      [win-grid exemplar + satisfiability check + fixed metric harness] and/or the DAgger-lite distribution-corrected value-routing)
+      into SUBMITTED_AGENT_CONFIG as the single source of truth, re-measure the integrated live first-win + multi-level solve-rate
+      end-to-end on the SCORED E3AgentPolicy, and keep test_arc_submitted_agent_parity green. If both A1/A2 nulled, integrate
+      'unchanged' and record why. verifier_is_oracle:false.
+    deliverable: results/experiment_4669_integration_gate.json
+    result: OK (conductor)
+  - id: exp4670-b1
+    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the MULTI-LEVEL-HARNESS CI-gate: lock in A1''s fixed live_multi_level_solve_rate
+      rollout (target_levels>=2, NO break-at-first-win) so the metric can NEVER silently revert to the degenerate 0.0-by-construction
+      value, PLUS a PROPOSER-PORT-HYGIENE guard (a "Qwen" generation measurement must verify via /props it served Qwen, not
+      the gemma squatting 8919), PLUS a first-win/multi-level floor. Unit tests green. verifier_is_oracle:false.'
+    deliverable: results/experiment_4670_multilevel_harness_cigate.json
+    result: OK (conductor)
+  - id: exp4671-b2
+    title: 'PHASE B2 (INFRA -- reserved slot 2; adversarial_verify hardening) -- extend adversarial_verify with two guards
+      for the .430 lever class: (1) L2-GOAL-INDUCTION-WITHOUT-SATISFIABILITY-CHECK -- a "reached L2 via induction" claim that
+      does NOT report goal_predicate_satisfiable + l2_plan_reaches_goal is flagged (it may be a degenerate-goal vacuous pass);
+      (2) MULTI-LEVEL-WITHOUT-NONDEGENERATE-METRIC -- a multi-level solve-rate claim that does NOT report the fixed harness
+      (target_levels>=2 + no early break) is flagged (the metric may be the degenerate 0.0-by-construction). Honest artifacts
+      NOT flagged. Tests green.'
+    deliverable: results/experiment_4671_adversarial_verify_hardening.json
+    result: OK (conductor)
+  - id: exp4672-c
+    title: PHASE C (HARDWARE CONTINUITY -- 1 per-board slot) -- per-board reachability audit (KV260 via ssh kria [SSH-only,
+      NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag --detect) so each attached
+      board stays visible per the Hardware-Task Continuity Discipline. Record per-board state (loaded overlay / uptime / IDCODE)
+      or blocked_<board>_<reason>. No bitstream build, no fabric-acceleration claim.
+    deliverable: results/experiment_4672_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4673-d
+    title: PHASE D (SOTA-INGESTION -> .431) -- focused literature pass on the STRUCTURAL multi-level-deepening fallback (if
+      A1 L2-goal-induction + A2 distribution-shift value-routing both null, the next lever is a bigger architectural move).
+      Map the strongest 3-5 SOTA methods -- hierarchical-subgoal-search over the live E3 frontier (arXiv:2604.03208/2506.07255/2504.04366)
+      + PoE-World factored-executable-model subgoal planner (2505.10819/2605.05138) -- with arXiv IDs + implement-cost + fails_when,
+      and FLAG the strongest for .431. Reliable sweep + WebSearch/WebFetch only; /deep-research BANNED.
+    deliverable: results/experiment_4673_sota_ingestion_structural_deepening.json
+    result: OK (conductor)
+  - id: exp4674-e
+    title: 'PHASE E (CAPSTONE .430) -- aggregate the scorecard + the HEADLINE DECISION: did L2-GOAL-PREDICATE INDUCTION (A1)
+      cross the bridge for live multi-level solve (the GENERIC agent reaches L2 on lp85/sc25 offline-reproduced), did DAgger-lite
+      distribution-shift value-routing (A2) lift live first-win/solve-rate (CI excludes baseline + shift-score drops), did
+      A3 bank +1 (58->59+)? Skip flagged_adversarial / control-failed / vacuous-goal artifacts. Confirm verifier_is_oracle:false
+      on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
+    deliverable: results/experiment_4674_capstone_v430.json
+    result: OK (conductor)
