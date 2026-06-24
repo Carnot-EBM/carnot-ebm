@@ -759,6 +759,24 @@ class StepwiseExplorer:
             self._adaptive_budget_history.append(decision.as_dict())
             candidates = gated
         rows = [{"action": int(c.action_id), "data": c.data} for c in candidates]
+        # PROPOSE hook (REQ-ARC-OAE-4710): inject click-heatmap proposals from an online scorer
+        # that has propose_enabled=True.  `getattr(fcs, "propose_enabled", False)` guarantees
+        # the LiveActionEffectScorer (frozen shipped scorer) is a no-op here -- it has no
+        # propose_enabled attribute so the default False short-circuits the whole block.
+        fcs = self.frame_change_scorer
+        if fcs is not None and getattr(fcs, "propose_enabled", False) and hasattr(fcs, "propose_coords"):
+            try:
+                existing = {
+                    (int(r["action"]), (r.get("data") or {}).get("x"), (r.get("data") or {}).get("y"))
+                    for r in rows
+                }
+                for (px, py) in fcs.propose_coords(frame):
+                    key = (6, px, py)
+                    if key not in existing:
+                        rows.append({"action": 6, "data": {"x": int(px), "y": int(py)}})
+                        existing.add(key)
+            except Exception:
+                pass
         if self.program_synthesis_filter is not None:
             rows = self.program_synthesis_filter.rank_candidates(frame, rows)
         return self._apply_controllable_novelty_order(frame, rows)
@@ -884,6 +902,25 @@ class StepwiseExplorer:
                         o.get("previous_frame") or o.get("grid"),
                         latest,
                         action,
+                    )
+                except Exception:
+                    pass
+            # OBSERVE hook (REQ-ARC-OAE-4710): feed realized (before, action, after) triples to
+            # an online scorer that supports observe_transition.  The LiveActionEffectScorer (the
+            # frozen shipped scorer) does NOT have this method, so the check `hasattr(fcs, ...)`
+            # makes this a guaranteed no-op for the frozen path -- byte-identical parity.
+            fcs = getattr(self, "frame_change_scorer", None)
+            if (
+                fcs is not None
+                and hasattr(fcs, "observe_transition")
+                and o.get("previous_frame") is not None
+            ):
+                try:
+                    fcs.observe_transition(
+                        o.get("previous_frame") or o.get("grid"),
+                        int(o["action"]),
+                        o.get("data"),
+                        latest,
                     )
                 except Exception:
                     pass

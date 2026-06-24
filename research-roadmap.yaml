@@ -275,7 +275,7 @@ tasks:
            c. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy, StepwiseExplorer; from carnot.agentic import arc_value_learner, arc_frame_change_predictor"` exits 0.
            d. Construct LocalGGUFProposer on a FREE port (e.g. 8920) + verify via /props it serves Qwen3.5-9B-MTP (NOT the gemma squatting 8919). If /props shows gemma or unreachable -> honest_verdict blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT (no fabrication). (--no-cov on focused pytest.)
-        1. Build the generic object-centric/relational representation in arc_value_learner (object decomposition + object-correspondence + action-context features). Run the DIAGNOSTIC: proposal-coverage of the winning L1 trajectory under {order-1, deployable object-centric, upper-bound/ground-truth ceiling} on the target game -- record perception_is_the_wall (bool) from whether the upper-bound representation raises coverage where order-1 does not. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
+        1. Build the generic object-centric/relational representation in arc_value_learner (object decomposition + object-correspondence + action-context features). Run the DIAGNOSTIC: proposal-coverage of the winning L1 trajectory under {{order-1, deployable object-centric, upper-bound/ground-truth ceiling}} on the target game -- record perception_is_the_wall (bool) from whether the upper-bound representation raises coverage where order-1 does not. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
         2. IF perception-sensitive: wire the DEPLOYABLE object-centric representation into the live StepwiseExplorer's PROPOSAL distribution, off-path calibrated. MEASURE generic-agent reached_level with object-centric proposal conditioning, offline_reproduced via arc_solver_kit.reproduce, vs the ORDER-1-REPRESENTATION ablation. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the target has reachable L1 headroom (a winning L1 trajectory exists offline); emit per-config first-win + a null_methodology_note when no new level.
         3. RUN test_arc_submitted_agent_parity.py -> green. If it nulls, log the residual (object_decomposition_correct_but_winning_action_not_proposable | offpath_calibration_insufficient | perception_not_the_wall_search_is) as the .434 target.
 
@@ -293,7 +293,7 @@ tasks:
         perception_is_the_wall:
           principle: "the DECISIVE diagnostic result -- does an upper-bound (relational/ground-truth) representation raise proposal-coverage of the winning L1 trajectory where order-1 does not; resolves the 8-milestone perception-vs-search ambiguity (true=perception, false=search/generation)."
         proposal_coverage_by_representation:
-          principle: "proposal-coverage of the winning L1 trajectory under {order-1, deployable object-centric, upper-bound ceiling} -- the make-a-winner-proposable signal that distinguishes perception from search."
+          principle: "proposal-coverage of the winning L1 trajectory under {{order-1, deployable object-centric, upper-bound ceiling}} -- the make-a-winner-proposable signal that distinguishes perception from search."
         generic_agent_reached_level:
           principle: "the deepest level the GENERIC live agent reached via object-centric proposal conditioning on the target -- the headline (a NEW level is the win)."
         offline_reproduced:
@@ -436,7 +436,7 @@ tasks:
            d. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
         1. Distill the amortized cross-game first-contact prior from logged traces (or the degraded frequency prior); wire arc_go_explore's return-then-explore archive into the live E3 explorer. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green AND arc_go_explore is now reachable (no longer orphaned).
-        2. Run the live explorer with {amortized prior + archive} vs the matched NO-PRIOR baseline on the target game(s); live E3 executes+audits.
+        2. Run the live explorer with {{amortized prior + archive}} vs the matched NO-PRIOR baseline on the target game(s); live E3 executes+audits.
         3. Measure candidate-generation COVERAGE (winner-in-pool/archive) + held-out first-win-rate vs the no-prior baseline. Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the matched baseline ran on a corpus with reachable L1 headroom; emit the coverage delta + first-win delta explicitly + a null_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any newly-solved variant. If coverage still does not rise, log the residual (cross_game_traces_encode_game_ids | archive_expands_dead_cells_no_goal_gradient | replay_cannot_restore_cell) as the .434 generation gap.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -453,7 +453,7 @@ tasks:
         go_explore_now_live_reachable:
           principle: "true -- arc_go_explore.py is wired into the live E3 path (was ORPHANED); the orphan-lint confirms it (the residual-effort-not-wasted fix)."
         candidate_generation_coverage_with_prior:
-          principle: "does the winning action/plan APPEAR in the {amortized-prior + archive} pool -- the make-a-winner-appear signal (distinguishes generation from selection)."
+          principle: "does the winning action/plan APPEAR in the {{amortized-prior + archive}} pool -- the make-a-winner-appear signal (distinguishes generation from selection)."
         candidate_generation_coverage_no_prior_baseline:
           principle: "the matched NO-PRIOR baseline coverage -- a coverage CLAIM requires the prior+archive coverage to exceed it (the winner generated where the empty-prior explorer did not)."
         coverage_delta:
