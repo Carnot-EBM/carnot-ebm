@@ -2348,6 +2348,10 @@ _ARC_OFFLINE_AUROC_KEY_MARKERS = ("auroc", "auc")
 _ARC_OFFLINE_AUROC_CONTEXT_MARKERS = ("offline", "loo", "leave_one", "leave-one", "detector")
 INTRINSIC_REWARD_WITHOUT_DOWNSTREAM_GAIN_KIND = "intrinsic-reward-without-downstream-gain"
 GOAL_ENERGY_WITHOUT_ABLATION_KIND = "goal-energy-without-ablation"
+QD_WITHOUT_RANDOM_MUTATION_ABLATION_KIND = "qd-without-random-mutation-ablation"
+QD_RANDOM_MUTATION_ABLATION_OMITTED_KIND = "qd-random-mutation-ablation-omitted"
+VALUE_ROUTING_WITHOUT_COST_CONTROL_KIND = "value-routing-without-cost-control"
+VALUE_ROUTING_COST_CONTROL_OMITTED_KIND = "value-routing-cost-control-omitted"
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -2759,6 +2763,290 @@ def check_goal_energy_ablation_overclaim(d: dict[str, Any], flags: list[Flag]) -
     )
 
 
+_QD_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "chosen_submitted_config",
+    "solve_provenance",
+)
+_QD_CONTEXT_MARKERS = (
+    "energy_fitness_qd",
+    "energy-fitness qd",
+    "energy fitness qd",
+    "quality-diversity",
+    "quality_diversity",
+    "map-elites",
+    "map_elites",
+    "energy-fitness",
+    "energy_fitness",
+    "energy-as-fitness",
+    "energy as fitness",
+)
+_QD_GENERATION_MARKERS = (
+    "generation",
+    "generate",
+    "generated",
+    "generator",
+    "winner_generated",
+    "winner generated",
+    "solve_rate",
+    "solve-rate",
+    "solve rate",
+    "live",
+)
+_QD_POSITIVE_DELTA_KEYS = (
+    "solve_rate_delta",
+    "live_solve_rate_delta",
+    "first_win_rate_delta",
+    "live_first_win_rate_delta",
+)
+_QD_BASELINE_PAIRS = (
+    ("live_solve_rate_qd", "live_solve_rate_search_baseline"),
+    ("live_solve_rate_energy_fitness_qd", "live_solve_rate_search_baseline"),
+    ("first_win_rate_qd", "first_win_rate_search_baseline"),
+    ("live_first_win_rate_qd", "live_first_win_rate_search_baseline"),
+)
+_VALUE_ROUTING_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "chosen_submitted_config",
+    "solve_provenance",
+)
+_VALUE_ROUTING_CONTEXT_MARKERS = (
+    "value-routing",
+    "value_routing",
+    "value routing",
+    "value-routed",
+    "value_routed",
+    "value routed",
+    "value head",
+    "value_head",
+    "value_weight",
+    "cost-fixed",
+    "cost_fixed",
+    "cost fix",
+)
+_VALUE_ROUTING_POSITIVE_DELTA_KEYS = (
+    "first_win_rate_delta",
+    "live_first_win_rate_delta",
+    "solve_rate_delta",
+    "live_solve_rate_delta",
+)
+_VALUE_ROUTING_BASELINE_PAIRS = (
+    ("live_first_win_rate_value_routed", "live_first_win_rate_baseline"),
+    ("first_win_rate_value_routed", "first_win_rate_baseline"),
+    ("live_solve_rate_value_routed", "live_solve_rate_baseline"),
+    ("solve_rate_value_routed", "solve_rate_baseline"),
+)
+
+
+def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
+    return " ".join(str(d.get(key, "")) for key in keys).lower()
+
+
+def _field_name_text(value: Any) -> str:
+    if isinstance(value, dict):
+        parts: list[str] = []
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            parts.append(str(key).lower())
+            parts.append(_field_name_text(nested))
+        return " ".join(parts)
+    if isinstance(value, list):
+        return " ".join(_field_name_text(item) for item in value)
+    return ""
+
+
+def _has_marker(text: str, markers: tuple[str, ...]) -> bool:
+    text = text.lower()
+    for marker in markers:
+        if marker == "qd":
+            if re.search(r"(^|[^a-z0-9])qd([^a-z0-9]|$)", text):
+                return True
+            continue
+        if marker in text:
+            return True
+    return False
+
+
+def _real_field_values(value: Any, wanted_key: str) -> list[Any]:
+    values: list[Any] = []
+    wanted = wanted_key.lower()
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            if str(key).lower() == wanted:
+                values.append(nested)
+                continue
+            values.extend(_real_field_values(nested, wanted))
+    elif isinstance(value, list):
+        for item in value:
+            values.extend(_real_field_values(item, wanted))
+    return values
+
+
+def _has_positive_top_level_metric(d: dict[str, Any], keys: tuple[str, ...]) -> bool:
+    for key, value in d.items():
+        if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+            continue
+        kl = str(key).lower()
+        if (
+            any(kl == wanted or kl.endswith(f"_{wanted}") for wanted in keys)
+            and _is_finite_number(value)
+            and float(value) > 0.0
+        ):
+            return True
+    return False
+
+
+def _has_positive_metric_pair(d: dict[str, Any], pairs: tuple[tuple[str, str], ...]) -> bool:
+    for left_key, right_key in pairs:
+        left = _finite_float(d, left_key)
+        right = _finite_float(d, right_key)
+        if left is not None and right is not None and left > right:
+            return True
+    return False
+
+
+def _has_qd_context(d: dict[str, Any]) -> bool:
+    text = f"{_claim_text(d, _QD_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+    return _is_arc_artifact(d) and (
+        _has_marker(text, _QD_CONTEXT_MARKERS) or _has_marker(text, ("qd",))
+    )
+
+
+def _claims_qd_energy_fitness_claim(d: dict[str, Any]) -> bool:
+    if not _has_qd_context(d):
+        return False
+    text = f"{_claim_text(d, _QD_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+    return _has_marker(text, _QD_GENERATION_MARKERS)
+
+
+def _claims_qd_energy_fitness_generation_win(d: dict[str, Any]) -> bool:
+    if not _has_qd_context(d):
+        return False
+    if d.get("winner_generated") is True:
+        return True
+    winner_count = _finite_float(d, "winner_generated_count")
+    if winner_count is not None and winner_count > 0.0:
+        return True
+    return _has_positive_top_level_metric(
+        d, _QD_POSITIVE_DELTA_KEYS
+    ) or _has_positive_metric_pair(d, _QD_BASELINE_PAIRS)
+
+
+def check_qd_random_mutation_ablation_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag QD generation wins that do not beat random-mutation ablation."""
+    if not _claims_qd_energy_fitness_claim(d):
+        return
+    ablation_values = _real_field_values(d, "random_mutation_ablation_passed")
+    ablation_omitted = not ablation_values
+    if ablation_omitted:
+        flags.append(
+            Flag(
+                kind=QD_RANDOM_MUTATION_ABLATION_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "qd-random-mutation-ablation-omitted: QD / energy-fitness "
+                    "generation claim omits random_mutation_ablation_passed. "
+                    "Report the random-mutation/no-energy-fitness ablation before "
+                    "attributing the lift to energy fitness."
+                ),
+            )
+        )
+    if not _claims_qd_energy_fitness_generation_win(d):
+        return
+    if any(value is True for value in ablation_values):
+        return
+    flags.append(
+        Flag(
+            kind=QD_WITHOUT_RANDOM_MUTATION_ABLATION_KIND,
+            severity="critical",
+            detail=(
+                "qd-without-random-mutation-ablation: artifact claims a QD / "
+                "energy-fitness generation win, but random_mutation_ablation_passed "
+                "is false or absent. The win must beat the "
+                "random-mutation/no-energy-fitness ablation before it can be "
+                "credited to energy fitness rather than search branching."
+            ),
+        )
+    )
+
+
+def _has_value_routing_context(d: dict[str, Any]) -> bool:
+    text = f"{_claim_text(d, _VALUE_ROUTING_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+    return _is_arc_artifact(d) and _has_marker(text, _VALUE_ROUTING_CONTEXT_MARKERS)
+
+
+def _claims_value_routing_live_claim(d: dict[str, Any]) -> bool:
+    if not _has_value_routing_context(d):
+        return False
+    text = f"{_claim_text(d, _VALUE_ROUTING_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+    return (
+        d.get("solve_provenance") == "live_agent_self_discovery"
+        or _has_marker(text, _ARC_LIVE_CONTEXT_MARKERS)
+        or "live_" in text
+    )
+
+
+def _claims_value_routing_live_win(d: dict[str, Any]) -> bool:
+    if not _claims_value_routing_live_claim(d):
+        return False
+    return _has_positive_top_level_metric(
+        d, _VALUE_ROUTING_POSITIVE_DELTA_KEYS
+    ) or _has_positive_metric_pair(d, _VALUE_ROUTING_BASELINE_PAIRS)
+
+
+def check_value_routing_cost_control_overclaim(
+    d: dict[str, Any], flags: list[Flag]
+) -> None:
+    """Flag value-routing wins that do not report feature cost and no-timeout."""
+    if not _claims_value_routing_live_claim(d):
+        return
+    cost_values = _real_field_values(d, "per_node_feature_cost_ms")
+    timeout_values = _real_field_values(d, "sim_timed_out")
+    omitted: list[str] = []
+    if not cost_values:
+        omitted.append("per_node_feature_cost_ms")
+    if not timeout_values:
+        omitted.append("sim_timed_out")
+    if omitted:
+        flags.append(
+            Flag(
+                kind=VALUE_ROUTING_COST_CONTROL_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "value-routing-cost-control-omitted: value-routing live "
+                    f"claim omits {', '.join(omitted)}. Report finite "
+                    "per_node_feature_cost_ms and sim_timed_out=false before "
+                    "attributing live lift to value routing."
+                ),
+            )
+        )
+    if not _claims_value_routing_live_win(d):
+        return
+    cost_ok = any(_is_finite_number(value) for value in cost_values)
+    timeout_ok = bool(timeout_values) and all(value is False for value in timeout_values)
+    if cost_ok and timeout_ok:
+        return
+    flags.append(
+        Flag(
+            kind=VALUE_ROUTING_WITHOUT_COST_CONTROL_KIND,
+            severity="critical",
+            detail=(
+                "value-routing-without-cost-control: artifact claims a "
+                "value-routing live first-win/solve-rate lift without proving "
+                "the cost fix is the controlled variable. Report finite "
+                "per_node_feature_cost_ms and sim_timed_out=false; a timeout "
+                "or missing cost control means the apparent win may be the "
+                "baseline finally finishing rather than a real signal lift."
+            ),
+        )
+    )
+
+
 _WORLD_MODEL_TRUST_RATE_KEYS = (
     "world_model_trust_pass_rate",
     "world_model_trust_pass_rate_new",
@@ -3061,6 +3349,8 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_false_negative_risk(d, flags)
     check_intrinsic_reward_overclaim(d, flags)
     check_goal_energy_ablation_overclaim(d, flags)
+    check_qd_random_mutation_ablation_overclaim(d, flags)
+    check_value_routing_cost_control_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
