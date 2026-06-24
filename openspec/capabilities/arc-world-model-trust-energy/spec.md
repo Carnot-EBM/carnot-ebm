@@ -4214,6 +4214,80 @@ fixed-harness multi-level solve rate, live submittable count greater than 33,
 no-regression versus the pre-integration config, `verifier_is_oracle=false`,
 `parity_test_green=true`, and a stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4682: Candidate-Generation Coverage CI Gate And Honest First-Win Floor
+
+Experiment 4682 SHALL provide a deterministic CI-gate at
+`python/carnot/experiment_4682_generation_coverage_cigate.py` that locks in the
+candidate-generation measurement substrate for `.431` A1/A2 work. The gate
+SHALL measure `candidate_generation_coverage`: whether the known winning
+action or winning plan appears in the generated candidate pool before any value
+head ranks it. This metric SHALL be computed from cached search traces and
+known winners, not from live LLM inference and not from the executable
+win-check.
+
+The CI-gate SHALL compare a method's candidate-generation coverage against a
+matched flat-search baseline over the same variant signatures. A generation
+improvement claim SHALL pass only when method coverage is strictly higher than
+the flat baseline, so ranking-only changes cannot be misreported as generation
+progress when the winning action or plan is absent from the pool.
+
+The gate SHALL also lock in the honest generic-first-win measurement substrate:
+the standard configuration is the 25 public color01 variant signatures from
+Experiment 4665/4676 with a finite action budget of 200, yielding the honest
+generic first-win floor of `1/25 = 0.04`. A first-win measurement SHALL fail if
+it uses a permissive harness, including a degenerate easy variant subset or an
+unbounded/non-standard action budget. A standard-config measurement at or above
+the 0.04 first-win floor SHALL pass.
+
+The gate SHALL enforce a candidate-generation coverage floor so future A1/A2
+changes cannot silently regress coverage below the established floor. The floor
+helper SHALL be deterministic and testable on synthetic regression and honest
+fixtures without live LLM inference.
+
+Experiment 4682 SHALL write
+`results/experiment_4682_generation_coverage_cigate.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `coverage_metric_added`,
+`honest_firstwin_floor_added`, `coverage_floor_cigate_added`, `tests_added`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: generation_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp proposer)."
+- `verifier_is_oracle`: principle "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+- `coverage_metric_added`: principle "the candidate-generation-coverage metric/gate (is the winner present in the generated pool; coverage-up-vs-flat-baseline) -- the generation analog of the .430 multi-level-harness gate."
+- `honest_firstwin_floor_added`: principle "the gate that a generic-first-win measurement must use the STANDARD config (variant set + action budget) -- catches a permissive harness silently inflating the 0.04 reality."
+- `coverage_floor_cigate_added`: principle "the floor CI-gate that fails on a generation-coverage regression below the A1 floor."
+- `tests_added`: principle "the unit tests added for all three guards (Tests Must Run and Assert: flag the winner-absent / permissive-harness / regression fixtures, pass the honest fixtures)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4682-COVERAGE-METRIC
+
+**Given** a cached search trace and a known winning action or plan
+**When** the Exp 4682 helper scans the generated candidate pool
+**Then** it reports coverage `1.0` when the winner is present and `0.0` when
+the winner is absent. Given matched method and flat-baseline trace sets, the
+coverage-up CI-gate passes only when method coverage exceeds flat coverage.
+
+#### SCENARIO-ARC-WMTE-4682-HONEST-FIRSTWIN
+
+**Given** a generic-first-win measurement
+**When** the Exp 4682 honest-first-win guard validates its harness
+**Then** the standard 25-variant color01 set with budget 200 and first-win rate
+`0.04` passes, while a degenerate easy variant subset or an unbounded budget is
+flagged as a permissive harness.
+
+#### SCENARIO-ARC-WMTE-4682-COVERAGE-FLOOR
+
+**Given** a candidate-generation coverage measurement and the established A1
+coverage floor
+**When** the Exp 4682 floor guard runs
+**Then** a measurement below the floor fails with a named regression error, and
+an honest measurement at or above the floor passes.
+
 ### REQ-ARC-WMTE-4678: Level-Up Self-Play Bank With Verifier Checkpoint
 
 Experiment 4678 SHALL bank one new reproducible ARC public-game level through
