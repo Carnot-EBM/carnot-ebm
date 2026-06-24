@@ -1,3 +1,57 @@
+## 2026-06-24 — .430 planning sweep — THE MULTI-LEVEL WALL IS THE DEGENERATE L2 GOAL PREDICATE: fix L2-goal induction (capture the L1 win-grid exemplar + satisfiability check) and the distribution-shift in value-routing (DAgger-lite); SOTA confirms both directions
+
+Added by the .430 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-24). The `.429` capstone
+(exp4662) closed `capability_grew_57_to_58` (A3 banked vc33 L2) but BOTH generation-guidance levers
+NULLED on live solve-rate: A1 (affordable value-routing — the compute-cost fix WORKED, per-node cost
+<1ms, no timeout, but raising value_weight gave `first_win_rate_delta=0.0`/`solve_rate_delta=0.0`) and
+A2 (energy-as-fitness QD — `no_winner_generated`). The live multi-level solve-rate is still 0.0. The
+DECISIVE input is the operator's clean-Qwen instrumented diagnosis
+(`docs/research-notes/multi-level-deepening-diagnostic-2026-06-23.md`, committed `8bb8a4cfd`) +
+`.429` B1's residual-cause localization (exp4658):
+
+1. **The multi-level wall is the DEGENERATE L2 GOAL PREDICATE.** When the live `level_up_reinduction`
+   pipeline (`arc_competition_agent.py:_induce_and_plan` -> `arc_llm_reinduction.execute_bounded_llm_reinduction`)
+   runs as far as it can (proposer OK, dynamics model gate-accepted), it dies at `no_reachable_plan`
+   (`arc_llm_reinduction.py:114`): the L2 `is_level_complete` is induced from ZERO L2-win positives
+   (the induce prompt's WIN-STATE block is absent — `arc_executable_world_model.py:308-311` only emits it
+   when an active transition has `level_after>level_before`) and is NEVER verified (the held-out gate checks
+   DYNAMICS only) -> unsatisfiable -> the planner has no reachable goal. The cheap levers are DEAD: relaxing
+   the held-out gate is a NO-OP (it passes vacuously on ~0 held-out data), and delaying the one-shot
+   BACKFIRES (the explorer hits `explored_out` at ~5 post-L1 transitions). This is the operator-pre-staged
+   `.430` headline (known-issues 2026-06-24).
+2. **The value-routing null is DISTRIBUTION-SHIFT, not calibration.** `.429` B1 (exp4658) measured
+   `distribution_shift_score=0.699`, `calibration_changes_routing=False`, `dominant_residual_cause=distribution_shift`:
+   the win-reachability value head (`arc_value_learner.py:558`, trained on winning-path states, label
+   1=on-path/0=off-path) is applied to an off-path live frontier. The fix is DAgger-lite — re-train on
+   search-distribution (off-path) states.
+
+**New SOTA mapped onto the two `.430 levers (verified via WebSearch 2026-06-24):**
+- **A1 — LLM goal/reward induction from few exemplars:** `arXiv:2511.19355` (LLMs for reward-function
+  design in RL control), `arXiv:2506.06303` (LLMs are in-context RL learners — reward/goal induction
+  from few examples), `arXiv:2603.09036` (SCALAR — LLM-guided symbolic planning + deep-RL grounding;
+  goal-as-predicate), `arXiv:2602.17930` (MIRA — memory-integrated RL agent w/ limited LLM guidance).
+  These ground "induce a satisfiable L2 goal predicate from the L1 win-grid exemplar + structural
+  evidence" as a current-SOTA technique, not a one-off hack.
+- **A2 — DAgger / distribution-shift correction for learned value/Q functions:** `arXiv:2605.12913`
+  (Revisiting DAgger in the Era of LLM-Agents, 2026 — DAgger for agent value heads under covariate
+  shift), `arXiv:2506.23793` (active fine-tuning under distribution shift), `arXiv:1011.0686` (the
+  original DAgger). The core idea — iteratively aggregate labels on states the LEARNER visits to kill
+  covariate shift — is exactly the off-path-frontier correction B1 localized.
+- **D / .431 fallback — structural multi-level deepening (carried from the `.429 D ingestion,
+  `docs/research-notes/generation-guidance-sota-ingestion-2026-06-24.md`):** hierarchical-subgoal-search
+  over the live E3 frontier (`arXiv:2604.03208` + `2506.07255` + `2504.04366`) and PoE-World
+  factored-executable-model subgoal planner (`arXiv:2505.10819` + `2605.05138`) — the bigger
+  architectural levers to attempt in `.431 if A1/A2 null.
+
+**Bottom line for the `.430 roadmap:** attack the multi-level wall from TWO independent, measured,
+high-confidence mechanisms — A1 the LLM-goal-induction path (capture the L1 win-grid exemplar + a
+goal-satisfiability check) and A2 the learned-value-routing path (DAgger-lite distribution-shift
+correction) — plus FIX the degenerate `live_multi_level_solve_rate` harness (it breaks at the first
+level-up: `target_levels=1`+`break`, so depth>=2 is impossible by construction) so any lever can be
+measured. 6 days to the 2026-06-30 ARC Prize Milestone #1 deadline.
+
+---
+
 ## 2026-06-23 — .426 planning sweep — CROSS THE OFFLINE→LIVE BRIDGE: the representation is SOLVED (0.725 LOO-AUROC) and the dense-gradient positive is PROVEN, but both REGRESS the live depth-first explorer; disambiguate the cause (compute / shift / calibration) and graduate the SpatialValueNet to the live path
 
 Added by the .426 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-23). The `.425` capstone
