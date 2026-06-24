@@ -9179,3 +9179,4 @@ c |
 | 2026-06-24 12:42 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 111 passed, 1 warning in 6.02s |
 | 2026-06-24 12:54 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAG | OK | 88 passed, 1 warning in 8.41s |
 | 2026-06-24 13:18 UTC | PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+tr | OK | 110 passed, 1 warning in 7.98s |
+| 2026-06-24 13:37 UTC | PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold thi | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
