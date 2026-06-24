@@ -529,6 +529,132 @@ LF52_L2_TAIL_LABELS: tuple[str, ...] = (
 
 LF52_L2_SOLUTION_LABELS: tuple[str, ...] = LF52_L1_LABELS + LF52_L2_TAIL_LABELS
 
+RE86_L1_LABELS: tuple[str, ...] = (
+    *(_json_action_label(1) for _ in range(7)),
+    *(_json_action_label(4) for _ in range(4)),
+    _json_action_label(5),
+    *(_json_action_label(1) for _ in range(6)),
+    *(_json_action_label(3) for _ in range(2)),
+)
+
+RE86_L2_TAIL_LABELS: tuple[str, ...] = (
+    *(_json_action_label(2) for _ in range(10)),
+    *(_json_action_label(3) for _ in range(3)),
+    _json_action_label(5),
+    *(_json_action_label(1) for _ in range(6)),
+    *(_json_action_label(3) for _ in range(6)),
+    _json_action_label(5),
+    *(_json_action_label(2) for _ in range(2)),
+    *(_json_action_label(3) for _ in range(7)),
+)
+
+RE86_L2_SOLUTION_LABELS: tuple[str, ...] = RE86_L1_LABELS + RE86_L2_TAIL_LABELS
+
+
+def _re86_center_color(sprite: Any) -> int:
+    pixels = getattr(sprite, "pixels", None)
+    try:
+        return int(pixels[sprite.height // 2, sprite.width // 2])
+    except Exception:
+        return -1
+
+
+def _re86():
+    """re86 -- sprite-overlay pattern match with verifier-derived L2 resize tail."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(RE86_L1_LABELS):
+            return [RE86_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(RE86_L2_TAIL_LABELS):
+            return [RE86_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        data = row.get("data") if isinstance(row.get("data"), dict) else None
+        return env.step(_game_action(GameAction, int(row["action"])), data=data)
+
+    def _sprite_row(sprite):
+        return (
+            str(getattr(sprite, "name", "")),
+            int(getattr(sprite, "x", 0)),
+            int(getattr(sprite, "y", 0)),
+            int(getattr(sprite, "width", 0)),
+            int(getattr(sprite, "height", 0)),
+            int(getattr(sprite, "rotation", 0) or 0),
+            _re86_center_color(sprite),
+        )
+
+    def _sources(game):
+        return list(game.current_level.get_sprites_by_tag("0031cppcuvqlbi"))
+
+    def _targets(game):
+        return list(game.current_level.get_sprites_by_tag("0054xnsuqceejm"))
+
+    def _active_index(game):
+        for index, sprite in enumerate(_sources(game)):
+            if _re86_center_color(sprite) == 0:
+                return index
+        return 0
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else -1
+        return (
+            int(level),
+            int(_active_index(game)),
+            tuple(sorted(_sprite_row(sprite) for sprite in _sources(game))),
+            tuple(sorted(_sprite_row(sprite) for sprite in _targets(game))),
+        )
+
+    def featurize(game):
+        sources = _sources(game)
+        targets = _targets(game)
+        target = targets[0] if targets else None
+        active = _active_index(game)
+        source = sources[active] if 0 <= active < len(sources) else None
+        sx = float(getattr(source, "x", 0) if source is not None else 0)
+        sy = float(getattr(source, "y", 0) if source is not None else 0)
+        tx = float(getattr(target, "x", 0) if target is not None else 0)
+        ty = float(getattr(target, "y", 0) if target is not None else 0)
+        sw = float(getattr(source, "width", 0) if source is not None else 0)
+        sh = float(getattr(source, "height", 0) if source is not None else 0)
+        return [
+            float(getattr(game, "level_index", 0) or 0),
+            float(active),
+            float(len(sources)),
+            float(len(targets)),
+            sx,
+            sy,
+            sw,
+            sh,
+            tx,
+            ty,
+            abs(sx - tx) + abs(sy - ty),
+        ]
+
+    def hand_verifier(game, _frame=None):
+        features = featurize(game)
+        return float(features[-1])
+
+    return GameAdapter(
+        game="re86",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: len(RE86_L1_LABELS), 2: len(RE86_L2_TAIL_LABELS), 3: 2},
+        level_tails={1: RE86_L1_LABELS, 2: RE86_L2_TAIL_LABELS},
+        branch_mode="fresh_env",
+    )
+
 
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
@@ -2061,6 +2187,7 @@ _BUILDERS = {
     "ft09": _ft09,
     "sk48": _sk48,
     "lf52": _lf52,
+    "re86": _re86,
     "ka59": _ka59,
     "cn04": _cn04,
     "su15": _su15,

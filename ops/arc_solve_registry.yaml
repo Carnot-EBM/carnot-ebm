@@ -1490,43 +1490,57 @@ games:
     reproducibility_checksum: 229dd2bcc0c645252420108fcbcbb66349662c66b1029520bdfcd9713f1d45dd
 - game: re86
   reproducibility: reproduced
-  levels_reproduced: 1
+  levels_reproduced: 2
   mechanic_class: pattern_match_sprite_resize
-  solver: python/carnot/experiment_4479_solve_re86.py
+  win_condition: >-
+    L1 sprite-overlay pattern match plus L2 verifier-derived post-L1 overlay
+    resize/move sequence. The generic sprite_overlay_resize_verifier runs on
+    the offline post-L1 state and derives the second target mask tail.
+  action_model: >-
+    Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5
+    cycles the active overlay source. L2 tail moves the active source downward
+    and left, cycles, positions the next source upward/left, cycles again, then
+    moves the final source down/left to cover the L2 target pixels.
+  solver: >-
+    GameAdapter _re86 in python/carnot/agentic/arc_game_adapters.py plus
+    scripts/arc_loop_solve.py --game re86 --target-level 2 --no-hazard-prune.
+  reproduce: >-
+    Exp4702 results/experiment_4702_levelup_selfplay.json re-gated
+    results/arc_loop_solve_re86.json offline_reproduced=True, reached_level=2,
+    banked +1 over the prior L1 registry row, checksum 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64.
+  learned_verifier_checkpoint: models/arc_verifier_re86.json
+  gotchas:
+  - The L2 delta is derived after replaying the L1 overlay seed; running the
+    verifier only at reset repeats L1 and does not expose the L2 target mask.
+  - The learned verifier checkpoint routes/ranks future search only; the
+    executable offline reproduction gate remains the oracle-distinct authority.
   dead_ends:
-  - gap_id: GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
-    game: re86
-    routed_to: tu93
-    operator: graph_astar_action_cost
-    residual_delta: missing_pattern_match_sprite_resize_verifier
-    status: filled
-    candidate_design: add a generic sprite-overlay pattern-match and resize/transformation
-      verifier
-    routed_recipe:
-      game: tu93
-      selected_operator:
-        operator: graph_astar_action_cost
-        routed_to: tu93
-        reason: retrieved_graph_primitive_matches_re86_keyboard_pattern_route
-        source: retrieved_primitives
-    artifact: results/experiment_4471_first_contact_rotated_new_game.json
-    filled_by: experiment_4479_solve_re86
-    filled_artifact: results/experiment_4479_solve_re86.json
-    filled_summary: sprite_overlay_resize_verifier reproduced re86 L1 offline
-  latest_exp4471_first_contact:
-    artifact: results/experiment_4471_first_contact_rotated_new_game.json
-    offline_reproduced: false
-    reproduced_levels: 0
-    gap_id: GAP-4471-RE86-MISSING-PATTERN-MATCH-SPRITE-RESIZE-VERIFIER
-  win_condition: sprite-overlay pattern match against target colored pixels
-  action_model: ACTION1-4 move active overlay source; ACTION5 cycles active source
-  reproduce: arc_solver_kit.reproduce(re86, solution_labels, apply_re86_label, claimed_level=1)
-  latest_exp4479_solve_re86:
-    artifact: results/experiment_4479_solve_re86.json
+  - bp35: no_grounded_next_level_adapter
+  - lf52: recently_deepened_or_operator_skip_list
+  - sb26: recently_deepened_or_operator_skip_list
+  - dc22: recently_deepened_or_operator_skip_list
+  - vc33: recently_deepened_or_operator_skip_list
+  - ft09: recently_deepened_or_operator_skip_list
+  - ls20: recently_deepened_or_operator_skip_list
+  - sk48: recently_deepened_or_operator_skip_list
+  - ka59: recently_deepened_or_operator_skip_list
+  - wa30: recently_deepened_or_operator_skip_list
+  - cd82: no_grounded_L3_delta
+  - sp80: no_grounded_L3_delta
+  - su15: no_grounded_L3_delta
+  - s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30
+  - g50t: clone_replay_L2_route_reached_distance_12_no_bank
+  - r11l: prefix_rooted_graph_search_stalled_at_L1
+  - re86: reset-only sprite overlay verifier repeats L1; derive L2 after replaying L1
+  latest_exp4702_levelup_selfplay:
+    artifact: results/experiment_4702_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_re86.json
     offline_reproduced: true
-    reproduced_levels: 1
-    operator: sprite_overlay_resize_verifier
-    reproducibility_checksum: 4f45118ce85a9d339538ff28ece2bb25a4c2aad2e5afc2885b916bf6bd222673
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_re86.json
+    target_rotation: clean_L1_only_not_deepened_in_428_432
+    reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
   levels_reproduced: 1
@@ -1547,7 +1561,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 61
+reproducible_total_levels: 62
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
