@@ -1,0 +1,471 @@
+{
+  "duration_s": 1.0,
+  "experiment": "experiment_4668_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+    },
+    "offline_reproduced_new_level": {
+      "principle": "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "primitive_persisted": {
+      "principle": "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "residual_dead_end": {
+      "principle": "the characterized transfer-null residual if value is zero (the next-attack record); per the .429 A5 pattern."
+    },
+    "transfer_games": {
+      "principle": "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+    },
+    "transfer_value_per_game": {
+      "principle": "per-game solve-rate/first-win/efficiency delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the persisted primitive ranks/routes/induces, oracle-distinct from the executable win-check."
+    }
+  },
+  "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor).",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "counted_toward_reproducible_total_levels": 0,
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "offline_reproduced_new_level": false,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4668": true
+  },
+  "primitive_operator_result": {
+    "aggregate_total_count": 2,
+    "frontier_count": 2,
+    "negative_count": 2,
+    "off_path_negative_count": 2,
+    "operator": "dagger_off_path_data_collection_operator",
+    "positive_count": 0,
+    "relabeled_frontier_count": 2,
+    "rows": [
+      {
+        "features": [
+          0.0,
+          0.0,
+          195.0
+        ],
+        "label": 0.0,
+        "path": [
+          {
+            "action": 1,
+            "data": {
+              "arm": "corrected",
+              "game": "bp35"
+            }
+          }
+        ],
+        "relabel_source": "executable_reproduction_prefix",
+        "source": "corrected_live_frontier"
+      },
+      {
+        "features": [
+          0.0,
+          0.0,
+          195.0
+        ],
+        "label": 0.0,
+        "path": [
+          {
+            "action": 2,
+            "data": {
+              "arm": "baseline",
+              "game": "bp35"
+            }
+          }
+        ],
+        "relabel_source": "executable_reproduction_prefix",
+        "source": "baseline_live_frontier"
+      }
+    ],
+    "verifier_is_oracle": false,
+    "winning_path_count": 0
+  },
+  "primitive_persisted": {
+    "derived_from_artifacts": [
+      "results/experiment_4664_l2_goal_predicate_induction_live.json",
+      "results/experiment_4665_dagger_distribution_shift_value_routing.json"
+    ],
+    "operator": "dagger_off_path_data_collection_operator",
+    "registry_general_gotcha_id": "primitive_dagger_off_path_data_collection_operator",
+    "reuse_note": "reuse live-frontier off-path row collection before retraining value heads",
+    "source": "A2_dagger_off_path_data_collection"
+  },
+  "random_seed": 4668,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:40eddb4adea3eccf2ac38c743680cd047cb8ce6d0ab52515148e88f4c7652427",
+  "requirements": [
+    "REQ-ARC-WMTE-4668"
+  ],
+  "residual_dead_end": "Persisted DAgger-lite off-path data-collection operator had zero transfer lift on cached held-out games; the residual bridge gap is converting corrected search-distribution labels into value-routing decisions that expose new first-win or multi-level candidates.",
+  "result_path": "results/experiment_4668_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4668"
+  ],
+  "schema": "carnot.exp4668.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "measured_signal": 0.699108,
+    "operator": "dagger_off_path_data_collection_operator",
+    "registry_general_gotcha_id": "primitive_dagger_off_path_data_collection_operator",
+    "selection_rationale": "both A1 and A2 were value-null; persist the strongest characterized component, the DAgger-lite off-path data-collection operator.",
+    "source": "A2_dagger_off_path_data_collection",
+    "upstream_signal_rank": [
+      {
+        "artifact": "results/experiment_4665_dagger_distribution_shift_value_routing.json",
+        "component_signal": 0.699108,
+        "live_signal": 0.0,
+        "measured_signal": 0.699108,
+        "source": "A2_dagger_off_path_data_collection"
+      },
+      {
+        "artifact": "results/experiment_4664_l2_goal_predicate_induction_live.json",
+        "goal_predicate_satisfiable": false,
+        "measured_signal": 0.0,
+        "source": "A1_l2_goal_induction"
+      }
+    ]
+  },
+  "transfer_dead_ends": {
+    "bp35": "cached matched DAgger-corrected rows showed zero solve-rate, first-win, and action-efficiency lift; no new reproduced level banked",
+    "cd82": "cached matched DAgger-corrected rows showed zero solve-rate, first-win, and action-efficiency lift; no new reproduced level banked",
+    "dc22": "cached matched DAgger-corrected rows showed zero solve-rate, first-win, and action-efficiency lift; no new reproduced level banked"
+  },
+  "transfer_games": [
+    "bp35",
+    "cd82",
+    "dc22"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "cached matched DAgger-corrected rows showed zero solve-rate, first-win, and action-efficiency lift; no new reproduced level banked",
+      "game": "bp35",
+      "operator_result": {
+        "aggregate_total_count": 2,
+        "frontier_count": 2,
+        "negative_count": 2,
+        "off_path_negative_count": 2,
+        "operator": "dagger_off_path_data_collection_operator",
+        "positive_count": 0,
+        "relabeled_frontier_count": 2,
+        "rows": [
+          {
+            "features": [
+              0.0,
+              0.0,
+              195.0
+            ],
+            "label": 0.0,
+            "path": [
+              {
+                "action": 1,
+                "data": {
+                  "arm": "corrected",
+                  "game": "bp35"
+                }
+              }
+            ],
+            "relabel_source": "executable_reproduction_prefix",
+            "source": "corrected_live_frontier"
+          },
+          {
+            "features": [
+              0.0,
+              0.0,
+              195.0
+            ],
+            "label": 0.0,
+            "path": [
+              {
+                "action": 2,
+                "data": {
+                  "arm": "baseline",
+                  "game": "bp35"
+                }
+              }
+            ],
+            "relabel_source": "executable_reproduction_prefix",
+            "source": "baseline_live_frontier"
+          }
+        ],
+        "verifier_is_oracle": false,
+        "winning_path_count": 0
+      },
+      "transfer_value": {
+        "action_efficiency_lift": 0.0,
+        "baseline_actions_to_first_levelup": null,
+        "baseline_reached_level": 0,
+        "cache_hits": 0,
+        "corrected_actions_to_first_levelup": null,
+        "corrected_reached_level": 0,
+        "distribution_shift_score_after": 0.0,
+        "distribution_shift_score_before": 0.699108,
+        "distribution_shift_score_delta": -0.699108,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "dagger_off_path_data_collection_operator",
+        "value_added": false,
+        "value_head_evals": 5
+      },
+      "value_added": false
+    },
+    {
+      "dead_end": "cached matched DAgger-corrected rows showed zero solve-rate, first-win, and action-efficiency lift; no new reproduced level banked",
+      "game": "cd82",
+      "operator_result": {
+        "aggregate_total_count": 2,
+        "frontier_count": 2,
+        "negative_count": 2,
+        "off_path_negative_count": 2,
+        "operator": "dagger_off_path_data_collection_operator",
+        "positive_count": 0,
+        "relabeled_frontier_count": 2,
+        "rows": [
+          {
+            "features": [
+              0.0,
+              0.0,
+              197.0
+            ],
+            "label": 0.0,
+            "path": [
+              {
+                "action": 1,
+                "data": {
+                  "arm": "corrected",
+                  "game": "cd82"
+                }
+              }
+            ],
+            "relabel_source": "executable_reproduction_prefix",
+            "source": "corrected_live_frontier"
+          },
+          {
+            "features": [
+              0.0,
+              0.0,
+              197.0
+            ],
+            "label": 0.0,
+            "path": [
+              {
+                "action": 2,
+                "data": {
+                  "arm": "baseline",
+                  "game": "cd82"
+                }
+              }
+            ],
+            "relabel_source": "executable_reproduction_prefix",
+            "source": "baseline_live_frontier"
+          }
+        ],
+        "verifier_is_oracle": false,
+        "winning_path_count": 0
+      },
+      "transfer_value": {
+        "action_efficiency_lift": 0.0,
+        "baseline_actions_to_first_levelup": null,
+        "baseline_reached_level": 0,
+        "cache_hits": 0,
+        "corrected_actions_to_first_levelup": null,
+        "corrected_reached_level": 0,
+        "distribution_shift_score_after": 0.0,
+        "distribution_shift_score_before": 0.699108,
+        "distribution_shift_score_delta": -0.699108,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "dagger_off_path_data_collection_operator",
+        "value_added": false,
+        "value_head_evals": 4
+      },
+      "value_added": false
+    },
+    {
+      "dead_end": "cached matched DAgger-corrected rows showed zero solve-rate, first-win, and action-efficiency lift; no new reproduced level banked",
+      "game": "dc22",
+      "operator_result": {
+        "aggregate_total_count": 2,
+        "frontier_count": 2,
+        "negative_count": 2,
+        "off_path_negative_count": 2,
+        "operator": "dagger_off_path_data_collection_operator",
+        "positive_count": 0,
+        "relabeled_frontier_count": 2,
+        "rows": [
+          {
+            "features": [
+              0.0,
+              0.0,
+              197.0
+            ],
+            "label": 0.0,
+            "path": [
+              {
+                "action": 1,
+                "data": {
+                  "arm": "corrected",
+                  "game": "dc22"
+                }
+              }
+            ],
+            "relabel_source": "executable_reproduction_prefix",
+            "source": "corrected_live_frontier"
+          },
+          {
+            "features": [
+              0.0,
+              0.0,
+              197.0
+            ],
+            "label": 0.0,
+            "path": [
+              {
+                "action": 2,
+                "data": {
+                  "arm": "baseline",
+                  "game": "dc22"
+                }
+              }
+            ],
+            "relabel_source": "executable_reproduction_prefix",
+            "source": "baseline_live_frontier"
+          }
+        ],
+        "verifier_is_oracle": false,
+        "winning_path_count": 0
+      },
+      "transfer_value": {
+        "action_efficiency_lift": 0.0,
+        "baseline_actions_to_first_levelup": null,
+        "baseline_reached_level": 0,
+        "cache_hits": 0,
+        "corrected_actions_to_first_levelup": null,
+        "corrected_reached_level": 0,
+        "distribution_shift_score_after": 0.0,
+        "distribution_shift_score_before": 0.699108,
+        "distribution_shift_score_delta": -0.699108,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "dagger_off_path_data_collection_operator",
+        "value_added": false,
+        "value_head_evals": 4
+      },
+      "value_added": false
+    }
+  ],
+  "transfer_value_per_game": {
+    "bp35": {
+      "action_efficiency_lift": 0.0,
+      "baseline_actions_to_first_levelup": null,
+      "baseline_reached_level": 0,
+      "cache_hits": 0,
+      "corrected_actions_to_first_levelup": null,
+      "corrected_reached_level": 0,
+      "distribution_shift_score_after": 0.0,
+      "distribution_shift_score_before": 0.699108,
+      "distribution_shift_score_delta": -0.699108,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "dagger_off_path_data_collection_operator",
+      "value_added": false,
+      "value_head_evals": 5
+    },
+    "cd82": {
+      "action_efficiency_lift": 0.0,
+      "baseline_actions_to_first_levelup": null,
+      "baseline_reached_level": 0,
+      "cache_hits": 0,
+      "corrected_actions_to_first_levelup": null,
+      "corrected_reached_level": 0,
+      "distribution_shift_score_after": 0.0,
+      "distribution_shift_score_before": 0.699108,
+      "distribution_shift_score_delta": -0.699108,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "dagger_off_path_data_collection_operator",
+      "value_added": false,
+      "value_head_evals": 4
+    },
+    "dc22": {
+      "action_efficiency_lift": 0.0,
+      "baseline_actions_to_first_levelup": null,
+      "baseline_reached_level": 0,
+      "cache_hits": 0,
+      "corrected_actions_to_first_levelup": null,
+      "corrected_reached_level": 0,
+      "distribution_shift_score_after": 0.0,
+      "distribution_shift_score_before": 0.699108,
+      "distribution_shift_score_delta": -0.699108,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "dagger_off_path_data_collection_operator",
+      "value_added": false,
+      "value_head_evals": 4
+    }
+  },
+  "upstream_signals": {
+    "A1_l2_goal_induction": {
+      "artifact": "results/experiment_4664_l2_goal_predicate_induction_live.json",
+      "goal_predicate_satisfiable": false,
+      "honest_verdict": "complete: l2_goal_induction_no_deepening_residual_single_exemplar_goal_insufficient",
+      "max_generic_agent_level": 1,
+      "measured_signal": 0.0
+    },
+    "A2_dagger_distribution_shift_value_routing": {
+      "artifact": "results/experiment_4665_dagger_distribution_shift_value_routing.json",
+      "chosen_submitted_config": "unchanged",
+      "component_signal": 0.699108,
+      "dagger_dataset": {
+        "frontier_count": 1042,
+        "negative_count": 1041,
+        "positive_count": 595,
+        "total_count": 1636,
+        "winning_path_count": 594
+      },
+      "distribution_shift_score_after": 0.0,
+      "distribution_shift_score_before": 0.699108,
+      "honest_verdict": "complete: dagger_distribution_corrected_no_live_lift_residual_logged.",
+      "measured_signal": 0.0
+    }
+  },
+  "verifier_is_oracle": false
+}
