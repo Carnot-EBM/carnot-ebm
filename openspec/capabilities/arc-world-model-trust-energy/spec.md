@@ -4093,6 +4093,78 @@ target games
 coverage delta, live first-win and solve-rate deltas, bootstrap CI, and an
 honest null note when the winning plan does not newly appear.
 
+### REQ-ARC-WMTE-4678: Level-Up Self-Play Bank With Verifier Checkpoint
+
+Experiment 4678 SHALL bank one new reproducible ARC public-game level through
+the standing self-play loop and SHALL train plus persist the learned verifier on
+the run's positive and negative traces. The selected target SHALL honor the
+rotation discipline by preferring a clean L1-only game not deepened in `.426`
+through `.430` and SHALL skip known stalled targets including `dc22`, `vc33`,
+`ft09`, `ls20`, `sk48`, `ka59`, and `wa30`. The implemented target for this
+bank is `sb26` L1->L2: it reuses the grounded color-match slot operator, reverse
+engineers only the L2 nested-frame delta from the offline environment adapter,
+and counts the level only when `arc_solver_kit.reproduce()` returns
+`reproduced=true` and `reached_level >= 2`.
+
+Experiment 4678 SHALL invoke the standing entrypoint
+`scripts/arc_loop_solve.py --game sb26 --target-level 2`, SHALL persist
+`models/arc_verifier_sb26.json`, SHALL update the `sb26` registry row with the
+banked L2 win condition/action model/gotchas/dead-ends/checkpoint metadata, and
+SHALL bump `reproducible_total_levels` from 59 to 60 only after the offline
+reproduction gate accepts the solution. The learned verifier SHALL be
+oracle-distinct: it may route or rank candidate states, but the executable
+offline reproduction gate is the only source of truth for a bank.
+
+Experiment 4678 SHALL write
+`results/experiment_4678_levelup_selfplay.json` with principle-annotated
+top-level fields for `honest_verdict`, `inference_substrate`,
+`verifier_is_oracle`, `solve_provenance`, `offline_reproduced`,
+`reproduced_levels`, `target_game`, `verifier_checkpoint_updated`,
+`registry_updated`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."
+- `verifier_is_oracle`: principle "MUST be false -- the learned verifier ranks/routes the search, oracle-distinct from the executable reproduction win-check."
+- `solve_provenance`: principle "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."
+- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
+- `target_game`: principle "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .426-.430, not dc22/vc33/ft09/ls20/sk48/ka59/wa30)."
+- `verifier_checkpoint_updated`: principle "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
+- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4678-ROTATED-TARGET
+
+**Given** the registry contains clean L1-only games, recent deepened games, and
+recorded dead-end approaches
+**When** Experiment 4678 selects a target
+**Then** it chooses `sb26` L1->L2, records why `r11l` and `lf52` prefix-rooted
+graph searches stalled, and skips `dc22`, `vc33`, `ft09`, `ls20`, `sk48`,
+`ka59`, and `wa30`.
+
+#### SCENARIO-ARC-WMTE-4678-BANK-AND-CHECKPOINT
+
+**Given** the `sb26` L2 nested-frame color-match delta and an offline arcade
+environment
+**When** the standing self-play loop runs for `sb26` target level 2
+**Then** the loop reaches L2, the offline reproduction gate reproduces L2, the
+learned verifier checkpoint is written to `models/arc_verifier_sb26.json`, and
+the artifact reports exactly one newly reproduced level.
+
+#### SCENARIO-ARC-WMTE-4678-REGISTRY-GATE
+
+**Given** the registry has `sb26.levels_reproduced == 1` and
+`reproducible_total_levels == 59`
+**When** Experiment 4678 applies a successful bank artifact
+**Then** it updates only after `offline_reproduced=true`, writes the sb26 L2
+win-condition/action-model/gotcha/dead-end/checkpoint metadata, and bumps the
+total to 60.
+
 ### REQ-ARC-WMTE-4671: Adversarial Verify L2 Goal And Multi-Level Metric Hardening
 
 The `scripts/adversarial_verify.py` reader SHALL protect the .430 A1 L2
