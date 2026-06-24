@@ -124,3 +124,27 @@ def test_scenario_ctnull_6_integration_parity_without_passing_control_still_crit
         "positive_control_passed": False,   # measurement NOT validated -> equality NOT excused
     }
     assert len(_critical_tautology(d)) >= 1
+
+
+def test_scenario_ctnull_7_held_out_first_win_readiness_flat_with_markers_not_quarantined() -> None:
+    """SCENARIO-CTNULL-7: the RETARGETED A4 held-out-first-win readiness experiment trips the SAME parity
+    pattern (first_win_baseline == first_win_rate_integrated when the metric is flat). With the markers it is
+    downgraded (not quarantined); the positive control is parity_test_green. Origin: the .432 A4 (exp4691,
+    created by the 2026-06-24 A4-retarget) FLAGGED on a flat 0.04==0.04 held-out first-win."""
+    d = {
+        "experiment": "held_out_first_win_readiness",
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "first_win_rate_integrated": 0.04,
+        "first_win_baseline": 0.04,
+        "first_win_delta_vs_baseline": 0.0,
+        "parity_test_green": True,
+        "positive_control_passed": True,
+        "null_delta_methodology_note": (
+            "held-out first-win FLAT vs baseline (delta=0): honest no-change; parity_test_green is the "
+            "passing positive control."
+        ),
+    }
+    assert _critical_tautology(d) == []
+    # safety: drop the passing control -> the unvalidated equality flags critical again
+    d_unvalidated = {**d, "positive_control_passed": False}
+    assert len(_critical_tautology(d_unvalidated)) >= 1

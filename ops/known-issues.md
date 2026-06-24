@@ -64,6 +64,16 @@ improved vs the last-submission baseline (bootstrap-CI lower bound > 0), OR (exp
 honest "no leaderboard-relevant change this milestone" note. NEVER readiness=true purely on
 `live_submittable_level_count > 33`.
 
+**TAUTOLOGY-CARVE-OUT MARKERS (MANDATORY — same contract as the A6 integration gate).** When the held-out
+first-win is FLAT (`first_win_rate_integrated == first_win_baseline`, `first_win_delta_vs_baseline == 0`), the
+readiness artifact MUST emit `null_delta_methodology_note` (non-empty) + `positive_control_passed:
+bool(parity_test_green)` so adversarial_verify's TAUTOLOGY carve-out recognizes the honest no-change and
+downgrades CRITICAL->WARN instead of quarantining the A4 phase. The positive control GATES the exemption.
+Shipped on `experiment_4691_held_out_first_win_readiness.py:build_artifact` (the copy-exemplar); pinned by
+`tests/python/test_adversarial_verify_control_treatment_null.py` SCENARIO-CTNULL-7. Origin: the `.432 A4
+(exp4691) FLAGGED on a flat 0.04==0.04 -- the same parity false-positive the A6 fix addressed, surfaced in the
+retargeted A4 lane. Do NOT weaken `scripts/adversarial_verify.py`.
+
 **REQUIRED ARTIFACT FIELDS (principle-annotated).**
 - `first_win_rate_integrated` — principle: "the held-out generic first-win on color-permuted variants is the
   only offline proxy that tracks the scored leaderboard lane; the replay count does not."
@@ -9259,6 +9269,10 @@ the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is alr
 action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
