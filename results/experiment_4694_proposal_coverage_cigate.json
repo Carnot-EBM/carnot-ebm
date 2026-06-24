@@ -1,0 +1,2357 @@
+{
+  "duration_s": 1.878677,
+  "experiment": "experiment_4694_proposal_coverage_cigate",
+  "experiment_id": 4694,
+  "field_principles": {
+    "honest_firstwin_floor_added": {
+      "principle": "the gate that a generic-first-win measurement must use the STANDARD config (variant set + action budget) -- catches a permissive harness silently inflating the 0.04 reality."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: proposal_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- proposal-coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp explorer)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "proposal_coverage_floor_cigate_added": {
+      "principle": "the floor CI-gate that fails on a proposal-coverage regression below the A1 floor."
+    },
+    "proposal_coverage_metric_added": {
+      "principle": "the L1-first-contact proposal-coverage metric/gate (does the explorer's proposal distribution reach the winning L1 trajectory; coverage-up-vs-flat-baseline) -- the proposal-stage analog of the .431 generation-coverage gate."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests added for all three guards (Tests Must Run and Assert: flag the trajectory-not-proposed / permissive-harness / regression fixtures, pass the honest fixtures)."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+    }
+  },
+  "honest_firstwin_floor_added": {
+    "errors": [],
+    "measured": {
+      "action_budget": 200,
+      "first_win_count": 1,
+      "first_win_rate": 0.04,
+      "variant_attempts_count": 25,
+      "variant_signatures": [
+        "ar25~color01",
+        "bp35~color01",
+        "cd82~color01",
+        "cn04~color01",
+        "dc22~color01",
+        "ft09~color01",
+        "g50t~color01",
+        "ka59~color01",
+        "lf52~color01",
+        "lp85~color01",
+        "ls20~color01",
+        "m0r0~color01",
+        "r11l~color01",
+        "re86~color01",
+        "s5i5~color01",
+        "sb26~color01",
+        "sc25~color01",
+        "sk48~color01",
+        "sp80~color01",
+        "su15~color01",
+        "tn36~color01",
+        "tr87~color01",
+        "tu93~color01",
+        "vc33~color01",
+        "wa30~color01"
+      ]
+    },
+    "passed": true,
+    "standard_config": {
+      "action_budget": 200,
+      "expected_first_win_rate_floor": 0.04,
+      "policy_mode": "4676_explore_budget_200",
+      "source_artifact": "results/experiment_4676_hierarchical_subgoal_search_live.json",
+      "source_config_key": "explore_budget_200",
+      "variant_ids": [
+        1
+      ],
+      "variant_kind": "color",
+      "variant_signatures": [
+        "ar25~color01",
+        "bp35~color01",
+        "cd82~color01",
+        "cn04~color01",
+        "dc22~color01",
+        "ft09~color01",
+        "g50t~color01",
+        "ka59~color01",
+        "lf52~color01",
+        "lp85~color01",
+        "ls20~color01",
+        "m0r0~color01",
+        "r11l~color01",
+        "re86~color01",
+        "s5i5~color01",
+        "sb26~color01",
+        "sc25~color01",
+        "sk48~color01",
+        "sp80~color01",
+        "su15~color01",
+        "tn36~color01",
+        "tr87~color01",
+        "tu93~color01",
+        "vc33~color01",
+        "wa30~color01"
+      ]
+    }
+  },
+  "honest_verdict": "success: proposal_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- proposal-coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp explorer).",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "firstwin_source_artifact_present": true,
+    "live_llm_inference": false,
+    "offline_arcade": true,
+    "ok": true,
+    "small_offline_rollout": true,
+    "spec_has_req_4694": true
+  },
+  "proposal_coverage_floor_cigate_added": {
+    "errors": [],
+    "floor": 0.04,
+    "measured": {
+      "coverage_rate": 0.5
+    },
+    "passed": true
+  },
+  "proposal_coverage_metric_added": {
+    "baseline": {
+      "attempted_count": 2,
+      "coverage_rate": 0.0,
+      "per_trace": [
+        {
+          "first_missed_step_index": 0,
+          "per_step": [
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":1,\"data\":null}"
+              ],
+              "proposed": false,
+              "step_index": 0,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 1,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 2,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 3,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 4,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 5,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 6,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 7,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 8,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 9,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 10,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 11,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 12,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 13,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 14,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 15,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 16,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 17,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 18,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 19,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 20,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 21,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 22,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 23,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 24,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 25,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 26,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 27,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 28,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 29,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 30,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 31,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 32,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 33,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 34,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 35,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 36,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 37,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 38,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 39,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 40,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 41,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 42,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 43,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 44,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+              ],
+              "proposed": true,
+              "step_index": 45,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 46,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 47,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 48,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 49,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 50,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 51,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 52,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 53,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 54,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 55,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 56,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 57,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 58,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            }
+          ],
+          "proposal_coverage": 0.0,
+          "proposal_record_count": 59,
+          "proposed_step_count": 58,
+          "trajectory_length": 59,
+          "variant_signature": "lp85~color01",
+          "winning_trajectory_reached": false
+        },
+        {
+          "first_missed_step_index": 0,
+          "per_step": [
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":1,\"data\":null}"
+              ],
+              "proposed": false,
+              "step_index": 0,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 1,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 2,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 3,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 4,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 5,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 6,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 7,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 8,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 9,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 10,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 11,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 12,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 13,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 14,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 15,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 16,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 17,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 18,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 19,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 20,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 21,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 22,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 23,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 24,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 25,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 26,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 27,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 28,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 29,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 30,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 31,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 32,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 33,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 34,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 35,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 36,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 37,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 38,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 39,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 40,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 41,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 42,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 43,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 44,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+              ],
+              "proposed": true,
+              "step_index": 45,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 46,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 47,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 48,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 49,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 50,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 51,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 52,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 53,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 54,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 55,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 56,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 57,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 58,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            }
+          ],
+          "proposal_coverage": 0.0,
+          "proposal_record_count": 59,
+          "proposed_step_count": 58,
+          "trajectory_length": 59,
+          "variant_signature": "ar25~color01",
+          "winning_trajectory_reached": false
+        }
+      ],
+      "variant_signatures": [
+        "lp85~color01",
+        "ar25~color01"
+      ],
+      "winning_trajectory_reached_count": 0
+    },
+    "coverage_delta": 0.5,
+    "errors": [],
+    "method": {
+      "attempted_count": 2,
+      "coverage_rate": 0.5,
+      "per_trace": [
+        {
+          "first_missed_step_index": null,
+          "per_step": [
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 0,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 1,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 2,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 3,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 4,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 5,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 6,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 7,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 8,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 9,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 10,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 11,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 12,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 13,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 14,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 15,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 16,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 17,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 18,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 19,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 20,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 21,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 22,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 23,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 24,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 25,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 26,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 27,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 28,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 29,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 30,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 31,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 32,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 33,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 34,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 35,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 36,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 37,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 38,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 39,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 40,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 41,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 42,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 43,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 44,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+              ],
+              "proposed": true,
+              "step_index": 45,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 46,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 47,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 48,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 49,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 50,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 51,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 52,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 53,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 54,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 55,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 56,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 57,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 58,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            }
+          ],
+          "proposal_coverage": 1.0,
+          "proposal_record_count": 59,
+          "proposed_step_count": 59,
+          "trajectory_length": 59,
+          "variant_signature": "lp85~color01",
+          "winning_trajectory_reached": true
+        },
+        {
+          "first_missed_step_index": 0,
+          "per_step": [
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":1,\"data\":null}"
+              ],
+              "proposed": false,
+              "step_index": 0,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 1,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 2,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 3,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 4,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 5,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 6,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 7,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 8,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 9,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 10,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 11,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 12,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 13,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 14,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 15,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 16,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 17,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 18,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 19,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 20,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 21,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 22,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 23,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 24,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 25,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 26,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 27,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 28,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 29,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 30,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 31,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 32,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 33,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 34,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 35,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 36,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 37,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 38,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 39,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 40,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 41,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 42,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 43,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 44,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+              ],
+              "proposed": true,
+              "step_index": 45,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":38}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 46,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 47,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":37,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 48,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":43,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 49,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":19,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 50,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":31,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 51,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":25,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+              ],
+              "proposed": true,
+              "step_index": 52,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 53,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":36,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 54,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":41,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+              ],
+              "proposed": true,
+              "step_index": 55,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":46,\"y\":1}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+              ],
+              "proposed": true,
+              "step_index": 56,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+              ],
+              "proposed": true,
+              "step_index": 57,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":13,\"y\":44}}"
+            },
+            {
+              "proposal_count": 1,
+              "proposal_keys": [
+                "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+              ],
+              "proposed": true,
+              "step_index": 58,
+              "winning_action_key": "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
+            }
+          ],
+          "proposal_coverage": 0.0,
+          "proposal_record_count": 59,
+          "proposed_step_count": 58,
+          "trajectory_length": 59,
+          "variant_signature": "ar25~color01",
+          "winning_trajectory_reached": false
+        }
+      ],
+      "variant_signatures": [
+        "lp85~color01",
+        "ar25~color01"
+      ],
+      "winning_trajectory_reached_count": 1
+    },
+    "passed": true
+  },
+  "random_seed": 4694,
+  "reproducibility_checksum": "sha256:bf56ef6e78abdd95e77f26d243e394a949475643d87b1d241bdcbc60a4770cfa",
+  "schema": "carnot.exp4694.proposal_coverage_cigate.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4694",
+    "SCENARIO-ARC-WMTE-4694-PROPOSAL-COVERAGE",
+    "SCENARIO-ARC-WMTE-4694-HONEST-FIRSTWIN",
+    "SCENARIO-ARC-WMTE-4694-PROPOSAL-COVERAGE-FLOOR"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "assertions": [
+      "winning-trajectory-proposed fixture coverage=1 and not-proposed fixture coverage=0",
+      "proposal-coverage-up-vs-flat-baseline fixture passes and collapsed baseline fails",
+      "standard 25-variant budget-200 first-win=0.04 fixture passes",
+      "permissive easy-subset/unbounded-budget fixture fails",
+      "proposal-coverage below-floor fixture fails and honest fixture passes"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4694_proposal_coverage_cigate.py -q --no-cov",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4694_proposal_coverage_cigate.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4694_proposal_coverage_cigate.py -q",
+      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4694_proposal_coverage_cigate.py' --fail-under=100 --show-missing"
+    ],
+    "focused_tests_passed": true,
+    "new_code_coverage": "100%",
+    "passed": true,
+    "test_file": "tests/python/test_experiment_4694_proposal_coverage_cigate.py"
+  },
+  "verifier_is_oracle": false
+}

@@ -4683,6 +4683,84 @@ coverage floor
 **Then** a measurement below the floor fails with a named regression error, and
 an honest measurement at or above the floor passes.
 
+### REQ-ARC-WMTE-4694: Proposal-Coverage CI Gate And Honest First-Win Floor
+
+Experiment 4694 SHALL provide a deterministic CI-gate at
+`python/carnot/experiment_4694_proposal_coverage_cigate.py` that locks in the
+L1 first-contact action-proposal measurement substrate for `.432` A1/A2 work.
+The gate SHALL measure `proposal_coverage`: whether the explorer's
+action-proposal distribution reaches the known winning L1 trajectory by
+proposing every next action along that trajectory at the matching winning
+prefix. This metric SHALL be computed from cached exploration traces and known
+winning L1 trajectories, not from live LLM inference and not from the
+executable win-check.
+
+The CI-gate SHALL compare a method's proposal coverage against a matched
+flat-exploration baseline over the same variant signatures. A directed
+exploration improvement claim SHALL pass only when method proposal coverage is
+strictly higher than the flat baseline, so search depth, value ranking, or
+candidate selection changes cannot be misreported as proposal-distribution
+progress when the winning L1 trajectory was never proposed.
+
+The gate SHALL re-affirm the honest generic-first-win measurement substrate
+from Experiment 4676: the standard configuration is the 25 public color01
+variant signatures with a finite action budget of 200, yielding the honest
+generic first-win floor of `1/25 = 0.04`. A first-win measurement SHALL fail if
+it uses a permissive harness, including a degenerate easy variant subset or an
+unbounded/non-standard action budget. A standard-config measurement at or
+above the 0.04 first-win floor SHALL pass.
+
+The gate SHALL enforce a proposal-coverage floor so future A1/A2 changes cannot
+silently regress proposal coverage below the established floor. The floor
+helper SHALL be deterministic and testable on synthetic regression and honest
+fixtures without live LLM inference.
+
+Experiment 4694 SHALL write
+`results/experiment_4694_proposal_coverage_cigate.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`,
+`proposal_coverage_metric_added`, `honest_firstwin_floor_added`,
+`proposal_coverage_floor_cigate_added`, `tests_added`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: proposal_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- proposal-coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp explorer)."
+- `verifier_is_oracle`: principle "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+- `proposal_coverage_metric_added`: principle "the L1-first-contact proposal-coverage metric/gate (does the explorer's proposal distribution reach the winning L1 trajectory; coverage-up-vs-flat-baseline) -- the proposal-stage analog of the .431 generation-coverage gate."
+- `honest_firstwin_floor_added`: principle "the gate that a generic-first-win measurement must use the STANDARD config (variant set + action budget) -- catches a permissive harness silently inflating the 0.04 reality."
+- `proposal_coverage_floor_cigate_added`: principle "the floor CI-gate that fails on a proposal-coverage regression below the A1 floor."
+- `tests_added`: principle "the unit tests added for all three guards (Tests Must Run and Assert: flag the trajectory-not-proposed / permissive-harness / regression fixtures, pass the honest fixtures)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4694-PROPOSAL-COVERAGE
+
+**Given** a cached exploration trace and a known winning L1 trajectory
+**When** the Exp 4694 helper scans the action-proposal distribution at each
+winning-prefix step
+**Then** it reports proposal coverage `1.0` only when every next winning action
+was proposed, and `0.0` when any winning action on the trajectory was not
+proposed. Given matched method and flat-baseline trace sets, the coverage-up
+CI-gate passes only when method proposal coverage exceeds flat coverage.
+
+#### SCENARIO-ARC-WMTE-4694-HONEST-FIRSTWIN
+
+**Given** a generic-first-win measurement
+**When** the Exp 4694 honest-first-win guard validates its harness
+**Then** the standard 25-variant color01 set with budget 200 and first-win rate
+`0.04` passes, while a degenerate easy variant subset or an unbounded budget is
+flagged as a permissive harness.
+
+#### SCENARIO-ARC-WMTE-4694-PROPOSAL-COVERAGE-FLOOR
+
+**Given** a proposal-coverage measurement and the established A1 floor
+**When** the Exp 4694 floor guard runs
+**Then** a measurement below the floor fails with a named regression error, and
+an honest measurement at or above the floor passes.
+
 ### REQ-ARC-WMTE-4678: Level-Up Self-Play Bank With Verifier Checkpoint
 
 Experiment 4678 SHALL bank one new reproducible ARC public-game level through
