@@ -28,13 +28,31 @@
     {
       "operator": "value_head_bridge_fix_operator",
       "derived_from_games": [
-        "exp4616_offline_live_bridge_disambiguation"
+        "exp4616_offline_live_bridge_disambiguation",
+        "exp4652_value_routing_cost_fix_live"
       ],
       "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
       "selector_tags": [
         "value_head",
         "bridge_fix",
         "decision_point",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "cheap_value_routing_cost_fix_operator",
+      "derived_from_games": [
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
+      "selector_tags": [
+        "value_head",
+        "cheap_feature",
+        "value_routing",
+        "cost_fix",
         "candidate_ranking",
         "graph_explore",
         "live_path",
