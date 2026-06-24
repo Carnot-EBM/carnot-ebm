@@ -171,7 +171,8 @@ def test_scenario_arc_wmte_4617_live_path_reachability(monkeypatch) -> None:
     assert "load_live_spatial_value_head" in arc_loop_src
     assert "LearnedVerifier.load" not in arc_loop_src
     assert "load_live_spatial_value_head" in comp_src
-    assert comp.SUBMITTED_AGENT_CONFIG["value_weight"] == 0.0
+    assert comp.SUBMITTED_AGENT_CONFIG["value_weight"] == comp.SUBMITTED_VALUE_WEIGHT
+    assert 0.0 < comp.SUBMITTED_AGENT_CONFIG["value_weight"] <= 1e-9
 
     sentinel = lambda _frame: 4.0
     monkeypatch.setattr(comp, "load_live_spatial_value_head", lambda *_, **__: sentinel)
@@ -187,7 +188,7 @@ def test_scenario_arc_wmte_4617_live_path_reachability(monkeypatch) -> None:
     policy = comp.E3AgentPolicy("paritytest", proposer=None, candidate_router=None)
 
     assert policy.explorer.value_head is sentinel
-    assert policy.explorer.value_weight == 0.0
+    assert policy.explorer.value_weight == comp.SUBMITTED_VALUE_WEIGHT
     assert policy.explorer.lazy_value_top_k <= comp.SUBMITTED_LAZY_VALUE_TOP_K
 
 
@@ -256,7 +257,7 @@ def test_req_arc_wmte_4617_artifact_success_can_come_from_actions_delta() -> Non
     assert artifact["value_weight_used"] == mod.GRADUATED_VALUE_WEIGHT
     assert artifact["bridge_fix_applied"]["mode"] == "decision_point_cached_tiebreak"
     assert "null_delta_methodology_note" in artifact
-    assert artifact["chosen_submitted_config"]["value_weight"] == 0.0
+    assert 0.0 < artifact["chosen_submitted_config"]["value_weight"] <= 1e-9
     assert mod.artifact_schema_errors(artifact) == []
 
 

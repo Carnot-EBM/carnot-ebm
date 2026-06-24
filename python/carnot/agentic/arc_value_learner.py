@@ -150,6 +150,14 @@ def cross_game_feature_names_v3() -> list[str]:
     )
 
 
+def cross_game_feature_names_v3_value_routing() -> list[str]:
+    """REQ-LEARN-4652: feature names for the cheap live value-routing subset."""
+
+    return [f"v2_{i}" for i in range(_V3_V2_LEN)] + [
+        f"frame_delta_{name}" for name in _V3_FRAME_DELTA_NAMES
+    ]
+
+
 def _grid2d(frame: Any) -> np.ndarray:
     from carnot.agentic.arc_agi3_world_model import grid_of
 
@@ -441,6 +449,28 @@ def cross_game_features_v3(
         *_frame_delta_features(g, frame, previous_frame),
         *_action_features(action_id),
         *_predicate_distance_features(g, goal_frame),
+    ]
+
+
+def cross_game_features_v3_value_routing(
+    frame: Any,
+    previous_frame: Any | None = None,
+    action_id: Any | None = None,
+    goal_frame: Any | None = None,
+) -> list[float]:
+    """REQ-LEARN-4652: cheap live routing features: v2 + frame-delta only.
+
+    The function accepts the full v3 context signature so callers can swap it in
+    for `cross_game_features_v3`, but it intentionally ignores action and goal
+    context. Those classes were measured as dead weight for live routing; the
+    previous frame is the only optional context used here.
+    """
+
+    _ = action_id, goal_frame
+    g = _grid2d(frame)
+    return [
+        *cross_game_features_v2(frame),
+        *_frame_delta_features(g, frame, previous_frame),
     ]
 
 

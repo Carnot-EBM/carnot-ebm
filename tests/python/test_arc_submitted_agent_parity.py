@@ -59,10 +59,12 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert exp.search_mode == SUBMITTED_AGENT_CONFIG["search_mode"]
     assert exp.frontier_batch_size == SUBMITTED_AGENT_CONFIG["frontier_batch_size"]
     assert exp.navigation_cost_tiebreak == SUBMITTED_AGENT_CONFIG["navigation_cost_tiebreak"]
-    # value_weight reverted to 0.0 (2026-06-20): the v3 head is loaded + used as a tiebreaker, but
-    # weight>0 was a measured regression (per-node v3 eval too slow). Pin it to 0 until .416 shows a
-    # weight>0 beats bare-BFS live AND finishes in budget. (NOT `> 0` — that asserted the regression.)
-    assert exp.value_weight == 0.0
+    # REQ-LEARN-4652: the component-labeling cost fix makes a bounded positive value route affordable.
+    assert exp.value_weight == m.SUBMITTED_VALUE_WEIGHT
+    assert 0.0 < exp.value_weight <= 1e-9
+    assert SUBMITTED_AGENT_CONFIG["value_head_feature_subset"] == (
+        "cross_game_features_v3:v2_plus_frame_delta"
+    )
     assert exp.target_levels > 1
     assert exp.candidate_router is not None
     assert exp.frame_change_scorer is not None
@@ -85,14 +87,15 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
 
 
 def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
-    """REQ-CAPSTONE-4605: value weight stays zero while router/deepening ship."""
+    """REQ-CAPSTONE-4605/REQ-LEARN-4652: router/deepening ship with bounded value routing."""
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     exp = pol.explorer
 
     assert SUBMITTED_AGENT_CONFIG["target_levels"] > 1
     assert exp.target_levels > 1
-    assert SUBMITTED_AGENT_CONFIG["value_weight"] == 0.0
-    assert exp.value_weight == 0.0
+    assert SUBMITTED_AGENT_CONFIG["value_weight"] == m.SUBMITTED_VALUE_WEIGHT
+    assert exp.value_weight == m.SUBMITTED_VALUE_WEIGHT
+    assert 0.0 < exp.value_weight <= 1e-9
     assert exp.frame_change_scorer is not None
     assert exp.frame_change_prune_threshold is None
     assert exp.action_effect_expansion_prior is not None

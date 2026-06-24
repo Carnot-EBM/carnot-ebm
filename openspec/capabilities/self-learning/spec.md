@@ -14239,6 +14239,102 @@ terminal-prefix `honest_verdict`.
 
 ---
 
+## REQ-LEARN-4652: ARC Value-Routing Cost Fix Live Productionization
+
+The live ARC value-routing path SHALL replace pure-Python connected-component
+flood fill in `arc_agi3_world_model.objects()` and
+`arc_value_learner._component_stats_from_grid()` with a
+`scipy.ndimage.label` fast path while preserving a pure-Python fallback for
+offline runtimes where scipy is unavailable. The fast path and fallback SHALL
+produce identical component targets and component statistics over at least 40
+deterministic random grids.
+
+The submitted `E3AgentPolicy` SHALL route the value head with the cheap
+`v2 + frame_delta` feature subset, excluding the previously measured
+dead-weight `action_conditioned` and `predicate_distance` classes. The
+submitted value weight SHALL be raised above `0.0` only in the cost-fixed,
+frame-hash-cached live path, and Exp 4652 SHALL compare that routed agent to a
+matched `value_weight=0` baseline on the same public-game variants with
+first-win rate, multi-level solve rate, per-node feature cost, timeout status,
+bootstrap confidence interval, and offline reproduction for newly solved
+variants.
+
+### REQ-LEARN-4652 Sub-requirements
+
+- REQ-LEARN-4652-1: Component labeling SHALL prefer `scipy.ndimage.label`
+  with 4-connectivity and SHALL fall back to pure Python without changing
+  component outputs.
+- REQ-LEARN-4652-2: Value-routing features SHALL expose a stable
+  `v2 + frame_delta` subset and SHALL ignore action-conditioned and
+  predicate-distance contexts.
+- REQ-LEARN-4652-3: The submitted `E3AgentPolicy` config SHALL set
+  `value_weight > 0`, `verifier_is_oracle=false`, and a feature-subset label
+  documenting the cheap cost-fixed route.
+- REQ-LEARN-4652-4: `experiment_4652_value_routing_cost_fix_live` SHALL write
+  the required principle-annotated artifact fields, including the matched
+  `value_weight=0` baseline, per-node feature cost under 1 ms, timeout status,
+  bootstrap CI, and residual-cause hypothesis for honest nulls.
+
+### SCENARIO-LEARN-4652-COMPONENTS: Fast Labeling Is Output-Identical
+
+**Given** at least 40 deterministic random ARC-style grids
+**When** the world-model object extractor and value-learner component stats run
+through both the scipy fast path and the pure-Python fallback
+**Then** the outputs are identical after deterministic ordering.
+
+### SCENARIO-LEARN-4652-VALUE-ROUTE: Submitted Path Uses Cheap Frame-Delta Value
+
+**Given** a previous frame, current frame, action id, and goal frame
+**When** the live value-routing featurizer builds its feature vector
+**Then** the vector contains only the v2 and frame-delta slices, changes with
+frame-delta context, and is unchanged by action-conditioned or
+predicate-distance context.
+
+### SCENARIO-LEARN-4652-LIVE-ARTIFACT: Matched Controls Decide Lift Or Null
+
+**Given** the offline arcade public variants are runnable
+**When** Exp 4652 compares `value_weight>0` against `value_weight=0`
+**Then** the artifact reports live first-win and multi-level solve rates,
+matched deltas, bootstrap CI, no-timeout status, per-node feature cost,
+live-path reachability, parity test status, and an honest residual hypothesis
+when the live lift is null.
+
+### REQ-LEARN-4652 Field Principles
+
+- `honest_verdict`: terminal prefix; success: value_routing_cost_fixed_live_<firstwin|solverate>_up_<n> OR complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration.
+- `inference_substrate`: verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the value head is a small CPU computation, no live_llm_inference.
+- `verifier_is_oracle`: MUST be false -- cross_game_features_v3 is a learned discriminator (LOO-AUROC 0.725), oracle-DISTINCT from the executable win-check.
+- `solve_provenance`: live_agent_self_discovery -- this improves the SCORED live agent's OWN search guidance (E3AgentPolicy value-routing); NOT a parallel solver, NOT outer_loop_re.
+- `live_path_reachable`: HARD gate -- the changed modules are in the live import closure (arc_agi3_world_model/arc_value_learner/arc_competition_agent <- E3AgentPolicy); arc_orphan_solver_lint passes.
+- `feature_output_identical_verified`: the scipy.ndimage.label fix MUST produce IDENTICAL component stats to the pure-python flood fill (asserted over >=40 random grids) -- a pure speedup, not a behavior change.
+- `per_node_feature_cost_ms`: the productionized per-node cost (must be < 1ms; was 13ms) -- the load-bearing number that removes the 25-game-sim timeout.
+- `sim_timed_out`: MUST be false with the cost fix + value_weight>0 -- the timeout was the named root cause of the prior value-head reversion.
+- `value_weight_set`: the value_weight raised off the 0.0 floor (the prescribed sequel to the cost fix); records the chosen dense-bias weight that does not time out.
+- `live_first_win_rate_value_routed`: the HEADLINE -- LIVE first-win-rate WITH the cost-fixed value head at value_weight>0 on the SCORED agent.
+- `live_solve_rate_value_routed`: LIVE multi-level (>=2) solve-rate WITH value-routing (the deeper wall -- does affordable guidance chain a 2nd level-up).
+- `live_baseline_value_weight_zero`: the matched value_weight=0 baseline first-win + solve-rate on the SAME variants (the no-regression control).
+- `first_win_rate_delta`: value_routed - baseline first-win-rate (positive = affordable guidance crossed the bridge), emitted explicitly so a null (0) is annotated.
+- `solve_rate_delta`: value_routed - baseline multi-level solve-rate; emitted explicitly so a null is annotated.
+- `live_lift_ci`: bootstrap CI on the chosen live-lift metric; a claim above baseline requires the CI to exclude it.
+- `bare_control_passed`: the POSITIVE CONTROL -- the value_weight=0 baseline ran on a corpus with reachable headroom; a no-lift null is valid only then.
+- `false_negative_risk_checked`: true with the no-timeout cost control + baseline + reachable-headroom confirmed -- a 'no lift' null is valid only then.
+- `residual_cause_hypothesis`: if the affordable value head still nulls, names the residual cause (distribution_shift | calibration) -- the B1/.430 diagnostic target; 'none' if it lifted.
+- `null_delta_methodology_note`: present when a delta==0 -- states the equality is an honest no-value null, not a measurement bug.
+- `chosen_submitted_config`: the recommended SUBMITTED_AGENT_CONFIG change (cost-fix on, value_weight value, feature subset) -- the A6 input; 'unchanged' if null.
+- `parity_test_green`: HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config stays the single source of truth.
+- `offline_reproduced`: any newly-solved variant must offline-reproduce to count.
+- `random_seed`: determinism precondition for reproducibility.
+- `reproducibility_checksum`: content-addressed hash catches silent harness/corpus drift on replay.
+- `preconditions_checked`: records resources verified (offline arcade, E3AgentPolicy + world-model + value-learner importable, scipy present); pre-empts missing-resource fabrication.
+
+## Implementation Status (REQ-LEARN-4652)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4652 | Planned (`python/carnot/agentic/arc_agi3_world_model.py`, `python/carnot/agentic/arc_value_learner.py`, `python/carnot/agentic/arc_competition_agent.py`, `python/carnot/experiment_4652_value_routing_cost_fix_live.py`, `results/experiment_4652_value_routing_cost_fix_live.json`) | Planned (`tests/python/test_experiment_4652_value_routing_cost_fix_live.py`, `tests/python/test_arc_verifier_variant_augmentation.py`, `tests/python/test_arc_submitted_agent_parity.py`) |
+
+---
+
 ## REQ-LEARN-4353: ARC Learned Action-Cost Heuristic Improves Held-Out Actions-To-Solve
 
 **Given** at least five reproduced ARC-AGI-3 solved levels with loadable action
