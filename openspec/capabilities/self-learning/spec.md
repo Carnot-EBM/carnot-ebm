@@ -14335,6 +14335,69 @@ when the live lift is null.
 
 ---
 
+## REQ-LEARN-4658: ARC Value-Routing CI Gate And Residual Diagnostic
+
+The ARC value-routing infrastructure SHALL provide a deterministic CI gate for
+the cost-fixed Exp 4652 value-routed 25-game live simulation. The gate SHALL fail
+when the cost-fixed value-routed simulation times out, when any live attempt in
+the value-routed or matched zero-weight baseline measurement reports a timeout,
+when the value-routed first-win rate drops below the Exp 4652 floor, or when the
+value-routed multi-level solve-rate drops below the Exp 4652 floor. The floor
+SHALL default to the Exp 4652 artifact values so future changes cannot silently
+revert the affordable value-weight integration.
+
+If Exp 4652 remains an honest no-lift/null value-routing result, the same
+workflow SHALL run an oracle-distinct residual diagnostic that distinguishes
+distribution shift from calibration. The distribution-shift probe SHALL compare
+value-head scores on winning-path states with off-path search-distribution states
+and emit a high-is-shift score. The calibration probe SHALL fit a monotonic
+isotonic/Platt-style score-to-cost mapping over cached candidate scores and
+report whether that calibrated cost changes the live routing decision. The
+workflow SHALL write
+`results/experiment_4658_value_routing_cigate_diagnostic.json` and SHALL NOT
+perform live LLM inference or leaderboard submission.
+
+### SCENARIO-LEARN-4658-CIGATE: Cost-Fixed Value Routing Cannot Regress Quietly
+
+**Given** the Exp 4652 value-routing live artifact is present
+**When** the CI gate evaluates timeout status, matched live attempts, first-win
+rate, and multi-level solve-rate
+**Then** the gate passes only when no timeout occurred, the 25-game measurement
+is present, first-win rate is at least the Exp 4652 floor, and multi-level
+solve-rate is at least the Exp 4652 floor.
+
+### SCENARIO-LEARN-4658-DIAGNOSTIC: Residual Cause Is Localized
+
+**Given** the Exp 4652 artifact reports
+`residual_cause_hypothesis=distribution_shift_or_calibration`
+**When** the diagnostic compares off-path search scores to winning-path scores
+and calibrates cached ranking scores into costs
+**Then** the artifact reports `distribution_shift_score`,
+`calibration_changes_routing`, and `dominant_residual_cause` as one of
+`distribution_shift`, `calibration`, or `none_a1_lifted`.
+
+### REQ-LEARN-4658 Field Principles
+
+- `honest_verdict`: terminal prefix; success: value_routing_cigate_plus_diagnostic_shipped_tests_green.
+- `inference_substrate`: verifier_ensemble_against_cached_candidates -- offline value-head re-scoring + a small sim re-run (1s floor); no live_llm_inference.
+- `verifier_is_oracle`: MUST be false -- the value head/diagnostic are oracle-distinct from the executable win-check.
+- `cigate_added`: the CI-gate that fails on a value-routing timeout-regression or live first-win/solve-rate floor breach (guards the A1 win).
+- `distribution_shift_score`: the DAgger-lite off-path-vs-winning-path value-head score gap (high = distribution-shift is the residual cause).
+- `calibration_changes_routing`: whether isotonic/Platt calibration of the 0.725 ranking changes the live routing decision (true = calibration is a residual cause).
+- `dominant_residual_cause`: the localized .430 target (distribution_shift | calibration | none_a1_lifted) -- converts A1's null into a sharp next-milestone attack.
+- `tests_added`: the unit tests added for the CI-gate + diagnostic (Tests Must Run and Assert).
+- `random_seed`: determinism precondition for reproducibility.
+- `reproducibility_checksum`: content-addressed hash catches silent drift on replay.
+- `preconditions_checked`: records resources verified; pre-empts missing-resource fabrication.
+
+## Implementation Status (REQ-LEARN-4658)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4658 | Planned (`python/carnot/experiment_4658_value_routing_cigate_diagnostic.py`, `results/experiment_4658_value_routing_cigate_diagnostic.json`) | Planned (`tests/python/test_experiment_4658_value_routing_cigate_diagnostic.py`) |
+
+---
+
 ## REQ-LEARN-4353: ARC Learned Action-Cost Heuristic Improves Held-Out Actions-To-Solve
 
 **Given** at least five reproduced ARC-AGI-3 solved levels with loadable action
