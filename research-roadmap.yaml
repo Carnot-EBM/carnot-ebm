@@ -1,79 +1,87 @@
-milestone: 2026.06.432
+milestone: 2026.06.433
 planned_by: >-
-  outer-loop (Claude Opus 4.8 planner, 2026-06-24). .431 grew capability 59->60 (A3 banked sb26 L2) but
-  bridge_crossed_for_solve=FALSE for the 7th consecutive milestone, AND the .431 GENERATION pivot itself NULLED on
-  live solve-rate. A1 (exp4676) hierarchical subgoal search ran its STEP-1 decisive diagnostic and DECIDED THE
-  OPEN QUESTION: wall_diagnosis=l1_first_contact -- the generic E3AgentPolicy reaches first-win on only 1 of 25
-  public games (lp85), first_win_rate=0.04; the subgoal-search build then nulled (generic_agent_reached_level=0,
-  empty subgoal_decomposition, residual value_head_still_not_separating). A2 (exp4677) PoE-World factored planner
-  nulled with coverage_delta=0.0, first_win_rate_delta=-0.04, residual experts_overfit_prefix. BOTH generation
-  levers chose chosen_submitted_config=unchanged. THE DECISIVE READ: the wall is upstream of BOTH selection AND
-  generation-by-search -- the winning L1 trajectory never enters the candidate pool because the EXPLORER'S
-  ACTION-PROPOSAL DISTRIBUTION does not cover it (24/25 games never reach L1 regardless of how candidates are
-  searched or ranked). The .431 D SOTA-ingestion (exp4685, directed-exploration-sota-ingestion-2026-06-24.md)
-  mapped the fix and its "bottom line for the .432 roadmap" is explicit: build directed PROPOSAL coverage so a
-  winning L1 trajectory APPEARS in the pool. .432 PIVOTS from generation-by-search to DIRECTED EXPLORATION: A1
-  (HEADLINE) controllable-novelty E3 proposal policy (Never Give Up arXiv:2002.06038 + RND arXiv:1810.12894 +
-  Strategy-Guided Exploration arXiv:2603.02045) reshaping the live StepwiseExplorer's action-proposal
-  distribution at L1 first-contact via an episodic kNN + RND lifelong novelty score over a CONTROLLABLE-novelty
-  embedding (frame-delta + action-EFFECT features -- the controllability gate is the noisy-TV fix for the .427
-  dense-curiosity null); A2 (second independent mechanism) program-synthesis action-effect proposal FILTER
-  (PoE-World arXiv:2505.10819 + Program-Synthesis-Guided RL arXiv:2102.11137) with HELD-OUT transition rejection
-  (the direct fix for A2's experts_overfit_prefix). A3 banks +1 (60->61) + trains the verifier; A4 is RETARGETED
-  per the 2026-06-24 operator directive to gate readiness on the HELD-OUT generic first-win lane (experiment_4605,
-  bootstrap-CI>0) -- NOT replay-package depth (the replay path scores ~0 on the hidden leaderboard; first scored
-  submission = 0.08). Plus persist+transfer (A5), SUBMITTED_AGENT_CONFIG integration (A6), 2 infra (B1
-  proposal-coverage CI-metric + honest first-win floor / B2 adversarial_verify novelty-ablation +
-  proposal-filter-heldout guards), 1 hardware (C), 1 SOTA-ingestion (D, amortized/transferable exploration
-  fallback for .433), capstone (E). Submission operator-only. verifier_is_oracle:false on every value claim. ARC
-  Prize Milestone #1 deadline 2026-06-30 (6 days).
-milestone_title: 'DIRECTED EXPLORATION at L1 FIRST-CONTACT, not generation-by-search -- the 7th-consecutive
-  bridge-not-crossed milestone (.431) ran the decisive diagnostic and CONFIRMED the wall: wall_diagnosis=l1_first_contact,
-  generic first-win 0.04 (only 1/25 public games reach L1). BOTH .431 generation levers nulled (A1 hierarchical
-  subgoal search value_head_still_not_separating + empty decomposition; A2 PoE-World coverage_delta=0.0
-  experts_overfit_prefix). The winning L1 trajectory never enters the candidate pool because the EXPLORER''S
-  action-proposal distribution misses it -- the wall is upstream of both selection AND generation-by-search. .432
-  PIVOTS to DIRECTED EXPLORATION (the .431 D ingestion''s explicit "bottom line for the .432 roadmap"): A1
-  (HEADLINE) controllable-novelty E3 proposal policy (NGU + RND + Strategy-Guided Exploration) reshaping the live
-  explorer''s action-proposal distribution at L1 first-contact via episodic kNN + RND lifelong novelty over a
-  CONTROLLABLE-novelty embedding (the controllability gate = the noisy-TV fix for the .427 dense-curiosity null);
-  A2 (second mechanism) program-synthesis action-effect proposal FILTER with HELD-OUT transition rejection (the
-  experts_overfit_prefix fix). A3 banks +1 (60->61) + trains the verifier; A4 RETARGETED to gate readiness on the
-  HELD-OUT first-win lane (experiment_4605, NOT replay-package depth -- replay scores ~0; first scored sub=0.08).
-  Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware (C), 1 SOTA-ingestion (D), capstone
-  (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+  outer-loop (Claude Opus 4.8 planner, 2026-06-24). .432 grew capability 60->61 (A3 banked lf52 L2) but
+  bridge_crossed_for_solve=FALSE for the 8th consecutive milestone, AND BOTH .432 DIRECTED-EXPLORATION generation
+  levers NULLED on live solve-rate: A1 controllable-novelty proposal policy (exp4688) ended
+  controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed (reshaping the proposal
+  distribution with episodic kNN + RND lifelong novelty over a controllability-gated embedding still did NOT make
+  the winning L1 prefix appear in the pool); A2 program-synthesis action-effect proposal filter (exp4689) ended
+  program_synthesis_filter_no_coverage_gain_residual_logged (coverage_delta=0.0, first_win_rate_delta=-0.04,
+  held-out rejection rejected all 2 induced programs as prefix-overfit). The wall is now DOUBLY confirmed UPSTREAM
+  of selection, generation-by-search, AND directed-exploration-of-the-proposal-distribution: eight milestones of
+  levers that all CONDITION ON THE SAME PERCEPTION have nulled. The operator's 2026-06-23 diagnosis names the
+  unattacked root cause: the binding constraint is PERCEPTION -- frame-only order-1 features are at LOO=chance
+  (cross_game_features_v2 LOO-AUROC 0.503), which is exactly why the .425 A2 wiring (exp4605) nulled; the
+  relational v3 features escape chance offline (LOO-AUROC 0.674, exp4476) but were NEVER wired live (only the
+  order-1 cheap subset was, into the value-HEAD as a near-zero tie-breaker, NEVER the explorer's PROPOSAL
+  distribution). .433 attacks the two deepest unattacked root causes, each operator/SOTA-flagged. A1 (HEADLINE):
+  object-centric/relational PERCEPTION wired into the live explorer's PROPOSAL distribution (the representation
+  that conditions what gets generated), off-path calibrated, GATED by a decisive perception-vs-search DIAGNOSTIC
+  that resolves the 8-milestone ambiguity -- SOLD arXiv:2410.08822 + FIOC-WM arXiv:2511.02225 + ObjectZero/MCTS
+  arXiv:2601.06604, honestly bounded by arXiv:2511.06136. A2 (second independent mechanism, the .432
+  SOTA-ingestion's explicit ".433 bottom line"): an AMORTIZED cross-game first-contact exploration prior (Algorithm
+  Distillation arXiv:2210.14215 + AMAGO arXiv:2310.09971 + arXiv:2601.19810) + wiring the currently-ORPHANED
+  arc_go_explore.py return-then-explore archive (arXiv:1901.10995 + arXiv:2004.12919) into the live E3 path for
+  systematic state coverage. A3 banks +1 (61->62) + trains the verifier; A4 is the RETARGETED held-out first-win
+  readiness lane (experiment_4605, bootstrap-CI>baseline) per the 2026-06-24 operator directive, now emitting the
+  null-delta markers so an honest flat null is not quarantined. Plus persist+transfer (A5), SUBMITTED_AGENT_CONFIG
+  integration (A6), 2 infra (B1 perception-quality LOO + off-path CI-metric / B2 adversarial_verify first-win-lane
+  null-delta carve-out + perception-overclaim guard), 1 hardware (C), 1 SOTA-ingestion (D, the .434 fallback),
+  capstone (E). Submission operator-only. verifier_is_oracle:false on every value claim; solve_provenance on every
+  ARC solve. ARC Prize Milestone #1 deadline 2026-06-30 (6 days).
+milestone_title: 'PERCEPTION (object-centric/relational into the live PROPOSAL distribution) + AMORTIZED EXPLORATION
+  at L1 FIRST-CONTACT -- the 9th attack on the wall after .432 was the 8th-consecutive bridge-not-crossed milestone
+  and BOTH directed-exploration generation levers NULLED (A1 controllable-novelty proposal ->
+  winning_prefix_still_not_proposed; A2 program-synthesis filter -> coverage_delta=0.0, first_win_delta=-0.04). Eight
+  milestones of selection + generation-by-search + directed-exploration levers all CONDITION ON THE SAME order-1
+  PERCEPTION (cross_game_features_v2 LOO=0.503=chance) -- the operator-named unattacked root cause. .433 wires
+  object-centric/relational PERCEPTION (the relational v3 LOO=0.674 features, NEVER live, NEVER in the proposal
+  distribution) into the live explorer''s PROPOSAL distribution gated by a decisive perception-vs-search DIAGNOSTIC
+  (A1, HEADLINE: SOLD/FIOC-WM/ObjectZero), and adds an AMORTIZED cross-game exploration prior + the orphaned
+  Go-Explore archive wired live (A2, the .432 SOTA-ingestion''s explicit .433 bottom line: Algorithm-Distillation /
+  AMAGO / Go-Explore). A3 banks +1 (61->62) + trains the verifier; A4 RETARGETED held-out first-win readiness (with
+  null-delta markers); plus A5 persist, A6 integration, 2 infra (B1/B2), 1 hardware (C), 1 SOTA-ingestion (D),
+  capstone (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 theme: >-
-  The 7th consecutive bridge_crossed_for_solve=FALSE proved the wall is the EXPLORER'S ACTION-PROPOSAL
-  DISTRIBUTION at L1 first-contact, not selection and not generation-by-search. .431 ran the decisive STEP-1
-  diagnostic and confirmed wall_diagnosis=l1_first_contact: the generic E3AgentPolicy reaches first-win on only
-  1/25 public games (first_win_rate=0.04). Its two generation-by-search levers both nulled -- A1 hierarchical
-  subgoal search (value_head_still_not_separating, empty decomposition), A2 PoE-World factored planner
-  (coverage_delta=0.0, experts_overfit_prefix) -- because both search/plan OVER a candidate pool that never
-  contains a winning L1 trajectory. The operator named the wall 2026-06-22 (make-a-winner-appear, not select); the
-  .431 D ingestion (directed-exploration-sota-ingestion-2026-06-24.md) sharpened it: the winner is not in the
-  pool because the explorer's PROPOSAL distribution does not cover it. .432 attacks the PROPOSAL distribution from
-  TWO independent SOTA-flagged mechanisms on the SCORED E3AgentPolicy, both verifier_is_oracle:false, both
-  live-path-reachable. A1 (HEADLINE) is the controllable-novelty E3 proposal policy: an episodic kNN novelty
-  table + an RND lifelong novelty score over a CONTROLLABLE-novelty embedding (frame-delta + action-EFFECT
-  features so cosmetic/noisy-TV changes are NOT rewarded), applied as an intrinsic proposal bonus that reshapes
-  the live StepwiseExplorer's action-proposal distribution BEFORE value-ranking, with a small family of
-  exploration temperatures. Gate: the GENERIC live agent's first-win rate rises on >=1 clean L1-only game where
-  the winning L1 trajectory now APPEARS in the explored pool, offline-reproduced as a NEW generic level, with a
-  NO-NOVELTY-BONUS ablation AND a COSMETIC-NOVELTY (controllability-gate-off) ablation that do NOT. A2 is the
-  program-synthesis action-effect proposal FILTER: induce small per-game action->effect programs from observed
-  prefixes, REJECT programs that fail held-out transitions (the experts_overfit_prefix fix), and prune the
-  explorer's primitive proposals to mechanically-relevant clicks/keys. Gate: candidate-generation coverage up
-  (the winner appears where the matched blind-proposal baseline did not) AND a held-out first-win lift (CI
-  excludes baseline), offline-reproduced. CAPABILITY (A3): self-play banks +1 reproducible level (60->61) + trains
-  the learned verifier. SCORE (A4): RETARGETED to gate readiness on the HELD-OUT first-win lane (experiment_4605
-  first_win_rate_integrated, bootstrap-CI lower bound > 0), keeping the replay package as a reproduced FLOOR
-  artifact only. Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware (C), 1 SOTA-ingestion
-  (D), capstone (E). verifier_is_oracle:false on every value claim; solve_provenance on every ARC solve;
-  submission operator-only. RETIRED (do NOT re-propose): the .431 A1 hierarchical-subgoal-search-over-the-pool
-  (value_head_still_not_separating); the .431 A2 PoE-World composing prefix-overfit experts WITHOUT held-out
-  rejection (experts_overfit_prefix); the .427 dense-curiosity REWARD with no controllability gate
-  (dense_curiosity_loop_no_live_lift). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).
+  The 8th consecutive bridge_crossed_for_solve=FALSE (.432) proved that reshaping the explorer's action-PROPOSAL
+  distribution (directed exploration: controllable novelty + program-synthesis filtering) is NOT sufficient to make
+  the winning L1 trajectory appear -- both .432 generation levers nulled (A1 winning_prefix_still_not_proposed; A2
+  coverage_delta=0.0). Across eight milestones, EVERY lever (six selection, two generation-by-search, two
+  directed-exploration) conditions on the SAME perception, and the operator's 2026-06-23 diagnosis names that
+  perception as the binding constraint: frame-only order-1 features are at LOO=chance (cross_game_features_v2
+  LOO-AUROC 0.503), which is precisely why the .425 A2 live wiring (exp4605) nulled. The richer relational v3
+  representation escapes chance offline (LOO-AUROC 0.674, exp4476/exp4545) but was NEVER wired into the live agent
+  (only the order-1 cheap subset was, into the value-HEAD as a near-zero-weight tie-breaker -- exp4605 -- and NEVER
+  into the explorer's PROPOSAL distribution). .433 attacks the two deepest unattacked root causes, each
+  operator/SOTA-flagged, both on the SCORED E3AgentPolicy, both verifier_is_oracle:false, both live-path-reachable.
+  A1 (HEADLINE) wires a generic OBJECT-CENTRIC / RELATIONAL representation into the live explorer's PROPOSAL
+  distribution (the representation that conditions what gets generated -- never done before; every prior perception
+  experiment targeted cross-game discrimination / value-head ranking, never the proposal stage), off-path
+  calibrated to fix the offline->live bridge, and is GATED by a DECISIVE perception-vs-search DIAGNOSTIC: does an
+  upper-bound relational/object-centric representation make the winning L1 prefix proposable on a clean game where
+  the order-1 representation does not? That diagnostic resolves the 8-milestone perception-vs-search ambiguity
+  whether or not A1 banks a level. SOTA: SOLD arXiv:2410.08822 + FIOC-WM arXiv:2511.02225 + ObjectZero/MCTS
+  arXiv:2601.06604, honestly bounded by "When Object-Centric World Models Meet Policy Learning... and Where It
+  Breaks" arXiv:2511.06136. A2 (second independent mechanism) is the .432 SOTA-ingestion's explicit ".433 bottom
+  line": an AMORTIZED cross-game first-contact exploration prior distilled from logged first-contact traces
+  (Algorithm Distillation arXiv:2210.14215 + AMAGO arXiv:2310.09971 + Unsupervised Efficient Exploration
+  arXiv:2601.19810) so the live explorer proposes from a learned cross-game prior instead of an empty per-game
+  start, PLUS wiring the currently-ORPHANED arc_go_explore.py return-then-explore archive (Go-Explore
+  arXiv:1901.10995 + First Return Then Explore arXiv:2004.12919) into the live E3 path for SYSTEMATIC state
+  coverage. A1 and A2 are genuinely independent (A1 fixes WHAT the agent perceives; A2 fixes WHERE it looks first
+  regardless of perception) -- two independent shots at the confirmed wall. CAPABILITY (A3): self-play banks +1
+  reproducible level (61->62) + trains the learned verifier. SCORE (A4): the RETARGETED held-out first-win lane
+  (experiment_4605 first_win_rate_integrated vs the 0.04/0.08 baseline, bootstrap-CI), now emitting the null-delta
+  markers so an honest flat null is NOT quarantined (the exp4691 TAUTOLOGY-flag fix). Plus persist+transfer (A5),
+  integration (A6), 2 infra (B1 perception-quality LOO + off-path CI-metric / B2 adversarial_verify first-win-lane
+  null-delta carve-out + perception-overclaim guard), 1 hardware (C), 1 SOTA-ingestion (D, the .434 fallback),
+  capstone (E). verifier_is_oracle:false on every value claim; solve_provenance on every ARC solve; submission
+  operator-only. RETIRED (do NOT re-propose): the .432 A1 controllable-novelty PROPOSAL policy
+  (winning_prefix_still_not_proposed); the .432 A2 program-synthesis filter WITHOUT a richer representation
+  (coverage_delta=0.0); the .425 A2 order-1-subset-into-the-value-head wiring (live_integration_no_value); any A4
+  that cites the replay-package level count as "the leaderboard score". 6 days to the ARC Prize Milestone #1
+  deadline (2026-06-30).
 sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1-A6); >=1
   level-up attempt that BANKS a new reproducible level (ARC Level-Up Attempt Guarantee, A3); self-play loop EVERY
   milestone (A3 trains+checkpoints the verifier); 2 reserved infra (B1/B2); 1 per-board hardware (C); 1
@@ -83,52 +91,52 @@ sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE
   on a FREE port + /props-verify Qwen (the port-8919 gemma-squat confound)."
 
 tasks:
-  - id: exp4687-phase0
-    milestone: 2026.06.432
-    title: 'PHASE 0 (TRANSITION) -- archive .431 -> activate .432; assert YAML parses + smart-subset pre-test gate
-      green; RECORD the TRUE .431 close-state (capability grew 59->60 via A3 sb26 L2, but bridge_crossed_for_solve=FALSE
-      for the 7th consecutive milestone AND the GENERATION pivot itself nulled: A1 hierarchical subgoal search ran
-      the STEP-1 diagnostic and CONFIRMED wall_diagnosis=l1_first_contact [generic first-win 0.04 = 1/25 games],
-      then nulled [generic_agent_reached_level=0, empty decomposition, value_head_still_not_separating]; A2
-      PoE-World factored planner nulled [coverage_delta=0.0, experts_overfit_prefix]; package live_submittable=60;
-      first scored submission=0.08; paper_ready=True). The .432 pivot -> DIRECTED EXPLORATION (make a winning L1
-      trajectory APPEAR in the pool): A1 controllable-novelty E3 proposal policy, A2 program-synthesis action-effect
-      proposal filter.'
+  - id: exp4699-phase0
+    milestone: 2026.06.433
+    title: 'PHASE 0 (TRANSITION) -- archive .432 -> activate .433; assert YAML parses + smart-subset pre-test gate
+      green; RECORD the TRUE .432 close-state (capability grew 60->61 via A3 lf52 L2, but bridge_crossed_for_solve=FALSE
+      for the 8th consecutive milestone AND BOTH DIRECTED-EXPLORATION generation levers nulled: A1 controllable-novelty
+      proposal policy [exp4688] ended winning_prefix_still_not_proposed [generic_agent_reached_level=0]; A2
+      program-synthesis action-effect proposal filter [exp4689] ended coverage_delta=0.0, first_win_rate_delta=-0.04,
+      heldout_programs_kept=0; A4 [exp4691] held-out first-win FLAT at 0.04, flagged TAUTOLOGY [null-delta markers
+      missing]; package live_submittable=61; first scored submission=0.08; paper_ready=True). The .433 pivot ->
+      PERCEPTION (object-centric/relational representation into the live PROPOSAL distribution, perception-vs-search
+      diagnostic) + AMORTIZED EXPLORATION (cross-game prior + Go-Explore archive wired live).'
     priority: critical
     track: transition
     max_turns: 30
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4687_archive_431_activate_432.json
-    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v431-activate-v432
+    deliverable: results/experiment_4699_archive_432_activate_433.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v432-activate-v433
       milestone-transition task -- false-positive scope-match vs every prior archive/activate task; structurally
       never a doomed rerun (the activation guard is a SCRIPT, not the agent). Mechanical YAML archive +
       next-milestone activation. Routes to codex (mechanical) per the archive/activate routing rule.'
     prompt: |
-      CONTEXT ({date}). Milestone 2026.06.431 has completed. This task mechanically transitions to 2026.06.432 and
-      RECORDS the true .431 close-state so the record is honest. Routine (codex).
+      CONTEXT ({date}). Milestone 2026.06.432 has completed. This task mechanically transitions to 2026.06.433 and
+      RECORDS the true .432 close-state so the record is honest. Routine (codex).
 
       IMPORTANT (lesson from prior PHASE 0 cascades): the conductor may have ALREADY archived/activated at its own
       level. If so, the archive step is a no-op -- EXPECTED, not a failure. You MUST still WRITE the deliverable
       artifact (the close-state record). Do NOT exit with "no file changes": the deliverable IS the file change.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/research-roadmap.yaml (the .431 roadmap to archive)
-        - {project_root}/research-roadmap-next.yaml (THIS .432 roadmap to activate)
-        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=60)
-        - {project_root}/results/experiment_4686_capstone_v431.json (the .431 scorecard: capability_grew_59_to_60; bridge_crossed_for_solve=False)
-        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json (A1: wall_diagnosis=l1_first_contact, generic first-win 0.04, value_head_still_not_separating) + {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (A2: coverage_delta=0.0, experts_overfit_prefix)
-        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .432 design doc)
+        - {project_root}/research-roadmap.yaml (the .432 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .433 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=61)
+        - {project_root}/results/experiment_4698_capstone_v432.json (the .432 scorecard: capability_grew_60_to_61; bridge_crossed_for_solve=False)
+        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json (A1: winning_prefix_still_not_proposed) + {project_root}/results/experiment_4689_program_synthesis_action_effect_proposal_filter.json (A2: coverage_delta=0.0, first_win_rate_delta=-0.04)
+        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .433 design doc)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
            b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
            Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
-        1. Archive the .431 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
-        2. Activate .432 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
-        3. WRITE the deliverable recording the TRUE .431 close-state: A3 (exp4678) banked sb26 L2 (reproducible_total_levels 59->60); A1 (exp4676) STEP-1 diagnostic confirmed wall_diagnosis=l1_first_contact (generic first-win 0.04 = only lp85 of 25), then the subgoal-search build nulled (generic_agent_reached_level=0, subgoal_decomposition=[], residual value_head_still_not_separating, chosen_submitted_config=unchanged); A2 (exp4677) PoE-World factored planner nulled (candidate_generation_coverage_factored=0.0, coverage_delta=0.0, first_win_rate_delta=-0.04, residual experts_overfit_prefix, chosen_submitted_config=unchanged); A4 (exp4679) package live_submittable=60 (>33), ready_for_operator_submit=True; capstone (exp4686) bridge_crossed_for_solve=False, paper_ready=True (FoVer 0.9131 frozen). RECORD the .432 pivot = DIRECTED EXPLORATION (make a winning L1 trajectory APPEAR in the pool by reshaping the explorer's action-proposal distribution): A1 controllable-novelty E3 proposal policy (NGU + RND + Strategy-Guided Exploration); A2 program-synthesis action-effect proposal filter with held-out transition rejection. RECORD A4 retarget: gate readiness on the held-out first-win lane (experiment_4605), NOT replay-package depth (first scored submission=0.08).
+        1. Archive the .432 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .433 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        3. WRITE the deliverable recording the TRUE .432 close-state: A3 (exp4690) banked lf52 L2 (reproducible_total_levels 60->61); A1 (exp4688) controllable-novelty proposal policy nulled (residual winning_prefix_still_not_proposed, generic_agent_reached_level=0, chosen_submitted_config=unchanged); A2 (exp4689) program-synthesis proposal filter nulled (coverage_delta=0.0, first_win_rate_delta=-0.04, heldout_programs_kept=0, residual experts_overfit_prefix/heldout_transitions_too_sparse, chosen_submitted_config=unchanged); A4 (exp4691) held-out first-win FLAT at 0.04 (flagged TAUTOLOGY because the null-delta markers were missing); capstone (exp4698) bridge_crossed_for_solve=False, capability_grew_60_to_61, paper_ready=True (FoVer 0.9131 frozen). RECORD the .433 pivot = PERCEPTION (object-centric/relational representation into the live PROPOSAL distribution + a decisive perception-vs-search diagnostic; the operator-named unattacked root cause: order-1 features LOO=chance) + AMORTIZED EXPLORATION (cross-game first-contact prior + Go-Explore archive wired live -- the .432 SOTA-ingestion's explicit .433 bottom line). RECORD A4 fix: emit the null-delta markers so an honest flat first-win null is NOT quarantined.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
@@ -137,119 +145,128 @@ tasks:
           principle: "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
         preconditions_checked:
           principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
-        close_state_431:
-          principle: "the honest .431 numbers (A3 59->60; A1 wall=l1_first_contact + nulled; A2 coverage 0 + experts_overfit_prefix; both unchanged; A4 60>33; bridge_crossed=False) carried forward so the record does not drift."
-        v432_pivot:
-          principle: "the .432 headline rationale (PIVOT to DIRECTED EXPLORATION: A1 controllable-novelty proposal policy; A2 program-synthesis action-effect proposal filter; A4 retargeted to the held-out first-win lane) recorded so the milestone intent is traceable."
+        close_state_432:
+          principle: "the honest .432 numbers (A3 60->61; A1 winning_prefix_still_not_proposed; A2 coverage 0 + first_win -0.04; both unchanged; A4 flat 0.04 TAUTOLOGY-flagged; bridge_crossed=False) carried forward so the record does not drift."
+        v433_pivot:
+          principle: "the .433 headline rationale (PIVOT to PERCEPTION: object-centric/relational representation into the live PROPOSAL distribution + perception-vs-search diagnostic; A2 amortized cross-game prior + Go-Explore archive wired live; A4 emits null-delta markers) recorded so the milestone intent is traceable."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4687_archive_431_activate_432.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4699_archive_432_activate_433.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4688-a1
-    milestone: 2026.06.432
-    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- the DIRECTED-EXPLORATION pivot) --
-      CONTROLLABLE-NOVELTY E3 PROPOSAL POLICY for L1 FIRST-CONTACT. The .431 diagnostic CONFIRMED wall_diagnosis=l1_first_contact
-      (generic first-win 0.04 = 1/25 games); the winning L1 trajectory never enters the candidate pool because the
-      live StepwiseExplorer''s action-proposal distribution misses it. Reshape that distribution with an
-      intrinsic CONTROLLABLE-novelty proposal bonus: an episodic kNN novelty table + an RND lifelong novelty score
-      over a CONTROLLABLE-novelty embedding (frame-delta + action-EFFECT features so cosmetic/noisy-TV changes are
-      NOT rewarded -- the .427 dense-curiosity fix), with a small family of exploration temperatures, applied
-      BEFORE value-ranking. Gate: the GENERIC live agent reaches a NEW level on >=1 clean L1-only game where flat
-      exploration fails, offline-reproduced, with a NO-NOVELTY-BONUS AND a COSMETIC-NOVELTY (controllability-gate-off)
-      ablation that do NOT. live_llm_inference. live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.
-      NGU arXiv:2002.06038 + RND arXiv:1810.12894 + Strategy-Guided arXiv:2603.02045.'
+  - id: exp4700-a1
+    milestone: 2026.06.433
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- the PERCEPTION pivot) -- OBJECT-CENTRIC
+      / RELATIONAL PERCEPTION wired into the live explorer''s PROPOSAL distribution, GATED by a decisive
+      perception-vs-search DIAGNOSTIC. Eight milestones of selection + generation-by-search + directed-exploration
+      levers all nulled while CONDITIONING ON THE SAME order-1 perception (cross_game_features_v2 LOO=0.503=chance --
+      the operator''s 2026-06-23 binding-constraint diagnosis; why the .425 A2 wiring [exp4605] nulled). The relational
+      v3 features escape chance offline (LOO=0.674, exp4476) but were NEVER wired live and NEVER into the PROPOSAL
+      distribution (only the order-1 subset into the value-HEAD tie-breaker). Build a generic object-centric/relational
+      representation; DIAGNOSTIC: does an upper-bound representation make the winning L1 prefix PROPOSABLE where order-1
+      does not (resolves the 8-milestone perception-vs-search ambiguity); then wire the best DEPLOYABLE representation
+      into the live PROPOSAL distribution, off-path calibrated. Gate: the GENERIC agent reaches a NEW level on >=1
+      clean L1 game with the ORDER-1-representation ablation FAILING, offline-reproduced; OR a decisive diagnostic
+      finding. live_llm_inference. live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict. SOLD
+      arXiv:2410.08822 + FIOC-WM arXiv:2511.02225 + ObjectZero arXiv:2601.06604, bounded by arXiv:2511.06136.'
     priority: critical
     track: arc-north-star
     max_turns: 160
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4688_controllable_novelty_proposal_policy_live.json
+    deliverable: results/experiment_4700_object_centric_perception_proposal_live.json
     prior_failures:
-      - experiment_id: exp4628-a1
-        verdict: 'complete: dense_curiosity_loop_no_live_lift_honest_null_gap_sharpened'
-        addressed_by: 'exp4628 (.427 A1) added a DENSE CURIOSITY / learning-progress REWARD signal and gave ZERO
-          live lift (first_win_rate_delta=0.0, solve_rate_delta=0.0, chosen_submitted_config=unchanged) -- because a
-          dense scalar progress reward rewards ANY frame change including cosmetic/uncontrollable ones (the noisy-TV
-          problem the .427 D ingestion flagged as noisy_tv_aware_action_effect_uncertainty_gate). THIS task is a
-          STRUCTURALLY DIFFERENT mechanism, not a re-run: (1) it is a CONTROLLABLE-NOVELTY PROPOSAL policy (NGU
-          arXiv:2002.06038 + RND arXiv:1810.12894), not a dense reward -- an episodic kNN novelty table + an RND
-          lifelong novelty score over a CONTROLLABLE-novelty embedding (frame-delta + action-EFFECT features) so the
-          controllability gate filters exactly the cosmetic/noisy-TV changes that defeated exp4628; (2) it reshapes
-          the explorer''s action-PROPOSAL distribution BEFORE value-ranking (a generation lever), not a reward added
-          to selection; (3) it is now TARGETED at the .431-CONFIRMED wall (wall_diagnosis=l1_first_contact, 24/25
-          games never reach L1) which exp4628 ran before. If the controllable-novelty proposal policy ALSO gives no
-          offline-reproduced new generic level with passing no-novelty AND cosmetic-novelty ablations, the residual
-          is documented (novelty widens the pool but the winning prefix is still not proposed | controllability
-          embedding still rewards non-winning controllable states), A2''s program-synthesis filter and the .433
-          amortized-exploration fallback (D-flagged) take over, and this precise lever retires.'
+      - experiment_id: exp4605-a2
+        verdict: 'complete: live_integration_no_value_honest_null_gap_sharpened'
+        addressed_by: 'exp4605 (.425 A2) wired the ORDER-1 cheap feature subset (cross_game_features_v3:v2_plus_frame_delta,
+          ~50 features) into the E3AgentPolicy/StepwiseExplorer VALUE HEAD as a near-zero-weight (value_weight~1e-12)
+          tie-breaker and gave zero live lift (first_win_delta=0, 0.04->0.04) -- the operator''s 2026-06-23 "frame-only
+          order-1 features LOO=chance" failure. THIS task is STRUCTURALLY DIFFERENT, not a re-run: (1) it builds a
+          generic OBJECT-CENTRIC / RELATIONAL representation (slot/connected-component object decomposition +
+          object-correspondence + action-context features -- the relational v3 features that reach LOO=0.674 offline
+          [exp4476] but were NEVER wired live), not the order-1 subset that nulled; (2) it wires the representation
+          into the explorer''s PROPOSAL distribution (a GENERATION lever -- what gets proposed), NOT the value-HEAD
+          tie-breaker (a ranking lever, which is what exp4605 changed); (3) it is OFF-PATH CALIBRATED (trained on the
+          live search distribution incl. off-path states, the .425-B2 offline->live bridge gap), not on winning paths
+          only; (4) it is GATED by a decisive perception-vs-search diagnostic. If the object-centric representation in
+          the proposal distribution ALSO gives no offline-reproduced new generic level with the order-1 ablation
+          failing AND the diagnostic shows perception is NOT the wall, the residual is documented (object decomposition
+          is correct but the winning action is still not proposable | off-path calibration insufficient) and this
+          precise lever retires for the sprint.'
         retire_if_same_verdict: true
-      - experiment_id: exp4676-a1
-        verdict: 'complete: hierarchical_subgoal_no_new_level_residual_value_head_still_not_separating'
-        addressed_by: 'exp4676 (.431 A1) attacked the wall with hierarchical subgoal SEARCH OVER the existing
-          candidate pool and nulled (generic_agent_reached_level=0, empty subgoal_decomposition, residual
-          value_head_still_not_separating) -- because searching/decomposing a pool cannot help when the winning L1
-          trajectory is not IN the pool (the diagnostic it itself produced: wall_diagnosis=l1_first_contact). THIS
-          task attacks the residual at its SOURCE: instead of searching the pool, it changes what the explorer
-          PROPOSES so the winning L1 trajectory enters the pool in the first place (a generation lever upstream of
-          subgoal search). Forward difference: directed PROPOSAL coverage (controllable novelty) vs SEARCH over a
-          pool that never contained the winner. If the proposal policy still produces no offline-reproduced new
-          generic level with passing ablations, the residual is logged as the .433 generation gap and this lever
-          retires.'
+      - experiment_id: exp4547
+        verdict: 'complete: frame_change_cnn_no_action_reduction_honest_null'
+        addressed_by: 'exp4547 (.421) trained a frame-change CNN action-effect predictor (passed positive control at
+          0.709 held-out AUROC) but produced NO live action-efficiency lift -- a learned per-frame action-effect RANKER
+          that did not change live behavior. THIS task attacks the residual at a different stage: instead of a learned
+          ranker over frame transitions, it builds an OBJECT-CENTRIC structural representation and conditions the
+          explorer''s PROPOSAL distribution on it (generation, not ranking), with a perception-vs-search diagnostic
+          that exp4547 never ran. Forward difference: object-centric/relational PROPOSAL conditioning + the decisive
+          diagnostic vs a frame-change CNN ranker. If it still produces no offline-reproduced new generic level with a
+          passing diagnostic, the residual is logged as the .434 perception gap and this lever retires.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint HEADLINE -- the DIRECTED-EXPLORATION pivot). Seven milestones (.425-.431) of
-      verifier/SELECTION and generation-by-SEARCH levers all NULLED on live SOLVE-RATE. The .431 A1 STEP-1
-      diagnostic (exp4676) DECIDED THE OPEN QUESTION: wall_diagnosis=l1_first_contact -- the generic E3AgentPolicy
-      reaches first-win on only 1 of 25 public games (lp85), first_win_rate=0.04; on 24/25 games the agent never
-      reaches L1 regardless of how candidates are SEARCHED (A1 hierarchical subgoal, nulled) or RANKED (six prior
-      selection levers, nulled). The .431 A2 PoE-World factored planner also nulled (coverage_delta=0.0,
-      experts_overfit_prefix). THE WALL IS THE EXPLORER'S ACTION-PROPOSAL DISTRIBUTION: the winning L1 trajectory
-      never enters the candidate pool, so nothing downstream can select or assemble it. The .431 D SOTA-ingestion
-      (directed-exploration-sota-ingestion-2026-06-24.md) "bottom line for the .432 roadmap" flags the
-      controllable-novelty E3 proposal policy as the build-FIRST .432 lever: widen the proposal distribution toward
-      CONTROLLABLE novelty so a winning L1 trajectory APPEARS, before selection or search can help.
+      CONTEXT ({date}, ARC sprint HEADLINE -- the PERCEPTION pivot). Eight milestones (.425-.432) of selection,
+      generation-by-search, and directed-exploration levers ALL NULLED on live SOLVE-RATE. The .432 directed-exploration
+      pivot was the decisive test of the PROPOSAL-DISTRIBUTION hypothesis: A1 controllable-novelty proposal (exp4688)
+      ended winning_prefix_still_not_proposed; A2 program-synthesis filter (exp4689) ended coverage_delta=0.0. Reshaping
+      WHAT the explorer proposes (novelty / program filtering) did NOT make the winning L1 trajectory appear. The
+      common denominator across all eight nulled levers: they CONDITION ON THE SAME PERCEPTION. The operator's
+      2026-06-23 diagnosis names it: the binding constraint is PERCEPTION -- frame-only order-1 features are at
+      LOO=chance (cross_game_features_v2 LOO-AUROC 0.503), which is precisely why the .425 A2 live wiring (exp4605)
+      nulled. The relational v3 representation escapes chance offline (LOO-AUROC 0.674, exp4476/exp4545) but was NEVER
+      wired into the live agent -- only the order-1 cheap subset was, into the value-HEAD as a near-zero tie-breaker,
+      and NEVER into the explorer's PROPOSAL distribution. NO experiment has wired a genuine object-centric/relational
+      representation into what the live explorer PROPOSES.
 
       CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in the LIVE modules
-      (arc_competition_agent StepwiseExplorer / arc_value_learner action-effect features / arc_llm_reinduction),
-      imported by E3AgentPolicy -- arc_orphan_solver_lint stays green; test_arc_submitted_agent_parity stays green.
-      live_llm_inference: the live E3 explorer's world-model induction (and the optional strategy-conditioned arm)
-      loads Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s). verifier_is_oracle:false (the novelty bonus is
-      oracle-DISTINCT from the executable reproduction win-check). solve_provenance: live_agent_self_discovery -- a
-      generic-agent NEW level from its OWN runtime exploration is the REAL ARC deliverable (NOT a hand-built
-      GameAdapter development_proxy). Honest null with passing ablations if the proposal policy does not close the
+      (arc_value_learner perception features / arc_competition_agent StepwiseExplorer proposal formation), imported by
+      E3AgentPolicy -- arc_orphan_solver_lint stays green; test_arc_submitted_agent_parity stays green.
+      live_llm_inference: the live E3 explorer's world-model induction loads Qwen3.5-9B-MTP on the iGPU (NEVER the
+      3090s; free port + /props-verify). verifier_is_oracle:false (the perception representation is oracle-DISTINCT
+      from the executable reproduction win-check). solve_provenance: live_agent_self_discovery -- a generic-agent NEW
+      level from its OWN runtime exploration is the REAL ARC deliverable (NOT a hand-built GameAdapter
+      development_proxy, NOT an outer-loop hand-RE). Honest null with a passing diagnostic if perception is not the
       wall.
 
-      THE CONTROLLABILITY GATE IS LOAD-BEARING (the .427 dense-curiosity fix). exp4628's dense curiosity reward
-      nulled because it rewarded ANY frame change (the noisy-TV problem). The novelty embedding here MUST be over
-      CONTROLLABLE features: the agent's own action-EFFECT deltas (what changed BECAUSE of the action), not raw
-      frame novelty. Cosmetic/animation/uncontrolled changes must NOT score as novel. The COSMETIC-NOVELTY ablation
-      (controllability gate OFF, raw-frame novelty) is the control that proves the gate is what adds value.
+      THE DECISIVE DIAGNOSTIC IS LOAD-BEARING (resolves the 8-milestone ambiguity). Before investing in a deployable
+      fix, run a SENSITIVITY/CEILING probe: on a clean L1 game where the order-1 representation fails, does an
+      UPPER-BOUND representation (the full relational v3, OR a ground-truth object-correspondence ceiling) make the
+      winning L1 prefix PROPOSABLE (proposal-coverage of the winning trajectory rises) where the order-1 representation
+      does not? If YES -> perception is the wall (and we know what to build). If NO -> search/generation is the wall
+      (perception fixes are futile; the .434 direction is amortized exploration / a different generation mechanism).
+      THE CEILING PROBE IS A DIAGNOSTIC, NOT A SOLVE: the ground-truth-object representation is an upper-bound
+      sensitivity measure, clearly labeled, NOT a deployable mechanism and NOT a solve claim. Any actual banked new
+      level MUST come from a DEPLOYABLE representation, be offline-reproduced, and carry solve_provenance:
+      live_agent_self_discovery.
 
       NOTE the PORT-8919 CONFOUND: LocalGGUFProposer.port defaults to 8919 and a persistent gemma-4-12B-it
-      llama-server squats 8919 -> any "Qwen" run silently talks to gemma. CONSTRUCT the proposer on a FREE port
-      (e.g. 8920) + verify via /props it served Qwen3.5-9B-MTP. On Kaggle (fresh env) this is moot; locally it
-      confounds every generation measurement.
+      llama-server squats 8919 -> any "Qwen" run silently talks to gemma. CONSTRUCT the proposer on a FREE port (e.g.
+      8920) + verify via /props it served Qwen3.5-9B-MTP. On Kaggle (fresh env) this is moot; locally it confounds
+      every generation measurement.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/docs/research-notes/directed-exploration-sota-ingestion-2026-06-24.md (the SOTA mapping: controllable-novelty proposal policy = episodic kNN + RND lifelong novelty over a controllable-novelty embedding + exploration temperatures; NGU arXiv:2002.06038 / RND arXiv:1810.12894 / Strategy-Guided arXiv:2603.02045 -- the spec for this task, incl. the "bottom line for the .432 roadmap")
-        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json (the .431 A1 -- read wall_diagnosis=l1_first_contact, generic_first_win_by_config, residual_cause_hypothesis=value_head_still_not_separating: the SELECTION/SEARCH lever that nulled because the pool never contained the winner) + {project_root}/results/experiment_4628_dense_curiosity_progress_loop.json (the .427 dense-curiosity REWARD null this fixes via the controllability gate)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy + class StepwiseExplorer -- where the action-proposal distribution is formed; this is where the intrinsic controllable-novelty proposal bonus attaches BEFORE value-ranking) + {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v3 ~432; action-effect features for the controllable-novelty embedding) + {project_root}/python/carnot/agentic/arc_frame_change_predictor.py (frame-delta features) + {project_root}/python/carnot/agentic/arc_go_explore.py (existing return-then-explore scaffolding to reuse for the prefix-archive variant)
-        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate + where the controllable-novelty proposal primitive will be persisted) + {project_root}/scripts/arc_orphan_solver_lint.py (live-path lint, stays green) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json (the .432 A1 -- residual winning_prefix_still_not_proposed: directed exploration over the SAME perception did not surface the winner) + {project_root}/results/experiment_4605_live_integration_scored_agent.json (the .425 A2 -- the order-1-into-value-head null this fixes via object-centric features in the PROPOSAL path)
+        - {project_root}/results/experiment_4476_cross_game_features_v3.json (the perception LOO evidence: v2 frame-only LOO-AUROC=0.503=chance; v2_plus_frame_delta=0.6798; v3_full=0.6744 -- the relational features that escape chance offline but were never wired live) -- read the per-feature ablation
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v2 ~L50; _frame_delta_features ~L333; cross_game_features_v3_value_routing ~L455 -- the LIVE order-1 subset; the object-relational/action-conditioned/predicate-distance features that were NEVER wired live live here) + {project_root}/python/carnot/agentic/arc_frame_change_predictor.py (frame_to_tensor ~L31 -- the one-hot frame representation; the object decomposition attaches here)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy ~L1404 calls cross_game_features_v3_value_routing; class StepwiseExplorer ~L235 forms the action-proposal distribution -- where the object-centric/relational representation must condition WHAT IS PROPOSED, not just rank) + {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate) + {project_root}/scripts/arc_orphan_solver_lint.py + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/docs/research-references.md (the object-centric SOTA: SOLD arXiv:2410.08822 / FIOC-WM arXiv:2511.02225 / ObjectZero arXiv:2601.06604 / "Where It Breaks" arXiv:2511.06136 -- read the honest failure-mode bound)
 
-      TASK: in the LIVE modules, implement a CONTROLLABLE-NOVELTY proposal policy on the StepwiseExplorer: (a) a
-      CONTROLLABLE-novelty embedding over visible frame-delta + action-EFFECT features (the controllability gate
-      rejects cosmetic/uncontrolled changes); (b) an episodic kNN novelty table (within-episode novelty) + an
-      RND-style lifelong novelty score (cross-episode novelty); (c) an intrinsic proposal bonus that reshapes the
-      explorer's action-proposal distribution BEFORE value-ranking; (d) a small family of exploration temperatures
-      within the same live E3 budget; (e) live E3 replay-verifies via arc_solver_kit.reproduce. MEASURE on >=1
-      clean L1-only game (PREFER a hard clean game from {{bp35,re86,s5i5,g50t,r11l,lf52}}): does the controllable-novelty
-      proposal policy make a winning L1 trajectory APPEAR where flat exploration does not -- does the GENERIC live
-      agent reach a NEW level, offline-reproduced. CONTROLS (mandatory): a matched NO-NOVELTY-BONUS ablation (same
-      budget, no intrinsic bonus) AND a COSMETIC-NOVELTY ablation (controllability gate OFF, raw-frame novelty) --
-      both must FAIL where the controllable-novelty policy succeeds (else the "win" is a flat-exploration win
-      mislabeled, or the controllability gate adds nothing). The WIN: a generic-agent NEW level via controllable-novelty
-      proposal, offline-reproduced, both ablations failing. verifier_is_oracle:false.
+      TASK: in the LIVE modules, (a) build a generic OBJECT-CENTRIC / RELATIONAL representation -- a slot /
+      connected-component object decomposition of the frame + object-correspondence (object identity across frames) +
+      action-context features (the relational v3 features that reach LOO=0.674 offline but were never live); (b)
+      DIAGNOSTIC: measure whether an upper-bound representation (full relational v3 OR a ground-truth
+      object-correspondence ceiling) raises proposal-coverage of the winning L1 trajectory on a clean L1 game vs the
+      order-1 representation (the decisive perception-vs-search probe); (c) IF perception-sensitive, wire the best
+      DEPLOYABLE object-centric/relational representation into the live StepwiseExplorer's PROPOSAL distribution,
+      calibrated on the LIVE off-path search distribution (the .425-B2 bridge fix); (d) live E3 replay-verifies via
+      arc_solver_kit.reproduce. MEASURE on >=1 clean L1 game (PREFER a hard clean game from
+      {{bp35,re86,s5i5,g50t,r11l}}): does the object-centric PROPOSAL conditioning make the GENERIC agent reach a NEW
+      level, offline-reproduced. CONTROL (mandatory): a matched ORDER-1-REPRESENTATION ablation (the exp4605 order-1
+      subset, same budget) that FAILS where the object-centric representation succeeds (else the "win" is not
+      attributable to the richer perception). The WIN: a generic-agent NEW level via object-centric proposal
+      conditioning, offline-reproduced, the order-1 ablation failing; OR a decisive diagnostic finding (perception
+      is/isn't the wall). verifier_is_oracle:false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
@@ -258,47 +275,47 @@ tasks:
            c. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy, StepwiseExplorer; from carnot.agentic import arc_value_learner, arc_frame_change_predictor"` exits 0.
            d. Construct LocalGGUFProposer on a FREE port (e.g. 8920) + verify via /props it serves Qwen3.5-9B-MTP (NOT the gemma squatting 8919). If /props shows gemma or unreachable -> honest_verdict blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT (no fabrication). (--no-cov on focused pytest.)
-        1. Implement the controllable-novelty proposal policy in the LIVE StepwiseExplorer (controllable-novelty embedding over frame-delta + action-effect features; episodic kNN + RND lifelong novelty; intrinsic proposal bonus before value-ranking; exploration-temperature family). Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
-        2. MEASURE on the target clean L1-only game(s): generic-agent reached_level with the controllable-novelty policy, offline_reproduced via arc_solver_kit.reproduce, vs the NO-NOVELTY-BONUS and COSMETIC-NOVELTY ablations. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the target has reachable L1 headroom (a winning L1 trajectory exists offline); emit per-config first-win + a null_methodology_note when no new level.
-        3. RUN test_arc_submitted_agent_parity.py -> green. If it nulls, log the residual (winning_prefix_still_not_proposed | controllability_embedding_rewards_non_winning_controllable_states | novelty_revisits_dead_states) as the .433/A2 target.
+        1. Build the generic object-centric/relational representation in arc_value_learner (object decomposition + object-correspondence + action-context features). Run the DIAGNOSTIC: proposal-coverage of the winning L1 trajectory under {order-1, deployable object-centric, upper-bound/ground-truth ceiling} on the target game -- record perception_is_the_wall (bool) from whether the upper-bound representation raises coverage where order-1 does not. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
+        2. IF perception-sensitive: wire the DEPLOYABLE object-centric representation into the live StepwiseExplorer's PROPOSAL distribution, off-path calibrated. MEASURE generic-agent reached_level with object-centric proposal conditioning, offline_reproduced via arc_solver_kit.reproduce, vs the ORDER-1-REPRESENTATION ablation. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the target has reachable L1 headroom (a winning L1 trajectory exists offline); emit per-config first-win + a null_methodology_note when no new level.
+        3. RUN test_arc_submitted_agent_parity.py -> green. If it nulls, log the residual (object_decomposition_correct_but_winning_action_not_proposable | offpath_calibration_insufficient | perception_not_the_wall_search_is) as the .434 target.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: controllable_novelty_generic_agent_new_level_<game>_L<n> OR complete: controllable_novelty_no_new_level_residual_<cause>."
+          principle: "terminal prefix; success: object_centric_perception_generic_agent_new_level_<game>_L<n> OR complete: object_centric_perception_no_new_level_residual_<cause> (incl. the decisive diagnostic finding)."
         inference_substrate:
-          principle: "live_llm_inference -- the live E3 explorer's world-model induction (and the strategy-conditioned arm) loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the live agent runs a real LLM during exploration."
+          principle: "live_llm_inference -- the live E3 explorer's world-model induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the live agent runs a real LLM during exploration. model_specs MUST name the GGUF (avoid the METHODOLOGY_MISSING warn the .432 A1/A2 artifacts got)."
         verifier_is_oracle:
-          principle: "MUST be false -- the controllable-novelty bonus is oracle-DISTINCT from the executable reproduction win-check."
+          principle: "MUST be false -- the perception representation is oracle-DISTINCT from the executable reproduction win-check."
         solve_provenance:
-          principle: "live_agent_self_discovery -- a generic-agent new level via runtime controllable-novelty exploration is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re."
+          principle: "live_agent_self_discovery -- a generic-agent new level via runtime object-centric exploration is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re (the ground-truth-object ceiling is a DIAGNOSTIC, not a solve)."
         live_path_reachable:
-          principle: "HARD gate -- the changed modules (StepwiseExplorer etc.) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
-        controllability_gate_on:
-          principle: "true -- the novelty embedding is over CONTROLLABLE action-effect deltas, not raw frame novelty (the .427 noisy-TV fix); the COSMETIC-NOVELTY ablation sets this false."
-        generic_first_win_by_config:
-          principle: "per-config (novelty temperature / ablation) generic first-win + multi-level rate -- the honest measurement on the standard harness (the 0.04 baseline locked in by B1)."
+          principle: "HARD gate -- the changed modules (StepwiseExplorer / arc_value_learner) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+        perception_is_the_wall:
+          principle: "the DECISIVE diagnostic result -- does an upper-bound (relational/ground-truth) representation raise proposal-coverage of the winning L1 trajectory where order-1 does not; resolves the 8-milestone perception-vs-search ambiguity (true=perception, false=search/generation)."
+        proposal_coverage_by_representation:
+          principle: "proposal-coverage of the winning L1 trajectory under {order-1, deployable object-centric, upper-bound ceiling} -- the make-a-winner-proposable signal that distinguishes perception from search."
         generic_agent_reached_level:
-          principle: "the deepest level the GENERIC live agent reached via controllable-novelty exploration on the target -- the headline (a NEW level is the win)."
+          principle: "the deepest level the GENERIC live agent reached via object-centric proposal conditioning on the target -- the headline (a NEW level is the win)."
         offline_reproduced:
           principle: "a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce (ARC Solve Reproducibility); a live-only trajectory is provisional."
         reproduced_levels:
           principle: "the integer new-level count the generic agent banked offline (>=1 is the bridge crossed for solve)."
-        no_novelty_ablation_reached_level:
-          principle: "the matched no-novelty-bonus (flat exploration) ablation's reached_level -- MUST be lower than the controllable-novelty policy for the win to be attributable to directed exploration (not flat exploration)."
-        cosmetic_novelty_ablation_reached_level:
-          principle: "the cosmetic-novelty (controllability-gate-off, raw-frame novelty) ablation's reached_level -- MUST be lower than the controllable-novelty policy for the win to be attributable to the controllability gate (not just any novelty)."
+        order1_ablation_reached_level:
+          principle: "the matched ORDER-1-REPRESENTATION (exp4605 subset) ablation's reached_level -- MUST be lower than the object-centric representation for the win to be attributable to the richer perception (not the search budget)."
+        offpath_calibrated:
+          principle: "true -- the deployable representation was calibrated on the LIVE off-path search distribution (incl. dead-ends), the .425-B2 offline->live bridge fix; an offline-winning-paths-only fit is the known live-null trap."
         residual_cause_hypothesis:
-          principle: "if it nulls, names the residual (winning_prefix_still_not_proposed | controllability_embedding_rewards_non_winning_controllable_states | novelty_revisits_dead_states) -- the .433 target; 'none' if it crossed."
+          principle: "if it nulls, names the residual (object_decomposition_correct_but_winning_action_not_proposable | offpath_calibration_insufficient | perception_not_the_wall_search_is) -- the .434 target; 'none' if it crossed."
         null_methodology_note:
-          principle: "present when no new level -- states the null is honest (passing ablations + reachable L1 headroom), not a measurement bug."
+          principle: "present when no new level -- states the null is honest (order-1 ablation + reachable L1 headroom + the diagnostic finding), not a measurement bug."
         bare_control_passed:
           principle: "the POSITIVE CONTROL -- the target has a reachable winning L1 trajectory offline; a no-new-level null is valid only then."
         false_negative_risk_checked:
-          principle: "true with both ablations run + reachable-L1-headroom confirmed -- a 'no new level' null is valid only then."
+          principle: "true with the order-1 ablation run + reachable-L1-headroom confirmed -- a 'no new level' null is valid only then."
         proposer_served_model:
           principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard."
         chosen_submitted_config:
-          principle: "the recommended SUBMITTED_AGENT_CONFIG change (controllable-novelty proposal on, novelty weight/temperature) -- the A6 input; 'unchanged' if null."
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (object-centric proposal conditioning on, representation params) -- the A6 input; 'unchanged' if null."
         parity_test_green:
           principle: "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
         random_seed:
@@ -308,149 +325,157 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4688_controllable_novelty_proposal_policy_live.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4700_object_centric_perception_proposal_live.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4689-a2
-    milestone: 2026.06.432
-    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; second independent GENERATION mechanism) --
-      PROGRAM-SYNTHESIS ACTION-EFFECT PROPOSAL FILTER with HELD-OUT transition rejection: induce small per-game
-      action->effect programs from observed prefixes, REJECT programs that fail held-out transitions (the direct fix
-      for the .431 A2 experts_overfit_prefix residual), and use surviving programs to PRUNE the live explorer''s
-      primitive proposals to mechanically-relevant clicks/keys (not blind spatial sweeps), so the winning L1
-      trajectory enters the pool. The program-synthesis complement to A1''s novelty proposal. Gate: candidate-generation
-      COVERAGE up (the winner appears in the pool where the matched BLIND-PROPOSAL baseline did not) AND a held-out
-      first-win lift (CI excludes baseline), offline-reproduced. Live-path-reachable. live_agent_self_discovery.
-      verifier_is_oracle:false. retire_if_same_verdict. PoE-World arXiv:2505.10819 + Program-Synthesis-Guided RL
-      arXiv:2102.11137.'
+  - id: exp4701-a2
+    milestone: 2026.06.433
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; second independent GENERATION mechanism -- the .432
+      SOTA-ingestion''s explicit ".433 bottom line") -- AMORTIZED cross-game first-contact EXPLORATION PRIOR + the
+      ORPHANED Go-Explore archive wired LIVE. The live explorer starts every game from an EMPTY prior; distill the
+      rare successful first-contact trajectories into a reusable CROSS-GAME action prior (Algorithm Distillation
+      arXiv:2210.14215 + AMAGO arXiv:2310.09971 + arXiv:2601.19810) so the explorer proposes informed first moves, AND
+      wire the currently-ORPHANED arc_go_explore.py return-then-explore archive (arXiv:1901.10995 + arXiv:2004.12919)
+      into the live E3 path for SYSTEMATIC state coverage (return to under-explored cells, then explore onward).
+      Genuinely independent of A1 (cross-game prior + systematic coverage vs representation). Gate: candidate-generation
+      COVERAGE up (the winner appears in the archive/pool where the matched NO-PRIOR baseline did not) AND a held-out
+      first-win lift (CI excludes baseline), offline-reproduced, the NO-PRIOR ablation failing. Live-path-reachable.
+      live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4689_program_synthesis_action_effect_proposal_filter.json
+    deliverable: results/experiment_4701_amortized_exploration_prior_go_explore_live.json
     prior_failures:
-      - experiment_id: exp4677-a2
-        verdict: 'complete: poe_world_factored_planner_no_coverage_gain_residual_logged'
-        addressed_by: 'exp4677 (.431 A2) ran a PoE-World factored planner that composed programmatic object-experts
-          into a product model for PLANNING and nulled (coverage_delta=0.0, residual experts_overfit_prefix -- the
-          induced experts overfit the proposer prefix and failed held-out transition trust, so no replay-stable
-          factor survived to compose). THIS task is the structural fix the .431 D ingestion flagged: instead of
-          COMPOSING experts into a planner over the existing pool, it uses program synthesis as a PROPOSAL FILTER --
-          induce small per-game action->effect programs, REJECT any program that fails held-out transitions (held-out
-          rejection IS the experts_overfit_prefix fix), and use the surviving programs to PRUNE the explorer''s
-          primitive proposals to mechanically-relevant actions so the winning L1 trajectory is PROPOSED. Different
-          mechanism (proposal filtering with held-out rejection) at a different stage (generation, not planning). If
-          held-out-rejected program-synthesis filtering ALSO produces coverage_delta=0 with a passing control, the
-          residual is logged (held-out transitions too sparse to reject brittle rules | induced program explains
-          effects but cannot target the winning action) and program-synthesis proposal filtering retires for the
-          sprint.'
+      - experiment_id: exp4688-a1
+        verdict: 'complete: controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed'
+        addressed_by: 'exp4688 (.432 A1) reshaped the proposal distribution with WITHIN-GAME controllable novelty
+          (episodic kNN + RND lifelong novelty) and nulled (winning_prefix_still_not_proposed) -- within-game novelty
+          starting from an empty per-game prior did not surface the winner. THIS task is a STRUCTURALLY DIFFERENT
+          mechanism: (1) an AMORTIZED CROSS-GAME prior distilled from logged first-contact traces across public games
+          (Algorithm Distillation arXiv:2210.14215 + AMAGO arXiv:2310.09971), so the explorer proposes from learned
+          cross-game structure instead of an empty start -- the deeper transfer wall the .432 SOTA-ingestion flagged;
+          (2) SYSTEMATIC return-then-explore archive coverage (Go-Explore arXiv:1901.10995 + First Return Then Explore
+          arXiv:2004.12919) wired into the LIVE path (arc_go_explore.py is currently ORPHANED), which covers the state
+          space systematically rather than relying on a learned within-game novelty bonus that keeps missing the
+          winner. Forward difference: cross-game amortized prior + systematic archive coverage vs within-game novelty.
+          If the amortized prior + archive ALSO produces no offline-reproduced new generic level with a passing
+          no-prior ablation, the residual is logged (the cross-game traces encode game-IDs not reusable mechanics |
+          the archive expands dead cells without a goal gradient) and this lever retires for the sprint.'
         retire_if_same_verdict: true
-      - experiment_id: exp4653-a2
-        verdict: 'complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened'
-        addressed_by: 'exp4653 (.429 A2) ran a FLAT energy-as-fitness QD over action sequences and generated
-          no_winner -- because it mutated blindly without a feasibility model of which actions are mechanically
-          valid. THIS task gives generation the FEASIBILITY MODEL that QD lacked, but in the form QD/PoE-World both
-          missed: a HELD-OUT-VALIDATED action->effect program that PRUNES proposals to mechanically-relevant actions
-          (PoE-World arXiv:2505.10819 + Program-Synthesis-Guided RL arXiv:2102.11137). Different mechanism
-          (held-out-validated proposal pruning) vs blind QD mutation. If coverage still does not rise above the
-          matched blind-proposal baseline, the residual is logged as the .433 Missing-Verifier/generation gap and
-          this lever retires.'
+      - experiment_id: exp4628-a1
+        verdict: 'complete: dense_curiosity_loop_no_live_lift_honest_null_gap_sharpened'
+        addressed_by: 'exp4628 (.427 A1) added a DENSE within-game curiosity/learning-progress REWARD and gave zero
+          live lift. THIS task is not a dense reward: it is an AMORTIZED cross-game PRIOR (a distilled policy over
+          first-contact action structure) + a return-then-explore ARCHIVE that gives the explorer stable return points
+          rather than restarting every hidden-game attempt from the initial state. Different mechanism (distilled
+          cross-game prior + systematic archive) at a different scope (cross-game transfer, not within-game reward
+          shaping). If it still gives no offline-reproduced new generic level with a passing no-prior ablation, the
+          residual is logged as the .434 amortized-transfer gap and this lever retires.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint -- the SECOND independent generation mechanism). A1 widens the proposal
-      distribution via CONTROLLABLE NOVELTY; A2 narrows it via HELD-OUT-VALIDATED PROGRAM SYNTHESIS. The .431 A2
-      PoE-World planner (exp4677) nulled with experts_overfit_prefix because it COMPOSED prefix-overfit experts into
-      a planner; the .429 energy-fitness QD (exp4653) generated no_winner because it mutated blindly. PoE-World
-      (arXiv:2505.10819) + model-predictive program synthesis (arXiv:2102.11137) give the fix the .431 D ingestion
-      flagged: induce SMALL per-game action->effect programs from observed prefixes, REJECT programs that fail
-      held-out transitions (held-out rejection is the experts_overfit_prefix fix), and use the SURVIVING programs to
-      PRUNE the live explorer's primitive proposals to mechanically-relevant clicks/keys -- so the explorer stops
-      blind spatial sweeping and proposes the actions that actually drive the game, making the winning L1 trajectory
-      enter the pool. CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): the changes are in the LIVE
-      modules (arc_executable_world_model / arc_llm_reinduction / arc_competition_agent), imported by E3AgentPolicy
-      -- arc_orphan_solver_lint stays green; parity stays green. live_llm_inference: the program-synthesis induction
-      loads Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s; free port + /props-verify). verifier_is_oracle:false (the
-      induced programs are oracle-DISTINCT from the executable reproduction win-check). solve_provenance:
-      live_agent_self_discovery (the generic agent's OWN runtime program induction). Honest null with a passing
-      control if the filter does not raise candidate coverage. This is the SECOND mechanism vs A1 -- if A1's novelty
-      policy nulls, A2 may cross.
+      CONTEXT ({date}, ARC sprint -- the SECOND independent generation mechanism; the .432 SOTA-ingestion's explicit
+      ".433 bottom line", docs/research-notes/amortized-exploration-sota-ingestion-2026-06-24.md). A1 attacks the wall
+      by fixing WHAT the agent perceives; A2 attacks it by fixing WHERE the agent looks first regardless of
+      perception. The live E3 explorer starts every game from an EMPTY per-game prior and explores from scratch -- so
+      the rare successful first-contact (lp85, the 1/25 that reaches L1) is re-derived from nothing on every game and
+      does not transfer. TWO complementary SOTA mechanisms, both flagged for .433: (1) an AMORTIZED cross-game
+      first-contact exploration PRIOR -- distill the logged successful AND near-miss first-contact trajectories into a
+      reusable cross-game policy (Algorithm Distillation arXiv:2210.14215 = in-context RL from across-task histories;
+      AMAGO arXiv:2310.09971 = scalable in-context RL for adaptive agents; Unsupervised Efficient Exploration
+      arXiv:2601.19810) so the explorer proposes informed first moves before its per-game proposer starts from empty;
+      (2) wire the currently-ORPHANED arc_go_explore.py return-then-explore archive (Go-Explore arXiv:1901.10995 +
+      First Return Then Explore arXiv:2004.12919) into the LIVE E3 path -- a first-class producer of replayable
+      prefixes that the explorer returns to under-explored cells of before exploring onward, giving SYSTEMATIC coverage
+      rather than a learned bonus that keeps missing the winner.
 
-      THE KEY METRIC IS CANDIDATE-GENERATION COVERAGE, not just solve-rate: does the winning action/plan now APPEAR
-      in the generated pool where the matched BLIND-PROPOSAL baseline did not? Coverage is the make-a-winner-appear
-      signal; the held-out first-win lift is the downstream confirmation. HELD-OUT REJECTION IS MANDATORY: every
-      induced program must be validated on held-out transitions and DROPPED if it fails (the experts_overfit_prefix
-      fix); report the kept/rejected program counts.
+      CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): arc_go_explore.py is currently ORPHANED (NOT in the
+      E3AgentPolicy import closure). Wiring it into the live path is exactly the right move and RESOLVES the orphan-lint
+      status (it becomes live-path-reachable) -- confirm arc_orphan_solver_lint stays green AFTER wiring; parity stays
+      green. live_llm_inference: the amortized-prior distillation / the LLM-proposed first moves load Qwen3.5-9B-MTP on
+      the iGPU (NEVER the 3090s; free port + /props-verify). verifier_is_oracle:false (the prior + archive are
+      oracle-DISTINCT from the executable reproduction win-check). solve_provenance: live_agent_self_discovery (the
+      generic agent's OWN runtime exploration). This is the SECOND mechanism vs A1 -- if A1's perception lever nulls,
+      A2 may cross.
 
-      NOTE the PORT-8919 CONFOUND: construct the LLM proposer on a FREE port (e.g. 8920) + /props-verify
-      Qwen3.5-9B-MTP (not the gemma squatting 8919).
+      THE KEY METRIC IS CANDIDATE-GENERATION COVERAGE: does the winning action/plan now APPEAR in the generated
+      pool/archive where the matched NO-PRIOR baseline did not? Coverage is the make-a-winner-appear signal; the
+      held-out first-win lift is the downstream confirmation. THE NO-PRIOR ABLATION IS MANDATORY: the same explorer +
+      archive WITHOUT the amortized cross-game prior must FAIL where the prior succeeds (else the win is from the
+      archive coverage alone, or the prior adds nothing). FAILS-WHEN (be honest): the cross-game traces encode game-IDs
+      not reusable mechanics; the archive expands many dead cells without a goal gradient; replay cannot restore the
+      selected cell. Report these if they bite.
+
+      NOTE the PORT-8919 CONFOUND: construct the LLM proposer on a FREE port (e.g. 8920) + /props-verify Qwen3.5-9B-MTP
+      (not the gemma squatting 8919).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/docs/research-notes/directed-exploration-sota-ingestion-2026-06-24.md (the program_synthesis_action_effect_proposal_filter mapping: induce action->effect programs + held-out transition rejection + proposal pruning; PoE-World arXiv:2505.10819 + arXiv:2102.11137 -- the spec; "must include held-out transition rejection because A2 already exposed experts_overfit_prefix")
-        - {project_root}/results/experiment_4677_poe_world_factored_subgoal_planner.json (.431 A2 -- read candidate_generation_coverage_factored=0.0, residual_bridge_gap=experts_overfit_prefix, expert_trust_weights: the prefix-overfit experts this fixes via held-out rejection)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json IF PRESENT (A1 -- read generic_first_win_by_config + residual to share the confirmed target game) -- else PREFER a hard clean L1-only game from {{bp35,re86,s5i5,g50t,r11l,lf52}}
-        - {project_root}/python/carnot/agentic/arc_executable_world_model.py (the executable world model + plan_in_model ~693 -- where induced action->effect programs attach) + {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction -- the LLM induction of action->effect programs) + {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy + StepwiseExplorer -- where the surviving programs PRUNE the proposal set)
-        - {project_root}/scripts/arc_orphan_solver_lint.py + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/docs/research-notes/amortized-exploration-sota-ingestion-2026-06-24.md (the spec: in_context_exploration_prior_from_first_contact_traces [arXiv:2210.14215 + arXiv:2310.09971 + arXiv:2601.19810] + arc_go_explore_return_then_explore_archive_upgrade [arXiv:1901.10995 + arXiv:2004.12919] -- the "bottom line for the .433 roadmap" + the per-method fails_when)
+        - {project_root}/python/carnot/agentic/arc_go_explore.py (the ORPHANED return-then-explore scaffolding to wire live: go_explore_solve API, the (frame_hash, level) cell archive, weighted under-visited/frontier cell selection, return-then-explore -- harden into a first-class replayable-prefix producer) + {project_root}/scripts/arc_orphan_solver_lint.py (confirm it becomes reachable AFTER wiring)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy + StepwiseExplorer -- where the amortized prior seeds first-move proposals and the archive returns/explores) + {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json IF PRESENT (A1 perception -- read generic_first_win_by_config to share the confirmed target game) -- else PREFER a hard clean L1-only game from {{bp35,re86,s5i5,g50t,r11l}}
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
 
-      TASK: implement a bounded program-synthesis action-effect PROPOSAL FILTER in the LIVE modules: (1) induce
-      small per-game action->effect programs from observed prefixes (LLM proposer); (2) VALIDATE each program on
-      held-out transitions and REJECT any that fail (held-out rejection -- the experts_overfit_prefix fix); (3) use
-      the surviving programs to PRUNE the explorer's primitive proposals to mechanically-relevant actions; (4) live
-      E3 executes+audits. MEASURE on the target game(s): candidate-generation COVERAGE (does the winner appear in
-      the generated pool where the matched BLIND-PROPOSAL baseline did not) + held-out first-win-rate WITH the
-      filter vs the matched blind-proposal baseline. Bootstrap CI. The WIN: coverage up (the winner now proposed)
-      AND a held-out first-win lift (CI excludes the blind-proposal baseline) on >=1 game, offline-reproduced.
-      verifier_is_oracle:false.
+      TASK: implement BOTH mechanisms in the LIVE modules: (1) distill an amortized cross-game first-contact action
+      prior from logged first-contact traces (a small sequence model / in-context prior; degrade gracefully to a
+      frequency prior over first-contact action families if training is too heavy in budget); (2) wire arc_go_explore's
+      return-then-explore archive into the live E3 explorer as a replayable-prefix producer; (3) the explorer proposes
+      from the amortized prior at first-contact + returns to under-explored archive cells then explores onward; (4)
+      live E3 executes+audits + replay-verifies via arc_solver_kit.reproduce. MEASURE on the target game(s):
+      candidate-generation COVERAGE (winner-in-pool/archive) + held-out first-win-rate WITH the amortized prior +
+      archive vs the matched NO-PRIOR baseline. Bootstrap CI. The WIN: coverage up (the winner now generated) AND a
+      held-out first-win lift (CI excludes the no-prior baseline) on >=1 game, offline-reproduced, the no-prior
+      ablation failing. verifier_is_oracle:false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. Qwen3.5-9B-MTP GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/` non-empty; else blocked_model_not_cached_qwen, EXIT.
            b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
-           c. `.venv/bin/python -c "from carnot.agentic import arc_executable_world_model, arc_llm_reinduction, arc_competition_agent"` exits 0.
+           c. `.venv/bin/python -c "from carnot.agentic import arc_go_explore, arc_competition_agent"` exits 0.
            d. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
-        1. Induce the per-game action->effect programs (LLM proposer), VALIDATE on held-out transitions, REJECT failures (record kept/rejected counts). Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green.
-        2. Use the surviving programs to PRUNE the explorer's primitive proposals to mechanically-relevant actions; live E3 executes+audits.
-        3. Measure candidate-generation COVERAGE (winner-in-pool) + held-out first-win-rate vs the matched blind-proposal baseline on the target game(s). Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the matched baseline ran on a corpus with reachable L1 headroom; emit the coverage delta + first-win delta explicitly + a null_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any newly-solved variant. If coverage still does not rise, log the residual (heldout_transitions_too_sparse | program_explains_effects_cannot_target_winning_action) as the .433 generation gap.
+        1. Distill the amortized cross-game first-contact prior from logged traces (or the degraded frequency prior); wire arc_go_explore's return-then-explore archive into the live E3 explorer. Confirm `.venv/bin/python scripts/arc_orphan_solver_lint.py` stays green AND arc_go_explore is now reachable (no longer orphaned).
+        2. Run the live explorer with {amortized prior + archive} vs the matched NO-PRIOR baseline on the target game(s); live E3 executes+audits.
+        3. Measure candidate-generation COVERAGE (winner-in-pool/archive) + held-out first-win-rate vs the no-prior baseline. Bootstrap CI. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the matched baseline ran on a corpus with reachable L1 headroom; emit the coverage delta + first-win delta explicitly + a null_methodology_note when 0. RUN test_arc_submitted_agent_parity.py -> green. Offline-reproduce any newly-solved variant. If coverage still does not rise, log the residual (cross_game_traces_encode_game_ids | archive_expands_dead_cells_no_goal_gradient | replay_cannot_restore_cell) as the .434 generation gap.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: program_synthesis_filter_coverage_up_heldout_firstwin_lift_<game> OR complete: program_synthesis_filter_no_coverage_gain_residual_logged."
+          principle: "terminal prefix; success: amortized_prior_go_explore_coverage_up_heldout_firstwin_lift_<game> OR complete: amortized_prior_go_explore_no_coverage_gain_residual_logged."
         inference_substrate:
-          principle: "live_llm_inference -- the program-synthesis induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor)."
+          principle: "live_llm_inference -- the amortized-prior distillation / LLM-proposed first moves load + run the Qwen3.5-9B-MTP GGUF (60s floor); model_specs MUST name the GGUF (avoid the .432 METHODOLOGY_MISSING warn)."
         verifier_is_oracle:
-          principle: "MUST be false -- the induced action->effect programs are oracle-DISTINCT from the executable reproduction win-check."
+          principle: "MUST be false -- the amortized prior + archive are oracle-DISTINCT from the executable reproduction win-check."
         solve_provenance:
-          principle: "live_agent_self_discovery -- the generic agent's OWN runtime program induction; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+          principle: "live_agent_self_discovery -- the generic agent's OWN runtime exploration; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
         live_path_reachable:
-          principle: "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
-        candidate_generation_coverage_filter:
-          principle: "does the winning action/plan APPEAR in the filter-pruned proposal pool -- the make-a-winner-appear signal (the metric that distinguishes generation from selection)."
-        candidate_generation_coverage_blind_baseline:
-          principle: "the matched BLIND-PROPOSAL baseline coverage -- a coverage CLAIM requires the filter coverage to exceed it (the winner proposed where blind sweeping did not)."
+          principle: "HARD gate -- arc_go_explore is now in the E3AgentPolicy import closure (no longer orphaned); arc_orphan_solver_lint passes."
+        go_explore_now_live_reachable:
+          principle: "true -- arc_go_explore.py is wired into the live E3 path (was ORPHANED); the orphan-lint confirms it (the residual-effort-not-wasted fix)."
+        candidate_generation_coverage_with_prior:
+          principle: "does the winning action/plan APPEAR in the {amortized-prior + archive} pool -- the make-a-winner-appear signal (distinguishes generation from selection)."
+        candidate_generation_coverage_no_prior_baseline:
+          principle: "the matched NO-PRIOR baseline coverage -- a coverage CLAIM requires the prior+archive coverage to exceed it (the winner generated where the empty-prior explorer did not)."
         coverage_delta:
-          principle: "filter - blind coverage (positive = the winner now proposed); emitted explicitly so a null (0) is annotated."
-        heldout_programs_kept:
-          principle: "the count of induced action->effect programs that PASSED held-out transition validation (only these prune proposals -- the experts_overfit_prefix fix)."
-        heldout_programs_rejected:
-          principle: "the count REJECTED for failing held-out transitions -- proves held-out rejection actually ran (no prefix-overfit program survived)."
-        live_first_win_rate_filter:
-          principle: "the held-out first-win-rate WITH the proposal filter on the SCORED agent."
-        live_baseline_blind_proposal:
-          principle: "the matched blind-proposal baseline first-win on the SAME games (the no-regression control)."
+          principle: "with-prior - no-prior coverage (positive = the winner now generated); emitted explicitly so a null (0) is annotated."
+        live_first_win_rate_with_prior:
+          principle: "the held-out first-win-rate WITH the amortized prior + archive on the SCORED agent."
+        live_baseline_no_prior:
+          principle: "the matched no-prior baseline first-win on the SAME games (the no-regression control + the ablation)."
         first_win_rate_delta:
-          principle: "filter - baseline first-win-rate; emitted explicitly so a null is annotated."
+          principle: "with-prior - baseline first-win-rate; emitted explicitly so a null is annotated."
         live_lift_ci:
           principle: "bootstrap CI on the first-win lift; a claim above baseline requires the CI to exclude it."
+        no_prior_ablation_failed:
+          principle: "true -- the matched NO-PRIOR ablation does NOT win where the prior+archive does; proves the win is attributable to the amortized prior, not the archive coverage alone."
         bare_control_passed:
           principle: "the POSITIVE CONTROL -- the matched baseline ran on a corpus with reachable L1 headroom; a no-coverage-gain null is valid only then."
         false_negative_risk_checked:
-          principle: "true with the matched blind baseline + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
+          principle: "true with the no-prior ablation + reachable-headroom confirmed -- a 'no coverage gain' null is valid only then."
         null_methodology_note:
           principle: "present when coverage_delta==0 -- states the equality is an honest no-value null, not a measurement bug."
         chosen_submitted_config:
-          principle: "the recommended SUBMITTED_AGENT_CONFIG change (proposal filter on, held-out trust threshold) -- the A6 input; 'unchanged' if null."
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (amortized prior on, archive on, return-then-explore params) -- the A6 input; 'unchanged' if null."
         proposer_served_model:
           principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
         parity_test_green:
@@ -458,7 +483,7 @@ tasks:
         offline_reproduced:
           principle: "any newly-solved variant must offline-reproduce to count."
         residual_bridge_gap:
-          principle: "the .433 generation gap logged if coverage does not rise (heldout_transitions_too_sparse | program_cannot_target_winning_action)."
+          principle: "the .434 generation gap logged if coverage does not rise (cross_game_traces_encode_game_ids | archive_expands_dead_cells_no_goal_gradient | replay_cannot_restore_cell)."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -466,37 +491,36 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4689_program_synthesis_action_effect_proposal_filter.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4701_amortized_exploration_prior_go_explore_live.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4690-a3
-    milestone: 2026.06.432
+  - id: exp4702-a3
+    milestone: 2026.06.433
     title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) --
-      run the standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT
-      deepened in .427-.431 (PREFER a first-contact L1->L2 of a hard clean public game from the L1-only set
-      bp35/re86/s5i5/g50t/r11l/lf52; alternatives m0r0/cn04/ar25 L2->L3; SKIP sb26 [.431], dc22 [.430], vc33 [.429],
-      ft09 [.428], ls20 [.427], sk48 [.426 failed], ka59/wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no
-      grounded delta]) AND train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced new
-      level -> reproducible_total_levels 60 -> 61+. verifier_is_oracle:false.'
+      run the standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened
+      in .428-.432 (PREFER a first-contact L1->L2 of a hard clean public game from bp35/re86/s5i5/g50t/r11l;
+      alternatives m0r0/cn04/ar25 L2->L3; SKIP lf52 [.432], sb26 [.431], dc22 [.430], vc33 [.429], ft09 [.428], ls20
+      [.427], sk48 [.426 failed], ka59/wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND
+      train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced new level ->
+      reproducible_total_levels 61 -> 62+. verifier_is_oracle:false.'
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4690_levelup_selfplay.json
+    deliverable: results/experiment_4702_levelup_selfplay.json
     prior_failures:
       - experiment_id: exp4618-a3
         verdict: 'complete: sk48_delta_identified_no_bank'
-        addressed_by: 'exp4618 (.426 A3) attempted sk48 L1->L2 and did NOT bank. This task ROTATES to a DIFFERENT
-          clean game NOT deepened in .427-.431 (PREFER bp35/re86/s5i5/g50t/r11l/lf52 first-contact L1->L2 -- hard
-          clean public games; alternatives m0r0/cn04/ar25 L2->L3) and explicitly SKIPS sb26 (.431), dc22 (.430),
-          vc33 (.429), ft09 (.428), ls20 (.427), sk48 (.426), ka59/wa30 (hidden-state-bound), and cd82-L3/sp80-L3/su15-L3
-          (no grounded delta). It may use any A1/A2 live improvement (controllable-novelty proposal / the
-          program-synthesis filter) to speed the search; the bank (offline-reproduced new level) is the gate, not
-          the routing speedup. If the rotated deepen ALSO produces no bank, log the per-game delta + dead-end in the
-          registry and the level-up target rotates again next milestone (the target is retired, not the self-play
-          loop).'
+        addressed_by: 'exp4618 (.426 A3) attempted sk48 L1->L2 and did NOT bank. This task ROTATES to a DIFFERENT clean
+          game NOT deepened in .428-.432 (PREFER bp35/re86/s5i5/g50t/r11l first-contact L1->L2 -- hard clean public
+          games; alternatives m0r0/cn04/ar25 L2->L3) and explicitly SKIPS lf52 (.432), sb26 (.431), dc22 (.430), vc33
+          (.429), ft09 (.428), ls20 (.427), sk48 (.426), ka59/wa30 (hidden-state-bound), and cd82-L3/sp80-L3/su15-L3
+          (no grounded delta). It may use any A1/A2 live improvement (object-centric perception / the amortized prior +
+          Go-Explore archive) to speed the search; the bank (offline-reproduced new level) is the gate, not the routing
+          speedup. If the rotated deepen ALSO produces no bank, log the per-game delta + dead-end in the registry and
+          the level-up target rotates again next milestone (the target is retired, not the self-play loop).'
         retire_if_same_verdict: true
     prompt: |
       CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE + the self-improvement engine). CLAUDE.md mandates >=1
@@ -504,30 +528,30 @@ tasks:
       running the self-play loop EVERY milestone. This task does BOTH: bank +1 level AND train+checkpoint the learned
       verifier on the run's positive (steps-to-go) + negative (off-path/dead-end) traces. INDEPENDENT of A1/A2 so the
       guarantee holds even if they null. ALL 25 public games have >=L1 banked -- so this is a DEEPEN (L1->L2),
-      preferring a deeper first-contact L1->L2 on a HARD clean game from the L1-only set. TARGET ROTATION: sb26 was
-      .431, dc22 .430, vc33 .429, ft09 .428, ls20 .427, sk48(failed) .426 -- rotate to a game NOT deepened in
-      .427-.431. PREFER bp35/re86/s5i5/g50t/r11l/lf52 L1->L2 (the genuine hard-to-bank clean public games);
-      alternatives m0r0/cn04/ar25 L2->L3. Check the registry dead_ends per game FIRST and SKIP stalled approaches: do
-      NOT pick sb26 (.431), dc22 (.430), vc33 (.429), ft09 (.428), ls20 (.427), sk48 (.426), ka59/wa30
-      (hidden-state-bound), cd82/sp80/su15-L3 (no-grounded-L3-delta). USE any A1 controllable-novelty / A2
-      program-synthesis live improvement from arc_loop_solve (if they shipped) to speed the search; the bank
-      (offline-reproduced new level) is the gate, not the routing speedup.
+      preferring a deeper first-contact L1->L2 on a HARD clean game. TARGET ROTATION: lf52 was .432, sb26 .431, dc22
+      .430, vc33 .429, ft09 .428, ls20 .427, sk48(failed) .426 -- rotate to a game NOT deepened in .428-.432. PREFER
+      bp35/re86/s5i5/g50t/r11l L1->L2 (the genuine hard-to-bank clean public games); alternatives m0r0/cn04/ar25
+      L2->L3. Check the registry dead_ends per game FIRST and SKIP stalled approaches: do NOT pick lf52 (.432), sb26
+      (.431), dc22 (.430), vc33 (.429), ft09 (.428), ls20 (.427), sk48 (.426), ka59/wa30 (hidden-state-bound),
+      cd82/sp80/su15-L3 (no-grounded-L3-delta). USE any A1 object-centric / A2 amortized-prior live improvement from
+      arc_loop_solve (if they shipped) to speed the search; the bank (offline-reproduced new level) is the gate, not
+      the routing speedup.
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/scripts/arc_loop_solve.py (the STANDING entrypoint: transfer-route -> verifier-routed solve -> reproduction gate -> TRAIN+CHECKPOINT the learned verifier -> registry update; A1/A2 may have wired live improvements here)
-        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=60 + per-game dead_ends; L1-only games: r11l/wa30/s5i5/lf52/sk48/ka59/g50t/re86/bp35; sb26 is now L2; L2 games incl ls20/cd82/sp80/su15/m0r0/cn04/ar25/vc33/dc22/sb26; ft09 L3)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=61 + per-game dead_ends; L1-only games: r11l/wa30/s5i5/sk48/ka59/g50t/re86/bp35; lf52 is now L2; L2 games incl ls20/cd82/sp80/su15/m0r0/cn04/ar25/vc33/dc22/sb26/lf52; ft09 L3)
         - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate)
         - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -> route a deepen attempt to the closest solved recipe)
         - {project_root}/python/carnot/agentic/arc_value_learner.py (the learned verifier trained on pos/neg traces; models/arc_verifier_<game>.json checkpoint)
 
       TASK: bank a NEW level -- gate: offline_reproduced=true AND reproduced_levels>=1 -- via the self-play loop, AND
-      persist the trained/updated learned-verifier checkpoint. Prefer the rotated clean game's next level (RE only
-      the next-level win/action/state DELTA via a derive-from-env GameAdapter). Only OFFLINE-REPRODUCED levels count.
-      Skip the dead-ends already recorded per game.
+      persist the trained/updated learned-verifier checkpoint. Prefer the rotated clean game's next level (RE only the
+      next-level win/action/state DELTA via a derive-from-env GameAdapter). Only OFFLINE-REPRODUCED levels count. Skip
+      the dead-ends already recorded per game.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Pick the rotation target (PREFER bp35/re86/s5i5/g50t/r11l/lf52 L1->L2; a clean game NOT deepened in .427-.431; check registry dead_ends to skip stalled approaches; do NOT pick sb26/dc22/vc33/ft09/ls20/sk48/ka59/wa30). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
+        1. Pick the rotation target (PREFER bp35/re86/s5i5/g50t/r11l L1->L2; a clean game NOT deepened in .428-.432; check registry dead_ends to skip stalled approaches; do NOT pick lf52/sb26/dc22/vc33/ft09/ls20/sk48/ka59/wa30). Run `.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or --auto with a preferred-target list).
         2. For a deepen: recommend_approach -> RE only the next-level delta -> register/extend the GameAdapter -> re-run the loop.
         3. Run the reproduction gate (arc_solver_kit.reproduce). Only on reproduced=True, update ops/arc_solve_registry.yaml (win condition, action model, gotchas, dead-ends, solver module) + bump reproducible_total_levels.
         4. TRAIN+CHECKPOINT the learned verifier on the run's pos/neg traces (the self-improvement step); persist models/arc_verifier_<game>.json (mirror-ready per CLAUDE.md decentralization rule 3). Record the verifier delta.
@@ -547,7 +571,7 @@ tasks:
         reproduced_levels:
           principle: "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."
         target_game:
-          principle: "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .427-.431, not sb26/dc22/vc33/ft09/ls20/sk48/ka59/wa30)."
+          principle: "the rotated game attempted -- traceable to the rotation discipline (a clean game not deepened in .428-.432, not lf52/sb26/dc22/vc33/ft09/ls20/sk48/ka59/wa30)."
         verifier_checkpoint_updated:
           principle: "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
         registry_updated:
@@ -559,56 +583,61 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4690_levelup_selfplay.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4702_levelup_selfplay.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4691-a4
-    milestone: 2026.06.432
-    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- RETARGETED per 2026-06-24 operator directive) -- gate readiness on
-      the HELD-OUT GENERIC FIRST-WIN lane (experiment_4605 first_win_rate_integrated vs the last-submission 0.04/0.08
-      baseline, bootstrap-CI lower bound > 0), NOT replay-package depth. The replay path scores ~0 on the hidden
-      leaderboard; the held-out first-win on color-permuted variants is the only offline proxy that tracks the
-      scored lane. Keep the reproduced replay package as a FLOOR artifact only (strip the "honest leaderboard score"
-      framing). Submission stays operator-only. verifier_is_oracle:false.'
+  - id: exp4703-a4
+    milestone: 2026.06.433
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- the RETARGETED held-out first-win readiness lane) -- gate readiness on
+      the HELD-OUT GENERIC FIRST-WIN (experiment_4605 first_win_rate_integrated vs the last-submission 0.04/0.08
+      baseline, bootstrap-CI lower bound > baseline), NOT replay-package depth. Re-measure AFTER A1/A2''s changes. EMIT
+      the null-delta markers (null_delta_methodology_note + positive_control_passed) so an honest FLAT first-win null
+      is NOT quarantined (the exp4691 TAUTOLOGY-flag fix). Keep the reproduced replay package as a FLOOR artifact only
+      (replay count is NOT the score). Submission operator-only. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 120
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4691_held_out_first_win_readiness.json
-    operator_override: '2026-06-24 operator directive (MANDATORY-NEXT-MILESTONE, audit wf_b7ea354a-5a3): RETARGET
-      PHASE-A4 -- gate readiness on the HELD-OUT first-win lane (experiment_4605), NOT replay-package freshness. The
-      replay path (arc3_live_submit.py) scores ~0 on the hidden leaderboard; first scored submission=0.08 (ref
-      53862349). Stop citing live_submittable_level_count>33 as "the score" (that framing is the retired dead-end);
-      strip the "honest leaderboard score" annotation from the spec. This is the forward difference vs the .431 A4
-      (exp4679) package-refresh framing -- a RETARGET, not a doomed rerun. agent_type codex (ARC sprint).'
+    deliverable: results/experiment_4703_held_out_first_win_readiness.json
+    operator_override: '2026-06-24 operator directive (MANDATORY-NEXT-MILESTONE, audit wf_b7ea354a-5a3, STANDING):
+      RETARGET PHASE-A4 -- gate readiness on the HELD-OUT first-win lane (experiment_4605), NOT replay-package
+      freshness. The replay path (arc3_live_submit.py) scores ~0 on the hidden leaderboard; first scored
+      submission=0.08 (ref 53862349). Stop citing live_submittable_level_count>33 as "the score" (the retired
+      dead-end). The forward difference vs the .432 A4 (exp4691, which flat-nulled at 0.04 AND was TAUTOLOGY-flagged
+      for missing the null-delta markers): THIS A4 emits null_delta_methodology_note + positive_control_passed so the
+      honest flat null is NOT quarantined, AND re-measures AFTER A1/A2''s perception/exploration changes. agent_type
+      codex (ARC sprint). retire_if_same_verdict applies to any A4 that STILL cites the replay count as "the score".'
     prompt: |
-      CONTEXT ({date}, ARC sprint SCORE -- RETARGETED). The 2026-06-24 operator audit (wf_b7ea354a-5a3) found the
-      dev-proxy-vs-scored conflation: PHASE-A4 gated readiness on live_submittable_level_count>33 (the depth of the
-      offline REPLAY package), but the replay path (scripts/arc3_live_submit.py) scores ~0 on the HIDDEN leaderboard
-      -- beating 33 reproduced replay levels does NOT move the leaderboard. What ACTUALLY scores is the Kaggle
-      competition kernel running the LIVE generic agent (make_carnot_agent -> E3AgentPolicy) on hidden OOD games;
-      FIRST SCORED SUBMISSION = 0.08 (ref 53862349). The held-out PROXY for that scored lane is
-      python/carnot/experiment_4605_live_integration_scored_agent.py -- it runs the LITERAL SUBMITTED_AGENT_CONFIG
-      (parity-hard-gated) over color-permuted variants; current baseline first_win_rate_integrated=0.04, CI [0,0],
-      parity green. RETARGET A4: gate readiness on the experiment_4605 HELD-OUT GENERIC FIRST-WIN (plus the deepening
-      field) vs the last-submission baseline, with a bootstrap-CI-excludes-0 improvement criterion. Keep the replay
-      package as a reproduced FLOOR artifact (reproduce + ship it) but do NOT treat its level count as the
-      leaderboard score, and DO NOT cite the replay count as "the score". NO LLM at submit-time. Submission is
-      OPERATOR-ONLY (External Publication) -- this task PREPARES + measures readiness ONLY. ARC Prize Milestone #1
-      deadline 2026-06-30 (6 days).
+      CONTEXT ({date}, ARC sprint SCORE -- the RETARGETED held-out first-win readiness lane). The 2026-06-24 operator
+      audit (wf_b7ea354a-5a3) found the dev-proxy-vs-scored conflation: the replay path (scripts/arc3_live_submit.py)
+      scores ~0 on the HIDDEN leaderboard -- beating 33 reproduced replay levels does NOT move the leaderboard. What
+      ACTUALLY scores is the Kaggle competition kernel running the LIVE generic agent (make_carnot_agent ->
+      E3AgentPolicy) on hidden OOD games; FIRST SCORED SUBMISSION = 0.08 (ref 53862349). The held-out PROXY for that
+      scored lane is python/carnot/experiment_4605_live_integration_scored_agent.py -- it runs the LITERAL
+      SUBMITTED_AGENT_CONFIG (parity-hard-gated) over color-permuted variants; baseline first_win_rate_integrated=0.04,
+      CI [0,0], parity green. RETARGET A4: gate readiness on the experiment_4605 HELD-OUT GENERIC FIRST-WIN (plus the
+      deepening field) vs the last-submission baseline, with a bootstrap-CI-excludes-baseline improvement criterion,
+      re-measured AFTER this milestone's A1/A2 changes. Keep the replay package as a reproduced FLOOR artifact but do
+      NOT treat its level count as the score. CRITICAL FIX (the exp4691 lesson): the .432 A4 flat-nulled
+      (first_win_baseline==first_win_rate_integrated==0.04) and was CRITICAL-flagged TAUTOLOGY because it did NOT emit
+      the null-delta markers the adversarial_verify carve-out reads. THIS A4 MUST emit, when the delta is ~0:
+      null_delta_methodology_note (non-empty, why a flat first-win is an honest no-change) AND positive_control_passed
+      (bool(parity_test_green AND no_regression)) -- the positive control GATES the exemption so a flat null is
+      excused but an unvalidated one is not. NO LLM at submit-time. Submission is OPERATOR-ONLY (External Publication)
+      -- this task PREPARES + measures readiness ONLY. ARC Prize Milestone #1 deadline 2026-06-30 (6 days).
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the HELD-OUT proxy: runs the LITERAL SUBMITTED_AGENT_CONFIG over color-permuted variants -> first_win_rate_integrated, parity-hard-gated -- the lane that tracks the scored leaderboard)
-        - {project_root}/results/experiment_4679_refresh_submission_package.json (the .431 A4 package-refresh -- the OLD framing being retargeted; its live_submittable_level_count=60 stays a FLOOR, NOT the score)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG -- the single source of truth the scored kernel loads) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green -- the held-out proxy is only valid if the measured agent == SUBMITTED_AGENT_CONFIG byte-for-byte)
-        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=60 -- the replay FLOOR depth) + {project_root}/scripts/arc3_live_submit.py (the replay path that scores ~0 -- the FLOOR artifact, not the score)
+        - {project_root}/results/experiment_4691_held_out_first_win_readiness.json (the .432 A4 -- read why it was TAUTOLOGY-flagged: it emitted baseline==integrated==0.04 WITHOUT null_delta_methodology_note/positive_control_passed) + {project_root}/results/experiment_4681_integration_gate.json (the A6 build_artifact null-delta-marker EXEMPLAR to copy: null_delta_methodology_note + positive_control_passed)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG -- the single source of truth the scored kernel loads) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/ops/arc_solve_registry.yaml (current reproducible_total_levels=61 -- the replay FLOOR depth) + {project_root}/scripts/arc3_live_submit.py (the replay path that scores ~0 -- the FLOOR artifact, not the score)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy, SUBMITTED_AGENT_CONFIG"` exits 0 AND `.venv/bin/python -c "from carnot import experiment_4605_live_integration_scored_agent"` exits 0. Missing -> blocked_<resource>, EXIT.
         1. RUN test_arc_submitted_agent_parity.py -> green (the proxy is valid only if the measured agent == SUBMITTED_AGENT_CONFIG). Then run the experiment_4605 held-out proxy: first_win_rate_integrated + first_win_ci_lower (bootstrap CI lower bound) + multi_level_deepen_rate_integrated on color-permuted variants, vs the last-submission baseline (0.04).
-        2. Compute READINESS: readiness=true IFF parity_test_green AND first_win_rate_integrated improved vs the last-submission baseline (bootstrap-CI lower bound > 0), OR (explicitly) held flat with an honest "no leaderboard-relevant change this milestone" note. NEVER readiness=true purely on live_submittable_level_count>33.
+        2. Compute READINESS: readiness=true IFF parity_test_green AND first_win_rate_integrated improved vs the last-submission baseline (bootstrap-CI lower bound > baseline), OR (explicitly) held flat WITH the null-delta markers: null_delta_methodology_note (why a flat first-win is an honest no-leaderboard-change) AND positive_control_passed=bool(parity_test_green AND no_regression). NEVER readiness=true purely on live_submittable_level_count>33.
         3. Reproduce + ship the replay package as a FLOOR artifact (replay_package_floor_reproduced=true) but record it is explicitly NOT the leaderboard score. Do NOT submit -- emit ready_for_operator_submit + the held-out first-win readiness + the floor package path.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -621,17 +650,21 @@ tasks:
         first_win_rate_integrated:
           principle: "the held-out generic first-win on color-permuted variants is the only offline proxy that tracks the scored leaderboard lane; the replay count does not."
         first_win_ci_lower:
-          principle: "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion; a point estimate alone is gameable by a single lucky variant."
+          principle: "bootstrap-CI lower bound > baseline is the falsifiable improvement criterion; a point estimate alone is gameable by a single lucky variant."
         first_win_baseline:
           principle: "the last-submission baseline first-win (0.04) -- the apples-to-apples comparison the readiness gate uses."
+        null_delta_methodology_note:
+          principle: "present when first_win delta is ~0 -- a non-empty note why a flat first-win is an honest no-leaderboard-change (the marker the TAUTOLOGY carve-out reads; the exp4691 flat null was quarantined for omitting it)."
+        positive_control_passed:
+          principle: "bool(parity_test_green AND no_regression_vs_baseline) -- GATES the null-delta exemption so an UNVALIDATED flat null (parity failed / regression) is NOT excused (a fabricator cannot dodge by merely claiming no change)."
         multi_level_deepen_rate_integrated:
-          principle: "deepening past L1 is the second scored lever (the L2 goal-predicate wall); tracking it held-out keeps A4 honest about depth without using the replay count."
+          principle: "deepening past L1 is the second scored lever; tracking it held-out keeps A4 honest about depth without using the replay count."
         parity_test_green:
           principle: "the held-out proxy is only valid if the measured agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates any readiness claim."
         replay_package_floor_reproduced:
           principle: "the replay package stays a reproduced FLOOR artifact, but its level count is explicitly NOT the leaderboard score (the retargeted framing)."
         replay_count_is_not_the_score:
-          principle: "MUST be true -- explicitly records that live_submittable_level_count is NOT the leaderboard score (the retired dead-end framing the 2026-06-24 directive strips)."
+          principle: "MUST be true -- explicitly records that live_submittable_level_count is NOT the leaderboard score (the retired dead-end framing)."
         ready_for_operator_submit:
           principle: "True if parity green AND the held-out first-win readiness gate passes; the task NEVER submits (operator-only)."
         random_seed:
@@ -641,47 +674,46 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (SUBMITTED_AGENT_CONFIG importable, experiment_4605 importable); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4691_held_out_first_win_readiness.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4703_held_out_first_win_readiness.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4692-a5
-    milestone: 2026.06.432
+  - id: exp4704-a5
+    milestone: 2026.06.433
     title: 'PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone''s winning A1/A2
-      DIRECTED-EXPLORATION primitive (the controllable-novelty proposal operator [episodic kNN + RND lifelong
-      novelty over a controllable-novelty embedding] OR the program-synthesis action-effect proposal filter [held-out
-      transition rejection + proposal pruning], whichever cleared its gate) as a reusable arc_solver_kit primitive +
-      registry general_gotcha, and measure cross-game transfer value (characterize the null honestly if transfer is
-      value-null). verifier_is_oracle:false.'
+      primitive (the object-centric/relational PERCEPTION representation operator OR the amortized cross-game
+      exploration prior + Go-Explore archive operator, whichever cleared its gate) as a reusable arc_solver_kit
+      primitive + registry general_gotcha, and measure cross-game transfer value (characterize the null honestly if
+      transfer is value-null). verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4692_primitive_persist_transfer.json
+    deliverable: results/experiment_4704_primitive_persist_transfer.json
     operator_override: '2026-06-16 ARC Solve Reproducibility + Solver-Reuse Discipline (standing: capture reusable
-      scaffolding, do not re-derive) + the self-learning ethos: routine persist+transfer continuation of the .431 A5
-      (exp4680, which persisted the programmatic-expert trust-weighting operator + characterized the transfer null).
-      The forward difference is THIS milestone''s winning DIRECTED-EXPLORATION primitive (controllable-novelty
-      proposal operator or the program-synthesis action-effect filter) + a fresh transfer measurement. False-positive
-      fuzzy-token scope-match vs prior persist tasks. Not a doomed rerun.'
+      scaffolding, do not re-derive) + the self-learning ethos: routine persist+transfer continuation of the .432 A5
+      (exp4692, which persisted the controllable-novelty embedding operator + characterized the transfer null). The
+      forward difference is THIS milestone''s winning primitive (the object-centric perception representation operator
+      OR the amortized-prior + Go-Explore archive operator) + a fresh transfer measurement. False-positive fuzzy-token
+      scope-match vs prior persist tasks. Not a doomed rerun.'
     prompt: |
       CONTEXT ({date}, ARC sprint SELF-LEARNING). The project ethos is capture-as-reusable-scaffolding: a winning
       primitive is persisted into arc_solver_kit + ops/arc_solve_registry.yaml so the LIVE solver reuses it, never
-      re-derives it. This task persists THIS milestone's winning A1/A2 DIRECTED-EXPLORATION primitive and measures
-      cross-game transfer. If BOTH A1 and A2 nulled, persist the strongest characterized component (e.g. the
-      controllable-novelty embedding mechanism, or the held-out-validated action-effect program inducer, both real
-      reusable generation primitives even if they did not bank a level) and characterize the transfer null honestly
-      -- a characterized null is valid (per the .431 A5 pattern).
+      re-derives it. This task persists THIS milestone's winning A1/A2 primitive and measures cross-game transfer. If
+      BOTH A1 and A2 nulled, persist the strongest characterized component (the object-centric representation builder,
+      or the amortized cross-game prior + return-then-explore archive operator -- both real reusable primitives even
+      if they did not bank a level) and characterize the transfer null honestly -- a characterized null is valid (per
+      the .432 A5 pattern).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4680_primitive_persist_transfer.json (the .431 A5 persist+transfer pattern + the transfer-null characterization schema)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json + {project_root}/results/experiment_4689_program_synthesis_action_effect_proposal_filter.json (A1/A2 -- the candidate primitives to persist; read their chosen_submitted_config + honest_verdict)
+        - {project_root}/results/experiment_4692_primitive_persist_transfer.json (the .432 A5 persist+transfer pattern + the transfer-null characterization schema)
+        - {project_root}/results/experiment_4700_object_centric_perception_proposal_live.json + {project_root}/results/experiment_4701_amortized_exploration_prior_go_explore_live.json (A1/A2 -- the candidate primitives to persist; read their chosen_submitted_config + honest_verdict)
         - {project_root}/python/carnot/agentic/arc_solver_kit.py (where reusable primitives live) + {project_root}/ops/arc_solve_registry.yaml (general_gotchas -- where the persisted operator + transfer_dead_ends are recorded)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Pick the primitive: the A1 controllable-novelty proposal operator if it cleared its gate, else the A2 program-synthesis action-effect filter operator if it cleared its gate, else the strongest characterized component (the controllable-novelty embedding / held-out-validated action-effect inducer is a real reusable generation primitive regardless).
+        1. Pick the primitive: the A1 object-centric perception representation operator if it cleared its gate, else the A2 amortized-prior + Go-Explore archive operator if it cleared its gate, else the strongest characterized component (the object-centric representation builder / the return-then-explore archive operator is a real reusable primitive regardless).
         2. Persist it as a reusable arc_solver_kit primitive + an ops/arc_solve_registry.yaml general_gotcha (operator id + derived_from_artifacts + a clear reuse note).
         3. Measure cross-game transfer on >=3 cached games (the persisted operator applied to held-out games): report the transfer value per game (coverage/first-win/solve-rate delta + offline_reproduced_new_level). Characterize the transfer null honestly with a residual_dead_end if value-null.
 
@@ -691,7 +723,7 @@ tasks:
         inference_substrate:
           principle: "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
         verifier_is_oracle:
-          principle: "MUST be false -- the persisted primitive generates/ranks/induces, oracle-distinct from the executable win-check."
+          principle: "MUST be false -- the persisted primitive generates/perceives/induces, oracle-distinct from the executable win-check."
         primitive_persisted:
           principle: "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
         transfer_games:
@@ -701,7 +733,7 @@ tasks:
         offline_reproduced_new_level:
           principle: "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
         residual_dead_end:
-          principle: "the characterized transfer-null residual if value is zero (the next-attack record); per the .431 A5 pattern."
+          principle: "the characterized transfer-null residual if value is zero (the next-attack record); per the .432 A5 pattern."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -709,47 +741,50 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4692_primitive_persist_transfer.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4704_primitive_persist_transfer.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4693-a6
-    milestone: 2026.06.432
-    title: 'PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone''s winning A1/A2 config (the
-      controllable-novelty proposal settings and/or the program-synthesis action-effect filter settings) into
-      SUBMITTED_AGENT_CONFIG as the single source of truth, re-measure the integrated HELD-OUT first-win +
-      multi-level deepen-rate end-to-end on the SCORED E3AgentPolicy (experiment_4605 lane), and keep
-      test_arc_submitted_agent_parity green. If both A1/A2 nulled, integrate ''unchanged'' and record why (avoid the
-      .430 A6 TAUTOLOGY flag). verifier_is_oracle:false.'
+  - id: exp4705-a6
+    milestone: 2026.06.433
+    title: 'PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone''s winning A1/A2 config (the object-centric
+      perception proposal settings and/or the amortized-prior + Go-Explore archive settings) into SUBMITTED_AGENT_CONFIG
+      as the single source of truth, re-measure the integrated HELD-OUT first-win + multi-level deepen-rate end-to-end
+      on the SCORED E3AgentPolicy (experiment_4605 lane), and keep test_arc_submitted_agent_parity green. If both A1/A2
+      nulled, integrate ''unchanged'' and emit the null-delta markers (null_delta_methodology_note +
+      positive_control_passed) so the honest no-change is NOT TAUTOLOGY-quarantined. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4693_integration_gate.json
-    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1, single-source-of-truth SUBMITTED_AGENT_CONFIG):
-      routine integration-gate continuation of the .431 A6 (exp4681, which integrated the winning .431 config + kept
-      parity green). The forward difference is THIS milestone''s winning A1/A2 config (controllable-novelty proposal +
-      the program-synthesis filter), re-measured on the RETARGETED held-out first-win lane. False-positive
-      fuzzy-token scope-match vs prior integration-gate tasks. Not a doomed rerun.'
+    deliverable: results/experiment_4705_integration_gate.json
+    operator_override: '2026-06-19 GAP-LIVE-INTEGRATION (operator #1, single-source-of-truth SUBMITTED_AGENT_CONFIG) +
+      2026-06-24 (MANDATORY-NEXT-MILESTONE: the A6 integration MUST emit the null-delta markers the TAUTOLOGY carve-out
+      reads): routine integration-gate continuation of the .432 A6 (exp4693, which integrated the winning .432 config +
+      kept parity green). The forward difference is THIS milestone''s winning A1/A2 config (object-centric perception
+      proposal + the amortized-prior/Go-Explore archive), re-measured on the held-out first-win lane with the
+      null-delta markers. False-positive fuzzy-token scope-match vs prior integration-gate tasks. Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint INTEGRATION -- single source of truth). SUBMITTED_AGENT_CONFIG is the one config
-      the scored Kaggle agent loads; every milestone's winning lever must be folded in (or explicitly 'unchanged') so
-      the deployed agent and the measured agent never diverge. This task integrates this milestone's winning A1/A2
-      config and re-measures the integrated HELD-OUT first-win + multi-level deepen-rate end-to-end on the SCORED
-      E3AgentPolicy (the experiment_4605 lane, consistent with the A4 retarget), keeping the parity test green. NOTE
-      the .430 A6 was flagged TAUTOLOGY (integrated==pre-integration to >5 sig figs because the config was
-      'unchanged'); if 'unchanged' here, report it as 'unchanged' with the reason rather than presenting identical
-      numbers as a finding.
+      CONTEXT ({date}, ARC sprint INTEGRATION -- single source of truth). SUBMITTED_AGENT_CONFIG is the one config the
+      scored Kaggle agent loads; every milestone's winning lever must be folded in (or explicitly 'unchanged') so the
+      deployed agent and the measured agent never diverge. This task integrates this milestone's winning A1/A2 config
+      and re-measures the integrated HELD-OUT first-win + multi-level deepen-rate end-to-end on the SCORED E3AgentPolicy
+      (the experiment_4605 lane, consistent with the A4 retarget), keeping the parity test green. CRITICAL (the
+      2026-06-24 MANDATORY fix): the prior A6 integration-gates were flagged TAUTOLOGY when 'unchanged' because
+      integrated==pre-integration to >5 sig figs and the null-delta markers were missing; if 'unchanged' here, emit
+      null_delta_methodology_note (why no-change is honest) AND positive_control_passed=bool(parity_test_green AND
+      no_regression) so the no-change is excused but an unvalidated one is not. Copy the exp4681 build_artifact
+      exemplar.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4681_integration_gate.json (the .431 A6 integration pattern -- and its TAUTOLOGY guard when unchanged)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json + {project_root}/results/experiment_4689_program_synthesis_action_effect_proposal_filter.json (A1/A2 chosen_submitted_config -- the configs to integrate)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG + E3AgentPolicy + the controllable-novelty/proposal-filter path) + {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out first-win lane to re-measure on) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/results/experiment_4693_integration_gate.json (the .432 A6 integration pattern) + {project_root}/results/experiment_4681_integration_gate.json (the null-delta-marker EXEMPLAR: build_artifact emits null_delta_methodology_note + positive_control_passed; CTNULL-5/6 tested)
+        - {project_root}/results/experiment_4700_object_centric_perception_proposal_live.json + {project_root}/results/experiment_4701_amortized_exploration_prior_go_explore_live.json (A1/A2 chosen_submitted_config -- the configs to integrate)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (SUBMITTED_AGENT_CONFIG + E3AgentPolicy + the object-centric-proposal/amortized-prior/archive path) + {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out first-win lane to re-measure on) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import E3AgentPolicy, SUBMITTED_AGENT_CONFIG"` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Fold the winning A1 config (controllable-novelty proposal on, novelty weight/temperature) and/or A2 config (proposal filter on, held-out trust threshold) into SUBMITTED_AGENT_CONFIG. If both A1/A2 nulled, set 'unchanged' and record why (do NOT present identical pre/post numbers as a finding -- the .430 A6 TAUTOLOGY lesson).
+        1. Fold the winning A1 config (object-centric proposal conditioning on, representation params) and/or A2 config (amortized prior on, archive on, return-then-explore params) into SUBMITTED_AGENT_CONFIG. If both A1/A2 nulled, set 'unchanged' and emit the null-delta markers (null_delta_methodology_note + positive_control_passed) -- do NOT present identical pre/post numbers as a finding without them (the TAUTOLOGY-quarantine lesson).
         2. Re-measure the integrated HELD-OUT first-win-rate + multi-level deepen-rate end-to-end on the SCORED E3AgentPolicy (experiment_4605 lane) vs the pre-integration config (no regression).
         3. RUN test_arc_submitted_agent_parity.py -> green (the integrated config is the single source of truth the scored kernel loads).
 
@@ -759,11 +794,15 @@ tasks:
         inference_substrate:
           principle: "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure on the held-out lane (1s floor)."
         verifier_is_oracle:
-          principle: "MUST be false -- the integrated controllable-novelty / proposal-filter signals are oracle-distinct from the executable win-check."
+          principle: "MUST be false -- the integrated object-centric/amortized-prior signals are oracle-distinct from the executable win-check."
         config_integrated:
           principle: "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
         config_changed:
-          principle: "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding) -- pre-empts the .430 A6 TAUTOLOGY flag."
+          principle: "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding)."
+        null_delta_methodology_note:
+          principle: "present when config_changed=false (pre==post) -- why the no-change is honest; the marker the TAUTOLOGY carve-out reads (the recurring A6 flag fix)."
+        positive_control_passed:
+          principle: "bool(parity_test_green AND no_regression) -- GATES the null-delta exemption so an unvalidated no-change is NOT excused."
         first_win_rate_integrated:
           principle: "the integrated SCORED-agent held-out first-win-rate (no regression vs pre-integration) -- the retargeted scored-lane metric."
         multi_level_deepen_rate_integrated:
@@ -777,71 +816,72 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4693_integration_gate.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4705_integration_gate.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4694-b1
-    milestone: 2026.06.432
-    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the L1-FIRST-CONTACT PROPOSAL-COVERAGE CI-metric + re-affirm
-      the HONEST generic-first-win floor: (1) a metric/gate that measures whether the explorer''s action-proposal
-      distribution REACHES the winning L1 trajectory (proposal-coverage at first-contact -- the directed-exploration
-      analog of the .431 B1 generation-coverage gate, now at the PROPOSAL stage upstream of search); (2) re-affirm
-      the HONEST generic-first-win measurement (the 0.04 reality on the standard config) so a future change can
-      NEITHER silently regress it NOR silently inflate it via a permissive harness; (3) a proposal-coverage floor.
-      Unit tests green. verifier_is_oracle:false.'
+  - id: exp4706-b1
+    milestone: 2026.06.433
+    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the PERCEPTION-QUALITY CI-metric + the OFF-PATH discrimination
+      metric that guard the A1 perception lever: (1) a LOO-discrimination gate that LOCKS the order-1-vs-relational
+      perception measurement (cross_game_features_v2 LOO-AUROC=0.503=chance baseline vs the richer representation) so a
+      perception change is mechanically trackable and cannot silently regress to chance; (2) an OFF-PATH discrimination
+      metric -- a representation''s held-out discrimination measured on the LIVE off-path search distribution (not
+      winning paths only), so the offline->live bridge gap (the .425-B2 finding) is a measurable number, not an
+      after-the-fact surprise; (3) a perception-quality floor. Unit tests green. verifier_is_oracle:false.'
     priority: high
     track: infra
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4694_proposal_coverage_cigate.json
-    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint, 2 reserved infra per milestone) + the .431
-      finding that the wall is the explorer''s proposal distribution at L1 first-contact (A1 wall_diagnosis=l1_first_contact,
-      generic first-win honest=0.04). Novel infra (the PROPOSAL-coverage analog of the .431 B1 generation-coverage
-      CI-gate; guards the A1/A2 measurement substrate so a permissive harness cannot silently inflate generic
-      first-win, and so a future change cannot silently regress proposal coverage). False-positive fuzzy-token
-      scope-match vs prior infra/metric-helper tasks (exp4682/exp4670). Not a doomed rerun.'
+    deliverable: results/experiment_4706_perception_quality_cigate.json
+    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint, 2 reserved infra per milestone) + the operator''s
+      2026-06-23 binding-constraint diagnosis (perception order-1 features LOO=chance). Novel infra (a PERCEPTION-quality
+      LOO + off-path discrimination CI-gate; guards the A1 perception measurement substrate so a representation change
+      cannot silently regress to chance and so the offline->live bridge gap is measurable). Distinct from the .432 B1
+      PROPOSAL-coverage gate (exp4694) -- this guards the REPRESENTATION quality, not the proposal coverage.
+      False-positive fuzzy-token scope-match vs prior infra/metric-helper tasks (exp4694/exp4682). Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint INFRA slot 1). .431 proved the wall is the EXPLORER'S ACTION-PROPOSAL DISTRIBUTION
-      at L1 first-contact: searching (A1 hierarchical subgoal) and ranking (six prior selection levers) a pool that
-      never contains the winning L1 trajectory cannot help, and the honest fixed-harness generic first-win is 0.04
-      (1/25 games). .432's A1/A2 attack the proposal distribution; this infra task LOCKS IN the ability to measure it
-      honestly and prevents silent regression OR silent inflation: (1) a PROPOSAL-COVERAGE metric/gate -- "does the
-      explorer's action-proposal distribution REACH the winning L1 trajectory" (the analog of .431 B1's
-      generation-coverage gate, but at the PROPOSAL stage upstream of search) so a directed-exploration improvement
-      is mechanically trackable; (2) re-affirm the HONEST generic-first-win measurement (the standard config: the
-      variant set + action budget that yields 0.04) so a future change can neither quietly drop it below the floor
-      NOR quietly inflate it by switching to a permissive harness (a degenerate-easy variant or an unbounded budget);
-      (3) a proposal-coverage floor. This directly guards A1/A2's measurement substrate.
+      CONTEXT ({date}, ARC sprint INFRA slot 1). The operator's 2026-06-23 diagnosis names PERCEPTION the binding
+      constraint: frame-only order-1 features are at LOO=chance (cross_game_features_v2 LOO-AUROC 0.503), the richer
+      relational v3 escapes chance offline (0.674), but every prior perception experiment validated offline then nulled
+      LIVE (the .425-B2 offline->live bridge gap: offline trains on winning paths, the live frontier is off-path). A1
+      (.433) wires object-centric perception into the live proposal path; this infra task LOCKS IN the ability to
+      measure perception quality honestly and makes the bridge gap a measurable number: (1) a LOO-DISCRIMINATION gate
+      that records the order-1 chance baseline (0.503) and a richer representation's LOO-AUROC, and FAILS if a
+      perception change silently regresses toward chance; (2) an OFF-PATH discrimination metric -- the representation's
+      held-out discrimination measured on the LIVE off-path search distribution (states the explorer actually visits,
+      incl. dead-ends), NOT on winning paths only, so the offline->live gap is a number A1 must report (a big
+      winning-path-vs-off-path gap predicts a live null); (3) a perception-quality floor. This directly guards A1's
+      measurement substrate.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4682_generation_coverage_cigate.json (the .431 B1 generation-coverage CI-gate + honest-first-win floor pattern to mirror -- the exact add-a-gate + unit-tests structure)
-        - {project_root}/results/experiment_4676_hierarchical_subgoal_search_live.json (the generic_first_win_by_config: the 1/25 first-win=0.04 standard config to re-affirm)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (StepwiseExplorer -- where the action-proposal distribution is formed and proposal-coverage is measured) + {project_root}/python/carnot/experiment_4628_dense_curiosity_progress_loop.py (run_variant_attempt -- the standard variant/budget config the honest first-win is measured against)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json IF PRESENT (A1 -- read generic_first_win_by_config + the proposal-coverage fields the gate locks in)
+        - {project_root}/results/experiment_4694_proposal_coverage_cigate.json (the .432 B1 proposal-coverage CI-gate + honest-floor pattern to mirror -- the exact add-a-gate + unit-tests structure)
+        - {project_root}/results/experiment_4476_cross_game_features_v3.json (the LOO evidence: v2 frame-only=0.503=chance; v2_plus_frame_delta=0.6798; v3_full=0.6744 -- the per-feature LOO ablation the gate locks in)
+        - {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v2 / v3 -- the representations the LOO gate measures) + {project_root}/python/carnot/agentic/arc_competition_agent.py (StepwiseExplorer -- the off-path search distribution the off-path metric is measured on)
+        - {project_root}/results/experiment_4700_object_centric_perception_proposal_live.json IF PRESENT (A1 -- read the perception fields the gate locks in)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
-        1. Ship the proposal-coverage metric/gate: a helper that, given an exploration trace + the known winning L1 trajectory, computes whether the explorer's action-proposal distribution REACHED (proposed every action on) the winning trajectory (proposal-coverage), and a CI-gate that compares a method's proposal-coverage vs a matched flat-exploration baseline. Add unit tests (a winning-trajectory-proposed fixture -> coverage=1; a winning-trajectory-not-proposed fixture -> coverage=0; a coverage-up-vs-baseline fixture -> gate passes).
-        2. Re-affirm the HONEST generic-first-win measurement: a helper that records the STANDARD config (variant set + action budget) and FAILS if a first-win measurement uses a permissive harness (a degenerate-easy variant subset or an unbounded budget) that would inflate the 0.04 reality. Add a unit test (a permissive-harness fixture flagged; the standard config passes).
-        3. Ship the proposal-coverage floor CI-gate (a future change cannot drop proposal coverage below the A1-established floor). Add unit tests; confirm green.
+        0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_value_learner; from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
+        1. Ship the LOO-discrimination gate: a helper that computes a representation's LOO-AUROC over the cached cross-game corpus and a CI-gate that FAILS if it is at/near chance (records the order-1 chance baseline 0.503 + the richer representation's value). Add unit tests (an at-chance fixture -> gate fails; an above-chance fixture -> gate passes).
+        2. Ship the OFF-PATH discrimination metric: a helper that measures a representation's held-out discrimination on the LIVE off-path search distribution (off-path/dead-end states), separately from winning-path discrimination, and reports the winning-path-vs-off-path GAP (a large gap predicts the live null). Add a unit test (a winning-paths-only fixture flagged with a large gap; an off-path-calibrated fixture with a small gap).
+        3. Ship the perception-quality floor CI-gate (a future change cannot drop LOO below the A1-established floor). Add unit tests; confirm green.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: proposal_coverage_cigate_plus_honest_firstwin_floor_shipped_tests_green."
+          principle: "terminal prefix; success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green."
         inference_substrate:
-          principle: "verifier_ensemble_against_cached_candidates -- proposal-coverage computation over cached traces + a small offline rollout (1s floor); no live_llm_inference (the CI-gate uses cached traces / a NoOp explorer)."
+          principle: "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference."
         verifier_is_oracle:
           principle: "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
-        proposal_coverage_metric_added:
-          principle: "the L1-first-contact proposal-coverage metric/gate (does the explorer's proposal distribution reach the winning L1 trajectory; coverage-up-vs-flat-baseline) -- the proposal-stage analog of the .431 generation-coverage gate."
-        honest_firstwin_floor_added:
-          principle: "the gate that a generic-first-win measurement must use the STANDARD config (variant set + action budget) -- catches a permissive harness silently inflating the 0.04 reality."
-        proposal_coverage_floor_cigate_added:
-          principle: "the floor CI-gate that fails on a proposal-coverage regression below the A1 floor."
+        loo_discrimination_gate_added:
+          principle: "the perception LOO-discrimination gate (records the order-1 chance baseline 0.503 + the richer representation's LOO-AUROC; fails on regression toward chance)."
+        offpath_discrimination_metric_added:
+          principle: "the off-path discrimination metric (held-out discrimination on the LIVE off-path search distribution + the winning-path-vs-off-path gap; the .425-B2 bridge-gap made measurable)."
+        perception_quality_floor_cigate_added:
+          principle: "the floor CI-gate that fails on a perception LOO regression below the A1 floor."
         tests_added:
-          principle: "the unit tests added for all three guards (Tests Must Run and Assert: flag the trajectory-not-proposed / permissive-harness / regression fixtures, pass the honest fixtures)."
+          principle: "the unit tests added for all three guards (Tests Must Run and Assert: flag the at-chance / winning-paths-only / regression fixtures, pass the honest fixtures)."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -849,69 +889,69 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4694_proposal_coverage_cigate.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4706_perception_quality_cigate.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4695-b2
-    milestone: 2026.06.432
+  - id: exp4707-b2
+    milestone: 2026.06.433
     title: 'PHASE B2 (INFRA -- reserved slot 2; adversarial_verify hardening) -- extend adversarial_verify with two
-      guards for the .432 DIRECTED-EXPLORATION lever class: (1) NOVELTY-PROPOSAL-WITHOUT-ABLATION -- a "reached a new
-      level via controllable novelty" claim that does NOT report the no-novelty-bonus AND the cosmetic-novelty
-      (controllability-gate-off) ablations + offline_reproduced is flagged (it may be a flat-exploration win
-      mislabeled, or the controllability gate added nothing); (2) PROPOSAL-FILTER-WITHOUT-HELDOUT-REJECTION -- a
-      program-synthesis action-effect coverage claim that does NOT report the held-out rejected-program count + the
-      matched blind-proposal baseline is flagged (the experts_overfit_prefix guard). Honest artifacts NOT flagged.
-      Tests green.'
+      guards for the .433 lever class: (1) HELD-OUT-FIRST-WIN-LANE null-delta carve-out -- extend the TAUTOLOGY
+      null-delta exemption (currently A6-only) to the A4 held-out first-win lane so an HONEST flat
+      first_win_baseline==first_win_rate_integrated is downgraded CRITICAL->WARN ONLY when null_delta_methodology_note
+      + positive_control_passed are present (the exp4691 false-positive fix; an unvalidated flat null stays CRITICAL);
+      (2) PERCEPTION-OVERCLAIM -- a "object-centric/relational representation lifted first-win" claim that does NOT
+      report the ORDER-1-representation ablation failing + offline_reproduced is flagged (the A1 analog of the .432
+      novelty-ablation guard). Honest artifacts NOT flagged. Tests green.'
     priority: high
     track: infra
     max_turns: 80
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4695_adversarial_verify_hardening.json
-    operator_override: '2026-06-23 reserved-infra-slot (ARC sprint) + the .425-.431 B2 adversarial_verify-hardening
-      lineage (TAUTOLOGY, offline-vs-live, intrinsic-reward, goal-energy-ablation, QD-ablation/value-routing-cost,
-      L2-goal-satisfiability/multi-level-metric, subgoal-decomposition/coverage-baseline guards). The forward
-      difference is the .432 DIRECTED-EXPLORATION lever class: novelty-ablation + proposal-filter-heldout-rejection.
-      False-positive fuzzy-token scope-match vs prior adversarial_verify-hardening tasks (exp4683/exp4671). Not a
-      doomed rerun.'
+    deliverable: results/experiment_4707_adversarial_verify_hardening.json
+    operator_override: '2026-06-24 (MANDATORY-NEXT-MILESTONE: the held-out-first-win lane needs the same null-delta
+      carve-out the A6 integration lane got) + 2026-06-23 reserved-infra-slot (ARC sprint) + the .425-.432 B2
+      adversarial_verify-hardening lineage (TAUTOLOGY, offline-vs-live, intrinsic-reward, goal-energy-ablation,
+      novelty-ablation/proposal-filter-heldout guards). The forward difference is the .433 lever class: the
+      held-out-first-win-lane null-delta carve-out + the perception-overclaim guard. False-positive fuzzy-token
+      scope-match vs prior adversarial_verify-hardening tasks (exp4695/exp4683). Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint INFRA slot 2). Each milestone .425-.431 added a B2 guard to adversarial_verify so
-      the new lever's over-claim is mechanically caught (the fabrication-gate quarantines flagged artifacts). .432's
-      two DIRECTED-EXPLORATION levers need their own guards: (1) the controllable-novelty proposal lever (A1) -- a
-      "the generic agent reached a new level via controllable novelty" claim must report the no-novelty-bonus AND the
-      cosmetic-novelty (controllability-gate-off) ablations (both lower than the controllable-novelty policy) +
-      offline_reproduced, else it may be a flat-exploration win mislabeled, or the controllability gate adds nothing
-      (the .427 dense-curiosity noisy-TV trap); (2) the program-synthesis proposal filter (A2) -- a "coverage up"
-      claim must report the held-out REJECTED-program count (proving held-out rejection actually ran, the
-      experts_overfit_prefix fix) AND the matched blind-proposal baseline coverage, else the coverage number is
-      unfalsifiable. Add both as CRITICAL-when-overclaiming / WARN-when-omitted guards, with honest artifacts NOT
-      flagged (false-positive guarded, like the .431 subgoal-decomposition / coverage-baseline guards).
+      CONTEXT ({date}, ARC sprint INFRA slot 2). Each milestone .425-.432 added a B2 guard to adversarial_verify so the
+      new lever's over-claim is mechanically caught. .433 needs two: (1) the HELD-OUT-FIRST-WIN lane null-delta
+      carve-out -- the .432 A4 (exp4691) was CRITICAL-flagged TAUTOLOGY because first_win_baseline==first_win_rate_integrated==0.04
+      (an HONEST flat null, the levers nulled), but the existing TAUTOLOGY null-delta carve-out (_declared_null_delta_descriptor,
+      shipped for the A6 integration lane) did not cover the first-win lane; extend it so a flat first-win equality is
+      downgraded CRITICAL->WARN ONLY when null_delta_methodology_note + positive_control_passed are present (an
+      unvalidated flat null -- parity failed / regression -- stays CRITICAL, so a fabricator cannot dodge by claiming
+      no change); (2) the PERCEPTION-OVERCLAIM guard -- a "the object-centric/relational representation lifted
+      first-win / reached a new level" claim must report the ORDER-1-REPRESENTATION ablation (strictly lower) +
+      offline_reproduced, else it may be a search-budget win mislabeled as a perception win (the A1 analog of the .432
+      novelty-ablation guard). Add both with honest artifacts NOT flagged (false-positive guarded).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4683_adversarial_verify_hardening.json (the .431 B2 subgoal-decomposition/coverage-baseline guard pattern -- the exact add-a-guard + false-positive-guard + tests structure to mirror)
-        - {project_root}/scripts/adversarial_verify.py (where the guards live: check_circular_moat_overclaim, the .431 subgoal-decomposition + coverage-baseline guards -- add the two new guards alongside)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json (the A1 artifact the guards must classify correctly: reports no_novelty_ablation_reached_level + cosmetic_novelty_ablation_reached_level + offline_reproduced -> NOT flagged; a hypothetical over-claim omitting them -> flagged) + {project_root}/results/experiment_4689_program_synthesis_action_effect_proposal_filter.json (reports heldout_programs_rejected + candidate_generation_coverage_blind_baseline -> NOT flagged; omitting them -> flagged)
+        - {project_root}/results/experiment_4695_adversarial_verify_hardening.json (the .432 B2 novelty-ablation/proposal-filter-heldout guard pattern -- the exact add-a-guard + false-positive-guard + tests structure to mirror)
+        - {project_root}/scripts/adversarial_verify.py (where the guards live: check_tautology + _declared_null_delta_descriptor [the A6 null-delta carve-out to EXTEND to the first-win lane] + check_circular_moat_overclaim + the .432 novelty-ablation guard -- add the two new guards alongside)
+        - {project_root}/results/experiment_4691_held_out_first_win_readiness.json (the A4 artifact the null-delta carve-out must downgrade to WARN once it emits the markers: first_win_baseline==first_win_rate_integrated + null_delta_methodology_note + positive_control_passed -> WARN not CRITICAL; without the markers -> stays CRITICAL) + {project_root}/results/experiment_4700_object_centric_perception_proposal_live.json (the A1 artifact the perception-overclaim guard classifies: reports order1_ablation_reached_level strictly lower + offline_reproduced -> NOT flagged; omitting -> flagged)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "import scripts.adversarial_verify"` exits 0. Missing -> blocked_<resource>, EXIT. (--no-cov on focused pytest.)
-        1. Add the NOVELTY-PROPOSAL-WITHOUT-ABLATION guard: CRITICAL when an artifact claims a controllable-novelty new-level win (generic_agent_reached_level up / reproduced_levels>=1 via controllable novelty) but no_novelty_ablation_reached_level / cosmetic_novelty_ablation_reached_level / offline_reproduced are absent or the ablations are NOT strictly lower; WARN when omitted on such a claim.
-        2. Add the PROPOSAL-FILTER-WITHOUT-HELDOUT-REJECTION guard: CRITICAL when an artifact claims program-synthesis coverage up but does NOT report heldout_programs_rejected (held-out rejection ran) AND candidate_generation_coverage_blind_baseline (the matched control); WARN when omitted.
-        3. Verify the HONEST A1/A2 artifacts (which DO report the ablations and the held-out rejection + blind-baseline coverage) are NOT flagged (false-positive guard). Add unit tests for both guards (flag the over-claim fixture, pass the honest fixture). Confirm green.
+        1. Extend the TAUTOLOGY null-delta carve-out to the HELD-OUT-FIRST-WIN lane: a flat first_win_baseline==first_win_rate_integrated is downgraded CRITICAL->WARN ONLY when null_delta_methodology_note (non-empty) AND positive_control_passed (true) are present; absent either -> stays CRITICAL. Mirror the A6 _declared_null_delta_descriptor pattern + CTNULL-5/6 tests.
+        2. Add the PERCEPTION-OVERCLAIM guard: CRITICAL when an artifact claims a perception-attributable new-level/first-win win (generic_agent_reached_level up / reproduced_levels>=1 via object-centric representation) but order1_ablation_reached_level is absent or NOT strictly lower, or offline_reproduced is absent; WARN when omitted on such a claim.
+        3. Verify the HONEST A1/A4 artifacts (A1 reports the order-1 ablation strictly lower + offline_reproduced; A4 reports the null-delta markers) are NOT flagged (false-positive guard). Add unit tests for both guards (flag the over-claim/unvalidated fixture, pass the honest fixture). Confirm green.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: adversarial_verify_hardened_novelty_ablation_and_proposal_filter_heldout_guards_tests_green."
+          principle: "terminal prefix; success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
-        novelty_ablation_guard_added:
-          principle: "the NOVELTY-PROPOSAL-WITHOUT-ABLATION guard (a controllable-novelty win must report the no-novelty-bonus AND cosmetic-novelty ablations strictly lower + offline_reproduced, else flagged as a possible flat-exploration win mislabeled / controllability-gate-adds-nothing)."
-        proposal_filter_heldout_guard_added:
-          principle: "the PROPOSAL-FILTER-WITHOUT-HELDOUT-REJECTION guard (a coverage-up claim must report the held-out rejected-program count AND the matched blind-proposal baseline, else flagged as unfalsifiable / experts_overfit_prefix-unguarded)."
+        firstwin_nulldelta_carveout_added:
+          principle: "the HELD-OUT-FIRST-WIN-lane null-delta carve-out (a flat first-win equality -> WARN only with null_delta_methodology_note + positive_control_passed; unvalidated -> stays CRITICAL) -- the exp4691 false-positive fix."
+        perception_overclaim_guard_added:
+          principle: "the PERCEPTION-OVERCLAIM guard (a perception-attributable win must report the order-1-representation ablation strictly lower + offline_reproduced, else flagged as a possible search-budget win mislabeled)."
         honest_artifacts_not_flagged:
-          principle: "the honest A1/A2 artifacts (which report their ablations + held-out rejection + blind-baseline coverage) are NOT flagged -- false-positive guard (like the .431 coverage-baseline guard)."
+          principle: "the honest A1/A4 artifacts (A1 order-1 ablation + offline_reproduced; A4 null-delta markers) are NOT flagged -- false-positive guard (like the .432 coverage-baseline guard)."
         tests_added:
-          principle: "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim, pass the honest)."
+          principle: "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim/unvalidated, pass the honest)."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -919,36 +959,36 @@ tasks:
         preconditions_checked:
           principle: "records resources verified; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4695_adversarial_verify_hardening.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4707_adversarial_verify_hardening.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4696-c
-    milestone: 2026.06.432
+  - id: exp4708-c
+    milestone: 2026.06.433
     title: 'PHASE C (HARDWARE CONTINUITY -- 1 per-board slot) -- per-board reachability audit (KV260 via ssh kria
-      [SSH-only, NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag
-      --detect) so each attached board stays visible per the Hardware-Task Continuity Discipline. Record per-board
-      state (loaded overlay / uptime / IDCODE) or blocked_<board>_<reason>. No bitstream build, no
-      fabric-acceleration claim.'
+      [SSH-only, NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag --detect)
+      so each attached board stays visible per the Hardware-Task Continuity Discipline. Record per-board state (loaded
+      overlay / uptime / IDCODE) or blocked_<board>_<reason>. No bitstream build, no fabric-acceleration claim.'
     priority: medium
     track: hardware
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4696_hardware_continuity.json
+    deliverable: results/experiment_4708_hardware_continuity.json
     operator_override: '2026-05-18 Hardware-Task Continuity Discipline (standing: >=1 task per attached board per
-      milestone until terminal state): routine per-board reachability audit, versioned continuation of the .431 C
-      (exp4684). KV260 precondition is SSH-only per the KV260 SSH-Not-SD-Card Discipline (NEVER a host SD-card device
-      check). False-positive fuzzy-token scope-match vs prior hardware-continuity tasks. Not a doomed rerun.'
+      milestone until terminal state): routine per-board reachability audit, versioned continuation of the .432 C
+      (exp4696, 2 of 3 boards reachable: kv260+polarfire ssh ok, gatemate unavailable). KV260 precondition is SSH-only
+      per the KV260 SSH-Not-SD-Card Discipline (NEVER a host SD-card device check). False-positive fuzzy-token
+      scope-match vs prior hardware-continuity tasks. Not a doomed rerun.'
     prompt: |
       CONTEXT ({date}, ARC sprint -- the 1 reserved per-board hardware-continuity slot). The Hardware-Task Continuity
       Discipline mandates >=1 task per attached board every milestone until each board hits its terminal state, so the
-      FPGAs stay visible during the ARC sprint. This is a reachability AUDIT (no bitstream build, no
-      fabric-acceleration claim). KV260 MUST use the SSH-reachability precondition, NEVER a host SD-card device check
-      (the KV260 SSH-Not-SD-Card Discipline).
+      FPGAs stay visible during the ARC sprint. This is a reachability AUDIT (no bitstream build, no fabric-acceleration
+      claim). KV260 MUST use the SSH-reachability precondition, NEVER a host SD-card device check (the KV260
+      SSH-Not-SD-Card Discipline).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4684_hardware_continuity.json (the .431 C audit schema: per_board_reachability + per_board_state + kv260_precondition ssh-only)
+        - {project_root}/results/experiment_4696_hardware_continuity.json (the .432 C audit schema: per_board_reachability + per_board_state + kv260_precondition ssh-only; .432 found 2 of 3 reachable)
         - {project_root}/ops/hardware-bringup-prep.md (per-board bring-up state) + the CLAUDE.md "Pre-Launch Preconditions" board-reachability table
 
       CONCRETE STEPS:
@@ -977,59 +1017,62 @@ tasks:
         preconditions_checked:
           principle: "records WHICH board checks ran + their results; pre-empts silent-missing-hardware fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4696_hardware_continuity.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4708_hardware_continuity.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4697-d
-    milestone: 2026.06.432
-    title: 'PHASE D (SOTA-INGESTION -> .433) -- focused literature pass on the NEXT fallback if .432''s
-      DIRECTED-EXPLORATION levers (A1 controllable-novelty proposal + A2 program-synthesis action-effect filter)
-      null: AMORTIZED / TRANSFERABLE exploration -- distill the rare successful first-contact exploration into a
-      reusable CROSS-GAME exploration policy so first-contact TRANSFERS to unseen games instead of being re-derived
-      from scratch (the deeper wall if per-game novelty does not transfer) + Go-Explore-style return-then-explore
-      archive. Map the strongest 3-5 SOTA methods with arXiv IDs + implement-cost-over-current-stack + fails_when,
-      and FLAG the strongest for .433. Reliable sweep + WebSearch/WebFetch only; /deep-research BANNED.'
+  - id: exp4709-d
+    milestone: 2026.06.433
+    title: 'PHASE D (SOTA-INGESTION -> .434) -- focused literature pass on the NEXT fallback if .433''s PERCEPTION (A1
+      object-centric/relational into the proposal distribution) + AMORTIZED EXPLORATION (A2 cross-game prior +
+      Go-Explore archive) levers null: structured/program-induced WORLD-MODELS for first-contact (induce an executable
+      object-relational transition model the explorer plans in) + hypothesis-driven active probing (the operator''s
+      perceive->hypothesize->test->refine RE loop the live agent should run). Map the strongest 3-5 SOTA methods with
+      arXiv IDs + implement-cost-over-current-stack + fails_when, and FLAG the strongest for .434. Reliable sweep +
+      WebSearch/WebFetch only; /deep-research BANNED.'
     priority: medium
     track: sota-ingestion
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4697_sota_ingestion_amortized_exploration.json
+    deliverable: results/experiment_4709_sota_ingestion_structured_world_model.json
     operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (STANDING: reserve a SOTA-ingestion slot per
-      bleeding-edge milestone) + the ARC sprint headline (directed exploration). Routine ingestion continuation of
-      the .431 D (exp4685, which flagged controllable-novelty + program-synthesis for .432). The forward difference
-      is the .433 direction (AMORTIZED/TRANSFERABLE exploration -- if per-game directed exploration works but does
-      not transfer to unseen games, the scored hidden-game lane still fails) -- a NEW track, not a deepening of the
-      .432 tracks. False-positive fuzzy-token scope-match vs prior SOTA-ingestion tasks. Not a doomed rerun.'
+      bleeding-edge milestone) + the ARC sprint headline (perception + amortized exploration). Routine ingestion
+      continuation of the .432 D (exp4697, which flagged amortized in-context exploration + Go-Explore for .433). The
+      forward difference is the .434 direction (structured/program-induced world-models for first-contact +
+      hypothesis-driven active probing -- if perception + amortized exploration still do not surface the winner, an
+      executable object-relational world-model the explorer PLANS in is the next lever) -- a NEW track, not a deepening
+      of the .433 tracks. False-positive fuzzy-token scope-match vs prior SOTA-ingestion tasks. Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint -- the 1 reserved SOTA-ingestion slot, feeding .433). .432 attacks the
-      make-a-winner-appear-at-L1 wall from two directed-exploration levers (A1 controllable-novelty proposal, A2
-      program-synthesis action-effect filter). IF both null, OR if they work per-game but the scored HIDDEN-game lane
-      (first scored submission 0.08) still fails, the DEEPER wall is TRANSFER: per-game directed exploration that is
-      re-derived from scratch on each hidden game does not generalize. This task maps the strongest SOTA for THAT
-      next wall: (1) AMORTIZED / META exploration -- distill the rare successful first-contact exploration trajectories
-      into a reusable CROSS-GAME exploration policy (learned exploration prior, meta-RL exploration, in-context
-      exploration) so first-contact transfers to unseen games; (2) GO-EXPLORE-style return-then-explore archive
-      (arc_go_explore.py exists -- a robust archive of reachable states that the explorer returns to before exploring
-      onward, which transfers structurally). RELIABLE channel ONLY: scripts/sweep_clusters.py / sweep_semscholar.py
-      (arXiv / Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top 5-8 papers. /deep-research is BANNED
-      in the autonomous loop. Every method claim MUST cite a REAL arXiv ID (no citation = fabrication).
+      CONTEXT ({date}, ARC sprint -- the 1 reserved SOTA-ingestion slot, feeding .434). .433 attacks the
+      make-a-winner-appear-at-L1 wall from PERCEPTION (A1 object-centric/relational representation into the proposal
+      distribution) + AMORTIZED EXPLORATION (A2 cross-game prior + Go-Explore archive). IF both null, the DEEPER lever
+      the literature points at is a STRUCTURED / PROGRAM-INDUCED WORLD-MODEL the explorer PLANS in: an executable
+      object-relational transition model induced at runtime (object-centric world models -- SOLD arXiv:2410.08822,
+      FIOC-WM arXiv:2511.02225, ObjectZero/MCTS arXiv:2601.06604, bounded by "Where It Breaks" arXiv:2511.06136) +
+      hypothesis-driven active probing (the operator's perceive->hypothesize->test->refine RE loop). This task maps the
+      strongest SOTA for THAT next wall: (1) STRUCTURED WORLD-MODELS for first-contact -- induce an object-relational
+      executable transition model and plan_in_model over it (vs the current degenerate full-grid-match
+      WorldModelVerifier); (2) HYPOTHESIS-DRIVEN ACTIVE PROBING -- the agent forms an explicit hypothesis about a
+      game's mechanic and runs targeted probe actions to confirm/refute it (active learning / experiment design for
+      interactive agents). RELIABLE channel ONLY: scripts/sweep_clusters.py / sweep_semscholar.py (arXiv /
+      Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top 5-8 papers. /deep-research is BANNED in the
+      autonomous loop. Every method claim MUST cite a REAL arXiv ID (no citation = fabrication).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4685_sota_ingestion_directed_exploration.json + {project_root}/docs/research-notes/directed-exploration-sota-ingestion-2026-06-24.md (the .431 ingestion + the two directed-exploration tracks .432 is building -- to scope the .433 fallback BEYOND them)
-        - {project_root}/results/experiment_4688_controllable_novelty_proposal_policy_live.json + {project_root}/results/experiment_4689_program_synthesis_action_effect_proposal_filter.json (A1/A2 -- read their honest_verdict + residual to scope the .433 fallback precisely: if directed exploration works per-game but does not transfer, amortized/meta exploration is the lever)
-        - {project_root}/python/carnot/agentic/arc_go_explore.py (the existing return-then-explore scaffolding -- scope the Go-Explore arm against what already exists) + {project_root}/research-studying.md + {project_root}/research-references.md (the already-discovered corpus to filter; mark ingested)
+        - {project_root}/results/experiment_4697_sota_ingestion_amortized_exploration.json + {project_root}/docs/research-notes/amortized-exploration-sota-ingestion-2026-06-24.md (the .432 ingestion + the two amortized-exploration tracks .433 is building -- to scope the .434 fallback BEYOND them)
+        - {project_root}/results/experiment_4700_object_centric_perception_proposal_live.json + {project_root}/results/experiment_4701_amortized_exploration_prior_go_explore_live.json (A1/A2 -- read their honest_verdict + residual to scope the .434 fallback precisely: if perception + amortized exploration still do not surface the winner, a structured executable world-model the explorer plans in is the lever)
+        - {project_root}/python/carnot/agentic/arc_executable_world_model.py (the existing executable world model + plan_in_model -- scope the structured-world-model arm against what already exists) + {project_root}/research-studying.md + {project_root}/research-references.md (the already-discovered corpus to filter; mark ingested)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `curl -sf -o /dev/null https://huggingface.co/api/models` exits 0 (network) AND `.venv/bin/python scripts/sweep_clusters.py --help` exits 0. Missing -> blocked_<resource>, EXIT.
-        1. Read the .432 A1/A2 residuals + run a FOCUSED fresh sweep (sweep_clusters.py / sweep_semscholar.py) on amortized/meta exploration, learned exploration priors, in-context exploration, and Go-Explore return-then-explore for interactive agents. WebSearch/WebFetch the top 5-8.
-        2. Synthesize the strongest 3-5 methods: per-method what it would take over the CURRENT stack (the live E3 explorer + A1 controllable-novelty + A2 program-synthesis filter) + where each fails. Write the per-track note. Scope precisely to the A1/A2 residual + the cross-game TRANSFER wall (the scored hidden-game lane).
-        3. FLAG the strongest method(s) as candidate .433 inputs (flagged_for_v433) + update research-studying.md (mark ingested). Every method cites a real arXiv ID.
+        1. Read the .433 A1/A2 residuals + run a FOCUSED fresh sweep (sweep_clusters.py / sweep_semscholar.py) on object-centric/structured world models for interactive agents, program-induced transition models, and hypothesis-driven active probing / active learning for RL. WebSearch/WebFetch the top 5-8.
+        2. Synthesize the strongest 3-5 methods: per-method what it would take over the CURRENT stack (the live E3 explorer + arc_executable_world_model + A1 perception + A2 amortized prior) + where each fails. Write the per-track note. Scope precisely to the A1/A2 residual + the structured-world-model / active-probing next wall.
+        3. FLAG the strongest method(s) as candidate .434 inputs (flagged_for_v434) + update research-studying.md (mark ingested). Every method cites a real arXiv ID.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: sota_ingestion_amortized_exploration_mapped."
+          principle: "terminal prefix; success: sota_ingestion_structured_world_model_mapped."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor)."
         deep_research_not_used:
@@ -1039,85 +1082,91 @@ tasks:
         citations_verified:
           principle: "each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations."
         flagged_for_next_roadmap:
-          principle: "the strongest method(s) flagged as candidate .433 inputs (flagged_for_v433) -- closes discover->ingest->plan->experiment."
+          principle: "the strongest method(s) flagged as candidate .434 inputs (flagged_for_v434) -- closes discover->ingest->plan->experiment."
         note_path:
           principle: "the per-track research-note path (the SOTA-Ingestion Cycle deliverable)."
         preconditions_checked:
           principle: "records network reachability verified; pre-empts fabricated citations."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4697_sota_ingestion_amortized_exploration.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4709_sota_ingestion_structured_world_model.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4698-e
-    milestone: 2026.06.432
-    title: 'PHASE E (CAPSTONE .432) -- aggregate the scorecard + the HEADLINE DECISION: did DIRECTED EXPLORATION
-      cross the offline->live bridge for L1-FIRST-CONTACT where seven milestones of selection + generation-by-search
-      could not -- did the controllable-novelty proposal policy (A1) make the GENERIC agent reach a NEW level
-      (offline-reproduced, no-novelty AND cosmetic-novelty ablations failing), did the program-synthesis action-effect
-      filter (A2) raise candidate-generation coverage + lift held-out first-win (CI excludes baseline, held-out
-      rejection ran), did A3 bank +1 (60->61)? Did A4''s RETARGETED held-out first-win readiness improve vs the 0.04
-      baseline? Skip flagged_adversarial / control-failed / ablation-missing artifacts. Confirm verifier_is_oracle:false
-      on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
+  - id: exp4710-e
+    milestone: 2026.06.433
+    title: 'PHASE E (CAPSTONE .433) -- aggregate the scorecard + the HEADLINE DECISION: did PERCEPTION (A1
+      object-centric/relational representation into the live PROPOSAL distribution) or AMORTIZED EXPLORATION (A2
+      cross-game prior + Go-Explore archive) cross the offline->live bridge for L1-FIRST-CONTACT where eight milestones
+      of selection + generation-by-search + directed-exploration could not -- did A1 make the GENERIC agent reach a NEW
+      level (offline-reproduced, ORDER-1-representation ablation failing) OR resolve the perception-vs-search diagnostic
+      (perception_is_the_wall), did A2 raise candidate-generation coverage + lift held-out first-win (CI excludes
+      baseline, no-prior ablation failing, arc_go_explore now live-reachable), did A3 bank +1 (61->62)? Did A4''s
+      held-out first-win readiness improve vs 0.04 (with null-delta markers)? Skip flagged_adversarial /
+      control-failed / ablation-missing artifacts. Confirm verifier_is_oracle:false on every included value claim.
+      Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
     priority: high
     track: capstone
     max_turns: 40
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4698_capstone_v432.json
-    operator_override: '2026-06-19 ARC sprint (capstone per milestone, codex-routed): routine capstone continuation
-      of the .431 capstone (exp4686, capability_grew_59_to_60). The forward difference is the .432 scorecard
-      (controllable-novelty proposal + program-synthesis action-effect filter + the retargeted held-out first-win
-      readiness + the next bank). False-positive fuzzy-token scope-match vs prior capstone tasks. Not a doomed rerun.'
+    deliverable: results/experiment_4710_capstone_v433.json
+    operator_override: '2026-06-19 ARC sprint (capstone per milestone, codex-routed): routine capstone continuation of
+      the .432 capstone (exp4698, capability_grew_60_to_61). The forward difference is the .433 scorecard
+      (object-centric perception into the proposal distribution + amortized exploration prior/Go-Explore + the
+      perception-vs-search diagnostic + the retargeted held-out first-win readiness + the next bank). False-positive
+      fuzzy-token scope-match vs prior capstone tasks. Not a doomed rerun.'
     prompt: |
-      CONTEXT ({date}, ARC sprint CAPSTONE .432). Aggregate the milestone scorecard + the HEADLINE DECISION. Read
-      EVERY upstream artifact via `python3 scripts/summarize_artifact.py` (Reading-Results Discipline) -- never
-      eyeball raw JSON. SKIP any flagged_adversarial / control-failed / ablation-missing artifact from the headline
-      (fabrication-gate + false-negative-risk + the .432-B2 guards compliance): A1's controllable-novelty win counts
-      ONLY if it reports the no-novelty-bonus AND cosmetic-novelty ablations BOTH strictly lower + offline_reproduced;
-      A2's program-synthesis-filter win counts ONLY if coverage_delta>0 (the winner appears where the blind-proposal
-      baseline did not) AND heldout_programs_rejected reported (held-out rejection ran) AND the held-out first-win CI
-      excludes the blind baseline. The authoritative reproducible_total_levels is the REGISTRY header (A3 bank). A4's
-      readiness is the RETARGETED held-out first-win (experiment_4605 first_win_rate_integrated vs 0.04, bootstrap-CI),
-      NOT the replay count. Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4
-      paper_ready (FoVer 0.9131 NEVER substituted). Submission operator-only (leaderboard_submission=false).
+      CONTEXT ({date}, ARC sprint CAPSTONE .433). Aggregate the milestone scorecard + the HEADLINE DECISION. Read EVERY
+      upstream artifact via `python3 scripts/summarize_artifact.py` (Reading-Results Discipline) -- never eyeball raw
+      JSON. SKIP any flagged_adversarial / control-failed / ablation-missing artifact from the headline (fabrication-gate
+      + false-negative-risk + the .432/.433-B2 guards compliance): A1's perception win counts ONLY if it reports the
+      ORDER-1-representation ablation strictly lower + offline_reproduced (else it is a search-budget win mislabeled);
+      A2's amortized-exploration win counts ONLY if coverage_delta>0 (the winner appears where the no-prior baseline did
+      not) AND the no-prior ablation failed AND the held-out first-win CI excludes the no-prior baseline. A1's
+      perception-vs-search DIAGNOSTIC (perception_is_the_wall) is a headline finding EVEN IF A1 banks no level. The
+      authoritative reproducible_total_levels is the REGISTRY header (A3 bank). A4's readiness is the RETARGETED
+      held-out first-win (experiment_4605 first_win_rate_integrated vs 0.04, bootstrap-CI, with the null-delta markers),
+      NOT the replay count. Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready
+      (FoVer 0.9131 NEVER substituted). Submission operator-only (leaderboard_submission=false).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4686_capstone_v431.json (the .431 capstone schema to mirror)
+        - {project_root}/results/experiment_4698_capstone_v432.json (the .432 capstone schema to mirror)
         - {project_root}/scripts/summarize_artifact.py (the MANDATORY reading path) + {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/publication_gate.py (G1-G4)
-        - the .432 upstream artifacts: results/experiment_4688 (A1 controllable-novelty proposal), 4689 (A2 program-synthesis filter), 4690 (A3 bank), 4691 (A4 held-out first-win readiness), 4692 (A5 transfer), 4693 (A6 integration), 4694 (B1), 4695 (B2) + {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)
+        - the .433 upstream artifacts: results/experiment_4700 (A1 object-centric perception + the perception-vs-search diagnostic), 4701 (A2 amortized prior + Go-Explore), 4702 (A3 bank), 4703 (A4 held-out first-win readiness), 4704 (A5 transfer), 4705 (A6 integration), 4706 (B1), 4707 (B2) + {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "import json,yaml; yaml.safe_load(open('{project_root}/ops/arc_solve_registry.yaml'))"` exits 0 AND every cited upstream artifact exists. Missing -> blocked_<resource>, EXIT.
         1. Read each upstream artifact via summarize_artifact.py; record honest_verdict + flagged/control/ablation-missing status + sha256. EXCLUDE flagged/control-failed/ablation-missing artifacts from the headline.
-        2. Aggregate the headline: A1 generic-agent-reached-new-level (only if no-novelty AND cosmetic-novelty ablations both strictly lower + offline_reproduced) + A2 coverage_delta + held-out first-win delta (only if coverage_delta>0 AND held-out rejection ran AND CI excludes the blind baseline) + A3 reproducible_total_levels_delta + A4 held-out first_win_rate_integrated vs 0.04. Compute the bridge_crossed_for_solve decision.
+        2. Aggregate the headline: A1 generic-agent-reached-new-level (only if the ORDER-1-representation ablation strictly lower + offline_reproduced) + the perception_is_the_wall diagnostic finding + A2 coverage_delta + held-out first-win delta (only if coverage_delta>0 AND no-prior ablation failed AND CI excludes the no-prior baseline) + A3 reproducible_total_levels_delta + A4 held-out first_win_rate_integrated vs 0.04. Compute the bridge_crossed_for_solve decision.
         3. Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Emit the operator-only submission status (leaderboard_submission=false).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: bridge_crossed_live_generic_new_level_via_directed_exploration_<games> OR complete: directed_exploration_levers_characterized_no_live_new_level OR complete: capability_grew_60_to_<n>."
+          principle: "terminal prefix; success: bridge_crossed_live_generic_new_level_via_<perception|amortized_exploration>_<games> OR complete: perception_and_amortized_exploration_levers_characterized_no_live_new_level OR complete: capability_grew_61_to_<n>."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
         cited_upstream_artifacts:
           principle: "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
-        a1_controllable_novelty_new_level:
-          principle: "the A1 result -- the generic agent's new level via controllable novelty, counted ONLY if the no-novelty-bonus AND cosmetic-novelty ablations BOTH strictly lower + offline_reproduced."
-        a2_program_synthesis_coverage_and_lift:
-          principle: "the A2 result -- coverage_delta (winner-now-proposed) + held-out first-win lift, counted ONLY if coverage_delta>0 AND heldout_programs_rejected reported AND the CI excludes the blind-proposal baseline."
+        a1_perception_new_level:
+          principle: "the A1 result -- the generic agent's new level via object-centric perception, counted ONLY if the ORDER-1-representation ablation strictly lower + offline_reproduced."
+        a1_perception_is_the_wall_diagnostic:
+          principle: "the A1 DECISIVE diagnostic -- did an upper-bound representation raise proposal-coverage of the winning L1 trajectory where order-1 did not (perception_is_the_wall true/false); a headline finding even if A1 banks no level (resolves the 8-milestone ambiguity)."
+        a2_amortized_exploration_coverage_and_lift:
+          principle: "the A2 result -- coverage_delta (winner-now-generated) + held-out first-win lift, counted ONLY if coverage_delta>0 AND the no-prior ablation failed AND the CI excludes the no-prior baseline; + go_explore_now_live_reachable."
         reproducible_total_levels:
-          principle: "authoritative from the registry (A3 bank, 60->61+) -- did solve CAPABILITY grow."
+          principle: "authoritative from the registry (A3 bank, 61->62+) -- did solve CAPABILITY grow."
         reproducible_total_levels_delta:
-          principle: "registry after - 60, emitted explicitly so a null is annotated."
+          principle: "registry after - 61, emitted explicitly so a null is annotated."
         held_out_first_win_readiness:
-          principle: "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline (bootstrap-CI), the only proxy that tracks the scored lane (NOT the replay count)."
+          principle: "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline (bootstrap-CI, null-delta markers present), the only proxy that tracks the scored lane (NOT the replay count)."
         bridge_crossed_for_solve:
-          principle: "the headline decision -- did DIRECTED EXPLORATION (A1 controllable-novelty / A2 program-synthesis filter) cross the offline->live bridge for L1-first-contact (the GENERIC agent reaches a NEW level via a widened proposal distribution), or did the directed-exploration levers get characterized as another honest null (the 8th milestone)."
+          principle: "the headline decision -- did PERCEPTION (A1) or AMORTIZED EXPLORATION (A2) cross the offline->live bridge for L1-first-contact (the GENERIC agent reaches a NEW level), or did the levers get characterized as another honest null (the 9th milestone) with the perception-vs-search diagnostic resolved."
         flagged_artifacts_handled:
-          principle: "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied (.431-B2 subgoal-decomposition/coverage-baseline + .432-B2 novelty-ablation/proposal-filter-heldout) -- fabrication-gate + false-negative-risk compliance."
+          principle: "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied (.432-B2 novelty-ablation/proposal-filter-heldout + .433-B2 firstwin-nulldelta/perception-overclaim) -- fabrication-gate + false-negative-risk compliance."
         verifier_is_oracle:
           principle: "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
         paper_ready:
-          principle: "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .432 headline."
+          principle: "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .433 headline."
         leaderboard_submission:
           principle: "MUST be false -- submission is operator-only (External Publication Discipline)."
         random_seed:
@@ -1127,5 +1176,5 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4698_capstone_v432.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4710_capstone_v433.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.

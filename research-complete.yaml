@@ -47650,3 +47650,136 @@ milestones:
       operator-only.'
     deliverable: results/experiment_4686_capstone_v431.json
     result: OK (conductor)
+- id: 2026.06.432
+  title: 'DIRECTED EXPLORATION at L1 FIRST-CONTACT, not generation-by-search -- the 7th-consecutive bridge-not-crossed milestone
+    (.431) ran the decisive diagnostic and CONFIRMED the wall: wall_diagnosis=l1_first_contact, generic first-win 0.04 (only
+    1/25 public games reach L1). BOTH .431 generation levers nulled (A1 hierarchical subgoal search value_head_still_not_separating
+    + empty decomposition; A2 PoE-World coverage_delta=0.0 experts_overfit_prefix). The winning L1 trajectory never enters
+    the candidate pool because the EXPLORER''S action-proposal distribution misses it -- the wall is upstream of both selection
+    AND generation-by-search. .432 PIVOTS to DIRECTED EXPLORATION (the .431 D ingestion''s explicit "bottom line for the .432
+    roadmap"): A1 (HEADLINE) controllable-novelty E3 proposal policy (NGU + RND + Strategy-Guided Exploration) reshaping the
+    live explorer''s action-proposal distribution at L1 first-contact via episodic kNN + RND lifelong novelty over a CONTROLLABLE-novelty
+    embedding (the controllability gate = the noisy-TV fix for the .427 dense-curiosity null); A2 (second mechanism) program-synthesis
+    action-effect proposal FILTER with HELD-OUT transition rejection (the experts_overfit_prefix fix). A3 banks +1 (60->61)
+    + trains the verifier; A4 RETARGETED to gate readiness on the HELD-OUT first-win lane (experiment_4605, NOT replay-package
+    depth -- replay scores ~0; first scored sub=0.08). Plus persist+transfer (A5), integration (A6), 2 infra (B1/B2), 1 hardware
+    (C), 1 SOTA-ingestion (D), capstone (E). 6 days to the ARC Prize Milestone #1 deadline (2026-06-30).'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-24'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4687-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .431 -> activate .432; assert YAML parses + smart-subset pre-test gate green;
+      RECORD the TRUE .431 close-state (capability grew 59->60 via A3 sb26 L2, but bridge_crossed_for_solve=FALSE for the
+      7th consecutive milestone AND the GENERATION pivot itself nulled: A1 hierarchical subgoal search ran the STEP-1 diagnostic
+      and CONFIRMED wall_diagnosis=l1_first_contact [generic first-win 0.04 = 1/25 games], then nulled [generic_agent_reached_level=0,
+      empty decomposition, value_head_still_not_separating]; A2 PoE-World factored planner nulled [coverage_delta=0.0, experts_overfit_prefix];
+      package live_submittable=60; first scored submission=0.08; paper_ready=True). The .432 pivot -> DIRECTED EXPLORATION
+      (make a winning L1 trajectory APPEAR in the pool): A1 controllable-novelty E3 proposal policy, A2 program-synthesis
+      action-effect proposal filter.'
+    deliverable: results/experiment_4687_archive_431_activate_432.json
+    result: OK (conductor)
+  - id: exp4688-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE -- the DIRECTED-EXPLORATION pivot) -- CONTROLLABLE-NOVELTY
+      E3 PROPOSAL POLICY for L1 FIRST-CONTACT. The .431 diagnostic CONFIRMED wall_diagnosis=l1_first_contact (generic first-win
+      0.04 = 1/25 games); the winning L1 trajectory never enters the candidate pool because the live StepwiseExplorer''s action-proposal
+      distribution misses it. Reshape that distribution with an intrinsic CONTROLLABLE-novelty proposal bonus: an episodic
+      kNN novelty table + an RND lifelong novelty score over a CONTROLLABLE-novelty embedding (frame-delta + action-EFFECT
+      features so cosmetic/noisy-TV changes are NOT rewarded -- the .427 dense-curiosity fix), with a small family of exploration
+      temperatures, applied BEFORE value-ranking. Gate: the GENERIC live agent reaches a NEW level on >=1 clean L1-only game
+      where flat exploration fails, offline-reproduced, with a NO-NOVELTY-BONUS AND a COSMETIC-NOVELTY (controllability-gate-off)
+      ablation that do NOT. live_llm_inference. live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.
+      NGU arXiv:2002.06038 + RND arXiv:1810.12894 + Strategy-Guided arXiv:2603.02045.'
+    deliverable: results/experiment_4688_controllable_novelty_proposal_policy_live.json
+    result: OK (conductor)
+  - id: exp4689-a2
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; second independent GENERATION mechanism) -- PROGRAM-SYNTHESIS
+      ACTION-EFFECT PROPOSAL FILTER with HELD-OUT transition rejection: induce small per-game action->effect programs from
+      observed prefixes, REJECT programs that fail held-out transitions (the direct fix for the .431 A2 experts_overfit_prefix
+      residual), and use surviving programs to PRUNE the live explorer''s primitive proposals to mechanically-relevant clicks/keys
+      (not blind spatial sweeps), so the winning L1 trajectory enters the pool. The program-synthesis complement to A1''s
+      novelty proposal. Gate: candidate-generation COVERAGE up (the winner appears in the pool where the matched BLIND-PROPOSAL
+      baseline did not) AND a held-out first-win lift (CI excludes baseline), offline-reproduced. Live-path-reachable. live_agent_self_discovery.
+      verifier_is_oracle:false. retire_if_same_verdict. PoE-World arXiv:2505.10819 + Program-Synthesis-Guided RL arXiv:2102.11137.'
+    deliverable: results/experiment_4689_program_synthesis_action_effect_proposal_filter.json
+    result: OK (conductor)
+  - id: exp4690-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .427-.431
+      (PREFER a first-contact L1->L2 of a hard clean public game from the L1-only set bp35/re86/s5i5/g50t/r11l/lf52; alternatives
+      m0r0/cn04/ar25 L2->L3; SKIP sb26 [.431], dc22 [.430], vc33 [.429], ft09 [.428], ls20 [.427], sk48 [.426 failed], ka59/wa30
+      [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND train+checkpoint the learned verifier on pos/neg
+      traces. Gate: offline_reproduced new level -> reproducible_total_levels 60 -> 61+. verifier_is_oracle:false.'
+    deliverable: results/experiment_4690_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4691-a4
+    title: PHASE A4 (ARC NORTH STAR; SCORE -- RETARGETED per 2026-06-24 operator directive) -- gate readiness on the HELD-OUT
+      GENERIC FIRST-WIN lane (experiment_4605 first_win_rate_integrated vs the last-submission 0.04/0.08 baseline, bootstrap-CI
+      lower bound > 0), NOT replay-package depth. The replay path scores ~0 on the hidden leaderboard; the held-out first-win
+      on color-permuted variants is the only offline proxy that tracks the scored lane. Keep the reproduced replay package
+      as a FLOOR artifact only (strip the "honest leaderboard score" framing). Submission stays operator-only. verifier_is_oracle:false.
+    deliverable: results/experiment_4691_held_out_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4692-a5
+    title: PHASE A5 (ARC NORTH STAR; SELF-LEARNING persist+transfer) -- persist this milestone's winning A1/A2 DIRECTED-EXPLORATION
+      primitive (the controllable-novelty proposal operator [episodic kNN + RND lifelong novelty over a controllable-novelty
+      embedding] OR the program-synthesis action-effect proposal filter [held-out transition rejection + proposal pruning],
+      whichever cleared its gate) as a reusable arc_solver_kit primitive + registry general_gotcha, and measure cross-game
+      transfer value (characterize the null honestly if transfer is value-null). verifier_is_oracle:false.
+    deliverable: results/experiment_4692_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4693-a6
+    title: PHASE A6 (ARC NORTH STAR; INTEGRATION) -- fold this milestone's winning A1/A2 config (the controllable-novelty
+      proposal settings and/or the program-synthesis action-effect filter settings) into SUBMITTED_AGENT_CONFIG as the single
+      source of truth, re-measure the integrated HELD-OUT first-win + multi-level deepen-rate end-to-end on the SCORED E3AgentPolicy
+      (experiment_4605 lane), and keep test_arc_submitted_agent_parity green. If both A1/A2 nulled, integrate 'unchanged'
+      and record why (avoid the .430 A6 TAUTOLOGY flag). verifier_is_oracle:false.
+    deliverable: results/experiment_4693_integration_gate.json
+    result: OK (conductor)
+  - id: exp4694-b1
+    title: 'PHASE B1 (INFRA -- reserved slot 1) -- ship the L1-FIRST-CONTACT PROPOSAL-COVERAGE CI-metric + re-affirm the HONEST
+      generic-first-win floor: (1) a metric/gate that measures whether the explorer''s action-proposal distribution REACHES
+      the winning L1 trajectory (proposal-coverage at first-contact -- the directed-exploration analog of the .431 B1 generation-coverage
+      gate, now at the PROPOSAL stage upstream of search); (2) re-affirm the HONEST generic-first-win measurement (the 0.04
+      reality on the standard config) so a future change can NEITHER silently regress it NOR silently inflate it via a permissive
+      harness; (3) a proposal-coverage floor. Unit tests green. verifier_is_oracle:false.'
+    deliverable: results/experiment_4694_proposal_coverage_cigate.json
+    result: OK (conductor)
+  - id: exp4695-b2
+    title: 'PHASE B2 (INFRA -- reserved slot 2; adversarial_verify hardening) -- extend adversarial_verify with two guards
+      for the .432 DIRECTED-EXPLORATION lever class: (1) NOVELTY-PROPOSAL-WITHOUT-ABLATION -- a "reached a new level via controllable
+      novelty" claim that does NOT report the no-novelty-bonus AND the cosmetic-novelty (controllability-gate-off) ablations
+      + offline_reproduced is flagged (it may be a flat-exploration win mislabeled, or the controllability gate added nothing);
+      (2) PROPOSAL-FILTER-WITHOUT-HELDOUT-REJECTION -- a program-synthesis action-effect coverage claim that does NOT report
+      the held-out rejected-program count + the matched blind-proposal baseline is flagged (the experts_overfit_prefix guard).
+      Honest artifacts NOT flagged. Tests green.'
+    deliverable: results/experiment_4695_adversarial_verify_hardening.json
+    result: OK (conductor)
+  - id: exp4696-c
+    title: PHASE C (HARDWARE CONTINUITY -- 1 per-board slot) -- per-board reachability audit (KV260 via ssh kria [SSH-only,
+      NEVER host SD-card], PolarFire via ssh polarfire, GateMate via openFPGALoader -c dirtyJtag --detect) so each attached
+      board stays visible per the Hardware-Task Continuity Discipline. Record per-board state (loaded overlay / uptime / IDCODE)
+      or blocked_<board>_<reason>. No bitstream build, no fabric-acceleration claim.
+    deliverable: results/experiment_4696_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4697-d
+    title: 'PHASE D (SOTA-INGESTION -> .433) -- focused literature pass on the NEXT fallback if .432''s DIRECTED-EXPLORATION
+      levers (A1 controllable-novelty proposal + A2 program-synthesis action-effect filter) null: AMORTIZED / TRANSFERABLE
+      exploration -- distill the rare successful first-contact exploration into a reusable CROSS-GAME exploration policy so
+      first-contact TRANSFERS to unseen games instead of being re-derived from scratch (the deeper wall if per-game novelty
+      does not transfer) + Go-Explore-style return-then-explore archive. Map the strongest 3-5 SOTA methods with arXiv IDs
+      + implement-cost-over-current-stack + fails_when, and FLAG the strongest for .433. Reliable sweep + WebSearch/WebFetch
+      only; /deep-research BANNED.'
+    deliverable: results/experiment_4697_sota_ingestion_amortized_exploration.json
+    result: OK (conductor)
+  - id: exp4698-e
+    title: 'PHASE E (CAPSTONE .432) -- aggregate the scorecard + the HEADLINE DECISION: did DIRECTED EXPLORATION cross the
+      offline->live bridge for L1-FIRST-CONTACT where seven milestones of selection + generation-by-search could not -- did
+      the controllable-novelty proposal policy (A1) make the GENERIC agent reach a NEW level (offline-reproduced, no-novelty
+      AND cosmetic-novelty ablations failing), did the program-synthesis action-effect filter (A2) raise candidate-generation
+      coverage + lift held-out first-win (CI excludes baseline, held-out rejection ran), did A3 bank +1 (60->61)? Did A4''s
+      RETARGETED held-out first-win readiness improve vs the 0.04 baseline? Skip flagged_adversarial / control-failed / ablation-missing
+      artifacts. Confirm verifier_is_oracle:false on every included value claim. Re-affirm G1-G4 paper_ready (FoVer 0.9131
+      frozen). Submission operator-only.'
+    deliverable: results/experiment_4698_capstone_v432.json
+    result: OK (conductor)
