@@ -1,0 +1,356 @@
+{
+  "bare_control_passed": true,
+  "chosen_submitted_config": "unchanged",
+  "controllability_gate_on": true,
+  "cosmetic_novelty_ablation_reached_level": 0,
+  "duration_s": 60.000427,
+  "experiment": "experiment_4688_controllable_novelty_proposal_policy_live",
+  "experiment_id": 4688,
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "bare_control_passed": {
+      "principle": "the POSITIVE CONTROL -- the target has a reachable winning L1 trajectory offline; a no-new-level null is valid only then."
+    },
+    "chosen_submitted_config": {
+      "principle": "the recommended SUBMITTED_AGENT_CONFIG change (controllable-novelty proposal on, novelty weight/temperature) -- the A6 input; 'unchanged' if null."
+    },
+    "controllability_gate_on": {
+      "principle": "true -- the novelty embedding is over CONTROLLABLE action-effect deltas, not raw frame novelty (the .427 noisy-TV fix); the COSMETIC-NOVELTY ablation sets this false."
+    },
+    "cosmetic_novelty_ablation_reached_level": {
+      "principle": "the cosmetic-novelty (controllability-gate-off, raw-frame novelty) ablation's reached_level -- MUST be lower than the controllable-novelty policy for the win to be attributable to the controllability gate (not just any novelty)."
+    },
+    "false_negative_risk_checked": {
+      "principle": "true with both ablations run + reachable-L1-headroom confirmed -- a 'no new level' null is valid only then."
+    },
+    "generic_agent_reached_level": {
+      "principle": "the deepest level the GENERIC live agent reached via controllable-novelty exploration on the target -- the headline (a NEW level is the win)."
+    },
+    "generic_first_win_by_config": {
+      "principle": "per-config (novelty temperature / ablation) generic first-win + multi-level rate -- the honest measurement on the standard harness (the 0.04 baseline locked in by B1)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: controllable_novelty_generic_agent_new_level_<game>_L<n> OR complete: controllable_novelty_no_new_level_residual_<cause>."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the live E3 explorer's world-model induction (and the strategy-conditioned arm) loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the live agent runs a real LLM during exploration."
+    },
+    "live_path_reachable": {
+      "principle": "HARD gate -- the changed modules (StepwiseExplorer etc.) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+    },
+    "no_novelty_ablation_reached_level": {
+      "principle": "the matched no-novelty-bonus (flat exploration) ablation's reached_level -- MUST be lower than the controllable-novelty policy for the win to be attributable to directed exploration (not flat exploration)."
+    },
+    "null_methodology_note": {
+      "principle": "present when no new level -- states the null is honest (passing ablations + reachable L1 headroom), not a measurement bug."
+    },
+    "offline_reproduced": {
+      "principle": "a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce (ARC Solve Reproducibility); a live-only trajectory is provisional."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication."
+    },
+    "proposer_served_model": {
+      "principle": "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproduced_levels": {
+      "principle": "the integer new-level count the generic agent banked offline (>=1 is the bridge crossed for solve)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift on replay."
+    },
+    "residual_cause_hypothesis": {
+      "principle": "if it nulls, names the residual (winning_prefix_still_not_proposed | controllability_embedding_rewards_non_winning_controllable_states | novelty_revisits_dead_states) -- the .433 target; 'none' if it crossed."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- a generic-agent new level via runtime controllable-novelty exploration is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the controllable-novelty bonus is oracle-DISTINCT from the executable reproduction win-check."
+    }
+  },
+  "generic_agent_reached_level": 0,
+  "generic_first_win_by_config": {
+    "controllable_novelty_t0.5": {
+      "first_win_count": 0,
+      "first_win_rate": 0.0,
+      "max_reached_level": 0,
+      "multi_level_count": 0,
+      "multi_level_rate": 0.0,
+      "variant_attempts": [
+        {
+          "actions": 195,
+          "actions_to_first_levelup": null,
+          "attempted": true,
+          "bare_control_passed": true,
+          "bonus_weight": 1.0,
+          "budget": 200,
+          "controllable_novelty_diagnostics": {
+            "bonus_weight": 1.0,
+            "candidate_scores": 4641,
+            "controllability_gate_on": true,
+            "controllability_gate_rejected": 0,
+            "enabled": true,
+            "episodic_embeddings": 194,
+            "observed_effects": 194,
+            "raw_frame_novelty": false,
+            "rnd_updates": 194,
+            "temperature": 0.5,
+            "verifier_is_oracle": false
+          },
+          "game": "bp35",
+          "generic_agent_reached_level": 0,
+          "offline_reproduced": false,
+          "policy_mode": "controllable_novelty_t0.5",
+          "reached_level": 0,
+          "reproduced_levels": 0,
+          "reproduction_gate": {
+            "claimed_level": 0,
+            "game": "bp35",
+            "mode": "offline_reproduction_gate_no_solution",
+            "reached_level": 0,
+            "reproduced": false
+          },
+          "solution_labels": [],
+          "temperature": 0.5
+        }
+      ],
+      "variant_attempts_count": 1
+    },
+    "cosmetic_novelty_gate_off": {
+      "first_win_count": 0,
+      "first_win_rate": 0.0,
+      "max_reached_level": 0,
+      "multi_level_count": 0,
+      "multi_level_rate": 0.0,
+      "variant_attempts": [
+        {
+          "actions": 195,
+          "actions_to_first_levelup": null,
+          "attempted": true,
+          "bare_control_passed": true,
+          "bonus_weight": 1.0,
+          "budget": 200,
+          "controllable_novelty_diagnostics": {
+            "bonus_weight": 1.0,
+            "candidate_scores": 5610,
+            "controllability_gate_on": false,
+            "controllability_gate_rejected": 0,
+            "enabled": true,
+            "episodic_embeddings": 194,
+            "observed_effects": 194,
+            "raw_frame_novelty": true,
+            "rnd_updates": 194,
+            "temperature": 0.5,
+            "verifier_is_oracle": false
+          },
+          "game": "bp35",
+          "generic_agent_reached_level": 0,
+          "offline_reproduced": false,
+          "policy_mode": "cosmetic_novelty_gate_off",
+          "reached_level": 0,
+          "reproduced_levels": 0,
+          "reproduction_gate": {
+            "claimed_level": 0,
+            "game": "bp35",
+            "mode": "offline_reproduction_gate_no_solution",
+            "reached_level": 0,
+            "reproduced": false
+          },
+          "solution_labels": [],
+          "temperature": 0.5
+        }
+      ],
+      "variant_attempts_count": 1
+    },
+    "no_novelty_bonus": {
+      "first_win_count": 0,
+      "first_win_rate": 0.0,
+      "max_reached_level": 0,
+      "multi_level_count": 0,
+      "multi_level_rate": 0.0,
+      "variant_attempts": [
+        {
+          "actions": 195,
+          "actions_to_first_levelup": null,
+          "attempted": true,
+          "bare_control_passed": true,
+          "bonus_weight": 0.0,
+          "budget": 200,
+          "controllable_novelty_diagnostics": {
+            "enabled": false
+          },
+          "game": "bp35",
+          "generic_agent_reached_level": 0,
+          "offline_reproduced": false,
+          "policy_mode": "no_novelty_bonus",
+          "reached_level": 0,
+          "reproduced_levels": 0,
+          "reproduction_gate": {
+            "claimed_level": 0,
+            "game": "bp35",
+            "mode": "offline_reproduction_gate_no_solution",
+            "reached_level": 0,
+            "reproduced": false
+          },
+          "solution_labels": [],
+          "temperature": 0.0
+        }
+      ],
+      "variant_attempts_count": 1
+    }
+  },
+  "honest_verdict": "complete: controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed",
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "no_novelty_ablation_reached_level": 0,
+  "null_methodology_note": "The run used a /props-verified Qwen proposer, live-path lint, submitted-agent parity, a reachable-L1 target control, and matched no-novelty/cosmetic-novelty ablations; no attributed reproduced new level is an honest proposal-policy null.",
+  "offline_reproduced": false,
+  "parity_test_green": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (34 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "live_modules_importable": true,
+    "offline_arcade": true,
+    "ok": true,
+    "parity_test": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov -n 0",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 11 items\n\ntests/python/test_arc_submitted_agent_parity.py ...........              [100%]\n\n============================== 11 passed in 3.79s ==============================\n"
+    },
+    "proposer_props_excerpt": "{\"bos_token\": \",\", \"build_info\": \"b9606-9b4dae81f\", \"chat_template\": \"{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception('System message cannot contain images.') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\\n                {%- endif %}\\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\\n   ",
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen_proposer_port": 8920,
+    "qwen_proposer_port_verified": true,
+    "spec_has_req_4688": true
+  },
+  "proposer_served_model": "Qwen3.5-9B-MTP",
+  "random_seed": 4688,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:6279e163dea4e3e271b947e119d52b27bf8097610faca4a64be5572823543c21",
+  "residual_cause_hypothesis": "winning_prefix_still_not_proposed",
+  "schema": "carnot.arc.controllable_novelty_proposal_policy_live_4688.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4688",
+    "SCENARIO-ARC-WMTE-4688"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_arm_results": {
+    "controllable_novelty": {
+      "actions": 195,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "bonus_weight": 1.0,
+      "budget": 200,
+      "controllable_novelty_diagnostics": {
+        "bonus_weight": 1.0,
+        "candidate_scores": 4641,
+        "controllability_gate_on": true,
+        "controllability_gate_rejected": 0,
+        "enabled": true,
+        "episodic_embeddings": 194,
+        "observed_effects": 194,
+        "raw_frame_novelty": false,
+        "rnd_updates": 194,
+        "temperature": 0.5,
+        "verifier_is_oracle": false
+      },
+      "game": "bp35",
+      "generic_agent_reached_level": 0,
+      "offline_reproduced": false,
+      "policy_mode": "controllable_novelty_t0.5",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "bp35",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "temperature": 0.5
+    },
+    "cosmetic_novelty": {
+      "actions": 195,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "bonus_weight": 1.0,
+      "budget": 200,
+      "controllable_novelty_diagnostics": {
+        "bonus_weight": 1.0,
+        "candidate_scores": 5610,
+        "controllability_gate_on": false,
+        "controllability_gate_rejected": 0,
+        "enabled": true,
+        "episodic_embeddings": 194,
+        "observed_effects": 194,
+        "raw_frame_novelty": true,
+        "rnd_updates": 194,
+        "temperature": 0.5,
+        "verifier_is_oracle": false
+      },
+      "game": "bp35",
+      "generic_agent_reached_level": 0,
+      "offline_reproduced": false,
+      "policy_mode": "cosmetic_novelty_gate_off",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "bp35",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "temperature": 0.5
+    },
+    "no_novelty": {
+      "actions": 195,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "bonus_weight": 0.0,
+      "budget": 200,
+      "controllable_novelty_diagnostics": {
+        "enabled": false
+      },
+      "game": "bp35",
+      "generic_agent_reached_level": 0,
+      "offline_reproduced": false,
+      "policy_mode": "no_novelty_bonus",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "bp35",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": [],
+      "temperature": 0.0
+    }
+  },
+  "target_game": "bp35",
+  "verifier_is_oracle": false
+}

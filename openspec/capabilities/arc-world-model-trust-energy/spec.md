@@ -1438,6 +1438,93 @@ flag one or more `flagged_for_v432` roadmap candidates, record all network and
 citation preconditions checked, record the A1/A2 L1-first-contact residual
 scope, and record that `/deep-research` was not used.
 
+### REQ-ARC-WMTE-4688: Controllable-Novelty Proposal Policy Live Gate
+
+Experiment 4688 SHALL implement the `.432` build-first lever from
+REQ-ARC-WMTE-4685 in the live `E3AgentPolicy` import closure. The live
+`StepwiseExplorer` SHALL expose an opt-in controllable-novelty proposal policy
+that reshapes each state's action-proposal order before value-ranking or
+frontier selection consumes the actions. The proposal policy SHALL embed visible
+frame-delta features together with action-effect features, maintain an episodic
+kNN novelty table for within-episode novelty, maintain an RND-style lifelong
+novelty score for cross-episode novelty, and apply an intrinsic proposal bonus
+under a small family of exploration temperatures.
+
+The controllability gate is load-bearing. With the gate enabled, novelty SHALL
+score only controllable action-effect deltas caused by the agent's own action;
+raw frame novelty, cosmetic animation, or uncontrolled frame changes SHALL NOT
+earn controllable novelty. Experiment 4688 SHALL include a matched no-novelty
+ablation and a cosmetic-novelty ablation that disables the gate and scores raw
+frame novelty. Any positive solve claim SHALL be valid only when the
+controllable-novelty arm reaches and offline-reproduces a new level while both
+ablations fail under the same budget.
+
+Before measurement, experiment 4688 SHALL verify that the Qwen3.5-9B-MTP GGUF
+is cached, `arc_solver_kit.offline_arcade()` initializes, the live
+`E3AgentPolicy` / `StepwiseExplorer` / value-learner / frame-change modules
+import, and `LocalGGUFProposer` on a free non-8919 port reports a Qwen model
+through `/props`. If those preconditions fail, it SHALL write a blocked artifact
+rather than fabricate a run. The measurement SHALL run on at least one clean
+L1-only target, prefer one of `bp35`, `re86`, `s5i5`, `g50t`, `r11l`, or
+`lf52`, replay-verify any claimed generic-agent new level with
+`arc_solver_kit.reproduce`, and report the target's reachable-L1 positive
+control so no-new-level nulls are auditable.
+
+The artifact at
+`results/experiment_4688_controllable_novelty_proposal_policy_live.json` SHALL
+include `honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `live_path_reachable`, `controllability_gate_on`,
+`generic_first_win_by_config`, `generic_agent_reached_level`,
+`offline_reproduced`, `reproduced_levels`,
+`no_novelty_ablation_reached_level`,
+`cosmetic_novelty_ablation_reached_level`,
+`residual_cause_hypothesis`, `bare_control_passed`,
+`false_negative_risk_checked`, `proposer_served_model`,
+`chosen_submitted_config`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, and `field_principles`.
+For complete/null verdicts it SHALL also include `null_methodology_note`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: controllable_novelty_generic_agent_new_level_<game>_L<n> OR complete: controllable_novelty_no_new_level_residual_<cause>.`
+- `inference_substrate`: principle `live_llm_inference -- the live E3 explorer's world-model induction (and the strategy-conditioned arm) loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); declared honestly because the live agent runs a real LLM during exploration.`
+- `verifier_is_oracle`: principle `MUST be false -- the controllable-novelty bonus is oracle-DISTINCT from the executable reproduction win-check.`
+- `solve_provenance`: principle `live_agent_self_discovery -- a generic-agent new level via runtime controllable-novelty exploration is the REAL deliverable, NOT a hand-built GameAdapter (development_proxy) and NOT outer_loop_re.`
+- `live_path_reachable`: principle `HARD gate -- the changed modules (StepwiseExplorer etc.) are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes.`
+- `controllability_gate_on`: principle `true -- the novelty embedding is over CONTROLLABLE action-effect deltas, not raw frame novelty (the .427 noisy-TV fix); the COSMETIC-NOVELTY ablation sets this false.`
+- `generic_first_win_by_config`: principle `per-config (novelty temperature / ablation) generic first-win + multi-level rate -- the honest measurement on the standard harness (the 0.04 baseline locked in by B1).`
+- `generic_agent_reached_level`: principle `the deepest level the GENERIC live agent reached via controllable-novelty exploration on the target -- the headline (a NEW level is the win).`
+- `offline_reproduced`: principle `a generic new level counts only if offline-reproduced via arc_solver_kit.reproduce (ARC Solve Reproducibility); a live-only trajectory is provisional.`
+- `reproduced_levels`: principle `the integer new-level count the generic agent banked offline (>=1 is the bridge crossed for solve).`
+- `no_novelty_ablation_reached_level`: principle `the matched no-novelty-bonus (flat exploration) ablation's reached_level -- MUST be lower than the controllable-novelty policy for the win to be attributable to directed exploration (not flat exploration).`
+- `cosmetic_novelty_ablation_reached_level`: principle `the cosmetic-novelty (controllability-gate-off, raw-frame novelty) ablation's reached_level -- MUST be lower than the controllable-novelty policy for the win to be attributable to the controllability gate (not just any novelty).`
+- `residual_cause_hypothesis`: principle `if it nulls, names the residual (winning_prefix_still_not_proposed | controllability_embedding_rewards_non_winning_controllable_states | novelty_revisits_dead_states) -- the .433 target; 'none' if it crossed.`
+- `null_methodology_note`: principle `present when no new level -- states the null is honest (passing ablations + reachable L1 headroom), not a measurement bug.`
+- `bare_control_passed`: principle `the POSITIVE CONTROL -- the target has a reachable winning L1 trajectory offline; a no-new-level null is valid only then.`
+- `false_negative_risk_checked`: principle `true with both ablations run + reachable-L1-headroom confirmed -- a 'no new level' null is valid only then.`
+- `proposer_served_model`: principle `the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard.`
+- `chosen_submitted_config`: principle `the recommended SUBMITTED_AGENT_CONFIG change (controllable-novelty proposal on, novelty weight/temperature) -- the A6 input; 'unchanged' if null.`
+- `parity_test_green`: principle `HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent.`
+- `random_seed`: principle `determinism precondition for reproducibility.`
+- `reproducibility_checksum`: principle `content-addressed hash catches silent harness/corpus drift on replay.`
+- `preconditions_checked`: principle `records resources verified (Qwen cached, offline arcade, live modules importable, /props served Qwen on a free port); pre-empts missing-resource fabrication.`
+
+### SCENARIO-ARC-WMTE-4688: Controllable Novelty Is Attributed Or Nulls Honestly
+
+Given the Qwen/free-port, offline arcade, live import, OpenSpec, and live-path
+lint preconditions pass
+When experiment 4688 runs the live `StepwiseExplorer` with controllable novelty,
+matched no-novelty, and cosmetic-novelty proposal configurations on a clean
+L1-only target
+Then the artifact reports per-config first-win/reached-level results, identifies
+whether the generic agent reached a new level, counts that level only if
+`arc_solver_kit.reproduce` verifies it offline, marks `verifier_is_oracle=false`
+because novelty is distinct from the executable win check, and either recommends
+the controllable-novelty submitted config after both ablations fail or records
+one of `winning_prefix_still_not_proposed`,
+`controllability_embedding_rewards_non_winning_controllable_states`, or
+`novelty_revisits_dead_states` as the next residual.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
