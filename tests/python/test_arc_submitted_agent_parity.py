@@ -88,6 +88,26 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert pol.subgoal_budget == SUBMITTED_AGENT_CONFIG["hierarchical_subgoal_budget"]
     assert pol.factored_planner == SUBMITTED_AGENT_CONFIG["factored_planner_enabled"]
     assert pol.factored_trust_threshold == SUBMITTED_AGENT_CONFIG["factored_trust_threshold"]
+    assert (
+        (exp.controllable_novelty_policy is not None)
+        == SUBMITTED_AGENT_CONFIG["controllable_novelty_proposal_enabled"]
+    )
+    assert (
+        exp.controllable_novelty_diagnostics()["enabled"]
+        == SUBMITTED_AGENT_CONFIG["controllable_novelty_proposal_enabled"]
+    )
+    assert (
+        pol.program_synthesis_filter_enabled
+        == SUBMITTED_AGENT_CONFIG["program_synthesis_proposal_filter_enabled"]
+    )
+    assert (
+        pol.program_synthesis_filter_trust_threshold
+        == SUBMITTED_AGENT_CONFIG["program_synthesis_proposal_filter_trust_threshold"]
+    )
+    assert (
+        exp.program_synthesis_filter_diagnostics()["enabled"]
+        == SUBMITTED_AGENT_CONFIG["program_synthesis_proposal_filter_enabled"]
+    )
 
 
 def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
