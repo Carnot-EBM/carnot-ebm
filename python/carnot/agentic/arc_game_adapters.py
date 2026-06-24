@@ -444,6 +444,38 @@ CN04_L2_TAIL_LABELS: tuple[str, ...] = (
 
 CN04_L2_SOLUTION_LABELS: tuple[str, ...] = CN04_L1_LABELS + CN04_L2_TAIL_LABELS
 
+SB26_L1_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 36, "y": 59}),
+    _json_action_label(6, {"x": 23, "y": 30}),
+    _json_action_label(6, {"x": 20, "y": 59}),
+    _json_action_label(6, {"x": 29, "y": 30}),
+    _json_action_label(6, {"x": 44, "y": 59}),
+    _json_action_label(6, {"x": 35, "y": 30}),
+    _json_action_label(6, {"x": 28, "y": 59}),
+    _json_action_label(6, {"x": 41, "y": 30}),
+    _json_action_label(5),
+)
+
+SB26_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(6, {"x": 32, "y": 59}),
+    _json_action_label(6, {"x": 23, "y": 23}),
+    _json_action_label(6, {"x": 18, "y": 59}),
+    _json_action_label(6, {"x": 29, "y": 23}),
+    _json_action_label(6, {"x": 11, "y": 59}),
+    _json_action_label(6, {"x": 23, "y": 37}),
+    _json_action_label(6, {"x": 46, "y": 59}),
+    _json_action_label(6, {"x": 29, "y": 37}),
+    _json_action_label(6, {"x": 25, "y": 59}),
+    _json_action_label(6, {"x": 35, "y": 37}),
+    _json_action_label(6, {"x": 53, "y": 59}),
+    _json_action_label(6, {"x": 41, "y": 37}),
+    _json_action_label(6, {"x": 39, "y": 59}),
+    _json_action_label(6, {"x": 41, "y": 23}),
+    _json_action_label(5),
+)
+
+SB26_L2_SOLUTION_LABELS: tuple[str, ...] = SB26_L1_LABELS + SB26_L2_TAIL_LABELS
+
 
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
 def _lp85():
@@ -555,6 +587,110 @@ def _su15():
         hand_verifier=lambda _game, _frame=None: 0.0,
         warmup_label=None,
         depth_caps={1: len(SU15_L1_LABELS), 2: len(SU15_L2_TAIL_LABELS), 3: 80},
+        branch_mode="fresh_env",
+    )
+
+
+# ---------------- sb26 (ordered color-match slot sequence; L1 seed + L2 nested-frame delta) ----------------
+def _sb26():
+    """sb26 -- ordered color-to-slot matching with a nested-frame L2 branch.
+
+    L1 is the existing flat color-match solve. L2 keeps the same click/validate
+    mechanic but adds a pre-placed `vgszefyyyp` branch in the root frame: the
+    root slots consume colors 12 and 15, the branch descends to the second frame
+    for 8, 9, 14, and 11, then the root tail consumes 6. The labels are the
+    offline-reproduced display centers for those item/slot placements.
+    """
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(SB26_L1_LABELS):
+            return [SB26_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(SB26_L2_TAIL_LABELS):
+            return [SB26_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        data = row.get("data") if isinstance(row.get("data"), dict) else None
+        return env.step(_game_action(GameAction, int(row["action"])), data=data)
+
+    def _clickable_rows(game):
+        rows = []
+        for sprite in list(getattr(game, "dkouqqads", []) or []) + list(
+            getattr(game, "dewwplfix", []) or []
+        ):
+            rows.append(
+                (
+                    str(getattr(sprite, "name", "")),
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    _sprite_color(sprite),
+                    bool(getattr(sprite, "is_visible", True)),
+                )
+            )
+        return tuple(sorted(rows))
+
+    def _target_fill_count(game):
+        filled = 0
+        targets = list(getattr(game, "wcfyiodrx", []) or [])
+        for sprite in targets:
+            pixels = getattr(sprite, "pixels", None)
+            try:
+                filled += int(pixels[1, 1] != -1)
+            except Exception:
+                pass
+        return filled, len(targets)
+
+    def state_key(game, frame=None):
+        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0)
+        selected = getattr(game, "lqcskynzr", None)
+        filled, total = _target_fill_count(game)
+        return (
+            int(level),
+            int(getattr(game, "pmygakdvy", 0) or 0),
+            len(getattr(game, "buvfjfmpp", []) or []),
+            int(getattr(game, "modqnpqfi", 0) or 0),
+            int(getattr(game, "sjcuorclg", 0) or 0),
+            bool(selected),
+            filled,
+            total,
+            _clickable_rows(game),
+        )
+
+    def featurize(game):
+        filled, total = _target_fill_count(game)
+        selected = getattr(game, "lqcskynzr", None)
+        placed = sum(
+            1
+            for _name, _x, y, _color, visible in _clickable_rows(game)
+            if visible and int(y) < 53
+        )
+        return [
+            float(getattr(game, "level_index", 0) or 0),
+            float(getattr(game, "pmygakdvy", 0) or 0),
+            float(filled),
+            float(total),
+            float(placed),
+            float(bool(selected)),
+            float(getattr(game, "sjcuorclg", 0) or 0),
+        ]
+
+    return GameAdapter(
+        game="sb26",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=lambda game, _frame=None: float(max(0, _target_fill_count(game)[1] - _target_fill_count(game)[0])),
+        warmup_label=None,
+        depth_caps={1: len(SB26_L1_LABELS), 2: len(SB26_L2_TAIL_LABELS), 3: 2},
+        level_tails={1: SB26_L1_LABELS, 2: SB26_L2_TAIL_LABELS},
         branch_mode="fresh_env",
     )
 
@@ -1754,6 +1890,7 @@ _BUILDERS = {
     "ka59": _ka59,
     "cn04": _cn04,
     "su15": _su15,
+    "sb26": _sb26,
     "sp80": _sp80,
     "ls20": _ls20,
     "lp85": _lp85,

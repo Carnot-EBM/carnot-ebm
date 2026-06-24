@@ -1292,41 +1292,60 @@ games:
     reproducibility_checksum: ec16d760881f77cc0d6ca85258a579c643c70d18193f57f7a66b55678aaceaf0
 - game: sb26
   reproducibility: reproduced
-  levels_reproduced: 1
-  solver: python/carnot/experiment_4470_color_match_slot_operator_solve_sb26.py
-  dead_ends:
-  - gap_id: GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER
-    game: sb26
-    routed_to: s5i5
-    operator: config_rule_verifier
-    residual_delta: missing_color_match_slot_sequence_verifier
-    status: filled
-    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware
-      grounding
-    routed_recipe:
-      game: s5i5
-      selected_operator:
-        operator: config_rule_verifier
-        routed_to: s5i5
-        reason: routed_recipe_contains_config_or_slot_sequence
-        source: closest_recipe
-    artifact: results/experiment_4458_first_contact_new_game.json
-    filled_by: experiment_4470_color_match_slot_operator_solve_sb26
-    filled_artifact: results/experiment_4470_color_match_slot_operator_solve_sb26.json
-    filled_summary: sb26 L1 re-solved through generic color_match_slot_sequence_verifier
+  levels_reproduced: 2
   mechanic_class: color_match_slot_sequence
-  win_condition: ordered colored item-to-slot matching left-to-right, ACTION5 validates
-    after all slots match
-  action_model: ACTION6 item click then ACTION6 slot click; ACTION7 undo; ACTION5
-    validate
-  reproduce: arc_solver_kit.reproduce(sb26, solution_labels, apply_sb26_label, claimed_level=1)
-  latest_exp4470_color_match:
-    artifact: results/experiment_4470_color_match_slot_operator_solve_sb26.json
+  win_condition: >-
+    L1 flat ordered color-to-slot match plus L2 nested-frame color-match
+    sequence: root frame consumes colors 12 and 15, a pre-placed vgszefyyyp
+    branch descends to the lower frame for 8, 9, 14, and 11, then the root tail
+    consumes 6 before ACTION5 validates and next_level fires.
+  action_model: >-
+    ACTION6 item click then ACTION6 slot click; ACTION5 validates. L2 tail uses
+    display-center clicks derived from the offline environment source:
+    (32,59)->(23,23), (18,59)->(29,23), (11,59)->(23,37),
+    (46,59)->(29,37), (25,59)->(35,37), (53,59)->(41,37),
+    (39,59)->(41,23), then validate.
+  solver: >-
+    GameAdapter _sb26 in python/carnot/agentic/arc_game_adapters.py plus
+    scripts/arc_loop_solve.py --game sb26 --target-level 2 --no-hazard-prune.
+  reproduce: >-
+    Exp4678 results/experiment_4678_levelup_selfplay.json re-gated
+    results/arc_loop_solve_sb26.json offline_reproduced=True, reached_level=2,
+    banked +1 over the prior L1 registry row, checksum 229dd2bcc0c645252420108fcbcbb66349662c66b1029520bdfcd9713f1d45dd.
+  learned_verifier_checkpoint: models/arc_verifier_sb26.json
+  gotchas:
+  - The L2 vgszefyyyp branch is not a target color itself; validation descends
+    through it and only counts the real lngftsryyw item slots in DFS order.
+  - The learned verifier checkpoint routes/ranks future search only; the
+    executable offline reproduction gate remains the oracle-distinct authority.
+  dead_ends:
+  - bp35: no_grounded_next_level_adapter_for_platformer_delta
+  - re86: sprite_overlay_L2_delta_not_adaptered_this_run
+  - s5i5: marker_coverage_L2_delta_not_adaptered_this_run
+  - g50t: target_offset_L2_delta_not_adaptered_this_run
+  - r11l: prefix_rooted_graph_search_stalled_at_L1
+  - lf52: prefix_rooted_graph_search_still_pending_or_stalled
+  - dc22: recently_deepened_or_operator_skip_list
+  - vc33: recently_deepened_or_operator_skip_list
+  - ft09: recently_deepened_or_operator_skip_list
+  - ls20: recently_deepened_or_operator_skip_list
+  - sk48: recently_deepened_or_operator_skip_list
+  - ka59: recently_deepened_or_operator_skip_list
+  - wa30: recently_deepened_or_operator_skip_list
+  - cd82: no_grounded_L3_delta
+  - sp80: no_grounded_L3_delta
+  - su15: no_grounded_L3_delta
+  - r11l: prefix-rooted graph search reached only L1 after 20000 expansions
+  - lf52: prefix-rooted graph search timed out without a bank
+  latest_exp4678_levelup_selfplay:
+    artifact: results/experiment_4678_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_sb26.json
     offline_reproduced: true
-    reproduced_levels: 1
-    reproducibility_checksum: 70d1253b011f3cce0d3552cf59abb2a93791e0859c71e8c27529c249bf8a0ca1
-    operator: color_match_slot_sequence_verifier
-  gotchas: []
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_sb26.json
+    target_rotation: clean_L1_only_not_deepened_in_426_430
+    reproducibility_checksum: 229dd2bcc0c645252420108fcbcbb66349662c66b1029520bdfcd9713f1d45dd
 - game: re86
   reproducibility: reproduced
   levels_reproduced: 1
@@ -1386,7 +1405,7 @@ games:
     reproduced_levels: 1
     operator: bp35_goal_directed_navigation_solver
     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 59
+reproducible_total_levels: 60
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

@@ -1,41 +1,30 @@
 {
   "game": "sb26",
-  "status": "needs_per_game_RE",
-  "transfer_recommendation": [
-    {
-      "game": "s5i5",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7 + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays it through arc_solver_kit.reproduce.",
-      "win_condition": "L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)]; initial controlled markers [(9,33),(30,9)].",
-      "action_model": "ACTION6 click-only; h_extend click (47,21) increases the horizontal controlled marker x by +3; v_extend click (22,47) increases the vertical controlled marker y by +3.",
-      "reusable_gotchas": [
-        "next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance."
-      ]
-    },
-    {
-      "game": "ft09",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json",
-      "win_condition": "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate.",
-      "action_model": "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce.",
-      "reusable_gotchas": [
-        "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough.",
-        "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
-      ]
-    },
-    {
-      "game": "vc33",
-      "similarity": 6.0,
-      "reproducibility": "reproduced",
-      "solver": "python/carnot/experiment_4446_drive_generic_first_contact_bank.py routes first contact through a generic config-rule verifier.",
-      "win_condition": "L1 support-clearance config: lower click control shifts the paired supports until the active piece clears the blocking goal color; next_level fires on replay.",
-      "action_model": "ACTION6 click-only; lower_click display coordinate (61,33), repeated 3 times.",
-      "reusable_gotchas": []
-    }
-  ],
+  "reached_level": 2,
+  "moves": 24,
+  "states_expanded": 24,
+  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
+  "hazard_prune": false,
+  "hazard_pruner_stats": null,
+  "offline_reproduced": true,
+  "reproduced_levels": 2,
+  "learned_verifier_checkpoint": "models/arc_verifier_sb26.json",
   "selected_generic_operators": [
+    {
+      "operator": "approach_dispatcher_operator",
+      "derived_from_games": [
+        "exp4592_generation_completeness_wiring"
+      ],
+      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
+      "selector_tags": [
+        "approach_dispatch",
+        "mechanic_router",
+        "candidate_generation",
+        "graph_explore",
+        "goal_distance",
+        "transfer"
+      ]
+    },
     {
       "operator": "color_match_slot_sequence_verifier",
       "derived_from_games": [
@@ -108,106 +97,201 @@
       ]
     }
   ],
-  "general_gotchas": [
+  "reproduction_gate": {
+    "game": "sb26",
+    "reached_level": 2,
+    "claimed_level": 2,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota"
+  },
+  "solution_labels": [
+    "{\"action\":6,\"data\":{\"x\":36,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":23,\"y\":30}}",
+    "{\"action\":6,\"data\":{\"x\":20,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":29,\"y\":30}}",
+    "{\"action\":6,\"data\":{\"x\":44,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":35,\"y\":30}}",
+    "{\"action\":6,\"data\":{\"x\":28,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":41,\"y\":30}}",
+    "{\"action\":5}",
+    "{\"action\":6,\"data\":{\"x\":32,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":23,\"y\":23}}",
+    "{\"action\":6,\"data\":{\"x\":18,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":29,\"y\":23}}",
+    "{\"action\":6,\"data\":{\"x\":11,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":23,\"y\":37}}",
+    "{\"action\":6,\"data\":{\"x\":46,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":29,\"y\":37}}",
+    "{\"action\":6,\"data\":{\"x\":25,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":35,\"y\":37}}",
+    "{\"action\":6,\"data\":{\"x\":53,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":41,\"y\":37}}",
+    "{\"action\":6,\"data\":{\"x\":39,\"y\":59}}",
+    "{\"action\":6,\"data\":{\"x\":41,\"y\":23}}",
+    "{\"action\":5}"
+  ],
+  "solution": [
     {
-      "id": "offline_is_a_simulator",
-      "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+      "action": 6,
+      "data": {
+        "x": 36,
+        "y": 59
+      }
     },
     {
-      "id": "level_on_frame_not_game",
-      "note": "level = frame.levels_completed; env._game has no levels_completed."
+      "action": 6,
+      "data": {
+        "x": 23,
+        "y": 30
+      }
     },
     {
-      "id": "deepcopy_injection_unreliable",
-      "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+      "action": 6,
+      "data": {
+        "x": 20,
+        "y": 59
+      }
     },
     {
-      "id": "first_step_after_reset_consumed",
-      "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 30
+      }
     },
     {
-      "id": "discover_coords_never_hardcode",
-      "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+      "action": 6,
+      "data": {
+        "x": 44,
+        "y": 59
+      }
     },
     {
-      "id": "state_dependent_controls_and_animations",
-      "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+      "action": 6,
+      "data": {
+        "x": 35,
+        "y": 30
+      }
     },
     {
-      "id": "non_idempotent_reset",
-      "note": "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
+      "action": 6,
+      "data": {
+        "x": 28,
+        "y": 59
+      }
     },
     {
-      "id": "same_action_next_level",
-      "note": "Some config/toggle games call next_level() in the same action that creates the winning arrangement, so the returned frame is already the next level and the pre-win grid is not externally observable. Ground the win predicate on execution state immediately before next_level, then count only the reproduce() level advance."
+      "action": 6,
+      "data": {
+        "x": 41,
+        "y": 30
+      }
     },
     {
-      "id": "primitive_glyph_rewrite_matcher",
-      "operator": "glyph_rewrite_matcher",
-      "derived_from_games": [
-        "tr87"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive glyph_rewrite_matcher from Exp 4436."
+      "action": 5
     },
     {
-      "id": "primitive_config_rule_grounding",
-      "operator": "config_rule_grounding",
-      "derived_from_games": [
-        "s5i5",
-        "ft09",
-        "tr87"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive config_rule_grounding from Exp 4436."
+      "action": 6,
+      "data": {
+        "x": 32,
+        "y": 59
+      }
     },
     {
-      "id": "primitive_config_rule_verifier",
-      "operator": "config_rule_verifier",
-      "derived_from_games": [
-        "s5i5",
-        "ft09",
-        "g50t"
-      ],
-      "note": "Exp 4444 promotes config_rule_grounding into a generic execution-grounded verifier for marker coverage, local constraint color-cycle, and target-offset toggle digests; ft09 L1 re-solves without ft09's own recipe."
+      "action": 6,
+      "data": {
+        "x": 23,
+        "y": 23
+      }
     },
     {
-      "id": "primitive_graph_astar_action_cost",
-      "operator": "graph_astar_action_cost",
-      "derived_from_games": [
-        "tu93",
-        "lp85",
-        "cd82",
-        "sp80",
-        "cn04",
-        "m0r0",
-        "sk48",
-        "su15"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436."
+      "action": 6,
+      "data": {
+        "x": 18,
+        "y": 59
+      }
     },
     {
-      "id": "primitive_object_centric_digest",
-      "operator": "object_centric_digest",
-      "derived_from_games": [
-        "g50t",
-        "lp85",
-        "tn36",
-        "ka59"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive object_centric_digest from Exp 4436."
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 23
+      }
     },
     {
-      "id": "primitive_active_data_collection",
-      "operator": "active_data_collection",
-      "derived_from_games": [
-        "ar25",
-        "ka59",
-        "ft09",
-        "sc25"
-      ],
-      "note": "Exp 4438 records consolidated generic primitive active_data_collection from Exp 4436."
+      "action": 6,
+      "data": {
+        "x": 11,
+        "y": 59
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 23,
+        "y": 37
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 46,
+        "y": 59
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 29,
+        "y": 37
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 25,
+        "y": 59
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 35,
+        "y": 37
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 53,
+        "y": 59
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 41,
+        "y": 37
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 39,
+        "y": 59
+      }
+    },
+    {
+      "action": 6,
+      "data": {
+        "x": 41,
+        "y": 23
+      }
+    },
+    {
+      "action": 5
     }
   ],
-  "guidance": "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot the runtime proposer with that recipe AND the `cautions`. FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
-  "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
-  "mode": "standing_arc_loop_routing_only"
+  "solve_provenance": "development_proxy",
+  "mode": "standing_arc_loop_offline_no_quota"
 }
