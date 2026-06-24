@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.432",
+  "generated_at": "2026-06-24T20:53:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector reported total_wall_time_minutes=0 / experiments_completed=0 / compute_bound_experiments_count=0 for 2026.06.432, but this is a recurring FALSE-ZERO from the timing-detector wiring gap (documented across .363-.425 in docs/research-log.md), not a genuinely empty milestone -- the commit/disk record shows .432 ran a full directed-exploration phase set through its capstone. Because no per-experiment timing was exposed to this retro, no execution-efficiency surface can be measured this turn. Both RTX 3090s reading 0% is consistent with no GPU work being attributed; gpu_idle_on_compute_bound_tasks stays null because no compute-bound task surfaced in the (empty) timing data.",
+  "bottlenecks_identified": [
+    "Observability, not compute, is the bottleneck this milestone: the milestone-scoped timing detector again false-reported 0 commits since activation (total_wall_time_minutes=0, experiments_completed=0), a recurring wiring gap documented .363-.425. The detector reaches the standalone module but not the conductor's retro prompt-assembly consumer that feeds this TIMING DATA block, so the retro is blind to per-experiment wall-time and cannot rank slowest experiments.",
+    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because no compute-bound (GGUF/CUDA/requires_gpu) task surfaced in the empty timing data. 0% utilization on both 3090s is the correct reading when no GPU work is attributed -- it is not a bug this milestone."
+  ],
+  "improvements_suggested": [
+    "Fix the recurring false-zero: wire the milestone-scoped timing detector into the conductor's retro prompt-assembly consumer (the path that populates the TIMING DATA block), not just the standalone module. Until then every operational retro since .363 is computed against an empty timing set and cannot measure efficiency.",
+    "Add a disk-mtime fallback in the retro harness: when the detector returns zero, source the exp_range and per-experiment window from results/experiment_*.json mtimes (the disk-mtime method already used in prior research-log entries) so the retro degrades gracefully instead of reporting a false '0 commits'.",
+    "Do NOT enable DualGPURunner this milestone: no compute-bound or multi-model-parallel task surfaced, so single/dual-GPU scheduling is not the lever."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the timing-detector wiring so it feeds the conductor's retro TIMING DATA block -- the single highest-leverage fix, because it restores efficiency measurement for every future operational retro (the gap has now persisted .363-.432, ~70 milestones).",
+    "Add a disk-mtime fallback in the retro harness so a detector false-zero degrades to a verifiable artifact-mtime window rather than a misleading '0 commits since activation'.",
+    "Leave GPU configuration unchanged; reserve DualGPURunner for milestones that actually load 2+ models in parallel -- this milestone surfaced no GPU work to optimize."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A retro that receives '0 commits' for a milestone that demonstrably ran a full directed-exploration phase set is itself the finding: the operational-efficiency signal has been blind since .363 because the timing detector never reaches the retro's prompt-assembly consumer. Per the anti-hallucination guard the locked fields remain 0/null and this artifact cites no per-experiment durations or experiment IDs; the durable fix is to repair the detector wiring (and add a disk-mtime fallback) so future retros measure real efficiency rather than re-document a false zero."
+}
