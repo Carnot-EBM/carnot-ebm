@@ -9177,3 +9177,4 @@ c |
 | 2026-06-24 11:33 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 112 passed, 1 warning in 15.09s |
 | 2026-06-24 12:15 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 107 passed, 1 warning in 9.54s |
 | 2026-06-24 12:42 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 111 passed, 1 warning in 6.02s |
+| 2026-06-24 12:54 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAG | OK | 88 passed, 1 warning in 8.41s |
