@@ -1,13 +1,13 @@
 {
   "game": "tu93",
-  "reached_level": 3,
-  "moves": 47,
-  "states_expanded": 2947,
-  "verifier_src": "hand_verifier_cold_start",
+  "reached_level": 4,
+  "moves": 64,
+  "states_expanded": 4346,
+  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
   "hazard_prune": false,
   "hazard_pruner_stats": null,
   "offline_reproduced": true,
-  "reproduced_levels": 3,
+  "reproduced_levels": 4,
   "learned_verifier_checkpoint": null,
   "selected_generic_operators": [
     {
@@ -22,6 +22,40 @@
         "candidate_generation",
         "graph_explore",
         "goal_distance",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "value_head_bridge_fix_operator",
+      "derived_from_games": [
+        "exp4616_offline_live_bridge_disambiguation",
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
+      "selector_tags": [
+        "value_head",
+        "bridge_fix",
+        "decision_point",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "cheap_value_routing_cost_fix_operator",
+      "derived_from_games": [
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
+      "selector_tags": [
+        "value_head",
+        "cheap_feature",
+        "value_routing",
+        "cost_fix",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
         "transfer"
       ]
     },
@@ -93,18 +127,53 @@
       ]
     },
     {
+      "operator": "world_model_trust_energy_gate_operator",
+      "derived_from_games": [
+        "exp4604_world_model_trust_energy"
+      ],
+      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
+      "selector_tags": [
+        "world_model",
+        "trust_energy",
+        "hidden_state",
+        "candidate_ranking",
+        "verifier",
+        "transfer"
+      ]
+    },
+    {
       "operator": "persistent_action_effect_memory_operator",
       "derived_from_games": [
-        "exp4568_clickability_action_effect_predictor"
+        "exp4568_clickability_action_effect_predictor",
+        "exp4629_graduate_action_effect_predictor_live"
       ],
-      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
       "selector_tags": [
         "action_effect",
         "clickability",
+        "frame_change",
+        "live_action_pruner",
+        "persistent_aem_plus_optional_cnn",
         "candidate_ranking",
         "graph_explore",
         "click",
         "keyboard",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "graded_goal_energy_search_heuristic_operator",
+      "derived_from_games": [
+        "exp4020_goal_induction_separation",
+        "exp4640_goal_energy_generation_live"
+      ],
+      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
+      "selector_tags": [
+        "goal_energy",
+        "graded_goal_satisfaction",
+        "search_heuristic",
+        "graph_explore",
+        "candidate_ranking",
         "transfer"
       ]
     },
@@ -164,8 +233,8 @@
   ],
   "reproduction_gate": {
     "game": "tu93",
-    "reached_level": 3,
-    "claimed_level": 3,
+    "reached_level": 4,
+    "claimed_level": 4,
     "reproduced": true,
     "mode": "offline_reproduction_gate_no_quota"
   },
@@ -216,7 +285,24 @@
     "{\"action\": 2}",
     "{\"action\": 4}",
     "{\"action\": 2}",
-    "{\"action\": 4}"
+    "{\"action\": 4}",
+    "{\"action\": 4}",
+    "{\"action\": 3}",
+    "{\"action\": 4}",
+    "{\"action\": 4}",
+    "{\"action\": 4}",
+    "{\"action\": 1}",
+    "{\"action\": 1}",
+    "{\"action\": 4}",
+    "{\"action\": 2}",
+    "{\"action\": 1}",
+    "{\"action\": 3}",
+    "{\"action\": 1}",
+    "{\"action\": 3}",
+    "{\"action\": 1}",
+    "{\"action\": 3}",
+    "{\"action\": 2}",
+    "{\"action\": 3}"
   ],
   "solution": [
     {
@@ -359,6 +445,57 @@
     },
     {
       "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 3
     }
   ],
   "solve_provenance": "development_proxy",
