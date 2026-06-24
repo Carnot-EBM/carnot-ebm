@@ -32,6 +32,7 @@ import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
+from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
     load_live_action_effect_scorer,
@@ -89,6 +90,8 @@ SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_MODE = "persistent_aem_plus_optional_cnn
 SUBMITTED_GOAL_ENERGY_ENABLED = True
 SUBMITTED_GOAL_ENERGY_ALPHA = 0.9
 SUBMITTED_GOAL_ENERGY_BETA = 0.1
+SUBMITTED_QD_GENERATION_ENABLED = False
+SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -263,6 +266,7 @@ class StepwiseExplorer:
         goal_bias: Any | None = None,
         goal_bias_label: str = "",
         goal_bias_lower_is_better: bool = True,
+        qd_generator: Any | bool | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -376,6 +380,14 @@ class StepwiseExplorer:
         self.goal_bias_lower_is_better = bool(goal_bias_lower_is_better and goal_bias is not None)
         self._goal_bias_scored = 0
         self._goal_bias_errors = 0
+        self.qd_generator = coerce_qd_generator(
+            qd_generator,
+            action_effect_scorer=self.frame_change_scorer,
+            goal_energy=self.goal_bias,
+        )
+        self._qd_sequences_injected = 0
+        self._qd_actions_injected = 0
+        self._qd_generation_errors = 0
 
     @staticmethod
     def _normalize_frontier_batch_size(value: int | str | None) -> int | None:
@@ -559,6 +571,18 @@ class StepwiseExplorer:
         if self.dense_curiosity is None:
             return {"enabled": False}
         return self.dense_curiosity.diagnostics()
+
+    def qd_generation_diagnostics(self) -> dict[str, Any]:
+        diagnostics = {
+            "enabled": self.qd_generator is not None,
+            "sequences_injected": int(self._qd_sequences_injected),
+            "actions_injected": int(self._qd_actions_injected),
+            "generation_errors": int(self._qd_generation_errors),
+            "verifier_is_oracle": False,
+        }
+        if self.qd_generator is not None and hasattr(self.qd_generator, "diagnostics"):
+            diagnostics["generator"] = self.qd_generator.diagnostics()
+        return diagnostics
 
     def _curiosity_score(self, node_hash: str) -> float:
         if self.dense_curiosity is None:
@@ -803,6 +827,7 @@ class StepwiseExplorer:
                             if self.goal_bias is not None
                             or self.dense_curiosity is not None
                             or self.action_effect_expansion_prior is not None
+                            or self.qd_generator is not None
                             else frame_for_value
                         ),
                         "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
@@ -829,6 +854,7 @@ class StepwiseExplorer:
                         if self.goal_bias is not None
                         or self.dense_curiosity is not None
                         or self.action_effect_expansion_prior is not None
+                        or self.qd_generator is not None
                         else frame_for_value
                     ),
                     "previous_frame": None,
@@ -1079,6 +1105,56 @@ class StepwiseExplorer:
             return lst.pop(self._div_rng.randrange(min(len(lst), self._div_topk)))
         return lst.pop(0)
 
+    def _qd_sequence_for_node(self, node: Mapping[str, Any]) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4653: generate one additive multi-action sequence for a frontier node."""
+
+        if self.qd_generator is None or node.get("qd_sequence_injected"):
+            return []
+        frame = node.get("frame")
+        candidates = list(node.get("untested") or [])
+        if frame is None or not candidates:
+            return []
+        try:
+            sequence = self.qd_generator.best_sequence(
+                frame,
+                candidates,
+                goal_energy=self.goal_bias,
+                action_effect_scorer=self.frame_change_scorer,
+                min_len=2,
+            )
+        except Exception:
+            self._qd_generation_errors += 1
+            return []
+        rows = [
+            {"action": int(step["action"]), "data": step.get("data")}
+            for step in sequence
+            if step.get("action") is not None
+        ]
+        if len(rows) < 2:
+            return []
+        if isinstance(node, dict):
+            node["qd_sequence_injected"] = True
+        self._qd_sequences_injected += 1
+        self._qd_actions_injected += len(rows)
+        return rows
+
+    def _begin_qd_sequence(self, sequence: Sequence[Mapping[str, Any]]) -> tuple:
+        first = sequence[0]
+        rest = sequence[1:]
+        self.pending = [
+            {"kind": int(step["action"]), "data": step.get("data"), "probe": True}
+            for step in rest
+        ]
+        self.awaiting = {
+            "origin": self.cur,
+            "action": int(first["action"]),
+            "data": first.get("data"),
+            "grid": self._grid_for_hash(self.cur),
+            "level_before": int(self.best_level),
+            "previous_frame": self.graph.get(self.cur, {}).get("frame"),
+        }
+        return (int(first["action"]), first.get("data"))
+
     def next_move(self, frames, latest) -> tuple:
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
             return ("RESET", None)
@@ -1104,6 +1180,9 @@ class StepwiseExplorer:
             and cur_node["untested"]
             and len(cur_node["path"]) < self.max_depth
         ):
+            qd_sequence = self._qd_sequence_for_node(cur_node)
+            if qd_sequence:
+                return self._begin_qd_sequence(qd_sequence)
             a = self._pop_untested(cur_node)
             self.awaiting = {
                 "origin": self.cur,
@@ -1124,6 +1203,9 @@ class StepwiseExplorer:
         if (
             th == self.cur and not over
         ):  # best frontier IS the current state -> expand in place (no nav)
+            qd_sequence = self._qd_sequence_for_node(node)
+            if qd_sequence:
+                return self._begin_qd_sequence(qd_sequence)
             a = self._pop_untested(node)
             self.awaiting = {
                 "origin": self.cur,
@@ -1406,6 +1488,7 @@ class E3AgentPolicy:
         dense_curiosity_weight: float = 0.15,
         dense_curiosity_discount: float = 0.5,
         goal_bias: Any = _DEFAULT_GOAL_BIAS,
+        qd_generator: Any | bool | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
@@ -1464,6 +1547,7 @@ class E3AgentPolicy:
             goal_bias=goal_bias,
             goal_bias_label=GOAL_ENERGY_SOURCE if goal_bias is not None else "",
             goal_bias_lower_is_better=True,
+            qd_generator=qd_generator,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -1919,6 +2003,8 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_source": GOAL_ENERGY_SOURCE,
     "goal_energy_alpha": SUBMITTED_GOAL_ENERGY_ALPHA,
     "goal_energy_beta": SUBMITTED_GOAL_ENERGY_BETA,
+    "qd_generation_enabled": SUBMITTED_QD_GENERATION_ENABLED,
+    "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

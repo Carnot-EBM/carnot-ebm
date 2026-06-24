@@ -1149,6 +1149,79 @@ current goal-energy / action-effect stack, cite real arXiv IDs including
 `.429` roadmap candidates, record all network and citation preconditions
 checked, and record that `/deep-research` was not used.
 
+### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
+
+Experiment 4653 SHALL implement the `.429` energy-as-fitness
+quality-diversity generator as a live-path-reachable module under
+`python/carnot/agentic`, imported by `arc_graph_explore` and reachable from
+`E3AgentPolicy`. The generator SHALL maintain a MAP-Elites-style archive over
+multi-action sequences, seed it from already available live search candidates or
+frontier fragments, evolve sequences with insert/delete/swap/splice mutation and
+shared-state crossover, and score elites with a CPU-only oracle-distinct fitness
+made from goal-energy delta, action-effect cell-recall/effect evidence, and
+first-win action efficiency. The behavior descriptor SHALL be derived from
+visible action-effect predictions so the archive keeps diverse niches rather
+than collapsing to one near-miss.
+
+The live integration SHALL inject generated multi-action sequences into the
+SCORED `E3AgentPolicy` / `StepwiseExplorer` search pool additively: primitive
+actions remain available, correctness is not regressed when QD is disabled, and
+QD induction cost is charged to the QD arm. The implementation SHALL include a
+matched search-only control and a random-mutation / no-energy-fitness QD
+ablation. It SHALL NOT modify `scripts/research_conductor.py`, SHALL NOT plan
+over retired composite macro vocabularies, SHALL keep
+`verifier_is_oracle=false`, and SHALL pass `scripts/arc_orphan_solver_lint.py`.
+
+Experiment 4653 SHALL write
+`results/experiment_4653_energy_fitness_qd_generation_live.json`. The artifact
+SHALL measure energy-fitness QD against search-only and random-mutation controls
+on cell-recall-reachable hard-game evidence, report `winner_generated`,
+`winner_generated_count`, live solve-rate, depth-of-live-solve,
+actions-to-win, first-win deltas, and paired bootstrap CI. Any newly generated
+winner SHALL count only when offline reproduced by `arc_solver_kit.reproduce` or
+an equivalent no-quota replay gate. If QD produces no new winner, the artifact
+SHALL report the honest P0.1-shadow null and the residual Missing-Verifier /
+bridge gap.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: energy_fitness_qd_winner_generated_<n> OR complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the QD scorer (goal-energy + action-effect CNN forward-pass) is CPU, declared so a fast pass is not DURATION_TOO_SHORT false-flagged; no live_llm_inference."
+- `verifier_is_oracle`: principle "MUST be false -- goal-energy + action-effect predict the win from VISIBLE state, oracle-DISTINCT from running the executable win-check."
+- `solve_provenance`: principle "live_agent_self_discovery -- the QD generator improves the SCORED live agent's OWN candidate generation (arc_graph_explore/E3AgentPolicy); NOT a parallel solver, NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the QD module is imported by arc_graph_explore AND reachable from E3AgentPolicy; arc_orphan_solver_lint passes (NOT orphaned)."
+- `winner_generated`: principle "the HEADLINE primary gate (structural, n-independent) -- the QD-generated winning sequence appears in the pool where best-first did NOT reach it at equal budget; offline-reproduced."
+- `winner_generated_count`: principle "the integer count of new winners the QD generator put in the pool that the search-only baseline missed (>=1 is the win)."
+- `live_solve_rate_qd`: principle "LIVE multi-level solve-rate WITH the energy-fitness QD generator on the SCORED agent."
+- `live_solve_rate_search_baseline`: principle "the matched search-only baseline solve-rate on the SAME games (the no-regression control)."
+- `solve_rate_delta`: principle "qd - search_baseline (positive = QD generation crossed the bridge), emitted explicitly so a null (0) is annotated."
+- `random_mutation_ablation_passed`: principle "the ENERGY-SPECIFIC control -- the energy-fitness QD win must beat a random-mutation/no-energy-fitness QD (else it is the search/branching, not the energy fitness, doing the work)."
+- `qd_lift_ci`: principle "bootstrap CI on winner_generated / solve-rate vs the random-mutation ablation; a claim requires the CI to exclude it."
+- `first_win_rate_delta`: principle "qd - search_baseline first-win-rate; emitted explicitly so a regression is caught (generation must not cost first-wins)."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the games are pre-confirmed cell_recall-reachable (headroom exists); a no-winner null is valid only then."
+- `false_negative_risk_checked`: principle "true with the search-only baseline + random-mutation ablation + reachable-headroom confirmed -- a 'no winner' null is valid only then."
+- `p01_shadow_note`: principle "records the operator's honest caveat -- #2 lives under the P0.1 de-novo-generation shadow; the bet is population-seeding + diversity escapes it. States whether the bet paid off."
+- `null_delta_methodology_note`: principle "present when a delta==0 / winner_generated false -- states the equality is an honest no-value null, not a bug."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (QD generator on, archive/mutation params) -- the A6 input; 'unchanged' if null."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `offline_reproduced`: principle "any QD-generated winner must offline-reproduce (arc_solver_kit.reproduce) to count."
+- `residual_bridge_gaps`: principle "the Missing-Verifier / bridge gap logged if QD nulls -- the next-attack record."
+- `random_seed`: principle "determinism precondition for reproducibility (QD mutation RNG seeded)."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, E3AgentPolicy + explorer + goal-induction + action-effect importable, exp4020 asset present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4653
+
+**Given** the offline arcade, E3 live-path imports, Exp4020 goal-energy asset,
+and action-effect scorer imports are available
+**When** Experiment 4653 runs energy-fitness QD, search-only, and random-mutation
+controls on matched cell-recall-reachable hard-game evidence
+**Then** the QD module is live-path reachable, primitive candidates remain
+available, the artifact reports winner-generation, live solve-rate, depth,
+actions-to-win, first-win deltas, random-mutation ablation status, bootstrap CI,
+offline reproduction status for any generated winner, and an honest null note
+when no new winner is generated.
+
 ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
 
 The solver kit SHALL persist the live LLM-proposer re-induction loop from
