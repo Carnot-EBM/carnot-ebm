@@ -4672,3 +4672,43 @@ it directly amortizes rare successful first-contact behavior across games. Keep
 the Go-Explore archive as the structural companion because it already exists in
 `arc_go_explore.py` and provides replayable return points for deeper probing.
 <!-- EXP4697-AMORTIZED-EXPLORATION-SOTA-END -->
+
+<!-- EXP4709-STRUCTURED-WORLD-MODEL-SOTA-START -->
+## 2026-06-25 Exp 4709 - .434 structured-world-model SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `docs/research-notes/structured-world-model-active-probing-sota-ingestion-2026-06-25.md`.
+
+**Filtered track:** fallback beyond `.433` A1/A2. A1 closed with
+`object_centric_perception_no_new_level_residual_offpath_calibration_insufficient` and A2 closed with `amortized_prior_go_explore_no_coverage_gain_residual_logged`. The next wall is the
+`structured-world-model / active-probing next wall`: the explorer needs an induced object-relational transition model
+that it can plan in, plus targeted probes that confirm or refute mechanic
+hypotheses.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py --help` exited cleanly. `scripts/sweep_clusters.py`
+emitted the ARC neural-guided-search, action-effect, and world-model cluster
+URLs. `scripts/sweep_semscholar.py` returned object-centric and
+active-hypothesis-testing arXiv IDs. Low-concurrency WebSearch/WebFetch plus
+direct arXiv HTTP checks verified arXiv:2410.08822, arXiv:2511.02225,
+arXiv:2601.06604, arXiv:2511.06136, arXiv:2307.02427, arXiv:2210.13455,
+arXiv:2506.01876, and arXiv:2309.08477. `/deep-research` was not invoked.
+
+**Methods marked ingested:** factored object-relational executable transition
+model, object-model MCTS with epistemic probe planning, hypothesis-driven
+active probe loop, and object-world-model drift guardrails.
+
+flagged_for_v434: factored_object_relational_executable_world_model
+(arXiv:2511.02225 + arXiv:2410.08822 + arXiv:2307.02427)
+
+flagged_for_v434: object_model_mcts_with_epistemic_probe_planning
+(arXiv:2601.06604 + arXiv:2210.13455)
+
+flagged_for_v434: hypothesis_driven_active_probe_loop
+(arXiv:2506.01876 + arXiv:2309.08477)
+
+**Bottom line for .434:** build the factored object-relational executable
+world model first, then use object-model MCTS and active probes to decide which
+uncertain mechanics deserve live actions. Keep the drift guardrail as the
+failure detector so object-centric perception does not create a false sense of
+control.
+<!-- EXP4709-STRUCTURED-WORLD-MODEL-SOTA-END -->
