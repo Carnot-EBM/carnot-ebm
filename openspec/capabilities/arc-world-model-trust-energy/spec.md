@@ -6991,6 +6991,74 @@ sets `positive_control_passed` from parity plus no-regression, sets
 `verifier_is_oracle=false`, and writes a stable
 `results/experiment_4742_integration_gate.json` checksum.
 
+### REQ-ARC-WMTE-4746: Epistemic-MCTS / Causal-Probe / MATM SOTA Ingestion For .437
+
+Experiment 4746 SHALL map the `.437` ARC frontier after `.436` valid-tested
+the guidance-class generation levers instead of building the `.435`-flagged
+epistemic-MCTS and causal-probe tracks. The workflow SHALL read
+`results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json`,
+`research-references.md`,
+`docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`,
+`python/carnot/agentic/arc_competition_agent.py`, and
+`python/carnot/agentic/arc_executable_world_model.py` before scoping methods.
+It SHALL map the epistemic object-model MCTS probe planner, the factored
+interaction / causal probe bank, the object-world-model breakage falsifier, and
+the within-game similarity-keyed partial-trajectory retrieval efficiency lever
+onto the current `E3AgentPolicy`, `StepwiseExplorer.adj`, and
+`arc_executable_world_model` stack. It SHALL explicitly bound MATM as an
+action-efficiency candidate, not a level-bank or cross-game retrieval claim.
+
+The workflow SHALL use the reliable low-concurrency channel: a network
+reachability check for `https://arxiv.org`, focused WebSearch/WebFetch over the
+top five to eight papers, and direct arXiv URL verification. It SHALL NOT
+invoke `/deep-research`. If arXiv is unreachable, the workflow SHALL report
+`blocked_network` rather than fabricate citations or method claims.
+
+Experiment 4746 SHALL write
+`docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md`
+and
+`results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json`. The
+artifact SHALL include `honest_verdict`, `inference_substrate`,
+`methods_mapped`, `citations`, `flagged_for_next_roadmap`, `note_path`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, and `field_principles`. The success verdict SHALL be
+`success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped`, the
+substrate SHALL be `aggregation_from_upstream_artifacts`, and
+`verifier_is_oracle` SHALL be false. Each mapped method SHALL cite real arXiv
+IDs/URLs and SHALL include `maps_to_current_stack`,
+`implement_cost_over_current_stack`, and `fails_when`. No solve claim, training
+claim, model-load claim, cross-game MATM claim, or leaderboard claim is valid
+in this literature-ingestion artifact.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor).`
+- `methods_mapped`: principle `the 3-5 strongest methods, each with maps_to_current_stack + implement_cost_over_current_stack + fails_when -- the actionable ingestion (discover -> ingest -> plan).`
+- `citations`: principle `real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline.`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged_for_v437 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments.`
+- `note_path`: principle `docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md -- the human-readable per-track synthesis.`
+- `verifier_is_oracle`: principle `false -- a literature synthesis invokes no oracle.`
+- `random_seed`: principle `determinism precondition (the search/synthesis seed).`
+- `reproducibility_checksum`: principle `content-addressed hash of the ingested source set.`
+- `preconditions_checked`: principle `records the network-reachability check; pre-empts missing-resource fabrication.`
+
+### SCENARIO-ARC-WMTE-4746: Next Frontier Maps To V437 Candidates
+
+Given arXiv is reachable and the `.435` epistemic-MCTS / causal-probe
+ingestion plus the `.436` research-reference pre-sweep are readable
+When experiment 4746 ingests focused papers for epistemic MCTS,
+object-centric MCTS, causal object-centric MCTS, factored interactive
+world-models, causality-aware object-world-model control, object-world-model
+policy breakage, and MATM-style similarity-keyed trajectory retrieval
+Then the note and JSON artifact map three to five methods onto
+`E3AgentPolicy`, `StepwiseExplorer.adj`, and `arc_executable_world_model`, cite
+real arXiv IDs including `2210.13455`, `2511.02225`, `2511.06136`,
+`2511.14262`, `2601.06604`, `2606.14418`, and `2606.19911`, flag one or more
+`flagged_for_v437` candidates, record that `/deep-research` was not invoked,
+record `verifier_is_oracle=false`, emit no ARC solve claim, and identify MATM
+as a within-game action-efficiency candidate rather than a level-bank.
+
 ### REQ-ARC-WMTE-4739: Rotated ARC Level-Up Self-Play Attempt
 
 Experiment 4739 SHALL use the standing ARC loop to attempt one rotated public

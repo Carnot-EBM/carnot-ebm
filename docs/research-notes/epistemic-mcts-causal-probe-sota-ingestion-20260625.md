@@ -286,3 +286,318 @@ flagged_for_v436: factored_interaction_causal_probe_bank
 from arXiv:2511.06136. The honest bound is explicit: object-centric world
 models can look visually stable and still break policy learning under off-path
 multi-object interactions, so this ingestion makes no solve claim.
+
+---
+
+# Exp 4746 .437 refresh
+
+## Exp 4746 artifact
+
+```json
+{
+  "citations": {
+    "2210.13455": {
+      "http_status": 200,
+      "title": "Epistemic Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2210.13455"
+    },
+    "2511.02225": {
+      "http_status": 200,
+      "title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2511.02225"
+    },
+    "2511.06136": {
+      "http_status": 200,
+      "title": "When Object-Centric World Models Meet Policy Learning: From Pixels to Policies, and Where It Breaks",
+      "url": "https://arxiv.org/abs/2511.06136"
+    },
+    "2511.14262": {
+      "http_status": 200,
+      "title": "Object-Centric World Models for Causality-Aware Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2511.14262"
+    },
+    "2601.06604": {
+      "http_status": 200,
+      "title": "Object-Centric World Models Meet Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2601.06604"
+    },
+    "2606.14418": {
+      "http_status": 200,
+      "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2606.14418"
+    },
+    "2606.19911": {
+      "http_status": 200,
+      "title": "Multi-Agent Transactive Memory",
+      "url": "https://arxiv.org/abs/2606.19911"
+    }
+  },
+  "field_principles": {
+    "citations": {
+      "principle": "real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline."
+    },
+    "flagged_for_next_roadmap": {
+      "principle": "the strongest method(s) flagged_for_v437 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor)."
+    },
+    "methods_mapped": {
+      "principle": "the 3-5 strongest methods, each with maps_to_current_stack + implement_cost_over_current_stack + fails_when -- the actionable ingestion (discover -> ingest -> plan)."
+    },
+    "note_path": {
+      "principle": "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md -- the human-readable per-track synthesis."
+    },
+    "preconditions_checked": {
+      "principle": "records the network-reachability check; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition (the search/synthesis seed)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash of the ingested source set."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- a literature synthesis invokes no oracle."
+    }
+  },
+  "flagged_for_next_roadmap": [
+    "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
+    "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
+    "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)"
+  ],
+  "honest_verdict": "success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "epistemic uncertainty is miscalibrated, object state keys alias hidden registers, or rollout error compounds before live probes can correct the model.",
+      "implement_cost_over_current_stack": "medium-high: add MCTS node statistics, rollout budgets, epistemic uncertainty propagation across candidate engines, and a live-probe handoff compatible with the existing active-probe observer.",
+      "maps_to_current_stack": "E3AgentPolicy replaces the single arc_executable_world_model BFS plan with uncertainty-aware MCTS rollouts over candidate engines and ProductWorldModel factors, returning either a solve action or an information-gain probe.",
+      "method": "Epistemic object-model MCTS probe planner",
+      "roadmap_candidate": "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
+      "source_ids": [
+        "2210.13455",
+        "2601.06604",
+        "2606.14418"
+      ],
+      "track": "epistemic_object_model_mcts_probe_planner"
+    },
+    {
+      "fails_when": "ARC objects are not separable at logical-grid resolution, action targets cannot be grounded from click or keyboard data, or causal attention prioritizes visually salient but goal-irrelevant slots.",
+      "implement_cost_over_current_stack": "medium-high: derive stable logical object slots from current frames, attach action-target metadata to candidates, and expose causal attention scores as planner priors rather than a learned submitted-policy head.",
+      "maps_to_current_stack": "E3AgentPolicy binds ARC candidate actions to object-like logical-grid slots before arc_executable_world_model rollouts, so MCTS can test which object interaction a click or movement action is expected to change.",
+      "method": "Causal object-centric MCTS action-slot adapter",
+      "roadmap_candidate": "support_for_v437: causal_object_mcts_action_slot_adapter (arXiv:2606.14418)",
+      "source_ids": [
+        "2606.14418"
+      ],
+      "track": "causal_object_mcts_action_slot_adapter"
+    },
+    {
+      "fails_when": "object slots drift, hidden registers alias relation labels, short prefixes make spurious interactions look causal, or the probe budget is too small for the needed intervention.",
+      "implement_cost_over_current_stack": "high: add a factor schema, confirm/refute probe ledger, causal relation scoring, and planner composition only over trusted factors.",
+      "maps_to_current_stack": "E3AgentPolicy proposes object-interaction hypotheses; arc_executable_world_model promotes ProgrammaticExpert rows into typed precondition/effect factors with confirmed/refuted causal ledgers before ProductWorldModel planning composes them.",
+      "method": "Factored interaction and causal probe bank",
+      "roadmap_candidate": "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
+      "source_ids": [
+        "2511.02225",
+        "2511.14262",
+        "2511.06136"
+      ],
+      "track": "factored_interaction_causal_probe_bank"
+    },
+    {
+      "fails_when": "within-game similarity descriptors collide across incompatible mechanics, stale prefixes waste actions, or the verifier cannot reject a plausible but harmful retrieved continuation.",
+      "implement_cost_over_current_stack": "low-medium: add a flag-gated descriptor index beside adj, candidate prefix retrieval, verifier/value scoring, and diagnostics for forward_walk_hit_rate and actions_to_first_levelup deltas.",
+      "maps_to_current_stack": "E3AgentPolicy keeps the existing StepwiseExplorer.adj exact-edge graph but adds a coarse within-game similarity descriptor so near-match frontier states can reuse partial paths; arc_executable_world_model and value/goal routing score retrieved prefixes before commit.",
+      "method": "Similarity-keyed partial-trajectory retrieval",
+      "roadmap_candidate": "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)",
+      "source_ids": [
+        "2606.19911"
+      ],
+      "track": "similarity_keyed_partial_trajectory_retrieval"
+    },
+    {
+      "fails_when": "the drift metric is too conservative and rejects useful factors, or too permissive and lets unstable object rollouts pass into execution.",
+      "implement_cost_over_current_stack": "low-medium: add off-path drift diagnostics, rejected-factor reasons, and plan invalidation when object-model predictions stay visually plausible but causally wrong.",
+      "maps_to_current_stack": "E3AgentPolicy invalidates arc_executable_world_model plans when off-path object factors or causal relations drift under multi-object interactions, then routes the failure into probe/factor ledgers instead of executing a brittle plan.",
+      "method": "Object-world-model drift and policy-breakage falsifier",
+      "roadmap_candidate": "guardrail_for_v437: object_world_model_policy_breakage_falsifier (arXiv:2511.06136)",
+      "source_ids": [
+        "2511.06136"
+      ],
+      "track": "object_world_model_drift_policy_breakage_falsifier"
+    }
+  ],
+  "note_path": "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_competition_agent_read": true,
+    "arc_executable_world_model_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/2210.13455",
+      "https://arxiv.org/abs/2511.02225",
+      "https://arxiv.org/abs/2511.06136",
+      "https://arxiv.org/abs/2511.14262",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2606.14418",
+      "https://arxiv.org/abs/2606.19911"
+    ],
+    "arxiv_reachable": true,
+    "claude_md_read": true,
+    "codex_md_read": true,
+    "cross_game_matm_claim_made": false,
+    "deep_research_invoked": false,
+    "exp4734_artifact_read": true,
+    "leaderboard_submission": false,
+    "level_bank_claim_made": false,
+    "live_llm_inference": false,
+    "matm_bounded_to_within_game_efficiency": true,
+    "matm_note_read": true,
+    "model_load": false,
+    "ops_docs_modified": false,
+    "research_conductor_modified": false,
+    "research_references_read": true,
+    "solve_claim_made": false,
+    "top_source_count": 7,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/2210.13455",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2606.14418",
+      "https://arxiv.org/abs/2511.02225",
+      "https://arxiv.org/abs/2511.14262",
+      "https://arxiv.org/abs/2511.06136",
+      "https://arxiv.org/abs/2606.19911"
+    ],
+    "websearch_webfetch_used": true
+  },
+  "random_seed": 4746,
+  "reproducibility_checksum": "sha256:601d710668c85e033ef8a7680e106308d7a22c71cba5d8d2c8a42704cb243a32",
+  "verifier_is_oracle": false
+}
+```
+
+## Exp 4746 fresh-pass provenance
+
+Read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
+`results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json`,
+`research-references.md`,
+`docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`,
+`python/carnot/agentic/arc_competition_agent.py`, and
+`python/carnot/agentic/arc_executable_world_model.py`.
+
+Fresh-pass source set, all checked through arXiv:
+- arXiv:2210.13455, Epistemic Monte Carlo Tree Search.
+- arXiv:2601.06604, Object-Centric World Models Meet Monte Carlo Tree Search.
+- arXiv:2606.14418, Causal Object-Centric Models for Planning with Monte Carlo Tree Search.
+- arXiv:2511.02225, Learning Interactive World Model for Object-Centric Reinforcement Learning.
+- arXiv:2511.14262, Object-Centric World Models for Causality-Aware Reinforcement Learning.
+- arXiv:2511.06136, When Object-Centric World Models Meet Policy Learning.
+- arXiv:2606.19911, Multi-Agent Transactive Memory.
+
+No `/deep-research`, no live LLM inference, no model load, no training, no
+leaderboard submission, and no solve claim. `scripts/research_conductor.py`,
+`ops/changelog.md`, and `ops/status.md` were not edited by this workflow.
+
+## SOTA -> .437 epistemic-MCTS / causal-probe / MATM mapping
+
+## Epistemic object-model MCTS probe planner
+
+**Sources:** arXiv:2210.13455, arXiv:2601.06604, arXiv:2606.14418.
+
+**Mapping:** `E3AgentPolicy` should replace the current single
+`arc_executable_world_model.plan_in_model` BFS choice with an uncertainty-aware
+MCTS planner over candidate engines and object factors. The planner returns
+either a solve action or an information-gain probe.
+
+**Cost:** medium-high. Add MCTS state keys, uncertainty propagation, rollout
+budgets, and a probe-vs-act handoff to the existing active-probe observer.
+
+**Fails when:** uncertainty is uncalibrated, hidden registers alias object
+state, or rollout error compounds before probes can correct the model.
+
+## Causal object-centric MCTS action-slot adapter
+
+**Source:** arXiv:2606.14418.
+
+**Mapping:** bind candidate ARC actions to logical-grid object slots before
+`arc_executable_world_model` rollouts so MCTS can reason about which object a
+click, drag, or movement action is expected to change.
+
+**Cost:** medium-high. Build stable slot descriptors and expose causal attention
+as a planner prior without adding a learned submitted-policy head.
+
+**Fails when:** object slots drift or causal attention follows visually salient
+but goal-irrelevant entities.
+
+## Factored interaction and causal probe bank
+
+**Sources:** arXiv:2511.02225, arXiv:2511.14262; guardrail arXiv:2511.06136.
+
+**Mapping:** `E3AgentPolicy` already exposes factored planning hooks, and
+`arc_executable_world_model` already has `ProgrammaticExpert` and
+`ProductWorldModel`. The .437 bank promotes those rows into typed
+precondition/effect factors whose causal status is confirmed or refuted by
+targeted probes before composition.
+
+**Cost:** high. Add factor schemas, confirm/refute ledgers, causal relation
+scores, and planner composition only over trusted factors.
+
+**Fails when:** object slots drift, relation labels alias hidden registers, or
+the probe budget is too small for the intervention.
+
+## Similarity-keyed partial-trajectory retrieval
+
+**Source:** MATM, arXiv:2606.19911.
+
+**Mapping:** `E3AgentPolicy` keeps the exact-hash `StepwiseExplorer.adj`
+navigation graph, then adds a coarse within-game descriptor index so near-match
+states can retrieve partial prefixes. `arc_executable_world_model` and the
+existing value/goal routing score retrieved prefixes before live commitment.
+
+**Cost:** low-medium. Add a flag-gated descriptor index, candidate-prefix
+retrieval, verifier/value scoring, and diagnostics for
+`forward_walk_hit_rate_delta` and `actions_to_first_levelup_delta`.
+
+**Fails when:** within-game descriptors collide across incompatible mechanics,
+stale prefixes waste actions, or the verifier cannot reject a plausible but
+harmful continuation. This is a within-game action-efficiency candidate, not a level-bank.
+
+## Object-world-model drift and policy-breakage falsifier
+
+**Source:** arXiv:2511.06136.
+
+**Mapping:** `E3AgentPolicy` should invalidate `arc_executable_world_model`
+plans when object factors drift under off-path multi-object interactions, then
+route the failure back into the probe and factor ledgers.
+
+**Cost:** low-medium. Add held-out off-path drift diagnostics, rejected-factor
+reasons, and plan invalidation for visually plausible but causally wrong
+rollouts.
+
+**Fails when:** the drift metric rejects every useful factor or allows unstable
+object rollouts into execution.
+
+## Bottom line for the .437 roadmap
+
+The strongest `.437` build candidate is
+flagged_for_v437: epistemic_object_model_mcts_probe_planner
+(arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418). It is the direct
+upgrade from the .435 posterior splitter to a planner that chooses between
+acting and probing inside world-model rollouts.
+
+The second `.437` build candidate is
+flagged_for_v437: factored_interaction_causal_probe_bank
+(arXiv:2511.02225 + arXiv:2511.14262), guarded by the drift falsifier from
+arXiv:2511.06136.
+
+The efficiency-only candidate is
+flagged_for_v437: similarity_keyed_partial_trajectory_retrieval
+(MATM arXiv:2606.19911): within-game action-efficiency candidate, not a level-bank.
+It should be measured by forward-walk hit-rate and
+actions-to-first-level-up deltas, with no cross-game retrieval claim and no
+solve claim.
