@@ -860,7 +860,7 @@ _L2_CODEONLY_DIRECTIVE = (
     "2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write\n"
     "   step-by-step analysis, explanation, or commentary -- not even as comments.\n"
     "3. Your response MUST begin with the characters ```python and end with ```.\n"
-    "4. Induce SIMPLE, GENERAL rules and write the two functions directly. Skip all reasoning.\n\n"
+    "4. Induce SIMPLE, GENERAL rules and write the requested function(s) directly. Skip all reasoning.\n\n"
 )
 
 
@@ -1168,16 +1168,16 @@ class LocalGGUFProposer:
         # call ONLY (codeonly_eligible, set True solely by induce->_gen_to_file). refactor() also
         # routes through _gen_to_file with the same `required` tuple, but it is a REASONING task
         # (debug BEFORE/PREDICTED/OBSERVED mismatches) that must NOT be told to "skip all reasoning";
-        # keying on codeonly_eligible (not just `required`) keeps refactor and gap-fillers untouched.
+        # keying on codeonly_eligible (set True ONLY by the induce paths) keeps refactor and
+        # gap-fillers untouched. It is NOT keyed on `required` because the focused split-induce calls
+        # request just ("engine",) or ("is_level_complete",) yet still need the code-only path.
         # When on: prepend the code-only directive + an opened fence, and add a stop-sequence on the
         # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
         # operator directive): a strict improvement (emits valid code in ~10s where the unpatched
         # path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
         _codeonly = (
-            (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0")
-            and codeonly_eligible
-            and "is_level_complete" in required
-        )
+            os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0"
+        ) and codeonly_eligible
         _stop_seq = ["```"] if _codeonly else None
         if _codeonly:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
@@ -1248,6 +1248,47 @@ class LocalGGUFProposer:
             self._proc.terminate()
             self._proc = None
 
+    def _write_world_model(self, game: str, code: str, note: str = "") -> tuple[bool, str]:
+        (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+        (E3_DIR / game / "world_model.py").write_text(code)
+        msg = "local gguf (GPU server) wrote world_model.py"
+        return True, (f"{msg} ({note})" if note else msg)
+
+    def _goal_only_prompt(
+        self, game: str, previous_level_complete_grid: Optional[np.ndarray]
+    ) -> str:
+        """A FOCUSED is_level_complete-only prompt with the WIN STATE exemplar front-and-centre, so
+        the model spends its whole budget on the win condition (not the engine)."""
+        win = ""
+        if previous_level_complete_grid is not None:
+            win = (
+                "The level is COMPLETE at this WIN STATE grid (is_level_complete must return True "
+                "here, and False elsewhere):\n"
+                + to_ascii(np.asarray(previous_level_complete_grid))
+                + "\n"
+            )
+        return (
+            f"You are inducing ONLY the win condition for the ARC-AGI-3 game '{game}'.\n"
+            + win
+            + "Write ONLY `def is_level_complete(grid):` returning True iff `grid` is a level-complete "
+            "/ win state, else False. numpy + stdlib only; pure and deterministic. Prefer a SIMPLE "
+            "GENERAL rule over an exact full-grid match.\n\n"
+            "Return ONLY one ```python code block defining is_level_complete.\n```python\n"
+        )
+
+    def _combine_world_model(self, engine_code: str, goal_code: str) -> str:
+        """Concatenate a focused engine block and a focused is_level_complete block into one world
+        model. Both pieces already parse individually (generate validates each); duplicate imports
+        are valid Python, but we verify the concatenation parses and fall back to a raw join."""
+        import ast
+
+        combined = "import numpy as np\n\n" + engine_code.strip() + "\n\n" + goal_code.strip() + "\n"
+        try:
+            ast.parse(combined)
+            return combined
+        except SyntaxError:
+            return engine_code.strip() + "\n\n" + goal_code.strip() + "\n"
+
     def induce(
         self,
         game: str,
@@ -1256,18 +1297,42 @@ class LocalGGUFProposer:
         *,
         previous_level_complete_grid: Optional[np.ndarray] = None,
     ) -> tuple[bool, str]:
-        return self._gen_to_file(
-            game,
-            induce_prompt(
-                game,
-                trans,
-                cell,
-                previous_level_complete_grid=previous_level_complete_grid,
-            )
-            + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
-            # induce is the only code-only-eligible path: it is the win-state-exemplar prompt whose
-            # CoT caused the truncation. refactor (below) must keep its reasoning.
+        base = induce_prompt(
+            game, trans, cell, previous_level_complete_grid=previous_level_complete_grid
+        )
+        # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
+        # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
+        ok, code = self.generate(
+            base + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
+            ("engine", "is_level_complete"),
+            tries=self.tries,
             codeonly_eligible=True,
+        )
+        if ok:
+            return self._write_world_model(game, code)
+        # FALLBACK (proto_l2_fix_finder, 2026-06-25): on complex real L2 prompts the combined call
+        # commonly fails because the model rambles its analysis INTO engine() comments, exhausts the
+        # token budget, and never writes is_level_complete. Induce each function in its OWN focused
+        # call so the engine ramble cannot starve the goal -- the focused goal call is valid in ~3.5s
+        # where the combined call fails (a budget bump does NOT help; the model just rambles more).
+        ok_e, eng = self.generate(
+            base + "\n\nReturn ONLY one ```python code block defining engine(grid, action, data).\n```python\n",
+            ("engine",),
+            tries=self.tries,
+            codeonly_eligible=True,
+        )
+        if not ok_e:
+            return False, f"split induce: engine failed: {str(eng)[:150]}"
+        ok_g, goal = self.generate(
+            self._goal_only_prompt(game, previous_level_complete_grid),
+            ("is_level_complete",),
+            tries=self.tries,
+            codeonly_eligible=True,
+        )
+        if not ok_g:
+            return False, f"split induce: goal failed: {str(goal)[:150]}"
+        return self._write_world_model(
+            game, self._combine_world_model(eng, goal), note="split induce: engine + focused goal"
         )
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
