@@ -5214,6 +5214,64 @@ target games
 coverage delta, live first-win and solve-rate deltas, bootstrap CI, and an
 honest null note when the winning plan does not newly appear.
 
+### REQ-ARC-WMTE-4749: Structured ProductWorldModel Engine Replacement
+
+Experiment 4749 SHALL add a live-path-reachable `structured_load_engine(game)`
+adapter for level-up re-induction that induces trusted programmatic object
+experts with `induce_programmatic_object_experts`, composes them into a
+`ProductWorldModel`, and returns the product model's `engine(grid, action,
+data) -> ndarray` dynamics surface with the existing `is_level_complete`
+provider or structural goal. The adapter SHALL be gated by
+`CARNOT_ARC_STRUCTURED_ENGINE=1` and otherwise preserve the existing
+`e3.load_engine` free-form path. The structured path SHALL reject or report a
+dead identity engine before any accuracy claim unless at least one real-frame
+candidate action changes more than zero cells.
+
+Experiment 4749 SHALL measure held-out transition accuracy for the structured
+engine and the free-form engine on the same real game transitions, then write
+`results/experiment_4749_structured_engine_vs_freeform.json`. A success claim
+SHALL require either a wide structured-vs-freeform accuracy win or a reproduced
+new L2 bank; an honest no-improvement or blocked-resource outcome SHALL remain
+terminal and non-fabricated.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix complete:/success:/passed:/shipped:; a wide structured-vs-freeform accuracy win OR an L2 bank is success_, an honest no-improvement null is complete_."
+- `inference_substrate`: principle "live_llm_inference (the experts are induced via the live proposer + scored on real transitions); 60s duration floor."
+- `preconditions_checked`: principle "records the GGUF/arcade/import checks so a silent-missing-resource run cannot fabricate an accuracy number."
+- `structured_engine_non_degenerate`: principle "the structured engine must CHANGE >0 cells on >=1 action before any accuracy claim -- guards the dead-engine (identity) failure the .428-.433 audit found."
+- `freeform_heldout_accuracy`: principle "the baseline 0.12 the structured engine must beat -- the explicit comparator, not a moving goalpost."
+- `structured_heldout_accuracy`: principle "the structured engine's held-out transition accuracy -- the load-bearing measurement (target >=0.5)."
+- `l2_proposer_failed`: principle "did the L2 reinduction still proposer_fail with the structured engine -- the direct test of whether the engine wall is cleared."
+- `offline_reproduced`: principle "true only if a NEW level is independently re-derived by arc_solver_kit.reproduce -- the only real level-up signal."
+- `solve_provenance`: principle "live_agent_self_discovery if the live agent advanced via its own attempts; development_proxy for the offline twin -- never over-credit."
+- `verifier_is_oracle`: principle "false -- the held-out accuracy is execution-grounded against observed transitions, not a learned-verifier moat claim."
+
+#### SCENARIO-ARC-WMTE-4749-STRUCTURED-ENGINE-ADAPTER
+
+**Given** real transition records and a programmatic-expert proposer
+**When** `structured_load_engine` is built for a game
+**Then** it composes trusted experts into `ProductWorldModel.engine`, returns a
+load-engine-shaped `(engine, goal)` pair, and records that the engine changes at
+least one real frame on at least one action before reporting held-out accuracy.
+
+#### SCENARIO-ARC-WMTE-4749-LIVE-WIRING
+
+**Given** a level-up re-induction episode in the live `E3AgentPolicy` path
+**When** `CARNOT_ARC_STRUCTURED_ENGINE=1`
+**Then** the call to `execute_bounded_llm_reinduction` uses the structured
+load-engine adapter instead of `e3.load_engine` while the default environment
+continues to use the free-form loader.
+
+#### SCENARIO-ARC-WMTE-4749-ACCURACY-ARTIFACT
+
+**Given** structured and free-form engines evaluated on the same held-out
+transitions
+**When** Experiment 4749 writes its artifact
+**Then** it reports both accuracies, non-degeneracy, L2 proposer failure status,
+offline reproduction status, live-path reachability, required field principles,
+and a terminal honest verdict without treating the verifier as an oracle.
+
 ### REQ-ARC-WMTE-4680: Persist Milestone Generation Primitive And Transfer Null
 
 Experiment 4680 SHALL persist the strongest reusable `.432` A1/A2 generation

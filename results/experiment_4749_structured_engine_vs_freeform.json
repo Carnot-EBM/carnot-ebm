@@ -1,0 +1,149 @@
+{
+  "accuracy_delta": 0.5,
+  "chosen_submitted_config": "unchanged",
+  "duration_s": 90.258642,
+  "experiment": "experiment_4749_structured_engine_vs_freeform",
+  "experiment_id": 4749,
+  "expert_trust_weights": [
+    {
+      "heldout_correct": 0,
+      "heldout_total": 4,
+      "kept": false,
+      "name": "red_to_blue",
+      "object_class": "red",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 4,
+      "kept": false,
+      "name": "blue_to_red",
+      "object_class": "blue",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 4,
+      "kept": false,
+      "name": "green_to_yellow",
+      "object_class": "green",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 4,
+      "kept": false,
+      "name": "yellow_to_green",
+      "object_class": "yellow",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 0,
+      "kept": false,
+      "name": "black_to_white",
+      "object_class": "black",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 4,
+      "kept": false,
+      "name": "white_to_black",
+      "object_class": "white",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 0,
+      "kept": false,
+      "name": "gray_to_magenta",
+      "object_class": "gray",
+      "trust": 0.0
+    },
+    {
+      "heldout_correct": 0,
+      "heldout_total": 4,
+      "kept": false,
+      "name": "magenta_to_gray",
+      "object_class": "magenta",
+      "trust": 0.0
+    }
+  ],
+  "field_principles": {
+    "freeform_heldout_accuracy": {
+      "principle": "the baseline 0.12 the structured engine must beat -- the explicit comparator, not a moving goalpost."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix complete:/success:/passed:/shipped:; a wide structured-vs-freeform accuracy win OR an L2 bank is success_, an honest no-improvement null is complete_."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (the experts are induced via the live proposer + scored on real transitions); 60s duration floor."
+    },
+    "l2_proposer_failed": {
+      "principle": "did the L2 reinduction still proposer_fail with the structured engine -- the direct test of whether the engine wall is cleared."
+    },
+    "offline_reproduced": {
+      "principle": "true only if a NEW level is independently re-derived by arc_solver_kit.reproduce -- the only real level-up signal."
+    },
+    "preconditions_checked": {
+      "principle": "records the GGUF/arcade/import checks so a silent-missing-resource run cannot fabricate an accuracy number."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery if the live agent advanced via its own attempts; development_proxy for the offline twin -- never over-credit."
+    },
+    "structured_engine_non_degenerate": {
+      "principle": "the structured engine must CHANGE >0 cells on >=1 action before any accuracy claim -- guards the dead-engine (identity) failure the .428-.433 audit found."
+    },
+    "structured_heldout_accuracy": {
+      "principle": "the structured engine's held-out transition accuracy -- the load-bearing measurement (target >=0.5)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the held-out accuracy is execution-grounded against observed transitions, not a learned-verifier moat claim."
+    }
+  },
+  "freeform_heldout_accuracy": 0.0,
+  "honest_verdict": "complete_structured_engine_no_improvement_null",
+  "inference_substrate": "live_llm_inference",
+  "l2_proposer_failed": true,
+  "l2_reinduction": {
+    "skipped": "structured_accuracy_not_wide_win"
+  },
+  "live_path_reachable": true,
+  "null_methodology_note": "The structured ProductWorldModel engine did not clear the wide held-out accuracy or L2 reproduction gate in this bounded run; this is an honest null, not a missing-resource substitute.",
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (39 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "ok": true,
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen3_5_9b_mtp_gguf_paths": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    ],
+    "spec_has_req_4749": true,
+    "structured_symbols_importable": true
+  },
+  "random_seed": 4749,
+  "reproducibility_checksum": "sha256:ade98a7717adc4b70f5c2d0f7e543e1792e7d26f55438215dc8b405fe6f11294",
+  "schema": "carnot.arc.structured_engine_vs_freeform_4749.v1",
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4749",
+    "SCENARIO-ARC-WMTE-4749-STRUCTURED-ENGINE-ADAPTER",
+    "SCENARIO-ARC-WMTE-4749-LIVE-WIRING",
+    "SCENARIO-ARC-WMTE-4749-ACCURACY-ARTIFACT"
+  ],
+  "structured_engine_non_degenerate": false,
+  "structured_heldout_accuracy": 0.5,
+  "submitted_to_leaderboard": false,
+  "target_game": "lp85",
+  "verifier_is_oracle": false
+}

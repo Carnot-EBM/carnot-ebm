@@ -2484,14 +2484,32 @@ class E3AgentPolicy:
                     structural_goal_provider = structural_alignment_goal_candidate
                 except Exception:
                     structural_goal_provider = None
+                reinduction_proposer = self._proposer()
+                reinduction_load_engine = e3.load_engine
+                attempt["structured_engine_enabled"] = False
+                if os.environ.get("CARNOT_ARC_STRUCTURED_ENGINE") == "1":
+                    from carnot.agentic import arc_structured_world_model as structured_wm
+
+                    reinduction_load_engine = structured_wm.make_structured_load_engine(
+                        game=self.short,
+                        transitions=active_transitions,
+                        proposer=reinduction_proposer,
+                        cell=self.cell,
+                        trust_threshold=self.factored_trust_threshold,
+                        fallback_goal_loader=e3.load_engine,
+                    )
+                    reinduction_proposer = structured_wm.StructuredEngineReinductionProposer(
+                        reinduction_proposer
+                    )
+                    attempt["structured_engine_enabled"] = True
                 outcome = execute_bounded_llm_reinduction(
                     game=self.short,
                     transitions=active_transitions,
                     cell=self.cell,
                     root_grid=self.root_grid,
-                    proposer=self._proposer(),
+                    proposer=reinduction_proposer,
                     candidate_provider=self._world_model_candidates,
-                    load_engine=e3.load_engine,
+                    load_engine=reinduction_load_engine,
                     plan_in_model=e3.plan_in_model,
                     max_rounds=MAX_REFINEMENT_ROUNDS,
                     min_heldout_accuracy=1.0,
