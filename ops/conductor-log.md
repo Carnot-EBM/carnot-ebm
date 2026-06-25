@@ -9281,3 +9281,4 @@ The contro |
 | 2026-06-25 19:09 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- VA | OK | 107 passed, 1 warning in 8.37s |
 | 2026-06-25 20:10 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY) -- VALID-TEST E | OK | 106 passed, 1 warning in 8.52s |
 | 2026-06-25 20:29 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 92 passed, 1 warning in 6.92s |
+| 2026-06-25 20:44 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 88 passed, 1 warning in 9.30s |
