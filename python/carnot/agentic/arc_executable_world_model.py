@@ -1145,6 +1145,8 @@ class LocalGGUFProposer:
         required: tuple = ("engine", "is_level_complete"),
         validate=None,
         tries: int = 3,
+        *,
+        codeonly_eligible: bool = False,
     ) -> tuple[bool, str]:
         """Generic GPU-server completion: returns (True, code) where `code` contains every
         `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
@@ -1162,15 +1164,20 @@ class LocalGGUFProposer:
                 f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
-        # L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the induce
-        # call (required contains is_level_complete) so gap-filler/refactor prompts are untouched.
+        # L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the INDUCE
+        # call ONLY (codeonly_eligible, set True solely by induce->_gen_to_file). refactor() also
+        # routes through _gen_to_file with the same `required` tuple, but it is a REASONING task
+        # (debug BEFORE/PREDICTED/OBSERVED mismatches) that must NOT be told to "skip all reasoning";
+        # keying on codeonly_eligible (not just `required`) keeps refactor and gap-fillers untouched.
         # When on: prepend the code-only directive + an opened fence, and add a stop-sequence on the
         # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
-        # operator directive): it is a strict improvement (emits valid code in ~13s where the
-        # unpatched path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
+        # operator directive): a strict improvement (emits valid code in ~10s where the unpatched
+        # path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
         _codeonly = (
-            os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0"
-        ) and "is_level_complete" in required
+            (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0")
+            and codeonly_eligible
+            and "is_level_complete" in required
+        )
         _stop_seq = ["```"] if _codeonly else None
         if _codeonly:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
@@ -1221,9 +1228,16 @@ class LocalGGUFProposer:
             return True, code
         return False, f"local model code unusable after {tries} tries ({last})"
 
-    def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
+    def _gen_to_file(
+        self, game: str, prompt: str, *, codeonly_eligible: bool = False
+    ) -> tuple[bool, str]:
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
-        ok, code = self.generate(prompt, ("engine", "is_level_complete"), tries=self.tries)
+        ok, code = self.generate(
+            prompt,
+            ("engine", "is_level_complete"),
+            tries=self.tries,
+            codeonly_eligible=codeonly_eligible,
+        )
         if ok:
             (E3_DIR / game / "world_model.py").write_text(code)
             return True, "local gguf (GPU server) wrote world_model.py"
@@ -1251,13 +1265,19 @@ class LocalGGUFProposer:
                 previous_level_complete_grid=previous_level_complete_grid,
             )
             + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
+            # induce is the only code-only-eligible path: it is the win-state-exemplar prompt whose
+            # CoT caused the truncation. refactor (below) must keep its reasoning.
+            codeonly_eligible=True,
         )
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
+        # NOT codeonly_eligible: refactor asks the model to reason about BEFORE/PREDICTED/OBSERVED
+        # mismatches; the code-only "skip all reasoning" directive would degrade exactly that.
         return self._gen_to_file(
             game,
             refactor_prompt(game, vr)
             + "\n\nReturn ONLY the corrected ```python file.\n```python\n",
+            codeonly_eligible=False,
         )
 
     def induce_programmatic_experts(

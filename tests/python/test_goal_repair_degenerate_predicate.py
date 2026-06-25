@@ -152,3 +152,47 @@ def test_control_no_exemplar_stays_degenerate() -> None:
     assert result.skipped == "degenerate_goal_predicate"
     assert result.refinement_rounds_used == 3
     assert all("goal_repaired" not in row for row in result.rounds)
+
+
+def _noop_engine(grid, _action, _data):
+    return np.asarray(grid)
+
+
+def test_repair_fires_on_refactor_round_not_just_round_one() -> None:
+    """The repair block runs every round; here round 1's engine cannot reach the fallback (repair
+    returns None -> degenerate -> continue), but round 2's refactored engine CAN -> repair fires on
+    the REFACTOR round. Guards the round-2+ path the round-1 integration test does not exercise."""
+    engines = iter(
+        [
+            (_noop_engine, _degenerate_goal),  # round 1: stuck -> fallback unreachable
+            (_set_corner_engine, _degenerate_goal),  # round 2 (refactor): reachable -> repair
+        ]
+    )
+    transitions = [
+        Transition(
+            grid=np.array([[0, 0]], dtype=np.int16),
+            action=1,
+            data=None,
+            next_grid=np.array([[1, 0]], dtype=np.int16),
+            level_before=1,
+            level_after=1,
+        )
+    ]
+    proposer = _Proposer()
+    result = execute_bounded_llm_reinduction(
+        game="fixture",
+        transitions=transitions,
+        cell=1,
+        root_grid=np.array([[0, 0]], dtype=np.int16),
+        proposer=proposer,
+        candidate_provider=lambda engine, goal: [("c", engine, goal)],
+        load_engine=lambda _game: next(engines),
+        plan_in_model=_plan_to_goal,
+        max_rounds=3,
+        previous_level_complete_grid=np.array([[1, 0]], dtype=np.int16),
+    )
+    assert result.planned is True
+    assert result.refinement_rounds_used == 2  # repaired on the 2nd (refactor) round
+    assert proposer.refactor_calls == 1
+    assert "goal_repaired" not in result.rounds[0]  # round 1 could not repair (unreachable)
+    assert result.rounds[1]["goal_repaired"] == "exemplar_nonzero_count_fallback"
