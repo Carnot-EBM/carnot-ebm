@@ -65,8 +65,47 @@ moat), and it demonstrably cuts actions where the verifier is right (vc33 27×).
 (hard-argmax) and the *verifier's bluntness* (cross-game marginal) — both addressable. A hedged pruner is
 the cheap next step that should convert this net-wash into a net win without losing solves.
 
+## UPDATE (2026-06-25) — the hedged pruner: NO deployable policy; the blocker is the VERIFIER, not the policy
+
+Tested the forward-path hypothesis (hedge the policy to stop hard-argmax over-committing): 3 hedge arms
+(ε-greedy 0.3, ε-greedy 0.5, weighted-sample T=0.5) over the same verifier + 9 games + 5 seeds + budget 2000.
+Artifact `results/proto_carnot_pruner_hedged.json`. All arms `pruner_exercised=True` (fire 0.76–0.83).
+
+| arm | median_eff (squared) | solves_preserved | regressed |
+|---|---|---|---|
+| hard_argmax | 0.68 | 4/9 | 5 |
+| eps_greedy_0.3 | **1.15** | **6/9** | 3 |
+| eps_greedy_0.5 | 1.42 | 5/9 | 4 |
+| weighted_sample | 1.32 | 6/9 | 3 |
+
+**Result: NO arm preserves every solve AND keeps median_eff>1.** The hedges *fixed the efficiency problem*
+(median_eff 1.15–1.42 > 1.0 — they genuinely cut net actions), **but every arm still regresses 3–4 games'
+solve rates.** The binding constraint is **solve loss, not efficiency**. m0r0 canary: more randomness recovers
+more m0r0 solves (argmax 0/5 → ε=0.5 3/5) but **no arm preserves vanilla's 4/5** — a hedge that injects enough
+randomness to undo the misdirection has, by definition, stopped being verifier-guided.
+
+**The sharpened conclusion: the blocker is the VERIFIER, not the policy.** The Carnot frame-change verifier is
+a **blunt cross-game MARGINAL** (PersistentAEM over all 25 games; it doesn't know which game it's playing) that
+is *genuinely wrong* about which edges lead to a level-up on m0r0/s5i5/sp80 — it actively steers exploration
+into dead regions. No edge-selection policy can be both verifier-guided and solve-safe when the verifier itself
+is wrong. (Adversarial sub-agent review: no fabrication; caveats — efficiency_ratio is the SQUARED action ratio
+= the ARC reward shape; per-game survivorship; N=5 < the N≥30 bar — recorded in the artifact. Ran twice, seeds
+4731+4732, identical conclusion.)
+
+**Revised forward path:**
+1. **A game-specific / online-adapted verifier as the pruner** — adapt the frame-change signal to *this* game
+   from its observed transitions during play (the StochasticGoose online-learning, but as a *pruner* on a
+   working explorer, not a sole driver). This is the one untested verifier variant that could be right
+   game-by-game where the cross-game marginal is wrong.
+2. **OR an abstaining verifier** — fall back to vanilla random on edges/states where the verifier's confidence
+   is low, so it can only *help* (never misdirect). A calibrated/abstaining pruner is strictly safe by
+   construction.
+3. **Deadline-relevant (independent of the pruner):** the clean graph-explore *mechanism* itself (vanilla
+   just-explore at budget 2000 = 0.36 vs our 0.08 on public games) is the deployable win NOW — adopt the
+   explorer mechanism; add the verifier-as-pruner only once it is online/game-specific or abstaining.
+
 ## Method note
 - `pruner_exercised` (Carnot scores varied AND changed the chosen edge on >0 steps) is the false-negative
-  guard — here 83% fire rate, so the null-on-some-games is real, not a dead verifier. Always check it.
+  guard — here 76–83% fire rate, so the null is real, not a dead verifier. Always check it.
 - Score with `ArcAction` OBJECTS, not dicts (the `getattr(candidate,"action_id")` dict-AttributeError bug
   fixed earlier this session would otherwise silently zero the CNN term).
