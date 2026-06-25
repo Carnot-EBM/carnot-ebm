@@ -1818,9 +1818,22 @@ class E3AgentPolicy:
         subgoal_budget: int = 3,
         factored_planner: bool = False,
         factored_trust_threshold: float = 0.75,
+        active_probe_controller: bool | None = None,
+        active_probe_budget: int = 2,
+        active_probe_concentration_threshold: float = 0.9,
     ) -> None:
+        import os
+
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
+        if active_probe_controller is None:
+            active_probe_controller = os.environ.get("CARNOT_ARC_ACTIVE_PROBE") == "1"
+        self.active_probe_controller_enabled = bool(active_probe_controller)
+        self.active_probe_budget = max(0, int(active_probe_budget))
+        self.active_probe_concentration_threshold = max(
+            0.0,
+            min(1.0, float(active_probe_concentration_threshold)),
+        )
         if value_head is _DEFAULT_VALUE_HEAD:
             value_head = load_cross_game_value_head()
         self.value_head = value_head
@@ -1908,6 +1921,15 @@ class E3AgentPolicy:
         self.induced = False
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
         self.world_model_trust_selection = None
+        self._active_probe_controller: Any = None
+        self._active_probe_pending: Any = None
+        self.active_probe_diagnostics: dict[str, Any] = {
+            "hypothesis_posterior_built": False,
+            "probe_actions_taken": 0,
+            "posterior_entropy_reduction": 0.0,
+            "trace": [],
+            "verifier_is_oracle": False,
+        }
         self._observed_level: Optional[int] = None
         self._start_level: Optional[int] = None
         self._current_goal_level: Optional[int] = None
@@ -2112,6 +2134,50 @@ class E3AgentPolicy:
         self.pi += 1
         return (step["action"], step.get("data"))
 
+    def _remember_active_probe_origin(self, move: tuple, latest: Any) -> None:
+        if self._active_probe_pending is None or latest is None:
+            return
+        kind, data = move
+        if kind in ("RESET", None):
+            return
+        try:
+            if int(kind) != int(self._active_probe_pending.action):
+                return
+            from carnot.agentic.arc_agi3_world_model import grid_of
+            from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
+
+            self.cell = detect_cell(grid_of(latest))
+            self._prev = (to_logical(grid_of(latest), self.cell), int(kind), data)
+        except Exception:
+            return
+
+    def _observe_active_probe_transition(self, transition: Any) -> None:
+        if self._active_probe_pending is None or self._active_probe_controller is None:
+            return
+        try:
+            update = self._active_probe_controller.observe_transition(
+                transition.grid,
+                self._active_probe_pending,
+                transition.next_grid,
+            )
+            self.active_probe_diagnostics = self._active_probe_controller.diagnostics()
+            self.active_probe_diagnostics["last_update"] = {
+                "posterior_entropy_before": round(float(update.posterior_entropy_before), 8),
+                "posterior_entropy_after": round(float(update.posterior_entropy_after), 8),
+                "posterior_entropy_reduction": round(
+                    float(update.posterior_entropy_reduction),
+                    8,
+                ),
+                "matched_hypotheses": list(update.matched_hypotheses),
+            }
+            self._pending_induction_reason = "active_probe_observed"
+            self.induced = False
+            self.phase = "induce"
+        except Exception as exc:
+            self.active_probe_diagnostics["last_update_error"] = repr(exc)[:160]
+        finally:
+            self._active_probe_pending = None
+
     def _proposer(self):
         if self.proposer is None:
             import os
@@ -2176,8 +2242,10 @@ class E3AgentPolicy:
 
             g0, aid, data = self._prev
             g1 = to_logical(grid_of(latest), self.cell)
-            self.transitions.append(Transition(g0, aid, data, g1, 0, _level_of(latest)))
+            transition = Transition(g0, aid, data, g1, 0, _level_of(latest))
+            self.transitions.append(transition)
             self._dsl_transitions.append((g0, _action_key(aid, data), g1))
+            self._observe_active_probe_transition(transition)
         boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))
         if boundary_events and latest is not None:
             try:
@@ -2229,11 +2297,15 @@ class E3AgentPolicy:
             self._prev = None
             if self.plan:
                 if self._execute_plan_from_current:
-                    return self._next_plan_move()
+                    mv = self._next_plan_move()
+                    self._remember_active_probe_origin(mv, latest)
+                    return mv
                 return ("RESET", None)
             return self.explorer.next_move(frames, latest)
         if self.phase == "execute" and self.pi < len(self.plan):
-            return self._next_plan_move()
+            mv = self._next_plan_move()
+            self._remember_active_probe_origin(mv, latest)
+            return mv
         # plan exhausted / no model -> keep exploring
         self.phase = "explore"
         return self.explorer.next_move(frames, latest)
@@ -2384,15 +2456,123 @@ class E3AgentPolicy:
                     self.plan = list(outcome.plan)
                 return
             self._fit_dsl_model()
+            if self.active_probe_controller_enabled and self.root_grid is not None:
+                try:
+                    from carnot.agentic.arc_active_probe import (
+                        ActiveProbeController,
+                        augment_with_transition_baselines,
+                        make_hypothesis_posterior,
+                        probe_actions_from_model_candidates,
+                    )
+
+                    candidate_pool = augment_with_transition_baselines([], active_transitions)
+                    if self._active_probe_controller is None:
+                        self._active_probe_controller = ActiveProbeController(
+                            make_hypothesis_posterior(candidate_pool),
+                            probe_budget=self.active_probe_budget,
+                            concentration_threshold=self.active_probe_concentration_threshold,
+                        )
+                    controller = self._active_probe_controller
+                    actions = probe_actions_from_model_candidates(e3._model_candidates(self.root_grid))
+                    chosen_probe = controller.choose_probe(self.root_grid, actions)
+                    attempt["active_probe_enabled"] = True
+                    attempt["active_probe_candidate_names"] = [
+                        str(candidate.name) for candidate in candidate_pool
+                    ]
+                    attempt["active_probe_diagnostics"] = controller.diagnostics()
+                    if chosen_probe is not None and chosen_probe.expected_information_gain > 0.0:
+                        self.plan = [chosen_probe.action.as_plan_step()]
+                        self.pi = 0
+                        self._active_probe_pending = chosen_probe.action
+                        self._execute_plan_from_current = True
+                        attempt["planned"] = True
+                        attempt["plan_length"] = 1
+                        attempt["engine_source"] = "active_probe_pre_llm_disambiguation"
+                        attempt["active_probe_action"] = chosen_probe.action.as_plan_step()
+                        attempt["active_probe_expected_information_gain"] = round(
+                            float(chosen_probe.expected_information_gain),
+                            8,
+                        )
+                        attempt["active_probe_energy_score"] = round(
+                            float(chosen_probe.energy_score),
+                            8,
+                        )
+                        attempt["active_probe_prediction_buckets"] = list(
+                            chosen_probe.prediction_buckets
+                        )
+                        self.active_probe_diagnostics = controller.diagnostics()
+                        return
+                    self.active_probe_diagnostics = controller.diagnostics()
+                except Exception as probe_exc:
+                    attempt["active_probe_error"] = repr(probe_exc)[:160]
             ok, _ = self._proposer().induce(self.short, active_transitions, self.cell)
             if not ok or self.root_grid is None:
                 attempt["skipped"] = "proposer_failed_or_missing_root"
                 return
             engine, is_done = e3.load_engine(self.short)
+            candidate_pool = self._world_model_candidates(engine, is_done)
+            if self.active_probe_controller_enabled:
+                try:
+                    from carnot.agentic.arc_active_probe import (
+                        ActiveProbeController,
+                        augment_with_transition_baselines,
+                        make_hypothesis_posterior,
+                        probe_actions_from_model_candidates,
+                    )
+
+                    candidate_pool = augment_with_transition_baselines(
+                        candidate_pool,
+                        active_transitions,
+                    )
+                    if self._active_probe_controller is None:
+                        self._active_probe_controller = ActiveProbeController(
+                            make_hypothesis_posterior(candidate_pool),
+                            probe_budget=self.active_probe_budget,
+                            concentration_threshold=self.active_probe_concentration_threshold,
+                        )
+                    controller = self._active_probe_controller
+                    actions = probe_actions_from_model_candidates(e3._model_candidates(self.root_grid))
+                    chosen_probe = controller.choose_probe(self.root_grid, actions)
+                    attempt["active_probe_enabled"] = True
+                    attempt["active_probe_candidate_names"] = [
+                        str(candidate.name) for candidate in candidate_pool
+                    ]
+                    attempt["active_probe_diagnostics"] = controller.diagnostics()
+                    if chosen_probe is not None and chosen_probe.expected_information_gain > 0.0:
+                        self.plan = [chosen_probe.action.as_plan_step()]
+                        self.pi = 0
+                        self._active_probe_pending = chosen_probe.action
+                        self._execute_plan_from_current = True
+                        attempt["planned"] = True
+                        attempt["plan_length"] = 1
+                        attempt["engine_source"] = "active_probe_disambiguation"
+                        attempt["active_probe_action"] = chosen_probe.action.as_plan_step()
+                        attempt["active_probe_expected_information_gain"] = round(
+                            float(chosen_probe.expected_information_gain),
+                            8,
+                        )
+                        attempt["active_probe_energy_score"] = round(
+                            float(chosen_probe.energy_score),
+                            8,
+                        )
+                        attempt["active_probe_prediction_buckets"] = list(
+                            chosen_probe.prediction_buckets
+                        )
+                        self.active_probe_diagnostics = controller.diagnostics()
+                        return
+                    best = controller.posterior.best_candidate()
+                    if best is not None:
+                        engine = best.engine
+                        is_done = best.is_level_complete or is_done
+                        attempt["active_probe_committed_hypothesis"] = str(best.name)
+                        attempt["active_probe_diagnostics"] = controller.diagnostics()
+                        self.active_probe_diagnostics = controller.diagnostics()
+                except Exception as probe_exc:
+                    attempt["active_probe_error"] = repr(probe_exc)[:160]
             if self.short in HIDDEN_STATE_GAME_IDS:
                 self.world_model_trust_selection = select_trusted_world_model(
                     active_transitions,
-                    self._world_model_candidates(engine, is_done),
+                    candidate_pool,
                     hidden_state=True,
                 )
                 trust_score = self.world_model_trust_selection.selected_score

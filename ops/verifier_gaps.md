@@ -2505,3 +2505,5 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - Evidence: no_surfacing_precision={'k': 8, 'hits': 0, 'total': 4, 'precision': 0.0}; surfacing_precision={'k': 8, 'hits': 0, 'total': 4, 'precision': 0.0}.
 - Needed verifier: a non-circular discriminator that separates the present winning slot from same-depth distractors before the live explorer exhausts budget.
 
+
+- EXP4727 active_probe_disambiguation bp35 budget_insufficient: active probing did not bank a new reproduced level. active_level=0, no_probe_level=0, probe_actions=0, posterior_entropy_reduction=0.000000. Needed verifier/probe gap: an oracle-distinct discriminator whose transition buckets separate the true mechanic at logical-grid resolution and still imply a level-completion policy.
