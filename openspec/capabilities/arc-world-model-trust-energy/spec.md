@@ -6501,6 +6501,69 @@ level delta, offline reproduction evidence for any new level, a deterministic
 checksum, and an honest null methodology note plus verifier gap when active
 probing cannot disambiguate.
 
+### REQ-ARC-WMTE-4734: Epistemic-MCTS / Causal-Probe SOTA Ingestion For .436
+
+Experiment 4734 SHALL map the next `.436` frontier after `.435` built the
+hypothesis-posterior active-probe controller. The workflow SHALL read
+`results/experiment_4722_sota_ingestion_active_probe_world_model.json`,
+`research-references.md`,
+`python/carnot/agentic/arc_competition_agent.py`, and
+`python/carnot/agentic/arc_executable_world_model.py` before scoping methods.
+It SHALL map the two `.435`-flagged methods that were not built by Experiment
+4727: the epistemic object-model MCTS probe planner and the factored
+interaction / causal probe bank. It SHALL explicitly avoid re-flagging the
+hypothesis-posterior active-probe controller as the `.436` roadmap result.
+
+The workflow SHALL use the reliable low-concurrency channel: a network
+reachability check for `https://arxiv.org`, focused WebSearch/WebFetch over
+the top five to eight papers, and direct arXiv URL verification. It SHALL NOT
+invoke `/deep-research`. If arXiv is unreachable, the workflow SHALL report
+`blocked_network` rather than fabricate citations or method claims.
+
+Experiment 4734 SHALL write
+`docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md`
+and `results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json`.
+The artifact SHALL include `honest_verdict`, `inference_substrate`,
+`methods_mapped`, `citations`, `flagged_for_next_roadmap`, `note_path`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, and `field_principles`. The success verdict SHALL be
+`success: sota_ingestion_epistemic_mcts_causal_probe_mapped`, the substrate
+SHALL be `aggregation_from_upstream_artifacts`, and `verifier_is_oracle` SHALL
+be false. Each mapped method SHALL cite real arXiv IDs/URLs and SHALL include
+`maps_to_current_stack`, `implement_cost_over_current_stack`, and
+`fails_when`. No solve claim, training claim, model-load claim, or leaderboard
+claim is valid in this literature-ingestion artifact.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor).`
+- `methods_mapped`: principle `the 3-5 strongest methods, each with maps_to_current_stack + implement_cost_over_current_stack + fails_when -- the actionable ingestion (discover -> ingest -> plan).`
+- `citations`: principle `real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline.`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged_for_v436 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments.`
+- `note_path`: principle `docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md -- the human-readable per-track synthesis.`
+- `verifier_is_oracle`: principle `false -- a literature synthesis invokes no oracle.`
+- `random_seed`: principle `determinism precondition (the search/synthesis seed).`
+- `reproducibility_checksum`: principle `content-addressed hash of the ingested source set.`
+- `preconditions_checked`: principle `records the network-reachability check; pre-empts missing-resource fabrication.`
+
+### SCENARIO-ARC-WMTE-4734: Next Frontier Maps To V436 Candidates
+
+Given arXiv is reachable and the `.434` active-probe world-model ingestion plus
+the `.435` research-reference pre-sweep are readable
+When experiment 4734 ingests focused papers for epistemic MCTS,
+object-centric MCTS, causal object-centric MCTS, factored interactive
+world-models, causality-aware object-world-model control, and
+object-world-model policy breakage
+Then the note and JSON artifact map three to five methods onto
+`E3AgentPolicy` and `arc_executable_world_model`, cite real arXiv IDs including
+`2210.13455`, `2309.08477`, `2506.01876`, `2511.02225`, `2511.06136`,
+`2511.14262`, `2601.06604`, and `2606.14418`, flag one or more
+`flagged_for_v436` candidates, do not flag the already-built
+`hypothesis_posterior_active_probe_controller`, record that `/deep-research`
+was not invoked, record `verifier_is_oracle=false`, and emit no ARC solve
+claim.
+
 ### REQ-ARC-WMTE-4730: Persist .435 Online-Warm Action-Effect Controller
 
 Experiment 4730 SHALL read the `.435` A1/A2 artifacts
