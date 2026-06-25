@@ -1,0 +1,310 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "ac25b48f9deaa77c2fb9220fd2c9c560a8c3739f55a8b82679415ec106d43142",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "nulls_audited",
+        "silent_bug_nulls",
+        "reopen_recommendations"
+      ],
+      "path": "results/experiment_4725_silent_bug_audit.json",
+      "sha256": "4e0d52ae856e31b6287ea8ae5013d58d68dfaccf2f2d4b949ad9e25cd8cbd778",
+      "source": "experiment_4725_silent_bug_audit"
+    },
+    {
+      "fields_imported": [
+        "arms_non_degenerate",
+        "online_train_steps_executed",
+        "online_warm_vs_frozen_delta"
+      ],
+      "path": "results/experiment_4726_online_action_learning_driver_valid_test.json",
+      "sha256": "aa4b83fbef26477aa35fd6561393e88a80b2db1e5ae78174a5c5cf29d9662a93",
+      "source": "experiment_4726_online_action_learning_driver_valid_test"
+    },
+    {
+      "fields_imported": [
+        "probe_actions_taken",
+        "hypothesis_posterior_built",
+        "active_probe_result"
+      ],
+      "path": "results/experiment_4727_active_probe_disambiguation.json",
+      "sha256": "5b3a03831aaa79a1b8c27dd5911358950261dc02c93d7f1e1f7802601073b4bc",
+      "source": "experiment_4727_active_probe_disambiguation"
+    },
+    {
+      "fields_imported": [
+        "target_game",
+        "reached_level",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4728_levelup_selfplay.json",
+      "sha256": "33c2e8c91d0aa71e443f0446ee207f2d8276aa88dac7f20014deb7bf6c5f0665",
+      "source": "experiment_4728_levelup_selfplay"
+    },
+    {
+      "fields_imported": [
+        "bridge_crossed_for_solve",
+        "reproducible_total_levels_delta",
+        "publication_gate"
+      ],
+      "path": "results/experiment_4735_capstone_v435.json",
+      "sha256": "4710b57919e46ad1e57b2595cef7c0b8a9ee7317d87d4af1b58ed5b8c5c9af4d",
+      "source": "experiment_4735_capstone_v435"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "888d917a6b04710e2282908abe30a986624c906d70518ebad3e87921b563cf00",
+      "source": "arc_solve_registry"
+    },
+    {
+      "fields_imported": [
+        "poison pre-test signature"
+      ],
+      "path": "ops/conductor-log.md",
+      "sha256": "24cf199e05877e0589ca4699f0a35a731758b402a786e37c73b43f0ef65c784f",
+      "source": "conductor_log"
+    },
+    {
+      "fields_imported": [
+        "2026.06.436 pivot"
+      ],
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "f2d3b897f435a717da7ff4b9c17808bef43a8bde3b6b7c128dcfb5f0c82b33b4",
+      "source": "research_roadmap_vnext_design"
+    }
+  ],
+  "close_state_435": {
+    "a1_online_driver": {
+      "arms_non_degenerate": true,
+      "chosen_submitted_config": "unchanged",
+      "coordinate_head_differs_from_frozen": true,
+      "frozen_first_win": 0.04,
+      "genuine_null": true,
+      "honest_verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_genuinely_too_sparse",
+      "online_train_steps_executed": 66,
+      "online_warm_first_win": 0.04,
+      "online_warm_vs_frozen_delta": 0.0,
+      "per_arm_action_distribution_distinct": true,
+      "retires": true,
+      "validly_tested": true
+    },
+    "a2_active_probe": {
+      "chosen_submitted_config": "unchanged",
+      "dead_code": true,
+      "generic_agent_reached_level": 0,
+      "honest_verdict": "complete: active_probe_no_new_level_residual_budget_insufficient",
+      "hypothesis_posterior_built": false,
+      "posterior_entropy_reduction": 0.0,
+      "probe_actions_taken": 0,
+      "reason": "probe_mechanism_did_not_run"
+    },
+    "a3_level_bank": {
+      "honest_verdict": "success: ar25_L3_offline_reproduced",
+      "offline_reproduced": true,
+      "prior_reproducible_total_levels": 63,
+      "reached_level": 3,
+      "reproducible_total_after": 64,
+      "reproducible_total_delta": 1,
+      "target_game": "ar25"
+    },
+    "b1_silent_bug_audit": {
+      "guidance_class_generation_levers": [
+        "experiment_4640_goal_energy_generation_live",
+        "experiment_4653_energy_fitness_qd_generation_live"
+      ],
+      "honest_verdict": "complete: silent_bug_audit_12_nulls_5_must_reopen",
+      "must_reopen_artifacts": [
+        "results/experiment_4640_goal_energy_generation_live.json",
+        "results/experiment_4653_energy_fitness_qd_generation_live.json",
+        "results/experiment_4676_hierarchical_subgoal_search_live.json",
+        "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
+        "results/experiment_4715_online_action_learning_driver_corrected.json"
+      ],
+      "must_reopen_count": 5,
+      "nulls_audited": 12
+    },
+    "capstone": {
+      "bridge_crossed_for_solve": false,
+      "consecutive_false_bridge_crossed_milestones": 11,
+      "frozen_fover_auroc": 0.9131,
+      "paper_ready": true,
+      "reproducible_total_levels_delta": 1
+    },
+    "source_capstone_honest_verdict": "blocked_upstream_artifacts"
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4736_archive_435_activate_436",
+  "experiment_id": 4736,
+  "field_provenance": {
+    "close_state_435": {
+      "principle": "the honest .435 numbers (A3 63->64 ar25 L3; A1 validly-tested genuine null -> RETIRE; A2 dead code; B1 5-must-reopen; bridge_crossed=False 11th) carried forward so the record does not drift."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
+    },
+    "poison_pretest_resolved": {
+      "principle": "any poison pre-test (id + reason) that would cascade-skip the .436 tail is fixed/quarantined -- the incident_agent_shipped_test_cascade fix."
+    },
+    "preconditions_checked": {
+      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
+    },
+    "v436_pivot": {
+      "principle": "the .436 headline rationale (valid-test the guidance-class generation levers: A1 goal-energy, A2 energy-fitness QD) recorded so the milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "complete: archive_435_activate_436_true_close_state_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_pretest_resolved": {
+    "action": "no_quarantine_needed_current_gate_green",
+    "current_gate_passed": true,
+    "historical_signature": "1 failed, 91 passed, 1 warning in 5.69s",
+    "historical_signature_observed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "a1_4726": {
+      "available": true,
+      "path": "results/experiment_4726_online_action_learning_driver_valid_test.json"
+    },
+    "a2_4727": {
+      "available": true,
+      "path": "results/experiment_4727_active_probe_disambiguation.json"
+    },
+    "a3_4728": {
+      "available": true,
+      "path": "results/experiment_4728_levelup_selfplay.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.436",
+      "milestone_before_activation": "2026.06.436",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "b1_4725": {
+      "available": true,
+      "path": "results/experiment_4725_silent_bug_audit.json"
+    },
+    "capstone_4735": {
+      "available": true,
+      "path": "results/experiment_4735_capstone_v435.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4736": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "conductor_log": {
+      "available": true,
+      "path": "ops/conductor-log.md",
+      "poison_signature": "1 failed, 91 passed, 1 warning in 5.69s",
+      "poison_signature_observed": true
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 64
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('yaml_ok')\"",
+      "literal_precondition_passed": false,
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4736_archive_435_activate_436.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.29s\n"
+    },
+    "vnext_design": {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  },
+  "random_seed": 4736,
+  "reproducibility_checksum": "sha256:9db8dd91e588a1872508c5fd4626b8c949cc68ffef4e6c55e195af82e1c5b2c7",
+  "result_path": "results/experiment_4736_archive_435_activate_436.json",
+  "schema": "carnot.archive_activation.v435_to_v436_4736.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4736",
+    "SCENARIO-CAPSTONE-4736",
+    "SCENARIO-CAPSTONE-4736-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4736-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.436",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.435"
+  },
+  "v436_pivot": {
+    "a1_goal_energy_candidate_generation": {
+      "mechanism": "score real candidate states with graded goal-energy",
+      "non_degeneracy_gate": "distinct candidate scores and candidate pool/ranking differs from baseline",
+      "reopens": "experiment_4640_goal_energy_generation_live"
+    },
+    "a2_energy_fitness_qd_generation": {
+      "mechanism": "distinct QD and random-mutation candidate pools with energy as fitness",
+      "non_degeneracy_gate": "byte-distinct QD/random/search pools before lift measurement",
+      "reopens": "experiment_4653_energy_fitness_qd_generation_live"
+    },
+    "headline_rationale": "valid-test the guidance-class generation levers",
+    "null_delta_markers_required": true
+  }
+}
