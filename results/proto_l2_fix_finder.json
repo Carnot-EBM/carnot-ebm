@@ -1,0 +1,47 @@
+{
+  "experiment_id": "proto_l2_fix_finder",
+  "honest_verdict": "complete_fix_separate_goal_call",
+  "verdict_summary": "The separate focused is_level_complete call (D) produces a valid goal predicate where the combined engine+goal prompt fails -- the engine ramble can no longer starve the goal. Recommended structural fix: induce the goal in its own call.",
+  "working_fixes": [
+    "C_goal_first_2560",
+    "D_separate_goal_768"
+  ],
+  "root_cause": "real lp85 L2 prompt -> model rambles analysis into engine() comments -> exhausts max_tokens=2560 -> is_level_complete never written (missing def)",
+  "captured_prompt_chars": 9290,
+  "arms": {
+    "B_raise_budget_4096": {
+      "stop_type": "limit",
+      "tokens": 4096,
+      "dur": 369.0,
+      "parse_ok": false,
+      "missing": [
+        "is_level_complete"
+      ],
+      "syntax_error": null,
+      "code_chars": 10926
+    },
+    "C_goal_first_2560": {
+      "stop_type": "word",
+      "tokens": 185,
+      "dur": 71.6,
+      "parse_ok": true,
+      "missing": [],
+      "syntax_error": null,
+      "code_chars": 579
+    },
+    "D_separate_goal_768": {
+      "stop_type": "word",
+      "tokens": 17,
+      "dur": 3.5,
+      "parse_ok": true,
+      "missing": [],
+      "syntax_error": null,
+      "code_chars": 65
+    }
+  },
+  "inference_substrate": "live_llm_inference",
+  "solve_provenance": "development_proxy",
+  "verifier_is_oracle": false,
+  "random_seed": 4729,
+  "model_port": 8920
+}
