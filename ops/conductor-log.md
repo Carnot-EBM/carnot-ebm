@@ -9288,3 +9288,6 @@ The contro |
 | 2026-06-25 21:54 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-CRITICAL | OK | 123 passed, 1 warning in 18.74s |
 | 2026-06-25 22:08 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 86 passed, 1 warning in 14.38s |
 | 2026-06-25 22:26 UTC | PHASE D (SOTA-INGESTION -- the .437 frontier) -- m | OK | 123 passed, 1 warning in 7.17s |
+| 2026-06-25 22:44 UTC | PHASE E (CAPSTONE .436) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.95s |
+| 2026-06-25 22:46 UTC | Activation REFUSED: milestone 2026.06.437 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 22:48 UTC | Milestone 2026.06.437 activated | OK | 12 tasks queued |

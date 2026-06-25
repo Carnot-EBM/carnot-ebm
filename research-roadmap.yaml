@@ -167,8 +167,8 @@ tasks:
       the exact dynamics signature; induce_programmatic_object_experts builds + held-out-scores those experts.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/python/carnot/agentic/arc_executable_world_model.py (ProductWorldModel.engine:427; induce_programmatic_object_experts:331; ProgrammaticExpert.applies/predict:101; e3.load_engine the free-form path:732)
-        - {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction:631; load_engine param + WorldModelCandidate.engine signature:59; select_trusted_world_model:729; min_heldout_accuracy threshold:751)
+        - {project_root}/python/carnot/agentic/arc_executable_world_model.py (ProductWorldModel.engine:427; induce_programmatic_object_experts:331; ProgrammaticExpert.applies/predict:101; e3.load_engine the free-form path: def at ~:721)
+        - {project_root}/python/carnot/agentic/arc_llm_reinduction.py (execute_bounded_llm_reinduction:631; load_engine param ~:639; WorldModelCandidate.engine signature:59; select_trusted_world_model call site:729 [def in arc_world_model_trust_energy.py]; min_heldout_accuracy threshold param ~:642 + accept-compare ~:752)
         - {project_root}/python/carnot/agentic/arc_competition_agent.py (the level_up_reinduction call site:2487-2505 -- load_engine=e3.load_engine:2494, min_heldout_accuracy=1.0:2497)
         - {project_root}/docs/research-notes/l2-fixstack-measurement-2026-06-25.md (the end-to-end finding)
 
@@ -290,9 +290,11 @@ tasks:
         preconditions_checked:
           principle: "records the arcade/value-learner import checks."
         detector_goal_count:
-          principle: "the over-segmentation metric (exp4712=42); the fix must drive it to a plausible small count -- the direct evidence the segmentation is resolved."
+          principle: "the over-segmentation metric (exp4712=42); FALSIFIABLE THRESHOLD: the fix must drive goal_count down to <= detector_piece_count (each moveable piece has at most one goal sprite -- a 1:1 pairing), a hard numeric gate, not 'plausible small'. The machine backstop is goal_predicate_satisfiable=True (reachability BFS), but goal_count<=piece_count must hold first."
+        detector_piece_count:
+          principle: "the count of detected moveable pieces -- the explicit comparator for the detector_goal_count<=detector_piece_count falsifiable gate."
         detector_aligned_piece_count:
-          principle: "must be able to reach piece_count on the win frame -- the direct evidence the goal is satisfiable."
+          principle: "must be able to reach detector_piece_count on the win frame -- the direct evidence the goal is satisfiable (aligned==pieces)."
         goal_predicate_satisfiable:
           principle: "_goal_satisfiability_check finds the goal True on >=1 reachable grid -- the gate exp4712 failed."
         l2_plan_reaches_goal:
@@ -459,8 +461,10 @@ tasks:
           principle: "the >=2 games the levers were characterized on -- the transfer evidence, not a single-game artifact."
         offline_reproduced_new_level:
           principle: "false expected -- this is characterization, NOT a level-bank (no over-claim)."
+        solve_provenance:
+          principle: "development_proxy -- characterizes the levers on the offline dev twin, asserting no new level (offline_reproduced_new_level=false); declared (paired with verifier_is_oracle) because A5 makes an offline_reproduced_new_level claim, per the ARC Live-Path Reachability discipline."
         verifier_is_oracle:
-          principle: "false."
+          principle: "false -- the transfer value is an execution-grounded efficiency measurement, not a learned-verifier moat claim."
 
       Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4753_persist_transfer.py
       Do NOT push.
