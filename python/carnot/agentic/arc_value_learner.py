@@ -486,6 +486,9 @@ class ObjectCentricProposalConfig:
     slot_score_weight: float = 1.0
     offpath_effect_bonus: float = 0.25
     no_op_penalty: float = 0.4
+    surfacing_ranker_enabled: bool = False
+    surfacing_ranker_weight: float = 1.0
+    surfacing_refit_min_samples: int = 4
 
 
 def _dominant_background(g: np.ndarray) -> float:
@@ -522,6 +525,11 @@ def _proposal_key(candidate: Mapping[str, Any]) -> tuple[Any, ...]:
 
 
 def _as_candidate_row(candidate: Any) -> dict[str, Any]:
+    if isinstance(candidate, Mapping):
+        row = dict(candidate)
+        row["action"] = _candidate_action_id(candidate)
+        row["data"] = _candidate_data(candidate)
+        return row
     return {"action": _candidate_action_id(candidate), "data": _candidate_data(candidate)}
 
 
@@ -849,6 +857,173 @@ def structural_alignment_goal_candidate(grid: Any) -> dict[str, Any] | None:
     }
 
 
+def _float_features(value: Any) -> list[float]:
+    if value is None:
+        return []
+    if isinstance(value, np.ndarray):
+        return [float(item) for item in value.astype(float).reshape(-1).tolist()]
+    if isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray, str)):
+        out: list[float] = []
+        for item in value:
+            try:
+                out.append(float(item))
+            except (TypeError, ValueError):
+                out.append(0.0)
+        return out
+    try:
+        return [float(value)]
+    except (TypeError, ValueError):
+        return []
+
+
+def _align_features(features: Sequence[float], dim: int) -> list[float]:
+    row = [float(value) for value in features]
+    if len(row) < dim:
+        return row + [0.0] * (dim - len(row))
+    return row[:dim]
+
+
+class OffPathCalibratedProposalRanker:
+    """REQ-ARC-WMTE-4713: oracle-distinct ranker over live off-path candidates."""
+
+    verifier_is_oracle = False
+
+    def __init__(self, *, iters: int = 300, lr: float = 0.4, l2: float = 1e-3) -> None:
+        self.iters = max(1, int(iters))
+        self.lr = float(lr)
+        self.l2 = float(l2)
+        self._samples: list[tuple[list[float], float]] = []
+        self._verifier: DiscriminativeVerifier | None = None
+        self._feature_dim = 0
+        self._fit_count = 0
+
+    def fit(self, rows: Sequence[Mapping[str, Any]]) -> "OffPathCalibratedProposalRanker":
+        samples: list[tuple[list[float], float]] = []
+        for row in rows:
+            if not isinstance(row, Mapping):
+                continue
+            features = _float_features(row.get("features", row.get("surfacing_features")))
+            if not features:
+                continue
+            label = 1.0 if float(row.get("label", row.get("y", 0.0)) or 0.0) >= 0.5 else 0.0
+            samples.append((features, label))
+        self._samples = samples
+        self._fit_from_samples()
+        return self
+
+    def record_sample(self, features: Sequence[float], label: float) -> None:
+        clean = _float_features(features)
+        if not clean:
+            return
+        self._samples.append((clean, 1.0 if float(label) >= 0.5 else 0.0))
+        self._fit_from_samples()
+
+    def _fit_from_samples(self) -> None:
+        labels = [label for _features, label in self._samples]
+        if not labels or len(set(labels)) < 2:
+            return
+        self._feature_dim = max(len(features) for features, _label in self._samples)
+        X = [_align_features(features, self._feature_dim) for features, _label in self._samples]
+        y = list(labels)
+        verifier = DiscriminativeVerifier(lambda _frame: [])
+        verifier.fit(X, y, iters=self.iters, lr=self.lr, l2=self.l2)
+        self._verifier = verifier
+        self._fit_count += 1
+
+    def score_features(self, features: Sequence[float]) -> float:
+        if self._verifier is None or self._feature_dim <= 0:
+            return 0.5
+        return float(self._verifier.proba_features(_align_features(features, self._feature_dim)))
+
+    def rank_rows(
+        self,
+        rows: Sequence[Mapping[str, Any]],
+        *,
+        feature_key: str = "surfacing_features",
+    ) -> list[dict[str, Any]]:
+        scored: list[tuple[float, float, int, dict[str, Any]]] = []
+        for index, row in enumerate(rows):
+            out = dict(row)
+            features = _float_features(out.get(feature_key))
+            score = self.score_features(features)
+            out["surfacing_verifier_score"] = float(score)
+            out["surfacing_ranker_oracle_distinct"] = True
+            base = float(out.get("object_centric_combined_score", out.get("object_centric_proposal_score", 0.0)) or 0.0)
+            scored.append((float(score), base, index, out))
+        scored.sort(key=lambda item: (-item[0], -item[1], item[2]))
+        return [row for _score, _base, _index, row in scored]
+
+    def diagnostics(self) -> dict[str, Any]:
+        positives = sum(1 for _features, label in self._samples if label >= 0.5)
+        negatives = len(self._samples) - positives
+        return {
+            "enabled": True,
+            "offpath_calibrated": self._verifier is not None,
+            "samples": int(len(self._samples)),
+            "positive_samples": int(positives),
+            "negative_samples": int(negatives),
+            "feature_dim": int(self._feature_dim),
+            "fit_count": int(self._fit_count),
+            "verifier_is_oracle": False,
+        }
+
+
+def _candidate_surfacing_features(
+    frame: Any,
+    row: Mapping[str, Any],
+    *,
+    slot: Mapping[str, Any] | None,
+    object_score: float,
+    calibration_score: float,
+    previous_frame: Any | None = None,
+) -> list[float]:
+    explicit = _float_features(row.get("surfacing_features"))
+    if explicit:
+        return explicit
+    try:
+        g = _grid2d(frame)
+    except Exception:
+        g = np.zeros((1, 1), dtype=float)
+    h, w = g.shape
+    data = row.get("data")
+    x_norm = 0.0
+    y_norm = 0.0
+    is_click = 0.0
+    if int(row.get("action") or 0) == 6 and isinstance(data, Mapping):
+        is_click = 1.0
+        x_norm = float(int(data.get("x", 0))) / float(max(1, w - 1))
+        y_norm = float(int(data.get("y", 0))) / float(max(1, h - 1))
+    slot_type = str((slot or {}).get("slot_type") or "")
+    slot_score = float((slot or {}).get("score") or 0.0)
+    density = float((slot or {}).get("local_object_density") or 0.0)
+    color = float((slot or {}).get("support_color") or 0.0) / 16.0
+    type_names = (
+        "component_centroid",
+        "component_bbox_center",
+        "object_neighborhood_gap",
+        "object_constellation_gap",
+    )
+    try:
+        frame_features = cross_game_features_v2(frame)
+    except Exception:
+        frame_features = [0.0] * _V3_V2_LEN
+    return [
+        *frame_features,
+        *_action_features(row.get("action")),
+        is_click,
+        x_norm,
+        y_norm,
+        float(bool(row.get("object_centric_augmented"))),
+        float(object_score),
+        float(calibration_score),
+        slot_score,
+        density,
+        color,
+        *[1.0 if slot_type == name else 0.0 for name in type_names],
+        float(previous_frame is not None),
+    ]
+
+
 class ObjectCentricProposalPolicy:
     """REQ-ARC-WMTE-4700: proposal augmenter/ranker for live StepwiseExplorer."""
 
@@ -869,6 +1044,23 @@ class ObjectCentricProposalPolicy:
         self._last_slot_count = 0
         self._transition_observations = 0
         self._effect_by_key: dict[tuple[Any, ...], list[int]] = {}
+        self._surfacing_features_by_key: dict[tuple[Any, ...], list[float]] = {}
+        self._surfacing_samples_since_fit = 0
+        self.surfacing_ranker = (
+            OffPathCalibratedProposalRanker() if self.config.surfacing_ranker_enabled else None
+        )
+
+    def calibrate_surfacing_ranker(
+        self,
+        rows: Sequence[Mapping[str, Any]],
+    ) -> "ObjectCentricProposalPolicy":
+        """REQ-ARC-WMTE-4713: fit the proposal ranker on off-path rows."""
+
+        if self.surfacing_ranker is None:
+            self.surfacing_ranker = OffPathCalibratedProposalRanker()
+            self.config.surfacing_ranker_enabled = True
+        self.surfacing_ranker.fit(rows)
+        return self
 
     def _calibration_score(self, row: Mapping[str, Any]) -> float:
         stats = self._effect_by_key.get(_proposal_key(row))
@@ -928,12 +1120,30 @@ class ObjectCentricProposalPolicy:
             action_features = _action_features(row.get("action"))
             if action_features and action_features[0] > 0:
                 score += 0.01
-            score += self._calibration_score(row)
+            calibration_score = self._calibration_score(row)
+            score += calibration_score
+            surfacing_features = _candidate_surfacing_features(
+                frame,
+                row,
+                slot=slot,
+                object_score=score,
+                calibration_score=calibration_score,
+                previous_frame=previous_frame,
+            )
+            combined = float(score)
             out = dict(row)
             out["object_centric_proposal_score"] = float(score)
             if slot is not None:
                 out["object_centric_slot"] = dict(slot)
-            scored.append((float(score), index, out))
+            if self.surfacing_ranker is not None:
+                out["surfacing_features"] = list(surfacing_features)
+                surfacing_score = self.surfacing_ranker.score_features(surfacing_features)
+                out["surfacing_verifier_score"] = float(surfacing_score)
+                out["surfacing_ranker_oracle_distinct"] = True
+                combined += self.config.surfacing_ranker_weight * (float(surfacing_score) - 0.5)
+                self._surfacing_features_by_key[_proposal_key(out)] = list(surfacing_features)
+            out["object_centric_combined_score"] = float(combined)
+            scored.append((float(combined), index, out))
             self._candidate_scores += 1
         scored.sort(key=lambda item: (-item[0], item[1]))
         return [row for _score, _index, row in scored]
@@ -958,8 +1168,18 @@ class ObjectCentricProposalPolicy:
         stats[0] += changed
         stats[1] += 1
         self._transition_observations += 1
+        if self.surfacing_ranker is not None:
+            features = self._surfacing_features_by_key.get(key)
+            if features is not None:
+                self.surfacing_ranker.record_sample(features, float(changed))
+                self._surfacing_samples_since_fit += 1
 
     def diagnostics(self) -> dict[str, Any]:
+        surfacing = (
+            {"enabled": False, "offpath_calibrated": False, "verifier_is_oracle": False}
+            if self.surfacing_ranker is None
+            else self.surfacing_ranker.diagnostics()
+        )
         return {
             "enabled": bool(self.config.enabled),
             "representation": "connected_components_object_slots_plus_correspondence_action_context",
@@ -970,6 +1190,7 @@ class ObjectCentricProposalPolicy:
             "offpath_calibrated": self._transition_observations > 0,
             "neighborhood_radius": int(self.config.neighborhood_radius),
             "max_augmented_clicks": int(self.config.max_augmented_clicks),
+            "surfacing_ranker": surfacing,
             "verifier_is_oracle": False,
         }
 

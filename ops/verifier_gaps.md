@@ -2496,3 +2496,12 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: medium (does not by itself unlock L2 — induction quality (GAP not here) is the binding
   constraint — but it removes a false-trust hole that would let a degenerate identity engine through, and
   it gives the induction loop an honest non-degeneracy signal to optimize against)
+
+## GAP-ARC-4713-SURFACING-r11l
+
+- Date: 2026-06-25
+- Residual: present_winner_not_separable_from_distractors
+- Context: object-centric coverage kept the L1 winner present, but the off-path-calibrated structural ranker did not lift it into actionable top-k.
+- Evidence: no_surfacing_precision={'k': 8, 'hits': 0, 'total': 4, 'precision': 0.0}; surfacing_precision={'k': 8, 'hits': 0, 'total': 4, 'precision': 0.0}.
+- Needed verifier: a non-circular discriminator that separates the present winning slot from same-depth distractors before the live explorer exhausts budget.
+
