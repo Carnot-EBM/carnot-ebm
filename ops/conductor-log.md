@@ -9262,3 +9262,4 @@ c |
 | 2026-06-25 09:38 UTC | PHASE B1 (INFRA reserved slot 1; operator MANDATOR | OK | 109 passed, 1 warning in 9.24s |
 | 2026-06-25 10:02 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
 | 2026-06-25 10:35 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; the capstone +  | OK | 105 passed, 1 warning in 6.50s |
+| 2026-06-25 11:12 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 116 passed, 1 warning in 18.01s |
