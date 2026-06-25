@@ -6723,6 +6723,103 @@ CPU scoring cost, parity and live-path gates, and either a success from
 `delta>=+0.05` or L2 reproduction, or an honest no-lift residual with
 `null_delta_methodology_note` and `positive_control_passed`.
 
+### REQ-ARC-WMTE-4738: Valid Energy-Fitness QD Candidate Generation Test
+
+Experiment 4738 SHALL reopen the invalid Experiment 4653 energy-fitness QD
+null by testing the live `E3AgentPolicy` candidate-generation path with a
+non-degeneracy gate before any lift claim. The live QD generator SHALL expose an
+additive candidate-pool evolution hook that is reachable from
+`StepwiseExplorer._candidates()`, keeps primitive naive-search candidates
+available, mutates candidate configuration fields such as click placement and
+toggle/color actions, scores generated candidates with lower-is-better
+oracle-distinct energy, and keeps diverse elites in a MAP-Elites-style archive
+keyed by visible behavior descriptors such as action kind, spatial bucket, and
+local color/object context.
+
+Before measuring lift, Experiment 4738 SHALL prove the three arms
+`naive-search`, `random-mutation`, and `energy-QD` produce distinct candidate
+pools. The gate SHALL compute pairwise candidate-pool Jaccard values and require
+each arm pair to have Jaccard `< 1.0`, and it SHALL require the energy-QD pool
+to contain a non-zero count of candidates that the naive enumerator did not
+produce. If these arms are byte-identical or the QD arm generates no novel
+candidates, the experiment SHALL emit
+`complete: energy_qd_generation_arms_degenerate_confirmed_harness_bug` and SHALL
+NOT report a capability null.
+
+After `arms_non_degenerate=true`, Experiment 4738 SHALL run matched
+`experiment_4605_live_integration_scored_agent` held-out first-win measurements
+for `naive-search`, `random-mutation`, and `energy-QD`, measure CPU generation
+milliseconds per generation, run `scripts/arc_orphan_solver_lint.py`, and run
+`tests/python/test_arc_submitted_agent_parity.py`. A success requires either an
+energy-QD held-out first-win lift of at least `+0.05` over naive search or an
+energy-QD multi-level probe on `lp85`/`sc25` that reaches L2 and passes
+`arc_solver_kit.reproduce`. If non-degenerate arms give flat first-win, the
+artifact SHALL include a non-empty `null_delta_methodology_note` and
+`positive_control_passed = bool(parity_test_green AND arms_non_degenerate AND
+bare_control_passed)`.
+
+The terminal artifact
+`results/experiment_4738_energy_fitness_qd_generation_valid_test.json` SHALL
+include principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `arms_non_degenerate`, `arm_pool_jaccard`,
+`novel_candidates_generated`, `energy_qd_first_win`, `naive_search_first_win`,
+`energy_qd_vs_naive_delta`, `cpu_generation_ms`, `goal_free_l2_reached`,
+`offline_reproduced`, `reproduced_levels`, `solve_provenance`,
+`verifier_is_oracle`, `live_path_reachable`, `bare_control_passed`,
+`false_negative_risk_checked`, `null_delta_methodology_note`,
+`positive_control_passed`, `chosen_submitted_config`, `proposer_served_model`,
+`parity_test_green`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: energy_qd_generation_first_win_lift_<delta>_or_l2_<game> OR complete: energy_qd_generation_arms_degenerate_confirmed_harness_bug OR complete: energy_qd_generation_no_first_win_lift_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference (the live candidate generation loads the Qwen GGUF, 60s floor); model_specs MUST name the GGUF."
+- `arms_non_degenerate`: principle "THE FIRST GATE -- the naive-search / random-mutation / energy-QD arms produce DISTINCT candidate pools (NOT byte-identical) + a non-zero novel-candidate count; a false here means the prior null (exp4653) was dead code (a BUG, not a capability null)."
+- `arm_pool_jaccard`: principle "the pairwise candidate-pool Jaccard between arms (< 1.0 proves distinct pools) -- the no-op catch that exp4653 failed (byte-identical arms)."
+- `novel_candidates_generated`: principle "the count of QD candidates NOT in the naive-enumerator pool -- proves the QD generator actually generated novel candidates (winner_generated_count was 0 in exp4653)."
+- `energy_qd_first_win`: principle "the held-out first-win of the energy-QD arm -- measured ONLY after arms_non_degenerate=True."
+- `naive_search_first_win`: principle "the naive-enumeration baseline -- the no-QD control."
+- `energy_qd_vs_naive_delta`: principle "energy_qd_first_win - naive_search_first_win; >=+0.05 is the gate; emitted explicitly so a null (0) is annotated (pair with null_delta_methodology_note + positive_control_passed when flat)."
+- `cpu_generation_ms`: principle "the Kaggle path is CPU under a 12h/600-RPM cap; QD generation too slow per turn makes the lever infeasible regardless of offline gains."
+- `goal_free_l2_reached`: principle "an energy-QD-generated L2 proves the wall is crossed by GENERATING the winner, not selecting."
+- `offline_reproduced`: principle "a new level counts only if offline-reproduced via arc_solver_kit.reproduce."
+- `reproduced_levels`: principle "the integer level the energy-QD agent reached on the multi-level probe."
+- `solve_provenance`: principle "live_agent_self_discovery for a generic energy-QD-generated L2; development_proxy if an adapter was needed."
+- `verifier_is_oracle`: principle "MUST be false -- the energy fitness scores candidate configurations (oracle-distinct; it does not run the win-check); gate-eligible."
+- `live_path_reachable`: principle "HARD gate -- the changed candidate-generation path is in the scored agent's import closure; arc_orphan_solver_lint passes."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the held-out harness has reachable first-win headroom; a flat null is valid only then."
+- `false_negative_risk_checked`: principle "true with non-degenerate arms + reachable headroom -- a 'no lift' null is valid only then."
+- `null_delta_methodology_note`: principle "present when energy_qd_vs_naive_delta ~0 on NON-degenerate arms; states the equality is an honest no-lift null (the TAUTOLOGY carve-out reads it) -- the .435-A1 escape fix."
+- `positive_control_passed`: principle "bool(parity_test_green AND arms_non_degenerate AND bare_control_passed) -- GATES the TAUTOLOGY null-delta exemption."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (energy-QD generator on, params) -- the A6 input; 'unchanged' if null."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4738-NON-DEGENERATE-QD-ARMS
+
+Given the Qwen3.5-9B-MTP GGUF is cached, `/props` verifies Qwen on a non-8919
+port, the offline arcade imports, and `arc-world-model-trust-energy` declares
+`REQ-ARC-WMTE-4738`
+When Experiment 4738 constructs naive-search, random-mutation, and energy-QD
+live candidate pools from `StepwiseExplorer._candidates()`
+Then the arms first prove `arms_non_degenerate=true` with pairwise Jaccard
+values below 1.0 and a non-zero QD novel-candidate count, or exit with the
+degenerate-harness-bug verdict before any lift claim.
+
+#### SCENARIO-ARC-WMTE-4738-HELDOUT-NULL-OR-LIFT
+
+Given Experiment 4738 has proven non-degenerate QD candidate pools and the
+parity/orphan-lint gates are green
+When it runs the held-out first-win harness and lp85/sc25 multi-level probe
+Then it either reports an energy-QD first-win lift of at least +0.05 or an
+offline reproduced L2, or emits a complete no-lift residual with
+`null_delta_methodology_note` and `positive_control_passed` when the matched
+first-win delta is flat.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts

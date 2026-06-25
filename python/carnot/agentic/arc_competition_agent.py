@@ -876,6 +876,21 @@ class StepwiseExplorer:
                 rows = self.goal_candidate_guidance.rank_candidates(frame, rows)
             except Exception:
                 pass
+        if (
+            self.qd_generator is not None
+            and rows
+            and hasattr(self.qd_generator, "generate_candidate_pool")
+        ):
+            try:
+                rows = self.qd_generator.generate_candidate_pool(
+                    frame,
+                    rows,
+                    goal_energy=self.goal_bias,
+                    action_effect_scorer=self.frame_change_scorer,
+                    arm_label="energy-QD",
+                )
+            except Exception:
+                self._qd_generation_errors += 1
         return self._apply_controllable_novelty_order(frame, rows)
 
     def _apply_amortized_prior_order(

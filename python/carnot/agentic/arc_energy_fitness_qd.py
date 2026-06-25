@@ -7,7 +7,9 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
+import json
 import random
+import time
 from typing import Any
 
 
@@ -26,6 +28,7 @@ class EnergyFitnessQDConfig:
     archive_size: int = 32
     pair_seed_top_k: int = 4
     use_energy_fitness: bool = True
+    candidate_pool_max_new: int = 8
 
 
 @dataclass(frozen=True)
@@ -138,6 +141,23 @@ def _sequence_signature(sequence: Sequence[Mapping[str, Any]]) -> tuple[tuple[An
     return tuple(_action_signature(step) for step in sequence)
 
 
+def candidate_signature_set(candidates: Sequence[Any]) -> set[tuple[Any, ...]]:
+    """REQ-ARC-WMTE-4738: stable candidate-pool signatures for Jaccard gates."""
+
+    return {_action_signature(normalize_action(candidate)) for candidate in candidates}
+
+
+def pool_jaccard(left: Sequence[Any], right: Sequence[Any]) -> float:
+    """REQ-ARC-WMTE-4738: pairwise pool Jaccard, with identical empty pools treated as 1."""
+
+    left_set = candidate_signature_set(left)
+    right_set = candidate_signature_set(right)
+    union = left_set | right_set
+    if not union:
+        return 1.0
+    return float(len(left_set & right_set)) / float(len(union))
+
+
 def _candidate_score(scorer: Any, frame: Any, candidate: Mapping[str, Any]) -> float:
     if scorer is None:
         return 0.0
@@ -161,6 +181,172 @@ def _goal_energy_value(goal_energy: Any, frame: Any) -> float:
         return float(goal_energy(frame))
     except Exception:
         return 1.0
+
+
+def _grid_array(frame: Any) -> Any | None:
+    try:
+        from carnot.agentic.arc_agi3_world_model import grid_of
+
+        return grid_of(frame)
+    except Exception:
+        pass
+    try:
+        import numpy as np
+
+        value = getattr(frame, "grid", getattr(frame, "frame", frame))
+        arr = np.asarray(value)
+        if arr.ndim >= 2 and arr.dtype != object:
+            return arr
+    except Exception:
+        return None
+    return None
+
+
+def _grid_shape(frame: Any) -> tuple[int, int]:
+    grid = _grid_array(frame)
+    shape = getattr(grid, "shape", None)
+    if shape is None or len(shape) < 2:
+        return (64, 64)
+    return (max(1, int(shape[0])), max(1, int(shape[1])))
+
+
+def _dominant_background(grid: Any) -> int:
+    if grid is None:
+        return 0
+    try:
+        import numpy as np
+
+        values, counts = np.unique(np.asarray(grid), return_counts=True)
+        if len(values) == 0:
+            return 0
+        return int(values[int(np.argmax(counts))])
+    except Exception:
+        return 0
+
+
+def _local_color_bucket(frame: Any, candidate: Mapping[str, Any]) -> int:
+    grid = _grid_array(frame)
+    data = candidate.get("data")
+    if grid is None or not isinstance(data, Mapping):
+        return 0
+    try:
+        y_max, x_max = _grid_shape(frame)
+        x = max(0, min(x_max - 1, int(data.get("x", 0) or 0)))
+        y = max(0, min(y_max - 1, int(data.get("y", 0) or 0)))
+        return int(grid[y, x]) % 16
+    except Exception:
+        return 0
+
+
+def _foreground_density_bucket(frame: Any) -> int:
+    grid = _grid_array(frame)
+    if grid is None:
+        return 0
+    try:
+        import numpy as np
+
+        arr = np.asarray(grid)
+        bg = _dominant_background(arr)
+        density = float(np.count_nonzero(arr != bg)) / float(max(1, arr.size))
+        return max(0, min(9, int(round(density * 9.0))))
+    except Exception:
+        return 0
+
+
+def _spatial_bucket(frame: Any, candidate: Mapping[str, Any]) -> int:
+    data = candidate.get("data")
+    if int(candidate.get("action", 0) or 0) != 6 or not isinstance(data, Mapping):
+        return int(candidate.get("action", 0) or 0) % 10
+    y_max, x_max = _grid_shape(frame)
+    x = max(0, min(x_max - 1, int(data.get("x", 0) or 0)))
+    y = max(0, min(y_max - 1, int(data.get("y", 0) or 0)))
+    xb = max(0, min(7, int((8 * x) / max(1, x_max))))
+    yb = max(0, min(7, int((8 * y) / max(1, y_max))))
+    return 8 * yb + xb
+
+
+def candidate_behavior_descriptor(
+    frame: Any,
+    candidate: Mapping[str, Any],
+) -> tuple[int, int, int]:
+    """REQ-ARC-WMTE-4738: visible descriptor for diverse candidate elites."""
+
+    action_bucket = int(candidate.get("action", 0) or 0) % 10
+    color_and_density = (16 * _foreground_density_bucket(frame)) + _local_color_bucket(
+        frame,
+        candidate,
+    )
+    return (action_bucket, _spatial_bucket(frame, candidate), color_and_density)
+
+
+def _clip_click(frame: Any, x: int, y: int) -> dict[str, int]:
+    y_max, x_max = _grid_shape(frame)
+    return {
+        "x": max(0, min(x_max - 1, int(x))),
+        "y": max(0, min(y_max - 1, int(y))),
+    }
+
+
+def _mutated_candidate_variants(
+    frame: Any,
+    candidate: Mapping[str, Any],
+    *,
+    rng: random.Random,
+    use_energy_fitness: bool,
+) -> list[ActionStep]:
+    base = normalize_action(candidate)
+    action = int(base["action"])
+    data = base.get("data")
+    if action != 6 or not isinstance(data, Mapping):
+        return []
+    x = int(data.get("x", 0) or 0)
+    y = int(data.get("y", 0) or 0)
+    offsets = [(-8, 0), (8, 0), (0, -8), (0, 8), (-4, -4), (4, 4), (-8, 8), (8, -8)]
+    if not use_energy_fitness:
+        offsets = list(offsets)
+        rng.shuffle(offsets)
+    rows: list[ActionStep] = []
+    seen: set[tuple[Any, ...]] = {_action_signature(base)}
+    for dx, dy in offsets:
+        mutated = {"action": 6, "data": _clip_click(frame, x + dx, y + dy)}
+        sig = _action_signature(mutated)
+        if sig not in seen:
+            seen.add(sig)
+            rows.append(mutated)
+    return rows
+
+
+def _local_salience(frame: Any, candidate: Mapping[str, Any]) -> float:
+    grid = _grid_array(frame)
+    data = candidate.get("data")
+    if grid is None or not isinstance(data, Mapping):
+        return 0.0
+    try:
+        bg = _dominant_background(grid)
+        y_max, x_max = _grid_shape(frame)
+        x = max(0, min(x_max - 1, int(data.get("x", 0) or 0)))
+        y = max(0, min(y_max - 1, int(data.get("y", 0) or 0)))
+        color = int(grid[y, x])
+        return 1.0 if color != bg else 0.0
+    except Exception:
+        return 0.0
+
+
+def _candidate_configuration_energy(
+    frame: Any,
+    candidate: Mapping[str, Any],
+    *,
+    goal_energy: Any | None,
+    action_effect_scorer: Any | None,
+) -> float:
+    """Lower-is-better oracle-distinct energy over a visible candidate config."""
+
+    base_energy = _goal_energy_value(goal_energy, frame)
+    effect = max(0.0, min(1.0, _candidate_score(action_effect_scorer, frame, candidate)))
+    local = _local_salience(frame, candidate)
+    spatial = float(_spatial_bucket(frame, candidate)) / 63.0
+    energy = float(base_energy) - (0.35 * effect) - (0.25 * local) + (0.05 * spatial)
+    return round(float(energy), 10)
 
 
 def behavior_descriptor_from_effects(
@@ -269,6 +455,7 @@ class EnergyFitnessQDGenerator:
         self.rng = random.Random(int(self.config.random_seed))
         self._last_archive: MAPElitesArchive | None = None
         self._generated_sequences = 0
+        self._last_candidate_pool: dict[str, Any] = {}
 
     def _evaluate_predictive(
         self,
@@ -392,6 +579,101 @@ class EnergyFitnessQDGenerator:
         self._generated_sequences += len(elites)
         return elites
 
+    def generate_candidate_pool(
+        self,
+        frame: Any,
+        candidates: Sequence[Any],
+        *,
+        goal_energy: Any | None = None,
+        action_effect_scorer: Any | None = None,
+        arm_label: str | None = None,
+        max_generated_candidates: int | None = None,
+    ) -> list[ActionStep]:
+        """REQ-ARC-WMTE-4738: add MAP-Elites candidate mutations to the live pool."""
+
+        rows = [normalize_action(candidate) for candidate in candidates]
+        if not self.config.enabled or not rows:
+            return [dict(row) for row in rows]
+        started = time.perf_counter()
+        label = str(
+            arm_label
+            or ("energy-QD" if self.config.use_energy_fitness else "random-mutation")
+        )
+        mutated: list[ActionStep] = []
+        for candidate in rows:
+            mutated.extend(
+                _mutated_candidate_variants(
+                    frame,
+                    candidate,
+                    rng=self.rng,
+                    use_energy_fitness=bool(self.config.use_energy_fitness),
+                )
+            )
+        naive_signatures = candidate_signature_set(rows)
+        unique_mutations: list[ActionStep] = []
+        seen = set(naive_signatures)
+        for candidate in mutated:
+            signature = _action_signature(candidate)
+            if signature in seen:
+                continue
+            seen.add(signature)
+            unique_mutations.append(candidate)
+
+        archive: dict[tuple[int, int, int], tuple[float, int, ActionStep]] = {}
+        scorer = action_effect_scorer if action_effect_scorer is not None else self.action_effect_scorer
+        energy_fn = goal_energy if goal_energy is not None else self.goal_energy
+        for index, candidate in enumerate(unique_mutations):
+            descriptor = candidate_behavior_descriptor(frame, candidate)
+            if self.config.use_energy_fitness:
+                energy = _candidate_configuration_energy(
+                    frame,
+                    candidate,
+                    goal_energy=energy_fn,
+                    action_effect_scorer=scorer,
+                )
+            else:
+                energy = round(float(self.rng.random()), 10)
+            incumbent = archive.get(descriptor)
+            if incumbent is None or energy < incumbent[0]:
+                archive[descriptor] = (energy, index, candidate)
+
+        limit = max_generated_candidates
+        if limit is None:
+            limit = self.config.candidate_pool_max_new
+        selected = sorted(archive.values(), key=lambda item: (item[0], item[1]))[
+            : max(0, int(limit))
+        ]
+        generated: list[ActionStep] = []
+        for rank, (energy, _index, candidate) in enumerate(selected):
+            row = dict(candidate)
+            row["generated_by"] = label
+            row["energy_qd_energy"] = float(energy)
+            row["behavior_descriptor"] = list(candidate_behavior_descriptor(frame, candidate))
+            row["fitness_lower_is_better"] = True
+            row["qd_rank"] = int(rank)
+            generated.append(row)
+        output = [dict(row) for row in rows] + generated
+        novel_count = len(candidate_signature_set(output) - naive_signatures)
+        jaccard = pool_jaccard(rows, output)
+        elapsed_ms = max(0.0, (time.perf_counter() - started) * 1000.0)
+        self._last_candidate_pool = {
+            "enabled": True,
+            "arm_label": label,
+            "use_energy_fitness": bool(self.config.use_energy_fitness),
+            "input_candidate_count": int(len(rows)),
+            "mutated_candidate_count": int(len(unique_mutations)),
+            "archive_size": int(len(archive)),
+            "generated_candidate_count": int(len(generated)),
+            "output_candidate_count": int(len(output)),
+            "novel_candidates_generated": int(novel_count),
+            "candidate_pool_jaccard_vs_naive": float(jaccard),
+            "arms_non_degenerate": bool(jaccard < 1.0 and novel_count > 0),
+            "cpu_generation_ms": float(elapsed_ms),
+            "behavior_descriptors": [row["behavior_descriptor"] for row in generated],
+            "verifier_is_oracle": False,
+        }
+        return output
+
     def best_sequence(
         self,
         frame: Any,
@@ -421,6 +703,7 @@ class EnergyFitnessQDGenerator:
             "mutation_rounds": int(self.config.mutation_rounds),
             "generated_sequences": int(self._generated_sequences),
             "archive": archive,
+            "candidate_pool": dict(self._last_candidate_pool),
             "verifier_is_oracle": False,
         }
 
@@ -449,6 +732,6 @@ def coerce_qd_generator(
             goal_energy=goal_energy,
             action_effect_scorer=action_effect_scorer,
         )
-    if hasattr(value, "best_sequence"):
+    if hasattr(value, "best_sequence") or hasattr(value, "generate_candidate_pool"):
         return value
     return None
