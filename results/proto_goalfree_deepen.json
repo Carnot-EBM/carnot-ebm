@@ -1,0 +1,108 @@
+{
+  "archive_actually_ran": true,
+  "arms": {
+    "go_explore": {
+      "arm": "go_explore",
+      "go_explore": {
+        "actions_injected": 597,
+        "archive_active": true,
+        "prefixes_injected": 232
+      },
+      "max_depth_reached": 1,
+      "max_level_reached": 1,
+      "n_variants_reached_l1": 3,
+      "n_variants_reached_l2": 0,
+      "per_variant": [
+        {
+          "actions": 1197,
+          "depth_reached": 1,
+          "reached_level": 1,
+          "reproduced": true,
+          "solved": true,
+          "variant": 1
+        },
+        {
+          "actions": 1156,
+          "depth_reached": 1,
+          "reached_level": 1,
+          "reproduced": true,
+          "solved": true,
+          "variant": 2
+        },
+        {
+          "actions": 1012,
+          "depth_reached": 1,
+          "reached_level": 1,
+          "reproduced": true,
+          "solved": true,
+          "variant": 3
+        }
+      ]
+    },
+    "no_archive": {
+      "arm": "no_archive",
+      "go_explore": {
+        "actions_injected": 0,
+        "archive_active": true,
+        "prefixes_injected": 0
+      },
+      "max_depth_reached": 1,
+      "max_level_reached": 1,
+      "n_variants_reached_l1": 3,
+      "n_variants_reached_l2": 0,
+      "per_variant": [
+        {
+          "actions": 1197,
+          "depth_reached": 1,
+          "reached_level": 1,
+          "reproduced": true,
+          "solved": true,
+          "variant": 1
+        },
+        {
+          "actions": 1184,
+          "depth_reached": 1,
+          "reached_level": 1,
+          "reproduced": true,
+          "solved": true,
+          "variant": 2
+        },
+        {
+          "actions": 1136,
+          "depth_reached": 1,
+          "reached_level": 1,
+          "reproduced": true,
+          "solved": true,
+          "variant": 3
+        }
+      ]
+    }
+  },
+  "baseline_reached_l2": false,
+  "budget": 1200,
+  "crossed_bar": false,
+  "deepening_mechanism": "goal_free_go_explore",
+  "duration_s": 462.648,
+  "experiment": "proto_goalfree_deepen",
+  "field_principles": {
+    "archive_actually_ran": "prefixes/actions injected > 0 proves the Go-Explore archive was actually exercised, not a no-op",
+    "crossed_bar": "go_explore reaches an offline-reproduced L2 where the no-archive control does not",
+    "go_explore_archive_reached_l2": "the lever: did goal-free systematic exploration deepen past L1",
+    "reached_l1_positive_control": "the probe must reach L1, else 'no L2' is an uninformative false negative"
+  },
+  "go_explore_archive_reached_l2": false,
+  "honest_verdict": "complete: goal_free_deepen_no_l2_valid_null_coverage_insufficient_redirect_multi_exemplar_goalfix",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "random_seed": 4720,
+  "reached_l1_positive_control": true,
+  "reproducibility_checksum": "sha256:a3f8b3b9ed4b3cc57427848670e05aafd3871ba08524250b4906ac96ce711bfa",
+  "schema": "carnot.proto.goalfree_deepen.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "target_game": "lp85",
+  "variants": [
+    1,
+    2,
+    3
+  ],
+  "verifier_is_oracle": false
+}
