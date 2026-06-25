@@ -9271,3 +9271,4 @@ The  |
 The contro |
 | 2026-06-25 15:37 UTC | PHASE A5 (ARC NORTH STAR; persist + cross-game tra | OK | 109 passed, 1 warning in 8.67s |
 | 2026-06-25 15:53 UTC | PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG i | OK | 86 passed, 1 warning in 10.49s |
+| 2026-06-25 16:23 UTC | PHASE B2 (INFRA reserved slot 2; operator MANDATOR | OK | 89 passed, 1 warning in 7.43s |
