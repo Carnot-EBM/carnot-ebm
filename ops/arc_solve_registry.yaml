@@ -605,6 +605,56 @@ general_gotchas:
       the novelty signal propose a winning prefix instead of revisiting
       non-winning controllable states.
     reproducibility_checksum: sha256:e15b6945aaba76bc4d8dec319d76bfb3d2e21ef77e5d5db3aaa44b99ddebe89c
+- id: primitive_object_centric_representation_builder_operator
+  operator: object_centric_representation_builder_operator
+  derived_from_games:
+  - exp4700_object_centric_perception_proposal_live
+  - exp4701_amortized_exploration_prior_go_explore_live
+  derived_from_artifacts:
+  - results/experiment_4700_object_centric_perception_proposal_live.json
+  - results/experiment_4701_amortized_exploration_prior_go_explore_live.json
+  note: >-
+    Exp 4704 persists the .434 object-centric representation builder as
+    reusable perception scaffolding: live proposal candidates can reuse
+    connected-component object slots, relational gap keypoints, and
+    proposal-side coverage diagnostics before value-ranking or frontier
+    selection. Both .434 A1 and A2 selected unchanged submitted config and
+    banked no level, so this captures the strongest characterized reusable
+    component rather than fabricating value. The primitive perceives/generates
+    candidate structure only; new levels still count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Cached held-out transfer can remain value-null when object-centric slots
+      are built successfully but no cached winning-prefix coverage, first-win,
+      solve-rate, or offline reproduction lift is produced.
+  latest_exp4704_transfer:
+    artifact: results/experiment_4704_primitive_persist_transfer.json
+    transfer_games:
+    - cd82
+    - dc22
+    - g50t
+    transfer_value_per_game:
+      cd82:
+        candidate_generation_coverage_delta: 0.0
+        first_win_rate_delta: 0.0
+        live_solve_rate_delta: 0.0
+        offline_reproduced_new_level: false
+      dc22:
+        candidate_generation_coverage_delta: 0.0
+        first_win_rate_delta: 0.0
+        live_solve_rate_delta: 0.0
+        offline_reproduced_new_level: false
+      g50t:
+        candidate_generation_coverage_delta: 0.0
+        first_win_rate_delta: 0.0
+        live_solve_rate_delta: 0.0
+        offline_reproduced_new_level: false
+    offline_reproduced_new_level: false
+    residual_dead_end: Transfer value is null on cached held-out games; the
+      object-centric representation builder is persisted as reusable perception
+      scaffolding, but the residual bridge gap is converting object slots and
+      relational keypoints into winning-prefix proposal coverage.
+    reproducibility_checksum: sha256:2239834a07c66edfce69c84416be68ebe0939a3e84700853a7a27e73124f6955
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:
