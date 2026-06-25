@@ -493,7 +493,11 @@ tasks:
         - {project_root}/scripts/kaggle/submission_kernel/main.py (the submission entrypoint)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: Qwen3.5-9B-MTP GGUF cached; arcade import exits 0. Missing -> blocked_<resource>.
+        0. PRECONDITIONS (BEFORE any other step):
+           a. `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/*/*.gguf` non-empty (frozen generator cached).
+           b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           c. `.venv/bin/python -c "from carnot.agentic.arc_competition_agent import make_carnot_agent; print('ok')"` exits 0.
+           Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication).
         1. Set the .437 lever env-gates to the validated state (structured engine / fixed detector ON only if A1/A2 validated); confirm the agent constructs + a smoke step runs offline.
         2. Confirm the frozen generator (Qwen3.5-9B-MTP) is intact and arc_orphan_solver_lint is green.
 
