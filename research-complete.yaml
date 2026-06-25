@@ -49713,3 +49713,133 @@ milestones:
       on every solve. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
     deliverable: results/experiment_4723_capstone_v434.json
     result: OK (conductor)
+- id: 2026.06.435
+  title: 'STOP SELECTING, START ACTING. .434 proved STATIC selection of the frozen pool is EXHAUSTED (A2: the present winner
+    -- coverage 1.0 -- is NOT separable from same-depth distractors by ANY static oracle-distinct feature; precision_at_k_delta=0.0),
+    the 10th-consecutive bridge-not-crossed milestone. .435 PIVOTS to the two "act to change the situation" levers, both never
+    validly tested: A1 (HEADLINE) the leader''s goal-free ONLINE ACTION-LEARNING DRIVER tested VALIDLY for the FIRST time
+    (the .433/.434 attempts ran dead code = all-arms-0.04 TAUTOLOGY; gated on PROVEN per-arm non-degeneracy before any lift
+    claim; operator highest-leverage 2026-06-24); A2 hypothesis-driven ACTIVE PROBING (act to disambiguate so the present
+    winner is distinguishable by CONSEQUENCE not a static feature; the capstone + SOTA hand-off). A3 self-play +1 (63->64)
+    + verifier train. CARRIED FORWARD (a .434 poison pre-test skipped them): B1 the operator-MANDATORY SILENT-BUG AUDIT (runs
+    early, adjudicates the .434 A4 TAUTOLOGY), B2 the exercise-evidence guard, A5 persist, A6 integration, C KV260. D SOTA-ingestion.
+    E capstone. 5 days to the ARC Prize Milestone #1 deadline.'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-25'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4724-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .434 -> activate .435; assert YAML parses + smart-subset pre-test gate green;
+      DETECT + RESOLVE the .434 POISON PRE-TEST (a "1 failed, 91 passed" test from an A1-A4 module cascade-SKIPPED A6/A7/B1/B2/C
+      in .434 -- fix/quarantine it so the .435 tail does not skip again); RECORD the TRUE .434 close-state (capability grew
+      62->63 via A3 dev-proxy bank of bp35 L2, but bridge_crossed_for_solve=FALSE for the 10th consecutive milestone; A2 [exp4713]
+      proved the present winner is NOT separable from distractors by any static feature -- static selection EXHAUSTED; A1
+      [exp4712] alignment_under_determined; A4 [exp4715] all-arms-0.04 TAUTOLOGY/flagged_adversarial = dead-code-suspect;
+      paper_ready=True). The .435 pivot -> ACT not select: A1 the leader online driver (first VALID test), A2 active probing,
+      B1 the silent-bug audit.'
+    deliverable: results/experiment_4724_archive_434_activate_435.json
+    result: OK (conductor)
+  - id: exp4725-b1
+    title: 'PHASE B1 (INFRA reserved slot 1; operator MANDATORY 2026-06-25; CARRIED FORWARD -- SKIPPED in .434 by a poison
+      pre-test; runs EARLY so its finding grounds A1) -- SILENT-BUG AUDIT of the .428-.434 generation/exploration-lever nulls.
+      Two .433 nulls TESTED DEAD CODE (Go-Explore archive _frame_grid returned (1,64,64); exp4710 CNN dict-candidate bug).
+      The .434 A4 (exp4715) returned all 3 arms EXACTLY 0.04 (TAUTOLOGY, flagged_adversarial) -- the SAME no-op signature.
+      Audit every .428-.434 generation/exploration null for silent representation no-ops (degenerate shapes, dropped/empty
+      candidate pools, dead archives, byte-identical arms, no-op transforms); ADJUDICATE the .434 A4 specifically; produce
+      a per-null verdict {{trustworthy_null | silent_bug_must_reopen}} + a prioritized reopen list. Output: ops/arc_null_silent_bug_audit.md
+      + the artifact. NO new solve claims.'
+    deliverable: results/experiment_4725_silent_bug_audit.json
+    result: OK (conductor)
+  - id: exp4726-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator highest-leverage 2026-06-24 "build it") -- LEADER''S GOAL-FREE
+      ONLINE ACTION-LEARNING DRIVER, tested VALIDLY for the FIRST time. The .433 (exp4710) and .434 (exp4715) attempts BOTH
+      ran degenerate/dead code (all-arms-identical 0.04 = TAUTOLOGY/no-op), so the leader''s loop has NEVER been validly tested.
+      Build the corrected driver: an online binary-frame-change CNN with a COORDINATE HEAD that PROPOSES clicks (hierarchical
+      action-then-coord sample, NOT a re-ranker), self-supervised free labels (frame_changed), Adam lr=1e-4 BCE every ~5 actions,
+      hash-deduped buffer, reward-driven per-level reset to the cross-game PRIOR (not random). TWO-STAGE GATE: (1) PROVE the
+      arms are non-degenerate (distinct action distributions + non-zero online train-steps; NOT byte-identical first-win)
+      -- else complete: online_driver_arms_degenerate_confirmed_harness_bug (a BUG, not a capability null); (2) only then,
+      online-warm beats frozen by >=+0.05 held-out first-win OR a multi-level probe (lp85/sc25) reaches L2 offline-reproduced.
+      CPU train-step ms MEASURED. live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
+    deliverable: results/experiment_4726_online_action_learning_driver_valid_test.json
+    result: OK (conductor)
+  - id: exp4727-a2
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; the capstone + SOTA hand-off -- ACT to disambiguate) -- HYPOTHESIS-DRIVEN ACTIVE-PROBE
+      DISAMBIGUATION. The .434 A2 (exp4713) proved the present winner (coverage 1.0) is NOT separable from same-depth distractors
+      by ANY static oracle-distinct feature (precision_at_k_delta=0.0) -- static selection is EXHAUSTED. The principled answer:
+      the agent ACTS to disambiguate. E3AgentPolicy keeps a posterior over candidate goal/dynamics hypotheses, asks arc_executable_world_model
+      what transition each predicts, and takes information-gain actions that SPLIT the posterior -- so the present-but-unseparable
+      winner becomes distinguishable by its observed CONSEQUENCE, not a static feature. The energy verifier scores which probe
+      best splits the posterior (oracle-distinct). Gate: the GENERIC agent reaches a NEW level via active probing on >=1 clean
+      L1 game, offline-reproduced, with the NO-PROBE (passive) ablation FAILING. arXiv:2506.01876 + 2309.08477. live_path-reachable.
+      live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
+    deliverable: results/experiment_4727_active_probe_disambiguation.json
+    result: OK (conductor)
+  - id: exp4728-a3
+    title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+      standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT deepened in .429-.434
+      (PREFER a first-contact L1->L2 of a hard clean public game from re86/s5i5/g50t/r11l; alternatives m0r0/cn04/ar25 L2->L3;
+      SKIP bp35 [.434], lf52 [.432], sb26 [.431], dc22 [.430], vc33 [.429], sk48 [.426], ka59/wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3
+      [no grounded delta]) AND train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced new level
+      -> reproducible_total_levels 63 -> 64+. verifier_is_oracle:false.'
+    deliverable: results/experiment_4728_levelup_selfplay.json
+    result: OK (conductor)
+  - id: exp4729-a4
+    title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness lane) -- re-measure the held-out generic first-win
+      lane (experiment_4605 SUBMITTED_AGENT_CONFIG over color-permuted variants) AFTER the .435 A1/A2 levers, vs the last-submission
+      baseline (first_win_rate_integrated=0.04, first scored submission 0.08), with a bootstrap-CI-excludes-0 improvement
+      criterion. Keep the replay package as a FLOOR artifact but do NOT cite its level count as the leaderboard score. Emit
+      the TAUTOLOGY null-delta markers so a flat result is not quarantined. parity-hard-gated. verifier_is_oracle:false.
+    deliverable: results/experiment_4729_held_out_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4730-a5
+    title: PHASE A5 (ARC NORTH STAR; persist + cross-game transfer; CARRIED FORWARD -- SKIPPED in .434) -- persist the STRONGEST
+      .435 ARC primitive (the online-action-learning driver from A1 IF its arms were non-degenerate, OR the active-probe disambiguation
+      controller from A2, whichever is strongest/characterized) as reusable arc_solver_kit scaffolding + measure leave-one-game
+      cross-game transfer. Both arms nulling -> capture the strongest characterized reusable component, do NOT fabricate transfer
+      value. verifier_is_oracle:false.
+    deliverable: results/experiment_4730_primitive_persist_transfer.json
+    result: OK (conductor)
+  - id: exp4731-a6
+    title: PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG integration gate; CARRIED FORWARD -- SKIPPED in .434) -- integrate
+      the strongest banked .435 change (A1 online driver / A2 active-probe controller, whichever chose a non-unchanged submitted-config
+      with a held-out lift) into the SUBMITTED_AGENT_CONFIG, parity-hard-gated, no regression vs pre-integration. If all A1/A2
+      selected unchanged, emit the honest-null markers (null_delta_methodology_note + positive_control_passed) so the flat
+      delta is not quarantined. verifier_is_oracle:false.
+    deliverable: results/experiment_4731_integration_gate.json
+    result: OK (conductor)
+  - id: exp4732-b2
+    title: 'PHASE B2 (INFRA reserved slot 2; operator MANDATORY 2026-06-25; CARRIED FORWARD -- SKIPPED in .434) -- adversarial_verify
+      LEVER-EXERCISE-EVIDENCE guard. Mechanize the silent-dead-code catch the operator found manually (Go-Explore (1,64,64);
+      exp4710 CNN dict-candidate; the .434 A4 byte-identical all-arms-0.04): an ARC generation/exploration-lever artifact
+      that declares a mechanism exercised (coverage / archive / candidate-pool / A/B-arms claim) but shows DEGENERATE exercise
+      evidence (zero injections, empty/unchanged pool, wrong-shape tensor, zero archive cells, BYTE-IDENTICAL arms) is flagged.
+      Pinned by a new test_adversarial_verify_*. Do NOT weaken any existing check.'
+    deliverable: results/experiment_4732_adversarial_verify_exercise_evidence_guard.json
+    result: OK (conductor)
+  - id: exp4733-c
+    title: "PHASE C (HARDWARE continuity -- KV260, the sovereignty story; CARRIED FORWARD -- SKIPPED in .434) -- KV260 SSH-reachability\
+      \ precondition + (if reachable) on-board Ising latency transcript toward terminal state. NEVER host SD-card device nodes.\
+      \ Per north-star \xA73 (KV260 is THE sovereignty story; drive to terminal then freeze) + Hardware-Task Continuity. If\
+      \ unreachable, honest blocked_kv260_ssh_unreachable (a documentation-only continuity record, NOT a fabrication)."
+    deliverable: results/experiment_4733_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4734-d
+    title: 'PHASE D (SOTA-INGESTION -- the .436 fallback) -- map the NEXT ARC frontier beyond active-probe (now .435 A2):
+      the EPISTEMIC-OBJECT-MODEL MCTS PROBE PLANNER (uncertainty-aware MCTS over object-centric world-model rollouts, arXiv:2210.13455
+      + arXiv:2601.06604) + the FACTORED INTERACTION/CAUSAL PROBE BANK (typed precondition/effect factors confirmed by causal
+      probes, arXiv:2511.02225 + arXiv:2511.14262), honestly bounded by the object-world-model breakage falsifier (arXiv:2511.06136).
+      Use low-concurrency WebSearch/WebFetch (NOT /deep-research). Real arXiv IDs/URLs for every claim. Output: a SOTA->experiment
+      mapping note + flagged_for_v436.'
+    deliverable: results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json
+    result: OK (conductor)
+  - id: exp4735-e
+    title: 'PHASE E (CAPSTONE .435) -- aggregate the scorecard + the HEADLINE DECISION: did .435 cross the offline->live bridge
+      that ten milestones could not? Did A1 (leader online driver, FIRST valid test) prove NON-DEGENERATE arms AND beat frozen
+      by >=+0.05 held-out first-win OR deepen to L2 offline-reproduced -- or did it confirm the .433/.434 nulls tested dead
+      code (online_driver_arms_degenerate)? Did A2 (active probing) reach a NEW generic level with the NO-PROBE ablation FAILING?
+      Did B1 classify the .434 A4 TAUTOLOGY as a silent-bug that must REOPEN? Did A3 bank +1 (63->64)? A4 held-out first-win
+      vs 0.04? Skip flagged_adversarial / control-failed / ablation-missing artifacts. Confirm verifier_is_oracle:false on
+      every value claim + solve_provenance on every solve. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
+    deliverable: results/experiment_4735_capstone_v435.json
+    result: OK (conductor)
