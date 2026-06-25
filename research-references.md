@@ -24610,3 +24610,60 @@ discriminative verifier (LOO-AUROC 0.674) into the SCORED `E3AgentPolicy`
 (GAP-LIVE-INTEGRATION). Both are live-path improvements (per the 2026-06-22 ARC
 Live-Path Reachability Discipline), and both pivot from the exhausted generation
 side to the verifier/energy side the literature says transfers.
+
+## .434 planner pre-sweep — the L1 wall SPLITS: perception solved (winner proposable), SURFACING is the new bottleneck (2026-06-24)
+
+The `.433 capstone (exp4710) was the 9TH consecutive `bridge_crossed_for_solve=FALSE`
+milestone (A3 banked +1, 61->62; first-win FLAT at 0.04 across every arm). But its A1
+perception diagnostic produced the most decisive NEW input in months:
+**`perception_is_the_wall=true`** — an upper-bound object-centric/relational representation
+makes the winning L1 trajectory FULLY PROPOSABLE (`object_centric_coverage=1.0` vs
+`order1_coverage=0.75`, delta +0.25), where the order-1 frame features (LOO=0.503=chance)
+do not. The winner becomes PRESENT in the pool. BUT the deployable arm still banked no level
+(`generic_agent_reached_level=0`): the winning candidates sit at **rank 59 and 161 of 186**,
+so the residual is `offpath_calibration_insufficient` — the agent can SEE the winner but
+cannot SURFACE it. The wall has split into (1) perception/proposability [solved in principle]
+and (2) ranking/surfacing [the new, verifier-shaped bottleneck].
+
+A focused fresh sweep corroborates both the split and the next attack:
+
+- **"When Object-Centric World Models Meet Policy Learning... and Where It Breaks"
+  (arXiv:2511.06136).** Object slots/relations help perception but BREAK under off-path
+  policy-learning interactions — the exact `offpath_calibration_insufficient` residual. The
+  honest bound on the `.433 A1 win: richer perception makes the winner proposable, but the
+  policy/ranking over that richer pool is where it fails.
+- **Object-Centric World Models Meet Monte Carlo Tree Search / ObjectZero
+  (arXiv:2601.06604)** + **OC-STORM / STICA (object-centric Transformer world model +
+  causality-aware value network).** Structured object representations integrate into MCTS
+  planning and a VALUE network — i.e. the surfacing/ranking layer is where object-centric
+  representations pay off, not the perception layer alone. Direct support for the `.434 A2
+  thesis: an off-path-calibrated verifier/value ranker over the object-centric proposal pool
+  to surface the now-present winner (rank 59 -> actionable top-k) — the verifier earning its
+  place per the north star (router/pruner, oracle-distinct).
+- **ARC-AGI-3 (arcprize.org/arc-agi/3, arXiv:2603.24621 technical report).** Four core
+  capabilities — Exploration, MODELING, Goal-setting, Planning; frontier <1% (Gemini 3.1 Pro
+  0.37%, GPT-5.4 0.26%, Opus 4.6 0.25%). Milestone prize $25K at the 2026-06-30 checkpoint.
+  Names world-modeling-that-generalizes + goal-setting as the crux — exactly the `.434 A1
+  (perception-grounded GOAL) + A2 (surface via the model/verifier) split.
+- **Graph-Based Exploration for ARC-AGI-3 (arXiv:2512.24156)** + the StochasticGoose
+  leaderboard loop (operator leader-gap synthesis): a goal-FREE online action-effect CNN with
+  a coordinate head that PROPOSES clicks + per-level reset deepens multi-level for free. The
+  `.434 A4 lever — but the `.433 first attempt (exp4710 arms) ran on a SILENTLY-BUGGY CNN
+  dict-candidate path and the Go-Explore archive was dead (`_frame_grid` returned (1,64,64)),
+  so BOTH the A2-amortized-exploration null and the online-action-learning null TESTED DEAD
+  CODE. The operator mandate: AUDIT the `.428-`.433 generation-lever nulls for silent
+  representation no-ops before trusting them (`.434 B1).
+- **Active-probe / hypothesis-driven world-model induction (arXiv:2506.01876 +
+  arXiv:2309.08477; flagged by the `.433 SOTA-ingestion exp4709 as a v435 candidate).** A
+  hypothesis-driven active-probe loop (act to disambiguate the goal/dynamics) is the deeper
+  generation mechanism beyond passive exploration — staged as the `.435 fallback.
+
+**Bottom line for .434:** the `.433 diagnostic redefines the attack. (1) BANK the perception
+win as a multi-level solve — lp85 L1->L2 via a PERCEPTION-GROUNDED STRUCTURAL-ALIGNMENT goal
+over detected objects (operator 2026-06-25 "yes"; A1, HEADLINE). (2) SURFACE the present
+winner — an off-path-calibrated oracle-distinct verifier/value ranker over the object-centric
+coverage-1.0 proposal pool (rank 59 -> top-k; the verifier earns its place; A2). (3) the
+CORRECTED goal-free online-action-learning DRIVER (coordinate-head-proposes-clicks, bug-fixed
+Go-Explore + CNN, A/B vs frozen; operator 2026-06-24 leader-gap; A4). (4) AUDIT the recent
+nulls for the silent bugs the operator found (B1). Majority-ARC sprint, 6 days to the
+2026-06-30 ARC Prize Milestone #1 deadline ($25K).
