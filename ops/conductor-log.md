@@ -9229,3 +9229,4 @@ c |
 | 2026-06-25 03:44 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-25 03:46 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-25 03:49 UTC | Milestone 2026.06.434 activated | OK | 13 tasks queued |
+| 2026-06-25 04:04 UTC | PHASE 0 (TRANSITION) -- archive .433 -> activate . | OK | 86 passed, 1 warning in 5.82s |
