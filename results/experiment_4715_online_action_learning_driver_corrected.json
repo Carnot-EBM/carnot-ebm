@@ -142,5 +142,28 @@
     "SCENARIO-ARC-FCP-4715"
   ],
   "submitted_to_leaderboard": false,
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "frozen_first_win=0.04 and online_scratch_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "frozen_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "online_scratch_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "online_warm_vs_frozen_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
