@@ -9215,3 +9215,17 @@ c |
 | 2026-06-25 02:01 UTC | PHASE C (HARDWARE CONTINUITY -- 1 per-board slot)  | OK | 86 passed, 1 warning in 5.76s |
 | 2026-06-25 02:16 UTC | PHASE D (SOTA-INGESTION -> .434) -- focused litera | OK | 114 passed, 1 warning in 6.01s |
 | 2026-06-25 02:31 UTC | PHASE E (CAPSTONE .433) -- aggregate the scorecard | OK | 88 passed, 1 warning in 5.64s |
+| 2026-06-25 03:21 UTC | Plan milestone 2026.06.434 | OK | 13 tasks proposed |
+| 2026-06-25 03:23 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:25 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:27 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:29 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:32 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:34 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:36 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:38 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:40 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:42 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:44 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:46 UTC | Activation REFUSED: milestone 2026.06.434 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-25 03:49 UTC | Milestone 2026.06.434 activated | OK | 13 tasks queued |
