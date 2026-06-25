@@ -127,6 +127,18 @@ class OnlineActionEffectScorer:
         Each component is wrapped in its own try/except so a transient CNN failure does NOT
         silence the memory score. Errors are counted for diagnostics -- we want to know if
         the CNN is failing, but we NEVER want a scorer crash to kill the explorer step.
+
+        DICT-CANDIDATE NORMALIZATION (2026-06-25 false-negative fix): the explorer scores
+        candidates from TWO shapes -- ArcAction objects (from rich_action_candidates, with
+        ``.action_id``/``.data``) AND plain dict rows ``{"action": .., "data": ..}`` (the
+        frontier's ``untested`` lists, _candidates:761). ``FrameChangeScorer.candidate_score``
+        reads ``getattr(candidate, "action_id")``, which raises ``AttributeError`` on a dict --
+        so the CNN term was silently DISCARDED on ~20/25 games (the shipped LiveActionEffectScorer
+        swallows the same AttributeError with a bare except, which is why the bug was invisible).
+        That made the trained CNN's output a no-op on most games -> the online-vs-frozen first-win
+        null was a FALSE NEGATIVE. We normalize dict candidates to an action-like shim before the
+        CNN call so the trained CNN actually contributes. PersistentAEM.candidate_score already
+        tolerates dicts, so the memory term is left as-is.
         """
         score = 0.0
         if self.memory is not None:
@@ -136,7 +148,7 @@ class OnlineActionEffectScorer:
                 self._errors += 1
         try:
             score += float(self.cnn_weight) * float(
-                self.cnn_scorer.candidate_score(frame, candidate)
+                self.cnn_scorer.candidate_score(frame, _as_action_like(candidate))
             )
         except Exception:
             self._errors += 1
@@ -311,6 +323,25 @@ class OnlineActionEffectScorer:
         }
 
 
+def _as_action_like(candidate: Any) -> Any:
+    """Return a candidate exposing ``.action_id`` / ``.data`` for FrameChangeScorer.
+
+    The CNN scorer reads ``getattr(candidate, "action_id")``; the frontier hands it plain dict
+    rows ``{"action": .., "data": ..}``. Wrap a dict in a SimpleNamespace so the CNN term works
+    on BOTH shapes (the 2026-06-25 false-negative fix). Non-dicts (ArcAction) pass through.
+    """
+    if isinstance(candidate, dict):
+        from types import SimpleNamespace
+
+        aid = candidate.get("action_id", candidate.get("action"))
+        try:
+            aid = int(aid)
+        except (TypeError, ValueError):
+            return candidate
+        return SimpleNamespace(action_id=aid, data=candidate.get("data"))
+    return candidate
+
+
 def _frame_to_tensor_safe(frame: Any) -> "torch.Tensor | None":
     """Convert a frame to a CHW tensor, returning None on any error."""
     try:
@@ -372,8 +403,26 @@ def build_online_scorer(arm: str, root: Path) -> Any:
     the shipped behavior -- no observe calls, no proposes, no cache clears.
     """
     if arm == "frozen":
+        # The SHIPPED scorer verbatim (raw LiveActionEffectScorer) -- the positive control that
+        # reproduces the committed exp4605 0.04 baseline. Its CNN term is silently discarded on
+        # ~20/25 games by the dict-candidate AttributeError (the bug this module's wrapper fixes);
+        # keeping it raw here is deliberate so we can measure what FIXING the bug changes.
         scorer = load_live_action_effect_scorer(root)
         return scorer
+
+    if arm == "frozen-fixed":
+        # CONTROL for the false-negative fix: the SAME warm CNN as online-warm, wrapped so the
+        # dict-candidate normalization makes the CNN term actually CONTRIBUTE (not discarded), but
+        # train_enabled=False so the CNN is NOT updated online. Comparing frozen (CNN discarded) ->
+        # frozen-fixed (CNN contributes, untrained) -> online-warm (CNN contributes, trained)
+        # cleanly decomposes "fixing the bug" from "online training".
+        memory = _load_cached_memory(root)
+        cnn = load_live_frame_change_cnn_scorer(root)
+        if cnn is None:
+            cnn = FrameChangeScorer(SmallFrameChangeCNN(num_colors=DEFAULT_NUM_COLORS, hidden_channels=8))
+        return OnlineActionEffectScorer(
+            memory=memory, cnn_scorer=cnn, train_enabled=False, propose_enabled=False
+        )
 
     # For all online arms: load the memory (frozen cross-game prior). The PersistentAEM is the
     # SAME static cross-game object for every (game, variant) attempt, so building it once and

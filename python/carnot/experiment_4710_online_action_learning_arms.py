@@ -309,7 +309,7 @@ def run_arm(
 def main() -> int:
     """CLI entry point -- reads arm from CARNOT_ARC_ONLINE_ARM env var (default: frozen)."""
     arm = os.environ.get("CARNOT_ARC_ONLINE_ARM", "frozen").strip()
-    valid_arms = ("frozen", "online-scratch", "online-warm", "online-warm-propose")
+    valid_arms = ("frozen", "frozen-fixed", "online-scratch", "online-warm", "online-warm-propose")
     if arm not in valid_arms:
         print(
             f"ERROR: CARNOT_ARC_ONLINE_ARM={arm!r} is not a valid arm. "
