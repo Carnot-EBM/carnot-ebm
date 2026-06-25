@@ -580,6 +580,54 @@ def _goal_satisfiability_check(
     }
 
 
+def _repair_degenerate_goal(
+    *,
+    engine: Callable[[np.ndarray, int, Any], np.ndarray],
+    previous_level_complete_grid: np.ndarray | None,
+    root_grid: np.ndarray,
+) -> dict[str, Any] | None:
+    """GOAL-REPAIR (2026-06-25 operator directive): rescue a DEGENERATE induced goal predicate.
+
+    The LLM-induced ``is_level_complete`` frequently comes out degenerate -- a constant ``return
+    False``, or an exact-match against a hardcoded win grid that the induced engine can never reach.
+    In those cases ``_goal_satisfiability_check`` returns ``degenerate_goal_predicate`` and the
+    planner has NO satisfiable target, so L1->L2 deepening stalls. This is the dominant lp85 failure
+    mode even AFTER the truncation fix (which only guarantees the model EMITS code, not that the
+    win-condition it writes is any good).
+
+    Re-refactoring the engine (the loop's default fallback) does NOT help, because refactor prompts
+    target the dynamics, not the goal predicate. Instead we substitute the exemplar-derived
+    ``_nonzero_count_predicate`` fallback (already used as a hierarchical subgoal) and re-check
+    satisfiability against the SAME engine. If that fallback is reachable, return it so the caller
+    can plan toward it; otherwise return ``None`` (no exemplar available, or the fallback is also
+    unreachable -> genuinely give up this round).
+
+    WHY this is a real repair and not a cheat: the fallback is a NON-DEGENERATE, REACHABLE proxy
+    (the level is "complete" once the grid has at least as many filled cells as the L1-completion
+    exemplar). It is a heuristic, not an exact win oracle -- it can admit some non-win grids -- but
+    it gives the planner a satisfiable target where a constant-false predicate blocks planning
+    entirely. The downstream plan-reaches-goal check and the offline reproduction gate still decide
+    whether the resulting plan is a REAL level-up, so a loose proxy cannot fabricate a solve; it can
+    only unblock the search so a genuine deepening has a chance to be found and then verified.
+    """
+    if previous_level_complete_grid is None:
+        return None
+    exemplar = np.asarray(previous_level_complete_grid).copy()
+    fallback = _nonzero_count_predicate(exemplar)
+    check = _goal_satisfiability_check(
+        engine=engine,
+        goal=fallback,
+        start_grid=np.asarray(root_grid),
+    )
+    if not bool(check.get("satisfiable")):
+        return None
+    return {
+        "predicate": fallback,
+        "satisfiability": dict(check),
+        "source": "exemplar_nonzero_count_fallback",
+    }
+
+
 def execute_bounded_llm_reinduction(
     *,
     game: str,
@@ -746,15 +794,39 @@ def execute_bounded_llm_reinduction(
                 key: value for key, value in goal_check.items() if key != "counterexample"
             }
             if not last_goal_satisfiable:
-                last_counterexample = dict(
-                    goal_check.get("counterexample") or {"kind": "degenerate_goal_predicate"}
+                # GOAL-REPAIR: the LLM-induced goal is degenerate (constant-false / unreachable
+                # exact-match). Before giving up this round to an engine-refactor (which cannot fix
+                # the goal), try the exemplar-derived nonzero-count fallback against THIS engine.
+                repaired = _repair_degenerate_goal(
+                    engine=selected.engine,
+                    previous_level_complete_grid=previous_level_complete_grid,
+                    root_grid=np.asarray(root_grid),
                 )
-                counterexamples.append(last_counterexample)
-                row["counterexample"] = dict(last_counterexample)
-                row["skipped"] = str(last_counterexample.get("kind") or "degenerate_goal_predicate")
-                skipped = row["skipped"]
-                rounds.append(row)
-                continue
+                if repaired is not None:
+                    selected_goal = repaired["predicate"]
+                    last_goal = selected_goal
+                    last_goal_satisfiable = True
+                    last_goal_satisfiability = dict(repaired["satisfiability"])
+                    row["goal_repaired"] = repaired["source"]
+                    row["goal_predicate_satisfiable"] = True
+                    row["goal_satisfiability"] = {
+                        key: value
+                        for key, value in repaired["satisfiability"].items()
+                        if key != "counterexample"
+                    }
+                    # fall through to planning with the repaired goal (no `continue`).
+                else:
+                    last_counterexample = dict(
+                        goal_check.get("counterexample") or {"kind": "degenerate_goal_predicate"}
+                    )
+                    counterexamples.append(last_counterexample)
+                    row["counterexample"] = dict(last_counterexample)
+                    row["skipped"] = str(
+                        last_counterexample.get("kind") or "degenerate_goal_predicate"
+                    )
+                    skipped = row["skipped"]
+                    rounds.append(row)
+                    continue
             plan = plan_in_model(selected.engine, selected_goal, np.asarray(root_grid))
             check = _plan_reaches_goal(
                 engine=selected.engine,

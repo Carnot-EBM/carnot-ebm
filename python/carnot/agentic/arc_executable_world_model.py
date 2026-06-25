@@ -850,7 +850,9 @@ def _transitions_block(
 # stays False for ~10 milestones; see proto_l2_proposer_truncation_check + proto_l2_code_only_prefix,
 # 2026-06-25). Prepending this directive AND adding a stop-sequence on the closing fence makes the
 # model emit ONLY the code and stop: verified 195 tokens / 15.6s (vs 605s rambling / 450s truncated),
-# valid+satisfiable engine+is_level_complete. Default OFF; gated by CARNOT_ARC_CODEONLY_INDUCE=1.
+# valid engine+is_level_complete. DEFAULT ON (2026-06-25 operator directive); opt out with
+# CARNOT_ARC_CODEONLY_INDUCE=0. NB: defeats truncation (emits code) but the induced goal predicate
+# can still be degenerate -> see the goal-repair loop in arc_llm_reinduction.execute_bounded_llm_reinduction.
 _L2_CODEONLY_DIRECTIVE = (
     "/no_think\n"
     "CRITICAL OUTPUT RULES -- obey EXACTLY:\n"
@@ -1160,11 +1162,15 @@ class LocalGGUFProposer:
                 f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
-        # env-gated L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the
-        # induce call (required contains is_level_complete) so gap-filler/refactor prompts are
-        # untouched. When on: prepend the code-only directive + an opened fence, and add a
-        # stop-sequence on the closing fence so the model emits ONLY the code (no win-state CoT).
-        _codeonly = bool(os.environ.get("CARNOT_ARC_CODEONLY_INDUCE")) and "is_level_complete" in required
+        # L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the induce
+        # call (required contains is_level_complete) so gap-filler/refactor prompts are untouched.
+        # When on: prepend the code-only directive + an opened fence, and add a stop-sequence on the
+        # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
+        # operator directive): it is a strict improvement (emits valid code in ~13s where the
+        # unpatched path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
+        _codeonly = (
+            os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0"
+        ) and "is_level_complete" in required
         _stop_seq = ["```"] if _codeonly else None
         if _codeonly:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
