@@ -74,3 +74,40 @@ code-only path for the real prompt (likely a stop-sequence / prose-leakage robus
 structural-alignment goal addresses the goal-quality half. The measurement was worth running: it
 moved the diagnosis from a guessed "goal quality" wall to a concrete, upstream "real-L2-prompt
 code-gen reliability" wall, with a clear next diagnostic.
+
+## CAPTURE DIAGNOSTIC (2026-06-25, follow-up) — root cause + the tested fix
+
+`scripts/experiments/proto_l2_capture.py` tee'd every `/completion` call while the lp85 agent
+played, and captured the EXACT real L2 reinduction call (`results/l2_capture.jsonl`). Then
+`scripts/experiments/proto_l2_fix_finder.py` tested candidate fixes on that exact prompt
+(`results/proto_l2_fix_finder.json`).
+
+**Root cause (definitive, live-representative — the live agent uses the same `max_tokens=2560`,
+`arc_competition_agent.py:2200`):** the real lp85 L2 reinduction prompt is `9290` chars (vs the
+synthetic ~2200) because it carries real click-action transitions + grids. The model **ignores the
+directive's "not even as comments" and rambles its analysis into code COMMENTS inside `engine()`**
+("The game seems to toggle...", "Since we cannot deduce the exact rule...", "as a placeholder, but
+this is not ideal..."), filling all 2560 tokens (`stop_type=limit`) on a verbose `engine()` and
+**never reaching `def is_level_complete`** -> missing def -> `proposer_failed`. The synthetic prompt
+is simple enough that the model writes concise code that fits; the real one is not. This is NOT
+variance: it is a deterministic, prompt-complexity-driven failure.
+
+**The fix (tested on the captured prompt):**
+
+| candidate | result |
+|---|---|
+| **B — raise budget 2560→4096** | **FAILS** (`stop=limit`, 4096 tokens, still no `is_level_complete`, 369s). The model rambles MORE to fill the bigger budget. **Do NOT just bump `max_tokens`.** |
+| **C — goal-first ordering** (write `is_level_complete` before `engine`) | works (`stop=word`, 185 tokens, both defs parse, 72s) — the short goal is written before the engine ramble can starve it. Cheap one-call fix, but n=1 (may be variance-sensitive to whether the engine then also stays concise). |
+| **D — separate focused goal call** (`is_level_complete`-only, win exemplar front-and-centre) | **works best** (`stop=word`, **17 tokens, 3.5s**, valid). Structural: the engine ramble cannot starve a goal induced in its OWN call. |
+
+**Recommended fix: D (separate focused goal induction).** Induce `is_level_complete` in its own
+focused call (reliable, 3.5s) rather than relying on the model to write both functions in one budget.
+Minimal-blast-radius implementation: keep the combined induce for `engine`, and when the combined
+output has a valid engine but is missing/degenerate `is_level_complete` (the captured failure mode),
+do a focused goal-only call to obtain it, then combine. This unblocks the L2 reinduction so the
+goal-repair loop + the eventual structural-alignment goal can actually run. (Goal-first ordering C is
+a cheaper alternative but less robust than the separate call.)
+
+This conclusively answers the bisected wall #1 (L2 reinduction reliability): the fix is a separate
+focused goal call, NOT a budget increase. Wall #2 (goal quality / structural-alignment goal) is then
+next, and now reachable.
