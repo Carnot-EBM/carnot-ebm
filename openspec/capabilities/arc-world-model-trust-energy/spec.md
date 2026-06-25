@@ -1986,6 +1986,70 @@ arm wins and offline-reproduces while the no-prior arm fails, or records one of
 `archive_expands_dead_cells_no_goal_gradient`, or
 `replay_cannot_restore_cell` as the residual.
 
+### REQ-ARC-WMTE-4705: Submitted A1/A2 Integration Gate For Object-Centric And Amortized Exploration
+
+Experiment 4705 SHALL read the object-centric proposal artifact
+`results/experiment_4700_object_centric_perception_proposal_live.json` and the
+amortized-prior plus Go-Explore artifact
+`results/experiment_4701_amortized_exploration_prior_go_explore_live.json`.
+The gate SHALL audit whether the A1 object-centric submitted config
+(`object_centric_proposal_enabled`, `object_centric_proposal_mode`, and
+representation params) or the A2 amortized-prior/archive submitted config
+(`amortized_first_contact_prior_enabled`, `amortized_first_contact_prior_mode`,
+`go_explore_archive_enabled`, and `go_explore_archive_mode`) cleared its
+upstream success gate and is actually folded into `SUBMITTED_AGENT_CONFIG`.
+If both upstream artifacts are null or explicitly `unchanged`, the gate SHALL
+record `config_integrated` as unchanged with the reason, SHALL set
+`config_changed=false`, and SHALL emit both `null_delta_methodology_note` and
+`positive_control_passed` so identical pre/post measurements are marked as by
+construction rather than presented as a finding.
+
+Experiment 4705 SHALL re-measure the integrated held-out first-win rate and
+multi-level deepen rate on the scored `E3AgentPolicy` by invoking the
+Experiment 4605 held-out lane with deepening enabled. The artifact at
+`results/experiment_4705_integration_gate.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `config_integrated`,
+`config_changed`, `null_delta_methodology_note`, `positive_control_passed`,
+`first_win_rate_integrated`, `multi_level_deepen_rate_integrated`,
+`parity_test_green`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. The artifact SHALL also include the A1/A2 audit,
+pre-integration comparison metrics, no-regression status, source artifact
+paths/checksums, the scored-lane measurement, the parity-test result,
+`submitted_to_leaderboard=false`, and spec refs. The verifier SHALL remain
+oracle-distinct from the executable win-check.
+
+Required field principles are:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<config>_shipped_parity_green OR complete: integration_unchanged_both_levers_null."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure on the held-out lane (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the integrated object-centric/amortized-prior signals are oracle-distinct from the executable win-check."
+- `config_integrated`: principle "the A1/A2 config folded into SUBMITTED_AGENT_CONFIG (or 'unchanged' with the reason) -- the single-source-of-truth update."
+- `config_changed`: principle "bool -- true only if a lever cleared its gate; when false, the pre/post numbers are identical BY CONSTRUCTION (not a finding)."
+- `null_delta_methodology_note`: principle "present when config_changed=false (pre==post) -- why the no-change is honest; the marker the TAUTOLOGY carve-out reads (the recurring A6 flag fix)."
+- `positive_control_passed`: principle "bool(parity_test_green AND no_regression) -- GATES the null-delta exemption so an unvalidated no-change is NOT excused."
+- `first_win_rate_integrated`: principle "the integrated SCORED-agent held-out first-win-rate (no regression vs pre-integration) -- the retargeted scored-lane metric."
+- `multi_level_deepen_rate_integrated`: principle "the integrated SCORED-agent multi-level deepen-rate (the deeper scored lever) -- measured on the held-out lane."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4705
+
+**Given** `SUBMITTED_AGENT_CONFIG` imports with `E3AgentPolicy`, the 4700/4701
+A1/A2 artifacts are readable, and the 4605 scored held-out lane is available
+**When** Experiment 4705 audits the upstream chosen submitted configs, measures
+the scored held-out lane with deepening enabled, and runs the submitted-agent
+parity test
+**Then** the result artifact reports either the exact A1/A2 config folded into
+the single source of truth or an unchanged reason when both levers are null,
+reports `config_changed` truthfully, reports held-out first-win rate and
+multi-level deepen rate, reports no regression versus the pre-integration
+config, sets `verifier_is_oracle=false`, requires `parity_test_green=true`, and
+emits `null_delta_methodology_note` plus `positive_control_passed` whenever the
+pre/post metrics are identical because no config changed.
+
 ### REQ-ARC-WMTE-4704: Persist .434 A1/A2 Primitive And Transfer Characterization
 
 Experiment 4704 SHALL persist the strongest reusable `.434` A1/A2 primitive

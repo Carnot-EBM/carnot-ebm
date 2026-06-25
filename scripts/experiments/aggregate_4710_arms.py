@@ -29,7 +29,11 @@ sys.path.insert(0, str(REPO / "python"))
 
 import carnot.experiment_4605_live_integration_scored_agent as mod  # noqa: E402
 
-ARMS = ["frozen", "online-scratch", "online-warm", "online-warm-propose"]
+# Post-fix arm set (2026-06-25): shipped-frozen (CNN discarded by the dict bug = the 0.04 control)
+# -> frozen-fixed (CNN contributes, untrained) -> online-warm (CNN contributes, trained) ->
+# online-warm-propose (CNN contributes + coord generation). online-scratch is dropped from the
+# headline (its pre-fix artifact is stale); included only if present.
+ARMS = ["frozen", "frozen-fixed", "online-warm", "online-warm-propose"]
 KILL_THRESHOLD = 0.05
 
 
@@ -87,11 +91,19 @@ def main() -> int:
                 "duration_s": art.get("duration_s"),
             }
         )
-        if arm != "frozen" and delta > best_delta:
+        # "best online arm" is the strongest of the ONLINE-TRAINING arms only (frozen-fixed is a
+        # control, not an online arm).
+        if arm in ("online-warm", "online-warm-propose", "online-scratch") and delta > best_delta:
             best_arm, best_delta = arm, delta
 
     best_row = next(r for r in rows if r["arm"] == best_arm)
     ci_lower = (best_row.get("ci95") or [None, None])[0]
+    # The training-isolation gate compares the best online arm to the CNN-working control
+    # (frozen-fixed) when present, else to shipped-frozen. This isolates "online training helps"
+    # from "fixing the CNN-discard bug helps".
+    fixed_row = next((r for r in rows if r["arm"] == "frozen-fixed"), None)
+    control_rate = fixed_row["first_win_rate"] if fixed_row else frozen_rate
+    best_minus_control = round((best_row["first_win_rate"] - control_rate), 6)
     crossed = bool(best_delta > KILL_THRESHOLD and isinstance(ci_lower, (int, float)) and ci_lower > 0)
 
     # Honest verdict (terminal prefix) + the null-delta markers the TAUTOLOGY carve-out reads,
@@ -115,8 +127,11 @@ def main() -> int:
         "schema": "carnot.exp4710.arms_summary.v1",
         "arms": rows,
         "frozen_first_win_rate": frozen_rate,
+        "frozen_fixed_first_win_rate": (fixed_row["first_win_rate"] if fixed_row else None),
         "best_online_arm": best_arm,
         "best_online_delta_vs_frozen": round(best_delta, 6),
+        "best_online_delta_vs_control": best_minus_control,
+        "control_arm": "frozen-fixed" if fixed_row else "frozen",
         "kill_threshold": KILL_THRESHOLD,
         "crossed_bar": crossed,
         "honest_verdict": verdict,
@@ -160,7 +175,11 @@ def main() -> int:
             print(f"    + newly solved: {r['newly_solved_vs_frozen']}")
         if r["lost_vs_frozen"]:
             print(f"    - LOST: {r['lost_vs_frozen']}")
-    print(f"\nbest online arm: {best_arm}  delta={best_delta:+.4f}  crossed_bar={crossed}")
+    print(
+        f"\nbest online arm: {best_arm}  vs_shipped_frozen={best_delta:+.4f}  "
+        f"vs_control({'frozen-fixed' if fixed_row else 'frozen'})={best_minus_control:+.4f}  "
+        f"crossed_bar={crossed}"
+    )
     print(f"positive_control_passed (frozen==0.04): {positive_control_passed}")
     print(f"VERDICT: {verdict}")
     print(f"written: {out.relative_to(REPO)}")
