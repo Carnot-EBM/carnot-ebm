@@ -1,0 +1,588 @@
+{
+  "a1_goal_energy_result": {
+    "arms_non_degenerate": true,
+    "banked": false,
+    "baseline_first_win": 0.0,
+    "beat_baseline_by_0_05": false,
+    "crossed": false,
+    "deepened_to_l2": false,
+    "generated": false,
+    "goal_energy_first_win": 0.0,
+    "goal_energy_vs_baseline_delta": 0.0,
+    "included_in_headline": true,
+    "offline_reproduced": false,
+    "reason": "goal_energy_real_non_degenerate_zero_lift_null",
+    "reproduced_levels": 1,
+    "solve_provenance": "live_agent_self_discovery"
+  },
+  "a2_energy_qd_result": {
+    "arms_non_degenerate": true,
+    "banked": false,
+    "crossed": false,
+    "deepened_to_l2": false,
+    "energy_qd_first_win": 0.0,
+    "energy_qd_vs_naive_delta": 0.0,
+    "generated": false,
+    "generated_winner_where_naive_missed": false,
+    "included_in_headline": true,
+    "naive_search_first_win": 0.0,
+    "novel_candidates_generated": 8,
+    "offline_reproduced": false,
+    "reason": "energy_qd_real_non_degenerate_zero_lift_null",
+    "reproduced_levels": 1,
+    "solve_provenance": "live_agent_self_discovery",
+    "target_game": "energy_qd"
+  },
+  "a3_banked_level": {
+    "banked": false,
+    "crossed": false,
+    "generated": false,
+    "new_levels_banked": 0,
+    "reason": "no_clean_registry_bank",
+    "reproduced_levels": 2,
+    "reproducible_total_levels_after": 64,
+    "reproducible_total_levels_before": 64,
+    "solve_provenance": "development_proxy",
+    "target_game": "re86"
+  },
+  "b1_carveout_fix_confirmed": true,
+  "bridge_crossed_for_solve": false,
+  "cited_upstream_artifacts": {
+    "A1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4737_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: goal_energy_generation_no_first_win_lift_residual_goal_energy_does_not_up_weight_the_winner",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A1",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4737_goal_energy_candidate_generation_valid_test.json",
+      "role": "goal_energy_candidate_generation",
+      "sha256": "sha256:86e48bd2eaa9c94fd003f2d82486fc812c134caf21287c4d74dd78ca7d119037",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4738_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: energy_qd_generation_no_first_win_lift_residual_winner_not_in_reachable_mutation_neighborhood",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "energy_qd_vs_naive_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "name": "A2",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4738_energy_fitness_qd_generation_valid_test.json",
+      "role": "energy_fitness_qd_generation",
+      "sha256": "sha256:46d5811f8eae2441a9a578081c7bb2d538c2a6534b93bba22ddc216b5954b8f4",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A3": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4739_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: re86_delta_identified_no_bank",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A3",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4739_levelup_selfplay.json",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:34938e6e3f4d8104b236916e16ea704e6edf176aaf543fab4605bd528eec1a46",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A4": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4740_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+          "kind": "TAUTOLOGY",
+          "severity": "warn"
+        }
+      ],
+      "name": "A4",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4740_held_out_first_win_readiness.json",
+      "role": "held_out_readiness",
+      "sha256": "sha256:069e1006f1071e0f2190fa971133f5f8a929bb320a2e0dd248273a5b1dd6aec0",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 1
+    },
+    "A5": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4741_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: energy_fitness_qd_generator_operator_persisted_transfer_characterized",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A5",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4741_primitive_persist_transfer.json",
+      "role": "primitive_persist",
+      "sha256": "sha256:269953689d6d547308d36c9da3ebff835e2974e68028cab0b0ebaab38c7e4cae",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A6": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4742_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: integration_no_change_all_levers_unchanged",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "live_first_win_rate_integrated=0.04 and live_first_win_rate_pre_integration=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via live_first_win_rate_delta_vs_pre_integration==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+          "kind": "TAUTOLOGY",
+          "severity": "warn"
+        },
+        {
+          "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: live_first_win_rate_delta_vs_pre_integration=0.0 with no non-degenerate exercise evidence; metrics_delta_audit.live_first_win_rate_delta_vs_pre_integration=0.0 with no non-degenerate exercise evidence",
+          "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
+          "severity": "warn"
+        }
+      ],
+      "name": "A6",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4742_integration_gate.json",
+      "role": "integration",
+      "sha256": "sha256:cc67c982bc45e936fe48e98f2b0a0c09b39857f8f5c93beb74580d8c8ce075ce",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 1
+    },
+    "B1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4743_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "success: adversarial_verify_carveout_hardening_shipped_pinned.",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B1",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4743_adversarial_verify_carveout_hardening.json",
+      "role": "adversarial_verify_carveout",
+      "sha256": "sha256:9a0a14726cb5af6046ca3487662d6d8378133cc3cc882182e60548cdd9f61cbb",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "B2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4744_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: submission_package_blocked_manifest_resources",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B2",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4744_submission_package_readiness.json",
+      "role": "submission_package_readiness",
+      "sha256": "sha256:dbc1ba944f1b758043999ba169981b0d6a1f54a6837d2cc392db8a047b64cffa",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "C": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4745_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "success: kv260_latency_transcript_captured",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "C",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4745_kv260_continuity.json",
+      "role": "kv260",
+      "sha256": "sha256:d0fc6537e2331b7a9b17430c40e15ccf368830510abac64edcfc52088fc45eea",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "D": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4746_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "D",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json",
+      "role": "sota_ingestion",
+      "sha256": "sha256:1b413383da05f51de30447f3fe1f7c054f583729114c0684ffb25c3ef368cb4a",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "PREVIOUS": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4735_capstone_v435.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "blocked_upstream_artifacts",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: a2_active_probe_new_level.hypothesis_posterior_built=False; a2_active_probe_new_level.posterior_entropy_reduction=0.0; a2_active_probe_new_level.probe_actions_taken=0; scorecard.A2.details.hypothesis_posterior_built=False; scorecard.A2.details.posterior_entropy_reduction=0.0; scorecard.A2.details.probe_actions_taken=0",
+          "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
+          "severity": "warn"
+        }
+      ],
+      "name": "PREVIOUS",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4735_capstone_v435.json",
+      "role": "previous_v435_scorecard",
+      "sha256": "sha256:4710b57919e46ad1e57b2595cef7c0b8a9ee7317d87d4af1b58ed5b8c5c9af4d",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 1
+    }
+  },
+  "duration_s": 0.941331,
+  "experiment": "experiment_4747_capstone_v436",
+  "field_principles": {
+    "a1_goal_energy_result": {
+      "principle": "did A1 prove arms_non_degenerate AND beat baseline by >=+0.05 / deepen to L2 -- or confirm goal_energy_generation_arms_degenerate (a harness bug) or a real non-degenerate null?"
+    },
+    "a2_energy_qd_result": {
+      "principle": "did A2 generate the winner (a NEW level via energy-fitness QD where naive search misses it) -- or confirm a harness bug / a real null?"
+    },
+    "a3_banked_level": {
+      "principle": "did A3 bank +1 (64->65)? the Level-Up Guarantee + self-play-every-milestone outcome."
+    },
+    "b1_carveout_fix_confirmed": {
+      "principle": "did B1 (INFRA) stop the honest non-degenerate-zero-lift null from being quarantined (the .435-A1 escape) + flag the declared-but-unrun mechanism (the .435-A2 escape)?"
+    },
+    "bridge_crossed_for_solve": {
+      "principle": "the HEADLINE DECISION -- True only if a GENERIC agent banked a NEW level via self-discovery (A1 goal-energy L2 | A2 energy-QD L2), offline-reproduced, control-passed; False if only capability/depth grew."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete: <capability_grew_64_to_65 | bridge_crossed_for_solve_<game>_L<n>> -- the honest one-line milestone outcome."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "next_milestone_fallback": {
+      "principle": "the .437 direction (D's flagged_for_v437 + the deferred reopens P1/P4/A2-active-probe + the strongest open lever) -- the convergence hand-off."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (upstream artifacts present, summarize/publication tools runnable); pre-empts missing-resource fabrication."
+    },
+    "publication_gate": {
+      "principle": "the G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py --json; FoVer 0.9131 frozen, never substituted."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash of the aggregated artifact set."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "the registry header delta this milestone (64->65 if A1/A2/A3 banked) -- the monotonic north-star metric."
+    },
+    "skipped_artifacts": {
+      "principle": "the artifacts skipped for flagged_adversarial / control-failed / ablation-missing -- the fabrication-gate discipline (never aggregate a flagged number)."
+    },
+    "submission_package_ready": {
+      "principle": "B2's submission-readiness (5 days to deadline) -- is the frozen-stack package ready for the operator to submit?"
+    },
+    "verifier_is_oracle_confirmed_false": {
+      "principle": "confirms every aggregated value claim carries verifier_is_oracle:false (no circular moat over-claim)."
+    }
+  },
+  "headline_decision": {
+    "a1_arms_non_degenerate": true,
+    "a1_beat_baseline_by_0_05": false,
+    "a1_deepened_to_l2": false,
+    "a2_deepened_to_l2": false,
+    "a2_generated_winner_where_naive_missed": false,
+    "a3_banked_64_to_65": false,
+    "b1_carveout_fix_confirmed": true,
+    "bridge_crossed_for_solve": false,
+    "capability_delta": 0,
+    "submission_package_ready": false
+  },
+  "honest_verdict": "complete: no_bridge_crossed_capability_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "missing_artifacts": [],
+  "next_milestone_fallback": {
+    "deferred_reopens": [
+      "P1_go_explore",
+      "P4_subgoal",
+      "A2_active_probe"
+    ],
+    "flagged_for_v437": [
+      "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
+      "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
+      "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)"
+    ],
+    "strongest_open_lever": "A2_energy_qd_generation"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "ok": true,
+    "operator_only": true,
+    "publication_gate_py_runnable": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 64,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4747": true,
+    "summarize_artifact_py_available": true,
+    "summarize_artifact_py_used_for_every_present_upstream": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "B2": true,
+      "C": true,
+      "D": true,
+      "PREVIOUS": true
+    }
+  },
+  "publication_gate": {
+    "fover_09131_frozen_never_substituted": true,
+    "frozen_fover_auroc": 0.9131,
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4747,
+  "reproducibility_checksum": "sha256:c10bf041600a9338140aa254afa25b008c9dfa0e6eedc2a42dada607ed99af9a",
+  "reproducible_total_levels": 64,
+  "reproducible_total_levels_delta": 0,
+  "result_path": "results/experiment_4747_capstone_v436.json",
+  "schema": "carnot.exp4747.capstone_v436.v1",
+  "scorecard": {
+    "A1": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "arms_non_degenerate": true,
+        "banked": false,
+        "baseline_first_win": 0.0,
+        "beat_baseline_by_0_05": false,
+        "crossed": false,
+        "deepened_to_l2": false,
+        "generated": false,
+        "goal_energy_first_win": 0.0,
+        "goal_energy_vs_baseline_delta": 0.0,
+        "included_in_headline": true,
+        "offline_reproduced": false,
+        "reason": "goal_energy_real_non_degenerate_zero_lift_null",
+        "reproduced_levels": 1,
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: goal_energy_generation_no_first_win_lift_residual_goal_energy_does_not_up_weight_the_winner"
+    },
+    "A2": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "arms_non_degenerate": true,
+        "banked": false,
+        "crossed": false,
+        "deepened_to_l2": false,
+        "energy_qd_first_win": 0.0,
+        "energy_qd_vs_naive_delta": 0.0,
+        "generated": false,
+        "generated_winner_where_naive_missed": false,
+        "included_in_headline": true,
+        "naive_search_first_win": 0.0,
+        "novel_candidates_generated": 8,
+        "offline_reproduced": false,
+        "reason": "energy_qd_real_non_degenerate_zero_lift_null",
+        "reproduced_levels": 1,
+        "solve_provenance": "live_agent_self_discovery",
+        "target_game": "energy_qd"
+      },
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: energy_qd_generation_no_first_win_lift_residual_winner_not_in_reachable_mutation_neighborhood"
+    },
+    "A3": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "banked": false,
+        "crossed": false,
+        "generated": false,
+        "new_levels_banked": 0,
+        "reason": "no_clean_registry_bank",
+        "reproduced_levels": 2,
+        "reproducible_total_levels_after": 64,
+        "reproducible_total_levels_before": 64,
+        "solve_provenance": "development_proxy",
+        "target_game": "re86"
+      },
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: re86_delta_identified_no_bank"
+    },
+    "A4": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: held_out_first_win_flat_no_leaderboard_change"
+    },
+    "A5": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: energy_fitness_qd_generator_operator_persisted_transfer_characterized"
+    },
+    "A6": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: integration_no_change_all_levers_unchanged"
+    },
+    "B1": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "carveout_fix_confirmed": true
+      },
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "success: adversarial_verify_carveout_hardening_shipped_pinned."
+    },
+    "B2": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "submission_package_ready": false
+      },
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "complete: submission_package_blocked_manifest_resources"
+    },
+    "C": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "success: kv260_latency_transcript_captured"
+    },
+    "D": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "generated": false,
+      "reason": "included_clean",
+      "verdict": "success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped"
+    }
+  },
+  "skipped_artifacts": [],
+  "solve_provenance_confirmed": true,
+  "spec_refs": [
+    "REQ-CAPSTONE-4747",
+    "SCENARIO-CAPSTONE-4747",
+    "SCENARIO-CAPSTONE-4747-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4747-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": false,
+  "verifier_is_oracle_confirmed_false": true
+}
