@@ -9275,3 +9275,5 @@ The contro |
 | 2026-06-25 16:41 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 132 passed, 1 warning in 13.97s |
 | 2026-06-25 16:56 UTC | PHASE D (SOTA-INGESTION -- the .436 fallback) -- m | OK | 120 passed, 1 warning in 9.38s |
 | 2026-06-25 17:13 UTC | PHASE E (CAPSTONE .435) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.88s |
+| 2026-06-25 18:07 UTC | Plan milestone 2026.06.436 | OK | 12 tasks proposed |
+| 2026-06-25 18:09 UTC | Milestone 2026.06.436 activated | OK | 12 tasks queued |
