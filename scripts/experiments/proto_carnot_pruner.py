@@ -133,23 +133,50 @@ class CarnotPrunedGraphExplorer(OrigGraphExplorer):
     pruned agent before calling choose_edge, so the pruner can score each edge.
     """
 
-    def __init__(self, *args: Any, carnot_scorer: Any = None, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        *args: Any,
+        carnot_scorer: Any = None,
+        policy: str = "hard_argmax",
+        epsilon: float = 0.0,
+        temperature: float = 0.5,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(*args, **kwargs)
         self.carnot_scorer = carnot_scorer
+        # Policy controls how the Carnot score is used over UNTESTED edges:
+        #   "hard_argmax"     -> always pick argmax (the original deterministic pruner)
+        #   "eps_greedy"      -> with prob epsilon pick uniform-random untested edge,
+        #                        else Carnot-argmax (keeps exploration diversity)
+        #   "weighted_sample" -> sample ∝ softmax(score / temperature)
+        self.policy = policy
+        self.epsilon = float(epsilon)
+        self.temperature = float(temperature)
         # Will be set by the agent before each choose_edge call:
         self._current_frame: Any = None
         self._edge_to_action_fn: Any = None  # callable(edge_idx) -> ArcAction
-        # Diagnostics: track when we actually changed the order
+        # Diagnostics: track when we actually changed the order vs what vanilla
+        # random.choice would have picked.
         self.pruner_total_choices = 0
         self.pruner_changed_count = 0
+        # For eps_greedy: count how many decisions took the random-explore branch.
+        self.pruner_explore_branch_count = 0
 
     def choose_edge(self, node: Any, return_reasoning: bool = False) -> Any:
-        """Override: score untested edges with Carnot, take argmax.
+        """Override: score untested edges with Carnot; select per self.policy.
 
         WHY: edge_idx < num_click_actions → segment click (ACTION6 at centroid)
              edge_idx >= num_click_actions → directional action (ACTION1..5)
-        We convert each edge_idx to an ArcAction, score it, and pick the max.
-        Tiebreaks are random (so seeds still matter and vary the run).
+        We convert each edge_idx to an ArcAction, score it, then apply the policy.
+
+        All policies draw their random fallback / sampling from the SAME
+        untested_edges set just-explore would (so any edge vanilla can reach is
+        always reachable — the hedge can never get permanently stuck).
+
+        The `pruner_changed_count` metric is measured the same way for every
+        policy: it counts decisions where the policy-chosen edge differs from the
+        vanilla random.choice draw, given the scores varied. This makes
+        `pruner_exercised` directly comparable across arms.
         """
         node_info = self._nodes[node]
         if node_info.has_open_group(self.active_group):
@@ -160,7 +187,10 @@ class CarnotPrunedGraphExplorer(OrigGraphExplorer):
                 raise ValueError("No untested edges in the current group while the group is open")
 
             self.pruner_total_choices += 1
-            random_choice = random.choice(untested_edges)  # what vanilla would pick
+            # The vanilla baseline draw (same RNG stream so paired-per-seed holds).
+            # Drawn FIRST and unconditionally so the RNG advances identically to
+            # vanilla on this decision; downstream policy draws are additional.
+            random_choice = random.choice(untested_edges)
 
             if (
                 self.carnot_scorer is not None
@@ -182,18 +212,17 @@ class CarnotPrunedGraphExplorer(OrigGraphExplorer):
                 score_vals = [s for s, _ in scores]
                 scores_vary = len(set(round(s, 8) for s in score_vals)) > 1
                 max_score = max(score_vals)
-
-                # argmax with random tiebreak among max-score edges
                 max_edges = [e for s, e in scores if abs(s - max_score) < 1e-9]
-                carnot_choice = random.choice(max_edges)
 
-                if scores_vary and carnot_choice != random_choice:
+                chosen = self._select_by_policy(untested_edges, scores, max_edges)
+
+                if scores_vary and chosen != random_choice:
                     self.pruner_changed_count += 1
 
-                edge_idx = carnot_choice
+                edge_idx = chosen
                 reasoning = (
-                    f"Carnot-pruned: chose edge {edge_idx} "
-                    f"(score={max_score:.4f}) from {len(untested_edges)} untested edges "
+                    f"Carnot-{self.policy}: chose edge {edge_idx} "
+                    f"(max_score={max_score:.4f}) from {len(untested_edges)} untested "
                     f"(scores_varied={scores_vary})\n"
                 )
             else:
@@ -219,6 +248,76 @@ class CarnotPrunedGraphExplorer(OrigGraphExplorer):
         else:
             return edge_idx
 
+    def _select_by_policy(
+        self,
+        untested_edges: list[int],
+        scores: list[tuple[float, int]],
+        max_edges: list[int],
+    ) -> int:
+        """Apply the configured hedge policy over the scored untested edges.
+
+        WHY a hedge: hard-argmax deterministically follows the blunt cross-game
+        Carnot marginal even when it is wrong for THIS game (it killed m0r0's
+        solve 5/5→0/5). A hedge keeps the verifier's guidance most of the time
+        but guarantees the agent can still reach any edge vanilla could, so it
+        cannot get permanently stuck in a verifier-misled dead end.
+
+        All draws use the seeded `random` module, so vanilla / argmax / hedge
+        are paired per seed.
+        """
+        if self.policy == "hard_argmax":
+            # Deterministic argmax with random tiebreak (original pruner).
+            return random.choice(max_edges)
+
+        if self.policy == "eps_greedy":
+            # With prob epsilon, take a uniform-random untested edge (explore);
+            # else exploit the Carnot argmax. The random draw uses the SAME
+            # untested_edges set vanilla would, so any edge stays reachable.
+            if random.random() < self.epsilon:
+                self.pruner_explore_branch_count += 1
+                return random.choice(untested_edges)
+            return random.choice(max_edges)
+
+        if self.policy == "weighted_sample":
+            # Sample an untested edge ∝ softmax(score / temperature). Lower T =>
+            # more peaked toward argmax; higher T => closer to uniform. T is
+            # chosen (0.5) to be neither uniform nor argmax. Every edge keeps
+            # nonzero probability, so the agent can never be fully stuck.
+            score_vals = [s for s, _ in scores]
+            edge_ids = [e for _, e in scores]
+            t = max(1e-6, self.temperature)
+            mx = max(score_vals)
+            # Numerically stable softmax.
+            exps = [_safe_exp((s - mx) / t) for s in score_vals]
+            total = sum(exps)
+            if total <= 0.0:
+                return random.choice(untested_edges)
+            probs = [e / total for e in exps]
+            return _weighted_choice(edge_ids, probs)
+
+        # Unknown policy: fall back to argmax (should not happen).
+        return random.choice(max_edges)
+
+
+def _safe_exp(x: float) -> float:
+    """exp(x) clipped to avoid overflow for very positive x."""
+    import math
+
+    if x > 50.0:
+        x = 50.0
+    return math.exp(x)
+
+
+def _weighted_choice(items: list[int], probs: list[float]) -> int:
+    """Seeded weighted sample of one item given a probability vector."""
+    r = random.random()
+    acc = 0.0
+    for item, p in zip(items, probs):
+        acc += p
+        if r <= acc:
+            return item
+    return items[-1]
+
 
 # ─── 5. Pruned HeuristicAgent: injects Carnot scorer and edge->action mapping ──
 class CarnotPrunedHeuristicAgent(OrigHeuristicAgent):
@@ -233,13 +332,24 @@ class CarnotPrunedHeuristicAgent(OrigHeuristicAgent):
     is completely unchanged from the original.
     """
 
-    def __init__(self, *args: Any, carnot_scorer: Any = None, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        *args: Any,
+        carnot_scorer: Any = None,
+        policy: str = "hard_argmax",
+        epsilon: float = 0.0,
+        temperature: float = 0.5,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(*args, **kwargs)
         # Replace the graph explorer with the pruned version
         self.graph_explorer = CarnotPrunedGraphExplorer(
             verbose_level=self.verbose_level,
             n_groups=self.N_GROUPS,
             carnot_scorer=carnot_scorer,
+            policy=policy,
+            epsilon=epsilon,
+            temperature=temperature,
         )
         self._carnot_scorer = carnot_scorer
         # Will be set during choose_action before the explorer chooses
@@ -444,15 +554,21 @@ def run_one_game(
     seed: int,
     pruner_mode: bool,
     carnot_scorer: Any = None,
+    policy: str = "hard_argmax",
+    epsilon: float = 0.0,
+    temperature: float = 0.5,
 ) -> dict:
-    """Run one game with either vanilla or Carnot-pruned agent.
+    """Run one game with either vanilla or a Carnot-pruned agent.
 
     WHY pruner_mode:
     - False: vanilla HeuristicAgent (random.choice untested edges)
-    - True: CarnotPrunedHeuristicAgent (argmax Carnot score over untested edges)
+    - True: CarnotPrunedHeuristicAgent using the named `policy`:
+        hard_argmax / eps_greedy (with epsilon) / weighted_sample (with temperature)
 
-    seed controls random.seed for this run. The same seed produces the same
-    result for vanilla; for Carnot-pruned, the seed only affects tiebreaks.
+    seed controls random.seed for this run. Vanilla and all pruned arms share
+    the same per-seed RNG stream so they are paired per seed: the explorer draws
+    the vanilla random.choice FIRST on every decision (advancing the RNG
+    identically to vanilla), then any policy-specific draw is layered on top.
     """
     # Seed random for reproducibility
     random.seed(seed)
@@ -463,6 +579,7 @@ def run_one_game(
         "budget": budget,
         "seed": seed,
         "pruner_mode": pruner_mode,
+        "policy": policy if pruner_mode else "vanilla",
         "reached_level": 0,
         "solved": False,
         "actions_used": 0,
@@ -471,6 +588,7 @@ def run_one_game(
         "adapter_error": None,
         "pruner_total_choices": 0,
         "pruner_changed_count": 0,
+        "pruner_explore_branch_count": 0,
     }
 
     try:
@@ -488,6 +606,9 @@ def run_one_game(
                 ROOT_URL="http://localhost:0",
                 record=False,
                 carnot_scorer=carnot_scorer,
+                policy=policy,
+                epsilon=epsilon,
+                temperature=temperature,
             )
         else:
             agent = OrigHeuristicAgent(
@@ -568,6 +689,9 @@ def run_one_game(
         if pruner_mode and hasattr(agent, "graph_explorer"):
             result["pruner_total_choices"] = agent.graph_explorer.pruner_total_choices
             result["pruner_changed_count"] = agent.graph_explorer.pruner_changed_count
+            result["pruner_explore_branch_count"] = getattr(
+                agent.graph_explorer, "pruner_explore_branch_count", 0
+            )
 
     except Exception:
         result["adapter_failed"] = True
@@ -585,15 +709,26 @@ def run_game_n_seeds(
     n_seeds: int,
     pruner_mode: bool,
     carnot_scorer: Any = None,
+    policy: str = "hard_argmax",
+    epsilon: float = 0.0,
+    temperature: float = 0.5,
 ) -> dict:
-    """Run a game N times with different seeds, return per-seed results + aggregates."""
+    """Run a game N times with different seeds, return per-seed results + aggregates.
+
+    The per-seed sequence (base_seed + i*37) is IDENTICAL across vanilla and all
+    pruned arms (vanilla / hard_argmax / eps_greedy / weighted_sample), so every
+    arm is paired against vanilla seed-for-seed — directly comparable.
+    """
     per_seed: list[dict] = []
     atfl_values: list[int] = []
 
     for i in range(n_seeds):
         seed = base_seed + i * 37  # spread seeds
         print(f"    seed={seed}...", end=" ", flush=True)
-        r = run_one_game(game_id, budget, arc, seed, pruner_mode, carnot_scorer)
+        r = run_one_game(
+            game_id, budget, arc, seed, pruner_mode, carnot_scorer,
+            policy=policy, epsilon=epsilon, temperature=temperature,
+        )
         per_seed.append(r)
 
         if r["adapter_failed"]:
@@ -611,6 +746,7 @@ def run_game_n_seeds(
     min_atfl = min(atfl_values) if atfl_values else None
     total_changed = sum(r.get("pruner_changed_count", 0) for r in per_seed)
     total_choices = sum(r.get("pruner_total_choices", 0) for r in per_seed)
+    total_explore = sum(r.get("pruner_explore_branch_count", 0) for r in per_seed)
 
     return {
         "game": game_id,
@@ -624,10 +760,148 @@ def run_game_n_seeds(
         "per_seed": per_seed,
         "pruner_total_choices": total_choices,
         "pruner_changed_count": total_changed,
+        "pruner_explore_branch_count": total_explore,
     }
 
 
-# ─── 9. Main ───────────────────────────────────────────────────────────────────
+# ─── 9. Arm definitions ────────────────────────────────────────────────────────
+# Each pruned arm is (name, policy, epsilon, temperature). vanilla is special-cased.
+PRUNED_ARMS = [
+    ("hard_argmax", "hard_argmax", 0.0, 0.5),
+    ("eps_greedy_0.3", "eps_greedy", 0.3, 0.5),
+    ("eps_greedy_0.5", "eps_greedy", 0.5, 0.5),
+    ("weighted_sample", "weighted_sample", 0.0, 0.5),  # T=0.5 (peaked, neither uniform nor argmax)
+]
+
+
+def _summarize_arm(
+    arm_name: str,
+    all_vanilla: dict[str, dict],
+    all_arm: dict[str, dict],
+) -> dict:
+    """Build per-game + aggregate stats for one arm, paired against vanilla.
+
+    The decisive constraint (per the task): an arm SUCCEEDS iff it preserves
+    EVERY solve (carnot_n_solved >= vanilla_n_solved on ALL 9 games — no solve
+    loss, no solve-rate regression) AND median_efficiency_ratio > 1.0.
+    """
+    per_game: list[dict] = []
+    efficiency_ratios: list[float] = []
+    action_reductions: list[float] = []
+    solve_preserved_count = 0       # any_solved preserved (solve not fully lost)
+    solve_rate_regressed_games: list[str] = []   # n_solved dropped vs vanilla
+    solve_lost_games: list[str] = []             # any_solved went True->False
+    total_choices = 0
+    total_changed = 0
+    total_explore = 0
+
+    for game in SOLVED_GAMES:
+        v = all_vanilla[game]
+        p = all_arm[game]
+
+        v_median = v["median_atfl"]
+        p_median = p["median_atfl"]
+        v_n = v["n_solved"]
+        p_n = p["n_solved"]
+
+        if v_median is not None and p_median is not None and p_median > 0:
+            action_reduction = float(v_median - p_median)
+            efficiency_ratio = float((v_median / p_median) ** 2)
+        else:
+            action_reduction = None
+            efficiency_ratio = None
+
+        # solve_preserved (task definition): carnot_n_solved >= vanilla_n_solved
+        # i.e. NO solve-rate regression. This is the binding "preserve every solve".
+        solve_preserved = (p_n >= v_n)
+        if solve_preserved:
+            solve_preserved_count += 1
+        else:
+            solve_rate_regressed_games.append(game)
+            if p["any_solved"] is False and v["any_solved"] is True:
+                solve_lost_games.append(game)
+
+        if efficiency_ratio is not None:
+            efficiency_ratios.append(efficiency_ratio)
+        if action_reduction is not None:
+            action_reductions.append(action_reduction)
+
+        total_choices += p["pruner_total_choices"]
+        total_changed += p["pruner_changed_count"]
+        total_explore += p.get("pruner_explore_branch_count", 0)
+
+        per_game.append({
+            "game": game,
+            "vanilla_median": v_median,
+            "arm_median": p_median,
+            "vanilla_n_solved": v_n,
+            "arm_n_solved": p_n,
+            "vanilla_actions_min": v["min_atfl"],
+            "arm_actions_min": p["min_atfl"],
+            "action_reduction": action_reduction,
+            "efficiency_ratio": efficiency_ratio,
+            "solve_preserved": solve_preserved,  # carnot_n_solved >= vanilla_n_solved
+            "pruner_total_choices": p["pruner_total_choices"],
+            "pruner_changed_count": p["pruner_changed_count"],
+        })
+
+    median_efficiency_ratio = float(median(efficiency_ratios)) if efficiency_ratios else None
+    median_action_reduction = float(median(action_reductions)) if action_reductions else None
+    pruner_exercised = (total_changed > 0 and total_choices > 0)
+    pruner_fire_rate = (total_changed / total_choices) if total_choices > 0 else 0.0
+
+    all_solves_preserved = (len(solve_rate_regressed_games) == 0)
+
+    # WORST per-game outcome = the binding constraint for this arm.
+    # Priority: a solve fully lost (most severe) > a solve-rate regression >
+    # lowest efficiency_ratio among games. Surface whichever binds.
+    if solve_lost_games:
+        worst = f"solve_lost:{solve_lost_games}"
+    elif solve_rate_regressed_games:
+        worst = f"solve_rate_regressed:{solve_rate_regressed_games}"
+    else:
+        # all solves preserved; binding constraint is the worst efficiency game
+        worst_game = None
+        worst_er = None
+        for g in per_game:
+            er = g["efficiency_ratio"]
+            if er is not None and (worst_er is None or er < worst_er):
+                worst_er = er
+                worst_game = g["game"]
+        worst = (
+            f"min_efficiency_ratio={worst_er:.3f}@{worst_game}"
+            if worst_er is not None else "no_efficiency_data"
+        )
+
+    deployable = bool(
+        all_solves_preserved
+        and median_efficiency_ratio is not None
+        and median_efficiency_ratio > 1.0
+        and pruner_exercised
+    )
+
+    return {
+        "arm": arm_name,
+        "per_game": per_game,
+        "median_efficiency_ratio": median_efficiency_ratio,
+        "median_action_reduction": median_action_reduction,
+        "n_games_solve_preserved": solve_preserved_count,
+        "n_games_total": len(SOLVED_GAMES),
+        "n_games_solve_rate_regressed": len(solve_rate_regressed_games),
+        "solve_rate_regressed_games": solve_rate_regressed_games,
+        "solve_lost_games": solve_lost_games,
+        "all_solves_preserved": all_solves_preserved,
+        "worst_per_game_outcome": worst,
+        "pruner_exercised": pruner_exercised,
+        "pruner_total_choices": total_choices,
+        "pruner_changed_count": total_changed,
+        "pruner_explore_branch_count": total_explore,
+        "pruner_fire_rate": round(pruner_fire_rate, 4),
+        "deployable": deployable,
+    }
+
+
+# ─── 10. Main: vanilla + all hedge arms ─────────────────────────────────────────
 def main() -> None:
     t0 = time.time()
     rng = random.Random(RANDOM_SEED)
@@ -635,195 +909,161 @@ def main() -> None:
 
     arc = kit.offline_arcade()
 
-    # ── SMOKE TEST: vc33 (cheapest game, ~9 actions vanilla) ──────────────────
-    print("\n=== SMOKE TEST: vc33 ===")
-    smoke_vanilla = run_one_game("vc33", BUDGET, arc, seed=base_seed, pruner_mode=False, carnot_scorer=None)
-    smoke_pruned = run_one_game("vc33", BUDGET, arc, seed=base_seed, pruner_mode=True, carnot_scorer=_CARNOT_SCORER)
+    # ── SMOKE: vc33 (clean argmax win) + m0r0 (the lost solve) under eps_greedy_0.3 ──
+    print("\n=== SMOKE: eps_greedy_0.3 on vc33 (clean win) + m0r0 (lost solve) ===")
+    smoke: dict[str, dict] = {}
+    for sg in ["vc33", "m0r0"]:
+        sv = run_one_game(sg, BUDGET, arc, seed=base_seed, pruner_mode=False, carnot_scorer=None)
+        sp = run_one_game(
+            sg, BUDGET, arc, seed=base_seed, pruner_mode=True,
+            carnot_scorer=_CARNOT_SCORER, policy="eps_greedy", epsilon=0.3,
+        )
+        smoke[sg] = {
+            "vanilla_solved": sv["solved"],
+            "vanilla_atfl": sv["actions_to_first_levelup"],
+            "eps03_solved": sp["solved"],
+            "eps03_atfl": sp["actions_to_first_levelup"],
+            "pruner_total_choices": sp.get("pruner_total_choices", 0),
+            "pruner_changed_count": sp.get("pruner_changed_count", 0),
+            "pruner_explore_branch_count": sp.get("pruner_explore_branch_count", 0),
+            "adapter_failed": sv["adapter_failed"] or sp["adapter_failed"],
+        }
+        print(
+            f"  {sg}: vanilla(solved={sv['solved']}, atfl={sv['actions_to_first_levelup']}) "
+            f"| eps0.3(solved={sp['solved']}, atfl={sp['actions_to_first_levelup']}, "
+            f"choices={sp.get('pruner_total_choices')}, changed={sp.get('pruner_changed_count')}, "
+            f"explore_draws={sp.get('pruner_explore_branch_count')})"
+        )
+        if sv["adapter_failed"] or sp["adapter_failed"]:
+            print("  SMOKE ADAPTER FAILED — aborting.")
+            if sv["adapter_failed"]:
+                print(sv["adapter_error"])
+            if sp["adapter_failed"]:
+                print(sp["adapter_error"])
+            sys.exit(1)
+    print("Smoke complete. Running full multi-arm comparison...\n")
 
-    print(f"  vanilla:  solved={smoke_vanilla['solved']} atfl={smoke_vanilla['actions_to_first_levelup']}")
-    print(f"  pruned:   solved={smoke_pruned['solved']} atfl={smoke_pruned['actions_to_first_levelup']}")
-    print(f"  pruner fired: total_choices={smoke_pruned.get('pruner_total_choices')} changed={smoke_pruned.get('pruner_changed_count')}")
-
-    if smoke_vanilla["adapter_failed"] or smoke_pruned["adapter_failed"]:
-        print("SMOKE FAILED — aborting.")
-        if smoke_vanilla["adapter_failed"]:
-            print("Vanilla error:", smoke_vanilla["adapter_error"])
-        if smoke_pruned["adapter_failed"]:
-            print("Pruned error:", smoke_pruned["adapter_error"])
-        sys.exit(1)
-
-    if not smoke_vanilla["solved"]:
-        print("WARNING: vanilla vc33 did not solve in smoke test! (may be stochastic — continuing)")
-    print("Smoke complete. Running full 9-game comparison...\n")
-
-    # ── FULL RUN: vanilla + pruned, N=5 seeds each ─────────────────────────────
+    # ── FULL RUN: vanilla + every pruned arm, N=5 seeds, paired per seed ────────
+    # vanilla is run ONCE per game; each pruned arm reuses the SAME per-seed
+    # sequence (base_seed + game-offset + i*37) so all arms pair against vanilla.
     all_vanilla: dict[str, dict] = {}
-    all_pruned: dict[str, dict] = {}
+    arm_results: dict[str, dict[str, dict]] = {name: {} for name, *_ in PRUNED_ARMS}
 
     for game in SOLVED_GAMES:
+        game_base = base_seed + hash(game) % 10000
         print(f"\n=== {game} ===")
-        print(f"  [vanilla]")
-        vanilla_result = run_game_n_seeds(
-            game, BUDGET, arc, base_seed=base_seed + hash(game) % 10000,
-            n_seeds=N_SEEDS, pruner_mode=False, carnot_scorer=None
+        print("  [vanilla]")
+        all_vanilla[game] = run_game_n_seeds(
+            game, BUDGET, arc, base_seed=game_base,
+            n_seeds=N_SEEDS, pruner_mode=False, carnot_scorer=None,
         )
-        all_vanilla[game] = vanilla_result
 
-        print(f"  [carnot_pruned]")
-        pruned_result = run_game_n_seeds(
-            game, BUDGET, arc, base_seed=base_seed + hash(game) % 10000,
-            n_seeds=N_SEEDS, pruner_mode=True, carnot_scorer=_CARNOT_SCORER
-        )
-        all_pruned[game] = pruned_result
+        for arm_name, policy, eps, temp in PRUNED_ARMS:
+            print(f"  [{arm_name}]")
+            arm_results[arm_name][game] = run_game_n_seeds(
+                game, BUDGET, arc, base_seed=game_base,
+                n_seeds=N_SEEDS, pruner_mode=True, carnot_scorer=_CARNOT_SCORER,
+                policy=policy, epsilon=eps, temperature=temp,
+            )
 
-        v_atfl = vanilla_result["median_atfl"]
-        p_atfl = pruned_result["median_atfl"]
-        print(f"  vanilla median_atfl={v_atfl}  pruned median_atfl={p_atfl}")
-        if v_atfl is not None and p_atfl is not None:
-            ratio = (v_atfl / p_atfl) ** 2 if p_atfl > 0 else None
-            print(f"  efficiency_ratio={(ratio):.3f}" if ratio else "  efficiency_ratio=N/A")
+    # ── Summarize each arm ─────────────────────────────────────────────────────
+    arm_summaries: dict[str, dict] = {}
+    for arm_name, *_ in PRUNED_ARMS:
+        arm_summaries[arm_name] = _summarize_arm(arm_name, all_vanilla, arm_results[arm_name])
 
-    # ── Per-game results ───────────────────────────────────────────────────────
-    per_game: list[dict] = []
-    action_reductions: list[float] = []
-    efficiency_ratios: list[float] = []
-    solve_preserved_count = 0
-    solve_lost_games: list[str] = []
-    total_pruner_choices = 0
-    total_pruner_changed = 0
+    # ── m0r0 canary: which arms recover its solve? ─────────────────────────────
+    m0r0_vanilla_n = all_vanilla["m0r0"]["n_solved"]
+    m0r0_recovery: dict[str, dict] = {}
+    for arm_name, *_ in PRUNED_ARMS:
+        arm_n = arm_results[arm_name]["m0r0"]["n_solved"]
+        m0r0_recovery[arm_name] = {
+            "vanilla_n_solved": m0r0_vanilla_n,
+            "arm_n_solved": arm_n,
+            "recovered": bool(arm_n >= 1),
+            "fully_preserved": bool(arm_n >= m0r0_vanilla_n),
+        }
+    any_arm_recovers_m0r0 = any(v["recovered"] for v in m0r0_recovery.values())
 
-    for game in SOLVED_GAMES:
-        v = all_vanilla[game]
-        p = all_pruned[game]
-
-        v_median = v["median_atfl"]
-        p_median = p["median_atfl"]
-
-        if v_median is not None and p_median is not None and p_median > 0:
-            action_reduction = float(v_median - p_median)
-            efficiency_ratio = float((v_median / p_median) ** 2)
-        elif v_median is not None and p_median is None:
-            # Pruned lost the solve entirely
-            action_reduction = None  # type: ignore
-            efficiency_ratio = None  # type: ignore
-        else:
-            action_reduction = None  # type: ignore
-            efficiency_ratio = None  # type: ignore
-
-        # Solve preserved: pruned arm must still solve (any seed)
-        solve_preserved = p["any_solved"]
-        if solve_preserved:
-            solve_preserved_count += 1
-        elif v["any_solved"]:
-            # vanilla solved but pruned did not
-            solve_lost_games.append(game)
-
-        if action_reduction is not None:
-            action_reductions.append(action_reduction)
-        if efficiency_ratio is not None:
-            efficiency_ratios.append(efficiency_ratio)
-
-        total_pruner_choices += p["pruner_total_choices"]
-        total_pruner_changed += p["pruner_changed_count"]
-
-        per_game.append({
-            "game": game,
-            "vanilla_actions_median": v_median,
-            "vanilla_actions_min": v["min_atfl"],
-            "vanilla_n_solved": v["n_solved"],
-            "carnot_actions_median": p_median,
-            "carnot_actions_min": p["min_atfl"],
-            "carnot_n_solved": p["n_solved"],
-            "action_reduction": action_reduction,
-            "efficiency_ratio": efficiency_ratio,
-            "solve_preserved": solve_preserved,
-            "pruner_total_choices": p["pruner_total_choices"],
-            "pruner_changed_count": p["pruner_changed_count"],
-        })
-
-    # ── Aggregates ─────────────────────────────────────────────────────────────
-    median_action_reduction = float(median(action_reductions)) if action_reductions else None
-    median_efficiency_ratio = float(median(efficiency_ratios)) if efficiency_ratios else None
-
-    # pruner_exercised: scores varied AND changed the order on >0 steps
-    pruner_exercised = (total_pruner_changed > 0 and total_pruner_choices > 0)
-    pruner_fire_rate = (total_pruner_changed / total_pruner_choices) if total_pruner_choices > 0 else 0.0
-
-    # Smoke verification values
-    smoke_pruner_fired = (
-        smoke_pruned.get("pruner_changed_count", 0) > 0
-        and smoke_pruned.get("pruner_total_choices", 0) > 0
-    )
+    # ── Deployable arms (preserve ALL solves AND median_eff > 1) ────────────────
+    deployable_arms = [name for name, s in arm_summaries.items() if s["deployable"]]
 
     # ── honest_verdict ─────────────────────────────────────────────────────────
-    all_solves_preserved = (len(solve_lost_games) == 0)
-    genuine_efficiency_win = (
-        median_efficiency_ratio is not None
-        and median_efficiency_ratio > 1.0
-        and pruner_exercised
-        and all_solves_preserved
-    )
-
-    if genuine_efficiency_win:
+    if deployable_arms:
+        # Pick the best deployable arm by median_efficiency_ratio
+        best = max(deployable_arms, key=lambda n: arm_summaries[n]["median_efficiency_ratio"])
+        bs = arm_summaries[best]
         verdict = (
-            f"success: Carnot pruner reduces actions "
-            f"(median_action_reduction={median_action_reduction:.1f}, "
-            f"median_efficiency_ratio={median_efficiency_ratio:.3f}), "
-            f"{solve_preserved_count}/{len(SOLVED_GAMES)} solves preserved, "
-            f"pruner exercised ({total_pruner_changed}/{total_pruner_choices} choices changed)"
-        )
-    elif not pruner_exercised:
-        verdict = (
-            f"complete: pruner NOT exercised "
-            f"(total_choices={total_pruner_choices}, changed={total_pruner_changed}) — "
-            f"scorer returned uniform scores or edge mapping failed; result is a false null"
-        )
-    elif not all_solves_preserved:
-        verdict = (
-            f"complete: pruner LOST solves on games={solve_lost_games}; "
-            f"median_efficiency_ratio={median_efficiency_ratio}; "
-            f"solve regression is a real finding — pruner is not a drop-in replacement"
-        )
-    elif median_efficiency_ratio is not None and median_efficiency_ratio <= 1.0:
-        verdict = (
-            f"complete: pruner exercised but NO action reduction "
-            f"(median_efficiency_ratio={median_efficiency_ratio:.3f} ≤ 1.0); "
-            f"Carnot frame-change scoring does not help just-explore on these games at this budget"
+            f"success: hedge arm '{best}' preserves ALL solves "
+            f"({bs['n_games_solve_preserved']}/{bs['n_games_total']}) AND "
+            f"median_efficiency_ratio={bs['median_efficiency_ratio']:.3f} > 1.0; "
+            f"deployable_arms={deployable_arms}; "
+            f"m0r0_recovered={any_arm_recovers_m0r0}"
         )
     else:
-        verdict = (
-            f"complete: pruner ran but results inconclusive "
-            f"(median_efficiency_ratio={median_efficiency_ratio}, "
-            f"solve_preserved={solve_preserved_count}/{len(SOLVED_GAMES)})"
-        )
+        # Identify the binding constraint across arms.
+        # Did any arm preserve all solves? If yes, efficiency was the blocker.
+        preserve_arms = [n for n, s in arm_summaries.items() if s["all_solves_preserved"]]
+        argmax_summary = arm_summaries["hard_argmax"]
+        if preserve_arms:
+            # solves preserved by some arm but median_eff <= 1 for those
+            effs = {n: arm_summaries[n]["median_efficiency_ratio"] for n in preserve_arms}
+            verdict = (
+                f"complete: NO deployable hedge — arms that preserve all solves "
+                f"({preserve_arms}) do NOT keep median_efficiency_ratio>1 "
+                f"(median_eff={effs}); binding constraint = NO EFFICIENCY GAIN "
+                f"once exploration diversity is restored. m0r0_recovered={any_arm_recovers_m0r0}"
+            )
+        else:
+            verdict = (
+                f"complete: NO deployable hedge — NO arm (including the hedges) "
+                f"preserves every solve; binding constraint = SOLVE LOSS / solve-rate "
+                f"regression persists under all policies. "
+                f"m0r0_recovered={any_arm_recovers_m0r0}; "
+                f"per-arm regressions: "
+                + "; ".join(
+                    f"{n}:{arm_summaries[n]['solve_rate_regressed_games']}"
+                    for n, *_ in PRUNED_ARMS
+                )
+            )
 
     duration_s = round(time.time() - t0, 2)
 
+    # ── Build the vanilla per-game reference block ─────────────────────────────
+    vanilla_per_game = [
+        {
+            "game": game,
+            "median_atfl": all_vanilla[game]["median_atfl"],
+            "min_atfl": all_vanilla[game]["min_atfl"],
+            "n_solved": all_vanilla[game]["n_solved"],
+        }
+        for game in SOLVED_GAMES
+    ]
+
     # ── Artifact ───────────────────────────────────────────────────────────────
     payload = {
-        "per_game": per_game,
-        "median_action_reduction": median_action_reduction,
-        "median_efficiency_ratio": median_efficiency_ratio,
-        "n_games_solve_preserved": solve_preserved_count,
-        "n_games_total": len(SOLVED_GAMES),
-        "solve_lost_games": solve_lost_games,
-        "pruner_exercised": pruner_exercised,
-        "pruner_total_choices": total_pruner_choices,
-        "pruner_changed_count": total_pruner_changed,
-        "pruner_fire_rate": round(pruner_fire_rate, 4),
-        "smoke_vanilla_atfl": smoke_vanilla.get("actions_to_first_levelup"),
-        "smoke_pruned_atfl": smoke_pruned.get("actions_to_first_levelup"),
-        "smoke_pruner_fired": smoke_pruner_fired,
-        "smoke_pruner_choices": smoke_pruned.get("pruner_total_choices", 0),
-        "smoke_pruner_changed": smoke_pruned.get("pruner_changed_count", 0),
+        "arms": ["vanilla"] + [name for name, *_ in PRUNED_ARMS],
+        "arm_configs": {
+            name: {"policy": policy, "epsilon": eps, "temperature": temp}
+            for name, policy, eps, temp in PRUNED_ARMS
+        },
+        "vanilla_per_game": vanilla_per_game,
+        "arm_summaries": arm_summaries,
+        "deployable_arms": deployable_arms,
+        "m0r0_canary": {
+            "vanilla_n_solved": m0r0_vanilla_n,
+            "per_arm_recovery": m0r0_recovery,
+            "any_arm_recovers_m0r0": any_arm_recovers_m0r0,
+        },
+        "smoke": smoke,
         "n_seeds": N_SEEDS,
         "budget": BUDGET,
         "games": SOLVED_GAMES,
+        "n_games_total": len(SOLVED_GAMES),
         "honest_verdict": verdict,
         "inference_substrate": "verifier_ensemble_against_cached_candidates",
         "verifier_is_oracle": False,
         "solve_provenance": "development_proxy",
-        "random_seed": RANDOM_SEED,
+        "random_seed": 4732,
         "base_seed_used": base_seed,
         "duration_s": duration_s,
         "methodology_note": (
@@ -831,9 +1071,17 @@ def main() -> None:
             "scores each untested edge in just-explore's GraphExplorer.choose_edge. "
             "Edge->ArcAction mapping: edge_idx < num_click_actions -> segment centroid click (ACTION6 x,y); "
             "edge_idx >= num_click_actions -> directional arrow action (ACTION1..5). "
-            "Pruner replaces random.choice with argmax, random tiebreak for equal scores. "
+            "Arms: vanilla (random.choice); hard_argmax (deterministic argmax); "
+            "eps_greedy_0.3/0.5 (prob eps uniform-random untested edge, else argmax); "
+            "weighted_sample (sample untested edge proportional to softmax(score/T), T=0.5). "
+            "Every hedge's random fallback draws from the SAME untested_edges set vanilla would, "
+            "so any edge vanilla can reach stays reachable (no permanent stuck state). "
+            "All arms share the per-seed RNG stream (vanilla random.choice drawn first on every "
+            "decision), so each arm is paired against vanilla seed-for-seed. "
             "All other just-explore logic (segmentation, graph, BFS, transition recording) unchanged. "
-            "Same budget, same games, same offline arcade variant-1 for both arms. CPU-only."
+            "Same budget(2000), same 9 games, same offline arcade variant-1 across all arms. CPU-only. "
+            "An arm SUCCEEDS iff carnot_n_solved >= vanilla_n_solved on ALL 9 games (no solve loss / "
+            "no solve-rate regression) AND median_efficiency_ratio > 1.0."
         ),
     }
 
@@ -843,30 +1091,53 @@ def main() -> None:
     ).hexdigest()
     payload["reproducibility_checksum"] = chksum
 
-    out_path = RESULTS_DIR / "proto_carnot_pruner.json"
+    out_path = RESULTS_DIR / "proto_carnot_pruner_hedged.json"
     out_path.write_text(json.dumps(payload, indent=2, default=str))
 
     # ── Console summary ────────────────────────────────────────────────────────
-    print("\n" + "=" * 70)
-    print("CARNOT PRUNER vs VANILLA: RESULTS")
-    print("=" * 70)
-    print(f"{'Game':<8} {'V-median':>10} {'P-median':>10} {'Reduction':>10} {'Eff-ratio':>10} {'Preserved':>10}")
-    print("-" * 70)
-    for g in per_game:
-        vm = f"{g['vanilla_actions_median']:.0f}" if g["vanilla_actions_median"] is not None else "N/A"
-        pm = f"{g['carnot_actions_median']:.0f}" if g["carnot_actions_median"] is not None else "N/A"
-        ar = f"{g['action_reduction']:.1f}" if g["action_reduction"] is not None else "N/A"
+    print("\n" + "=" * 90)
+    print("HEDGED CARNOT PRUNER: PER-ARM AGGREGATE (vs vanilla, paired per seed)")
+    print("=" * 90)
+    print(f"{'Arm':<18} {'median_eff':>11} {'solves_pres':>12} {'regressed':>10} {'exercised':>10} {'worst_outcome'}")
+    print("-" * 90)
+    for arm_name, *_ in PRUNED_ARMS:
+        s = arm_summaries[arm_name]
+        me = f"{s['median_efficiency_ratio']:.3f}" if s["median_efficiency_ratio"] is not None else "N/A"
+        sp = f"{s['n_games_solve_preserved']}/{s['n_games_total']}"
+        rg = str(s["n_games_solve_rate_regressed"])
+        ex = "YES" if s["pruner_exercised"] else "NO-OP"
+        print(f"{arm_name:<18} {me:>11} {sp:>12} {rg:>10} {ex:>10} {s['worst_per_game_outcome']}")
+    print("-" * 90)
+    print(f"\nDeployable arms (preserve ALL solves AND median_eff>1): {deployable_arms or 'NONE'}")
+    print(f"m0r0 canary recovery: {any_arm_recovers_m0r0}")
+    for arm_name, *_ in PRUNED_ARMS:
+        r = m0r0_recovery[arm_name]
+        print(f"  m0r0 {arm_name}: vanilla_n={r['vanilla_n_solved']} arm_n={r['arm_n_solved']} recovered={r['recovered']}")
+
+    # Per-game for the best arm (deployable if any, else best median_eff that preserves most solves)
+    if deployable_arms:
+        best_arm = max(deployable_arms, key=lambda n: arm_summaries[n]["median_efficiency_ratio"])
+    else:
+        # best = arm with most solves preserved, tiebreak by median_eff
+        best_arm = max(
+            (name for name, *_ in PRUNED_ARMS),
+            key=lambda n: (
+                arm_summaries[n]["n_games_solve_preserved"],
+                arm_summaries[n]["median_efficiency_ratio"] or -1.0,
+            ),
+        )
+    print(f"\n=== PER-GAME for best arm '{best_arm}' ===")
+    print(f"{'Game':<8} {'V-med':>8} {'A-med':>8} {'V-solv':>7} {'A-solv':>7} {'eff':>8} {'pres':>6}")
+    print("-" * 60)
+    for g in arm_summaries[best_arm]["per_game"]:
+        vm = f"{g['vanilla_median']:.0f}" if g["vanilla_median"] is not None else "N/A"
+        am = f"{g['arm_median']:.0f}" if g["arm_median"] is not None else "N/A"
         er = f"{g['efficiency_ratio']:.3f}" if g["efficiency_ratio"] is not None else "N/A"
-        sp = "YES" if g["solve_preserved"] else "LOST"
-        print(f"{g['game']:<8} {vm:>10} {pm:>10} {ar:>10} {er:>10} {sp:>10}")
-    print("-" * 70)
-    print(f"{'MEDIAN':<8} {'':<10} {'':<10} {median_action_reduction if median_action_reduction is not None else 'N/A':>10.1f} {median_efficiency_ratio if median_efficiency_ratio is not None else 'N/A':>10.3f}")
-    print()
-    print(f"Solves preserved: {solve_preserved_count}/{len(SOLVED_GAMES)}")
-    print(f"Solve lost games: {solve_lost_games}")
-    print(f"Pruner exercised: {pruner_exercised} ({total_pruner_changed}/{total_pruner_choices} choices changed, fire_rate={pruner_fire_rate:.3f})")
-    print(f"Smoke: vanilla_atfl={smoke_vanilla.get('actions_to_first_levelup')} pruned_atfl={smoke_pruned.get('actions_to_first_levelup')}")
-    print(f"Duration: {duration_s}s")
+        pr = "YES" if g["solve_preserved"] else "REGR"
+        print(f"{g['game']:<8} {vm:>8} {am:>8} {g['vanilla_n_solved']:>7} {g['arm_n_solved']:>7} {er:>8} {pr:>6}")
+    print("-" * 60)
+
+    print(f"\nDuration: {duration_s}s")
     print(f"\nVerdict: {verdict}")
     print(f"\nArtifact: {out_path}")
 

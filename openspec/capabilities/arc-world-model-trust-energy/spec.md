@@ -1805,6 +1805,96 @@ When a candidate perception representation reports a lower LOO-AUROC
 Then the perception-quality floor CI-gate fails; otherwise it passes and records
 the measured LOO, floor, and source.
 
+### REQ-ARC-WMTE-4713: Surface Present Winner With Off-Path Calibrated Ranker
+
+Experiment 4713 SHALL attack the `.434` surfacing layer after Experiment 4700
+proved that object-centric perception makes the winning L1 trajectory present
+in the proposal pool. The live `StepwiseExplorer` object-centric proposal path
+SHALL expose an opt-in off-path-calibrated oracle-distinct verifier ranker that
+uses deployable structural candidate features and live off-path transition rows,
+including dead-ends, to rerank the object-centric proposal pool before search
+consumes it. The ranker SHALL remain distinct from the executable reproduction
+win-check: it may learn from visible-state features, action context, and
+observed off-path transition labels, but it SHALL NOT call the reproduction
+gate to score candidate actions.
+
+The experiment SHALL run on a clean L1 target, preferably one of `bp35`,
+`re86`, `s5i5`, `g50t`, or `r11l`, and SHALL reconfirm that the object-centric
+pool contains the winning candidate on the chosen target. It SHALL report the
+winning candidate's pre-surfacing rank, precision-at-k without surfacing, and
+precision-at-k after applying the off-path-calibrated ranker. The matched
+no-surfacing ablation SHALL use the same object-centric pool and budget with
+the `.433` explorer value head behavior. A positive surfacing claim SHALL
+require precision-at-k lift, generic live E3 reaching a new level, offline
+reproduction through `arc_solver_kit.reproduce`, and a lower reached level from
+the no-surfacing ablation.
+
+Before measurement, Experiment 4713 SHALL verify the persisted A1
+`object_centric_representation_builder_operator` is importable, the
+Qwen3.5-9B-MTP GGUF is cached, `arc_solver_kit.offline_arcade()` initializes,
+and a free non-8919 `LocalGGUFProposer` port reports Qwen through `/props`.
+If any precondition fails, it SHALL write a blocked artifact with
+`preconditions_checked` populated. If the present winner is not separable from
+same-depth distractors, the artifact SHALL record the residual cause and append
+a Missing-Verifier gap entry to `ops/verifier_gaps.md`.
+
+The artifact at
+`results/experiment_4713_surface_present_winner_verifier_ranker.json` SHALL
+include `honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `live_path_reachable`, `winner_present_coverage`,
+`winner_rank_pre_surfacing`, `precision_at_k_with_surfacing`,
+`precision_at_k_no_surfacing`, `generic_agent_reached_level`,
+`no_surfacing_ablation_reached_level`, `offline_reproduced`,
+`reproduced_levels`, `offpath_calibrated`, `bare_control_passed`,
+`false_negative_risk_checked`, `null_methodology_note`,
+`missing_verifier_gap_logged`, `chosen_submitted_config`,
+`proposer_served_model`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: surfaced_present_winner_generic_agent_new_level_<game>_L<n> OR complete: surface_present_winner_no_new_level_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference -- the live E3 explorer's world-model induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); model_specs MUST name the GGUF."
+- `verifier_is_oracle`: principle "MUST be false -- the ranker is a learned/energy verifier oracle-DISTINCT from the executable reproduction win-check (gate-eligible per the Circularity discipline)."
+- `solve_provenance`: principle "live_agent_self_discovery -- the generic agent's OWN runtime exploration; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+- `live_path_reachable`: principle "HARD gate -- the changed StepwiseExplorer ranking path is in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `winner_present_coverage`: principle "the object-centric proposal-coverage of the winning trajectory on the target (the .433 A1 coverage-1.0 claim re-confirmed on THIS game -- a winner must be present to surface)."
+- `winner_rank_pre_surfacing`: principle "the winning candidate's rank in the pool BEFORE surfacing (the .433 baseline was rank 59,161) -- the buried-winner the ranker must lift."
+- `precision_at_k_with_surfacing`: principle "precision-at-k (e.g. top-8) of the present winner WITH the off-path-calibrated ranker -- the make-the-present-winner-actionable signal."
+- `precision_at_k_no_surfacing`: principle "the matched NO-SURFACING ablation (the .433 explorer value head, same pool) -- a surfacing claim requires precision-at-k to exceed it."
+- `generic_agent_reached_level`: principle "the deepest level the GENERIC live agent reached via surfacing -- the downstream headline (a NEW level is the bridge crossed)."
+- `no_surfacing_ablation_reached_level`: principle "the matched NO-SURFACING ablation reached_level -- MUST be lower for the win to be attributable to the surfacing, not the budget."
+- `offline_reproduced`: principle "any new level counts only if offline-reproduced via arc_solver_kit.reproduce; a live-only trajectory is provisional."
+- `reproduced_levels`: principle "the integer new-level count surfaced offline (>=1 is the bridge crossed for solve)."
+- `offpath_calibrated`: principle "true -- the ranker was calibrated on the LIVE off-path search distribution (incl. dead-ends), the .425-B2 bridge fix; an on-winning-paths-only fit is the known live-null trap."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- coverage-1.0 holds on the target (a winner is present) + reachable L1 headroom; a no-new-level null is valid only then."
+- `false_negative_risk_checked`: principle "true with the no-surfacing ablation + winner-present confirmed -- a 'no new level' null is valid only then."
+- `null_methodology_note`: principle "present when no new level; states the null is honest (winner present + ablation run + the precision-at-k delta), not a measurement bug."
+- `missing_verifier_gap_logged`: principle "if the present winner is not separable, the gap (the discriminator a new verifier would need) is appended to ops/verifier_gaps.md per the Missing-Verifier Gap Logging discipline."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (surfacing ranker on, params) -- the A7 input; 'unchanged' if null."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (A1 operator importable, Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4713-PRECISION-AT-K
+
+Given a target whose object-centric proposal pool contains every winning L1
+candidate
+When Experiment 4713 applies the off-path-calibrated ranker to the same pool
+Then it reports the pre-surfacing ranks, no-surfacing precision-at-k, and
+surfacing precision-at-k, and a surfacing win requires the latter to improve.
+
+#### SCENARIO-ARC-WMTE-4713-LIVE-ABLATION
+
+Given Qwen, offline arcade, live-path lint, and parity preconditions pass
+When live generic E3 runs with surfacing enabled and a matched no-surfacing
+ablation over the same object-centric pool and budget
+Then a new level counts only when the surfaced arm reaches and offline
+reproduces it while the ablation reaches a lower level; otherwise the artifact
+emits an honest residual and logs a missing-verifier gap when appropriate.
+
 ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
 
 Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2

@@ -1,0 +1,271 @@
+{
+  "bare_control_passed": true,
+  "chosen_submitted_config": "unchanged",
+  "duration_s": 60.000092,
+  "experiment": "experiment_4713_surface_present_winner_verifier_ranker",
+  "experiment_id": 4713,
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "bare_control_passed": {
+      "principle": "the POSITIVE CONTROL -- coverage-1.0 holds on the target (a winner is present) + reachable L1 headroom; a no-new-level null is valid only then."
+    },
+    "chosen_submitted_config": {
+      "principle": "the recommended SUBMITTED_AGENT_CONFIG change (surfacing ranker on, params) -- the A7 input; 'unchanged' if null."
+    },
+    "false_negative_risk_checked": {
+      "principle": "true with the no-surfacing ablation + winner-present confirmed -- a 'no new level' null is valid only then."
+    },
+    "generic_agent_reached_level": {
+      "principle": "the deepest level the GENERIC live agent reached via surfacing -- the downstream headline (a NEW level is the bridge crossed)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: surfaced_present_winner_generic_agent_new_level_<game>_L<n> OR complete: surface_present_winner_no_new_level_residual_<cause>."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the live E3 explorer's world-model induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); model_specs MUST name the GGUF."
+    },
+    "live_path_reachable": {
+      "principle": "HARD gate -- the changed StepwiseExplorer ranking path is in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+    },
+    "missing_verifier_gap_logged": {
+      "principle": "if the present winner is not separable, the gap (the discriminator a new verifier would need) is appended to ops/verifier_gaps.md per the Missing-Verifier Gap Logging discipline."
+    },
+    "no_surfacing_ablation_reached_level": {
+      "principle": "the matched NO-SURFACING ablation reached_level -- MUST be lower for the win to be attributable to the surfacing, not the budget."
+    },
+    "null_methodology_note": {
+      "principle": "present when no new level; states the null is honest (winner present + ablation run + the precision-at-k delta), not a measurement bug."
+    },
+    "offline_reproduced": {
+      "principle": "any new level counts only if offline-reproduced via arc_solver_kit.reproduce; a live-only trajectory is provisional."
+    },
+    "offpath_calibrated": {
+      "principle": "true -- the ranker was calibrated on the LIVE off-path search distribution (incl. dead-ends), the .425-B2 bridge fix; an on-winning-paths-only fit is the known live-null trap."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes."
+    },
+    "precision_at_k_no_surfacing": {
+      "principle": "the matched NO-SURFACING ablation (the .433 explorer value head, same pool) -- a surfacing claim requires precision-at-k to exceed it."
+    },
+    "precision_at_k_with_surfacing": {
+      "principle": "precision-at-k (e.g. top-8) of the present winner WITH the off-path-calibrated ranker -- the make-the-present-winner-actionable signal."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (A1 operator importable, Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
+    },
+    "proposer_served_model": {
+      "principle": "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproduced_levels": {
+      "principle": "the integer new-level count surfaced offline (>=1 is the bridge crossed for solve)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift on replay."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- the generic agent's OWN runtime exploration; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the ranker is a learned/energy verifier oracle-DISTINCT from the executable reproduction win-check (gate-eligible per the Circularity discipline)."
+    },
+    "winner_present_coverage": {
+      "principle": "the object-centric proposal-coverage of the winning trajectory on the target (the .433 A1 coverage-1.0 claim re-confirmed on THIS game -- a winner must be present to surface)."
+    },
+    "winner_rank_pre_surfacing": {
+      "principle": "the winning candidate's rank in the pool BEFORE surfacing (the .433 baseline was rank 59,161) -- the buried-winner the ranker must lift."
+    }
+  },
+  "generic_agent_reached_level": 0,
+  "honest_verdict": "complete: surface_present_winner_no_new_level_residual_present_winner_not_separable_from_distractors",
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "missing_verifier_gap_logged": true,
+  "model_specs": "Qwen3.5-9B-MTP GGUF",
+  "no_surfacing_ablation_reached_level": 0,
+  "null_methodology_note": "The null is measured with a winner-present object-centric pool, a matched no-surfacing ablation, Qwen /props verification, and explicit precision-at-k delta=0.0; no generic new level is claimed.",
+  "offline_reproduced": false,
+  "offpath_calibrated": true,
+  "parity_test_green": true,
+  "precision_at_k_delta": 0.0,
+  "precision_at_k_no_surfacing": {
+    "hits": 0,
+    "k": 8,
+    "precision": 0.0,
+    "total": 4
+  },
+  "precision_at_k_with_surfacing": {
+    "hits": 0,
+    "k": 8,
+    "precision": 0.0,
+    "total": 4
+  },
+  "preconditions_checked": {
+    "a1_operator_importable": true,
+    "a1_operator_module": "carnot.agentic.arc_solver_kit",
+    "a1_operator_name": "object_centric_representation_builder_operator",
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (37 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "live_modules_importable": true,
+    "offline_arcade": true,
+    "offpath_calibration_rows": 80,
+    "offpath_label_source": "dagger_value_cost_improved_after_observed_transition",
+    "ok": true,
+    "parity_test": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov -n 0",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 11 items\n\ntests/python/test_arc_submitted_agent_parity.py ...........              [100%]\n\n============================== 11 passed in 4.81s ==============================\n"
+    },
+    "proposer_props_excerpt": "{\"bos_token\": \",\", \"build_info\": \"b9606-9b4dae81f\", \"chat_template\": \"{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception('System message cannot contain images.') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\\n                {%- endif %}\\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\\n   ",
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen_proposer_port": 8920,
+    "qwen_proposer_port_verified": true,
+    "spec_has_req_4700": true,
+    "spec_has_req_4713": true
+  },
+  "proposer_served_model": "Qwen3.5-9B-MTP",
+  "random_seed": 4713,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:cd082fbe7f08d208c2aeee6dac26636ca40bfd161c19e284db3aa98dfcf5c3b8",
+  "residual_cause_hypothesis": "present_winner_not_separable_from_distractors",
+  "schema": "carnot.arc.surface_present_winner_verifier_ranker_4713.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4713",
+    "SCENARIO-ARC-WMTE-4713-PRECISION-AT-K",
+    "SCENARIO-ARC-WMTE-4713-LIVE-ABLATION"
+  ],
+  "submitted_to_leaderboard": false,
+  "surfacing_ranker_diagnostics": {
+    "augmented_candidates": 18351,
+    "candidate_scores": 22684,
+    "enabled": true,
+    "last_slot_count": 181,
+    "max_augmented_clicks": 192,
+    "neighborhood_radius": 2,
+    "offpath_calibrated": true,
+    "offpath_transition_observations": 155,
+    "representation": "connected_components_object_slots_plus_correspondence_action_context",
+    "surfacing_ranker": {
+      "enabled": true,
+      "feature_dim": 62,
+      "fit_count": 156,
+      "negative_samples": 54,
+      "offpath_calibrated": true,
+      "positive_samples": 181,
+      "samples": 235,
+      "verifier_is_oracle": false
+    },
+    "verifier_is_oracle": false
+  },
+  "target_arm_results": {
+    "no_surfacing_ablation": {
+      "actions": 156,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "budget": 160,
+      "game": "r11l",
+      "generic_agent_reached_level": 0,
+      "object_centric_proposal_diagnostics": {
+        "augmented_candidates": 6913,
+        "candidate_scores": 8477,
+        "enabled": true,
+        "last_slot_count": 175,
+        "max_augmented_clicks": 192,
+        "neighborhood_radius": 2,
+        "offpath_calibrated": true,
+        "offpath_transition_observations": 155,
+        "representation": "connected_components_object_slots_plus_correspondence_action_context",
+        "surfacing_ranker": {
+          "enabled": false,
+          "offpath_calibrated": false,
+          "verifier_is_oracle": false
+        },
+        "verifier_is_oracle": false
+      },
+      "offline_reproduced": false,
+      "policy_mode": "object_centric_no_surfacing_ablation",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "r11l",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": []
+    },
+    "surfacing": {
+      "actions": 156,
+      "actions_to_first_levelup": null,
+      "attempted": true,
+      "bare_control_passed": true,
+      "budget": 160,
+      "game": "r11l",
+      "generic_agent_reached_level": 0,
+      "object_centric_proposal_diagnostics": {
+        "augmented_candidates": 18351,
+        "candidate_scores": 22684,
+        "enabled": true,
+        "last_slot_count": 181,
+        "max_augmented_clicks": 192,
+        "neighborhood_radius": 2,
+        "offpath_calibrated": true,
+        "offpath_transition_observations": 155,
+        "representation": "connected_components_object_slots_plus_correspondence_action_context",
+        "surfacing_ranker": {
+          "enabled": true,
+          "feature_dim": 62,
+          "fit_count": 156,
+          "negative_samples": 54,
+          "offpath_calibrated": true,
+          "positive_samples": 181,
+          "samples": 235,
+          "verifier_is_oracle": false
+        },
+        "verifier_is_oracle": false
+      },
+      "offline_reproduced": false,
+      "policy_mode": "object_centric_offpath_surfacing_ranker",
+      "reached_level": 0,
+      "reproduced_levels": 0,
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "r11l",
+        "mode": "offline_reproduction_gate_no_solution",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "solution_labels": []
+    }
+  },
+  "target_game": "r11l",
+  "verifier_is_oracle": false,
+  "winner_present_coverage": 1.0,
+  "winner_rank_pre_surfacing": [
+    59,
+    161,
+    12,
+    77
+  ],
+  "winner_rank_with_surfacing": [
+    87,
+    102,
+    74,
+    36
+  ]
+}
