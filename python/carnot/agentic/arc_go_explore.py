@@ -48,16 +48,28 @@ def _coarse_cell(grid: np.ndarray, level: int, bins: int = 6) -> tuple:
 
 
 def _frame_grid(frame: Any) -> np.ndarray:
-    if isinstance(frame, np.ndarray):
-        return frame
-    if hasattr(frame, "frame"):
-        return np.asarray(getattr(frame, "frame"))
-    try:
-        from carnot.agentic.arc_agi3_world_model import grid_of
+    """Extract the 2-D (H,W) grid from a frame.
 
-        return np.asarray(grid_of(frame))
-    except Exception:
-        return np.asarray([])
+    BUG FIX (2026-06-25): the live env frame is a ``FrameDataRaw`` whose ``.frame`` attribute is a
+    (1,H,W) 3-D array. The old code grabbed that raw 3-D array via ``hasattr(frame, "frame")``, so
+    ``observe()``'s ``grid.ndim != 2`` guard early-returned on EVERY live frame and the archive was
+    silently dead (observations stayed 0). ``grid_of`` already returns the correct 2-D (H,W) grid for
+    a FrameDataRaw, so prefer it; keep the ndarray / ``.frame`` paths as fallbacks and squeeze a
+    leading singleton channel so a (1,H,W) raw still collapses to (H,W).
+    """
+    if isinstance(frame, np.ndarray):
+        arr = frame
+    else:
+        try:
+            from carnot.agentic.arc_agi3_world_model import grid_of
+
+            arr = np.asarray(grid_of(frame))
+        except Exception:
+            arr = np.asarray(getattr(frame, "frame")) if hasattr(frame, "frame") else np.asarray([])
+    arr = np.asarray(arr)
+    if arr.ndim == 3 and arr.shape[0] == 1:  # FrameDataRaw.frame is (1,H,W) -> (H,W)
+        arr = arr[0]
+    return arr
 
 
 def _frame_level(frame: Any) -> int:
