@@ -1986,6 +1986,73 @@ arm wins and offline-reproduces while the no-prior arm fails, or records one of
 `archive_expands_dead_cells_no_goal_gradient`, or
 `replay_cannot_restore_cell` as the residual.
 
+### REQ-ARC-WMTE-4704: Persist .434 A1/A2 Primitive And Transfer Characterization
+
+Experiment 4704 SHALL persist the strongest reusable `.434` A1/A2 primitive
+into `arc_solver_kit` and `ops/arc_solve_registry.yaml`, then measure
+cross-game transfer on at least three cached held-out games. If Experiment 4700
+cleared the object-centric perception gate, the persisted primitive SHALL be the
+A1 object-centric perception representation operator. Else if Experiment 4701
+cleared the amortized prior plus Go-Explore gate, the persisted primitive SHALL
+be the A2 amortized-prior plus return-then-explore archive operator. If both are
+value-null, the experiment SHALL persist the strongest characterized reusable
+component. For the cached `.434` artifacts, that fallback component is the A1
+object-centric representation builder: it derives connected-component object
+slots, relational gap keypoints, and proposal-side coverage diagnostics without
+reading the executable win predicate.
+
+The persisted primitive SHALL remain oracle-distinct from the executable
+win-check. It may generate, perceive, induce, or rank candidate actions, but a
+new level SHALL count only when the offline reproduction gate accepts it. The
+transfer measurement SHALL apply the persisted operator to at least three cached
+held-out games and report, per game, candidate-coverage delta, first-win-rate
+delta, solve-rate delta, and `offline_reproduced_new_level`. A zero-value
+transfer is valid only when the artifact records a residual dead-end for the
+next attack.
+
+Experiment 4704 SHALL write
+`results/experiment_4704_primitive_persist_transfer.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `verifier_is_oracle`, `primitive_persisted`,
+`transfer_games`, `transfer_value_per_game`, `offline_reproduced_new_level`,
+`residual_dead_end`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: primitive_persisted_transfer_<value|null>_characterized OR complete: primitive_persisted_transfer_null_characterized."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor)."
+- `verifier_is_oracle`: principle "MUST be false -- the persisted primitive generates/perceives/induces, oracle-distinct from the executable win-check."
+- `primitive_persisted`: principle "the operator id + derived_from_artifacts + source -- the reusable scaffolding captured so the live solver reuses it, never re-derives."
+- `transfer_games`: principle "the >=3 held-out games the persisted operator was applied to (the cross-game transfer measurement)."
+- `transfer_value_per_game`: principle "per-game coverage/first-win/solve-rate delta + offline_reproduced_new_level -- honest transfer value, null characterized if zero."
+- `offline_reproduced_new_level`: principle "true only if the transfer banked a strictly NEW offline-reproduced level (else reproducible_total_levels is unchanged -- stated honestly)."
+- `residual_dead_end`: principle "the characterized transfer-null residual if value is zero (the next-attack record); per the .432 A5 pattern."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4704-PERSIST-STRONGEST-COMPONENT
+
+**Given** Experiments 4700 and 4701 both report complete value-null verdicts
+and `chosen_submitted_config=unchanged`
+**When** Experiment 4704 selects the reusable primitive
+**Then** it persists `object_centric_representation_builder_operator` under the
+registry gotcha id `primitive_object_centric_representation_builder_operator`,
+records the 4700/4701 source artifacts, and explains that this captures
+characterized object-centric perception scaffolding rather than fabricating a
+banked level.
+
+#### SCENARIO-ARC-WMTE-4704-TRANSFER-MEASUREMENT
+
+**Given** cached held-out games and the persisted object-centric representation
+builder
+**When** Experiment 4704 measures transfer
+**Then** each game reports coverage, first-win, solve-rate, and offline
+reproduction deltas, and a zero-value run emits
+`complete: primitive_persisted_transfer_null_characterized` with a
+`residual_dead_end`.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness

@@ -255,6 +255,26 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="object_centric_representation_builder_operator",
+            derived_from_games=(
+                "exp4700_object_centric_perception_proposal_live",
+                "exp4701_amortized_exploration_prior_go_explore_live",
+            ),
+            purpose=(
+                "Build connected-component object slots, relational gap keypoints, and "
+                "proposal-side coverage diagnostics before value ranking or frontier "
+                "selection, without consulting the executable win-check."
+            ),
+            selector_tags=(
+                "object_centric",
+                "perception",
+                "representation_builder",
+                "candidate_generation",
+                "graph_explore",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -315,7 +335,10 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
         ),
         PrimitiveOperator(
             operator="graded_goal_energy_search_heuristic_operator",
-            derived_from_games=("exp4020_goal_induction_separation", "exp4640_goal_energy_generation_live"),
+            derived_from_games=(
+                "exp4020_goal_induction_separation",
+                "exp4640_goal_energy_generation_live",
+            ),
             purpose=(
                 "Rank generated frontier candidates by a depth-preserving convex blend of "
                 "navigation energy and Exp4020 graded goal-satisfaction energy, then report "
@@ -566,7 +589,10 @@ def select_primitive_operators(
             "active_data_collection",
             "graph_astar_action_cost",
         )
-    if "value_head_bridge_fix_operator" in names and "cheap_value_routing_cost_fix_operator" not in names:
+    if (
+        "value_head_bridge_fix_operator" in names
+        and "cheap_value_routing_cost_fix_operator" not in names
+    ):
         expanded: list[str] = []
         for name in names:
             expanded.append(name)
@@ -575,6 +601,16 @@ def select_primitive_operators(
                 expanded.append("dagger_off_path_data_collection_operator")
                 expanded.append("programmatic_expert_trust_weighting_operator")
                 expanded.append("controllable_novelty_embedding_operator")
+        names = tuple(expanded)
+    if (
+        "object_centric_digest" in names
+        and "object_centric_representation_builder_operator" not in names
+    ):
+        expanded = []
+        for name in names:
+            if name == "object_centric_digest":
+                expanded.append("object_centric_representation_builder_operator")
+            expanded.append(name)
         names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
@@ -1323,7 +1359,9 @@ def _controllable_novelty_public_row(row: Any, index: int, min_observed: int) ->
     novelty_signal = float(observed + embeddings) + 0.001 * float(candidate_scores + rnd_updates)
     return {
         "game": str(_candidate_field(row, "game", "") or ""),
-        "policy_mode": str(_candidate_field(row, "policy_mode", f"novelty_{index}") or f"novelty_{index}"),
+        "policy_mode": str(
+            _candidate_field(row, "policy_mode", f"novelty_{index}") or f"novelty_{index}"
+        ),
         "observed_effects": int(observed),
         "episodic_embeddings": int(embeddings),
         "candidate_scores": int(candidate_scores),
@@ -1373,6 +1411,172 @@ def controllable_novelty_embedding_operator(
         "min_observed_effects": int(min_observed),
         "best_novelty_signal": float(public_rows[0]["novelty_signal"]) if public_rows else 0.0,
         "controllable_novelty_embeddings": public_rows,
+        "coverage_ready": bool(usable_rows),
+        "residual": residual,
+        "verifier_is_oracle": False,
+    }
+
+
+def _object_representation_float(row: Any, key: str, default: float = 0.0) -> float:
+    value = _candidate_field(row, key, default)
+    if isinstance(value, bool):
+        return float(default)
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
+def _object_representation_int(row: Any, key: str) -> int:
+    value = _candidate_field(row, key, 0)
+    if isinstance(value, bool):
+        return 0
+    try:
+        return max(0, int(value))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _object_representation_min(value: Any) -> int:
+    if isinstance(value, bool):
+        return 1
+    try:
+        return max(1, int(value))
+    except (TypeError, ValueError):
+        return 1
+
+
+def _object_representation_mapping(row: Any, key: str) -> Mapping[str, Any]:
+    value = _candidate_field(row, key, {})
+    return value if isinstance(value, Mapping) else {}
+
+
+def _object_representation_public_row(
+    row: Any,
+    index: int,
+    min_component_count: int,
+) -> dict[str, Any]:
+    grid = _candidate_field(row, "grid")
+    digest = _object_representation_mapping(row, "object_digest") or _object_representation_mapping(
+        row, "digest"
+    )
+    digest_error = ""
+    slot_count = _object_representation_int(row, "object_slot_count") or _object_representation_int(
+        row, "slot_count"
+    )
+    relational_slot_count = _object_representation_int(row, "relational_slot_count")
+    if grid is not None:
+        try:
+            digest = object_centric_digest(grid)
+            from carnot.agentic.arc_value_learner import object_centric_slots
+
+            slots = object_centric_slots(grid)
+            slot_count = len(slots)
+            relational_slot_count = sum(
+                1
+                for slot in slots
+                if str(slot.get("slot_type") or "").endswith("_gap")
+                or str(slot.get("slot_type") or "") == "object_neighborhood_gap"
+            )
+        except Exception as exc:
+            digest = {}
+            slot_count = 0
+            relational_slot_count = 0
+            digest_error = f"{type(exc).__name__}: {exc}"
+    diagnostics = _object_representation_mapping(row, "object_centric_proposal_diagnostics")
+    if not diagnostics:
+        diagnostics = _object_representation_mapping(row, "diagnostics")
+    if slot_count <= 0:
+        slot_count = _object_representation_int(diagnostics, "last_slot_count")
+    component_count = _object_representation_int(row, "component_count")
+    if component_count <= 0 and digest:
+        component_count = _object_representation_int(digest, "component_count")
+    if component_count <= 0 and slot_count > 0:
+        component_count = min(
+            slot_count, max(1, _object_representation_int(row, "component_count"))
+        )
+    object_coverage = _object_representation_float(row, "object_centric_coverage")
+    order1_coverage = _object_representation_float(row, "order1_coverage")
+    explicit_delta = _candidate_field(row, "candidate_generation_coverage_delta", None)
+    if explicit_delta is None:
+        explicit_delta = _candidate_field(row, "coverage_delta", None)
+    coverage_delta = (
+        max(0.0, _object_representation_float(row, "object_centric_coverage") - order1_coverage)
+        if explicit_delta is None
+        else max(0.0, _object_representation_float({"value": explicit_delta}, "value"))
+    )
+    representation = str(
+        _candidate_field(row, "representation", diagnostics.get("representation", "object_centric"))
+        or "object_centric"
+    )
+    has_relational_slots = bool(
+        relational_slot_count > 0
+        or _candidate_field(row, "has_relational_slots", False) is True
+        or "object" in representation
+    )
+    usable = bool(
+        component_count >= min_component_count and slot_count > 0 and has_relational_slots
+    )
+    if usable:
+        rejection_reason = ""
+    elif digest_error:
+        rejection_reason = "object_digest_failed"
+    elif component_count < min_component_count:
+        rejection_reason = "insufficient_object_components"
+    else:
+        rejection_reason = "no_relational_object_slots"
+    return {
+        "game": str(_candidate_field(row, "game", f"object_representation_{index}") or ""),
+        "representation": representation,
+        "component_count": int(component_count),
+        "object_slot_count": int(slot_count),
+        "relational_slot_count": int(relational_slot_count),
+        "object_centric_coverage": round(float(object_coverage), 6),
+        "order1_coverage": round(float(order1_coverage), 6),
+        "coverage_delta": round(float(coverage_delta), 6),
+        "usable": bool(usable),
+        "rejection_reason": rejection_reason,
+        "digest_error": digest_error,
+        "digest_shape": list(digest.get("shape", [])) if isinstance(digest, Mapping) else [],
+    }
+
+
+def object_centric_representation_builder_operator(
+    representation_rows: Sequence[Any],
+    *,
+    min_component_count: int = 1,
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4704: reusable object-centric representation builder."""
+
+    minimum = _object_representation_min(min_component_count)
+    public_rows = [
+        _object_representation_public_row(row, index, minimum)
+        for index, row in enumerate(list(representation_rows))
+    ]
+    public_rows.sort(
+        key=lambda row: (
+            not bool(row["usable"]),
+            -float(row["coverage_delta"]),
+            -int(row["object_slot_count"]),
+            str(row["game"]),
+        )
+    )
+    usable_rows = [row for row in public_rows if row["usable"]]
+    if usable_rows:
+        residual = ""
+    elif not public_rows:
+        residual = "no_object_centric_rows"
+    else:
+        residual = "no_usable_object_centric_representation"
+    return {
+        "operator": "object_centric_representation_builder_operator",
+        "representation_row_count": len(public_rows),
+        "usable_representation_count": len(usable_rows),
+        "rejected_representation_count": len(public_rows) - len(usable_rows),
+        "min_component_count": int(minimum),
+        "best_coverage_delta": float(public_rows[0]["coverage_delta"]) if public_rows else 0.0,
+        "object_slot_total": int(sum(int(row["object_slot_count"]) for row in public_rows)),
+        "object_centric_representations": public_rows,
         "coverage_ready": bool(usable_rows),
         "residual": residual,
         "verifier_is_oracle": False,
