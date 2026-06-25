@@ -6887,6 +6887,69 @@ action-efficiency deltas, sets `offline_reproduced_new_level` only for
 `arc_solver_kit.reproduce`-banked levels, and records a characterized
 `transfer_dead_ends` note for value-null transfer.
 
+### REQ-ARC-WMTE-4742: .436 Submitted-Agent Integration Gate
+
+Experiment 4742 SHALL read the `.436` A1/A2 artifacts
+`results/experiment_4737_goal_energy_candidate_generation_valid_test.json` and
+`results/experiment_4738_energy_fitness_qd_generation_valid_test.json`, choose
+the strongest non-unchanged `chosen_submitted_config` that has a positive
+held-out first-win lift, and integrate that change into `SUBMITTED_AGENT_CONFIG`
+only when the submitted config exactly matches the selected change, the
+submitted-agent parity test passes, and the measured held-out first-win does
+not regress versus the pre-integration baseline. If both upstream artifacts
+select `unchanged` or have no positive held-out lift, the integration SHALL be
+a no-op with `integrated_change="none"` and SHALL report the flat delta
+honestly rather than fabricating a win.
+
+Experiment 4742 SHALL verify the offline arcade is importable and both `.436`
+A1/A2 artifacts are present before measuring. Missing resources SHALL produce a
+terminal `blocked_<resource>` verdict and record the failed resource in
+`preconditions_checked`. The experiment SHALL run
+`tests/python/test_arc_submitted_agent_parity.py` as a hard gate, set
+`verifier_is_oracle=false`, write
+`results/experiment_4742_integration_gate.json`, and never submit to the
+leaderboard.
+
+The artifact SHALL include `honest_verdict`, `inference_substrate`,
+`integrated_change`, `live_first_win_rate_integrated`,
+`live_first_win_rate_pre_integration`, `parity_test_green`,
+`null_delta_methodology_note`, `positive_control_passed`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`. When
+`live_first_win_rate_integrated == live_first_win_rate_pre_integration`, the
+artifact SHALL emit a non-empty `null_delta_methodology_note` and
+`positive_control_passed` SHALL equal
+`bool(parity_test_green AND no_regression_vs_pre_integration)`. The artifact
+SHALL NOT rely on a `tautology_guard` prose field for the null-delta carve-out.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: integrated_<change>_first_win_<delta> OR complete: integration_no_change_all_levers_unchanged."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- scores the integrated config over cached variants (1s floor)."
+- `integrated_change`: principle "the change integrated into SUBMITTED_AGENT_CONFIG (or 'none' if all A1/A2 selected unchanged)."
+- `live_first_win_rate_integrated`: principle "the held-out first-win of the integrated config -- the scored-lane proxy."
+- `live_first_win_rate_pre_integration`: principle "the pre-integration baseline -- the no-regression control."
+- `parity_test_green`: principle "HARD gate -- the integrated agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates the integration."
+- `null_delta_methodology_note`: principle "present when both deltas ~0; the TAUTOLOGY carve-out reads it (honest no-change, not a measurement bug)."
+- `positive_control_passed`: principle "bool(parity_test_green AND no_regression) -- GATES the TAUTOLOGY exemption; an unvalidated integration is NOT excused."
+- `verifier_is_oracle`: principle "false -- the integration gate measures the agent; no oracle is invoked."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift."
+- `preconditions_checked`: principle "records resources verified (offline arcade, A1/A2 artifacts present); pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4742-HONEST-NULL-INTEGRATION
+
+Given the `.436` A1 and A2 artifacts both select
+`chosen_submitted_config="unchanged"`
+When Experiment 4742 runs the integration gate and the submitted-agent parity
+test passes
+Then it keeps `SUBMITTED_AGENT_CONFIG` unchanged, records
+`integrated_change="none"`, reports equal integrated and pre-integration
+held-out first-win rates, emits `null_delta_methodology_note`,
+sets `positive_control_passed` from parity plus no-regression, sets
+`verifier_is_oracle=false`, and writes a stable
+`results/experiment_4742_integration_gate.json` checksum.
+
 ### REQ-ARC-WMTE-4739: Rotated ARC Level-Up Self-Play Attempt
 
 Experiment 4739 SHALL use the standing ARC loop to attempt one rotated public
