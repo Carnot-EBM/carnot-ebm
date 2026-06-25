@@ -6820,6 +6820,81 @@ offline reproduced L2, or emits a complete no-lift residual with
 `null_delta_methodology_note` and `positive_control_passed` when the matched
 first-win delta is flat.
 
+### REQ-ARC-WMTE-4739: Rotated ARC Level-Up Self-Play Attempt
+
+Experiment 4739 SHALL use the standing ARC loop to attempt one rotated public
+game deepening without duplicating an already banked registry level. It SHALL
+precheck `ops/arc_solve_registry.yaml`, skip the recent operator skip list
+(`ar25`, `bp35`, `lf52`, `sb26`, `dc22`, `vc33`, `sk48`), prefer the clean hard
+targets `re86`, `s5i5`, `g50t`, and `r11l`, and use `m0r0` or `cn04` only as
+allowed fallback alternatives. A target level SHALL pass registry precheck only
+when the registry's `levels_reproduced` for that game is lower than the
+attempted target level.
+
+Before writing a terminal artifact, Experiment 4739 SHALL verify
+`arc_solver_kit.offline_arcade()` and `scripts/arc_loop_solve.py --help`, run
+`scripts/arc_loop_solve.py --game <target> --target-level <n>
+--no-hazard-prune`, and report the result through the offline reproduction gate
+from `arc_solver_kit.reproduce`. New levels SHALL count only when the standing
+loop advances beyond the prechecked registry level and the offline reproduction
+gate confirms the reached level. The learned verifier checkpoint SHALL be
+reported as `models/arc_verifier_<game>.json` when the run produces or refreshes
+one, but the checkpoint SHALL remain oracle-distinct from the executable
+reproduction authority.
+
+The terminal artifact
+`results/experiment_4739_levelup_selfplay.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `offline_reproduced`, `reproduced_levels`,
+`new_levels_banked`, `reproducible_total_levels`, `verifier_checkpoint`,
+`verifier_is_oracle`, `solve_provenance`, `registry_precheck_passed`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`. If no
+new level banks, the artifact SHALL emit a terminal `complete:` verdict,
+preserve `reproducible_total_levels` unchanged, and record per-game dead-end
+deltas for the attempted rotated targets instead of fabricating a bank.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- arc_loop_solve scores against the offline sim (1s floor), no live LLM load."
+- `offline_reproduced`: principle "only offline-reproduced levels count (ARC Solve Reproducibility); a live-only trajectory is provisional."
+- `reproduced_levels`: principle "the integer level reached on the target game."
+- `new_levels_banked`: principle ">=1 is the Level-Up Guarantee met; 0 rotates the target next milestone."
+- `reproducible_total_levels`: principle "the registry header after this run (64->65+ if banked) -- the monotonic north-star metric."
+- `verifier_checkpoint`: principle "models/arc_verifier_<game>.json -- the self-play loop trains+checkpoints the learned verifier (the self-improvement-every-milestone mandate)."
+- `verifier_is_oracle`: principle "MUST be false -- the learned verifier routes/ranks; the executable reproduction gate is the oracle-distinct authority."
+- `solve_provenance`: principle "live_agent_self_discovery for a generic bank, OR development_proxy honestly if a GameAdapter delta was required."
+- `registry_precheck_passed`: principle "confirms the target level is NOT already in the registry (a duplicate is a CRITICAL adversarial flag)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, arc_loop_solve runnable); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4739-ROTATED-PRECHECK
+
+Given the ARC registry records `re86` at L2 and the hard preferred L1-to-L2
+targets have stalled or routing-only notes
+When Experiment 4739 selects a target
+Then it does not re-bank an already recorded level, records the skipped and
+stalled target notes, and attempts only a target level greater than the
+registry's reproduced level for that game.
+
+#### SCENARIO-ARC-WMTE-4739-REPRODUCTION-GATED-SELFPLAY
+
+Given the offline arcade and standing loop are importable
+When Experiment 4739 runs `scripts/arc_loop_solve.py --game re86 --target-level 3 --no-hazard-prune`
+Then it records the loop artifact, the offline reproduction gate result, the
+learned verifier checkpoint path, `verifier_is_oracle=false`, and
+`solve_provenance=development_proxy`.
+
+#### SCENARIO-ARC-WMTE-4739-NO-BANK-RESIDUAL
+
+Given the standing loop reproduces only the registry's prior level for the
+selected target
+When Experiment 4739 writes the artifact
+Then it emits `complete: <game>_delta_identified_no_bank`, keeps
+`new_levels_banked=0`, leaves `reproducible_total_levels=64`, and records the
+attempted target deltas as dead-ends for the next rotation.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts
