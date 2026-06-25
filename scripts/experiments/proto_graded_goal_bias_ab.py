@@ -318,15 +318,31 @@ def main() -> int:
         return 1
 
     if not preconds["port_free"]:
-        artifact = {
-            "experiment": "proto_graded_goal_bias_ab",
-            "honest_verdict": f"blocked_port_{preconds['port']}_in_use",
-            "preconditions": preconds,
-        }
-        with open(_OUTFILE, "w") as f:
-            json.dump(artifact, f, indent=2)
-        print(f"BLOCKED: port {preconds['port']} in use.", flush=True)
-        return 1
+        # A busy port is FINE if a healthy Qwen server is already serving on it -- LocalGGUFProposer
+        # ._ensure_server() reuses a healthy server. Only abort if the occupant is NOT a healthy Qwen.
+        import urllib.request
+        reuse_ok = False
+        occupant = "unknown"
+        try:
+            with urllib.request.urlopen(f"http://127.0.0.1:{preconds['port']}/health", timeout=4) as r:
+                healthy = json.loads(r.read()).get("status") == "ok"
+            with urllib.request.urlopen(f"http://127.0.0.1:{preconds['port']}/props", timeout=5) as r:
+                occupant = str(json.loads(r.read()).get("model_path", ""))
+            reuse_ok = healthy and ("qwen" in occupant.lower())
+        except Exception as e:
+            occupant = f"probe_failed:{e}"
+        if not reuse_ok:
+            artifact = {
+                "experiment": "proto_graded_goal_bias_ab",
+                "honest_verdict": f"blocked_port_{preconds['port']}_occupied_by_non_qwen",
+                "preconditions": {**preconds, "port_occupant": occupant},
+            }
+            with open(_OUTFILE, "w") as f:
+                json.dump(artifact, f, indent=2)
+            print(f"BLOCKED: port {preconds['port']} occupied by non-Qwen: {occupant}", flush=True)
+            return 1
+        print(f"  Port {preconds['port']} busy but serving a healthy Qwen -> REUSING warm server.",
+              flush=True)
 
     print(f"\n=== STEP 1: SMOKE TEST - lp85 binary arm (confirm L1 reach + L2 induction fires) ===",
           flush=True)

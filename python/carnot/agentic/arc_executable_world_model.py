@@ -844,6 +844,24 @@ def _transitions_block(
     return "\n".join(out)
 
 
+# A forceful CODE-ONLY directive for the L2+ induction call. The L2 induce prompt carries a WIN
+# STATE exemplar, which makes Qwen3.5-9B burn its ENTIRE token budget on win-state chain-of-thought
+# before reaching the code block (stop_type='limit', 0 code emitted -> goal_predicate_satisfiable
+# stays False for ~10 milestones; see proto_l2_proposer_truncation_check + proto_l2_code_only_prefix,
+# 2026-06-25). Prepending this directive AND adding a stop-sequence on the closing fence makes the
+# model emit ONLY the code and stop: verified 195 tokens / 15.6s (vs 605s rambling / 450s truncated),
+# valid+satisfiable engine+is_level_complete. Default OFF; gated by CARNOT_ARC_CODEONLY_INDUCE=1.
+_L2_CODEONLY_DIRECTIVE = (
+    "/no_think\n"
+    "CRITICAL OUTPUT RULES -- obey EXACTLY:\n"
+    "1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.\n"
+    "2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write\n"
+    "   step-by-step analysis, explanation, or commentary -- not even as comments.\n"
+    "3. Your response MUST begin with the characters ```python and end with ```.\n"
+    "4. Induce SIMPLE, GENERAL rules and write the two functions directly. Skip all reasoning.\n\n"
+)
+
+
 def induce_prompt(
     game: str,
     trans: list[Transition],
@@ -1134,6 +1152,7 @@ class LocalGGUFProposer:
         the caller reject runtime-buggy code (e.g. a heuristic that returns None)."""
         import ast
         import json as _json
+        import os
         import urllib.request
 
         if not self._ensure_server():
@@ -1141,18 +1160,27 @@ class LocalGGUFProposer:
                 f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                 "must run on GPU (no CPU fallback)"
             )
-        if self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
+        # env-gated L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the
+        # induce call (required contains is_level_complete) so gap-filler/refactor prompts are
+        # untouched. When on: prepend the code-only directive + an opened fence, and add a
+        # stop-sequence on the closing fence so the model emits ONLY the code (no win-state CoT).
+        _codeonly = bool(os.environ.get("CARNOT_ARC_CODEONLY_INDUCE")) and "is_level_complete" in required
+        _stop_seq = ["```"] if _codeonly else None
+        if _codeonly:
+            prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
+        elif self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
             prompt = self.no_think_prefix + prompt
         last = ""
         for attempt in range(tries):
-            body = _json.dumps(
-                {
-                    "prompt": prompt,
-                    "n_predict": self.max_tokens,
-                    "temperature": 0.2 + 0.1 * attempt,
-                    "cache_prompt": True,
-                }
-            ).encode()
+            _payload = {
+                "prompt": prompt,
+                "n_predict": self.max_tokens,
+                "temperature": 0.2 + 0.1 * attempt,
+                "cache_prompt": True,
+            }
+            if _stop_seq:
+                _payload["stop"] = _stop_seq
+            body = _json.dumps(_payload).encode()
             try:
                 req = urllib.request.Request(
                     self._url() + "/completion",
@@ -1164,6 +1192,10 @@ class LocalGGUFProposer:
             except Exception as e:
                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
             code = _extract_python(text)
+            if not code and _codeonly:
+                # the stop-sequence consumed the closing fence and the opener was in the prompt, so
+                # the raw completion IS the code block body.
+                code = text.strip()
             if not code or any(f"def {fn}" not in code for fn in required):
                 last = f"missing {required} in output"
                 continue
