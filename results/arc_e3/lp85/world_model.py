@@ -8,7 +8,7 @@ def engine(grid, action, data):
         for r in range(h):
             for c in range(w):
                 if new_grid[r, c] == 3:
-                    new_grid[r, c] = 4
+                    new_grid[r, c] = 5
         return new_grid
     return grid
 
