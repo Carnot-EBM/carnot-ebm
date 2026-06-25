@@ -1,0 +1,15 @@
+=== STEP 0: PRECONDITIONS ===
+  GGUF present: True -> /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf
+  Port 8920 free: False
+  Port 8919 occupant: ?
+  Port 8920 busy but serving a healthy Qwen -> REUSING warm server.
+
+=== STEP 1: SMOKE TEST - lp85 binary arm (confirm L1 reach + L2 induction fires) ===
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-25 09:42:43 | INFO | Created new scorecard: 5ca3bda9-74ea-4295-8100-0d89905fb4a1
+2026-06-25 09:42:43 | INFO | Successfully loaded game class Lp85 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85/305b61c3/lp85.py
+  lp85 binary smoke: maxL=1 n_induce=2 goal_satisfiable=False (712.1s)
+
+=== STEP 2: FULL 2x2 A/B (games=['lp85', 'sc25'], budget=400) ===
+  Running lp85 / binary arm ...
+2026-06-25 09:54:37 | INFO | Created new scorecard: 03c0df50-fe44-45dc-a746-9f8637176168

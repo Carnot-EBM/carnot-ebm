@@ -9264,3 +9264,6 @@ c |
 | 2026-06-25 10:35 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; the capstone +  | OK | 105 passed, 1 warning in 6.50s |
 | 2026-06-25 11:12 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 116 passed, 1 warning in 18.01s |
 | 2026-06-25 12:35 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: rst_win_ci_low |
+| 2026-06-25 13:58 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: it.
+codex
+The  |
