@@ -1,0 +1,109 @@
+{
+  "duration_s": 2.136068,
+  "experiment": "experiment_4706_perception_quality_cigate",
+  "experiment_id": 4706,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference."
+    },
+    "loo_discrimination_gate_added": {
+      "principle": "the perception LOO-discrimination gate (records the order-1 chance baseline 0.503 + the richer representation's LOO-AUROC; fails on regression toward chance)."
+    },
+    "offpath_discrimination_metric_added": {
+      "principle": "the off-path discrimination metric (held-out discrimination on the LIVE off-path search distribution + the winning-path-vs-off-path gap; the .425-B2 bridge-gap made measurable)."
+    },
+    "perception_quality_floor_cigate_added": {
+      "principle": "the floor CI-gate that fails on a perception LOO regression below the A1 floor."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests added for all three guards (Tests Must Run and Assert: flag the at-chance / winning-paths-only / regression fixtures, pass the honest fixtures)."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+    }
+  },
+  "honest_verdict": "success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference.",
+  "loo_discrimination_gate_added": {
+    "errors": [],
+    "loo_delta_vs_order1": 0.17137,
+    "near_chance_threshold": 0.55,
+    "order1_chance_baseline_loo_auroc": 0.503096,
+    "passed": true,
+    "richer_representation_loo_auroc": 0.674466,
+    "source": "results/experiment_4476_verifier_features_v3_loo_gate.json",
+    "target_loo_auroc": 0.6
+  },
+  "offpath_discrimination_metric_added": {
+    "errors": [],
+    "max_allowed_gap": 0.15,
+    "min_offpath_auroc": 0.55,
+    "off_path_frontier_auroc": 1.0,
+    "off_path_frontier_rows": 2,
+    "passed": true,
+    "source": "results/experiment_4616_offline_live_bridge_disambiguation.json",
+    "winning_path_auroc": 1.0,
+    "winning_path_rows": 2,
+    "winning_path_vs_offpath_gap": 0.0
+  },
+  "perception_quality_floor_cigate_added": {
+    "a1_floor_loo_auroc": 0.674466,
+    "errors": [],
+    "measured_loo_auroc": 0.674466,
+    "passed": true,
+    "source": "results/experiment_4476_verifier_features_v3_loo_gate.json"
+  },
+  "preconditions_checked": {
+    "a1_perception_source_present": true,
+    "agents_md_read": true,
+    "cached_loo_source_present": true,
+    "codex_md_read": true,
+    "live_llm_inference": false,
+    "live_modules_importable": true,
+    "live_offpath_source_present": true,
+    "offline_arcade": true,
+    "ok": true,
+    "spec_has_req_4706": true
+  },
+  "random_seed": 4706,
+  "reproducibility_checksum": "sha256:d1be586b3aece179f85634f20eb0721bff9b24392383f6fe30fd207713709e58",
+  "schema": "carnot.arc.perception_quality_cigate_4706.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4706",
+    "SCENARIO-ARC-WMTE-4706-LOO-DISCRIMINATION",
+    "SCENARIO-ARC-WMTE-4706-OFFPATH-DISCRIMINATION",
+    "SCENARIO-ARC-WMTE-4706-PERCEPTION-QUALITY-FLOOR"
+  ],
+  "submitted_to_leaderboard": false,
+  "tests_added": {
+    "assertions": [
+      "at-chance LOO fixture fails and rich LOO fixture passes",
+      "winning-path-only off-path fixture fails with a large gap",
+      "off-path-calibrated fixture passes with a small gap",
+      "perception LOO regression below the A1 floor fails and floor fixture passes"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_experiment_4706_perception_quality_cigate.py -q --no-cov",
+      ".venv/bin/pytest tests/python -q",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4706_perception_quality_cigate.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4706_perception_quality_cigate.py -q",
+      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4706_perception_quality_cigate.py' --fail-under=100 --show-missing"
+    ],
+    "focused_tests_passed": true,
+    "new_code_coverage": "100%",
+    "passed": true,
+    "test_file": "tests/python/test_experiment_4706_perception_quality_cigate.py"
+  },
+  "verifier_is_oracle": false
+}

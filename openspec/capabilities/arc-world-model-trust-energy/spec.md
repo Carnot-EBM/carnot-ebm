@@ -1739,6 +1739,72 @@ Then the artifact counts a new level only if live exploration reaches it,
 offline reproduction verifies it, and the order-1 ablation fails; otherwise it
 records an honest residual for the next milestone.
 
+### REQ-ARC-WMTE-4706: Perception Quality LOO And Off-Path CI-Gates
+
+Experiment 4706 SHALL ship a perception-quality measurement substrate for the
+`.434` perception pivot before A1/A2 integration claims depend on it. The
+module SHALL expose a helper that computes leave-one-game-out AUROC for a
+representation over cached cross-game rows, a CI gate that records the
+order-1 chance baseline `0.503` and the richer representation AUROC, and a
+floor gate that fails when perception LOO regresses below the A1-established
+floor. The LOO gate SHALL fail on at-chance fixtures and on regressions toward
+chance even when in-sample discrimination is high.
+
+The module SHALL also expose an off-path discrimination metric for live search
+distribution rows. It SHALL report the representation's discrimination on
+winning-path rows separately from discrimination on the LIVE off-path/frontier
+distribution that `StepwiseExplorer.search_distribution_samples()` exposes,
+including dead-end/off-path states, and it SHALL report the
+winning-path-vs-off-path AUROC gap. A large gap or near-chance off-path AUROC
+SHALL be flagged because it predicts the offline-to-live null.
+
+The artifact at
+`results/experiment_4706_perception_quality_cigate.json` SHALL include
+`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`loo_discrimination_gate_added`, `offpath_discrimination_metric_added`,
+`perception_quality_floor_cigate_added`, `tests_added`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, and `field_principles`.
+The verifier SHALL remain oracle-distinct from the executable win-check and the
+inference substrate SHALL be cached-corpus verifier computation without live LLM
+inference.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference."
+- `verifier_is_oracle`: principle "MUST be false -- the CI-gates guard the measurement substrate, oracle-distinct from the executable win-check."
+- `loo_discrimination_gate_added`: principle "the perception LOO-discrimination gate (records the order-1 chance baseline 0.503 + the richer representation's LOO-AUROC; fails on regression toward chance)."
+- `offpath_discrimination_metric_added`: principle "the off-path discrimination metric (held-out discrimination on the LIVE off-path search distribution + the winning-path-vs-off-path gap; the .425-B2 bridge-gap made measurable)."
+- `perception_quality_floor_cigate_added`: principle "the floor CI-gate that fails on a perception LOO regression below the A1 floor."
+- `tests_added`: principle "the unit tests added for all three guards (Tests Must Run and Assert: flag the at-chance / winning-paths-only / regression fixtures, pass the honest fixtures)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4706-LOO-DISCRIMINATION
+
+Given cached cross-game perception rows with game ids, labels, and
+representation features
+When Experiment 4706 computes leave-one-game-out AUROC for the representation
+Then it records the order-1 baseline `0.503`, records the richer representation
+LOO-AUROC, fails at/near chance fixtures, and passes above-chance fixtures.
+
+#### SCENARIO-ARC-WMTE-4706-OFFPATH-DISCRIMINATION
+
+Given scored winning-path rows and scored live off-path/frontier rows from the
+search distribution
+When Experiment 4706 measures off-path discrimination
+Then it reports winning-path AUROC, off-path AUROC, the AUROC gap, row counts,
+and flags a winning-path-only representation while passing an off-path
+calibrated representation.
+
+#### SCENARIO-ARC-WMTE-4706-PERCEPTION-QUALITY-FLOOR
+
+Given the A1-established perception LOO floor
+When a candidate perception representation reports a lower LOO-AUROC
+Then the perception-quality floor CI-gate fails; otherwise it passes and records
+the measured LOO, floor, and source.
+
 ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
 
 Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2
