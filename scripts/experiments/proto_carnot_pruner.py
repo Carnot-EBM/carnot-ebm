@@ -35,7 +35,12 @@ JE_ROOT = Path("/home/ianblenke/arc-sota-refs/arc-agi-3-just-explore")
 RESULTS_DIR = REPO_ROOT / "results"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-RANDOM_SEED = 4731
+# RANDOM_SEED drives base_seed (via random.Random(RANDOM_SEED)). The single-arm
+# run used 4731; the hedged multi-arm run uses 4732 (per the task spec). The TRUE
+# reproducibility anchor recorded in the artifact is `base_seed_used`, derived
+# deterministically from RANDOM_SEED, so a re-run with the same RANDOM_SEED
+# reproduces every per-seed sequence exactly.
+RANDOM_SEED = 4732
 N_SEEDS = 5
 BUDGET = 2000
 SOLVED_GAMES = ["ar25", "cd82", "ft09", "lp85", "m0r0", "r11l", "s5i5", "sp80", "vc33"]
@@ -1063,9 +1068,31 @@ def main() -> None:
         "inference_substrate": "verifier_ensemble_against_cached_candidates",
         "verifier_is_oracle": False,
         "solve_provenance": "development_proxy",
-        "random_seed": 4732,
+        "random_seed": RANDOM_SEED,
         "base_seed_used": base_seed,
         "duration_s": duration_s,
+        "measurement_caveats": [
+            "efficiency_ratio is the SQUARED action ratio (vanilla_median/arm_median)**2 — "
+            "this is the ARC leaderboard reward shape (baseline_actions/actions_taken)**2; "
+            "the per-game numbers are squared, NOT a raw action ratio (e.g. eff=4.0 means a "
+            "2x action reduction).",
+            "efficiency_ratio is computed over SOLVED seeds only, and vanilla vs arm medians "
+            "may be over DIFFERENT seed subsets / different N when solve rates differ. On a "
+            "solve-rate-regressed game an arm can show a high efficiency_ratio purely from "
+            "survivorship (it kept the easy seeds, dropped the hard ones). The deployability "
+            "gate guards against this by ALSO requiring carnot_n_solved >= vanilla_n_solved on "
+            "every game, so survivorship cannot flip the verdict — but per-game efficiency "
+            "magnitudes on regressed games are confounded.",
+            "N=5 seeds/arm/game is below the project N>=30 bar for percentage-point solve-rate "
+            "claims. Vanilla baselines are themselves flaky on some games (ar25 0/5, m0r0 2/5 in "
+            "this run), so a 1-seed n_solved delta is within seed noise. Treat per-game solve-rate "
+            "deltas as indicative, not definitive; the cross-arm pattern (NO arm preserves all "
+            "solves while beating vanilla on efficiency) is the robust finding.",
+            "Pairing is at the SEED/initial-condition level: every arm draws the vanilla "
+            "random.choice first on each decision (so decision 1 matches vanilla for the same "
+            "seed), but each policy then consumes the RNG differently, so trajectories diverge "
+            "from decision 2 onward (intended — that is the point of the policy).",
+        ],
         "methodology_note": (
             "Carnot frame-change verifier (LiveActionEffectScorer: PersistentAEM + SmallFrameChangeCNN) "
             "scores each untested edge in just-explore's GraphExplorer.choose_edge. "
