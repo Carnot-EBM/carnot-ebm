@@ -6627,6 +6627,102 @@ first-win, coverage, and action-efficiency deltas, records transfer dead-ends
 for null games, keeps `verifier_is_oracle=false`, and writes a stable
 `results/experiment_4730_primitive_persist_transfer.json` checksum.
 
+### REQ-ARC-WMTE-4737: Goal-Energy Candidate-Generation Guidance Valid Test
+
+Experiment 4737 SHALL reopen the Exp4640 goal-energy generation null by adding
+an additive goal-energy proposal-guidance hook to the live `E3AgentPolicy` /
+`StepwiseExplorer` candidate-generation path. The hook SHALL score candidate
+states produced by a transition predictor for the current frame and candidate
+action, combine lower-is-better navigation/proposal rank with graded
+goal-distance or structural-progress energy, and reorder the existing proposal
+pool without removing the baseline proposal path. The scorer SHALL be
+oracle-distinct: it may score predicted candidate states, but SHALL NOT call an
+executable win-check or environment verifier when ranking proposals.
+
+Before measuring lift, Experiment 4737 SHALL prove the goal-energy generation
+arm is non-degenerate. The non-degeneracy gate SHALL require real candidate
+state scoring evidence, non-zero goal-energy score variance across the
+candidate pool, and a measurable proposal ranking or pool delta versus the
+baseline ordering. If this gate fails because the arm cloned cached attempts,
+scored a constant neutral frame, or otherwise no-opped, the experiment SHALL
+emit `complete: goal_energy_generation_arms_degenerate_confirmed_harness_bug`
+and SHALL NOT treat the result as a capability null.
+
+After `arms_non_degenerate=true`, Experiment 4737 SHALL run the matched
+`experiment_4605_live_integration_scored_agent` held-out harness for baseline
+and goal-energy-guided arms, measure CPU goal-energy scoring milliseconds per
+candidate, run `scripts/arc_orphan_solver_lint.py`, and run
+`tests/python/test_arc_submitted_agent_parity.py`. A success requires either a
+held-out first-win lift of at least `+0.05` over baseline or a multi-level probe
+that reaches L2 and passes `arc_solver_kit.reproduce`. If the non-degenerate
+arms give flat first-win, the artifact SHALL include a non-empty
+`null_delta_methodology_note` and `positive_control_passed =
+bool(parity_test_green AND arms_non_degenerate AND bare_control_passed)` so the
+honest equality is not quarantined as a tautology.
+
+The terminal artifact
+`results/experiment_4737_goal_energy_candidate_generation_valid_test.json`
+SHALL include principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `arms_non_degenerate`,
+`candidate_pool_differs_from_baseline`, `goal_energy_score_variance`,
+`goal_energy_first_win`, `baseline_first_win`,
+`goal_energy_vs_baseline_delta`, `cpu_scoring_ms_per_candidate`,
+`goal_free_l2_reached`, `offline_reproduced`, `reproduced_levels`,
+`solve_provenance`, `verifier_is_oracle`, `live_path_reachable`,
+`bare_control_passed`, `false_negative_risk_checked`,
+`null_delta_methodology_note`, `positive_control_passed`,
+`chosen_submitted_config`, `proposer_served_model`, `parity_test_green`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: goal_energy_generation_first_win_lift_<delta>_or_l2_<game> OR complete: goal_energy_generation_arms_degenerate_confirmed_harness_bug OR complete: goal_energy_generation_no_first_win_lift_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference (the live candidate generation loads the Qwen GGUF, 60s floor); model_specs MUST name the GGUF."
+- `arms_non_degenerate`: principle "THE FIRST GATE -- the goal-energy arm scores REAL candidate states with non-zero score variance + a candidate pool that DIFFERS from baseline (NOT cloned/neutral-on-cached-frame); a false here means the prior null was dead code (a BUG to fix, not a capability null)."
+- `candidate_pool_differs_from_baseline`: principle "the explicit evidence the goal-energy pool/ranking differs from baseline (rank/coverage delta > 0) -- the no-op catch that exp4640 failed (it cloned baseline)."
+- `goal_energy_score_variance`: principle "non-zero variance of the graded goal-energy across candidate states -- proves it scored REAL states, not a constant neutral value on the cached frame."
+- `goal_energy_first_win`: principle "the held-out first-win of the goal-energy-guided arm -- measured ONLY after arms_non_degenerate=True."
+- `baseline_first_win`: principle "the unbiased-proposal baseline (the current submitted behavior) -- the no-guidance control."
+- `goal_energy_vs_baseline_delta`: principle "goal_energy_first_win - baseline_first_win; >=+0.05 is the gate; emitted explicitly so a null (0) is annotated and not auto-quarantined as TAUTOLOGY (pair with null_delta_methodology_note + positive_control_passed when flat)."
+- `cpu_scoring_ms_per_candidate`: principle "the Kaggle path is CPU under a 12h/600-RPM cap; goal-energy scoring too slow per candidate makes the lever infeasible regardless of offline gains."
+- `goal_free_l2_reached`: principle "a goal-energy-guided L2 deepening proves the wall is crossed by GUIDING generation toward the goal."
+- `offline_reproduced`: principle "a new level counts only if offline-reproduced via arc_solver_kit.reproduce."
+- `reproduced_levels`: principle "the integer level the goal-energy-guided agent reached on the multi-level probe."
+- `solve_provenance`: principle "live_agent_self_discovery for a generic goal-energy-guided L2; development_proxy if an adapter was needed."
+- `verifier_is_oracle`: principle "MUST be false -- the graded goal-energy scores candidate states (oracle-distinct; it does not run the win-check); gate-eligible."
+- `live_path_reachable`: principle "HARD gate -- the changed E3AgentPolicy candidate-generation path is in the scored agent's import closure; arc_orphan_solver_lint passes."
+- `bare_control_passed`: principle "the POSITIVE CONTROL -- the held-out harness has reachable first-win headroom; a flat null is valid only then."
+- `false_negative_risk_checked`: principle "true with non-degenerate arms + reachable headroom -- a 'no lift' null is valid only then."
+- `null_delta_methodology_note`: principle "present when goal_energy_vs_baseline_delta ~0 on NON-degenerate arms; states the equality is an honest no-lift null (the TAUTOLOGY carve-out reads it), not a measurement bug -- the .435-A1 escape fix."
+- `positive_control_passed`: principle "bool(parity_test_green AND arms_non_degenerate AND bare_control_passed) -- GATES the TAUTOLOGY null-delta exemption; an unvalidated flat result is NOT excused."
+- `chosen_submitted_config`: principle "the recommended SUBMITTED_AGENT_CONFIG change (goal-energy guidance on, weight) -- the A6 input; 'unchanged' if null."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (CUDA if training, Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4737-NON-DEGENERATE-GOAL-GUIDANCE
+
+Given the Qwen3.5-9B-MTP GGUF is cached and `/props` verifies Qwen on a free
+non-8919 port, the offline arcade imports, and `arc-world-model-trust-energy`
+declares `REQ-ARC-WMTE-4737`
+When Experiment 4737 constructs baseline and goal-energy-guided live
+`E3AgentPolicy` proposal paths
+Then the goal-energy arm first proves `arms_non_degenerate=true` by scoring
+predicted candidate states with non-zero score variance and a proposal ranking
+delta, or exits with the degenerate-harness-bug verdict before any lift claim.
+
+#### SCENARIO-ARC-WMTE-4737-HELDOUT-NULL-OR-LIFT
+
+Given the non-degeneracy gate has passed
+When Experiment 4737 runs the matched held-out first-win harness and the
+lp85/sc25 multi-level probe
+Then it reports `goal_energy_first_win`, `baseline_first_win`, explicit delta,
+CPU scoring cost, parity and live-path gates, and either a success from
+`delta>=+0.05` or L2 reproduction, or an honest no-lift residual with
+`null_delta_methodology_note` and `positive_control_passed`.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts
