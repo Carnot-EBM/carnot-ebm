@@ -675,17 +675,32 @@ def load_partial(root: Path) -> JsonDict:
         integrated = rows.get("integrated_attempts")
         bare = rows.get("bare_attempts")
         if isinstance(integrated, list) and isinstance(bare, list):
+            # Coerce only Mapping rows; a scalar/garbage row would make dict(row) raise, which would
+            # defeat the "never crash on resume" guarantee. We keep only well-formed attempt rows.
             out[str(game)] = {
-                "integrated_attempts": [dict(row) for row in integrated],
-                "bare_attempts": [dict(row) for row in bare],
+                "integrated_attempts": [dict(row) for row in integrated if isinstance(row, Mapping)],
+                "bare_attempts": [dict(row) for row in bare if isinstance(row, Mapping)],
             }
     return {"games": out}
 
 
 def _write_partial(root: Path, ledger: Mapping[str, Any]) -> None:
-    """Flush the resume ledger after each per-game unit completes (incremental durability)."""
+    """Flush the resume ledger after each per-game unit completes (incremental durability).
 
-    _write_json(_partial_path(root), ledger)
+    ATOMIC write: serialize to a sibling temp file then os.replace() onto the real path. A naive
+    truncate-then-write (Path.write_text) leaves a TRUNCATED partial file if codex SIGKILLs the process
+    mid-flush -- the next resume would then read corrupt JSON, fall back to no-progress, and silently
+    re-run every already-done game. os.replace is atomic on POSIX, so a kill leaves EITHER the old
+    complete ledger OR the new complete ledger, never a half-written one -- exactly the durability the
+    checkpoint exists to provide."""
+
+    path = _partial_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(
+        json.dumps(dict(ledger), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    os.replace(tmp, path)
 
 
 def clear_partial(root: Path) -> None:
@@ -724,6 +739,10 @@ def run_held_out_proxy_checkpointed(
 
     root_path = Path(root)
     budget = resolve_soft_budget_s() if soft_budget_s is None else float(soft_budget_s)
+    # The budget is an ELAPSED-TIME duration, so anchor to the start and compare now()-started, NOT the
+    # absolute clock. (A naive now()>=budget would compare a ~1.7e9 Unix timestamp against 4200s and
+    # always trip, stopping before game 1 every time.)
+    started = float(now())
 
     # The held-out lane is exp4605 with deepening ON and the 4 color variants. We set the same env the
     # non-checkpointed run_held_out_proxy sets so the per-variant attempt rows (which read _deepen_enabled
@@ -750,9 +769,10 @@ def run_held_out_proxy_checkpointed(
         remaining = [game for game in ordered_games if game not in done]
 
         for index, game in enumerate(remaining):
-            # Soft-budget check BETWEEN games: if we cannot afford another (minutes-long) game, stop
-            # gracefully NOW with whatever is already flushed, well under the 4800s hard cap.
-            if float(now()) >= budget:
+            # Soft-budget check BETWEEN games: if the ELAPSED time means we cannot afford another
+            # (minutes-long) game, stop gracefully NOW with whatever is already flushed, well under the
+            # 4800s hard cap. Elapsed = now()-started so the comparison is a duration-vs-duration.
+            if float(now()) - started >= budget:
                 already = [g for g in ordered_games if g in done]
                 still = [g for g in ordered_games if g not in done]
                 raise _BudgetExceeded(done_games=already, remaining_games=still)
