@@ -1,0 +1,146 @@
+{
+  "ab_methodology": "content_addressed_reuse_of_exp4710_corrected_arm_artifacts; online-warm maps to online-warm-propose because that arm exercises the coordinate-head ACTION6 driver.",
+  "arm_source_artifacts": {
+    "frozen": "results/experiment_4710_online_action_learning_arms_frozen.json",
+    "online-scratch": "results/experiment_4710_online_action_learning_arms_online_scratch.json",
+    "online-warm": "results/experiment_4710_online_action_learning_arms_online_warm_propose.json"
+  },
+  "bare_control_passed": true,
+  "chosen_submitted_config": {
+    "coordinate_head_proposals": true,
+    "online_action_learning_driver": "available_additive",
+    "reset_to_prior_on_level_up": true,
+    "submitted_recommendation": "keep_conservative_null_config_with_safe_cell_recall_floor",
+    "trust_metric": "cell_recall"
+  },
+  "cpu_train_step_ms": 9.182296,
+  "duration_s": 23.079,
+  "experiment": "experiment_4715_online_action_learning_driver_corrected",
+  "false_negative_risk_checked": true,
+  "field_principles": {
+    "bare_control_passed": "positive control: held-out harness has reachable first-win headroom.",
+    "chosen_submitted_config": "recommended submitted-agent config: additive online driver, reset-to-prior, cell_recall floor; kept conservative when the first-win gate is flat.",
+    "cpu_train_step_ms": "CPU wall-clock for one online Adam/BCE step after about five observed actions.",
+    "false_negative_risk_checked": "true only when the three arm inputs and headroom are present.",
+    "frozen_first_win": "the frozen-prior baseline is the no-online control.",
+    "goal_free_l2_reached": "a goal-free L2 deepening proves the wall is crossed by demoting goal-induction.",
+    "honest_verdict": "terminal prefix; success: online_warm_beats_frozen_<delta>_l2_<game> OR complete: online_action_learning_no_first_win_lift_residual_<cause>.",
+    "inference_substrate": "live_llm_inference for the Qwen GGUF precondition plus verifier_ensemble_against_cached_candidates for the offline held-out arm artifacts.",
+    "live_path_reachable": "arc_orphan_solver_lint confirms the changed modules are live-path reachable.",
+    "null_methodology_note": "present for flat deltas; explains honest no-lift null vs measurement bug.",
+    "offline_reproduced": "a goal-free L2 counts only if offline-reproduced.",
+    "online_scratch_first_win": "the online-from-random arm isolates learning from warm start.",
+    "online_warm_first_win": "the +0.05 online-warm-over-frozen gate is the whole bet; the warm arm isolates online adaptation from scratch initialization.",
+    "online_warm_vs_frozen_delta": "online_warm_first_win - frozen_first_win; >=+0.05 is the gate; emitted explicitly.",
+    "parity_test_green": "test_arc_submitted_agent_parity.py passes.",
+    "preconditions_checked": "records CUDA, Qwen cache, offline arcade, Go-Explore import, and /props.",
+    "proposer_served_model": "the /props-verified proposer model; must be Qwen3.5-9B-MTP.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "reproduced_levels": "integer level reached by the goal-free multi-level probe.",
+    "reproducibility_checksum": "content-addressed hash catches silent drift on replay.",
+    "solve_provenance": "live_agent_self_discovery for generic goal-free L2; development_proxy otherwise.",
+    "verifier_is_oracle": "MUST be false; the online frame-change CNN does not run the win-check."
+  },
+  "frozen_first_win": 0.04,
+  "goal_free_l2_reached": false,
+  "goal_free_probe": {
+    "games": [
+      {
+        "actions": 250,
+        "archive_cells": 4,
+        "executor": "affordance_go_explore",
+        "first_levelup_actions": null,
+        "game": "lp85",
+        "iterations": 8,
+        "levels_reached": 0,
+        "max_depth": 35
+      },
+      {
+        "actions": 250,
+        "archive_cells": 64,
+        "executor": "affordance_go_explore",
+        "first_levelup_actions": null,
+        "game": "sc25",
+        "iterations": 6,
+        "levels_reached": 0,
+        "max_depth": 70
+      }
+    ],
+    "goal_free_l2_reached": false,
+    "note": "Bounded goal-free probe records exploration depth, but counts L2 only with an offline-reproduced solution path; no reproduced goal-free L2 was produced here.",
+    "offline_reproduced": false,
+    "probe_budget": 250,
+    "reproduced_levels": 0
+  },
+  "honest_verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_too_sparse",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates + live_llm_inference_precondition_verified",
+  "live_path_lint": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "duration_s": 0.593,
+    "output_tail": "OK: all solver-like ARC modules are reachable from the live agent path (37 modules in the live closure).\n",
+    "passed": true,
+    "returncode": 0
+  },
+  "live_path_reachable": true,
+  "model_specs": {
+    "action_effect_model": "SmallFrameChangeCNN binary frame-change coordinate head",
+    "gguf": "Qwen3.5-9B-Q4_K_M.gguf",
+    "live_generator": "Qwen3.5-9B-MTP"
+  },
+  "null_methodology_note": "The corrected warm coordinate-head arm equals the frozen first-win rate on the same held-out harness inputs; this is an honest no-lift null, not the prior dict-candidate or dead-archive measurement bug.",
+  "offline_reproduced": false,
+  "online_scratch_first_win": 0.04,
+  "online_warm_first_win": 0.04,
+  "online_warm_vs_frozen_delta": 0.0,
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "duration_s": 6.712,
+    "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [11 items]\n\n...........                                                              [100%]\n============================== 11 passed in 5.51s ==============================\n",
+    "passed": true,
+    "returncode": 0
+  },
+  "parity_test_green": true,
+  "preconditions_checked": {
+    "arc_go_explore_bug_fixed_frame_grid": true,
+    "arc_go_explore_importable": true,
+    "arm_artifacts_present": {
+      "frozen": true,
+      "online-scratch": true,
+      "online-warm": true
+    },
+    "blocked_resource": "",
+    "cuda_available": true,
+    "offline_arcade_ok": true,
+    "ok": true,
+    "proposer_port": 8920,
+    "proposer_props": {
+      "blocked_resource": "",
+      "model": "Qwen3.5-9B-MTP",
+      "model_alias": "Qwen3.5-9B-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "passed": true,
+      "port": 8920
+    },
+    "proposer_served_model": "Qwen3.5-9B-MTP",
+    "qwen_gguf_cached": true,
+    "qwen_props_verified": true
+  },
+  "proposer_served_model": "Qwen3.5-9B-MTP",
+  "random_seed": 4715,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:b70ff6e0facb7e4f22f8a728aa1aee4f993849e2e29c8ebf4f05673b0f28505d",
+  "schema": "carnot.exp4715.online_action_learning_driver_corrected.v1",
+  "schema_errors": [],
+  "solve_provenance": "development_proxy",
+  "source_artifact_checksums": {
+    "frozen": "sha256:9aa395e6e97811bf944ebb920a56e972a6eb9473a95cb1a1a90e5928c2ec4574",
+    "online-scratch": "sha256:68e2331e5acff02923a9825cc7638c9135c91098f9e351c943ab2948c2351f3c",
+    "online-warm": "sha256:252fab8970554642951c8bae145d263053cefce5fe816b0ecbd1478fc1bdf4b0"
+  },
+  "spec_refs": [
+    "REQ-ARC-FCP-4715",
+    "SCENARIO-ARC-FCP-4715"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false
+}

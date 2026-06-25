@@ -32,8 +32,8 @@ Online loop:
   2. Every `fit_every` observations, run one SGD step on the buffered examples
   3. MANDATORY: clear cnn_scorer._cache after every fit (stale predictions from before the
      weight update would otherwise persist and silently mislead the explorer)
-  4. reset() at each env RESET (per-level fresh exploration; warm weights are PRESERVED so
-     cross-level knowledge accumulates within the same attempt; only per-step buffer clears)
+  4. reset() on level-up restores the initial prior snapshot, clears Adam state, and starts
+     the next level from the cross-game prior rather than stale level-specific weights.
 
 PARITY SAFETY
 -------------
@@ -101,25 +101,40 @@ class OnlineActionEffectScorer:
     lr: float = 1e-4
     fit_every: int = 5
     max_batch: int = 32
+    max_buffer: int = 200_000
     propose_k: int = 6
 
     # Online state -- initialized in __post_init__ so the dataclass stays declarative.
     _optimizer: Any = field(default=None, init=False, repr=False)
     _buffer: list[FrameActionEffectExample] = field(default_factory=list, init=False, repr=False)
     _seen: set[tuple[str, int, Any, Any]] = field(default_factory=set, init=False, repr=False)
+    _seen_order: list[tuple[str, int, Any, Any]] = field(default_factory=list, init=False, repr=False)
     _obs_since_fit: int = field(default=0, init=False, repr=False)
     _observed: int = field(default=0, init=False, repr=False)
     _fits: int = field(default=0, init=False, repr=False)
     _errors: int = field(default=0, init=False, repr=False)
+    _resets_to_prior: int = field(default=0, init=False, repr=False)
+    _reset_levels: list[int] = field(default_factory=list, init=False, repr=False)
+    _initial_state: dict[str, torch.Tensor] = field(default_factory=dict, init=False, repr=False)
 
     def __post_init__(self) -> None:
-        """Build the Adam optimizer ONCE -- never rebuilt per step (saves ~1ms/step)."""
+        """Snapshot the starting CNN prior and build the Adam optimizer."""
+        self._initial_state = {
+            name: tensor.detach().cpu().clone()
+            for name, tensor in self.cnn_scorer.model.state_dict().items()
+        }
+        self._rebuild_optimizer()
+
+    def _rebuild_optimizer(self) -> None:
+        """Recreate Adam so level resets do not carry stale moment estimates."""
         if self.train_enabled:
             # WHY set_to_none=True in zero_grad later: releases gradient tensors immediately,
             # reducing peak memory by ~1x the parameter count during the step.
             self._optimizer = torch.optim.Adam(
                 self.cnn_scorer.model.parameters(), lr=float(self.lr)
             )
+        else:
+            self._optimizer = None
 
     def candidate_score(self, frame: Any, candidate: Any) -> float:
         """REQ-ARC-OAE-4710: blended score matching LiveActionEffectScorer's formula.
@@ -180,6 +195,9 @@ class OnlineActionEffectScorer:
             if dedup_key in self._seen:
                 return
             self._seen.add(dedup_key)
+            self._seen_order.append(dedup_key)
+            if len(self._seen_order) > int(self.max_buffer):
+                self._seen.discard(self._seen_order.pop(0))
 
             # Compute whether the frame changed -- the free self-supervised label.
             try:
@@ -201,6 +219,8 @@ class OnlineActionEffectScorer:
                 x=x,
                 y=y,
             )
+            if len(self._buffer) >= int(self.max_buffer):
+                self._buffer.pop(0)
             self._buffer.append(example)
             self._observed += 1
             self._obs_since_fit += 1
@@ -295,20 +315,26 @@ class OnlineActionEffectScorer:
             self._errors += 1
         return results
 
-    def reset(self) -> None:
-        """Reset per-level state while PRESERVING warm model weights.
+    def reset(self, *, level: int | None = None, reset_to_prior: bool = True) -> None:
+        """Reset per-level state and, by default, restore the initial CNN prior.
 
-        WHY preserve weights: knowledge about which actions cause frame changes accumulates
-        across levels within the same game attempt. A model that learned "ACTION3 never causes
-        change in this game" should NOT forget that on level 2. Only the per-step observation
-        buffer and dedup set are cleared -- the CNN's accumulated knowledge survives.
-
-        WHY also clear cnn_scorer._cache: after an env reset the frames are different (new level
-        layout), so cached predictions from the old level are guaranteed stale.
+        REQ-ARC-FCP-4715: on level-up the goal-free driver starts the next level from the
+        cross-game prior snapshot, not from weights overfit to the previous level. The optimizer
+        is rebuilt too, because Adam moments are level-specific state. Pass
+        ``reset_to_prior=False`` only for diagnostic ablations that deliberately preserve online
+        weights across levels.
         """
         self._buffer.clear()
         self._seen.clear()
+        self._seen_order.clear()
         self._obs_since_fit = 0
+        if reset_to_prior and self._initial_state:
+            state = {name: tensor.clone() for name, tensor in self._initial_state.items()}
+            self.cnn_scorer.model.load_state_dict(state)
+            self._rebuild_optimizer()
+            self._resets_to_prior += 1
+            if level is not None:
+                self._reset_levels.append(int(level))
         self.cnn_scorer._cache.clear()
 
     def diagnostics(self) -> dict[str, Any]:
@@ -320,6 +346,9 @@ class OnlineActionEffectScorer:
             "train_enabled": bool(self.train_enabled),
             "propose_enabled": bool(self.propose_enabled),
             "buffer_size": int(len(self._buffer)),
+            "max_buffer": int(self.max_buffer),
+            "resets_to_prior": int(self._resets_to_prior),
+            "reset_levels": list(self._reset_levels),
         }
 
 

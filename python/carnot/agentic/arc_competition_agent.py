@@ -972,8 +972,11 @@ class StepwiseExplorer:
         h = self._hash(latest)
         lvl = _level_of(latest)
         over = self._game_over(latest)
+        previous_best_level = int(self.best_level)
+        initial_observation = self.start_level is None
         if self.start_level is None:
             self.start_level = lvl
+        level_increased = (not initial_observation) and lvl > previous_best_level
         self.best_level = max(self.best_level, lvl)
         features = None
         if self.awaiting is not None:
@@ -1034,6 +1037,18 @@ class StepwiseExplorer:
                     )
                 except Exception:
                     pass
+            if level_increased:
+                fcs = getattr(self, "frame_change_scorer", None)
+                if fcs is not None and hasattr(fcs, "reset"):
+                    try:
+                        fcs.reset(level=int(lvl), reset_to_prior=True)
+                    except TypeError:
+                        try:
+                            fcs.reset()
+                        except Exception:
+                            pass
+                    except Exception:
+                        pass
             if over:
                 origin_node = self.graph.get(o["origin"], {})
                 act = {"action": o["action"], "data": o["data"]}

@@ -816,6 +816,69 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
 - `preconditions_checked`: principle "records resources verified (offline arcade, E3AgentPolicy + graph_explore_solve_v2 importable, .427 predictor artifact present); pre-empts missing-resource fabrication."
 
+### REQ-ARC-FCP-4715: Goal-Free Online Action Learning Driver Corrected Build
+
+Experiment 4715 SHALL write
+`results/experiment_4715_online_action_learning_driver_corrected.json` after
+installing the corrected goal-free online action-learning driver into the live
+cascade. The driver SHALL remain additive to the existing `cascade=True`
+goal-induction path: it may propose and rank actions through the scored
+`E3AgentPolicy` / `StepwiseExplorer` import closure, but it SHALL NOT remove
+the existing LLM goal-induction planner or banked-solution replay path.
+
+The online action-effect driver SHALL use self-supervised binary frame-change
+labels from the agent's own transitions, perform one CPU-safe Adam/BCE update
+on approximately every five observed actions, use hash-deduped examples, and
+expose a coordinate head that proposes top-k ACTION6 click coordinates. Plain
+dict candidate rows and ArcAction-like objects SHALL both receive the CNN term
+so the coordinate head is not silently bypassed. On any observed level increase,
+the driver SHALL reset per-level buffer state, optimizer state, and trainable
+CNN weights to the scorer's initial cross-game prior snapshot; this reset-to-
+prior behavior SHALL be measured separately from a scratch/random arm.
+
+The corrected build SHALL also flip the cheap online dynamics floor by default:
+`gated_engine_from_transitions` SHALL default to `trust_metric="cell_recall"`
+while preserving explicit callers that request `"exact"`. The experiment SHALL
+record the live preconditions from the operator prompt: CUDA available for
+offline arms, Qwen3.5-9B-MTP GGUF cached, offline arcade and the bug-fixed
+Go-Explore archive importable, and `/props` verification that the proposer
+port serves Qwen rather than Gemma.
+
+Experiment 4715 SHALL compare the frozen, online-scratch, and online-warm
+arms on the experiment 4605 held-out harness or a content-addressed reuse of
+the corresponding completed arm artifacts. A success verdict is allowed only
+when online-warm first-win rate exceeds frozen by at least +0.05 and a
+goal-free lp85/sc25 multi-level probe reaches L2 and offline-reproduces via
+`arc_solver_kit.reproduce`. If the arm delta is flat and no goal-free L2 is
+reproduced, the artifact SHALL report a terminal `complete:` null, name the
+residual cause, keep `verifier_is_oracle=false`, and leave the submitted config
+unchanged except for explicitly safe additive floors.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: online_warm_beats_frozen_<delta>_l2_<game> OR complete: online_action_learning_no_first_win_lift_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference for the live arm that loads the Qwen GGUF, or verifier_ensemble_against_cached_candidates for the offline held-out harness arm; model_specs name the GGUF."
+- `online_warm_first_win`: principle "the +0.05 online-warm-over-frozen gate is the whole bet; the warm arm isolates online adaptation from scratch initialization."
+- `online_scratch_first_win`: principle "the online-from-random arm isolates whether the win is online learning or warm start."
+- `frozen_first_win`: principle "the frozen-prior baseline is the current submitted behavior and the no-online control."
+- `online_warm_vs_frozen_delta`: principle "online_warm_first_win - frozen_first_win; >=+0.05 is the gate; emitted explicitly so a null is annotated."
+- `cpu_train_step_ms`: principle "the Kaggle path is CPU under a 12h/600-RPM cap; an online step too slow to run every five actions makes the loop infeasible regardless of offline gains."
+- `goal_free_l2_reached`: principle "a goal-free L2 deepening proves the wall is crossed by demoting goal-induction, not fixing it."
+- `offline_reproduced`: principle "a goal-free L2 counts only if offline-reproduced via arc_solver_kit.reproduce."
+- `reproduced_levels`: principle "the integer level the goal-free driver reached on the multi-level probe."
+- `solve_provenance`: principle "live_agent_self_discovery for a generic goal-free L2; development_proxy if an adapter or cached arm artifact was needed."
+- `verifier_is_oracle`: principle "MUST be false -- the online frame-change CNN is oracle-distinct and does not run the win-check."
+- `live_path_reachable`: principle "HARD gate -- the changed E3AgentPolicy/StepwiseExplorer path is in the scored agent import closure and arc_orphan_solver_lint passes."
+- `bare_control_passed`: principle "the positive control proves the held-out harness has reachable first-win headroom before accepting a flat null."
+- `false_negative_risk_checked`: principle "true only when the three arms ran or were content-addressed and reachable headroom was confirmed."
+- `null_methodology_note`: principle "present when online_warm_vs_frozen_delta is approximately zero; states the equality is an honest no-lift null, not a measurement bug."
+- `chosen_submitted_config`: principle "the recommended submitted-agent config change: online driver on, reset-to-prior, cell_recall un-gate; unchanged if null."
+- `proposer_served_model`: principle "the model served by /props; MUST be Qwen3.5-9B-MTP to guard the port-8919 Gemma confound."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records CUDA, Qwen cache, offline arcade, bug-fixed archive, and /props served Qwen."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
