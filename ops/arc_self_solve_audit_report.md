@@ -16,50 +16,37 @@ OK: all solver-like ARC modules are reachable from the live agent path (37 modul
 
 ## Hostile LLM review
 
-I have the full picture now. Cross-referencing all 18 artifacts against the registry's recorded `levels_reproduced` and solver mechanism.
+I now have complete evidence. Cross-referencing every artifact's `reached_level` against the registry's recorded `levels_reproduced` and the canonical `reproducible_total_levels: 63`, plus a hostile read of all 19 artifact bodies for undeclared outer-loop inputs. Here is the audit.
 
 ---
 
-## TL;DR
+## ARC Self-Solve Audit — last 7d (19 artifacts)
 
-**No OUTER_LOOP_RE fraud, but the whole batch is CHURN: all 18 "solves" re-validate levels already in the registry — zero new levels banked this week.** 17/18 are honestly-labeled `development_proxy` (the offline dev-twin re-running hand-built `GameAdapter`s); 1/18 (r11l) is genuine adapter-free `live_agent_self_discovery` but stalled at an already-recorded L1. Reachability pre-pass clean (no OFF_PATH). The load-bearing concern is interpretive, and the registry itself already states it: the 62-level count is a **dev proxy**, the scored hidden-leaderboard baseline is **0.08**.
+**TL;DR — `clean_provenance_but_zero_self_discovery_advance`.** No integrity violations: reachability lint is clean (exit 0), no off-path mechanism, no dishonestly-stamped self-discovery, no undeclared outer-loop inputs (`read_game_source` / `offline_ground_truth_bfs` / `*calibration*` absent from all 19 bodies). **But the window is 100% re-verification: 0 of 19 banked a new level** — every artifact reaches a level already in the registry (`reached_level ≤ levels_reproduced`), and the canonical `reproducible_total_levels` stayed at **63**. 18/19 are `development_proxy` (hand-built `GameAdapter` dev-twins re-gated through the standing loop); the *single* `live_agent_self_discovery` artifact (r11l) only re-touched an already-banked L1. The deliverable — live self-discovery of *new* ground — did not move.
 
-These artifacts are literally the registry's own gate files (e.g. `arc_loop_solve_vc33.json` *is* "the 10-label L2 gate"). The 7-day window caught the standing loop touching them, not new milestone solves.
+### Per-artifact verdicts
 
-## Per-artifact
+| Artifact | reached / reg | provenance | Verdict | Evidence |
+|---|---|---|---|---|
+| `r11l` | L1 / **L1** | live_self_discovery | **DUPLICATE** (right mechanism, no new level) | `graph_explore_adapter_free`, 3 moves, self-learned `region_count` heuristic — the genuine live path, but L1 already banked (reg solver = exp4296). `next: register a GameAdapter` → it's a *seed*, not an advance. |
+| `lp85` | L4 / **L5** | development_proxy | **DUPLICATE** | Re-gates "the L4 gate"; registry already deeper at L5. |
+| `tu93` | L4 / **L5** | development_proxy | **DUPLICATE** | Reproduction re-verify below registry depth; `verifier_src: hand_verifier_cold_start`. |
+| `tr87` | L6 / **L6** | development_proxy | **DUPLICATE** | At-depth re-verify. |
+| `ft09` | L3 / **L3** | development_proxy | **DUPLICATE** | At-depth re-verify. |
+| `ls20`,`cd82`,`sp80`,`su15`,`dc22`,`vc33`,`bp35`,`sb26`,`re86`,`ar25`,`m0r0`,`cn04`,`lf52` | L2 / **L2** | development_proxy | **DUPLICATE** ×13 | All at-depth re-verifications via hand-registered `GameAdapter`s; none increment the count. |
+| `sk48` | L1 / **L1** | development_proxy | **DUPLICATE** | At-depth re-verify. |
 
-| Game | Art L / Reg L | Verdict | Mechanism (registry `solver`) |
-|---|---|---|---|
-| **r11l** | 1 / 1 | **DUPLICATE** (good provenance) | adapter-free graph-explore — genuine self-discovery, but L1 already banked and registry repeatedly records it "stalled_at_L1" |
-| lp85 | 4 / 5 | DUPLICATE | offline solver + adapter; registry: "remains the L4 gate" |
-| tu93 | 4 / 5 | DUPLICATE | GameAdapter `_tu93` + OfflineSolver |
-| tr87 | 6 / 6 | DUPLICATE | GameAdapter `_tr87` (hand-RE'd, reads internal fields) |
-| ft09 | 3 / 3 | DUPLICATE | GameAdapter `_ft09` (hardcoded L3 click set) |
-| ls20 | 2 / 2 | DUPLICATE | GameAdapter `_ls20` |
-| dc22 | 2 / 2 | DUPLICATE | GameAdapter `_dc22` |
-| vc33 | 2 / 2 | DUPLICATE | GameAdapter `_vc33` (hardcoded support clicks) |
-| cd82 | 2 / 2 | DUPLICATE | GameAdapter `_cd82` |
-| sp80 | 2 / 2 | DUPLICATE | GameAdapter `_sp80` |
-| su15 | 2 / 2 | DUPLICATE | GameAdapter `_su15` (14 hardcoded drag clicks) |
-| sb26 | 2 / 2 | DUPLICATE | GameAdapter `_sb26` ("derived from the offline environment source") |
-| re86 | 2 / 2 | DUPLICATE | GameAdapter `_re86` |
-| lf52 | 2 / 2 | DUPLICATE | GameAdapter `_lf52` |
-| ar25 | 2 / 2 | DUPLICATE | GameAdapter `_ar25` |
-| m0r0 | 2 / 2 | DUPLICATE | GameAdapter `_m0r0` |
-| cn04 | 2 / 2 | DUPLICATE | GameAdapter `_cn04` |
-| sk48 | 1 / 1 | DUPLICATE | adapter-free trajectory replay (graph_explore_solve_v2) |
+**Recommended action (all 19):** *No quarantine, no correction* — these are the standing loop's by-design reproducibility-maintenance (`mode: standing_arc_loop_*_no_quota`), not fraudulent new-solve claims, so Layer-1b's CRITICAL-duplicate rule should **not** fire (they don't claim new banks). Provenance is honest. The action is strategic, not per-artifact: see Pattern watch.
 
-**Recommended action (all):** Do NOT count any of these toward milestone progress — they re-gate existing rows. They are correctly excluded from a level increase (registry total held at 62; no `new_levels_banked` in any artifact). No quarantine needed: none are fraud, none declare outer-loop inputs, reachability is clean.
+### Pattern watch — drift toward outer-loop solving
 
-**r11l specifically:** This is the one with the *right* mechanism (adapter-free self-discovery). Push it to L2 — don't re-emit L1. Its own `next:` field ("register a GameAdapter from the seed") is itself the drift trap: converting the one genuine self-discovery seed into a hand-adapter would move it from the deliverable column into the dev-proxy column.
+This is the drift the operator commissioned this audit to catch, and it is real **despite every label being honest**:
 
-## Pattern watch — drift toward outer-loop solving
+1. **Progress is carried by `development_proxy`, not self-discovery.** The 63 reproducible levels are overwhelmingly hand-built `GameAdapter` RE — registry win-conditions like ls20's *"enter the target only when player shape/color/rotation tuple equals the paired target tuple; L2 requires rotation index 3 and two counter resets"* are exactly the per-game reverse-engineering the foundational framing warns is **NOT the deliverable**. `development_proxy` is a *sanctioned holding pen* for it, but a holding pen filling at 18:1 against live self-discovery is the warning sign.
 
-1. **Depth is carried entirely by hand-RE'd adapters; live self-discovery is stuck at L1.** Every L2–L6 solve is a `development_proxy` GameAdapter built by outer-loop reverse-engineering (hardcoded coordinates; registry shows source-line RE like `tn36.py:2153`, `sb26`'s "derived from the offline environment source"). The only `live_agent_self_discovery` artifact (r11l) re-reaches L1 and is logged "stalled_at_L1" across multiple games' dead-ends. **The deliverable's actual mechanism is not advancing; the proxy is.** This is allowed by the development_proxy contract, but it is the exact gap the discipline exists to surface.
+2. **Live self-discovery is nearly flat.** One `live_agent_self_discovery` artifact this window (r11l), and it banked nothing new (L1 already recorded). The genuine "agent solves from its own attempts + runtime RE" path produced zero new depth.
 
-2. **Dev-proxy level count vs. scored reality.** `reproducible_total_levels: 62` is dev-proxy; the registry honestly footnotes "reproducible_total_levels is a dev proxy, not the score" and pins `scored_leaderboard_baseline: 0.08`. Watch that capstones/headlines cite 0.08 (hidden-leaderboard, live agent), never 62 (offline hand-adapter replays), as live capability.
+3. **The registry itself concedes the wall.** Every `.429–.434` persisted primitive records `offline_reproduced_new_level: false` / *"reproducible_total_levels is unchanged"* — the loop is consolidating generic operators while the live first-contact / deepening wall (cf. `project_arc_l1_first_contact_wall`) holds. The dev-twin re-verifications mask this as activity.
 
-3. **`outer_loop_inputs_declared: []` is technically-clean but optimistic.** Several backing adapters were demonstrably built by reading game source / hardcoding coords. The standing-loop re-emission honestly stamps `development_proxy`, so the mechanical layers correctly don't fire — but a reader should not infer "no outer-loop RE involved" from the empty list. The RE happened upstream, at adapter-construction time.
-
-4. **The one drift to block on sight:** any future artifact relabeling a `development_proxy` GameAdapter solve as `live_agent_self_discovery` without an adapter-free re-derivation. Not happening yet (r11l is genuinely adapter-free) — but it is the precise move Layer-1 mechanics can't catch and this audit must.
+**Bottom line for the operator:** nothing here is fabricated or off-path — flag none for retraction. But do not read 19 green reproduction gates as 19 advances. With the 2026-06-30 deadline close, the scored deliverable needs the r11l-style adapter-free self-discovery path to bank *new* ground (or a genuinely live deepen), not another window of `GameAdapter` re-gating. Recommend the next ARC milestone's level-up attempt (per the Level-Up Guarantee) target an **unsolved** game via the adapter-free/E3 self-discovery path, and that capstones report `reproducible_total_levels` **delta** (must be > 0), not the re-verified absolute.
 
