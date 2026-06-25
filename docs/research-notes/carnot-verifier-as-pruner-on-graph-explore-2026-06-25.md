@@ -104,6 +104,40 @@ is wrong. (Adversarial sub-agent review: no fabrication; caveats — efficiency_
    just-explore at budget 2000 = 0.36 vs our 0.08 on public games) is the deployable win NOW — adopt the
    explorer mechanism; add the verifier-as-pruner only once it is online/game-specific or abstaining.
 
+## UPDATE 2 (2026-06-25) — abstaining pruner + the deadline generator: the verifier is too SATURATED to prune
+
+Two more results closed the loop (`results/proto_carnot_pruner_abstain.json`, `results/proto_just_explore_budget_scan.json`).
+
+**(a) Abstaining no-op-deferral pruner — still NO deployable policy, and the root cause is now nailed.** The
+design never promotes an edge (try predicted-live edges in *vanilla* random order; defer confident-no-ops), so
+it structurally cannot misdirect like hard-argmax. Yet it fails — for a deeper reason: **the Carnot
+frame-change CNN's P(change) is SATURATED.** Over ~7,700 real untested-edge scorings, P(change) ∈ [0.26, 0.81]
+(p50 0.38), *never below 0.2* — the verifier confidently predicts ~every action changes the frame, so it
+**cannot discriminate no-op from live edges at all**. Consequence: absolute thresholds {0.05,0.1,0.2} defer
+*zero* edges (no-op); percentile-deferral {0.2,0.3,0.5} fires (defers 58k–146k edges) but median efficiency < 1
+(0.75–0.84) AND every arm loses m0r0's solve. So **across three pruner prototypes — hard-argmax, hedge,
+abstain — the Carnot verifier-as-pruner adds no deployable value**, because the current cross-game-marginal
+frame-change verifier carries no usable discriminative signal on these games.
+
+**(b) The deadline generator — clean graph-explore at raised budget.** Vanilla just-explore on the held-out
+proxy: 0.16 @budget200 → **0.28 @budget2000** → 0.272 @budget4000 (plateau). **Wall-clock is NOT the
+constraint:** a full budget-4000 pass over all 25 games costs ~360s vs the 43,200s (12h) envelope — 120×
+headroom; the max affordable per-game budget is ≈361,000 actions (~900× our current `MAX_ACTIONS=400` cap). So
+raising our cap 400→2000 is trivially affordable — **capability, not budget, is the limit.** Best deployable:
+**budget 2000, gated first-win 0.28** (ties b4000 at half the wall-clock; just-explore plateaus — the games it
+can solve, it solves early; the 13 it never solves aren't budget-limited). That is **~7× our E3AgentPolicy
+baseline (0.04)** on the proxy.
+
+**THE DEADLINE PLAY (synthesis).** The deployable lever for 2026-06-30 is the **clean graph-explore generator at
+budget 2000**, NOT the verifier-as-pruner (which is now a research direction needing a *discriminating* /
+game-specific / online verifier — the saturated frame-change marginal can't prune). Honest tensions for the
+operator: (1) submission is **operator-only** (external publication); (2) the deadline-winning move uses **none
+of Carnot's verifier** — it's a graph-explorer that beats our agent but isn't "Carnot," so shipping it is a
+strategy/thesis call, not an autonomous one; (3) **0.28 is an upper bound** (public games just-explore was tuned
+on; hidden-game transfer is lower) and N=5 is below the N≥30 bar. The Carnot-native path remains: a working
+graph-explore generator + an *online/game-specific* verifier as the pruner — but that verifier does not exist
+yet, and the saturated frame-change CNN is not it.
+
 ## Method note
 - `pruner_exercised` (Carnot scores varied AND changed the chosen edge on >0 steps) is the false-negative
   guard — here 76–83% fire rate, so the null is real, not a dead verifier. Always check it.
