@@ -287,5 +287,28 @@
     "SCENARIO-ARC-FCP-4726"
   ],
   "submitted_to_leaderboard": false,
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "frozen_first_win=0.04 and online_scratch_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "frozen_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "warn",
+      "detail": "online_scratch_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via online_warm_vs_frozen_delta==0, null_delta_methodology_note, and bare_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "online_warm_vs_frozen_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
