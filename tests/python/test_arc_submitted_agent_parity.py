@@ -146,6 +146,28 @@ def test_req_capstone_4597_submitted_config_points_at_refreshed_package():
     )
 
 
+def test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator():
+    """REQ-CAPSTONE-4744: submitted config declares the frozen Qwen3.5-MTP package stack."""
+
+    frozen = SUBMITTED_AGENT_CONFIG["frozen_generator"]
+
+    assert frozen["model_id"] == "unsloth/Qwen3.5-9B-MTP-GGUF"
+    assert frozen["repo_substr"] == "Qwen3.5-9B-MTP"
+    assert frozen["mtp"] is True
+    assert frozen["spec_type"] == "draft-mtp"
+    assert frozen["kv_quant"] == "q8_0"
+    assert frozen["max_tokens"] >= frozen["n_predict_min"] >= 2048
+    assert frozen["no_think_prefix"] == "/no_think\n"
+    assert frozen["llama_server_kind"] == "cuda-12.8-binary"
+    assert frozen["binary_not_wheel"] is True
+    assert frozen["wheel_fallback_allowed"] is False
+    assert frozen["port_strategy"] == "free_non_8919"
+    assert frozen["props_verify_endpoint"] == "/props"
+    assert "libllama-common" in frozen["required_shared_libraries"]
+    assert frozen["forbidden_models"] == ["gemma-8919"]
+    assert frozen["forbidden_gpu_targets"] == ["3090"]
+
+
 def test_wired_flags_reflect_actual_imports():
     """REQ-CAPSTONE-4605: shipped config declares real router/verifier/DSL imports."""
     # router_wired / world_model_dsl_wired must match whether the modules are ACTUALLY referenced in the

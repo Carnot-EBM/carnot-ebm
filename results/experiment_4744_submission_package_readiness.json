@@ -1,0 +1,331 @@
+{
+  "duration_s": 13.409255,
+  "entrypoint_validation": {
+    "blocked_resource": "",
+    "constructed": true,
+    "entrypoint": "carnot.agentic.arc_competition_agent.make_carnot_agent",
+    "imported": true,
+    "max_actions": 400,
+    "policy_class": "E3AgentPolicy"
+  },
+  "experiment": "experiment_4744_submission_package_readiness",
+  "field_principles": {
+    "frozen_generator_confirmed": {
+      "principle": "the generator wired into SUBMITTED_AGENT_CONFIG is Qwen3.5-9B-MTP (NEVER gemma-8919, NEVER the 3090s) -- the frozen-stack guard."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: submission_package_ready OR complete: submission_package_blocked_<resource>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- package validation + an offline smoke, no headline live-model load (100us/1s floor)."
+    },
+    "parity_test_green": {
+      "principle": "HARD gate -- the validated agent is byte-for-byte the SUBMITTED_AGENT_CONFIG."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (agent importable, offline arcade); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "readiness_checklist": {
+      "principle": "per-item pass/blocked (entrypoint imports, frozen generator wired, manifest complete, smoke episode ran, parity green) -- the operator's pre-submission checklist."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash of the validated package manifest."
+    },
+    "submission_package_ready": {
+      "principle": "True if the package is ready for the OPERATOR to submit; the task itself never submits (Operator-Only External Publication)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- a packaging validation invokes no oracle."
+    }
+  },
+  "frozen_generator_config": {
+    "binary_not_wheel": true,
+    "checks": {
+      "binary_not_wheel": true,
+      "free_non_8919_port": true,
+      "model_is_qwen35_mtp": true,
+      "mtp_enabled": true,
+      "n_predict_floor": true,
+      "no_think": true,
+      "not_3090": true,
+      "not_gemma_8919": true,
+      "props_verify": true,
+      "q8_kv": true,
+      "submitted_cascade": true,
+      "submitted_policy_e3": true
+    },
+    "confirmed": true,
+    "forbidden_gpu_targets": [
+      "3090"
+    ],
+    "forbidden_models": [
+      "gemma-8919"
+    ],
+    "gpu_target": "kaggle_cuda_gpu_not_3090",
+    "kv_quant": "q8_0",
+    "llama_server_kind": "cuda-12.8-binary",
+    "max_tokens": 2560,
+    "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+    "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "model_path_env": "CARNOT_ARC_GGUF_PATH",
+    "mtp": true,
+    "n_predict_min": 2048,
+    "no_think_prefix": "/no_think\n",
+    "port_strategy": "free_non_8919",
+    "props_verify_endpoint": "/props",
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "required_shared_libraries": [
+      "libllama-common",
+      "libllama",
+      "libggml",
+      "libggml-cuda"
+    ],
+    "server_path_env": "CARNOT_LLAMA_SERVER",
+    "spec_type": "draft-mtp",
+    "wheel_fallback_allowed": false
+  },
+  "frozen_generator_confirmed": true,
+  "honest_verdict": "complete: submission_package_blocked_manifest_resources",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- package validation + an offline smoke, no headline live-model load (100us/1s floor).",
+  "operator_only": true,
+  "package_manifest": {
+    "blocked_resources": [
+      "model_file",
+      "llama_server_binary",
+      "libllama-common",
+      "libllama",
+      "libggml",
+      "libggml-cuda"
+    ],
+    "complete": false,
+    "entrypoint": {
+      "factory": "make_carnot_agent",
+      "module": "carnot.agentic.arc_competition_agent",
+      "policy": "E3AgentPolicy"
+    },
+    "kaggle_constraints": {
+      "rpm_cap": 600,
+      "runtime_hours": 12,
+      "vram_gb": 16
+    },
+    "llama_server": {
+      "binary_not_wheel": true,
+      "kind": "cuda-12.8-binary",
+      "path": "",
+      "path_env": "CARNOT_LLAMA_SERVER",
+      "present": false,
+      "required": true
+    },
+    "model_files": [
+      {
+        "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+        "path": "",
+        "path_env": "CARNOT_ARC_GGUF_PATH",
+        "present": false,
+        "required": true
+      }
+    ],
+    "shared_libraries": [
+      {
+        "name": "libllama-common",
+        "present": false,
+        "required": true
+      },
+      {
+        "name": "libllama",
+        "present": false,
+        "required": true
+      },
+      {
+        "name": "libggml",
+        "present": false,
+        "required": true
+      },
+      {
+        "name": "libggml-cuda",
+        "present": false,
+        "required": true
+      }
+    ]
+  },
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "duration_s": 9.330135,
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.90s ==============================\n"
+  },
+  "parity_test_green": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_competition_agent_importable": true,
+    "codex_md_read": true,
+    "offline_arcade_importable": true,
+    "ok": true,
+    "spec_has_req_4744": true
+  },
+  "random_seed": 4744,
+  "readiness_checklist": [
+    {
+      "detail": "make_carnot_agent -> E3AgentPolicy",
+      "id": "entrypoint_imports",
+      "label": "entrypoint imports and constructs",
+      "status": "pass"
+    },
+    {
+      "detail": "Qwen3.5-9B-MTP with MTP/q8/no_think/n_predict guard",
+      "id": "frozen_generator_wired",
+      "label": "frozen generator wired",
+      "status": "pass"
+    },
+    {
+      "detail": "model_file,llama_server_binary,libllama-common,libllama,libggml,libggml-cuda",
+      "id": "manifest_complete",
+      "label": "package manifest complete",
+      "status": "blocked"
+    },
+    {
+      "detail": "offline smoke within budget",
+      "id": "smoke_episode_ran",
+      "label": "offline smoke episode ran",
+      "status": "pass"
+    },
+    {
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+      "id": "parity_green",
+      "label": "submitted-agent parity green",
+      "status": "pass"
+    }
+  ],
+  "reproducibility_checksum": "sha256:92c0a831b216068658a0dd551a9d8a696a957bc01654153840786bb2d7be367e",
+  "schema": "carnot.exp4744.submission_package_readiness.v1",
+  "smoke_episode": {
+    "action_budget": 5,
+    "actions_taken": 1,
+    "blocked_resource": "",
+    "estimated_rpm": 178.464451,
+    "game": "ar25",
+    "ran": true,
+    "resets": 1,
+    "rpm_cap": 600,
+    "solve_claim_made": false,
+    "within_action_budget": true,
+    "within_rpm_budget": true
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4744",
+    "SCENARIO-CAPSTONE-4744",
+    "SCENARIO-CAPSTONE-4744-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4744-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": false,
+  "submitted_agent_config": {
+    "action_effect_expansion_prior_enabled": true,
+    "action_effect_expansion_prior_mode": "persistent_aem_plus_optional_cnn_frontier_prior",
+    "amortized_first_contact_prior_enabled": false,
+    "amortized_first_contact_prior_mode": "frequency_prior_from_cross_game_first_contact_traces",
+    "bare_control_config": {
+      "action_effect_expansion_prior_enabled": false,
+      "candidate_router": null,
+      "goal_energy_candidate_guidance_enabled": false,
+      "goal_energy_enabled": false,
+      "navigation_cost_tiebreak": false,
+      "policy": "E3AgentPolicy",
+      "search_mode": "depth_first_ride",
+      "target_levels": 1,
+      "value_weight": 0.0
+    },
+    "candidate_router": "cross_game_discriminative_v3_tiebreaker",
+    "cascade": true,
+    "controllable_novelty_proposal_enabled": false,
+    "controllable_novelty_proposal_mode": "episodic_knn_plus_rnd_action_effect_embedding",
+    "dense_curiosity_discount": 0.5,
+    "dense_curiosity_progress_loop_enabled": false,
+    "dense_curiosity_weight": 0.15,
+    "discriminative_candidate_router_enabled": true,
+    "discriminative_router_wired": true,
+    "explore_diversity_default": false,
+    "factored_planner_enabled": false,
+    "factored_trust_threshold": 0.75,
+    "feature_router_enabled": false,
+    "frame_change_predictor_enabled": true,
+    "frame_change_prune_threshold": null,
+    "frame_change_ranking_mode": "persistent_aem_plus_optional_cnn",
+    "frontier_batch_size": 1,
+    "frozen_generator": {
+      "binary_not_wheel": true,
+      "forbidden_gpu_targets": [
+        "3090"
+      ],
+      "forbidden_models": [
+        "gemma-8919"
+      ],
+      "gpu_target": "kaggle_cuda_gpu_not_3090",
+      "kv_quant": "q8_0",
+      "llama_server_kind": "cuda-12.8-binary",
+      "max_tokens": 2560,
+      "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+      "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "model_path_env": "CARNOT_ARC_GGUF_PATH",
+      "mtp": true,
+      "n_predict_min": 2048,
+      "no_think_prefix": "/no_think\n",
+      "port_strategy": "free_non_8919",
+      "props_verify_endpoint": "/props",
+      "repo_substr": "Qwen3.5-9B-MTP",
+      "required_shared_libraries": [
+        "libllama-common",
+        "libllama",
+        "libggml",
+        "libggml-cuda"
+      ],
+      "server_path_env": "CARNOT_LLAMA_SERVER",
+      "spec_type": "draft-mtp",
+      "wheel_fallback_allowed": false
+    },
+    "go_explore_archive_enabled": false,
+    "go_explore_archive_mode": "return_then_explore_replayable_prefix_archive",
+    "goal_energy_alpha": 0.9,
+    "goal_energy_beta": 0.1,
+    "goal_energy_candidate_guidance_alpha": 0.0,
+    "goal_energy_candidate_guidance_beta": 1.0,
+    "goal_energy_candidate_guidance_enabled": true,
+    "goal_energy_enabled": true,
+    "goal_energy_source": "exp4020_graded_goal_satisfaction_energy",
+    "goal_energy_wired": true,
+    "graph_explore_budget": 80,
+    "hierarchical_subgoal_budget": 3,
+    "hierarchical_subgoal_search_enabled": false,
+    "lazy_value_top_k": 4,
+    "live_submit_package_path": "results/experiment_4643_submission_package_operator_resubmit.json",
+    "live_submit_source": "experiment_4643_refresh_submission_package",
+    "navigation_cost_tiebreak": true,
+    "object_centric_proposal_enabled": false,
+    "object_centric_proposal_mode": "connected_component_slots_plus_relational_gaps",
+    "online_discriminative": true,
+    "policy": "E3AgentPolicy",
+    "program_synthesis_proposal_filter_enabled": false,
+    "program_synthesis_proposal_filter_trust_threshold": 0.75,
+    "qd_generation_enabled": false,
+    "qd_generation_mode": "energy_fitness_map_elites_sequence_generator",
+    "routed_explore_budget": 24,
+    "router_wired": true,
+    "search_mode": "depth_first_ride",
+    "solve_learning_router_wired": true,
+    "strategy_router_enabled": true,
+    "target_levels": 3,
+    "value_head_checkpoint": "models/arc_dagger_value_routing_v3.json",
+    "value_head_distribution_corrected": true,
+    "value_head_feature_subset": "cross_game_features_v3:v2_plus_frame_delta",
+    "value_weight": 1e-12,
+    "verifier_is_oracle": false,
+    "world_model_dsl_wired": true
+  },
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false
+}
