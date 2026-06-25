@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.433",
+  "generated_at": "2026-06-25T02:36:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative TIMING DATA reported 0 experiments / 0 wall-minutes / 0 compute-bound / null GPU-idle -- the recurring false-zero milestone-scoped timing-detector gap (.363-.433, ~71 milestones), NOT an empty milestone: on-disk exp4699-exp4710 (12 experiments, ~266-min window 2026-06-24 18:02:57->22:28:49 EDT) ran the full PERCEPTION (A1) + AMORTIZED-EXPLORATION (A2) phase set. No monitored-RTX-3090 compute-bound task ran -- the two live_llm_inference levers exp4700/exp4701 each ran 60.0s on the AMD iGPU frozen sprint generator (Qwen3.5-9B-MTP), the longest task exp4703 (651.6s) is offline cached-candidate verifier scoring on CPU, and the rest are aggregation / hardware-smoke -- so compute_bound=0 and both idle 3090s (0%) are CORRECT; gpu_idle_on_compute_bound_tasks=null because there is no compute-bound task to flag.",
+  "bottlenecks_identified": [
+    "Observability, NOT execution: the milestone-scoped timing detector again false-reported 0 commits since activation, so the locked retro numbers 0/0/0/null reflect a detector blind spot rather than inactivity. The recurring gap now spans .363-.433 (~71 milestones); the shipped detector-wire reaches the standalone module but never the conductor's retro TIMING-DATA prompt-assembly consumer that feeds this block.",
+    "GPU idle is NOT a bottleneck this milestone: no monitored-RTX-3090 compute-bound task ran (the two live levers ran on the AMD iGPU frozen sprint generator; the rest are offline cached-candidate verifier-scoring / aggregation / hardware-smoke), so both 3090s at 0% are correct behaviour, not a misallocation.",
+    "The longest task exp4703 (held-out first-win readiness, 651.6s / ~10.9 min) is offline cached-candidate verifier scoring over color-permuted variants -- CPU-bound, not GPU; its cost is intrinsic to the held-out proxy lane, not an idle-GPU waste, and it would not benefit from DualGPURunner (single offline scorer, no parallel model load)."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site (the consumer that builds this block) so the retro reads real per-experiment timing instead of a false zero. This is the single recurring fix carried .426->.433 and remains the highest-leverage operational action.",
+    "Add a disk-mtime fallback in the retro assembler: when the detector returns 0 commits, degrade to the results/experiment_*.json artifact-mtime window for the active milestone, so a detector false-zero becomes a verifiable timing window rather than 0/0/0/null.",
+    "Promote injected==on-disk to a HARD retro-launch gate so a retro cannot start with a 0-count while on-disk artifacts for the active milestone exist (exp4699-exp4710 were present this run).",
+    "Write-time stamping: have each experiment emit duration_s + inference_substrate + a compute_bound boolean at artifact-emit time, so the retro can classify compute-bound tasks deterministically instead of re-deriving substrate from GGUF/CUDA markers.",
+    "Add a representation/decomposition-present precondition before the A1 PERCEPTION lever, mirroring the .431 subgoal-decomposition gate: exp4700 nulled on off-path-calibration-insufficient at the 60s live floor; a cheap upstream check avoids spending the live-inference budget when the deployable representation is known-insufficient."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Move the milestone-scoped timing-detector wire to the conductor's retro TIMING-DATA prompt-assembly call site, killing the ~71-milestone false-zero at its source so retro numbers stop reading 0/0/0/null when on-disk artifacts exist.",
+    "Add a disk-mtime fallback + injected==on-disk HARD retro-launch gate, so a detector false-zero degrades to a verifiable artifact-mtime window instead of a silent zero.",
+    "Stamp duration_s + inference_substrate + compute_bound at artifact-write time for deterministic compute-bound classification (removes substrate re-derivation and confirms the live levers ran on the iGPU, not the 3090s)."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "The .433 execution itself was efficient: 12 on-disk experiments across a ~4.4h window with the live PERCEPTION/AMORTIZED-EXPLORATION levers correctly placed on the AMD iGPU sprint generator and both 3090s correctly idle. The only operational defect is the ~71-milestone retro timing-detector false-zero, an observability gap whose fix (move the wire to the retro prompt-assembly consumer + disk-mtime fallback) has been the top recurring action since .426 and is still unshipped at the conductor layer. Research-wise this was an honest negative on the offline->live bridge for the 9th consecutive milestone (A1 object-centric perception null, A2 amortized-exploration + Go-Explore null), with capability banking +1 via self-play (re86 L2; reproducible_total_levels 61->62)."
+}
