@@ -1,131 +1,137 @@
-milestone: 2026.06.435
+milestone: 2026.06.436
 planned_by: >-
-  outer-loop (Claude Opus 4.8 planner, 2026-06-25). .434 was the 10th consecutive
-  bridge_crossed_for_solve=FALSE milestone. Its DECISIVE new input was negative-and-clarifying: the A2
-  surfacing experiment (exp4713) proved the winning L1 candidate -- now PRESENT in the object-centric pool
-  (coverage 1.0, the .433 perception win) at rank ~59 -- is NOT separable from same-depth distractors by ANY
-  static oracle-distinct feature (precision_at_k_delta=0.0; ranks even worsened [59,161,12,77]->[87,102,74,36]).
-  Three more levers nulled the same way: A1 perception-grounded L2 alignment goal (alignment_under_determined);
-  A4 the leader's online driver (all 3 arms EXACTLY 0.04 = TAUTOLOGY/no-op signature, flagged_adversarial --
-  almost certainly tested DEAD CODE again, like the .433 Go-Explore (1,64,64) + CNN dict-candidate bugs); A3
-  banked bp35 L2 but via a development_proxy adapter, not self-discovery. PLUS a poison pre-test SKIPPED the
-  operator-MANDATORY B1 (silent-bug audit) + B2 (guard) + A6 persist + A7 integration + C KV260 (no artifacts).
-  DIAGNOSIS: STATIC SELECTION OF A FROZEN POOL IS EXHAUSTED. .435 PIVOTS to ACTING, not selecting -- two
-  genuinely-independent "make the winner appear/separable by ACTING" levers, both never validly tested: A1
-  (HEADLINE) the leader's goal-free ONLINE ACTION-LEARNING DRIVER, tested VALIDLY for the FIRST time (gated on
-  PROVEN per-arm non-degeneracy before any lift claim -- the .433/.434 attempts ran dead code); A2 hypothesis-
-  driven ACTIVE PROBING (the agent ACTS to disambiguate goal/dynamics so the present-but-unseparable winner is
-  distinguishable by CONSEQUENCE, not a static feature -- the .434 capstone + SOTA hand-off, arXiv:2506.01876 +
-  2309.08477). A3 self-play banks +1 (63->64) + trains the verifier. CARRIED FORWARD (skipped in .434): B1 the
-  operator-MANDATORY silent-bug audit (runs EARLY, adjudicates the .434 A4 TAUTOLOGY -> reopen list), B2 the
-  exercise-evidence guard, A5 persist, A6 integration, C KV260. D SOTA-ingestion (the .436 fallback: epistemic
-  MCTS + factored causal probe). E capstone. verifier_is_oracle:false on every value claim; solve_provenance on
-  every solve; submission operator-only; FoVer 0.9131 / G1-G4 paper_ready frozen. 5 days to the ARC Prize
-  Milestone #1 deadline (2026-06-30).
-milestone_title: 'STOP SELECTING, START ACTING. .434 proved STATIC selection of the frozen pool is EXHAUSTED
-  (A2: the present winner -- coverage 1.0 -- is NOT separable from same-depth distractors by ANY static
-  oracle-distinct feature; precision_at_k_delta=0.0), the 10th-consecutive bridge-not-crossed milestone. .435
-  PIVOTS to the two "act to change the situation" levers, both never validly tested: A1 (HEADLINE) the leader''s
-  goal-free ONLINE ACTION-LEARNING DRIVER tested VALIDLY for the FIRST time (the .433/.434 attempts ran dead
-  code = all-arms-0.04 TAUTOLOGY; gated on PROVEN per-arm non-degeneracy before any lift claim; operator
-  highest-leverage 2026-06-24); A2 hypothesis-driven ACTIVE PROBING (act to disambiguate so the present winner
-  is distinguishable by CONSEQUENCE not a static feature; the capstone + SOTA hand-off). A3 self-play +1
-  (63->64) + verifier train. CARRIED FORWARD (a .434 poison pre-test skipped them): B1 the operator-MANDATORY
-  SILENT-BUG AUDIT (runs early, adjudicates the .434 A4 TAUTOLOGY), B2 the exercise-evidence guard, A5 persist,
-  A6 integration, C KV260. D SOTA-ingestion. E capstone. 5 days to the ARC Prize Milestone #1 deadline.'
+  outer-loop (Claude Opus 4.8 planner, 2026-06-25). .435 was the 11th consecutive
+  bridge_crossed_for_solve=FALSE milestone, but its real output was a sharp TRUST-CORRECTION. A1 (the leader's
+  online action-learning driver) was the ONLY .435 lever VALIDLY tested (arms_non_degenerate=True: 66 online
+  Adam steps, distinct per-arm action distributions, coordinate head differs from frozen) and it GENUINELY
+  NULLED (online_warm_vs_frozen_delta=0.0, all arms at the 0.04 baseline) -- the operator's highest-leverage
+  2026-06-24 bet is ANSWERED: the frame-change online CNN does NOT lift first-win -> the online-action-learning
+  lever RETIRES. A2 (active probe) tested DEAD CODE (probe_actions_taken=0, hypothesis_posterior_built=False,
+  probe_mechanism_did_not_run). DECISIVELY: the operator-MANDATED B1 silent-bug audit (exp4725) found 12 nulls,
+  5 must reopen -- the guidance-class GENERATION levers were ALL tested on dead/byte-identical code: P2
+  goal-energy generation (exp4640: the goal-energy arm CLONED cached baseline, goal_energy_neutral_on_cached_frame),
+  P3 energy-fitness QD (exp4653: QD/random/search arms BYTE-IDENTICAL), P1 Go-Explore (1,64,64) archive, P4
+  hierarchical subgoal (empty decomposition). The guidance-class generation hypothesis -- the operator's own
+  2026-06-23 redirect ("the 0.04 wall is generation-GUIDANCE, NOT depth/coverage; concentrate on goal-energy /
+  expansion-prior") -- was NEVER VALIDLY TESTED. .436 VALID-TESTS the two strongest guidance-class generation
+  levers, each with the non-degeneracy gate applied INLINE (the .435-A1 discipline) + the null-delta carve-out
+  markers so an honest no-lift null is NOT quarantined (the .435-A1 escape): A1 (HEADLINE) goal-energy candidate
+  generation (reopen exp4640, score REAL candidate states), A2 energy-fitness QD generation (reopen exp4653,
+  distinct QD + random-mutation pools; MAP-Elites + gradients). A3 self-play banks +1 (64->65) + trains the
+  verifier. A4 held-out readiness (robust to the codex cap) + submission-config confirm. A5 persist, A6
+  integration. INFRA (both fix a .435 escape): B1 the adversarial_verify carve-out hardening (don't quarantine
+  honest non-degenerate-zero-lift generation nulls + flag the A2-class declared-but-unrun mechanism), B2
+  submission-package readiness validation (deadline-critical). C KV260 continuity. D SOTA-ingestion (the .437
+  frontier: epistemic-MCTS + causal-probe + MATM efficiency). E capstone. verifier_is_oracle:false on every
+  value claim; solve_provenance on every solve; submission operator-only; FoVer 0.9131 / G1-G4 paper_ready
+  frozen. 5 days to the ARC Prize Milestone #1 deadline (2026-06-30).
+milestone_title: 'VALID-TEST THE GUIDANCE-CLASS GENERATION LEVERS. .435 proved (A1, the ONLY validly-tested
+  lever) the leader online driver genuinely nulls AND (B1 audit) that the guidance-class GENERATION levers --
+  goal-energy + energy-fitness QD, the operator''s own 2026-06-23 redirect target -- were ALL tested on
+  dead/byte-identical code and NEVER validly tested. .436 reopens the two strongest with the non-degeneracy gate
+  INLINE + the null-delta markers (the .435-A1 fix): A1 (HEADLINE) goal-energy candidate generation (reopen
+  exp4640, score REAL candidate states), A2 energy-fitness QD generation (reopen exp4653, distinct QD +
+  random-mutation pools). A3 self-play +1 (64->65) + verifier train. A4 held-out readiness + submission-config.
+  A5 persist, A6 integration. INFRA: B1 adversarial_verify carve-out hardening (the .435 A1+A2 escapes), B2
+  submission-package readiness. C KV260. D SOTA-ingestion. E capstone. 5 days to the ARC Prize Milestone #1 deadline.'
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 theme: >-
-  .434 settled the surfacing question with a clarifying NEGATIVE: the winning L1 candidate is PRESENT in the
-  object-centric proposal pool (coverage 1.0) but NOT separable from same-depth distractors by ANY static
-  oracle-distinct feature (exp4713 A2: precision_at_k_delta=0.0, ranks worsened). Ten milestones of
-  selection/perception/goal levers have not moved generic first-win off 0.04 (1/25 games). STATIC SELECTION OF A
-  FROZEN POOL IS EXHAUSTED. The only untested directions ACT to change the situation rather than rank a frozen
-  pool. .435 pursues the two that the project has never validly tested, both on the SCORED E3AgentPolicy, both
-  verifier_is_oracle:false, both live-path-reachable: A1 (HEADLINE) the leader's goal-free ONLINE
-  ACTION-LEARNING DRIVER (online frame-change CNN + coordinate head that PROPOSES clicks, per-level reset to the
-  cross-game PRIOR, free self-supervised labels, deepens multi-level for free) tested VALIDLY for the FIRST time
-  -- the .433 (exp4710) and .434 (exp4715) attempts BOTH ran degenerate/dead code (all-arms-identical 0.04
-  TAUTOLOGY), so this gates on PROVEN per-arm non-degeneracy (distinct action distributions + non-zero online
-  train-steps) BEFORE any lift claim; (operator 2026-06-24 "the highest-leverage ARC lever for the deadline;
-  build it"). A2 hypothesis-driven ACTIVE PROBING -- E3AgentPolicy keeps a posterior over candidate
-  goal/dynamics hypotheses and takes information-gain actions that SPLIT it, so the present-but-unseparable
-  winner becomes distinguishable by its observed CONSEQUENCE; the energy verifier scores which probe best
-  splits the posterior (oracle-distinct); the no-probe ablation must FAIL (arXiv:2506.01876 + 2309.08477, the
-  capstone/SOTA hand-off). A3 banks +1 (63->64) via the self-play loop + trains the verifier (Level-Up
-  Guarantee + self-play-every-milestone). A4 the held-out first-win readiness lane. A5 persist+transfer. A6
-  SUBMITTED_AGENT_CONFIG integration. INFRA (both operator-MANDATORY 2026-06-25, both SKIPPED in .434 by a
-  poison pre-test, both carried forward): B1 the SILENT-BUG AUDIT of the .428-.434 generation-lever nulls (runs
-  EARLY; formally adjudicates whether the .434 A4 TAUTOLOGY was a no-op that must REOPEN), B2 the
-  adversarial_verify lever-exercise-evidence guard that mechanizes the dead-code catch. C KV260 hardware
-  continuity. D SOTA-ingestion (the .436 fallback: epistemic-object-model MCTS probe planner + factored causal
-  probe bank). E capstone. RETIRED (do NOT re-propose): the .434 A2 STATIC present-winner ranker AS-BUILT
-  (present_winner_not_separable -- A2 changes the mechanism to active probing); the .434 A1 single-frame
-  structural-alignment L2 goal (alignment_under_determined); the .433 single-exemplar/reinduction L2-goal fixes;
-  goal-free Go-Explore as a standalone L2 solver; re-running the .433/.434 online-driver attempts VERBATIM (they
-  ran dead code -- A1 is the first VALID test). 5 days to the ARC Prize Milestone #1 deadline (2026-06-30).
+  .435 closed bridge_crossed_for_solve=FALSE for the 11th consecutive milestone but delivered a decisive
+  TRUST-CORRECTION. The leader's online action-learning driver -- the operator's highest-leverage 2026-06-24 bet
+  -- was for the FIRST TIME validly tested (arms_non_degenerate=True) and GENUINELY nulled: it RETIRES. The
+  active-probe lever tested dead code. And the operator-MANDATED B1 silent-bug audit found that the
+  guidance-class GENERATION levers -- goal-energy candidate generation and energy-fitness QD, which the
+  operator's OWN 2026-06-23 redirect named as THE direction for the generation-GUIDANCE wall -- were ALL tested
+  on dead/byte-identical code (cloned baseline, byte-identical arms) and are UNTRUSTWORTHY nulls that were never
+  validly tested. The diagnosis is now triply-grounded: the 0.04 wall is generation-GUIDANCE (operator
+  2026-06-23; macro-action + click-heatmap retired as empirical nulls), the guidance-class generation levers
+  tested dead code (B1 2026-06-25), and the live agent IS an energy-refinement loop where the wall is
+  make-a-winner-appear not select (energy-config-space memory). .436 VALID-TESTS the two strongest
+  guidance-class generation levers on the SCORED E3AgentPolicy candidate-generation path, both
+  verifier_is_oracle:false, both live-path-reachable, each with the non-degeneracy gate applied INLINE (prove
+  distinct candidate pools that DIFFER from baseline BEFORE any lift) + the null-delta/TAUTOLOGY carve-out
+  markers (the .435-A1 fix, so an honest no-lift null is not quarantined): A1 (HEADLINE) goal-energy candidate
+  generation (reopen exp4640 -- score REAL candidate states by a graded goal-distance energy, bias the proposal
+  distribution toward low-goal-energy states so the present-but-under-weighted winner APPEARS in the expanded
+  pool); A2 energy-fitness QD generation (reopen exp4653 -- distinct QD + random-mutation candidate pools, energy
+  as fitness, MAP-Elites + gradients, evolve the pool toward the winner). A3 banks +1 (64->65) via the self-play
+  loop + trains the verifier (Level-Up Guarantee + self-play-every-milestone). A4 the held-out first-win
+  readiness lane (robust to the codex 4800s cap that lost the .435 A4 artifact) + submission-config confirm. A5
+  persist+transfer. A6 SUBMITTED_AGENT_CONFIG integration. INFRA (both fix a .435 escape): B1 the
+  adversarial_verify carve-out hardening (recognize a validly-non-degenerate-zero-lift generation null as honest
+  rather than CRITICAL-quarantining it like .435 A1, AND flag the A2-class declared-but-unrun mechanism
+  probe_actions_taken==0), B2 the submission-package readiness validation (the package builds with the frozen
+  Qwen3.5-9B-MTP + the agent entrypoint runs, deadline-critical). C KV260 hardware continuity. D SOTA-ingestion
+  (the .437 frontier). E capstone. RETIRED (do NOT re-propose): the .435 A1 online-action-learning driver
+  (validly tested, genuine null); the .434 static present-winner ranker + single-frame alignment L2 goal;
+  macro-action/horizon-collapse + click-heatmap-as-generator (empirical nulls -- the wall is guidance, not
+  depth/coverage); re-running the dead-code generation nulls VERBATIM (A1/A2 reopen them WITH the non-degeneracy
+  gate + REAL candidate scoring -- the structural difference). DEFERRED to .437: P1 Go-Explore reopen, P4
+  hierarchical-subgoal reopen, A2 active-probe reopen, D's frontier. 5 days to the ARC Prize Milestone #1
+  deadline (2026-06-30).
 sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1-A6);
   >=1 level-up attempt that BANKS a new reproducible level (ARC Level-Up Attempt Guarantee -- A3 self-play bank
-  + A1 L2 probe + A2 new level); self-play EVERY milestone (A3 trains+checkpoints the verifier); 2 reserved
-  infra (B1/B2, both operator-MANDATORY + carried forward); 1 per-board hardware (C); 1 SOTA-ingestion (D). All
-  experiments codex/gpt-5.5; planner/retro stay Claude Opus. 5 days to the ARC Prize Milestone #1 deadline
-  ($25K). The frozen live generator is Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s); A1/A2 arms that
-  induce/strategize via the LLM declare live_llm_inference for that arm only and construct the proposer on a
-  FREE port + /props-verify Qwen (the port-8919 gemma-squat confound)."
+  + A1/A2 L2 gates); self-play EVERY milestone (A3 trains+checkpoints the verifier); 2 reserved infra (B1
+  carve-out hardening + B2 submission-package readiness, both fix a .435 escape); 1 per-board hardware (C); 1
+  SOTA-ingestion (D). All experiments codex/gpt-5.5; planner/retro stay Claude Opus. 5 days to the ARC Prize
+  Milestone #1 deadline ($25K). The frozen live generator is Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s);
+  A1/A2 declare live_llm_inference + construct the proposer on a FREE port + /props-verify Qwen (the port-8919
+  gemma-squat confound)."
 
 tasks:
-  - id: exp4724-phase0
-    milestone: 2026.06.435
-    title: 'PHASE 0 (TRANSITION) -- archive .434 -> activate .435; assert YAML parses + smart-subset pre-test
-      gate green; DETECT + RESOLVE the .434 POISON PRE-TEST (a "1 failed, 91 passed" test from an A1-A4 module
-      cascade-SKIPPED A6/A7/B1/B2/C in .434 -- fix/quarantine it so the .435 tail does not skip again); RECORD
-      the TRUE .434 close-state (capability grew 62->63 via A3 dev-proxy bank of bp35 L2, but
-      bridge_crossed_for_solve=FALSE for the 10th consecutive milestone; A2 [exp4713] proved the present winner
-      is NOT separable from distractors by any static feature -- static selection EXHAUSTED; A1 [exp4712]
-      alignment_under_determined; A4 [exp4715] all-arms-0.04 TAUTOLOGY/flagged_adversarial = dead-code-suspect;
-      paper_ready=True). The .435 pivot -> ACT not select: A1 the leader online driver (first VALID test), A2
-      active probing, B1 the silent-bug audit.'
+  - id: exp4736-phase0
+    milestone: 2026.06.436
+    title: 'PHASE 0 (TRANSITION) -- archive .435 -> activate .436; assert YAML parses + smart-subset pre-test
+      gate green; DETECT + RESOLVE any poison pre-test (the .434/.435 cascade-skip signature: a "1 failed, N
+      passed" focused-test failure that asserts a now-correct honest verdict). RECORD the TRUE .435 close-state:
+      capability grew 63->64 (A3 banked ar25 L3 offline-reproduced) but bridge_crossed_for_solve=FALSE for the
+      11th consecutive milestone; A1 (exp4726) the leader online driver was VALIDLY tested (arms_non_degenerate
+      =True) and GENUINELY nulled (delta=0.0) -> RETIRES; A2 (exp4727) tested dead code (probe_actions_taken=0);
+      B1 (exp4725) found 12 nulls, 5 must reopen (the guidance-class generation levers tested dead code);
+      paper_ready=True. The .436 pivot -> VALID-TEST the guidance-class generation levers: A1 goal-energy
+      candidate generation, A2 energy-fitness QD.'
     priority: critical
     track: transition
     max_turns: 40
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4724_archive_434_activate_435.json
-    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v434-activate-v435
+    deliverable: results/experiment_4736_archive_435_activate_436.json
+    operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine archive-v435-activate-v436
       milestone-transition task -- false-positive scope-match vs every prior archive/activate task; structurally
       never a doomed rerun (the activation guard is a SCRIPT, not the agent). Mechanical YAML archive +
       next-milestone activation + poison-pre-test resolution. Routes to codex per the archive/activate routing rule.'
     prompt: |
-      CONTEXT ({date}). Milestone 2026.06.434 has completed. This task mechanically transitions to 2026.06.435,
-      RESOLVES the .434 poison pre-test, and RECORDS the true .434 close-state so the record is honest. Routine (codex).
+      CONTEXT ({date}). Milestone 2026.06.435 has completed. This task mechanically transitions to 2026.06.436,
+      resolves any poison pre-test, and RECORDS the true .435 close-state so the record is honest. Routine (codex).
 
       IMPORTANT (lesson from prior PHASE 0 cascades): the conductor may have ALREADY archived/activated at its own
       level. If so, the archive step is a no-op -- EXPECTED, not a failure. You MUST still WRITE the deliverable
       artifact (the close-state record). Do NOT exit with "no file changes": the deliverable IS the file change.
 
-      THE POISON PRE-TEST (operator-relevant, incident_agent_shipped_test_cascade): in .434 a single failing
-      pre-test ("1 failed, 91 passed") from an A1-A4 module cascade-SKIPPED A6/A7/B1/B2/C (5 tasks, including the
-      operator-MANDATORY B1 audit + B2 guard). Identify the failing test, and if it asserts against a now-correct
-      honest verdict / a stale expectation (a POISON test), FIX it or quarantine it with a tracking note so the
-      .435 tail does not cascade-skip. Record which test + why in the artifact. Do NOT weaken a legitimate test.
+      POISON PRE-TEST (incident_agent_shipped_test_cascade): in .434 a single failing focused pre-test ("1 failed,
+      91 passed") cascade-SKIPPED 5 tail tasks. If the smart-subset pre-tests show a single failure that asserts
+      against a now-correct honest verdict / a stale expectation (a POISON test), FIX it or quarantine it with a
+      tracking note so the .436 tail does not cascade-skip. Record which test + why. Do NOT weaken a legitimate test.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/research-roadmap.yaml (the .434 roadmap to archive)
-        - {project_root}/research-roadmap-next.yaml (THIS .435 roadmap to activate)
-        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=63)
-        - {project_root}/results/experiment_4723_capstone_v434.json (the .434 scorecard: bridge_crossed_for_solve=False; A2 present_winner_not_separable; A4 flagged_adversarial TAUTOLOGY; A6/A7/B1/B2/C missing)
-        - {project_root}/ops/conductor-log.md (the .434 SKIP rows "Pre-tests failing, self-heal failed: 1 failed, 91 passed" -- the poison-test signature)
-        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .435 design doc)
+        - {project_root}/research-roadmap.yaml (the .435 roadmap to archive)
+        - {project_root}/research-roadmap-next.yaml (THIS .436 roadmap to activate)
+        - {project_root}/ops/arc_solve_registry.yaml (authoritative header: reproducible_total_levels=64)
+        - {project_root}/results/experiment_4735_capstone_v435.json (the .435 scorecard: bridge_crossed_for_solve=False; A1 online_driver genuine null; A2 probe_mechanism_did_not_run; B1 12_nulls_5_must_reopen; reproducible_total_levels_delta=1)
+        - {project_root}/results/experiment_4725_silent_bug_audit.json (the B1 reopen list -- the .436 plan's grounding)
+        - {project_root}/ops/conductor-log.md (the .435 SKIP rows -- the poison-test signature, if any)
+        - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md (the .436 design doc)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
            a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')"` exits 0.
            b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
            Missing -> honest_verdict blocked_<resource>, EXIT (no fabrication). Do NOT run the full pytest as a precondition.
-        1. Archive the .434 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
-        2. Activate .435 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
+        1. Archive the .435 roadmap per the conductor's normal transition convention (do NOT modify scripts/research_conductor.py). If already archived, proceed -- not a failure.
+        2. Activate .436 (research-roadmap-next.yaml -> active). Assert it parses + the smart-subset pre-test gate is green.
         3. POISON-TEST RESOLUTION: run the smart-subset / focused pre-tests; if a test fails because it asserts a stale/now-wrong expectation, FIX or quarantine it (record test id + reason). Confirm the gate is green afterward.
-        4. WRITE the deliverable recording the TRUE .434 close-state: A3 banked +1 (reproducible_total_levels 62->63) via development_proxy (bp35 L2, NOT self-discovery); A2 (exp4713) present_winner_not_separable_from_distractors (precision_at_k_delta=0.0 -- static selection EXHAUSTED); A1 (exp4712) alignment_under_determined; A4 (exp4715) all-arms-0.04 TAUTOLOGY flagged_adversarial (dead-code-suspect, B1 to adjudicate); A6/A7/B1/B2/C SKIPPED by a poison pre-test; capstone (exp4723) bridge_crossed_for_solve=False (10th), paper_ready=True (FoVer 0.9131 frozen). RECORD the .435 pivot = ACT not select (A1 leader online driver first VALID test; A2 active probing; B1 silent-bug audit reopened).
+        4. WRITE the deliverable recording the TRUE .435 close-state: A3 banked +1 (reproducible_total_levels 63->64) via ar25 L3 offline-reproduced; A1 (exp4726) online driver VALIDLY tested (arms_non_degenerate=True) + genuine null (delta=0.0) -> RETIRES; A2 (exp4727) probe_mechanism_did_not_run (dead code); B1 (exp4725) 12_nulls_5_must_reopen (guidance-class generation levers tested dead code); capstone (exp4735) bridge_crossed_for_solve=False (11th), paper_ready=True (FoVer 0.9131 frozen). RECORD the .436 pivot = VALID-TEST the guidance-class generation levers (A1 goal-energy candidate generation reopen exp4640; A2 energy-fitness QD reopen exp4653).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
@@ -135,262 +141,165 @@ tasks:
         preconditions_checked:
           principle: "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
         poison_pretest_resolved:
-          principle: "the .434 poison pre-test (id + reason) that cascade-skipped A6/A7/B1/B2/C is now fixed/quarantined so the .435 tail runs -- the incident_agent_shipped_test_cascade fix."
-        close_state_434:
-          principle: "the honest .434 numbers (A3 62->63 dev-proxy; A2 not-separable=static-selection-exhausted; A1 alignment_under_determined; A4 TAUTOLOGY dead-code-suspect; bridge_crossed=False 10th) carried forward so the record does not drift."
-        v435_pivot:
-          principle: "the .435 headline rationale (stop selecting, start acting: A1 leader online driver first valid test; A2 active probing; B1/B2 carried-forward operator-mandated audit) recorded so the milestone intent is traceable."
+          principle: "any poison pre-test (id + reason) that would cascade-skip the .436 tail is fixed/quarantined -- the incident_agent_shipped_test_cascade fix."
+        close_state_435:
+          principle: "the honest .435 numbers (A3 63->64 ar25 L3; A1 validly-tested genuine null -> RETIRE; A2 dead code; B1 5-must-reopen; bridge_crossed=False 11th) carried forward so the record does not drift."
+        v436_pivot:
+          principle: "the .436 headline rationale (valid-test the guidance-class generation levers: A1 goal-energy, A2 energy-fitness QD) recorded so the milestone intent is traceable."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4724_archive_434_activate_435.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4736_archive_435_activate_436.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4725-b1
-    milestone: 2026.06.435
-    title: 'PHASE B1 (INFRA reserved slot 1; operator MANDATORY 2026-06-25; CARRIED FORWARD -- SKIPPED in .434 by
-      a poison pre-test; runs EARLY so its finding grounds A1) -- SILENT-BUG AUDIT of the .428-.434
-      generation/exploration-lever nulls. Two .433 nulls TESTED DEAD CODE (Go-Explore archive _frame_grid
-      returned (1,64,64); exp4710 CNN dict-candidate bug). The .434 A4 (exp4715) returned all 3 arms EXACTLY 0.04
-      (TAUTOLOGY, flagged_adversarial) -- the SAME no-op signature. Audit every .428-.434 generation/exploration
-      null for silent representation no-ops (degenerate shapes, dropped/empty candidate pools, dead archives,
-      byte-identical arms, no-op transforms); ADJUDICATE the .434 A4 specifically; produce a per-null verdict
-      {{trustworthy_null | silent_bug_must_reopen}} + a prioritized reopen list. Output:
-      ops/arc_null_silent_bug_audit.md + the artifact. NO new solve claims.'
-    priority: critical
-    track: infra
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4725_silent_bug_audit.json
-    operator_override: '2026-06-25 operator directive (mandate): "Audit the .428-.433 generation-lever nulls for
-      other silent representation no-ops before trusting them." Two .433 nulls tested dead code; the .434 A4
-      TAUTOLOGY is the same signature. This is a NEW audit deliverable (ops/arc_null_silent_bug_audit.md) that
-      SKIPPED in .434 by a poison pre-test -- carried forward, not a doomed rerun; false-positive scope-match vs
-      prior audit tasks. Routes to codex (ARC sprint).'
-    prompt: |
-      CONTEXT ({date}, ARC sprint INFRA -- operator 2026-06-25 mandate, CARRIED FORWARD from .434 where a poison
-      pre-test SKIPPED it). Two .433 generation-lever nulls TESTED DEAD CODE: (1) the Go-Explore archive
-      _frame_grid returned a (1,64,64) 3-D array so the archive was SILENTLY DEAD -- the .433 A2
-      amortized-exploration null is UNTRUSTWORTHY; (2) exp4710 online-action-learning ran on a CNN dict-candidate
-      bug. The .434 A4 (exp4715) then returned all 3 arms (frozen/scratch/warm) at EXACTLY 0.04 -- a TAUTOLOGY
-      flagged_adversarial, the SAME no-op signature. Before the loop trusts ANY recent generation null as a real
-      capability limit, AUDIT the .428-.434 generation/exploration-lever nulls for silent representation no-ops.
-      This protects the integrity of the project's negatives (its core strength) and tells the planner which
-      "closed" levers must REOPEN -- critically, whether A1 (.435 online driver) is a valid reopen.
-
-      DEFINITION OF A SILENT REPRESENTATION NO-OP (what to detect): a lever artifact claiming a
-      generation/exploration mechanism was exercised, but the underlying representation/archive/CNN/arm produced
-      DEGENERATE output: a wrong-shape tensor (e.g. (1,64,64) where a 2-D grid was expected), an EMPTY or
-      unchanged candidate pool after the transform, a dead archive (zero injections / zero cells), a dropped
-      dict-candidate, BYTE-IDENTICAL A/B arms (the .434 A4 frozen==scratch==warm==0.04 signature), or a no-op
-      that returns the input. The signature: a delta==0.0 / coverage==0.0 / arms-identical paired with NO
-      evidence the mechanism actually ran on non-degenerate data.
-
-      EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4715_online_action_learning_driver_corrected.json (the .434 A4 all-arms-0.04 TAUTOLOGY -- ADJUDICATE this specifically) + {project_root}/results/experiment_4701_amortized_exploration_prior_go_explore_live.json + {project_root}/results/experiment_4710_online_action_learning_arms_summary.json (the two CONFIRMED dead-code nulls) + {project_root}/python/carnot/agentic/arc_go_explore.py (the _frame_grid (1,64,64) bug, fixed 2026-06-25 -- confirm the fix landed)
-        - the .428-.434 generation/exploration-lever null artifacts: results/experiment_4628_*, 4640_*, 4653_*, 4664_*, 4676_*, 4688_*, 4701_*, 4710_*, 4712_*, 4713_*, 4715_* (and any other A1/A2/A4 generation/exploration nulls in that window) -- read each one's exercise-evidence fields (coverage, injections, candidate counts, archive cells, per-arm first-win)
-        - {project_root}/ops/known-issues.md (the 2026-06-25 silent-bug note) + {project_root}/scripts/adversarial_verify.py (the exercise-evidence patterns B2 will mechanize)
-
-      TASK: enumerate every .428-.434 generation/exploration-lever null. For each, inspect the artifact + the
-      module it exercised for a silent representation no-op (degenerate shape, empty/unchanged pool, dead archive,
-      dropped candidate, byte-identical arms, no-op transform). Emit a per-null verdict {{trustworthy_null |
-      silent_bug_must_reopen}} with the evidence, and a prioritized re-run recommendation (which "closed" levers
-      must REOPEN -- critically, does the .434 A4 TAUTOLOGY mean the online-action-learning lever was never
-      validly tested and must reopen as .435 A1?). Write ops/arc_null_silent_bug_audit.md + the artifact. NO new
-      solve claims -- this is an audit only.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: the .428-.434 null artifacts present in results/; arc_go_explore importable. Missing -> blocked_<resource>, EXIT.
-        1. Enumerate the .428-.434 generation/exploration-lever nulls; for each, extract its exercise-evidence fields + read the module it exercised.
-        2. Classify each {{trustworthy_null | silent_bug_must_reopen}} with evidence; ADJUDICATE the .434 A4 all-arms-0.04 TAUTOLOGY explicitly (online_driver_arms_degenerate? -> must reopen); confirm the Go-Explore (1,64,64) fix landed.
-        3. Write ops/arc_null_silent_bug_audit.md (per-null table + the prioritized reopen list) + the artifact.
-
-      REQUIRED ARTIFACT FIELDS (principle-annotated):
-        honest_verdict:
-          principle: "terminal prefix; complete: silent_bug_audit_<N>_nulls_<K>_must_reopen."
-        inference_substrate:
-          principle: "aggregation_from_upstream_artifacts -- reads upstream nulls + module code, no model load (100us floor)."
-        nulls_audited:
-          principle: "the count of .428-.434 generation/exploration-lever nulls inspected -- the audit scope."
-        silent_bug_nulls:
-          principle: "the list classified silent_bug_must_reopen with evidence (degenerate shape / empty pool / dead archive / dropped candidate / byte-identical arms) -- the load-bearing finding."
-        a4_tautology_verdict:
-          principle: "the explicit adjudication of the .434 A4 all-arms-0.04 TAUTOLOGY: online_driver_arms_degenerate (no-op, must reopen) | trustworthy_null -- this GROUNDS whether .435 A1 is a valid reopen."
-        trustworthy_nulls:
-          principle: "the list classified trustworthy_null (the mechanism genuinely ran on non-degenerate data) -- so the loop does NOT re-run a real null."
-        reopen_recommendations:
-          principle: "the prioritized re-run list for the planner (which closed levers reopen) -- the audit's actionable output."
-        go_explore_fix_confirmed:
-          principle: "true if the Go-Explore _frame_grid (1,64,64) fix (2026-06-25) is confirmed landed."
-        audit_report_path:
-          principle: "ops/arc_null_silent_bug_audit.md -- the human-readable per-null table."
-        verifier_is_oracle:
-          principle: "false -- an audit invokes no oracle."
-        random_seed:
-          principle: "determinism precondition for reproducibility."
-        reproducibility_checksum:
-          principle: "content-addressed hash catches silent drift in the audited artifact set."
-        preconditions_checked:
-          principle: "records resources verified (null artifacts present, arc_go_explore importable); pre-empts missing-resource fabrication."
-
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4725_silent_bug_audit.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4726-a1
-    milestone: 2026.06.435
-    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator highest-leverage 2026-06-24 "build it") --
-      LEADER''S GOAL-FREE ONLINE ACTION-LEARNING DRIVER, tested VALIDLY for the FIRST time. The .433 (exp4710) and
-      .434 (exp4715) attempts BOTH ran degenerate/dead code (all-arms-identical 0.04 = TAUTOLOGY/no-op), so the
-      leader''s loop has NEVER been validly tested. Build the corrected driver: an online binary-frame-change CNN
-      with a COORDINATE HEAD that PROPOSES clicks (hierarchical action-then-coord sample, NOT a re-ranker),
-      self-supervised free labels (frame_changed), Adam lr=1e-4 BCE every ~5 actions, hash-deduped buffer,
-      reward-driven per-level reset to the cross-game PRIOR (not random). TWO-STAGE GATE: (1) PROVE the arms are
-      non-degenerate (distinct action distributions + non-zero online train-steps; NOT byte-identical first-win)
-      -- else complete: online_driver_arms_degenerate_confirmed_harness_bug (a BUG, not a capability null); (2)
-      only then, online-warm beats frozen by >=+0.05 held-out first-win OR a multi-level probe (lp85/sc25)
-      reaches L2 offline-reproduced. CPU train-step ms MEASURED. live_agent_self_discovery. verifier_is_oracle:false.
-      retire_if_same_verdict.'
+  - id: exp4737-a1
+    milestone: 2026.06.436
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- VALID-TEST GOAL-ENERGY CANDIDATE GENERATION, the
+      operator''s explicit guidance-class redirect target (2026-06-23), reopened because B1 (exp4725) found the
+      .428 goal-energy null (exp4640) tested DEAD CODE: the goal-energy arm CLONED cached baseline attempts
+      (goal_energy_neutral_on_cached_frame=True) so generation was NEVER exercised. Build the corrected lever: a
+      graded goal-distance / structural-progress ENERGY that scores REAL candidate states and BIASES the live
+      candidate-generation proposal distribution toward low-goal-energy (closer-to-goal) states, so the
+      present-but-under-weighted winning L1 candidate APPEARS in the pool the search expands. NON-DEGENERACY GATE
+      INLINE (the .435-A1 discipline): PROVE the goal-energy arm produces distinct per-candidate scores (non-zero
+      score variance) AND a candidate pool/ranking that DIFFERS from baseline BEFORE any lift -- else complete:
+      goal_energy_generation_arms_degenerate_confirmed_harness_bug (a BUG, not a null). THEN: goal-energy
+      generation beats baseline by >=+0.05 held-out first-win OR a multi-level probe (lp85/sc25) reaches L2
+      offline-reproduced. EMIT the null-delta markers so an honest no-lift null is NOT quarantined.
+      verifier_is_oracle:false. live_agent_self_discovery. retire_if_same_verdict.'
     priority: critical
     track: arc-north-star
     max_turns: 160
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4726_online_action_learning_driver_valid_test.json
-    operator_override: '2026-06-24 operator directive (standing, leader-gap analysis): "the highest-leverage ARC
-      lever for the 2026-06-30 deadline; build it." The .433 (exp4710) + .434 (exp4715) attempts BOTH ran
-      degenerate/dead code (all-arms-identical 0.04 TAUTOLOGY -- B1 adjudicates this milestone), so the operator''s
-      own retirement condition ("online-warm does not beat frozen by +0.05 AND no L2, with NON-dead code") was
-      never validly met. THIS is the first VALID test, gated on proven per-arm non-degeneracy. Authorizes the
-      reopen of the online-action-learning scope. Routes to codex (ARC sprint).'
+    deliverable: results/experiment_4737_goal_energy_candidate_generation_valid_test.json
+    operator_override: '2026-06-25 operator directive (B1 silent-bug audit mandate) + 2026-06-23 redirect: B1
+      (exp4725) classified the .428 goal-energy generation null (exp4640) silent_bug_must_reopen
+      (no_op_goal_energy_cached_frame / byte_identical_goal_energy_and_baseline -- generation never exercised),
+      and the operator''s 2026-06-23 redirect names goal-energy / expansion-prior as THE guidance-class lever for
+      the 0.04 generation wall. This is the FIRST VALID test (REAL candidate scoring + non-degeneracy gate
+      inline), not a doomed rerun -- false-positive scope-match vs exp4640/exp4644. Routes to codex (ARC sprint).'
     prior_failures:
-      - experiment_id: exp4715-a4
-        verdict: 'complete: online_action_learning_no_first_win_lift_residual_online_signal_too_sparse'
-        addressed_by: 'exp4715 (.434 A4) returned all 3 arms (frozen/scratch/warm) at EXACTLY 0.04 -- a TAUTOLOGY,
-          flagged_adversarial: the arms were BYTE-IDENTICAL, the no-op signature of dead code (the .433 attempt
-          exp4710 had the same signature on a CNN dict-candidate bug + a (1,64,64) Go-Explore archive). The
-          residual "online_signal_too_sparse" was therefore an artifact of a non-running online path, NOT a
-          measured capability limit. THIS task is STRUCTURALLY DIFFERENT: it imposes a NON-DEGENERACY GATE FIRST
-          -- the three arms MUST produce distinct action distributions + non-zero online train-steps before ANY
-          lift is measured (the B2 exercise-evidence discipline applied inline). If the arms are still identical
-          it is logged as a confirmed harness bug (online_driver_arms_degenerate_confirmed_harness_bug), NOT a
-          capability null. If the arms ARE non-degenerate this time AND online-warm still does not beat frozen by
-          +0.05 AND no L2 deepens, the lever retires for REAL.'
-        retire_if_same_verdict: true
-      - experiment_id: exp4710-online-arms
-        verdict: 'complete: online_action_learning_no_first_win_lift_null'
-        addressed_by: 'exp4710 (.433) ran the online-action-learning arms on a confirmed CNN dict-candidate bug +
-          a silently-dead Go-Explore archive ((1,64,64)) -- the null tested dead code (operator-confirmed
-          2026-06-25). THIS task fixes both bugs (the Go-Explore _frame_grid fix landed 2026-06-25) and adds the
-          COORDINATE HEAD that PROPOSES clicks (the leader''s actual DRIVER mechanism, not the re-ranker the .433
-          arms used), gated on proven per-arm non-degeneracy. If non-degenerate arms still give no +0.05
-          first-win lift AND no L2, the residual (cpu_latency_bound | per-game online signal genuinely too sparse)
-          is documented and this lever retires.'
+      - experiment_id: exp4640-goal-energy-generation-live
+        verdict: 'complete: goal_energy_generation_no_winner_generated_neutral_on_cached_frame'
+        addressed_by: 'exp4640 (.428 A1) nulled because the goal-energy arm CLONED cached baseline attempts and
+          marked them goal_energy_neutral_on_cached_frame=True -- generation was NEVER exercised (B1 exp4725
+          classified it silent_bug_must_reopen, P2). THIS task is STRUCTURALLY DIFFERENT: it scores REAL candidate
+          states (not cloned baseline) with a graded goal-distance energy and imposes a NON-DEGENERACY GATE FIRST
+          -- the goal-energy arm MUST produce distinct per-candidate scores (non-zero score variance) AND a
+          candidate pool/ranking that DIFFERS from baseline before ANY lift is measured (the B2 exercise-evidence
+          discipline applied inline). If still degenerate it is logged
+          goal_energy_generation_arms_degenerate_confirmed_harness_bug (a BUG, not a null). If non-degenerate AND
+          no +0.05 first-win lift AND no L2, the lever retires for REAL with the null-delta markers emitted.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint HEADLINE -- operator 2026-06-24 "the highest-leverage ARC lever for the deadline;
-      build it"; full synthesis docs/research-notes/leader-gap-online-action-learning-vs-multilevel-wall-2026-06-24.md).
-      StochasticGoose (leaderboard #1, ~1.21 vs our 0.08) TRAINS an action-effect CNN ONLINE per game on free
-      self-supervised labels (reward=1.0 if frame changed else 0.0), Adam lr=1e-4 BCE every 5 actions, a 200k
-      hash-deduped buffer, a CNN COORDINATE HEAD that PROPOSES clicks, and a per-level reset. It has NO goal
-      predicate and NO planner -- it explores toward frame-change and the environment score drives per-level
-      reset, so it deepens multi-level FOR FREE. THE CRITICAL HISTORY: our .433 (exp4710) AND .434 (exp4715)
-      attempts BOTH nulled with the all-arms-identical-0.04 TAUTOLOGY signature -- i.e. the online path almost
-      certainly NEVER RAN (dead code: the .433 CNN dict-candidate bug + (1,64,64) Go-Explore archive; the .434
-      arms byte-identical). The leader's loop has therefore NEVER been validly tested. THIS task is the first
-      VALID test. B1 (this milestone, runs earlier) formally adjudicates the .434 A4 TAUTOLOGY.
+      CONTEXT ({date}, ARC sprint HEADLINE). The 0.04 generic first-win wall is a GENERATION-GUIDANCE problem (the
+      winning L1 candidate is PRESENT in the object-centric pool -- coverage 1.0 per the .433 perception win -- but
+      the generator's proposal distribution under-weights it; .434 proved it is NOT separable by any STATIC
+      feature, and .435 proved ACTING via the leader's online CNN driver does not lift it). The operator's
+      2026-06-23 redirect named the guidance class -- "generation guidance via an objective goal-distance /
+      structural-progress ENERGY ... biasing action proposals toward the goal" -- as THE direction. B1 (exp4725)
+      found the .428 goal-energy lever (exp4640) tested DEAD CODE: the goal-energy arm CLONED cached baseline
+      attempts (goal_energy_neutral_on_cached_frame=True), so generation was NEVER exercised. THIS is the FIRST
+      VALID test.
 
-      THE NON-DEGENERACY GATE IS LOAD-BEARING (the honest fix). Before measuring ANY lift, PROVE the three arms
-      {{frozen, online-scratch, online-warm}} are NON-DEGENERATE: distinct per-arm action distributions, non-zero
-      online train-steps actually executed (gradient norms > 0), the online CNN coordinate head actually proposing
-      DIFFERENT clicks than the frozen prior. If the arms come out byte-identical AGAIN, emit honest_verdict
-      complete: online_driver_arms_degenerate_confirmed_harness_bug with the diagnostic (which path no-op''d) --
-      that is a BUG to fix in .436, NOT a capability null, and NOT a retirement.
+      THE NON-DEGENERACY GATE IS LOAD-BEARING (the .435-A1 lesson + the B2 discipline applied inline). Before
+      measuring ANY lift, PROVE the goal-energy generation arm is NON-DEGENERATE: it scores REAL candidate states
+      (the actual generated/reachable candidate frames, NOT cloned cached baseline attempts), produces distinct
+      per-candidate scores (non-zero score variance across the pool), and yields a candidate pool/proposal-ranking
+      that DIFFERS from the baseline pool (a measurable rank/coverage delta). If the arm comes out cloning baseline
+      AGAIN (zero score variance / byte-identical pool), emit honest_verdict complete:
+      goal_energy_generation_arms_degenerate_confirmed_harness_bug with the diagnostic (which path no-op'd) -- a
+      BUG to fix, NOT a capability null, NOT a retirement.
 
-      CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): modifies E3AgentPolicy/StepwiseExplorer (in the
-      scored agent's import closure -- arc_orphan_solver_lint + parity stay green). Additive (cascade=True): do NOT
-      rip out the goal-induction path. live_llm_inference: the Qwen frozen generator is UNAFFECTED (this is the
-      action-effect CNN, not the LLM) but the live run loads it; declare the substrate honestly.
-      verifier_is_oracle:false (the online frame-change CNN is oracle-distinct -- it does not run the win-check;
-      gate-eligible). solve_provenance: live_agent_self_discovery (a generic-agent goal-free L2 is self-discovery;
-      an adapter is a dev proxy). THE CPU LATENCY GATE: the Kaggle path is CPU under a 12h/600-RPM cap --
-      WALL-CLOCK-MEASURE a CNN Adam step every 5 actions on CPU; an online step too slow makes the leader's loop
-      infeasible regardless of offline gains.
+      EMIT THE NULL-DELTA MARKERS (the .435-A1 escape fix). If the arm is non-degenerate but the held-out first-win
+      delta is ~0 (e.g. 0.04==0.04), emit null_delta_methodology_note (non-empty, why delta=0 is an honest no-lift
+      null on non-degenerate arms) + positive_control_passed: bool(parity_test_green AND
+      arms_non_degenerate AND bare_control_passed). Without these, adversarial_verify's TAUTOLOGY check CRITICAL-
+      flags the honest 0.04==0.04 equality and the capstone quarantines the artifact (exactly what happened to the
+      .435 A1). B1 (this milestone) also hardens the carve-out, but emit the markers regardless.
+
+      CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability + Circularity): modifies the LIVE E3AgentPolicy
+      candidate-generation path (in the scored agent's import closure -- arc_orphan_solver_lint +
+      test_arc_submitted_agent_parity stay green). Additive (cascade): do NOT rip out the existing proposal path.
+      The graded goal-energy is ORACLE-DISTINCT -- it scores candidate states by goal-distance/structural-progress;
+      it does NOT run the executable win-check (verifier_is_oracle:false, gate-eligible). solve_provenance:
+      live_agent_self_discovery (a generic-agent goal-energy-guided L2 is self-discovery; an adapter is a dev
+      proxy). live_llm_inference: the candidate generation loads Qwen3.5-9B-MTP. CPU-LATENCY GATE: the Kaggle path
+      is CPU under a 12h/600-RPM cap -- WALL-CLOCK-MEASURE the per-candidate goal-energy scoring cost on CPU.
 
       NOTE the PORT-8919 CONFOUND: LocalGGUFProposer.port defaults to 8919 and a persistent gemma-4-12B-it
       llama-server squats 8919 -> any "Qwen" run silently talks to gemma. CONSTRUCT the proposer on a FREE port
       (e.g. 8920) + verify via /props it served Qwen3.5-9B-MTP.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/ops/known-issues.md (the 2026-06-24 leader-gap MANDATORY entry -- the full task spec, the three build steps, the falsifiable gate, the CPU-latency risk) + {project_root}/docs/research-notes/leader-gap-online-action-learning-vs-multilevel-wall-2026-06-24.md
-        - {project_root}/results/experiment_4715_online_action_learning_driver_corrected.json + {project_root}/results/experiment_4710_online_action_learning_arms_summary.json (the two nulls this corrects -- read WHY they nulled; the TAUTOLOGY arms-identical signature) + {project_root}/results/experiment_4725_silent_bug_audit.json IF PRESENT (B1's adjudication of the .434 A4)
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (_load_submitted_frame_change_scorer ~L216 for the scorer term; _candidates ~L720 for CNN-proposed coords; StepwiseExplorer for the observe/train-per-step hook; gated_engine_from_transitions ~L2049 trust_metric) + {project_root}/python/carnot/agentic/arc_frame_change_predictor.py + {project_root}/python/carnot/agentic/arc_live_ttt.py (~L382/407 the existing online CNN to un-gate via cell_recall)
-        - {project_root}/python/carnot/agentic/arc_go_explore.py (the bug-fixed archive, 2026-06-25) + {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out color-permuted A/B harness) + {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green)
+        - {project_root}/results/experiment_4725_silent_bug_audit.json (B1's P2 reopen recommendation for goal-energy + the dead-code evidence) + {project_root}/results/experiment_4640_goal_energy_generation_live.json + {project_root}/python/carnot/experiment_4640_goal_energy_generation_live.py (the null this corrects -- read WHY it cloned baseline / went neutral on the cached frame)
+        - {project_root}/ops/known-issues.md (the 2026-06-23 redirect: generation guidance via goal-distance / structural-progress energy; the goal-energy / expansion-prior class)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy; _candidates ~L720 -- the candidate generation/proposal path to bias; _induce_and_plan) + {project_root}/python/carnot/agentic/arc_executable_world_model.py (candidate-state transition prediction) + {project_root}/python/carnot/agentic/arc_value_learner.py (the energy/discriminative substrate)
+        - {project_root}/ops/arc_solve_registry.yaml (the persisted graded_goal_energy_search_heuristic_operator from exp4644 -- build on it; alpha*navigation_energy + beta*graded_goal_energy) + {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate)
+        - {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out color-permuted A/B harness; B~=100) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green) + {project_root}/scripts/arc_orphan_solver_lint.py
 
-      TASK: add a goal-free online-exploration policy to the live cascade (cascade=True, additive): (1) an online
-      binary-frame-change CNN with a COORDINATE HEAD that PROPOSES clicks (top-k heatmap pixels as ACTION6,
-      hierarchical action-then-coord sample), self-supervised free labels (frame_changed), Adam lr=1e-4 BCE every
-      ~5 actions, hash-deduped buffer; (2) reward-driven per-level reset to the cross-game PRIOR (not random); (3)
-      cheap floor (may ship first): flip gated_engine_from_transitions default to trust_metric="cell_recall" so
-      the existing online CNN un-gates. FIRST prove the arms are non-degenerate; THEN A/B {{frozen, online-scratch,
-      online-warm}} on the experiment_4605 held-out harness (B~=100). MEASURE cpu_train_step_ms. The WIN:
-      arms_non_degenerate=True AND (online-warm beats frozen by >=+0.05 held-out first-win OR a multi-level probe
-      lp85/sc25 reaches L2 offline-reproduced). verifier_is_oracle:false.
+      TASK: add a goal-energy candidate-generation guidance to the live E3AgentPolicy proposal path (cascade,
+      additive): (1) a graded goal-distance / structural-progress ENERGY that scores REAL candidate states and
+      biases the proposal distribution toward low-goal-energy states (so the present-but-under-weighted winner is
+      up-weighted into the expanded pool); (2) FIRST prove the arm is non-degenerate (REAL candidate scoring,
+      non-zero score variance, a candidate pool that DIFFERS from baseline); (3) THEN A/B {{baseline,
+      goal-energy-guided}} on the experiment_4605 held-out harness (B~=100) + a multi-level probe (lp85/sc25 ->
+      reproduce-gate any L2). MEASURE per-candidate cpu scoring ms. The WIN: arms_non_degenerate=True AND
+      (goal-energy beats baseline by >=+0.05 held-out first-win OR a multi-level probe reaches L2
+      offline-reproduced). verifier_is_oracle:false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
-           a. `.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` for the offline training arms (the live Kaggle path is CPU); else blocked_cuda_unavailable, EXIT.
+           a. `.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` for any offline training arm (the live Kaggle path is CPU); else note + proceed CPU-only if the lever needs no training, else blocked_cuda_unavailable.
            b. Qwen3.5-9B-MTP GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/` non-empty; else blocked_model_not_cached_qwen, EXIT.
-           c. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0; arc_go_explore importable (the bug-fixed archive).
+           c. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
            d. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
-        1. Build the online CNN with the proposing coordinate head + the per-level reset-to-prior. PROVE arms are non-degenerate (distinct action distributions + non-zero train-steps). If still identical -> online_driver_arms_degenerate_confirmed_harness_bug, EXIT honest. Confirm arc_orphan_solver_lint stays green.
-        2. Run the A/B {{frozen, online-scratch, online-warm}} on the experiment_4605 held-out harness (B~=100). MEASURE cpu_train_step_ms. Multi-level probe lp85/sc25 -> reproduce-gate any L2.
-        3. RUN test_arc_submitted_agent_parity.py -> green. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the harness has reachable first-win headroom; emit the online-warm-vs-frozen delta + a null_methodology_note when flat. If non-degenerate arms still give no +0.05 lift AND no L2, log the residual (cpu_latency_bound | online_signal_genuinely_too_sparse) -- the lever retires for REAL.
+        1. Build the graded goal-energy candidate-scoring + proposal-biasing. PROVE the arm is non-degenerate (REAL candidate scoring, non-zero score variance, candidate pool DIFFERS from baseline). If still cloning baseline -> goal_energy_generation_arms_degenerate_confirmed_harness_bug, EXIT honest. Confirm arc_orphan_solver_lint stays green.
+        2. Run the A/B {{baseline, goal-energy-guided}} on the experiment_4605 held-out harness (B~=100). MEASURE cpu_scoring_ms_per_candidate. Multi-level probe lp85/sc25 -> reproduce-gate any L2.
+        3. RUN test_arc_submitted_agent_parity.py -> green. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the harness has reachable first-win headroom; emit the goal-energy-vs-baseline delta + null_delta_methodology_note + positive_control_passed when flat. If non-degenerate arms still give no +0.05 lift AND no L2, log the residual (cpu_latency_bound | goal_energy_does_not_up_weight_the_winner | winner_aliased_at_logical_grid) -- the lever retires for REAL.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: online_warm_beats_frozen_<delta>_or_l2_<game> OR complete: online_driver_arms_degenerate_confirmed_harness_bug OR complete: online_action_learning_no_first_win_lift_residual_<cause>."
+          principle: "terminal prefix; success: goal_energy_generation_first_win_lift_<delta>_or_l2_<game> OR complete: goal_energy_generation_arms_degenerate_confirmed_harness_bug OR complete: goal_energy_generation_no_first_win_lift_residual_<cause>."
         inference_substrate:
-          principle: "live_llm_inference (live arm loads the Qwen GGUF, 60s floor) / verifier_ensemble_against_cached_candidates (offline harness arm); model_specs name the GGUF."
+          principle: "live_llm_inference (the live candidate generation loads the Qwen GGUF, 60s floor); model_specs MUST name the GGUF."
         arms_non_degenerate:
-          principle: "THE FIRST GATE -- the three arms produce distinct action distributions + non-zero online train-steps (NOT byte-identical); a false here means the prior nulls were dead code (this is a BUG to fix, not a capability null)."
-        per_arm_action_distribution_distinct:
-          principle: "the explicit evidence the arms differ (e.g. KL between arm action histograms > 0) -- the no-op catch that the .433/.434 attempts failed."
-        online_train_steps_executed:
-          principle: "the count of online Adam steps actually run with gradient norm > 0 -- proves the online CNN trained, not a frozen no-op."
-        online_warm_first_win:
-          principle: "the +0.05 online-warm-over-frozen gate is the bet; measured ONLY after arms_non_degenerate=True."
-        online_scratch_first_win:
-          principle: "the online-from-random arm -- isolates online-learning vs warm-start."
-        frozen_first_win:
-          principle: "the frozen-prior baseline (the current submitted behavior) -- the no-online control."
-        online_warm_vs_frozen_delta:
-          principle: "online_warm_first_win - frozen_first_win; >=+0.05 is the gate; emitted explicitly so a null (0) is annotated and not auto-quarantined as TAUTOLOGY (pair with null_delta_methodology_note + positive_control_passed when flat)."
-        cpu_train_step_ms:
-          principle: "the Kaggle path is CPU under a 12h/600-RPM cap; an online step too slow to run every 5 actions makes the leader's loop infeasible regardless of offline gains."
+          principle: "THE FIRST GATE -- the goal-energy arm scores REAL candidate states with non-zero score variance + a candidate pool that DIFFERS from baseline (NOT cloned/neutral-on-cached-frame); a false here means the prior null was dead code (a BUG to fix, not a capability null)."
+        candidate_pool_differs_from_baseline:
+          principle: "the explicit evidence the goal-energy pool/ranking differs from baseline (rank/coverage delta > 0) -- the no-op catch that exp4640 failed (it cloned baseline)."
+        goal_energy_score_variance:
+          principle: "non-zero variance of the graded goal-energy across candidate states -- proves it scored REAL states, not a constant neutral value on the cached frame."
+        goal_energy_first_win:
+          principle: "the held-out first-win of the goal-energy-guided arm -- measured ONLY after arms_non_degenerate=True."
+        baseline_first_win:
+          principle: "the unbiased-proposal baseline (the current submitted behavior) -- the no-guidance control."
+        goal_energy_vs_baseline_delta:
+          principle: "goal_energy_first_win - baseline_first_win; >=+0.05 is the gate; emitted explicitly so a null (0) is annotated and not auto-quarantined as TAUTOLOGY (pair with null_delta_methodology_note + positive_control_passed when flat)."
+        cpu_scoring_ms_per_candidate:
+          principle: "the Kaggle path is CPU under a 12h/600-RPM cap; goal-energy scoring too slow per candidate makes the lever infeasible regardless of offline gains."
         goal_free_l2_reached:
-          principle: "a goal-free L2 deepening proves the wall is crossed by DEMOTING goal-induction, not fixing it."
+          principle: "a goal-energy-guided L2 deepening proves the wall is crossed by GUIDING generation toward the goal."
         offline_reproduced:
-          principle: "a goal-free L2 counts only if offline-reproduced via arc_solver_kit.reproduce."
+          principle: "a new level counts only if offline-reproduced via arc_solver_kit.reproduce."
         reproduced_levels:
-          principle: "the integer level the goal-free driver reached on the multi-level probe."
+          principle: "the integer level the goal-energy-guided agent reached on the multi-level probe."
         solve_provenance:
-          principle: "live_agent_self_discovery for a generic goal-free L2; development_proxy if an adapter was needed."
+          principle: "live_agent_self_discovery for a generic goal-energy-guided L2; development_proxy if an adapter was needed."
         verifier_is_oracle:
-          principle: "MUST be false -- the online frame-change CNN is oracle-distinct (it does not run the win-check); gate-eligible."
+          principle: "MUST be false -- the graded goal-energy scores candidate states (oracle-distinct; it does not run the win-check); gate-eligible."
         live_path_reachable:
-          principle: "HARD gate -- the changed E3AgentPolicy/StepwiseExplorer is in the scored agent's import closure; arc_orphan_solver_lint passes."
+          principle: "HARD gate -- the changed E3AgentPolicy candidate-generation path is in the scored agent's import closure; arc_orphan_solver_lint passes."
         bare_control_passed:
           principle: "the POSITIVE CONTROL -- the held-out harness has reachable first-win headroom; a flat null is valid only then."
         false_negative_risk_checked:
-          principle: "true with all three arms non-degenerate + reachable headroom -- a 'no lift' null is valid only then."
+          principle: "true with non-degenerate arms + reachable headroom -- a 'no lift' null is valid only then."
         null_delta_methodology_note:
-          principle: "present when online_warm_vs_frozen_delta ~0 on NON-degenerate arms; states the equality is an honest no-lift null (the TAUTOLOGY carve-out reads it), not a measurement bug."
+          principle: "present when goal_energy_vs_baseline_delta ~0 on NON-degenerate arms; states the equality is an honest no-lift null (the TAUTOLOGY carve-out reads it), not a measurement bug -- the .435-A1 escape fix."
         positive_control_passed:
-          principle: "bool(parity_test_green AND arms_non_degenerate) -- GATES the TAUTOLOGY null-delta exemption; an unvalidated flat result is NOT excused."
+          principle: "bool(parity_test_green AND arms_non_degenerate AND bare_control_passed) -- GATES the TAUTOLOGY null-delta exemption; an unvalidated flat result is NOT excused."
         chosen_submitted_config:
-          principle: "the recommended SUBMITTED_AGENT_CONFIG change (online driver on, reset-to-prior, cell_recall un-gate) -- the A6 input; 'unchanged' if null."
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (goal-energy guidance on, weight) -- the A6 input; 'unchanged' if null."
         proposer_served_model:
           principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
         parity_test_green:
@@ -400,140 +309,145 @@ tasks:
         reproducibility_checksum:
           principle: "content-addressed hash catches silent harness/corpus drift on replay."
         preconditions_checked:
-          principle: "records resources verified (CUDA for offline arms, Qwen cached, offline arcade + bug-fixed archive, /props served Qwen); pre-empts missing-resource fabrication."
+          principle: "records resources verified (CUDA if training, Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4726_online_action_learning_driver_valid_test.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4737_goal_energy_candidate_generation_valid_test.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4727-a2
-    milestone: 2026.06.435
-    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; the capstone + SOTA hand-off -- ACT to disambiguate) --
-      HYPOTHESIS-DRIVEN ACTIVE-PROBE DISAMBIGUATION. The .434 A2 (exp4713) proved the present winner (coverage
-      1.0) is NOT separable from same-depth distractors by ANY static oracle-distinct feature
-      (precision_at_k_delta=0.0) -- static selection is EXHAUSTED. The principled answer: the agent ACTS to
-      disambiguate. E3AgentPolicy keeps a posterior over candidate goal/dynamics hypotheses, asks
-      arc_executable_world_model what transition each predicts, and takes information-gain actions that SPLIT the
-      posterior -- so the present-but-unseparable winner becomes distinguishable by its observed CONSEQUENCE, not a
-      static feature. The energy verifier scores which probe best splits the posterior (oracle-distinct). Gate:
-      the GENERIC agent reaches a NEW level via active probing on >=1 clean L1 game, offline-reproduced, with the
-      NO-PROBE (passive) ablation FAILING. arXiv:2506.01876 + 2309.08477. live_path-reachable.
-      live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
+  - id: exp4738-a2
+    milestone: 2026.06.436
+    title: 'PHASE A2 (ARC NORTH STAR; PRIMARY) -- VALID-TEST ENERGY-FITNESS QD CANDIDATE GENERATION, reopened
+      because B1 (exp4725) found the .428 energy-QD null (exp4653) tested DEAD CODE: the QD/random/search arms were
+      BYTE-IDENTICAL except the arm label (unchanged candidate pool, winner_generated_count=0). Build the
+      corrected lever: a quality-diversity generator (MAP-Elites-with-gradients family) with DISTINCT QD +
+      random-mutation candidate pools, energy as the fitness/quality and a behavior descriptor for diversity, that
+      EVOLVES the candidate pool toward states a naive enumerator misses -- so the winning L1 candidate is
+      GENERATED. NON-DEGENERACY GATE INLINE: PROVE the QD arm, the random-mutation arm, and the naive-search arm
+      produce DISTINCT candidate pools (NOT byte-identical) + a non-zero number of NOVEL candidates BEFORE any lift
+      -- else complete: energy_qd_generation_arms_degenerate_confirmed_harness_bug. THEN: QD generation beats naive
+      search by >=+0.05 held-out first-win OR a multi-level probe reaches L2 offline-reproduced. EMIT the
+      null-delta markers. verifier_is_oracle:false. live_agent_self_discovery. retire_if_same_verdict.'
     priority: critical
     track: arc-north-star
     max_turns: 160
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4727_active_probe_disambiguation.json
+    deliverable: results/experiment_4738_energy_fitness_qd_generation_valid_test.json
+    operator_override: '2026-06-25 operator directive (B1 silent-bug audit mandate) + the energy-config-space
+      direction: B1 (exp4725) classified the .428 energy-QD null (exp4653) silent_bug_must_reopen
+      (byte_identical_qd_search_random_arms / unchanged_candidate_pool -- QD never exercised), and the operator''s
+      energy-config-space framing names energy-as-fitness QD evolution as a generation lever for the 0.04 wall.
+      This is the FIRST VALID test (distinct QD + random-mutation pools + non-degeneracy gate inline), not a
+      doomed rerun -- false-positive scope-match vs exp4653/the .430 QD attempt. Routes to codex (ARC sprint).'
     prior_failures:
-      - experiment_id: exp4713-a2
-        verdict: 'complete: surface_present_winner_no_new_level_residual_present_winner_not_separable_from_distractors'
-        addressed_by: 'exp4713 (.434 A2) tried to SURFACE the present winner with a STATIC oracle-distinct ranker
-          over the frozen object-centric pool and FAILED -- precision_at_k_delta=0.0, ranks even worsened
-          ([59,161,12,77]->[87,102,74,36]): the present winner is NOT separable from same-depth distractors by any
-          STATIC feature. THIS task is a FUNDAMENTALLY DIFFERENT MECHANISM: it does NOT rank a frozen pool -- the
-          agent ACTS (takes information-gain probe actions) to disambiguate the goal/dynamics so the winner becomes
-          distinguishable by its observed CONSEQUENCE, not a static feature. Static selection is the exhausted
-          lever (exp4713 proved it); active probing is the untested lever the .434 capstone + SOTA-ingestion
-          (exp4722) explicitly handed off to (arXiv:2506.01876 + 2309.08477). If active probing ALSO reaches no
-          new generic level with the no-probe ablation failing, the residual is logged (the probe budget cannot
-          disambiguate within the action cap | the consequence is aliased at logical-grid resolution) and this
-          precise lever retires.'
+      - experiment_id: exp4653-energy-fitness-qd-generation-live
+        verdict: 'complete: energy_fitness_qd_no_winner_generated_byte_identical_arms'
+        addressed_by: 'exp4653 (.428) nulled because the QD, random-QD, and search arms were BYTE-IDENTICAL except
+          the arm label (winner_generated_count=0, unchanged candidate pool -- B1 exp4725 classified it
+          silent_bug_must_reopen, P3). THIS task is STRUCTURALLY DIFFERENT: it builds DISTINCT QD +
+          random-mutation candidate pools (MAP-Elites-with-gradients: an energy fitness + a behavior descriptor +
+          a real mutation operator) and imposes a NON-DEGENERACY GATE FIRST -- the QD arm, the random-mutation
+          arm, and the naive-search arm MUST produce DISTINCT candidate pools (NOT byte-identical) + a non-zero
+          NOVEL-candidate count before ANY lift. If still byte-identical it is logged
+          energy_qd_generation_arms_degenerate_confirmed_harness_bug (a BUG, not a null). If non-degenerate AND no
+          +0.05 first-win lift AND no L2, the lever retires for REAL with the null-delta markers emitted.'
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT ({date}, ARC sprint -- the capstone + SOTA hand-off; "act to disambiguate", the principled answer to
-      the .434 not-separable finding). The .434 A2 (exp4713) proved the winning L1 candidate is PRESENT in the
-      object-centric pool (coverage 1.0) but NOT separable from same-depth distractors by ANY static oracle-distinct
-      feature (precision_at_k_delta=0.0; ranks worsened). Ten milestones of STATIC selection/ranking have not moved
-      generic first-win off 0.04. Static selection of a frozen pool is EXHAUSTED. The capstone (exp4723) +
-      SOTA-ingestion (exp4722) hand off to ACTIVE PROBING: instead of ranking a frozen pool, the agent ACTS to
-      disambiguate the goal/dynamics, so the present-but-unseparable winner becomes distinguishable by its observed
-      CONSEQUENCE (different hypotheses predict different transitions; a discriminating action reveals which is
-      true). Maps to arXiv:2506.01876 (In-Context Learning for Pure Exploration) + arXiv:2309.08477 (Active
-      Hypothesis Testing).
+      CONTEXT ({date}, ARC sprint). Genuinely INDEPENDENT of A1 (A1 biases the proposal distribution by a graded
+      goal-distance energy; A2 EVOLVES a quality-diversity candidate pool with energy as fitness). The 0.04 wall
+      is generation-guidance; the energy-config-space framing says the live agent is an energy-refinement loop and
+      the wall is make-a-winner-APPEAR. B1 (exp4725) found the .428 energy-QD lever (exp4653) tested DEAD CODE: the
+      QD/random/search arms were BYTE-IDENTICAL except the arm label (winner_generated_count=0). THIS is the FIRST
+      VALID test, with DISTINCT pools.
 
-      THE MECHANISM (maps onto the current stack, exp4722 ingestion): E3AgentPolicy keeps a small POSTERIOR over
-      candidate goal/dynamics hypotheses; asks arc_executable_world_model to predict the transition each hypothesis
-      expects; chooses live actions that MAXIMALLY SPLIT that posterior (information gain / expected log-likelihood
-      ratio) BEFORE committing to a solve plan. The ENERGY VERIFIER scores which probe best splits the posterior
-      (oracle-DISTINCT -- it does NOT run the env's win-check; verifier_is_oracle:false, gate-eligible per the
-      Circularity discipline -- this is the north-star "verifier earns its place" as a probe-router). FAILS-WHEN
-      (be honest): the true mechanic is outside the hypothesis class; probe outcomes are aliased at logical-grid
-      resolution; the probe budget is spent identifying a rule that still does not imply the level goal.
+      THE NON-DEGENERACY GATE IS LOAD-BEARING (the B2 discipline inline). Before measuring ANY lift, PROVE the
+      three arms {{naive-search, random-mutation, energy-QD}} produce DISTINCT candidate pools (NOT byte-identical
+      -- a measurable pool-difference / Jaccard < 1.0 between arms) AND the QD arm generates a non-zero number of
+      NOVEL candidates (candidates the naive enumerator does not produce). If the arms come out byte-identical
+      AGAIN, emit honest_verdict complete: energy_qd_generation_arms_degenerate_confirmed_harness_bug with the
+      diagnostic -- a BUG, not a null.
 
-      CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): changes are in the LIVE
-      E3AgentPolicy/_induce_and_plan + arc_executable_world_model induction path imported by the scored agent --
-      arc_orphan_solver_lint + test_arc_submitted_agent_parity stay green. live_llm_inference: the live induction
-      loads Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s; free port + /props-verify). solve_provenance:
-      live_agent_self_discovery (the generic agent's OWN runtime probing). Genuinely INDEPENDENT of A1 (A1 is a
-      goal-free online-CNN driver; A2 is hypothesis-posterior active probing inside the induction phase).
+      THE MECHANISM (MAP-Elites + gradients, arXiv:2303.03832 / arXiv:2211.12610): an energy FITNESS (lower energy
+      = fitter candidate) + a behavior descriptor (e.g. object count / spatial spread / color histogram) defining
+      the diversity archive + a real mutation operator over the configuration space (mutate candidate object
+      placements/colors/toggles), keeping diverse elites. The bet: energy-as-fitness QD evolution GENERATES the
+      winning candidate where naive object-centroid enumeration misses it. The energy fitness is ORACLE-DISTINCT
+      (it scores candidate configurations; it does NOT run the env win-check; verifier_is_oracle:false).
 
-      THE NO-PROBE ABLATION IS MANDATORY: the same agent WITHOUT the active-probe controller (the passive
-      induce-then-plan path) must FAIL where active probing succeeds (else the win is not attributable to probing).
+      EMIT THE NULL-DELTA MARKERS (the .435-A1 escape fix): when non-degenerate but the delta is ~0, emit
+      null_delta_methodology_note + positive_control_passed: bool(parity_test_green AND arms_non_degenerate AND
+      bare_control_passed) so the honest no-lift null is not quarantined.
 
-      NOTE the PORT-8919 CONFOUND: construct the LLM proposer on a FREE port (e.g. 8920) + /props-verify Qwen3.5-9B-MTP.
+      CRITICAL DISCIPLINE (CLAUDE.md ARC Live-Path Reachability): changes are in the LIVE E3AgentPolicy
+      candidate-generation path imported by the scored agent -- arc_orphan_solver_lint + test_arc_submitted_agent_parity
+      stay green. live_llm_inference: the live candidate generation loads Qwen3.5-9B-MTP on the iGPU (NEVER the
+      3090s; FREE port + /props-verify; the port-8919 gemma-squat guard). solve_provenance: live_agent_self_discovery.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4713_surface_present_winner_verifier_ranker.json (the static-ranker null this supersedes -- the not-separable finding) + {project_root}/results/experiment_4722_sota_ingestion_active_probe_world_model.json (the SOTA mapping: hypothesis_posterior_active_probe_controller, maps_to_current_stack + implement_cost + fails_when) + {project_root}/docs/research-notes/active-probe-world-model-sota-ingestion-20260625.md
-        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy + _induce_and_plan -- where the hypothesis ledger + probe interface go) + {project_root}/python/carnot/agentic/arc_executable_world_model.py (plan_in_model / transition prediction per hypothesis) + {project_root}/python/carnot/agentic/arc_value_learner.py (the energy/discriminative substrate to score probe information-gain)
-        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate) + {project_root}/scripts/arc_orphan_solver_lint.py + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green) + {project_root}/ops/verifier_gaps.md (log any residual as a missing-verifier gap)
+        - {project_root}/results/experiment_4725_silent_bug_audit.json (B1's P3 reopen recommendation for energy-QD + the byte-identical-arms evidence) + {project_root}/results/experiment_4653_energy_fitness_qd_generation_live.json + {project_root}/python/carnot/experiment_4653_energy_fitness_qd_generation_live.py (the null this corrects -- read WHY the arms were byte-identical)
+        - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy; _candidates ~L720 -- the candidate pool to evolve) + {project_root}/python/carnot/agentic/arc_value_learner.py (the energy substrate for the QD fitness) + {project_root}/python/carnot/agentic/arc_executable_world_model.py (candidate-state rollout for the behavior descriptor)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate) + {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out harness, B~=100) + {project_root}/tests/python/test_arc_submitted_agent_parity.py (MUST stay green) + {project_root}/scripts/arc_orphan_solver_lint.py
 
-      TASK: in the LIVE induction path, (a) maintain a small posterior over candidate goal/dynamics hypotheses;
-      (b) for each candidate live action, score expected posterior-split (information gain) via the executable
-      world-model's per-hypothesis transition predictions, with the energy verifier ranking discriminating probes;
-      (c) take the most-discriminating action, update the posterior from the observed transition, repeat until the
-      posterior concentrates, THEN plan to the implied goal; (d) run the live generic E3 with active probing ON on
-      a hard clean L1 game (PREFER {{bp35,re86,s5i5,g50t,r11l}}), replay-verify any new level via
-      arc_solver_kit.reproduce, vs the NO-PROBE (passive) ablation (same budget). The WIN: a generic NEW level via
-      active probing, offline-reproduced, with the no-probe ablation FAILING. verifier_is_oracle:false. If it
-      nulls, log the residual to ops/verifier_gaps.md.
+      TASK: add an energy-fitness QD candidate generator to the live candidate path (cascade, additive): an energy
+      fitness + a behavior descriptor + a real mutation operator producing a DIVERSE elite archive. FIRST prove
+      the arms {{naive-search, random-mutation, energy-QD}} are non-degenerate (distinct pools, non-zero novel
+      count); THEN A/B on the experiment_4605 held-out harness (B~=100) + a multi-level probe (lp85/sc25 ->
+      reproduce-gate any L2). MEASURE the per-generation cpu cost. The WIN: arms_non_degenerate=True AND (energy-QD
+      beats naive search by >=+0.05 held-out first-win OR a multi-level probe reaches L2 offline-reproduced).
+      verifier_is_oracle:false.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
-           a. arc_executable_world_model importable + supports per-hypothesis transition prediction (or extend it); else blocked_world_model_missing, EXIT.
-           b. Qwen3.5-9B-MTP GGUF cached; else blocked_model_not_cached_qwen, EXIT.
-           c. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
-           d. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
+           a. Qwen3.5-9B-MTP GGUF cached; else blocked_model_not_cached_qwen, EXIT.
+           b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+           c. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
-        1. Build the hypothesis-posterior + information-gain probe scorer (energy-verifier-routed) in the live induction path. Confirm arc_orphan_solver_lint stays green.
-        2. Run the live generic E3 with active probing ON vs the NO-PROBE ablation (same budget) on the target game. Replay-verify any new level via arc_solver_kit.reproduce. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: confirm reachable L1 headroom; emit the probe-vs-no-probe delta + a null_methodology_note when no new level.
-        3. RUN test_arc_submitted_agent_parity.py -> green. If it nulls, log the residual (mechanic_outside_hypothesis_class | probe_outcomes_aliased | budget_insufficient) as the .436 target AND append a missing-verifier gap to ops/verifier_gaps.md.
+        1. Build the energy-fitness QD generator (energy fitness + behavior descriptor + mutation operator + elite archive). PROVE the three arms are non-degenerate (distinct pools, non-zero novel count). If still byte-identical -> energy_qd_generation_arms_degenerate_confirmed_harness_bug, EXIT honest. Confirm arc_orphan_solver_lint stays green.
+        2. Run the A/B {{naive-search, random-mutation, energy-QD}} on the experiment_4605 held-out harness (B~=100). MEASURE cpu_generation_ms. Multi-level probe lp85/sc25 -> reproduce-gate any L2.
+        3. RUN test_arc_submitted_agent_parity.py -> green. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: reachable headroom; emit the qd-vs-naive delta + null_delta_methodology_note + positive_control_passed when flat. If non-degenerate arms still give no +0.05 lift AND no L2, log the residual (winner_not_in_reachable_mutation_neighborhood | cpu_latency_bound) -- the lever retires for REAL.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: active_probe_generic_agent_new_level_<game>_L<n> OR complete: active_probe_no_new_level_residual_<cause>."
+          principle: "terminal prefix; success: energy_qd_generation_first_win_lift_<delta>_or_l2_<game> OR complete: energy_qd_generation_arms_degenerate_confirmed_harness_bug OR complete: energy_qd_generation_no_first_win_lift_residual_<cause>."
         inference_substrate:
-          principle: "live_llm_inference -- the live induction loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); model_specs MUST name the GGUF."
-        verifier_is_oracle:
-          principle: "MUST be false -- the verifier scores probe information-gain; it is oracle-DISTINCT from the executable reproduction win-check (gate-eligible)."
-        solve_provenance:
-          principle: "live_agent_self_discovery -- the generic agent's OWN runtime probing; NOT a hand-built adapter (development_proxy), NOT outer_loop_re."
-        live_path_reachable:
-          principle: "HARD gate -- the changed induction path is in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
-        hypothesis_posterior_built:
-          principle: "true -- the agent maintained a posterior over goal/dynamics hypotheses (the active-probe mechanism actually ran, not a stub)."
-        probe_actions_taken:
-          principle: "the count of information-gain probe actions actually executed live -- the exercise evidence (a zero here is a no-op)."
-        posterior_entropy_reduction:
-          principle: "the measured drop in posterior entropy from the probes -- proves the probes were discriminating (not random)."
-        generic_agent_reached_level:
-          principle: "the deepest level the GENERIC live agent reached via active probing -- the headline (a NEW level is the bridge crossed)."
-        no_probe_ablation_reached_level:
-          principle: "the matched NO-PROBE (passive) ablation reached_level -- MUST be lower for the win to be attributable to probing, not the budget."
+          principle: "live_llm_inference (the live candidate generation loads the Qwen GGUF, 60s floor); model_specs MUST name the GGUF."
+        arms_non_degenerate:
+          principle: "THE FIRST GATE -- the naive-search / random-mutation / energy-QD arms produce DISTINCT candidate pools (NOT byte-identical) + a non-zero novel-candidate count; a false here means the prior null (exp4653) was dead code (a BUG, not a capability null)."
+        arm_pool_jaccard:
+          principle: "the pairwise candidate-pool Jaccard between arms (< 1.0 proves distinct pools) -- the no-op catch that exp4653 failed (byte-identical arms)."
+        novel_candidates_generated:
+          principle: "the count of QD candidates NOT in the naive-enumerator pool -- proves the QD generator actually generated novel candidates (winner_generated_count was 0 in exp4653)."
+        energy_qd_first_win:
+          principle: "the held-out first-win of the energy-QD arm -- measured ONLY after arms_non_degenerate=True."
+        naive_search_first_win:
+          principle: "the naive-enumeration baseline -- the no-QD control."
+        energy_qd_vs_naive_delta:
+          principle: "energy_qd_first_win - naive_search_first_win; >=+0.05 is the gate; emitted explicitly so a null (0) is annotated (pair with null_delta_methodology_note + positive_control_passed when flat)."
+        cpu_generation_ms:
+          principle: "the Kaggle path is CPU under a 12h/600-RPM cap; QD generation too slow per turn makes the lever infeasible regardless of offline gains."
+        goal_free_l2_reached:
+          principle: "an energy-QD-generated L2 proves the wall is crossed by GENERATING the winner, not selecting."
         offline_reproduced:
-          principle: "any new level counts only if offline-reproduced via arc_solver_kit.reproduce; a live-only trajectory is provisional."
+          principle: "a new level counts only if offline-reproduced via arc_solver_kit.reproduce."
         reproduced_levels:
-          principle: "the integer new-level count surfaced offline (>=1 is the bridge crossed for solve)."
+          principle: "the integer level the energy-QD agent reached on the multi-level probe."
+        solve_provenance:
+          principle: "live_agent_self_discovery for a generic energy-QD-generated L2; development_proxy if an adapter was needed."
+        verifier_is_oracle:
+          principle: "MUST be false -- the energy fitness scores candidate configurations (oracle-distinct; it does not run the win-check); gate-eligible."
+        live_path_reachable:
+          principle: "HARD gate -- the changed candidate-generation path is in the scored agent's import closure; arc_orphan_solver_lint passes."
         bare_control_passed:
-          principle: "the POSITIVE CONTROL -- reachable L1 headroom on the target; a no-new-level null is valid only then."
+          principle: "the POSITIVE CONTROL -- the held-out harness has reachable first-win headroom; a flat null is valid only then."
         false_negative_risk_checked:
-          principle: "true with the no-probe ablation + reachable headroom -- a 'no new level' null is valid only then."
-        null_methodology_note:
-          principle: "present when no new level; states the null is honest (probes ran + posterior reduced + ablation run), not a measurement bug."
-        missing_verifier_gap_logged:
-          principle: "if active probing cannot disambiguate, the gap (the discriminator a new verifier/probe would need) is appended to ops/verifier_gaps.md."
+          principle: "true with non-degenerate arms + reachable headroom -- a 'no lift' null is valid only then."
+        null_delta_methodology_note:
+          principle: "present when energy_qd_vs_naive_delta ~0 on NON-degenerate arms; states the equality is an honest no-lift null (the TAUTOLOGY carve-out reads it) -- the .435-A1 escape fix."
+        positive_control_passed:
+          principle: "bool(parity_test_green AND arms_non_degenerate AND bare_control_passed) -- GATES the TAUTOLOGY null-delta exemption."
         chosen_submitted_config:
-          principle: "the recommended SUBMITTED_AGENT_CONFIG change (active-probe controller on, params) -- the A6 input; 'unchanged' if null."
+          principle: "the recommended SUBMITTED_AGENT_CONFIG change (energy-QD generator on, params) -- the A6 input; 'unchanged' if null."
         proposer_served_model:
           principle: "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP) -- the port-8919 confound guard."
         parity_test_green:
@@ -543,39 +457,38 @@ tasks:
         reproducibility_checksum:
           principle: "content-addressed hash catches silent harness/corpus drift on replay."
         preconditions_checked:
-          principle: "records resources verified (world-model importable, Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
+          principle: "records resources verified (Qwen cached, offline arcade, /props served Qwen); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4727_active_probe_disambiguation.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4738_energy_fitness_qd_generation_valid_test.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4728-a3
-    milestone: 2026.06.435
+  - id: exp4739-a3
+    milestone: 2026.06.436
     title: 'PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE)
       -- run the standing self-play loop (arc_loop_solve) to bank +1 NEW reproducible level on a CLEAN game NOT
-      deepened in .429-.434 (PREFER a first-contact L1->L2 of a hard clean public game from re86/s5i5/g50t/r11l;
-      alternatives m0r0/cn04/ar25 L2->L3; SKIP bp35 [.434], lf52 [.432], sb26 [.431], dc22 [.430], vc33 [.429],
-      sk48 [.426], ka59/wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND
+      deepened in .429-.435 (PREFER a first-contact L1->L2 of a hard clean public game from re86/s5i5/g50t/r11l;
+      alternatives m0r0/cn04 L2->L3; SKIP ar25 [.435 L3], bp35 [.434], lf52 [.432], sb26 [.431], dc22 [.430],
+      vc33 [.429], sk48 [.426], ka59/wa30 [hidden-state-bound], cd82-L3/sp80-L3/su15-L3 [no grounded delta]) AND
       train+checkpoint the learned verifier on pos/neg traces. Gate: offline_reproduced new level ->
-      reproducible_total_levels 63 -> 64+. verifier_is_oracle:false.'
+      reproducible_total_levels 64 -> 65+. verifier_is_oracle:false.'
     priority: critical
     track: arc-north-star
     max_turns: 150
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4728_levelup_selfplay.json
+    deliverable: results/experiment_4739_levelup_selfplay.json
     prior_failures:
       - experiment_id: exp4618-a3
         verdict: 'complete: sk48_delta_identified_no_bank'
         addressed_by: 'exp4618 (.426 A3) attempted sk48 L1->L2 and did NOT bank. This task ROTATES to a DIFFERENT
-          clean game NOT deepened in .429-.434 (PREFER re86/s5i5/g50t/r11l first-contact L1->L2 -- hard clean
-          public games; alternatives m0r0/cn04/ar25 L2->L3) and explicitly SKIPS bp35 (.434), lf52 (.432), sb26
-          (.431), dc22 (.430), vc33 (.429), sk48 (.426), ka59/wa30 (hidden-state-bound), and
-          cd82-L3/sp80-L3/su15-L3 (no grounded delta). It may use any A1/A2 live improvement (the online driver /
-          the active-probe controller) to speed the search; the bank (offline-reproduced new level) is the gate,
-          not the routing speedup. If the rotated deepen ALSO produces no bank, log the per-game delta + dead-end
-          in the registry and the level-up target rotates again next milestone (the target is retired, not the
-          self-play loop).'
+          clean game NOT deepened in .429-.435 (PREFER re86/s5i5/g50t/r11l first-contact L1->L2; alternatives
+          m0r0/cn04 L2->L3) and explicitly SKIPS ar25 (.435 L3), bp35 (.434), lf52 (.432), sb26 (.431), dc22
+          (.430), vc33 (.429), sk48 (.426), ka59/wa30 (hidden-state-bound), cd82-L3/sp80-L3/su15-L3 (no grounded
+          delta). It may use any .436 A1/A2 generation improvement (goal-energy / energy-QD) to speed the search;
+          the bank (offline-reproduced new level) is the gate, not a routing speedup. If the rotated deepen ALSO
+          produces no bank, log the per-game delta + dead-end in the registry and the level-up target rotates
+          again next milestone (the target retires, not the self-play loop).'
         retire_if_same_verdict: true
     prompt: |
       CONTEXT ({date}, ARC sprint LEVEL-UP ATTEMPT GUARANTEE + the self-improvement engine). CLAUDE.md mandates
@@ -583,10 +496,10 @@ tasks:
       mandates running the self-play loop EVERY milestone. This task does BOTH: bank +1 level AND train+checkpoint
       the learned verifier on the run's positive (steps-to-go) + negative (off-path/dead-end) traces. INDEPENDENT
       of A1/A2 so the guarantee holds even if they null. ALL 25 public games have >=L1 banked -- so this is a
-      DEEPEN (L1->L2), preferring a deeper first-contact L1->L2 on a HARD clean game. TARGET ROTATION: SKIP bp35
-      (.434), lf52 (.432), sb26 (.431), dc22 (.430), vc33 (.429), sk48 (.426 failed) -- rotate to a game NOT
-      deepened in .429-.434. PREFER re86/s5i5/g50t/r11l L1->L2 (the genuine hard-to-bank clean public games);
-      alternatives m0r0/cn04/ar25 L2->L3. Check the registry dead_ends per game FIRST and SKIP stalled approaches.
+      DEEPEN, preferring a deeper first-contact L1->L2 on a HARD clean game. TARGET ROTATION: SKIP ar25 (.435 L3),
+      bp35 (.434), lf52 (.432), sb26 (.431), dc22 (.430), vc33 (.429), sk48 (.426 failed) -- rotate to a game NOT
+      deepened in .429-.435. PREFER re86/s5i5/g50t/r11l L1->L2 (the genuine hard-to-bank clean public games);
+      alternatives m0r0/cn04 L2->L3. Check the registry dead_ends per game FIRST and SKIP stalled approaches.
 
       CRITICAL DISCIPLINE (CLAUDE.md ARC Solve Reproducibility + Live-Path Reachability): use the standing
       arc_loop_solve loop; only offline-reproduced levels count (arc_solver_kit.reproduce); update the registry;
@@ -597,12 +510,12 @@ tasks:
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/scripts/arc_loop_solve.py (the standing loop: transfer-routing -> verifier-routed best-first solve -> reproduction gate -> train+checkpoint the learned verifier -> registry update) + {project_root}/python/carnot/agentic/arc_solver_kit.py (reproduce gate)
-        - {project_root}/ops/arc_solve_registry.yaml (per-game rows, dead_ends, levels_reproduced -- pick a target NOT on the skip list, check its dead_ends FIRST) + {project_root}/python/carnot/agentic/arc_game_adapters.py (GameAdapter pattern if a delta is needed)
-        - {project_root}/results/experiment_4714_levelup_selfplay.json (the .434 A3 -- bp35, the target it deepened, to rotate away from)
+        - {project_root}/ops/arc_solve_registry.yaml (per-game rows, dead_ends, levels_reproduced -- pick a target NOT on the skip list, check its dead_ends FIRST; header reproducible_total_levels=64) + {project_root}/python/carnot/agentic/arc_game_adapters.py (GameAdapter pattern if a delta is needed)
+        - {project_root}/results/experiment_4728_levelup_selfplay.json (the .435 A3 -- ar25 L3, the target it deepened, to rotate away from)
 
       TASK: pick a rotated clean target (PREFER re86/s5i5/g50t/r11l L1->L2), run arc_loop_solve to bank +1
       offline-reproduced level, train+checkpoint the learned verifier (models/arc_verifier_<game>.json), update the
-      registry. The gate is the BANK (reproducible_total_levels 63->64+), not a routing speedup.
+      registry. The gate is the BANK (reproducible_total_levels 64->65+), not a routing speedup.
       verifier_is_oracle:false. If no bank, log the per-game delta + dead-end and rotate next milestone.
 
       CONCRETE STEPS:
@@ -625,7 +538,7 @@ tasks:
         new_levels_banked:
           principle: ">=1 is the Level-Up Guarantee met; 0 rotates the target next milestone."
         reproducible_total_levels:
-          principle: "the registry header after this run (63->64+ if banked) -- the monotonic north-star metric."
+          principle: "the registry header after this run (64->65+ if banked) -- the monotonic north-star metric."
         verifier_checkpoint:
           principle: "models/arc_verifier_<game>.json -- the self-play loop trains+checkpoints the learned verifier (the self-improvement-every-milestone mandate)."
         verifier_is_oracle:
@@ -641,62 +554,65 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (offline arcade, arc_loop_solve runnable); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4728_levelup_selfplay.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4739_levelup_selfplay.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4729-a4
-    milestone: 2026.06.435
-    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness lane) -- re-measure the held-out
-      generic first-win lane (experiment_4605 SUBMITTED_AGENT_CONFIG over color-permuted variants) AFTER the .435
-      A1/A2 levers, vs the last-submission baseline (first_win_rate_integrated=0.04, first scored submission 0.08),
-      with a bootstrap-CI-excludes-0 improvement criterion. Keep the replay package as a FLOOR artifact but do NOT
-      cite its level count as the leaderboard score. Emit the TAUTOLOGY null-delta markers so a flat result is not
-      quarantined. parity-hard-gated. verifier_is_oracle:false.'
+  - id: exp4740-a4
+    milestone: 2026.06.436
+    title: 'PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness + SUBMISSION-CONFIG confirm) --
+      re-measure the held-out generic first-win lane (experiment_4605 SUBMITTED_AGENT_CONFIG over color-permuted
+      variants) AFTER the .436 A1/A2 generation levers, vs the last-submission baseline
+      (first_win_rate_integrated=0.04, first scored submission 0.08), with a bootstrap-CI-excludes-0 improvement
+      criterion. ROBUST to the codex 4800s cap (checkpoint/resume -- the .435 A4 lost its artifact to the cap).
+      Confirm the SUBMITTED_AGENT_CONFIG is current + submission-ready (5 days to deadline). Keep the replay
+      package as a FLOOR artifact, NOT the leaderboard score. Emit the TAUTOLOGY null-delta markers. parity-hard-
+      gated. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4729_held_out_first_win_readiness.json
-    operator_override: '2026-06-24 operator directive (standing, RETARGET PHASE-A4): the held-out first-win
+    deliverable: results/experiment_4740_held_out_first_win_readiness.json
+    operator_override: '2026-06-24 operator directive (standing, PHASE-A4 readiness lane): the held-out first-win
       readiness lane (experiment_4605 first_win_rate_integrated vs the last-submission baseline, bootstrap-CI) is
-      the operator-established standing readiness measurement -- false-positive scope-match vs exp4716/exp4703
-      (prior readiness runs); it re-measures after new levers each milestone and a flat result is an HONEST
-      no-change (not a retirement trigger for the LANE). Emits the null-delta markers. Routes to codex (ARC sprint).'
+      the operator-established standing readiness measurement -- false-positive scope-match vs
+      exp4729/exp4716/exp4703 (prior readiness runs); it re-measures after new levers each milestone and a flat
+      result is an HONEST no-change (not a retirement trigger for the LANE). Emits the null-delta markers + uses
+      checkpoint/resume to survive the codex 4800s cap that lost the .435 A4 artifact. Routes to codex (ARC sprint).'
     prompt: |
-      CONTEXT ({date}, ARC sprint -- operator 2026-06-24 RETARGET PHASE-A4). The held-out PROXY for the scored
-      leaderboard lane is experiment_4605 (the LITERAL SUBMITTED_AGENT_CONFIG over color-permuted variants,
-      parity-hard-gated; baseline first_win_rate_integrated=0.04, CI [0,0]; first scored submission 0.08). Gate
-      readiness on THIS lane improving vs the last-submission baseline (bootstrap-CI lower bound > 0), NOT on the
-      replay-package level count (the replay path scores ~0 on the hidden leaderboard). Keep the replay package as
-      a reproduced FLOOR artifact but do NOT treat its count as the score.
+      CONTEXT ({date}, ARC sprint -- the held-out readiness lane + submission-config confirm; 5 days to the
+      2026-06-30 deadline). The held-out PROXY for the scored leaderboard lane is experiment_4605 (the LITERAL
+      SUBMITTED_AGENT_CONFIG over color-permuted variants, parity-hard-gated; baseline
+      first_win_rate_integrated=0.04, CI [0,0]; first scored submission 0.08). Gate readiness on THIS lane
+      improving vs the last-submission baseline (bootstrap-CI lower bound > 0), NOT on the replay-package level
+      count (the replay path scores ~0 on the hidden leaderboard). The .435 A4 (exp4729) LOST its artifact to the
+      codex 4800s cap -- USE the checkpoint/resume + soft wall-clock budget (already added 2026-06-25, commit
+      810b6f451) so the SCORE survives.
 
       TAUTOLOGY-CARVE-OUT MARKERS (MANDATORY): when the held-out first-win is FLAT (first_win_rate_integrated ==
       first_win_baseline, delta == 0), emit null_delta_methodology_note (non-empty, why delta=0 is honest) +
       positive_control_passed: bool(parity_test_green) so adversarial_verify's TAUTOLOGY carve-out downgrades
-      CRITICAL->WARN instead of quarantining the phase. The positive control GATES the exemption. Copy-exemplar:
-      experiment_4716_held_out_first_win_readiness.py:build_artifact / experiment_4703. Do NOT weaken
-      scripts/adversarial_verify.py. NOTE: the .434 A5 emitted a SECOND TAUTOLOGY on held_out_variant_attempts ==
-      min_held_out_variant_attempts (a stub-default-looking equality) -- if you emit both fields, ensure they are
-      genuinely distinct measurements OR drop the redundant one so the carve-out is not needed for an artifact-shape coincidence.
+      CRITICAL->WARN. Do NOT weaken scripts/adversarial_verify.py. Do NOT emit a SECOND coincidental-equality
+      field that needs its own carve-out (the .434 A5 spurious held_out_variant_attempts == min tautology).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/ops/known-issues.md (the 2026-06-24 "RETARGET PHASE-A4" MANDATORY entry -- the full spec, the falsifiable gate, the markers contract)
-        - {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out proxy; SUBMITTED_AGENT_CONFIG, parity hard-gate) + {project_root}/results/experiment_4716_held_out_first_win_readiness.json (the .434 A5 -- the flat-0.04 baseline + the markers pattern + the spurious second-tautology to avoid)
+        - {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the held-out proxy; SUBMITTED_AGENT_CONFIG, parity hard-gate, the checkpoint/resume) + {project_root}/results/experiment_4716_held_out_first_win_readiness.json (the .434 A5 -- the flat-0.04 baseline + the markers pattern + the spurious second-tautology to avoid)
+        - {project_root}/results/experiment_4737_goal_energy_candidate_generation_valid_test.json + {project_root}/results/experiment_4738_energy_fitness_qd_generation_valid_test.json (the .436 A1/A2 chosen_submitted_config -- read what, if anything, they changed)
         - {project_root}/python/carnot/live_submittable_metrics.py (the replay-package FLOOR -- reproduce it but do NOT cite its count as the score) + {project_root}/tests/python/test_arc_submitted_agent_parity.py
 
-      TASK: run the experiment_4605 held-out generic first-win lane AFTER the .435 A1/A2 levers (read their
+      TASK: run the experiment_4605 held-out generic first-win lane AFTER the .436 A1/A2 levers (read their
       chosen_submitted_config), report first_win_rate_integrated + first_win_ci_lower +
       multi_level_deepen_rate_integrated vs the last-submission baseline, with a bootstrap-CI-excludes-0
-      improvement criterion. Reproduce the replay package as a FLOOR (do NOT cite its count as the score). Emit the
-      null-delta markers if flat. Readiness=true IFF parity_test_green AND first_win_ci_lower > 0, OR explicitly
-      held-flat with an honest no-change note.
+      improvement criterion. Confirm the SUBMITTED_AGENT_CONFIG is current + submission-ready (record
+      submitted_config_current). Reproduce the replay package as a FLOOR (do NOT cite its count as the score).
+      Emit the null-delta markers if flat. Readiness=true IFF parity_test_green AND first_win_ci_lower > 0, OR
+      explicitly held-flat with an honest no-change note.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0; experiment_4605 importable. Missing -> blocked_<resource>, EXIT.
-        1. Run the held-out lane (B>=100 variants), compute first_win_rate_integrated + bootstrap CI + multi_level_deepen_rate.
-        2. Reproduce the replay-package floor; record replay_package_floor_reproduced (NOT as the score). RUN test_arc_submitted_agent_parity.py -> green.
+        1. Run the held-out lane (B>=100 variants) WITH checkpoint/resume (survive the codex cap); compute first_win_rate_integrated + bootstrap CI + multi_level_deepen_rate.
+        2. Confirm SUBMITTED_AGENT_CONFIG current + submission-ready; reproduce the replay-package floor; RUN test_arc_submitted_agent_parity.py -> green.
         3. If flat, emit null_delta_methodology_note + positive_control_passed. Set readiness per the gate.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -709,13 +625,15 @@ tasks:
         first_win_ci_lower:
           principle: "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion; a point estimate is gameable by one lucky variant."
         multi_level_deepen_rate_integrated:
-          principle: "deepening past L1 is the second scored lever; tracking it held-out keeps A4 honest about depth without the replay count."
+          principle: "deepening past L1 is the second scored lever; tracking it held-out keeps A4 honest about depth."
+        submitted_config_current:
+          principle: "true if the SUBMITTED_AGENT_CONFIG measured here is the one that would be submitted -- the deadline-readiness confirm (5 days out)."
         parity_test_green:
           principle: "the held-out proxy is valid only if the measured agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates readiness."
         replay_package_floor_reproduced:
           principle: "the replay package stays a reproduced FLOOR, but its level count is explicitly NOT the leaderboard score."
         null_delta_methodology_note:
-          principle: "present when first-win is flat; the TAUTOLOGY carve-out reads it to downgrade CRITICAL->WARN (honest no-change, not a measurement bug)."
+          principle: "present when first-win is flat; the TAUTOLOGY carve-out reads it to downgrade CRITICAL->WARN (honest no-change)."
         positive_control_passed:
           principle: "bool(parity_test_green) -- GATES the TAUTOLOGY exemption; an unvalidated flat result is NOT excused."
         verifier_is_oracle:
@@ -727,48 +645,46 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (offline arcade, experiment_4605 importable); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4729_held_out_first_win_readiness.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4740_held_out_first_win_readiness.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4730-a5
-    milestone: 2026.06.435
-    title: 'PHASE A5 (ARC NORTH STAR; persist + cross-game transfer; CARRIED FORWARD -- SKIPPED in .434) -- persist
-      the STRONGEST .435 ARC primitive (the online-action-learning driver from A1 IF its arms were non-degenerate,
-      OR the active-probe disambiguation controller from A2, whichever is strongest/characterized) as reusable
-      arc_solver_kit scaffolding + measure leave-one-game cross-game transfer. Both arms nulling -> capture the
-      strongest characterized reusable component, do NOT fabricate transfer value. verifier_is_oracle:false.'
+  - id: exp4741-a5
+    milestone: 2026.06.436
+    title: 'PHASE A5 (ARC NORTH STAR; persist + cross-game transfer) -- persist the STRONGEST .436 ARC generation
+      primitive (the goal-energy candidate-generation guidance from A1 IF non-degenerate, OR the energy-fitness QD
+      generator from A2, whichever is strongest/characterized) as reusable arc_solver_kit scaffolding + measure
+      leave-one-game cross-game transfer. Both arms nulling -> capture the strongest characterized reusable
+      component, do NOT fabricate transfer value. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4730_primitive_persist_transfer.json
+    deliverable: results/experiment_4741_primitive_persist_transfer.json
     operator_override: '2026-06-16 operator directive (standing, ARC Solve Reproducibility + Solver-Reuse): the
       persist+transfer task is the routine self-learning-capture lineage -- false-positive scope-match vs every
-      prior persist task (exp4717-skipped/exp4704/exp4692...); it persists a DIFFERENT primitive each milestone
-      (the strongest .435 component) and never fabricates transfer value. SKIPPED in .434 by a poison pre-test --
-      carried forward. Routes to codex (ARC sprint).'
+      prior persist task (exp4730/exp4704/exp4692...); it persists a DIFFERENT primitive each milestone (the
+      strongest .436 generation component) and never fabricates transfer value. Routes to codex (ARC sprint).'
     prompt: |
       CONTEXT ({date}, ARC sprint -- the self-learning capture step, CLAUDE.md ARC Solve Reproducibility +
-      Solver-Reuse Discipline; CARRIED FORWARD from .434 where a poison pre-test SKIPPED it). Persist the strongest
-      .435 ARC primitive into reusable arc_solver_kit / arc_solve_registry scaffolding so the LIVE agent reuses it
-      on hidden games, and measure leave-one-game cross-game transfer HONESTLY (a transfer null is a valid
-      characterized result; do NOT fabricate value).
+      Solver-Reuse Discipline). Persist the strongest .436 ARC generation primitive into reusable arc_solver_kit /
+      arc_solve_registry scaffolding so the LIVE agent reuses it on hidden games, and measure leave-one-game
+      cross-game transfer HONESTLY (a transfer null is a valid characterized result; do NOT fabricate value).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4726_online_action_learning_driver_valid_test.json + {project_root}/results/experiment_4727_active_probe_disambiguation.json (the .435 A1/A2 -- pick the strongest/most-characterized to persist; if A1's arms were degenerate, prefer A2's controller)
-        - {project_root}/python/carnot/agentic/arc_solver_kit.py (where reusable primitives live) + {project_root}/ops/arc_solve_registry.yaml (the primitives section -- append the new operator with derived_from, note, transfer_dead_ends)
-        - {project_root}/results/experiment_4704_primitive_persist_transfer.json (the .433 persist exemplar -- the schema to follow)
+        - {project_root}/results/experiment_4737_goal_energy_candidate_generation_valid_test.json + {project_root}/results/experiment_4738_energy_fitness_qd_generation_valid_test.json (the .436 A1/A2 -- pick the strongest/most-characterized to persist; if A1's arms were degenerate, prefer A2's generator, and vice versa)
+        - {project_root}/python/carnot/agentic/arc_solver_kit.py (where reusable primitives live) + {project_root}/ops/arc_solve_registry.yaml (the primitives section -- append the new operator with derived_from, note, transfer_dead_ends; cf. graded_goal_energy_search_heuristic_operator from exp4644)
+        - {project_root}/results/experiment_4730_primitive_persist_transfer.json (the .435 persist exemplar -- the schema to follow)
 
-      TASK: persist the strongest .435 primitive (A1 online-action-learning driver | A2 active-probe controller) as
-      a reusable arc_solver_kit operator + a registry entry (note, derived_from, transfer_dead_ends). Measure
-      leave-one-game transfer on 3 cached held-out games; report per-game transfer value (solve-rate / first-win /
-      coverage / action-efficiency deltas) HONESTLY. New levels count only through arc_solver_kit.reproduce.
-      verifier_is_oracle:false.
+      TASK: persist the strongest .436 primitive (A1 goal-energy candidate-generation guidance | A2 energy-fitness
+      QD generator) as a reusable arc_solver_kit operator + a registry entry (note, derived_from,
+      transfer_dead_ends). Measure leave-one-game transfer on 3 cached held-out games; report per-game transfer
+      value (solve-rate / first-win / coverage / action-efficiency deltas) HONESTLY. New levels count only through
+      arc_solver_kit.reproduce. verifier_is_oracle:false.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: offline arcade importable; the .435 A1/A2 artifacts present. Missing -> blocked_<resource>, EXIT.
+        0. PRECONDITIONS: offline arcade importable; the .436 A1/A2 artifacts present. Missing -> blocked_<resource>, EXIT.
         1. Pick the strongest characterized primitive; implement it as a reusable arc_solver_kit operator; append the registry entry.
         2. Measure leave-one-game transfer on 3 cached held-out games; report per-game deltas + a transfer_dead_ends note.
         3. RUN `.venv/bin/python scripts/arc_orphan_solver_lint.py` -> green.
@@ -785,56 +701,52 @@ tasks:
         offline_reproduced_new_level:
           principle: "true only if persisting banked a strictly new offline-reproduced level (usually false for a persist task)."
         verifier_is_oracle:
-          principle: "false -- the persisted operator ranks/routes/perceives; the reproduction gate is the oracle-distinct authority."
+          principle: "false -- the persisted operator generates/scores/routes; the reproduction gate is the oracle-distinct authority."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
           principle: "content-addressed hash catches silent harness/corpus drift."
         preconditions_checked:
-          principle: "records resources verified (offline arcade, .435 artifacts present); pre-empts missing-resource fabrication."
+          principle: "records resources verified (offline arcade, .436 artifacts present); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4730_primitive_persist_transfer.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4741_primitive_persist_transfer.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4731-a6
-    milestone: 2026.06.435
-    title: 'PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG integration gate; CARRIED FORWARD -- SKIPPED in .434)
-      -- integrate the strongest banked .435 change (A1 online driver / A2 active-probe controller, whichever
-      chose a non-unchanged submitted-config with a held-out lift) into the SUBMITTED_AGENT_CONFIG,
-      parity-hard-gated, no regression vs pre-integration. If all A1/A2 selected unchanged, emit the honest-null
-      markers (null_delta_methodology_note + positive_control_passed) so the flat delta is not quarantined.
-      verifier_is_oracle:false.'
+  - id: exp4742-a6
+    milestone: 2026.06.436
+    title: 'PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG integration gate) -- integrate the strongest banked
+      .436 change (A1 goal-energy guidance / A2 energy-QD generator, whichever chose a non-unchanged
+      submitted-config with a held-out lift) into the SUBMITTED_AGENT_CONFIG, parity-hard-gated, no regression vs
+      pre-integration. If all A1/A2 selected unchanged, emit the honest-null markers (null_delta_methodology_note
+      + positive_control_passed) so the flat delta is not quarantined. verifier_is_oracle:false.'
     priority: high
     track: arc-north-star
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4731_integration_gate.json
+    deliverable: results/experiment_4742_integration_gate.json
     operator_override: '2026-06-24 operator directive (standing, A6/A7 integration fix): the SUBMITTED_AGENT_CONFIG
-      integration gate is the routine integration lineage -- false-positive scope-match vs exp4718-skipped/exp4705
-      (prior integration gates); it integrates a DIFFERENT change each milestone and emits the honest-null markers
-      the TAUTOLOGY carve-out reads when the delta is ~0. SKIPPED in .434 by a poison pre-test -- carried forward.
-      Routes to codex (ARC sprint).'
+      integration gate is the routine integration lineage -- false-positive scope-match vs exp4731/exp4705 (prior
+      integration gates); it integrates a DIFFERENT change each milestone and emits the honest-null markers the
+      TAUTOLOGY carve-out reads when the delta is ~0. Routes to codex (ARC sprint).'
     prompt: |
-      CONTEXT ({date}, ARC sprint -- the integration gate; operator 2026-06-24 A6 fix; CARRIED FORWARD from .434
-      where a poison pre-test SKIPPED it). Integrate the strongest banked .435 change into the
-      SUBMITTED_AGENT_CONFIG (parity-hard-gated), with no regression vs pre-integration. If all A1/A2 selected
-      unchanged (the levers nulled), the integration is a NO-OP and the delta is 0 -- emit the honest-null markers
-      so adversarial_verify's TAUTOLOGY carve-out recognizes the honest no-change.
+      CONTEXT ({date}, ARC sprint -- the integration gate; operator 2026-06-24 A6 fix). Integrate the strongest
+      banked .436 change into the SUBMITTED_AGENT_CONFIG (parity-hard-gated), with no regression vs
+      pre-integration. If all A1/A2 selected unchanged (the levers nulled), the integration is a NO-OP and the
+      delta is 0 -- emit the honest-null markers so adversarial_verify's TAUTOLOGY carve-out recognizes the honest
+      no-change.
 
-      HONEST-NULL MARKERS (MANDATORY, the operator 2026-06-24 fix): when both deltas are ~0
-      (live_first_win_rate_integrated == live_first_win_rate_pre_integration), the build_artifact MUST emit
-      null_delta_methodology_note (non-empty, why delta=0 is honest no-change) AND positive_control_passed:
-      bool(parity_test_green AND no_regression_vs_pre_integration). The positive control GATES the exemption: an
-      UNVALIDATED integration (parity failed / regression) is NOT excused. Copy-exemplar:
-      experiment_4681_integration_gate.py:build_artifact / experiment_4705. Do NOT re-introduce a
+      HONEST-NULL MARKERS (MANDATORY): when both deltas are ~0 (live_first_win_rate_integrated ==
+      live_first_win_rate_pre_integration), the build_artifact MUST emit null_delta_methodology_note (non-empty,
+      why delta=0 is honest no-change) AND positive_control_passed: bool(parity_test_green AND
+      no_regression_vs_pre_integration). The positive control GATES the exemption. Copy-exemplar:
+      experiment_4731_integration_gate.py:build_artifact / experiment_4705. Do NOT re-introduce a
       tautology_guard-style prose field the linter ignores.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/ops/known-issues.md (the 2026-06-24 "A6 integration task MUST emit the honest-null markers" MANDATORY entry)
-        - {project_root}/results/experiment_4726_*.json + {project_root}/results/experiment_4727_*.json (the A1/A2 chosen_submitted_config -- what to integrate, if any)
-        - {project_root}/results/experiment_4705_integration_gate.json (the .433 exemplar) + {project_root}/python/carnot/experiment_4681_integration_gate.py (the copy-exemplar build_artifact) + {project_root}/tests/python/test_arc_submitted_agent_parity.py
+        - {project_root}/results/experiment_4737_*.json + {project_root}/results/experiment_4738_*.json (the A1/A2 chosen_submitted_config -- what to integrate, if any)
+        - {project_root}/results/experiment_4731_integration_gate.json (the .435 exemplar) + {project_root}/python/carnot/experiment_4731_integration_gate.py (the copy-exemplar build_artifact) + {project_root}/tests/python/test_arc_submitted_agent_parity.py
         - {project_root}/tests/python/test_adversarial_verify_control_treatment_null.py (CTNULL-5/6 -- the markers contract)
 
       TASK: read the A1/A2 chosen_submitted_config; if any selected a non-unchanged config WITH a held-out lift,
@@ -862,7 +774,7 @@ tasks:
         parity_test_green:
           principle: "HARD gate -- the integrated agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates the integration."
         null_delta_methodology_note:
-          principle: "present when both deltas ~0; the TAUTOLOGY carve-out reads it (honest no-change, not a measurement bug)."
+          principle: "present when both deltas ~0; the TAUTOLOGY carve-out reads it (honest no-change)."
         positive_control_passed:
           principle: "bool(parity_test_green AND no_regression) -- GATES the TAUTOLOGY exemption; an unvalidated integration is NOT excused."
         verifier_is_oracle:
@@ -874,83 +786,90 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (offline arcade, A1/A2 artifacts present); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4731_integration_gate.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4742_integration_gate.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4732-b2
-    milestone: 2026.06.435
-    title: 'PHASE B2 (INFRA reserved slot 2; operator MANDATORY 2026-06-25; CARRIED FORWARD -- SKIPPED in .434) --
-      adversarial_verify LEVER-EXERCISE-EVIDENCE guard. Mechanize the silent-dead-code catch the operator found
-      manually (Go-Explore (1,64,64); exp4710 CNN dict-candidate; the .434 A4 byte-identical all-arms-0.04): an
-      ARC generation/exploration-lever artifact that declares a mechanism exercised (coverage / archive /
-      candidate-pool / A/B-arms claim) but shows DEGENERATE exercise evidence (zero injections, empty/unchanged
-      pool, wrong-shape tensor, zero archive cells, BYTE-IDENTICAL arms) is flagged. Pinned by a new
-      test_adversarial_verify_*. Do NOT weaken any existing check.'
+  - id: exp4743-b1
+    milestone: 2026.06.436
+    title: 'PHASE B1 (INFRA reserved slot 1) -- adversarial_verify CARVE-OUT HARDENING that fixes the TWO .435
+      escapes. (1) The .435 A1 (exp4726) proved arms_non_degenerate=True (66 train steps, distinct distributions)
+      yet was CRITICAL-flagged as a TAUTOLOGY on the honest 0.04==0.04==0.04 no-lift equality and the capstone
+      QUARANTINED it -- an honest non-degenerate-zero-lift generation null must downgrade CRITICAL->WARN when it
+      carries arms_non_degenerate=True + the null_delta markers, NOT be quarantined. (2) The .435 A2 (exp4727)
+      declared an active-probe mechanism but probe_actions_taken=0 / hypothesis_posterior_built=False -- the
+      LEVER_EXERCISE_EVIDENCE guard must FLAG this declared-but-unrun no-op (it currently passes clean). Pin both
+      with a new test using exp4726 + exp4727 as exemplars. Do NOT weaken any existing check.'
     priority: high
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4732_adversarial_verify_exercise_evidence_guard.json
-    operator_override: '2026-06-25 operator directive (mandate, mechanize the silent-bug catch): the
-      adversarial_verify hardening task is the routine guard-hardening lineage -- false-positive scope-match vs
-      exp4720-skipped/exp4707 (prior adversarial_verify hardening); it adds a DIFFERENT guard each milestone (here
-      the lever-exercise-evidence guard) and never weakens an existing check. SKIPPED in .434 by a poison pre-test
-      -- carried forward. Routes to codex (ARC sprint).'
+    deliverable: results/experiment_4743_adversarial_verify_carveout_hardening.json
+    operator_override: '2026-06-25 outer-loop (fix the two .435 adversarial_verify escapes): the adversarial_verify
+      hardening task is the routine guard-hardening lineage -- false-positive scope-match vs exp4732/exp4720/exp4707
+      (prior adversarial_verify hardening); it adds a DIFFERENT carve-out each milestone (here: recognize an honest
+      non-degenerate-zero-lift generation null + flag the declared-but-unrun mechanism) and never weakens an
+      existing check. Routes to codex (ARC sprint).'
     prompt: |
-      CONTEXT ({date}, ARC sprint INFRA; CARRIED FORWARD from .434 where a poison pre-test SKIPPED it). The
-      operator found three generation-lever nulls that tested DEAD CODE (Go-Explore archive (1,64,64); exp4710 CNN
-      dict-candidate bug; the .434 A4 byte-identical all-arms-0.04 TAUTOLOGY). B1 audits the historical nulls; B2
-      mechanizes the catch GOING FORWARD: a new adversarial_verify check that flags an ARC
-      generation/exploration-lever artifact whose exercise-evidence is DEGENERATE despite declaring a mechanism was
-      exercised. This turns the operator's manual finding into a standing guard so a future silent no-op is caught
-      at verify time, not by a human.
+      CONTEXT ({date}, ARC sprint INFRA -- fix the two .435 adversarial_verify escapes that muddied the .435
+      record). The .436 HEADLINE generation valid-tests (A1 goal-energy, A2 energy-QD) will produce the SAME shape
+      as .435 A1 if they null honestly: arms_non_degenerate=True + a three-way first-win equality at the 0.04
+      baseline. In .435 that shape was CRITICAL-flagged as a TAUTOLOGY and the capstone QUARANTINED the artifact --
+      so an HONEST no-lift null on a validly-non-degenerate lever was lost. We MUST NOT quarantine an honest
+      generation null again. Separately, the .435 A2 declared an active-probe mechanism but probe_actions_taken=0 /
+      hypothesis_posterior_built=False (the probe never ran) and the existing LEVER_EXERCISE_EVIDENCE guard passed
+      it clean -- a declared-but-unrun no-op must be flagged.
 
-      THE CHECK (LEVER_EXERCISE_EVIDENCE_DEGENERATE): WARN/CRITICAL when an artifact declares a
-      generation/exploration mechanism (has a candidate_generation_coverage / go_explore / archive_injections /
-      proposal_pool / online-driver-arms field, or an inference_substrate naming an exploration lever) AND that
-      mechanism's exercise evidence is degenerate: archive_injections == 0 / archive_cells == 0 with a non-trivial
-      run, a candidate pool that is empty or byte-identical pre/post transform, a declared grid tensor with a
-      degenerate shape (a leading singleton where a 2-D grid is expected), BYTE-IDENTICAL A/B arms (frozen ==
-      scratch == warm to >5 sig figs -- the .434 A4 signature), or a coverage/delta == 0.0 with NO non-degenerate
-      exercise evidence. Guard against false positives: a genuine no-coverage-gain null that EMITS non-degenerate
-      exercise evidence (archive_injections > 0, non-empty pool, correct shape, DISTINCT arm distributions, an
-      explicit arms_non_degenerate=True) is a trustworthy null and must NOT be flagged.
+      THE TWO FIXES (do NOT weaken any existing check):
+        (1) TAUTOLOGY null-delta carve-out: when an ARC generation/exploration artifact carries arms_non_degenerate
+            ==True AND a non-empty null_delta_methodology_note AND positive_control_passed==True, a three-way (or
+            pairwise) first-win equality at the baseline (e.g. 0.04==0.04==0.04) is an HONEST no-lift null ->
+            downgrade the TAUTOLOGY CRITICAL to WARN (NOT quarantine). Without the markers / without
+            arms_non_degenerate it stays CRITICAL (an unvalidated flat result is NOT excused).
+        (2) LEVER_EXERCISE_EVIDENCE_DEGENERATE extension: an artifact that DECLARES an exploration/probe mechanism
+            (has probe_actions_taken / hypothesis_posterior_built / posterior_entropy_reduction or an
+            active-probe/posterior field) but shows the mechanism DID NOT RUN (probe_actions_taken==0 /
+            hypothesis_posterior_built==False / posterior_entropy_reduction==0.0) is flagged
+            LEVER_EXERCISE_EVIDENCE_DEGENERATE (declared-but-unrun). A genuine null that EMITS positive exercise
+            evidence (probe_actions_taken>0 + posterior_entropy_reduction>0) is NOT flagged.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/scripts/adversarial_verify.py (the check registry + the existing check_* functions + the null-delta / TAUTOLOGY carve-outs -- follow the same structure; do NOT weaken any existing check) + {project_root}/results/experiment_4707_adversarial_verify_hardening.json (the .433 B2 exemplar)
-        - {project_root}/results/experiment_4715_online_action_learning_driver_corrected.json (the .434 A4 byte-identical all-arms-0.04 -- the guard must catch this) + {project_root}/results/experiment_4701_amortized_exploration_prior_go_explore_live.json + {project_root}/results/experiment_4710_online_action_learning_arms_summary.json (the dead-code exemplars) + a trustworthy generation null with non-degenerate exercise evidence (the guard must NOT flag it)
-        - {project_root}/tests/python/test_adversarial_verify_control_treatment_null.py (the test pattern to follow)
+        - {project_root}/scripts/adversarial_verify.py (the check registry + the TAUTOLOGY check + the existing LEVER_EXERCISE_EVIDENCE_DEGENERATE check from .435 B2 + the null-delta / positive_control carve-outs -- follow the same structure; do NOT weaken any existing check) + {project_root}/results/experiment_4732_adversarial_verify_exercise_evidence_guard.json (the .435 B2 exemplar)
+        - {project_root}/results/experiment_4726_online_action_learning_driver_valid_test.json (the .435 A1 -- arms_non_degenerate=True + 0.04==0.04==0.04: the carve-out MUST downgrade this to WARN) + {project_root}/results/experiment_4727_active_probe_disambiguation.json (the .435 A2 -- probe_actions_taken=0: the guard MUST flag this declared-but-unrun)
+        - {project_root}/tests/python/test_adversarial_verify_control_treatment_null.py + {project_root}/tests/python/test_adversarial_verify_lever_exercise_evidence.py (the test patterns to follow)
 
-      TASK: add the LEVER_EXERCISE_EVIDENCE_DEGENERATE check to scripts/adversarial_verify.py (WARN by default,
-      CRITICAL when it also flips a gate / headlines a solve), with a false-positive carve-out for nulls that emit
-      non-degenerate exercise evidence (incl. an explicit arms_non_degenerate=True). Add a pinning test
-      (tests/python/test_adversarial_verify_lever_exercise_evidence.py) with: the three dead-code exemplars
-      (Go-Explore (1,64,64); exp4710 CNN dict-candidate; .434 A4 byte-identical arms) -> flagged; a trustworthy
-      non-degenerate null -> NOT flagged. Do NOT weaken any existing check.
+      TASK: add the two carve-outs to scripts/adversarial_verify.py. Add a pinning test
+      (tests/python/test_adversarial_verify_carveout_hardening.py) with: exp4726 (non-degenerate + null markers ->
+      downgraded to WARN, NOT quarantined); exp4727 (declared probe + 0 probe_actions -> flagged
+      LEVER_EXERCISE_EVIDENCE_DEGENERATE); a genuine non-degenerate null with positive exercise evidence -> NOT
+      flagged. Do NOT weaken any existing check; confirm the existing adversarial_verify suite stays green.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: adversarial_verify.py importable; the exemplar artifacts present. Missing -> blocked_<resource>, EXIT.
-        1. Add the LEVER_EXERCISE_EVIDENCE_DEGENERATE check + the false-positive carve-out (incl. arms_non_degenerate).
-        2. Add the pinning test (three dead-code exemplars flagged; trustworthy null not flagged). Run `.venv/bin/python -m pytest tests/python/test_adversarial_verify_lever_exercise_evidence.py -q --no-cov` -> green.
+        0. PRECONDITIONS: adversarial_verify.py importable; exp4726 + exp4727 artifacts present. Missing -> blocked_<resource>, EXIT.
+        1. Add the TAUTOLOGY null-delta carve-out (downgrade CRITICAL->WARN when arms_non_degenerate + markers) + the LEVER_EXERCISE_EVIDENCE declared-but-unrun extension.
+        2. Add the pinning test (exp4726 downgraded; exp4727 flagged; a positive-exercise null not flagged). Run `.venv/bin/python -m pytest tests/python/test_adversarial_verify_carveout_hardening.py -q --no-cov` -> green.
         3. Confirm the existing adversarial_verify test suite stays green (no regression / no weakening).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: lever_exercise_evidence_guard_shipped_pinned."
+          principle: "terminal prefix; success: adversarial_verify_carveout_hardening_shipped_pinned."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor)."
-        check_added:
-          principle: "LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the new guard name; mechanizes the operator's manual silent-dead-code catch."
-        dead_code_exemplars_flagged:
-          principle: "the three dead-code nulls (Go-Explore (1,64,64); exp4710 CNN dict-candidate; .434 A4 byte-identical arms) are flagged in retrospect -- the guard works."
-        trustworthy_null_not_flagged:
-          principle: "a genuine non-degenerate null is NOT flagged -- the false-positive carve-out works (a real null must survive)."
+        tautology_carveout_added:
+          principle: "the non-degenerate-zero-lift carve-out -- mechanizes the fix so an honest generation null (the .436 A1/A2 shape) is not quarantined like .435 A1."
+        exercise_evidence_extension_added:
+          principle: "the declared-but-unrun extension (probe_actions_taken==0 etc.) -- catches the .435 A2-class no-op the existing guard missed."
+        a1_exemplar_downgraded_to_warn:
+          principle: "exp4726 (non-degenerate + null markers) downgrades CRITICAL->WARN -- the honest-null-not-quarantined fix works."
+        a2_exemplar_flagged:
+          principle: "exp4727 (declared probe + 0 probe_actions) is flagged LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the declared-but-unrun catch works."
+        positive_exercise_null_not_flagged:
+          principle: "a genuine null with positive exercise evidence is NOT flagged -- the false-positive carve-out works (a real null must survive)."
         existing_suite_green:
           principle: "the existing adversarial_verify tests stay green -- no existing check weakened (the never-weaken-the-linter rule)."
         pinning_test_path:
-          principle: "tests/python/test_adversarial_verify_lever_exercise_evidence.py -- the standing pin."
+          principle: "tests/python/test_adversarial_verify_carveout_hardening.py -- the standing pin."
         verifier_is_oracle:
           principle: "false -- a linter check invokes no oracle."
         random_seed:
@@ -960,35 +879,105 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (adversarial_verify importable, exemplars present); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4732_adversarial_verify_exercise_evidence_guard.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4743_adversarial_verify_carveout_hardening.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4733-c
-    milestone: 2026.06.435
-    title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty story; CARRIED FORWARD -- SKIPPED in .434) --
-      KV260 SSH-reachability precondition + (if reachable) on-board Ising latency transcript toward terminal state.
-      NEVER host SD-card device nodes. Per north-star §3 (KV260 is THE sovereignty story; drive to terminal then
-      freeze) + Hardware-Task Continuity. If unreachable, honest blocked_kv260_ssh_unreachable (a
-      documentation-only continuity record, NOT a fabrication).'
+  - id: exp4744-b2
+    milestone: 2026.06.436
+    title: 'PHASE B2 (INFRA reserved slot 2; DEADLINE-CRITICAL) -- SUBMISSION-PACKAGE READINESS VALIDATION. With 5
+      days to the 2026-06-30 ARC Prize Milestone #1 deadline, validate that the Kaggle submission package builds +
+      runs end-to-end with the FROZEN generator (Qwen3.5-9B-MTP on the iGPU + the CUDA-12.8 llama-server binary,
+      NOT a wheel) and that the agent entrypoint (make_carnot_agent -> E3AgentPolicy) imports + runs a smoke
+      episode under the 16GB / 600-RPM / 12h constraints. NON-FABRICATED: if a dependency is missing, emit honest
+      blocked_<resource>. Output a submission-readiness checklist (operator submits -- Operator-Only External
+      Publication). NO solve claims.'
+    priority: high
+    track: infra
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4744_submission_package_readiness.json
+    operator_override: '2026-06-19 operator directive (ARC submission sprint, standing) + the 2026-06-30 deadline:
+      submission-package readiness validation is deadline-critical infra -- false-positive scope-match vs prior
+      packaging/readiness tasks; it confirms the submittable package builds with the frozen generator before the
+      operator submits (the operator submits, never the agent -- Operator-Only External Publication). Routes to
+      codex (ARC sprint).'
+    prompt: |
+      CONTEXT ({date}, ARC sprint INFRA -- deadline-critical, 5 days to 2026-06-30). The submission package must be
+      ready for the operator to submit. This task VALIDATES (does not submit -- Operator-Only External Publication)
+      that the Kaggle package builds + runs end-to-end with the FROZEN stack: generator = Qwen3.5-9B-MTP on the
+      iGPU (NEVER the 3090s; [[project_arc_live_generator]]); Kaggle engine = the CUDA-12.8 llama-server BINARY
+      (NOT a wheel -- MTP is in libllama-common); agent entrypoint = make_carnot_agent -> E3AgentPolicy. Under the
+      ~16GB VRAM / 600-RPM / 12h-runtime Kaggle constraints.
+
+      EXISTING CODE TO READ FIRST:
+        - {project_root}/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md (the packaging spec) + {project_root}/python/carnot/agentic/arc_competition_agent.py (make_carnot_agent + E3AgentPolicy -- the entrypoint)
+        - {project_root}/results/experiment_4744* IF a prior packaging artifact exists (do NOT duplicate; extend) + {project_root}/python/carnot/experiment_4605_live_integration_scored_agent.py (the SUBMITTED_AGENT_CONFIG)
+        - {project_root}/tests/python/test_arc_submitted_agent_parity.py (the agent that would ship)
+
+      TASK: validate the submission package end-to-end: (1) the agent entrypoint imports + constructs; (2) the
+      frozen generator config (Qwen3.5-9B-MTP, MTP + q8 KV + n_predict>=2048 + /no_think, FREE port + /props-verify)
+      is the one wired into SUBMITTED_AGENT_CONFIG; (3) a SMOKE episode runs offline under the action/RPM budget;
+      (4) the package manifest (model files, llama-server binary path, entrypoint) is complete. Output a
+      submission-readiness checklist with per-item pass/blocked. NON-FABRICATED: missing dependency -> honest
+      blocked_<resource> + the checklist item marked blocked. NO solve claims.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: arc_competition_agent importable; offline arcade importable. Missing -> blocked_<resource>, EXIT.
+        1. Validate the entrypoint (make_carnot_agent constructs) + the frozen generator config wired into SUBMITTED_AGENT_CONFIG + the package manifest completeness.
+        2. Run a SMOKE episode offline under the budget; confirm parity (test_arc_submitted_agent_parity.py green).
+        3. WRITE the submission-readiness checklist (per-item pass/blocked). Operator submits -- this task never submits.
+
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        honest_verdict:
+          principle: "terminal prefix; success: submission_package_ready OR complete: submission_package_blocked_<resource>."
+        inference_substrate:
+          principle: "aggregation_from_upstream_artifacts -- package validation + an offline smoke, no headline live-model load (100us/1s floor)."
+        submission_package_ready:
+          principle: "True if the package is ready for the OPERATOR to submit; the task itself never submits (Operator-Only External Publication)."
+        readiness_checklist:
+          principle: "per-item pass/blocked (entrypoint imports, frozen generator wired, manifest complete, smoke episode ran, parity green) -- the operator's pre-submission checklist."
+        frozen_generator_confirmed:
+          principle: "the generator wired into SUBMITTED_AGENT_CONFIG is Qwen3.5-9B-MTP (NEVER gemma-8919, NEVER the 3090s) -- the frozen-stack guard."
+        parity_test_green:
+          principle: "HARD gate -- the validated agent is byte-for-byte the SUBMITTED_AGENT_CONFIG."
+        verifier_is_oracle:
+          principle: "false -- a packaging validation invokes no oracle."
+        random_seed:
+          principle: "determinism precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "content-addressed hash of the validated package manifest."
+        preconditions_checked:
+          principle: "records resources verified (agent importable, offline arcade); pre-empts missing-resource fabrication."
+
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4744_submission_package_readiness.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4745-c
+    milestone: 2026.06.436
+    title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty story) -- KV260 SSH-reachability precondition +
+      (if reachable) on-board Ising latency transcript toward terminal state. NEVER host SD-card device nodes. Per
+      north-star §3 (KV260 is THE sovereignty story; drive to terminal then freeze) + Hardware-Task Continuity. If
+      unreachable, honest blocked_kv260_ssh_unreachable (a documentation-only continuity record, NOT a fabrication).'
     priority: medium
     track: hardware
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4733_kv260_continuity.json
+    deliverable: results/experiment_4745_kv260_continuity.json
     operator_override: '2026-05-18 operator directive (standing, Hardware-Task Continuity) + north-star §3 (KV260
       until terminal): the per-board KV260 continuity task is mandated forward work -- false-positive scope-match
       vs every prior KV260 task; it is the next concrete step toward the board-latency terminal state, not a doomed
       rerun. SSH-reachability precondition (NEVER host SD-card device nodes, per the KV260 SSH-Not-SD-Card
-      Discipline). SKIPPED in .434 by a poison pre-test -- carried forward. Routes to codex (ARC sprint).'
+      Discipline). Routes to codex (ARC sprint).'
     prompt: |
-      CONTEXT ({date}, ARC sprint HARDWARE continuity; CARRIED FORWARD from .434 where a poison pre-test SKIPPED
-      it). Per CLAUDE.md Hardware-Task Continuity + north-star §3, the KV260 is THE sovereignty story and must be
-      driven to its terminal state (board-level latency transcript in a non-fabricated artifact +
-      kv260_synthesis_succeeded) then frozen. This task is the next concrete step: confirm SSH-reachability and, if
-      reachable, capture an on-board Ising latency transcript. The other boards (GateMate, PolarFire) are
-      opportunistic this milestone.
+      CONTEXT ({date}, ARC sprint HARDWARE continuity). Per CLAUDE.md Hardware-Task Continuity + north-star §3, the
+      KV260 is THE sovereignty story and must be driven to its terminal state (board-level latency transcript in a
+      non-fabricated artifact + kv260_synthesis_succeeded) then frozen. This task is the next concrete step:
+      confirm SSH-reachability and, if reachable, capture an on-board Ising latency transcript. The other boards
+      (GateMate, PolarFire) are opportunistic this milestone.
 
       CRITICAL DISCIPLINE (CLAUDE.md KV260 SSH-Not-SD-Card): the precondition is SSH-reachability of the BOARD,
       NEVER host SD-card presence. Do NOT use a host SD-card device listing (that checks the HOST's SD slot --
@@ -997,7 +986,7 @@ tasks:
 
       EXISTING CODE TO READ FIRST:
         - {project_root}/ops/hardware-bringup-prep.md (KV260 bring-up state) + {project_root}/ops/north-star.md §3 (KV260 terminal-state definition)
-        - {project_root}/results/experiment_4708_hardware_continuity.json (the .433 hardware task -- the prior KV260 state to continue from)
+        - {project_root}/results/experiment_4733_kv260_continuity.json (the .435 hardware task -- the prior KV260 state to continue from)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
@@ -1026,61 +1015,64 @@ tasks:
         reproducibility_checksum:
           principle: "content-addressed hash of the bitstream + transcript inputs."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4733_kv260_continuity.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4745_kv260_continuity.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4734-d
-    milestone: 2026.06.435
-    title: 'PHASE D (SOTA-INGESTION -- the .436 fallback) -- map the NEXT ARC frontier beyond active-probe (now
-      .435 A2): the EPISTEMIC-OBJECT-MODEL MCTS PROBE PLANNER (uncertainty-aware MCTS over object-centric
-      world-model rollouts, arXiv:2210.13455 + arXiv:2601.06604) + the FACTORED INTERACTION/CAUSAL PROBE BANK
-      (typed precondition/effect factors confirmed by causal probes, arXiv:2511.02225 + arXiv:2511.14262),
-      honestly bounded by the object-world-model breakage falsifier (arXiv:2511.06136). Use low-concurrency
-      WebSearch/WebFetch (NOT /deep-research). Real arXiv IDs/URLs for every claim. Output: a SOTA->experiment
-      mapping note + flagged_for_v436.'
+  - id: exp4746-d
+    milestone: 2026.06.436
+    title: 'PHASE D (SOTA-INGESTION -- the .437 frontier) -- map the NEXT ARC frontier beyond .436 guidance-class
+      generation: the EPISTEMIC-OBJECT-MODEL MCTS PROBE PLANNER (uncertainty-aware MCTS over object-centric
+      world-model rollouts, arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418), the FACTORED
+      INTERACTION/CAUSAL PROBE BANK (typed precondition/effect factors confirmed by causal probes, arXiv:2511.02225
+      + arXiv:2511.14262; guardrail arXiv:2511.06136), and the within-game SIMILARITY-KEYED PARTIAL-TRAJECTORY
+      RETRIEVAL efficiency lever (MATM, arXiv:2606.19911 -- an action-efficiency candidate, NOT a level-bank). Use
+      low-concurrency WebSearch/WebFetch (NOT /deep-research). Real arXiv IDs/URLs for every claim. Output: a
+      SOTA->experiment mapping note + flagged_for_v437.'
     priority: medium
     track: sota-ingestion
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json
+    deliverable: results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json
     operator_override: '2026-06-11 operator directive (standing, SOTA-Ingestion Cycle Discipline): the
       per-milestone SOTA-ingestion task is mandated forward work for the bleeding-edge ARC track -- false-positive
-      scope-match vs exp4722 (the .434 ingestion); it maps a DIFFERENT frontier each milestone (here the epistemic
-      MCTS planner + factored causal probe bank, the next step after .435 A2 active-probe). Low-concurrency
-      WebSearch/WebFetch, NOT /deep-research. Routes to codex.'
+      scope-match vs exp4734/exp4722 (prior ingestions); it maps a DIFFERENT frontier each milestone (here the
+      .437 frontier: epistemic-MCTS + causal-probe + MATM efficiency, the step after .436 guidance-class
+      generation). Low-concurrency WebSearch/WebFetch, NOT /deep-research. Routes to codex.'
     prompt: |
-      CONTEXT ({date}, ARC sprint SOTA-INGESTION -- CLAUDE.md SOTA-Ingestion Cycle Discipline). The .434 ingestion
-      (exp4722) flagged three v435 methods; .435 A2 builds the first (hypothesis-posterior active probe). This task
-      maps the NEXT frontier for .436: the two methods .435 did NOT build -- the EPISTEMIC-OBJECT-MODEL MCTS PROBE
-      PLANNER (uncertainty-aware MCTS over arc_executable_world_model rollouts, returning either a solve action or
-      an information-gain probe; arXiv:2210.13455 + arXiv:2601.06604) and the FACTORED INTERACTION/CAUSAL PROBE
-      BANK (typed precondition/effect factors confirmed/refuted by causal probes; arXiv:2511.02225 +
-      arXiv:2511.14262), honestly bounded by the object-world-model drift/breakage falsifier (arXiv:2511.06136).
-      Use the RELIABLE low-concurrency channel (WebSearch/WebFetch of the top 5-8 papers); do NOT invoke
-      /deep-research (it rate-limits + burns tokens in the autonomous loop). Real arXiv IDs/URLs for every method
-      claim (no fabrication -- adversarial_verify discipline).
+      CONTEXT ({date}, ARC sprint SOTA-INGESTION -- CLAUDE.md SOTA-Ingestion Cycle Discipline). The .435 ingestion
+      (exp4734) flagged epistemic-MCTS + causal-probe for .436; .436 instead valid-tested the guidance-class
+      generation levers (B1 reopens, the more-grounded headline). This task maps the .437 frontier: (1) the
+      EPISTEMIC-OBJECT-MODEL MCTS PROBE PLANNER (uncertainty-aware MCTS over arc_executable_world_model rollouts
+      returning either a solve action or an information-gain probe; arXiv:2210.13455 + arXiv:2601.06604 +
+      arXiv:2606.14418); (2) the FACTORED INTERACTION/CAUSAL PROBE BANK (typed precondition/effect factors
+      confirmed/refuted by causal probes; arXiv:2511.02225 + arXiv:2511.14262), honestly bounded by the
+      object-world-model breakage falsifier (arXiv:2511.06136); (3) the within-game SIMILARITY-KEYED
+      PARTIAL-TRAJECTORY RETRIEVAL efficiency lever (MATM, arXiv:2606.19911 -- key StepwiseExplorer.adj by a coarse
+      similarity descriptor, an action-EFFICIENCY candidate, NOT a level-bank). Use the RELIABLE low-concurrency
+      channel (WebSearch/WebFetch of the top 5-8 papers); do NOT invoke /deep-research. Real arXiv IDs/URLs for
+      every claim (no fabrication -- adversarial_verify discipline).
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4722_sota_ingestion_active_probe_world_model.json (the .434 ingestion -- the schema to follow + the flagged_for_v435 methods; do NOT duplicate the hypothesis-posterior one .435 A2 built, map the NEXT two) + {project_root}/research-references.md (the .435 planner pre-sweep -- the epistemic-MCTS + causal-probe arXiv IDs)
+        - {project_root}/results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json (the .435 ingestion -- the schema to follow + the flagged_for_v436 methods .436 did NOT build) + {project_root}/research-references.md (the .436 planner pre-sweep + the epistemic-MCTS / causal-probe / MATM arXiv IDs)
         - {project_root}/python/carnot/agentic/arc_competition_agent.py + {project_root}/python/carnot/agentic/arc_executable_world_model.py (the current stack the methods must map onto)
 
-      TASK: read the already-discovered epistemic-MCTS / causal-probe corpus + run a FOCUSED fresh pass (WebSearch +
-      WebFetch the top 5-8 papers). Synthesize a SOTA->experiment mapping: the strongest 3-5 methods, what each
-      would take to implement over the CURRENT stack (E3AgentPolicy + arc_executable_world_model), and where each
-      FAILS (the honest bound, e.g. arXiv:2511.06136). Write docs/research-notes/epistemic-mcts-causal-probe-sota-
-      ingestion-{date}.md + flag the strongest method(s) as flagged_for_v436 candidates. NO solve claims.
+      TASK: read the already-discovered corpus + run a FOCUSED fresh pass (WebSearch + WebFetch the top 5-8 papers).
+      Synthesize a SOTA->experiment mapping: the strongest 3-5 methods, what each would take to implement over the
+      CURRENT stack (E3AgentPolicy + arc_executable_world_model), and where each FAILS (the honest bound, e.g.
+      arXiv:2511.06136). Write docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-{date}.md + flag the
+      strongest method(s) as flagged_for_v437 candidates. NO solve claims.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: network reachable (`curl -sf -o /dev/null https://arxiv.org`); else blocked_network, EXIT.
-        1. Read the .434 ingestion + the research-references epistemic-MCTS/causal IDs; run a focused WebSearch + WebFetch the top 5-8 papers (real arXiv IDs).
+        1. Read the .435 ingestion + the research-references IDs; run a focused WebSearch + WebFetch the top 5-8 papers (real arXiv IDs).
         2. Synthesize the SOTA->experiment mapping (3-5 methods, implement-cost, fails-when) onto the current stack.
-        3. Write the note + the artifact with flagged_for_v436. Every method cites a real arXiv ID/URL.
+        3. Write the note + the artifact with flagged_for_v437. Every method cites a real arXiv ID/URL.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_mapped."
+          principle: "terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor)."
         methods_mapped:
@@ -1088,7 +1080,7 @@ tasks:
         citations:
           principle: "real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline."
         flagged_for_next_roadmap:
-          principle: "the strongest method(s) flagged_for_v436 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments."
+          principle: "the strongest method(s) flagged_for_v437 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments."
         note_path:
           principle: "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-{date}.md -- the human-readable per-track synthesis."
         verifier_is_oracle:
@@ -1100,74 +1092,81 @@ tasks:
         preconditions_checked:
           principle: "records the network-reachability check; pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4735-e
-    milestone: 2026.06.435
-    title: 'PHASE E (CAPSTONE .435) -- aggregate the scorecard + the HEADLINE DECISION: did .435 cross the
-      offline->live bridge that ten milestones could not? Did A1 (leader online driver, FIRST valid test) prove
-      NON-DEGENERATE arms AND beat frozen by >=+0.05 held-out first-win OR deepen to L2 offline-reproduced -- or
-      did it confirm the .433/.434 nulls tested dead code (online_driver_arms_degenerate)? Did A2 (active probing)
-      reach a NEW generic level with the NO-PROBE ablation FAILING? Did B1 classify the .434 A4 TAUTOLOGY as a
-      silent-bug that must REOPEN? Did A3 bank +1 (63->64)? A4 held-out first-win vs 0.04? Skip flagged_adversarial
-      / control-failed / ablation-missing artifacts. Confirm verifier_is_oracle:false on every value claim +
-      solve_provenance on every solve. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
+  - id: exp4747-e
+    milestone: 2026.06.436
+    title: 'PHASE E (CAPSTONE .436) -- aggregate the scorecard + the HEADLINE DECISION: did .436 cross the
+      offline->live bridge that eleven milestones could not? Did A1 (goal-energy candidate generation, the
+      operator''s guidance-class redirect, FIRST valid test) prove NON-DEGENERATE arms AND beat baseline by
+      >=+0.05 held-out first-win OR deepen to L2 -- or did it confirm goal_energy_generation_arms_degenerate (a
+      harness bug) or a real non-degenerate null? Did A2 (energy-fitness QD, FIRST valid test) generate the winner
+      where naive search misses it? Did A3 bank +1 (64->65)? Did B1 stop the honest non-degenerate-zero-lift null
+      from being quarantined? Is the submission package ready (B2)? Skip flagged_adversarial / control-failed /
+      ablation-missing artifacts. Confirm verifier_is_oracle:false on every value claim + solve_provenance on
+      every solve. Re-affirm G1-G4 paper_ready (FoVer 0.9131 frozen). Submission operator-only.'
     priority: high
     track: capstone
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4735_capstone_v435.json
+    deliverable: results/experiment_4747_capstone_v436.json
     operator_override: '2026-06-19 operator directive (standing, ARC sprint): the per-milestone capstone is the
       routine scorecard-aggregation lineage -- false-positive scope-match vs every prior capstone
-      (exp4723/exp4710...); it aggregates a DIFFERENT milestone each time and emits no new solve claims. Routes to
+      (exp4735/exp4723...); it aggregates a DIFFERENT milestone each time and emits no new solve claims. Routes to
       codex (capstones default codex).'
     prompt: |
-      CONTEXT ({date}, ARC sprint CAPSTONE .435). Aggregate the .435 scorecard and adjudicate the HEADLINE
-      DECISION. .434 proved STATIC selection of the frozen pool is EXHAUSTED (A2 not-separable); .435 pivoted to
-      ACTING (A1 leader online driver first valid test; A2 active probing) + carried forward the operator-mandated
-      audit (B1) + guard (B2). This capstone reads every upstream artifact, SKIPS any carrying flagged_adversarial
-      / control-failed / ablation-missing, confirms verifier_is_oracle:false on every value claim +
-      solve_provenance on every solve, and re-affirms G1-G4.
+      CONTEXT ({date}, ARC sprint CAPSTONE .436). Aggregate the .436 scorecard and adjudicate the HEADLINE
+      DECISION. .435 proved the leader online driver genuinely nulls (validly tested) AND that the guidance-class
+      GENERATION levers were tested on dead code (B1); .436 VALID-TESTED the two strongest (A1 goal-energy
+      candidate generation, A2 energy-fitness QD) with the non-degeneracy gate inline + the null-delta markers, and
+      fixed the carve-out so an honest non-degenerate-zero-lift null is not quarantined (B1 INFRA). This capstone
+      reads every upstream artifact, SKIPS any carrying flagged_adversarial / control-failed / ablation-missing,
+      confirms verifier_is_oracle:false on every value claim + solve_provenance on every solve, and re-affirms G1-G4.
 
       READING-RESULTS DISCIPLINE (MANDATORY): read every upstream artifact via `.venv/bin/python
       scripts/summarize_artifact.py <id>` -- never eyeball raw JSON. A FAILED gate / a flagged artifact / a
       degenerate null overrides a celebratory verdict.
 
       EXISTING CODE TO READ FIRST:
-        - {project_root}/results/experiment_4725_*.json (B1 silent-bug audit), 4726_*.json (A1 online driver), 4727_*.json (A2 active probe), 4728_*.json (A3 +1), 4729_*.json (A4 readiness), 4730_*.json (A5 persist), 4731_*.json (A6 integration), 4732_*.json (B2 guard), 4733_*.json (C KV260), 4734_*.json (D ingestion)
-        - {project_root}/scripts/summarize_artifact.py (the mandated reading tool) + {project_root}/scripts/publication_gate.py (G1-G4 --json) + {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels) + {project_root}/results/experiment_4723_capstone_v434.json (the .434 scorecard to compare)
+        - {project_root}/results/experiment_4737_*.json (A1 goal-energy), 4738_*.json (A2 energy-QD), 4739_*.json (A3 +1), 4740_*.json (A4 readiness), 4741_*.json (A5 persist), 4742_*.json (A6 integration), 4743_*.json (B1 carve-out), 4744_*.json (B2 submission), 4745_*.json (C KV260), 4746_*.json (D ingestion)
+        - {project_root}/scripts/summarize_artifact.py (the mandated reading tool) + {project_root}/scripts/publication_gate.py (G1-G4 --json) + {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels) + {project_root}/results/experiment_4735_capstone_v435.json (the .435 scorecard to compare)
 
-      TASK: write the .435 capstone scorecard + the HEADLINE DECISION. For each ARC lever report the verdict +
-      whether it crossed/banked/surfaced. Compute reproducible_total_levels_delta. Emit the G1-G4 publication_gate
-      (paper_ready, FoVer 0.9131 frozen, never substituted). The HEADLINE DECISION must answer: did A1 prove
-      non-degenerate arms AND beat frozen by +0.05 / deepen to L2 (or confirm dead-code)? did A2 reach a new
-      generic level with the no-probe ablation failing? did B1 find the .434 A4 must reopen? did A3 bank +1
-      (63->64)? Skip flagged/control-failed artifacts. NO new solve claims of its own.
+      TASK: write the .436 capstone scorecard + the HEADLINE DECISION. For each ARC lever report the verdict +
+      whether it crossed/banked/generated. Compute reproducible_total_levels_delta. Emit the G1-G4
+      publication_gate (paper_ready, FoVer 0.9131 frozen, never substituted). The HEADLINE DECISION must answer:
+      did A1 prove non-degenerate arms AND beat baseline by +0.05 / deepen to L2 (or confirm a harness bug or a
+      real null)? did A2 generate the winner where naive search misses it? did A3 bank +1 (64->65)? did B1 stop
+      the honest non-degenerate-zero-lift null from being quarantined? is the submission package ready (B2)? Skip
+      flagged/control-failed artifacts. NO new solve claims of its own.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the .435 upstream artifacts present; summarize_artifact.py + publication_gate.py runnable. Missing -> blocked_<resource>, EXIT.
+        0. PRECONDITIONS: the .436 upstream artifacts present; summarize_artifact.py + publication_gate.py runnable. Missing -> blocked_<resource>, EXIT.
         1. Summarize every upstream artifact via summarize_artifact.py; SKIP any flagged_adversarial / control-failed / ablation-missing.
-        2. Aggregate the scorecard (per-lever verdict + crossed/banked/surfaced), compute reproducible_total_levels_delta, run publication_gate.py --json for G1-G4.
-        3. Write the capstone with the HEADLINE DECISION (bridge_crossed_for_solve, capability delta, B1's silent-bug-reopen list, A1's arms_non_degenerate verdict) + the .436 fallback (D's flagged_for_v436 + B1's reopen list + the strongest open lever).
+        2. Aggregate the scorecard (per-lever verdict + crossed/banked/generated), compute reproducible_total_levels_delta, run publication_gate.py --json for G1-G4.
+        3. Write the capstone with the HEADLINE DECISION (bridge_crossed_for_solve, capability delta, A1/A2 generation verdicts, B1 carve-out fix confirmed, submission readiness) + the .437 fallback (D's flagged_for_v437 + the deferred reopens P1/P4/A2-active-probe + the strongest open lever).
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         honest_verdict:
-          principle: "terminal prefix; complete: <capability_grew_63_to_64 | bridge_crossed_for_solve_<game>_L<n>> -- the honest one-line milestone outcome."
+          principle: "terminal prefix; complete: <capability_grew_64_to_65 | bridge_crossed_for_solve_<game>_L<n>> -- the honest one-line milestone outcome."
         inference_substrate:
           principle: "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
         bridge_crossed_for_solve:
-          principle: "the HEADLINE DECISION -- True only if a GENERIC agent banked a NEW level via self-discovery (A1 online-driver L2 | A2 active-probe new level), offline-reproduced, ablation-controlled; False if only capability/depth grew."
-        a1_online_driver_result:
-          principle: "did A1 prove arms_non_degenerate AND beat frozen by >=+0.05 / deepen to L2 -- or confirm online_driver_arms_degenerate (the .433/.434 nulls tested dead code)?"
-        a2_active_probe_new_level:
-          principle: "did A2 reach a NEW generic level via active probing with the no-probe ablation FAILING? -- the verifier earning its place as a probe-router."
-        b1_silent_bug_reopen_list:
-          principle: "the .428-.434 nulls B1 classified silent_bug_must_reopen (incl. the .434 A4 verdict) -- closed levers that must reopen (trust correction)."
+          principle: "the HEADLINE DECISION -- True only if a GENERIC agent banked a NEW level via self-discovery (A1 goal-energy L2 | A2 energy-QD L2), offline-reproduced, control-passed; False if only capability/depth grew."
+        a1_goal_energy_result:
+          principle: "did A1 prove arms_non_degenerate AND beat baseline by >=+0.05 / deepen to L2 -- or confirm goal_energy_generation_arms_degenerate (a harness bug) or a real non-degenerate null?"
+        a2_energy_qd_result:
+          principle: "did A2 generate the winner (a NEW level via energy-fitness QD where naive search misses it) -- or confirm a harness bug / a real null?"
+        a3_banked_level:
+          principle: "did A3 bank +1 (64->65)? the Level-Up Guarantee + self-play-every-milestone outcome."
+        b1_carveout_fix_confirmed:
+          principle: "did B1 (INFRA) stop the honest non-degenerate-zero-lift null from being quarantined (the .435-A1 escape) + flag the declared-but-unrun mechanism (the .435-A2 escape)?"
+        submission_package_ready:
+          principle: "B2's submission-readiness (5 days to deadline) -- is the frozen-stack package ready for the operator to submit?"
         reproducible_total_levels_delta:
-          principle: "the registry header delta this milestone (63->64 if A1/A2/A3 banked) -- the monotonic north-star metric."
+          principle: "the registry header delta this milestone (64->65 if A1/A2/A3 banked) -- the monotonic north-star metric."
         publication_gate:
           principle: "the G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py --json; FoVer 0.9131 frozen, never substituted."
         verifier_is_oracle_confirmed_false:
@@ -1175,7 +1174,7 @@ tasks:
         skipped_artifacts:
           principle: "the artifacts skipped for flagged_adversarial / control-failed / ablation-missing -- the fabrication-gate discipline (never aggregate a flagged number)."
         next_milestone_fallback:
-          principle: "the .436 direction (D's flagged_for_v436 + B1's reopen list + the strongest open lever) -- the convergence hand-off."
+          principle: "the .437 direction (D's flagged_for_v437 + the deferred reopens P1 Go-Explore / P4 subgoal / A2 active-probe + the strongest open lever) -- the convergence hand-off."
         random_seed:
           principle: "determinism precondition for reproducibility."
         reproducibility_checksum:
@@ -1183,5 +1182,5 @@ tasks:
         preconditions_checked:
           principle: "records resources verified (upstream artifacts present, summarize/publication tools runnable); pre-empts missing-resource fabrication."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4735_capstone_v435.py
+      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4747_capstone_v436.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
