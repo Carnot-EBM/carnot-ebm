@@ -379,17 +379,19 @@ def _load_prior(prior_path: str) -> Any:
 def gated_engine_from_transitions(game: str, transitions: list, *,
                                   prior_path: str = "models/arc_dynamics_prior.pt",
                                   trust_threshold: float = 0.5, holdout_frac: float = 0.25,
-                                  dynamics_backend: str = "cnn", trust_metric: str = "exact"):
+                                  dynamics_backend: str = "cnn", trust_metric: str = "cell_recall"):
     """Build a per-game world-model engine LEARNED from the played transitions, WARM-STARTED from the
     cross-game prior (models/arc_dynamics_prior.pt, the one that transfers 5/5), and GATED by held-out
     trust. Returns ``(engine, is_level_complete, diag)``.
 
     engine/is_level_complete are None UNLESS the learned model reproduces a held-out split of the played
-    transitions at >= trust_threshold exact-grid accuracy -- the SAME bar the live agent's existing
-    WorldModelVerifier gate uses, so a weak learned model can never displace the fallback path. This is the
-    execution-grounded, zero-LLM alternative to e3.load_engine: the conductor's live agent tries it FIRST
-    and falls through to the LLM induction if the gate fails. diag carries the prior-loaded flag + the
-    held-out accuracy for telemetry. (Oracle-distinct learned dynamics; verifier_is_oracle False.)"""
+    transitions at >= trust_threshold changed-cell recall by default. REQ-ARC-FCP-4715 flips this cheap
+    floor from exact-grid accuracy to ``cell_recall`` because the online CNN can be useful at changed-cell
+    granularity even when exact full-grid accuracy is near zero. Explicit ``trust_metric="exact"`` callers
+    still get the old bar. This is the execution-grounded, zero-LLM alternative to e3.load_engine: the
+    conductor's live agent tries it FIRST and falls through to the LLM induction if the gate fails. diag
+    carries the prior-loaded flag + both held-out metrics for telemetry. (Oracle-distinct learned dynamics;
+    verifier_is_oracle False.)"""
     diag: dict = {"backend": dynamics_backend, "n_transitions": len(transitions)}
     if len(transitions) < 8:
         diag["skip"] = "too_few_transitions"
