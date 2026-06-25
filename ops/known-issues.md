@@ -4,6 +4,85 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-06-25 (MANDATORY-NEXT-MILESTONE, operator-directed: "yes" pre-stage): PERCEPTION-GROUNDED STRUCTURAL-ALIGNMENT L2 GOAL — the next multi-level (L1->L2) deepening step
+
+**Origin:** the 2026-06-25 outer-loop goal-free deepening probe (`scripts/experiments/proto_goalfree_deepen.py`,
+`results/proto_goalfree_deepen.json`, note `docs/research-notes/goalfree-multilevel-deepening-probe-2026-06-25.md`).
+Two MULTI-LEVEL levers are now DECISIVELY nulled — build this PERCEPTION-grounded goal instead; do NOT
+re-propose either nulled lever.
+
+**What is nulled (do NOT re-propose):**
+1. **Single-exemplar goal-fix (exp4664, `.430)** — `complete: l2_goal_induction_no_deepening_residual_
+   single_exemplar_goal_insufficient`; `goal_predicate_satisfiable=False`. A flat L1-completion exemplar grid
+   CANNOT express an alignment goal, so the induced L2 `is_level_complete` stays degenerate.
+2. **Goal-free Go-Explore deepening (proto_goalfree_deepen, 2026-06-25)** — VALID null: lp85 reaches L1 3/3
+   reproducibly but L2 0/3, with the Go-Explore archive GENUINELY exercised (232 prefix injections; positive
+   control + lever-exercised both pass; adversarial_verify clean). Goal-free systematic exploration cannot
+   solve a goal-DIRECTED L2 by construction. **This de-justifies the expensive CNN-as-DRIVER build for lp85.**
+
+**The diagnosis (why those nulled + why this is different).** lp85's L2 win condition is
+`marker_pair_shape_alignment` (registry): "align each moveable piece with its goal sprite", click-only. It is
+goal-DIRECTED and sparse-reward (level-up only when ALL pieces align) — so (a) goal-free exploration can't
+stumble onto it, and (b) a flat exemplar grid can't express it. BUT the goal is OBSERVABLE in a single live
+frame (the goal sprites are visible). So the goal must be a PERCEPTION-GROUNDED STRUCTURAL predicate over
+detected objects, not an exemplar replay.
+
+**THE TASK TO BUILD.** Induce lp85's L2 `is_level_complete` as a STRUCTURAL ALIGNMENT predicate built on the
+`.433 A1 object-centric/relational perception representation (the SAME primitive the conductor is already
+building — this rides on it, it does not duplicate it):
+1. Detect the moveable pieces + their goal sprites via the object-centric perception operator (the .433 A1
+   representation). 
+2. Express `is_level_complete(grid) := every detected piece is aligned to its goal sprite` — a structural
+   predicate computed from ONE live frame (no L2-win exemplar needed). Wire it into the live
+   `level_up_reinduction` path (`arc_competition_agent.py:_induce_and_plan` -> the goal-satisfiability check
+   already shipped at `arc_llm_reinduction.py:441` will now find it SATISFIABLE on >=1 reachable grid).
+3. Plan to it (`plan_in_model`) and execute on the SCORED `E3AgentPolicy`.
+
+**Falsifiable acceptance gate.** lp85 reaches L2 (`reproduced_levels>=2`), offline-reproduced via
+`arc_solver_kit.reproduce`, stamped `solve_provenance: live_agent_self_discovery` (NOT a development_proxy
+adapter), with `goal_predicate_satisfiable=True` AND `l2_plan_reaches_goal=True` AND the goal expressed as a
+piece->sprite alignment over DETECTED objects (not a per-game hardcode). Parity green, live-path-reachable
+(`arc_orphan_solver_lint`). `retire_if_same_verdict: true` — if the perception-grounded alignment goal still
+yields `goal_predicate_satisfiable=False` / `no_reachable_plan`, document the residual (the object detector
+cannot resolve lp85's pieces/sprites, or alignment is under-determined) and retire; the next fallback is the
+multi-exemplar variant (bank >=2 L1-completion exemplars), NOT the CNN driver.
+
+**Why NOT a doomed rerun.** It is neither nulled lever: (a) NOT the single-exemplar goal-fix (that used a flat
+exemplar grid; this uses a STRUCTURAL predicate over detected objects, which is what the residual
+`single_exemplar_goal_insufficient` specifically pointed at); (b) NOT goal-free Go-Explore (that demoted the
+goal; this BUILDS a satisfiable goal). The `.430 satisfiability check + win-state plumbing already shipped — this
+adds the perception-grounded GOAL EXPRESSION that was missing.
+
+**ALSO (operator note — two silent bugs found this session):** the Go-Explore archive `_frame_grid` returned a
+(1,64,64) 3-D array so the archive was SILENTLY DEAD (fixed 2026-06-25, `arc_go_explore.py`) — the conductor's
+`.433 A2 Go-Explore null TESTED DEAD CODE and should be re-examined. Same class as the exp4710 CNN
+dict-candidate bug. Audit the `.428-`.433 generation-lever nulls for other silent representation no-ops before
+trusting them.
+
+**PRECONDITIONS (step 0):** the `.433 A1 object-centric perception operator must exist + be importable (cite
+the module/operator it ships as); else `blocked_a1_perception_operator_missing`. lp85 offline env present.
+
+**REQUIRED ARTIFACT FIELDS (principle-annotated):**
+- `goal_predicate_satisfiable: bool` — principle: "the .430 gate checks DYNAMICS only; this records the L2
+  alignment goal is True on >=1 reachable grid — the missing verification that exemplar-replay never produced."
+- `goal_expression: str` (e.g. `structural_piece_sprite_alignment_over_detected_objects`) — principle: "the
+  goal must be a STRUCTURAL predicate over DETECTED objects, not a per-game hardcode or a flat exemplar grid."
+- `l2_plan_reaches_goal: bool` + `reproduced_levels: int` + `offline_reproduced: bool` — principle: "plan_len=0
+  / no_reachable_plan was the measured failure; a reproduced L2 is the fix working; only reproduced levels count."
+- `solve_provenance: live_agent_self_discovery` — principle: "a generic-agent L2 via the perception-grounded
+  goal is self-discovery; an adapter L2 is a dev proxy that does not prove the live fix."
+- `verifier_is_oracle: false` — principle: "the alignment predicate is oracle-distinct from the env's own
+  level-up check."
+- `inference_substrate: live_llm_inference` — principle: "the reinduction path loads + runs the Qwen GGUF; 60s floor."
+- `honest_verdict` — terminal prefix; a null is `complete: l2_perception_goal_no_deepening_residual_<cause>`.
+
+**Agent routing:** `agent_type: codex` (ARC Submission Sprint default). Touches `arc_competition_agent.py` +
+`arc_llm_reinduction.py` + `arc_executable_world_model.py` + the .433 A1 perception module; if the planner
+judges it needs Claude's multi-file choreography it may set `requires_claude_verified: true`, default codex.
+Counts toward the ARC sprint majority AND the Level-Up Attempt Guarantee (its gate banks an L2).
+
+---
+
 ### 2026-06-24 (MANDATORY-NEXT-MILESTONE, operator-directed leader-gap analysis): GOAL-FREE ONLINE ACTION-LEARNING loop — the leader's loop, weighed against the multi-level wall
 
 **Origin:** operator asked to gap-analyze the leaderboard #1 (StochasticGoose ~1.21) vs our live agent
@@ -9352,6 +9431,10 @@ the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is alr
 action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
