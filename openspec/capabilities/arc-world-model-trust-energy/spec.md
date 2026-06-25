@@ -6820,6 +6820,73 @@ offline reproduced L2, or emits a complete no-lift residual with
 `null_delta_methodology_note` and `positive_control_passed` when the matched
 first-win delta is flat.
 
+### REQ-ARC-WMTE-4741: Persist .436 Primitive And Leave-One-Game Transfer
+
+Experiment 4741 SHALL persist the strongest characterized `.436` A1/A2
+generation primitive into `arc_solver_kit` and `ops/arc_solve_registry.yaml` so
+the live ARC agent can reuse it on hidden games. The preferred A2 persistence
+surface is `energy_fitness_qd_generator_operator` with registry gotcha id
+`primitive_energy_fitness_qd_generator_operator`. If Experiment 4737's
+goal-energy guidance arms are degenerate, Experiment 4741 SHALL prefer
+Experiment 4738's energy-fitness QD generator; if Experiment 4738's QD arms are
+degenerate, it SHALL prefer Experiment 4737's goal-energy candidate-generation
+guidance. When both are non-degenerate, it SHALL pick the better-characterized
+reusable primitive using artifact evidence such as novel generated candidates,
+offline-reproduced probe evidence, and measured non-degeneracy diagnostics.
+
+The persisted operator SHALL be oracle-distinct: it may generate, score, rank,
+or route cached candidate rows, but SHALL NOT call the executable win-check
+while assigning candidate fitness. New levels SHALL count only when a proposed
+solution passes `arc_solver_kit.reproduce`; transfer-only cached scoring SHALL
+set `verifier_is_oracle=false` and SHALL NOT claim a newly banked level.
+
+Experiment 4741 SHALL measure leave-one-game transfer on at least three cached
+held-out games using `verifier_ensemble_against_cached_candidates` without live
+LLM load. For every held-out game it SHALL exclude that game's rows from the
+operator's cross-game characterization, apply the persisted operator to cached
+rows, and report solve-rate, first-win, candidate-generation coverage, and
+action-efficiency deltas honestly. A transfer null is valid when recorded as a
+characterized null with a `transfer_dead_ends` note.
+
+The terminal artifact
+`results/experiment_4741_primitive_persist_transfer.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `persisted_operator`, `transfer_value_per_game`,
+`offline_reproduced_new_level`, `verifier_is_oracle`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; complete: <operator>_persisted_transfer_<characterized|null>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- scores cached held-out rows (1s floor), no live LLM load."
+- `persisted_operator`: principle "the reusable arc_solver_kit operator name + the registry entry -- the self-learning capture so the live agent reuses it on hidden games."
+- `transfer_value_per_game`: principle "per-game leave-one-game transfer deltas, reported HONESTLY; a transfer null is a valid characterized result, not a failure to hide."
+- `offline_reproduced_new_level`: principle "true only if persisting banked a strictly new offline-reproduced level (usually false for a persist task)."
+- `verifier_is_oracle`: principle "false -- the persisted operator generates/scores/routes; the reproduction gate is the oracle-distinct authority."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift."
+- `preconditions_checked`: principle "records resources verified (offline arcade, .436 artifacts present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4741-PERSIST-STRONGEST-436-PRIMITIVE
+
+Given the `.436` A1 and A2 artifacts are present, the offline arcade imports,
+and `arc-world-model-trust-energy` declares `REQ-ARC-WMTE-4741`
+When Experiment 4741 selects the primitive to persist
+Then `arc_solver_kit.primitive_operator_registry()` and
+`ops/arc_solve_registry.yaml` expose the chosen operator with `derived_from`,
+`note`, and `transfer_dead_ends`, and the artifact records the selection
+rationale without claiming verifier-oracle authority.
+
+#### SCENARIO-ARC-WMTE-4741-LEAVE-ONE-GAME-TRANSFER
+
+Given the selected `.436` primitive is persisted
+When Experiment 4741 applies it to three cached held-out games with each target
+game excluded from cross-game characterization
+Then the artifact reports per-game solve-rate, first-win, coverage, and
+action-efficiency deltas, sets `offline_reproduced_new_level` only for
+`arc_solver_kit.reproduce`-banked levels, and records a characterized
+`transfer_dead_ends` note for value-null transfer.
+
 ### REQ-ARC-WMTE-4739: Rotated ARC Level-Up Self-Play Attempt
 
 Experiment 4739 SHALL use the standing ARC loop to attempt one rotated public

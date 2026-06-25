@@ -676,6 +676,27 @@ general_gotchas:
       groups contain no same-state effective target, or when the online-warm
       ranker reorders candidates without improving solve-rate, first-win,
       coverage, or action efficiency.
+- id: primitive_energy_fitness_qd_generator_operator
+  operator: energy_fitness_qd_generator_operator
+  derived_from:
+  - results/experiment_4738_energy_fitness_qd_generation_valid_test.json
+  derived_from_games:
+  - exp4738_energy_fitness_qd_generation_valid_test
+  note: >-
+    Exp 4741 persists the .436 A2 energy-fitness QD generator after Exp 4738
+    proved the naive-search, random-mutation, and energy-QD arms were
+    non-degenerate and generated novel candidates. The reusable operator scores
+    cached candidate rows with lower-is-better oracle-distinct energy, preserves
+    MAP-Elites-style behavior descriptor coverage, keeps naive candidates
+    available, and reports solve-rate / first-win / coverage / action-efficiency
+    transfer before any solve claim. New levels still count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Exp4738/Exp4741 showed generated coverage can improve on cached held-out
+      rows while solve-rate, first-win, and action-efficiency remain flat. The
+      residual gap is converting QD novelty into a winning-prefix mutation
+      neighborhood rather than treating candidate novelty itself as a reproduced
+      level.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:

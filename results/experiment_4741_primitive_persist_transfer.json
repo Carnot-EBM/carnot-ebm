@@ -1,0 +1,4752 @@
+{
+  "duration_s": 1.0,
+  "experiment": "experiment_4741_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; complete: <operator>_persisted_transfer_<characterized|null>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- scores cached held-out rows (1s floor), no live LLM load."
+    },
+    "offline_reproduced_new_level": {
+      "principle": "true only if persisting banked a strictly new offline-reproduced level (usually false for a persist task)."
+    },
+    "persisted_operator": {
+      "principle": "the reusable arc_solver_kit operator name + the registry entry -- the self-learning capture so the live agent reuses it on hidden games."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (offline arcade, .436 artifacts present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift."
+    },
+    "transfer_value_per_game": {
+      "principle": "per-game leave-one-game transfer deltas, reported HONESTLY; a transfer null is a valid characterized result, not a failure to hide."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the persisted operator generates/scores/routes; the reproduction gate is the oracle-distinct authority."
+    }
+  },
+  "honest_verdict": "complete: energy_fitness_qd_generator_operator_persisted_transfer_characterized",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- scores cached held-out rows (1s floor), no live LLM load.",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "offline_reproduced_new_level": false,
+  "persisted_operator": {
+    "derived_from_artifacts": [
+      "results/experiment_4738_energy_fitness_qd_generation_valid_test.json"
+    ],
+    "operator": "energy_fitness_qd_generator_operator",
+    "registry_entry": {
+      "derived_from": [
+        "results/experiment_4738_energy_fitness_qd_generation_valid_test.json"
+      ],
+      "id": "primitive_energy_fitness_qd_generator_operator",
+      "note": "persist .436 energy-fitness QD generator for hidden-game reuse",
+      "operator": "energy_fitness_qd_generator_operator"
+    },
+    "registry_general_gotcha_id": "primitive_energy_fitness_qd_generator_operator",
+    "source": "A2_energy_fitness_qd_generator",
+    "transfer_dead_ends": {
+      "ar25": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+      "lp85": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+      "sc25": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood"
+    }
+  },
+  "preconditions_checked": {
+    "a1_artifact": true,
+    "a2_artifact": true,
+    "agents_md_read": true,
+    "blocked_resource": "",
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "registry_operator_present": true,
+    "selected_operator": "energy_fitness_qd_generator_operator",
+    "spec_has_req_4741": true
+  },
+  "random_seed": 4741,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:a0d2df33374fb6635531992376f642acb513973bbee268f108b36e0e60585a61",
+  "requirements": [
+    "REQ-ARC-WMTE-4741"
+  ],
+  "result_path": "results/experiment_4741_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4741-PERSIST-STRONGEST-436-PRIMITIVE",
+    "SCENARIO-ARC-WMTE-4741-LEAVE-ONE-GAME-TRANSFER"
+  ],
+  "schema": "carnot.exp4741.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "operator": "energy_fitness_qd_generator_operator",
+    "registry_general_gotcha_id": "primitive_energy_fitness_qd_generator_operator",
+    "selected_reason": "a2_non_degenerate_qd_generator_with_novel_candidates",
+    "selection_rationale": "A2's energy-QD arm was non-degenerate and generated novel candidates; A1 also produced a non-degenerate goal-energy rank delta, but A2 is the stronger reusable generation primitive for hidden-game reuse.",
+    "source": "A2_energy_fitness_qd_generator",
+    "upstream_signal_rank": [
+      {
+        "arms_non_degenerate": true,
+        "artifact": "results/experiment_4738_energy_fitness_qd_generation_valid_test.json",
+        "energy_qd_vs_naive_delta": 0.0,
+        "measured_signal": 9.0,
+        "novel_candidates_generated": 8,
+        "source": "A2_energy_fitness_qd_generator"
+      },
+      {
+        "arms_non_degenerate": true,
+        "artifact": "results/experiment_4737_goal_energy_candidate_generation_valid_test.json",
+        "goal_energy_score_variance": 0.0003908818794621362,
+        "goal_energy_vs_baseline_delta": 0.0,
+        "measured_signal": 1.390882,
+        "source": "A1_goal_energy_candidate_generation_guidance"
+      }
+    ]
+  },
+  "transfer_dead_ends": {
+    "ar25": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+    "lp85": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+    "sc25": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood"
+  },
+  "transfer_games": [
+    "lp85",
+    "sc25",
+    "ar25"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+      "excluded_from_characterization": true,
+      "game": "lp85",
+      "naive_attempt_count": 4,
+      "offline_reproduced_new_level": false,
+      "operator_application": {
+        "action_efficiency_lift": 0.0,
+        "actions_to_first_goal_after": null,
+        "actions_to_first_goal_before": null,
+        "archive": [
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "lp85~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "lp85~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "lp85~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "lp85~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          }
+        ],
+        "archive_size": 28,
+        "behavior_descriptor_count": 28,
+        "best_candidate_id": "lp85~color01:qd:0",
+        "candidate_count": 36,
+        "candidate_generation_coverage_delta": 24.0,
+        "generated_candidate_count": 32,
+        "incoming_candidates": [
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "lp85~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "lp85~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "lp85~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "lp85~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          }
+        ],
+        "operator": "energy_fitness_qd_generator_operator",
+        "ranked_candidates": [
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              83
+            ],
+            "candidate_id": "lp85~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              87
+            ],
+            "candidate_id": "lp85~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              85
+            ],
+            "candidate_id": "lp85~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              86
+            ],
+            "candidate_id": "lp85~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              92
+            ],
+            "candidate_id": "lp85~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "lp85~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "lp85~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "lp85~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "lp85~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              0,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              1,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              2,
+              95
+            ],
+            "candidate_id": "lp85~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              95
+            ],
+            "candidate_id": "lp85~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              3,
+              86
+            ],
+            "candidate_id": "lp85~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          }
+        ],
+        "score_source": "cached_candidate_energy_fitness",
+        "value_added": true,
+        "verifier_is_oracle": false
+      },
+      "qd_attempt_count": 4,
+      "transfer_value": {
+        "action_efficiency_delta": 0.0,
+        "candidate_generation_coverage_delta": 8.0,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "operator": "energy_fitness_qd_generator_operator",
+        "value_added": true
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+      "excluded_from_characterization": true,
+      "game": "sc25",
+      "naive_attempt_count": 4,
+      "offline_reproduced_new_level": false,
+      "operator_application": {
+        "action_efficiency_lift": 0.0,
+        "actions_to_first_goal_after": null,
+        "actions_to_first_goal_before": null,
+        "archive": [
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "sc25~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "sc25~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "sc25~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "sc25~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          }
+        ],
+        "archive_size": 27,
+        "behavior_descriptor_count": 27,
+        "best_candidate_id": "sc25~color01:qd:0",
+        "candidate_count": 36,
+        "candidate_generation_coverage_delta": 23.0,
+        "generated_candidate_count": 32,
+        "incoming_candidates": [
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "sc25~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "sc25~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "sc25~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "sc25~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          }
+        ],
+        "operator": "energy_fitness_qd_generator_operator",
+        "ranked_candidates": [
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              18
+            ],
+            "candidate_id": "sc25~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              29
+            ],
+            "candidate_id": "sc25~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              28
+            ],
+            "candidate_id": "sc25~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              22
+            ],
+            "candidate_id": "sc25~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              39,
+              19
+            ],
+            "candidate_id": "sc25~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "sc25~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "sc25~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "sc25~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "sc25~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              16
+            ],
+            "candidate_id": "sc25~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "sc25~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "sc25~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              20,
+              21
+            ],
+            "candidate_id": "sc25~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          }
+        ],
+        "score_source": "cached_candidate_energy_fitness",
+        "value_added": true,
+        "verifier_is_oracle": false
+      },
+      "qd_attempt_count": 4,
+      "transfer_value": {
+        "action_efficiency_delta": 0.0,
+        "candidate_generation_coverage_delta": 8.0,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "operator": "energy_fitness_qd_generator_operator",
+        "value_added": true
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "generated coverage but no solve-rate, first-win, or action-efficiency lift; winner not in reachable QD mutation neighborhood",
+      "excluded_from_characterization": true,
+      "game": "ar25",
+      "naive_attempt_count": 4,
+      "offline_reproduced_new_level": false,
+      "operator_application": {
+        "action_efficiency_lift": 0.0,
+        "actions_to_first_goal_after": null,
+        "actions_to_first_goal_before": null,
+        "archive": [
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "ar25~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              22
+            ],
+            "candidate_id": "ar25~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              17
+            ],
+            "candidate_id": "ar25~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              31
+            ],
+            "candidate_id": "ar25~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "ar25~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              22
+            ],
+            "candidate_id": "ar25~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              31
+            ],
+            "candidate_id": "ar25~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "ar25~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          }
+        ],
+        "archive_size": 32,
+        "behavior_descriptor_count": 35,
+        "best_candidate_id": "ar25~color01:qd:0",
+        "candidate_count": 36,
+        "candidate_generation_coverage_delta": 31.0,
+        "generated_candidate_count": 32,
+        "incoming_candidates": [
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "ar25~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "ar25~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "ar25~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "ar25~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              22
+            ],
+            "candidate_id": "ar25~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              22
+            ],
+            "candidate_id": "ar25~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "ar25~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              17
+            ],
+            "candidate_id": "ar25~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              17
+            ],
+            "candidate_id": "ar25~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "ar25~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              31
+            ],
+            "candidate_id": "ar25~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              31
+            ],
+            "candidate_id": "ar25~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          }
+        ],
+        "operator": "energy_fitness_qd_generator_operator",
+        "ranked_candidates": [
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 1,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 10,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 19,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              7,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:0",
+            "energy_fitness": 0.1,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 28,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 2,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 11,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 20,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              11,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:1",
+            "energy_fitness": 0.11,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 29,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 3,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 12,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 21,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              15,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:2",
+            "energy_fitness": 0.12000000000000001,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 30,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              21
+            ],
+            "candidate_id": "ar25~color01:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 4,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              22
+            ],
+            "candidate_id": "ar25~color02:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 13,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              17
+            ],
+            "candidate_id": "ar25~color03:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 22,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              18,
+              31
+            ],
+            "candidate_id": "ar25~color04:qd:3",
+            "energy_fitness": 0.13,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 31,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 5,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 14,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 23,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:4",
+            "energy_fitness": 0.14,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 32,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              21
+            ],
+            "candidate_id": "ar25~color01:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 6,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              22
+            ],
+            "candidate_id": "ar25~color02:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 15,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              31
+            ],
+            "candidate_id": "ar25~color04:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 33,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              30
+            ],
+            "candidate_id": "ar25~color01:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 7,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              17
+            ],
+            "candidate_id": "ar25~color02:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 16,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              24
+            ],
+            "candidate_id": "ar25~color03:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 25,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              27,
+              18
+            ],
+            "candidate_id": "ar25~color04:qd:6",
+            "energy_fitness": 0.16,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 34,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              19
+            ],
+            "candidate_id": "ar25~color01:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 8,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              24
+            ],
+            "candidate_id": "ar25~color02:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 17,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              29
+            ],
+            "candidate_id": "ar25~color03:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 26,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              31,
+              26
+            ],
+            "candidate_id": "ar25~color04:qd:7",
+            "energy_fitness": 0.17,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 35,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              0,
+              0
+            ],
+            "candidate_id": "ar25~color01:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 0,
+            "target": false
+          },
+          {
+            "action": 6,
+            "behavior_descriptor": [
+              6,
+              19,
+              17
+            ],
+            "candidate_id": "ar25~color03:qd:5",
+            "energy_fitness": 0.15000000000000002,
+            "generated_by": "energy-QD",
+            "is_qd_generated": true,
+            "original_index": 24,
+            "reaches_goal": false,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              1,
+              0
+            ],
+            "candidate_id": "ar25~color02:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 9,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              2,
+              0
+            ],
+            "candidate_id": "ar25~color03:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 18,
+            "target": false
+          },
+          {
+            "action": 0,
+            "behavior_descriptor": [
+              0,
+              3,
+              0
+            ],
+            "candidate_id": "ar25~color04:naive",
+            "energy_fitness": 1.0,
+            "is_qd_generated": false,
+            "original_index": 27,
+            "target": false
+          }
+        ],
+        "score_source": "cached_candidate_energy_fitness",
+        "value_added": true,
+        "verifier_is_oracle": false
+      },
+      "qd_attempt_count": 4,
+      "transfer_value": {
+        "action_efficiency_delta": 0.0,
+        "candidate_generation_coverage_delta": 8.0,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "offline_reproduced_new_level": false,
+        "operator": "energy_fitness_qd_generator_operator",
+        "value_added": true
+      },
+      "value_added": true
+    }
+  ],
+  "transfer_value_per_game": {
+    "ar25": {
+      "action_efficiency_delta": 0.0,
+      "candidate_generation_coverage_delta": 8.0,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "operator": "energy_fitness_qd_generator_operator",
+      "value_added": true
+    },
+    "lp85": {
+      "action_efficiency_delta": 0.0,
+      "candidate_generation_coverage_delta": 8.0,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "operator": "energy_fitness_qd_generator_operator",
+      "value_added": true
+    },
+    "sc25": {
+      "action_efficiency_delta": 0.0,
+      "candidate_generation_coverage_delta": 8.0,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "offline_reproduced_new_level": false,
+      "operator": "energy_fitness_qd_generator_operator",
+      "value_added": true
+    }
+  },
+  "verifier_is_oracle": false
+}

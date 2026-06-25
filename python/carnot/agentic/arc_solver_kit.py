@@ -299,6 +299,25 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="energy_fitness_qd_generator_operator",
+            derived_from_games=("exp4738_energy_fitness_qd_generation_valid_test",),
+            purpose=(
+                "Reuse the .436 energy-fitness QD generator: keep naive candidates "
+                "available, score generated candidates with oracle-distinct lower-is-better "
+                "energy, preserve diverse behavior descriptors, and report coverage or "
+                "first-win transfer before any solve claim."
+            ),
+            selector_tags=(
+                "energy_qd",
+                "map_elites",
+                "candidate_generation",
+                "energy_fitness",
+                "graph_explore",
+                "click",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -645,6 +664,16 @@ def select_primitive_operators(
             expanded.append(name)
             if name == "persistent_action_effect_memory_operator":
                 expanded.append("online_warm_action_effect_controller_operator")
+        names = tuple(expanded)
+    if (
+        "graded_goal_energy_search_heuristic_operator" in names
+        and "energy_fitness_qd_generator_operator" not in names
+    ):
+        expanded = []
+        for name in names:
+            expanded.append(name)
+            if name == "graded_goal_energy_search_heuristic_operator":
+                expanded.append("energy_fitness_qd_generator_operator")
         names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
@@ -2044,6 +2073,181 @@ def online_warm_action_effect_controller_operator(
         "actions_reduced": actions_reduced,
         "value_added": bool(actions_reduced > 0.0),
         "verifier_is_oracle": False,
+    }
+
+
+def _energy_fitness_float(value: Any, default: float = 0.0) -> float:
+    if isinstance(value, bool):
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _energy_fitness_action(candidate: Any) -> int:
+    for key in ("action", "action_id"):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return int(_energy_fitness_float(value, 0.0))
+    return 0
+
+
+def _energy_fitness_xy(candidate: Any) -> tuple[int, int] | None:
+    data = _candidate_field(candidate, "data")
+    for source in (data, candidate):
+        if source is None:
+            continue
+        x = _candidate_field(source, "x")
+        y = _candidate_field(source, "y")
+        if x is not None and y is not None:
+            return (
+                int(_energy_fitness_float(x, 0.0)),
+                int(_energy_fitness_float(y, 0.0)),
+            )
+    return None
+
+
+def _energy_fitness_descriptor(candidate: Any, bucket_size: int) -> tuple[int, int, int]:
+    bucket = max(1, int(bucket_size))
+    descriptor = _candidate_field(candidate, "behavior_descriptor")
+    if isinstance(descriptor, Sequence) and not isinstance(descriptor, (str, bytes)):
+        values = [int(_energy_fitness_float(value, 0.0)) for value in list(descriptor)[:3]]
+        while len(values) < 3:
+            values.append(0)
+        return (values[0], values[1], values[2])
+    xy = _energy_fitness_xy(candidate)
+    if xy is None:
+        return (_energy_fitness_action(candidate), 0, 0)
+    x, y = xy
+    return (_energy_fitness_action(candidate), x // bucket, y // bucket)
+
+
+def _energy_fitness_score(candidate: Any) -> float:
+    for key in (
+        "energy_fitness",
+        "energy_score",
+        "qd_energy",
+        "combined_goal_energy",
+        "graded_goal_energy",
+        "goal_energy",
+    ):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return _energy_fitness_float(value, 1.0)
+    return 1.0
+
+
+def _energy_fitness_generated(candidate: Any) -> bool:
+    source = str(
+        _candidate_field(
+            candidate,
+            "generated_by",
+            _candidate_field(candidate, "source", _candidate_field(candidate, "arm_label", "")),
+        )
+    ).lower()
+    return bool(
+        _candidate_truthy(candidate, "qd_generated")
+        or _candidate_truthy(candidate, "generated")
+        or "energy-qd" in source
+        or "energy_qd" in source
+        or "qd" == source
+    )
+
+
+def _energy_fitness_public_row(
+    candidate: Any,
+    index: int,
+    *,
+    bucket_size: int,
+    target_key: str,
+) -> dict[str, Any]:
+    row = dict(candidate) if isinstance(candidate, Mapping) else {"candidate": repr(candidate)}
+    row["candidate_id"] = str(row.get("candidate_id") or _candidate_identifier(candidate, index))
+    row["energy_fitness"] = float(_energy_fitness_score(candidate))
+    row["behavior_descriptor"] = list(_energy_fitness_descriptor(candidate, bucket_size))
+    row["is_qd_generated"] = _energy_fitness_generated(candidate)
+    row["original_index"] = int(index)
+    row["target"] = bool(
+        _candidate_truthy(candidate, target_key) or _candidate_reaches_goal(candidate)
+    )
+    return row
+
+
+def energy_fitness_qd_generator_operator(
+    candidates: Sequence[Any],
+    *,
+    max_elites: int = 32,
+    bucket_size: int = 8,
+    target_key: str = "reaches_goal",
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4741: reusable .436 energy-fitness QD generator/ranker."""
+
+    rows = [
+        _energy_fitness_public_row(
+            candidate,
+            index,
+            bucket_size=bucket_size,
+            target_key=target_key,
+        )
+        for index, candidate in enumerate(candidates)
+    ]
+    baseline_descriptors = {
+        tuple(row["behavior_descriptor"]) for row in rows if not row["is_qd_generated"]
+    }
+    generated_descriptors = {
+        tuple(row["behavior_descriptor"]) for row in rows if row["is_qd_generated"]
+    }
+    archive: dict[tuple[int, int, int], dict[str, Any]] = {}
+    for row in rows:
+        descriptor = tuple(row["behavior_descriptor"])
+        current = archive.get(descriptor)
+        if current is None or (
+            float(row["energy_fitness"]),
+            int(row["original_index"]),
+        ) < (
+            float(current["energy_fitness"]),
+            int(current["original_index"]),
+        ):
+            archive[descriptor] = row
+    elites = sorted(
+        archive.values(),
+        key=lambda row: (float(row["energy_fitness"]), int(row["original_index"])),
+    )[: max(0, int(max_elites))]
+    elite_ids = {row["candidate_id"] for row in elites}
+    tail = [row for row in rows if row["candidate_id"] not in elite_ids]
+    ranked = elites + sorted(
+        tail,
+        key=lambda row: (float(row["energy_fitness"]), int(row["original_index"])),
+    )
+
+    def first_target(items: Sequence[Mapping[str, Any]]) -> int | None:
+        for position, row in enumerate(items, start=1):
+            if row.get("target") is True:
+                return int(position)
+        return None
+
+    before = first_target(rows)
+    after = first_target(ranked)
+    lift = float(before - after) if before is not None and after is not None else 0.0
+    coverage_delta = float(len(generated_descriptors - baseline_descriptors))
+    return {
+        "operator": "energy_fitness_qd_generator_operator",
+        "score_source": "cached_candidate_energy_fitness",
+        "verifier_is_oracle": False,
+        "candidate_count": int(len(rows)),
+        "generated_candidate_count": int(sum(1 for row in rows if row["is_qd_generated"])),
+        "behavior_descriptor_count": int(len({tuple(row["behavior_descriptor"]) for row in rows})),
+        "candidate_generation_coverage_delta": coverage_delta,
+        "archive_size": int(len(elites)),
+        "archive": elites,
+        "incoming_candidates": rows,
+        "ranked_candidates": ranked,
+        "best_candidate_id": str(ranked[0]["candidate_id"]) if ranked else "",
+        "actions_to_first_goal_before": before,
+        "actions_to_first_goal_after": after,
+        "action_efficiency_lift": lift,
+        "value_added": bool(lift > 0.0 or coverage_delta > 0.0),
     }
 
 
