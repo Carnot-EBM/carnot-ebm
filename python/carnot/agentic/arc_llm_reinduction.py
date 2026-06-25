@@ -4,7 +4,8 @@ Spec refs: REQ-ARC-WMTE-4544, SCENARIO-ARC-WMTE-4544,
 REQ-ARC-WMTE-4557, SCENARIO-ARC-WMTE-4557-POSITIVE-CONTROL-FIRST,
 REQ-ARC-WMTE-4664, SCENARIO-ARC-WMTE-4664-GOAL-SATISFIABILITY,
 REQ-ARC-WMTE-4676, SCENARIO-ARC-WMTE-4676-HIERARCHICAL-PLAN,
-REQ-ARC-WMTE-4677, SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING.
+REQ-ARC-WMTE-4677, SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING,
+REQ-ARC-WMTE-4712, SCENARIO-ARC-WMTE-4712-LIVE-REINDUCTION-WIRING.
 """
 
 from __future__ import annotations
@@ -66,6 +67,8 @@ class LlmReinductionResult:
     accepted_by_heldout_verifier: bool = False
     goal_predicate_satisfiable: bool = False
     goal_satisfiability: dict[str, Any] = field(default_factory=dict)
+    goal_expression: str = ""
+    structural_goal_diagnostics: dict[str, Any] = field(default_factory=dict)
     subgoal_decomposition: list[dict[str, Any]] = field(default_factory=list)
     per_subgoal_reachable: list[dict[str, Any]] = field(default_factory=list)
     subgoal_search_used: bool = False
@@ -84,6 +87,43 @@ def _model_specs(proposer: Any) -> str:
     path = getattr(proposer, "model_path", None)
     label = repo or proposer.__class__.__name__
     return f"{label} GGUF ({path})" if path else str(label)
+
+
+def _normalise_structural_goal_candidate(
+    provider: Callable[[np.ndarray], Any] | None,
+    start_grid: np.ndarray,
+) -> dict[str, Any] | None:
+    """REQ-ARC-WMTE-4712: normalize an optional perception-grounded goal candidate."""
+
+    if provider is None:
+        return None
+    try:
+        row = provider(np.asarray(start_grid))
+    except Exception as exc:
+        return {
+            "error": repr(exc)[:160],
+            "predicate": None,
+            "goal_expression": "",
+            "diagnostics": {},
+        }
+    if row is None:
+        return None
+    if callable(row):
+        return {
+            "predicate": row,
+            "goal_expression": getattr(row, "__name__", "structural_goal"),
+            "diagnostics": {},
+        }
+    if isinstance(row, Mapping):
+        predicate = row.get("predicate")
+        if not callable(predicate):
+            return None
+        return {
+            "predicate": predicate,
+            "goal_expression": str(row.get("goal_expression") or row.get("name") or "structural_goal"),
+            "diagnostics": dict(row.get("diagnostics") or {}),
+        }
+    return None
 
 
 def _normalise_candidates(rows: Sequence[Any], engine: Any, goal: Any) -> list[WorldModelCandidate]:
@@ -560,6 +600,7 @@ def execute_bounded_llm_reinduction(
     subgoal_candidates: Sequence[SubgoalCandidate] | None = None,
     enable_factored_planner: bool = False,
     factored_trust_threshold: float = 0.75,
+    structural_goal_provider: Callable[[np.ndarray], Any] | None = None,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -594,11 +635,17 @@ def execute_bounded_llm_reinduction(
     last_selected = ""
     last_engine = None
     last_goal = None
+    last_goal_expression = ""
+    last_structural_goal_diagnostics: dict[str, Any] = {}
     last_goal_satisfiable = False
     last_goal_satisfiability: dict[str, Any] = {}
     last_heldout_accuracy: float | None = None
     last_accepted = False
     skipped = "no_reachable_plan_after_refinement"
+    structural_goal_candidate = _normalise_structural_goal_candidate(
+        structural_goal_provider,
+        np.asarray(root_grid),
+    )
 
     for round_index in range(rounds_limit):
         round_no = round_index + 1
@@ -638,6 +685,21 @@ def execute_bounded_llm_reinduction(
             )
             selected = selection.selected
             selected_goal = selected.is_level_complete or goal
+            if structural_goal_candidate is not None:
+                if structural_goal_candidate.get("predicate") is not None:
+                    selected_goal = structural_goal_candidate["predicate"]
+                    last_goal_expression = str(
+                        structural_goal_candidate.get("goal_expression") or ""
+                    )
+                    last_structural_goal_diagnostics = dict(
+                        structural_goal_candidate.get("diagnostics") or {}
+                    )
+                    row["goal_expression"] = last_goal_expression
+                    row["structural_goal_diagnostics"] = dict(
+                        last_structural_goal_diagnostics
+                    )
+                elif structural_goal_candidate.get("error"):
+                    row["structural_goal_error"] = structural_goal_candidate["error"]
             heldout_accuracy = float(selection.selected_score.heldout_accuracy)
             accepted = heldout_accuracy >= verifier_threshold
             last_heldout_accuracy = heldout_accuracy
@@ -733,6 +795,8 @@ def execute_bounded_llm_reinduction(
                 accepted_by_heldout_verifier=last_accepted,
                 goal_predicate_satisfiable=last_goal_satisfiable,
                 goal_satisfiability=last_goal_satisfiability,
+                goal_expression=last_goal_expression,
+                structural_goal_diagnostics=last_structural_goal_diagnostics,
                 rounds=rounds,
                 counterexamples=counterexamples,
                 skipped="",
@@ -780,6 +844,8 @@ def execute_bounded_llm_reinduction(
                     accepted_by_heldout_verifier=last_accepted,
                     goal_predicate_satisfiable=last_goal_satisfiable,
                     goal_satisfiability=last_goal_satisfiability,
+                    goal_expression=last_goal_expression,
+                    structural_goal_diagnostics=last_structural_goal_diagnostics,
                     subgoal_decomposition=list(subgoal_result.subgoal_decomposition),
                     per_subgoal_reachable=list(subgoal_result.per_subgoal_reachable),
                     subgoal_search_used=True,
@@ -848,6 +914,8 @@ def execute_bounded_llm_reinduction(
                         accepted_by_heldout_verifier=last_accepted,
                         goal_predicate_satisfiable=last_goal_satisfiable,
                         goal_satisfiability=last_goal_satisfiability,
+                        goal_expression=last_goal_expression,
+                        structural_goal_diagnostics=last_structural_goal_diagnostics,
                         subgoal_decomposition=list(factored_result.subgoal_decomposition),
                         per_subgoal_reachable=list(factored_result.per_subgoal_reachable),
                         factored_planner_used=True,
@@ -880,6 +948,8 @@ def execute_bounded_llm_reinduction(
         accepted_by_heldout_verifier=last_accepted,
         goal_predicate_satisfiable=last_goal_satisfiable,
         goal_satisfiability=last_goal_satisfiability,
+        goal_expression=last_goal_expression,
+        structural_goal_diagnostics=last_structural_goal_diagnostics,
         rounds=rounds,
         counterexamples=counterexamples,
         skipped=skipped,

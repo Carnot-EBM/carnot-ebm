@@ -660,6 +660,195 @@ def object_centric_slots(
     )[: max(1, int(max_slots))]
 
 
+STRUCTURAL_ALIGNMENT_GOAL_EXPRESSION = "structural_piece_sprite_alignment_over_detected_objects"
+
+
+def _same_color_components(g: np.ndarray) -> list[dict[str, Any]]:
+    h, w = g.shape
+    seen = np.zeros((h, w), dtype=bool)
+    rows: list[dict[str, Any]] = []
+    for y in range(h):
+        for x in range(w):
+            if seen[y, x]:
+                continue
+            color = int(g[y, x])
+            stack = [(y, x)]
+            seen[y, x] = True
+            cells: list[tuple[int, int]] = []
+            while stack:
+                cy, cx = stack.pop()
+                cells.append((cy, cx))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = cy + dy, cx + dx
+                    if (
+                        0 <= ny < h
+                        and 0 <= nx < w
+                        and not seen[ny, nx]
+                        and int(g[ny, nx]) == color
+                    ):
+                        seen[ny, nx] = True
+                        stack.append((ny, nx))
+            ys = [cell[0] for cell in cells]
+            xs = [cell[1] for cell in cells]
+            rows.append(
+                {
+                    "color": color,
+                    "area": len(cells),
+                    "x0": min(xs),
+                    "y0": min(ys),
+                    "x1": max(xs),
+                    "y1": max(ys),
+                    "cx": float(sum(xs)) / float(len(xs)),
+                    "cy": float(sum(ys)) / float(len(ys)),
+                }
+            )
+    return rows
+
+
+def _is_solid_2x2_component(component: Mapping[str, Any]) -> bool:
+    return (
+        int(component.get("area") or 0) == 4
+        and int(component.get("x1") or 0) - int(component.get("x0") or 0) == 1
+        and int(component.get("y1") or 0) - int(component.get("y0") or 0) == 1
+    )
+
+
+def _corner_marker_pieces(components: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    by_color: dict[int, set[tuple[int, int]]] = {}
+    for component in components:
+        if int(component.get("area") or 0) != 1:
+            continue
+        color = int(component.get("color") or 0)
+        by_color.setdefault(color, set()).add(
+            (int(component.get("x0") or 0), int(component.get("y0") or 0))
+        )
+
+    pieces: list[dict[str, Any]] = []
+    for color, points in by_color.items():
+        for x0, y0 in sorted(points):
+            corners = {(x0, y0), (x0 + 3, y0), (x0, y0 + 3), (x0 + 3, y0 + 3)}
+            if not corners.issubset(points):
+                continue
+            pieces.append(
+                {
+                    "kind": "corner_marker_piece",
+                    "color": int(color),
+                    "bbox": [int(x0), int(y0), int(x0 + 3), int(y0 + 3)],
+                    "target_goal_bbox": [int(x0 + 1), int(y0 + 1), int(x0 + 2), int(y0 + 2)],
+                    "center": [float(x0 + 1.5), float(y0 + 1.5)],
+                }
+            )
+    return pieces
+
+
+def detect_marker_pair_shape_alignment(frame: Any) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4712: detect corner-marker pieces and same-color goal sprites.
+
+    The A1 object-centric slot builder still runs first, but the alignment
+    objects are segmented by same-color components so board backgrounds do not
+    merge the moveable corner markers into one global component.
+    """
+
+    g = _grid2d(frame).astype(np.int16, copy=False)
+    try:
+        slots = object_centric_slots(g)
+    except Exception:
+        slots = []
+    components = _same_color_components(g)
+    raw_goals = [
+        {
+            "kind": "goal_sprite",
+            "color": int(component["color"]),
+            "bbox": [
+                int(component["x0"]),
+                int(component["y0"]),
+                int(component["x1"]),
+                int(component["y1"]),
+            ],
+            "center": [float(component["cx"]), float(component["cy"])],
+        }
+        for component in components
+        if _is_solid_2x2_component(component)
+    ]
+    colors_with_goals = {int(goal["color"]) for goal in raw_goals}
+    pieces = [
+        piece for piece in _corner_marker_pieces(components) if int(piece["color"]) in colors_with_goals
+    ]
+    piece_colors = {int(piece["color"]) for piece in pieces}
+    goals = [goal for goal in raw_goals if int(goal["color"]) in piece_colors]
+    goals_by_color: dict[int, list[dict[str, Any]]] = {}
+    for goal in goals:
+        goals_by_color.setdefault(int(goal["color"]), []).append(goal)
+
+    pairs: list[dict[str, Any]] = []
+    for piece in pieces:
+        color = int(piece["color"])
+        target = list(piece["target_goal_bbox"])
+        candidates = goals_by_color.get(color, [])
+        aligned_goal = next((goal for goal in candidates if list(goal["bbox"]) == target), None)
+        if aligned_goal is None and candidates:
+            tx = (target[0] + target[2]) / 2.0
+            ty = (target[1] + target[3]) / 2.0
+            aligned_goal = min(
+                candidates,
+                key=lambda goal: abs(float(goal["center"][0]) - tx)
+                + abs(float(goal["center"][1]) - ty),
+            )
+        aligned = aligned_goal is not None and list(aligned_goal["bbox"]) == target
+        distance = None
+        if aligned_goal is not None:
+            distance = int(
+                abs(int(aligned_goal["bbox"][0]) - int(target[0]))
+                + abs(int(aligned_goal["bbox"][1]) - int(target[1]))
+            )
+        pairs.append(
+            {
+                "piece": piece,
+                "goal": aligned_goal,
+                "aligned": bool(aligned),
+                "alignment_distance": distance,
+            }
+        )
+
+    complete = bool(pieces) and len(pieces) <= len(goals) and all(
+        bool(pair["aligned"]) for pair in pairs
+    )
+    return {
+        "goal_expression": STRUCTURAL_ALIGNMENT_GOAL_EXPRESSION,
+        "detected": bool(pieces and goals),
+        "complete": bool(complete),
+        "piece_count": int(len(pieces)),
+        "goal_count": int(len(goals)),
+        "aligned_piece_count": int(sum(1 for pair in pairs if pair["aligned"])),
+        "object_centric_slot_count": int(len(slots)),
+        "pieces": pieces,
+        "goals": goals,
+        "pairs": pairs,
+        "verifier_is_oracle": False,
+    }
+
+
+def structural_piece_sprite_alignment_goal(grid: Any) -> bool:
+    """REQ-ARC-WMTE-4712: structural piece->sprite goal predicate."""
+
+    return bool(detect_marker_pair_shape_alignment(grid).get("complete"))
+
+
+def structural_alignment_goal_candidate(grid: Any) -> dict[str, Any] | None:
+    """REQ-ARC-WMTE-4712: return an oracle-distinct structural goal candidate."""
+
+    diagnostics = detect_marker_pair_shape_alignment(grid)
+    if not diagnostics.get("detected"):
+        return None
+    return {
+        "name": STRUCTURAL_ALIGNMENT_GOAL_EXPRESSION,
+        "goal_expression": STRUCTURAL_ALIGNMENT_GOAL_EXPRESSION,
+        "predicate": structural_piece_sprite_alignment_goal,
+        "diagnostics": diagnostics,
+        "verifier_is_oracle": False,
+    }
+
+
 class ObjectCentricProposalPolicy:
     """REQ-ARC-WMTE-4700: proposal augmenter/ranker for live StepwiseExplorer."""
 

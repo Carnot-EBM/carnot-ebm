@@ -2183,6 +2183,73 @@ reproduction deltas, and a zero-value run emits
 `complete: primitive_persisted_transfer_null_characterized` with a
 `residual_dead_end`.
 
+### REQ-ARC-WMTE-4712: Perception-Grounded Structural Alignment L2 Goal
+
+Experiment 4712 SHALL use the persisted A1 object-centric perception substrate
+to derive an oracle-distinct structural L2 goal for `lp85` marker-pair shape
+alignment. The detector SHALL operate from a single live frame, identify
+moveable corner-marker pieces and same-color goal sprites as detected objects,
+and expose `is_level_complete(grid)` as "every detected piece is aligned to its
+goal sprite" without requiring an L2-winning exemplar grid or the environment's
+own level-up checker.
+
+The live `E3AgentPolicy` level-up reinduction path SHALL pass the structural
+goal candidate into `execute_bounded_llm_reinduction` when the current frame
+contains marker-pair alignment objects. The `.430` goal-satisfiability check
+SHALL evaluate the structural predicate over reachable model states before
+planning, and `plan_in_model` SHALL only return a plan when that plan reaches
+the structural goal. A successful bank requires `lp85` to reach L2 through the
+generic live agent path and reproduce through `arc_solver_kit.reproduce`;
+otherwise the artifact SHALL report the measured residual cause without
+fabricating a solve.
+
+Experiment 4712 SHALL write
+`results/experiment_4712_perception_grounded_l2_goal_lp85.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `goal_predicate_satisfiable`, `goal_expression`,
+`l2_plan_reaches_goal`, `reproduced_levels`, `offline_reproduced`,
+`solve_provenance`, `verifier_is_oracle`, `live_path_reachable`,
+`registry_precheck_generic_l2`, `parity_test_green`,
+`residual_cause_hypothesis`, `proposer_served_model`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: perception_grounded_l2_goal_lp85_L2_offline_reproduced OR complete: l2_perception_goal_no_deepening_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference -- the reinduction path loads + runs the Qwen3.5-9B-MTP GGUF (60s floor); model_specs MUST name the GGUF."
+- `goal_predicate_satisfiable`: principle "the .430 gate checks DYNAMICS only; this records the L2 alignment goal is True on >=1 reachable grid -- the verification exemplar-replay never produced."
+- `goal_expression`: principle "MUST be a STRUCTURAL predicate over DETECTED objects (e.g. structural_piece_sprite_alignment_over_detected_objects), not a per-game hardcode or a flat exemplar grid."
+- `l2_plan_reaches_goal`: principle "plan_len=0 / no_reachable_plan was the measured failure; True means the plan reaches the satisfiable goal."
+- `reproduced_levels`: principle "the integer level reached; >=2 is the lp85 L2 bank (only reproduced levels count)."
+- `offline_reproduced`: principle "a reproduced L2 via arc_solver_kit.reproduce is the fix working; a live-only trajectory is provisional."
+- `solve_provenance`: principle "live_agent_self_discovery -- a generic-agent L2 via the perception-grounded goal is self-discovery; an adapter L2 is a dev proxy that does NOT prove the live fix."
+- `verifier_is_oracle`: principle "MUST be false -- the alignment predicate is oracle-distinct from the env's own level-up check."
+- `live_path_reachable`: principle "HARD gate -- the changed modules are in the E3AgentPolicy import closure; arc_orphan_solver_lint passes."
+- `registry_precheck_generic_l2`: principle "confirms the generic live path does not ALREADY self-discover lp85 L2 (vs the adaptered registry row) -- a duplicate of an already-banked GENERIC level is a CRITICAL adversarial flag."
+- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the deployed agent == the measured agent."
+- `residual_cause_hypothesis`: principle "if it nulls, names the residual (object_detector_cannot_resolve_pieces_sprites | alignment_under_determined | no_reachable_plan) -- the .435 target; 'none' if it banked."
+- `null_methodology_note`: principle "present when no L2; states the null is honest (lp85 L1 reachable + object detector ran + goal satisfiability checked), not a measurement bug."
+- `proposer_served_model`: principle "the model the proposer /props reported (MUST be Qwen3.5-9B-MTP, NOT gemma) -- the port-8919 confound guard."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (A1 operator importable, Qwen cached, offline arcade + lp85 env, /props served Qwen); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4712-STRUCTURAL-ALIGNMENT-GOAL
+
+**Given** a live frame containing same-color corner-marker pieces and same-color
+solid goal sprites
+**When** the A1 object-centric perception substrate builds marker-pair objects
+**Then** the structural predicate returns true exactly when every detected
+corner-marker piece has a goal sprite in its interior alignment position.
+
+#### SCENARIO-ARC-WMTE-4712-LIVE-REINDUCTION-WIRING
+
+**Given** `E3AgentPolicy` enters `level_up_reinduction` on `lp85`
+**When** the current root grid contains a detected structural alignment goal
+**Then** `execute_bounded_llm_reinduction` evaluates that structural goal in
+the goal-satisfiability check and records the goal expression and detector
+diagnostics in the induction attempt.
+
 ### REQ-ARC-WMTE-4653: Energy-Fitness QD Generator Live Injection
 
 Experiment 4653 SHALL implement the `.429` energy-as-fitness
