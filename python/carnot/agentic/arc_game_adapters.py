@@ -261,6 +261,12 @@ AR25_L2_TAIL_LABELS: tuple[str, ...] = tuple(["3", "3", "5"] + ["2"] * 8)
 
 AR25_L2_SOLUTION_LABELS: tuple[str, ...] = AR25_L1_LABELS + AR25_L2_TAIL_LABELS
 
+AR25_L3_TAIL_LABELS: tuple[str, ...] = tuple(
+    ["1"] * 7 + ["5"] + ["4"] * 7 + ["2"] * 7 + ["5"] + ["3"] * 12 + ["2"] * 5
+)
+
+AR25_L3_SOLUTION_LABELS: tuple[str, ...] = AR25_L2_SOLUTION_LABELS + AR25_L3_TAIL_LABELS
+
 FT09_L1_LABELS: tuple[str, ...] = (
     _json_action_label(6, {"x": 36, "y": 36}),
     _json_action_label(6, {"x": 36, "y": 44}),
@@ -1723,6 +1729,8 @@ def _ar25():
             return [AR25_L1_LABELS[extension_index]]
         if level == 1 and extension_index < len(AR25_L2_TAIL_LABELS):
             return [AR25_L2_TAIL_LABELS[extension_index]]
+        if level == 2 and extension_index < len(AR25_L3_TAIL_LABELS):
+            return [AR25_L3_TAIL_LABELS[extension_index]]
         return []
 
     def state_key(game, frame=None):
@@ -1784,7 +1792,11 @@ def _ar25():
         featurize=featurize,
         hand_verifier=hand_verifier,
         warmup_label=None,
-        depth_caps={1: len(AR25_L1_LABELS), 2: len(AR25_L2_TAIL_LABELS), 3: 2},
+        depth_caps={
+            1: len(AR25_L1_LABELS),
+            2: len(AR25_L2_TAIL_LABELS),
+            3: len(AR25_L3_TAIL_LABELS),
+        },
         branch_mode="fresh_env",
     )
 

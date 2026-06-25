@@ -92,6 +92,22 @@
       ]
     },
     {
+      "operator": "controllable_novelty_embedding_operator",
+      "derived_from_games": [
+        "exp4688_controllable_novelty_proposal_policy_live"
+      ],
+      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
+      "selector_tags": [
+        "controllable_novelty",
+        "directed_exploration",
+        "intrinsic_proposal",
+        "candidate_generation",
+        "action_effect",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
       "operator": "per_level_reinduction_operator",
       "derived_from_games": [
         "lp85",
@@ -206,6 +222,22 @@
         "search_heuristic",
         "graph_explore",
         "candidate_ranking",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "object_centric_representation_builder_operator",
+      "derived_from_games": [
+        "exp4700_object_centric_perception_proposal_live",
+        "exp4701_amortized_exploration_prior_go_explore_live"
+      ],
+      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+      "selector_tags": [
+        "object_centric",
+        "perception",
+        "representation_builder",
+        "candidate_generation",
+        "graph_explore",
         "transfer"
       ]
     },

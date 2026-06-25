@@ -1,0 +1,552 @@
+{
+  "dead_ends_recorded": [
+    "re86: registry_prechecked:bp35: no_grounded_next_level_adapter",
+    "re86: registry_prechecked:lf52: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:sb26: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:dc22: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:vc33: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:ft09: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:ls20: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:sk48: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:ka59: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:wa30: recently_deepened_or_operator_skip_list",
+    "re86: registry_prechecked:cd82: no_grounded_L3_delta",
+    "re86: registry_prechecked:sp80: no_grounded_L3_delta",
+    "re86: registry_prechecked:su15: no_grounded_L3_delta",
+    "re86: registry_prechecked:s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30",
+    "re86: registry_prechecked:g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+    "re86: registry_prechecked:r11l: prefix_rooted_graph_search_stalled_at_L1",
+    "re86: registry_prechecked:re86: reset-only sprite overlay verifier repeats L1; derive L2 after replaying L1",
+    "re86: registry_prechecked:re86: sprite_overlay_L2_delta_not_adaptered_this_run",
+    "s5i5: registry_prechecked:s5i5: marker_coverage_L2_delta_not_adaptered_this_run",
+    "s5i5: registry_prechecked:s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30",
+    "g50t: registry_prechecked:GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+    "g50t: registry_prechecked:g50t: target_offset_L2_delta_not_adaptered_this_run",
+    "g50t: registry_prechecked:g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+    "r11l: registry_prechecked:r11l: prefix_rooted_graph_search_stalled_at_L1",
+    "r11l: registry_prechecked:r11l: prefix-rooted graph search reached only L1 after 20000 expansions",
+    "ar25: registry_prechecked:sk48 remained routing-only for this milestone; the chain/color reorder L2 still needs a grounded adapter.",
+    "ar25: registry_prechecked:Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta is required before the standing loop can bank.",
+    "g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+    "ar25: ACTION7 hidden undo stack excluded from banked L3 path"
+  ],
+  "experiment": "experiment_4728_levelup_selfplay",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- arc_loop_solve scores against the offline sim (1s floor), no live LLM load.",
+    "new_levels_banked": ">=1 is the Level-Up Guarantee met; 0 rotates the target next milestone.",
+    "offline_reproduced": "only offline-reproduced levels count (ARC Solve Reproducibility); a live-only trajectory is provisional.",
+    "preconditions_checked": "records resources verified (offline arcade, arc_loop_solve runnable); pre-empts missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_precheck_passed": "confirms the target level is NOT already in the registry (a duplicate is a CRITICAL adversarial flag).",
+    "reproduced_levels": "the integer level reached on the target game.",
+    "reproducibility_checksum": "content-addressed hash catches silent harness/corpus drift on replay.",
+    "reproducible_total_levels": "the registry header after this run (63->64+ if banked) -- the monotonic north-star metric.",
+    "solve_provenance": "live_agent_self_discovery for a generic bank, OR development_proxy honestly if a GameAdapter delta was required.",
+    "verifier_checkpoint": "models/arc_verifier_<game>.json -- the self-play loop trains+checkpoints the learned verifier (the self-improvement-every-milestone mandate).",
+    "verifier_is_oracle": "MUST be false -- the learned verifier routes/ranks; the executable reproduction gate is the oracle-distinct authority."
+  },
+  "honest_verdict": "success: ar25_L3_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "new_levels_banked": 1,
+  "offline_reproduced": true,
+  "preconditions_checked": [
+    "arc_solver_kit.offline_arcade()",
+    "scripts/arc_loop_solve.py --help",
+    "standing_loop_result_or_run:results/arc_loop_solve_ar25.json"
+  ],
+  "prior_reproduced_level": 2,
+  "random_seed": 4728,
+  "reached_level": 3,
+  "registry_precheck_passed": true,
+  "registry_updated": true,
+  "reproduced_levels": 3,
+  "reproducibility_checksum": "e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3",
+  "reproducible_total_levels": 64,
+  "reproducible_total_levels_before": 63,
+  "reproduction_gate": {
+    "claimed_level": 3,
+    "game": "ar25",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 3,
+    "reproduced": true
+  },
+  "schema": "carnot.exp4728.levelup_selfplay.v1",
+  "schema_errors": [],
+  "selected_generic_operators": [
+    {
+      "derived_from_games": [
+        "exp4592_generation_completeness_wiring"
+      ],
+      "operator": "approach_dispatcher_operator",
+      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
+      "selector_tags": [
+        "approach_dispatch",
+        "mechanic_router",
+        "candidate_generation",
+        "graph_explore",
+        "goal_distance",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4616_offline_live_bridge_disambiguation",
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "operator": "value_head_bridge_fix_operator",
+      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
+      "selector_tags": [
+        "value_head",
+        "bridge_fix",
+        "decision_point",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "operator": "cheap_value_routing_cost_fix_operator",
+      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
+      "selector_tags": [
+        "value_head",
+        "cheap_feature",
+        "value_routing",
+        "cost_fix",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4665_dagger_distribution_shift_value_routing"
+      ],
+      "operator": "dagger_off_path_data_collection_operator",
+      "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
+      "selector_tags": [
+        "dagger",
+        "off_path",
+        "search_distribution",
+        "value_head",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4677_poe_world_factored_subgoal_planner"
+      ],
+      "operator": "programmatic_expert_trust_weighting_operator",
+      "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
+      "selector_tags": [
+        "programmatic_expert",
+        "trust_weighting",
+        "factored_planner",
+        "candidate_generation",
+        "world_model",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4688_controllable_novelty_proposal_policy_live"
+      ],
+      "operator": "controllable_novelty_embedding_operator",
+      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
+      "selector_tags": [
+        "controllable_novelty",
+        "directed_exploration",
+        "intrinsic_proposal",
+        "candidate_generation",
+        "action_effect",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "operator": "per_level_reinduction_operator",
+      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "deepening",
+        "goal_bias",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "operator": "llm_proposer_reinduction_operator",
+      "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "llm_proposer",
+        "bounded_refinement",
+        "trust_energy",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "sc25",
+        "exp4580_live_submission_gap_close"
+      ],
+      "operator": "env_adaptive_resolve_operator",
+      "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
+      "selector_tags": [
+        "env_adaptive",
+        "coordinate_discovery",
+        "drift_recovery",
+        "replay",
+        "click",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4556_cached_generic_transfer"
+      ],
+      "operator": "verifier_router_candidate_ranking_operator",
+      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
+      "selector_tags": [
+        "verifier_router",
+        "candidate_ranking",
+        "trust_energy",
+        "graph_explore",
+        "config_toggle",
+        "program_editor",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4604_world_model_trust_energy"
+      ],
+      "operator": "world_model_trust_energy_gate_operator",
+      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
+      "selector_tags": [
+        "world_model",
+        "trust_energy",
+        "hidden_state",
+        "candidate_ranking",
+        "verifier",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4568_clickability_action_effect_predictor",
+        "exp4629_graduate_action_effect_predictor_live"
+      ],
+      "operator": "persistent_action_effect_memory_operator",
+      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+      "selector_tags": [
+        "action_effect",
+        "clickability",
+        "frame_change",
+        "live_action_pruner",
+        "persistent_aem_plus_optional_cnn",
+        "candidate_ranking",
+        "graph_explore",
+        "click",
+        "keyboard",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4020_goal_induction_separation",
+        "exp4640_goal_energy_generation_live"
+      ],
+      "operator": "graded_goal_energy_search_heuristic_operator",
+      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
+      "selector_tags": [
+        "goal_energy",
+        "graded_goal_satisfaction",
+        "search_heuristic",
+        "graph_explore",
+        "candidate_ranking",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "exp4700_object_centric_perception_proposal_live",
+        "exp4701_amortized_exploration_prior_go_explore_live"
+      ],
+      "operator": "object_centric_representation_builder_operator",
+      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+      "selector_tags": [
+        "object_centric",
+        "perception",
+        "representation_builder",
+        "candidate_generation",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "operator": "object_centric_digest",
+      "purpose": "Connected-component object summary for routing, grounding, and active data.",
+      "selector_tags": [
+        "object",
+        "digest",
+        "program_editor",
+        "world_model"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "ft09",
+        "sc25"
+      ],
+      "operator": "active_data_collection",
+      "purpose": "Balanced action/object coverage plan for offline transition collection.",
+      "selector_tags": [
+        "active_data",
+        "world_model",
+        "e3",
+        "transition"
+      ]
+    },
+    {
+      "derived_from_games": [
+        "tu93",
+        "lp85",
+        "cd82",
+        "sp80",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "su15"
+      ],
+      "operator": "graph_astar_action_cost",
+      "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+      "selector_tags": [
+        "graph_explore",
+        "astar",
+        "action_cost",
+        "keyboard",
+        "click"
+      ]
+    }
+  ],
+  "solution_labels": [
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "3",
+    "3",
+    "5",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "5",
+    "4",
+    "4",
+    "4",
+    "4",
+    "4",
+    "4",
+    "4",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "5",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2"
+  ],
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4728",
+    "SCENARIO-ARC-WMTE-4728-ROTATED-TARGET",
+    "SCENARIO-ARC-WMTE-4728-BANK-AND-CHECKPOINT",
+    "SCENARIO-ARC-WMTE-4728-REGISTRY-GATE"
+  ],
+  "standing_loop_result_path": "results/arc_loop_solve_ar25.json",
+  "states_expanded": 66,
+  "target_game": "ar25",
+  "target_selection": {
+    "dead_ends_by_game": {
+      "ar25": [
+        "sk48 remained routing-only for this milestone; the chain/color reorder L2 still needs a grounded adapter.",
+        "Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta is required before the standing loop can bank."
+      ],
+      "g50t": [
+        "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+        "g50t: target_offset_L2_delta_not_adaptered_this_run",
+        "g50t: clone_replay_L2_route_reached_distance_12_no_bank"
+      ],
+      "r11l": [
+        "r11l: prefix_rooted_graph_search_stalled_at_L1",
+        "r11l: prefix-rooted graph search reached only L1 after 20000 expansions"
+      ],
+      "re86": [
+        "bp35: no_grounded_next_level_adapter",
+        "lf52: recently_deepened_or_operator_skip_list",
+        "sb26: recently_deepened_or_operator_skip_list",
+        "dc22: recently_deepened_or_operator_skip_list",
+        "vc33: recently_deepened_or_operator_skip_list",
+        "ft09: recently_deepened_or_operator_skip_list",
+        "ls20: recently_deepened_or_operator_skip_list",
+        "sk48: recently_deepened_or_operator_skip_list",
+        "ka59: recently_deepened_or_operator_skip_list",
+        "wa30: recently_deepened_or_operator_skip_list",
+        "cd82: no_grounded_L3_delta",
+        "sp80: no_grounded_L3_delta",
+        "su15: no_grounded_L3_delta",
+        "s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30",
+        "g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+        "r11l: prefix_rooted_graph_search_stalled_at_L1",
+        "re86: reset-only sprite overlay verifier repeats L1; derive L2 after replaying L1",
+        "re86: sprite_overlay_L2_delta_not_adaptered_this_run"
+      ],
+      "s5i5": [
+        "s5i5: marker_coverage_L2_delta_not_adaptered_this_run",
+        "s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30"
+      ]
+    },
+    "dead_ends_seen": [
+      "sk48 remained routing-only for this milestone; the chain/color reorder L2 still needs a grounded adapter.",
+      "Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta is required before the standing loop can bank."
+    ],
+    "preferred_targets": [
+      "re86",
+      "s5i5",
+      "g50t",
+      "r11l"
+    ],
+    "prohibited_targets": [
+      "bp35",
+      "lf52",
+      "sb26",
+      "dc22",
+      "vc33",
+      "sk48"
+    ],
+    "registry_game_count": 25,
+    "registry_level_before": 2,
+    "registry_precheck_passed": true,
+    "requested_alternatives": [
+      "m0r0",
+      "cn04",
+      "ar25"
+    ],
+    "rotation_rule": "prefer re86/s5i5/g50t/r11l; skip bp35/lf52/sb26/dc22/vc33/sk48 and do not re-bank levels already recorded in the registry",
+    "selected": "ar25",
+    "selection_reason": "re86 is already L2; s5i5/g50t/r11l carry recorded L2 stalls; ar25 is the first allowed L2->L3 alternative with a grounded reflection tail",
+    "target_level": 3
+  },
+  "verifier_checkpoint": "models/arc_verifier_ar25.json",
+  "verifier_delta": {
+    "after_sha256": "d534c57f37aad2560eed6bb90ff0d5a4548e62ddbdaeba4dfe196b3150dc6bf8",
+    "before_sha256": "b6a6323073e4002fbec61a526bf461a2d13f86abd183bd587dc43fc2bba36cca",
+    "checkpoint_path": "models/arc_verifier_ar25.json",
+    "negative_trace_notes": [
+      "re86: registry_prechecked:bp35: no_grounded_next_level_adapter",
+      "re86: registry_prechecked:lf52: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:sb26: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:dc22: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:vc33: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:ft09: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:ls20: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:sk48: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:ka59: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:wa30: recently_deepened_or_operator_skip_list",
+      "re86: registry_prechecked:cd82: no_grounded_L3_delta",
+      "re86: registry_prechecked:sp80: no_grounded_L3_delta",
+      "re86: registry_prechecked:su15: no_grounded_L3_delta",
+      "re86: registry_prechecked:s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30",
+      "re86: registry_prechecked:g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+      "re86: registry_prechecked:r11l: prefix_rooted_graph_search_stalled_at_L1",
+      "re86: registry_prechecked:re86: reset-only sprite overlay verifier repeats L1; derive L2 after replaying L1",
+      "re86: registry_prechecked:re86: sprite_overlay_L2_delta_not_adaptered_this_run",
+      "s5i5: registry_prechecked:s5i5: marker_coverage_L2_delta_not_adaptered_this_run",
+      "s5i5: registry_prechecked:s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30",
+      "g50t: registry_prechecked:GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
+      "g50t: registry_prechecked:g50t: target_offset_L2_delta_not_adaptered_this_run",
+      "g50t: registry_prechecked:g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+      "r11l: registry_prechecked:r11l: prefix_rooted_graph_search_stalled_at_L1",
+      "r11l: registry_prechecked:r11l: prefix-rooted graph search reached only L1 after 20000 expansions",
+      "ar25: registry_prechecked:sk48 remained routing-only for this milestone; the chain/color reorder L2 still needs a grounded adapter.",
+      "ar25: registry_prechecked:Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta is required before the standing loop can bank.",
+      "g50t: clone_replay_L2_route_reached_distance_12_no_bank",
+      "ar25: ACTION7 hidden undo stack excluded from banked L3 path"
+    ],
+    "positive_trace_steps": 66,
+    "sha_changed": true,
+    "updated": true
+  },
+  "verifier_is_oracle": false
+}

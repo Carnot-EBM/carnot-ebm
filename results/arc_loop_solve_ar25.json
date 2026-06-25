@@ -1,13 +1,13 @@
 {
   "game": "ar25",
-  "reached_level": 2,
-  "moves": 26,
-  "states_expanded": 26,
+  "reached_level": 3,
+  "moves": 66,
+  "states_expanded": 66,
   "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
   "hazard_prune": false,
   "hazard_pruner_stats": null,
   "offline_reproduced": true,
-  "reproduced_levels": 2,
+  "reproduced_levels": 3,
   "learned_verifier_checkpoint": "models/arc_verifier_ar25.json",
   "selected_generic_operators": [
     {
@@ -87,6 +87,22 @@
         "factored_planner",
         "candidate_generation",
         "world_model",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "controllable_novelty_embedding_operator",
+      "derived_from_games": [
+        "exp4688_controllable_novelty_proposal_policy_live"
+      ],
+      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
+      "selector_tags": [
+        "controllable_novelty",
+        "directed_exploration",
+        "intrinsic_proposal",
+        "candidate_generation",
+        "action_effect",
         "graph_explore",
         "transfer"
       ]
@@ -210,6 +226,22 @@
       ]
     },
     {
+      "operator": "object_centric_representation_builder_operator",
+      "derived_from_games": [
+        "exp4700_object_centric_perception_proposal_live",
+        "exp4701_amortized_exploration_prior_go_explore_live"
+      ],
+      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+      "selector_tags": [
+        "object_centric",
+        "perception",
+        "representation_builder",
+        "candidate_generation",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
       "operator": "object_centric_digest",
       "derived_from_games": [
         "g50t",
@@ -265,8 +297,8 @@
   ],
   "reproduction_gate": {
     "game": "ar25",
-    "reached_level": 2,
-    "claimed_level": 2,
+    "reached_level": 3,
+    "claimed_level": 3,
     "reproduced": true,
     "mode": "offline_reproduction_gate_no_quota"
   },
@@ -292,6 +324,46 @@
     "2",
     "2",
     "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "5",
+    "4",
+    "4",
+    "4",
+    "4",
+    "4",
+    "4",
+    "4",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "2",
+    "5",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
+    "3",
     "2",
     "2",
     "2",
@@ -361,6 +433,126 @@
     },
     {
       "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 2
+    },
+    {
+      "action": 5
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
+    },
+    {
+      "action": 3
     },
     {
       "action": 2

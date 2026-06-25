@@ -6177,6 +6177,83 @@ validates with a stable checksum.
 **Then** it refuses to re-bank the same level and reports the duplicate as a
 critical registry-precheck failure rather than producing a success artifact.
 
+### REQ-ARC-WMTE-4728: Rotated Level-Up Self-Play Bank and Learned-Verifier Checkpoint
+
+Experiment 4728 SHALL run the standing ARC self-play loop on a rotated target
+that is not one of the .429-.434 recently deepened or failed targets and is not
+already recorded at the requested level in `ops/arc_solve_registry.yaml`. The
+target selection SHALL precheck `dead_ends` for `re86`, `s5i5`, `g50t`, and
+`r11l`, SHALL record `g50t`'s distance-12 L2 stall as a no-bank dead-end when
+that path does not reproduce a new level, and MAY rotate to `ar25` L2->L3 when
+the preferred hard clean L1 targets are already banked or stalled.
+
+The experiment SHALL verify `arc_solver_kit.offline_arcade()` before running,
+verify `scripts/arc_loop_solve.py` is runnable, invoke
+`scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune`
+unless a bankable cached loop artifact already exists, and SHALL count progress
+only when `arc_solver_kit.reproduce` reports `reproduced=true` and the reached
+level exceeds the prior registry level. On success it SHALL update
+`ops/arc_solve_registry.yaml` for `ar25`, bump `reproducible_total_levels` from
+63 to 64, persist the learned verifier checkpoint at
+`models/arc_verifier_ar25.json`, and write
+`results/experiment_4728_levelup_selfplay.json`.
+
+The `ar25` L3 tail SHALL be a grounded continuation of the existing L1+L2
+reflection adapter: move the horizontal reflection axis from `y=16` to `y=9`,
+move the L-shaped object to `(11,14)`, and move the two-row object to `(3,14)`
+so the executable `vplrhaovhr()` reflection coverage predicate advances to L3.
+
+The terminal artifact
+`results/experiment_4728_levelup_selfplay.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `offline_reproduced`, `reproduced_levels`,
+`new_levels_banked`, `reproducible_total_levels`, `verifier_checkpoint`,
+`verifier_is_oracle`, `solve_provenance`, `registry_precheck_passed`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- arc_loop_solve scores against the offline sim (1s floor), no live LLM load."
+- `offline_reproduced`: principle "only offline-reproduced levels count (ARC Solve Reproducibility); a live-only trajectory is provisional."
+- `reproduced_levels`: principle "the integer level reached on the target game."
+- `new_levels_banked`: principle ">=1 is the Level-Up Guarantee met; 0 rotates the target next milestone."
+- `reproducible_total_levels`: principle "the registry header after this run (63->64+ if banked) -- the monotonic north-star metric."
+- `verifier_checkpoint`: principle "models/arc_verifier_<game>.json -- the self-play loop trains+checkpoints the learned verifier (the self-improvement-every-milestone mandate)."
+- `verifier_is_oracle`: principle "MUST be false -- the learned verifier routes/ranks; the executable reproduction gate is the oracle-distinct authority."
+- `solve_provenance`: principle "live_agent_self_discovery for a generic bank, OR development_proxy honestly if a GameAdapter delta was required."
+- `registry_precheck_passed`: principle "confirms the target level is NOT already in the registry (a duplicate is a CRITICAL adversarial flag)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
+- `preconditions_checked`: principle "records resources verified (offline arcade, arc_loop_solve runnable); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4728-ROTATED-TARGET
+
+**Given** `re86` is already L2, `s5i5` and `g50t` carry stalled L2 dead-end
+notes, `r11l` is still prefix-rooted at L1, and `ar25` is L2
+**When** Experiment 4728 selects a target
+**Then** it records those prechecks, selects `ar25` for L3, and marks
+`registry_precheck_passed=true`.
+
+#### SCENARIO-ARC-WMTE-4728-BANK-AND-CHECKPOINT
+
+**Given** the `ar25` GameAdapter exposes the L1 seed, L2 mirror/object delta,
+and L3 horizontal-axis plus object-placement tail
+**When** the standing loop replays the adapter through the offline reproduction
+gate
+**Then** it reaches L3, reports `offline_reproduced=true`, banks exactly one new
+level, writes `models/arc_verifier_ar25.json`, and keeps
+`verifier_is_oracle=false`.
+
+#### SCENARIO-ARC-WMTE-4728-REGISTRY-GATE
+
+**Given** the prior registry total is 63 and the `ar25` row is L2
+**When** the reproduction gate reaches L3 and the learned verifier checkpoint is
+written
+**Then** the registry persists the L3 win condition, action model, gotchas, and
+dead-ends, bumps `reproducible_total_levels` to 64, and the artifact schema
+validates with a stable checksum.
+
 ### REQ-ARC-WMTE-4709: Structured-World-Model SOTA Ingestion For .434
 
 Experiment 4709 SHALL map the `.434` fallback after the `.433` A1 object-centric
