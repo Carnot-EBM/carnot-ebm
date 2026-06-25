@@ -145,5 +145,14 @@
       "sha256": "sha256:b7198983a040ad86634c9b022ffe34de4ef436c141291e79554d62b98999dce7"
     }
   },
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "held_out_variant_attempts=100.0 and min_held_out_variant_attempts=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

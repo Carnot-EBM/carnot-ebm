@@ -1,3 +1,41 @@
+## 2026-06-25 — .435 planning sweep — STATIC SELECTION IS EXHAUSTED, PIVOT TO ACTING: the leader's online action-learning driver (first VALID test) + hypothesis-driven active-probe disambiguation
+
+Added by the .435 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-25). The `.434` capstone
+(exp4723) closed `bridge_crossed_for_solve=False` for the **10th consecutive milestone** and produced the
+decisive clarifying NEGATIVE: the `.434` A2 surfacing experiment (exp4713) proved the winning L1 candidate —
+now PRESENT in the object-centric proposal pool (coverage 1.0, the `.433` perception win) at rank ~59 — is
+**NOT separable from same-depth distractors by ANY static oracle-distinct feature**
+(`precision_at_k_delta=0.0`; the ranker even *worsened* ranks `[59,161,12,77]→[87,102,74,36]`). Three more
+levers nulled: A1 perception-grounded L2 alignment goal (`alignment_under_determined`); A4 the leader's
+online driver (all three arms EXACTLY 0.04 — a `TAUTOLOGY`/no-op signature, `flagged_adversarial`, almost
+certainly **dead code again** like the `.433` Go-Explore `(1,64,64)` + CNN dict-candidate bugs); A3 banked
+bp35 L2 but via a `development_proxy` adapter. A poison pre-test SKIPPED the operator-MANDATORY B1 audit +
+B2 guard + A5 persist + A6 integration + C KV260 (no artifacts).
+
+**The settled diagnosis: STATIC SELECTION OF A FROZEN POOL IS EXHAUSTED.** Ten milestones of
+selection/perception/goal levers have not moved generic first-win off 0.04 (1/25 games). The two untested
+directions both **ACT to change the situation** rather than rank a frozen pool, and the `.435` plan pursues
+both:
+
+1. **The leader's goal-free ONLINE ACTION-LEARNING DRIVER** (`.435` A1; operator highest-leverage
+   2026-06-24): an online frame-change CNN + coordinate head that PROPOSES clicks, per-level reset to the
+   cross-game prior, deepens multi-level for free. It has NEVER been validly tested (`.433`/`.434` ran dead
+   code), so `.435` A1 gates on PROVEN per-arm non-degeneracy before any lift claim.
+2. **Hypothesis-driven ACTIVE PROBING** (`.435` A2; the capstone + SOTA-ingestion hand-off): the agent keeps
+   a posterior over goal/dynamics hypotheses and takes information-gain actions that SPLIT it, so the
+   present-but-unseparable winner becomes distinguishable by its observed CONSEQUENCE, not a static feature.
+   The energy verifier scores which probe best splits the posterior (oracle-distinct — the north-star
+   "verifier earns its place" as a probe-router). SOTA: **arXiv:2506.01876** (In-Context Learning for Pure
+   Exploration) + **arXiv:2309.08477** (Active Hypothesis Testing).
+
+**SOTA frontier for `.436` (exp4722 ingestion + the `.435` D fallback):** the **epistemic-object-model MCTS
+probe planner** (arXiv:2210.13455 Epistemic MCTS + arXiv:2601.06604 Object-Centric WMs Meet MCTS) and the
+**factored interaction/causal probe bank** (arXiv:2511.02225 + arXiv:2511.14262 object-centric causal WMs),
+honestly bounded by **arXiv:2511.06136** ("…and Where It Breaks" — the object-WM policy-breakage falsifier).
+Trust-integrity hardening: B1 (silent-bug audit of the `.428`–`.434` generation-lever nulls) + B2 (a standing
+`adversarial_verify` lever-exercise-evidence guard that flags byte-identical arms / dead archives / degenerate
+shapes — mechanizing the operator's manual dead-code catch).
+
 ## 2026-06-24 — .430 planning sweep — THE MULTI-LEVEL WALL IS THE DEGENERATE L2 GOAL PREDICATE: fix L2-goal induction (capture the L1 win-grid exemplar + satisfiability check) and the distribution-shift in value-routing (DAgger-lite); SOTA confirms both directions
 
 Added by the .430 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-24). The `.429` capstone
