@@ -97,6 +97,29 @@ def test_not_eligible_is_not_codeonly(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "stop" not in cap["body"]
 
 
+def test_engine_only_required_is_codeonly(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The split-induce engine call requests required=('engine',) yet must still be code-only --
+    the gate keys on codeonly_eligible, NOT on 'is_level_complete' in required."""
+    monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
+    cap = _capture(monkeypatch)
+    p = _proposer(monkeypatch)
+    ok, _ = p.generate("BASE", ("engine",), codeonly_eligible=True)
+    assert ok is True
+    assert cap["body"]["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
+    assert cap["body"].get("stop") == ["```"]
+
+
+def test_goal_only_required_is_codeonly(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The split-induce goal call requests required=('is_level_complete',) and must be code-only."""
+    monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
+    cap = _capture(monkeypatch)
+    p = _proposer(monkeypatch)
+    ok, _ = p.generate("BASE", ("is_level_complete",), codeonly_eligible=True)
+    assert ok is True
+    assert cap["body"]["prompt"].startswith(awm._L2_CODEONLY_DIRECTIVE)
+    assert cap["body"].get("stop") == ["```"]
+
+
 def test_optout_env_disables_even_when_eligible(monkeypatch: pytest.MonkeyPatch) -> None:
     """CARNOT_ARC_CODEONLY_INDUCE=0 disables code-only even for an eligible induce call."""
     monkeypatch.setenv("CARNOT_ARC_CODEONLY_INDUCE", "0")
