@@ -2053,7 +2053,48 @@ class E3AgentPolicy:
         return False, None
 
     def _install_goal_bias(self, is_done) -> None:
+        """Install the induced goal as a frontier bias for best-first ordering.
+
+        GRADED-GOAL-ENERGY FIX (2026-06-25, opportunity 1): the induced goal predicate is a BINARY
+        callable (grid -> bool). Installing it verbatim as ``1.0 if is_done else 0.0`` gives the
+        best-first frontier a CLIFF -- zero signal at every non-terminal state, a spike only at the
+        exact win -- so the search has no gradient to descend toward the goal until it accidentally
+        lands on it. This degrades the live graded GoalSatisfactionEnergy and is consistent with the
+        multi-level deepening null (lp85 L2 did not bank). When CARNOT_ARC_GRADED_GOAL_BIAS=1 and a
+        win-state exemplar (the previous level's completion grid) is available, install a GRADED
+        energy instead: E(grid) = 0.0 if is_done(grid) else the normalized cell-Hamming distance to
+        the win exemplar -- a terminal anchor at the true goal PLUS a continuous descent gradient
+        everywhere else, so the frontier can flow toward goal-shaped states. Default (env unset)
+        keeps the binary behavior byte-identical (parity-safe).
+        """
         if not callable(is_done):
+            return
+
+        import os
+
+        import numpy as np
+
+        exemplar = getattr(self, "_previous_level_complete_grid", None)
+        if os.environ.get("CARNOT_ARC_GRADED_GOAL_BIAS") == "1" and exemplar is not None:
+            exemplar_arr = np.asarray(exemplar)
+
+            def _graded_bias(frame: Any) -> float:
+                from carnot.agentic.arc_agi3_world_model import grid_of
+                from carnot.agentic.arc_executable_world_model import to_logical
+
+                grid = to_logical(grid_of(frame), self.cell)
+                try:
+                    if is_done(grid):
+                        return 0.0
+                except Exception:
+                    pass
+                g = np.asarray(grid)
+                if g.shape != exemplar_arr.shape:
+                    return 1.0  # mismatched shape -> maximally far
+                return float(np.mean(g != exemplar_arr))
+
+            label = f"L{self._current_goal_level or '?'}_induced_goal_graded_distance"
+            self.explorer.set_goal_bias(_graded_bias, label=label, lower_is_better=True)
             return
 
         def _bias(frame: Any) -> float:
