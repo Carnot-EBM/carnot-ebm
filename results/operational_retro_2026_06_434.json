@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.434",
+  "generated_at": "2026-06-25T08:15:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked numeric fields (0/0/0, gpu_idle=null) reflect the milestone-scoped TIMING-DETECTOR output, NOT an idle milestone. On-disk reconciliation (verifiable via `ls results/experiment_47*_*.json` + `git log` PHASE 0/A1/A2/A3/A4/D/E commits) shows 2026.06.434 DID run: artifacts exp4711-exp4723 are present with a clean mtime window 2026-06-25 00:01:30->04:07:52 EDT (~246 min), and the on-disk capstone exp4723_capstone_v434.json carries the scorecard. This is the recurring FALSE-ZERO timing-detector gap (documented .363-.433, now extending to .434, ~72 milestones): the shipped detector-wire reaches the standalone module but not the conductor's retro prompt-assembly consumer that feeds this TIMING DATA block. No monitored-3090 compute-bound task ran (the live ARC levers run on the AMD iGPU frozen-sprint generator; the rest are aggregation / cached-candidate verifier-scoring), so compute_bound=0 and both idle 3090s are CORRECT, not a bug.",
+  "bottlenecks_identified": [
+    "RECURRING (highest-leverage): the authoritative milestone-scoped timing detector AGAIN false-reported 0 commits since activation despite exp4711-exp4723 existing on disk -- a ~72-milestone observability gap (.363->.434), not an execution failure. It forces every retro to hand-reconstruct exp_range/window from artifact mtimes.",
+    "INCOMPLETE ARMS (this milestone, per on-disk capstone exp4723): honest_verdict=blocked_upstream_artifacts -- 5 expected arm artifacts (exp4717-exp4721) are absent, and exp4715/exp4716 were skipped as flagged_adversarial/control-failed. Those are wasted/incomplete task slots, the concrete execution-efficiency loss this milestone.",
+    "GPU idle is NOT a bottleneck: both RTX 3090s at 0% util / 4MB is correct because no monitored-3090 compute-bound (GGUF/CUDA) task ran; per the GPU Idle Interpretation Rule the idle claim is not gated (no compute-bound task present), so gpu_idle_on_compute_bound_tasks stays null."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site (the consumer it currently never reaches), and add a disk-mtime fallback so a detector false-zero degrades to a verifiable artifact-mtime window instead of a bare 0 -- the same recommendation carried .363->.433, still unshipped.",
+    "Add write-time stamping of duration_s / inference_substrate / compute_bound on each experiment artifact so the retro can classify compute-bound vs aggregation without re-deriving it from GGUF-marker heuristics.",
+    "Root-cause why exp4717-exp4721 never landed (5 missing artifacts -> blocked_upstream_artifacts on the capstone); recovering those slots is the real per-milestone wall-time win, larger than any GPU-scheduling change here.",
+    "Leave GPU scheduling untouched / no DualGPURunner action: no task loaded 2+ models on the monitored 3090s in parallel this milestone, so dual-GPU enforcement is not a live question."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Ship the detector-wire relocation + disk-mtime fallback so the retro TIMING DATA block stops false-reporting 0 (recurring ~72 milestones; this is the single highest-leverage operational fix).",
+    "Investigate the 5 missing arm artifacts (exp4717-exp4721) that drove the capstone's blocked_upstream_artifacts verdict -- recover the slots or confirm they were intentionally dropped.",
+    "Keep the monitored 3090s out of scope for GPU-idle flags until a write-time compute_bound stamp exists; the live ARC work correctly runs on the AMD iGPU, not the 3090s."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "The retro's own authoritative input was AGAIN a false-zero (the detector reported 0 while 13 artifacts sat on disk) -- a process/observability failure, not a compute one. The highest-leverage operational action remains the unshipped detector-wire relocation, now recurring ~72 milestones; the concrete waste THIS milestone is the 5 missing arm artifacts (exp4717-4721), not any idle-GPU time (zero, because no monitored-3090 compute-bound work ran)."
+}
