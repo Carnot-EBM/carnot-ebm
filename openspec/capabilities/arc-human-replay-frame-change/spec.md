@@ -879,6 +879,65 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift on replay."
 - `preconditions_checked`: principle "records CUDA, Qwen cache, offline arcade, bug-fixed archive, and /props served Qwen."
 
+### REQ-ARC-FCP-4726: Valid Online Driver Non-Degeneracy Gate
+
+Experiment 4726 SHALL write
+`results/experiment_4726_online_action_learning_driver_valid_test.json` before
+interpreting any held-out lift from the goal-free online action-learning
+driver. The experiment SHALL first verify the hard resource preconditions:
+CUDA for offline training arms, cached Qwen3.5-9B-MTP GGUF weights, the offline
+ARC arcade plus the bug-fixed Go-Explore archive, and a `/props`-verified Qwen
+proposer on a non-8919 port. If any precondition is absent, the artifact SHALL
+record `preconditions_checked` and a terminal blocked verdict instead of
+fabricating an A/B measurement.
+
+The non-degeneracy gate SHALL compare the frozen, online-scratch, and
+online-warm arms before measuring lift. The gate SHALL prove that the three arms
+produce distinct per-arm action distributions, that online Adam steps actually
+execute with positive gradient norms, and that the online coordinate head
+proposes click cells that differ from the frozen prior's click head. If this
+gate fails, the artifact SHALL report
+`complete: online_driver_arms_degenerate_confirmed_harness_bug` with diagnostic
+evidence and SHALL NOT treat a flat first-win delta as a capability null.
+
+When the gate passes, Experiment 4726 SHALL aggregate the held-out first-win
+rates for `{frozen, online-scratch, online-warm}` on the experiment 4605
+color-permuted harness, measure one CPU online train-step latency, run the
+live-path orphan lint and submitted-agent parity checks, and include the
+bounded lp85/sc25 goal-free L2 probe. A success verdict requires
+`online_warm_vs_frozen_delta >= 0.05` or an offline-reproduced goal-free L2.
+Otherwise the artifact SHALL report an honest no-lift residual only when the
+non-degeneracy gate, parity, and reachable-headroom positive control pass.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; success: online_warm_beats_frozen_<delta>_or_l2_<game> OR complete: online_driver_arms_degenerate_confirmed_harness_bug OR complete: online_action_learning_no_first_win_lift_residual_<cause>."
+- `inference_substrate`: principle "live_llm_inference precondition for the Qwen GGUF plus verifier_ensemble_against_cached_candidates for the offline held-out arm artifacts."
+- `arms_non_degenerate`: principle "first gate; true only when action distributions differ, online train steps have positive gradient norms, and online coordinate proposals differ from the frozen prior."
+- `per_arm_action_distribution_distinct`: principle "explicit evidence the arm action histograms are not byte-identical."
+- `online_train_steps_executed`: principle "positive-gradient Adam steps actually run; proves the online CNN trained."
+- `online_warm_first_win`: principle "the +0.05 online-warm-over-frozen gate is the bet."
+- `online_scratch_first_win`: principle "online-from-random arm isolates online learning from warm start."
+- `frozen_first_win`: principle "frozen-prior baseline, the no-online control."
+- `online_warm_vs_frozen_delta`: principle "online_warm_first_win - frozen_first_win; >=+0.05 is the first-win gate."
+- `cpu_train_step_ms`: principle "CPU wall-clock for one online Adam/BCE step after about five actions."
+- `goal_free_l2_reached`: principle "a goal-free L2 deepening proves the wall is crossed by demoting goal-induction."
+- `offline_reproduced`: principle "a goal-free L2 counts only if offline-reproduced."
+- `reproduced_levels`: principle "integer level reached by the goal-free multi-level probe."
+- `solve_provenance`: principle "live_agent_self_discovery for a generic goal-free L2; development_proxy otherwise."
+- `verifier_is_oracle`: principle "MUST be false; the online frame-change CNN does not run the win-check."
+- `live_path_reachable`: principle "the changed E3AgentPolicy/StepwiseExplorer code is in the scored agent import closure."
+- `bare_control_passed`: principle "positive control; held-out harness has reachable first-win headroom."
+- `false_negative_risk_checked`: principle "true only with non-degenerate arms and reachable headroom."
+- `null_delta_methodology_note`: principle "present when a flat non-degenerate delta is an honest no-lift null."
+- `positive_control_passed`: principle "bool(parity_test_green AND arms_non_degenerate); gates the TAUTOLOGY null-delta exemption."
+- `chosen_submitted_config`: principle "recommended submitted-agent config; unchanged for honest null."
+- `proposer_served_model`: principle "the `/props`-reported model; MUST be Qwen3.5-9B-MTP."
+- `parity_test_green`: principle "test_arc_submitted_agent_parity.py passes."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift."
+- `preconditions_checked`: principle "records CUDA, Qwen cache, offline arcade, Go-Explore import, and `/props` verification."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -888,6 +947,23 @@ change the frame
 When the behavior prior or scorer ranks the candidates
 Then the changing click is ordered ahead of no-op candidates
 And the legacy candidate order remains the tie-break for equal scores.
+
+### SCENARIO-ARC-FCP-4726: Online Driver Arms Must Be Non-Degenerate Before Lift
+
+Given the frozen, online-scratch, and online-warm goal-free driver arms are
+available and the Qwen/arcade/CUDA preconditions pass
+When experiment 4726 runs the valid-driver gate before aggregating held-out
+first-win rates
+Then it records distinct per-arm action distributions, positive-gradient
+online Adam train steps, and online coordinate-head click proposals that differ
+from the frozen prior before setting `arms_non_degenerate=true`.
+
+Given any of those non-degeneracy witnesses is missing
+When experiment 4726 writes its artifact
+Then it reports
+`complete: online_driver_arms_degenerate_confirmed_harness_bug`, keeps
+`chosen_submitted_config` unchanged, and does not treat a flat first-win delta
+as a capability null.
 
 ### SCENARIO-ARC-FCP-4629: Submitted E3 Uses Live-Reachable Action-Effect Ranking
 
