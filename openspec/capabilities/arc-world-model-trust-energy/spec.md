@@ -5882,6 +5882,76 @@ written
 dead-ends, bumps `reproducible_total_levels` to 62, and the artifact schema
 validates with a stable checksum.
 
+### REQ-ARC-WMTE-4709: Structured-World-Model SOTA Ingestion For .434
+
+Experiment 4709 SHALL map the `.434` fallback after the `.433` A1 object-centric
+perception arm and A2 amortized-prior plus Go-Explore arm fail to make a
+winner appear at L1. The workflow SHALL read
+`results/experiment_4697_sota_ingestion_amortized_exploration.json`,
+`docs/research-notes/amortized-exploration-sota-ingestion-2026-06-24.md`,
+`results/experiment_4700_object_centric_perception_proposal_live.json`,
+`results/experiment_4701_amortized_exploration_prior_go_explore_live.json`,
+`python/carnot/agentic/arc_executable_world_model.py`,
+`research-studying.md`, and `research-references.md` before scoping methods.
+The synthesis SHALL explicitly carry forward the `.433` residuals
+`object_centric_perception_no_new_level_residual_offpath_calibration_insufficient`
+and `amortized_prior_go_explore_no_coverage_gain_residual_logged`, plus the
+deeper wall: if perception and amortized exploration do not surface the winning
+prefix, the explorer needs an induced structured, executable object-relational transition model
+that it can plan in and actively probe.
+
+The workflow SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch of the top five to eight papers, and direct arXiv HTTP
+checks. It SHALL NOT invoke `/deep-research`. If
+`https://huggingface.co/api/models` or
+`.venv/bin/python scripts/sweep_clusters.py --help` fails, the workflow SHALL
+report `blocked_network` or `blocked_sweep_clusters` rather than fabricate
+citations.
+
+Experiment 4709 SHALL write
+`docs/research-notes/structured-world-model-active-probing-sota-ingestion-2026-06-25.md`
+and `results/experiment_4709_sota_ingestion_structured_world_model.json`. The
+artifact SHALL include `honest_verdict`, `inference_substrate`,
+`deep_research_not_used`, `methods_mapped`, `citations_verified`,
+`flagged_for_next_roadmap`, `note_path`, `preconditions_checked`,
+`random_seed`, and `field_principles`. The success verdict SHALL be
+`success: sota_ingestion_structured_world_model_mapped`, the substrate SHALL be
+`aggregation_from_upstream_artifacts`, and `deep_research_not_used` SHALL be
+true. Each mapped method SHALL cite real arXiv IDs and SHALL include the
+implementation cost over the current live E3 explorer,
+`arc_executable_world_model`, A1 object-centric perception, and A2 amortized
+prior plus Go-Explore stack, plus a concrete `fails_when` condition and a
+residual-scope note. No method claim is valid without a verified arXiv ID.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_structured_world_model_mapped.`
+- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature read + synthesis, no model load (100us floor).`
+- `deep_research_not_used`: principle `MUST be true -- /deep-research is BANNED in the autonomous loop; used sweep helpers + low-concurrency WebSearch/WebFetch.`
+- `methods_mapped`: principle `the strongest 3-5 SOTA methods with REAL arXiv IDs + per-method implement-cost-over-current-stack + fails_when (no citation = fabrication).`
+- `citations_verified`: principle `each cited arXiv ID with an HTTP-200 verification -- pre-empts fabricated citations.`
+- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged as candidate .434 inputs (flagged_for_v434) -- closes discover->ingest->plan->experiment.`
+- `note_path`: principle `the per-track research-note path (the SOTA-Ingestion Cycle deliverable).`
+- `preconditions_checked`: principle `records network reachability verified; pre-empts fabricated citations.`
+
+### SCENARIO-ARC-WMTE-4709: Structured World Models And Active Probing Map Onto .434 Inputs
+
+Given the network and sweep-helper preconditions succeed and the `.433` A1/A2
+residual artifacts are readable
+When experiment 4709 ingests focused papers for object-centric structured world
+models, program-induced executable transition models, MCTS planning in learned
+object models, epistemic uncertainty planning, and active hypothesis testing
+Then the note and JSON artifact map three to five strongest methods onto the
+current live E3 explorer / `arc_executable_world_model` / A1 object-centric
+perception / A2 amortized-prior plus Go-Explore stack, cite real arXiv IDs
+including `2410.08822`, `2511.02225`, `2601.06604`, `2511.06136`,
+`2307.02427`, `2210.13455`, `2506.01876`, and `2309.08477`, flag one or more
+`flagged_for_v434` roadmap candidates, record all network and citation
+preconditions checked, record the `.433` null residuals and structured
+world-model / active-probing next-wall scope, and record that `/deep-research`
+was not used.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored
