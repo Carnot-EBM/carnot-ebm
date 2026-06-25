@@ -3,3 +3,16 @@ INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and ma
 [13:12:56] Running lp85 binary arm (default fix stack: truncation default-ON + goal-repair), budget=400...
 2026-06-25 13:12:57 | INFO | Created new scorecard: 399ca511-7f5d-4e56-a841-81c5aa81efba
 2026-06-25 13:12:57 | INFO | Successfully loaded game class Lp85 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85/305b61c3/lp85.py
+[13:29:06] VERDICT: complete_no_change_still_L1_goal_unsatisfiable
+[13:29:06] SUMMARY: lp85 stayed L1, goal_satisfiable_any=False -- the repair did NOT fire or the induction still failed. Needs investigation.
+[13:29:06]   max_depth=1 l2_reproduced=False goal_satisfiable_any=False repair_fired=False n_induce=2
+[13:29:06]   induced is_level_complete tail:
+def is_level_complete(grid):
+    h, w = grid.shape
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 3:
+                return False
+    return True
+[13:29:06] DONE in 971.68s -> /home/ianblenke/github.com/ianblenke/carnot/results/proto_l2_measure_fixstack.json
+EXIT=0

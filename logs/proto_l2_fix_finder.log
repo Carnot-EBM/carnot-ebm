@@ -1,0 +1,11 @@
+[13:44:19] captured prompt 9290c | base 8818c | win_block present=True
+[13:44:19] ARM B: same directive, n_predict=4096 ...
+[13:50:28]   B: stop=limit toks=4096 parse_ok=False missing=['is_level_complete'] dur=369.0s
+[13:50:28] ARM C: goal-first directive, n_predict=2560 ...
+[13:51:39]   C: stop=word toks=185 parse_ok=True missing=[] dur=71.6s
+[13:51:39] ARM D: separate focused is_level_complete-only call, n_predict=768 ...
+[13:51:43]   D: stop=word toks=17 parse_ok=True missing=[] dur=3.5s
+[13:51:43] VERDICT: complete_fix_separate_goal_call
+[13:51:43] SUMMARY: The separate focused is_level_complete call (D) produces a valid goal predicate where the combined engine+goal prompt fails -- the engine ramble can no longer starve the goal. Recommended structural fix: induce the goal in its own call.
+[13:51:43] WORKING FIXES: ['C_goal_first_2560', 'D_separate_goal_768']
+EXIT=0
