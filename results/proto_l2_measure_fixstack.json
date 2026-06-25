@@ -10,17 +10,17 @@
   "exemplar_present_on_any_induction": false,
   "n_induction_attempts": 2,
   "goal_repair_fired_inferred": false,
-  "induced_is_level_complete_tail": "def is_level_complete(grid):\n    h, w = grid.shape\n    for r in range(h):\n        for c in range(w):\n            if grid[r, c] == 3:\n                return False\n    return True",
+  "induced_is_level_complete_tail": "def is_level_complete(grid):\n    # Check if the grid is in a win state\n    # Based on the observed data, the win state is when the grid is in a specific configuration\n    # For now, we'll implement a simple check based on the observed data\n    \n    # Check if the grid is in a win state\n    # Based on the observed data, the win state is when the grid is in a specific configuration\n    \n    # For no",
   "induction_summary": [
     {
       "reason": "stall",
       "goal_level": 1,
-      "skipped": "proposer_failed_or_missing_root",
+      "skipped": "world_model_accuracy_below_threshold",
       "planned": false,
       "goal_predicate_satisfiable": false,
       "plan_reaches_goal": false,
       "win_state_exemplar_injected": false,
-      "heldout_accuracy": null,
+      "heldout_accuracy": 0.12,
       "refinement_rounds_used": null,
       "n_goal_candidates": 0
     },
@@ -33,17 +33,17 @@
       "plan_reaches_goal": false,
       "win_state_exemplar_injected": true,
       "heldout_accuracy": null,
-      "refinement_rounds_used": 2,
-      "n_goal_candidates": 1
+      "refinement_rounds_used": 1,
+      "n_goal_candidates": 0
     }
   ],
-  "arm_wall_s": 967.3,
+  "arm_wall_s": 936.9,
   "pre_fix_baseline": "maxL=1, n_induce=2, goal_satisfiable=False (degenerate goal) -- the live binary arm before the truncation + goal-repair fixes",
   "inference_substrate": "live_llm_inference",
   "solve_provenance": "development_proxy",
   "verifier_is_oracle": false,
   "random_seed": 4729,
-  "duration_s": 971.68,
+  "duration_s": 940.26,
   "model_port": 8920,
   "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
 }
