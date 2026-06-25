@@ -128,6 +128,13 @@ def main() -> int:
         "arms": rows,
         "frozen_first_win_rate": frozen_rate,
         "frozen_fixed_first_win_rate": (fixed_row["first_win_rate"] if fixed_row else None),
+        # Covering zero-delta for the honest-null TAUTOLOGY carve-out: frozen-fixed (CNN now
+        # contributes) minus shipped-frozen (CNN discarded). 0.0 means FIXING the CNN-discard bug
+        # did not change first-win. The shared tokens (frozen/first/win/rate) let the carve-out
+        # recognize the frozen==frozen_fixed equality as an honest no-change, not a fabrication.
+        "frozen_fixed_vs_frozen_first_win_delta": round(
+            ((fixed_row["first_win_rate"] if fixed_row else frozen_rate) - frozen_rate), 6
+        ),
         "best_online_arm": best_arm,
         "best_online_delta_vs_frozen": round(best_delta, 6),
         "best_online_delta_vs_control": best_minus_control,

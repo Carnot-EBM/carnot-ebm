@@ -1,0 +1,129 @@
+{
+  "arms": [
+    {
+      "arm": "frozen",
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_point": 0.0,
+      "delta_vs_frozen": 0.0,
+      "duration_s": 603.898,
+      "first_win_rate": 0.04,
+      "lost_vs_frozen": [],
+      "newly_solved_vs_frozen": [],
+      "scorer_diagnostics": {
+        "errors": 0,
+        "fits": 0,
+        "n_scorers": 0,
+        "observed": 0
+      },
+      "solved_games": [
+        "lp85"
+      ]
+    },
+    {
+      "arm": "frozen-fixed",
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_point": 0.0,
+      "delta_vs_frozen": 0.0,
+      "duration_s": 442.585,
+      "first_win_rate": 0.04,
+      "lost_vs_frozen": [],
+      "newly_solved_vs_frozen": [],
+      "scorer_diagnostics": {
+        "errors": 0,
+        "fits": 0,
+        "n_scorers": 25,
+        "observed": 4737
+      },
+      "solved_games": [
+        "lp85"
+      ]
+    },
+    {
+      "arm": "online-warm",
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_point": 0.0,
+      "delta_vs_frozen": 0.0,
+      "duration_s": 608.56,
+      "first_win_rate": 0.04,
+      "lost_vs_frozen": [],
+      "newly_solved_vs_frozen": [],
+      "scorer_diagnostics": {
+        "errors": 0,
+        "fits": 935,
+        "n_scorers": 25,
+        "observed": 4737
+      },
+      "solved_games": [
+        "lp85"
+      ]
+    },
+    {
+      "arm": "online-warm-propose",
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_point": 0.0,
+      "delta_vs_frozen": 0.0,
+      "duration_s": 511.517,
+      "first_win_rate": 0.04,
+      "lost_vs_frozen": [],
+      "newly_solved_vs_frozen": [],
+      "scorer_diagnostics": {
+        "errors": 0,
+        "fits": 935,
+        "n_scorers": 25,
+        "observed": 4737
+      },
+      "solved_games": [
+        "lp85"
+      ]
+    }
+  ],
+  "best_online_arm": "online-warm",
+  "best_online_delta_vs_control": 0.0,
+  "best_online_delta_vs_frozen": 0.0,
+  "cited_upstream_artifacts": [
+    {
+      "arm": "frozen",
+      "path": "results/experiment_4710_online_action_learning_arms_frozen.json"
+    },
+    {
+      "arm": "frozen-fixed",
+      "path": "results/experiment_4710_online_action_learning_arms_frozen_fixed.json"
+    },
+    {
+      "arm": "online-warm",
+      "path": "results/experiment_4710_online_action_learning_arms_online_warm.json"
+    },
+    {
+      "arm": "online-warm-propose",
+      "path": "results/experiment_4710_online_action_learning_arms_online_warm_propose.json"
+    }
+  ],
+  "control_arm": "frozen-fixed",
+  "crossed_bar": false,
+  "experiment": "experiment_4710_arms_summary",
+  "frozen_first_win_rate": 0.04,
+  "frozen_fixed_first_win_rate": 0.04,
+  "frozen_fixed_vs_frozen_first_win_delta": 0.0,
+  "honest_verdict": "complete: online_action_learning_no_first_win_lift_null best_arm=online-warm best_delta=+0.0000 (kill_threshold=+0.05)",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kill_threshold": 0.05,
+  "null_delta_methodology_note": "flat first-win delta vs the frozen 0.04 baseline is the expected ablation equality when the online CNN (a 0.05-weighted re-rank term, or an adds-candidates propose term) does not change WHICH games solve. positive_control_passed = the frozen arm reproduces the committed exp4605 0.04 baseline (lp85 solved), so the harness is real and a flat online delta is an honest no-change, not a broken measurement.",
+  "positive_control_passed": true,
+  "random_seed": 4710,
+  "reproducibility_checksum": "sha256:6485c3f574c2c7c7f581fb6f81ef3ab919ed4e5584aeabe5eee078bd66e2eeca",
+  "schema": "carnot.exp4710.arms_summary.v1",
+  "solve_provenance": "development_proxy",
+  "verifier_is_oracle": false
+}
