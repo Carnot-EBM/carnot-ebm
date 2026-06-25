@@ -6310,6 +6310,64 @@ Then the note and JSON artifact map three to five methods onto
 `flagged_for_v435` candidates, record that `/deep-research` was not invoked,
 record `verifier_is_oracle=false`, and emit no ARC solve claim.
 
+### REQ-ARC-WMTE-4727: Live Hypothesis-Posterior Active Probe Controller
+
+The live `E3AgentPolicy` induction path SHALL support an active-probe
+controller that maintains a small posterior over candidate goal/dynamics
+hypotheses, asks `arc_executable_world_model` for each hypothesis' predicted
+transition under candidate live actions, scores candidate probes by expected
+posterior split / information gain, executes the most discriminating probe
+before committing to a solve plan, and updates the posterior from the observed
+transition. The energy verifier SHALL rank probes by transition
+discrimination only and SHALL NOT call the environment win-check, so
+`verifier_is_oracle=false` remains gate-eligible.
+
+The same scored-agent path SHALL expose a matched no-probe ablation that keeps
+the passive induce-then-plan behavior under the same budget. A success claim
+for Experiment 4727 is valid only when the generic live agent reaches a new
+level with active probing, offline reproduction confirms it via
+`arc_solver_kit.reproduce`, and the no-probe ablation reaches a lower level.
+If no new level is reached, Experiment 4727 SHALL still emit an honest null
+after confirming probes ran, posterior entropy dropped, reachable L1 headroom
+was checked, and the no-probe ablation ran.
+
+Experiment 4727 SHALL write
+`results/experiment_4727_active_probe_disambiguation.json` with
+`honest_verdict`, `inference_substrate`, `verifier_is_oracle`,
+`solve_provenance`, `live_path_reachable`, `hypothesis_posterior_built`,
+`probe_actions_taken`, `posterior_entropy_reduction`,
+`generic_agent_reached_level`, `no_probe_ablation_reached_level`,
+`offline_reproduced`, `reproduced_levels`, `bare_control_passed`,
+`false_negative_risk_checked`, `null_methodology_note`,
+`missing_verifier_gap_logged`, `chosen_submitted_config`,
+`proposer_served_model`, `parity_test_green`, `random_seed`,
+`reproducibility_checksum`, and `preconditions_checked`. The artifact SHALL
+include field principles for those fields. If any hard precondition is missing,
+the artifact SHALL report a terminal blocked verdict and record the exact
+failed resource in `preconditions_checked` instead of fabricating a live run.
+
+### SCENARIO-ARC-WMTE-4727-ACTIVE-PROBE-SPLITS-POSTERIOR
+
+Given two candidate dynamics hypotheses that make different predictions for at
+least one live action
+When the active-probe controller scores candidate actions
+Then the highest-ranked probe is the action whose predicted transition buckets
+split the posterior with the largest expected information gain, the posterior
+update increases mass on hypotheses matching the observed transition, and the
+diagnostics report a positive posterior entropy reduction.
+
+### SCENARIO-ARC-WMTE-4727-ARTIFACT-CONTRACT
+
+Given the preconditions pass and Experiment 4727 runs the generic E3 path with
+active probing and the matched no-probe ablation
+When the workflow writes
+`results/experiment_4727_active_probe_disambiguation.json`
+Then it records Qwen3.5-9B-MTP `/props` provenance, `verifier_is_oracle=false`,
+live-path reachability via `arc_orphan_solver_lint`, the probe-vs-no-probe
+level delta, offline reproduction evidence for any new level, a deterministic
+checksum, and an honest null methodology note plus verifier gap when active
+probing cannot disambiguate.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored

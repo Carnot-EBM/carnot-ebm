@@ -697,6 +697,27 @@ class WorldModelVerifier:
         return VerifyResult(n, n_correct, n_correct / max(1, n), mism, cell_recall=cell_recall)
 
 
+def predict_hypothesis_transition(
+    hypothesis: Any,
+    grid: np.ndarray,
+    action: int,
+    data: Any = None,
+) -> np.ndarray:
+    """REQ-ARC-WMTE-4727: run one hypothesis' transition model for a candidate probe.
+
+    Active probing needs a narrow, oracle-distinct prediction API: given a
+    candidate dynamics hypothesis and a possible live action, return what that
+    hypothesis says the next logical grid will be. This helper deliberately
+    does not inspect `is_level_complete`; probe routing is about transition
+    consequences, not asking the environment's win oracle.
+    """
+
+    engine = getattr(hypothesis, "engine", hypothesis)
+    if not callable(engine):
+        raise TypeError("hypothesis_transition_engine_not_callable")
+    return np.asarray(engine(np.asarray(grid).copy(), int(action), data))
+
+
 def load_engine(game: str):
     """Import the codex-written world_model.py for a game and return (engine,
     is_level_complete). Re-imports fresh each call so a refactor is picked up."""
