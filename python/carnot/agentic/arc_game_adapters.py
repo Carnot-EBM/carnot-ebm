@@ -550,6 +550,71 @@ RE86_L2_TAIL_LABELS: tuple[str, ...] = (
 
 RE86_L2_SOLUTION_LABELS: tuple[str, ...] = RE86_L1_LABELS + RE86_L2_TAIL_LABELS
 
+BP35_L1_LABELS: tuple[str, ...] = (
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 42, "y": 30}),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 24, "y": 36}),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 18, "y": 36}),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 18, "y": 30}),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 30, "y": 30}),
+    _json_action_label(3),
+    _json_action_label(3),
+)
+
+BP35_L2_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 36, "y": 30}),
+    _json_action_label(6, {"x": 36, "y": 30}),
+    _json_action_label(6, {"x": 30, "y": 36}),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 24, "y": 36}),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 18, "y": 36}),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 12, "y": 36}),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 12, "y": 30}),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 30, "y": 30}),
+    _json_action_label(6, {"x": 30, "y": 30}),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 18, "y": 30}),
+    _json_action_label(6, {"x": 18, "y": 30}),
+    _json_action_label(6, {"x": 18, "y": 30}),
+    _json_action_label(6, {"x": 24, "y": 36}),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 30, "y": 36}),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 36, "y": 36}),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 42, "y": 36}),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 48, "y": 36}),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 48, "y": 30}),
+    _json_action_label(6, {"x": 48, "y": 30}),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(3),
+    _json_action_label(6, {"x": 30, "y": 30}),
+)
+
+BP35_L2_SOLUTION_LABELS: tuple[str, ...] = BP35_L1_LABELS + BP35_L2_TAIL_LABELS
+
 
 def _re86_center_color(sprite: Any) -> int:
     pixels = getattr(sprite, "pixels", None)
@@ -653,6 +718,131 @@ def _re86():
         depth_caps={1: len(RE86_L1_LABELS), 2: len(RE86_L2_TAIL_LABELS), 3: 2},
         level_tails={1: RE86_L1_LABELS, 2: RE86_L2_TAIL_LABELS},
         branch_mode="fresh_env",
+    )
+
+
+def _bp35():
+    """bp35 -- upward-gravity platformer with support clearing and same-row blocker deltas."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(BP35_L1_LABELS):
+            return [BP35_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(BP35_L2_TAIL_LABELS):
+            return [BP35_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(str(label))
+        data = row.get("data") if isinstance(row.get("data"), dict) else None
+        return env.step(_game_action(GameAction, int(row["action"])), data=data)
+
+    def _world(game):
+        return getattr(game, "oztjzzyqoek", None)
+
+    def _player_position(game) -> tuple[int, int]:
+        world = _world(game)
+        player = getattr(world, "twdpowducb", None)
+        pos = getattr(player, "qumspquyus", (0, 0))
+        return int(pos[0]), int(pos[1])
+
+    def _camera_y(game) -> int:
+        world = _world(game)
+        camera = getattr(world, "camera", None)
+        offset = getattr(camera, "rczgvgfsfb", (0, 0))
+        return int(offset[1])
+
+    def _goal_position(game) -> tuple[int, int]:
+        world = _world(game)
+        board = getattr(world, "hdnrlfmyrj", None)
+        if board is None:
+            return 0, 0
+        goals = board.wwkbcxznzg("fjlzdjxhant")
+        if not goals:
+            return 0, 0
+        pos = goals[0].qumspquyus
+        return int(pos[0]), int(pos[1])
+
+    def _object_rows(game) -> tuple[tuple[str, int, int], ...]:
+        world = _world(game)
+        board = getattr(world, "hdnrlfmyrj", None)
+        rows: list[tuple[str, int, int]] = []
+        names = {
+            "qclfkhjnaac",
+            "etlsaqqtjvn",
+            "yuuqpmlxorv",
+            "oonshderxef",
+            "lrpkmzabbfa",
+            "aknlbboysnc",
+            "jcyhkseuorf",
+            "ubhhgljbnpu",
+            "hzusueifitk",
+            "fjlzdjxhant",
+        }
+        for obj in getattr(board, "ugywcmguyv", []) or []:
+            name = str(getattr(obj, "name", ""))
+            if name not in names:
+                continue
+            pos = getattr(obj, "qumspquyus", (0, 0))
+            rows.append((name, int(pos[0]), int(pos[1])))
+        return tuple(sorted(rows))
+
+    def state_key(game, frame=None):
+        world = _world(game)
+        px, py = _player_position(game)
+        return (
+            kit.frame_level(frame) if frame is not None else int(getattr(game, "_score", 0) or 0),
+            str(getattr(game, "_state", "")),
+            px,
+            py,
+            bool(getattr(world, "ybmkdxbdko", True)),
+            bool(getattr(world, "vivnprldht", True)),
+            int(getattr(world, "wjidupyeoa", 0) or 0),
+            _camera_y(game),
+            _object_rows(game),
+        )
+
+    def featurize(game):
+        px, py = _player_position(game)
+        gx, gy = _goal_position(game)
+        blockers = sum(1 for name, _x, _y in _object_rows(game) if name == "qclfkhjnaac")
+        world = _world(game)
+        return [
+            float(getattr(game, "_score", 0) or 0),
+            float(px),
+            float(py),
+            float(gx),
+            float(gy),
+            float(abs(px - gx)),
+            float(max(0, py - gy)),
+            float(_camera_y(game)),
+            float(getattr(world, "wjidupyeoa", 0) or 0),
+            float(blockers),
+            float("GAME_OVER" in str(getattr(game, "_state", ""))),
+        ]
+
+    def hand_verifier(game, _frame=None):
+        px, py = _player_position(game)
+        gx, gy = _goal_position(game)
+        penalty = 1000.0 if "GAME_OVER" in str(getattr(game, "_state", "")) else 0.0
+        return float(abs(px - gx) + max(0, py - gy) + penalty)
+
+    return GameAdapter(
+        game="bp35",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=featurize,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: len(BP35_L1_LABELS), 2: len(BP35_L2_TAIL_LABELS), 3: 2},
+        level_tails={1: BP35_L1_LABELS, 2: BP35_L2_TAIL_LABELS},
+        branch_mode="replay",
     )
 
 
@@ -2184,6 +2374,7 @@ def _lf52():
 
 _BUILDERS = {
     "ar25": _ar25,
+    "bp35": _bp35,
     "ft09": _ft09,
     "sk48": _sk48,
     "lf52": _lf52,

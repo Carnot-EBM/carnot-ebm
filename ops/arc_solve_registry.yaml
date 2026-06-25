@@ -1593,25 +1593,45 @@ games:
     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
 - game: bp35
   reproducibility: reproduced
-  levels_reproduced: 1
+  levels_reproduced: 2
   mechanic_class: goal_directed_navigation_local_obstacle_clear
-  solver: python/carnot/experiment_4480_solve_bp35_goal_directed.py
-  win_condition: move the shape-changing avatar into the color-14 goal tile after local blocker clears
-  action_model: ACTION3/ACTION4 horizontal movement; ACTION6 camera-relative local removable-blocker clear
-  reproduce: arc_solver_kit.reproduce(bp35, solution_labels, apply_bp35_label, claimed_level=1)
+  win_condition: >-
+    L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
+    shelf transfers, and a final support clear above the color-14 goal tile.
+  action_model: >-
+    ACTION3/ACTION4 move horizontally; ACTION6 clicks camera-relative blockers.
+    The L2 delta clears same-row blockers before lateral moves, avoids spike
+    support columns, traverses the right-hand bypass, then clears the blocker at
+    grid (5,9) to fall into the goal.
+  solver: >-
+    GameAdapter _bp35 in python/carnot/agentic/arc_game_adapters.py plus
+    scripts/arc_loop_solve.py --game bp35 --target-level 2 --no-hazard-prune.
+  reproduce: >-
+    Exp4714 results/experiment_4714_levelup_selfplay.json re-gated
+    results/arc_loop_solve_bp35.json offline_reproduced=True, reached_level=2,
+    banked +1 over the prior L1 registry row, checksum 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae.
+  learned_verifier_checkpoint: models/arc_verifier_bp35.json
+  gotchas:
+  - Some L2 falls visibly remain at L1 for one frame even though the game state
+    is GAME_OVER; dead-end filtering must read the executable reproduction gate.
+  - Camera-relative click coordinates repeat across different grid cells after
+    falls; the replayed sequence is display-coordinate grounded, not grid-label
+    grounded.
+  - The learned verifier checkpoint routes/ranks future search only; the
+    executable offline reproduction gate remains the oracle-distinct authority.
   dead_ends:
-  - gap_id: GAP-4480-BP35-GOAL-DIRECTED-NAVIGATION
-    status: filled
-    filled_by: experiment_4480_solve_bp35_goal_directed
-    filled_artifact: results/experiment_4480_solve_bp35_goal_directed.json
-    filled_summary: goal-directed bp35 navigation reproduced L1 offline
-  latest_exp4480_solve_bp35:
-    artifact: results/experiment_4480_solve_bp35_goal_directed.json
+  - bp35: registry_prechecked:GAP-4480-BP35-GOAL-DIRECTED-NAVIGATION
+  - bp35: prior no-grounded-next-level-adapter dead-end retired by grounded L2 tail
+  latest_exp4714_levelup_selfplay:
+    artifact: results/experiment_4714_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_bp35.json
     offline_reproduced: true
-    reproduced_levels: 1
-    operator: bp35_goal_directed_navigation_solver
-    reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
-reproducible_total_levels: 62
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_bp35.json
+    target_rotation: clean_L1_to_L2_not_deepened_in_429_433
+    reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
+reproducible_total_levels: 63
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
