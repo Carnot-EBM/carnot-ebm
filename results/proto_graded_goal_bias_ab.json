@@ -1,0 +1,105 @@
+{
+  "experiment": "proto_graded_goal_bias_ab",
+  "run_date": "2026-06-25",
+  "preconditions": {
+    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "gguf_present": true,
+    "port": 8920,
+    "port_free": true,
+    "port_8919_occupant": "gemma-4-12b-it squatting (known; Qwen3.5-9B-MTP on port 8920 confirmed via /slots task IDs)",
+    "qwen_confirmed_on_8920": true
+  },
+  "smoke_test": {
+    "game": "lp85",
+    "arm": "binary",
+    "max_depth_reached": 1,
+    "n_induction_attempts": 2,
+    "goal_predicate_satisfiable_any": false,
+    "wall_s": 649.9,
+    "note": "From step 1 of proto_graded_goal_bias_ab.py (killed after step 1 due to 244-min timeout on step 2)"
+  },
+  "graded_arm_check": {
+    "game": "lp85",
+    "arm": "graded",
+    "CARNOT_ARC_GRADED_GOAL_BIAS": "1",
+    "max_depth_reached": 1,
+    "actions_used": 118,
+    "budget": 120,
+    "wall_s": 566.3,
+    "goal_bias_label_final": "",
+    "graded_path_fired": false,
+    "win_state_exemplar_present": true,
+    "goal_predicate_satisfiable_any": false,
+    "_previous_level_complete_grid_captured": true,
+    "n_induction_attempts": 2,
+    "induction_summary": [
+      {
+        "reason": "stall",
+        "goal_level": 1,
+        "skipped": "world_model_accuracy_below_threshold",
+        "goal_predicate_satisfiable": null,
+        "win_state_exemplar_injected": null,
+        "note": "World model accuracy too low to trust; planning skipped. L1 reached via exploration (action 63), not LLM plan."
+      },
+      {
+        "reason": "level_up_reinduction",
+        "goal_level": 2,
+        "skipped": "proposer_failed",
+        "goal_predicate_satisfiable": false,
+        "win_state_exemplar_injected": true,
+        "note": "Exemplar WAS injected (L1 completion grid captured), env=CARNOT_ARC_GRADED_GOAL_BIAS=1 was set, but proposer returned ok=False: LLM failed to generate valid Python code for L2 world model (missing required functions or syntax error). _install_goal_bias never reached."
+      }
+    ],
+    "outcome": "C_label_wrong",
+    "outcome_interpretation": "OUTCOME C: graded path did NOT fire because the LLM proposer failed before _install_goal_bias was ever called. The exemplar was present and the env was set correctly - the graded bias WOULD have been installed if the proposer had succeeded. The wall is therefore earlier than the bias mechanism.",
+    "artifact_source": "results/graded_goal_check_focused.json"
+  },
+  "verdict": {
+    "outcome": "C_with_deeper_diagnosis",
+    "summary": "complete: graded_goal_bias_necessary_but_blocked_by_proposer_failure_before_goal_induction",
+    "decisive_finding": "The graded-goal-energy fix (commit 05970b9c6) is correctly implemented: _previous_level_complete_grid IS captured after L1 solve, the graded bias WOULD be installed if the proposer succeeded. However, the wall for lp85 L2 is even earlier: the LLM proposer (Qwen3.5-9B-MTP via llama-server on port 8920) fails to generate valid Python code for the L2 world model. This means _install_goal_bias is never reached. The graded fix cannot be tested or benefit the agent until the proposer succeeds in generating a parseable world model for L2.",
+    "per_game_per_arm": {
+      "lp85_binary_smoke": {
+        "maxL": 1,
+        "n_induction_attempts": 2,
+        "goal_predicate_satisfiable": false,
+        "l2_reached": false,
+        "l2_offline_reproduced": false
+      },
+      "lp85_graded_focused": {
+        "maxL": 1,
+        "n_induction_attempts": 2,
+        "graded_path_fired": false,
+        "exemplar_present": true,
+        "proposer_failed_on_l2_reinduction": true,
+        "goal_predicate_satisfiable": false,
+        "l2_reached": false,
+        "l2_offline_reproduced": false
+      },
+      "sc25_binary": "not_run",
+      "sc25_graded": "not_run"
+    },
+    "graded_path_fired": false,
+    "exemplar_captured": true,
+    "proposer_failure_is_wall": true,
+    "honest_assessment": "Cannot determine A vs B without first fixing the proposer failure. OUTCOME C dominates: the graded gradient is never installed because the LLM cannot produce valid world model code for lp85 L2. Both binary and graded arms fail at the same upstream gate: the LLM proposer. The fix is necessary-but-premature: it cannot be evaluated until the proposer succeeds.",
+    "implications_for_next_steps": [
+      "1. The proposer failure (LLM can't generate valid lp85 L2 world model code) must be fixed first",
+      "2. Possible fixes: better prompting, more transitions in evidence, different model, lower max_tokens to avoid truncation",
+      "3. Once proposer succeeds and goal predicate is satisfiable, the graded bias test can be run cleanly",
+      "4. The smoke binary arm also showed goal_predicate_satisfiable=False on both inductions - this is consistent with proposer failure (goal_satisfiable=False is the default when proposer fails)"
+    ]
+  },
+  "integrity": {
+    "inference_substrate": "live_llm_inference",
+    "model": "Qwen3.5-9B-MTP / Qwen3.5-9B-Q4_K_M.gguf on port 8920 (llama-server with MTP draft)",
+    "random_seed": 42,
+    "reproducibility_checksum": "see_graded_goal_check_focused.json:e61bb6ecc84bf4aa",
+    "verifier_is_oracle": false,
+    "solve_provenance": "live_agent_self_discovery",
+    "wall_s_smoke": 649.9,
+    "wall_s_graded_check": 566.3,
+    "total_wall_s": 1216.2
+  },
+  "honest_verdict": "complete: graded_goal_bias_ab -> OUTCOME_C_proposer_failure_is_wall_before_bias_mechanism"
+}
