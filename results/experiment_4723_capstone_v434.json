@@ -1,0 +1,664 @@
+{
+  "a1_lp85_l2_banked": {
+    "banked": false,
+    "crossed": false,
+    "generic_agent_reached_level": 0,
+    "goal_predicate_satisfiable": false,
+    "l2_plan_reaches_goal": false,
+    "offline_reproduced": false,
+    "reason": "goal_or_plan_control_failed",
+    "reproduced_levels": 1,
+    "solve_provenance": "live_agent_self_discovery",
+    "target_game": "lp85"
+  },
+  "a2_surfaced_present_winner": {
+    "crossed": false,
+    "generic_agent_reached_level": 0,
+    "no_surfacing_ablation_reached_level": 0,
+    "offline_reproduced": false,
+    "precision_at_k_delta": 0.0,
+    "reason": "precision_at_k_not_up",
+    "solve_provenance": "live_agent_self_discovery",
+    "surfaced": false,
+    "target_game": "r11l",
+    "winner_present_coverage": 1.0,
+    "winner_rank_pre_surfacing": [
+      59,
+      161,
+      12,
+      77
+    ],
+    "winner_rank_with_surfacing": [
+      87,
+      102,
+      74,
+      36
+    ]
+  },
+  "a3_levelup_banked": {
+    "banked": true,
+    "new_levels_banked": 1,
+    "reason": "offline_reproduced_registry_delta_62_to_63",
+    "reproduced_levels": 2,
+    "reproducible_total_levels_after": 63,
+    "reproducible_total_levels_before": 62,
+    "solve_provenance": "development_proxy",
+    "target_game": "bp35"
+  },
+  "a4_online_driver_beat_frozen": {
+    "beat_frozen_by_0_05": false,
+    "crossed": false,
+    "frozen_first_win": 0.04,
+    "goal_free_l2_banked": false,
+    "included_in_headline": false,
+    "offline_reproduced": false,
+    "online_warm_first_win": 0.04,
+    "online_warm_vs_frozen_delta": 0.0,
+    "reason": "flagged_adversarial_or_live_critical",
+    "reproduced_levels": 0,
+    "solve_provenance": "development_proxy"
+  },
+  "b1_silent_bug_reopen_list": [],
+  "bridge_crossed_for_solve": false,
+  "cited_upstream_artifacts": {
+    "A1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4712_perception_grounded_l2_goal_lp85.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: l2_perception_goal_no_deepening_residual_alignment_under_determined",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A1",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4712_perception_grounded_l2_goal_lp85.json",
+      "role": "lp85_l2_goal",
+      "sha256": "sha256:21b358bc461079ae317b3999b9e3e5d51561c583938e76f380f3361e8854b762",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4713_surface_present_winner_verifier_ranker.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: surface_present_winner_no_new_level_residual_present_winner_not_separable_from_distractors",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "precision_at_k_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "name": "A2",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4713_surface_present_winner_verifier_ranker.json",
+      "role": "surface_present_winner",
+      "sha256": "sha256:cc73d7e86c0462528abde580a84f1c40604c7acdc808e5f5786f80098c060960",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A3": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4714_levelup_selfplay.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "success: bp35_L2_offline_reproduced",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A3",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4714_levelup_selfplay.json",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:da88267d76ecbd59aa32d506f784cd2dcba16fcd5e83d859dfa4184bb931d6e2",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A4": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4715_online_action_learning_driver_corrected.json",
+      "control_failed": false,
+      "critical_flags": [
+        {
+          "detail": "frozen_first_win=0.04 and online_scratch_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "frozen_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "online_scratch_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "exists": true,
+      "honest_verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_too_sparse",
+      "included_in_headline": false,
+      "live_critical": true,
+      "live_flags": [
+        {
+          "detail": "frozen_first_win=0.04 and online_scratch_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "frozen_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "online_scratch_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "online_warm_vs_frozen_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "name": "A4",
+      "read_via_summarize_artifact": true,
+      "reason": "flagged_adversarial_or_live_critical",
+      "resolved_path": "results/experiment_4715_online_action_learning_driver_corrected.json",
+      "role": "online_driver",
+      "sha256": "sha256:b7198983a040ad86634c9b022ffe34de4ef436c141291e79554d62b98999dce7",
+      "stamped_flagged_adversarial": true,
+      "summary_exit_code": 2
+    },
+    "A5": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4716_held_out_first_win_readiness.json",
+      "control_failed": false,
+      "critical_flags": [
+        {
+          "detail": "held_out_variant_attempts=100.0 and min_held_out_variant_attempts=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "exists": true,
+      "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+      "included_in_headline": false,
+      "live_critical": true,
+      "live_flags": [
+        {
+          "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+          "kind": "TAUTOLOGY",
+          "severity": "warn"
+        },
+        {
+          "detail": "held_out_variant_attempts=100.0 and min_held_out_variant_attempts=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "name": "A5",
+      "read_via_summarize_artifact": true,
+      "reason": "flagged_adversarial_or_live_critical",
+      "resolved_path": "results/experiment_4716_held_out_first_win_readiness.json",
+      "role": "held_out_readiness",
+      "sha256": "sha256:64f7636babd579d41da797d51c61cdd9c431f346e642a0d9bd86d95f323ce923",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 2
+    },
+    "A6": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4717_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": false,
+      "honest_verdict": null,
+      "included_in_headline": false,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A6",
+      "read_via_summarize_artifact": false,
+      "reason": "missing",
+      "resolved_path": null,
+      "role": "primitive_persist",
+      "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": null
+    },
+    "A7": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4718_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": false,
+      "honest_verdict": null,
+      "included_in_headline": false,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A7",
+      "read_via_summarize_artifact": false,
+      "reason": "missing",
+      "resolved_path": null,
+      "role": "integration",
+      "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": null
+    },
+    "B1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4719_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": false,
+      "honest_verdict": null,
+      "included_in_headline": false,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B1",
+      "read_via_summarize_artifact": false,
+      "reason": "missing",
+      "resolved_path": null,
+      "role": "silent_bug_audit",
+      "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": null
+    },
+    "B2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4720_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": false,
+      "honest_verdict": null,
+      "included_in_headline": false,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B2",
+      "read_via_summarize_artifact": false,
+      "reason": "missing",
+      "resolved_path": null,
+      "role": "guard",
+      "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": null
+    },
+    "C": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4721_*.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": false,
+      "honest_verdict": null,
+      "included_in_headline": false,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "C",
+      "read_via_summarize_artifact": false,
+      "reason": "missing",
+      "resolved_path": null,
+      "role": "kv260",
+      "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": null
+    },
+    "D": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4722_sota_ingestion_active_probe_world_model.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "success: sota_ingestion_active_probe_world_model_mapped",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "D",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4722_sota_ingestion_active_probe_world_model.json",
+      "role": "sota_ingestion",
+      "sha256": "sha256:f6f0233cc859cf111eb356bff9c1f045c9cbf4a47c58eeef4024768aeb5c92ad",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "PREVIOUS": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4710_capstone_v433.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "exists": true,
+      "honest_verdict": "complete: capability_grew_61_to_62",
+      "included_in_headline": true,
+      "live_critical": false,
+      "live_flags": [],
+      "name": "PREVIOUS",
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "resolved_path": "results/experiment_4710_capstone_v433.json",
+      "role": "previous_v433_scorecard",
+      "sha256": "sha256:64849c90911fdcf0017576d9fc245099073b8929f2cb66b707654df853423df6",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    }
+  },
+  "duration_s": 0.217812,
+  "experiment": "experiment_4723_capstone_v434",
+  "field_principles": {
+    "a1_lp85_l2_banked": {
+      "principle": "did A1 bank lp85 L2 via the perception-grounded structural goal (the perception win -> a real multi-level solve)?"
+    },
+    "a2_surfaced_present_winner": {
+      "principle": "did A2 surface the present-but-buried winner (precision-at-k up + generic new level + no-surfacing ablation failing)? -- the verifier earning its place."
+    },
+    "a4_online_driver_beat_frozen": {
+      "principle": "did the corrected online driver beat frozen by >=+0.05 held-out first-win AND/OR deepen to L2?"
+    },
+    "b1_silent_bug_reopen_list": {
+      "principle": "the .428-.433 nulls B1 classified silent_bug_must_reopen -- closed levers that must reopen (trust correction)."
+    },
+    "bridge_crossed_for_solve": {
+      "principle": "the HEADLINE DECISION -- True only if a GENERIC agent banked a NEW level via self-discovery (A1 lp85 L2 | A2 surfaced winner | A4 goal-free L2), offline-reproduced, ablation-controlled; False if only capability/depth grew."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete: <capability_grew_62_to_63 | bridge_crossed_for_solve_<game>_L<n>> -- the honest one-line milestone outcome."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "next_milestone_fallback": {
+      "principle": "the .435 direction (D's flagged_for_v435 active-probe methods + B1's reopen list + the strongest open lever) -- the convergence hand-off."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (upstream artifacts present, summarize/publication tools runnable); pre-empts missing-resource fabrication."
+    },
+    "publication_gate": {
+      "principle": "the G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py --json; FoVer 0.9131 frozen, never substituted."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash of the aggregated artifact set."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "the registry header delta this milestone (62->63 if A1/A3 banked) -- the monotonic north-star metric."
+    },
+    "skipped_artifacts": {
+      "principle": "the artifacts skipped for flagged_adversarial / control-failed / ablation-missing -- the fabrication-gate discipline (never aggregate a flagged number)."
+    },
+    "verifier_is_oracle_confirmed_false": {
+      "principle": "confirms every aggregated value claim carries verifier_is_oracle:false (no circular moat over-claim)."
+    }
+  },
+  "honest_verdict": "blocked_upstream_artifacts",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "missing_artifacts": [
+    "results/experiment_4717_*.json",
+    "results/experiment_4718_*.json",
+    "results/experiment_4719_*.json",
+    "results/experiment_4720_*.json",
+    "results/experiment_4721_*.json"
+  ],
+  "next_milestone_fallback": {
+    "b1_reopen_list": [],
+    "flagged_for_v435": [
+      "flagged_for_v435: hypothesis_posterior_active_probe_controller (arXiv:2506.01876 + arXiv:2309.08477)",
+      "flagged_for_v435: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604)",
+      "flagged_for_v435: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262)"
+    ],
+    "strongest_open_lever": "A2_present_winner_surfacing"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "blocked_resource": "upstream_artifacts",
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [
+      "results/experiment_4717_*.json",
+      "results/experiment_4718_*.json",
+      "results/experiment_4719_*.json",
+      "results/experiment_4720_*.json",
+      "results/experiment_4721_*.json"
+    ],
+    "ok": false,
+    "operator_only": true,
+    "publication_gate_py_runnable": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 63,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4723": true,
+    "summarize_artifact_py_available": true,
+    "summarize_artifact_py_used_for_every_present_upstream": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": false,
+      "A7": false,
+      "B1": false,
+      "B2": false,
+      "C": false,
+      "D": true,
+      "PREVIOUS": true
+    }
+  },
+  "publication_gate": {
+    "fover_09131_frozen_never_substituted": true,
+    "frozen_fover_auroc": 0.9131,
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4723,
+  "reproducibility_checksum": "sha256:714229c1b91b25344f7199478cf00008d7d1d84848d624cefcbc5d3cf80e3aeb",
+  "reproducible_total_levels": 63,
+  "reproducible_total_levels_delta": 1,
+  "result_path": "results/experiment_4723_capstone_v434.json",
+  "schema": "carnot.exp4723.capstone_v434.v1",
+  "scorecard": {
+    "A1": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "banked": false,
+        "crossed": false,
+        "generic_agent_reached_level": 0,
+        "goal_predicate_satisfiable": false,
+        "l2_plan_reaches_goal": false,
+        "offline_reproduced": false,
+        "reason": "goal_or_plan_control_failed",
+        "reproduced_levels": 1,
+        "solve_provenance": "live_agent_self_discovery",
+        "target_game": "lp85"
+      },
+      "reason": "included_clean",
+      "surfaced": false,
+      "verdict": "complete: l2_perception_goal_no_deepening_residual_alignment_under_determined"
+    },
+    "A2": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "crossed": false,
+        "generic_agent_reached_level": 0,
+        "no_surfacing_ablation_reached_level": 0,
+        "offline_reproduced": false,
+        "precision_at_k_delta": 0.0,
+        "reason": "precision_at_k_not_up",
+        "solve_provenance": "live_agent_self_discovery",
+        "surfaced": false,
+        "target_game": "r11l",
+        "winner_present_coverage": 1.0,
+        "winner_rank_pre_surfacing": [
+          59,
+          161,
+          12,
+          77
+        ],
+        "winner_rank_with_surfacing": [
+          87,
+          102,
+          74,
+          36
+        ]
+      },
+      "reason": "included_clean",
+      "surfaced": false,
+      "verdict": "complete: surface_present_winner_no_new_level_residual_present_winner_not_separable_from_distractors"
+    },
+    "A3": {
+      "banked": true,
+      "clean": true,
+      "crossed": false,
+      "details": {
+        "banked": true,
+        "new_levels_banked": 1,
+        "reason": "offline_reproduced_registry_delta_62_to_63",
+        "reproduced_levels": 2,
+        "reproducible_total_levels_after": 63,
+        "reproducible_total_levels_before": 62,
+        "solve_provenance": "development_proxy",
+        "target_game": "bp35"
+      },
+      "reason": "included_clean",
+      "surfaced": false,
+      "verdict": "success: bp35_L2_offline_reproduced"
+    },
+    "A4": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "details": {
+        "beat_frozen_by_0_05": false,
+        "crossed": false,
+        "frozen_first_win": 0.04,
+        "goal_free_l2_banked": false,
+        "included_in_headline": false,
+        "offline_reproduced": false,
+        "online_warm_first_win": 0.04,
+        "online_warm_vs_frozen_delta": 0.0,
+        "reason": "flagged_adversarial_or_live_critical",
+        "reproduced_levels": 0,
+        "solve_provenance": "development_proxy"
+      },
+      "reason": "flagged_adversarial_or_live_critical",
+      "surfaced": false,
+      "verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_too_sparse"
+    },
+    "A5": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "reason": "flagged_adversarial_or_live_critical",
+      "surfaced": false,
+      "verdict": "complete: held_out_first_win_flat_no_leaderboard_change"
+    },
+    "A6": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "reason": "missing",
+      "surfaced": false,
+      "verdict": null
+    },
+    "A7": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "reason": "missing",
+      "surfaced": false,
+      "verdict": null
+    },
+    "B1": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "reason": "missing",
+      "surfaced": false,
+      "verdict": null
+    },
+    "B2": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "reason": "missing",
+      "surfaced": false,
+      "verdict": null
+    },
+    "C": {
+      "banked": false,
+      "clean": false,
+      "crossed": false,
+      "reason": "missing",
+      "surfaced": false,
+      "verdict": null
+    },
+    "D": {
+      "banked": false,
+      "clean": true,
+      "crossed": false,
+      "reason": "included_clean",
+      "surfaced": false,
+      "verdict": "success: sota_ingestion_active_probe_world_model_mapped"
+    }
+  },
+  "skipped_artifacts": [
+    "results/experiment_4715_online_action_learning_driver_corrected.json",
+    "results/experiment_4716_held_out_first_win_readiness.json"
+  ],
+  "solve_provenance_confirmed": true,
+  "spec_refs": [
+    "REQ-CAPSTONE-4723",
+    "SCENARIO-CAPSTONE-4723",
+    "SCENARIO-CAPSTONE-4723-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4723-FIELD-PRINCIPLES"
+  ],
+  "verifier_is_oracle_confirmed_false": true
+}
