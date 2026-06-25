@@ -1,0 +1,49 @@
+{
+  "experiment_id": "proto_l2_measure_fixstack",
+  "honest_verdict": "complete_no_change_still_L1_goal_unsatisfiable",
+  "verdict_summary": "lp85 stayed L1, goal_satisfiable_any=False -- the repair did NOT fire or the induction still failed. Needs investigation.",
+  "game": "lp85",
+  "budget": 400,
+  "max_depth_reached": 1,
+  "l2_offline_reproduced": false,
+  "goal_predicate_satisfiable_any": false,
+  "exemplar_present_on_any_induction": false,
+  "n_induction_attempts": 2,
+  "goal_repair_fired_inferred": false,
+  "induced_is_level_complete_tail": "def is_level_complete(grid):\n    h, w = grid.shape\n    for r in range(h):\n        for c in range(w):\n            if grid[r, c] == 3:\n                return False\n    return True",
+  "induction_summary": [
+    {
+      "reason": "stall",
+      "goal_level": 1,
+      "skipped": "proposer_failed_or_missing_root",
+      "planned": false,
+      "goal_predicate_satisfiable": false,
+      "plan_reaches_goal": false,
+      "win_state_exemplar_injected": false,
+      "heldout_accuracy": null,
+      "refinement_rounds_used": null,
+      "n_goal_candidates": 0
+    },
+    {
+      "reason": "level_up_reinduction",
+      "goal_level": 2,
+      "skipped": "proposer_failed",
+      "planned": false,
+      "goal_predicate_satisfiable": false,
+      "plan_reaches_goal": false,
+      "win_state_exemplar_injected": true,
+      "heldout_accuracy": null,
+      "refinement_rounds_used": 2,
+      "n_goal_candidates": 1
+    }
+  ],
+  "arm_wall_s": 967.3,
+  "pre_fix_baseline": "maxL=1, n_induce=2, goal_satisfiable=False (degenerate goal) -- the live binary arm before the truncation + goal-repair fixes",
+  "inference_substrate": "live_llm_inference",
+  "solve_provenance": "development_proxy",
+  "verifier_is_oracle": false,
+  "random_seed": 4729,
+  "duration_s": 971.68,
+  "model_port": 8920,
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+}
