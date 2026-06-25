@@ -5,11 +5,12 @@ Spec refs: REQ-ARC-WMTE-4640, SCENARIO-ARC-WMTE-4640.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
+import time
 from typing import Any
 
 from carnot.agentic.arc_goal_predicate_separation import compile_goal_predicate
@@ -36,6 +37,266 @@ def _state_from_visible(value: Any) -> Mapping[str, Any] | None:
         if isinstance(state, Mapping):
             return state
     return None
+
+
+def _candidate_field(candidate: Any, key: str, default: Any = None) -> Any:
+    if isinstance(candidate, Mapping):
+        return candidate.get(key, default)
+    return getattr(candidate, key, default)
+
+
+def _candidate_action(candidate: Any) -> int:
+    value = _candidate_field(candidate, "action", _candidate_field(candidate, "action_id", 0))
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _candidate_data(candidate: Any) -> Any:
+    return _candidate_field(candidate, "data")
+
+
+def _candidate_signature(candidate: Any) -> tuple[Any, str]:
+    data = _candidate_data(candidate)
+    return (
+        _candidate_action(candidate),
+        json.dumps(data, sort_keys=True, separators=(",", ":"), default=str),
+    )
+
+
+def _candidate_navigation_energy(candidate: Any, index: int, total: int) -> float:
+    for key in (
+        "navigation_energy",
+        "arc_goal_distance",
+        "goal_distance",
+        "navigation",
+        "heuristic",
+        "search_energy",
+    ):
+        value = _candidate_field(candidate, key)
+        if value is None:
+            continue
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return 0.0
+    if total <= 1:
+        return 0.0
+    return float(index) / float(total - 1)
+
+
+def _candidate_state_from_row(candidate: Any) -> Any:
+    for key in (
+        "candidate_state",
+        "predicted_candidate_state",
+        "next_state",
+        "next_frame",
+        "goal_state",
+        "visible_goal_state",
+        "target_group_state",
+        "state",
+        "frame",
+    ):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return value
+    return None
+
+
+def _state_hash(value: Any) -> str:
+    try:
+        import numpy as np
+
+        arr = np.asarray(value.frame if hasattr(value, "frame") else value)
+        if arr.ndim >= 1 and arr.dtype != object:
+            payload = {
+                "shape": list(arr.shape),
+                "dtype": str(arr.dtype),
+                "sha256": hashlib.sha256(arr.tobytes()).hexdigest(),
+            }
+            return hashlib.sha256(
+                json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()[:16]
+    except Exception:
+        pass
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(encoded.encode()).hexdigest()[:16]
+
+
+def _score_variance(scores: Sequence[float]) -> float:
+    if not scores:
+        return 0.0
+    mean = sum(float(score) for score in scores) / float(len(scores))
+    return sum((float(score) - mean) ** 2 for score in scores) / float(len(scores))
+
+
+@dataclass
+class GoalEnergyCandidateGuidance:
+    """REQ-ARC-WMTE-4737: score predicted candidate states and bias proposal order.
+
+    The guidance is deliberately fail-closed: it only reorders when it has scored
+    real predicted candidate states, the scores have non-zero variance, and the
+    resulting rank differs from the baseline pool. Otherwise it returns the
+    incoming candidate order unchanged and records the degenerate diagnostic.
+    """
+
+    goal_energy: Any
+    transition_predictor: Any | None = None
+    alpha: float = 0.0
+    beta: float = 1.0
+    lower_is_better: bool = True
+    source: str = "goal_energy_candidate_generation_guidance"
+    verifier_is_oracle: bool = False
+    _candidate_states_scored_total: int = field(default=0, init=False, repr=False)
+    _prediction_errors_total: int = field(default=0, init=False, repr=False)
+    _scoring_errors_total: int = field(default=0, init=False, repr=False)
+    _last_diagnostics: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        total = float(self.alpha) + float(self.beta)
+        if abs(total - 1.0) > 1e-9:
+            raise ValueError("candidate goal guidance requires alpha + beta == 1")
+
+    def set_goal_energy(self, goal_energy: Any) -> None:
+        self.goal_energy = goal_energy
+
+    def _predict_state(self, frame: Any, candidate: Any) -> Any:
+        inline_state = _candidate_state_from_row(candidate)
+        if inline_state is not None:
+            return inline_state
+        predictor = self.transition_predictor
+        if predictor is None:
+            return None
+        if hasattr(predictor, "candidate_state"):
+            return predictor.candidate_state(frame, candidate)
+        if hasattr(predictor, "predict_candidate_state"):
+            return predictor.predict_candidate_state(frame, candidate)
+        if hasattr(predictor, "predict"):
+            from carnot.agentic.arc_agi3_world_model import grid_of
+
+            grid = grid_of(frame)
+            action = _candidate_action(candidate)
+            data = _candidate_data(candidate)
+            akey = (
+                (6, int(data["x"]), int(data["y"]))
+                if int(action) == 6 and isinstance(data, Mapping)
+                else (int(action),)
+            )
+            return predictor.predict(grid, akey)
+        if callable(predictor):
+            try:
+                return predictor(frame, candidate)
+            except TypeError:
+                return predictor(frame, _candidate_action(candidate), _candidate_data(candidate))
+        return None
+
+    def _score_state(self, state: Any) -> float:
+        if self.goal_energy is None:
+            return 1.0
+        return float(self.goal_energy(state))
+
+    def rank_candidates(self, frame: Any, candidates: Sequence[Any]) -> list[dict[str, Any]]:
+        rows = [dict(row) if isinstance(row, Mapping) else {"action": _candidate_action(row), "data": _candidate_data(row)} for row in candidates]
+        baseline_signatures = [_candidate_signature(row) for row in rows]
+        scored_rows: list[tuple[float, float, int, dict[str, Any]]] = []
+        scores: list[float] = []
+        state_hashes: list[str] = []
+        score_elapsed_s = 0.0
+        prediction_errors = 0
+        scoring_errors = 0
+        total = len(rows)
+
+        for index, row in enumerate(rows):
+            try:
+                state = self._predict_state(frame, row)
+            except Exception:
+                prediction_errors += 1
+                continue
+            if state is None:
+                continue
+            try:
+                started = time.perf_counter()
+                raw_goal_score = self._score_state(state)
+                score_elapsed_s += max(0.0, time.perf_counter() - started)
+            except Exception:
+                scoring_errors += 1
+                continue
+            goal_key = float(raw_goal_score) if self.lower_is_better else -float(raw_goal_score)
+            navigation = _candidate_navigation_energy(row, index, total)
+            combined = float(self.alpha) * float(navigation) + float(self.beta) * goal_key
+            annotated = dict(row)
+            annotated["goal_energy_score"] = float(raw_goal_score)
+            annotated["goal_energy_navigation"] = float(navigation)
+            annotated["combined_goal_energy"] = float(combined)
+            annotated["predicted_candidate_state_hash"] = _state_hash(state)
+            scored_rows.append((combined, navigation, index, annotated))
+            scores.append(float(raw_goal_score))
+            state_hashes.append(annotated["predicted_candidate_state_hash"])
+
+        variance = _score_variance(scores)
+        real_state_evidence = bool(scored_rows and len(set(state_hashes)) > 1)
+        ranked_rows = [row for _combined, _nav, _index, row in sorted(scored_rows, key=lambda item: (item[0], item[2]))]
+        if len(ranked_rows) < len(rows):
+            scored_indexes = {index for _combined, _nav, index, _row in scored_rows}
+            ranked_rows.extend(dict(row) for index, row in enumerate(rows) if index not in scored_indexes)
+        ranked_signatures = [_candidate_signature(row) for row in ranked_rows]
+        pool_differs = baseline_signatures != ranked_signatures
+        arms_non_degenerate = bool(real_state_evidence and variance > 1e-12 and pool_differs)
+
+        self._candidate_states_scored_total += len(scored_rows)
+        self._prediction_errors_total += prediction_errors
+        self._scoring_errors_total += scoring_errors
+        cpu_ms = (
+            (score_elapsed_s * 1000.0) / float(len(scored_rows))
+            if scored_rows
+            else 0.0
+        )
+        self._last_diagnostics = {
+            "enabled": True,
+            "source": self.source,
+            "verifier_is_oracle": False,
+            "candidate_count": int(len(rows)),
+            "candidate_states_scored": int(len(scored_rows)),
+            "candidate_states_scored_total": int(self._candidate_states_scored_total),
+            "prediction_errors": int(prediction_errors),
+            "prediction_errors_total": int(self._prediction_errors_total),
+            "scoring_errors": int(scoring_errors),
+            "scoring_errors_total": int(self._scoring_errors_total),
+            "real_candidate_state_evidence": bool(real_state_evidence),
+            "goal_energy_score_variance": float(variance),
+            "candidate_pool_differs_from_baseline": bool(pool_differs if variance > 1e-12 else False),
+            "arms_non_degenerate": bool(arms_non_degenerate),
+            "cpu_scoring_ms_per_candidate": float(cpu_ms),
+            "score_min": min(scores) if scores else None,
+            "score_max": max(scores) if scores else None,
+        }
+        if not arms_non_degenerate:
+            return [dict(row) for row in rows]
+        return ranked_rows
+
+    def diagnostics(self) -> dict[str, Any]:
+        if self._last_diagnostics:
+            return dict(self._last_diagnostics)
+        return {
+            "enabled": True,
+            "source": self.source,
+            "verifier_is_oracle": False,
+            "candidate_count": 0,
+            "candidate_states_scored": 0,
+            "candidate_states_scored_total": int(self._candidate_states_scored_total),
+            "prediction_errors": 0,
+            "prediction_errors_total": int(self._prediction_errors_total),
+            "scoring_errors": 0,
+            "scoring_errors_total": int(self._scoring_errors_total),
+            "real_candidate_state_evidence": False,
+            "goal_energy_score_variance": 0.0,
+            "candidate_pool_differs_from_baseline": False,
+            "arms_non_degenerate": False,
+            "cpu_scoring_ms_per_candidate": 0.0,
+            "score_min": None,
+            "score_max": None,
+        }
 
 
 @dataclass(frozen=True)

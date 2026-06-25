@@ -101,6 +101,9 @@ SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_MODE = "persistent_aem_plus_optional_cnn
 SUBMITTED_GOAL_ENERGY_ENABLED = True
 SUBMITTED_GOAL_ENERGY_ALPHA = 0.9
 SUBMITTED_GOAL_ENERGY_BETA = 0.1
+SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED = True
+SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA = 0.0
+SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA = 1.0
 SUBMITTED_QD_GENERATION_ENABLED = False
 SUBMITTED_QD_GENERATION_MODE = "energy_fitness_map_elites_sequence_generator"
 SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
@@ -289,6 +292,7 @@ class StepwiseExplorer:
         goal_bias: Any | None = None,
         goal_bias_label: str = "",
         goal_bias_lower_is_better: bool = True,
+        goal_candidate_guidance: Any | None = None,
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
@@ -411,6 +415,7 @@ class StepwiseExplorer:
         self.goal_bias_lower_is_better = bool(goal_bias_lower_is_better and goal_bias is not None)
         self._goal_bias_scored = 0
         self._goal_bias_errors = 0
+        self.goal_candidate_guidance = goal_candidate_guidance
         self.qd_generator = coerce_qd_generator(
             qd_generator,
             action_effect_scorer=self.frame_change_scorer,
@@ -624,6 +629,14 @@ class StepwiseExplorer:
         self.goal_bias = goal_bias
         self.goal_bias_label = str(label or "")
         self.goal_bias_lower_is_better = bool(lower_is_better and goal_bias is not None)
+        if self.goal_candidate_guidance is not None and hasattr(
+            self.goal_candidate_guidance,
+            "set_goal_energy",
+        ):
+            try:
+                self.goal_candidate_guidance.set_goal_energy(goal_bias)
+            except Exception:
+                pass
 
     def goal_bias_diagnostics(self) -> dict[str, Any]:
         return {
@@ -633,6 +646,15 @@ class StepwiseExplorer:
             "nodes_scored": int(self._goal_bias_scored),
             "errors": int(self._goal_bias_errors),
         }
+
+    def goal_candidate_guidance_diagnostics(self) -> dict[str, Any]:
+        """REQ-ARC-WMTE-4737: expose candidate-state goal-energy guidance diagnostics."""
+
+        if self.goal_candidate_guidance is None:
+            return {"enabled": False}
+        if hasattr(self.goal_candidate_guidance, "diagnostics"):
+            return dict(self.goal_candidate_guidance.diagnostics())
+        return {"enabled": True}
 
     def action_effect_expansion_prior_diagnostics(self) -> dict[str, Any]:
         if self.action_effect_expansion_prior is None:
@@ -849,6 +871,11 @@ class StepwiseExplorer:
             )
         if self.program_synthesis_filter is not None:
             rows = self.program_synthesis_filter.rank_candidates(frame, rows)
+        if self.goal_candidate_guidance is not None and rows:
+            try:
+                rows = self.goal_candidate_guidance.rank_candidates(frame, rows)
+            except Exception:
+                pass
         return self._apply_controllable_novelty_order(frame, rows)
 
     def _apply_amortized_prior_order(
@@ -1801,6 +1828,9 @@ class E3AgentPolicy:
         dense_curiosity_weight: float = 0.15,
         dense_curiosity_discount: float = 0.5,
         goal_bias: Any = _DEFAULT_GOAL_BIAS,
+        goal_candidate_guidance: Any | bool | None = (
+            SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED
+        ),
         qd_generator: Any | bool | None = None,
         controllable_novelty: Any | bool | None = SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
@@ -1868,6 +1898,15 @@ class E3AgentPolicy:
         self.dsl_model = ObjectDeltaModel(self.short)
         self.dsl_energy: Optional[dict[str, Any]] = None
         self._dsl_transitions: list[tuple[Any, tuple, Any]] = []
+        if goal_candidate_guidance is True and goal_bias is not None:
+            goal_candidate_guidance = arc_goal_energy_live.GoalEnergyCandidateGuidance(
+                goal_energy=goal_bias,
+                transition_predictor=self._predict_goal_candidate_state,
+                alpha=SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA,
+                beta=SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA,
+            )
+        elif goal_candidate_guidance is False:
+            goal_candidate_guidance = None
         self.explorer = StepwiseExplorer(
             target_levels=target_levels,
             value_head=value_head,
@@ -1899,6 +1938,7 @@ class E3AgentPolicy:
             goal_bias=goal_bias,
             goal_bias_label=GOAL_ENERGY_SOURCE if goal_bias is not None else "",
             goal_bias_lower_is_better=True,
+            goal_candidate_guidance=goal_candidate_guidance,
             qd_generator=qd_generator,
             controllable_novelty=controllable_novelty,
             object_centric_proposal=object_centric_proposal,
@@ -1941,6 +1981,34 @@ class E3AgentPolicy:
         self._execute_plan_from_current = False
         self.level_induction_events: list[dict[str, Any]] = []
         self.induction_attempts: list[dict[str, Any]] = []
+
+    def _predict_goal_candidate_state(self, frame: Any, candidate: Mapping[str, Any]) -> Any:
+        """REQ-ARC-WMTE-4737: predict a live candidate state for proposal guidance.
+
+        This uses the agent's learned object-delta transition model. An unfitted
+        model usually predicts no-op states, which the guidance detects as
+        degenerate and leaves in baseline order.
+        """
+
+        from types import SimpleNamespace
+
+        import numpy as np
+
+        from carnot.agentic.arc_agi3_world_model import grid_of
+        from carnot.agentic.arc_executable_world_model import to_logical
+
+        data = candidate.get("data")
+        action = int(candidate.get("action", candidate.get("action_id", 0)) or 0)
+        grid = to_logical(grid_of(frame), self.cell)
+        pred = self.dsl_model.predict(grid, _action_key(action, data))
+        arr = np.asarray(pred, dtype=np.int16)
+        if self.cell > 1:
+            arr = np.repeat(np.repeat(arr, self.cell, axis=0), self.cell, axis=1)
+        return SimpleNamespace(
+            frame=arr,
+            available_actions=list(getattr(frame, "available_actions", []) or []),
+            levels_completed=getattr(frame, "levels_completed", 0),
+        )
 
     def _maybe_route_from_frame(self, latest: Any) -> None:
         if self._route_from_frame_checked or latest is None:
@@ -2714,6 +2782,13 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_source": GOAL_ENERGY_SOURCE,
     "goal_energy_alpha": SUBMITTED_GOAL_ENERGY_ALPHA,
     "goal_energy_beta": SUBMITTED_GOAL_ENERGY_BETA,
+    "goal_energy_candidate_guidance_enabled": (
+        SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED
+    ),
+    "goal_energy_candidate_guidance_alpha": (
+        SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA
+    ),
+    "goal_energy_candidate_guidance_beta": SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA,
     "qd_generation_enabled": SUBMITTED_QD_GENERATION_ENABLED,
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
     "controllable_novelty_proposal_enabled": SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED,
@@ -2762,6 +2837,7 @@ SUBMITTED_AGENT_CONFIG = {
         "navigation_cost_tiebreak": False,
         "action_effect_expansion_prior_enabled": False,
         "goal_energy_enabled": False,
+        "goal_energy_candidate_guidance_enabled": False,
     },
 }
 
