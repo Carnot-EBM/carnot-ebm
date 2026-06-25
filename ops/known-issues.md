@@ -4,7 +4,9 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
-### 2026-06-25 (INFRASTRUCTURE / operator decision needed — outer-loop watchdog): exp4729 (held-out first-win SCORE) DETERMINISTICALLY exceeds the codex 4800s hard wall-clock cap
+### 2026-06-25 (INFRASTRUCTURE — ~~operator decision needed~~ RESOLVED 2026-06-25 via `810b6f451`): exp4729 (held-out first-win SCORE) DETERMINISTICALLY exceeds the codex 4800s hard wall-clock cap
+
+**~~RESOLVED 2026-06-25~~ (commit `810b6f451`, outer-loop):** implemented recommended-fix (b) — checkpoint/resume + a soft ELAPSED-time budget (`EXP4729_SOFT_BUDGET_S`, default 4200s, ~600s under the hard cap). The script now checkpoints the attempt ledger after each game (atomic write), resumes by skipping done games, and on a budget stop emits a schema-valid `partial: true` artifact + exit 0 while keeping the ledger; a subsequent run finishes the rest. SCORE is byte-identical to a single uncapped run (proven by a full-run==resumed-run equivalence test). 20 tests pass, ruff clean. The original observed history is preserved below.
 
 **Observed (2 watchdogs, `.435):** PHASE A4 = `exp4729-a4` (`python/carnot/experiment_4729_held_out_first_win_readiness.py`, runs the held-out first-win proxy over the public games) FAILed at 12:35 and 13:58 UTC, both `Codex CLI error: Hard wall-clock cap after 4800s`, and was on a 3rd attempt at 14:27. The conductor's `MAX_FAILURES_PER_TASK=3` 3-fail-skip WILL retire it after the 3rd fail (~15:20 UTC) and advance to A5 — so it self-recovers, but it has burned ~3×80min = ~4h on one task and produced no artifact (the main reason `.435 had ~0 commits across the 12:35–14:30 window). Nothing blocking depends on its artifact (the E capstone aggregates whatever `4729_*.json` exists, if any).
 
