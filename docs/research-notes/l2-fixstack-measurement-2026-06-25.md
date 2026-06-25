@@ -111,3 +111,51 @@ a cheaper alternative but less robust than the separate call.)
 This conclusively answers the bisected wall #1 (L2 reinduction reliability): the fix is a separate
 focused goal call, NOT a budget increase. Wall #2 (goal quality / structural-alignment goal) is then
 next, and now reachable.
+
+## END-TO-END MEASUREMENT after shipping the split-fallback (2026-06-25, v2) — HONEST NEGATIVE
+
+Re-ran the live lp85 probe (`results/proto_l2_measure_fixstack.json`, 940s) WITH the split-fallback
+fix (commit 06b527ea1) in the tree. **lp85 L2 still does NOT bank** (`max_depth=1`,
+`l2_offline_reproduced=False`, `goal_satisfiable_any=False`). The induction breakdown is the honest
+story, and it REFUTES the optimistic read that the split alone unblocks L2:
+
+```
+[0] goal_level=1  skipped=world_model_accuracy_below_threshold  heldout_acc=0.12   (L1 engine only 12% accurate)
+[1] goal_level=2  skipped=proposer_failed  exemplar_injected=True                  (L2 induction STILL fails)
+```
+
+**Two walls, both rooted in MODEL CAPABILITY on the real prompts — not prompt engineering:**
+
+1. **L1 engine accuracy = 0.12.** The combined L1 induction DID succeed (wrote engine +
+   is_level_complete), but the induced ENGINE reproduces only 12% of observed transitions -> rejected
+   by the held-out verifier. The model writes a verbose placeholder engine (2639 chars of
+   `# Copy the grid... # If action is 6...` comments) that does not capture lp85's real click dynamics.
+2. **L2 induction still `proposer_failed`** despite the split fix being correct in isolation
+   (unit tests + the isolated real-prompt test where engine-only=35s and goal-only=8.6s both
+   produced valid code). In the FULL live run it still fails. The most likely mechanism: the
+   combined call rambles to the 2560 limit (`stop_type=limit`, ~230s at ~11 tok/s) and the focused
+   engine-only call ALSO rambles on the real multi-transition prompt; with the proposer timeout at
+   300s (`LocalGGUFProposer.timeout=300`) and likely iGPU contention from the concurrent conductor
+   milestone, the rambling calls exceed the timeout and the split's calls fail too. (Confirming
+   exactly whether the split fired vs timed out needs a tee'd-HTTP capture of the L2 induction's
+   call count — not yet run.)
+
+**The honest conclusion.** The truncation fix + goal-repair + split-fallback are each correct and
+necessary, but the end-to-end measurement shows they are NOT sufficient: the binding wall is that
+**Qwen3.5-9B produces low-quality, rambling, placeholder code on the REAL lp85 prompts** (12%-accurate
+engine; `return False` goal), where the SYNTHETIC prompts were simple enough to mask it. This is a
+model-capability / induction-quality wall.
+
+**Revised recommendation (evidence-based, supersedes the optimistic "now reachable"):**
+- The lever is to reduce what the model must induce from free-form code, OR to use a stronger
+  inducer: (a) the **perception-grounded structural-alignment goal** (pre-staged) gives the model a
+  structured predicate over detected objects instead of free-form is_level_complete -- directly
+  attacks the placeholder-goal problem; (b) the **engine/dynamics accuracy** (12%) is its own wall --
+  a structured action-effect model (the existing CNN/program-synthesis action-effect work) may beat
+  free-form LLM engine induction; (c) a stronger induction model (the frozen ARC sprint stack is
+  Qwen3.5-9B for the live generator, but the offline induction could use a larger model).
+- A budget bump and the split are both confirmed insufficient on their own; do not pursue further
+  prompt-only tweaks as the primary lever.
+- The split-fallback remains shipped (correct, tested, fabrication-safe) -- it is a real robustness
+  improvement that helps when the focused calls DON'T ramble; it just does not, by itself, clear the
+  model-capability wall on lp85's real prompts.
