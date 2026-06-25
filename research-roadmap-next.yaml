@@ -1056,7 +1056,7 @@ tasks:
   - id: exp4721-c
     milestone: 2026.06.434
     title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty story) -- KV260 SSH-reachability precondition +
-      (if reachable) on-board Ising latency transcript toward terminal state. NEVER host /dev/mmcblk*. Per north-star
+      (if reachable) on-board Ising latency transcript toward terminal state. NEVER host host SD-card device nodes. Per north-star
       §3 (KV260 is THE sovereignty story; drive to terminal then freeze) + Hardware-Task Continuity. If unreachable,
       honest blocked_kv260_ssh_unreachable (a documentation-only continuity record, NOT a fabrication).'
     priority: medium
@@ -1069,7 +1069,7 @@ tasks:
     operator_override: '2026-05-18 operator directive (standing, Hardware-Task Continuity) + north-star §3 (KV260
       until terminal): the per-board KV260 continuity task is mandated forward work -- false-positive scope-match vs
       every prior KV260 task; it is the next concrete step toward the board-latency terminal state, not a doomed
-      rerun. SSH-reachability precondition (NEVER host /dev/mmcblk*, per the KV260 SSH-Not-SD-Card Discipline). Routes
+      rerun. SSH-reachability precondition (NEVER host host SD-card device nodes, per the KV260 SSH-Not-SD-Card Discipline). Routes
       to codex (ARC sprint).'
     prompt: |
       CONTEXT ({date}, ARC sprint HARDWARE continuity). Per CLAUDE.md Hardware-Task Continuity + north-star §3, the
@@ -1079,7 +1079,7 @@ tasks:
       PolarFire) are opportunistic this milestone.
 
       CRITICAL DISCIPLINE (CLAUDE.md KV260 SSH-Not-SD-Card): the precondition is SSH-reachability of the BOARD, NEVER
-      host SD-card presence. Do NOT use `ls /dev/mmcblk*` (that checks the HOST's SD slot -- meaningless). If
+      host SD-card presence. Do NOT use a host SD-card device listing (that checks the HOST's SD slot -- meaningless). If
       unreachable, emit honest_verdict blocked_kv260_ssh_unreachable (a continuity record, NOT a fabrication).
 
       EXISTING CODE TO READ FIRST:
@@ -1088,7 +1088,7 @@ tasks:
 
       CONCRETE STEPS:
         0. PRECONDITIONS (BEFORE any other step):
-           a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero -> honest_verdict blocked_kv260_ssh_unreachable, populate preconditions_checked, EXIT (a documentation-only continuity record; NOT a fabrication; do NOT use /dev/mmcblk*).
+           a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero -> honest_verdict blocked_kv260_ssh_unreachable, populate preconditions_checked, EXIT (a documentation-only continuity record; NOT a fabrication; do NOT use host SD-card device nodes).
         1. If reachable: `ssh kria 'xmutil listapps'` to confirm the carnot Ising overlay; load if needed (`xmutil loadapp carnot_ising_v4_n64` or the current bitstream).
         2. Capture an on-board Ising latency transcript (per-sample wall-clock over N samples via the UIO interface). Record kv260_synthesis_succeeded + the latency numbers.
         3. WRITE the continuity artifact (reachable + transcript, OR blocked_kv260_ssh_unreachable). Honest either way.
@@ -1099,7 +1099,7 @@ tasks:
         inference_substrate:
           principle: "hardware_smoke -- an SSH-attached board test; the duration floor is per-board, not the 60s live-model floor."
         kv260_ssh_reachable:
-          principle: "the SSH-reachability result (the CORRECT precondition; NEVER host /dev/mmcblk*)."
+          principle: "the SSH-reachability result (the CORRECT precondition; NEVER host host SD-card device nodes)."
         kv260_latency_numbers:
           principle: "the on-board per-sample Ising latency transcript (the terminal-state deliverable) -- present only if reachable; null + blocked verdict otherwise."
         kv260_synthesis_succeeded:
