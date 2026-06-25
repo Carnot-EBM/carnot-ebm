@@ -2266,6 +2266,13 @@ class E3AgentPolicy:
             if attempt["reason"] == "level_up_reinduction" or next_level_episode:
                 attempt["reason"] = "level_up_reinduction"
                 self._fit_dsl_model()
+                structural_goal_provider = None
+                try:
+                    from carnot.agentic.arc_value_learner import structural_alignment_goal_candidate
+
+                    structural_goal_provider = structural_alignment_goal_candidate
+                except Exception:
+                    structural_goal_provider = None
                 outcome = execute_bounded_llm_reinduction(
                     game=self.short,
                     transitions=active_transitions,
@@ -2283,6 +2290,7 @@ class E3AgentPolicy:
                     value_head=self.value_head,
                     enable_factored_planner=self.factored_planner,
                     factored_trust_threshold=self.factored_trust_threshold,
+                    structural_goal_provider=structural_goal_provider,
                 )
                 attempt.update(
                     {
@@ -2301,6 +2309,10 @@ class E3AgentPolicy:
                         is not None,
                         "goal_predicate_satisfiable": bool(outcome.goal_predicate_satisfiable),
                         "goal_satisfiability": dict(outcome.goal_satisfiability),
+                        "goal_expression": outcome.goal_expression,
+                        "structural_goal_diagnostics": dict(
+                            outcome.structural_goal_diagnostics
+                        ),
                         "subgoal_search_used": bool(
                             outcome.subgoal_search_used or outcome.subgoal_decomposition
                         ),
