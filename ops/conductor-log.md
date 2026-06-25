@@ -9233,3 +9233,22 @@ c |
 | 2026-06-25 04:26 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 106 passed, 1 warning in 8.68s |
 | 2026-06-25 04:44 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; the SURFACING l | OK | 106 passed, 1 warning in 8.17s |
 | 2026-06-25 05:23 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 117 passed, 1 warning in 7.36s |
+| 2026-06-25 05:39 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY 2026- | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantine |
+| 2026-06-25 07:02 UTC | PHASE A5 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: +        "resu |
+| 2026-06-25 07:04 UTC | PHASE A5 (ARC NORTH STAR; SCORE -- held-out first- | OK | Deliverable already exists in repo |
+| 2026-06-25 07:04 UTC | PHASE A6 (ARC NORTH STAR; persist + cross-game tra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 5.69s |
+| 2026-06-25 07:06 UTC | PHASE A6 (ARC NORTH STAR; persist + cross-game tra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.50s |
+| 2026-06-25 07:08 UTC | PHASE A6 (ARC NORTH STAR; persist + cross-game tra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.69s |
+| 2026-06-25 07:11 UTC | PHASE A7 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG i | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.55s |
+| 2026-06-25 07:13 UTC | PHASE A7 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG i | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.65s |
+| 2026-06-25 07:15 UTC | PHASE A7 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG i | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.11s |
+| 2026-06-25 07:18 UTC | PHASE B1 (INFRA reserved slot 1; operator MANDATOR | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 5.91s |
+| 2026-06-25 07:20 UTC | PHASE B1 (INFRA reserved slot 1; operator MANDATOR | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 5.70s |
+| 2026-06-25 07:22 UTC | PHASE B1 (INFRA reserved slot 1; operator MANDATOR | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.52s |
+| 2026-06-25 07:24 UTC | PHASE B2 (INFRA reserved slot 2) -- adversarial_ve | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.44s |
+| 2026-06-25 07:27 UTC | PHASE B2 (INFRA reserved slot 2) -- adversarial_ve | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.51s |
+| 2026-06-25 07:29 UTC | PHASE B2 (INFRA reserved slot 2) -- adversarial_ve | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.67s |
+| 2026-06-25 07:31 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.74s |
+| 2026-06-25 07:33 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.49s |
+| 2026-06-25 07:36 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.68s |
+| 2026-06-25 07:38 UTC | PHASE D (SOTA-INGESTION -- the .435 fallback) -- m | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.38s |

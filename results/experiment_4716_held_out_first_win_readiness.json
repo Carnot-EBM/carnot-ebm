@@ -1,0 +1,149 @@
+{
+  "duration_s": 4036.512178,
+  "experiment": "experiment_4716_held_out_first_win_readiness",
+  "experiment_id": 4716,
+  "field_principles": {
+    "first_win_ci_lower": {
+      "principle": "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion; a point estimate is gameable by one lucky variant."
+    },
+    "first_win_rate_integrated": {
+      "principle": "the held-out generic first-win on color-permuted variants -- the only offline proxy that tracks the scored leaderboard lane; the replay count does not."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: held_out_first_win_improved_<delta> OR complete: held_out_first_win_flat_no_leaderboard_change."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor)."
+    },
+    "multi_level_deepen_rate_integrated": {
+      "principle": "deepening past L1 is the second scored lever; tracking it held-out keeps A5 honest about depth without the replay count."
+    },
+    "null_delta_methodology_note": {
+      "principle": "present when first-win is flat; the TAUTOLOGY carve-out reads it to downgrade CRITICAL->WARN (honest no-change, not a measurement bug)."
+    },
+    "parity_test_green": {
+      "principle": "the held-out proxy is valid only if the measured agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates readiness."
+    },
+    "positive_control_passed": {
+      "principle": "bool(parity_test_green) -- GATES the TAUTOLOGY exemption; an unvalidated flat result is NOT excused."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (offline arcade, experiment_4605 importable); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "replay_package_floor_reproduced": {
+      "principle": "the replay package stays a reproduced FLOOR, but its level count is explicitly NOT the leaderboard score."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the held-out lane measures the agent; no oracle is invoked."
+    }
+  },
+  "first_win_baseline": 0.04,
+  "first_win_ci_lower": 0.0,
+  "first_win_delta_vs_baseline": 0.0,
+  "first_win_rate_integrated": 0.04,
+  "held_out_first_win_readiness": true,
+  "held_out_proxy_summary": {
+    "first_win_baseline": 0.04,
+    "first_win_ci_lower": 0.0,
+    "first_win_delta_vs_baseline": 0.0,
+    "first_win_rate_integrated": 0.04,
+    "held_out_variant_attempts": 100,
+    "multi_level_deepen_rate_integrated": 0.0,
+    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+  },
+  "held_out_variant_attempts": 100,
+  "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
+  "min_held_out_variant_attempts": 100,
+  "multi_level_deepen_rate_integrated": 0.0,
+  "null_delta_methodology_note": "Held-out first-win is flat vs baseline (first_win_rate_integrated == first_win_baseline, delta=0.0): no lever moved the leaderboard-relevant metric in this readiness run. The equality is an honest no-leaderboard-change null; positive_control_passed passed and gates whether the flat null is excused.",
+  "operator_only": true,
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [11 items]\n\n...........                                                              [100%]\n============================== 11 passed in 5.86s ==============================\n"
+  },
+  "parity_test_green": true,
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "experiment_4605_importable": true,
+    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
+    "experiment_4605_importable_returncode": 0,
+    "offline_arcade": true,
+    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
+    "offline_arcade_returncode": 0,
+    "ok": true
+  },
+  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
+  "random_seed": 4716,
+  "ready_for_operator_submit": true,
+  "replay_count_is_not_the_score": true,
+  "replay_floor": {
+    "live_submittable_level_count": 60,
+    "live_submittable_subset_of_reproducible": true,
+    "note": "replay package floor only; live_submittable_level_count is not the leaderboard score.",
+    "offline_reproduced": true,
+    "package_exists": true,
+    "package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
+    "ready_for_operator_submit": true,
+    "replay_package_floor_reproduced": true,
+    "reproducible_total_levels": 63,
+    "reproducible_vs_submittable_gap": 3,
+    "source_result_exists": true,
+    "source_result_path": "results/experiment_4679_refresh_submission_package.json"
+  },
+  "replay_floor_package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
+  "replay_package_floor_reproduced": true,
+  "reproducibility_checksum": "sha256:01a281ff4a0870f5a7256c90b9b7cd9e8070b9f739716e70845f0f26161d02f3",
+  "result_path": "results/experiment_4716_held_out_first_win_readiness.json",
+  "schema": "carnot.arc.held_out_first_win_readiness_4716.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4716",
+    "SCENARIO-CAPSTONE-4716",
+    "SCENARIO-CAPSTONE-4716-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4716-FIELD-PRINCIPLES"
+  ],
+  "submitted_to_leaderboard": false,
+  "v434_lever_inputs": {
+    "a1": {
+      "chosen_submitted_config": null,
+      "exists": true,
+      "experiment": "experiment_4712_perception_grounded_l2_goal_lp85",
+      "honest_verdict": "complete: l2_perception_goal_no_deepening_residual_alignment_under_determined",
+      "path": "results/experiment_4712_perception_grounded_l2_goal_lp85.json",
+      "sha256": "sha256:21b358bc461079ae317b3999b9e3e5d51561c583938e76f380f3361e8854b762"
+    },
+    "a2": {
+      "chosen_submitted_config": "unchanged",
+      "exists": true,
+      "experiment": "experiment_4713_surface_present_winner_verifier_ranker",
+      "honest_verdict": "complete: surface_present_winner_no_new_level_residual_present_winner_not_separable_from_distractors",
+      "path": "results/experiment_4713_surface_present_winner_verifier_ranker.json",
+      "sha256": "sha256:cc73d7e86c0462528abde580a84f1c40604c7acdc808e5f5786f80098c060960"
+    },
+    "a4": {
+      "chosen_submitted_config": {
+        "coordinate_head_proposals": true,
+        "online_action_learning_driver": "available_additive",
+        "reset_to_prior_on_level_up": true,
+        "submitted_recommendation": "keep_conservative_null_config_with_safe_cell_recall_floor",
+        "trust_metric": "cell_recall"
+      },
+      "exists": true,
+      "experiment": "experiment_4715_online_action_learning_driver_corrected",
+      "honest_verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_too_sparse",
+      "path": "results/experiment_4715_online_action_learning_driver_corrected.json",
+      "sha256": "sha256:b7198983a040ad86634c9b022ffe34de4ef436c141291e79554d62b98999dce7"
+    }
+  },
+  "verifier_is_oracle": false
+}

@@ -1034,11 +1034,17 @@ def main() -> None:
             "can show survivorship-inflated efficiency. The deployability gate guards against "
             "this by ALSO requiring carnot_n_solved >= vanilla_n_solved on every game.",
             "N=5 seeds/arm/game is below the project N>=30 bar; vanilla itself is flaky on some "
-            "games (ar25 1/5, m0r0 4/5). A 1-seed n_solved delta is within seed noise. Treat "
-            "per-game solve-rate deltas as indicative; the cross-arm pattern is the robust finding.",
-            "base_seed is PINNED to the prior hedged run (24487) so every per-game per-seed "
-            "sequence is identical to the prior vanilla baseline; vanilla is re-run here in-process "
-            "and reproduces the prior vanilla block, confirming pairing.",
+            "games (ar25 1/5, m0r0 4/5 in the prior run). A 1-seed n_solved delta is within seed "
+            "noise. Treat per-game solve-rate deltas as indicative; the cross-arm pattern is the "
+            "robust finding.",
+            "PAIRING IS WITHIN THIS RUN. The decisive comparison is abstain-vs-vanilla where BOTH "
+            "are produced in THIS process with the identical per-game per-seed sequence "
+            "(game_base=base_seed+hash(game)%10000, then base_seed+i*37), so each arm is paired "
+            "against THIS run's vanilla seed-for-seed. NOTE: Python's hash() of strings is "
+            "randomized per process (PYTHONHASHSEED unset), so this run's per-game seeds differ "
+            "from the prior hedged run's — the vanilla MEDIANS here will NOT bit-match the prior "
+            "artifact's vanilla block (different seeds), but the paired vanilla-vs-abstain "
+            "comparison within this run is exact. base_seed itself is pinned to 24487.",
         ],
         "methodology_note": (
             "Carnot frame-change CNN (SmallFrameChangeCNN P(change) head) partitions just-explore's "
