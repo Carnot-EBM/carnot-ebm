@@ -1,0 +1,142 @@
+{
+  "duration_s": 0.10077190189622343,
+  "experiment": "experiment_4707_adversarial_verify_hardening",
+  "field_principles": {
+    "firstwin_nulldelta_carveout_added": {
+      "principle": "the HELD-OUT-FIRST-WIN-lane null-delta carve-out (a flat first-win equality -> WARN only with null_delta_methodology_note + positive_control_passed; unvalidated -> stays CRITICAL) -- the exp4691 false-positive fix."
+    },
+    "honest_artifacts_not_flagged": {
+      "principle": "the honest A1/A4 artifacts (A1 order-1 ablation + offline_reproduced; A4 null-delta markers) are NOT flagged -- false-positive guard (like the .432 coverage-baseline guard)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+    },
+    "perception_overclaim_guard_added": {
+      "principle": "the PERCEPTION-OVERCLAIM guard (a perception-attributable win must report the order-1-representation ablation strictly lower + offline_reproduced, else flagged as a possible search-budget win mislabeled)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified; pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "tests_added": {
+      "principle": "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim/unvalidated, pass the honest)."
+    }
+  },
+  "firstwin_nulldelta_carveout_added": true,
+  "firstwin_nulldelta_guard_report": {
+    "a4_firstwin_tautology_flags": [
+      {
+        "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      }
+    ],
+    "a4_source_had_null_delta_methodology_note": false,
+    "a4_source_had_positive_control_passed": false,
+    "a4_validated_flags": [
+      {
+        "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      }
+    ],
+    "failed_positive_control_flags": [
+      {
+        "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "unvalidated_flat_null_flags": [
+      {
+        "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "validated_flat_null_flags": [
+      {
+        "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      }
+    ]
+  },
+  "honest_artifacts_not_flagged": true,
+  "honest_verdict": "success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
+  "perception_overclaim_guard_added": true,
+  "perception_overclaim_guard_report": {
+    "a1_fixture_flags": [],
+    "a1_guarded_flags": [],
+    "invalid_ablation_flags": [
+      {
+        "detail": "perception-overclaim: artifact claims an object-centric/relational representation first-win or new-level win without proving order1_ablation_reached_level is strictly lower than generic_agent_reached_level and offline_reproduced=true. The apparent win may be a search-budget win mislabeled as a perception representation win.",
+        "kind": "perception-overclaim",
+        "severity": "critical"
+      }
+    ],
+    "omitted_evidence_flags": [
+      {
+        "detail": "perception-overclaim-omitted: object-centric/relational first-win or new-level claim omits order1_ablation_reached_level, offline_reproduced. Report order1_ablation_reached_level and offline_reproduced before crediting a perception win.",
+        "kind": "perception-overclaim-omitted",
+        "severity": "warn"
+      },
+      {
+        "detail": "perception-overclaim: artifact claims an object-centric/relational representation first-win or new-level win without proving order1_ablation_reached_level is strictly lower than generic_agent_reached_level and offline_reproduced=true. The apparent win may be a search-budget win mislabeled as a perception representation win.",
+        "kind": "perception-overclaim",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "passing_evidence_flags": []
+  },
+  "preconditions_checked": {
+    "adversarial_verify_import_ok": true,
+    "adversarial_verify_parse_ok": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "fixtures_present": true,
+    "network_required": false,
+    "ok": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4707": true
+  },
+  "random_seed": 4707,
+  "reproducibility_checksum": "sha256:7463cf25a462dbf2adca293e523dc86fec17b9cf5cb942045a5f82fcdc165639",
+  "result_path": "results/experiment_4707_adversarial_verify_hardening.json",
+  "schema": "carnot.exp4707.adversarial_verify_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4707",
+    "SCENARIO-ARC-WMTE-4707-FIRSTWIN-NULLDELTA",
+    "SCENARIO-ARC-WMTE-4707-PERCEPTION-OVERCLAIM"
+  ],
+  "tests_added": {
+    "assertions": [
+      "Flat first-win equality without null-delta markers stays critical",
+      "Flat first-win equality with null_delta_methodology_note and positive_control_passed downgrades to warn",
+      "Flat first-win equality with a failed positive control stays critical",
+      "Object-centric perception win omitting order-1 ablation and offline reproduction emits omitted warn and critical overclaim flag",
+      "Object-centric perception win whose order-1 ablation is not lower emits critical overclaim flag",
+      "Object-centric perception win with lower order-1 ablation and offline reproduction is not false-flagged",
+      "Honest A1/A4 artifacts do not fire the new guarded criticals"
+    ],
+    "commands": [
+      ".venv/bin/pytest tests/python/test_adversarial_verify_hardening_4707.py -q --no-cov",
+      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4707_adversarial_verify_hardening.py' -m pytest --override-ini addopts='' tests/python/test_adversarial_verify_hardening_4707.py -q"
+    ],
+    "passed": true,
+    "test_files": [
+      "tests/python/test_adversarial_verify_hardening_4707.py"
+    ]
+  }
+}
