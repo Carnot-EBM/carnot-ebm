@@ -48,7 +48,7 @@ theme: >-
   verifier/value ranker over the object-centric coverage-1.0 proposal pool lifts the rank-59 winner to actionable
   top-k (the north-star verifier-as-router earning its place; the prior selection nulls were on the order-1 pool
   where the winner was ABSENT); A4 runs the CORRECTED goal-free online-action-learning DRIVER (coordinate-head-
-  proposes-clicks + bug-fixed Go-Explore archive + bug-fixed CNN; A/B {frozen, online-scratch, online-warm} --
+  proposes-clicks + bug-fixed Go-Explore archive + bug-fixed CNN; A/B {{frozen, online-scratch, online-warm}} --
   operator 2026-06-24 leader-gap; the .433 attempt nulled on DEAD CODE). A3 banks +1 (62->63) + trains the verifier
   (Level-Up Guarantee + self-play-every-milestone). A5 the held-out first-win readiness lane. A6 persist+transfer.
   A7 SUBMITTED_AGENT_CONFIG integration. INFRA: B1 the operator-mandated SILENT-BUG AUDIT of the .428-.433
@@ -170,7 +170,7 @@ tasks:
       - experiment_id: exp4537-reinduction
         verdict: 'complete: per_level_reinduction_no_new_level_offline_reproduced'
         addressed_by: 'exp4537 (.420) persisted the per-level reinduction operator (detect level-up, clear stale
-          induction, re-induce the L_{n+1} predicate) but banked no new level because the re-induced predicate was
+          induction, re-induce the L_{{n+1}} predicate) but banked no new level because the re-induced predicate was
           not GROUNDED in detected objects -- it re-induced from the post-transition representation without a
           structural alignment expression. THIS task supplies the missing object-grounded goal expression (piece->
           sprite alignment over the .433 A1 object-centric detector) into that same reinduction path. Forward
@@ -361,7 +361,7 @@ tasks:
       discriminative verifier over the LOO=0.674 structural features, OR an energy ranker), trained on the LIVE
       off-path search distribution (incl. dead-ends), that re-ranks the proposal pool; (c) MEASURE precision-at-k of
       the present winning candidate (rank 59 -> top-k) on a clean L1 game (PREFER a hard clean game from
-      {bp35,re86,s5i5,g50t,r11l}); (d) run the live generic E3 with surfacing ON, replay-verify via
+      {{bp35,re86,s5i5,g50t,r11l}}); (d) run the live generic E3 with surfacing ON, replay-verify via
       arc_solver_kit.reproduce, vs the NO-SURFACING ablation (the .433 explorer value head, same pool, same budget).
       The WIN: precision-at-k up AND a generic NEW level via surfacing, offline-reproduced, the no-surfacing ablation
       failing. verifier_is_oracle:false. If it nulls, log the present-but-unselectable residual to ops/verifier_gaps.md.
@@ -534,7 +534,7 @@ tasks:
       (hierarchical action-then-coord sample, NOT a re-ranker), self-supervised free labels (frame_changed), Adam
       lr=1e-4 BCE every ~5 actions, hash-deduped buffer, reward-driven per-level reset to the cross-game PRIOR (not
       random). Cheap floor (may ship first): flip gated_engine_from_transitions default to trust_metric=cell_recall
-      so the existing online CNN un-gates. A/B {frozen, online-scratch, online-warm}. Gate: online-warm beats frozen
+      so the existing online CNN un-gates. A/B {{frozen, online-scratch, online-warm}}. Gate: online-warm beats frozen
       by >=+0.05 held-out first-win AND a multi-level probe reaches L2 offline-reproduced. CPU train-step wall-clock
       MEASURED (Kaggle viability). live_agent_self_discovery. verifier_is_oracle:false. retire_if_same_verdict.'
     priority: critical
@@ -547,7 +547,7 @@ tasks:
     prior_failures:
       - experiment_id: exp4710-online-arms
         verdict: 'complete: online_action_learning_no_first_win_lift_null'
-        addressed_by: 'exp4710 (.433) ran the online-action-learning arms {frozen, online-scratch, online-warm, ...}
+        addressed_by: 'exp4710 (.433) ran the online-action-learning arms {{frozen, online-scratch, online-warm, ...}}
           and nulled at first_win 0.04 flat (best_delta=+0.0000) -- BUT on a CNN dict-candidate SILENT BUG
           (operator-confirmed, 2026-06-25) and over a Go-Explore archive that returned (1,64,64) and was SILENTLY
           DEAD. THE NULL TESTED DEAD CODE. THIS task is the CORRECTED build: (1) the CNN dict-candidate bug fixed; (2)
@@ -600,7 +600,7 @@ tasks:
       hierarchical action-then-coord sample), self-supervised free labels (frame_changed), Adam lr=1e-4 BCE every ~5
       actions, hash-deduped buffer; (2) reward-driven per-level reset to the cross-game PRIOR (not random) -- the
       differentiation vs a pure copy; (3) cheap floor (may ship first): flip gated_engine_from_transitions default to
-      trust_metric="cell_recall" so the existing online CNN un-gates. A/B {frozen, online-scratch, online-warm} on
+      trust_metric="cell_recall" so the existing online CNN un-gates. A/B {{frozen, online-scratch, online-warm}} on
       the experiment_4605 held-out harness, B~=100. MEASURE the CPU train-step ms. The WIN: online-warm beats frozen
       by >=+0.05 held-out first-win AND a multi-level probe (lp85/sc25) reaches L2 offline-reproduced.
       verifier_is_oracle:false.
@@ -613,7 +613,7 @@ tasks:
            d. LLM proposer on a FREE port + /props-verify Qwen (not gemma-8919); else blocked_qwen_proposer_port, EXIT.
            ANY missing -> populate preconditions_checked, EXIT. (--no-cov on focused pytest.)
         1. Build the online CNN with the proposing coordinate head + the per-level reset-to-prior; (optionally ship the cheap cell_recall un-gate floor first). Confirm arc_orphan_solver_lint stays green.
-        2. Run the A/B {frozen, online-scratch, online-warm} on the experiment_4605 held-out harness (B~=100). MEASURE cpu_train_step_ms. Multi-level probe lp85/sc25 -> reproduce-gate any L2.
+        2. Run the A/B {{frozen, online-scratch, online-warm}} on the experiment_4605 held-out harness (B~=100). MEASURE cpu_train_step_ms. Multi-level probe lp85/sc25 -> reproduce-gate any L2.
         3. RUN test_arc_submitted_agent_parity.py -> green. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: the harness has reachable first-win headroom; emit the online-warm-vs-frozen delta + a null_methodology_note when flat. If online-warm does not beat frozen by +0.05 AND no L2, log the residual (cpu_latency_bound | online_signal_too_sparse) as the .435 target.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
@@ -897,7 +897,7 @@ tasks:
       (silently dead, fixed 2026-06-25), and exp4710 online-action-learning ran on a CNN dict-candidate bug. Audit
       every .428-.433 generation/exploration-lever null for silent representation no-ops (degenerate output shapes,
       dropped/empty candidate pools, dead archives, no-op transforms) and produce a per-null verdict
-      {trustworthy_null | silent_bug_must_reopen} + a re-run recommendation. Output: ops/arc_null_silent_bug_audit.md
+      {{trustworthy_null | silent_bug_must_reopen}} + a re-run recommendation. Output: ops/arc_null_silent_bug_audit.md
       + the artifact. NO new solve claims.'
     priority: high
     track: infra
@@ -933,7 +933,7 @@ tasks:
 
       TASK: enumerate every .428-.433 generation/exploration-lever null. For each, inspect the artifact + the module
       it exercised for a silent representation no-op (degenerate shape, empty/unchanged pool, dead archive, dropped
-      candidate, no-op transform). Emit a per-null verdict {trustworthy_null | silent_bug_must_reopen} with the
+      candidate, no-op transform). Emit a per-null verdict {{trustworthy_null | silent_bug_must_reopen}} with the
       evidence, and a prioritized re-run recommendation (which "closed" levers must REOPEN -- e.g. the .433 A2
       amortized-exploration on the bug-fixed archive). Write ops/arc_null_silent_bug_audit.md + the artifact. NO new
       solve claims -- this is an audit only.
@@ -941,7 +941,7 @@ tasks:
       CONCRETE STEPS:
         0. PRECONDITIONS: the .428-.433 null artifacts present in results/; arc_go_explore importable. Missing -> blocked_<resource>, EXIT.
         1. Enumerate the .428-.433 generation/exploration-lever nulls; for each, extract its exercise-evidence fields + read the module it exercised.
-        2. Classify each {trustworthy_null | silent_bug_must_reopen} with evidence; confirm the Go-Explore (1,64,64) fix landed (2026-06-25).
+        2. Classify each {{trustworthy_null | silent_bug_must_reopen}} with evidence; confirm the Go-Explore (1,64,64) fix landed (2026-06-25).
         3. Write ops/arc_null_silent_bug_audit.md (per-null table + the prioritized reopen list) + the artifact.
 
       REQUIRED ARTIFACT FIELDS (principle-annotated):
