@@ -655,6 +655,27 @@ general_gotchas:
       scaffolding, but the residual bridge gap is converting object slots and
       relational keypoints into winning-prefix proposal coverage.
     reproducibility_checksum: sha256:2239834a07c66edfce69c84416be68ebe0939a3e84700853a7a27e73124f6955
+- id: primitive_online_warm_action_effect_controller_operator
+  operator: online_warm_action_effect_controller_operator
+  derived_from:
+  - results/experiment_4726_online_action_learning_driver_valid_test.json
+  - results/experiment_4727_active_probe_disambiguation.json
+  derived_from_games:
+  - exp4726_online_action_learning_driver_valid_test
+  - exp4727_active_probe_disambiguation
+  note: >-
+    Exp 4730 persists the .435 A1 online-warm action-effect controller as a
+    reusable hidden-game candidate ranker after Exp 4726 proved the online arms
+    were non-degenerate and Exp 4727's active-probe path executed no probe
+    actions. The operator combines leave-one-game PersistentAEM evidence with
+    optional online-warm frame-change scores, ranks/routes candidate actions,
+    and remains oracle-distinct; new levels still count only through
+    arc_solver_kit.reproduce().
+  transfer_dead_ends:
+  - Leave-one-game transfer can remain value-null when cached held-out candidate
+      groups contain no same-state effective target, or when the online-warm
+      ranker reorders candidates without improving solve-rate, first-win,
+      coverage, or action efficiency.
 - id: primitive_object_centric_digest
   operator: object_centric_digest
   derived_from_games:

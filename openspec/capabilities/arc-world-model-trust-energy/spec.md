@@ -6445,6 +6445,69 @@ level delta, offline reproduction evidence for any new level, a deterministic
 checksum, and an honest null methodology note plus verifier gap when active
 probing cannot disambiguate.
 
+### REQ-ARC-WMTE-4730: Persist .435 Online-Warm Action-Effect Controller
+
+Experiment 4730 SHALL read the `.435` A1/A2 artifacts
+`results/experiment_4726_online_action_learning_driver_valid_test.json` and
+`results/experiment_4727_active_probe_disambiguation.json`, choose the strongest
+characterized reusable primitive, persist it in `arc_solver_kit`, and register
+it in `ops/arc_solve_registry.yaml` as
+`primitive_online_warm_action_effect_controller_operator`. If A1's
+online-action-learning arms are non-degenerate, the workflow SHALL persist the
+A1 online-warm action-effect controller even when its first-win lift is a
+characterized null. If A1 is degenerate and A2 actually built a posterior and
+executed probes, the workflow MAY select the A2 active-probe controller instead.
+The persisted primitive SHALL rank or route candidate actions from cached
+action-effect evidence and SHALL NOT call the executable win-check, so
+`verifier_is_oracle=false`.
+
+Experiment 4730 SHALL measure honest leave-one-game transfer on at least three
+cached held-out games by excluding the target game from the action-effect memory,
+scoring cached held-out candidate rows, and reporting per-game solve-rate,
+first-win, coverage, and action-efficiency deltas. A null transfer SHALL be
+reported as a characterized result, not hidden. New levels SHALL count only when
+`arc_solver_kit.reproduce` confirms them; for this persistence measurement the
+usual value of `offline_reproduced_new_level` is false.
+
+Experiment 4730 SHALL write
+`results/experiment_4730_primitive_persist_transfer.json` with
+`honest_verdict`, `inference_substrate`, `persisted_operator`,
+`transfer_value_per_game`, `offline_reproduced_new_level`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, and `field_principles`. If the offline arcade or either
+`.435` artifact is unavailable, the experiment SHALL emit a terminal
+`blocked_<resource>` verdict and SHALL NOT fabricate transfer values.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; complete: <operator>_persisted_transfer_<characterized|null>."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- scores cached held-out rows (1s floor), no live LLM load."
+- `persisted_operator`: principle "the reusable arc_solver_kit operator name + the registry entry -- the self-learning capture so the live agent reuses it on hidden games."
+- `transfer_value_per_game`: principle "per-game leave-one-game transfer deltas, reported HONESTLY; a transfer null is a valid characterized result, not a failure to hide."
+- `offline_reproduced_new_level`: principle "true only if persisting banked a strictly new offline-reproduced level (usually false for a persist task)."
+- `verifier_is_oracle`: principle "false -- the persisted operator ranks/routes/perceives; the reproduction gate is the oracle-distinct authority."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift."
+- `preconditions_checked`: principle "records resources verified (offline arcade, .435 artifacts present); pre-empts missing-resource fabrication."
+
+### SCENARIO-ARC-WMTE-4730-PERSIST-STRONGEST-435-PRIMITIVE
+
+Given A1 has non-degenerate online-warm arms and A2 did not execute probe
+actions
+When Experiment 4730 selects a primitive
+Then it persists `online_warm_action_effect_controller_operator`, records the
+A1/A2 upstream signal comparison, and exposes the operator through
+`arc_solver_kit.primitive_operator_registry()` and the ARC solve registry.
+
+### SCENARIO-ARC-WMTE-4730-LEAVE-ONE-GAME-TRANSFER
+
+Given cached action-effect rows exist for at least three held-out games
+When Experiment 4730 measures leave-one-game transfer
+Then each game excludes its own rows from the memory, reports solve-rate,
+first-win, coverage, and action-efficiency deltas, records transfer dead-ends
+for null games, keeps `verifier_is_oracle=false`, and writes a stable
+`results/experiment_4730_primitive_persist_transfer.json` checksum.
+
 ### REQ-ARC-WMTE-4621: ARC Sprint Integration Gate for the Scored Agent
 
 Experiment 4621 SHALL consolidate the ARC sprint's measured wins into the scored

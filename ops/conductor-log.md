@@ -9267,3 +9267,5 @@ c |
 | 2026-06-25 13:58 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: it.
 codex
 The  |
+| 2026-06-25 15:22 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: dex
+The contro |
