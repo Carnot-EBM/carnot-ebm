@@ -1,3 +1,50 @@
+## 2026-06-25 (later) — .436 planning sweep — VALID-TEST THE GUIDANCE-CLASS GENERATION LEVERS: B1 found the energy-as-generation levers (goal-energy candidate scoring + energy-fitness QD) were NEVER validly tested (dead/byte-identical code); .436 reopens them with the non-degeneracy gate INLINE
+
+Added by the `.436` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-25). The `.435` capstone
+(exp4735) closed `bridge_crossed_for_solve=False` for the **11th consecutive milestone**, but the milestone's
+real value was a sharp **trust-correction** that reframes the whole search:
+
+- **A1 (the leader's online action-learning driver) was the ONLY `.435` lever VALIDLY tested**
+  (`arms_non_degenerate=True`: 66 online Adam steps with positive gradient norms, distinct per-arm action
+  distributions, coordinate head differs from frozen) — and it **genuinely nulled** (`online_warm_vs_frozen_delta=0.0`,
+  all arms at the 0.04 baseline). The operator's highest-leverage bet (2026-06-24) is now ANSWERED: the
+  frame-change-driven online CNN does NOT lift generic first-win → **the online-action-learning lever RETIRES**
+  (`retire_if_same_verdict`). (It was CRITICAL-flagged as a TAUTOLOGY on the honest 0.04==0.04==0.04 equality and
+  the capstone quarantined it — an `adversarial_verify` carve-out gap, fixed in `.436` INFRA-1.)
+- **A2 (active-probe disambiguation) tested DEAD CODE**: `probe_actions_taken=0`,
+  `hypothesis_posterior_built=False`, `posterior_entropy_reduction=0.0` — `reason: probe_mechanism_did_not_run`.
+  Another silent no-op (the class B1/B2 were built to catch; the current guard missed it — fixed in `.436` INFRA-1).
+- **B1 silent-bug audit (operator-mandated 2026-06-25): 12 nulls audited, 5 must reopen.** The decisive finding
+  — the **guidance-class GENERATION levers were all tested on dead/byte-identical code**:
+  P1 Go-Explore amortized prior (`(1,64,64)` archive, zero cells), P2 **goal-energy generation** (exp4640:
+  the goal-energy arm CLONED cached baseline attempts, `goal_energy_neutral_on_cached_frame=True` — generation
+  never exercised), P3 **energy-fitness QD** (exp4653: QD/random/search arms BYTE-IDENTICAL except the label),
+  P4 hierarchical subgoal (empty decomposition). These nulls are UNTRUSTWORTHY.
+
+**The settled diagnosis (triply-grounded): the 0.04 wall is GENERATION-GUIDANCE, and the guidance-class
+generation levers were NEVER validly tested.** This converges three independent signals: (1) the operator's
+2026-06-23 redirect ("the 0.04 wall is generation-GUIDANCE, NOT depth/coverage — concentrate on the guidance
+class: goal-energy / expansion-prior"; macro-action + click-heatmap levers RETIRED as empirical nulls);
+(2) B1's audit (the guidance-class generation levers tested dead code → must reopen); (3) the energy-config-space
+memory ([[project_arc_energy_config_space]]: "the live agent IS an energy-refinement loop; the wall is
+make-a-winner-appear, not select; energy-as-fitness QD evolution"). **`.436` valid-tests the two strongest
+guidance-class generation levers** — **goal-energy candidate generation** (A1, reopen of exp4640) and
+**energy-fitness QD generation** (A2, reopen of exp4653) — each with the non-degeneracy gate applied INLINE
+(the `.435`-A1 discipline: prove distinct, non-degenerate candidate pools that DIFFER from baseline BEFORE any
+lift is measured) and the null-delta/TAUTOLOGY carve-out markers emitted so an honest no-lift null is NOT
+quarantined. SOTA support (light sweep, this planning round): energy-as-fitness QD is the **MAP-Elites +
+descriptor-conditioned gradients** ([arXiv:2303.03832](https://arxiv.org/abs/2303.03832)) /
+**model-based QD with gradients** ([arXiv:2211.12610](https://arxiv.org/abs/2211.12610)) family — exactly the
+distinct-mutation-pool + gradient-guided generation the exp4653 reopen needs.
+
+**SOTA frontier carried to `.437` (the `.436` D slot maps it fresh):** the epistemic-object-model MCTS probe
+planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418) + the factored interaction/causal probe bank
+(arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136), plus the within-game **similarity-keyed
+partial-trajectory retrieval** efficiency lever (MATM, arXiv:2606.19911 — the one un-subsumed graft, an
+action-efficiency candidate, NOT a level-bank). Sources: [MAP-Elites + DCG (arXiv:2303.03832)](https://arxiv.org/abs/2303.03832),
+[Model-Based QD with Gradients (arXiv:2211.12610)](https://arxiv.org/abs/2211.12610),
+[QD in hard-exploration (arXiv:2211.13742)](https://arxiv.org/abs/2211.13742).
+
 ## 2026-06-25 — .435 planning sweep — STATIC SELECTION IS EXHAUSTED, PIVOT TO ACTING: the leader's online action-learning driver (first VALID test) + hypothesis-driven active-probe disambiguation
 
 Added by the .435 planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-25). The `.434` capstone
