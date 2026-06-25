@@ -2007,6 +2007,47 @@ Go-Explore `(1,64,64)`, Exp 4710 CNN dict-candidate, and `.434` A4 all-arms
 `0.04` signatures, and does not flag a flat null that explicitly reports
 non-degenerate exercise evidence such as `arms_non_degenerate=true`.
 
+### REQ-ARC-WMTE-4743: Adversarial Verify Null-Delta Carveout Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL harden the `.436` ARC
+generation/exploration valid-test lane without weakening existing fabrication
+checks. When an ARC generation/exploration artifact reports
+`arms_non_degenerate=true`, a non-empty `null_delta_methodology_note`, and
+`positive_control_passed=true`, equal first-win arms at the baseline SHALL
+downgrade `TAUTOLOGY` from CRITICAL to WARN rather than quarantining the
+artifact. Without those markers, the equal-arm signature SHALL remain CRITICAL.
+
+The same reader SHALL extend `LEVER_EXERCISE_EVIDENCE_DEGENERATE` to catch
+declared-but-unrun active-probe mechanisms. If an ARC exploration/probe
+artifact declares probe/posterior fields such as `probe_actions_taken`,
+`hypothesis_posterior_built`, `posterior_entropy_reduction`, active-probe, or
+hypothesis-posterior diagnostics but reports that the mechanism did not run
+(`probe_actions_taken==0`, `hypothesis_posterior_built=false`, or
+`posterior_entropy_reduction==0.0`), the artifact SHALL be flagged
+`LEVER_EXERCISE_EVIDENCE_DEGENERATE`. A flat null with positive exercise
+evidence (`probe_actions_taken>0` and `posterior_entropy_reduction>0`) SHALL
+NOT be flagged by this extension.
+
+Experiment 4743 SHALL write
+`results/experiment_4743_adversarial_verify_carveout_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `tautology_carveout_added`,
+`exercise_evidence_extension_added`, `a1_exemplar_downgraded_to_warn`,
+`a2_exemplar_flagged`, `positive_exercise_null_not_flagged`,
+`existing_suite_green`, `pinning_test_path`, `verifier_is_oracle`,
+`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
+
+#### SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING
+
+Given Exp 4726 reports non-degenerate online-action-learning arms with a
+validated null-delta note, Exp 4727 declares an active probe that never runs,
+and a synthetic flat active-probe null reports positive exercise evidence
+When `adversarial_verify.py` checks those artifacts
+Then Exp 4726's equal first-win arms produce WARN `TAUTOLOGY` flags and no
+critical `TAUTOLOGY`, Exp 4727 emits
+`LEVER_EXERCISE_EVIDENCE_DEGENERATE`, and the positive-exercise null does not
+emit `LEVER_EXERCISE_EVIDENCE_DEGENERATE`.
+
 ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
 
 Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2

@@ -1,0 +1,137 @@
+{
+  "a1_exemplar_downgraded_to_warn": {
+    "artifact": "results/experiment_4726_online_action_learning_driver_valid_test.json",
+    "critical_flags": [],
+    "not_quarantined": true,
+    "passed": true,
+    "tautology_flags": [
+      {
+        "detail": "frozen_first_win=0.04 and online_scratch_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via validated_non_degenerate_first_win_null==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      },
+      {
+        "detail": "frozen_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via validated_non_degenerate_first_win_null==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      },
+      {
+        "detail": "online_scratch_first_win=0.04 and online_warm_first_win=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via online_warm_vs_frozen_delta==0, null_delta_methodology_note, and bare_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+        "kind": "TAUTOLOGY",
+        "severity": "warn"
+      }
+    ]
+  },
+  "a2_exemplar_flagged": {
+    "artifact": "results/experiment_4727_active_probe_disambiguation.json",
+    "lever_flags": [
+      {
+        "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: active_probe_result.active_probe_diagnostics.hypothesis_posterior_built=False; active_probe_result.active_probe_diagnostics.posterior_entropy_reduction=0.0; active_probe_result.active_probe_diagnostics.probe_actions_taken=0; active_probe_result.hypothesis_posterior_built=False; active_probe_result.posterior_entropy_reduction=0.0; active_probe_result.probe_actions_taken=0",
+        "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
+        "severity": "warn"
+      }
+    ],
+    "passed": true
+  },
+  "duration_s": 26.661378778982908,
+  "exercise_evidence_extension_added": {
+    "declared_but_unrun": "probe_actions_taken==0 / hypothesis_posterior_built==False / posterior_entropy_reduction==0.0",
+    "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
+    "passed": true
+  },
+  "existing_suite_green": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_adversarial_verify_arc_self_solve.py tests/python/test_adversarial_verify_baseline_identity_tautology.py tests/python/test_adversarial_verify_carveout_hardening.py tests/python/test_adversarial_verify_control_treatment_null.py tests/python/test_adversarial_verify_degenerate_controls.py tests/python/test_adversarial_verify_degenerate_separation.py tests/python/test_adversarial_verify_guards.py tests/python/test_adversarial_verify_hardening_4611.py tests/python/test_adversarial_verify_hardening_4623.py tests/python/test_adversarial_verify_hardening_4635.py tests/python/test_adversarial_verify_hardening_4647.py tests/python/test_adversarial_verify_hardening_4659.py tests/python/test_adversarial_verify_hardening_4671.py tests/python/test_adversarial_verify_hardening_4683.py tests/python/test_adversarial_verify_hardening_4695.py tests/python/test_adversarial_verify_hardening_4707.py tests/python/test_adversarial_verify_lever_exercise_evidence.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [174 items]\n\n........................................................................ [ 41%]\n........................................................................ [ 82%]\n..............................                                           [100%]\n============================= 174 passed in 20.58s =============================\n"
+  },
+  "experiment": "experiment_4743_adversarial_verify_carveout_hardening",
+  "field_principles": {
+    "a1_exemplar_downgraded_to_warn": {
+      "principle": "exp4726 (non-degenerate + null markers) downgrades CRITICAL->WARN -- the honest-null-not-quarantined fix works."
+    },
+    "a2_exemplar_flagged": {
+      "principle": "exp4727 (declared probe + 0 probe_actions) is flagged LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the declared-but-unrun catch works."
+    },
+    "exercise_evidence_extension_added": {
+      "principle": "the declared-but-unrun extension (probe_actions_taken==0 etc.) -- catches the .435 A2-class no-op the existing guard missed."
+    },
+    "existing_suite_green": {
+      "principle": "the existing adversarial_verify tests stay green -- no existing check weakened (the never-weaken-the-linter rule)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: adversarial_verify_carveout_hardening_shipped_pinned."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor)."
+    },
+    "pinning_test_path": {
+      "principle": "tests/python/test_adversarial_verify_carveout_hardening.py -- the standing pin."
+    },
+    "positive_exercise_null_not_flagged": {
+      "principle": "a genuine null with positive exercise evidence is NOT flagged -- the false-positive carve-out works (a real null must survive)."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (adversarial_verify importable, exemplars present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift."
+    },
+    "tautology_carveout_added": {
+      "principle": "the non-degenerate-zero-lift carve-out -- mechanizes the fix so an honest generation null (the .436 A1/A2 shape) is not quarantined like .435 A1."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- a linter check invokes no oracle."
+    }
+  },
+  "honest_verdict": "success: adversarial_verify_carveout_hardening_shipped_pinned.",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor).",
+  "pinning_test_green": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_adversarial_verify_carveout_hardening.py -q --no-cov",
+    "duration_s": 4.616888043936342,
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [5 items]\n\n.....                                                                    [100%]\n============================== 5 passed in 3.41s ===============================\n"
+  },
+  "pinning_test_path": "tests/python/test_adversarial_verify_carveout_hardening.py",
+  "positive_exercise_null_not_flagged": {
+    "lever_flags": [],
+    "passed": true,
+    "posterior_entropy_reduction": 0.25,
+    "probe_actions_taken": 3
+  },
+  "preconditions_checked": {
+    "adversarial_verify_importable": true,
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "exp4726_present": true,
+    "exp4727_present": true,
+    "network_required": false,
+    "ok": true,
+    "pinning_test_present": true,
+    "spec_has_req_4743": true
+  },
+  "random_seed": 4743,
+  "reproducibility_checksum": "sha256:55dba530c233160a2f81e524f7be32998ae4d704a0d2ee237eb863784a793d1d",
+  "result_path": "results/experiment_4743_adversarial_verify_carveout_hardening.json",
+  "schema": "carnot.exp4743.adversarial_verify_carveout_hardening.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4743",
+    "SCENARIO-ARC-WMTE-4743-CARVEOUT-HARDENING"
+  ],
+  "tautology_carveout_added": {
+    "critical_to_warn": true,
+    "markers": [
+      "arms_non_degenerate=true",
+      "null_delta_methodology_note",
+      "positive_control_passed=true"
+    ],
+    "passed": true
+  },
+  "verifier_is_oracle": false
+}

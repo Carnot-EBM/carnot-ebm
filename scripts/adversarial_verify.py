@@ -1218,6 +1218,30 @@ def _declared_null_delta_descriptor(
     return None
 
 
+def _declared_arc_nondegenerate_firstwin_null_descriptor(
+    d: dict[str, Any], left: str, right: str
+) -> dict[str, str] | None:
+    """Recognize validated ARC generation/exploration no-lift first-win nulls."""
+    if not _is_arc_generation_or_exploration_artifact(d):
+        return None
+    if not _real_field_has_true(d, "arms_non_degenerate"):
+        return None
+    note = d.get("null_delta_methodology_note")
+    if not isinstance(note, str) or not note.strip():
+        return None
+    if d.get("positive_control_passed") is not True:
+        return None
+    left_lower = left.lower()
+    right_lower = right.lower()
+    if "first_win" not in left_lower or "first_win" not in right_lower:
+        return None
+    return {
+        "delta_key": "validated_non_degenerate_first_win_null",
+        "methodology_key": "null_delta_methodology_note",
+        "control_key": "positive_control_passed",
+    }
+
+
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.
 
@@ -1248,6 +1272,10 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         if _is_small_shared_denominator_rate_pair(k1, k2, v1, v2, d):
             continue
         declared_null_delta = _declared_null_delta_descriptor(d, k1, k2)
+        if declared_null_delta is None:
+            declared_null_delta = _declared_arc_nondegenerate_firstwin_null_descriptor(
+                d, k1, k2
+            )
         # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
         # honest_verdict declares a no-value null (verifier_router_no_value_added,
         # no_lever_raises_a_metric, ...), a control==treatment equality where one side is an
@@ -3207,6 +3235,11 @@ _LEVER_EXERCISE_CONTEXT_MARKERS = (
     "online_driver_arms",
     "online_warm_first_win",
     "online_scratch_first_win",
+    "active_probe",
+    "active-probe",
+    "hypothesis_posterior",
+    "posterior_entropy_reduction",
+    "probe_actions_taken",
 )
 _LEVER_ZERO_DELTA_KEY_MARKERS = (
     "coverage_delta",
@@ -3236,6 +3269,14 @@ _LEVER_ONLINE_METRIC_MARKERS = (
     "first_win_rate",
     "solve_rate",
     "live_solve_rate",
+)
+_LEVER_PROBE_DECLARATION_MARKERS = (
+    "active_probe",
+    "active-probe",
+    "hypothesis_posterior",
+    "probe_actions_taken",
+    "hypothesis_posterior_built",
+    "posterior_entropy_reduction",
 )
 
 
@@ -3484,8 +3525,52 @@ def _byte_identical_online_arm_reason(d: dict[str, Any]) -> str | None:
     return f"byte-identical online-driver arms to >{TAUTOLOGY_DIGITS} sig figs ({formatted})"
 
 
+def _has_positive_probe_exercise_evidence(d: dict[str, Any]) -> bool:
+    """True when a declared active-probe path emitted real exercise evidence."""
+    probe_actions_positive = any(
+        float(number) > 0.0
+        for value in _real_field_values(d, "probe_actions_taken")
+        for number in _numeric_leaf_values(value)
+    )
+    entropy_reduction_positive = any(
+        float(number) > 0.0
+        for value in _real_field_values(d, "posterior_entropy_reduction")
+        for number in _numeric_leaf_values(value)
+    )
+    return probe_actions_positive and entropy_reduction_positive
+
+
+def _declared_but_unrun_probe_reasons(d: dict[str, Any]) -> list[str]:
+    if _has_positive_probe_exercise_evidence(d):
+        return []
+
+    declared = False
+    reasons: list[str] = []
+    for path, value in _iter_real_fields(d):
+        path_text = _path_text(path)
+        path_lower = path_text.lower()
+        leaf = path[-1].lower()
+        if any(marker in path_lower for marker in _LEVER_PROBE_DECLARATION_MARKERS):
+            declared = True
+        if leaf == "probe_actions_taken" and _is_finite_number(value) and float(value) == 0.0:
+            reasons.append(f"{path_text}=0")
+        elif leaf == "hypothesis_posterior_built" and value is False:
+            reasons.append(f"{path_text}=False")
+        elif (
+            leaf == "posterior_entropy_reduction"
+            and _is_finite_number(value)
+            and float(value) == 0.0
+        ):
+            reasons.append(f"{path_text}=0.0")
+    if not declared:
+        return []
+    return reasons
+
+
 def _has_nondegenerate_lever_evidence(d: dict[str, Any]) -> bool:
     if _has_distinct_arm_evidence(d):
+        return True
+    if _has_positive_probe_exercise_evidence(d):
         return True
     for key in (
         "actions_injected",
@@ -3545,6 +3630,7 @@ def check_lever_exercise_evidence(d: dict[str, Any], flags: list[Flag]) -> None:
     reasons.extend(_pool_degenerate_reasons(d))
     reasons.extend(_grid_shape_degenerate_reasons(d))
     reasons.extend(_scorer_diagnostics_error_reasons(d))
+    reasons.extend(_declared_but_unrun_probe_reasons(d))
 
     arm_reason = _byte_identical_online_arm_reason(d)
     if arm_reason is not None and not _has_distinct_arm_evidence(d):
