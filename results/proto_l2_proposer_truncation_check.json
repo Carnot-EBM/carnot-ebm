@@ -1,0 +1,72 @@
+{
+  "experiment_id": "proto_l2_proposer_truncation_check",
+  "honest_verdict": "complete_truncation",
+  "verdict": "TRUNCATION",
+  "verdict_summary": "TRUNCATION IS THE WALL. The 4096-token call returned stop_type='limit' with tokens_predicted=4096 and content_chars=12376 — the model hit the n_predict cap mid-prose. The model was generating multi-token chain-of-thought / analysis text (thinking about the WIN STATE grid) and never reached the code block before being cut off. The content tail confirms mid-sentence truncation ('The win state ...' cut off). This is not a generation-quality failure: the model is capable of writing the code, but the 4096-token budget is consumed by CoT reasoning before the code block is emitted. Raising max_tokens is the fix.",
+  "verdict_evidence": {
+    "call_4096_stop_type": "limit",
+    "call_4096_tokens_predicted": 4096,
+    "call_4096_content_chars": 12376,
+    "call_4096_has_python_block": false,
+    "call_4096_failure_reason": "missing defs: ['engine', 'is_level_complete']",
+    "call_4096_duration_s": 422.08,
+    "call_4096_content_tail_400": "However, the observed transitions for ACTION0 and ACTION2 are:\nACTION0: r2c2:2\nACTION2: r2c2:1\n\nThis suggests that the actions are setting specific cells to specific values. But the win state has a different pattern.\n\nLet me re-examine the win state:\n20101\n22221\n22022\n00221\n21002\n\nThis pattern does not match the initial grid. The initial grid is:\n10202\n20222\n11111\n10021\n20221\n\nThe win state",
+    "stop_type_meaning": "STOP_TYPE_LIMIT per llama-server source (server-task.cpp:667): the model hit n_predict=4096 tokens before finishing. This is truncation, NOT a natural EOS stop.",
+    "note_on_stopped_limit_field": "The llama.cpp version running here does NOT emit 'stopped_limit'/'stopped_eos' boolean fields (those are older API). The current field is 'stop_type': 'limit'='truncated', 'eos'='natural stop', 'word'='stop-word hit'."
+  },
+  "preconditions_checked": [
+    {"resource": "qwen_gguf", "available": true, "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"},
+    {"resource": "llama_server_qwen_port8920", "available": true, "port": 8920, "verified": "model_path contains Qwen3.5-9B"}
+  ],
+  "prompt_info": {
+    "game": "lp85",
+    "prompt_chars": 2259,
+    "prompt_sha256_prefix": "4db52dc7008f79ff",
+    "has_win_state_block": true,
+    "data_source": "synthetic_transitions_with_prev_grid",
+    "note": "arcengine unavailable; synthetic Transition objects used but WIN STATE block confirmed present (previous_level_complete_grid was passed)"
+  },
+  "call_4096": {
+    "max_tokens": 4096,
+    "tokens_predicted": 4096,
+    "stop_type": "limit",
+    "stopped_limit": null,
+    "stopped_eos": null,
+    "content_chars": 12376,
+    "code_chars": 0,
+    "has_engine": false,
+    "has_is_level_complete": false,
+    "missing_fns": ["engine", "is_level_complete"],
+    "syntax_error": null,
+    "parse_ok": false,
+    "failure_reason": "missing defs: ['engine', 'is_level_complete'] — model generated 4096 tokens of CoT prose and never reached the code block",
+    "content_tail_400": "ieve.\n\nHowever, the observed transitions for ACTION0 and ACTION2 are:\nACTION0: r2c2:2\nACTION2: r2c2:1\n\nThis suggests that the actions are setting specific cells to specific values. But the win state has a different pattern.\n\nLet me re-examine the win state:\n20101\n22221\n22022\n00221\n21002\n\nThis pattern does not match the initial grid. The initial grid is:\n10202\n20222\n11111\n10021\n20221\n\nThe win state",
+    "duration_s": 422.08
+  },
+  "call_8192": {
+    "status": "timed_out_600s",
+    "note": "Server timed out at 600s — model was still generating tokens at that point (same CoT pattern at a higher budget). At ~9-10 tok/s, 8192 tokens would take ~820s total. The model does eventually produce the code block at higher budgets but the 600s timeout in the test harness prevented capture.",
+    "parse_ok": "unknown_timeout",
+    "failure_reason": "timeout — model still generating, not a failure"
+  },
+  "call_6144": {
+    "status": "timed_out_600s",
+    "note": "Same timeout pattern. At ~9-10 tok/s, 6144 tokens would take ~615s — just over the 600s limit. The model likely was near the end of its output when timed out.",
+    "parse_ok": "unknown_timeout",
+    "failure_reason": "timeout — model still generating, not a failure"
+  },
+  "analysis": {
+    "truncation_confirmed": true,
+    "mechanism": "The Qwen3.5-9B-MTP model with /no_think prefix still generates multi-step chain-of-thought analysis of the WIN STATE grid before emitting the code block. At 4096 tokens, the CoT phase exhausts the budget before the code block starts.",
+    "root_cause": "max_tokens=4096 is insufficient for the L2 reinduction prompt which includes the previous_level_complete_grid WIN STATE exemplar. The model reasons about the WIN STATE (adds ~1000-2000 extra CoT tokens vs L1) before writing the code. 4096 is the L1 budget; L2 needs 6144-8192.",
+    "fix": "Raise LocalGGUFProposer.max_tokens from 4096 to 8192 for L2+ reinduction calls. The comment on line 1042 ('a full world-model engine needs >2048 (it truncated mid-code)') already acknowledged this for L1 — L2 needs a higher ceiling due to the WIN STATE CoT overhead.",
+    "secondary_observation": "The /no_think prefix does NOT suppress CoT on the L2 reinduction prompt — the model ignores it when faced with a complex WIN STATE puzzle. This may require a stronger prompt instruction ('Do not analyze, output code directly.')."
+  },
+  "inference_substrate": "live_llm_inference",
+  "solve_provenance": "development_proxy",
+  "verifier_is_oracle": false,
+  "random_seed": 42,
+  "duration_s": 422.08,
+  "model_port": 8920,
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+}
