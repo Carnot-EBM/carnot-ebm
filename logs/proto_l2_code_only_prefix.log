@@ -1,0 +1,13 @@
+[09:16:42] PRECONDITIONS: {'qwen_gguf': True, 'server_health': True, 'serving_qwen': True, 'n_ctx': 16384, 'model_path': '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf'}
+[09:16:42] prompt rebuilt: base=2167c captured=2249c sha=8e198a5d63934854 (WIN STATE block present=True)
+[09:16:42] BASELINE: /no_think + weak suffix @4096 (expect truncation)...
+[09:24:13]   baseline: stop=limit toks=4096 parse_ok=False dur=450.3s
+[09:24:13] ARM A: STRONG_DIRECTIVE prefix + fenced suffix @4096...
+[09:34:18]   A: stop=limit toks=4096 parse_ok=True dur=605.38s
+[09:34:18] WINNER=A_strong_prefix_4096 -- testing goal satisfiability...
+[09:34:18]   satisfiability: {'exec_ok': True, 'win_state_complete': False, 'non_degenerate': True, 'engine_runs': True, 'goal_predicate_satisfiable': False, 'error': None, 'is_level_complete_on': {'win_exemplar': False, 'init': False, 'rand0': False, 'rand1': False, 'rand2': False}}
+[09:34:18] VERDICT: complete_code_only_prefix_emits_code_but_goal_unsatisfiable
+[09:34:18] SUMMARY: A_strong_prefix_4096 emits valid code at 4096, but is_level_complete is NOT satisfiable/non-degenerate on the win exemplar (sat={'exec_ok': True, 'win_state_complete': False, 'non_degenerate': True, 'engine_runs': True, 'goal_predicate_satisfiable': False, 'error': None, 'is_level_complete_on': {'win_exemplar': False, 'init': False, 'rand0': False, 'rand1': False, 'rand2': False}}).
+[09:34:18] DONE in 1055.7s -> /home/ianblenke/github.com/ianblenke/carnot/results/proto_l2_code_only_prefix.json
+[09:34:18] CHAIN: NOT satisfiable -> do NOT chain to graded-bias; report the wall.
+EXIT=0

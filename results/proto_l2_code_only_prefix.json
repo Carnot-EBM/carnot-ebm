@@ -1,7 +1,7 @@
 {
   "experiment_id": "proto_l2_code_only_prefix",
-  "honest_verdict": "complete_code_only_prefix_fixes_truncation_satisfiable_goal",
-  "verdict_summary": "CORRECTED: the strong code-only prefix defeats the zero-code truncation (valid engine+is_level_complete at 4096; baseline got 0 code) AND the induced goal predicate is SATISFIABLE+discriminating (True on the rendered win state, False elsewhere). The original 'unsatisfiable' verdict was a test bug (fed raw prev, not the rendered win grid). Remaining: Arm A rambled to the 4096 limit (605s); a stop-sequence on the closing fence fixes latency.",
+  "honest_verdict": "complete_code_only_prefix_fixes_truncation_emits_valid_code",
+  "verdict_summary": "The strong code-only directive + stop=['```'] DEFEATS the zero-code truncation: valid parseable engine+is_level_complete at 4096 where the baseline emitted 0 code (450s). The stopping is due to the STOP-SEQUENCE (the directive ALONE still ran to the 4096 limit, 605s); with the stop-sequence the call is 195 tokens / 15.6s. RETRACTED OVER-CLAIM (per 2026-06-25 adversarial review): the isolation 'satisfiable goal' claim does NOT hold under the harness's real criterion. (1) The synthetic prompt literally instructs 'is_level_complete must return True here' and prints the win grid, so the model copying it into np.array_equal is True BY CONSTRUCTION (circular). (2) The harness's _goal_satisfiability_check is BFS-reachability over the induced engine; the toy engine only sets cell [2,2], so the hardcoded 25-cell grid is UNREACHABLE -> the harness would return satisfiable=False even in isolation. The defensible isolation claim is ONLY 'emits valid parseable code, fast' -- NOT 'satisfiable goal'.",
   "baseline_truncation_reproduced_on_this_prompt": true,
   "winner_arm": "A_strong_prefix_4096",
   "goal_satisfiability": {
@@ -132,5 +132,12 @@
     "baseline_arm_a_duration_s": 605.38,
     "note": "stop=['```'] stops the model right after the code block, avoiding the ramble-to-4096-limit Arm A showed. Confirms the fix is code-only-prefix + stop-sequence (no budget bump needed)."
   },
-  "stop_sequence_code": "import numpy as np\n\ndef engine(grid, action, data):\n    grid = grid.copy()\n    if action == 0:\n        grid[2, 2] = 2\n    elif action == 2:\n        grid[2, 2] = 1\n    elif action == 1:\n        pass\n    elif action == 3:\n        pass\n    return grid\n\ndef is_level_complete(grid):\n    return np.array_equal(grid, np.array([\n        [2, 0, 1, 0, 1],\n        [2, 2, 2, 2, 1],\n        [2, 2, 0, 2, 2],\n        [0, 0, 2, 2, 1],\n        [2, 1, 0, 0, 2]\n    ]))"
+  "stop_sequence_code": "import numpy as np\n\ndef engine(grid, action, data):\n    grid = grid.copy()\n    if action == 0:\n        grid[2, 2] = 2\n    elif action == 2:\n        grid[2, 2] = 1\n    elif action == 1:\n        pass\n    elif action == 3:\n        pass\n    return grid\n\ndef is_level_complete(grid):\n    return np.array_equal(grid, np.array([\n        [2, 0, 1, 0, 1],\n        [2, 2, 2, 2, 1],\n        [2, 2, 0, 2, 2],\n        [0, 0, 2, 2, 1],\n        [2, 1, 0, 0, 2]\n    ]))",
+  "goal_satisfiability_RECONCILED": {
+    "note": "Supersedes both the top-level goal_satisfiability (False, fed raw prev) AND goal_satisfiability_CORRECTED (True, circular self-match). Neither is the harness criterion.",
+    "harness_criterion": "_goal_satisfiability_check (arc_llm_reinduction.py:481) = BFS over induced engine; satisfiable iff a REACHABLE grid makes is_level_complete True.",
+    "isolation_satisfiable_under_harness_criterion": false,
+    "reason": "induced engine only mutates cell [2,2]; hardcoded 25-cell win grid is unreachable.",
+    "defensible_isolation_claim": "emits valid parseable engine+is_level_complete (truncation defeated)"
+  }
 }
