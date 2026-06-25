@@ -1895,6 +1895,62 @@ Then a new level counts only when the surfaced arm reaches and offline
 reproduces it while the ablation reaches a lower level; otherwise the artifact
 emits an honest residual and logs a missing-verifier gap when appropriate.
 
+### REQ-ARC-WMTE-4725: Silent Representation No-Op Audit For Generation/Exploration Nulls
+
+Experiment 4725 SHALL audit the `.428` through `.434` ARC generation and
+exploration-lever null artifacts before the planner treats recent negative
+results as capability limits. The audit SHALL enumerate every in-scope null
+artifact for experiments 4628, 4640, 4653, 4664, 4676, 4688, 4700, 4701,
+4710, 4712, 4713, and 4715, read each artifact's exercise-evidence fields, and
+inspect the exercised module code when the artifact indicates a suspected
+representation/archive/CNN/arm degeneracy.
+
+The audit SHALL classify each null as `trustworthy_null` when the mechanism ran
+on non-degenerate data, or `silent_bug_must_reopen` when the artifact shows a
+wrong-shape tensor, empty or unchanged generated pool, dead archive, dropped
+dict-candidate, byte-identical arms, or no-op transform paired with flat
+coverage/delta. The audit SHALL explicitly adjudicate the `.434` A4 all-arms
+`0.04` online-driver signature as
+`online_driver_arms_degenerate (no-op, must reopen)` or `trustworthy_null`.
+The audit SHALL confirm the `arc_go_explore._frame_grid` fix by verifying a
+leading-singleton `(1,H,W)` frame collapses to a 2-D `(H,W)` grid.
+
+Experiment 4725 SHALL write
+`results/experiment_4725_silent_bug_audit.json` and
+`ops/arc_null_silent_bug_audit.md` with no solve claims. The artifact SHALL
+include `honest_verdict`, `inference_substrate`, `nulls_audited`,
+`silent_bug_nulls`, `a4_tautology_verdict`, `trustworthy_nulls`,
+`reopen_recommendations`, `go_explore_fix_confirmed`, `audit_report_path`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; complete: silent_bug_audit_<N>_nulls_<K>_must_reopen."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads upstream nulls + module code, no model load (100us floor)."
+- `nulls_audited`: principle "the count of .428-.434 generation/exploration-lever nulls inspected -- the audit scope."
+- `silent_bug_nulls`: principle "the list classified silent_bug_must_reopen with evidence (degenerate shape / empty pool / dead archive / dropped candidate / byte-identical arms) -- the load-bearing finding."
+- `a4_tautology_verdict`: principle "the explicit adjudication of the .434 A4 all-arms-0.04 TAUTOLOGY: online_driver_arms_degenerate (no-op, must reopen) | trustworthy_null -- this GROUNDS whether .435 A1 is a valid reopen."
+- `trustworthy_nulls`: principle "the list classified trustworthy_null (the mechanism genuinely ran on non-degenerate data) -- so the loop does NOT re-run a real null."
+- `reopen_recommendations`: principle "the prioritized re-run list for the planner (which closed levers reopen) -- the audit's actionable output."
+- `go_explore_fix_confirmed`: principle "true if the Go-Explore _frame_grid (1,64,64) fix (2026-06-25) is confirmed landed."
+- `audit_report_path`: principle "ops/arc_null_silent_bug_audit.md -- the human-readable per-null table."
+- `verifier_is_oracle`: principle "false -- an audit invokes no oracle."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift in the audited artifact set."
+- `preconditions_checked`: principle "records resources verified (null artifacts present, arc_go_explore importable); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4725-AUDIT-CLASSIFICATION
+
+Given the `.428` through `.434` generation/exploration null artifacts are
+present and `arc_go_explore` imports
+When Experiment 4725 audits their exercise evidence
+Then it emits one verdict per null, classifies dead archives, cloned arms,
+empty generated pools, and the `.434` all-arms `0.04` online-driver tautology as
+`silent_bug_must_reopen`, keeps non-degenerate exercised mechanisms as
+`trustworthy_null`, and writes a prioritized reopen list without claiming a new
+solve.
+
 ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
 
 Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2
