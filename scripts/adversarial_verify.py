@@ -2396,6 +2396,7 @@ PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND = (
 )
 PERCEPTION_OVERCLAIM_KIND = "perception-overclaim"
 PERCEPTION_OVERCLAIM_OMITTED_KIND = "perception-overclaim-omitted"
+LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND = "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -3185,6 +3186,57 @@ _PERCEPTION_REQUIRED_EVIDENCE_KEYS = (
     "order1_ablation_reached_level",
     "offline_reproduced",
 )
+_LEVER_EXERCISE_CONTEXT_MARKERS = (
+    "candidate_generation_coverage",
+    "candidate-generation coverage",
+    "candidate generation coverage",
+    "go_explore",
+    "go-explore",
+    "archive_injections",
+    "archive cells",
+    "archive_cells",
+    "actions_injected",
+    "prefixes_injected",
+    "proposal_pool",
+    "proposal pool",
+    "candidate_pool",
+    "candidate pool",
+    "online_action_learning",
+    "online action learning",
+    "online-driver-arms",
+    "online_driver_arms",
+    "online_warm_first_win",
+    "online_scratch_first_win",
+)
+_LEVER_ZERO_DELTA_KEY_MARKERS = (
+    "coverage_delta",
+    "candidate_generation_coverage",
+    "first_win_rate_delta",
+    "first_win_delta",
+    "online_warm_vs_frozen_delta",
+    "best_online_delta",
+)
+_LEVER_POOL_KEY_MARKERS = (
+    "candidate_pool",
+    "proposal_pool",
+    "candidate_generation_pool",
+    "generated_pool",
+)
+_LEVER_ARCHIVE_PATH_MARKERS = ("archive", "go_explore", "go-explore")
+_LEVER_ARCHIVE_ZERO_KEYS = (
+    "actions_injected",
+    "archive_injections",
+    "prefixes_injected",
+    "stored_cells",
+    "archive_cells",
+)
+_LEVER_ONLINE_ARM_MARKERS = ("frozen", "scratch", "warm")
+_LEVER_ONLINE_METRIC_MARKERS = (
+    "first_win",
+    "first_win_rate",
+    "solve_rate",
+    "live_solve_rate",
+)
 
 
 def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
@@ -3232,6 +3284,290 @@ def _real_field_values(value: Any, wanted_key: str) -> list[Any]:
         for item in value:
             values.extend(_real_field_values(item, wanted))
     return values
+
+
+def _iter_real_fields(value: Any, path: tuple[str, ...] = ()) -> list[tuple[tuple[str, ...], Any]]:
+    """Walk artifact fields while skipping metadata principle prose."""
+    rows: list[tuple[tuple[str, ...], Any]] = []
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            key_text = str(key)
+            if key_text in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+                continue
+            nested_path = path + (key_text,)
+            rows.append((nested_path, nested))
+            rows.extend(_iter_real_fields(nested, nested_path))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            nested_path = path + (f"[{index}]",)
+            rows.append((nested_path, item))
+            rows.extend(_iter_real_fields(item, nested_path))
+    return rows
+
+
+def _path_text(path: tuple[str, ...]) -> str:
+    return ".".join(path)
+
+
+def _path_has_marker(path: tuple[str, ...], markers: tuple[str, ...]) -> bool:
+    text = _path_text(path).lower()
+    return any(marker in text for marker in markers)
+
+
+def _is_arc_generation_or_exploration_artifact(d: dict[str, Any]) -> bool:
+    text = (
+        f"{d.get('experiment', '')} {d.get('schema', '')} "
+        f"{d.get('honest_verdict', '')} {d.get('inference_substrate', '')} "
+        f"{d.get('solve_provenance', '')} {_field_name_text(d)}"
+    ).lower()
+    arc_context = _is_arc_artifact(d) or "arc" in text or "online_action_learning" in text
+    return arc_context and any(marker in text for marker in _LEVER_EXERCISE_CONTEXT_MARKERS)
+
+
+def _max_positive_real_field(d: dict[str, Any], wanted_key: str) -> float | None:
+    positives = [
+        float(number)
+        for value in _real_field_values(d, wanted_key)
+        for number in _numeric_leaf_values(value)
+        if number > 0.0
+    ]
+    return max(positives, default=None)
+
+
+def _has_nontrivial_lever_run(d: dict[str, Any]) -> bool:
+    for wanted_key in ("actions", "budget", "duration_s", "iterations", "attempts", "observed"):
+        if _max_positive_real_field(d, wanted_key) is not None:
+            return True
+    return any(value is True for value in _real_field_values(d, "attempted"))
+
+
+def _archive_zero_reasons(d: dict[str, Any]) -> list[str]:
+    if not _has_nontrivial_lever_run(d):
+        return []
+    reasons: list[str] = []
+    for path, value in _iter_real_fields(d):
+        leaf = path[-1].lower()
+        if leaf not in _LEVER_ARCHIVE_ZERO_KEYS:
+            continue
+        if not _path_has_marker(path[:-1], _LEVER_ARCHIVE_PATH_MARKERS):
+            continue
+        if _is_finite_number(value) and float(value) == 0.0:
+            reasons.append(f"{_path_text(path)}=0")
+    return reasons
+
+
+def _pool_degenerate_reasons(d: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    for path, value in _iter_real_fields(d):
+        leaf = path[-1].lower()
+        if not any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):
+            continue
+        if value in (None, "", [], {}):
+            reasons.append(f"{_path_text(path)} is empty")
+        elif isinstance(value, dict):
+            keys = {str(key).lower(): nested for key, nested in value.items()}
+            left = keys.get("pre") or keys.get("before") or keys.get("input")
+            right = keys.get("post") or keys.get("after") or keys.get("output")
+            if left not in (None, "", [], {}) and left == right:
+                reasons.append(f"{_path_text(path)} is byte-identical before/after transform")
+    return reasons
+
+
+def _shape_dims(value: Any) -> list[int]:
+    if isinstance(value, str):
+        return [int(part) for part in re.findall(r"\d+", value)]
+    if isinstance(value, (list, tuple)):
+        dims: list[int] = []
+        for item in value:
+            if isinstance(item, bool):
+                return []
+            if isinstance(item, int):
+                dims.append(item)
+            elif isinstance(item, float) and item.is_integer():
+                dims.append(int(item))
+            else:
+                return []
+        return dims
+    return []
+
+
+def _grid_shape_degenerate_reasons(d: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    for path, value in _iter_real_fields(d):
+        leaf = path[-1].lower()
+        if "shape" not in leaf and "grid_tensor" not in leaf:
+            continue
+        dims = _shape_dims(value)
+        if len(dims) >= 3 and dims[0] == 1 and dims[-2] > 1 and dims[-1] > 1:
+            reasons.append(f"{_path_text(path)}={tuple(dims)} has leading singleton grid axis")
+    return reasons
+
+
+def _scorer_diagnostics_error_reasons(d: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    for path, value in _iter_real_fields(d):
+        if not isinstance(value, dict) or path[-1].lower() != "scorer_diagnostics":
+            continue
+        errors = value.get("errors")
+        if not (_is_finite_number(errors) and float(errors) > 0.0):
+            continue
+        observed = value.get("observed")
+        fits = value.get("fits")
+        detail = f"{_path_text(path)}.errors={errors}"
+        if _is_finite_number(observed):
+            detail += f", observed={observed}"
+        if _is_finite_number(fits):
+            detail += f", fits={fits}"
+        reasons.append(detail)
+    return reasons
+
+
+def _has_positive_online_training_evidence(d: dict[str, Any]) -> bool:
+    for path, value in _iter_real_fields(d):
+        if not isinstance(value, dict) or path[-1].lower() != "scorer_diagnostics":
+            continue
+        observed = value.get("observed")
+        fits = value.get("fits")
+        errors = value.get("errors", 0)
+        if (
+            _is_finite_number(observed)
+            and _is_finite_number(fits)
+            and _is_finite_number(errors)
+            and float(observed) > 0.0
+            and float(fits) > 0.0
+            and float(errors) == 0.0
+        ):
+            return True
+    return False
+
+
+def _has_distinct_arm_evidence(d: dict[str, Any]) -> bool:
+    return (
+        _real_field_has_true(d, "arms_non_degenerate")
+        or _real_field_has_true(d, "per_arm_action_distribution_distinct")
+        or _has_positive_online_training_evidence(d)
+    )
+
+
+def _online_arm_metric_items(d: dict[str, Any]) -> list[tuple[str, float]]:
+    items: list[tuple[str, float]] = []
+    for key, value in d.items():
+        kl = str(key).lower()
+        if not _is_finite_number(value):
+            continue
+        if not any(marker in kl for marker in _LEVER_ONLINE_ARM_MARKERS):
+            continue
+        if not any(marker in kl for marker in _LEVER_ONLINE_METRIC_MARKERS):
+            continue
+        items.append((str(key), float(value)))
+    arms = d.get("arms")
+    if isinstance(arms, list):
+        for index, row in enumerate(arms):
+            if not isinstance(row, dict):
+                continue
+            arm = str(row.get("arm", f"arm_{index}"))
+            value = row.get("first_win_rate")
+            if _is_finite_number(value):
+                items.append((f"arms.{arm}.first_win_rate", float(value)))
+    return items
+
+
+def _byte_identical_online_arm_reason(d: dict[str, Any]) -> str | None:
+    items = _online_arm_metric_items(d)
+    labels = " ".join(label.lower() for label, _ in items)
+    if len(items) < 3 or not all(marker in labels for marker in _LEVER_ONLINE_ARM_MARKERS):
+        return None
+    first_value = items[0][1]
+    if not all(_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS) for _, value in items[1:]):
+        return None
+    formatted = ", ".join(f"{label}={value:.6g}" for label, value in items)
+    return f"byte-identical online-driver arms to >{TAUTOLOGY_DIGITS} sig figs ({formatted})"
+
+
+def _has_nondegenerate_lever_evidence(d: dict[str, Any]) -> bool:
+    if _has_distinct_arm_evidence(d):
+        return True
+    for key in (
+        "actions_injected",
+        "archive_injections",
+        "prefixes_injected",
+        "stored_cells",
+        "archive_cells",
+        "heldout_programs_rejected",
+        "candidate_scores",
+        "observed_effects",
+        "augmented_candidates",
+        "candidate_group_count",
+    ):
+        if _max_positive_real_field(d, key) is not None:
+            return True
+    for path, value in _iter_real_fields(d):
+        leaf = path[-1].lower()
+        if any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):
+            if isinstance(value, (list, dict, str)) and len(value) > 0:
+                return True
+        if "shape" in leaf:
+            dims = _shape_dims(value)
+            if len(dims) == 2 and dims[0] > 1 and dims[1] > 1:
+                return True
+    return False
+
+
+def _zero_lever_delta_reasons(d: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    for path, value in _iter_real_fields(d):
+        leaf = path[-1].lower()
+        if not any(marker in leaf for marker in _LEVER_ZERO_DELTA_KEY_MARKERS):
+            continue
+        if _is_finite_number(value) and float(value) == 0.0:
+            reasons.append(f"{_path_text(path)}=0.0 with no non-degenerate exercise evidence")
+    return reasons
+
+
+def _lever_exercise_severity(d: dict[str, Any]) -> str:
+    verdict = str(d.get("honest_verdict", "")).lower()
+    if d.get("flagged_adversarial") is True or d.get("submitted_to_leaderboard") is True:
+        return "critical"
+    if _flips_gate(d) or _claims_arc_live_search_win(d) or _is_arc_solve_claim(d):
+        return "critical"
+    if verdict.startswith(("success:", "success_", "shipped:", "shipped_", "passed:", "passed_")):
+        return "critical"
+    return "warn"
+
+
+def check_lever_exercise_evidence(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Flag generation/exploration artifacts whose declared lever did not really exercise."""
+    if not _is_arc_generation_or_exploration_artifact(d):
+        return
+
+    reasons: list[str] = []
+    reasons.extend(_archive_zero_reasons(d))
+    reasons.extend(_pool_degenerate_reasons(d))
+    reasons.extend(_grid_shape_degenerate_reasons(d))
+    reasons.extend(_scorer_diagnostics_error_reasons(d))
+
+    arm_reason = _byte_identical_online_arm_reason(d)
+    if arm_reason is not None and not _has_distinct_arm_evidence(d):
+        reasons.append(arm_reason)
+
+    if not reasons and not _has_nondegenerate_lever_evidence(d):
+        reasons.extend(_zero_lever_delta_reasons(d))
+
+    if not reasons:
+        return
+
+    unique_reasons = list(dict.fromkeys(reasons))
+    flags.append(
+        Flag(
+            kind=LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND,
+            severity=_lever_exercise_severity(d),
+            detail=(
+                "lever-exercise-evidence-degenerate: artifact declares a generation/exploration "
+                "lever, but its exercise evidence is degenerate: "
+                + "; ".join(unique_reasons[:6])
+            ),
+        )
+    )
 
 
 def _has_positive_top_level_metric(d: dict[str, Any], keys: tuple[str, ...]) -> bool:
@@ -4355,6 +4691,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_multilevel_nondegenerate_metric_overclaim(d, flags)
     check_subgoal_search_decomposition_overclaim(d, flags)
     check_generation_coverage_baseline_overclaim(d, flags)
+    check_lever_exercise_evidence(d, flags)
     check_novelty_proposal_ablation_overclaim(d, flags)
     check_proposal_filter_heldout_rejection_overclaim(d, flags)
     check_perception_overclaim(d, flags)

@@ -1951,6 +1951,62 @@ empty generated pools, and the `.434` all-arms `0.04` online-driver tautology as
 `trustworthy_null`, and writes a prioritized reopen list without claiming a new
 solve.
 
+### REQ-ARC-WMTE-4732: Adversarial Verify Lever Exercise-Evidence Guard
+
+The `scripts/adversarial_verify.py` reader SHALL mechanize the Experiment 4725
+silent-bug audit as a standing check named
+`LEVER_EXERCISE_EVIDENCE_DEGENERATE`. For ARC generation or exploration-lever
+artifacts that declare `candidate_generation_coverage`, Go-Explore/archive
+diagnostics, proposal/candidate pools, online-driver arms, or an
+`inference_substrate` naming a generation/exploration lever, the reader SHALL
+flag exercise evidence as degenerate when an archive records zero injections or
+zero cells during a non-trivial run, a candidate/proposal pool is empty or
+unchanged before and after a transform, a grid tensor reports a leading
+singleton shape where a 2-D grid is expected, online-driver arms are
+byte-identical to more than five significant figures, or coverage/delta remains
+zero with no non-degenerate mechanism evidence.
+
+The guard SHALL default to WARN and SHALL escalate to CRITICAL when the
+degenerate artifact also headlines a solve, flips a gate, is submitted, or is
+already quarantined as adversarial. The guard SHALL NOT flag a genuine flat
+generation/exploration null that emits non-degenerate exercise evidence such as
+positive archive injections/cells, a non-empty changed candidate/proposal pool,
+a correct 2-D grid shape, distinct arm distributions, positive online training
+counters without scorer errors, or explicit `arms_non_degenerate=true`.
+
+Experiment 4732 SHALL write
+`results/experiment_4732_adversarial_verify_exercise_evidence_guard.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `check_added`, `dead_code_exemplars_flagged`,
+`trustworthy_null_not_flagged`, `existing_suite_green`, `pinning_test_path`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: lever_exercise_evidence_guard_shipped_pinned."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor)."
+- `check_added`: principle "LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the new guard name; mechanizes the operator's manual silent-dead-code catch."
+- `dead_code_exemplars_flagged`: principle "the three dead-code nulls (Go-Explore (1,64,64); exp4710 CNN dict-candidate; .434 A4 byte-identical arms) are flagged in retrospect -- the guard works."
+- `trustworthy_null_not_flagged`: principle "a genuine non-degenerate null is NOT flagged -- the false-positive carve-out works (a real null must survive)."
+- `existing_suite_green`: principle "the existing adversarial_verify tests stay green -- no existing check weakened (the never-weaken-the-linter rule)."
+- `pinning_test_path`: principle "tests/python/test_adversarial_verify_lever_exercise_evidence.py -- the standing pin."
+- `verifier_is_oracle`: principle "false -- a linter check invokes no oracle."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift."
+- `preconditions_checked`: principle "records resources verified (adversarial_verify importable, exemplars present); pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE
+
+Given an ARC generation/exploration artifact declares a lever mechanism and its
+exercise evidence is a dead archive, dropped/errored candidate pool, degenerate
+grid shape, or byte-identical online-driver arms
+When `adversarial_verify.py` checks the artifact
+Then it emits `LEVER_EXERCISE_EVIDENCE_DEGENERATE`, catches the historical
+Go-Explore `(1,64,64)`, Exp 4710 CNN dict-candidate, and `.434` A4 all-arms
+`0.04` signatures, and does not flag a flat null that explicitly reports
+non-degenerate exercise evidence such as `arms_non_degenerate=true`.
+
 ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
 
 Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2
