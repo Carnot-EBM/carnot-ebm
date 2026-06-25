@@ -9277,3 +9277,4 @@ The contro |
 | 2026-06-25 17:13 UTC | PHASE E (CAPSTONE .435) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.88s |
 | 2026-06-25 18:07 UTC | Plan milestone 2026.06.436 | OK | 12 tasks proposed |
 | 2026-06-25 18:09 UTC | Milestone 2026.06.436 activated | OK | 12 tasks queued |
+| 2026-06-25 18:23 UTC | PHASE 0 (TRANSITION) -- archive .435 -> activate . | OK | 86 passed, 1 warning in 7.24s |
