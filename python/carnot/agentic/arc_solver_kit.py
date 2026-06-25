@@ -275,6 +275,30 @@ def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
             ),
         ),
         PrimitiveOperator(
+            operator="online_warm_action_effect_controller_operator",
+            derived_from_games=(
+                "exp4726_online_action_learning_driver_valid_test",
+                "exp4727_active_probe_disambiguation",
+            ),
+            purpose=(
+                "Reuse the .435 online-warm action-effect controller: combine "
+                "leave-one-game PersistentAEM evidence with optional online-warm "
+                "frame-change scores, keep the executable win-check outside ranking, "
+                "and report first-win/efficiency transfer before any solve claim."
+            ),
+            selector_tags=(
+                "online_action_learning",
+                "online_warm",
+                "action_effect",
+                "frame_change",
+                "candidate_ranking",
+                "graph_explore",
+                "click",
+                "keyboard",
+                "transfer",
+            ),
+        ),
+        PrimitiveOperator(
             operator="verifier_router_candidate_ranking_operator",
             derived_from_games=("exp4556_cached_generic_transfer",),
             purpose=(
@@ -611,6 +635,16 @@ def select_primitive_operators(
             if name == "object_centric_digest":
                 expanded.append("object_centric_representation_builder_operator")
             expanded.append(name)
+        names = tuple(expanded)
+    if (
+        "persistent_action_effect_memory_operator" in names
+        and "online_warm_action_effect_controller_operator" not in names
+    ):
+        expanded = []
+        for name in names:
+            expanded.append(name)
+            if name == "persistent_action_effect_memory_operator":
+                expanded.append("online_warm_action_effect_controller_operator")
         names = tuple(expanded)
     return tuple(registry[name] for name in names)
 
@@ -1923,6 +1957,93 @@ def persistent_action_effect_memory_operator(
         "actions_to_first_levelup_after": after,
         "actions_reduced": actions_reduced,
         "value_added": bool(actions_reduced > 0.0),
+    }
+
+
+def online_warm_action_effect_controller_operator(
+    candidates: Sequence[Any],
+    *,
+    memory: PersistentAEM | None,
+    frame: Any = None,
+    scorer: Any = None,
+    online_score_key: str = "online_warm_score",
+    online_weight: float = 0.05,
+    target_key: str = "reaches_levelup",
+) -> dict[str, Any]:
+    """REQ-ARC-WMTE-4730: reusable .435 online-warm action-effect controller."""
+
+    rows: list[dict[str, Any]] = []
+    scorer_used = False
+    online_score_rows = 0
+    for index, candidate in enumerate(candidates):
+        row = dict(candidate) if isinstance(candidate, Mapping) else {"candidate": repr(candidate)}
+        row["candidate_id"] = str(
+            row.get("candidate_id") or _candidate_identifier(candidate, index)
+        )
+        try:
+            memory_score = float(memory.candidate_score(candidate)) if memory is not None else 0.0
+        except Exception:
+            memory_score = 0.0
+        live_score = _live_action_effect_score(scorer, frame, candidate)
+        if live_score is None:
+            raw_online = _candidate_field(candidate, online_score_key, None)
+            try:
+                online_score = 0.0 if raw_online is None else float(raw_online)
+            except (TypeError, ValueError):
+                online_score = 0.0
+        else:
+            scorer_used = True
+            online_score = float(live_score)
+        if live_score is not None or _candidate_field(candidate, online_score_key, None) is not None:
+            online_score_rows += 1
+        row["memory_score"] = float(memory_score)
+        row["online_warm_score"] = float(online_score)
+        row["action_effect_score"] = float(memory_score) + (
+            max(0.0, float(online_weight)) * float(online_score)
+        )
+        row["original_index"] = int(index)
+        row["target"] = _candidate_reaches_levelup(candidate, target_key)
+        rows.append(row)
+
+    ranked = sorted(
+        rows,
+        key=lambda row: (-float(row.get("action_effect_score") or 0.0), int(row["original_index"])),
+    )
+
+    def first_target(items: Sequence[Mapping[str, Any]]) -> int | None:
+        for index, row in enumerate(items, start=1):
+            if row.get("target") is True:
+                return int(index)
+        return None
+
+    before = first_target(rows)
+    after = first_target(ranked)
+    actions_reduced = float(before - after) if before is not None and after is not None else 0.0
+    if scorer_used:
+        score_source = "persistent_aem_plus_live_online_warm"
+    elif online_score_rows:
+        score_source = "persistent_aem_plus_online_warm"
+    else:
+        score_source = "persistent_aem_only_online_warm_scaffold"
+    memory_public = (
+        memory.as_dict()
+        if memory is not None and hasattr(memory, "as_dict")
+        else {"row_count": 0, "included_games": [], "excluded_games": [], "feature_count": 0}
+    )
+    return {
+        "operator": "online_warm_action_effect_controller_operator",
+        "score_source": score_source,
+        "memory": memory_public,
+        "candidate_count": int(len(rows)),
+        "online_score_rows": int(online_score_rows),
+        "incoming_candidates": rows,
+        "ranked_candidates": ranked,
+        "best_candidate_id": str(ranked[0]["candidate_id"]) if ranked else "",
+        "actions_to_first_levelup_before": before,
+        "actions_to_first_levelup_after": after,
+        "actions_reduced": actions_reduced,
+        "value_added": bool(actions_reduced > 0.0),
+        "verifier_is_oracle": False,
     }
 
 

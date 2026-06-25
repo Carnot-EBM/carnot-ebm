@@ -1,0 +1,515 @@
+{
+  "duration_s": 1.621259,
+  "experiment": "experiment_4730_primitive_persist_transfer",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; complete: <operator>_persisted_transfer_<characterized|null>."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- scores cached held-out rows (1s floor), no live LLM load."
+    },
+    "offline_reproduced_new_level": {
+      "principle": "true only if persisting banked a strictly new offline-reproduced level (usually false for a persist task)."
+    },
+    "persisted_operator": {
+      "principle": "the reusable arc_solver_kit operator name + the registry entry -- the self-learning capture so the live agent reuses it on hidden games."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (offline arcade, .435 artifacts present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift."
+    },
+    "transfer_value_per_game": {
+      "principle": "per-game leave-one-game transfer deltas, reported HONESTLY; a transfer null is a valid characterized result, not a failure to hide."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the persisted operator ranks/routes/perceives; the reproduction gate is the oracle-distinct authority."
+    }
+  },
+  "honest_verdict": "complete: online_warm_action_effect_controller_operator_persisted_transfer_characterized",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- scores cached held-out rows (1s floor), no live LLM load.",
+  "new_levels_banked": 0,
+  "offline_reproduced": {
+    "counted_toward_reproducible_total_levels": 0,
+    "new_level_records": [],
+    "new_levels_banked": 0
+  },
+  "offline_reproduced_new_level": false,
+  "persisted_operator": {
+    "derived_from_artifacts": [
+      "results/experiment_4726_online_action_learning_driver_valid_test.json",
+      "results/experiment_4727_active_probe_disambiguation.json"
+    ],
+    "operator": "online_warm_action_effect_controller_operator",
+    "registry_entry": {
+      "derived_from": [
+        "results/experiment_4726_online_action_learning_driver_valid_test.json",
+        "results/experiment_4727_active_probe_disambiguation.json"
+      ],
+      "id": "primitive_online_warm_action_effect_controller_operator",
+      "note": "persist .435 online-warm action-effect controller for hidden-game reuse",
+      "operator": "online_warm_action_effect_controller_operator"
+    },
+    "registry_general_gotcha_id": "primitive_online_warm_action_effect_controller_operator",
+    "source": "A1_online_action_learning_driver",
+    "transfer_dead_ends": {}
+  },
+  "preconditions_checked": {
+    "a1_artifact": true,
+    "a2_artifact": true,
+    "agents_md_read": true,
+    "blocked_resource": "",
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "offline_arcade_error": "",
+    "ok": true,
+    "operator_registered": true,
+    "registry_has_primitive_gotcha": true,
+    "spec_has_req_4730": true,
+    "transition_corpus_present": true,
+    "transition_npz_count": 25
+  },
+  "random_seed": 4730,
+  "registry_updated": true,
+  "reproducibility_checksum": "sha256:1c5bf32a2e0251111551011e8bf5ec0e6e38f58bfc8bb4e8dc95ace0235254bc",
+  "requirements": [
+    "REQ-ARC-WMTE-4730"
+  ],
+  "result_path": "results/experiment_4730_primitive_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4730-PERSIST-STRONGEST-435-PRIMITIVE",
+    "SCENARIO-ARC-WMTE-4730-LEAVE-ONE-GAME-TRANSFER"
+  ],
+  "schema": "carnot.exp4730.primitive_persist_transfer.v1",
+  "selected_upstream": {
+    "operator": "online_warm_action_effect_controller_operator",
+    "registry_general_gotcha_id": "primitive_online_warm_action_effect_controller_operator",
+    "selected_reason": "a1_non_degenerate_online_warm_controller",
+    "selection_rationale": "A1's arms were non-degenerate, trained with positive gradients, and produced distinct coordinate proposals. Its first-win lift is null, but the controller is the strongest characterized .435 reusable primitive.",
+    "source": "A1_online_action_learning_driver",
+    "upstream_signal_rank": [
+      {
+        "arms_non_degenerate": true,
+        "artifact": "results/experiment_4726_online_action_learning_driver_valid_test.json",
+        "measured_signal": 68.0,
+        "online_warm_vs_frozen_delta": 0.0,
+        "source": "A1_online_action_learning_driver"
+      },
+      {
+        "artifact": "results/experiment_4727_active_probe_disambiguation.json",
+        "measured_signal": 0.0,
+        "posterior_entropy_reduction": 0.0,
+        "probe_actions_taken": 0,
+        "source": "A2_active_probe_controller"
+      }
+    ]
+  },
+  "transfer_dead_ends": {},
+  "transfer_games": [
+    "dc22",
+    "m0r0",
+    "ka59"
+  ],
+  "transfer_results": [
+    {
+      "dead_end": "",
+      "excluded_from_memory": true,
+      "game": "dc22",
+      "group_results": [
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 3,
+          "actions_to_first_effect_before": 3,
+          "best_candidate_id": "dc22:0b58123a2a2cda70:0",
+          "candidate_count": 3,
+          "state_key": "0b58123a2a2cda70",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "dc22:0c2605669d6349e9:0",
+          "candidate_count": 3,
+          "state_key": "0c2605669d6349e9",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "dc22:0d12c16ba7d70a95:0",
+          "candidate_count": 2,
+          "state_key": "0d12c16ba7d70a95",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 1.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "dc22:0d29ee309999aa27:1",
+          "candidate_count": 3,
+          "state_key": "0d29ee309999aa27",
+          "value_added": true
+        },
+        {
+          "actions_reduced": 1.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "dc22:0f513ccfaf6ec731:1",
+          "candidate_count": 2,
+          "state_key": "0f513ccfaf6ec731",
+          "value_added": true
+        },
+        {
+          "actions_reduced": -1.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "dc22:101051dbbbb07723:1",
+          "candidate_count": 3,
+          "state_key": "101051dbbbb07723",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "dc22:101a6bac03224900:0",
+          "candidate_count": 2,
+          "state_key": "101a6bac03224900",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "dc22:1023d6b8d8d30087:0",
+          "candidate_count": 2,
+          "state_key": "1023d6b8d8d30087",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "dc22:14a80e4774144f33:1",
+          "candidate_count": 2,
+          "state_key": "14a80e4774144f33",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "dc22:1682786e1b493104:1",
+          "candidate_count": 2,
+          "state_key": "1682786e1b493104",
+          "value_added": false
+        }
+      ],
+      "offline_reproduced_new_level": false,
+      "transfer_value": {
+        "action_efficiency_delta": 1.0,
+        "actions_to_first_effect_baseline": 2.0,
+        "actions_to_first_effect_with_controller": 1.0,
+        "candidate_generation_coverage_delta": 0.0,
+        "candidate_group_count": 115,
+        "excluded_from_memory": true,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "memory_row_count": 13477,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "online_warm_action_effect_controller_operator",
+        "target_row_count": 1151,
+        "value_added": true
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "excluded_from_memory": true,
+      "game": "m0r0",
+      "group_results": [
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:0066c17e02fe9975:0",
+          "candidate_count": 2,
+          "state_key": "0066c17e02fe9975",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:008317a13d5d9e17:0",
+          "candidate_count": 2,
+          "state_key": "008317a13d5d9e17",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:0759f495879eadf6:0",
+          "candidate_count": 2,
+          "state_key": "0759f495879eadf6",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:085779ec54e475d9:0",
+          "candidate_count": 2,
+          "state_key": "085779ec54e475d9",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:15f6127aa49b073c:0",
+          "candidate_count": 2,
+          "state_key": "15f6127aa49b073c",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 3,
+          "actions_to_first_effect_before": 3,
+          "best_candidate_id": "m0r0:165386425923bd73:1",
+          "candidate_count": 3,
+          "state_key": "165386425923bd73",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:1a10fb67ab07f3b6:0",
+          "candidate_count": 3,
+          "state_key": "1a10fb67ab07f3b6",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "m0r0:1bcddebc0fed1f5f:0",
+          "candidate_count": 2,
+          "state_key": "1bcddebc0fed1f5f",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:21e996f37b5bde4e:0",
+          "candidate_count": 2,
+          "state_key": "21e996f37b5bde4e",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "m0r0:29c44e98a67fde88:0",
+          "candidate_count": 2,
+          "state_key": "29c44e98a67fde88",
+          "value_added": false
+        }
+      ],
+      "offline_reproduced_new_level": false,
+      "transfer_value": {
+        "action_efficiency_delta": 1.0,
+        "actions_to_first_effect_baseline": 2.0,
+        "actions_to_first_effect_with_controller": 1.0,
+        "candidate_generation_coverage_delta": 0.0,
+        "candidate_group_count": 53,
+        "excluded_from_memory": true,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "memory_row_count": 13700,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "online_warm_action_effect_controller_operator",
+        "target_row_count": 928,
+        "value_added": true
+      },
+      "value_added": true
+    },
+    {
+      "dead_end": "",
+      "excluded_from_memory": true,
+      "game": "ka59",
+      "group_results": [
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:00776c4e6bb82109:0",
+          "candidate_count": 2,
+          "state_key": "00776c4e6bb82109",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 1.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:015e1f3e7c87fbca:1",
+          "candidate_count": 2,
+          "state_key": "015e1f3e7c87fbca",
+          "value_added": true
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:052d9ce22b3a3f3b:0",
+          "candidate_count": 2,
+          "state_key": "052d9ce22b3a3f3b",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:105c0eaa80ed4541:0",
+          "candidate_count": 2,
+          "state_key": "105c0eaa80ed4541",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "ka59:11707d81936fa90b:1",
+          "candidate_count": 2,
+          "state_key": "11707d81936fa90b",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "ka59:14357d4f18095ce5:0",
+          "candidate_count": 2,
+          "state_key": "14357d4f18095ce5",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 1,
+          "actions_to_first_effect_before": 1,
+          "best_candidate_id": "ka59:1ae229efae0b3d0d:0",
+          "candidate_count": 2,
+          "state_key": "1ae229efae0b3d0d",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:2ce2505d3860a38e:0",
+          "candidate_count": 2,
+          "state_key": "2ce2505d3860a38e",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:30cdcb5ea397859e:0",
+          "candidate_count": 2,
+          "state_key": "30cdcb5ea397859e",
+          "value_added": false
+        },
+        {
+          "actions_reduced": 0.0,
+          "actions_to_first_effect_after": 2,
+          "actions_to_first_effect_before": 2,
+          "best_candidate_id": "ka59:3319ec5ad7d9a109:0",
+          "candidate_count": 2,
+          "state_key": "3319ec5ad7d9a109",
+          "value_added": false
+        }
+      ],
+      "offline_reproduced_new_level": false,
+      "transfer_value": {
+        "action_efficiency_delta": 1.0,
+        "actions_to_first_effect_baseline": 2.0,
+        "actions_to_first_effect_with_controller": 1.0,
+        "candidate_generation_coverage_delta": 0.0,
+        "candidate_group_count": 41,
+        "excluded_from_memory": true,
+        "first_win_rate_delta": 0.0,
+        "live_solve_rate_delta": 0.0,
+        "memory_row_count": 13697,
+        "offline_reproduced_new_level": false,
+        "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+        "operator": "online_warm_action_effect_controller_operator",
+        "target_row_count": 931,
+        "value_added": true
+      },
+      "value_added": true
+    }
+  ],
+  "transfer_value_per_game": {
+    "dc22": {
+      "action_efficiency_delta": 1.0,
+      "actions_to_first_effect_baseline": 2.0,
+      "actions_to_first_effect_with_controller": 1.0,
+      "candidate_generation_coverage_delta": 0.0,
+      "candidate_group_count": 115,
+      "excluded_from_memory": true,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "memory_row_count": 13477,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "online_warm_action_effect_controller_operator",
+      "target_row_count": 1151,
+      "value_added": true
+    },
+    "ka59": {
+      "action_efficiency_delta": 1.0,
+      "actions_to_first_effect_baseline": 2.0,
+      "actions_to_first_effect_with_controller": 1.0,
+      "candidate_generation_coverage_delta": 0.0,
+      "candidate_group_count": 41,
+      "excluded_from_memory": true,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "memory_row_count": 13697,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "online_warm_action_effect_controller_operator",
+      "target_row_count": 931,
+      "value_added": true
+    },
+    "m0r0": {
+      "action_efficiency_delta": 1.0,
+      "actions_to_first_effect_baseline": 2.0,
+      "actions_to_first_effect_with_controller": 1.0,
+      "candidate_generation_coverage_delta": 0.0,
+      "candidate_group_count": 53,
+      "excluded_from_memory": true,
+      "first_win_rate_delta": 0.0,
+      "live_solve_rate_delta": 0.0,
+      "memory_row_count": 13700,
+      "offline_reproduced_new_level": false,
+      "offline_reproduced_new_level_source": "arc_solver_kit.reproduce",
+      "operator": "online_warm_action_effect_controller_operator",
+      "target_row_count": 928,
+      "value_added": true
+    }
+  },
+  "verifier_is_oracle": false
+}
