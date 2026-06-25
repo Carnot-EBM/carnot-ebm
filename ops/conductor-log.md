@@ -9280,3 +9280,4 @@ The contro |
 | 2026-06-25 18:23 UTC | PHASE 0 (TRANSITION) -- archive .435 -> activate . | OK | 86 passed, 1 warning in 7.24s |
 | 2026-06-25 19:09 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- VA | OK | 107 passed, 1 warning in 8.37s |
 | 2026-06-25 20:10 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY) -- VALID-TEST E | OK | 106 passed, 1 warning in 8.52s |
+| 2026-06-25 20:29 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 92 passed, 1 warning in 6.92s |
