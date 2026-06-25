@@ -5601,6 +5601,77 @@ required evidence field is omitted; and not flagged when both the held-out
 rejected-program count and matched blind-proposal baseline coverage are
 reported.
 
+### REQ-ARC-WMTE-4707: Adversarial Verify First-Win Null And Perception Hardening
+
+The `scripts/adversarial_verify.py` reader SHALL protect the `.433`
+held-out-first-win readiness lane and object-centric perception lane from two
+degenerate classifications. A top-level equality between
+`first_win_baseline` and `first_win_rate_integrated` SHALL be treated as an
+honest null-delta only when the artifact also reports a non-empty
+`null_delta_methodology_note`, `positive_control_passed=true`, and an explicit
+zero `first_win_delta_vs_baseline`. In that case the TAUTOLOGY flag SHALL be
+downgraded from CRITICAL to WARN. If either null marker is absent, false, or
+the zero delta is absent, the equality SHALL remain CRITICAL.
+
+An ARC artifact that claims an object-centric or relational representation
+lifted first-win, reached a new level, or reports `reproduced_levels >= 1` in
+an object-centric perception context SHALL report
+`order1_ablation_reached_level` strictly lower than
+`generic_agent_reached_level` and `offline_reproduced=true`. If such a
+perception-attributable win is claimed while either field is omitted, the
+reader SHALL emit a WARN flag of kind `perception-overclaim-omitted`. If the
+order-1 ablation is absent, not strictly lower, or the offline reproduction
+gate is absent/false, the reader SHALL emit a CRITICAL flag of kind
+`perception-overclaim`.
+
+The honest `.433` artifacts SHALL NOT fire the new guarded criticals:
+`results/experiment_4691_held_out_first_win_readiness.json` when it reports
+the first-win null-delta markers, and
+`results/experiment_4700_object_centric_perception_proposal_live.json` when it
+reports its order-1 ablation evidence and does not make a reproduced
+perception win claim.
+
+Experiment 4707 SHALL write
+`results/experiment_4707_adversarial_verify_hardening.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `firstwin_nulldelta_carveout_added`,
+`perception_overclaim_guard_added`, `honest_artifacts_not_flagged`,
+`tests_added`, `random_seed`, `reproducibility_checksum`, and
+`preconditions_checked`.
+
+Required field principles SHALL be included for:
+
+- `honest_verdict`: principle "terminal prefix; success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor)."
+- `firstwin_nulldelta_carveout_added`: principle "the HELD-OUT-FIRST-WIN-lane null-delta carve-out (a flat first-win equality -> WARN only with null_delta_methodology_note + positive_control_passed; unvalidated -> stays CRITICAL) -- the exp4691 false-positive fix."
+- `perception_overclaim_guard_added`: principle "the PERCEPTION-OVERCLAIM guard (a perception-attributable win must report the order-1-representation ablation strictly lower + offline_reproduced, else flagged as a possible search-budget win mislabeled)."
+- `honest_artifacts_not_flagged`: principle "the honest A1/A4 artifacts (A1 order-1 ablation + offline_reproduced; A4 null-delta markers) are NOT flagged -- false-positive guard (like the .432 coverage-baseline guard)."
+- `tests_added`: principle "the unit tests for both guards (Tests Must Run and Assert: flag the over-claim/unvalidated, pass the honest)."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
+- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+
+#### SCENARIO-ARC-WMTE-4707-FIRSTWIN-NULLDELTA
+
+**Given** a held-out-first-win artifact reports a flat
+`first_win_baseline == first_win_rate_integrated`
+**When** `adversarial_verify.py` checks the artifact
+**Then** the equality is WARN-flagged when a non-empty
+`null_delta_methodology_note`, `positive_control_passed=true`, and
+`first_win_delta_vs_baseline==0` are present; otherwise it remains
+CRITICAL-flagged.
+
+#### SCENARIO-ARC-WMTE-4707-PERCEPTION-OVERCLAIM
+
+**Given** an ARC artifact claims an object-centric or relational
+representation produced a first-win or new-level result
+**When** `adversarial_verify.py` checks the artifact
+**Then** the claim is CRITICAL-flagged unless
+`order1_ablation_reached_level` is strictly lower than
+`generic_agent_reached_level` and `offline_reproduced=true`; omitted evidence
+also emits a WARN; and honest null artifacts with order-1 evidence do not fire
+the new guard.
+
 ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
 
 Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2

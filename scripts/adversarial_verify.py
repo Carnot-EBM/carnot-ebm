@@ -1174,6 +1174,14 @@ def _delta_key_covers_pair(delta_key: str, left: str, right: str) -> bool:
     return any(tok in left_lower and tok in right_lower for tok in tokens)
 
 
+def _is_heldout_firstwin_null_delta_pair(left: str, right: str) -> bool:
+    """True for the retargeted A4 first-win baseline-vs-integrated equality."""
+    return {left.lower(), right.lower()} == {
+        "first_win_baseline",
+        "first_win_rate_integrated",
+    }
+
+
 def _declared_null_delta_descriptor(
     d: dict[str, Any], left: str, right: str
 ) -> dict[str, str] | None:
@@ -1188,6 +1196,14 @@ def _declared_null_delta_descriptor(
     control_key = _passing_positive_control_key(d)
     if control_key is None:
         return None
+    if _is_heldout_firstwin_null_delta_pair(left, right) and _is_explicit_zero(
+        d.get("first_win_delta_vs_baseline")
+    ):
+        return {
+            "delta_key": "first_win_delta_vs_baseline",
+            "methodology_key": "null_delta_methodology_note",
+            "control_key": control_key,
+        }
     for key, value in d.items():
         if key in (left, right):
             continue
@@ -2378,6 +2394,8 @@ PROPOSAL_FILTER_WITHOUT_HELDOUT_REJECTION_KIND = (
 PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND = (
     "proposal-filter-heldout-rejection-omitted"
 )
+PERCEPTION_OVERCLAIM_KIND = "perception-overclaim"
+PERCEPTION_OVERCLAIM_OMITTED_KIND = "perception-overclaim-omitted"
 _INTRINSIC_REWARD_CONTEXT_MARKERS = (
     "curiosity",
     "exploration",
@@ -3108,6 +3126,64 @@ _PROPOSAL_FILTER_POSITIVE_METRIC_KEYS = (
 _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS = (
     "heldout_programs_rejected",
     "candidate_generation_coverage_blind_baseline",
+)
+_PERCEPTION_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
+    "experiment",
+    "solve_provenance",
+    "chosen_submitted_config",
+    "residual_cause_hypothesis",
+)
+_PERCEPTION_CONTEXT_MARKERS = (
+    "object_centric",
+    "object-centric",
+    "object centric",
+    "relational representation",
+    "relational",
+    "perception",
+    "order1_ablation_reached_level",
+    "proposal_coverage_by_representation",
+)
+_PERCEPTION_WIN_MARKERS = (
+    "success:",
+    "first_win",
+    "first-win",
+    "first win",
+    "new_level",
+    "new level",
+    "reached l",
+    "reached_l",
+    "reached level",
+    "reached_level",
+    "generic_agent_reached_level",
+    "levelup",
+    "level-up",
+    "level up",
+    "lift",
+    "lifted",
+    "raised",
+)
+_PERCEPTION_NULL_TEXT_MARKERS = (
+    "complete:",
+    "no_new_level",
+    "no new level",
+    "no_level",
+    "no level",
+    "no_first_win",
+    "no first win",
+    "residual",
+    "null",
+    "unchanged",
+    "regressed",
+    "blocked",
+)
+_PERCEPTION_POSITIVE_METRIC_KEYS = (
+    "first_win_delta",
+    "first_win_rate_delta",
+    "live_first_win_rate_delta",
+)
+_PERCEPTION_REQUIRED_EVIDENCE_KEYS = (
+    "order1_ablation_reached_level",
+    "offline_reproduced",
 )
 
 
@@ -3891,6 +3967,86 @@ def check_proposal_filter_heldout_rejection_overclaim(
     )
 
 
+def _perception_overclaim_text(d: dict[str, Any]) -> str:
+    return f"{_claim_text(d, _PERCEPTION_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
+
+
+def _has_perception_context(d: dict[str, Any]) -> bool:
+    text = _perception_overclaim_text(d)
+    return _is_arc_artifact(d) and _has_marker(text, _PERCEPTION_CONTEXT_MARKERS)
+
+
+def _has_positive_perception_firstwin_metric(d: dict[str, Any]) -> bool:
+    return _has_positive_top_level_metric(d, _PERCEPTION_POSITIVE_METRIC_KEYS)
+
+
+def _claims_perception_attributable_win(d: dict[str, Any]) -> bool:
+    if not _has_perception_context(d):
+        return False
+    text = _perception_overclaim_text(d)
+    if _has_marker(text, _PERCEPTION_NULL_TEXT_MARKERS):
+        return False
+    reproduced = _max_real_field_number(d, "reproduced_levels")
+    if reproduced is not None and reproduced >= 1.0:
+        return True
+    reached = _max_real_field_number(d, "generic_agent_reached_level")
+    if (
+        reached is not None
+        and reached > 0.0
+        and _has_marker(text, _PERCEPTION_WIN_MARKERS)
+    ):
+        return True
+    return _has_marker(text, _PERCEPTION_WIN_MARKERS) and _has_positive_perception_firstwin_metric(d)
+
+
+def _perception_order1_ablation_strictly_lower(d: dict[str, Any]) -> bool:
+    reached = _max_real_field_number(d, "generic_agent_reached_level")
+    order1 = _max_real_field_number(d, "order1_ablation_reached_level")
+    return reached is not None and order1 is not None and order1 < reached
+
+
+def check_perception_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Flag perception-attributable wins missing order-1 ablation evidence."""
+    if not _claims_perception_attributable_win(d):
+        return
+    omitted = [
+        key
+        for key in _PERCEPTION_REQUIRED_EVIDENCE_KEYS
+        if not _real_field_values(d, key)
+    ]
+    if omitted:
+        flags.append(
+            Flag(
+                kind=PERCEPTION_OVERCLAIM_OMITTED_KIND,
+                severity="warn",
+                detail=(
+                    "perception-overclaim-omitted: object-centric/relational "
+                    f"first-win or new-level claim omits {', '.join(omitted)}. "
+                    "Report order1_ablation_reached_level and "
+                    "offline_reproduced before crediting a perception win."
+                ),
+            )
+        )
+    if _perception_order1_ablation_strictly_lower(d) and _real_field_has_true(
+        d, "offline_reproduced"
+    ):
+        return
+    flags.append(
+        Flag(
+            kind=PERCEPTION_OVERCLAIM_KIND,
+            severity="critical",
+            detail=(
+                "perception-overclaim: artifact claims an "
+                "object-centric/relational representation first-win or new-level "
+                "win without proving order1_ablation_reached_level is strictly "
+                "lower than generic_agent_reached_level and "
+                "offline_reproduced=true. The apparent win may be a search-budget "
+                "win mislabeled as a perception representation win."
+            ),
+        )
+    )
+
+
 _WORLD_MODEL_TRUST_RATE_KEYS = (
     "world_model_trust_pass_rate",
     "world_model_trust_pass_rate_new",
@@ -4201,6 +4357,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_generation_coverage_baseline_overclaim(d, flags)
     check_novelty_proposal_ablation_overclaim(d, flags)
     check_proposal_filter_heldout_rejection_overclaim(d, flags)
+    check_perception_overclaim(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
