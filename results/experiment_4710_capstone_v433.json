@@ -1,0 +1,578 @@
+{
+  "a1_perception_is_the_wall_diagnostic": {
+    "coverage_delta_vs_order1": 0.25,
+    "headline_finding": true,
+    "object_centric_coverage": 1.0,
+    "order1_coverage": 0.75,
+    "perception_is_the_wall": true,
+    "reason": "upper_bound_representation_raises_winning_l1_coverage_where_order1_does_not",
+    "source": "results/experiment_4700_object_centric_perception_proposal_live.json"
+  },
+  "a1_perception_new_level": {
+    "generic_agent_reached_level": 0,
+    "headline_counted": false,
+    "offline_reproduced": false,
+    "order1_ablation_reached_level": 0,
+    "order1_ablation_strictly_lower": false,
+    "reason": "generic_agent_did_not_reach_new_level",
+    "reproduced_levels": 0,
+    "source": "results/experiment_4700_object_centric_perception_proposal_live.json",
+    "target_games": [
+      "r11l"
+    ]
+  },
+  "a2_amortized_exploration_coverage_and_lift": {
+    "candidate_generation_coverage_no_prior_baseline": 0.0,
+    "candidate_generation_coverage_with_prior": 0.0,
+    "coverage_delta": 0.0,
+    "first_win_rate_delta": 0.0,
+    "go_explore_now_live_reachable": true,
+    "headline_counted": false,
+    "heldout_first_win_ci_excludes_no_prior_baseline": false,
+    "live_lift_ci": {
+      "confidence": 0.95,
+      "high": 0.0,
+      "low": 0.0,
+      "n_boot": 1000
+    },
+    "no_prior_ablation_failed": false,
+    "offline_reproduced": false,
+    "reason": "coverage_delta_not_positive",
+    "source": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
+    "target_games": [
+      "bp35"
+    ],
+    "winner_newly_generated_vs_no_prior": false
+  },
+  "bridge_crossed_for_solve": false,
+  "cited_upstream_artifacts": {
+    "A1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4700_object_centric_perception_proposal_live.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 60.000083,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: object_centric_perception_no_new_level_residual_offpath_calibration_insufficient",
+      "imported_fields": [
+        "generic_agent_reached_level",
+        "order1_ablation_reached_level",
+        "offline_reproduced",
+        "reproduced_levels",
+        "perception_is_the_wall",
+        "proposal_coverage_by_representation"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "live_llm_inference",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A1",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "object_centric_perception_proposal_live",
+      "sha256": "sha256:6774823cb7f4fab9caf5767b363eccbdaaead76f4ea33fc4bb324e6e5142ce5c",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 60.000066,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: amortized_prior_go_explore_no_coverage_gain_residual_logged",
+      "imported_fields": [
+        "candidate_generation_coverage_with_prior",
+        "candidate_generation_coverage_no_prior_baseline",
+        "coverage_delta",
+        "no_prior_ablation_failed",
+        "first_win_rate_delta",
+        "live_lift_ci",
+        "go_explore_now_live_reachable"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "live_llm_inference",
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "coverage_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "first_win_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "name": "A2",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "amortized_exploration_prior_go_explore_live",
+      "sha256": "sha256:5eda0919811a53f9bd0d8a1b7896678f1671aa39d73f4d6c5b1a5f77c6552f89",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A3": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4702_levelup_selfplay.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": null,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "success: re86_L2_offline_reproduced",
+      "imported_fields": [
+        "reproduced_levels",
+        "offline_reproduced",
+        "reproduction_gate"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A3",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "levelup_selfplay_bank",
+      "sha256": "sha256:85c207450d5c30ae00b50ff119efce980a5356dfb8b3e0ceafe0f9ca5bfc7f60",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A4": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4703_held_out_first_win_readiness.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 651.551338,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+      "imported_fields": [
+        "first_win_rate_integrated",
+        "first_win_baseline",
+        "first_win_ci_lower",
+        "null_delta_methodology_note",
+        "positive_control_passed",
+        "replay_count_is_not_the_score",
+        "ready_for_operator_submit"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out proxy runs the scored agent over cached color-permuted variants offline, no live game server (1s floor).",
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "first_win_baseline=0.04 and first_win_rate_integrated=0.04 agree to >5 sig figs, but the artifact declares declared_null_delta via first_win_delta_vs_baseline==0, null_delta_methodology_note, and positive_control_passed=true. Downgraded CRITICAL->WARN so an honest null is read instead of quarantined.",
+          "kind": "TAUTOLOGY",
+          "severity": "warn"
+        }
+      ],
+      "name": "A4",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "held_out_first_win_readiness",
+      "sha256": "sha256:a31dbfc96649be349b7500fd0930074cce51209ecf6175e009b7b02b146a680d",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 1
+    },
+    "A5": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4704_primitive_persist_transfer.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 1.0,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
+      "imported_fields": [
+        "primitive_persisted",
+        "offline_reproduced_new_level",
+        "transfer_value_per_game"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor).",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "A5",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "primitive_persist_transfer",
+      "sha256": "sha256:dd52d8fd72c506b2a135c299d9ae049275a57569aefbb7a19d1bb4bce861e5f3",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "A6": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4705_integration_gate.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 1.0,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "complete: integration_unchanged_both_levers_null",
+      "imported_fields": [
+        "config_changed",
+        "first_win_rate_integrated",
+        "multi_level_deepen_rate_integrated"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure on the held-out lane (1s floor).",
+      "live_critical": false,
+      "live_flags": [
+        {
+          "detail": "multi_level_deepen_rate_delta_vs_pre_integration=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "name": "A6",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "integration_gate",
+      "sha256": "sha256:3fd142938c2aede650b000a20a84580ae0258f956ef3432f77a86a3691b1fd79",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "B1": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4706_perception_quality_cigate.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 2.136068,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "success: perception_quality_loo_plus_offpath_cigate_shipped_tests_green",
+      "imported_fields": [
+        "loo_discrimination_gate_added",
+        "offpath_discrimination_metric_added",
+        "perception_quality_floor_cigate_added"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates -- LOO/off-path computation over cached corpora (1s floor); no live_llm_inference.",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B1",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "perception_quality_cigate",
+      "sha256": "sha256:e94db3dbb3f46c41dfd282b7746d5f55fe7d11637b0f07cfc3570f24cec75aba",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    },
+    "B2": {
+      "ablation_missing": false,
+      "acceptance_gate_failures": [],
+      "artifact": "results/experiment_4707_adversarial_verify_hardening.json",
+      "control_failed": false,
+      "critical_flags": [],
+      "duration_s": 0.10077190189622343,
+      "exists": true,
+      "false_negative_risk_open": false,
+      "honest_verdict": "success: adversarial_verify_hardened_firstwin_nulldelta_and_perception_overclaim_guards_tests_green.",
+      "imported_fields": [
+        "firstwin_nulldelta_carveout_added",
+        "perception_overclaim_guard_added",
+        "tests_added"
+      ],
+      "included_in_headline": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
+      "live_critical": false,
+      "live_flags": [],
+      "name": "B2",
+      "oracle_not_distinct": false,
+      "positive_control_failed": false,
+      "read_via_summarize_artifact": true,
+      "reason": "included_clean",
+      "role": "adversarial_verify_firstwin_and_perception_guards",
+      "sha256": "sha256:0c856c4f74031ad2aa0267f1d9a839d400e01b6592fb018adcbfba89a4330860",
+      "stamped_flagged_adversarial": false,
+      "summary_exit_code": 0
+    }
+  },
+  "duration_s": 0.328948,
+  "experiment": "experiment_4710_capstone_v433",
+  "field_principles": {
+    "a1_perception_is_the_wall_diagnostic": {
+      "principle": "the A1 DECISIVE diagnostic -- did an upper-bound representation raise proposal-coverage of the winning L1 trajectory where order-1 did not (perception_is_the_wall true/false); a headline finding even if A1 banks no level (resolves the 8-milestone ambiguity)."
+    },
+    "a1_perception_new_level": {
+      "principle": "the A1 result -- the generic agent's new level via object-centric perception, counted ONLY if the ORDER-1-representation ablation strictly lower + offline_reproduced."
+    },
+    "a2_amortized_exploration_coverage_and_lift": {
+      "principle": "the A2 result -- coverage_delta (winner-now-generated) + held-out first-win lift, counted ONLY if coverage_delta>0 AND the no-prior ablation failed AND the CI excludes the no-prior baseline; + go_explore_now_live_reachable."
+    },
+    "bridge_crossed_for_solve": {
+      "principle": "the headline decision -- did PERCEPTION (A1) or AMORTIZED EXPLORATION (A2) cross the offline->live bridge for L1-first-contact (the GENERIC agent reaches a NEW level), or did the levers get characterized as another honest null (the 9th milestone) with the perception-vs-search diagnostic resolved."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
+    },
+    "flagged_artifacts_handled": {
+      "principle": "names any flagged_adversarial / control-failed / ablation-missing artifact EXCLUDED + the guards applied (.432-B2 novelty-ablation/proposal-filter-heldout + .433-B2 firstwin-nulldelta/perception-overclaim) -- fabrication-gate + false-negative-risk compliance."
+    },
+    "held_out_first_win_readiness": {
+      "principle": "the A4 RETARGETED readiness -- experiment_4605 first_win_rate_integrated vs the 0.04 baseline (bootstrap-CI, null-delta markers present), the only proxy that tracks the scored lane (NOT the replay count)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: bridge_crossed_live_generic_new_level_via_<perception|amortized_exploration>_<games> OR complete: perception_and_amortized_exploration_levers_characterized_no_live_new_level OR complete: capability_grew_61_to_<n>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
+    },
+    "leaderboard_submission": {
+      "principle": "MUST be false -- submission is operator-only (External Publication Discipline)."
+    },
+    "paper_ready": {
+      "principle": "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .433 headline."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent drift on replay."
+    },
+    "reproducible_total_levels": {
+      "principle": "authoritative from the registry (A3 bank, 61->62+) -- did solve CAPABILITY grow."
+    },
+    "reproducible_total_levels_delta": {
+      "principle": "registry after - 61, emitted explicitly so a null is annotated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
+    }
+  },
+  "flagged_artifacts_handled": {
+    "ablation_missing_artifacts": [],
+    "control_failed_artifacts": [],
+    "excluded_artifacts": [],
+    "excluded_details": [],
+    "failed_acceptance_gate_overrides": [],
+    "false_negative_risk_open_artifacts": [],
+    "flagged_adversarial_artifacts": [],
+    "guard_note": "Stamped flagged, live-critical, control-failed, ablation-missing, and false-negative-risk-open artifacts are excluded from clean headline claims.",
+    "guards_applied": {
+      ".432-B2 novelty-ablation/proposal-filter-heldout": true,
+      ".433-B1 perception-quality-cigate": true,
+      ".433-B2 firstwin-nulldelta": true,
+      ".433-B2 perception-overclaim": true
+    },
+    "oracle_not_distinct_artifacts": [],
+    "positive_control_failed_artifacts": []
+  },
+  "held_out_first_win_readiness": {
+    "first_win_baseline": 0.04,
+    "first_win_ci_lower": 0.0,
+    "first_win_delta_vs_baseline": 0.0,
+    "first_win_rate_integrated": 0.04,
+    "headline_counted": false,
+    "multi_level_deepen_rate_integrated": 0.0,
+    "null_delta_markers_present": true,
+    "ready_for_operator_submit": false,
+    "reason": "held_out_first_win_not_above_baseline",
+    "replay_count_is_not_the_score": true,
+    "replay_floor_live_submittable_level_count": 60,
+    "source": "results/experiment_4703_held_out_first_win_readiness.json"
+  },
+  "honest_verdict": "complete: capability_grew_61_to_62",
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
+  "leaderboard_submission": false,
+  "paper_ready": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "leaderboard_submission": false,
+    "missing_upstream_artifacts": [],
+    "network_required": false,
+    "ok": true,
+    "operator_only": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_reproducible_total_levels": 62,
+    "registry_yaml_loadable": true,
+    "research_conductor_modified": false,
+    "spec_has_req_4710": true,
+    "summarize_artifact_py_available": true,
+    "summarize_artifact_py_used_for_every_upstream": true,
+    "upstream_artifacts_present": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true,
+      "B1": true,
+      "B2": true
+    }
+  },
+  "publication_gate": {
+    "fover_09131_never_substituted": true,
+    "frozen_fover_auroc": 0.9131,
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4710,
+  "reproducibility_checksum": "sha256:5585d6a46edfc599e3dfafd56dfbe7af39ad66e42a26b1bea74cafc85833abca",
+  "reproducible_total_levels": 62,
+  "reproducible_total_levels_delta": 1,
+  "result_path": "results/experiment_4710_capstone_v433.json",
+  "schema": "carnot.exp4710.capstone_v433.v1",
+  "scorecard": {
+    "A1": {
+      "generic_agent_reached_level": 0,
+      "headline_counted": false,
+      "offline_reproduced": false,
+      "order1_ablation_reached_level": 0,
+      "order1_ablation_strictly_lower": false,
+      "reason": "generic_agent_did_not_reach_new_level",
+      "reproduced_levels": 0,
+      "source": "results/experiment_4700_object_centric_perception_proposal_live.json",
+      "target_games": [
+        "r11l"
+      ]
+    },
+    "A1_diagnostic": {
+      "coverage_delta_vs_order1": 0.25,
+      "headline_finding": true,
+      "object_centric_coverage": 1.0,
+      "order1_coverage": 0.75,
+      "perception_is_the_wall": true,
+      "reason": "upper_bound_representation_raises_winning_l1_coverage_where_order1_does_not",
+      "source": "results/experiment_4700_object_centric_perception_proposal_live.json"
+    },
+    "A2": {
+      "candidate_generation_coverage_no_prior_baseline": 0.0,
+      "candidate_generation_coverage_with_prior": 0.0,
+      "coverage_delta": 0.0,
+      "first_win_rate_delta": 0.0,
+      "go_explore_now_live_reachable": true,
+      "headline_counted": false,
+      "heldout_first_win_ci_excludes_no_prior_baseline": false,
+      "live_lift_ci": {
+        "confidence": 0.95,
+        "high": 0.0,
+        "low": 0.0,
+        "n_boot": 1000
+      },
+      "no_prior_ablation_failed": false,
+      "offline_reproduced": false,
+      "reason": "coverage_delta_not_positive",
+      "source": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
+      "target_games": [
+        "bp35"
+      ],
+      "winner_newly_generated_vs_no_prior": false
+    },
+    "A3": {
+      "artifact_reproduced_levels": 1,
+      "clean": true,
+      "registry_authoritative_total_levels": 62,
+      "source": "results/experiment_4702_levelup_selfplay.json"
+    },
+    "A4": {
+      "first_win_baseline": 0.04,
+      "first_win_ci_lower": 0.0,
+      "first_win_delta_vs_baseline": 0.0,
+      "first_win_rate_integrated": 0.04,
+      "headline_counted": false,
+      "multi_level_deepen_rate_integrated": 0.0,
+      "null_delta_markers_present": true,
+      "ready_for_operator_submit": false,
+      "reason": "held_out_first_win_not_above_baseline",
+      "replay_count_is_not_the_score": true,
+      "replay_floor_live_submittable_level_count": 60,
+      "source": "results/experiment_4703_held_out_first_win_readiness.json"
+    },
+    "A5": {
+      "clean": true,
+      "verdict": "complete: primitive_persisted_transfer_null_characterized"
+    },
+    "A6": {
+      "clean": true,
+      "first_win_rate_integrated": 0.04,
+      "multi_level_deepen_rate_integrated": 0.0,
+      "reason": "included_clean"
+    },
+    "B1": {
+      "clean": true,
+      "perception_quality_cigate_added": true
+    },
+    "B2": {
+      "clean": true,
+      "guards_applied": {
+        ".432-B2 novelty-ablation/proposal-filter-heldout": true,
+        ".433-B1 perception-quality-cigate": true,
+        ".433-B2 firstwin-nulldelta": true,
+        ".433-B2 perception-overclaim": true
+      }
+    },
+    "headline": {
+      "bridge_crossed_for_solve": false,
+      "crossing_source": "none",
+      "perception_is_the_wall": true,
+      "registry_total_authoritative": true,
+      "submission_operator_only": true
+    },
+    "verifier_oracle_checks": {
+      "A1": true,
+      "A2": true,
+      "A3": true,
+      "A4": true,
+      "A5": true,
+      "A6": true
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4710",
+    "SCENARIO-CAPSTONE-4710",
+    "SCENARIO-CAPSTONE-4710-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4710-FIELD-PRINCIPLES"
+  ],
+  "verifier_is_oracle": false
+}
