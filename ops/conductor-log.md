@@ -9252,3 +9252,4 @@ c |
 | 2026-06-25 07:33 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.49s |
 | 2026-06-25 07:36 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.68s |
 | 2026-06-25 07:38 UTC | PHASE D (SOTA-INGESTION -- the .435 fallback) -- m | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.38s |
+| 2026-06-25 07:52 UTC | PHASE D (SOTA-INGESTION -- the .435 fallback) -- m | OK | 127 passed, 1 warning in 7.27s |
