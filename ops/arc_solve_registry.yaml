@@ -1144,35 +1144,74 @@ games:
   gotchas: []
 - game: ar25
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: reflection_mirror_object_alignment
-  win_condition: 'L1 object reflection plus L2 mirror/object alignment: after the
-    L1 reflected L-shape, L2 moves the vertical mirror to x=10 and the selected
-    object to (15,14) so its vertical reflection covers every fixed 0001sruqbuvukh
-    target cell.'
-  action_model: Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling.
-    L2 delta is ACTION3 x2 to move the selected vertical mirror left, ACTION5 to
-    select the object, then ACTION2 x8 to move it down.
-  solver: GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_ar25.json 26-label L2 gate.
-  reproduce: Exp4581 results/experiment_4581_levelup_selfplay.json re-gated results/arc_loop_solve_ar25.json
-    offline_reproduced=True, reached_level=2, banked +1 over the current L1
-    registry row, checksum 673c828fa05f82f38e861f5ef8fc07ca7dd4d1e8ae99f82c5fca4abf5cf32125.
-  learned_verifier_checkpoint: models/arc_verifier_ar25.json trained by scripts/arc_loop_solve.py
-    on the ar25 L1+L2 positive steps-to-go trace and this run's recorded
-    off-path/dead-end evidence.
+  win_condition: >-
+    L1 object reflection plus L2 vertical mirror/object alignment plus L3
+    horizontal-axis reflection coverage: move the horizontal 0002nuguepuujf axis
+    from y=16 to y=9, place the L-shaped object at (11,14), and place the
+    two-row object at (3,14) so reflections cover every fixed 0001sruqbuvukh
+    target cell.
+  action_model: >-
+    Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling. L3 tail:
+    ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the
+    L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the
+    two-row object, then ACTION3 x12 and ACTION2 x5 place it.
+  solver: >-
+    GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py plus
+    scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune.
+  reproduce: >-
+    Exp4728 results/experiment_4728_levelup_selfplay.json re-gated
+    results/arc_loop_solve_ar25.json offline_reproduced=True, reached_level=3,
+    banked +1 over the prior L2 registry row, checksum e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3.
+  learned_verifier_checkpoint: models/arc_verifier_ar25.json
   gotchas:
-  - The L2 selected object cannot move to x=19 because the 5-wide sprite is board
-    bounded; move the vertical mirror from x=12 to x=10 instead.
-  - ACTION5 is load-bearing at L2 because reset selects the vertical mirror before
-    the movable object.
-  - ACTION7 pops a hidden undo stack that is not encoded in the visible grid; skip
-    ACTION7 for this banked path and retain it as a dead-end caution.
+  - The L3 axis sprite is selected at level entry; moving it horizontally is
+    ignored by the environment, so ACTION1 x7 is the load-bearing axis delta.
+  - The L3 target decomposes into two reflected object masks around y=9; moving
+    only the axis does not win.
+  - ACTION7 pops a hidden undo stack and remains excluded from the banked path.
+  - The learned verifier checkpoint routes/ranks future search only; the
+    executable offline reproduction gate remains the oracle-distinct authority.
   dead_ends:
-  - sk48 remained routing-only for this milestone; the chain/color reorder L2 still
-    needs a grounded adapter.
-  - Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta
-    is required before the standing loop can bank.
+  - 're86: registry_prechecked:bp35: no_grounded_next_level_adapter'
+  - 're86: registry_prechecked:lf52: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:sb26: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:dc22: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:vc33: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:ft09: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:ls20: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:sk48: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:ka59: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:wa30: recently_deepened_or_operator_skip_list'
+  - 're86: registry_prechecked:cd82: no_grounded_L3_delta'
+  - 're86: registry_prechecked:sp80: no_grounded_L3_delta'
+  - 're86: registry_prechecked:su15: no_grounded_L3_delta'
+  - 're86: registry_prechecked:s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30'
+  - 're86: registry_prechecked:g50t: clone_replay_L2_route_reached_distance_12_no_bank'
+  - 're86: registry_prechecked:r11l: prefix_rooted_graph_search_stalled_at_L1'
+  - 're86: registry_prechecked:re86: reset-only sprite overlay verifier repeats L1; derive L2 after replaying L1'
+  - 're86: registry_prechecked:re86: sprite_overlay_L2_delta_not_adaptered_this_run'
+  - 's5i5: registry_prechecked:s5i5: marker_coverage_L2_delta_not_adaptered_this_run'
+  - 's5i5: registry_prechecked:s5i5: chain_carried_marker_L2_geometry_stalled_at_x39_y30'
+  - 'g50t: registry_prechecked:GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT'
+  - 'g50t: registry_prechecked:g50t: target_offset_L2_delta_not_adaptered_this_run'
+  - 'g50t: registry_prechecked:g50t: clone_replay_L2_route_reached_distance_12_no_bank'
+  - 'r11l: registry_prechecked:r11l: prefix_rooted_graph_search_stalled_at_L1'
+  - 'r11l: registry_prechecked:r11l: prefix-rooted graph search reached only L1 after 20000 expansions'
+  - 'ar25: registry_prechecked:sk48 remained routing-only for this milestone; the chain/color reorder L2 still needs a grounded adapter.'
+  - 'ar25: registry_prechecked:Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta is required before the standing loop can bank.'
+  - 'g50t: clone_replay_L2_route_reached_distance_12_no_bank'
+  - 'ar25: ACTION7 hidden undo stack excluded from banked L3 path'
+  latest_exp4728_levelup_selfplay:
+    artifact: results/experiment_4728_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_ar25.json
+    offline_reproduced: true
+    reproduced_levels: 3
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_ar25.json
+    target_rotation: preferred_L1_targets_prechecked_then_allowed_L2_to_L3_alternative
+    reproducibility_checksum: e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3
 - game: ka59
   reproducibility: reproduced
   levels_reproduced: 1
@@ -1631,7 +1670,7 @@ games:
     verifier_checkpoint: models/arc_verifier_bp35.json
     target_rotation: clean_L1_to_L2_not_deepened_in_429_433
     reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
-reproducible_total_levels: 63
+reproducible_total_levels: 64
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
