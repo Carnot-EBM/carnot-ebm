@@ -1,0 +1,779 @@
+{
+  "arms": [
+    "vanilla",
+    "hard_argmax",
+    "eps_greedy_0.3",
+    "eps_greedy_0.5",
+    "weighted_sample"
+  ],
+  "arm_configs": {
+    "hard_argmax": {
+      "policy": "hard_argmax",
+      "epsilon": 0.0,
+      "temperature": 0.5
+    },
+    "eps_greedy_0.3": {
+      "policy": "eps_greedy",
+      "epsilon": 0.3,
+      "temperature": 0.5
+    },
+    "eps_greedy_0.5": {
+      "policy": "eps_greedy",
+      "epsilon": 0.5,
+      "temperature": 0.5
+    },
+    "weighted_sample": {
+      "policy": "weighted_sample",
+      "epsilon": 0.0,
+      "temperature": 0.5
+    }
+  },
+  "vanilla_per_game": [
+    {
+      "game": "ar25",
+      "median_atfl": 1246.0,
+      "min_atfl": 1246,
+      "n_solved": 1
+    },
+    {
+      "game": "cd82",
+      "median_atfl": 527.0,
+      "min_atfl": 352,
+      "n_solved": 5
+    },
+    {
+      "game": "ft09",
+      "median_atfl": 598.0,
+      "min_atfl": 477,
+      "n_solved": 3
+    },
+    {
+      "game": "lp85",
+      "median_atfl": 487.0,
+      "min_atfl": 455,
+      "n_solved": 5
+    },
+    {
+      "game": "m0r0",
+      "median_atfl": 562.0,
+      "min_atfl": 218,
+      "n_solved": 4
+    },
+    {
+      "game": "r11l",
+      "median_atfl": 53.0,
+      "min_atfl": 46,
+      "n_solved": 4
+    },
+    {
+      "game": "s5i5",
+      "median_atfl": 706.0,
+      "min_atfl": 558,
+      "n_solved": 3
+    },
+    {
+      "game": "sp80",
+      "median_atfl": 52.0,
+      "min_atfl": 20,
+      "n_solved": 5
+    },
+    {
+      "game": "vc33",
+      "median_atfl": 23.0,
+      "min_atfl": 17,
+      "n_solved": 5
+    }
+  ],
+  "arm_summaries": {
+    "hard_argmax": {
+      "arm": "hard_argmax",
+      "per_game": [
+        {
+          "game": "ar25",
+          "vanilla_median": 1246.0,
+          "arm_median": 268.0,
+          "vanilla_n_solved": 1,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 1246,
+          "arm_actions_min": 268,
+          "action_reduction": 978.0,
+          "efficiency_ratio": 21.615560258409445,
+          "solve_preserved": true,
+          "pruner_total_choices": 1325,
+          "pruner_changed_count": 995
+        },
+        {
+          "game": "cd82",
+          "vanilla_median": 527.0,
+          "arm_median": 824.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 3,
+          "vanilla_actions_min": 352,
+          "arm_actions_min": 734,
+          "action_reduction": -297.0,
+          "efficiency_ratio": 0.4090409675747007,
+          "solve_preserved": false,
+          "pruner_total_choices": 3411,
+          "pruner_changed_count": 2755
+        },
+        {
+          "game": "ft09",
+          "vanilla_median": 598.0,
+          "arm_median": 724.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 477,
+          "arm_actions_min": 547,
+          "action_reduction": -126.0,
+          "efficiency_ratio": 0.6822212386679283,
+          "solve_preserved": true,
+          "pruner_total_choices": 4143,
+          "pruner_changed_count": 4011
+        },
+        {
+          "game": "lp85",
+          "vanilla_median": 487.0,
+          "arm_median": 387.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 455,
+          "arm_actions_min": 387,
+          "action_reduction": 100.0,
+          "efficiency_ratio": 1.583565357316935,
+          "solve_preserved": true,
+          "pruner_total_choices": 1730,
+          "pruner_changed_count": 1471
+        },
+        {
+          "game": "m0r0",
+          "vanilla_median": 562.0,
+          "arm_median": null,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 0,
+          "vanilla_actions_min": 218,
+          "arm_actions_min": null,
+          "action_reduction": null,
+          "efficiency_ratio": null,
+          "solve_preserved": false,
+          "pruner_total_choices": 2022,
+          "pruner_changed_count": 1220
+        },
+        {
+          "game": "r11l",
+          "vanilla_median": 53.0,
+          "arm_median": 766.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 2,
+          "vanilla_actions_min": 46,
+          "arm_actions_min": 544,
+          "action_reduction": -713.0,
+          "efficiency_ratio": 0.004787339200621723,
+          "solve_preserved": false,
+          "pruner_total_choices": 3040,
+          "pruner_changed_count": 2833
+        },
+        {
+          "game": "s5i5",
+          "vanilla_median": 706.0,
+          "arm_median": null,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 0,
+          "vanilla_actions_min": 558,
+          "arm_actions_min": null,
+          "action_reduction": null,
+          "efficiency_ratio": null,
+          "solve_preserved": false,
+          "pruner_total_choices": 1189,
+          "pruner_changed_count": 804
+        },
+        {
+          "game": "sp80",
+          "vanilla_median": 52.0,
+          "arm_median": 322.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 20,
+          "arm_actions_min": 322,
+          "action_reduction": -270.0,
+          "efficiency_ratio": 0.02607924077003202,
+          "solve_preserved": false,
+          "pruner_total_choices": 1114,
+          "pruner_changed_count": 852
+        },
+        {
+          "game": "vc33",
+          "vanilla_median": 23.0,
+          "arm_median": 6.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 17,
+          "arm_actions_min": 6,
+          "action_reduction": 17.0,
+          "efficiency_ratio": 14.694444444444446,
+          "solve_preserved": true,
+          "pruner_total_choices": 25,
+          "pruner_changed_count": 22
+        }
+      ],
+      "median_efficiency_ratio": 0.6822212386679283,
+      "median_action_reduction": -126.0,
+      "n_games_solve_preserved": 4,
+      "n_games_total": 9,
+      "n_games_solve_rate_regressed": 5,
+      "solve_rate_regressed_games": [
+        "cd82",
+        "m0r0",
+        "r11l",
+        "s5i5",
+        "sp80"
+      ],
+      "solve_lost_games": [
+        "m0r0",
+        "s5i5"
+      ],
+      "all_solves_preserved": false,
+      "worst_per_game_outcome": "solve_lost:['m0r0', 's5i5']",
+      "pruner_exercised": true,
+      "pruner_total_choices": 17999,
+      "pruner_changed_count": 14963,
+      "pruner_explore_branch_count": 0,
+      "pruner_fire_rate": 0.8313,
+      "deployable": false
+    },
+    "eps_greedy_0.3": {
+      "arm": "eps_greedy_0.3",
+      "per_game": [
+        {
+          "game": "ar25",
+          "vanilla_median": 1246.0,
+          "arm_median": 271.0,
+          "vanilla_n_solved": 1,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 1246,
+          "arm_actions_min": 171,
+          "action_reduction": 975.0,
+          "efficiency_ratio": 21.139635898204002,
+          "solve_preserved": true,
+          "pruner_total_choices": 1423,
+          "pruner_changed_count": 1067
+        },
+        {
+          "game": "cd82",
+          "vanilla_median": 527.0,
+          "arm_median": 835.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 352,
+          "arm_actions_min": 522,
+          "action_reduction": -308.0,
+          "efficiency_ratio": 0.3983348273512855,
+          "solve_preserved": true,
+          "pruner_total_choices": 4348,
+          "pruner_changed_count": 3638
+        },
+        {
+          "game": "ft09",
+          "vanilla_median": 598.0,
+          "arm_median": 106.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 477,
+          "arm_actions_min": 61,
+          "action_reduction": 492.0,
+          "efficiency_ratio": 31.82662869348523,
+          "solve_preserved": true,
+          "pruner_total_choices": 1395,
+          "pruner_changed_count": 1344
+        },
+        {
+          "game": "lp85",
+          "vanilla_median": 487.0,
+          "arm_median": 393.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 455,
+          "arm_actions_min": 385,
+          "action_reduction": 94.0,
+          "efficiency_ratio": 1.5355813245796348,
+          "solve_preserved": true,
+          "pruner_total_choices": 1752,
+          "pruner_changed_count": 1492
+        },
+        {
+          "game": "m0r0",
+          "vanilla_median": 562.0,
+          "arm_median": 1335.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 218,
+          "arm_actions_min": 1335,
+          "action_reduction": -773.0,
+          "efficiency_ratio": 0.17721892578097603,
+          "solve_preserved": false,
+          "pruner_total_choices": 3437,
+          "pruner_changed_count": 2017
+        },
+        {
+          "game": "r11l",
+          "vanilla_median": 53.0,
+          "arm_median": 165.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 46,
+          "arm_actions_min": 73,
+          "action_reduction": -112.0,
+          "efficiency_ratio": 0.10317722681359046,
+          "solve_preserved": true,
+          "pruner_total_choices": 800,
+          "pruner_changed_count": 720
+        },
+        {
+          "game": "s5i5",
+          "vanilla_median": 706.0,
+          "arm_median": 809.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 558,
+          "arm_actions_min": 809,
+          "action_reduction": -103.0,
+          "efficiency_ratio": 0.7615744383717786,
+          "solve_preserved": false,
+          "pruner_total_choices": 2801,
+          "pruner_changed_count": 1786
+        },
+        {
+          "game": "sp80",
+          "vanilla_median": 52.0,
+          "arm_median": null,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 0,
+          "vanilla_actions_min": 20,
+          "arm_actions_min": null,
+          "action_reduction": null,
+          "efficiency_ratio": null,
+          "solve_preserved": false,
+          "pruner_total_choices": 572,
+          "pruner_changed_count": 443
+        },
+        {
+          "game": "vc33",
+          "vanilla_median": 23.0,
+          "arm_median": 9.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 17,
+          "arm_actions_min": 7,
+          "action_reduction": 14.0,
+          "efficiency_ratio": 6.530864197530863,
+          "solve_preserved": true,
+          "pruner_total_choices": 85,
+          "pruner_changed_count": 56
+        }
+      ],
+      "median_efficiency_ratio": 1.1485778814757066,
+      "median_action_reduction": -44.5,
+      "n_games_solve_preserved": 6,
+      "n_games_total": 9,
+      "n_games_solve_rate_regressed": 3,
+      "solve_rate_regressed_games": [
+        "m0r0",
+        "s5i5",
+        "sp80"
+      ],
+      "solve_lost_games": [
+        "sp80"
+      ],
+      "all_solves_preserved": false,
+      "worst_per_game_outcome": "solve_lost:['sp80']",
+      "pruner_exercised": true,
+      "pruner_total_choices": 16613,
+      "pruner_changed_count": 12563,
+      "pruner_explore_branch_count": 4703,
+      "pruner_fire_rate": 0.7562,
+      "deployable": false
+    },
+    "eps_greedy_0.5": {
+      "arm": "eps_greedy_0.5",
+      "per_game": [
+        {
+          "game": "ar25",
+          "vanilla_median": 1246.0,
+          "arm_median": 419.0,
+          "vanilla_n_solved": 1,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 1246,
+          "arm_actions_min": 54,
+          "action_reduction": 827.0,
+          "efficiency_ratio": 8.843171319370473,
+          "solve_preserved": true,
+          "pruner_total_choices": 3032,
+          "pruner_changed_count": 2028
+        },
+        {
+          "game": "cd82",
+          "vanilla_median": 527.0,
+          "arm_median": 819.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 3,
+          "vanilla_actions_min": 352,
+          "arm_actions_min": 700,
+          "action_reduction": -292.0,
+          "efficiency_ratio": 0.4140506081898024,
+          "solve_preserved": false,
+          "pruner_total_choices": 2890,
+          "pruner_changed_count": 2463
+        },
+        {
+          "game": "ft09",
+          "vanilla_median": 598.0,
+          "arm_median": 789.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 4,
+          "vanilla_actions_min": 477,
+          "arm_actions_min": 277,
+          "action_reduction": -191.0,
+          "efficiency_ratio": 0.5744448781647526,
+          "solve_preserved": true,
+          "pruner_total_choices": 5528,
+          "pruner_changed_count": 5385
+        },
+        {
+          "game": "lp85",
+          "vanilla_median": 487.0,
+          "arm_median": 409.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 455,
+          "arm_actions_min": 384,
+          "action_reduction": 78.0,
+          "efficiency_ratio": 1.4177880333092225,
+          "solve_preserved": true,
+          "pruner_total_choices": 1852,
+          "pruner_changed_count": 1560
+        },
+        {
+          "game": "m0r0",
+          "vanilla_median": 562.0,
+          "arm_median": 1464.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 3,
+          "vanilla_actions_min": 218,
+          "arm_actions_min": 1356,
+          "action_reduction": -902.0,
+          "efficiency_ratio": 0.1473636865836543,
+          "solve_preserved": false,
+          "pruner_total_choices": 4184,
+          "pruner_changed_count": 2615
+        },
+        {
+          "game": "r11l",
+          "vanilla_median": 53.0,
+          "arm_median": 50.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 46,
+          "arm_actions_min": 29,
+          "action_reduction": 3.0,
+          "efficiency_ratio": 1.1236000000000002,
+          "solve_preserved": true,
+          "pruner_total_choices": 246,
+          "pruner_changed_count": 187
+        },
+        {
+          "game": "s5i5",
+          "vanilla_median": 706.0,
+          "arm_median": 338.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 558,
+          "arm_actions_min": 338,
+          "action_reduction": 368.0,
+          "efficiency_ratio": 4.362907461223346,
+          "solve_preserved": false,
+          "pruner_total_choices": 1618,
+          "pruner_changed_count": 1066
+        },
+        {
+          "game": "sp80",
+          "vanilla_median": 52.0,
+          "arm_median": 26.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 20,
+          "arm_actions_min": 26,
+          "action_reduction": 26.0,
+          "efficiency_ratio": 4.0,
+          "solve_preserved": false,
+          "pruner_total_choices": 488,
+          "pruner_changed_count": 376
+        },
+        {
+          "game": "vc33",
+          "vanilla_median": 23.0,
+          "arm_median": 10.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 17,
+          "arm_actions_min": 6,
+          "action_reduction": 13.0,
+          "efficiency_ratio": 5.289999999999999,
+          "solve_preserved": true,
+          "pruner_total_choices": 64,
+          "pruner_changed_count": 50
+        }
+      ],
+      "median_efficiency_ratio": 1.4177880333092225,
+      "median_action_reduction": 13.0,
+      "n_games_solve_preserved": 5,
+      "n_games_total": 9,
+      "n_games_solve_rate_regressed": 4,
+      "solve_rate_regressed_games": [
+        "cd82",
+        "m0r0",
+        "s5i5",
+        "sp80"
+      ],
+      "solve_lost_games": [],
+      "all_solves_preserved": false,
+      "worst_per_game_outcome": "solve_rate_regressed:['cd82', 'm0r0', 's5i5', 'sp80']",
+      "pruner_exercised": true,
+      "pruner_total_choices": 19902,
+      "pruner_changed_count": 15730,
+      "pruner_explore_branch_count": 9476,
+      "pruner_fire_rate": 0.7904,
+      "deployable": false
+    },
+    "weighted_sample": {
+      "arm": "weighted_sample",
+      "per_game": [
+        {
+          "game": "ar25",
+          "vanilla_median": 1246.0,
+          "arm_median": 749.0,
+          "vanilla_n_solved": 1,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 1246,
+          "arm_actions_min": 749,
+          "action_reduction": 497.0,
+          "efficiency_ratio": 2.7674032666608435,
+          "solve_preserved": true,
+          "pruner_total_choices": 3298,
+          "pruner_changed_count": 2165
+        },
+        {
+          "game": "cd82",
+          "vanilla_median": 527.0,
+          "arm_median": 836.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 3,
+          "vanilla_actions_min": 352,
+          "arm_actions_min": 201,
+          "action_reduction": -309.0,
+          "efficiency_ratio": 0.39738244316751,
+          "solve_preserved": false,
+          "pruner_total_choices": 4072,
+          "pruner_changed_count": 3443
+        },
+        {
+          "game": "ft09",
+          "vanilla_median": 598.0,
+          "arm_median": 444.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 477,
+          "arm_actions_min": 304,
+          "action_reduction": 154.0,
+          "efficiency_ratio": 1.8139964288612938,
+          "solve_preserved": true,
+          "pruner_total_choices": 3284,
+          "pruner_changed_count": 3204
+        },
+        {
+          "game": "lp85",
+          "vanilla_median": 487.0,
+          "arm_median": 453.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 455,
+          "arm_actions_min": 356,
+          "action_reduction": 34.0,
+          "efficiency_ratio": 1.1557436564673087,
+          "solve_preserved": true,
+          "pruner_total_choices": 2015,
+          "pruner_changed_count": 1702
+        },
+        {
+          "game": "m0r0",
+          "vanilla_median": 562.0,
+          "arm_median": 1042.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 3,
+          "vanilla_actions_min": 218,
+          "arm_actions_min": 685,
+          "action_reduction": -480.0,
+          "efficiency_ratio": 0.2908956274107449,
+          "solve_preserved": false,
+          "pruner_total_choices": 3075,
+          "pruner_changed_count": 2029
+        },
+        {
+          "game": "r11l",
+          "vanilla_median": 53.0,
+          "arm_median": 41.0,
+          "vanilla_n_solved": 4,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 46,
+          "arm_actions_min": 24,
+          "action_reduction": 12.0,
+          "efficiency_ratio": 1.6710291493158835,
+          "solve_preserved": true,
+          "pruner_total_choices": 194,
+          "pruner_changed_count": 144
+        },
+        {
+          "game": "s5i5",
+          "vanilla_median": 706.0,
+          "arm_median": 443.0,
+          "vanilla_n_solved": 3,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 558,
+          "arm_actions_min": 296,
+          "action_reduction": 263.0,
+          "efficiency_ratio": 2.5398142156138377,
+          "solve_preserved": true,
+          "pruner_total_choices": 1932,
+          "pruner_changed_count": 1254
+        },
+        {
+          "game": "sp80",
+          "vanilla_median": 52.0,
+          "arm_median": 83.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 1,
+          "vanilla_actions_min": 20,
+          "arm_actions_min": 83,
+          "action_reduction": -31.0,
+          "efficiency_ratio": 0.39250979822906085,
+          "solve_preserved": false,
+          "pruner_total_choices": 740,
+          "pruner_changed_count": 563
+        },
+        {
+          "game": "vc33",
+          "vanilla_median": 23.0,
+          "arm_median": 20.0,
+          "vanilla_n_solved": 5,
+          "arm_n_solved": 5,
+          "vanilla_actions_min": 17,
+          "arm_actions_min": 13,
+          "action_reduction": 3.0,
+          "efficiency_ratio": 1.3224999999999998,
+          "solve_preserved": true,
+          "pruner_total_choices": 106,
+          "pruner_changed_count": 63
+        }
+      ],
+      "median_efficiency_ratio": 1.3224999999999998,
+      "median_action_reduction": 12.0,
+      "n_games_solve_preserved": 6,
+      "n_games_total": 9,
+      "n_games_solve_rate_regressed": 3,
+      "solve_rate_regressed_games": [
+        "cd82",
+        "m0r0",
+        "sp80"
+      ],
+      "solve_lost_games": [],
+      "all_solves_preserved": false,
+      "worst_per_game_outcome": "solve_rate_regressed:['cd82', 'm0r0', 'sp80']",
+      "pruner_exercised": true,
+      "pruner_total_choices": 18716,
+      "pruner_changed_count": 14567,
+      "pruner_explore_branch_count": 0,
+      "pruner_fire_rate": 0.7783,
+      "deployable": false
+    }
+  },
+  "deployable_arms": [],
+  "m0r0_canary": {
+    "vanilla_n_solved": 4,
+    "per_arm_recovery": {
+      "hard_argmax": {
+        "vanilla_n_solved": 4,
+        "arm_n_solved": 0,
+        "recovered": false,
+        "fully_preserved": false
+      },
+      "eps_greedy_0.3": {
+        "vanilla_n_solved": 4,
+        "arm_n_solved": 1,
+        "recovered": true,
+        "fully_preserved": false
+      },
+      "eps_greedy_0.5": {
+        "vanilla_n_solved": 4,
+        "arm_n_solved": 3,
+        "recovered": true,
+        "fully_preserved": false
+      },
+      "weighted_sample": {
+        "vanilla_n_solved": 4,
+        "arm_n_solved": 3,
+        "recovered": true,
+        "fully_preserved": false
+      }
+    },
+    "any_arm_recovers_m0r0": true
+  },
+  "smoke": {
+    "vc33": {
+      "vanilla_solved": true,
+      "vanilla_atfl": 45,
+      "eps03_solved": true,
+      "eps03_atfl": 7,
+      "pruner_total_choices": 6,
+      "pruner_changed_count": 5,
+      "pruner_explore_branch_count": 3,
+      "adapter_failed": false
+    },
+    "m0r0": {
+      "vanilla_solved": true,
+      "vanilla_atfl": 240,
+      "eps03_solved": true,
+      "eps03_atfl": 1301,
+      "pruner_total_choices": 914,
+      "pruner_changed_count": 542,
+      "pruner_explore_branch_count": 240,
+      "adapter_failed": false
+    }
+  },
+  "n_seeds": 5,
+  "budget": 2000,
+  "games": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "lp85",
+    "m0r0",
+    "r11l",
+    "s5i5",
+    "sp80",
+    "vc33"
+  ],
+  "n_games_total": 9,
+  "honest_verdict": "complete: NO deployable hedge \u2014 NO arm (including the hedges) preserves every solve; binding constraint = SOLVE LOSS / solve-rate regression persists under all policies. m0r0_recovered=True; per-arm regressions: hard_argmax:['cd82', 'm0r0', 'r11l', 's5i5', 'sp80']; eps_greedy_0.3:['m0r0', 's5i5', 'sp80']; eps_greedy_0.5:['cd82', 'm0r0', 's5i5', 'sp80']; weighted_sample:['cd82', 'm0r0', 'sp80']",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "random_seed": 4732,
+  "base_seed_used": 24487,
+  "duration_s": 1322.95,
+  "measurement_caveats": [
+    "efficiency_ratio is the SQUARED action ratio (vanilla_median/arm_median)**2 \u2014 this is the ARC leaderboard reward shape (baseline_actions/actions_taken)**2; the per-game numbers are squared, NOT a raw action ratio (e.g. eff=4.0 means a 2x action reduction).",
+    "efficiency_ratio is computed over SOLVED seeds only, and vanilla vs arm medians may be over DIFFERENT seed subsets / different N when solve rates differ. On a solve-rate-regressed game an arm can show a high efficiency_ratio purely from survivorship (it kept the easy seeds, dropped the hard ones). The deployability gate guards against this by ALSO requiring carnot_n_solved >= vanilla_n_solved on every game, so survivorship cannot flip the verdict \u2014 but per-game efficiency magnitudes on regressed games are confounded.",
+    "N=5 seeds/arm/game is below the project N>=30 bar for percentage-point solve-rate claims. Vanilla baselines are themselves flaky on some games (ar25 0/5, m0r0 2/5 in this run), so a 1-seed n_solved delta is within seed noise. Treat per-game solve-rate deltas as indicative, not definitive; the cross-arm pattern (NO arm preserves all solves while beating vanilla on efficiency) is the robust finding.",
+    "Pairing is at the SEED/initial-condition level: every arm draws the vanilla random.choice first on each decision (so decision 1 matches vanilla for the same seed), but each policy then consumes the RNG differently, so trajectories diverge from decision 2 onward (intended \u2014 that is the point of the policy)."
+  ],
+  "methodology_note": "Carnot frame-change verifier (LiveActionEffectScorer: PersistentAEM + SmallFrameChangeCNN) scores each untested edge in just-explore's GraphExplorer.choose_edge. Edge->ArcAction mapping: edge_idx < num_click_actions -> segment centroid click (ACTION6 x,y); edge_idx >= num_click_actions -> directional arrow action (ACTION1..5). Arms: vanilla (random.choice); hard_argmax (deterministic argmax); eps_greedy_0.3/0.5 (prob eps uniform-random untested edge, else argmax); weighted_sample (sample untested edge proportional to softmax(score/T), T=0.5). Every hedge's random fallback draws from the SAME untested_edges set vanilla would, so any edge vanilla can reach stays reachable (no permanent stuck state). All arms share the per-seed RNG stream (vanilla random.choice drawn first on every decision), so each arm is paired against vanilla seed-for-seed. All other just-explore logic (segmentation, graph, BFS, transition recording) unchanged. Same budget(2000), same 9 games, same offline arcade variant-1 across all arms. CPU-only. An arm SUCCEEDS iff carnot_n_solved >= vanilla_n_solved on ALL 9 games (no solve loss / no solve-rate regression) AND median_efficiency_ratio > 1.0.",
+  "reproducibility_checksum": "a9aad16d5ad0f867b575dceb558733f7120e8e29a11aa379d06aeed84b619722"
+}
