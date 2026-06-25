@@ -7,7 +7,7 @@ SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 import hashlib
 import json
 import os
@@ -34,6 +34,14 @@ EXPERIMENT = "experiment_4729_held_out_first_win_readiness"
 EXPERIMENT_ID = 4729
 SCHEMA = "carnot.arc.held_out_first_win_readiness_4729.v1"
 RESULT_RELATIVE_PATH = "results/experiment_4729_held_out_first_win_readiness.json"
+# Sibling checkpoint file. The held-out proxy runs the offline ARC arcade over every public game x
+# {color variant 1..4} x {integrated, bare} -- minutes per game, and the whole sweep exceeds codex's
+# 4800s hard wall-clock cap, so codex KILLS the run before it can write the final artifact and the
+# task FAILs every milestone producing NOTHING. We persist per-game progress to this partial file so a
+# capped/killed run leaves usable work on disk, and the NEXT run resumes from it instead of restarting
+# the whole sweep. The partial file holds the already-computed integrated/bare attempt rows keyed by
+# game; it is the resume ledger, NOT the scored artifact.
+PARTIAL_RESULT_RELATIVE_PATH = "results/experiment_4729_held_out_first_win_readiness.partial.json"
 PROXY_RESULT_RELATIVE_PATH = "results/experiment_4605_live_integration_scored_agent.json"
 REPLAY_FLOOR_RESULT_RELATIVE_PATH = "results/experiment_4679_refresh_submission_package.json"
 REPLAY_FLOOR_PACKAGE_FALLBACK = "results/experiment_4679_submission_package_operator_resubmit.json"
@@ -42,6 +50,14 @@ MIN_HELD_OUT_VARIANT_ATTEMPTS = 100
 HELD_OUT_VARIANT_ATTEMPT_FLOOR = "B>=100"
 HELD_OUT_VARIANT_IDS = (1, 2, 3, 4)
 RANDOM_SEED = 4729
+# Soft wall-clock budget (seconds). Checked BETWEEN per-game units. When exceeded the run stops
+# GRACEFULLY -- it flushes the partial file and emits a clean partial: true artifact (exit 0), keeping
+# the total wall-clock well under codex's 4800s HARD cap so codex never kills the process mid-write.
+# The default 4200s leaves ~10min of headroom for the parity test + artifact assembly + flush. The
+# operator can override via EXP4729_SOFT_BUDGET_S (e.g. raise it on an uncapped direct invocation, or
+# lower it for a faster partial). The PARTIAL artifact accumulates across resumed runs until COMPLETE.
+SOFT_BUDGET_ENV = "EXP4729_SOFT_BUDGET_S"
+DEFAULT_SOFT_BUDGET_S = 4200.0
 TERMINAL_PREFIXES = ("success:", "complete:", "blocked_")
 INFERENCE_SUBSTRATE = (
     "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted "
@@ -489,7 +505,11 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("held_out_first_win_readiness_gate")
     if artifact.get("ready_for_operator_submit") is not expected_readiness:
         errors.append("ready_for_operator_submit_gate")
-    if not blocked and attempts < MIN_HELD_OUT_VARIANT_ATTEMPTS:
+    # A blocked OR a checkpoint-partial run is a legitimately-incomplete state: the B>=100 floor
+    # cannot be met yet (a partial soft-budget stop ran only some games), so the below-minimum rule is
+    # exempt for it -- the partial: true flag + completed/remaining_variants record the incompleteness.
+    partial = artifact.get("partial") is True
+    if not blocked and not partial and attempts < MIN_HELD_OUT_VARIANT_ATTEMPTS:
         errors.append("held_out_variant_attempts_below_minimum")
     if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
         errors.append("reproducibility_checksum")
@@ -594,6 +614,222 @@ def run_held_out_proxy(root: Path, parity_test: Mapping[str, Any]) -> JsonDict:
             os.environ[exp4605.VARIANT_IDS_ENV] = previous_variants
 
 
+class _BudgetExceeded(Exception):
+    """Raised by the checkpointed proxy when the soft wall-clock budget is hit mid-sweep.
+
+    It is NOT an error -- it is the graceful-stop signal. The run() handler catches it, treats the
+    accumulated (partial) attempts as the run's output, and writes a partial: true artifact + exit 0.
+    Carrying the per-game progress on the exception keeps the resume ledger flush-then-stop atomic.
+    """
+
+    def __init__(self, *, done_games: Sequence[str], remaining_games: Sequence[str]) -> None:
+        self.done_games = list(done_games)
+        self.remaining_games = list(remaining_games)
+        super().__init__(
+            f"soft budget exceeded after {len(self.done_games)} games; "
+            f"{len(self.remaining_games)} remaining"
+        )
+
+
+def resolve_soft_budget_s(env: Mapping[str, str] | None = None) -> float:
+    """Soft wall-clock budget in seconds: EXP4729_SOFT_BUDGET_S overrides DEFAULT_SOFT_BUDGET_S.
+
+    A non-positive or unparseable override falls back to the default so a typo can never DISABLE the
+    graceful stop (which would re-expose the run to codex's hard kill). The budget is the only knob;
+    WHAT is measured is unchanged."""
+
+    source = os.environ if env is None else env
+    raw = str(source.get(SOFT_BUDGET_ENV, "")).strip()
+    if not raw:
+        return DEFAULT_SOFT_BUDGET_S
+    try:
+        parsed = float(raw)
+    except (TypeError, ValueError):
+        return DEFAULT_SOFT_BUDGET_S
+    return parsed if parsed > 0.0 else DEFAULT_SOFT_BUDGET_S
+
+
+def _partial_path(root: Path) -> Path:
+    return Path(root) / PARTIAL_RESULT_RELATIVE_PATH
+
+
+def load_partial(root: Path) -> JsonDict:
+    """Load the resume ledger, or an empty skeleton when no partial file exists.
+
+    The ledger records, per completed game, the integrated + bare attempt ROWS exactly as exp4605
+    produced them, so a resumed run can rebuild the SAME aggregated measurement it would have built in
+    one shot. We key by game (the per-unit checkpoint granularity) so resume skips whole completed
+    games. A corrupt/unreadable file is treated as no-progress (defensive: never crash on resume)."""
+
+    path = _partial_path(root)
+    if not path.exists():
+        return {"games": {}}
+    raw = _read_json(path)
+    games = raw.get("games")
+    if not isinstance(games, Mapping):
+        return {"games": {}}
+    out: dict[str, JsonDict] = {}
+    for game, rows in games.items():
+        if not isinstance(rows, Mapping):
+            continue
+        integrated = rows.get("integrated_attempts")
+        bare = rows.get("bare_attempts")
+        if isinstance(integrated, list) and isinstance(bare, list):
+            out[str(game)] = {
+                "integrated_attempts": [dict(row) for row in integrated],
+                "bare_attempts": [dict(row) for row in bare],
+            }
+    return {"games": out}
+
+
+def _write_partial(root: Path, ledger: Mapping[str, Any]) -> None:
+    """Flush the resume ledger after each per-game unit completes (incremental durability)."""
+
+    _write_json(_partial_path(root), ledger)
+
+
+def clear_partial(root: Path) -> None:
+    """Remove the resume ledger once the FULL sweep is complete (its job is done)."""
+
+    path = _partial_path(root)
+    if path.exists():  # pragma: no branch - trivial guard
+        path.unlink()
+
+
+def run_held_out_proxy_checkpointed(
+    root: Path,
+    parity_test: Mapping[str, Any],
+    *,
+    now: Callable[[], float] = time.time,
+    soft_budget_s: float | None = None,
+    public_games: Sequence[str] | None = None,
+) -> JsonDict:
+    """Checkpoint/resume variant of run_held_out_proxy that survives the codex 4800s hard cap.
+
+    This drives exp4605's per-GAME building blocks directly (variant_specs -> per-game variant attempts
+    -> measurement_from_attempts -> build_artifact) instead of calling exp4605.run() as one opaque
+    blackbox, so it can (a) persist progress after EACH game and (b) skip games already on disk.
+
+    CRITICAL -- the SCORE is byte-identical to a full exp4605.run(): we accumulate the integrated and
+    bare attempt rows in the SAME game-major order (sorted games x sorted variants) that
+    measure_policy_pair uses, then aggregate the FULL accumulated lists with the SAME
+    measurement_from_attempts + build_artifact. Per-game checkpointing only changes WHEN rows are
+    persisted, never which rows are produced or how they are scored.
+
+    Raises _BudgetExceeded when the soft budget is hit between games -- the run() handler then writes a
+    partial artifact from whatever games are done. Returns the full proxy artifact when ALL games run.
+    """
+
+    from carnot import experiment_4605_live_integration_scored_agent as exp4605
+
+    root_path = Path(root)
+    budget = resolve_soft_budget_s() if soft_budget_s is None else float(soft_budget_s)
+
+    # The held-out lane is exp4605 with deepening ON and the 4 color variants. We set the same env the
+    # non-checkpointed run_held_out_proxy sets so the per-variant attempt rows (which read _deepen_enabled
+    # / the variant ids) are byte-identical to today's behavior.
+    previous_deepen = os.environ.get(exp4605.DEEPEN_ENV)
+    previous_variants = os.environ.get(exp4605.VARIANT_IDS_ENV)
+    os.environ[exp4605.DEEPEN_ENV] = "1"
+    os.environ[exp4605.VARIANT_IDS_ENV] = ",".join(str(item) for item in HELD_OUT_VARIANT_IDS)
+    try:
+        games = list(
+            public_games if public_games is not None else exp4605._public_games(root_path)
+        )
+        variant_ids = HELD_OUT_VARIANT_IDS
+        budget_per_game = exp4605.DEFAULT_BUDGET
+        integrated_factory = exp4605.default_variant_runner_factory("integrated")
+        bare_factory = exp4605.default_variant_runner_factory("bare")
+
+        ledger = load_partial(root_path)
+        done = dict(ledger.get("games", {}))
+
+        # Rebuild accumulated attempts in deterministic game-major order so the final aggregation equals
+        # the all-at-once run regardless of how many resumes it took to get here.
+        ordered_games = sorted(str(game) for game in games)
+        remaining = [game for game in ordered_games if game not in done]
+
+        for index, game in enumerate(remaining):
+            # Soft-budget check BETWEEN games: if we cannot afford another (minutes-long) game, stop
+            # gracefully NOW with whatever is already flushed, well under the 4800s hard cap.
+            if float(now()) >= budget:
+                already = [g for g in ordered_games if g in done]
+                still = [g for g in ordered_games if g not in done]
+                raise _BudgetExceeded(done_games=already, remaining_games=still)
+
+            specs = exp4605.variant_specs([game], variant_ids)
+            integrated_attempts = [
+                dict(integrated_factory(str(spec["game"]), spec, int(budget_per_game)))
+                for spec in specs
+            ]
+            bare_attempts = [
+                dict(bare_factory(str(spec["game"]), spec, int(budget_per_game))) for spec in specs
+            ]
+            done[game] = {
+                "integrated_attempts": integrated_attempts,
+                "bare_attempts": bare_attempts,
+            }
+            # INCREMENTAL CHECKPOINT: flush after EACH game so a kill loses at most one game.
+            _write_partial(root_path, {"games": done})
+            _ = index  # explicit: progress is the loop position, kept for readability
+
+        # All games are done -- assemble the full proxy artifact with the SAME aggregation exp4605.run
+        # uses, then drop the ledger.
+        proxy = _assemble_proxy_from_ledger(
+            exp4605=exp4605,
+            done=done,
+            ordered_games=ordered_games,
+            parity_test=parity_test,
+        )
+        clear_partial(root_path)
+        return proxy
+    finally:
+        if previous_deepen is None:
+            os.environ.pop(exp4605.DEEPEN_ENV, None)
+        else:
+            os.environ[exp4605.DEEPEN_ENV] = previous_deepen
+        if previous_variants is None:
+            os.environ.pop(exp4605.VARIANT_IDS_ENV, None)
+        else:
+            os.environ[exp4605.VARIANT_IDS_ENV] = previous_variants
+
+
+def _assemble_proxy_from_ledger(
+    *,
+    exp4605: Any,
+    done: Mapping[str, Any],
+    ordered_games: Sequence[str],
+    parity_test: Mapping[str, Any],
+) -> JsonDict:
+    """Aggregate the per-game ledger rows into the exp4605 proxy artifact, SCORE-identical to one run.
+
+    Concatenating the per-game attempt rows in sorted-game order reproduces the exact list that
+    measure_policy_pair builds in one shot (it iterates variant_specs == sorted games x sorted
+    variants). We then call the unchanged exp4605.measurement_from_attempts + build_artifact, so the
+    first-win rate, CI, deepen rate, and verdict are computed by the SAME code on the SAME rows."""
+
+    integrated_attempts: list[JsonDict] = []
+    bare_attempts: list[JsonDict] = []
+    for game in ordered_games:
+        rows = done.get(game)
+        if not isinstance(rows, Mapping):
+            continue
+        integrated_attempts.extend(dict(row) for row in rows.get("integrated_attempts", []))
+        bare_attempts.extend(dict(row) for row in rows.get("bare_attempts", []))
+
+    integrated = exp4605.measurement_from_attempts(integrated_attempts)
+    bare = exp4605.measurement_from_attempts(bare_attempts)
+    artifact = exp4605.build_artifact(
+        preconditions_checked={"ok": True},
+        integrated_measurement=integrated,
+        bare_measurement=bare,
+        parity_test=dict(parity_test),
+        duration_s=1.0,
+        random_seed=exp4605.RANDOM_SEED,
+    )
+    return dict(artifact)
+
+
 def load_replay_package_floor(root: Path) -> JsonDict:  # pragma: no cover - filesystem boundary.
     from carnot.live_submittable_metrics import compute_live_submittable_metrics
 
@@ -655,12 +891,84 @@ def _blocked_artifact(
     return artifact
 
 
+def _partial_artifact(
+    *,
+    root: Path,
+    preconditions_checked: Mapping[str, Any],
+    parity_test: Mapping[str, Any],
+    budget_exceeded: _BudgetExceeded,
+    replay_floor: Mapping[str, Any],
+    v435_lever_inputs: Mapping[str, Any],
+    duration_s: float,
+) -> JsonDict:
+    """Emit a CLEAN partial artifact (exit 0, NOT a crash) when the soft budget stops the sweep.
+
+    We assemble the proxy from ONLY the games already flushed to the resume ledger and score it with
+    the SAME build_artifact path as a full run, so the numbers in a partial are honest (just over fewer
+    variants). The verdict carries a terminal prefix (complete_partial_...) so the conductor reconciler
+    treats it as a terminal-but-incomplete state, not a failed/partial-token retry. completed_variants
+    / remaining_variants record exactly which color variants ran so the NEXT resumed run finishes the
+    rest. ready_for_operator_submit stays False (a sub-B100 partial can never be ready)."""
+
+    from carnot import experiment_4605_live_integration_scored_agent as exp4605
+
+    root_path = Path(root)
+    ledger = load_partial(root_path)
+    done = dict(ledger.get("games", {}))
+    ordered_games = sorted(set(done) | set(budget_exceeded.done_games))
+    proxy = _assemble_proxy_from_ledger(
+        exp4605=exp4605,
+        done=done,
+        ordered_games=ordered_games,
+        parity_test=parity_test,
+    )
+    artifact = build_artifact(
+        preconditions_checked=dict(preconditions_checked),
+        parity_test=dict(parity_test),
+        proxy_artifact=proxy,
+        replay_floor=dict(replay_floor),
+        v435_lever_inputs=dict(v435_lever_inputs),
+        duration_s=duration_s,
+    )
+    completed_variants = [
+        _variant_signature(game, variant)
+        for game in budget_exceeded.done_games
+        for variant in HELD_OUT_VARIANT_IDS
+    ]
+    remaining_variants = [
+        _variant_signature(game, variant)
+        for game in budget_exceeded.remaining_games
+        for variant in HELD_OUT_VARIANT_IDS
+    ]
+    attempts = _extract_held_out_variant_attempts(proxy)
+    artifact["partial"] = True
+    artifact["completed_variants"] = completed_variants
+    artifact["remaining_variants"] = remaining_variants
+    artifact["completed_games"] = list(budget_exceeded.done_games)
+    artifact["remaining_games"] = list(budget_exceeded.remaining_games)
+    # Terminal prefix 'complete:' (a member of TERMINAL_PREFIXES) so the conductor reconciler reads this
+    # as a terminal-but-incomplete state, NOT a partial-token retry. 'partial' here is the descriptive
+    # tail, not a partial-failure token -- the partial: true field is the structured signal.
+    artifact["honest_verdict"] = (
+        f"complete: held_out_first_win_soft_budget_stop_partial_"
+        f"{len(budget_exceeded.done_games)}_of_"
+        f"{len(budget_exceeded.done_games) + len(budget_exceeded.remaining_games)}_games_"
+        f"{attempts}_attempts_resume_to_finish"
+    )
+    artifact["reproducibility_checksum"] = payload_checksum(artifact)
+    return artifact
+
+
+def _variant_signature(game: str, variant_id: int) -> str:
+    return f"{game}~color{int(variant_id):02d}"
+
+
 def run(
     *,
     root: Path | str = REPO_ROOT,
     preconditions_checker: PreconditionsChecker = check_preconditions,
     parity_check: ParityCheck = run_parity_test,
-    proxy_runner: ProxyRunner = run_held_out_proxy,
+    proxy_runner: ProxyRunner = run_held_out_proxy_checkpointed,
     replay_floor_loader: ReplayFloorLoader = load_replay_package_floor,
     lever_input_loader: LeverInputLoader = load_v435_lever_inputs,
     now: Callable[[], float] = time.time,
@@ -699,6 +1007,23 @@ def run(
 
     try:
         proxy = dict(proxy_runner(root_path, parity))
+    except _BudgetExceeded as budget_exc:
+        # GRACEFUL soft-budget stop: the per-game sweep ran out of soft budget BEFORE finishing. Whatever
+        # games completed are already flushed to the resume ledger; emit a clean partial: true artifact
+        # (exit 0, NOT a crash) so codex sees a successful run well under its 4800s hard cap, and the
+        # NEXT run resumes from the ledger. The partial file is intentionally NOT cleared here.
+        checks["soft_budget_partial"] = True
+        artifact = _partial_artifact(
+            root=root_path,
+            preconditions_checked=checks,
+            parity_test=parity,
+            budget_exceeded=budget_exc,
+            replay_floor=replay_floor,
+            v435_lever_inputs=lever_inputs,
+            duration_s=duration(),
+        )
+        write_artifact(root_path, artifact)
+        return artifact
     except Exception as exc:  # pragma: no cover - defensive live-run boundary.
         checks["proxy_error"] = repr(exc)[:500]
         checks["blocked_resource"] = "experiment_4605_proxy"
@@ -734,6 +1059,13 @@ def run(
         v435_lever_inputs=lever_inputs,
         duration_s=duration(),
     )
+    # COMPLETE: all games ran (possibly across multiple resumed runs). The final artifact is the SAME
+    # schema/values as today's full run; partial: false marks it complete. The resume ledger was already
+    # cleared by the checkpointed proxy runner once the last game finished; clear defensively in case a
+    # custom (non-checkpointing) proxy_runner was injected.
+    artifact["partial"] = False
+    artifact["reproducibility_checksum"] = payload_checksum(artifact)
+    clear_partial(root_path)
     write_artifact(root_path, artifact)
     return artifact
 

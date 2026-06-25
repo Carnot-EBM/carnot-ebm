@@ -1,0 +1,161 @@
+{
+  "bitstream_sha256": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+  "board_harness_summary": {
+    "sample_count": 32,
+    "schema": "carnot.kv260.remote_latency_harness.v2",
+    "selected_uio": "/dev/uio4",
+    "selected_uio_addr_hex": "0x00000000a0000000"
+  },
+  "command_probes": {
+    "kv260_bitstream_sha256": {
+      "combined_output": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb  /lib/firmware/carnot_ising_v4.bit\n",
+      "command": "ssh kria 'sudo sh -lc \"find /lib/firmware -maxdepth 4 -type f \\( -name '\"'\"'*carnot_ising*.bit'\"'\"' -o -name '\"'\"'*carnot_ising*.bit.bin'\"'\"' \\) -print0 2>/dev/null | sort -z | xargs -0 sha256sum 2>/dev/null | head -n 1\"'",
+      "duration_s": 1.7114599149208516,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb  /lib/firmware/carnot_ising_v4.bit\n"
+    },
+    "kv260_latency_harness": {
+      "combined_output": "BOARD_HARNESS_START exp4733\n{\"final_spin_words_hex\": [\"0x2857fd02\", \"0x2857fd02\"], \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"reset_trigger_poll_done_once_per_sample\"}, \"per_batch_wall_clock_us\": 10599.851, \"per_sample_wall_clock_us\": [25.93, 25.2, 24.6, 24.171, 24.68, 24.3, 24.111, 24.22, 24.19, 23.951, 23.87, 24.22, 68.901, 24.47, 24.371, 24.06, 24.26, 24.441, 24.35, 24.32, 24.291, 24.06, 23.94, 24.241, 24.29, 24.08, 24.341, 24.16, 24.33, 23.951, 24.33, 24.12], \"sample_count\": 32, \"schema\": \"carnot.kv260.remote_latency_harness.v2\", \"selected_uio\": \"/dev/uio4\", \"selected_uio_addr_hex\": \"0x00000000a0000000\"}\n",
+      "command": "ssh kria 'sudo python3 -'",
+      "duration_s": 0.6544447392225266,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "BOARD_HARNESS_START exp4733\n{\"final_spin_words_hex\": [\"0x2857fd02\", \"0x2857fd02\"], \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"reset_trigger_poll_done_once_per_sample\"}, \"per_batch_wall_clock_us\": 10599.851, \"per_sample_wall_clock_us\": [25.93, 25.2, 24.6, 24.171, 24.68, 24.3, 24.111, 24.22, 24.19, 23.951, 23.87, 24.22, 68.901, 24.47, 24.371, 24.06, 24.26, 24.441, 24.35, 24.32, 24.291, 24.06, 23.94, 24.241, 24.29, 24.08, 24.341, 24.16, 24.33, 23.951, 24.33, 24.12], \"sample_count\": 32, \"schema\": \"carnot.kv260.remote_latency_harness.v2\", \"selected_uio\": \"/dev/uio4\", \"selected_uio_addr_hex\": \"0x00000000a0000000\"}\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.555062381085008,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7623479140456766,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_after_load": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 1.0045765219256282,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    },
+    "kv260_xmutil_listapps_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.9474079909268767,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1\n"
+    },
+    "kv260_xmutil_loadapp": {
+      "combined_output": "remove from slot 0 returns: 0 (Ok)\ncarnot_ising_v2_n64: Loaded with slot_handle 0\n",
+      "command": "ssh kria 'sudo xmutil unloadapp 2>/dev/null || true; sudo xmutil loadapp carnot_ising_v2_n64'",
+      "duration_s": 2.100927935913205,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "remove from slot 0 returns: 0 (Ok)\ncarnot_ising_v2_n64: Loaded with slot_handle 0\n"
+    }
+  },
+  "duration_s": 11.7368,
+  "experiment": 4733,
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: kv260_latency_transcript_captured OR complete:/blocked_kv260_ssh_unreachable (an honest non-terminal continuity record).",
+    "inference_substrate": "hardware_smoke -- an SSH-attached board test; the duration floor is per-board, not the 60s live-model floor.",
+    "kv260_latency_numbers": "the on-board per-sample Ising latency transcript (the terminal-state deliverable) -- present only if reachable; null + blocked verdict otherwise.",
+    "kv260_ssh_reachable": "the SSH-reachability result (the CORRECT precondition; NEVER host SD-card device nodes).",
+    "kv260_synthesis_succeeded": "true if the carnot Ising overlay loaded + ran on-board -- part of the terminal-state definition (north-star \u00a73).",
+    "preconditions_checked": "records the SSH-reachability check (NEVER host SD-card); pre-empts the wrong-mechanism SD-card confusion + missing-resource fabrication.",
+    "random_seed": "determinism precondition for reproducibility (the sampler seed).",
+    "reproducibility_checksum": "content-addressed hash of the bitstream + transcript inputs.",
+    "verifier_is_oracle": "false -- a hardware latency measurement invokes no verifier oracle."
+  },
+  "honest_verdict": "success: kv260_latency_transcript_captured",
+  "inference_substrate": "hardware_smoke",
+  "kv260_latency_numbers": {
+    "final_spin_words_hex": [
+      "0x2857fd02",
+      "0x2857fd02"
+    ],
+    "fixed_compute_budget": {
+      "beta_final_q88": 256,
+      "max_degree": 16,
+      "sample_count": 32,
+      "spin_count": 64,
+      "trigger_mode": "reset_trigger_poll_done_once_per_sample"
+    },
+    "max_us": 68.901,
+    "mean_us": 25.7109375,
+    "median_us": 24.275,
+    "min_us": 23.87,
+    "p95_us": 25.93,
+    "per_batch_wall_clock_us": 10599.851,
+    "per_sample_wall_clock_us": [
+      25.93,
+      25.2,
+      24.6,
+      24.171,
+      24.68,
+      24.3,
+      24.111,
+      24.22,
+      24.19,
+      23.951,
+      23.87,
+      24.22,
+      68.901,
+      24.47,
+      24.371,
+      24.06,
+      24.26,
+      24.441,
+      24.35,
+      24.32,
+      24.291,
+      24.06,
+      23.94,
+      24.241,
+      24.29,
+      24.08,
+      24.341,
+      24.16,
+      24.33,
+      23.951,
+      24.33,
+      24.12
+    ],
+    "sample_count": 32,
+    "selected_uio": "/dev/uio4",
+    "selected_uio_addr_hex": "0x00000000a0000000",
+    "unit": "us"
+  },
+  "kv260_ssh_reachable": true,
+  "kv260_synthesis_succeeded": true,
+  "overlay_loaded": "carnot_ising_v2_n64",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 4.555062381085008,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 4733,
+  "reproducibility_checksum": "a41cbd28bebbcc2d8d234ba6eeaf002d4fde423a2b6f1e84d5193aec2da82dcb",
+  "schema": "carnot.kv260_continuity.v1",
+  "spec_refs": [
+    "REQ-HW-4733",
+    "SCENARIO-HW-4733"
+  ],
+  "verifier_is_oracle": false
+}

@@ -11692,6 +11692,91 @@ required fields:
 
 ---
 
+### REQ-HW-4733
+
+**Title:** KV260 continuity MUST capture an SSH-gated on-board Ising latency transcript for Exp 4733
+
+**Description:**
+Experiment 4733 MUST produce `results/experiment_4733_kv260_continuity.json`
+as the next KV260 hardware-continuity artifact for the ARC sprint. The
+precondition MUST be board SSH reachability via
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; a host SD-card device
+node check is not a valid precondition. If that SSH command returns non-zero,
+the artifact MUST stop honestly with
+`honest_verdict=complete:/blocked_kv260_ssh_unreachable`, record the failed
+SSH precondition in `preconditions_checked`, set `kv260_ssh_reachable=false`,
+set `kv260_latency_numbers=null`, set `kv260_synthesis_succeeded=false`, and
+avoid fabricated latency values.
+
+When SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'` and
+preserve that transcript. If the non-sudo `xmutil` probe reports that root is
+required, the experiment MAY retry with `ssh kria 'sudo xmutil listapps'`.
+When no Carnot Ising overlay is listed as loaded, the experiment MUST load the
+current deployable Carnot Ising app over SSH, preferring
+`sudo xmutil loadapp carnot_ising_v4_n64` when available and otherwise using
+the current `carnot_ising_v2_n64`/`carnot_ising_v4` app. The experiment MUST
+then run an on-board Python UIO harness with `ssh kria 'sudo python3 -'` to
+capture per-sample wall-clock latency numbers for a deterministic n=64 Ising
+problem. The harness MUST use the UIO register interface and must report at
+least 30 positive per-sample latency values.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; success: kv260_latency_transcript_captured OR complete:/blocked_kv260_ssh_unreachable (an honest non-terminal continuity record).`
+- `inference_substrate`: `hardware_smoke -- an SSH-attached board test; the duration floor is per-board, not the 60s live-model floor.`
+- `kv260_ssh_reachable`: `the SSH-reachability result (the CORRECT precondition; NEVER host SD-card device nodes).`
+- `kv260_latency_numbers`: `the on-board per-sample Ising latency transcript (the terminal-state deliverable) -- present only if reachable; null + blocked verdict otherwise.`
+- `kv260_synthesis_succeeded`: `true if the carnot Ising overlay loaded + ran on-board -- part of the terminal-state definition (north-star §3).`
+- `preconditions_checked`: `records the SSH-reachability check (NEVER host SD-card); pre-empts the wrong-mechanism SD-card confusion + missing-resource fabrication.`
+- `verifier_is_oracle`: `false -- a hardware latency measurement invokes no verifier oracle.`
+- `random_seed`: `determinism precondition for reproducibility (the sampler seed).`
+- `reproducibility_checksum`: `content-addressed hash of the bitstream + transcript inputs.`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4733_kv260_continuity.py` writes
+  `results/experiment_4733_kv260_continuity.json`.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `preconditions_checked` records the SSH BatchMode command listed above and
+  contains no host SD-card device-node precondition.
+- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
+  `complete:/blocked_kv260_ssh_unreachable`, `kv260_latency_numbers` is null,
+  `kv260_synthesis_succeeded=false`, and no board latency transcript is
+  fabricated.
+- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
+  `success: kv260_latency_transcript_captured`, `kv260_latency_numbers`
+  contains at least 30 positive per-sample wall-clock values with summary
+  statistics, `kv260_synthesis_succeeded=true`, and the command transcript
+  proves the Carnot Ising overlay was listed or loaded and the UIO harness ran
+  on-board.
+- `verifier_is_oracle=false`, `random_seed=4733`, `field_principles`,
+  `duration_s`, `command_probes`, `overlay_loaded`, `bitstream_sha256`, and a
+  stable `reproducibility_checksum` are present.
+
+**Implementation status:** Planned (Exp 4733)
+
+---
+
+### SCENARIO-HW-4733
+
+**Scenario:** Exp 4733 records the KV260 terminal latency transcript or an
+honest SSH-unreachable continuity record.
+
+**Given:** The KV260 continuity task requires SSH reachability of the board and
+must not use a host SD-card device-node precondition.
+**When:** Experiment 4733 checks SSH, confirms or loads a Carnot Ising overlay
+with `xmutil`, and runs the UIO latency harness only when the board is
+reachable.
+**Then:** It writes `results/experiment_4733_kv260_continuity.json` with a
+terminal-prefixed `honest_verdict`, `inference_substrate=hardware_smoke`,
+principle-annotated required fields, `verifier_is_oracle=false`, deterministic
+`random_seed=4733`, and either a real on-board per-sample latency transcript or
+`complete:/blocked_kv260_ssh_unreachable` with null latency numbers.
+
+**Implementation status:** Planned (Exp 4733)
+
+---
+
 ### SCENARIO-HW-4708
 
 **Scenario:** Exp 4708 records attached-board reachability and light state without heavy bring-up.
