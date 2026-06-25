@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-06-25 (Operational retrospective .435 -- recurring false-zero timing-detector gap, ~73rd milestone; .435 = bridge-not-crossed null + A3 banks +1 (63->64) -- outer-loop)
+
+Operational retro for milestone 2026.06.435. The retro's authoritative milestone-scoped timing detector AGAIN false-reported 0 commits since activation (the recurring observability gap documented .363-.434, now ~73 milestones); on-disk artifacts exp4725-exp4735 (mtimes 05:36->13:10 EDT, ~454-min window) show the milestone executed cleanly. Locked retro fields stay at the detector's 0/0/0/null per conductor constraint; interpretive fields + research-log corrected from on-disk evidence.
+
+- .435 research outcome (from capstone exp4735, for context): HONEST NEGATIVE -- bridge_crossed_for_solve=false (11th consecutive milestone); A1 leader online driver NULL on its FIRST valid test (arms_non_degenerate=false, online_warm_vs_frozen_delta=0.0, 66 train steps ran, distinct arms but ties frozen at 0.04); A2 active-probe NULL (mechanism did not run); A4 held-out-score MISSING (exp4729 exceeded the codex 4800s cap -> capstone honest_verdict=blocked_upstream_artifacts); A3 BANKED +1 self-play (reproducible_total_levels 63->64); B1 correctly reopened the .434 A4 byte-identical tautology as a silent-bug.
+- Operational bottlenecks: (1) the false-zero timing detector (highest-leverage, recurring ~73 milestones); (2) the codex wall-clock cap delaying the long held-out-score arm (checkpoint/resume + soft-budget fix applied mid-milestone, 810b6f451); (3) idle GPU-0 python process (PID 3095366, 536MB, 0% util) to reclaim. No monitored-3090 compute-bound task ran, so both idle 3090s are correct (gpu_idle_on_compute_bound_tasks=null).
+- Highest-leverage fix (recurring): move the detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site + disk-mtime fallback + write-time duration_s/inference_substrate/compute_bound stamping. estimated_time_savings_pct=15.
+- Wrote results/operational_retro_2026_06_435.json (interpretive fields only; locked numeric fields untouched) + docs/research-log.md .435 entry. Did NOT touch operator-curated docs (docs/index.html, docs/roadmap.md, README.md) or scripts/research_conductor.py / research-roadmap.yaml.
+
 ## 2026-06-22 (AGGRESSIVE adversarial defense vs outer-loop ARC solving — the 2nd-recurrence hardening: per-artifact calibration-solve catch + milestone-close AI audit + provenance contract — outer-loop, ultracode)
 
 Operator: "Update the adversarial agent to prevent this from happening again. This is the 2nd time ... it
