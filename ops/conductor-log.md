@@ -9273,3 +9273,4 @@ The contro |
 | 2026-06-25 15:53 UTC | PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG i | OK | 86 passed, 1 warning in 10.49s |
 | 2026-06-25 16:23 UTC | PHASE B2 (INFRA reserved slot 2; operator MANDATOR | OK | 89 passed, 1 warning in 7.43s |
 | 2026-06-25 16:41 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 132 passed, 1 warning in 13.97s |
+| 2026-06-25 16:56 UTC | PHASE D (SOTA-INGESTION -- the .436 fallback) -- m | OK | 120 passed, 1 warning in 9.38s |
