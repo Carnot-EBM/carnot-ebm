@@ -116,6 +116,9 @@ class OnlineActionEffectScorer:
     _resets_to_prior: int = field(default=0, init=False, repr=False)
     _reset_levels: list[int] = field(default_factory=list, init=False, repr=False)
     _initial_state: dict[str, torch.Tensor] = field(default_factory=dict, init=False, repr=False)
+    _last_gradient_norm: float = field(default=0.0, init=False, repr=False)
+    _max_gradient_norm: float = field(default=0.0, init=False, repr=False)
+    _positive_grad_steps: int = field(default=0, init=False, repr=False)
 
     def __post_init__(self) -> None:
         """Snapshot the starting CNN prior and build the Adam optimizer."""
@@ -252,6 +255,16 @@ class OnlineActionEffectScorer:
                 assert self._optimizer is not None
                 self._optimizer.zero_grad(set_to_none=True)
                 loss.backward()
+                grad_sq = 0.0
+                for parameter in self.cnn_scorer.model.parameters():
+                    if parameter.grad is None:
+                        continue
+                    grad_sq += float(parameter.grad.detach().pow(2).sum().item())
+                grad_norm = float(grad_sq**0.5)
+                self._last_gradient_norm = grad_norm
+                self._max_gradient_norm = max(float(self._max_gradient_norm), grad_norm)
+                if grad_norm > 0.0:
+                    self._positive_grad_steps += 1
                 self._optimizer.step()
                 self._fits += 1
         except Exception:
@@ -342,6 +355,10 @@ class OnlineActionEffectScorer:
         return {
             "observed": int(self._observed),
             "fits": int(self._fits),
+            "online_train_steps_executed": int(self._fits),
+            "train_steps_with_positive_grad_norm": int(self._positive_grad_steps),
+            "last_gradient_norm": float(self._last_gradient_norm),
+            "max_gradient_norm": float(self._max_gradient_norm),
             "errors": int(self._errors),
             "train_enabled": bool(self.train_enabled),
             "propose_enabled": bool(self.propose_enabled),
