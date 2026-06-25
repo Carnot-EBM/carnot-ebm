@@ -145,5 +145,23 @@
   "structured_heldout_accuracy": 0.5,
   "submitted_to_leaderboard": false,
   "target_game": "lp85",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "accuracy_delta=0.5 and structured_heldout_accuracy=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    },
+    {
+      "kind": "FALSE_NEGATIVE_RISK",
+      "severity": "warn",
+      "detail": "Null claim and the experiment's own gate structured_engine_non_degenerate=False: it self-reports the test was degenerate. Do not propagate this null to a forward-facing claim."
+    }
+  ]
 }

@@ -9292,3 +9292,4 @@ The contro |
 | 2026-06-25 22:46 UTC | Activation REFUSED: milestone 2026.06.437 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-25 22:48 UTC | Milestone 2026.06.437 activated | OK | 12 tasks queued |
 | 2026-06-25 23:04 UTC | PHASE 0 (TRANSITION) -- archive .436 -> activate . | OK | 86 passed, 1 warning in 8.25s |
+| 2026-06-25 23:28 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- RE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
