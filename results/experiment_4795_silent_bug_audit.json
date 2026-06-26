@@ -1,0 +1,231 @@
+{
+  "arc_orphan_solver_lint": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (39 modules in the live closure).\n"
+  },
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "audited_artifact_checksums": {
+    "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json": "sha256:70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047",
+    "results/experiment_4792_levelup_attempt.json": "sha256:cd478028017ec8007eee5e3c767559f8b1f02fcf556fc3ef5e0d3b446d16918a",
+    "results/experiment_4794_heldout_first_win_readiness.json": "sha256:0654b39f23c70f647d76bedac2064f1e03bf89c25298cfdf3afeae4e08300cef"
+  },
+  "audited_artifacts": [
+    "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+    "results/experiment_4792_levelup_attempt.json",
+    "results/experiment_4794_heldout_first_win_readiness.json"
+  ],
+  "duration_s": 0.0001,
+  "experiment": "experiment_4795_silent_bug_audit",
+  "experiment_id": 4795,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined."
+    },
+    "s2_live_path_reachable_confirmed": {
+      "principle": "the load-bearing check -- S2's energy gate must be reachable from E3AgentPolicy, else its 'live trust gate' claim is hollow."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_0_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "exercise_evidence": [
+        "lint_passed=True",
+        "artifact_live_path_reachable=True",
+        "artifact_lint_precondition_passed=True",
+        "e3_policy_imports_trust_energy=True",
+        "real_binary_accuracy_control=True",
+        "identical_candidate_sets=True",
+        "binary_selection_reconstructed=True",
+        "checked_games=5"
+      ],
+      "null_id": "experiment_4791_structural_energy_s2_offpath_trust_gate",
+      "s2_control_check": {
+        "artifact_lint_precondition_passed": true,
+        "artifact_live_path_reachable": true,
+        "binary_selection_reconstructed": true,
+        "candidate_rows_present": true,
+        "checked_games": 5,
+        "e3_policy_imports_trust_energy": true,
+        "finite_offpath_energy_scores": true,
+        "heldout_game_floor_met": true,
+        "identical_candidate_sets": true,
+        "lint_passed": true,
+        "min_heldout_games": 5,
+        "mismatches": [],
+        "n_heldout_games": 5,
+        "real_binary_accuracy_control": true,
+        "reconstructed_binary_selections": [
+          {
+            "actual_binary_selection": "results/arc_e3/ar25/world_model.py",
+            "binary_any_candidate_passed": true,
+            "declared_candidate_count": 2,
+            "expected_binary_selection": "results/arc_e3/ar25/world_model.py",
+            "game": "ar25",
+            "row_candidate_count": 2
+          },
+          {
+            "actual_binary_selection": "results/arc_e3/cd82/world_model.best.py",
+            "binary_any_candidate_passed": false,
+            "declared_candidate_count": 2,
+            "expected_binary_selection": "results/arc_e3/cd82/world_model.best.py",
+            "game": "cd82",
+            "row_candidate_count": 2
+          },
+          {
+            "actual_binary_selection": "results/arc_e3/cn04/world_model.py",
+            "binary_any_candidate_passed": false,
+            "declared_candidate_count": 3,
+            "expected_binary_selection": "results/arc_e3/cn04/world_model.py",
+            "game": "cn04",
+            "row_candidate_count": 3
+          },
+          {
+            "actual_binary_selection": "results/arc_e3/ka59/world_model.py",
+            "binary_any_candidate_passed": false,
+            "declared_candidate_count": 2,
+            "expected_binary_selection": "results/arc_e3/ka59/world_model.py",
+            "game": "ka59",
+            "row_candidate_count": 2
+          },
+          {
+            "actual_binary_selection": "results/arc_e3/sc25/world_model.py",
+            "binary_any_candidate_passed": false,
+            "declared_candidate_count": 2,
+            "expected_binary_selection": "results/arc_e3/sc25/world_model.py",
+            "game": "sc25",
+            "row_candidate_count": 2
+          }
+        ],
+        "s2_live_path_reachable_confirmed": true
+      },
+      "s2_live_path_reachable_confirmed": true,
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "levelup_attempts=2",
+        "solution_label_count=81",
+        "reproduction_gates=2",
+        "existing_depth_reproduced=2",
+        "new_depth_claims=0",
+        "new_levels_banked=0",
+        "offline_reproduced=False"
+      ],
+      "null_id": "experiment_4792_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True",
+        "inference_substrate=aggregation_from_upstream_artifacts",
+        "proxy_cache_used=True"
+      ],
+      "null_id": "experiment_4794_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "batch_ckpt_exp441_present": true,
+    "checkpoint_441_present": true,
+    "codex_md_read": true,
+    "milestone_441_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "source_artifacts_present": true
+  },
+  "random_seed": 4795,
+  "reproducibility_checksum": "sha256:c4c5fa189867a863af5dd789a7e161aa152b14d1d0b482fccb64dbe84a525cba",
+  "result_path": "results/experiment_4795_silent_bug_audit.json",
+  "s2_control_check": {
+    "artifact_lint_precondition_passed": true,
+    "artifact_live_path_reachable": true,
+    "binary_selection_reconstructed": true,
+    "candidate_rows_present": true,
+    "checked_games": 5,
+    "e3_policy_imports_trust_energy": true,
+    "finite_offpath_energy_scores": true,
+    "heldout_game_floor_met": true,
+    "identical_candidate_sets": true,
+    "lint_passed": true,
+    "min_heldout_games": 5,
+    "mismatches": [],
+    "n_heldout_games": 5,
+    "real_binary_accuracy_control": true,
+    "reconstructed_binary_selections": [
+      {
+        "actual_binary_selection": "results/arc_e3/ar25/world_model.py",
+        "binary_any_candidate_passed": true,
+        "declared_candidate_count": 2,
+        "expected_binary_selection": "results/arc_e3/ar25/world_model.py",
+        "game": "ar25",
+        "row_candidate_count": 2
+      },
+      {
+        "actual_binary_selection": "results/arc_e3/cd82/world_model.best.py",
+        "binary_any_candidate_passed": false,
+        "declared_candidate_count": 2,
+        "expected_binary_selection": "results/arc_e3/cd82/world_model.best.py",
+        "game": "cd82",
+        "row_candidate_count": 2
+      },
+      {
+        "actual_binary_selection": "results/arc_e3/cn04/world_model.py",
+        "binary_any_candidate_passed": false,
+        "declared_candidate_count": 3,
+        "expected_binary_selection": "results/arc_e3/cn04/world_model.py",
+        "game": "cn04",
+        "row_candidate_count": 3
+      },
+      {
+        "actual_binary_selection": "results/arc_e3/ka59/world_model.py",
+        "binary_any_candidate_passed": false,
+        "declared_candidate_count": 2,
+        "expected_binary_selection": "results/arc_e3/ka59/world_model.py",
+        "game": "ka59",
+        "row_candidate_count": 2
+      },
+      {
+        "actual_binary_selection": "results/arc_e3/sc25/world_model.py",
+        "binary_any_candidate_passed": false,
+        "declared_candidate_count": 2,
+        "expected_binary_selection": "results/arc_e3/sc25/world_model.py",
+        "game": "sc25",
+        "row_candidate_count": 2
+      }
+    ],
+    "s2_live_path_reachable_confirmed": true
+  },
+  "s2_live_path_reachable_confirmed": true,
+  "schema": "carnot.arc.milestone_441_silent_bug_audit_4795.v1",
+  "silent_bugs_found": [],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4795",
+    "SCENARIO-ARC-WMTE-4795-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4795-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4791_structural_energy_s2_offpath_trust_gate",
+    "experiment_4792_levelup_attempt",
+    "experiment_4794_heldout_first_win_readiness"
+  ]
+}

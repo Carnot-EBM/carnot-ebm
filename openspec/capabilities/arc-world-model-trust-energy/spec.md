@@ -8706,6 +8706,73 @@ Then it writes a blocked artifact with the missing source in
 `preconditions_checked`, no silent-bug fabrication, no markdown append, and a
 stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4795: .441 ARC Null Silent-Bug Audit
+
+Experiment 4795 SHALL audit the `.441` ARC null artifacts before their negative
+verdicts are treated as capability limits. The audit SHALL read
+`results/experiment_4791_structural_energy_s2_offpath_trust_gate.json`,
+`results/experiment_4792_levelup_attempt.json`, and
+`results/experiment_4794_heldout_first_win_readiness.json`. Missing `.441`
+source artifacts SHALL produce a blocked artifact rather than a fabricated
+audit. Experiment 4793 is a success checkpoint refresh and SHALL be excluded
+from the null count unless it emits a terminal null/residual artifact.
+
+The audit SHALL verify that each null's lever was genuinely exercised. For
+S2/Experiment 4791 it SHALL run `scripts/arc_orphan_solver_lint.py`, confirm
+that the structural-energy gate is reachable from the live `E3AgentPolicy`
+import path, and reconstruct the control as the real incumbent binary
+`WorldModelVerifier` exact-accuracy `>=0.5` selection over the identical
+candidate engine sets. The audit SHALL flag S2 as a silent bug if the energy
+gate is not live-path reachable, if the control is not the real binary gate, if
+the energy and binary arms do not use identical candidate sets, or if the
+binary selected candidate cannot be reconstructed as the first candidate
+passing the exact-accuracy threshold or the first candidate when none pass. For
+the level-up no-bank null it SHALL verify non-empty attempted-game rows,
+solution labels, reproduction gates, and same-depth/new-depth accounting. For
+the held-out first-win null it SHALL verify the held-out attempt floor,
+positive-control parity, parity-test success, and the flat `0.04` methodology
+note.
+
+Experiment 4795 SHALL write
+`results/experiment_4795_silent_bug_audit.json` and append a human-readable
+section to `ops/arc_null_silent_bug_audit.md`. The artifact SHALL include
+principle-annotated top-level fields for `honest_verdict`, `nulls_audited`,
+`s2_live_path_reachable_confirmed`, and `inference_substrate`, plus per-null
+verdicts, silent-bug findings, trusted nulls, S2 control checks, the
+`arc_orphan_solver_lint.py` result, preconditions, checksums for audited
+artifacts, duration, random seed, and a stable reproducibility checksum. The
+audit SHALL make no solve, leaderboard, training, or fresh live-inference
+claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `nulls_audited`: principle "count of nulls re-examined."
+- `s2_live_path_reachable_confirmed`: principle "the load-bearing check -- S2's energy gate must be reachable from E3AgentPolicy, else its 'live trust gate' claim is hollow."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4795-SILENT-BUG-AUDIT
+
+Given the `.441` S2, level-up no-bank, and held-out first-win null artifacts
+are present
+When Experiment 4795 cross-checks exercised-evidence fields and runs
+`scripts/arc_orphan_solver_lint.py`
+Then it writes `results/experiment_4795_silent_bug_audit.json`, appends to
+`ops/arc_null_silent_bug_audit.md`, confirms
+`s2_live_path_reachable_confirmed=true` only when the lint passes and the S2
+artifact also recorded a live reachable gate, keeps S2 trusted only when the
+real binary gate is reconstructed over identical candidate sets, and reports
+the complete audit with
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-ARC-WMTE-4795-BLOCKED-PRECONDITION
+
+Given any required `.441` source artifact is missing
+When Experiment 4795 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, no markdown append, and a
+stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts

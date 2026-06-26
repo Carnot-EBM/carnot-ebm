@@ -89,3 +89,23 @@
 | `experiment_4781_structural_energy_s1_contrastive_landscape` | `silent_bug_must_reopen` | `s1_origin_probe_not_refit` | s1_candidate_rows=463<br>s1_n_pos=186<br>s1_n_neg=277<br>origin_matched=True<br>origin_probe_status=origin_matched_single_origin_all_induced<br>origin_probe_refit_on_origin_matched_data=False<br>origin_probe_auroc=0.5<br>shuffled_label_control_auroc=0.493356<br>shuffled_label_resamples=16<br>shuffled_label_module_permutation_loo=True<br>denoising_direction_executed=True<br>denoising_direction_agreement=0.622339<br>n_seeds=10<br>distinct_seed_count=10 |
 | `experiment_4782_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=1<br>exercised_attempts=1<br>solution_label_count=42<br>reproduced_existing=1<br>new_levels_banked=0<br>reproduced_levels=0 |
 | `experiment_4784_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True |
+## Experiment 4795 .441 ARC Null Silent-Bug Audit
+
+- Verdict: `complete_arc_null_silent_bug_audit_3_nulls_0_reopen`
+- Nulls audited: `3`
+- S2 live path reachable confirmed: `True`
+- Silent bugs found: `0`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Null | Verdict | Silent signatures | Evidence |
+|---|---|---|---|
+| `experiment_4791_structural_energy_s2_offpath_trust_gate` | `trustworthy_null` | - | lint_passed=True<br>artifact_live_path_reachable=True<br>artifact_lint_precondition_passed=True<br>e3_policy_imports_trust_energy=True<br>real_binary_accuracy_control=True<br>identical_candidate_sets=True<br>binary_selection_reconstructed=True<br>checked_games=5 |
+| `experiment_4792_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=2<br>solution_label_count=81<br>reproduction_gates=2<br>existing_depth_reproduced=2<br>new_depth_claims=0<br>new_levels_banked=0<br>offline_reproduced=False |
+| `experiment_4794_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True<br>inference_substrate=aggregation_from_upstream_artifacts<br>proxy_cache_used=True |
+
+### S2 Control Check
+
+- Real binary control: `True`
+- Identical candidate sets: `True`
+- Binary selection reconstructed: `True`
+- Checked games: `5`
