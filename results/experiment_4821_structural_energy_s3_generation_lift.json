@@ -1,0 +1,784 @@
+{
+  "duration_s": 3.808,
+  "energy_config": {
+    "dim": 23,
+    "feature_families": [
+      "object_relational",
+      "frame_delta"
+    ],
+    "model": "frozen_linear_pairwise_margin_s1_structural_energy",
+    "no_change_penalty": 500.0,
+    "s2v3_energy_minus_accuracy_delta_ci95": [
+      -0.06276362669828736,
+      0.26410130774644547
+    ],
+    "s2v3_honest_verdict": "complete_structural_energy_s2v3_bounded_corpus_wide",
+    "shape_mismatch_penalty": 1000000.0,
+    "source_experiment": 4781
+  },
+  "experiment": "experiment_4821_structural_energy_s3_generation_lift",
+  "experiment_id": 4821,
+  "field_principles": {
+    "game_results": {
+      "principle": "per-game: winner-rank, banked-by-E, banked-by-bare, was-already-in-bare-pool -- the per-game generation log."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a generation win is success_structural_energy_s3_generation_authorizes_s4, a null is complete_structural_energy_s3_bounded_no_generation_lift, insufficient headroom is complete_structural_energy_s3_inconclusive_no_generation_headroom."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (the energy guides over cached candidates; if the live LLM induces fresh, declare live_llm_inference)."
+    },
+    "live_path_reachable": {
+      "principle": "the goal_energy guidance must be in the E3AgentPolicy plan_in_model import closure (arc_orphan_solver_lint) -- a guidance the live agent cannot reach adds no live value."
+    },
+    "n_headroom_games": {
+      "principle": ">=5 held-out games where the bare explorer banks 0 AND the winner is reachable -- the ONLY games that test generation (positive control: generation COULD help)."
+    },
+    "new_levels_not_in_bare_pool": {
+      "principle": "any banked level must NOT have been already in the bare explorer's pool -- else it is re-ranking, not generation (the second killer)."
+    },
+    "positive_control_passed": {
+      "principle": "the headroom games' winners ARE reachable -- so a null means 'energy could have generated the winner but didn't', not 'no winner existed'."
+    },
+    "random_seed": {
+      "principle": "determinism for the guided/unguided runs + bootstrap."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (energy, games, lambda, seeds) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- a generation lift is the agent solving via its OWN E-guided attempts; offline_reproduced gated."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the energy guides generation, oracle-distinct; required for check_circular_moat_overclaim."
+    },
+    "winners_newly_entering_pool_delta_ci95": {
+      "principle": "the decisive metric -- E-guided minus lambda=0 fraction of winners NEWLY entering the pool; must EXCLUDE 0 for a PASS."
+    }
+  },
+  "game_results": [
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "ar25",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "bp35",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "cd82",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "cn04",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "dc22",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "ft09",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "g50t",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "ka59",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "lf52",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "ls20",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "m0r0",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "r11l",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_counts": [
+          186,
+          186,
+          148,
+          148
+        ],
+        "ranks": [
+          59,
+          161,
+          12,
+          77
+        ],
+        "source": "results/experiment_4700_object_centric_perception_proposal_live.json"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_counts": [
+          186,
+          186,
+          148,
+          148
+        ],
+        "ranks": [
+          59,
+          161,
+          12,
+          77
+        ],
+        "source": "results/experiment_4700_object_centric_perception_proposal_live.json"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "re86",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "s5i5",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "sb26",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "sc25",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "sk48",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "sp80",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "su15",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "tn36",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "tr87",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "tu93",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "vc33",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    },
+    {
+      "banked-by-E": false,
+      "banked-by-bare": false,
+      "banked_by_E": false,
+      "banked_by_bare": false,
+      "bare_offline_reproduced": false,
+      "bare_reached_level": 0,
+      "e_guided_attempts": 4,
+      "e_guided_offline_reproduced": false,
+      "e_guided_reached_level": 0,
+      "game": "wa30",
+      "lambda0_attempts": 4,
+      "positive_control_reachable": true,
+      "was-already-in-bare-pool": false,
+      "was_already_in_bare_pool": false,
+      "winner-rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      },
+      "winner_newly_entered_pool": false,
+      "winner_rank": {
+        "candidate_count": null,
+        "rank": null,
+        "source": "not_measured_for_cached_game"
+      }
+    }
+  ],
+  "honest_verdict": "complete_structural_energy_s3_bounded_no_generation_lift",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "lambda0_control": {
+    "description": "goal_guidance_lambda=0 disables plan_in_model goal_energy guidance",
+    "lambda": 0.0,
+    "matched_control": true
+  },
+  "lambda_guidance": 1.0,
+  "live_path_reachable": true,
+  "min_headroom_games": 5,
+  "n_headroom_games": 24,
+  "new_levels_not_in_bare_pool": [],
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "arc_orphan_solver_lint": {
+      "output_tail": "OK: all solver-like ARC modules are reachable from the live agent path (39 modules in the live closure).",
+      "passed": true
+    },
+    "e3_agent_policy_import": {
+      "output_tail": "",
+      "passed": true
+    },
+    "offline_arcade": {
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00",
+      "passed": true
+    },
+    "source_artifacts_present": {
+      "results/experiment_4640_goal_energy_generation_live.json": true,
+      "results/experiment_4737_goal_energy_candidate_generation_valid_test.json": true,
+      "results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json": true
+    }
+  },
+  "random_seed": 4821,
+  "reproducibility_checksum": "sha256:aed375336853ec36ac78b8e0f7702f321471cb531364171ecfdfb43dcf73575b",
+  "result_path": "results/experiment_4821_structural_energy_s3_generation_lift.json",
+  "retire_if_same_verdict": true,
+  "schema": "carnot.arc_structural_energy_s3_generation_lift_4821.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifacts": {
+    "matched_generation_measurement": "results/experiment_4737_goal_energy_candidate_generation_valid_test.json",
+    "positive_control": "results/experiment_4640_goal_energy_generation_live.json",
+    "s2v3_energy": "results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json",
+    "winner_rank_diagnostic": "results/experiment_4700_object_centric_perception_proposal_live.json"
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-4821",
+    "SCENARIO-ARC-WMTE-4821-GENERATION-LIFT",
+    "SCENARIO-ARC-WMTE-4821-LIVE-PLAN-WIRING"
+  ],
+  "verifier_is_oracle": false,
+  "winners_newly_entering_pool_delta": 0.0,
+  "winners_newly_entering_pool_delta_ci95": [
+    0.0,
+    0.0
+  ]
+}

@@ -7960,6 +7960,83 @@ leaderboard, or solve result
 When the Experiment 4818 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4821: S3 Structural-Energy Generation Lift
+
+Experiment 4821 SHALL run the S3 generation-lift test authorized by the
+S2-v3 corpus-wide bounded selection result. The live `E3AgentPolicy`
+induce->verify->plan path SHALL pass a lower-is-better goal-energy callable
+into `arc_executable_world_model.plan_in_model` when `goal_guidance_lambda > 0`
+and SHALL pass no goal-energy guidance when `goal_guidance_lambda == 0`, making
+lambda zero the matched bare-explorer control. The guidance SHALL be reachable
+from the submitted `E3AgentPolicy` import closure and `scripts/arc_orphan_solver_lint.py`
+SHALL pass before the artifact can claim `live_path_reachable=true`.
+
+The S3 measurement SHALL select held-out games where the matched lambda-zero
+bare explorer banks zero levels and a positive-control source marks the winner
+reachable in the offline environment. If fewer than five such headroom games are
+available, the artifact SHALL stop as
+`complete_structural_energy_s3_inconclusive_no_generation_headroom`. Otherwise
+it SHALL compare the E-guided arm against the matched lambda-zero arm and count
+only winners newly entering the pool under E-guidance that the bare control did
+not produce. Any banked level SHALL be gated by `arc_solver_kit.reproduce` with
+`offline_reproduced=true`; a banked level that was already in the bare pool
+SHALL be recorded as re-ranking, not generation.
+
+Experiment 4821 SHALL write
+`results/experiment_4821_structural_energy_s3_generation_lift.json` with
+principle-annotated fields for `honest_verdict`, `verifier_is_oracle`,
+`live_path_reachable`, `inference_substrate`, `n_headroom_games`,
+`winners_newly_entering_pool_delta_ci95`, `new_levels_not_in_bare_pool`,
+`solve_provenance`, `game_results`, `positive_control_passed`, `random_seed`,
+and `reproducibility_checksum`. The artifact SHALL set `verifier_is_oracle=false`
+and `solve_provenance=live_agent_self_discovery`.
+
+The PASS verdict SHALL be
+`success_structural_energy_s3_generation_authorizes_s4` only if at least five
+headroom games are tested, the E-guided arm banks at least one new
+offline-reproduced level not present in the bare pool, and the bootstrap CI95
+for the winners-newly-entering-pool delta excludes zero. If the CI95 includes
+zero, or every banked level was already in the bare pool, the verdict SHALL be
+`complete_structural_energy_s3_bounded_no_generation_lift`. The artifact SHALL
+set `retire_if_same_verdict=true`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a generation win is success_structural_energy_s3_generation_authorizes_s4, a null is complete_structural_energy_s3_bounded_no_generation_lift, insufficient headroom is complete_structural_energy_s3_inconclusive_no_generation_headroom."
+- `verifier_is_oracle`: principle "MUST be false -- the energy guides generation, oracle-distinct; required for check_circular_moat_overclaim."
+- `live_path_reachable`: principle "the goal_energy guidance must be in the E3AgentPolicy plan_in_model import closure (arc_orphan_solver_lint) -- a guidance the live agent cannot reach adds no live value."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates (the energy guides over cached candidates; if the live LLM induces fresh, declare live_llm_inference)."
+- `n_headroom_games`: principle ">=5 held-out games where the bare explorer banks 0 AND the winner is reachable -- the ONLY games that test generation (positive control: generation COULD help)."
+- `winners_newly_entering_pool_delta_ci95`: principle "the decisive metric -- E-guided minus lambda=0 fraction of winners NEWLY entering the pool; must EXCLUDE 0 for a PASS."
+- `new_levels_not_in_bare_pool`: principle "any banked level must NOT have been already in the bare explorer's pool -- else it is re-ranking, not generation (the second killer)."
+- `solve_provenance`: principle "live_agent_self_discovery -- a generation lift is the agent solving via its OWN E-guided attempts; offline_reproduced gated."
+- `game_results`: principle "per-game: winner-rank, banked-by-E, banked-by-bare, was-already-in-bare-pool -- the per-game generation log."
+- `positive_control_passed`: principle "the headroom games' winners ARE reachable -- so a null means 'energy could have generated the winner but didn't', not 'no winner existed'."
+- `random_seed`: principle "determinism for the guided/unguided runs + bootstrap."
+- `reproducibility_checksum`: principle "content hash of (energy, games, lambda, seeds) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4821-GENERATION-LIFT
+
+Given the offline arcade is available, `E3AgentPolicy` imports, the S2-v3
+structural-energy artifact is present, and at least five positive-control
+headroom games are available
+When Experiment 4821 compares E-guided planning against the lambda-zero matched
+control
+Then it writes
+`results/experiment_4821_structural_energy_s3_generation_lift.json`, records
+per-game winner-rank, E-banked, bare-banked, and already-in-bare-pool fields,
+keeps `verifier_is_oracle=false`, and emits a success verdict only when the
+new-winner delta CI95 excludes zero.
+
+#### SCENARIO-ARC-WMTE-4821-LIVE-PLAN-WIRING
+
+Given an `E3AgentPolicy` has an induced goal predicate and
+`goal_guidance_lambda > 0`
+When the live induce->verify->plan path calls `plan_in_model`
+Then the call includes a `goal_energy` guidance callable; when
+`goal_guidance_lambda == 0`, the same path calls `plan_in_model` without
+goal-energy guidance.
+
 ### REQ-ARC-WMTE-4781: S1 Contrastive Structural Energy Landscape
 
 Experiment 4781 SHALL promote the S0' origin-matched structural signal into a
