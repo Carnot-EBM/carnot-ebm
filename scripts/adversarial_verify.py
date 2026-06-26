@@ -4718,12 +4718,19 @@ def check_engine_selection_candidate_diversity(d: dict[str, Any], flags: list[Fl
     effective, total = _count_effective_selection_games(gr)
     declared = d.get("min_heldout_games")
     declared = int(declared) if _is_finite_number(declared) else 0
-    # HARD independent floor: the artifact's own min_heldout_games may only TIGHTEN
-    # the bar above the floor, never relax it below (closes the self-declared-bar
-    # evasion FN-3 -- the load-bearing flaw).
-    required = max(5, math.ceil(0.6 * total), declared)
+    n_available = d.get("n_available_games")
+    n_available = int(n_available) if _is_finite_number(n_available) else 0
+    # CORPUS-COVERAGE + POWER floor (operator 2026-06-26 "require corpus coverage"):
+    # S2-v2 (exp4801) satisfied the old absolute floor of 5 by testing 5 of 25 games --
+    # an underpowered narrow sample (its delta CI was [-0.478, +0.004] on n=5). The bar
+    # is now max(10, ceil(0.6*corpus)) where corpus = max(games tested, n_available_games
+    # declared) -- so a full ~25-game corpus needs ~15 effective games, and under-declaring
+    # the corpus cannot lower the absolute floor of 10. The agent's min_heldout_games may
+    # only TIGHTEN (the FN-3 independent-floor property is preserved).
+    corpus = max(total, n_available)
+    required = max(10, math.ceil(0.6 * corpus), declared)
     if effective >= required:
-        return  # enough behaviorally-diverse games -- a genuine selection test
+        return  # enough behaviorally-diverse games across the corpus -- a genuine, powered test
     if not _draws_selection_conclusion(d):
         return
     flags.append(
@@ -4731,14 +4738,14 @@ def check_engine_selection_candidate_diversity(d: dict[str, Any], flags: list[Fl
             kind="DEGENERATE_CANDIDATE_POOL",
             severity="critical",
             detail=(
-                f"Engine-selection comparison rests on a degenerate candidate pool: only "
-                f"{effective}/{total} games had behaviorally-diverse candidates (outcome spread "
-                f">{_EFFECTIVE_SPREAD_EPS}), below the required {required} (independent floor; the "
-                f"artifact's min_heldout_games may tighten but not lower it). A selection "
-                f"conclusion ({d.get('honest_verdict')!r}) -- whether bounded-null or PASS -- "
-                f"cannot be drawn from this: a 0-or-negative delta from non-diverse candidates is a "
-                f"NON-TEST, not a genuine result. Re-run with a candidate pool that genuinely spans "
-                f"held-out off-path generalization across >= the required games."
+                f"Engine-selection comparison rests on a degenerate / under-covered candidate pool: "
+                f"only {effective} games had behaviorally-diverse candidates (outcome spread "
+                f">{_EFFECTIVE_SPREAD_EPS}) out of {total} tested / {corpus}-game corpus, below the "
+                f"required {required} (max(10, 0.6*corpus); min_heldout_games may tighten but not "
+                f"lower it). A selection conclusion ({d.get('honest_verdict')!r}) -- bounded-null OR "
+                f"PASS -- cannot be drawn: a 0-or-negative delta from a thin/non-diverse pool is a "
+                f"NON-TEST. Re-run across the FULL corpus (attempt all available games; generate "
+                f"genuinely diverse engines) until >= the required effective games."
             ),
         )
     )

@@ -751,7 +751,7 @@ def test_degenerate_candidate_pool_fires_on_low_effective_games():
 
 def test_degenerate_candidate_pool_does_not_fire_when_pool_is_diverse():
     # all 5 games behaviorally diverse, required 5 -> a genuine test, no flag
-    assert not _run_degen(_s2_artifact([[0.3, 0.7]] * 5))
+    assert not _run_degen(_s2_artifact([[0.3, 0.7]] * 12))
 
 
 def test_degenerate_candidate_pool_does_not_fire_on_non_selection_artifact():
@@ -788,7 +788,7 @@ def test_degen_pass_verdict_on_degenerate_pool_now_flags():
 
 def test_degen_genuinely_diverse_pass_does_not_flag():
     # a PASS on a genuinely diverse pool (5 effective) must NOT flag
-    d = _s2_artifact([[0.3, 0.9]] * 5, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
+    d = _s2_artifact([[0.3, 0.9]] * 12, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
     d["energy_minus_accuracy_delta"] = 0.21
     assert not _run_degen(d)
 
@@ -803,7 +803,7 @@ def test_degen_renamed_delta_field_still_recognized():
 
 def test_degen_field_agnostic_diverse_pool_not_flagged():
     # FP-2: a diverse pool logged under offpath_structural_energy must NOT be mis-flagged
-    assert not _run_degen(_s2_artifact([[10.0, 200.0]] * 5, field="offpath_structural_energy"))
+    assert not _run_degen(_s2_artifact([[10.0, 200.0]] * 12, field="offpath_structural_energy"))
 
 
 def test_degen_non_s2_incidental_energy_delta_not_flagged():
@@ -827,6 +827,23 @@ def test_real_exp4791_still_flags():
     p = _Path(__file__).resolve().parents[2] / "results" / "experiment_4791_structural_energy_s2_offpath_trust_gate.json"
     if p.exists():
         assert _run_degen(_json.load(open(p)))
+
+
+def test_degen_thin_5_game_pool_now_flags():
+    # operator 2026-06-26: a thin 5-game test (even fully diverse) is under-covered -> flags.
+    # This is the S2-v2 (exp4801) reclassification: 5/25 games is too narrow for a verdict.
+    assert _run_degen(_s2_artifact([[0.3, 0.7]] * 5))
+
+
+def test_degen_corpus_coverage_under_declaration_cannot_dodge():
+    # 12 effective games but the declared corpus is 25 -> required = max(10, 15) = 15 -> still flags.
+    d = _s2_artifact([[0.3, 0.7]] * 12)
+    d["n_available_games"] = 25
+    assert _run_degen(d)
+    # and a genuinely corpus-wide test (16 of 25 effective) does NOT flag
+    d2 = _s2_artifact([[0.3, 0.7]] * 16)
+    d2["n_available_games"] = 25
+    assert not _run_degen(d2)
 
 
 def test_effective_selection_games_count():
