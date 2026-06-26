@@ -77,6 +77,169 @@ class CandidateScore:
 
 
 @dataclass(frozen=True)
+class S1StructuralTransitionEnergy:
+    """REQ-ARC-WMTE-4791: frozen S1 lower-is-better off-path transition energy."""
+
+    feature_mean: tuple[float, ...] = (
+        0.32721382,
+        0.12581662,
+        0.25262373,
+        0.43074671,
+        0.09112444,
+        1.0,
+        0.93723486,
+        0.00196306,
+        0.06080208,
+        0.00334773,
+        0.01798484,
+        0.03559435,
+        0.01466377,
+        0.00196967,
+        1.0,
+        0.00196842,
+        -0.00054787,
+        0.00054787,
+        0.00191674,
+        0.00843683,
+        0.00239692,
+        0.0,
+        0.0,
+    )
+    feature_scale: tuple[float, ...] = (
+        0.39143438,
+        0.1052774,
+        0.08983493,
+        0.18484001,
+        0.06381427,
+        1.0,
+        0.16514214,
+        0.01738833,
+        0.16494935,
+        0.02692125,
+        0.05628982,
+        0.10111979,
+        0.04225519,
+        0.00789738,
+        1.0,
+        0.00462703,
+        0.00240489,
+        0.00240489,
+        0.00456805,
+        0.02938024,
+        0.00781244,
+        1.0,
+        1.0,
+    )
+    weights: tuple[float, ...] = (
+        0.43535789,
+        -0.0719261,
+        -0.01053813,
+        0.11925962,
+        -0.18605983,
+        0.0,
+        0.64766456,
+        -0.31110494,
+        -0.61562603,
+        -0.20712673,
+        -0.5342987,
+        -0.59984914,
+        -0.58702932,
+        -0.41766227,
+        0.0,
+        -0.95604276,
+        0.39851227,
+        -0.39851227,
+        -0.91184741,
+        -0.44574168,
+        -0.52151116,
+        0.0,
+        0.0,
+    )
+    no_change_penalty: float = 500.0
+    shape_mismatch_penalty: float = 1.0e6
+
+    @property
+    def energy_config(self) -> dict[str, Any]:
+        return {
+            "source_experiment": 4781,
+            "model": "frozen_linear_pairwise_margin_s1_structural_energy",
+            "feature_families": ["object_relational", "frame_delta"],
+            "dim": len(self.weights),
+            "no_change_penalty": float(self.no_change_penalty),
+            "shape_mismatch_penalty": float(self.shape_mismatch_penalty),
+        }
+
+    def features(
+        self,
+        previous_grid: Any,
+        action: int,
+        data: Any,
+        predicted_grid: Any,
+    ) -> list[float]:
+        from carnot.agentic.arc_value_learner import (
+            cross_game_feature_slices_v3,
+            cross_game_features_v3,
+        )
+
+        action_key: Any = action
+        if isinstance(data, Mapping):
+            if "x" in data and "y" in data:
+                action_key = (int(action), int(data["x"]), int(data["y"]))
+        slices = cross_game_feature_slices_v3()
+        values = [
+            float(v)
+            for v in cross_game_features_v3(
+                predicted_grid,
+                previous_frame=previous_grid,
+                action_id=action_key,
+                goal_frame=None,
+            )
+        ]
+        out: list[float] = []
+        for family in ("object_relational", "frame_delta"):
+            lo, hi = slices[family]
+            out.extend(float(v) for v in values[lo:hi])
+        return out
+
+    def transition_energy(
+        self,
+        previous_grid: Any,
+        action: int,
+        data: Any,
+        predicted_grid: Any,
+    ) -> float:
+        prev = np.asarray(previous_grid)
+        pred = np.asarray(predicted_grid)
+        if pred.shape != prev.shape:
+            return float(self.shape_mismatch_penalty)
+        feats = np.asarray(self.features(prev, action, data, pred), dtype=float)
+        dim = len(self.weights)
+        if feats.size != dim:
+            aligned = np.zeros(dim, dtype=float)
+            n = min(dim, feats.size)
+            if n:
+                aligned[:n] = feats[:n]
+            feats = aligned
+        mean = np.asarray(self.feature_mean, dtype=float)
+        scale = np.asarray(self.feature_scale, dtype=float)
+        weights = np.asarray(self.weights, dtype=float)
+        z = (feats - mean) / np.where(scale < 1.0e-8, 1.0, scale)
+        energy = -float(z @ weights)
+        if np.array_equal(prev, pred):
+            energy += float(self.no_change_penalty)
+        return float(energy)
+
+
+_DEFAULT_S1_OFFPATH_SCORER = S1StructuralTransitionEnergy()
+
+
+def default_s1_offpath_energy_scorer() -> S1StructuralTransitionEnergy:
+    """REQ-ARC-WMTE-4791: live default scorer for E3's hidden-state trust gate."""
+
+    return _DEFAULT_S1_OFFPATH_SCORER
+
+
+@dataclass(frozen=True)
 class ChangeWeightedConsistency:
     """REQ-ARC-WMTE-4604: score only real grid-changing cells."""
 
@@ -243,13 +406,16 @@ def select_trusted_world_model(
     *,
     hidden_state: bool,
     baseline_threshold: float = 0.5,
+    offpath_energy_scorer: Any | None = None,
 ) -> TrustSelection:
-    """REQ-ARC-WMTE-4491: rank by held-out energy, not first prefix threshold."""
+    """REQ-ARC-WMTE-4791: rank by off-path structural energy, not a binary cutoff."""
 
     if not candidates:
         raise ValueError("at least one world-model candidate is required")
 
     prefix, heldout = _split_prefix_heldout(transitions)
+    energy_scorer = offpath_energy_scorer or default_s1_offpath_energy_scorer()
+    offpath_verifier = WorldModelVerifier(list(heldout))
     raw_rows: list[
         tuple[
             WorldModelCandidate,
@@ -260,6 +426,7 @@ def select_trusted_world_model(
             bool,
             bool,
             _CalibrationRow,
+            float,
         ]
     ] = []
     for candidate in candidates:
@@ -279,9 +446,13 @@ def select_trusted_world_model(
                 heldout_accuracy,
                 prefix_change,
                 heldout_change,
-                prefix_accuracy >= float(baseline_threshold),
+                binary_exact_gate_pass(transitions, candidate.engine, threshold=baseline_threshold),
                 binary_exact_gate_pass(transitions, candidate.engine, threshold=baseline_threshold),
                 calibration_row,
+                offpath_verifier.offpath_structural_energy(
+                    candidate.engine,
+                    energy_scorer=energy_scorer,
+                ),
             )
         )
 
@@ -299,6 +470,7 @@ def select_trusted_world_model(
             heldout_best=heldout_accuracy == best_heldout,
             calibration_row=calibration_row,
             calibrator=calibrator,
+            offpath_structural_energy=offpath_structural_energy,
         )
         for (
             candidate,
@@ -309,17 +481,14 @@ def select_trusted_world_model(
             baseline_clears,
             binary_gate_pass,
             calibration_row,
+            offpath_structural_energy,
         ) in raw_rows
     )
-    baseline = next((row for row in rows if row.baseline_clears), None)
+    baseline = next((row for row in rows if row.binary_gate_pass), None)
     selected_score = min(
         rows,
         key=lambda row: (
-            bool(hidden_state) and not row.trust_pass,
             row.trust_energy,
-            -row.heldout_change_consistency,
-            -row.heldout_accuracy,
-            -row.prefix_accuracy,
             row.candidate.name,
         ),
     )
@@ -344,14 +513,19 @@ def _candidate_score(
     heldout_best: bool,
     calibration_row: _CalibrationRow,
     calibrator: TrustEnergyCalibrator,
+    offpath_structural_energy: float | None = None,
 ) -> CandidateScore:
     heldout_miss = 1.0 - heldout_change.consistency
     calibrated_miss = calibrator.predicted_heldout_miss(calibration_row)
     overfit_gap = max(0.0, prefix_change.consistency - heldout_change.consistency)
     degeneracy_penalty = 1.0 if not heldout_change.nondegenerate else 0.0
     exact_miss_tiebreak = 0.05 * (1.0 - heldout_accuracy)
-    trust_energy = heldout_miss + 0.25 * calibrated_miss + 0.25 * overfit_gap
-    trust_energy += degeneracy_penalty + exact_miss_tiebreak
+    if offpath_structural_energy is None:
+        trust_energy = heldout_miss + 0.25 * calibrated_miss + 0.25 * overfit_gap
+        trust_energy += degeneracy_penalty + exact_miss_tiebreak
+    else:
+        del heldout_miss, calibrated_miss, overfit_gap, degeneracy_penalty, exact_miss_tiebreak
+        trust_energy = float(offpath_structural_energy)
     return CandidateScore(
         candidate=candidate,
         prefix_accuracy=prefix_accuracy,
