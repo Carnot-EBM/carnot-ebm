@@ -130,3 +130,28 @@
 - Minimum held-out games: `5`
 - Per-game selections logged: `True`
 - Live-path reachable confirmed: `True`
+## Experiment 4825 .444 ARC Null Silent-Bug Audit
+
+- Verdict: `complete_arc_null_silent_bug_audit_3_nulls_0_reopen`
+- Nulls audited: `3`
+- S3 controls verified: `True`
+- S3 guidance exercised: `True`
+- Silent bugs found: `0`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Null | Verdict | Silent signatures | Evidence |
+|---|---|---|---|
+| `experiment_4821_structural_energy_s3_generation_lift` | `trustworthy_null` | - | matched_lambda0_control=True<br>same_games_seeds_budget=True<br>n_headroom_games=24<br>positive_control_passed=True<br>new_levels_not_in_bare_pool=True<br>live_path_reachable=True<br>s3_guidance_exercised=True<br>differing_headroom_games=18 |
+| `experiment_4822_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=19<br>solution_label_count=832<br>reproduction_gates=19<br>existing_depth_reproduced=19<br>new_depth_claims=0<br>new_levels_banked=0<br>offline_reproduced=False<br>target_game=ka59 |
+| `experiment_4824_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True<br>inference_substrate=aggregation_from_upstream_artifacts<br>proxy_cache_used=True |
+
+### S3 Control Check
+
+- Matched lambda-zero control: `True`
+- Same games/seeds/budget: `True`
+- Headroom games: `24`
+- Reachable-winner positive control: `True`
+- New levels not in bare pool: `True`
+- Live-path reachable: `True`
+- Guidance exercised: `True`
+- Differing headroom games: `18`

@@ -1,0 +1,222 @@
+{
+  "arc_orphan_solver_lint": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (39 modules in the live closure).\n"
+  },
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "audited_artifact_checksums": {
+    "results/experiment_4737_goal_energy_candidate_generation_valid_test.json": "sha256:86e48bd2eaa9c94fd003f2d82486fc812c134caf21287c4d74dd78ca7d119037",
+    "results/experiment_4821_structural_energy_s3_generation_lift.json": "sha256:9230675dee8a6c0192ac1fb2be11cd2403c216717ff736a3f7482906257ed814",
+    "results/experiment_4822_levelup_attempt.json": "sha256:342894698d60d26b3ae3f1e0ac6c997b50f17b3dbb2992c17d176b06dd9d5d1f",
+    "results/experiment_4824_heldout_first_win_readiness.json": "sha256:7142786fa8db964b82292f90795de7cd5093b43edf5fcad6de007f4ecb4b63bf"
+  },
+  "audited_artifacts": [
+    "results/experiment_4821_structural_energy_s3_generation_lift.json",
+    "results/experiment_4822_levelup_attempt.json",
+    "results/experiment_4824_heldout_first_win_readiness.json"
+  ],
+  "duration_s": 0.0001,
+  "experiment": "experiment_4825_silent_bug_audit",
+  "experiment_id": 4825,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined."
+    },
+    "s3_controls_verified": {
+      "principle": "the load-bearing check -- matched lambda=0, NEW-levels-not-re-ranking, reachable-winner positive control; else S3's verdict is uninterpretable."
+    },
+    "s3_guidance_exercised": {
+      "principle": "true only if lambda=1 produced different candidate proposals/search than lambda=0 on >=1 headroom game -- else the S3 0.0 delta is a no-op, not a genuine generation null."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_0_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "exercise_evidence": [
+        "matched_lambda0_control=True",
+        "same_games_seeds_budget=True",
+        "n_headroom_games=24",
+        "positive_control_passed=True",
+        "new_levels_not_in_bare_pool=True",
+        "live_path_reachable=True",
+        "s3_guidance_exercised=True",
+        "differing_headroom_games=18"
+      ],
+      "null_id": "experiment_4821_structural_energy_s3_generation_lift",
+      "s3_control_check": {
+        "artifact_arc_orphan_solver_lint_passed": true,
+        "artifact_live_path_reachable": true,
+        "current_arc_orphan_solver_lint_passed": true,
+        "guidance_exercise_check": {
+          "candidate_pool_differs_from_baseline": true,
+          "candidate_states_scored": 24,
+          "differing_headroom_games": [
+            "ar25",
+            "bp35",
+            "cd82",
+            "cn04",
+            "dc22",
+            "g50t",
+            "ka59",
+            "lf52",
+            "ls20",
+            "m0r0",
+            "re86",
+            "sb26",
+            "sc25",
+            "sk48",
+            "sp80",
+            "tr87",
+            "tu93",
+            "wa30"
+          ],
+          "fingerprint_differences": [],
+          "goal_energy_score_variance": 0.0003908818794621362,
+          "guidance_exercised": true,
+          "real_candidate_state_evidence": true,
+          "source_present": true
+        },
+        "live_path_reachable": true,
+        "matched_lambda0_control": true,
+        "min_headroom_games": 5,
+        "n_headroom_games": 24,
+        "new_levels_not_in_bare_pool": true,
+        "positive_control_passed": true,
+        "s3_controls_verified": true,
+        "s3_guidance_exercised": true,
+        "same_games_seeds_budget": true,
+        "source_match_check": {
+          "baseline_headroom_games": 24,
+          "guided_headroom_games": 24,
+          "per_game_variant_counts_match": true,
+          "same_source_games_and_budget": true,
+          "single_random_seed_recorded": true,
+          "source_present": true,
+          "variant_signatures_match": true
+        }
+      },
+      "s3_controls_verified": true,
+      "s3_guidance_exercised": true,
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "levelup_attempts=19",
+        "solution_label_count=832",
+        "reproduction_gates=19",
+        "existing_depth_reproduced=19",
+        "new_depth_claims=0",
+        "new_levels_banked=0",
+        "offline_reproduced=False",
+        "target_game=ka59"
+      ],
+      "null_id": "experiment_4822_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True",
+        "inference_substrate=aggregation_from_upstream_artifacts",
+        "proxy_cache_used=True"
+      ],
+      "null_id": "experiment_4824_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "milestone_444_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "source_artifacts_present": true
+  },
+  "random_seed": 4825,
+  "reproducibility_checksum": "sha256:bd6440f7af0f3881266f47a29bbcdfb7404395ea48dc246d2d72f0e8d0743ca2",
+  "result_path": "results/experiment_4825_silent_bug_audit.json",
+  "s3_control_check": {
+    "artifact_arc_orphan_solver_lint_passed": true,
+    "artifact_live_path_reachable": true,
+    "current_arc_orphan_solver_lint_passed": true,
+    "guidance_exercise_check": {
+      "candidate_pool_differs_from_baseline": true,
+      "candidate_states_scored": 24,
+      "differing_headroom_games": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "g50t",
+        "ka59",
+        "lf52",
+        "ls20",
+        "m0r0",
+        "re86",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "tr87",
+        "tu93",
+        "wa30"
+      ],
+      "fingerprint_differences": [],
+      "goal_energy_score_variance": 0.0003908818794621362,
+      "guidance_exercised": true,
+      "real_candidate_state_evidence": true,
+      "source_present": true
+    },
+    "live_path_reachable": true,
+    "matched_lambda0_control": true,
+    "min_headroom_games": 5,
+    "n_headroom_games": 24,
+    "new_levels_not_in_bare_pool": true,
+    "positive_control_passed": true,
+    "s3_controls_verified": true,
+    "s3_guidance_exercised": true,
+    "same_games_seeds_budget": true,
+    "source_match_check": {
+      "baseline_headroom_games": 24,
+      "guided_headroom_games": 24,
+      "per_game_variant_counts_match": true,
+      "same_source_games_and_budget": true,
+      "single_random_seed_recorded": true,
+      "source_present": true,
+      "variant_signatures_match": true
+    }
+  },
+  "s3_controls_verified": true,
+  "s3_guidance_exercised": true,
+  "schema": "carnot.arc.milestone_444_silent_bug_audit_4825.v1",
+  "silent_bugs_found": [],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4825",
+    "SCENARIO-ARC-WMTE-4825-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4825-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4821_structural_energy_s3_generation_lift",
+    "experiment_4822_levelup_attempt",
+    "experiment_4824_heldout_first_win_readiness"
+  ]
+}
