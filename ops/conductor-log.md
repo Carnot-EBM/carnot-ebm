@@ -9302,3 +9302,13 @@ The contro |
 | 2026-06-26 02:38 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-CRITICAL | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-26 02:52 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 132 passed, 1 warning in 10.08s |
 | 2026-06-26 03:06 UTC | PHASE D (SOTA-INGESTION -- the .438 frontier) -- t | OK | 105 passed, 1 warning in 6.59s |
+| 2026-06-26 03:21 UTC | PHASE E (CAPSTONE .437) -- aggregate the .437 scor | OK | 87 passed, 1 warning in 9.05s |
+| 2026-06-26 03:23 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:25 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:28 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:30 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:32 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:34 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:36 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:38 UTC | Activation REFUSED: milestone 2026.06.438 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-26 03:40 UTC | Milestone 2026.06.438 activated | OK | 10 tasks queued |
