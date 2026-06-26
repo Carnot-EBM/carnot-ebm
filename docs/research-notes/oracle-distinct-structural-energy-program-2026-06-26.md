@@ -71,6 +71,20 @@ the actual agent) is now authorized** per the staged gate; pre-stage it for `.44
   direction is NOT paused on S2** — it is awaiting the S2-v2 real test. (The `.441 capstone's
   honest_verdict string says "bounded"; that is a mislabel — it correctly SKIPPED the flagged artifact
   and imported no numbers, but the true status is INCONCLUSIVE; the `.442 transition records it as such.)
+- **S2-v2 (`.442 A1, exp4801) — GENUINE BOUNDED (the hardening worked; energy does NOT beat cheap
+  accuracy at engine selection).** A real test this time: **n_effective_games = 5/5** (the enforced
+  diverse pool), `positive_control_passed=True` (the pool contains a candidate the accuracy gate
+  misses — BOUNDED means "energy could have won but didn't"), `candidates_genuinely_induced=True`, and
+  the `DEGENERATE_CANDIDATE_POOL` detector does NOT fire (verified live). Result:
+  `complete_structural_energy_s2v2_bounded_diverse_pool`, **energy−accuracy off-path cell_recall delta
+  = −0.158, CI95 [−0.478, +0.004]** (includes 0, point estimate slightly NEGATIVE). On a genuine
+  diverse test the off-path structural energy ranks induced engines **no better (slightly worse)** than
+  the cheap execution-grounded accuracy gate. **The energy is a real OFFLINE discriminator (S0'/S1) but
+  adds no live value at engine SELECTION.** Per the pre-registered S2 gate, BOUNDED → the next test is
+  **S3 (generation lift)** — a DIFFERENT use (does the energy put a winner INTO the pool the explorer
+  never proposed) and the actual ARC wall (selection ≠ generation; the ledger's finding is ARC is
+  generation-bound). S2-v2 bounded does NOT refute S3, but it IS the first live null — a genuine
+  decision point on whether to proceed to S3 or reconsider.
 
 ---
 
