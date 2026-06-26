@@ -1,20 +1,86 @@
 {
-  "game": "sk48",
-  "reached_level": 2,
-  "moves": 44,
-  "states_expanded": 44,
-  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
-  "hazard_prune": false,
-  "hazard_pruner_stats": null,
+  "dead_ends_recorded": [
+    "sk48: registry_prechecked prior L1 before target L2",
+    "sk48: L2 tail is banked only through the standing GameAdapter/live-path loop",
+    "sk48: registry_prechecked:sk48: recently_deepened_or_operator_skip_list"
+  ],
+  "experiment": "experiment_4751_levelup_selfplay",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced when a level is banked, complete: <game>_delta_identified_no_bank otherwise.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates for this adaptered offline self-play bank; live_llm_inference; 60s floor applies only when the live proposer is actually invoked.",
+    "model_specs": "records the cached Qwen3.5-9B-MTP GGUF precondition and whether it was invoked.",
+    "new_levels_banked": "exactly +1 for the Level-Up Attempt Guarantee; zero is a complete no-bank attempt.",
+    "offline_reproduced": "true only if arc_solver_kit.reproduce re-derives the claimed level offline -- the ONLY counted-level signal (a live-recorded trajectory is provisional).",
+    "preconditions_checked": "records GGUF/arcade checks.",
+    "random_seed": "determinism precondition for reproducibility.",
+    "registry_precheck_passed": "confirms sk48 L2 was not already reachable in the authoritative registry before counting.",
+    "reproduced_levels": "the count of offline-reproduced levels this run -- feeds reproducible_total_levels growth.",
+    "reproducibility_checksum": "content-addressed hash of the reproduction-gated artifact fields.",
+    "reproducible_total_levels": "authoritative registry total after a reproduced bank; Experiment 4751 advances 64->65 only on sk48 L2.",
+    "solve_provenance": "live_agent_self_discovery if the live agent advanced via its OWN attempts + runtime RE; development_proxy for the offline dev twin -- never outer_loop_re.",
+    "verifier_checkpoint": "models/arc_verifier_sk48.json records the trained learned verifier checkpoint from the standing loop.",
+    "verifier_is_oracle": "false -- a learned/energy verifier routes/prunes; if the verifier IS the executable oracle the win is execution_grounded, not a moat."
+  },
+  "honest_verdict": "success: sk48_L2_offline_reproduced",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates for this adaptered offline self-play bank; Qwen3.5-MTP GGUF was prechecked but not invoked",
+  "model_specs": [
+    {
+      "invoked": false,
+      "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "model_name": "Qwen3.5-9B-MTP",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "role": "cached_precondition_not_invoked"
+    }
+  ],
+  "new_levels_banked": 1,
   "offline_reproduced": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "check": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "resource": "qwen3.5_9b_mtp_gguf_cached"
+    },
+    {
+      "available": true,
+      "check": "arc_solver_kit.offline_arcade()",
+      "resource": "arc_solver_kit.offline_arcade"
+    },
+    {
+      "available": true,
+      "check": "scripts/arc_loop_solve.py --help",
+      "resource": "arc_loop_solve_help"
+    },
+    {
+      "available": true,
+      "check": "results/arc_loop_solve_sk48.json",
+      "resource": "standing_loop_result_or_run"
+    }
+  ],
+  "prior_reproduced_level": 1,
+  "random_seed": 4751,
+  "reached_level": 2,
+  "registry_precheck_passed": true,
+  "registry_updated": true,
   "reproduced_levels": 2,
-  "learned_verifier_checkpoint": "models/arc_verifier_sk48.json",
+  "reproducibility_checksum": "5695797d7a0fde50273b3c61c5b71c121ff5f6e1be48204d5ad00854bbc808e7",
+  "reproducible_total_levels": 65,
+  "reproducible_total_levels_before": 64,
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "sk48",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.exp4751.levelup_selfplay.v1",
+  "schema_errors": [],
   "selected_generic_operators": [
     {
-      "operator": "approach_dispatcher_operator",
       "derived_from_games": [
         "exp4592_generation_completeness_wiring"
       ],
+      "operator": "approach_dispatcher_operator",
       "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
       "selector_tags": [
         "approach_dispatch",
@@ -26,11 +92,11 @@
       ]
     },
     {
-      "operator": "value_head_bridge_fix_operator",
       "derived_from_games": [
         "exp4616_offline_live_bridge_disambiguation",
         "exp4652_value_routing_cost_fix_live"
       ],
+      "operator": "value_head_bridge_fix_operator",
       "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
       "selector_tags": [
         "value_head",
@@ -43,10 +109,10 @@
       ]
     },
     {
-      "operator": "cheap_value_routing_cost_fix_operator",
       "derived_from_games": [
         "exp4652_value_routing_cost_fix_live"
       ],
+      "operator": "cheap_value_routing_cost_fix_operator",
       "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
       "selector_tags": [
         "value_head",
@@ -60,10 +126,10 @@
       ]
     },
     {
-      "operator": "dagger_off_path_data_collection_operator",
       "derived_from_games": [
         "exp4665_dagger_distribution_shift_value_routing"
       ],
+      "operator": "dagger_off_path_data_collection_operator",
       "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
       "selector_tags": [
         "dagger",
@@ -76,10 +142,10 @@
       ]
     },
     {
-      "operator": "programmatic_expert_trust_weighting_operator",
       "derived_from_games": [
         "exp4677_poe_world_factored_subgoal_planner"
       ],
+      "operator": "programmatic_expert_trust_weighting_operator",
       "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
       "selector_tags": [
         "programmatic_expert",
@@ -92,10 +158,10 @@
       ]
     },
     {
-      "operator": "controllable_novelty_embedding_operator",
       "derived_from_games": [
         "exp4688_controllable_novelty_proposal_policy_live"
       ],
+      "operator": "controllable_novelty_embedding_operator",
       "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
       "selector_tags": [
         "controllable_novelty",
@@ -108,13 +174,13 @@
       ]
     },
     {
-      "operator": "per_level_reinduction_operator",
       "derived_from_games": [
         "lp85",
         "m0r0",
         "sp80",
         "vc33"
       ],
+      "operator": "per_level_reinduction_operator",
       "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
       "selector_tags": [
         "reinduction",
@@ -125,13 +191,13 @@
       ]
     },
     {
-      "operator": "llm_proposer_reinduction_operator",
       "derived_from_games": [
         "lp85",
         "m0r0",
         "sp80",
         "vc33"
       ],
+      "operator": "llm_proposer_reinduction_operator",
       "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
       "selector_tags": [
         "reinduction",
@@ -143,11 +209,11 @@
       ]
     },
     {
-      "operator": "env_adaptive_resolve_operator",
       "derived_from_games": [
         "sc25",
         "exp4580_live_submission_gap_close"
       ],
+      "operator": "env_adaptive_resolve_operator",
       "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
       "selector_tags": [
         "env_adaptive",
@@ -159,10 +225,10 @@
       ]
     },
     {
-      "operator": "verifier_router_candidate_ranking_operator",
       "derived_from_games": [
         "exp4556_cached_generic_transfer"
       ],
+      "operator": "verifier_router_candidate_ranking_operator",
       "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
       "selector_tags": [
         "verifier_router",
@@ -175,10 +241,10 @@
       ]
     },
     {
-      "operator": "world_model_trust_energy_gate_operator",
       "derived_from_games": [
         "exp4604_world_model_trust_energy"
       ],
+      "operator": "world_model_trust_energy_gate_operator",
       "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
       "selector_tags": [
         "world_model",
@@ -190,11 +256,11 @@
       ]
     },
     {
-      "operator": "persistent_action_effect_memory_operator",
       "derived_from_games": [
         "exp4568_clickability_action_effect_predictor",
         "exp4629_graduate_action_effect_predictor_live"
       ],
+      "operator": "persistent_action_effect_memory_operator",
       "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
       "selector_tags": [
         "action_effect",
@@ -210,11 +276,11 @@
       ]
     },
     {
-      "operator": "online_warm_action_effect_controller_operator",
       "derived_from_games": [
         "exp4726_online_action_learning_driver_valid_test",
         "exp4727_active_probe_disambiguation"
       ],
+      "operator": "online_warm_action_effect_controller_operator",
       "purpose": "Reuse the .435 online-warm action-effect controller: combine leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, keep the executable win-check outside ranking, and report first-win/efficiency transfer before any solve claim.",
       "selector_tags": [
         "online_action_learning",
@@ -229,11 +295,11 @@
       ]
     },
     {
-      "operator": "graded_goal_energy_search_heuristic_operator",
       "derived_from_games": [
         "exp4020_goal_induction_separation",
         "exp4640_goal_energy_generation_live"
       ],
+      "operator": "graded_goal_energy_search_heuristic_operator",
       "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
       "selector_tags": [
         "goal_energy",
@@ -245,10 +311,10 @@
       ]
     },
     {
-      "operator": "energy_fitness_qd_generator_operator",
       "derived_from_games": [
         "exp4738_energy_fitness_qd_generation_valid_test"
       ],
+      "operator": "energy_fitness_qd_generator_operator",
       "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
       "selector_tags": [
         "energy_qd",
@@ -261,11 +327,11 @@
       ]
     },
     {
-      "operator": "object_centric_representation_builder_operator",
       "derived_from_games": [
         "exp4700_object_centric_perception_proposal_live",
         "exp4701_amortized_exploration_prior_go_explore_live"
       ],
+      "operator": "object_centric_representation_builder_operator",
       "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
       "selector_tags": [
         "object_centric",
@@ -277,13 +343,13 @@
       ]
     },
     {
-      "operator": "object_centric_digest",
       "derived_from_games": [
         "g50t",
         "lp85",
         "tn36",
         "ka59"
       ],
+      "operator": "object_centric_digest",
       "purpose": "Connected-component object summary for routing, grounding, and active data.",
       "selector_tags": [
         "object",
@@ -293,13 +359,13 @@
       ]
     },
     {
-      "operator": "active_data_collection",
       "derived_from_games": [
         "ar25",
         "ka59",
         "ft09",
         "sc25"
       ],
+      "operator": "active_data_collection",
       "purpose": "Balanced action/object coverage plan for offline transition collection.",
       "selector_tags": [
         "active_data",
@@ -309,7 +375,6 @@
       ]
     },
     {
-      "operator": "graph_astar_action_cost",
       "derived_from_games": [
         "tu93",
         "lp85",
@@ -320,6 +385,7 @@
         "sk48",
         "su15"
       ],
+      "operator": "graph_astar_action_cost",
       "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
       "selector_tags": [
         "graph_explore",
@@ -330,13 +396,6 @@
       ]
     }
   ],
-  "reproduction_gate": {
-    "game": "sk48",
-    "reached_level": 2,
-    "claimed_level": 2,
-    "reproduced": true,
-    "mode": "offline_reproduction_gate_no_quota"
-  },
   "solution_labels": [
     "{\"action\":1}",
     "{\"action\":1}",
@@ -383,140 +442,43 @@
     "{\"action\":4}",
     "{\"action\":4}"
   ],
-  "solution": [
-    {
-      "action": 1
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 2
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 3
-    },
-    {
-      "action": 1
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    },
-    {
-      "action": 4
-    }
-  ],
   "solve_provenance": "development_proxy",
-  "mode": "standing_arc_loop_offline_no_quota"
+  "spec_refs": [
+    "REQ-ARC-WMTE-4751",
+    "SCENARIO-ARC-WMTE-4751-REGISTRY-PRECHECK",
+    "SCENARIO-ARC-WMTE-4751-REPRODUCTION-GATED-BANK",
+    "SCENARIO-ARC-WMTE-4751-REGISTRY-GATE"
+  ],
+  "standing_loop_result_path": "results/arc_loop_solve_sk48.json",
+  "states_expanded": 44,
+  "target_game": "sk48",
+  "target_level": 2,
+  "target_selection": {
+    "dead_ends_seen": [
+      "sk48: recently_deepened_or_operator_skip_list"
+    ],
+    "registry_game_count": 25,
+    "registry_level_before": 1,
+    "registry_precheck_passed": true,
+    "registry_total_before": 64,
+    "rotation_rule": "count only level > registry levels_reproduced and reject duplicate L2+ rows.",
+    "selected": "sk48",
+    "selection_reason": "sk48 is a shallow solved public game with reproduced L1 and an unbanked L2 live path.",
+    "target_level": 2
+  },
+  "verifier_checkpoint": "models/arc_verifier_sk48.json",
+  "verifier_delta": {
+    "after_sha256": "be50db86b8c30a4e226b12860b92b25b8b442414f5d6f43ef50b5b524c005920",
+    "before_sha256": "be50db86b8c30a4e226b12860b92b25b8b442414f5d6f43ef50b5b524c005920",
+    "checkpoint_path": "models/arc_verifier_sk48.json",
+    "negative_trace_notes": [
+      "sk48: registry_prechecked prior L1 before target L2",
+      "sk48: L2 tail is banked only through the standing GameAdapter/live-path loop",
+      "sk48: registry_prechecked:sk48: recently_deepened_or_operator_skip_list"
+    ],
+    "positive_trace_steps": 44,
+    "sha_changed": false,
+    "updated": true
+  },
+  "verifier_is_oracle": false
 }

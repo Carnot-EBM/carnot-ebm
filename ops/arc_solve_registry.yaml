@@ -1178,12 +1178,43 @@ games:
     the registered deepen target is the already reproduced L1->L2 increment.
 - game: sk48
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: first-solve L1 adapter-free (E1); 14-action sequence replays offline.
-  solver: results/arc_explore_trajectory_sk48.json (graph_explore_solve_v2 + salience/mask,
-    14 actions).
-  reproduce: re-gated reproduced=True L1.
-  gotchas: []
+  levels_reproduced: 2
+  mechanic_class: chain_color_reorder
+  win_condition: >-
+    L1 chain navigation plus L2 chain-segment color/order matching: replay the
+    14-action L1 prefix, then the 30-action L2 tail registered in the GameAdapter
+    so each active chain segment matches its paired guide.
+  action_model: >-
+    Keyboard ACTION1-4 movement over the active chain head/selector; labels are
+    compact JSON action rows emitted by the SK48 GameAdapter.
+  solver: >-
+    GameAdapter _sk48 in python/carnot/agentic/arc_game_adapters.py plus
+    scripts/arc_loop_solve.py --game sk48 --target-level 2 --no-hazard-prune.
+  reproduce: >-
+    Exp4751 results/experiment_4751_levelup_selfplay.json re-gated
+    results/arc_loop_solve_sk48.json offline_reproduced=True, reached_level=2,
+    banked +1 over the prior L1 registry row, checksum 5695797d7a0fde50273b3c61c5b71c121ff5f6e1be48204d5ad00854bbc808e7.
+  learned_verifier_checkpoint: models/arc_verifier_sk48.json
+  gotchas:
+  - Replay the L1 prefix before the L2 tail; solving L2 from reset is not the
+    live-path mechanism being counted.
+  - State keys include active chain head, paired chain rows, guide colors, and
+    selector/counter fields.
+  - The learned verifier checkpoint routes/ranks future search only; the
+    executable offline reproduction gate remains the oracle-distinct authority.
+  dead_ends:
+  - 'sk48: registry_prechecked prior L1 before target L2'
+  - 'sk48: L2 tail is banked only through the standing GameAdapter/live-path loop'
+  - 'sk48: registry_prechecked:sk48: recently_deepened_or_operator_skip_list'
+  latest_exp4751_levelup_selfplay:
+    artifact: results/experiment_4751_levelup_selfplay.json
+    loop_artifact: results/arc_loop_solve_sk48.json
+    offline_reproduced: true
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: models/arc_verifier_sk48.json
+    target_rotation: shallow_solved_sk48_L1_to_L2_live_path
+    reproducibility_checksum: 5695797d7a0fde50273b3c61c5b71c121ff5f6e1be48204d5ad00854bbc808e7
 - game: ar25
   reproducibility: reproduced
   levels_reproduced: 3
@@ -1712,7 +1743,7 @@ games:
     verifier_checkpoint: models/arc_verifier_bp35.json
     target_rotation: clean_L1_to_L2_not_deepened_in_429_433
     reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
-reproducible_total_levels: 64
+reproducible_total_levels: 65
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
