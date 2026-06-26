@@ -7512,6 +7512,75 @@ When Experiment 4761 runs
 Then it writes a blocked artifact with the failed precondition recorded, no
 claimed AUROC, `verifier_is_oracle=false`, and a reproducibility checksum.
 
+### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
+
+Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the
+structural-energy build after the S0 transition-correctness probe. The workflow
+SHALL verify that `research-studying.md` and `research-references.md` are
+present, read the already-discovered corpus for structural-energy and
+object-centric world-model references, emit focused `scripts/sweep_clusters.py`
+cluster URLs for energy-based models and world-model induction, run
+`scripts/sweep_semscholar.py` on focused structural-energy queries, and use
+low-concurrency WebSearch/WebFetch plus direct arXiv checks to verify the top
+five to eight source papers. The workflow SHALL NOT invoke `/deep-research`,
+load models, train, submit to a leaderboard, or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4768 SHALL write
+`results/experiment_4768_sota_ingestion_structural_energy.json` and update
+`research-studying.md` with an idempotent Exp 4768 section marked INGESTED. The
+artifact SHALL include the required fields `honest_verdict`, `methods_mapped`,
+`arxiv_ids_cited`, `flagged_for_v439`, `inference_substrate`,
+`preconditions_checked`, `citations`, `fresh_sweep`, `s0_context`,
+`note_path`, `random_seed`, `duration_s`, `reproducibility_checksum`, and
+`field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_structural_energy_mapped`; `inference_substrate` SHALL
+equal `aggregation_from_upstream_artifacts`; and `flagged_for_v439` SHALL name
+the strongest method or methods for the `.439` planner. The mapping SHALL cover
+S1 through S4 of the structural-energy program: contrastive structural energy,
+off-path trust gating, generation lift, and cross-game/family transfer
+survival. The mapping SHALL state what each method takes over from the current
+stack and where it fails.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_structural_energy_mapped."
+- `methods_mapped`: principle "the strongest 3-5 methods mapped onto S1-S4 -- the actionable output, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID -- an ingestion with no citations is fabrication."
+- `flagged_for_v439`: principle "the strongest method(s) flagged so the .439 planner reads the mapping (discover->ingest->plan->experiment)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts; 0.0001s floor."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`2006.15055`, `2301.08243`, `2307.01668`, `2505.10819`, `2507.04920`,
+`2510.04542`, `2602.02900`, and `2605.05138`. The method map SHALL contain
+three to five methods, and every method claim SHALL cite only IDs from
+`arxiv_ids_cited`. The note SHALL identify Slot Attention/object-centric slots,
+PoE-World/product-of-experts factors, MC-ETM/diffusion-contrastive transition
+energies, JEPA-class representation prediction, executable/code world-model
+induction, and object-centric denoising diffusion priors as the ingested
+literature informing the S1-S4 build.
+
+#### SCENARIO-ARC-WMTE-4768
+
+Given the research files are present, the reliable sweep helpers are available,
+Semantic Scholar is attempted through the reliable script, and the top arXiv
+sources are HTTP-200 verified
+When Experiment 4768 runs
+Then it writes
+`results/experiment_4768_sota_ingestion_structural_energy.json`, records that
+`/deep-research` was not invoked, maps three to five SOTA methods onto S1-S4
+with real arXiv IDs, updates `research-studying.md` with the Exp 4768 mapping
+note, and flags the strongest candidate inputs for `.439`.
+
+#### SCENARIO-ARC-WMTE-4768-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID, uses
+a stale `.438` roadmap flag, or claims a model-load, training, leaderboard, or
+solve result
+When the Experiment 4768 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4765: .438 ARC Null Silent-Bug Audit
 
 Experiment 4765 SHALL audit the `.438` ARC null and no-bank residual artifacts

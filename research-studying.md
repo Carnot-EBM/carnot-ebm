@@ -10,7 +10,53 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4768-SOTA-INGESTION-STRUCTURAL-ENERGY-START -->
+## 2026-06-26 Exp 4768 - .438 structural-energy SOTA ingestion for S1-S4 - INGESTED
+
+**Status:** INGESTED into `results/experiment_4768_sota_ingestion_structural_energy.json`.
+
+**Preconditions:** `research-studying.md` and `research-references.md` were
+present. `scripts/sweep_clusters.py` emitted the EBM and neural-guided/world
+model cluster URLs. `scripts/sweep_semscholar.py` was run on three focused
+queries and returned HTTP 429, so no S2-only source was promoted.
+Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks verified the
+top eight papers listed below. `/deep-research` was not invoked. No model load,
+training, leaderboard submission, or solve claim was made; this is a no solve claim
+ingestion note.
+
+**S0 context imported:** `results/experiment_4761_structural_energy_s0_core_bet_probe.json` reports
+`complete: structural_energy_s0_retired_loo_0.746_null_or_leaky` with an origin-probe leak,
+so the .439 planner should treat the S1-S4 entries as candidate inputs that
+must address provenance leakage before any continuation claim.
+
+**Verified source set:**
+- arXiv:2006.15055 -- Object-Centric Learning with Slot Attention
+- arXiv:2301.08243 -- Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture
+- arXiv:2307.01668 -- Training Energy-Based Models with Diffusion Contrastive Divergences
+- arXiv:2505.10819 -- PoE-World: Compositional World Modeling with Products of Programmatic Experts
+- arXiv:2507.04920 -- Object-centric Denoising Diffusion Models for Physical Reasoning
+- arXiv:2510.04542 -- Code World Models for General Game Playing
+- arXiv:2602.02900 -- Manifold-Constrained Energy-Based Transition Models for Offline Reinforcement Learning
+- arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents
+
+**SOTA -> S1-S4 structural-energy mapping:**
+- **Slot-factor contrastive transition energy** (arXiv:2006.15055, arXiv:2505.10819, arXiv:2602.02900, arXiv:2307.01668): maps to S1, S2; Takes over the S0 feature-only probe by making object_relational and frame_delta features into a contrastive energy landscape that can rank candidate transitions and induced engines. Fails when: Slot binding is unstable across ARC frames, the energy keeps learning induced-vs-real provenance like the S0 origin probe, or near-miss negatives are too sparse to harden the contrastive objective.
+- **Product-of-experts executable world-model trust gate** (arXiv:2505.10819, arXiv:2510.04542, arXiv:2605.05138): maps to S2, S3, S4; Takes over the binary executable-model verifier by ranking factorized candidate engines on off-path structural energy where the environment win-check is unavailable. Fails when: The synthesized factors overfit a prefix, hidden-state inference is wrong, or executable-model verification leaks private solution facts instead of measuring transition consistency.
+- **JEPA-style latent transition residual energy** (arXiv:2301.08243, arXiv:2602.02900): maps to S1, S4; Takes over raw frame-marginal controls by predicting semantically meaningful target representations from context/action structure. Fails when: The representation discards exact cell-level consequences, the learned latent becomes a value head in disguise, or cross-family transfer drops like the prior oracle-distinct failures.
+- **Object-centric denoising structural prior** (arXiv:2507.04920, arXiv:2307.01668, arXiv:2602.02900): maps to S3, S4; Takes over static reranking by perturbing candidate transition trajectories toward low-energy, object-consistent alternatives that the bare explorer did not enumerate. Fails when: The diffusion prior smooths away discrete ARC mechanics, conditioning accidentally uses observed goal states as an oracle, or every lift is only reranking a winner already present in the pool.
+
+flagged_for_v439: slot_factor_transition_energy_rerun_after_s0_origin_probe_leak_guard (arXiv:2006.15055 + arXiv:2505.10819 + arXiv:2602.02900 + arXiv:2307.01668)
+flagged_for_v439: poe_code_world_model_trust_gate_with_cwm_hidden_state_planning (arXiv:2505.10819 + arXiv:2510.04542 + arXiv:2605.05138)
+
+**Bottom line for .439:** start with the slot/factor contrastive transition
+energy rerun, using Slot Attention object bindings plus PoE/programmatic
+factors and MC-ETM-style hard near-miss negatives. In parallel, keep the
+PoE/code-world-model trust gate ready as the strongest S2-S3 integration path
+if the leak-hardened S1 energy clears the S0 origin-probe failure mode.
+<!-- EXP4768-SOTA-INGESTION-STRUCTURAL-ENERGY-END -->
+
 <!-- EXP4758-SOTA-INGESTION-START -->
+
 ## 2026-06-26 Exp 4758 - .437 structured world-model + grounded-goal SOTA ingestion - INGESTED
 
 **Status:** INGESTED into `results/experiment_4758_sota_ingestion.json`.
