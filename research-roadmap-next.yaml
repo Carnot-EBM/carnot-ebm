@@ -272,15 +272,24 @@ tasks:
     \ present; Qwen generator on the iGPU (NEVER 3090s). Scope the\n     game/seed count so the run finishes\
     \ under the codex wall-clock cap (or checkpoint/resume).\n  1. Run the held-out first-win measurement\
     \ with periodic checkpointing; on cap, emit the partial artifact.\n  2. Report held-out first-win\
-    \ rate + CI, vs the prior best.\n\nFALSIFIABLE GATE: a non-fabricated held-out first-win rate with\
-    \ CI on >=N held-out variants; a capped run still\nemits a partial-but-usable artifact (not a blocked-on-timeout\
-    \ with no data).\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
-    \ \"terminal prefix; a measured rate is complete_/success_.\"\n  heldout_first_win_rate:\n    principle:\
-    \ \"the deadline-relevant generalization signal -- held-out, not in-sample.\"\n  inference_substrate:\n\
-    \    principle: \"live_llm_inference; 60s floor.\"\n  checkpoint_emitted:\n    principle: \"a capped\
-    \ run must still emit a usable partial artifact -- the exp4729 wall-clock-cap lesson.\"\n  preconditions_checked:\n\
-    \    principle: \"records generator/harness checks; a missing resource emits blocked_, never a fabricated\
-    \ rate.\"\n"
+    \ rate + CI, vs the prior best.\n  3. SUBSTRATE HONESTY (exp4752 .437 A4 false-positive fix): if you\
+    \ RESUME from a checkpoint / lever-cache and do NOT run the live agent this turn, declare inference_substrate=aggregation_from_upstream_artifacts\
+    \ (0.0001s floor), NOT live_llm_inference -- otherwise the DURATION_TOO_SHORT floor false-positive-flags\
+    \ a legitimately-fast cache-hit. Only declare live_llm_inference if you actually ran the agent live\
+    \ (>=60s). For a FLAT null (held-out rate == baseline 0.04), add a null_delta_methodology_note + positive_control_passed=true\
+    \ so the flat==baseline agreement is read as a genuine null, not a TAUTOLOGY bug.\n\nFALSIFIABLE GATE:\
+    \ a non-fabricated held-out first-win rate with CI on >=N held-out variants; a capped run still\n\
+    emits a partial-but-usable artifact (not a blocked-on-timeout with no data).\n\nREQUIRED ARTIFACT\
+    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; a measured rate\
+    \ is complete_/success_.\"\n  heldout_first_win_rate:\n    principle: \"the deadline-relevant generalization\
+    \ signal -- held-out, not in-sample.\"\n  inference_substrate:\n    principle: \"live_llm_inference\
+    \ (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/lever-cache\
+    \ hit aggregated an existing proxy -- declare what actually ran (Inference-Substrate Declaration Discipline).\"\
+    \n  checkpoint_emitted:\n    principle: \"a capped run must still emit a usable partial artifact --\
+    \ the exp4729 wall-clock-cap lesson.\"\n  null_delta_methodology_note:\n    principle: \"for a flat\
+    \ null (held-out rate == baseline 0.04), explains why the agreement is a genuine no-improvement result,\
+    \ not a TAUTOLOGY bug (the exp4752 false-positive).\"\n  preconditions_checked:\n    principle: \"\
+    records generator/harness checks; a missing resource emits blocked_, never a fabricated rate.\"\n"
   milestone: 2026.06.438
   agent_type: codex
   model: gpt-5.5
