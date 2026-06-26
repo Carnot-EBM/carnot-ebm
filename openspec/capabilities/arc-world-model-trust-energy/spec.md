@@ -5351,6 +5351,54 @@ summarizes positive or null transfer honestly, sets
 `offline_reproduced_new_level=false`, and uses
 `solve_provenance=development_proxy` with `verifier_is_oracle=false`.
 
+### REQ-ARC-WMTE-4754: Submitted .437 Lever Config Integration Confirmation
+
+Experiment 4754 SHALL confirm that the `.437` structured-engine and fixed
+detector levers are reflected in the scored submitted agent configuration only
+when their A1/A2 validation artifacts authorize them. Before any confirmation
+claim, it SHALL verify the cached Qwen3.5-9B-MTP GGUF, offline arcade
+initialization, and `make_carnot_agent` import preconditions. Missing required
+resources SHALL produce a terminal `blocked_<resource>` artifact without
+fabricating integration or readiness.
+
+The experiment SHALL inspect `arc_competition_agent.py` for the
+`CARNOT_ARC_STRUCTURED_ENGINE` live hook and the fixed detector/trust-metric
+hook, derive the submitted env-gate state from the `.437` A1/A2 artifacts,
+construct the submitted `make_carnot_agent` entrypoint under that env-gate
+state, run one offline smoke step, confirm the frozen Qwen3.5-9B-MTP generator
+declaration remains intact, and run `scripts/arc_orphan_solver_lint.py`.
+
+The terminal artifact
+`results/experiment_4754_submitted_agent_config.json` SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `preconditions_checked`,
+`agent_constructs_and_smoke_runs`, and `submission_package_ready`, plus
+`env_gate_state`, `levers_integrated`, `frozen_generator_intact`,
+`arc_orphan_solver_lint`, `submitted_agent_config`,
+`submitted_to_leaderboard=false`, `random_seed`, `reproducibility_checksum`,
+and `duration_s`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; an integration-confirmed run is success_/complete_."
+- `inference_substrate`: principle "live_llm_inference."
+- `preconditions_checked`: principle "records GGUF/arcade checks."
+- `agent_constructs_and_smoke_runs`: principle "the agent entrypoint builds + a smoke step runs offline -- the integration gate."
+- `submission_package_ready`: principle "True only if OPERATOR-ready; this task NEVER submits (operator-only external publication)."
+
+#### SCENARIO-ARC-WMTE-4754
+
+**Given** the Qwen3.5-9B-MTP GGUF cache, offline arcade initialization, and
+`make_carnot_agent` import preconditions pass
+**When** Experiment 4754 derives the `.437` env-gate state, constructs the
+submitted agent entrypoint, runs one offline smoke step, and runs
+`arc_orphan_solver_lint.py`
+**Then** it writes `results/experiment_4754_submitted_agent_config.json` with a
+terminal success/complete verdict, records whether the `.437` levers are on or
+unchanged, confirms the frozen generator declaration, sets
+`submitted_to_leaderboard=false`, and sets `submission_package_ready=true` only
+when the smoke, lint, package-path, and frozen-generator checks are green.
+
 ### REQ-ARC-WMTE-4680: Persist Milestone Generation Primitive And Transfer Null
 
 Experiment 4680 SHALL persist the strongest reusable `.432` A1/A2 generation
