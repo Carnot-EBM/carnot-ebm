@@ -4,6 +4,56 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-06-26 (MANDATORY-NEXT-MILESTONE, operator-directed "ignoring the deadline, we MUST pursue oracle-distinct structural energy"): S0 — the cheap decisive core-bet probe
+
+**Origin:** operator directive 2026-06-25 — the audit (`wf_88e2a7a7-2fe`) confirmed that
+energy-as-RFT-teacher and every other current energy formulation null on ARC for ONE root cause
+(frame-marginal features), and that the ONLY direction unlocking "extend with energy" is the
+**oracle-distinct STRUCTURAL energy** (north-star §5 / GAP-ARCH-FEATURES). Full staged program +
+adversarial corrections: `docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md`
+(workflow `wf_f046ff34-c0a`, refuted_count=3 on the first-experiment draft, corrections folded).
+**Build S0 FIRST; it retires the entire direction in one day if the core bet is false.**
+
+**The foothold (do NOT re-derive):** `exp4545` already crossed chance cross-game — structural
+features lift LOO AUROC 0.503→0.674, CI [0.606,0.745] excl 0.5, `verifier_is_oracle=False`
+(`object_relational` + `frame_delta` are the transferring families; action/predicate are ~dead).
+BUT that is on a **win-reachability** label (a selector signal exp4700 proved unselectable). S0
+tests the RIGHT target: **held-out transition-correctness**, cross-game.
+
+**THE TASK (S0).** From banked transitions, fit an induced engine on a prefix, evaluate on
+**held-out** off-path transitions. Build an oracle-FREE transition-correctness dataset:
+positive = engine correctly predicts the held-out s'; negative = engine **mispredicts** (a REAL
+near-miss — NOT a synthetic corruption of the ground-truth grid). Compute ONLY the
+proven-transferring structural families (`object_relational`, `frame_delta` from
+`arc_value_learner.py:433 cross_game_features_v3`); fit a logistic head; run the existing
+`arc_cross_game_verifier_train.py --discriminative` LOO harness RE-TARGETED to
+transition-correctness. No GPU, no LLM, `inference_substrate: verifier_ensemble_against_cached_candidates`.
+
+**Falsifiable gate (the only non-circular evidence = cross-game LOO):** LOO AUROC on the
+real-near-miss transition-correctness label, bootstrap CI95, must clear BOTH (a) TRUE chance 0.5
+(CI95 lower bound > 0.5 — note **0.5442 is NOT chance; it is the retired GAP-3 stage-2 EBM's
+recorded AUROC**, a harder ceiling to also beat) AND (b) the v2 frame-marginal control on
+identical folds (structural−marginal delta CI95 excludes 0). Anti-single-lever: ≥1 genuinely
+structural family (object_relational or a conservation term) independently clears 0.55 LOO.
+Mandatory leak audit: origin-probe (induced-vs-real) AUROC < 0.6. Positive control: in-sample > 0.60.
+`retire_if_same_verdict: true` — if CI95 includes 0.5, OR structural−marginal delta CI95 includes 0,
+OR the origin-probe leaks, **the entire energy-guided direction retires** (one day of cost).
+
+**prior_failures (MANDATORY — GAP-3 stage2/stage2v2 is RETIRED on `ops/exclusion_manifest.yaml:485`):**
+- experiment: `arc3_gap3_stage2_transition_ebm` — verdict `does_not_beat_vote macroauroc_0.5442`.
+- what is different (all three required): (1) **real induced-engine-misprediction near-miss
+  negatives on LIVE game (s,a,s') transitions**, NOT synthetic-corruption negatives on ARC-1 puzzle
+  candidate grids (GAP-3 proved synthetic corruptions are aced while real near-misses, 91.5% of
+  errors, score below chance); (2) **held-out-generalization target**, NOT win-reachability; (3)
+  structural-only features. Without these three, the conductor MUST GATE_BLOCK as a doomed rerun.
+
+**Agent routing:** `agent_type: codex` (ARC sprint default; numerical/harness task with a
+deterministic gate). `verifier_is_oracle: false` REQUIRED in the artifact + must pass
+`check_circular_moat_overclaim`. If S0 passes, S1–S4 (contrastive energy → off-path trust gate →
+generation-into-pool → cross-family transfer) follow per the spec; this is the multi-week
+"extend-with-energy" build the operator authorized.
+
+
 ### 2026-06-25 (INFRASTRUCTURE — ~~operator decision needed~~ RESOLVED 2026-06-25 via `810b6f451`): exp4729 (held-out first-win SCORE) DETERMINISTICALLY exceeds the codex 4800s hard wall-clock cap
 
 **~~RESOLVED 2026-06-25~~ (commit `810b6f451`, outer-loop):** implemented recommended-fix (b) — checkpoint/resume + a soft ELAPSED-time budget (`EXP4729_SOFT_BUDGET_S`, default 4200s, ~600s under the hard cap). The script now checkpoints the attempt ledger after each game (atomic write), resumes by skipping done games, and on a budget stop emits a schema-valid `partial: true` artifact + exit 0 while keeping the ledger; a subsequent run finishes the rest. SCORE is byte-identical to a single uncapped run (proven by a full-run==resumed-run equivalence test). 20 tests pass, ruff clean. The original observed history is preserved below.
