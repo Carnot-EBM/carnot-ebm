@@ -1,0 +1,113 @@
+{
+  "arc_orphan_solver_lint": {
+    "skipped": "blocked_arcade_import"
+  },
+  "duration_s": 0.002128,
+  "experiment": "experiment_4753_persist_transfer",
+  "experiment_id": 4753,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; characterization-complete is complete_."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference."
+    },
+    "offline_reproduced_new_level": {
+      "principle": "false expected -- this is characterization, NOT a level-bank (no over-claim)."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade + upstream-artifact checks."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- characterizes the levers on the offline dev twin, asserting no new level (offline_reproduced_new_level=false); declared (paired with verifier_is_oracle) because A5 makes an offline_reproduced_new_level claim, per the ARC Live-Path Reachability discipline."
+    },
+    "transfer_games": {
+      "principle": "the >=2 games the levers were characterized on -- the transfer evidence, not a single-game artifact."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the transfer value is an execution-grounded efficiency measurement, not a learned-verifier moat claim."
+    }
+  },
+  "honest_verdict": "blocked_arcade_import",
+  "inference_substrate": "live_llm_inference",
+  "live_path_persistence": {
+    "agent_path_present": true,
+    "persisted_levers": [
+      "structured_engine",
+      "structural_alignment_detector"
+    ],
+    "structural_alignment_goal_provider": true,
+    "structural_goal_passed_to_reinduction": true,
+    "structured_engine_env_gate": true,
+    "structured_engine_live_import": true,
+    "structured_engine_reinduction_proposer": true
+  },
+  "offline_reproduced_new_level": false,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "agents_md_read": true,
+    "arcade_import": false,
+    "arcade_import_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import arcade'",
+    "arcade_import_error": "ModuleNotFoundError: No module named 'arcade'",
+    "blocked_resource": "blocked_arcade_import",
+    "codex_md_read": true,
+    "ok": false,
+    "spec_has_req_4753": true
+  },
+  "random_seed": 4753,
+  "reproducibility_checksum": "sha256:7abbad8762483a9c64b606b6c53d6be62c9646f5ea46a08ddf52e06d3a9ff22f",
+  "requirements": [
+    "REQ-ARC-WMTE-4753"
+  ],
+  "residual_dead_end": "preconditions failed before transfer measurement: blocked_arcade_import",
+  "result_path": "results/experiment_4753_persist_transfer.json",
+  "scenarios": [
+    "SCENARIO-ARC-WMTE-4753-BLOCKED-PRECONDITION",
+    "SCENARIO-ARC-WMTE-4753-LIVE-PERSISTENCE",
+    "SCENARIO-ARC-WMTE-4753-TRANSFER-CHARACTERIZATION"
+  ],
+  "schema": "carnot.arc.persist_transfer_4753.v1",
+  "selected_levers": [
+    "structural_alignment_detector"
+  ],
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4753",
+    "SCENARIO-ARC-WMTE-4753-BLOCKED-PRECONDITION",
+    "SCENARIO-ARC-WMTE-4753-LIVE-PERSISTENCE",
+    "SCENARIO-ARC-WMTE-4753-TRANSFER-CHARACTERIZATION"
+  ],
+  "transfer_dead_ends": {},
+  "transfer_games": [],
+  "transfer_results": [],
+  "transfer_value_per_game": {},
+  "upstream_validation": {
+    "A1_structured_engine": {
+      "accuracy_delta": 0.5,
+      "artifact": "results/experiment_4749_structured_engine_vs_freeform.json",
+      "honest_verdict": "complete_structured_engine_no_improvement_null",
+      "offline_reproduced": false,
+      "residual": "structured_engine_not_validated",
+      "structured_engine_non_degenerate": false,
+      "structured_heldout_accuracy": 0.5,
+      "validated": false
+    },
+    "A2_structural_alignment_detector": {
+      "artifact": "results/experiment_4750_structural_alignment_detector_fix.json",
+      "detector_goal_count": 2,
+      "detector_pairing_gate": true,
+      "detector_piece_count": 2,
+      "goal_predicate_satisfiable": false,
+      "honest_verdict": "complete_detector_fixed_but_no_bank_no_reachable_plan",
+      "offline_reproduced": false,
+      "residual": "",
+      "structural_goal_detected": true,
+      "validated": true
+    },
+    "eligible_levers": [
+      "structural_alignment_detector"
+    ]
+  },
+  "verifier_is_oracle": false
+}
