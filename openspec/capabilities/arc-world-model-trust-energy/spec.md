@@ -7960,6 +7960,76 @@ leaderboard, or solve result
 When the Experiment 4818 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4828: Cross-Family Transfer SOTA Ingestion For S4
+
+Experiment 4828 SHALL run the reserved `.445` SOTA-ingestion slot for
+cross-domain and cross-family transfer of learned verifiers, reward models,
+and energies. The workflow SHALL verify that `research-studying.md` and
+`research-references.md` are present, read the discovered corpus filtered to
+cross-family transfer and held-out robustness, emit focused
+`scripts/sweep_clusters.py` cluster URLs for verifier/reward, energy-based,
+and neural-guided search literature, run `scripts/sweep_semscholar.py` on
+focused cross-family transfer queries, and use low-concurrency
+WebSearch/WebFetch plus direct arXiv checks to verify the top five to eight
+source papers. The workflow SHALL NOT invoke `/deep-research`, load models,
+train, submit to a leaderboard, or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4828 SHALL write
+`results/experiment_4828_sota_ingestion_cross_family_transfer.json` and
+update `research-studying.md` with an idempotent Exp 4828 section marked
+INGESTED. The artifact SHALL include the required fields `honest_verdict`,
+`methods_mapped`, `arxiv_ids_cited`, `flagged_for_v445`,
+`inference_substrate`, `preconditions_checked`, `citations`, `fresh_sweep`,
+`s4_context`, `note_path`, `random_seed`, `duration_s`,
+`reproducibility_checksum`, and `field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_cross_family_transfer_mapped`;
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`; and
+`flagged_for_v445` SHALL name the strongest method or methods for the `.445`
+planner. The mapping SHALL cover S4 by explaining how each method stress-tests
+or trains the energy under held-out family shift instead of accepting a pooled
+source-family average. The mapping SHALL cover reward/verifier OOD evaluation,
+representation anchoring, worst-family robust optimization, risk extrapolation
+or invariant-risk regularization, and transferable-reward stress tests.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_cross_family_transfer_mapped."
+- `methods_mapped`: principle "the strongest 3-5 methods mapped onto S4, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID."
+- `flagged_for_v445`: principle "the strongest method(s) flagged so the .445 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`1911.08731`, `2003.00688`, `2007.01434`, `2012.07421`, `2311.14743`,
+`2403.13787`, `2602.08489`, and `2605.25629`. The method map SHALL contain
+three to five methods, and every method claim SHALL cite only IDs from
+`arxiv_ids_cited`. The note SHALL identify Group DRO, REx, DomainBed, WILDS,
+reward-model distribution-shift analysis, RewardBench, transferable reward,
+and representation anchoring as the ingested literature informing S4
+cross-family transfer.
+
+#### SCENARIO-ARC-WMTE-4828
+
+Given the research files are present, the reliable sweep helpers are available,
+Semantic Scholar is attempted through the reliable script, and the top arXiv
+sources are HTTP-200 verified
+When Experiment 4828 runs
+Then it writes
+`results/experiment_4828_sota_ingestion_cross_family_transfer.json`, records
+that `/deep-research` was not invoked, maps three to five SOTA methods onto S4
+with real arXiv IDs, updates `research-studying.md` with the Exp 4828 mapping
+note, and flags the strongest candidate inputs for `.445`.
+
+#### SCENARIO-ARC-WMTE-4828-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID, uses
+a stale `.444` roadmap flag, maps only S3 without S4, omits the held-out family
+handoff, or claims a model-load, training, leaderboard, or solve result
+When the Experiment 4828 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4821: S3 Structural-Energy Generation Lift
 
 Experiment 4821 SHALL run the S3 generation-lift test authorized by the
