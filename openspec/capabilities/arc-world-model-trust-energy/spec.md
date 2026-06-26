@@ -8177,6 +8177,72 @@ every attempted game's `candidate_rows[*].heldout_cell_recall`, keeps the
 energy arm `verifier_is_oracle=false`, and emits a PASS or BOUNDED verdict only
 when the effective-game count clears the corpus-wide floor.
 
+### REQ-ARC-WMTE-4815: .443 ARC Null Silent-Bug Audit
+
+Experiment 4815 SHALL audit the `.443` ARC null artifacts before their negative
+verdicts are treated as capability limits. The audit SHALL read
+`results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json`,
+`results/experiment_4812_levelup_attempt.json`, and
+`results/experiment_4814_heldout_first_win_readiness.json`. Missing `.443`
+source artifacts SHALL produce a blocked artifact rather than a fabricated
+audit. Experiment 4813 is a successful self-play verifier checkpoint refresh
+and SHALL be excluded from the null count.
+
+For S2-v3/Experiment 4811, the audit SHALL verify that `n_available_games`
+matches the real corpus size from `environment_files/`, that
+`n_games_attempted` equals `n_available_games`, that the effective-game floor is
+`max(10, ceil(0.6 * max(n_games_attempted, n_available_games)))`, and that
+`adversarial_verify.check_engine_selection_candidate_diversity` does not emit
+`DEGENERATE_CANDIDATE_POOL`. The audit SHALL classify S2-v3 as a silent bug if
+the artifact under-declares the corpus, attempts only a subset, misses the
+effective-game floor, lacks per-game candidate-selection logs, or trips
+`DEGENERATE_CANDIDATE_POOL`.
+
+For the other ARC nulls, the audit SHALL verify that the lever was genuinely
+exercised. The level-up no-bank null SHALL have non-empty attempted-game rows,
+target/depth accounting, same-depth or terminal residual evidence, reproduction
+gates for reproduced depths, and same-depth versus new-depth accounting. The
+held-out first-win null SHALL have the held-out attempt floor, positive-control
+parity, parity-test success, proxy aggregation evidence, and a non-empty flat
+`0.04` methodology note.
+
+Experiment 4815 SHALL write `results/experiment_4815_silent_bug_audit.json`
+with principle-annotated top-level fields for `honest_verdict`,
+`s2v3_corpus_coverage_verified`, `nulls_audited`, and `inference_substrate`,
+plus per-null verdicts, silent-bug findings, trusted nulls, the S2-v3 corpus
+coverage check, preconditions, checksums for audited artifacts, duration,
+random seed, and a stable reproducibility checksum. The audit SHALL make no
+solve, leaderboard, training, ops-document, or fresh live-inference claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `s2v3_corpus_coverage_verified`: principle "the load-bearing check -- n_available_games must match the real corpus AND DEGENERATE_CANDIDATE_POOL must not fire, else S2-v3's verdict is again under-covered."
+- `nulls_audited`: principle "count of nulls re-examined."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4815-SILENT-BUG-AUDIT
+
+Given the `.443` S2-v3, level-up no-bank, and held-out first-win null artifacts
+are present
+When Experiment 4815 cross-checks exercised-evidence fields and runs
+`adversarial_verify.check_engine_selection_candidate_diversity`
+Then it writes `results/experiment_4815_silent_bug_audit.json`, sets
+`s2v3_corpus_coverage_verified=true` only when the declared corpus count equals
+`environment_files/`, `n_games_attempted == n_available_games`, the effective
+count clears the corpus-wide floor, and `DEGENERATE_CANDIDATE_POOL` does not
+fire, keeps the other ARC nulls trusted only when their exercised-evidence
+fields are non-degenerate, and reports the complete audit with
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-ARC-WMTE-4815-BLOCKED-PRECONDITION
+
+Given any required `.443` source artifact is missing
+When Experiment 4815 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, and a stable
+reproducibility checksum.
+
 ### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
 
 Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the
