@@ -1,0 +1,203 @@
+{
+  "citations": {
+    "2402.12275": {
+      "http_status": 200,
+      "title": "WorldCoder, a Model-Based LLM Agent: Building World Models by Writing Code and Interacting with the Environment",
+      "url": "https://arxiv.org/abs/2402.12275"
+    },
+    "2503.23145": {
+      "http_status": 200,
+      "title": "CodeARC: Benchmarking Reasoning Capabilities of LLM Agents for Inductive Program Synthesis",
+      "url": "https://arxiv.org/abs/2503.23145"
+    },
+    "2511.02225": {
+      "http_status": 200,
+      "title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2511.02225"
+    },
+    "2601.06604": {
+      "http_status": 200,
+      "title": "Object-Centric World Models Meet Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2601.06604"
+    },
+    "2605.05138": {
+      "http_status": 200,
+      "title": "Executable World Models for ARC-AGI-3 in the Era of Coding Agents",
+      "url": "https://arxiv.org/abs/2605.05138"
+    },
+    "2605.14937": {
+      "http_status": 200,
+      "title": "Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations",
+      "url": "https://arxiv.org/abs/2605.14937"
+    },
+    "2606.08775": {
+      "http_status": 200,
+      "title": "Unifying Object-Centric World Models and Diffusion Policy: A Hierarchical Framework for Multi-Stage Robotic Tasks",
+      "url": "https://arxiv.org/abs/2606.08775"
+    },
+    "2606.14418": {
+      "http_status": 200,
+      "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2606.14418"
+    }
+  },
+  "field_principles": {
+    "citations": {
+      "principle": "HTTP-200 arXiv source set used for adversarial citation verification."
+    },
+    "flagged_for_438": {
+      "principle": "the strongest method flagged as a candidate input for the .438 roadmap -- closes discover->ingest->plan."
+    },
+    "fresh_sweep": {
+      "principle": "records reliable-channel sweep helpers and WebSearch/WebFetch provenance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; an ingestion-synthesized run is complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 100us floor."
+    },
+    "methods_mapped": {
+      "principle": "the strongest 3-5 SOTA methods with REAL arXiv IDs -- no fabricated citations (adversarial_verify bar)."
+    },
+    "note_path": {
+      "principle": "points to the idempotent research-studying.md mapping note."
+    },
+    "preconditions_checked": {
+      "principle": "records the network check."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash of citations and mapped methods."
+    }
+  },
+  "flagged_for_438": "flagged_for_438: verifier_refined_executable_world_model_with_perception_grounded_goal_mpc (arXiv:2605.05138 + arXiv:2402.12275 + arXiv:2605.14937 + arXiv:2606.08775)",
+  "fresh_sweep": {
+    "cluster_ids": [
+      6,
+      5
+    ],
+    "filtered_track": "structured world-model induction + perception-grounded ARC goals",
+    "semantic_scholar_queries": [
+      "ARC-AGI-3 executable world model coding agent goal induction",
+      "object-centric world model goal conditioned planning MCTS perception grounded",
+      "interactive program synthesis world model induction agents hidden target"
+    ],
+    "semantic_scholar_result": "HTTP 429 on all focused queries; no S2-only source promoted.",
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2402.12275",
+      "https://arxiv.org/abs/2606.14418",
+      "https://arxiv.org/abs/2605.14937",
+      "https://arxiv.org/abs/2606.08775",
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2511.02225"
+    ]
+  },
+  "honest_verdict": "complete_sota_ingestion_structured_world_model_goal_frontier_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "The prompt budget cannot afford repeated refactors, hidden mechanics need observations not yet taken, or the induced program overfits public prefixes without perception-grounded object/goal evidence.",
+      "maps_to_current_stack": "E3AgentPolicy should keep arc_executable_world_model as the acting substrate, but make ProductWorldModel and the coding-agent-style verify-refactor loop the primary induction path before planning.",
+      "method": "Verifier-refined executable world-model induction",
+      "roadmap_candidate": "flagged_for_438: verifier_refined_executable_world_model_with_perception_grounded_goal_mpc (arXiv:2605.05138 + arXiv:2402.12275 + arXiv:2605.14937 + arXiv:2606.08775)",
+      "source_ids": [
+        "2605.05138",
+        "2402.12275"
+      ],
+      "takes_over_from_current_stack": "Takes over the .437 A1 structured engine slot: replace brittle free-form load_engine output with a typed executable model, a transition verifier, and refactoring toward simpler factors.",
+      "track": "verifier_refined_executable_world_model"
+    },
+    {
+      "fails_when": "Slots drift across frames, ARC goals are non-spatial or hidden-state dependent, or differentiable/continuous MPC assumptions do not transfer to discrete click/key action spaces.",
+      "maps_to_current_stack": "E3AgentPolicy should feed the structural-alignment goal pipeline into arc_executable_world_model.plan_in_model as object slots, target slots, and feasible subgoals rather than as a single brittle terminal predicate.",
+      "method": "Perception-grounded goal-conditioned object planning",
+      "roadmap_candidate": "support_for_438: grounded_goal_conditioned_object_planner",
+      "source_ids": [
+        "2605.14937",
+        "2606.08775"
+      ],
+      "takes_over_from_current_stack": "Takes over the .437 A2 detector fix by turning detected pieces and goal sprites into a goal-conditioned planning objective with subgoal checks.",
+      "track": "perception_grounded_goal_conditioned_planning"
+    },
+    {
+      "fails_when": "The object representation misses the controllable entity, action-slot binding aliases multiple mechanics, or MCTS rollouts compound an early world-model error before a live probe can correct it.",
+      "maps_to_current_stack": "E3AgentPolicy should bind each candidate click/key action to logical object slots before arc_executable_world_model rollouts, then use MCTS to decide whether to probe, advance a subgoal, or execute a solve prefix.",
+      "method": "Causal object-centric MCTS action-slot planner",
+      "roadmap_candidate": "support_for_438: causal_object_mcts_action_slot_planner",
+      "source_ids": [
+        "2606.14418",
+        "2601.06604"
+      ],
+      "takes_over_from_current_stack": "Takes over static candidate ranking by adding object-causal attention, slot-level transition predictions, and search over object interactions.",
+      "track": "causal_object_mcts_action_slot_planner"
+    },
+    {
+      "fails_when": "ARC action budgets make probes too expensive, the true rule lies outside the primitive vocabulary, or there is no free oracle analogous to CodeARC's hidden function query channel.",
+      "maps_to_current_stack": "arc_executable_world_model should treat ProgrammaticExpert factors as candidate interaction primitives, then use cheap live probes and held-out transition checks to reject or refine them before E3AgentPolicy trusts a plan.",
+      "method": "Interactive program-synthesis refinement over factor primitives",
+      "roadmap_candidate": "support_for_438: probe_refined_factor_primitive_induction",
+      "source_ids": [
+        "2503.23145",
+        "2511.02225"
+      ],
+      "takes_over_from_current_stack": "Takes over one-shot induction by converting errors into differential-test style counterexamples and by organizing object interactions into reusable factor primitives.",
+      "track": "interactive_program_synthesis_refinement"
+    }
+  ],
+  "note_path": "research-studying.md#exp-4758-sota-ingestion",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/2402.12275",
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2511.02225",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2605.14937",
+      "https://arxiv.org/abs/2606.08775",
+      "https://arxiv.org/abs/2606.14418"
+    ],
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "leaderboard_submission": false,
+    "model_load": false,
+    "network_check_command": "curl -sf -o /dev/null https://huggingface.co/api/models",
+    "network_hf_models_reachable": true,
+    "ops_docs_modified": false,
+    "research_references_read": true,
+    "research_studying_read": true,
+    "solve_claim_made": false,
+    "sweep_cluster_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_http_429": true,
+    "sweep_semscholar_queries": [
+      "ARC-AGI-3 executable world model coding agent goal induction",
+      "object-centric world model goal conditioned planning MCTS perception grounded",
+      "interactive program synthesis world model induction agents hidden target"
+    ],
+    "sweep_semscholar_used": true,
+    "top_source_count": 8,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/2605.05138",
+      "https://arxiv.org/abs/2402.12275",
+      "https://arxiv.org/abs/2606.14418",
+      "https://arxiv.org/abs/2605.14937",
+      "https://arxiv.org/abs/2606.08775",
+      "https://arxiv.org/abs/2503.23145",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2511.02225"
+    ],
+    "websearch_webfetch_used": true
+  },
+  "random_seed": 4758,
+  "reproducibility_checksum": "sha256:a3d617e194811eedf24b052ca812872eafda533af464d0deab0ac1ff1ae2e67d"
+}

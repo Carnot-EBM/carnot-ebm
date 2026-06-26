@@ -7367,6 +7367,70 @@ Then it emits `complete: <game>_delta_identified_no_bank`, keeps
 `new_levels_banked=0`, leaves `reproducible_total_levels=64`, and records the
 attempted target deltas as dead-ends for the next rotation.
 
+### REQ-ARC-WMTE-4758: .437 SOTA Ingestion for Structured World-Model Induction and Perception-Grounded Goals
+
+Experiment 4758 SHALL run the reserved `.437` SOTA-ingestion slot for the
+headline open problem: structured world-model induction plus
+perception-grounded goals for ARC. The workflow SHALL use only the reliable
+channel: read `research-studying.md`, `research-references.md`,
+`scripts/sweep_clusters.py`, and `scripts/sweep_semscholar.py`; verify network
+reachability with `curl -sf -o /dev/null https://huggingface.co/api/models`;
+emit the ARC cluster URLs; run a focused Semantic Scholar pass; and WebFetch
+the top five to eight arXiv papers. It SHALL NOT invoke `/deep-research`, load
+models, train, submit to the leaderboard, or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4758 SHALL write
+`results/experiment_4758_sota_ingestion.json` and update `research-studying.md`
+with an idempotent Exp 4758 section. The artifact SHALL include the required
+fields `honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`methods_mapped`, `flagged_for_438`, `citations`, `fresh_sweep`, `note_path`,
+`random_seed`, `reproducibility_checksum`, and `field_principles`.
+The complete-path `honest_verdict` SHALL start with `complete_` and equal
+`complete_sota_ingestion_structured_world_model_goal_frontier_mapped`;
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`; and
+`flagged_for_438` SHALL name the strongest method as a `.438` roadmap
+candidate. If the Hugging Face network precondition fails, the workflow SHALL
+write a blocked artifact with `honest_verdict=blocked_network`, no method
+claims, no citations, and a failed network check recorded in
+`preconditions_checked`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; an ingestion-synthesized run is complete_."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts; 100us floor."
+- `preconditions_checked`: principle "records the network check."
+- `methods_mapped`: principle "the strongest 3-5 SOTA methods with REAL arXiv IDs -- no fabricated citations (adversarial_verify bar)."
+- `flagged_for_438`: principle "the strongest method flagged as a candidate input for the .438 roadmap -- closes discover->ingest->plan."
+
+The method map SHALL contain three to five methods, and each method SHALL cite
+only real verified arXiv IDs from the fetched source set:
+`2605.05138`, `2402.12275`, `2606.14418`, `2605.14937`, `2606.08775`,
+`2503.23145`, `2601.06604`, and `2511.02225`. Each method SHALL state what it
+takes over from the current Carnot stack and where it fails. The note SHALL
+surface the strongest candidate for `.438` as a verifier-refined executable
+world-model induction loop with perception-grounded goal-conditioned planning,
+using `E3AgentPolicy`, `arc_executable_world_model`, `ProductWorldModel`, and
+the structural-alignment goal pipeline as the target integration points.
+
+#### SCENARIO-ARC-WMTE-4758
+
+Given the network precondition passes, the discovered corpus is readable, the
+reliable sweep helpers are available, and the top arXiv sources are HTTP-200
+verified
+When Experiment 4758 runs
+Then it writes `results/experiment_4758_sota_ingestion.json`, records that
+`/deep-research` was not invoked, maps three to five SOTA methods with real
+arXiv IDs, updates `research-studying.md` with the Exp 4758 mapping note, and
+flags exactly one strongest method for `.438`.
+
+#### SCENARIO-ARC-WMTE-4758-BLOCKED-NETWORK
+
+Given the Hugging Face network precondition fails
+When Experiment 4758 runs
+Then it writes a `blocked_network` artifact, records the failed network check,
+leaves `methods_mapped`, `citations`, and `flagged_for_438` empty, and makes no
+paper, solve, model-load, training, or leaderboard claim.
+
 ### REQ-ARC-WMTE-4751: SK48 Level-Up Self-Play Bank and Learned-Verifier Checkpoint
 
 Experiment 4751 SHALL bank exactly one new offline-reproduced public ARC level
