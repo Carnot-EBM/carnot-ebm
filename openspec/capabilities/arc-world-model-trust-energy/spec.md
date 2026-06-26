@@ -5284,6 +5284,73 @@ transitions
 offline reproduction status, live-path reachability, required field principles,
 and a terminal honest verdict without treating the verifier as an oracle.
 
+### REQ-ARC-WMTE-4753: Persist .437 Structured/Detector Levers And Transfer Characterization
+
+Experiment 4753 SHALL read the `.437` A1 structured-engine artifact
+`results/experiment_4749_structured_engine_vs_freeform.json` and A2 fixed
+structural-alignment detector artifact
+`results/experiment_4750_structural_alignment_detector_fix.json`, verify the
+literal `import arcade` precondition, and inspect the live
+`arc_competition_agent` path for the env-gated structured-engine hook and the
+fixed detector structural goal provider. If the upstream artifacts validated
+their gates, the experiment SHALL confirm the corresponding live-path lever is
+persisted and SHALL run `scripts/arc_orphan_solver_lint.py` before claiming live
+reachability. If a required precondition is missing, the artifact SHALL emit a
+terminal `blocked_<resource>` verdict and SHALL not fabricate transfer deltas.
+
+When preconditions pass, Experiment 4753 SHALL characterize action-efficiency
+and first-effect transfer value on at least two games without making a new-level
+claim. The transfer measurement SHALL compare a baseline route against the
+persisted .437 levers, report per-game `action_efficiency_delta` and
+`first_effect_delta`, and keep `offline_reproduced_new_level=false`.
+
+The terminal artifact `results/experiment_4753_persist_transfer.json` SHALL
+include principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `preconditions_checked`, `transfer_games`,
+`offline_reproduced_new_level`, `solve_provenance`, and `verifier_is_oracle`,
+plus `live_path_persistence`, `upstream_validation`, `transfer_value_per_game`,
+`arc_orphan_solver_lint`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; characterization-complete is complete_."
+- `inference_substrate`: principle "live_llm_inference."
+- `preconditions_checked`: principle "records arcade + upstream-artifact checks."
+- `transfer_games`: principle "the >=2 games the levers were characterized on -- the transfer evidence, not a single-game artifact."
+- `offline_reproduced_new_level`: principle "false expected -- this is characterization, NOT a level-bank (no over-claim)."
+- `solve_provenance`: principle "development_proxy -- characterizes the levers on the offline dev twin, asserting no new level (offline_reproduced_new_level=false); declared (paired with verifier_is_oracle) because A5 makes an offline_reproduced_new_level claim, per the ARC Live-Path Reachability discipline."
+- `verifier_is_oracle`: principle "false -- the transfer value is an execution-grounded efficiency measurement, not a learned-verifier moat claim."
+
+#### SCENARIO-ARC-WMTE-4753-BLOCKED-PRECONDITION
+
+**Given** the A1/A2 artifacts or literal `import arcade` precondition are
+missing
+**When** Experiment 4753 runs
+**Then** it writes `results/experiment_4753_persist_transfer.json` with a
+terminal `blocked_<resource>` verdict, records the failed precondition, keeps
+`offline_reproduced_new_level=false`, and leaves transfer deltas unclaimed.
+
+#### SCENARIO-ARC-WMTE-4753-LIVE-PERSISTENCE
+
+**Given** the A1/A2 artifacts are present and any validated lever is eligible
+for persistence
+**When** Experiment 4753 inspects the live agent path
+**Then** it records whether `CARNOT_ARC_STRUCTURED_ENGINE` reaches
+`arc_structured_world_model`, whether the fixed structural-alignment goal
+provider reaches `execute_bounded_llm_reinduction`, and whether
+`arc_orphan_solver_lint.py` passes.
+
+#### SCENARIO-ARC-WMTE-4753-TRANSFER-CHARACTERIZATION
+
+**Given** all preconditions pass
+**When** Experiment 4753 measures the persisted levers on two or more transfer
+games
+**Then** it reports per-game action-efficiency and first-effect deltas,
+summarizes positive or null transfer honestly, sets
+`offline_reproduced_new_level=false`, and uses
+`solve_provenance=development_proxy` with `verifier_is_oracle=false`.
+
 ### REQ-ARC-WMTE-4680: Persist Milestone Generation Primitive And Transfer Null
 
 Experiment 4680 SHALL persist the strongest reusable `.432` A1/A2 generation

@@ -621,3 +621,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - FALSE_NEGATIVE_RISK flag ['FALSE_NEGATIVE_RISK'] on a null/negative verdict — verify a positive control ran
 - artifact: results/experiment_4749_structured_engine_vs_freeform.json
+
+## experiment_4752_held_out_first_win_readiness.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_4752_held_out_first_win_readiness.json
