@@ -7673,6 +7673,76 @@ else the harness is broken and the result is uninformative."; `random_seed` =
 `reproducibility_checksum` = "content hash of (corpus, folds, induced-engine
 fits, features) so a replication catches drift."
 
+### REQ-ARC-WMTE-4781: S1 Contrastive Structural Energy Landscape
+
+Experiment 4781 SHALL promote the S0' origin-matched structural signal into a
+contrastive lower-is-better transition energy over induced held-out
+predictions. The workflow SHALL first verify that
+`arc_solver_kit.offline_arcade()` exits successfully and that
+`cross_game_features_v3` imports. If either precondition fails, the artifact
+SHALL stop with `honest_verdict=blocked_offline_arcade_missing` or
+`honest_verdict=blocked_structural_features_missing` and SHALL NOT report a
+fabricated AUROC.
+
+The dataset SHALL reuse the Experiment 4771 S0' origin-matched construction:
+positive rows are induced predictions that match the held-out observed next
+grid, negative rows are induced predictions that do not match that held-out
+grid, and both classes have induced origin. The energy SHALL use only the
+`object_relational` and `frame_delta` slices from `cross_game_features_v3` for
+the primary structural model. It SHALL train a contrastive margin or NCE-style
+linear energy across at least ten deterministic random seeds so that lower
+energy ranks correct transitions above wrong near misses, then report
+leave-one-GAME-out AUROC ranking by -E.
+
+Experiment 4781 SHALL write
+`results/experiment_4781_structural_energy_s1_contrastive_landscape.json`, set
+`verifier_is_oracle=false`, and include principle-annotated top-level fields
+for `honest_verdict`, `verifier_is_oracle`, `inference_substrate`,
+`preconditions_checked`, `energy_ranking_loo_auroc_mean`,
+`energy_ranking_loo_auroc_ci95`, `n_seeds`,
+`denoising_direction_agreement`, `origin_probe_auroc`,
+`shuffled_label_control_auroc`, `per_family_loo`, `in_sample_auroc`,
+`random_seeds_used`, and `reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a usable energy landscape is success_structural_energy_s1_landscape_authorizes_s2, a bounded result is complete_structural_energy_s1_discriminates_no_usable_landscape."
+- `verifier_is_oracle`: principle "MUST be false -- the energy never runs the env win-check; required for check_circular_moat_overclaim."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates (scores structural features over cached transitions, no LLM; 1s floor)."
+- `preconditions_checked`: principle "records the arcade/feature-import checks so a silent-missing-resource run cannot fabricate an AUROC."
+- `energy_ranking_loo_auroc_mean`: principle "the load-bearing measurement -- mean cross-game LOO AUROC ranking by -E across >=10 seeds."
+- `energy_ranking_loo_auroc_ci95`: principle ">=0.70 with CI95 excluding chance across seeds is the bar -- multi-seed is what S0' (single-seed) did not establish."
+- `n_seeds`: principle ">=10 -- the single-seed S0' result must be shown robust before the energy is trusted as a landscape."
+- `denoising_direction_agreement`: principle "the energy-vs-classifier distinction -- -deltaE descent must point toward correctness, a property a point classifier lacks."
+- `origin_probe_auroc`: principle "carry the S0' leak control -- must stay < 0.6 (origin matched); a regression means the contrastive training reintroduced an origin shortcut."
+- `shuffled_label_control_auroc`: principle "<= 0.55 -- the second leak control must hold under contrastive training."
+- `per_family_loo`: principle ">=2 independent structural families each >= 0.60 -- kills the frame_delta-single-lever risk for the energy."
+- `in_sample_auroc`: principle "positive control > 0.60 -- else the harness is broken."
+- `random_seeds_used`: principle "the list of >=10 seeds -- determinism + reproducibility for the multi-seed claim."
+- `reproducibility_checksum`: principle "content hash of (corpus, folds, energy training config) so a replication catches drift."
+
+The S1 gate SHALL pass only when cross-game energy-ranking LOO AUROC is at
+least `0.70` with CI95 excluding chance across at least ten seeds, at least two
+independent structural families each clear `0.60` LOO, the denoising-direction
+agreement is materially above chance, origin-probe AUROC remains below `0.6`,
+shuffled-label control AUROC is no greater than `0.55`, and the in-sample
+positive control exceeds `0.60`. If any gate fails, the artifact SHALL report
+`complete_structural_energy_s1_discriminates_no_usable_landscape` instead of
+authorizing S2.
+
+#### SCENARIO-ARC-WMTE-4781-CONTRASTIVE-LANDSCAPE-GATE
+
+Given the S0' origin-matched dataset can be rebuilt and the structural feature
+spine is importable
+When Experiment 4781 trains the multi-seed contrastive energy landscape
+Then it writes
+`results/experiment_4781_structural_energy_s1_contrastive_landscape.json`,
+keeps `verifier_is_oracle=false`, reports multi-seed LOO ranking,
+frame-marginal control, denoising-direction, origin-probe, shuffled-label,
+per-family, and positive-control measurements, and emits
+`success_structural_energy_s1_landscape_authorizes_s2` only when every S1 gate
+criterion is satisfied.
+
 ### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
 
 Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the
