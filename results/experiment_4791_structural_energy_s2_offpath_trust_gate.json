@@ -304,5 +304,18 @@
     "REQ-ARC-WMTE-4791",
     "SCENARIO-ARC-WMTE-4791-OFFPATH-TRUST-GATE"
   ],
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "accuracy_gate_selected_offpath_cell_recall=0.32018531293855285 and energy_selected_offpath_cell_recall=0.32018531293855285 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "energy_minus_accuracy_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
