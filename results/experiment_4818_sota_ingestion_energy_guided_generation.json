@@ -1,0 +1,289 @@
+{
+  "arxiv_ids_cited": [
+    "1806.10230",
+    "1909.06878",
+    "2202.11705",
+    "2207.12598",
+    "2305.12018",
+    "2309.15028",
+    "2502.07202",
+    "2605.28814"
+  ],
+  "citations": {
+    "1806.10230": {
+      "http_status": 200,
+      "title": "Guided evolutionary strategies: Augmenting random search with surrogate gradients",
+      "url": "https://arxiv.org/abs/1806.10230"
+    },
+    "1909.06878": {
+      "http_status": 200,
+      "title": "Model Based Planning with Energy Based Models",
+      "url": "https://arxiv.org/abs/1909.06878"
+    },
+    "2202.11705": {
+      "http_status": 200,
+      "title": "COLD Decoding: Energy-based Constrained Text Generation with Langevin Dynamics",
+      "url": "https://arxiv.org/abs/2202.11705"
+    },
+    "2207.12598": {
+      "http_status": 200,
+      "title": "Classifier-Free Diffusion Guidance",
+      "url": "https://arxiv.org/abs/2207.12598"
+    },
+    "2305.12018": {
+      "http_status": 200,
+      "title": "BOLT: Fast Energy-based Controlled Text Generation with Tunable Biases",
+      "url": "https://arxiv.org/abs/2305.12018"
+    },
+    "2309.15028": {
+      "http_status": 200,
+      "title": "Do not throw away your value model! Generating more preferable text with Value-Guided Monte-Carlo Tree Search decoding",
+      "url": "https://arxiv.org/abs/2309.15028"
+    },
+    "2502.07202": {
+      "http_status": 200,
+      "title": "Monte Carlo Tree Diffusion for System 2 Planning",
+      "url": "https://arxiv.org/abs/2502.07202"
+    },
+    "2605.28814": {
+      "http_status": 200,
+      "title": "Self-Improving Language Models with Bidirectional Evolutionary Search",
+      "url": "https://arxiv.org/abs/2605.28814"
+    }
+  },
+  "duration_s": 0.0001,
+  "field_principles": {
+    "arxiv_ids_cited": {
+      "principle": "every method claim must cite a verifiable arXiv ID."
+    },
+    "citations": {
+      "principle": "HTTP-200 arXiv source metadata backing every method claim."
+    },
+    "duration_s": {
+      "principle": "0.0001s floor for aggregation-only inference substrate."
+    },
+    "flagged_for_v444": {
+      "principle": "the strongest method(s) flagged so the .444 planner reads the mapping."
+    },
+    "fresh_sweep": {
+      "principle": "records focused sweep_clusters, sweep_semscholar, and WebFetch provenance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; mapping emitted is success_sota_ingestion_energy_guided_generation_mapped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "methods_mapped": {
+      "principle": "the strongest 3-5 methods mapped onto S3, each with a real arXiv ID."
+    },
+    "note_path": {
+      "principle": "points to the idempotent research-studying.md ingestion note."
+    },
+    "preconditions_checked": {
+      "principle": "records reliable-channel checks and explicitly excludes banned channels."
+    },
+    "random_seed": {
+      "principle": "deterministic experiment identifier for reproducible artifact generation."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of citations, method map, flags, and S3 context."
+    },
+    "s3_context": {
+      "principle": "states that S3 uses energy for generation guidance, not oracle solve claims."
+    }
+  },
+  "flagged_for_v444": [
+    {
+      "candidate": "bolt_cold_cfg_value_tree_generator_for_s3",
+      "flag": "flagged_for_v444: bolt_cold_cfg_value_tree_generator_for_s3 (arXiv:2202.11705 + arXiv:2305.12018 + arXiv:2207.12598 + arXiv:2309.15028 + arXiv:2502.07202)",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "source_ids": [
+        "2202.11705",
+        "2305.12018",
+        "2207.12598",
+        "2309.15028",
+        "2502.07202"
+      ]
+    },
+    {
+      "candidate": "bes_energy_fitness_pool_inserter",
+      "flag": "flagged_for_v444: bes_energy_fitness_pool_inserter (arXiv:2605.28814 + arXiv:1806.10230 + arXiv:1909.06878)",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "source_ids": [
+        "2605.28814",
+        "1806.10230",
+        "1909.06878"
+      ]
+    }
+  ],
+  "fresh_sweep": {
+    "cluster_ids": [
+      1,
+      6
+    ],
+    "filtered_track": "energy/value-guided generation for S3 pool insertion",
+    "semantic_scholar_queries": [
+      "energy guided generation classifier guidance score guidance value guided generation evolutionary search energy fitness planning",
+      "energy guided sampling constrained text generation Langevin decoding value guided MCTS diffusion planning",
+      "energy as fitness evolutionary search quality diversity generation value guided generation"
+    ],
+    "semantic_scholar_result": "HTTP 429 on all three focused queries; no S2-only source promoted.",
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/1806.10230",
+      "https://arxiv.org/abs/1909.06878",
+      "https://arxiv.org/abs/2202.11705",
+      "https://arxiv.org/abs/2207.12598",
+      "https://arxiv.org/abs/2305.12018",
+      "https://arxiv.org/abs/2309.15028",
+      "https://arxiv.org/abs/2502.07202",
+      "https://arxiv.org/abs/2605.28814"
+    ]
+  },
+  "honest_verdict": "success_sota_ingestion_energy_guided_generation_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "The candidate representation has no smooth edit neighborhood, energy gradients point toward unplayable programs, or bias tuning collapses diversity before verification.",
+      "graft_to_live_loop": "Represent action programs or latent plans as variables under the S3 energy, then use short Langevin-style edits or BOLT-style tunable biases to move candidates before hard mechanics verification.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "Energy-constrained sampler with fast logit-bias refinement",
+      "put_winner_into_pool": "Generate a small guided batch, replay-verify each candidate, and put the lowest-energy verified winner into the explorer pool.",
+      "roadmap_candidate": "flagged_for_v444: bolt_cold_cfg_value_tree_generator_for_s3 (arXiv:2202.11705 + arXiv:2305.12018 + arXiv:2207.12598 + arXiv:2309.15028 + arXiv:2502.07202)",
+      "source_ids": [
+        "2202.11705",
+        "2305.12018"
+      ],
+      "takes_over_from_current_stack": "Takes over blind local mutation when the pool has no candidate that already wins but the verifier can score partial plausibility.",
+      "track": "energy_constrained_sampling"
+    },
+    {
+      "fails_when": "Guidance scale overwhelms diversity, the score follows a provenance shortcut, or high guidance yields valid-looking but unplayable plans.",
+      "graft_to_live_loop": "Treat S3 energy as a classifier-like guidance signal during proposal construction, with guidance strength increased only after action syntax and transition checks keep the candidate executable.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "Classifier/score-guided proposal sampler",
+      "put_winner_into_pool": "Sample a guided batch, choose the verified candidate with the best lower-is-better score, and put that winner into the live pool.",
+      "roadmap_candidate": "flagged_for_v444: bolt_cold_cfg_value_tree_generator_for_s3 (arXiv:2202.11705 + arXiv:2305.12018 + arXiv:2207.12598 + arXiv:2309.15028 + arXiv:2502.07202)",
+      "source_ids": [
+        "2207.12598"
+      ],
+      "takes_over_from_current_stack": "Takes over unguided proposal batches whose candidates are scored only after generation has already spent the action budget.",
+      "track": "classifier_score_guided_generation"
+    },
+    {
+      "fails_when": "Partial-plan energy is poorly calibrated, branching cost exceeds the action-efficiency budget, or the tree repeatedly explores equivalent leaves.",
+      "graft_to_live_loop": "Expand partial generated plans as a tree and use negative energy as the value term for partial rollouts; revisit branches whose decoded or denoised continuations improve the trust score.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "Value-guided tree and diffusion generation",
+      "put_winner_into_pool": "Complete the best tree leaf into executable actions, verify it, and put the verified low-energy winner into the candidate pool.",
+      "roadmap_candidate": "flagged_for_v444: bolt_cold_cfg_value_tree_generator_for_s3 (arXiv:2202.11705 + arXiv:2305.12018 + arXiv:2207.12598 + arXiv:2309.15028 + arXiv:2502.07202)",
+      "source_ids": [
+        "2309.15028",
+        "2502.07202"
+      ],
+      "takes_over_from_current_stack": "Takes over one-shot generation by spending inference-time compute on partial candidates before they become expensive live actions.",
+      "track": "value_guided_tree_generation"
+    },
+    {
+      "fails_when": "Fitness overweights novelty, surrogate energy points away from true transition mechanics, or evolution burns budget without verified elites.",
+      "graft_to_live_loop": "Run a tiny population over action programs where fitness is negative S3 energy plus executable validity, and use recombination or guided random search to escape high-probability but losing rollouts.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "Energy-as-fitness evolutionary pool search",
+      "put_winner_into_pool": "Select the verified elite with the best energy-adjusted fitness and put that winner into the explorer pool while retaining alternates.",
+      "roadmap_candidate": "flagged_for_v444: bes_energy_fitness_pool_inserter (arXiv:2605.28814 + arXiv:1806.10230 + arXiv:1909.06878)",
+      "source_ids": [
+        "2605.28814",
+        "1806.10230"
+      ],
+      "takes_over_from_current_stack": "Takes over single-candidate mutation by preserving a small population of high-quality candidates instead of only the current best guess.",
+      "track": "energy_as_fitness_evolutionary_search"
+    },
+    {
+      "fails_when": "State-space descent invents unreachable grids, the action realizer cannot realize the trajectory, or energy ignores a small decisive change.",
+      "graft_to_live_loop": "Generate intermediate state trajectories under the energy model, then ask the action realizer to synthesize concrete actions that reach the best low-energy trajectory.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "Plan-with-energy state trajectory generator",
+      "put_winner_into_pool": "Promote a trajectory only after it is realized as executable actions; the realized action sequence becomes the winner inserted into the pool.",
+      "roadmap_candidate": "flagged_for_v444: bes_energy_fitness_pool_inserter (arXiv:2605.28814 + arXiv:1806.10230 + arXiv:1909.06878)",
+      "source_ids": [
+        "1909.06878",
+        "2502.07202"
+      ],
+      "takes_over_from_current_stack": "Takes over static plan reranking when no current candidate reaches a goal-like state but the energy can propose plausible intermediate states.",
+      "track": "plan_with_energy_state_generation"
+    }
+  ],
+  "note_path": "research-studying.md#exp-4818-sota-ingestion-energy-guided-generation",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/1806.10230",
+      "https://arxiv.org/abs/1909.06878",
+      "https://arxiv.org/abs/2202.11705",
+      "https://arxiv.org/abs/2207.12598",
+      "https://arxiv.org/abs/2305.12018",
+      "https://arxiv.org/abs/2309.15028",
+      "https://arxiv.org/abs/2502.07202",
+      "https://arxiv.org/abs/2605.28814"
+    ],
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "leaderboard_submission": false,
+    "model_load": false,
+    "ops_docs_modified": false,
+    "research_references_present": true,
+    "research_studying_present": true,
+    "solve_claim_made": false,
+    "sweep_cluster_ids": [
+      1,
+      6
+    ],
+    "sweep_cluster_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"energy+based+model\"+OR+abs:\"energy-based+model\"+OR+abs:\"energy+guided+decoding\"+OR+abs:\"token+energy\"+OR+abs:\"EBT\")+AND+(abs:\"reasoning\"+OR+abs:\"verification\"+OR+abs:\"LLM\"+OR+abs:\"language+model\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_http_429": true,
+    "sweep_semscholar_queries": [
+      "energy guided generation classifier guidance score guidance value guided generation evolutionary search energy fitness planning",
+      "energy guided sampling constrained text generation Langevin decoding value guided MCTS diffusion planning",
+      "energy as fitness evolutionary search quality diversity generation value guided generation"
+    ],
+    "sweep_semscholar_used": true,
+    "top_source_count": 8,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/1806.10230",
+      "https://arxiv.org/abs/1909.06878",
+      "https://arxiv.org/abs/2202.11705",
+      "https://arxiv.org/abs/2207.12598",
+      "https://arxiv.org/abs/2305.12018",
+      "https://arxiv.org/abs/2309.15028",
+      "https://arxiv.org/abs/2502.07202",
+      "https://arxiv.org/abs/2605.28814"
+    ],
+    "websearch_webfetch_used": true
+  },
+  "random_seed": 4818,
+  "reproducibility_checksum": "sha256:13e005fcf4a5f79c20d63c583ea98551247a9f39640fe1bc367cf12baa106412",
+  "s3_context": {
+    "generation_constraint": "Use energy to guide generation and pool insertion, not as an environment oracle or solve claim.",
+    "input_energy_contract": "lower-is-better energy/value feedback from upstream trust and verification artifacts",
+    "roadmap_target": ".444",
+    "s3_generation_allowed": true
+  }
+}
