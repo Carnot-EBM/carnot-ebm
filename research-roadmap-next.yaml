@@ -363,13 +363,13 @@ tasks:
     majority-ARC + reserved infra/hardware/sota/capstone slots. (hardware-continuity; KV260 per-milestone,
     until terminal state).'
   prompt: "CONTEXT ({date}). KV260 hardware-continuity (Hardware-Task Continuity Discipline). Interact\
-    \ with the\nboard via SSH ONLY -- host SD-card device nodes (/dev/mmcblk*) are PERMANENTLY retired\
-    \ for KV260 (KV260\nSSH-Not-SD-Card Discipline).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any\
-    \ other step):\n     a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero\
-    \ -> honest_verdict\n        blocked_kv260_ssh_unreachable, EXIT (do NOT use host SD-card device nodes\
-    \ -- permanently retired).\n  1. Report the loaded overlay (`ssh kria 'xmutil listapps'`) + the board\
-    \ state.\n  2. Record the next concrete forward step for the KV260 track (per the most recent KV260\
-    \ artifact + the board\n     terminal-state definition); if it needs operator action, queue a documentation/audit\
+    \ with the\nboard via SSH ONLY -- host SD-card device nodes are PERMANENTLY retired for KV260 (KV260\n\
+    SSH-Not-SD-Card Discipline).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n   \
+    \  a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero -> honest_verdict\n\
+    \        blocked_kv260_ssh_unreachable, EXIT (do NOT use host SD-card device nodes -- permanently\
+    \ retired).\n  1. Report the loaded overlay (`ssh kria 'xmutil listapps'`) + the board state.\n  2.\
+    \ Record the next concrete forward step for the KV260 track (per the most recent KV260 artifact +\
+    \ the board\n     terminal-state definition); if it needs operator action, queue a documentation/audit\
     \ step (do NOT skip).\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
     \ \"terminal prefix; reachable + state recorded is success_/complete_; unreachable is blocked_kv260_ssh_unreachable.\"\
     \n  inference_substrate:\n    principle: \"hardware_smoke -- SSH-attached board test.\"\n  kv260_ssh_reachable:\n\
