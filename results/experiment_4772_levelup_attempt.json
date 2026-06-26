@@ -1,0 +1,144 @@
+{
+  "attempted_games": [
+    {
+      "dead_end": "ka59: same-depth reproduction reached L1 against registry prior L1; next run needs a new RE angle",
+      "game": "ka59",
+      "learned_verifier_checkpoint": null,
+      "loop_result_path": "results/arc_loop_solve_ka59.json",
+      "loop_solve_provenance": "development_proxy",
+      "new_levels_banked": 0,
+      "offline_reproduced_existing_depth": true,
+      "offline_reproduced_new_depth": false,
+      "prior_level": 1,
+      "reached_level": 1,
+      "reproduction_gate": {
+        "claimed_level": 1,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true
+      },
+      "residual_cause": "reproduced_existing_or_lower_level",
+      "solution_labels": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ],
+      "target_level": 2,
+      "target_selection_reason": "shallowest_standing_loop_deepen"
+    }
+  ],
+  "dead_ends": [
+    "ka59: same-depth reproduction reached L1 against registry prior L1; next run needs a new RE angle"
+  ],
+  "experiment": "experiment_4772_levelup_attempt",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>.",
+    "inference_substrate": "live_llm_inference if induction runs; 60s floor.",
+    "offline_reproduced": "only reproduced levels count -- a live-recorded trajectory alone is provisional.",
+    "preconditions_checked": "records arcade/env/generator checks so a missing-resource run emits blocked_, never a fabricated solve.",
+    "reproduced_levels": "the new reproducible depth; the monotonic ARC progress metric.",
+    "solve_provenance": "live_agent_self_discovery -- the agent advanced via its OWN attempts + runtime RE; NOT outer_loop_re (CRITICAL).",
+    "verifier_is_oracle": "the reproduction gate is execution-grounded (true); this is a SOLVE task, not a moat claim."
+  },
+  "honest_verdict": "complete_ka59_no_new_level_residual_existing_depth",
+  "inference_substrate": "adapter_search_only_no_induction",
+  "new_levels_banked": 0,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "induction_needed": false,
+    "offline_arcade": {
+      "check": "arc_solver_kit.offline_arcade()",
+      "ok": true
+    },
+    "qwen_igpu": {
+      "needed": false,
+      "ok": null
+    },
+    "registry_loadable": {
+      "ok": true,
+      "path": "ops/arc_solve_registry.yaml"
+    }
+  },
+  "random_seed": 4772,
+  "registry_update": {
+    "path": "ops/arc_solve_registry.yaml",
+    "reason": "no_new_level_banked",
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "updated": false
+  },
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "f8ea496158f90dec8c8fb8471292cfbede8a8df252e794bb21f54e1763195767",
+  "rotation_selection": {
+    "game": "ka59",
+    "prior_level": 1,
+    "public_rotation": [
+      {
+        "game": "re86",
+        "prior_level": 2,
+        "status": "already_reproduced"
+      },
+      {
+        "game": "sb26",
+        "prior_level": 2,
+        "status": "already_reproduced"
+      },
+      {
+        "game": "bp35",
+        "prior_level": 2,
+        "status": "already_reproduced"
+      },
+      {
+        "game": "lf52",
+        "prior_level": 2,
+        "status": "already_reproduced"
+      }
+    ],
+    "reason": "shallowest_standing_loop_deepen",
+    "skipped_shallow_non_adaptered": [
+      {
+        "game": "g50t",
+        "prior_level": 1,
+        "reason": "no_standing_adapter_for_deepen"
+      },
+      {
+        "game": "r11l",
+        "prior_level": 1,
+        "reason": "no_standing_adapter_for_deepen"
+      },
+      {
+        "game": "s5i5",
+        "prior_level": 1,
+        "reason": "no_standing_adapter_for_deepen"
+      },
+      {
+        "game": "wa30",
+        "prior_level": 1,
+        "reason": "no_standing_adapter_for_deepen"
+      }
+    ],
+    "target_level": 2
+  },
+  "schema": "carnot.exp4772.levelup_attempt.v1",
+  "schema_errors": [],
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4772",
+    "SCENARIO-ARC-WMTE-4772-ROTATION-TARGET",
+    "SCENARIO-ARC-WMTE-4772-REPRODUCTION-GATE",
+    "SCENARIO-ARC-WMTE-4772-STABLE-ARTIFACT"
+  ],
+  "target_game": "ka59",
+  "verifier_is_oracle": true
+}
