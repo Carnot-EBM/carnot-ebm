@@ -1,0 +1,260 @@
+{
+  "detector_aligned_piece_count": 0,
+  "detector_goal_count": 2,
+  "detector_pairing_gate": true,
+  "detector_piece_count": 2,
+  "detector_positive_control": {
+    "available": true,
+    "diagnostics": {
+      "aligned_piece_count": 0,
+      "complete": false,
+      "detected": true,
+      "goal_count": 2,
+      "goal_expression": "structural_piece_sprite_alignment_over_detected_objects",
+      "goals": [
+        {
+          "bbox": [
+            32,
+            17,
+            33,
+            18
+          ],
+          "center": [
+            32.5,
+            17.5
+          ],
+          "color": 11,
+          "kind": "goal_sprite"
+        },
+        {
+          "bbox": [
+            23,
+            38,
+            24,
+            39
+          ],
+          "center": [
+            23.5,
+            38.5
+          ],
+          "color": 11,
+          "kind": "goal_sprite"
+        }
+      ],
+      "object_centric_slot_count": 77,
+      "pairs": [
+        {
+          "aligned": false,
+          "alignment_distance": 12,
+          "goal": {
+            "bbox": [
+              32,
+              17,
+              33,
+              18
+            ],
+            "center": [
+              32.5,
+              17.5
+            ],
+            "color": 11,
+            "kind": "goal_sprite"
+          },
+          "piece": {
+            "bbox": [
+              34,
+              25,
+              37,
+              28
+            ],
+            "center": [
+              35.5,
+              26.5
+            ],
+            "color": 11,
+            "kind": "corner_marker_piece",
+            "target_goal_bbox": [
+              35,
+              26,
+              36,
+              27
+            ]
+          }
+        },
+        {
+          "aligned": false,
+          "alignment_distance": 15,
+          "goal": {
+            "bbox": [
+              23,
+              38,
+              24,
+              39
+            ],
+            "center": [
+              23.5,
+              38.5
+            ],
+            "color": 11,
+            "kind": "goal_sprite"
+          },
+          "piece": {
+            "bbox": [
+              34,
+              34,
+              37,
+              37
+            ],
+            "center": [
+              35.5,
+              35.5
+            ],
+            "color": 11,
+            "kind": "corner_marker_piece",
+            "target_goal_bbox": [
+              35,
+              35,
+              36,
+              36
+            ]
+          }
+        }
+      ],
+      "piece_count": 2,
+      "pieces": [
+        {
+          "bbox": [
+            34,
+            25,
+            37,
+            28
+          ],
+          "center": [
+            35.5,
+            26.5
+          ],
+          "color": 11,
+          "kind": "corner_marker_piece",
+          "target_goal_bbox": [
+            35,
+            26,
+            36,
+            27
+          ]
+        },
+        {
+          "bbox": [
+            34,
+            34,
+            37,
+            37
+          ],
+          "center": [
+            35.5,
+            35.5
+          ],
+          "color": 11,
+          "kind": "corner_marker_piece",
+          "target_goal_bbox": [
+            35,
+            35,
+            36,
+            36
+          ]
+        }
+      ],
+      "raw_goal_count": 42,
+      "verifier_is_oracle": false
+    },
+    "l1_positive_control_reaches_level": 1,
+    "l1_positive_control_steps": 63,
+    "structural_goal_detected": true
+  },
+  "detector_raw_goal_count": 42,
+  "duration_s": 2438.449242,
+  "experiment": "experiment_4750_structural_alignment_detector_fix",
+  "experiment_id": 4750,
+  "field_principles": {
+    "detector_aligned_piece_count": {
+      "principle": "must be able to reach detector_piece_count on the win frame -- direct evidence the goal is satisfiable."
+    },
+    "detector_goal_count": {
+      "principle": "the over-segmentation metric (exp4712=42); FALSIFIABLE THRESHOLD: the fix must drive goal_count down to <= detector_piece_count."
+    },
+    "detector_piece_count": {
+      "principle": "the count of detected moveable pieces -- the explicit comparator."
+    },
+    "goal_predicate_satisfiable": {
+      "principle": "_goal_satisfiability_check finds the goal True on >=1 reachable grid."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; an L2 bank is success_, an honest detector-fixed-but-no-bank null is complete_."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (runs the live agent loop); 60s floor."
+    },
+    "l2_plan_reaches_goal": {
+      "principle": "plan_in_model reaches the goal."
+    },
+    "offline_reproduced": {
+      "principle": "true only if arc_solver_kit.reproduce independently re-derives the L2 bank."
+    },
+    "preconditions_checked": {
+      "principle": "records the arcade/value-learner import checks."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery for an own-attempt advance; development_proxy for the offline twin."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the alignment predicate is over detected objects, not a learned-verifier moat."
+    }
+  },
+  "goal_expression": "structural_piece_sprite_alignment_over_detected_objects",
+  "goal_predicate_satisfiable": false,
+  "honest_verdict": "complete_detector_fixed_but_no_bank_no_reachable_plan",
+  "inference_substrate": "live_llm_inference",
+  "l2_plan_reaches_goal": false,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "a1_operator_importable": true,
+    "a1_operator_module": "carnot.agentic.arc_solver_kit.object_centric_representation_builder_operator",
+    "agents_md_read": true,
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (39 modules in the live closure).\n"
+    },
+    "codex_md_read": true,
+    "lp85_env_present": true,
+    "offline_arcade": true,
+    "ok": true,
+    "parity_test": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov -n 0",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 12 items\n\ntests/python/test_arc_submitted_agent_parity.py ............             [100%]\n\n============================== 12 passed in 7.94s ==============================\n"
+    },
+    "proposer_props_excerpt": "{\"bos_token\": \",\", \"build_info\": \"b9606-9b4dae81f\", \"chat_template\": \"{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception('System message cannot contain images.') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\\n                {%- endif %}\\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\\n   ",
+    "proposer_served_model": "Qwen3.5-9B-MTP",
+    "qwen3_5_9b_mtp_gguf_cached": true,
+    "qwen_proposer_port": 8920,
+    "qwen_proposer_port_verified": true,
+    "structural_goal_provider_importable": true
+  },
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "sha256:2015d640f71c2f4696c902358d0702dfee7f18c0e9f365776da5811c799c5285",
+  "residual_cause_hypothesis": "no_reachable_plan",
+  "result_path": "results/experiment_4750_structural_alignment_detector_fix.json",
+  "schema": "carnot.arc.structural_alignment_detector_fix_4750.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4712",
+    "SCENARIO-ARC-WMTE-4712-STRUCTURAL-ALIGNMENT-GOAL",
+    "SCENARIO-ARC-WMTE-4712-LIVE-REINDUCTION-WIRING"
+  ],
+  "upstream_experiment": "experiment_4712_perception_grounded_l2_goal_lp85",
+  "verifier_is_oracle": false
+}

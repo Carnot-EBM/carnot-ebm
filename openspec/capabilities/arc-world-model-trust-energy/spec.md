@@ -2446,6 +2446,15 @@ generic live agent path and reproduce through `arc_solver_kit.reproduce`;
 otherwise the artifact SHALL report the measured residual cause without
 fabricating a solve.
 
+The detector SHALL report only one matched goal sprite per detected marker
+piece. Distractor solid 2x2 sprites in the same frame SHALL NOT inflate
+`goal_count`; for a valid structural candidate `goal_count <= piece_count`,
+and a complete frame requires `aligned_piece_count == piece_count`.
+If the detector-fixed live run still does not bank L2, the follow-on artifact
+SHALL run a multi-exemplar fallback that banks at least two independently
+replayed L1-completion frames and reports whether the structural candidate fits
+all of them without using the environment level-up oracle.
+
 Experiment 4712 SHALL write
 `results/experiment_4712_perception_grounded_l2_goal_lp85.json` with
 principle-annotated top-level fields for `honest_verdict`,
@@ -2484,6 +2493,9 @@ solid goal sprites
 **When** the A1 object-centric perception substrate builds marker-pair objects
 **Then** the structural predicate returns true exactly when every detected
 corner-marker piece has a goal sprite in its interior alignment position.
+The exposed diagnostics SHALL use one-to-one piece/goal pairing so a real
+`lp85` post-L1 frame with many distractor 2x2 tiles does not over-segment into
+more goal sprites than detected pieces.
 
 #### SCENARIO-ARC-WMTE-4712-LIVE-REINDUCTION-WIRING
 

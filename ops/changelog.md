@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix — codex)
+
+- Fixed the two failing Exp 4750 tests without reverting prior detector changes and without modifying
+  `scripts/research_conductor.py`. Added the missing `multi_exemplar_fallback_from_l1_traces` API, replayed
+  independent lp85 L1-completion traces from Exp 4664 and `arc3_lp85_offline_resolve`, and threaded
+  `multi_exemplar_fallback` / `multi_exemplar_fallback_used` into `artifact_from_reinduction` verdicts.
+- Validation: `pytest -q -o addopts='' tests/python/test_experiment_4750_structural_alignment_detector_fix.py`
+  passed (`6 passed`); adjacent `pytest -q -o addopts='' tests/python/test_experiment_4712_perception_grounded_l2_goal_lp85.py tests/python/test_experiment_4750_structural_alignment_detector_fix.py`
+  passed (`10 passed`); focused Ruff check/format passed. Repo-wide spec coverage remains blocked by
+  pre-existing unreferenced legacy tests (`1124 test(s) missing spec traceability`).
+
 ## 2026-06-25 (Operational retrospective .435 -- recurring false-zero timing-detector gap, ~73rd milestone; .435 = bridge-not-crossed null + A3 banks +1 (63->64) -- outer-loop)
 
 Operational retro for milestone 2026.06.435. The retro's authoritative milestone-scoped timing detector AGAIN false-reported 0 commits since activation (the recurring observability gap documented .363-.434, now ~73 milestones); on-disk artifacts exp4725-exp4735 (mtimes 05:36->13:10 EDT, ~454-min window) show the milestone executed cleanly. Locked retro fields stay at the detector's 0/0/0/null per conductor constraint; interpretive fields + research-log corrected from on-disk evidence.

@@ -1,5 +1,13 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-06-26 Exp 4750 structural-alignment detector
+regression fix added the missing multi-exemplar L1-completion fallback API and
+artifact fields for `REQ-ARC-WMTE-4712`, with focused tests in
+`tests/python/test_experiment_4750_structural_alignment_detector_fix.py`.
+Validation: Exp 4750 focused tests (`6 passed`), adjacent Exp 4712+4750 tests
+(`10 passed`), and focused Ruff check/format passed. The full spec-coverage
+audit is still blocked by pre-existing unreferenced legacy tests.
+
 **Operational Note:** 2026-06-20 REQ-REPORT-4482 regression fix exposed the
 ARC roadmap no-cov activation guard through `scripts/arc_nocov_precondition_lint.py`
 and the `scripts/__init__.py` package hook, without modifying
@@ -9,7 +17,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-05-27 (Milestone 2026.05.294 operational retrospective recorded; artifact/status-only update, no new REQ-/SCENARIO-* items or implementation status changes)
+**Last Updated:** 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix; REQ-ARC-WMTE-4712 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
@@ -1726,3 +1734,6 @@ legacy tests.
 | REQ-REPORT-4358 | Archive .402, activate .403, and preserve the true close-state | Implemented | python/carnot/reporting/archive_v402_activate_v403_4358.py; results/experiment_4358_archive_v402_activate_v403.json |
 | SCENARIO-REPORT-4358 | Exp 4358 records the true `.402` close-state and emits a terminal successful archive artifact | Implemented | tests/python/test_experiment_4358_archive_v402_activate_v403.py |
 | SCENARIO-REPORT-4358-BLOCKED-PRECONDITION | Exp 4358 blocked paths stop before fabrication and record failed preconditions | Implemented | tests/python/test_experiment_4358_archive_v402_activate_v403.py |
+| REQ-ARC-WMTE-4712 | Perception-grounded structural alignment L2 goal and detector-fixed fallback reporting | Implemented | `python/carnot/agentic/arc_value_learner.py`; `python/carnot/experiment_4750_structural_alignment_detector_fix.py`; `tests/python/test_experiment_4712_perception_grounded_l2_goal_lp85.py`; `tests/python/test_experiment_4750_structural_alignment_detector_fix.py` |
+| SCENARIO-ARC-WMTE-4712-STRUCTURAL-ALIGNMENT-GOAL | One-to-one marker/goal pairing and multi-exemplar L1-completion fallback diagnostics | Implemented | `tests/python/test_experiment_4750_structural_alignment_detector_fix.py` |
+| SCENARIO-ARC-WMTE-4712-LIVE-REINDUCTION-WIRING | Live reinduction receives the structural goal provider and detector diagnostics | Implemented | `tests/python/test_experiment_4712_perception_grounded_l2_goal_lp85.py`; `python/carnot/experiment_4750_structural_alignment_detector_fix.py` |
