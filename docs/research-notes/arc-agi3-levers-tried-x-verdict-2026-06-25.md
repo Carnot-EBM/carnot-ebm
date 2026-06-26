@@ -119,7 +119,7 @@ These are the `unbuilt_mapped_only` ingestions (genuinely untried — mapping ar
 
 **open_active reopen flags (closed verdicts that the silent-bug audit says must be reopened, NOT clean nulls):**
 - online action-learning driver corrected re-run (`experiment_4715`) — `dead_code_or_silent_bug`, P0 reopen-as-435-A1 (byte-identical arms / 0.04 tautology).
-- amortized prior + Go-Explore archive live (`experiment_4701`) — `dead_code_or_silent_bug`, P1 rerun-after-frame-grid-fix-with-positive-archive-cells.
+- amortized prior + Go-Explore archive live (`experiment_4701`) — `dead_code_or_silent_bug`, P1 rerun-after-frame-grid-fix-with-positive-archive-cells. **RESOLVED `.445 (exp4831): fair-test reran — archive ALIVE this time (obs=2, cells=2, prefixes=1; NOT the dead 0/0/0) + `prior_changed_proposals=True` (exercised, not a no-op), but first_win 0.0 in BOTH arms on n=1 held-out (bp35) → no lift, L1 wall survives. The exploration-prior class is consistent-with-RETIRED (caveat: thin n=1 held-out test). Root cause = perception/representation (.446 frontier).**
 - structured ProductWorldModel vs free-form (`experiment_4749`) — `dead_code_or_silent_bug`, null must NOT be propagated (dead/identity engine + TAUTOLOGY corrigendum).
 
 ---
