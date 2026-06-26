@@ -1,0 +1,345 @@
+{
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4761,
+      "fields_imported": [
+        "honest_verdict",
+        "s0_gate_passed",
+        "retire_energy_guided_direction",
+        "retire_if_same_verdict",
+        "loo_auroc_structural",
+        "loo_auroc_majority_control",
+        "loo_auroc_marginal_control",
+        "origin_probe_auroc",
+        "structural_minus_marginal_delta_ci95",
+        "n_held_out_games",
+        "n_candidate_rows",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:ca3a0a104aee73976fc7561a5e5278214a9e4b6004b5eba0288e079bed465cff"
+    },
+    {
+      "experiment_id": 4762,
+      "fields_imported": [
+        "honest_verdict",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "registry_update",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:74161164ba8d1a118746cc4260b090652147a35689f686da7ffad79f63324f32"
+    },
+    {
+      "experiment_id": 4763,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:3f221ed0c3523500024500bfebafee05270c629ad08ada4f9d31f1e8492f9b82"
+    },
+    {
+      "experiment_id": 4764,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "first_win_baseline",
+        "prior_best_heldout_first_win_rate",
+        "heldout_first_win_delta_vs_baseline",
+        "heldout_first_win_delta_vs_prior_best",
+        "parity_test_green",
+        "positive_control_passed"
+      ],
+      "sha256": "sha256:b960e0bb18da7dfdbc3cb6426731a98bb73ee2c4aa9c6847d55124a98ac68038"
+    },
+    {
+      "experiment_id": 4765,
+      "fields_imported": [
+        "honest_verdict",
+        "nulls_audited",
+        "trusted_nulls",
+        "silent_bugs_found",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:5762e4cabcd44428a90e3ce42f09e8e5cada1bf159a116a412a63d098081aad1"
+    },
+    {
+      "experiment_id": 4766,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:f48c0fdbeba4d7b778f0175eaf9e72a72933b2afce120594f71768f583ac3a54"
+    },
+    {
+      "experiment_id": 4767,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:b7321d70a18c0b12cfcae27c6bd55b86d0c0b16abac42e2df6ce0dd2b4ce2944"
+    },
+    {
+      "experiment_id": 4768,
+      "fields_imported": [
+        "honest_verdict",
+        "s0_context",
+        "flagged_for_v439",
+        "methods_mapped"
+      ],
+      "sha256": "sha256:23f27d4818417d83192a1fd2d44444bd70f0fe97643b20c3b99c17079936f1e8"
+    }
+  ],
+  "duration_s": 0.433931,
+  "experiment": "experiment_4769_capstone_v438",
+  "experiment_id": 4769,
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail proving the capstone synthesizes real measurements."
+    },
+    "flagged_artifacts_skipped": {
+      "principle": "records which flagged_adversarial artifacts were excluded -- never aggregate a fabricated number."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; capstone_ready=true is success_/complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric carried from the registry, not re-counted."
+    },
+    "s0_structural_energy_verdict": {
+      "principle": "the headline -- direction ALIVE (S0 passed, S1 queued) or RETIRED (S0 nulled); the milestone's load-bearing result."
+    }
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4763,
+      "path": "results/experiment_4763_self_play_verifier_checkpoint.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:3f221ed0c3523500024500bfebafee05270c629ad08ada4f9d31f1e8492f9b82",
+      "source": "SELF_PLAY"
+    },
+    {
+      "experiment_id": 4766,
+      "path": "results/experiment_4766_submission_package_harden.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:f48c0fdbeba4d7b778f0175eaf9e72a72933b2afce120594f71768f583ac3a54",
+      "source": "PACKAGE"
+    }
+  ],
+  "hardware_continuity": {
+    "decision": "kv260_reachable",
+    "experiment_id": 4767,
+    "kv260_ssh_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "source": "HARDWARE"
+  },
+  "heldout_readiness": {
+    "decision": "flat_null_no_readiness_gain",
+    "experiment_id": 4764,
+    "first_win_baseline": 0.04,
+    "heldout_first_win_delta_vs_baseline": 0.0,
+    "heldout_first_win_delta_vs_prior_best": 0.0,
+    "heldout_first_win_rate": 0.04,
+    "parity_test_green": true,
+    "positive_control_passed": true,
+    "prior_best_heldout_first_win_rate": 0.04,
+    "source": "HELDOUT"
+  },
+  "honest_verdict": "complete: s0_structural_energy_retired_v438_capstone_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "levelup_bank": {
+    "experiment_id": 4762,
+    "moat_claim": false,
+    "new_levels_banked": 0,
+    "registry_updated": false,
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "reproducible_total_levels_delta": 0,
+    "source": "LEVELUP",
+    "target_game": "re86",
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4769": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "BUG_AUDIT": {
+        "path": "results/experiment_4765_silent_bug_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HARDWARE": {
+        "path": "results/experiment_4767_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HELDOUT": {
+        "path": "results/experiment_4764_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "LEVELUP": {
+        "path": "results/experiment_4762_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "PACKAGE": {
+        "path": "results/experiment_4766_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "S0": {
+        "path": "results/experiment_4761_structural_energy_s0_core_bet_probe.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SELF_PLAY": {
+        "path": "results/experiment_4763_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SOTA": {
+        "path": "results/experiment_4768_sota_ingestion_structural_energy.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 4769,
+  "reproducibility_checksum": "sha256:59ba9791d4f38d9adbe0b68c98fef93e9d524406592cde0a8029be6b6cde6066",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4769_capstone_v438.json",
+  "s0_structural_energy_verdict": {
+    "direction": "RETIRED",
+    "experiment_id": 4761,
+    "loo_auroc_majority_control": 0.5,
+    "loo_auroc_marginal_control": 0.464578396462,
+    "loo_auroc_structural": 0.745588188062,
+    "n_candidate_rows": 463,
+    "n_held_out_games": 16,
+    "origin_probe_auroc": 0.732792721071,
+    "reason": "s0_gate_failed_or_null_or_leaky",
+    "retire_energy_guided_direction": true,
+    "retire_if_same_verdict": true,
+    "s0_gate_passed": false,
+    "s1_queued": false,
+    "source": "S0",
+    "structural_minus_marginal_delta_ci95": [
+      0.17481816435901296,
+      0.39015500191631836
+    ],
+    "upstream_honest_verdict": "complete: structural_energy_s0_retired_loo_0.746_null_or_leaky",
+    "verifier_is_oracle": false
+  },
+  "schema": "carnot.exp4769.capstone_v438.v1",
+  "self_play_checkpoint": {
+    "decision": "skipped_flagged_adversarial",
+    "experiment_id": 4763,
+    "source": "SELF_PLAY"
+  },
+  "silent_bug_audit": {
+    "experiment_id": 4765,
+    "nulls_audited": 3,
+    "reopened_null_ids": [
+      "experiment_4761_structural_energy_s0_core_bet_probe"
+    ],
+    "s0_reopened_for_origin_probe_leak": true,
+    "silent_bugs_found_count": 1,
+    "source": "BUG_AUDIT",
+    "trusted_nulls": [
+      "experiment_4762_levelup_attempt",
+      "experiment_4764_heldout_first_win_readiness"
+    ]
+  },
+  "sota_handoff": {
+    "decision": "sota_handoff_mapped",
+    "experiment_id": 4768,
+    "flagged_for_v439_candidates": [
+      "slot_factor_transition_energy_rerun",
+      "poe_code_world_model_trust_gate"
+    ],
+    "methods_mapped_count": 4,
+    "s0_context": {
+      "imported_honest_verdict": "complete: structural_energy_s0_retired_loo_0.746_null_or_leaky",
+      "loo_auroc_structural": 0.7455881880622204,
+      "origin_probe_auroc": 0.7327927210707903,
+      "planning_constraint": "origin_probe_leak means S1-S4 candidates are v439 planning inputs only after a leak-hardened rerun or factorized provenance guard.",
+      "source_artifact": "results/experiment_4761_structural_energy_s0_core_bet_probe.json",
+      "stage": "S0",
+      "structural_minus_marginal_delta_ci95": [
+        0.17481816435901296,
+        0.39015500191631836
+      ]
+    },
+    "source": "SOTA"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4769",
+    "SCENARIO-CAPSTONE-4769",
+    "SCENARIO-CAPSTONE-4769-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4769-FIELD-PRINCIPLES"
+  ],
+  "submission_package_state": {
+    "decision": "skipped_flagged_adversarial",
+    "experiment_id": 4766,
+    "source": "PACKAGE"
+  },
+  "upstream_oracle_declarations": {
+    "BUG_AUDIT": {
+      "experiment_id": 4765,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HARDWARE": {
+      "experiment_id": 4767,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HELDOUT": {
+      "experiment_id": 4764,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "LEVELUP": {
+      "experiment_id": 4762,
+      "moat_claim_allowed": false,
+      "verifier_is_oracle": true
+    },
+    "PACKAGE": {
+      "experiment_id": 4766,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "S0": {
+      "experiment_id": 4761,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SELF_PLAY": {
+      "experiment_id": 4763,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SOTA": {
+      "experiment_id": 4768,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    }
+  }
+}
