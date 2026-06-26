@@ -1,0 +1,159 @@
+{
+  "duration_s": 11.302184,
+  "experiment": "experiment_4752_held_out_first_win_readiness",
+  "experiment_id": 4752,
+  "field_principles": {
+    "first_win_ci": {
+      "principle": "the bootstrap CI -- distinguishes a real delta from noise."
+    },
+    "first_win_rate_integrated": {
+      "principle": "the held-out first-win rate -- the SCORE; unchanged math from prior milestones for comparability."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a flat/no-change readiness is complete_, a readiness improvement is success_."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (the proxy runs the live agent); 60s floor (or a lever-cache hit aggregation)."
+    },
+    "partial": {
+      "principle": "true if the soft budget stopped the run before completion (resumable) -- the cap-survival signal; false on a full run."
+    },
+    "preconditions_checked": {
+      "principle": "records GGUF/arcade checks."
+    },
+    "submission_package_ready": {
+      "principle": "True only if the package is OPERATOR-ready; this task NEVER submits (operator-only external publication)."
+    }
+  },
+  "first_win_baseline": 0.04,
+  "first_win_ci": {
+    "bootstrap_resamples": 1000,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "method": "paired_percentile_bootstrap",
+    "point": 0.0,
+    "random_seed": 4605
+  },
+  "first_win_ci_lower": 0.0,
+  "first_win_delta_vs_baseline": 0.0,
+  "first_win_rate_integrated": 0.04,
+  "held_out_first_win_readiness": true,
+  "held_out_proxy_summary": {
+    "first_win_baseline": 0.04,
+    "first_win_ci": {
+      "bootstrap_resamples": 1000,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "paired_percentile_bootstrap",
+      "point": 0.0,
+      "random_seed": 4605
+    },
+    "first_win_ci_lower": 0.0,
+    "first_win_delta_vs_baseline": 0.0,
+    "first_win_rate_integrated": 0.04,
+    "held_out_variant_attempts": 100,
+    "multi_level_deepen_rate_integrated": 0.0,
+    "proxy_cache_reason": "Existing Exp4605 held-out proxy is complete and SCORE-compatible; 4752 changes only result persistence and field reporting.",
+    "proxy_cache_used": true,
+    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+  },
+  "held_out_variant_attempt_floor": "B>=100",
+  "held_out_variant_attempts": 100,
+  "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+  "inference_substrate": "live_llm_inference -- the checkpoint/resume proxy runs the live submitted ARC agent over held-out variants; 60s floor unless a lever-cache hit aggregates an existing proxy artifact.",
+  "multi_level_deepen_rate_integrated": 0.0,
+  "null_delta_methodology_note": "Held-out first-win is flat vs baseline (first_win_rate_integrated == first_win_baseline, delta=0.0): no lever moved the leaderboard-relevant metric in this readiness run. The equality is an honest no-leaderboard-change null; positive_control_passed passed and gates whether the flat null is excused.",
+  "operator_only": true,
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.71s ==============================\n"
+  },
+  "parity_test_green": true,
+  "partial": false,
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "experiment_4605_importable": true,
+    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
+    "experiment_4605_importable_returncode": 0,
+    "offline_arcade": true,
+    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
+    "offline_arcade_returncode": 0,
+    "ok": true,
+    "qwen35_mtp_gguf_cached": true,
+    "qwen35_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+  },
+  "prior_milestone": {
+    "exists": true,
+    "experiment_id": 4740,
+    "first_win_ci": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "source_lower_bound_only",
+      "point": 0.0
+    },
+    "first_win_rate_integrated": 0.04,
+    "held_out_first_win_readiness": true,
+    "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+    "multi_level_deepen_rate_integrated": 0.0,
+    "partial": false,
+    "path": "results/experiment_4740_held_out_first_win_readiness.json"
+  },
+  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
+  "random_seed": 4752,
+  "readiness_delta_vs_prior_milestone": {
+    "current_readiness": true,
+    "first_win_rate_delta": 0.0,
+    "multi_level_deepen_rate_delta": 0.0,
+    "prior_exists": true,
+    "prior_experiment_id": 4740,
+    "prior_readiness": true,
+    "prior_result_path": "results/experiment_4740_held_out_first_win_readiness.json",
+    "readiness_changed": false
+  },
+  "ready_for_operator_submit": false,
+  "replay_count_is_not_the_score": true,
+  "replay_floor": {
+    "live_submittable_level_count": 60,
+    "live_submittable_subset_of_reproducible": true,
+    "note": "replay package floor only; live_submittable_level_count is not the leaderboard score.",
+    "offline_reproduced": true,
+    "package_exists": true,
+    "package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
+    "ready_for_operator_submit": true,
+    "replay_package_floor_reproduced": true,
+    "reproducible_total_levels": 65,
+    "reproducible_vs_submittable_gap": 5,
+    "source_result_exists": true,
+    "source_result_path": "results/experiment_4679_refresh_submission_package.json"
+  },
+  "replay_floor_package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
+  "replay_package_floor_reproduced": true,
+  "reproducibility_checksum": "sha256:d69ef81fea5fb1048a9022181b6dc3cfe0cdf7bfa4a90a02bb60e36e5bf4044a",
+  "result_path": "results/experiment_4752_held_out_first_win_readiness.json",
+  "schema": "carnot.arc.held_out_first_win_readiness_4752.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4752",
+    "SCENARIO-CAPSTONE-4752",
+    "SCENARIO-CAPSTONE-4752-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4752-FIELD-PRINCIPLES"
+  ],
+  "submission_package_readiness": {
+    "exists": true,
+    "honest_verdict": "complete: submission_package_blocked_manifest_resources",
+    "path": "results/experiment_4744_submission_package_readiness.json",
+    "submission_package_ready": false
+  },
+  "submission_package_ready": false,
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false
+}
