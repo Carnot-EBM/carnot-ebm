@@ -1,0 +1,360 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "4b36300e3d521e91f44e883989478ff3c6aaf608d521fe60da504997f58e86a5",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "capstone_ready",
+        "s2_structural_energy_verdict",
+        "readiness",
+        "levelup_bank",
+        "flagged_artifacts_skipped",
+        "sota_handoff",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4799_capstone_v441.json",
+      "sha256": "5ee39070a7382c709164daa80639084571a39b94c415a7a655776391c3d5b2ab",
+      "source": "experiment_4799_capstone_v441"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_adversarial",
+        "verifier_is_oracle",
+        "live_path_reachable",
+        "energy_minus_accuracy_delta",
+        "energy_minus_accuracy_delta_ci95",
+        "n_heldout_games",
+        "min_heldout_games",
+        "game_results"
+      ],
+      "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+      "sha256": "70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047",
+      "source": "experiment_4791_structural_energy_s2_offpath_trust_gate"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_441": {
+    "capstone_honest_verdict": "complete_s2_structural_energy_bounded_v441_capstone_ready",
+    "capstone_misrecorded_bounded_null": true,
+    "capstone_ready": true,
+    "capstone_reported_reproducible_total_levels": 65,
+    "capstone_reported_s2_verdict": "bounded",
+    "capstone_reported_s3_authorized": false,
+    "flagged_artifacts_skipped": [
+      {
+        "experiment_id": 4791,
+        "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+        "reason": "live_critical_recheck",
+        "sha256": "sha256:70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047",
+        "source": "S2"
+      }
+    ],
+    "levelup_bank": {
+      "experiment_id": 4792,
+      "moat_claim": false,
+      "new_levels_banked": 0,
+      "offline_reproduced": false,
+      "registry_updated": false,
+      "reproduced_levels": 0,
+      "reproducible_total_levels_after": 65,
+      "reproducible_total_levels_before": 65,
+      "reproducible_total_levels_delta": 0,
+      "source": "LEVELUP",
+      "target_game": "sb26",
+      "verifier_is_oracle": true
+    },
+    "readiness": {
+      "heldout_decision": "flat_null_no_readiness_gain",
+      "ready_for_operator_submit": false,
+      "reason": "requires_s2_trust_gate_win_clean_package_and_heldout_gain",
+      "s2_verdict": "bounded",
+      "submission_package_decision": "package_ready_operator_only"
+    },
+    "reproducible_total_levels": 65,
+    "s2_corrected_record": {
+      "behaviorally_identical_games": [
+        "ar25",
+        "ka59"
+      ],
+      "candidate_pool_diversity": [
+        {
+          "behaviorally_identical_candidates": true,
+          "effective_for_selection": false,
+          "game": "ar25",
+          "heldout_cell_recall_spread": 0.0,
+          "heldout_cell_recall_values": [
+            1.0,
+            1.0
+          ],
+          "n_candidates": 2,
+          "offpath_structural_energy_spread": 0.0
+        },
+        {
+          "behaviorally_identical_candidates": false,
+          "effective_for_selection": false,
+          "game": "cd82",
+          "heldout_cell_recall_spread": 0.0,
+          "heldout_cell_recall_values": [
+            0.0,
+            0.0
+          ],
+          "n_candidates": 2,
+          "offpath_structural_energy_spread": 999502.2509369875
+        },
+        {
+          "behaviorally_identical_candidates": false,
+          "effective_for_selection": true,
+          "game": "cn04",
+          "heldout_cell_recall_spread": 0.006218905473,
+          "heldout_cell_recall_values": [
+            0.04477611940298507,
+            0.04477611940298507,
+            0.05099502487562189
+          ],
+          "n_candidates": 3,
+          "offpath_structural_energy_spread": 3.552960214501
+        },
+        {
+          "behaviorally_identical_candidates": true,
+          "effective_for_selection": false,
+          "game": "ka59",
+          "heldout_cell_recall_spread": 0.0,
+          "heldout_cell_recall_values": [
+            0.864406779661017,
+            0.864406779661017
+          ],
+          "n_candidates": 2,
+          "offpath_structural_energy_spread": 0.0
+        },
+        {
+          "behaviorally_identical_candidates": false,
+          "effective_for_selection": true,
+          "game": "sc25",
+          "heldout_cell_recall_spread": 0.121621621622,
+          "heldout_cell_recall_values": [
+            0.12162162162162163,
+            0.0
+          ],
+          "n_candidates": 2,
+          "offpath_structural_energy_spread": 372.483199522534
+        }
+      ],
+      "corrected_verdict": "inconclusive_degenerate_pool",
+      "effective_game_gate_passed": false,
+      "effective_games": [
+        "cn04",
+        "sc25"
+      ],
+      "energy_direction_state": "inconclusive_not_bounded_not_passed",
+      "equal_recall_non_effective_games": [
+        "ar25",
+        "cd82",
+        "ka59"
+      ],
+      "min_effective_games_required": 5,
+      "n_effective_games": 2,
+      "n_total_games": 5,
+      "reason": "Exp4791 reported a zero delta, but the candidate pool only produced two effective held-out games with distinct cell-recall outcomes.",
+      "reported_energy_minus_accuracy_delta": 0.0,
+      "reported_energy_minus_accuracy_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "reported_flagged_adversarial": true,
+      "reported_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
+      "reported_live_path_reachable": true,
+      "reported_verifier_is_oracle": false,
+      "s2v2_required": true
+    },
+    "sota_handoff": {
+      "arxiv_ids_cited": [
+        "1806.10230",
+        "1909.06878",
+        "2012.04322",
+        "2105.05233",
+        "2202.11705",
+        "2207.12598",
+        "2309.15028",
+        "2502.07202"
+      ],
+      "decision": "sota_handoff_mapped",
+      "experiment_id": 4798,
+      "flagged_for_v442_candidates": [
+        "cold_cfg_value_tree_generator_for_s3",
+        "energy_fitness_qd_pool_inserter"
+      ],
+      "methods_mapped_count": 5,
+      "s1_s2_context": {
+        "generation_constraint": "Use S1/S2 lower-is-better energy to guide new candidate generation and trust gating, not as an environment oracle or solve claim.",
+        "s1_energy_ranking_loo_auroc_mean": 0.7134961314270525,
+        "s1_gate_passed": true,
+        "s1_imported_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+        "s1_source_artifact": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+        "s2_candidate_pool_size": 11,
+        "s2_energy_minus_accuracy_delta": 0.0,
+        "s2_imported_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
+        "s2_live_path_reachable": true,
+        "s2_n_heldout_games": 5,
+        "s2_source_artifact": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+        "s3_generation_allowed": true
+      },
+      "source": "SOTA"
+    }
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4800_archive_441_activate_442",
+  "experiment_id": 4800,
+  "field_principles": {
+    "close_state_441": {
+      "principle": "the honest `.441` close-state carried from Exp4799 plus the corrected Exp4791 candidate-diversity read so the bounded-null misrecord does not pause S2-v2."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_441_archived_442_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "poison_test_resolved": {
+      "principle": "records whether a poison pre-test was found+fixed -- the cascade-skip guard."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    },
+    "s2_recorded_as_inconclusive": {
+      "principle": "S2 (exp4791) was a degenerate non-test, NOT a bounded null -- the record must not pause the energy direction on it."
+    },
+    "v442_pivot": {
+      "principle": "the `.442` headline rationale (S2-v2 diverse-pool off-path trust gate) recorded so milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "complete_441_archived_442_activated_already_active_s2_inconclusive_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "no_poison_observed_current_gate_green",
+    "current_gate_passed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.442",
+      "milestone_before_activation": "2026.06.442",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "capstone_4799": {
+      "available": true,
+      "path": "results/experiment_4799_capstone_v441.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4800": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade(); print('ok')\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('ok')\"",
+      "literal_precondition_passed": false,
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "s2_4791": {
+      "available": true,
+      "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4800_archive_441_activate_442.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 7.23s\n"
+    }
+  },
+  "random_seed": 4800,
+  "reproducibility_checksum": "sha256:67e69e86af3686ab3ec092fb26d56779e94335843cb807bfb70500f309eae192",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4800_archive_441_activate_442.json",
+  "s2_recorded_as_inconclusive": true,
+  "schema": "carnot.archive_activation.v441_to_v442_4800.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4800",
+    "SCENARIO-CAPSTONE-4800",
+    "SCENARIO-CAPSTONE-4800-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4800-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.442",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.441"
+  },
+  "v442_pivot": {
+    "candidate_diversity_gate": "count a game only when candidate engines produce at least two distinct held-out off-path cell_recall values",
+    "direction": "retest S2 with a diverse candidate pool; do not treat Exp4791's degenerate zero-delta as a bounded null",
+    "enforces_behaviorally_diverse_candidate_pool": true,
+    "headline": "S2-v2 diverse-pool off-path trust gate",
+    "minimum_effective_games_required": 5,
+    "source_correction": "exp4791_s2_inconclusive_degenerate_pool",
+    "task_id": "exp4801-a1"
+  }
+}
