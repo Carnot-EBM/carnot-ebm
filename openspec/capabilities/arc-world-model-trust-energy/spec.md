@@ -8037,6 +8037,83 @@ Then the call includes a `goal_energy` guidance callable; when
 `goal_guidance_lambda == 0`, the same path calls `plan_in_model` without
 goal-energy guidance.
 
+### REQ-ARC-WMTE-4825: .444 ARC Null Silent-Bug Audit
+
+Experiment 4825 SHALL audit the `.444` ARC null artifacts before their negative
+verdicts are treated as capability limits. The audit SHALL read
+`results/experiment_4821_structural_energy_s3_generation_lift.json`,
+`results/experiment_4822_levelup_attempt.json`, and
+`results/experiment_4824_heldout_first_win_readiness.json`. Missing `.444`
+source artifacts SHALL produce a blocked artifact rather than a fabricated
+audit. Experiment 4823 is a self-play checkpoint slot and SHALL be excluded
+from the null count unless it emits a terminal ARC null artifact.
+
+For S3/Experiment 4821, the audit SHALL verify the matched lambda-zero control:
+the guided and lambda-zero arms use the same games, seeds, and budget; the
+artifact reports `lambda_guidance > 0` and a `lambda0_control` with
+`lambda=0.0` and `matched_control=true`; the per-game headroom set has at least
+the required minimum; all headroom games have `positive_control_reachable=true`;
+and any E-banked level counted as new is not already in the bare explorer pool.
+The audit SHALL independently confirm live-path reachability from the artifact's
+`live_path_reachable=true` and a passing `arc_orphan_solver_lint` precondition.
+
+The audit SHALL additionally verify that S3 guidance was non-trivially
+exercised. `s3_guidance_exercised` SHALL be true only when the S3 artifact
+contains positive evidence that the lambda-one run produced different candidate
+proposals, search states, explored nodes, or equivalent search fingerprints
+than the matched lambda-zero control on at least one headroom game. If the
+matched controls pass but no such differing proposal/search evidence exists,
+the audit SHALL classify S3 as `inconclusive_guidance_no_op` rather than a
+trustworthy generation null.
+
+For the other ARC nulls, the audit SHALL verify that the lever was genuinely
+exercised. The level-up no-bank null SHALL have non-empty attempted-game rows,
+target/depth accounting, same-depth or terminal residual evidence, reproduction
+gates for reproduced depths, and same-depth versus new-depth accounting. The
+held-out first-win null SHALL have the held-out attempt floor, positive-control
+parity, parity-test success, proxy aggregation evidence, and a non-empty flat
+`0.04` methodology note.
+
+Experiment 4825 SHALL write `results/experiment_4825_silent_bug_audit.json`
+and append a human-readable section to `ops/arc_null_silent_bug_audit.md`. The
+artifact SHALL include principle-annotated top-level fields for
+`honest_verdict`, `s3_controls_verified`, `s3_guidance_exercised`,
+`nulls_audited`, and `inference_substrate`, plus per-null verdicts,
+silent-bug findings, trusted nulls, S3 control checks, preconditions, checksums
+for audited artifacts, duration, random seed, and a stable reproducibility
+checksum. The audit SHALL make no solve, leaderboard, training, ops-status, or
+fresh live-inference claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `s3_controls_verified`: principle "the load-bearing check -- matched lambda=0, NEW-levels-not-re-ranking, reachable-winner positive control; else S3's verdict is uninterpretable."
+- `s3_guidance_exercised`: principle "true only if lambda=1 produced different candidate proposals/search than lambda=0 on >=1 headroom game -- else the S3 0.0 delta is a no-op, not a genuine generation null."
+- `nulls_audited`: principle "count of nulls re-examined."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4825-SILENT-BUG-AUDIT
+
+Given the `.444` S3 generation-lift, level-up no-bank, and held-out first-win
+null artifacts are present
+When Experiment 4825 cross-checks exercised-evidence fields and S3 matched
+control evidence
+Then it writes `results/experiment_4825_silent_bug_audit.json`, sets
+`s3_controls_verified=true` only when the lambda-zero control is matched,
+headroom winners are reachable, NEW levels are not re-ranking, and live-path
+reachability is confirmed, sets `s3_guidance_exercised=true` only when
+proposal/search evidence differs between guided and bare arms on at least one
+headroom game, and marks S3 `inconclusive_guidance_no_op` when the guidance was
+not exercised.
+
+#### SCENARIO-ARC-WMTE-4825-BLOCKED-PRECONDITION
+
+Given any required `.444` source artifact is missing
+When Experiment 4825 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, no markdown append, and a
+stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4781: S1 Contrastive Structural Energy Landscape
 
 Experiment 4781 SHALL promote the S0' origin-matched structural signal into a
