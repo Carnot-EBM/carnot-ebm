@@ -10,6 +10,48 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4808-SOTA-INGESTION-ENERGY-GUIDED-GENERATION-START -->
+## 2026-06-26 Exp 4808 - .443 energy-guided generation SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4808_sota_ingestion_energy_guided_generation.json`.
+
+**Preconditions:** `research-studying.md` and `research-references.md` were
+present. `scripts/sweep_clusters.py` emitted the EBM and neural-guided search
+cluster URLs. `scripts/sweep_semscholar.py` was run on three focused
+energy-guided generation queries and returned HTTP 429 for all of them, so no
+S2-only source was promoted. Low-concurrency WebSearch/WebFetch plus direct
+arXiv HTTP checks verified the top eight papers listed below. `/deep-research`
+was not invoked. No model load, training, leaderboard submission, or solve
+claim was made; this is a no solve claim ingestion note.
+
+**Verified source set:**
+- arXiv:1806.10230 -- Guided evolutionary strategies: Augmenting random search with surrogate gradients
+- arXiv:1909.06878 -- Model Based Planning with Energy Based Models
+- arXiv:2202.11705 -- COLD Decoding: Energy-based Constrained Text Generation with Langevin Dynamics
+- arXiv:2207.12598 -- Classifier-Free Diffusion Guidance
+- arXiv:2305.12018 -- BOLT: Fast Energy-based Controlled Text Generation with Tunable Biases
+- arXiv:2309.15028 -- Do not throw away your value model! Generating more preferable text with Value-Guided Monte-Carlo Tree Search decoding
+- arXiv:2502.07202 -- Monte Carlo Tree Diffusion for System 2 Planning
+- arXiv:2605.28814 -- Self-Improving Language Models with Bidirectional Evolutionary Search
+
+**SOTA -> S3 energy-guided generation mapping:**
+- **Energy-constrained sampler with fast logit-bias refinement** (arXiv:2202.11705, arXiv:2305.12018): maps to S3; Represent action programs or latent plans as variables under the S3 energy, then use short Langevin-style edits or BOLT-style tunable biases to move candidates before hard mechanics verification. Winner insertion: Generate a small guided batch, replay-verify each candidate, and put the lowest-energy verified winner into the explorer pool. Takes over: Takes over blind local mutation when the pool has no candidate that already wins but the verifier can score partial plausibility. Fails when: The candidate representation has no smooth edit neighborhood, energy gradients point toward unplayable programs, or bias tuning collapses diversity before verification.
+- **Classifier/score-guided proposal sampler** (arXiv:2207.12598): maps to S3; Treat S3 energy as a classifier-like guidance signal during proposal construction, with guidance strength increased only after action syntax and transition checks keep the candidate executable. Winner insertion: Sample a guided batch, choose the verified candidate with the best lower-is-better score, and put that winner into the live pool. Takes over: Takes over unguided proposal batches whose candidates are scored only after generation has already spent the action budget. Fails when: Guidance scale overwhelms diversity, the score follows a provenance shortcut, or high guidance yields valid-looking but unplayable plans.
+- **Value-guided tree and diffusion generation** (arXiv:2309.15028, arXiv:2502.07202): maps to S3; Expand partial generated plans as a tree and use negative energy as the value term for partial rollouts; revisit branches whose decoded or denoised continuations improve the trust score. Winner insertion: Complete the best tree leaf into executable actions, verify it, and put the verified low-energy winner into the candidate pool. Takes over: Takes over one-shot generation by spending inference-time compute on partial candidates before they become expensive live actions. Fails when: Partial-plan energy is poorly calibrated, branching cost exceeds the action-efficiency budget, or the tree repeatedly explores equivalent leaves.
+- **Energy-as-fitness evolutionary pool search** (arXiv:2605.28814, arXiv:1806.10230): maps to S3; Run a tiny population over action programs where fitness is negative S3 energy plus executable validity, and use recombination or guided random search to escape high-probability but losing rollouts. Winner insertion: Select the verified elite with the best energy-adjusted fitness and put that winner into the explorer pool while retaining alternates. Takes over: Takes over single-candidate mutation by preserving a small population of high-quality candidates instead of only the current best guess. Fails when: Fitness overweights novelty, surrogate energy points away from true transition mechanics, or evolution burns budget without verified elites.
+- **Plan-with-energy state trajectory generator** (arXiv:1909.06878, arXiv:2502.07202): maps to S3; Generate intermediate state trajectories under the energy model, then ask the action realizer to synthesize concrete actions that reach the best low-energy trajectory. Winner insertion: Promote a trajectory only after it is realized as executable actions; the realized action sequence becomes the winner inserted into the pool. Takes over: Takes over static plan reranking when no current candidate reaches a goal-like state but the energy can propose plausible intermediate states. Fails when: State-space descent invents unreachable grids, the action realizer cannot realize the trajectory, or energy ignores a small decisive change.
+
+flagged_for_v443: bolt_cold_cfg_value_tree_generator_for_s3 (arXiv:2202.11705 + arXiv:2305.12018 + arXiv:2207.12598 + arXiv:2309.15028 + arXiv:2502.07202)
+flagged_for_v443: bes_energy_fitness_pool_inserter (arXiv:2605.28814 + arXiv:1806.10230 + arXiv:1909.06878)
+
+**Bottom line for .443:** prioritize the BOLT/COLD/CFG/value-tree generator
+because it can put a winner into the pool with the smallest live-stack change:
+generate a guided batch, verify hard mechanics, then promote the best
+low-energy verified candidate. Keep BES-style energy-as-fitness evolution as
+the fallback when guided chains collapse, because recombination can escape
+high-probability losing rollouts while still using the same verifier energy.
+<!-- EXP4808-SOTA-INGESTION-ENERGY-GUIDED-GENERATION-END -->
+
 <!-- EXP4798-SOTA-INGESTION-ENERGY-GUIDED-GENERATION-START -->
 ## 2026-06-26 Exp 4798 - .442 energy-guided generation SOTA ingestion - INGESTED
 
