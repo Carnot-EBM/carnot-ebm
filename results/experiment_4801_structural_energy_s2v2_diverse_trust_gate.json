@@ -678,5 +678,14 @@
     "REQ-ARC-WMTE-4801",
     "SCENARIO-ARC-WMTE-4801-DIVERSE-TRUST-GATE"
   ],
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DEGENERATE_CANDIDATE_POOL",
+      "severity": "critical",
+      "detail": "Engine-selection comparison rests on a degenerate / under-covered candidate pool: only 5 games had behaviorally-diverse candidates (outcome spread >0.001) out of 5 tested / 5-game corpus, below the required 10 (max(10, 0.6*corpus); min_heldout_games may tighten but not lower it). A selection conclusion ('complete_structural_energy_s2v2_bounded_diverse_pool') -- bounded-null OR PASS -- cannot be drawn: a 0-or-negative delta from a thin/non-diverse pool is a NON-TEST. Re-run across the FULL corpus (attempt all available games; generate genuinely diverse engines) until >= the required effective games."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
