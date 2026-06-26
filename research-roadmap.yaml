@@ -1,185 +1,171 @@
-# Pre-staged .438 roadmap (Pre-Staged Roadmap Convention). Operator-directed 2026-06-25:
-# pursue the oracle-distinct structural energy (S0 core-bet probe). Built by scripts/_build_roadmap_438.py.
-milestone: 2026.06.438
-planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-26, operator-directed pre-stage: ''write [the
-  oracle-distinct structural energy S0 probe] into research-roadmap-next.yaml for .438 so it runs the
-  next milestone''). Grounded in the map->design->adversarial-verify workflow wf_f046ff34-c0a (refuted_count=3;
-  first-experiment corrections folded) and the foothold exp4545 (cross-game LOO 0.674 CI-excl-0.5, verifier_is_oracle=False).'
-milestone_title: 'PURSUE THE ORACLE-DISTINCT STRUCTURAL ENERGY (the only direction that unlocks extend-with-energy
-  on ARC): S0 core-bet probe -- can a STRUCTURAL transition energy discriminate held-out transition-correctness
-  cross-game above chance, with real near-miss negatives + a frame-marginal control + a leak audit. Cheap
-  (1 day, no GPU), decisive: retires the whole direction if the core bet is false. Plus the sprint-mandated
-  level-up attempt, self-play, readiness, and reserved infra/hardware/SOTA/capstone slots.'
+# Pre-staged .439 roadmap (Pre-Staged Roadmap Convention). Operator-directed 2026-06-26:
+# S0' origin-matched re-run (disentangle the S0 leak). Built by scripts/_build_roadmap_439.py.
+milestone: 2026.06.439
+planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-26, operator-directed pre-stage: ''pre-stage
+  S0'' (the origin-matched re-run) for .439''). S0 (.438 A1, exp4761) returned structural cross-game LOO
+  0.746 (CI excl chance, +0.28 over marginals, both families) but FAILED the leak audit (origin-probe
+  0.733) -> retired per the pre-registered gate. S0'' removes the origin confound (both classes induced).'
+milestone_title: 'S0'' ORIGIN-MATCHED RE-RUN -- disentangle the S0 leak: make BOTH classes induced predictions
+  (positive=induced-correct, negative=induced-wrong) so the origin-probe is structurally at chance, then
+  re-measure the cross-game structural LOO. If it survives (origin-probe <0.6, shuffled-label control
+  at chance, LOO CI excl chance) the energy direction REOPENS to S1; if it collapses, the S0 0.746 was
+  an origin leak and the direction retires for real. Plus the sprint-mandated level-up, self-play, readiness,
+  and reserved infra/hardware/SOTA/capstone slots.'
 milestone_doc: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
-theme: The 2026-06-25 audit confirmed every current energy formulation nulls on ARC for ONE root cause
-  -- frame-marginal features (cross-game LOO AUROC 0.503 == chance). The ONLY direction that unlocks extend-with-energy
-  is an oracle-distinct STRUCTURAL energy (north-star §5 / GAP-ARCH-FEATURES). exp4545 already crossed
-  chance cross-game on structural features (LOO 0.674) but on the WRONG target (win-reachability, unselectable).
-  S0 tests the RIGHT target -- held-out transition-correctness -- with the two adversarial killers (oracle-distinctness
-  + frame-marginal collapse) gated, and retires the direction cheaply if false. S1-S4 (contrastive energy
-  -> off-path trust gate -> generation-into-pool -> cross-family transfer) follow ONLY if S0 passes; they
-  are NOT pre-committed (staged-gate discipline).
+theme: 'S0 found the strongest ARC energy signal yet (structural cross-game LOO 0.746, +0.28 over frame-marginals,
+  frame_delta 0.725 + object_relational 0.661 both clearing 0.55, 92% real near-misses) -- but it FAILED
+  the leak audit (origin-probe 0.733) because positives were REAL recordings and negatives were INDUCED
+  mispredictions, confounding origin with correctness. S0'' is the decisive disentangling test: both classes
+  induced, so only correctness distinguishes them. This is NOT re-opening a clean null -- it resolves
+  the specific leak the S0 audit caught (the exact confound the adversarial design predicted). S1-S4 remain
+  gated on S0'' surviving (staged-gate).'
 sprint_forcing_function: ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1
-  S0 structural-energy headline + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt that
-  BANKS a new reproducible level (ARC Level-Up Attempt Guarantee -- A2); self-play EVERY milestone (A3
-  trains + checkpoints the verifier); 2 reserved infra (B1 silent-bug audit, B2 submission harden); 1
-  hardware continuity (C KV260, SSH precondition); 1 SOTA-ingestion (D structural-energy frontier). Operator
-  directive 2026-06-25 authorizes the structural-energy depth work (deadline ignored for that track).
+  S0' structural-energy headline + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt that
+  BANKS a new reproducible level (Level-Up Attempt Guarantee -- A2); self-play EVERY milestone (A3); 2
+  reserved infra (B1 silent-bug + S0' leak-control audit, B2 submission harden); 1 hardware continuity
+  (C KV260, SSH-only, NO host-device literal); 1 SOTA-ingestion (D structural-energy + leak-robust eval).
+  Operator directive 2026-06-26 authorizes the S0' depth work.
 tasks:
-- id: exp4760-phase0
-  title: 'PHASE 0 (TRANSITION) -- archive .437 -> activate .438; assert YAML parses + the smart-subset
-    pre-test gate is green; DETECT + RESOLVE any poison pre-test (incident_agent_shipped_test_cascade:
-    a ''1 failed, N passed'' focused failure asserting against a now-correct honest verdict). RECORD the
-    true .437 close-state.'
+- id: exp4770-phase0
+  title: PHASE 0 (TRANSITION) -- archive .438 -> activate .439; assert YAML parses + the smart-subset
+    pre-test gate is green; DETECT + RESOLVE any poison pre-test. RECORD the true .438 close-state (incl.
+    the S0 retired-on-leak headline).
   priority: critical
   track: transition
   max_turns: 40
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4760_archive_437_activate_438.json
+  deliverable: results/experiment_4770_archive_438_activate_439.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
-    majority-ARC + reserved infra/hardware/sota/capstone slots. (archive-v437-activate-v438).'
-  prompt: "CONTEXT ({date}). Milestone 2026.06.437 has completed. Mechanically transition to 2026.06.438,\n\
-    resolve any poison pre-test, and RECORD the true .437 close-state so the record stays honest. Routine\
-    \ (codex).\n\nIMPORTANT: the conductor may have ALREADY archived/activated -- if so the archive step\
-    \ is a no-op (EXPECTED,\nnot a failure). You MUST still WRITE the deliverable artifact (the close-state\
-    \ record).\n\nPOISON PRE-TEST (incident_agent_shipped_test_cascade): if the smart-subset pre-tests\
-    \ show a single failure\nasserting against a now-correct honest verdict / stale expectation, FIX or\
-    \ quarantine it with a tracking note\nso the .438 tail does not cascade-skip. Record which test +\
-    \ why. Do NOT weaken a legitimate test.\n\nEXISTING CODE TO READ FIRST:\n  - {project_root}/research-roadmap.yaml\
-    \ (the .437 roadmap to archive)\n  - {project_root}/research-roadmap-next.yaml (THIS .438 roadmap\
-    \ to activate)\n  - {project_root}/ops/arc_solve_registry.yaml (authoritative reproducible_total_levels)\n\
-    \  - {project_root}/results/experiment_4759_capstone_v437.json (the .437 scorecard, if present)\n\
-    \  - {project_root}/ops/conductor-log.md (the .437 SKIP rows -- the poison-test signature, if any)\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"import\
-    \ yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('yaml_ok')\"` exits\
-    \ 0.\n     b. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"\
-    ` exits 0.\n  1. Archive .437 -> activate .438 (no-op if the conductor already did it). Record the\
-    \ .437 close-state:\n     reproducible_total_levels (from arc_solve_registry), the .437 A1 structural-engine\
-    \ null + A2 detector-fix\n     modest-result, and any FLAGGED tasks.\n  2. Run the smart-subset pre-test\
-    \ gate; detect+resolve any poison test (record test id + reason).\n  3. WRITE the deliverable artifact.\n\
-    \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
-    \ a clean transition is complete_437_archived_438_activated_<state>.\"\n  inference_substrate:\n \
-    \   principle: \"aggregation_from_upstream_artifacts -- reads upstream JSON, no LLM; 0.0001s floor.\"\
-    \n  poison_test_resolved:\n    principle: \"records whether a poison pre-test was found+fixed -- the\
-    \ .434/.435 cascade-skip guard.\"\n  reproducible_total_levels:\n    principle: \"the authoritative\
-    \ ARC progress metric carried forward from arc_solve_registry, not re-counted.\"\n"
-  milestone: 2026.06.438
+    majority-ARC + reserved infra/hardware/sota/capstone slots. (archive-v438-activate-v439).'
+  prompt: "CONTEXT ({date}). Milestone 2026.06.438 has completed. Mechanically transition to 2026.06.439,\n\
+    resolve any poison pre-test, and RECORD the true .438 close-state. Routine (codex).\n\nIMPORTANT:\
+    \ the conductor may have ALREADY archived/activated -- if so the archive step is a no-op (EXPECTED).\n\
+    You MUST still WRITE the deliverable artifact (the close-state record).\n\nPOISON PRE-TEST (incident_agent_shipped_test_cascade):\
+    \ if the smart-subset pre-tests show a single failure\nasserting against a now-correct honest verdict,\
+    \ FIX or quarantine it with a tracking note. Do NOT weaken a\nlegitimate test.\n\nEXISTING CODE TO\
+    \ READ FIRST:\n  - {project_root}/research-roadmap.yaml (.438 to archive); {project_root}/research-roadmap-next.yaml\
+    \ (.439 to activate)\n  - {project_root}/ops/arc_solve_registry.yaml; {project_root}/results/experiment_4769_capstone_v438.json\n\
+    \  - {project_root}/results/experiment_4761_structural_energy_s0_core_bet_probe.json (the S0 retired-on-leak\
+    \ result)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: `.venv/bin/python -c \"import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml'));\
+    \ print('ok')\"` exits 0; arc_solver_kit.offline_arcade() exits 0.\n  1. Archive .438 -> activate\
+    \ .439 (no-op if already done). Record the .438 close-state incl. the S0 headline\n     (structural\
+    \ LOO 0.746 but leak-audit-failed -> retired; S0' re-tests origin-matched in .439 A1).\n  2. Run the\
+    \ pre-test gate; resolve any poison test. WRITE the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
+    \  honest_verdict:\n    principle: \"terminal prefix; clean transition is complete_438_archived_439_activated_<state>.\"\
+    \n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts -- reads upstream JSON,\
+    \ no LLM; 0.0001s floor.\"\n  poison_test_resolved:\n    principle: \"records whether a poison pre-test\
+    \ was found+fixed -- the cascade-skip guard.\"\n  reproducible_total_levels:\n    principle: \"the\
+    \ authoritative ARC progress metric carried from the registry, not re-counted.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4761-a1
-  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed ''pursue oracle-distinct structural
-    energy, deadline ignored'') -- S0 CORE-BET PROBE: can a STRUCTURAL transition energy discriminate
-    held-out TRANSITION-CORRECTNESS cross-game above chance? The cheapest decisive test of the only direction
-    that unlocks extend-with-energy on ARC. No GPU, no LLM, 1 day; retires the ENTIRE energy-guided direction
-    if the core bet is false.'
+- id: exp4771-a1
+  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S0'' ORIGIN-MATCHED RE-RUN:
+    resolve the S0 leak confound. S0 got a STRONG structural cross-game LOO (0.746) but FAILED the leak
+    audit (origin-probe 0.733) because positives were REAL recordings and negatives were INDUCED mispredictions
+    -- origin confounded with correctness. S0'' makes BOTH classes INDUCED predictions (positive=induced-correct,
+    negative=induced-wrong) so origin cannot leak; if the LOO survives with the origin probe at chance,
+    the direction REOPENS to S1, else it retires for real.'
   priority: critical
   track: arc-north-star
   max_turns: 140
   inference_substrate: verifier_ensemble_against_cached_candidates
-  deliverable: results/experiment_4761_structural_energy_s0_core_bet_probe.json
-  operator_override: '2026-06-25 operator directive: ''ignoring the deadline, we must pursue the only
-    direction that would unlock extend-with-energy on ARC with oracle-distinct structural energy.'' Designed
-    + adversarially corrected via workflow wf_f046ff34-c0a (refuted_count=3; the first-experiment corrections
-    are folded in). Spec: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md.'
+  deliverable: results/experiment_4771_structural_energy_s0prime_origin_matched.json
+  operator_override: '2026-06-26 operator directive: pre-stage S0'' (origin-matched re-run) for .439 after
+    S0 retired on a fixable leak confound (not a clean null). Spec: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
+    (S0 + the origin-leak fix).'
   prior_failures:
-  - experiment_id: arc3_gap3_stage2_transition_ebm
-    verdict: 'complete: gap3_stage2_transition_ebm_does_not_beat_vote macroauroc_0.5442 (RETIRED, exclusion_manifest:485)'
-    addressed_by: 'GAP-3 trained a contrastive transition-EBM on SYNTHETIC-CORRUPTION negatives over ARC-1
-      puzzle CANDIDATE grids and proved synthetic corruptions are aced while REAL near-misses (91.5% of
-      errors) score below chance, with E''s hit-set a strict subset of vote. THREE required differences
-      make S0 NOT that rerun: (1) negatives are the agent''s OWN induced-engine MISPREDICTIONS on held-out
-      LIVE game (s,a,s'') transitions (real near-misses, oracle-free), NOT synthetic corruptions of ground-truth
-      grids; (2) the target is HELD-OUT TRANSITION-CORRECTNESS / world-model generalization, NOT win-reachability
-      and NOT candidate-selection; (3) features are the proven-transferring structural families only (object_relational
-      + frame_delta from cross_game_features_v3). retire_if_same_verdict: true -- a null retires the whole
-      energy-guided direction.'
+  - experiment_id: exp4761-structural-energy-s0-core-bet-probe
+    verdict: 'complete: structural_energy_s0_retired_loo_0.746_null_or_leaky (origin-probe 0.733 >= 0.6)'
+    addressed_by: 'S0 showed a STRONG cross-game structural LOO (0.746, CI [0.660,0.831] excl chance,
+      structural-minus-marginal delta +0.28 CI excl 0, frame_delta 0.725 + object_relational 0.661 both
+      >0.55, 92.4% real near-miss negatives) but FAILED the leak audit: positives were REAL recorded transitions
+      and negatives were the agent''s INDUCED-engine mispredictions, so ORIGIN (real vs induced) perfectly
+      correlated with the LABEL (correct vs wrong) and the origin-probe scored 0.733. S0'' resolves the
+      confound at the dataset level: BOTH classes are INDUCED-engine predictions -- positive = an induced
+      prediction that MATCHES the held-out real next-grid (correct), negative = an induced prediction
+      that does NOT (wrong, a real near-miss). Origin is now constant (all induced) so the origin-probe
+      is structurally at chance; a shuffled-label control confirms no residual leak. retire_if_same_verdict:
+      true -- if the structural LOO COLLAPSES to chance once origin is matched, the 0.746 was all leak
+      and the energy-guided direction RETIRES for real; if it SURVIVES (CI excl chance, origin-probe <
+      0.6, shuffled-label control at chance), the direction REOPENS to S1 (contrastive energy).'
     retire_if_same_verdict: true
-  prompt: "CONTEXT ({date}). OPERATOR-DIRECTED HEADLINE. The audit (wf_88e2a7a7-2fe) confirmed every current\n\
-    energy formulation nulls on ARC for ONE root cause: frame-marginal features (cross-game LOO AUROC\
-    \ 0.503 ==\nchance). The ONLY direction that unlocks 'extend with energy' is an oracle-distinct STRUCTURAL\
-    \ energy\n(north-star §5 / GAP-ARCH-FEATURES). This task is S0 -- the cheapest decisive probe of the\
-    \ core bet. Full\nprogram + adversarial corrections: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md.\n\
-    \nTHE FOOTHOLD (do NOT re-derive): exp4545 already crossed chance cross-game -- structural features\
-    \ lift LOO\nAUROC 0.503->0.674, CI [0.606,0.745] EXCLUDING 0.5, verifier_is_oracle=False; object_relational\
-    \ + frame_delta\nare the transferring families (action/predicate ~dead). BUT that is on a WIN-REACHABILITY\
-    \ label (a selector\nsignal exp4700 proved unselectable). S0 tests the RIGHT target: HELD-OUT TRANSITION-CORRECTNESS,\
-    \ cross-game.\n\nTHE TWO KILLERS S0 MUST SURVIVE:\n  (1) ORACLE-DISTINCTNESS: NEVER call the env win-check\
-    \ / is_level_complete / unit tests, and NEVER build\n      negatives by corrupting the ground-truth\
-    \ next-grid (that needs the observed grid = the executable\n      oracle, and makes the head a corrupted-vs-real\
-    \ PROVENANCE discriminator -- the .393/GAP-3 leak).\n      verifier_is_oracle=false; must pass check_circular_moat_overclaim.\n\
-    \  (2) FRAME-MARGINAL COLLAPSE: features must be functions of the (s,a,s') TRANSITION + cross-frame\
-    \ object\n      correspondences (differences/relations), never absolute color/position -- and must\
-    \ clear chance on REAL\n      near-miss negatives (<=5% cells changed), not synthetic corruptions.\n\
-    \nEXISTING CODE TO READ FIRST:\n  - {project_root}/python/carnot/agentic/arc_value_learner.py (cross_game_features_v3\
-    \ :433 -- the structural\n    feature spine: object_relational + frame_delta; EXCLUDE action_conditioned/predicate_distance\
-    \ ~dead, and\n    EXCLUDE the v1/v2 frame-marginals)\n  - {project_root}/scripts/arc_cross_game_verifier_train.py\
-    \ (the --discriminative leave-one-GAME-out harness to\n    RE-TARGET to transition-correctness labels)\n\
-    \  - {project_root}/results/experiment_4545_cross_game_discrimination_v3.json (the foothold; LOO 0.674\
-    \ CI-excl-0.5)\n  - {project_root}/results/experiment_4604_world_model_trust_energy.json (the oracle-distinct,\
-    \ live-computable\n    held-out-generalization target; verifier_is_oracle=False)\n  - {project_root}/results/arc3_gap3_stage2_transition_ebm.json\
-    \ (the RETIRED prior; what NOT to repeat)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other\
-    \ step):\n     a. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"\
-    ` exits 0\n        (banked offline transitions available). Else honest_verdict blocked_offline_arcade_missing,\
+  prompt: "CONTEXT ({date}). OPERATOR-DIRECTED HEADLINE. S0 (.438 A1, exp4761) is the foothold AND the\
+    \ warning:\nthe structural transition energy cleared cross-game held-out transition-correctness at\
+    \ LOO 0.746 (CI excl\nchance, +0.28 over frame-marginals, BOTH families clear 0.55, 92% real near-misses)\
+    \ -- the strongest signal\nany ARC energy attempt has shown -- but it FAILED the leak audit (origin-probe\
+    \ AUROC 0.733 >= 0.6). The cause\nis a dataset confound: positives = REAL recorded transitions, negatives\
+    \ = INDUCED-engine mispredictions, so\nORIGIN (real vs induced) perfectly tracks the LABEL (correct\
+    \ vs wrong). The 0.746 cannot be cleanly attributed\nto correctness vs provenance. S0' removes the\
+    \ confound. Spec:\ndocs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md.\n\n\
+    THE FIX (origin-matched dataset). BOTH classes are INDUCED-engine predictions on HELD-OUT transitions:\n\
+    \  positive = an induced prediction s_hat that MATCHES the held-out real s' (the engine got it right).\n\
+    \  negative = an induced prediction s_hat that does NOT match s' (a real near-miss, the engine got\
+    \ it wrong).\nNow every sample is induced-origin, so the origin-probe (induced-vs-real) has nothing\
+    \ to separate -- it is\nstructurally at chance. The ONLY thing distinguishing positives from negatives\
+    \ is whether the induced\nprediction is CORRECT. If the structural energy still discriminates cross-game,\
+    \ it is a genuine\ncorrectness signal, not provenance.\n\nEXISTING CODE TO READ FIRST:\n  - {project_root}/results/experiment_4761_structural_energy_s0_core_bet_probe.json\
+    \ (S0: the 0.746 LOO + 0.733 leak)\n  - {project_root}/python/carnot/agentic/arc_value_learner.py\
+    \ (cross_game_features_v3 :433 -- object_relational + frame_delta only; EXCLUDE marginals + the dead\
+    \ families)\n  - {project_root}/scripts/arc_cross_game_verifier_train.py (the --discriminative LOO\
+    \ harness)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python\
+    \ -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` exits 0. Else blocked_offline_arcade_missing,\
     \ EXIT.\n     b. `.venv/bin/python -c \"from carnot.agentic.arc_value_learner import cross_game_features_v3\"\
-    ` imports.\n        Else blocked_structural_features_missing, EXIT. (No GPU/LLM needed -- numerical/harness\
-    \ task.)\n  1. Build the oracle-FREE transition-correctness dataset: for each of the >=16 banked games,\
-    \ fit an induced\n     engine on a prefix of recorded transitions, evaluate on HELD-OUT (not-fit-on)\
-    \ off-path transitions.\n       positive = (s,a,s') where the induced engine correctly predicts the\
-    \ held-out s'.\n       negative = (s,a,s_hat) where the engine MISPREDICTS -- a REAL near-miss (engine\
-    \ error). NO ground-truth\n                  corruption. Record the cell-change distribution; the\
-    \ decisive negatives are near-misses.\n  2. Compute ONLY the structural families (object_relational\
-    \ + frame_delta) over (s, predicted-s', real-s').\n     Do NOT include frame-marginals or the dead\
-    \ families. Fit a logistic head.\n  3. Run the --discriminative LEAVE-ONE-GAME-OUT harness RE-TARGETED\
-    \ to this transition-correctness label.\n     Report LOO AUROC + bootstrap CI95. Run TWO matched controls\
-    \ on identical folds/seeds: (a) majority-class\n     (true chance 0.5), (b) the v2 FRAME-MARGINAL\
-    \ logistic on the SAME labels/folds.\n  4. Per-family ablation: report each structural family's individual\
-    \ LOO. Run the MANDATORY leak audit: an\n     origin-probe (induced-vs-real classifier on the same\
-    \ features) must score AUROC < 0.6.\n  5. WRITE the artifact with verifier_is_oracle=false.\n\nFALSIFIABLE\
-    \ GATE (the only non-circular evidence = cross-game LOO):\n  PASS iff ALL hold: LOO AUROC CI95 lower\
-    \ bound > 0.5 (TRUE chance) AND point estimate > 0.60; AND the\n  structural-minus-marginal delta\
-    \ CI95 EXCLUDES 0; AND >=1 genuinely-structural family (object_relational or a\n  conservation term)\
-    \ individually clears 0.55 LOO; AND the origin-probe leak audit returns AUROC < 0.6; AND\n  in-sample\
-    \ positive control > 0.60. (Note: 0.5442 is NOT chance -- it is the retired GAP-3 EBM's recorded\n\
-    \  AUROC; beating it is a harder ceiling to ALSO report, not the floor.)\n  retire_if_same_verdict:\
-    \ true -- if CI95 includes 0.5, OR the structural-minus-marginal delta CI95 includes\n  0, OR the\
-    \ origin-probe leaks, the ENTIRE energy-guided direction retires (one day of cost). If PASS, S1\n\
-    \  (contrastive energy) is queued for .439.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n \
-    \ honest_verdict:\n    principle: \"terminal prefix; a clean cross-game above-chance result is success_,\
-    \ an honest null is complete_; a null with CI-incl-0.5 RETIRES the direction.\"\n  verifier_is_oracle:\n\
-    \    principle: \"MUST be false -- the energy never runs the env win-check; required for check_circular_moat_overclaim\
-    \ (the .387 circular-moat guard).\"\n  inference_substrate:\n    principle: \"verifier_ensemble_against_cached_candidates\
-    \ -- scores structural features over cached transitions, no LLM; 1s floor.\"\n  preconditions_checked:\n\
-    \    principle: \"records the arcade/feature-import checks so a silent-missing-resource run cannot\
-    \ fabricate an AUROC.\"\n  loo_auroc_structural:\n    principle: \"the load-bearing measurement --\
-    \ cross-game leave-one-GAME-out AUROC on held-out transition-correctness with the structural features.\"\
-    \n  loo_auroc_ci95:\n    principle: \"bootstrap CI95; the lower bound vs 0.5 is the decisive non-circular\
-    \ signal (FALSE_NEGATIVE_RISK guard requires a positive control).\"\n  loo_auroc_marginal_control:\n\
-    \    principle: \"the v2 frame-marginal head on identical folds -- the structural-minus-marginal delta\
-    \ is what proves STRUCTURE adds transfer beyond marginals (the 0.503 root cause).\"\n  structural_minus_marginal_delta_ci95:\n\
-    \    principle: \"must exclude 0 -- otherwise structure carries no signal beyond marginals and the\
-    \ direction retires.\"\n  per_family_loo:\n    principle: \">=1 non-frame_delta structural family\
-    \ must independently clear 0.55 -- kills the frame_delta-single-lever risk (frame_delta is near-marginal).\"\
-    \n  origin_probe_auroc:\n    principle: \"induced-vs-real leak audit; must be < 0.6 -- else the head\
-    \ is a provenance discriminator, not a correctness one (the .393/GAP-3 leak).\"\n  near_miss_negative_fraction:\n\
-    \    principle: \"fraction of negatives that are REAL near-misses (<=5% cells changed); GAP-3 aced\
-    \ synthetic corruptions but failed real near-misses, so the gate must hold on near-misses.\"\n  in_sample_auroc:\n\
-    \    principle: \"positive control > 0.60 -- else the harness is broken and the LOO null is uninformative.\"\
-    \n  random_seed:\n    principle: \"determinism is the precondition for reproducibility; a third party\
-    \ must re-run the LOO.\"\n  reproducibility_checksum:\n    principle: \"content hash of the (corpus,\
-    \ folds, features) so a future replication catches drift.\"\n"
-  milestone: 2026.06.438
+    ` imports. Else blocked_structural_features_missing, EXIT. (No GPU/LLM.)\n  1. For each banked game:\
+    \ fit an induced engine on a prefix, run it on HELD-OUT transitions to produce\n     induced predictions\
+    \ s_hat. Label each by whether s_hat == real s' (correct) or != (wrong/near-miss).\n     Build the\
+    \ dataset = {{(features over (s, s_hat), correct?)}}. ENSURE both classes are present per game (if\n\
+    \     a game's engine is 0% or 100% accurate on held-out, it contributes only one class -- pool across\
+    \ games\n     and report per-game class balance; a fold needs both classes).\n  2. Compute ONLY the\
+    \ structural families (object_relational + frame_delta) over (s, s_hat). Fit a logistic head.\n  3.\
+    \ Run the LEAVE-ONE-GAME-OUT harness on this origin-MATCHED correct-vs-wrong label. Report LOO AUROC\
+    \ + CI95.\n     Controls on identical folds: (a) majority-class (chance 0.5); (b) the v2 frame-marginal\
+    \ head.\n  4. LEAK AUDITS (the whole point of S0'): (a) origin-probe -- with origin matched it must\
+    \ now be < 0.6\n     (ideally ~0.5); (b) SHUFFLED-LABEL control -- re-run the LOO with permuted labels;\
+    \ AUROC must be <= ~0.55\n     (else the pipeline leaks label via a nuisance path). Per-family ablation:\
+    \ each family's individual LOO.\n  5. WRITE the artifact with verifier_is_oracle=false.\n\nFALSIFIABLE\
+    \ GATE (the decisive disentangling test):\n  REOPEN-TO-S1 iff ALL hold: structural LOO CI95 lower\
+    \ bound > 0.5 AND point > 0.60; AND structural-minus-\n  marginal delta CI95 excludes 0; AND >=1 structural\
+    \ family individually clears 0.55; AND the origin-probe is\n  < 0.6 (origin matched, so it should\
+    \ be ~chance); AND the shuffled-label control AUROC <= 0.55; AND in-sample\n  positive control > 0.60.\n\
+    \  retire_if_same_verdict: true -- if the structural LOO COLLAPSES to chance (CI includes 0.5) once\
+    \ origin is\n  matched, the S0 0.746 was driven by the origin leak and the ENTIRE energy-guided direction\
+    \ RETIRES for real.\n  If it SURVIVES all gates, the direction is REAL and REOPENS to S1 (contrastive\
+    \ energy) for .440.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
+    \ \"terminal prefix; a surviving origin-matched signal is success_structural_energy_s0prime_reopens_s1,\
+    \ a collapse is complete_structural_energy_s0prime_retired_was_origin_leak.\"\n  verifier_is_oracle:\n\
+    \    principle: \"MUST be false -- the energy never runs the env win-check; required for check_circular_moat_overclaim.\"\
+    \n  inference_substrate:\n    principle: \"verifier_ensemble_against_cached_candidates -- scores structural\
+    \ features over cached transitions, no LLM; 1s floor.\"\n  preconditions_checked:\n    principle:\
+    \ \"records the arcade/feature-import checks so a silent-missing-resource run cannot fabricate an\
+    \ AUROC.\"\n  loo_auroc_structural:\n    principle: \"the load-bearing measurement -- cross-game LOO\
+    \ AUROC on the ORIGIN-MATCHED correct-vs-wrong induced-prediction label.\"\n  loo_auroc_ci95:\n  \
+    \  principle: \"bootstrap CI95; the lower bound vs 0.5 decides reopen-vs-retire.\"\n  origin_probe_auroc:\n\
+    \    principle: \"with origin matched (all induced) this MUST drop below 0.6 (ideally ~0.5) -- the\
+    \ direct test that the S0 0.733 leak is removed; if it is still high, the matching failed.\"\n  shuffled_label_control_auroc:\n\
+    \    principle: \"permuted-label LOO must be <= 0.55 -- the second leak control proving the structural\
+    \ signal is genuinely label-correlated, not a nuisance path.\"\n  structural_minus_marginal_delta_ci95:\n\
+    \    principle: \"must exclude 0 -- structure must still beat frame-marginals on the clean (origin-matched)\
+    \ label.\"\n  per_family_loo:\n    principle: \">=1 family must independently clear 0.55 on the clean\
+    \ label -- kills the single-lever risk.\"\n  per_game_class_balance:\n    principle: \"records each\
+    \ game's correct/wrong induced-prediction counts -- a fold needs both classes; an all-one-class game\
+    \ cannot contribute to LOO.\"\n  in_sample_auroc:\n    principle: \"positive control > 0.60 -- else\
+    \ the harness is broken and the result is uninformative.\"\n  random_seed:\n    principle: \"determinism\
+    \ is the precondition for reproducibility.\"\n  reproducibility_checksum:\n    principle: \"content\
+    \ hash of (corpus, folds, induced-engine fits, features) so a replication catches drift.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4762-a2
+- id: exp4772-a2
   title: 'PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible
     level via the standing live solver: first-contact on the next UNSOLVED rotation game (re86/sb26/bp35/lf52)
-    OR +1 deepen on a shallow-solved game. offline_reproduced gated; solve_provenance=live_agent_self_discovery.'
+    OR +1 deepen on a shallow-solved game. offline_reproduced gated.'
   priority: critical
   track: arc-north-star
   max_turns: 160
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4762_levelup_attempt.json
+  deliverable: results/experiment_4772_levelup_attempt.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (ARC Level-Up Attempt Guarantee; rotating
@@ -187,264 +173,247 @@ tasks:
   prompt: "CONTEXT ({date}). The ARC Level-Up Attempt Guarantee requires >=1 task per roadmap whose gate\
     \ BANKS a\nnew reproducible level. Run the standing self-improving live solver on a rotation target\
     \ -- prefer an UNSOLVED\npublic game (re86/sb26/bp35/lf52) for first-contact, else +1 deepen on the\
-    \ shallowest already-solved game.\n\nSTANDING ENTRYPOINT (ARC Solve Reproducibility Discipline): `.venv/bin/python\
-    \ scripts/arc_loop_solve.py\n--game <target>` does the whole loop (transfer-routing -> verifier-routed\
-    \ best-first solve -> reproduction gate\n-> train+checkpoint the learned verifier -> registry update).\
-    \ For an UN-adaptered game it emits the\ntransfer-routing recommendation + general gotchas (your per-game\
-    \ RE starting point: reverse-engineer only the\nwin/action/state DELTA, register a GameAdapter, re-run).\
-    \ Reuse arc_solver_kit + the registry general_gotchas;\ndo NOT re-derive from zero.\n\nCONCRETE STEPS:\n\
-    \  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from carnot.agentic import\
-    \ arc_solver_kit as k; k.offline_arcade()\"` exits 0.\n     b. Qwen generator reachable on the iGPU\
-    \ (NEVER the 3090s) if induction is needed; else the solver runs\n        adapter/search-only. If\
-    \ the offline env for the target is missing -> blocked_<game>_offline_env_missing.\n  1. Read ops/arc_solve_registry.yaml;\
-    \ pick the rotation target (unsolved-first). recommend_approach(game) for\n     the routing recipe.\n\
-    \  2. Run arc_loop_solve.py --game <target>. Reverse-engineer only the DELTA; register a GameAdapter\
-    \ if needed.\n  3. Run the reproduction gate (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml.\
-    \ Record DEAD-ENDS.\n\nFALSIFIABLE GATE: >=1 NEW level offline-reproduced (offline_reproduced=true,\
-    \ reproduced_levels>=1 on a first\ncontact, OR level>prior-best on a deepen), solve_provenance=live_agent_self_discovery,\
-    \ registry updated.\nretire_if_same_verdict: true -- if no new level banks, document the residual\
-    \ (per-game RE delta unresolved) and\nrotate the target next milestone; do NOT re-attempt the same\
-    \ game without a new RE angle.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
-    \    principle: \"terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>.\"\
+    \ shallowest already-solved game.\n\nSTANDING ENTRYPOINT: `.venv/bin/python scripts/arc_loop_solve.py\
+    \ --game <target>` (transfer-routing ->\nverifier-routed best-first solve -> reproduction gate ->\
+    \ train+checkpoint verifier -> registry update). Reuse\narc_solver_kit + the registry general_gotchas;\
+    \ reverse-engineer only the per-game DELTA; do NOT re-derive.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\
+    \ arc_solver_kit.offline_arcade() exits 0; Qwen generator on the iGPU (NEVER 3090s) if\n     induction\
+    \ is needed; if the target offline env is missing -> blocked_<game>_offline_env_missing.\n  1. Read\
+    \ ops/arc_solve_registry.yaml; pick the rotation target (unsolved-first). recommend_approach(game).\n\
+    \  2. Run arc_loop_solve.py --game <target>; register a GameAdapter for the DELTA if needed.\n  3.\
+    \ Run the reproduction gate (arc_solver_kit.reproduce); update the registry; record DEAD-ENDS.\n\n\
+    FALSIFIABLE GATE: >=1 NEW level offline-reproduced (offline_reproduced=true), solve_provenance=\n\
+    live_agent_self_discovery, registry updated. retire_if_same_verdict: true -- if no new level banks,\
+    \ document\nthe residual and ROTATE the target next milestone (do NOT re-attempt the same game without\
+    \ a new RE angle).\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
+    \ \"terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>.\"\
     \n  solve_provenance:\n    principle: \"live_agent_self_discovery -- the agent advanced via its OWN\
-    \ attempts + runtime RE; NOT outer_loop_re (CRITICAL) and NOT a bare development_proxy adapter for\
-    \ a headline.\"\n  offline_reproduced:\n    principle: \"only reproduced levels count toward reproducible_total_levels\
-    \ -- a live-recorded trajectory alone is provisional.\"\n  reproduced_levels:\n    principle: \"the\
-    \ new reproducible depth; the monotonic ARC progress metric.\"\n  inference_substrate:\n    principle:\
-    \ \"live_llm_inference if induction runs; 60s floor.\"\n  verifier_is_oracle:\n    principle: \"the\
-    \ live solver's reproduction gate is execution-grounded (true); this is a SOLVE task, not a moat claim.\"\
-    \n  preconditions_checked:\n    principle: \"records arcade/env/generator checks so a missing-resource\
+    \ attempts + runtime RE; NOT outer_loop_re (CRITICAL).\"\n  offline_reproduced:\n    principle: \"\
+    only reproduced levels count -- a live-recorded trajectory alone is provisional.\"\n  reproduced_levels:\n\
+    \    principle: \"the new reproducible depth; the monotonic ARC progress metric.\"\n  inference_substrate:\n\
+    \    principle: \"live_llm_inference if induction runs; 60s floor.\"\n  verifier_is_oracle:\n    principle:\
+    \ \"the reproduction gate is execution-grounded (true); this is a SOLVE task, not a moat claim.\"\n\
+    \  preconditions_checked:\n    principle: \"records arcade/env/generator checks so a missing-resource\
     \ run emits blocked_, never a fabricated solve.\"\n"
-  milestone: 2026.06.438
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4763-a3
-  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone per the sprint) -- run the standing self-improvement
-    loop on a banked game: verifier-routed best-first solve -> reproduction gate -> TRAIN + CHECKPOINT
-    the learned verifier (models/arc_verifier_<game>.json, mirror-ready).'
+- id: exp4773-a3
+  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- run the standing self-improvement loop
+    on a banked game: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
   priority: high
   track: arc-north-star
   max_turns: 140
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4763_self_play_verifier_checkpoint.json
+  deliverable: results/experiment_4773_self_play_verifier_checkpoint.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (self-play-every-milestone; standing arc_loop_solve
     loop).'
-  prompt: "CONTEXT ({date}). The ARC sprint mandates self-play EVERY milestone: the standing loop trains\
-    \ +\ncheckpoints the learned verifier so the live solver self-improves across runs. Run arc_loop_solve.py\
-    \ on a\nbanked game (warm-started by the saved verifier if present) to advance +1 level AND refresh\
+  prompt: "CONTEXT ({date}). The ARC sprint mandates self-play EVERY milestone. Run arc_loop_solve.py\
+    \ on a banked\ngame (warm-started by the saved verifier if present) to advance +1 level AND refresh\
     \ the checkpoint.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arc_solver_kit.offline_arcade() exits 0;\
-    \ target game has a banked level in the registry.\n  1. `.venv/bin/python scripts/arc_loop_solve.py\
-    \ --game <banked-target>` (or --auto). It warm-starts from\n     models/arc_verifier_<game>.json if\
-    \ present, runs the verifier-routed search + reproduction gate, then\n     trains + checkpoints the\
-    \ verifier and updates the registry.\n  2. Confirm the checkpoint mtime advanced (a new best banked)\
-    \ and record the search-state count.\n\nFALSIFIABLE GATE: the learned verifier checkpoint is refreshed\
-    \ (mtime advances) AND the reproduction gate\npasses on >=1 level. A failed self-play run records\
-    \ the residual; it does NOT fabricate a checkpoint.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
-    \  honest_verdict:\n    principle: \"terminal prefix; checkpoint refreshed + gate green is success_.\"\
-    \n  verifier_checkpoint_refreshed:\n    principle: \"the self-improvement signal -- the learned verifier\
-    \ improved from its own play.\"\n  inference_substrate:\n    principle: \"live_llm_inference; 60s\
-    \ floor.\"\n  solve_provenance:\n    principle: \"live_agent_self_discovery -- self-play is the agent\
-    \ improving on its own attempts.\"\n  preconditions_checked:\n    principle: \"records arcade/registry\
-    \ checks; a missing target emits blocked_, never a fabricated checkpoint.\"\n"
-  milestone: 2026.06.438
+    \ target has a banked level in the registry.\n  1. `.venv/bin/python scripts/arc_loop_solve.py --game\
+    \ <banked-target>` (or --auto): warm-starts from\n     models/arc_verifier_<game>.json, runs the verifier-routed\
+    \ search + reproduction gate, trains + checkpoints.\n  2. Confirm the checkpoint mtime advanced; record\
+    \ the search-state count.\n\nFALSIFIABLE GATE: the learned verifier checkpoint is refreshed (mtime\
+    \ advances) AND the reproduction gate\npasses on >=1 level. A failed run records the residual; it\
+    \ does NOT fabricate a checkpoint.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
+    \    principle: \"terminal prefix; checkpoint refreshed + gate green is success_.\"\n  verifier_checkpoint_refreshed:\n\
+    \    principle: \"the self-improvement signal -- the learned verifier improved from its own play.\"\
+    \n  inference_substrate:\n    principle: \"live_llm_inference; 60s floor.\"\n  solve_provenance:\n\
+    \    principle: \"live_agent_self_discovery -- self-play is the agent improving on its own attempts.\"\
+    \n  preconditions_checked:\n    principle: \"records arcade/registry checks; a missing target emits\
+    \ blocked_, never a fabricated checkpoint.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4764-a4
+- id: exp4774-a4
   title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness) -- measure the live agent's
-    held-out first-win rate on the color-permuted variant harness (the deadline-relevant generalization
-    signal), checkpoint/resume-capable so a capped run still emits a usable partial artifact.
+    held-out first-win rate on the color-permuted variant harness, checkpoint/resume-capable.
   priority: high
   track: arc-north-star
   max_turns: 120
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4764_heldout_first_win_readiness.json
+  deliverable: results/experiment_4774_heldout_first_win_readiness.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
-    majority-ARC + reserved infra/hardware/sota/capstone slots. (held-out first-win readiness lane, continues
-    .437 A4).'
-  prompt: "CONTEXT ({date}). Continues the held-out first-win readiness lane. Measure the live E3 agent's\n\
-    held-out first-win rate on the experiment_4605 color-permuted variant harness -- the generalization\
-    \ signal that\npredicts scored performance on unseen games. MUST checkpoint/resume so a wall-clock-capped\
-    \ run still emits a\nusable partial artifact (the exp4729 codex-cap lesson, RESOLVED 810b6f451: scope\
-    \ down / checkpoint-resume).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arcade + the variant harness\
-    \ present; Qwen generator on the iGPU (NEVER 3090s). Scope the\n     game/seed count so the run finishes\
-    \ under the codex wall-clock cap (or checkpoint/resume).\n  1. Run the held-out first-win measurement\
-    \ with periodic checkpointing; on cap, emit the partial artifact.\n  2. Report held-out first-win\
-    \ rate + CI, vs the prior best.\n  3. SUBSTRATE HONESTY (exp4752 .437 A4 false-positive fix): if you\
-    \ RESUME from a checkpoint / lever-cache and do NOT run the live agent this turn, declare inference_substrate=aggregation_from_upstream_artifacts\
-    \ (0.0001s floor), NOT live_llm_inference -- otherwise the DURATION_TOO_SHORT floor false-positive-flags\
-    \ a legitimately-fast cache-hit. Only declare live_llm_inference if you actually ran the agent live\
-    \ (>=60s). For a FLAT null (held-out rate == baseline 0.04), add a null_delta_methodology_note + positive_control_passed=true\
-    \ so the flat==baseline agreement is read as a genuine null, not a TAUTOLOGY bug.\n\nFALSIFIABLE GATE:\
-    \ a non-fabricated held-out first-win rate with CI on >=N held-out variants; a capped run still\n\
-    emits a partial-but-usable artifact (not a blocked-on-timeout with no data).\n\nREQUIRED ARTIFACT\
-    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; a measured rate\
-    \ is complete_/success_.\"\n  heldout_first_win_rate:\n    principle: \"the deadline-relevant generalization\
-    \ signal -- held-out, not in-sample.\"\n  inference_substrate:\n    principle: \"live_llm_inference\
-    \ (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/lever-cache\
-    \ hit aggregated an existing proxy -- declare what actually ran (Inference-Substrate Declaration Discipline).\"\
-    \n  checkpoint_emitted:\n    principle: \"a capped run must still emit a usable partial artifact --\
-    \ the exp4729 wall-clock-cap lesson.\"\n  null_delta_methodology_note:\n    principle: \"for a flat\
-    \ null (held-out rate == baseline 0.04), explains why the agreement is a genuine no-improvement result,\
-    \ not a TAUTOLOGY bug (the exp4752 false-positive).\"\n  preconditions_checked:\n    principle: \"\
-    records generator/harness checks; a missing resource emits blocked_, never a fabricated rate.\"\n"
-  milestone: 2026.06.438
+    majority-ARC + reserved infra/hardware/sota/capstone slots. (held-out first-win readiness lane).'
+  prompt: "CONTEXT ({date}). Measure the live E3 agent's held-out first-win rate on the experiment_4605\n\
+    color-permuted variant harness -- the generalization signal that predicts scored performance. MUST\n\
+    checkpoint/resume so a wall-clock-capped run still emits a usable partial artifact (the exp4729 lesson).\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS: arcade + the variant harness present; Qwen generator on the\
+    \ iGPU (NEVER 3090s). Scope the\n     game/seed count under the codex wall-clock cap (or checkpoint/resume).\n\
+    \  1. Run the held-out first-win measurement with periodic checkpointing; on cap, emit the partial\
+    \ artifact.\n  2. Report held-out first-win rate + CI, vs the prior best.\n  3. SUBSTRATE HONESTY\
+    \ (exp4752 false-positive fix): if you RESUME from a checkpoint / lever-cache and do NOT\n     run\
+    \ the live agent this turn, declare inference_substrate=aggregation_from_upstream_artifacts (NOT\n\
+    \     live_llm_inference) so the DURATION_TOO_SHORT floor matches what actually ran. For a FLAT null\
+    \ (held-out\n     rate == baseline 0.04) add a null_delta_methodology_note + positive_control_passed=true\
+    \ so the\n     flat==baseline agreement reads as a genuine null, not a TAUTOLOGY bug.\n\nFALSIFIABLE\
+    \ GATE: a non-fabricated held-out first-win rate with CI on >=N held-out variants; a capped run still\n\
+    emits a partial-but-usable artifact.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
+    \    principle: \"terminal prefix; a measured rate is complete_/success_.\"\n  heldout_first_win_rate:\n\
+    \    principle: \"the deadline-relevant generalization signal -- held-out, not in-sample.\"\n  inference_substrate:\n\
+    \    principle: \"live_llm_inference (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts\
+    \ if a checkpoint/cache hit -- declare what actually ran.\"\n  null_delta_methodology_note:\n    principle:\
+    \ \"for a flat null (rate == baseline 0.04), explains why the agreement is a genuine no-improvement\
+    \ result, not a TAUTOLOGY bug.\"\n  checkpoint_emitted:\n    principle: \"a capped run must still\
+    \ emit a usable partial artifact.\"\n  preconditions_checked:\n    principle: \"records generator/harness\
+    \ checks; a missing resource emits blocked_, never a fabricated rate.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4765-b1
-  title: 'PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .438 ARC generation/verifier nulls:
-    re-examine each honest_null for dead-code/identity-engine/byte-identical-arm/representation-no-op
-    signatures (the .428-.435 audit pattern) before trusting them.'
+- id: exp4775-b1
+  title: 'PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .439 ARC generation/verifier nulls
+    + the S0'' leak controls: confirm the origin-matched dataset is genuinely origin-balanced and the
+    shuffled-label control actually fired (not a dead no-op).'
   priority: high
   track: infra
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4765_silent_bug_audit.json
+  deliverable: results/experiment_4775_silent_bug_audit.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 1; recurring silent-bug
-    audit).'
-  prompt: "CONTEXT ({date}). Reserved infra slot. Audit the milestone's ARC nulls for silent bugs before\
-    \ they\nare trusted: dead/identity engines (changes 0 cells), byte-identical A/B arms, 0.04-tautology\
-    \ first-win,\nrepresentation no-ops (the _frame_grid (1,64,64) dead-archive class), and the S0 leak\
-    \ signature (origin-probe\nnot run / >=0.6). Cross-check each null artifact's exercised-evidence fields.\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS: the .438 result artifacts present.\n  1. For each ARC null\
-    \ this milestone, verify the lever was genuinely exercised (non-degenerate, distinct arms,\n     leak\
-    \ audit clean). Flag any null that tested dead code.\n  2. WRITE the audit artifact appending to ops/arc_null_silent_bug_audit.md.\n\
+    audit + S0'' leak-control check).'
+  prompt: "CONTEXT ({date}). Reserved infra slot. Audit the milestone's ARC nulls for silent bugs (dead/identity\n\
+    engines, byte-identical arms, 0.04-tautology, representation no-ops) AND specifically verify the S0'\
+    \ (exp4771)\nleak controls really executed: per_game_class_balance shows both classes present, the\
+    \ origin-probe was\ngenuinely re-fit on the origin-matched data (not the stale S0 value), and the\
+    \ shuffled-label control actually\npermuted labels and re-ran the LOO (not a hardcoded 0.5). A leak\
+    \ control that did not fire is a silent no-op.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .439 result\
+    \ artifacts present.\n  1. For each ARC null this milestone, verify the lever was genuinely exercised.\
+    \ For S0', verify the two leak\n     controls fired and the origin-matching is real (both classes\
+    \ induced, class balance non-degenerate).\n  2. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\
     \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
     \ audit complete is complete_/success_.\"\n  nulls_audited:\n    principle: \"count of nulls re-examined\
-    \ -- a null that tested dead code is not a trustworthy null.\"\n  silent_bugs_found:\n    principle:\
-    \ \"the load-bearing output -- which nulls must be reopened vs trusted.\"\n  inference_substrate:\n\
-    \    principle: \"aggregation_from_upstream_artifacts; 0.0001s floor.\"\n"
-  milestone: 2026.06.438
+    \ -- a null that tested dead code is not trustworthy.\"\n  s0prime_leak_controls_fired:\n    principle:\
+    \ \"the load-bearing check -- the origin-probe + shuffled-label controls must have genuinely executed,\
+    \ else S0''s reopen/retire verdict is uninterpretable.\"\n  inference_substrate:\n    principle: \"\
+    aggregation_from_upstream_artifacts; 0.0001s floor.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4766-b2
+- id: exp4776-b2
   title: 'PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the
-    Kaggle ARC-AGI-3 agent package builds + the frozen Qwen3.5-9B-MTP stack loads under the ~16GB constraint;
-    checklist for the operator (operator-only submission).'
+    Kaggle ARC-AGI-3 agent package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; operator
+    checklist.'
   priority: high
   track: infra
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4766_submission_package_harden.json
+  deliverable: results/experiment_4776_submission_package_harden.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 2; submission-package
     readiness, operator-only submit).'
   prompt: "CONTEXT ({date}). Reserved infra slot, deadline-relevant. Verify the ARC-AGI-3 Kaggle submission\n\
-    package builds and the frozen live stack (Qwen3.5-9B-MTP + MTP + q8 KV + the CUDA-12.8 llama-server)\
-    \ is\npackaged within the ~16GB constraint. Produce an OPERATOR checklist -- the task NEVER submits\
-    \ (operator-only\nexternal publication).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the submission packaging\
-    \ scripts + arc_competition_agent present.\n  1. Dry-build the package; verify the agent config +\
-    \ model paths resolve; estimate the VRAM footprint vs 16GB.\n  2. WRITE the operator checklist; submission_package_ready\
-    \ reflects operator-readiness, the task does not submit.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
-    \  honest_verdict:\n    principle: \"terminal prefix; package builds is success_/complete_.\"\n  submission_package_ready:\n\
-    \    principle: \"True iff ready for the OPERATOR to submit; the task itself NEVER submits (operator-only).\"\
-    \n  vram_estimate_gb:\n    principle: \"must fit the ~16GB Kaggle constraint with KV + headroom --\
-    \ the deployment gate.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts;\
-    \ 0.0001s floor.\"\n"
-  milestone: 2026.06.438
+    package builds and the frozen live stack (Qwen3.5-9B-MTP + MTP + q8 KV + CUDA-12.8 llama-server) packages\n\
+    within ~16GB. Produce an OPERATOR checklist -- NEVER submits (operator-only external publication).\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS: the submission packaging scripts + arc_competition_agent present.\n\
+    \  1. Dry-build the package; verify the agent config + model paths resolve; estimate VRAM vs 16GB.\n\
+    \  2. WRITE the operator checklist; submission_package_ready reflects operator-readiness, the task\
+    \ does not submit.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
+    \ \"terminal prefix; package builds is success_/complete_.\"\n  submission_package_ready:\n    principle:\
+    \ \"True iff ready for the OPERATOR to submit; the task itself NEVER submits.\"\n  vram_estimate_gb:\n\
+    \    principle: \"must fit ~16GB Kaggle with KV + headroom -- the deployment gate.\"\n  inference_substrate:\n\
+    \    principle: \"aggregation_from_upstream_artifacts; 0.0001s floor.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4767-c
+- id: exp4777-c
   title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty anchor) -- the per-milestone KV260 continuity
-    task: SSH-reachability, loaded overlay, next concrete forward step. SSH precondition ONLY (host SD-card
-    device nodes are permanently retired for KV260).'
+    task: SSH-reachability, loaded overlay, next concrete forward step. SSH precondition ONLY.'
   priority: medium
   track: hardware
   max_turns: 80
   inference_substrate: hardware_smoke
-  deliverable: results/experiment_4767_kv260_continuity.json
+  deliverable: results/experiment_4777_kv260_continuity.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (hardware-continuity; KV260 per-milestone,
     until terminal state).'
   prompt: "CONTEXT ({date}). KV260 hardware-continuity (Hardware-Task Continuity Discipline). Interact\
-    \ with the\nboard via SSH ONLY -- host SD-card device nodes are PERMANENTLY retired for KV260 (KV260\n\
-    SSH-Not-SD-Card Discipline).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n   \
-    \  a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero -> honest_verdict\n\
-    \        blocked_kv260_ssh_unreachable, EXIT (do NOT use host SD-card device nodes -- permanently\
-    \ retired).\n  1. Report the loaded overlay (`ssh kria 'xmutil listapps'`) + the board state.\n  2.\
-    \ Record the next concrete forward step for the KV260 track (per the most recent KV260 artifact +\
-    \ the board\n     terminal-state definition); if it needs operator action, queue a documentation/audit\
-    \ step (do NOT skip).\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
-    \ \"terminal prefix; reachable + state recorded is success_/complete_; unreachable is blocked_kv260_ssh_unreachable.\"\
+    \ with the\nboard via SSH ONLY -- host SD-card device nodes are PERMANENTLY retired for KV260 (KV260\
+    \ SSH-Not-SD-Card\nDiscipline). Do NOT use any host block-device precondition.\n\nCONCRETE STEPS:\n\
+    \  0. PRECONDITIONS (BEFORE any other step):\n     a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria\
+    \ 'true'` returns 0. If non-zero -> honest_verdict\n        blocked_kv260_ssh_unreachable, EXIT (do\
+    \ NOT fall back to a host SD-card check -- permanently retired).\n  1. Report the loaded overlay (`ssh\
+    \ kria 'xmutil listapps'`) + the board state.\n  2. Record the next concrete forward step for the\
+    \ KV260 track; if it needs operator action, queue a\n     documentation/audit step (do NOT skip).\n\
+    \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
+    \ reachable + state recorded is success_/complete_; unreachable is blocked_kv260_ssh_unreachable.\"\
     \n  inference_substrate:\n    principle: \"hardware_smoke -- SSH-attached board test.\"\n  kv260_ssh_reachable:\n\
-    \    principle: \"the SSH reachability check -- the ONLY valid KV260 precondition (not host SD-card\
+    \    principle: \"the SSH reachability check -- the ONLY valid KV260 precondition (not host block-device\
     \ presence).\"\n  preconditions_checked:\n    principle: \"records the SSH check so a wrong-mechanism\
-    \ (SD-card) precondition cannot escalate the operator for a no-op.\"\n"
-  milestone: 2026.06.438
+    \ precondition cannot escalate the operator for a no-op.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4768-d
-  title: PHASE D (SOTA-INGESTION -- the .438 frontier = oracle-distinct structural energy) -- ingest the
-    structural / object-centric world-model + energy-based-model literature mapped onto the S0-S4 program;
-    flag the strongest method(s) for the .439 roadmap. Real arXiv IDs only.
+- id: exp4778-d
+  title: PHASE D (SOTA-INGESTION -- the .440 frontier = oracle-distinct structural energy / leak-robust
+    transition discrimination) -- ingest the structural / object-centric world-model + contrastive energy
+    literature, esp. confound/leak-robust representation-evaluation methods. Real arXiv IDs only.
   priority: medium
   track: sota-ingestion
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4768_sota_ingestion_structural_energy.json
+  deliverable: results/experiment_4778_sota_ingestion_structural_energy.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
-    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved SOTA-ingestion slot; headline=bleeding-edge
-    structural energy).'
-  prompt: "CONTEXT ({date}). Reserved SOTA-ingestion slot (SOTA-Ingestion Cycle Discipline). The .438\
-    \ headline is\nthe oracle-distinct STRUCTURAL energy (S0). Ingest the literature that informs the\
-    \ S1-S4 build: object-centric /\nrelational world models (slot-attention, PoE-World), energy-based\
-    \ models over structure (contrastive/NCE\ntransition energies, JEPA-class), executable-world-model\
-    \ induction (arXiv:2605.05138, Code World Models\n2510.04542), and denoising/diffusion structural\
-    \ priors. Use the RELIABLE channel (scripts/sweep_clusters.py /\nsweep_semscholar.py + low-concurrency\
-    \ WebSearch/WebFetch). Do NOT invoke /deep-research (banned from the\nautonomous loop -- rate-limit\
-    \ incident).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: research-studying.md / research-references.md\
-    \ present.\n  1. Read the already-discovered corpus filtered to structural-energy / object-centric\
-    \ world models; run a\n     focused fresh sweep (top 5-8 papers).\n  2. Synthesize a SOTA->S1-S4 mapping\
-    \ note (strongest 3-5 methods, what each takes over the current stack,\n     where each fails). Cite\
-    \ REAL arXiv IDs for every method claim (no fabrication).\n  3. Flag the strongest method(s) as candidate\
-    \ inputs for the .439 roadmap; mark ingested in research-studying.md.\n\nREQUIRED ARTIFACT FIELDS\
-    \ (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; mapping emitted is\
-    \ success_sota_ingestion_structural_energy_mapped.\"\n  methods_mapped:\n    principle: \"the strongest\
-    \ 3-5 methods mapped onto S1-S4 -- the actionable output, each with a real arXiv ID.\"\n  arxiv_ids_cited:\n\
-    \    principle: \"every method claim must cite a verifiable arXiv ID -- an ingestion with no citations\
-    \ is fabrication.\"\n  flagged_for_v439:\n    principle: \"the strongest method(s) flagged so the\
-    \ .439 planner reads the mapping (discover->ingest->plan->experiment).\"\n  inference_substrate:\n\
+    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved SOTA-ingestion slot; headline=structural
+    energy + leak-robust eval).'
+  prompt: "CONTEXT ({date}). Reserved SOTA-ingestion slot. The headline is the oracle-distinct STRUCTURAL\
+    \ energy\n(S0'). Ingest the literature that informs the S1-S4 build AND the leak-robustness problem\
+    \ S0 surfaced:\nobject-centric / relational world models (slot-attention, PoE-World), contrastive/NCE\
+    \ transition energies,\nJEPA-class predictive energies, executable-world-model induction (arXiv:2605.05138,\
+    \ Code World Models\n2510.04542), AND methods for confound/shortcut-robust representation evaluation\
+    \ (origin/provenance-leak\ncontrols, counterfactual/invariance probes). Use the RELIABLE channel (scripts/sweep_clusters.py\
+    \ /\nsweep_semscholar.py + low-concurrency WebSearch/WebFetch). Do NOT invoke /deep-research (banned\
+    \ from the loop).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: research-studying.md / research-references.md\
+    \ present.\n  1. Read the discovered corpus filtered to the track; focused fresh sweep (top 5-8 papers).\n\
+    \  2. Synthesize a SOTA->S1-S4 mapping note + a specific note on leak-robust evaluation for the energy\
+    \ probe.\n     Cite REAL arXiv IDs for every method claim.\n  3. Flag the strongest method(s) for\
+    \ the .440 roadmap; mark ingested in research-studying.md.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
+    \  honest_verdict:\n    principle: \"terminal prefix; mapping emitted is success_sota_ingestion_structural_energy_mapped.\"\
+    \n  methods_mapped:\n    principle: \"the strongest 3-5 methods mapped onto S1-S4 + leak-robust eval,\
+    \ each with a real arXiv ID.\"\n  arxiv_ids_cited:\n    principle: \"every method claim must cite\
+    \ a verifiable arXiv ID -- an ingestion with no citations is fabrication.\"\n  flagged_for_v440:\n\
+    \    principle: \"the strongest method(s) flagged so the .440 planner reads the mapping.\"\n  inference_substrate:\n\
     \    principle: \"aggregation_from_upstream_artifacts; 0.0001s floor.\"\n"
-  milestone: 2026.06.438
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
-- id: exp4769-e
-  title: 'PHASE E (CAPSTONE .438) -- aggregate the .438 scorecard: the S0 structural-energy core-bet verdict
-    (direction alive or retired), the level-up bank, self-play checkpoint, readiness, and reproducible_total_levels.
-    SKIP any flagged_adversarial artifact; verifier_is_oracle honored.'
+- id: exp4779-e
+  title: 'PHASE E (CAPSTONE .439) -- aggregate the .439 scorecard: the S0'' origin-matched verdict (energy
+    direction REOPENS to S1 or RETIRES for real), the level-up bank, self-play checkpoint, readiness,
+    reproducible_total_levels. SKIP any flagged_adversarial artifact; honor verifier_is_oracle.'
   priority: high
   track: capstone
   max_turns: 120
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4769_capstone_v438.json
+  deliverable: results/experiment_4779_capstone_v439.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
-    majority-ARC + reserved infra/hardware/sota/capstone slots. (capstone aggregation; codex default per
-    CLAUDE.md).'
-  prompt: "CONTEXT ({date}). Capstone for .438. Aggregate the scorecard from the upstream .438 artifacts.\
-    \ The\nHEADLINE is the S0 structural-energy core-bet verdict: did the structural transition energy\
-    \ clear cross-game\nheld-out transition-correctness above chance (direction ALIVE -> queue S1 for\
-    \ .439) or not (direction RETIRED)?\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .438 upstream artifacts\
-    \ present.\n  1. Read each upstream artifact via scripts/summarize_artifact.py. SKIP any flagged_adversarial=true\
-    \ artifact\n     (never aggregate a flagged number). Honor verifier_is_oracle (a circular win is not\
-    \ a moat).\n  2. Aggregate: S0 verdict + whether S1 is queued; the level-up bank (reproduced_total_levels\
-    \ delta); self-play\n     checkpoint; held-out readiness. Cite upstream sha256/ids.\n  3. WRITE the\
-    \ capstone scorecard.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
-    \ \"terminal prefix; capstone_ready=true is success_/complete_.\"\n  s0_structural_energy_verdict:\n\
-    \    principle: \"the headline -- direction ALIVE (S0 passed, S1 queued) or RETIRED (S0 nulled); the\
-    \ milestone's load-bearing result.\"\n  reproducible_total_levels:\n    principle: \"the monotonic\
-    \ ARC progress metric carried from the registry, not re-counted.\"\n  cited_upstream_artifacts:\n\
-    \    principle: \"list of {{experiment_id, fields_imported, sha256}} -- the audit trail proving the\
-    \ capstone synthesizes real measurements.\"\n  flagged_artifacts_skipped:\n    principle: \"records\
-    \ which flagged_adversarial artifacts were excluded -- never aggregate a fabricated number.\"\n  inference_substrate:\n\
-    \    principle: \"aggregation_from_upstream_artifacts; 0.0001s floor.\"\n"
-  milestone: 2026.06.438
+    majority-ARC + reserved infra/hardware/sota/capstone slots. (capstone aggregation; codex default).'
+  prompt: "CONTEXT ({date}). Capstone for .439. The HEADLINE is the S0' origin-matched verdict: once origin\
+    \ is\nmatched (both classes induced), does the structural energy STILL discriminate cross-game transition-correctness\n\
+    (direction REOPENS to S1) or does the LOO collapse to chance (the S0 0.746 was an origin leak -> RETIRE)?\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS: the .439 upstream artifacts present.\n  1. Read each upstream\
+    \ artifact via scripts/summarize_artifact.py. SKIP any flagged_adversarial=true artifact.\n     Honor\
+    \ verifier_is_oracle.\n  2. Aggregate: S0' verdict (reopen-to-S1 vs retire, with the origin-probe\
+    \ + shuffled-label control numbers);\n     the level-up bank (reproducible_total_levels delta); self-play\
+    \ checkpoint; readiness. Cite upstream sha256/ids.\n  3. WRITE the capstone scorecard.\n\nREQUIRED\
+    \ ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; capstone_ready=true\
+    \ is success_/complete_.\"\n  s0prime_structural_energy_verdict:\n    principle: \"the headline --\
+    \ direction REOPENS to S1 (origin-matched signal survives) or RETIRES (was an origin leak); the milestone's\
+    \ load-bearing result.\"\n  reproducible_total_levels:\n    principle: \"the monotonic ARC progress\
+    \ metric carried from the registry, not re-counted.\"\n  cited_upstream_artifacts:\n    principle:\
+    \ \"list of {{experiment_id, fields_imported, sha256}} -- the audit trail.\"\n  flagged_artifacts_skipped:\n\
+    \    principle: \"records which flagged_adversarial artifacts were excluded -- never aggregate a fabricated\
+    \ number.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts; 0.0001s\
+    \ floor.\"\n"
+  milestone: 2026.06.439
   agent_type: codex
   model: gpt-5.5
