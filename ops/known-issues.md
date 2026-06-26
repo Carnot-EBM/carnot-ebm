@@ -16,6 +16,20 @@
 
 ### 2026-06-25 (MANDATORY-NEXT-MILESTONE, operator-directed: "yes" pre-stage): PERCEPTION-GROUNDED STRUCTURAL-ALIGNMENT L2 GOAL — the next multi-level (L1->L2) deepening step
 
+> **RESULT — `.437 A2 (exp4750) LANDED `modest_or_partial` (2026-06-25). THE GOAL-QUALITY HALF IS NOW
+> SOLVED; THE WALL HAS SHIFTED TO THE DYNAMICS ENGINE. DO NOT re-propose a goal/detector fix.**
+> `results/experiment_4750_structural_alignment_detector_fix.json`:
+> `complete_detector_fixed_but_no_bank_no_reachable_plan` (duration_s=2438). The detector over-segmentation
+> IS fixed — `detector_goal_count` 42->2, `detector_piece_count=2` — but lp85 L2 still did NOT bank:
+> `aligned_piece_count=0`, `goal_predicate_satisfiable=False`, `residual_cause_hypothesis=no_reachable_plan`.
+> **What this means for the next planner:** the binding residual is NO LONGER goal-quality (the structural
+> predicate is now correctly segmented and few-piece). It is **ENGINE-reachability** — the agent cannot PLAN
+> to a correct goal because the induced dynamics ENGINE is wrong (free-form LLM engine held-out accuracy
+> ~0.12 on lp85, Family-3 ledger). The next lever is the dynamics ENGINE / world-model accuracy (the .437 A1
+> structured `ProductWorldModel` direction, which itself nulled at exp4749 as a dead/identity engine — so the
+> open target is a genuinely better induced engine, NOT another goal predicate). Cross-ref the levers ledger
+> `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md` (Family 3, and the exp4750 row).
+
 **Origin:** the 2026-06-25 outer-loop goal-free deepening probe (`scripts/experiments/proto_goalfree_deepen.py`,
 `results/proto_goalfree_deepen.json`, note `docs/research-notes/goalfree-multilevel-deepening-probe-2026-06-25.md`).
 Two MULTI-LEVEL levers are now DECISIVELY nulled — build this PERCEPTION-grounded goal instead; do NOT
