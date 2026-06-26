@@ -633,3 +633,44 @@ def test_aggregation_with_semicolon_note_uses_aggregation_floor():
     assert floor is not None
     assert floor["reason"] == "aggregation"
     assert floor["min_duration_s"] <= 0.001
+
+
+# --------------------------------------------------------------------------- #
+# TAUTOLOGY excludes wall-clock TIMESTAMP fields (2026-06-26 outer-loop fix)   #
+# Origin: .438 A3 self-play (exp4763) -- checkpoint_mtime_before_ns vs         #
+# checkpoint_mtime_after_ns was a GENUINE ~2s checkpoint advance (verdict      #
+# success_..._checkpoint_refreshed) but flagged TAUTOLOGY because two ns epoch #
+# timestamps share leading sig figs (both 1.78244...). Same class as the       #
+# identifier/seed carve-out. Must NOT exclude real durations (latency_ns).     #
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize(
+    "field,is_excluded",
+    [
+        ("checkpoint_mtime_before_ns", True),  # the exp4763 case
+        ("checkpoint_mtime_after_ns", True),
+        ("created_timestamp", True),
+        ("run_started_ts", True),
+        ("build_epoch", True),
+        ("wall_clock_ns", True),  # has time-ish token 'clock'
+        # safety: real measured metrics / durations must stay IN the check
+        ("latency_ns", False),
+        ("duration_ns", False),
+        ("loo_auroc_structural", False),
+        ("heldout_first_win_rate", False),
+    ],
+)
+def test_tautology_excludes_timestamp_fields(field, is_excluded):
+    assert av._is_identifier_field(field) is is_excluded
+
+
+def test_tautology_does_not_fire_on_checkpoint_mtime_pair():
+    """The exp4763 regression: a genuine before/after mtime advance must not flag."""
+    d = {
+        "experiment": 4763,
+        "honest_verdict": "success_re86_L2_checkpoint_refreshed",
+        "checkpoint_mtime_before_ns": 1.7824478245866583e18,
+        "checkpoint_mtime_after_ns": 1.7824497419434204e18,
+    }
+    flags = []
+    av.check_tautology(d, flags)
+    assert not [f for f in flags if _kinds([f])[0] == "TAUTOLOGY"]

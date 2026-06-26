@@ -354,12 +354,43 @@ _IDENTIFIER_FIELDS = frozenset(
 )
 
 
+def _is_timestamp_field(k: str) -> bool:
+    """True if the field is a wall-clock TIMESTAMP (not a measured metric).
+
+    Two timestamps share their leading significant figures by construction --
+    any two events in the same era agree to many sig figs -- so they false-
+    positive the tautology check exactly like identifiers/seeds.
+    Origin: exp4763 (.438 A3 self-play) -- `checkpoint_mtime_before_ns`
+    (1.78244782e18) vs `checkpoint_mtime_after_ns` (1.78244974e18) was a GENUINE
+    ~2s checkpoint advance (verdict success_..._checkpoint_refreshed) but flagged
+    TAUTOLOGY because both nanosecond epoch timestamps start 1.78244...
+
+    Conservative: a bare duration like `latency_ns` / `duration_ns` is NOT a
+    timestamp (no time-ish token) and is left in the tautology check, so a real
+    duration coincidence is still caught.
+    """
+    kl = k.lower()
+    if "mtime" in kl or "timestamp" in kl:
+        return True
+    if kl.endswith(("_ts", "_epoch", "_unixtime")):
+        return True
+    # epoch timestamps in ns/us/ms carry a time-ish token (time/ts/clock/epoch/stamp)
+    if kl.endswith(("_ns", "_us", "_ms")) and any(
+        t in kl for t in ("time", "clock", "epoch", "stamp")
+    ):
+        return True
+    return False
+
+
 def _is_identifier_field(k: str) -> bool:
-    """True if the field is an identifier / seed / metadata field, not a
-    measured metric. Identifiers legitimately coincide (e.g. random_seed ==
-    experiment_id) and must be excluded from tautology comparison."""
+    """True if the field is an identifier / seed / timestamp / metadata field,
+    not a measured metric. Identifiers and timestamps legitimately coincide
+    (e.g. random_seed == experiment_id; two mtimes share leading sig figs) and
+    must be excluded from tautology comparison."""
     kl = k.lower()
     if kl in _IDENTIFIER_FIELDS:
+        return True
+    if _is_timestamp_field(kl):
         return True
     return kl.endswith("_seed") or kl.endswith("_id") or kl.endswith("_seed_used")
 
