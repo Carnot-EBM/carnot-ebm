@@ -1,0 +1,465 @@
+{
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4821,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "live_path_reachable",
+        "lambda0_control",
+        "lambda_guidance",
+        "n_headroom_games",
+        "min_headroom_games",
+        "positive_control_passed",
+        "new_levels_not_in_bare_pool",
+        "winners_newly_entering_pool_delta",
+        "winners_newly_entering_pool_delta_ci95",
+        "game_results",
+        "source_artifacts",
+        "solve_provenance",
+        "inference_substrate"
+      ],
+      "sha256": "sha256:9230675dee8a6c0192ac1fb2be11cd2403c216717ff736a3f7482906257ed814"
+    },
+    {
+      "experiment_id": 4822,
+      "fields_imported": [
+        "honest_verdict",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "registry_update",
+        "attempted_games",
+        "dead_ends",
+        "solve_provenance",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:342894698d60d26b3ae3f1e0ac6c997b50f17b3dbb2992c17d176b06dd9d5d1f"
+    },
+    {
+      "experiment_id": 4823,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_checkpoint_refreshed",
+        "target_game",
+        "self_play_residual",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "solve_provenance",
+        "inference_substrate"
+      ],
+      "sha256": "sha256:8d9781e52564678c57c998e29ed8c7ea31e2b7f8520bcea77c22667ee4ede7dd"
+    },
+    {
+      "experiment_id": 4824,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "first_win_baseline",
+        "prior_best_heldout_first_win_rate",
+        "heldout_first_win_delta_vs_baseline",
+        "heldout_first_win_delta_vs_prior_best",
+        "heldout_variant_attempts",
+        "positive_control_passed",
+        "parity_test_green",
+        "null_delta_methodology_note",
+        "inference_substrate"
+      ],
+      "sha256": "sha256:7142786fa8db964b82292f90795de7cd5093b43edf5fcad6de007f4ecb4b63bf"
+    },
+    {
+      "experiment_id": 4825,
+      "fields_imported": [
+        "honest_verdict",
+        "nulls_audited",
+        "trusted_nulls",
+        "silent_bugs_found",
+        "s3_controls_verified",
+        "s3_control_check",
+        "s3_guidance_exercised"
+      ],
+      "sha256": "sha256:6ba69d5bc73f4c870c01b9c8e0b17306137e86cc5e13acf553414242aa40ae48"
+    },
+    {
+      "experiment_id": 4826,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "submitted_to_leaderboard",
+        "operator_only",
+        "vram_estimate_gb",
+        "package_builds",
+        "inference_substrate"
+      ],
+      "sha256": "sha256:77c0f13999ca44b37f7e347f75439562e29c416c6a7b2ed95c29870046d0a305"
+    },
+    {
+      "experiment_id": 4827,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "board_state",
+        "next_forward_step",
+        "inference_substrate",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:d595392825dd07ed5556822094001c601c3607b1f96bd667d941aa20c2ece170"
+    },
+    {
+      "experiment_id": 4828,
+      "fields_imported": [
+        "honest_verdict",
+        "methods_mapped",
+        "flagged_for_v445",
+        "s4_context",
+        "arxiv_ids_cited",
+        "inference_substrate"
+      ],
+      "sha256": "sha256:f544c34c9d255ec1bb35b169b060aa7ea7adf128d551df813d69bb6f099f2de0"
+    }
+  ],
+  "duration_s": 0.465771,
+  "experiment": "experiment_4829_capstone_v444",
+  "experiment_id": 4829,
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; capstone_ready=true is success_/complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric carried from the registry."
+    },
+    "s3_structural_energy_verdict": {
+      "principle": "the headline -- generation WIN (S4 authorized) / BOUNDED no-generation-lift / inconclusive-no-headroom; honors the matched-control + NEW-not-re-ranking checks."
+    }
+  },
+  "flagged_artifacts_skipped": [],
+  "hardware_continuity": {
+    "board_state": {
+      "captured": false,
+      "reason": "kv260_ssh_unreachable"
+    },
+    "decision": "blocked_kv260_ssh_unreachable",
+    "experiment_id": 4827,
+    "kv260_ssh_reachable": false,
+    "next_forward_step": "OPERATOR ACTION: restore KV260 SSH reachability, then rerun the SSH-only continuity check; operator/audit queue: document the SSH outage and keep host SD-card preconditions retired.",
+    "source": "HARDWARE"
+  },
+  "heldout_readiness": {
+    "decision": "flat_null_no_readiness_gain",
+    "experiment_id": 4824,
+    "first_win_baseline": 0.04,
+    "heldout_first_win_delta_vs_baseline": 0.0,
+    "heldout_first_win_delta_vs_prior_best": 0.0,
+    "heldout_first_win_rate": 0.04,
+    "heldout_variant_attempts": 100,
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "null_delta_methodology_note_present": true,
+    "parity_test_green": true,
+    "positive_control_passed": true,
+    "prior_best_heldout_first_win_rate": 0.04,
+    "source": "HELDOUT"
+  },
+  "honest_verdict": "complete_s3_bounded_no_generation_lift_capstone_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "levelup_bank": {
+    "experiment_id": 4822,
+    "moat_claim": false,
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "registry_updated": false,
+    "reproduced_levels": 0,
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "reproducible_total_levels_delta": 0,
+    "source": "LEVELUP",
+    "target_game": "ka59",
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4829": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "BUG_AUDIT": {
+        "path": "results/experiment_4825_silent_bug_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HARDWARE": {
+        "path": "results/experiment_4827_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HELDOUT": {
+        "path": "results/experiment_4824_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "LEVELUP": {
+        "path": "results/experiment_4822_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "PACKAGE": {
+        "path": "results/experiment_4826_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "S3": {
+        "path": "results/experiment_4821_structural_energy_s3_generation_lift.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SELF_PLAY": {
+        "path": "results/experiment_4823_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SOTA": {
+        "path": "results/experiment_4828_sota_ingestion_cross_family_transfer.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 4829,
+  "readiness": {
+    "heldout_decision": "flat_null_no_readiness_gain",
+    "ready_for_operator_submit": false,
+    "reason": "requires_s3_generation_win_clean_package_and_heldout_gain",
+    "s3_verdict": "bounded_no_generation_lift",
+    "s4_authorized": false,
+    "structural_energy_direction": "bounded_at_real_offline_discriminator_no_live_value",
+    "submission_package_decision": "package_ready_operator_only"
+  },
+  "reproducibility_checksum": "sha256:21cecce264ac1b15a879d3a9f00ce81b54d5d7835539b82471d9549ae67f60c8",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4829_capstone_v444.json",
+  "s3_structural_energy_verdict": {
+    "b1_control_snapshot": {
+      "controls_verified_by_b1": true,
+      "matched_lambda0_control_b1": true,
+      "new_levels_not_re_ranking_b1": true,
+      "reachable_winner_positive_control_b1": true,
+      "s3_guidance_exercised_b1": true
+    },
+    "banked_levels_already_in_bare_pool": [],
+    "bounded_no_generation_lift": true,
+    "ci_excludes_zero": false,
+    "ci_includes_zero": true,
+    "controls_verified_by_b1": true,
+    "direction_after_s3": "bounded_at_real_offline_discriminator_no_live_value",
+    "experiment_id": 4821,
+    "generation_win": false,
+    "guidance_exercised": true,
+    "headroom_floor_met": true,
+    "lambda0_control": {
+      "description": "goal_guidance_lambda=0 disables plan_in_model goal_energy guidance",
+      "lambda": 0.0,
+      "matched_control": true
+    },
+    "live_path_reachable": true,
+    "live_recheck_excerpt": "==============================================================================\nARTIFACT  experiment_4821_structural_energy_s3_generation_lift.json\n------------------------------------------------------------------------------\n  verdict     ",
+    "live_recheck_exit_code": 0,
+    "matched_lambda0_control": true,
+    "metrics_imported": true,
+    "min_headroom_games": 5,
+    "n_headroom_games": 24,
+    "new_levels_not_in_bare_pool": [],
+    "new_levels_not_re_ranking": true,
+    "positive_control_passed": true,
+    "reachable_winner_positive_control": true,
+    "reason": "no_generation_lift_ci_includes_zero",
+    "s4_authorized": false,
+    "source": "S3",
+    "upstream_honest_verdict": "complete_structural_energy_s3_bounded_no_generation_lift",
+    "verdict": "bounded_no_generation_lift",
+    "verifier_is_oracle": false,
+    "winners_newly_entering_pool_delta": 0.0,
+    "winners_newly_entering_pool_delta_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "schema": "carnot.exp4829.capstone_v444.v1",
+  "self_play_checkpoint": {
+    "decision": "checkpoint_refreshed",
+    "experiment_id": 4823,
+    "inference_substrate": "live_llm_inference",
+    "offline_reproduced": true,
+    "reproduced_levels": 2,
+    "self_play_residual": "checkpoint_refreshed_gate_passed",
+    "solve_provenance": "live_agent_self_discovery",
+    "source": "SELF_PLAY",
+    "target_game": "re86",
+    "verifier_checkpoint_refreshed": true
+  },
+  "silent_bug_audit": {
+    "experiment_id": 4825,
+    "nulls_audited": 3,
+    "s3_control_check": {
+      "artifact_arc_orphan_solver_lint_passed": true,
+      "artifact_live_path_reachable": true,
+      "current_arc_orphan_solver_lint_passed": true,
+      "guidance_exercise_check": {
+        "candidate_pool_differs_from_baseline": true,
+        "candidate_states_scored": 24,
+        "differing_headroom_games": [
+          "ar25",
+          "bp35",
+          "cd82",
+          "cn04",
+          "dc22",
+          "g50t",
+          "ka59",
+          "lf52",
+          "ls20",
+          "m0r0",
+          "re86",
+          "sb26",
+          "sc25",
+          "sk48",
+          "sp80",
+          "tr87",
+          "tu93",
+          "wa30"
+        ],
+        "fingerprint_differences": [],
+        "goal_energy_score_variance": 0.0003908818794621362,
+        "guidance_exercised": true,
+        "real_candidate_state_evidence": true,
+        "source_present": true
+      },
+      "live_path_reachable": true,
+      "matched_lambda0_control": true,
+      "min_headroom_games": 5,
+      "n_headroom_games": 24,
+      "new_levels_not_in_bare_pool": true,
+      "positive_control_passed": true,
+      "s3_controls_verified": true,
+      "s3_guidance_exercised": true,
+      "same_games_seeds_budget": true,
+      "source_match_check": {
+        "baseline_headroom_games": 24,
+        "guided_headroom_games": 24,
+        "per_game_variant_counts_match": true,
+        "same_source_games_and_budget": true,
+        "single_random_seed_recorded": true,
+        "source_present": true,
+        "variant_signatures_match": true
+      }
+    },
+    "s3_controls_verified": true,
+    "s3_guidance_exercised": true,
+    "silent_bugs_found_count": 0,
+    "source": "BUG_AUDIT",
+    "trusted_nulls": [
+      "experiment_4821_structural_energy_s3_generation_lift",
+      "experiment_4822_levelup_attempt",
+      "experiment_4824_heldout_first_win_readiness"
+    ]
+  },
+  "sota_handoff": {
+    "arxiv_ids_cited": [
+      "1911.08731",
+      "2003.00688",
+      "2007.01434",
+      "2012.07421",
+      "2311.14743",
+      "2403.13787",
+      "2602.08489",
+      "2605.25629"
+    ],
+    "decision": "sota_handoff_mapped",
+    "experiment_id": 4828,
+    "flagged_for_v445_candidates": [
+      "anchor_leave_one_family_transfer_gate",
+      "worst_family_group_dro_s4_energy",
+      "rex_transferable_reward_stress"
+    ],
+    "methods_mapped_count": 5,
+    "s4_context": {
+      "evaluation_constraint": "Use leave-one-family-out held-out evaluation and worst-family metrics; a pooled average or source-family fit cannot authorize S4.",
+      "gap_context": "S4 stresses the energy on cross-family transfer because the .393 win and GAP-4 path did not survive the transfer setting.",
+      "roadmap_target": ".445",
+      "s4_cross_family_transfer_required": true
+    },
+    "source": "SOTA"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4829",
+    "SCENARIO-CAPSTONE-4829",
+    "SCENARIO-CAPSTONE-4829-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4829-FIELD-PRINCIPLES"
+  ],
+  "submission_package_state": {
+    "decision": "package_ready_operator_only",
+    "experiment_id": 4826,
+    "operator_only": true,
+    "source": "PACKAGE",
+    "submission_package_ready": true,
+    "submitted_to_leaderboard": false,
+    "vram_estimate_gb": 15.146
+  },
+  "upstream_oracle_declarations": {
+    "BUG_AUDIT": {
+      "experiment_id": 4825,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HARDWARE": {
+      "experiment_id": 4827,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HELDOUT": {
+      "experiment_id": 4824,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "LEVELUP": {
+      "experiment_id": 4822,
+      "moat_claim_allowed": false,
+      "verifier_is_oracle": true
+    },
+    "PACKAGE": {
+      "experiment_id": 4826,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "S3": {
+      "experiment_id": 4821,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SELF_PLAY": {
+      "experiment_id": 4823,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SOTA": {
+      "experiment_id": 4828,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    }
+  }
+}
