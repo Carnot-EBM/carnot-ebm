@@ -9297,3 +9297,4 @@ The contro |
 | 2026-06-26 01:07 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 94 passed, 1 warning in 9.12s |
 | 2026-06-26 01:33 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-26 01:49 UTC | PHASE A5 (ARC NORTH STAR; persist + cross-game tra | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-26 02:05 UTC | PHASE A6 (ARC NORTH STAR; SUBMITTED_AGENT_CONFIG i | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
