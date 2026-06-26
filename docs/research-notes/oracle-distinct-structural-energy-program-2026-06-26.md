@@ -11,6 +11,37 @@ energy-as-RFT-teacher recommendation (RETIRED — see the levers ledger DO-NOT-R
 
 ---
 
+## RESULTS — S0 (leaky→retired) then S0' (origin-matched→REOPENS to S1)
+
+> **STATUS (2026-06-26): the direction is ALIVE. S0' passed every gate; S1 is authorized.**
+> (Recorded here durably because the conductor's stale in-process linter TAUTOLOGY-flagged the
+> S0' artifact on a chance-floor false-positive, so the `.439 capstone will skip it — the true
+> result lives in the exp4771 artifact + this note.)
+
+- **S0 (`.438 A1, exp4761):** structural cross-game LOO **0.746** (CI [0.660, 0.831] excl chance),
+  +0.28 over frame-marginals, frame_delta 0.725 + object_relational 0.661 both >0.55, 92% real
+  near-misses — the strongest ARC energy signal yet — BUT the leak audit FAILED (origin-probe
+  **0.733**) because positives were REAL recordings and negatives were INDUCED mispredictions
+  (origin confounded with correctness). Retired per the pre-registered gate as a *fixable confound*.
+- **S0' (`.439 A1, exp4771) — origin-matched (both classes induced):**
+  `honest_verdict: success_structural_energy_s0prime_reopens_s1`, `verifier_is_oracle: false`.
+  - origin_probe_auroc **0.733 → 0.500** (origin-matching removed the leak — the decisive test)
+  - shuffled_label_control_auroc **0.503** (no residual nuisance leak)
+  - loo_auroc_structural **0.739**, CI **[0.636, 0.833]** — still excludes chance with origin matched
+  - structural − frame-marginal delta CI **[0.127, 0.332]** — excludes 0 (marginals 0.511 = chance)
+  - per-family: frame_delta 0.739, object_relational 0.660 — both independently clear 0.55
+  - in-sample 0.848 (positive control passes); 16/18 games contribute both classes to the LOO
+  - `retire_energy_guided_direction: False`
+
+**Conclusion.** The S0 0.746 was **NOT an origin leak** — when origin is matched (probe driven to
+exactly chance), the structural energy STILL discriminates held-out transition-correctness
+cross-game at 0.739, oracle-distinct and leak-controlled. This is the **first clean,
+leak-controlled, oracle-distinct cross-game energy signal on ARC** — "extend with energy" is no
+longer at chance. **S1 (the contrastive energy landscape) is now authorized** per the staged gate;
+pre-stage it for `.440.
+
+---
+
 ## 0. Why this is the only direction left (settled, not re-derived)
 
 Every prior energy attempt on ARC nulled for ONE shared root cause: the energy is computed over
