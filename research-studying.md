@@ -10,6 +10,46 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4758-SOTA-INGESTION-START -->
+## 2026-06-26 Exp 4758 - .437 structured world-model + grounded-goal SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4758_sota_ingestion.json`.
+
+**Preconditions:** Hugging Face model API reachability returned `net_ok`.
+`scripts/sweep_clusters.py` emitted the ARC neural-guided-search / world-model
+cluster URL and the ARC action-effect / exploration cluster URL.
+`scripts/sweep_semscholar.py` was run on three focused queries and returned
+HTTP 429, so no S2-only source was promoted. Low-concurrency WebSearch/WebFetch
+plus direct arXiv HTTP checks verified the top eight papers listed below.
+`/deep-research` was not invoked. No model load, training, leaderboard
+submission, or solve claim was made; this is a no solve claim ingestion note.
+
+**Verified source set:**
+- arXiv:2402.12275 -- WorldCoder, a Model-Based LLM Agent: Building World Models by Writing Code and Interacting with the Environment
+- arXiv:2503.23145 -- CodeARC: Benchmarking Reasoning Capabilities of LLM Agents for Inductive Program Synthesis
+- arXiv:2511.02225 -- Learning Interactive World Model for Object-Centric Reinforcement Learning
+- arXiv:2601.06604 -- Object-Centric World Models Meet Monte Carlo Tree Search
+- arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents
+- arXiv:2605.14937 -- Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations
+- arXiv:2606.08775 -- Unifying Object-Centric World Models and Diffusion Policy: A Hierarchical Framework for Multi-Stage Robotic Tasks
+- arXiv:2606.14418 -- Causal Object-Centric Models for Planning with Monte Carlo Tree Search
+
+**SOTA -> .438 experiment mapping:**
+- **Verifier-refined executable world-model induction** (arXiv:2605.05138, arXiv:2402.12275): takes over Takes over the .437 A1 structured engine slot: replace brittle free-form load_engine output with a typed executable model, a transition verifier, and refactoring toward simpler factors. Fails when: The prompt budget cannot afford repeated refactors, hidden mechanics need observations not yet taken, or the induced program overfits public prefixes without perception-grounded object/goal evidence.
+- **Perception-grounded goal-conditioned object planning** (arXiv:2605.14937, arXiv:2606.08775): takes over Takes over the .437 A2 detector fix by turning detected pieces and goal sprites into a goal-conditioned planning objective with subgoal checks. Fails when: Slots drift across frames, ARC goals are non-spatial or hidden-state dependent, or differentiable/continuous MPC assumptions do not transfer to discrete click/key action spaces.
+- **Causal object-centric MCTS action-slot planner** (arXiv:2606.14418, arXiv:2601.06604): takes over Takes over static candidate ranking by adding object-causal attention, slot-level transition predictions, and search over object interactions. Fails when: The object representation misses the controllable entity, action-slot binding aliases multiple mechanics, or MCTS rollouts compound an early world-model error before a live probe can correct it.
+- **Interactive program-synthesis refinement over factor primitives** (arXiv:2503.23145, arXiv:2511.02225): takes over Takes over one-shot induction by converting errors into differential-test style counterexamples and by organizing object interactions into reusable factor primitives. Fails when: ARC action budgets make probes too expensive, the true rule lies outside the primitive vocabulary, or there is no free oracle analogous to CodeARC's hidden function query channel.
+
+flagged_for_438: verifier_refined_executable_world_model_with_perception_grounded_goal_mpc (arXiv:2605.05138 + arXiv:2402.12275 + arXiv:2605.14937 + arXiv:2606.08775)
+
+**Bottom line for .438:** build the verifier-refined executable world-model
+loop first, but bind its goals to perception-grounded object/subgoal structure
+instead of asking the free-form engine for another brittle terminal predicate.
+The direct target is `E3AgentPolicy` + `arc_executable_world_model` +
+`ProductWorldModel` with the structural-alignment goal pipeline supplying
+goal-conditioned subgoals and failure diagnostics.
+<!-- EXP4758-SOTA-INGESTION-END -->
+
 ## 2026-06-22 Skill-to-LoRA (arXiv:2606.16769) - operator-directed ingestion - INGESTED
 
 **Status:** INGESTED (operator: "what can we learn"). S2L (Zhang & Qi, CUHK, 2026-06-15) distills a
