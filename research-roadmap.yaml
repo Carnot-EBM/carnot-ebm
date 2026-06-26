@@ -1,164 +1,210 @@
-# Pre-staged .441 roadmap (Pre-Staged Roadmap Convention). Operator-directed 2026-06-26:
-# S2 off-path trust gate (S1 PASSED -> S2 authorized). Built by scripts/_build_roadmap_441.py.
-milestone: 2026.06.441
-planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-26, operator-directed pre-stage). S1 (.440 A1,
-  exp4781) PASSED (success_..._authorizes_s2: energy-ranking LOO 0.713/10-seed, denoising-direction 0.622,
-  leak-clean). Per the staged gate, S2 (off-path trust gate -- the first live-path-reachable stage) is
-  AUTHORIZED for .441. Spec: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md.'
-milestone_title: 'S2 OFF-PATH TRUST GATE -- graft the S1 structural energy into the LIVE WorldModelVerifier
-  / E3AgentPolicy (live-path-reachable) as an off-path energy-RANKING of candidate induced world-models,
-  vs the incumbent binary accuracy<0.5 gate. The FIRST stage where the energy adds value to the ACTUAL
-  agent: does oracle-distinct energy select a better-generalizing engine than cheap execution-grounded
-  accuracy? PASS -> S3 generation lift (.442); BOUNDED -> usable landscape but no live trust value. Plus
-  the sprint-mandated level-up (rotated), self-play, readiness, reserved infra/hardware/SOTA/capstone.'
+# Pre-staged .442 roadmap (Pre-Staged Roadmap Convention). Operator-directed 2026-06-26 'a+b':
+# S2-v2 diverse-pool off-path trust gate (fixes the exp4791 degenerate non-test). Built by scripts/_build_roadmap_442.py.
+milestone: 2026.06.442
+planned_by: outer-loop (Claude Opus 4.8 planner, 2026-06-26, operator-directed 'a+b'). S2 (.441 A1, exp4791)
+  was a DEGENERATE NON-TEST (2/5 effective games; energy_minus_accuracy_delta=0.0 an artifact of non-diverse
+  candidate pools), NOT a bounded null. S2-v2 re-tests with an ENFORCED behaviorally-diverse candidate
+  pool + per-game logging + an effective-games gate. The degenerate-pool detector ships as adversarial_verify.check_engine_selection_candidate_diversity
+  (DEGENERATE_CANDIDATE_POOL).
+milestone_title: S2-v2 OFF-PATH TRUST GATE on a DIVERSE candidate pool -- fix the exp4791 degenerate non-test.
+  Generate K behaviorally-diverse candidate engines per game (varied refinement rounds/seeds spanning
+  held-out off-path cell_recall), log per-game energy-vs-accuracy selections, and gate on >=5 EFFECTIVE
+  games so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake null. PASS -> S3 generation
+  lift; GENUINE bounded (diverse pool) -> pivot the energy to S3 directly. Plus the sprint-mandated level-up
+  (rotated), self-play, readiness, reserved infra/hardware/SOTA/capstone.
 milestone_doc: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
-theme: 'Three consecutive energy headline successes would make this the strongest ARC energy result yet:
-  S0'' (reopen, leak-clean discrimination) -> S1 (usable multi-seed landscape + denoising direction) ->
-  S2 (live off-path trust value). S2 is the FIRST stage the energy touches the REAL agent: it must be
-  live-path-reachable (arc_orphan_solver_lint) and beat the incumbent execution-grounded binary accuracy
-  gate on held-out off-path generalization. If it does, the oracle-distinct moat is no longer just an
-  offline number -- it is live agent value. S3/S4 remain gated on S2 passing (staged-gate).'
+theme: 'S2 (exp4791) over-claimed a bounded null from a degenerate candidate pool -- the operator caught
+  it and directed (a) an S2-v2 with enforced candidate diversity + per-game logging + an effective-games
+  gate, and (b) a degenerate-pool detector (now shipped as DEGENERATE_CANDIDATE_POOL in adversarial_verify).
+  S2-v2 is the corrected first live test of whether the structural energy beats cheap execution-grounded
+  accuracy at selecting among induced world-models. The honest outcome space: WIN (-> S3), GENUINE bounded
+  (the energy doesn''t beat accuracy on a real diverse test -> pivot to S3 generation), or INCONCLUSIVE
+  (still can''t assemble a diverse pool -> retire the trust-gate framing). S3-S4 remain gated.'
 sprint_forcing_function: ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1
-  S2 energy headline + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt that BANKS a new
-  reproducible level (Level-Up Attempt Guarantee -- A2, rotated); self-play EVERY milestone (A3); 2 reserved
-  infra (B1 silent-bug + S2 reachability audit, B2 submission harden); 1 hardware continuity (C KV260,
-  SSH-only, NO host-device literal); 1 SOTA-ingestion (D energy-guided generation). Operator standing
-  directive authorizes the structural-energy depth track.
+  S2-v2 energy headline + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt (Level-Up Attempt
+  Guarantee -- A2, rotated); self-play EVERY milestone (A3); 2 reserved infra (B1 silent-bug + S2-v2 candidate-diversity
+  check, B2 submission harden); 1 hardware continuity (C KV260, SSH-only, NO host-device literal); 1 SOTA-ingestion
+  (D energy-guided generation). Operator standing directive authorizes the structural-energy depth track.
 tasks:
-- id: exp4790-phase0
-  title: PHASE 0 (TRANSITION) -- archive .440 -> activate .441; assert YAML parses + pre-test gate green;
-    DETECT + RESOLVE any poison pre-test. RECORD the true .440 close-state (S1 PASSED -> S2 authorized).
+- id: exp4800-phase0
+  title: PHASE 0 (TRANSITION) -- archive .441 -> activate .442; assert YAML parses + pre-test gate green;
+    DETECT + RESOLVE any poison pre-test. RECORD the true .441 close-state (S2 was a DEGENERATE NON-TEST
+    -- inconclusive, NOT bounded; S2-v2 re-tests with a diverse pool).
   priority: critical
   track: transition
   max_turns: 40
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4790_archive_440_activate_441.json
+  deliverable: results/experiment_4800_archive_441_activate_442.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
-    majority-ARC + reserved infra/hardware/sota/capstone slots. (archive-v440-activate-v441).'
-  prompt: "CONTEXT ({date}). Milestone 2026.06.440 completed. Mechanically transition to 2026.06.441,\
-    \ resolve any\npoison pre-test, RECORD the true .440 close-state. Routine (codex). The conductor may\
+    majority-ARC + reserved infra/hardware/sota/capstone slots. (archive-v441-activate-v442).'
+  prompt: "CONTEXT ({date}). Milestone 2026.06.441 completed. Mechanically transition to 2026.06.442,\
+    \ resolve any\npoison pre-test, RECORD the true .441 close-state. Routine (codex). The conductor may\
     \ have already archived/\nactivated (no-op, EXPECTED). You MUST still WRITE the deliverable.\n\nKEY\
-    \ .440 CLOSE-STATE: S1 (A1, exp4781) PASSED -- success_structural_energy_s1_landscape_authorizes_s2\n\
-    (energy-ranking LOO 0.713 across 10 seeds, denoising-direction 0.622, leak controls clean). The energy\
-    \ is a\nusable LANDSCAPE; S2 (off-path trust gate) is the .441 headline.\n\nCONCRETE STEPS:\n  0.\
-    \ PRECONDITIONS: `.venv/bin/python -c \"import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml'));\
-    \ print('ok')\"` exits 0; arc_solver_kit.offline_arcade() exits 0.\n  1. Archive .440 -> activate\
-    \ .441 (no-op if already done). Record the S1 PASS as the .440 headline.\n  2. Run the pre-test gate;\
-    \ resolve any poison test. WRITE the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
-    \  honest_verdict:\n    principle: \"terminal prefix; clean transition is complete_440_archived_441_activated_<state>.\"\
+    \ .441 CLOSE-STATE: S2 (A1, exp4791) reported energy_minus_accuracy_delta=0.0 'no_live_trust_value'\
+    \ BUT it\nwas a DEGENERATE NON-TEST -- 2/5 games had behaviorally-identical candidate engines, only\
+    \ 2/5 genuinely\ntested the selection. The energy direction is INCONCLUSIVE at S2 (NOT bounded, NOT\
+    \ passed). S2-v2 (.442 A1)\nre-tests with an enforced behaviorally-diverse candidate pool. Record\
+    \ S2 as 'inconclusive_degenerate_pool',\nnot 'bounded'.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: `.venv/bin/python\
+    \ -c \"import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('ok')\"\
+    ` exits 0; arc_solver_kit.offline_arcade() exits 0.\n  1. Archive .441 -> activate .442 (no-op if\
+    \ already done). Record S2 as inconclusive_degenerate_pool.\n  2. Run the pre-test gate; resolve any\
+    \ poison test. WRITE the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
+    \    principle: \"terminal prefix; clean transition is complete_441_archived_442_activated_<state>.\"\
     \n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (reads upstream JSON,\
-    \ no LLM; 0.0001s floor).\"\n  s1_pass_recorded:\n    principle: \"the .440 headline (S1 PASSED ->\
-    \ S2 authorized) carried forward.\"\n  reproducible_total_levels:\n    principle: \"the authoritative\
-    \ ARC progress metric carried from the registry, not re-counted.\"\n"
-  milestone: 2026.06.441
+    \ no LLM; 0.0001s floor).\"\n  s2_recorded_as_inconclusive:\n    principle: \"S2 (exp4791) was a degenerate\
+    \ non-test, NOT a bounded null -- the record must not pause the energy direction on it.\"\n  reproducible_total_levels:\n\
+    \    principle: \"the authoritative ARC progress metric carried from the registry, not re-counted.\"\
+    \n"
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4791-a1
-  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S2 OFF-PATH TRUST GATE: graft
-    the S1 structural energy into the LIVE WorldModelVerifier / E3AgentPolicy (live-path-reachable, NOT
-    an orphan) as an OFF-PATH energy-RANKING of candidate induced world-models, vs the incumbent binary
-    accuracy<0.5 gate. The FIRST stage where the energy adds value to the ACTUAL agent: does ranking induced
-    engines by off-path structural energy select a better-generalizing engine than cheap execution-grounded
-    accuracy? This is the oracle-distinct moat slot.'
+- id: exp4801-a1
+  title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S2-v2 OFF-PATH TRUST GATE
+    with an ENFORCED behaviorally-DIVERSE candidate pool. S2 (exp4791) was a degenerate non-test (candidate
+    engines bit-identical on held-out transitions, so any selector scored the same). S2-v2 generates a
+    candidate pool that genuinely spans off-path generalization, logs per-game selections, and uses an
+    EFFECTIVE-GAMES gate so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake null.
   priority: critical
   track: arc-north-star
   max_turns: 180
   inference_substrate: verifier_ensemble_against_cached_candidates
-  deliverable: results/experiment_4791_structural_energy_s2_offpath_trust_gate.json
-  operator_override: '2026-06-26 operator standing directive (''pursue oracle-distinct structural energy,
-    deadline ignored'') + the staged-gate: S1 (exp4781) PASSED (success_..._authorizes_s2), which AUTHORIZES
-    S2 per docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md. S2 is the defined
-    next STAGE (off-path live trust gate), NOT a rerun of S1.'
+  deliverable: results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json
+  operator_override: '2026-06-26 operator directive (''a+b'': pre-stage S2-v2 with diversity enforcement
+    + per-game logging + a minimum-effective-games gate). S2 (exp4791) was a degenerate non-test; S2-v2
+    is the corrected re-test, NOT a doomed rerun. Spec: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md.'
   prior_failures:
-  - experiment_id: exp4781-structural-energy-s1-contrastive-landscape
-    verdict: success_structural_energy_s1_landscape_authorizes_s2 (PASSED -- the foundation, not a failure)
-    addressed_by: 'S2 is the staged CONTINUATION of the PASSED S1, not a rerun. S1 proved the contrastive
-      energy forms a usable cross-game LANDSCAPE offline (LOO 0.713/10-seed, denoising-direction 0.622,
-      leak-clean). S2 is a DIFFERENT experiment: graft that energy into the LIVE Family-B loop (WorldModelVerifier
-      / E3AgentPolicy import closure -- must pass arc_orphan_solver_lint, NOT a standalone scripts/experiments
-      solver) and test whether OFF-PATH energy-ranking of candidate induced engines beats the incumbent
-      binary accuracy<0.5 gate on held-out off-path generalization -- which S1 (an offline discrimination
-      probe) did not test. retire_if_same_verdict: true means: if energy-ranked engine selection does
-      NOT beat the binary accuracy gate on held-out off-path cell_recall (CI95 includes 0), S2 is bounded
-      at ''leak-clean discrimination + usable landscape, but no live trust-gate value'' and the direction
-      pauses there.'
+  - experiment_id: exp4791-structural-energy-s2-offpath-trust-gate
+    verdict: complete_structural_energy_s2_no_live_trust_value (DEGENERATE NON-TEST -- inconclusive, not
+      a genuine bounded null)
+    addressed_by: 'exp4791 reported energy_minus_accuracy_delta=0.0 (CI [0,0]) but the candidate engine
+      pools were behaviorally degenerate: 2/5 games had bit-identical candidate predictions (same off-path
+      energy + cell_recall) and a 3rd had equal recalls, so only 2/5 games genuinely tested the selection
+      -- the 0-delta is an artifact of non-diverse candidates, NOT a null. S2-v2 is DIFFERENT: (1) it
+      GENERATES a behaviorally-diverse candidate pool per game (K engines induced from varied refinement-round
+      snapshots / seeds so they span a range of held-out off-path cell_recall); (2) it ENFORCES an effective-games
+      gate (only games whose candidates have >=2 distinct held-out off-path cell_recall count); (3) it
+      LOGS per-game selections (which engine energy picked vs accuracy, their off-path recalls). retire_if_same_verdict:
+      true means: if S2-v2 STILL cannot assemble >= the required effective games, it returns INCONCLUSIVE
+      (blocked_insufficient_candidate_diversity), and the off-path-trust-gate approach is retired in favor
+      of testing the energy on a different live use (e.g. S3 generation directly) -- NOT re-run again
+      on degenerate pools.'
     retire_if_same_verdict: true
-  prompt: "CONTEXT ({date}). OPERATOR-DIRECTED HEADLINE. S1 (.440 A1, exp4781) PASSED: the contrastive\
-    \ structural\nenergy is a usable cross-game LANDSCAPE (LOO 0.713 across 10 seeds, denoising-direction\
-    \ 0.622, leak-clean,\nboth families >0.60). S2 is the FIRST live-path-reachable stage: graft the energy\
-    \ into the ACTUAL agent and\ntest whether it adds oracle-distinct value over cheap execution-grounded\
-    \ accuracy. Spec:\ndocs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md (S2).\n\
-    \nTHE BUILD. Replace WorldModelVerifier's binary accuracy<0.5 cutoff with an E-RANKING of candidate\
-    \ induced\nworld-models by OFF-PATH structural energy (the regime where the executable oracle is silent\
-    \ -- unobserved\noff-path transitions). On held-out hidden-state games, for each game gather the candidate\
-    \ induced engines the\nagent's own induction produced, and SELECT one by (a) the energy ranking vs\
-    \ (b) the incumbent binary\naccuracy<0.5 gate; measure each selected engine's HELD-OUT OFF-PATH transition\
-    \ cell_recall.\n\nLIVE-PATH-REACHABILITY (hard requirement, ARC Live-Path Reachability Discipline):\
-    \ the energy gate MUST be\nwired into the WorldModelVerifier / E3AgentPolicy import closure -- it\
-    \ must pass scripts/arc_orphan_solver_lint.py\n(NOT a standalone scripts/experiments solver the live\
-    \ agent never imports). The whole point of S2 is that the\nenergy reaches the REAL agent.\n\nEXISTING\
-    \ CODE TO READ FIRST:\n  - {project_root}/results/experiment_4781_structural_energy_s1_contrastive_landscape.json\
-    \ (the S1 energy to graft)\n  - {project_root}/python/carnot/agentic/arc_executable_world_model.py\
-    \ (WorldModelVerifier -- the binary accuracy<0.5 gate to compare against)\n  - {project_root}/python/carnot/agentic/arc_competition_agent.py\
-    \ (E3AgentPolicy -- the live import closure)\n  - {project_root}/scripts/arc_orphan_solver_lint.py\
-    \ (the reachability lint the graft must pass)\n  - {project_root}/python/carnot/agentic/arc_value_learner.py\
-    \ (cross_game_features_v3 -- the structural features)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE\
-    \ any other step):\n     a. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k;\
-    \ k.offline_arcade()\"` exits 0. Else blocked_offline_arcade_missing, EXIT.\n     b. `.venv/bin/python\
-    \ -c \"from carnot.agentic.arc_executable_world_model import WorldModelVerifier\"` imports. Else blocked_world_model_verifier_missing,\
-    \ EXIT.\n  1. Wire the S1 energy as an OFF-PATH trust ranker into WorldModelVerifier (live-path-reachable;\
-    \ confirm with arc_orphan_solver_lint).\n  2. On held-out games, gather candidate induced engines;\
-    \ select by energy-ranking vs the binary accuracy<0.5 gate.\n  3. Measure each selected engine's held-out\
-    \ OFF-PATH transition cell_recall. Bootstrap the energy-minus-accuracy delta.\n  4. WRITE the artifact\
-    \ with verifier_is_oracle=false (the energy is oracle-distinct; the binary-accuracy CONTROL is execution-grounded).\n\
-    \nFALSIFIABLE GATE:\n  PASS (-> S3 generation lift, authorized for .442) iff the energy-selected engine's\
-    \ held-out off-path\n  cell_recall MINUS the binary-accuracy-gate-selected engine's > 0 with bootstrap\
-    \ CI95 EXCLUDING 0, on >=N\n  held-out games. retire_if_same_verdict: true -- if the energy-ranked\
-    \ selection does NOT beat the binary\n  accuracy gate (CI95 includes 0), S2 is BOUNDED at 'usable\
-    \ landscape but no live trust-gate value' and the\n  direction pauses there (the energy discriminates\
-    \ offline but adds nothing the cheap execution-grounded gate\n  doesn't already capture).\n\n  CONTROL\
-    \ (mandatory): the incumbent binary WorldModelVerifier accuracy<0.5 gate (verifier_is_oracle=TRUE)\n\
-    \  on the IDENTICAL candidate engine sets -- the energy must beat THIS, not a strawman.\n\nREQUIRED\
-    \ ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; a live\
-    \ trust-gate win is success_structural_energy_s2_trust_gate_authorizes_s3, a bound is complete_structural_energy_s2_no_live_trust_value.\"\
-    \n  verifier_is_oracle:\n    principle: \"MUST be false for the energy ranking (oracle-distinct);\
-    \ the binary-accuracy CONTROL is execution-grounded (true) -- S2 measures whether oracle-distinct\
-    \ energy beats execution-grounded selection.\"\n  live_path_reachable:\n    principle: \"the energy\
-    \ gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint passes) -- a gate the live\
-    \ agent cannot reach adds no live value (ARC Live-Path Reachability Discipline).\"\n  inference_substrate:\n\
-    \    principle: \"verifier_ensemble_against_cached_candidates (scores the energy over cached candidate\
-    \ induced engines off-path predictions, no fresh LLM; 1s floor).\"\n  preconditions_checked:\n   \
-    \ principle: \"records the arcade / WorldModelVerifier import checks so a silent-missing-resource\
-    \ run cannot fabricate a cell_recall.\"\n  energy_selected_offpath_cell_recall:\n    principle: \"\
-    the held-out off-path cell_recall of the engine the structural energy selected -- the load-bearing\
-    \ measurement.\"\n  accuracy_gate_selected_offpath_cell_recall:\n    principle: \"the held-out off-path\
-    \ cell_recall of the engine the incumbent binary accuracy<0.5 gate selected -- the control the energy\
-    \ must beat.\"\n  energy_minus_accuracy_delta_ci95:\n    principle: \"must EXCLUDE 0 (energy > accuracy-gate)\
-    \ for S2 to pass -- the oracle-distinct value-add over cheap execution-grounded selection.\"\n  n_heldout_games:\n\
-    \    principle: \">=N held-out games -- the delta must hold across games, not a single-game artifact.\"\
-    \n  random_seed:\n    principle: \"determinism for reproducibility of the selection + bootstrap.\"\
-    \n  reproducibility_checksum:\n    principle: \"content hash of (engine candidates, folds, energy\
-    \ config) so a replication catches drift.\"\n"
-  milestone: 2026.06.441
+  prompt: "CONTEXT ({date}). OPERATOR-DIRECTED HEADLINE. S2 (.441 A1, exp4791) was a DEGENERATE NON-TEST:\n\
+    energy_minus_accuracy_delta=0.0 'no_live_trust_value', but 2/5 games had behaviorally-IDENTICAL candidate\n\
+    engines (bit-identical off-path energy 189.1448 + cell_recall 1.0 on ar25; same on ka59) and a 3rd\
+    \ (cd82)\nhad equal recalls -- only 2/5 games (cn04, sc25) genuinely tested whether the energy beats\
+    \ the accuracy\ngate. A 0-delta from non-diverse candidates is a NON-TEST, not a null. S2-v2 fixes\
+    \ this. Spec:\ndocs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md (S2). The\
+    \ degenerate-pool\ndetector now ships as adversarial_verify.check_engine_selection_candidate_diversity\
+    \ (DEGENERATE_CANDIDATE_POOL).\n\nTHE BUILD (three required changes vs S2):\n  1. GENERATE a behaviorally-DIVERSE\
+    \ candidate pool per game. The S2 pools were near-duplicate induction\n     snapshots. For each held-out\
+    \ game, assemble K>=3 candidate engines that genuinely DIFFER in held-out\n     off-path generalization\
+    \ -- e.g. snapshots from DIFFERENT refinement rounds (an early rambling engine,\n     a mid engine,\
+    \ a refined engine) and/or DIFFERENT induction seeds/temperatures. The pool MUST span a\n     range\
+    \ of held-out off-path cell_recall (verify >=2 distinct values per game before counting it).\n  2.\
+    \ EFFECTIVE-GAMES gate. A game is EFFECTIVE only if its candidate pool has >=2 distinct held-out\n\
+    \     off-path cell_recall (the selection genuinely matters). Require >= MIN_EFFECTIVE (set min_heldout_games\n\
+    \     = the number of effective games actually achieved, and require it to be >= 5). If fewer than\
+    \ 5\n     effective games can be assembled, return honest_verdict\n     complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity\
+    \ -- do NOT report a 0-delta\n     as a bounded null.\n  3. PER-GAME selection logging. For each game\
+    \ record: the candidate_rows (each with off-path\n     structural_energy + held-out cell_recall +\
+    \ prefix/held-out accuracy), the energy-selected candidate,\n     the accuracy-gate-selected candidate,\
+    \ whether they DIFFER, and each selection's off-path cell_recall.\n\nLIVE-PATH-REACHABILITY (unchanged\
+    \ from S2): the energy gate MUST stay in the E3AgentPolicy import closure\n(arc_orphan_solver_lint\
+    \ passes).\n\nEXISTING CODE TO READ FIRST:\n  - {project_root}/results/experiment_4791_structural_energy_s2_offpath_trust_gate.json\
+    \ (the degenerate S2 -- see candidate_rows / game_results)\n  - {project_root}/python/carnot/experiment_4791_structural_energy_s2_offpath_trust_gate.py\
+    \ (the S2 code to extend)\n  - {project_root}/python/carnot/agentic/arc_executable_world_model.py\
+    \ (WorldModelVerifier + induction/refinement rounds for snapshotting diverse candidates)\n  - {project_root}/scripts/adversarial_verify.py\
+    \ (check_engine_selection_candidate_diversity -- your gate must satisfy this: effective games >= min_heldout_games)\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from\
+    \ carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` exits 0. Else blocked_offline_arcade_missing,\
+    \ EXIT.\n     b. `.venv/bin/python -c \"from carnot.agentic.arc_executable_world_model import WorldModelVerifier\"\
+    ` imports. Else blocked_world_model_verifier_missing, EXIT.\n  1. For each held-out game, GENERATE\
+    \ K>=3 behaviorally-diverse candidate engines (varied refinement\n     rounds / seeds); compute each\
+    \ candidate's held-out off-path cell_recall + off-path structural energy.\n  2. Mark a game EFFECTIVE\
+    \ iff its candidates have >=2 distinct held-out off-path cell_recall. Require >=5\n     effective\
+    \ games; else return the INCONCLUSIVE verdict (above) -- no fake 0-delta.\n  3. On the effective games:\
+    \ select an engine by (a) off-path energy ranking vs (b) the incumbent binary\n     accuracy<0.5 gate;\
+    \ measure each selected engine's held-out off-path cell_recall; bootstrap the\n     energy-minus-accuracy\
+    \ delta. LOG per-game selections.\n  4. WRITE the artifact with verifier_is_oracle=false + min_heldout_games=<effective\
+    \ count> + per-game\n     game_results (so check_engine_selection_candidate_diversity passes only\
+    \ on a genuine test).\n\nFALSIFIABLE GATE:\n  PASS (-> S3 generation lift, .443) iff on >=5 EFFECTIVE\
+    \ games the energy-selected off-path cell_recall\n  MINUS accuracy-selected > 0 with bootstrap CI95\
+    \ EXCLUDING 0. BOUNDED iff >=5 effective games AND the delta\n  CI95 includes 0 (a GENUINE null on\
+    \ a real diverse test -> the energy does not beat cheap accuracy at\n  engine selection; the direction\
+    \ pivots to testing the energy on S3 generation directly).\n  retire_if_same_verdict: true -- if <5\
+    \ effective games can be assembled (still degenerate), return\n  INCONCLUSIVE and retire the off-path-trust-gate\
+    \ framing (do NOT re-run on degenerate pools); the energy's\n  next live test becomes S3 generation.\n\
+    \nGATE HARDENING (adversarial verify wf_3c4337f4 -- the diversity gate is now mechanically non-gameable;\
+    \ do NOT\ntry to dodge it):\n  - INDEPENDENT FLOOR: adversarial_verify.check_engine_selection_candidate_diversity\
+    \ now requires\n    effective_games >= max(5, ceil(0.6*total_games)) -- your declared min_heldout_games\
+    \ can only TIGHTEN this,\n    never lower it. Declaring min_heldout_games=1 will NOT dodge the check.\
+    \ A game counts EFFECTIVE only if its\n    candidates' held-out off-path cell_recall spans > 1e-3\
+    \ (a real spread, not float noise).\n  - EXACT KEY: log each candidate's `heldout_cell_recall` (the\
+    \ exact field the delta + the linter read) in\n    candidate_rows, alongside offpath_structural_energy\
+    \ + prefix/held-out accuracy.\n  - CONSISTENCY: n_effective_games MUST equal the linter-computed effective\
+    \ count (games with candidate\n    cell_recall spread > 1e-3). A fabricated n_effective_games that\
+    \ disagrees is a CRITICAL mismatch.\n  - GENUINE INDUCTION, NO SABOTAGE: the candidate pool's diversity\
+    \ MUST come from GENUINELY INDUCED engines\n    (varied refinement rounds / seeds spanning a real\
+    \ off-path quality gradient) -- NOT from injecting a\n    deliberately-broken 0.0-recall engine to\
+    \ manufacture spread. For a PASS, energy must out-select the\n    accuracy gate on games where BOTH\
+    \ selected candidates are non-degenerate (off-path cell_recall > 0); a\n    PASS whose win comes solely\
+    \ from energy AVOIDING a broken candidate the accuracy gate picked is INVALID\n    (report it as such,\
+    \ not a win).\n  - BOUNDED REQUIRES A POSITIVE CONTROL: a BOUNDED verdict (energy does not beat accuracy\
+    \ on a diverse pool)\n    is only valid if positive_control_passed=true -- a documented oracle/headroom\
+    \ upper bound showing the\n    diverse pool CONTAINS a candidate the accuracy gate MISSES (i.e. energy\
+    \ COULD have won but didn't), so\n    BOUNDED means 'no oracle-distinct value' and not 'nothing in\
+    \ the pool distinguished anything'.\n\n  The artifact MUST pass adversarial_verify.check_engine_selection_candidate_diversity:\
+    \ effective_games\n  (games with >=2 distinct candidate cell_recall) >= min_heldout_games. A 0-delta\
+    \ with effective<required\n  is correctly flagged DEGENERATE_CANDIDATE_POOL -- so a bounded verdict\
+    \ is only valid on a diverse pool.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
+    \    principle: \"terminal prefix; a live trust win is success_structural_energy_s2v2_trust_gate_authorizes_s3,\
+    \ a genuine null on a diverse pool is complete_structural_energy_s2v2_bounded_diverse_pool, an under-diverse\
+    \ non-test is complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity.\"\n \
+    \ verifier_is_oracle:\n    principle: \"MUST be false for the energy ranking (oracle-distinct); the\
+    \ binary-accuracy CONTROL is execution-grounded.\"\n  n_effective_games:\n    principle: \"games whose\
+    \ candidate pool has >=2 distinct held-out off-path cell_recall -- the ONLY games that genuinely test\
+    \ selection; the exp4791 failure was n_effective=2 of 5. MUST equal the linter-computed effective\
+    \ count (cell_recall spread > 1e-3); a mismatch is a CRITICAL fabrication.\"\n  min_heldout_games:\n\
+    \    principle: \"set to n_effective; check_engine_selection_candidate_diversity requires effective>=this,\
+    \ so a degenerate pool cannot pass as a null.\"\n  game_results:\n    principle: \"per-game candidate_rows\
+    \ + energy-selected vs accuracy-selected candidate + each off-path cell_recall -- the per-game logging\
+    \ exp4791 lacked (it only reported the aggregate).\"\n  candidate_pool_diversity:\n    principle:\
+    \ \"records distinct off-path cell_recall count per game -- proves the pool genuinely spans generalization,\
+    \ not near-duplicate induction snapshots.\"\n  energy_minus_accuracy_delta_ci95:\n    principle: \"\
+    must EXCLUDE 0 (energy>accuracy) for PASS, on >=5 EFFECTIVE games -- a 0-delta is only meaningful\
+    \ on a diverse pool.\"\n  live_path_reachable:\n    principle: \"the energy gate must be in the E3AgentPolicy\
+    \ import closure (arc_orphan_solver_lint).\"\n  preconditions_checked:\n    principle: \"records the\
+    \ arcade / WorldModelVerifier import checks so a silent-missing-resource run cannot fabricate a cell_recall.\"\
+    \n  positive_control_passed:\n    principle: \"REQUIRED for a BOUNDED verdict -- a documented oracle/headroom\
+    \ upper bound proving the diverse pool CONTAINS a candidate the accuracy gate misses, so BOUNDED means\
+    \ 'energy could have won but didn't', not a degenerate non-test.\"\n  false_negative_risk_checked:\n\
+    \    principle: \"engages check_false_negative_risk on the bounded verdict -- a null is only trustworthy\
+    \ with a passing positive control.\"\n  candidates_genuinely_induced:\n    principle: \"the diversity\
+    \ spread must come from genuinely-induced engines (varied rounds/seeds), NOT an injected broken 0.0-recall\
+    \ sabotage candidate -- a PASS off a sabotage pool is invalid.\"\n  random_seed:\n    principle: \"\
+    determinism for the candidate generation + selection + bootstrap.\"\n  reproducibility_checksum:\n\
+    \    principle: \"content hash of (candidate engines, folds, energy config) so a replication catches\
+    \ drift.\"\n"
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4792-a2
+- id: exp4802-a2
   title: PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible
-    level on a ROTATED unsolved target (sb26/bp35; ka59+lf52 no-banked, re86 self-play covered). offline_reproduced
-    gated.
+    level on a ROTATED unsolved target (bp35/sb26). offline_reproduced gated.
   priority: critical
   track: arc-north-star
   max_turns: 160
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4792_levelup_attempt.json
+  deliverable: results/experiment_4802_levelup_attempt.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (ARC Level-Up Attempt Guarantee; rotate
-    to sb26/bp35).'
+    to bp35/sb26).'
   prompt: "CONTEXT ({date}). The ARC Level-Up Attempt Guarantee requires >=1 task per roadmap whose gate\
-    \ BANKS a\nnew reproducible level. ROTATE: ka59 + lf52 no-banked, re86 had self-play coverage -- pick\
-    \ sb26 or bp35 for\nfirst-contact, else +1 deepen on the shallowest already-solved game.\n\nSTANDING\
+    \ BANKS a\nnew reproducible level. ROTATE the target (ka59/lf52/re86/sc25 covered recently) -- pick\
+    \ bp35 or sb26 for\nfirst-contact, else +1 deepen on the shallowest already-solved game.\n\nSTANDING\
     \ ENTRYPOINT: `.venv/bin/python scripts/arc_loop_solve.py --game <target>`. Reuse arc_solver_kit +\n\
     registry general_gotchas; reverse-engineer only the per-game DELTA.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\
     \ arc_solver_kit.offline_arcade() exits 0; Qwen generator on the iGPU (NEVER 3090s) if\n     induction\
@@ -171,23 +217,22 @@ tasks:
     \ \"terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>.\"\
     \n  solve_provenance:\n    principle: \"live_agent_self_discovery -- the agent advanced via its OWN\
     \ attempts; NOT outer_loop_re (CRITICAL).\"\n  offline_reproduced:\n    principle: \"only reproduced\
-    \ levels count -- a live-recorded trajectory alone is provisional.\"\n  reproduced_levels:\n    principle:\
-    \ \"the new reproducible depth; the monotonic ARC progress metric.\"\n  inference_substrate:\n   \
-    \ principle: \"live_llm_inference if induction runs (60s floor).\"\n  verifier_is_oracle:\n    principle:\
-    \ \"the reproduction gate is execution-grounded (true); this is a SOLVE task.\"\n  preconditions_checked:\n\
-    \    principle: \"records arcade/env/generator checks so a missing-resource run emits blocked_, never\
-    \ a fabricated solve.\"\n"
-  milestone: 2026.06.441
+    \ levels count.\"\n  reproduced_levels:\n    principle: \"the new reproducible depth; the monotonic\
+    \ ARC progress metric.\"\n  inference_substrate:\n    principle: \"live_llm_inference if induction\
+    \ runs (60s floor).\"\n  verifier_is_oracle:\n    principle: \"the reproduction gate is execution-grounded\
+    \ (true); this is a SOLVE task.\"\n  preconditions_checked:\n    principle: \"records arcade/env/generator\
+    \ checks so a missing-resource run emits blocked_, never a fabricated solve.\"\n"
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4793-a3
+- id: exp4803-a3
   title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- run the standing self-improvement loop
     on a banked game: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
   priority: high
   track: arc-north-star
   max_turns: 140
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4793_self_play_verifier_checkpoint.json
+  deliverable: results/experiment_4803_self_play_verifier_checkpoint.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (self-play-every-milestone; standing arc_loop_solve
@@ -206,17 +251,17 @@ tasks:
     \    principle: \"live_agent_self_discovery -- self-play is the agent improving on its own attempts.\"\
     \n  preconditions_checked:\n    principle: \"records arcade/registry checks; a missing target emits\
     \ blocked_, never a fabricated checkpoint.\"\n"
-  milestone: 2026.06.441
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4794-a4
+- id: exp4804-a4
   title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness) -- measure the live agent's
     held-out first-win rate on the color-permuted variant harness, checkpoint/resume-capable.
   priority: high
   track: arc-north-star
   max_turns: 120
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4794_heldout_first_win_readiness.json
+  deliverable: results/experiment_4804_heldout_first_win_readiness.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (held-out first-win readiness lane).'
@@ -240,38 +285,42 @@ tasks:
     \ checkpoint_emitted:\n    principle: \"a capped run must still emit a usable partial artifact.\"\n\
     \  preconditions_checked:\n    principle: \"records generator/harness checks; a missing resource emits\
     \ blocked_, never a fabricated rate.\"\n"
-  milestone: 2026.06.441
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4795-b1
-  title: PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .441 ARC nulls + verify the S2 graft
-    is GENUINELY live-path-reachable (arc_orphan_solver_lint) and the engine-selection comparison used
-    the REAL binary-accuracy control (not a strawman).
+- id: exp4805-b1
+  title: 'PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .442 ARC nulls + RUN the degenerate-pool
+    detector on S2-v2: confirm n_effective_games >= min_heldout_games (the candidate pool is genuinely
+    diverse) so a bounded/0-delta verdict is a real test, not a degenerate non-test like S2 (exp4791).'
   priority: high
   track: infra
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4795_silent_bug_audit.json
+  deliverable: results/experiment_4805_silent_bug_audit.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 1; silent-bug audit
-    + S2 reachability/control check).'
+    + S2-v2 candidate-diversity check).'
   prompt: "CONTEXT ({date}). Reserved infra slot. Audit the milestone's ARC nulls for silent bugs. For\
-    \ S2\n(exp4791) specifically: verify the energy gate is GENUINELY in the E3AgentPolicy import closure\n\
-    (arc_orphan_solver_lint passes -- not an orphan), and that the engine-selection comparison used the\
-    \ REAL\nincumbent binary accuracy<0.5 gate on the IDENTICAL candidate sets (not a weakened strawman\
-    \ control).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .441 result artifacts present.\n  1. For each\
-    \ ARC null, verify the lever was genuinely exercised. For S2, run arc_orphan_solver_lint on the\n\
-    \     graft + confirm the control is the real binary gate.\n  2. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\
-    \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
-    \ audit complete is complete_/success_.\"\n  nulls_audited:\n    principle: \"count of nulls re-examined.\"\
-    \n  s2_live_path_reachable_confirmed:\n    principle: \"the load-bearing check -- S2's energy gate\
-    \ must be reachable from E3AgentPolicy, else its 'live trust gate' claim is hollow.\"\n  inference_substrate:\n\
-    \    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
-  milestone: 2026.06.441
+    \ S2-v2\n(exp4801) specifically: RUN adversarial_verify.check_engine_selection_candidate_diversity\
+    \ on the artifact and\nconfirm it does NOT flag DEGENERATE_CANDIDATE_POOL -- i.e. n_effective_games\
+    \ (games with >=2 distinct\nheld-out off-path cell_recall) >= min_heldout_games. If it DOES flag,\
+    \ S2-v2's pool is still degenerate and\nits verdict is a non-test; record that. Also confirm the per-game\
+    \ selections were logged (game_results with\nenergy-vs-accuracy picks) and the graft stayed live-path-reachable\
+    \ (arc_orphan_solver_lint).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .442 result artifacts present.\n\
+    \  1. `.venv/bin/python -c \"import json,sys; sys.path.insert(0,'scripts'); import adversarial_verify\
+    \ as av;\n     d=json.load(open('results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json'));\n\
+    \     f=[]; av.check_engine_selection_candidate_diversity(d,f); print('DEGENERATE_CANDIDATE_POOL:',\
+    \ [x.kind for x in f])\"`\n  2. For each other ARC null, verify the lever was genuinely exercised.\n\
+    \  3. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
+    \  honest_verdict:\n    principle: \"terminal prefix; audit complete is complete_/success_.\"\n  s2v2_candidate_pool_diverse:\n\
+    \    principle: \"the load-bearing check -- DEGENERATE_CANDIDATE_POOL must NOT fire on S2-v2, else\
+    \ its verdict is again a non-test.\"\n  nulls_audited:\n    principle: \"count of nulls re-examined.\"\
+    \n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4796-b2
+- id: exp4806-b2
   title: 'PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the
     Kaggle ARC-AGI-3 agent package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; operator
     checklist.'
@@ -279,7 +328,7 @@ tasks:
   track: infra
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4796_submission_package_harden.json
+  deliverable: results/experiment_4806_submission_package_harden.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 2; submission-package
@@ -294,17 +343,17 @@ tasks:
     \    principle: \"True iff ready for the OPERATOR to submit; the task itself NEVER submits.\"\n  vram_estimate_gb:\n\
     \    principle: \"must fit ~16GB Kaggle with KV + headroom.\"\n  inference_substrate:\n    principle:\
     \ \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
-  milestone: 2026.06.441
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4797-c
+- id: exp4807-c
   title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty anchor) -- the per-milestone KV260 continuity
     task: SSH-reachability, loaded overlay, next concrete forward step. SSH precondition ONLY.'
   priority: medium
   track: hardware
   max_turns: 80
   inference_substrate: hardware_smoke
-  deliverable: results/experiment_4797_kv260_continuity.json
+  deliverable: results/experiment_4807_kv260_continuity.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (hardware-continuity; KV260 per-milestone).'
@@ -321,73 +370,70 @@ tasks:
     \ \"the SSH reachability check -- the ONLY valid KV260 precondition.\"\n  preconditions_checked:\n\
     \    principle: \"records the SSH check so a wrong-mechanism precondition cannot escalate the operator\
     \ for a no-op.\"\n"
-  milestone: 2026.06.441
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4798-d
-  title: PHASE D (SOTA-INGESTION -- the .442 frontier = energy-guided GENERATION) -- ingest the literature
-    on using a learned energy/value to GUIDE candidate generation (energy-guided sampling, gradient/score
-    guidance, energy-as-fitness search) to inform S3 (generation lift). Real arXiv IDs only.
+- id: exp4808-d
+  title: PHASE D (SOTA-INGESTION -- the .443 frontier = energy-guided GENERATION) -- ingest the literature
+    on using a learned energy/value to GUIDE candidate generation (energy-guided sampling, score guidance,
+    energy-as-fitness search) to inform S3. Real arXiv IDs only.
   priority: medium
   track: sota-ingestion
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4798_sota_ingestion_energy_guided_generation.json
+  deliverable: results/experiment_4808_sota_ingestion_energy_guided_generation.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved SOTA-ingestion slot; headline=energy
     trust gate -> generation lift).'
-  prompt: "CONTEXT ({date}). Reserved SOTA-ingestion slot. S2 grafts the energy as a trust gate; S3 will\
-    \ use it\nto GUIDE generation (put a winner INTO the pool). Ingest the literature on energy/value-guided\
-    \ GENERATION:\nenergy-guided sampling, classifier/score guidance, energy-as-fitness evolutionary search,\
-    \ plan-with-energy.\nUse the RELIABLE channel (sweep_clusters.py / sweep_semscholar.py + low-concurrency\
-    \ WebSearch/WebFetch). Do\nNOT invoke /deep-research.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: research-studying.md\
-    \ / research-references.md present.\n  1. Read the discovered corpus filtered to energy-guided generation;\
-    \ focused fresh sweep (top 5-8 papers).\n  2. Synthesize a SOTA->S3 mapping note (how each method\
-    \ would use the S1/S2 energy to put a winner into the\n     explorer's pool). Cite REAL arXiv IDs.\n\
-    \  3. Flag the strongest method(s) for the .442 roadmap; mark ingested in research-studying.md.\n\n\
-    REQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
-    \ mapping emitted is success_sota_ingestion_energy_guided_generation_mapped.\"\n  methods_mapped:\n\
-    \    principle: \"the strongest 3-5 methods mapped onto S3, each with a real arXiv ID.\"\n  arxiv_ids_cited:\n\
-    \    principle: \"every method claim must cite a verifiable arXiv ID -- an ingestion with no citations\
-    \ is fabrication.\"\n  flagged_for_v442:\n    principle: \"the strongest method(s) flagged so the\
-    \ .442 planner reads the mapping.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
-    \ (0.0001s floor).\"\n"
-  milestone: 2026.06.441
+  prompt: "CONTEXT ({date}). Reserved SOTA-ingestion slot. S3 will use the energy to GUIDE generation\
+    \ (put a\nwinner INTO the pool). Ingest the literature on energy/value-guided GENERATION: energy-guided\
+    \ sampling,\nclassifier/score guidance, energy-as-fitness evolutionary search, plan-with-energy. Use\
+    \ the RELIABLE channel\n(sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch).\
+    \ Do NOT invoke /deep-research.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: research-studying.md / research-references.md\
+    \ present.\n  1. Read the discovered corpus filtered to energy-guided generation; focused fresh sweep\
+    \ (top 5-8 papers).\n  2. Synthesize a SOTA->S3 mapping note. Cite REAL arXiv IDs.\n  3. Flag the\
+    \ strongest method(s) for the .443 roadmap; mark ingested in research-studying.md.\n\nREQUIRED ARTIFACT\
+    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; mapping emitted\
+    \ is success_sota_ingestion_energy_guided_generation_mapped.\"\n  methods_mapped:\n    principle:\
+    \ \"the strongest 3-5 methods mapped onto S3, each with a real arXiv ID.\"\n  arxiv_ids_cited:\n \
+    \   principle: \"every method claim must cite a verifiable arXiv ID.\"\n  flagged_for_v443:\n    principle:\
+    \ \"the strongest method(s) flagged so the .443 planner reads the mapping.\"\n  inference_substrate:\n\
+    \    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
-- id: exp4799-e
-  title: 'PHASE E (CAPSTONE .441) -- aggregate the .441 scorecard: the S2 off-path trust-gate verdict
-    (live trust value -> S3 authorized, or bounded), the level-up bank, self-play, readiness, reproducible_total_levels.
-    SKIP genuinely-flagged artifacts but record the S2 true verdict from the gate numbers (note any stale-conductor
-    false-positive).'
+- id: exp4809-e
+  title: 'PHASE E (CAPSTONE .442) -- aggregate the .442 scorecard: the S2-v2 verdict (trust win -> S3,
+    GENUINE bounded on a DIVERSE pool, or still-inconclusive), the level-up bank, self-play, readiness.
+    SKIP genuinely-flagged artifacts; record S2-v2''s true verdict ONLY if DEGENERATE_CANDIDATE_POOL did
+    NOT fire.'
   priority: high
   track: capstone
   max_turns: 120
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4799_capstone_v441.json
+  deliverable: results/experiment_4809_capstone_v442.json
   operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
     task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
     majority-ARC + reserved infra/hardware/sota/capstone slots. (capstone aggregation; codex default).'
-  prompt: "CONTEXT ({date}). Capstone for .441. The HEADLINE is the S2 off-path trust-gate verdict: does\
-    \ ranking\ninduced engines by off-path structural energy BEAT the incumbent binary accuracy<0.5 gate\
-    \ on held-out\noff-path cell_recall (CI95 excl 0 -> S3 authorized) or not (BOUNDED -- usable landscape\
-    \ but no live trust value)?\n\nIMPORTANT: read each upstream artifact via scripts/summarize_artifact.py\
-    \ (PATCHED linter -- a live re-check).\nIf S2 carries a stale-conductor false-positive flag but its\
-    \ gate numbers show a genuine PASS, record the true\nverdict WITH a note (do not silently drop the\
-    \ headline); do NOT aggregate a genuinely-fabricated number.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\
-    \ the .441 upstream artifacts present.\n  1. Read each upstream artifact (summarize_artifact). Honor\
-    \ verifier_is_oracle.\n  2. Aggregate: S2 verdict (trust-gate win vs bounded, with the cell_recall\
-    \ delta + CI); level-up; self-play;\n     readiness. Cite upstream sha256/ids.\n  3. WRITE the capstone\
-    \ scorecard.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
-    \ \"terminal prefix; capstone_ready=true is success_/complete_.\"\n  s2_structural_energy_verdict:\n\
-    \    principle: \"the headline -- live off-path trust-gate WIN (S3 authorized) or BOUNDED; recorded\
-    \ from the gate numbers even if stale-flagged.\"\n  reproducible_total_levels:\n    principle: \"\
-    the monotonic ARC progress metric carried from the registry.\"\n  cited_upstream_artifacts:\n    principle:\
-    \ \"list of {{experiment_id, fields_imported, sha256}} -- the audit trail.\"\n  stale_false_positive_notes:\n\
-    \    principle: \"records which conductor flags were stale-linter false-positives (live re-check clean)\
-    \ vs genuine.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (0.0001s\
-    \ floor).\"\n"
-  milestone: 2026.06.441
+  prompt: "CONTEXT ({date}). Capstone for .442. The HEADLINE is the S2-v2 verdict: on a behaviorally-DIVERSE\n\
+    candidate pool (>=5 effective games), does off-path energy-ranking BEAT the binary accuracy gate (CI95\
+    \ excl\n0 -> S3 authorized), is it a GENUINE bounded null (diverse pool, CI incl 0 -> energy doesn't\
+    \ beat accuracy\nat engine selection; pivot the energy to S3 generation), or still INCONCLUSIVE (insufficient\
+    \ diversity)?\n\nIMPORTANT: read each upstream artifact via scripts/summarize_artifact.py (PATCHED\
+    \ linter). For S2-v2, the\nverdict is ONLY trustworthy if check_engine_selection_candidate_diversity\
+    \ did NOT fire DEGENERATE_CANDIDATE_\nPOOL (n_effective_games >= min_heldout_games). If it fired,\
+    \ record S2-v2 as inconclusive, not bounded.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .442 upstream\
+    \ artifacts present.\n  1. Read each upstream artifact. Honor verifier_is_oracle + the DEGENERATE_CANDIDATE_POOL\
+    \ check.\n  2. Aggregate: S2-v2 verdict (win / genuine-bounded / inconclusive); level-up; self-play;\
+    \ readiness. Cite sha256/ids.\n  3. WRITE the capstone scorecard.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
+    \  honest_verdict:\n    principle: \"terminal prefix; capstone_ready=true is success_/complete_.\"\
+    \n  s2v2_structural_energy_verdict:\n    principle: \"the headline -- trust WIN (S3 authorized) /\
+    \ GENUINE bounded (diverse pool) / inconclusive (degenerate pool); recorded only if DEGENERATE_CANDIDATE_POOL\
+    \ did not fire.\"\n  reproducible_total_levels:\n    principle: \"the monotonic ARC progress metric\
+    \ carried from the registry.\"\n  cited_upstream_artifacts:\n    principle: \"list of {{experiment_id,\
+    \ fields_imported, sha256}} -- the audit trail.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
+    \ (0.0001s floor).\"\n"
+  milestone: 2026.06.442
   agent_type: codex
   model: gpt-5.5
