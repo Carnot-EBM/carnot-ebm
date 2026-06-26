@@ -1,0 +1,133 @@
+{
+  "audited_artifact_checksums": {
+    "results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json": "sha256:705ddd20a540b2bed81efbff0ec9ba9e34b5cdc56f929cafe524eedc9327bb1a",
+    "results/experiment_4812_levelup_attempt.json": "sha256:2dc9850cab0272766384d7de876322bfc9c9b88453ea66ba2319dc0963423cd6",
+    "results/experiment_4814_heldout_first_win_readiness.json": "sha256:e1cbe27d09692fa505c1a1006f1dfa7d46ae15627d9e20a279749f183d01a1c2"
+  },
+  "audited_artifacts": [
+    "results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json",
+    "results/experiment_4812_levelup_attempt.json",
+    "results/experiment_4814_heldout_first_win_readiness.json"
+  ],
+  "duration_s": 0.0001,
+  "experiment": "experiment_4815_silent_bug_audit",
+  "experiment_id": 4815,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined."
+    },
+    "s2v3_corpus_coverage_verified": {
+      "principle": "the load-bearing check -- n_available_games must match the real corpus AND DEGENERATE_CANDIDATE_POOL must not fire, else S2-v3's verdict is again under-covered."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_0_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "exercise_evidence": [
+        "real_corpus_size=25",
+        "n_available_games=25",
+        "n_games_attempted=25",
+        "n_effective_games=23",
+        "required_effective_games=15",
+        "degenerate_candidate_pool_flagged=False",
+        "per_game_selections_logged=True"
+      ],
+      "null_id": "experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate",
+      "s2v3_corpus_coverage_check": {
+        "attempted_corpus_wide": true,
+        "checked_games": 25,
+        "degenerate_candidate_pool_flagged": false,
+        "effective_game_floor_met": true,
+        "flag_kinds": [],
+        "n_available_games": 25,
+        "n_available_matches_real_corpus": true,
+        "n_effective_games": 23,
+        "n_games_attempted": 25,
+        "per_game_selections_logged": true,
+        "real_corpus_size": 25,
+        "required_effective_games": 15
+      },
+      "s2v3_corpus_coverage_verified": true,
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "levelup_attempts=17",
+        "solution_label_count=751",
+        "reproduction_gates=17",
+        "existing_depth_reproduced=17",
+        "new_depth_claims=0",
+        "new_levels_banked=0",
+        "offline_reproduced=False",
+        "target_game=ka59"
+      ],
+      "null_id": "experiment_4812_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True",
+        "inference_substrate=aggregation_from_upstream_artifacts",
+        "proxy_cache_used=True"
+      ],
+      "null_id": "experiment_4814_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "environment_files_present": true,
+    "milestone_443_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "real_corpus_size": 25,
+    "source_artifacts_present": true
+  },
+  "random_seed": 4815,
+  "reproducibility_checksum": "sha256:188f6416438f4452122e644792237c20d557282107f778900641357bf4d82705",
+  "result_path": "results/experiment_4815_silent_bug_audit.json",
+  "s2v3_corpus_coverage_check": {
+    "attempted_corpus_wide": true,
+    "checked_games": 25,
+    "degenerate_candidate_pool_flagged": false,
+    "effective_game_floor_met": true,
+    "flag_kinds": [],
+    "n_available_games": 25,
+    "n_available_matches_real_corpus": true,
+    "n_effective_games": 23,
+    "n_games_attempted": 25,
+    "per_game_selections_logged": true,
+    "real_corpus_size": 25,
+    "required_effective_games": 15
+  },
+  "s2v3_corpus_coverage_verified": true,
+  "schema": "carnot.arc.milestone_443_silent_bug_audit_4815.v1",
+  "silent_bugs_found": [],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4815",
+    "SCENARIO-ARC-WMTE-4815-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4815-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate",
+    "experiment_4812_levelup_attempt",
+    "experiment_4814_heldout_first_win_readiness"
+  ]
+}
