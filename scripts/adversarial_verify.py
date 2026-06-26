@@ -4604,29 +4604,64 @@ def _grid_changing_correct_evidence(value: Any) -> tuple[str, float] | None:
     return None
 
 
+# S2-style engine-selection schema signal (scopes the check; closes FN-1 renamed-delta
+# evasion + FP-1 incidental-energy_delta false positive). The diversity-spread epsilon
+# requires a MEANINGFUL outcome range (closes FN-4 float-noise manufactured diversity).
+_S2_SCHEMA_TOKENS = ("s2", "offpath", "off_path", "trust_gate", "engine_selection", "engine_select")
+_EFFECTIVE_SPREAD_EPS = 1e-3
+_NO_VALUE_VERDICT_TOKENS = (
+    "no_live_trust_value", "no_trust", "no_value", "bounded", "does_not_beat",
+    "below_control", "inconclusive", "negative_result", "ties_control", "no_delta", "null",
+)
+_PASS_VERDICT_TOKENS = ("authorizes_s3", "trust_gate", "_passes", "_pass_", "success_")
+
+
+def _has_s2_schema_signal(d: dict[str, Any]) -> bool:
+    blob = " ".join(
+        str(d.get(k, "")) for k in ("experiment", "experiment_id", "schema", "honest_verdict", "title")
+    ).lower()
+    return any(t in blob for t in _S2_SCHEMA_TOKENS)
+
+
 def _engine_selection_game_rows(d: dict[str, Any]) -> list[Any] | None:
     """Per-game candidate rows for an S2-style engine-SELECTION comparison, or None.
-    Recognized by `game_results` rows carrying `candidate_rows` AND a top-level
-    energy-vs-control selection delta field."""
+    Recognized by `game_results` rows carrying `candidate_rows` AND (an S2 schema
+    signal s2/offpath/trust_gate/engine_selection OR a top-level delta/margin key).
+    Scoping to the S2 schema (not an incidental field-name substring) closes the
+    renamed-delta evasion (FN-1) and the incidental-`energy_delta` FP (FP-1)."""
     gr = d.get("game_results")
     if not isinstance(gr, list) or not gr:
         return None
     if not any(isinstance(g, dict) and "candidate_rows" in g for g in gr):
         return None
-    if not any(
-        ("delta" in k.lower() and ("energy" in k.lower() or "select" in k.lower()))
-        for k in d
-    ):
+    has_delta = any(("delta" in k.lower() or "margin" in k.lower()) for k in d)
+    if not (_has_s2_schema_signal(d) or has_delta):
         return None
     return gr
 
 
+def _candidate_outcome_values(rows: list[Any]) -> list[float]:
+    """The per-candidate OUTCOME metric values, field-agnostic: prefer held-out
+    off-path cell_recall (the metric the S2 delta is computed from), else off-path
+    structural energy, else held-out accuracy. Closes FP-2 (a diverse pool logged
+    under a different valid field being mis-counted as degenerate)."""
+    for field in ("heldout_cell_recall", "offpath_structural_energy", "heldout_accuracy"):
+        vals = [
+            float(r[field])
+            for r in rows
+            if isinstance(r, dict) and _is_finite_number(r.get(field))
+        ]
+        if len(vals) >= 2:
+            return vals
+    return []
+
+
 def _count_effective_selection_games(gr: list[Any]) -> tuple[int, int]:
-    """(effective, total). A game is EFFECTIVE iff its candidate pool is
-    behaviorally diverse -- >=2 distinct held-out cell_recall among candidates --
-    i.e. the SELECTION genuinely matters. A pool whose candidates all share one
-    cell_recall cannot distinguish any selector from any other (the exp4791 trap:
-    different files, bit-identical off-path predictions)."""
+    """(effective, total). A game is EFFECTIVE iff its candidate pool spans a
+    MEANINGFUL outcome range -- max-min of the candidates' outcome metric exceeds
+    _EFFECTIVE_SPREAD_EPS. Requiring a real spread (not mere distinctness) closes
+    the 1e-8 float-noise manufactured-diversity evasion (FN-4); the exp4791 trap was
+    different files with bit-identical off-path predictions."""
     effective = 0
     total = 0
     for g in gr:
@@ -4636,25 +4671,28 @@ def _count_effective_selection_games(gr: list[Any]) -> tuple[int, int]:
         rows = g.get("candidate_rows")
         if not isinstance(rows, list) or len(rows) < 2:
             continue
-        recalls = {
-            round(float(r.get("heldout_cell_recall")), 9)
-            for r in rows
-            if isinstance(r, dict) and _is_finite_number(r.get("heldout_cell_recall"))
-        }
-        if len(recalls) >= 2:
+        vals = _candidate_outcome_values(rows)
+        if vals and (max(vals) - min(vals)) > _EFFECTIVE_SPREAD_EPS:
             effective += 1
     return effective, total
 
 
-def _near_zero_selection_delta(d: dict[str, Any]) -> bool:
+def _draws_selection_conclusion(d: dict[str, Any]) -> bool:
+    """True if the artifact draws a SELECTION conclusion -- a no-value/bounded null OR
+    a PASS/trust win. BOTH must clear the diversity bar: a PASS is NOT exempt (closes
+    the PASS-bypass, attack #3 -- a PASS off a degenerate/broken pool is also invalid).
+    A zero-OR-NEGATIVE selection delta counts as a no-value read (closes the
+    negative-delta evasion, FN-2: energy strictly LOSING is the clearest no-value)."""
+    verdict = str(d.get("honest_verdict", "")).lower()
+    if any(t in verdict for t in _NO_VALUE_VERDICT_TOKENS):
+        return True
+    if any(t in verdict for t in _PASS_VERDICT_TOKENS):
+        return True
     for k, v in d.items():
-        if (
-            "delta" in k.lower()
-            and ("energy" in k.lower() or "select" in k.lower())
-            and _is_finite_number(v)
-            and abs(float(v)) < 1e-9
-        ):
-            return True
+        kl = k.lower()
+        if ("delta" in kl or "margin" in kl) and ("energy" in kl or "select" in kl or "trust" in kl):
+            if _is_finite_number(v) and float(v) <= 1e-9:  # zero or negative = no value
+                return True
     return False
 
 
@@ -4667,37 +4705,40 @@ def check_engine_selection_candidate_diversity(d: dict[str, Any], flags: list[Fl
     games had behaviorally-IDENTICAL candidate engines (bit-identical off-path energy
     + cell_recall) and a 3rd had equal recalls, so only 2 games genuinely tested
     whether the energy beats the accuracy gate. A 0-delta from a pool with no
-    behavioral diversity is a NON-TEST, not a genuine null -- it must NOT be read as
-    'energy adds no value'. The required count of effective games is the artifact's
-    declared `min_heldout_games`, else min(total, 5)."""
+    behavioral diversity is a NON-TEST, not a genuine null.
+
+    Hardened (adversarial verify wf_3c4337f4): the `required` bar is a HARD independent
+    floor the producing agent cannot lower -- max(5, ceil(0.6*total), declared) -- so an
+    artifact declaring `min_heldout_games: 1` can no longer dodge the check (FN-3). The
+    bar also applies to PASS verdicts, not just nulls (attack #3), uses a meaningful
+    spread (FN-4), treats negative deltas as no-value (FN-2), and is S2-scoped (FN-1/FP-1)."""
     gr = _engine_selection_game_rows(d)
     if gr is None:
         return
     effective, total = _count_effective_selection_games(gr)
-    required = d.get("min_heldout_games")
-    if not _is_finite_number(required):
-        required = min(total, 5)
+    declared = d.get("min_heldout_games")
+    declared = int(declared) if _is_finite_number(declared) else 0
+    # HARD independent floor: the artifact's own min_heldout_games may only TIGHTEN
+    # the bar above the floor, never relax it below (closes the self-declared-bar
+    # evasion FN-3 -- the load-bearing flaw).
+    required = max(5, math.ceil(0.6 * total), declared)
     if effective >= required:
         return  # enough behaviorally-diverse games -- a genuine selection test
-    verdict = str(d.get("honest_verdict", "")).lower()
-    draws_no_value = (
-        any(t in verdict for t in ("no_live_trust_value", "no_trust", "no_value", "bounded"))
-        or _near_zero_selection_delta(d)
-    )
-    if not draws_no_value:
-        return  # only guards a null/bounded conclusion; a PASS on few games is caught elsewhere
+    if not _draws_selection_conclusion(d):
+        return
     flags.append(
         Flag(
             kind="DEGENERATE_CANDIDATE_POOL",
             severity="critical",
             detail=(
                 f"Engine-selection comparison rests on a degenerate candidate pool: only "
-                f"{effective}/{total} games had behaviorally-diverse candidates (>=2 distinct "
-                f"held-out cell_recall), below the required {required}. A no-value/bounded verdict "
-                f"({d.get('honest_verdict')!r}) cannot be concluded from this -- a 0-delta from "
-                f"non-diverse candidates is a NON-TEST, not a genuine null. Re-run with a "
-                f"behaviorally-diverse candidate pool (engines that differ in held-out off-path "
-                f"cell_recall) and an effective-games gate."
+                f"{effective}/{total} games had behaviorally-diverse candidates (outcome spread "
+                f">{_EFFECTIVE_SPREAD_EPS}), below the required {required} (independent floor; the "
+                f"artifact's min_heldout_games may tighten but not lower it). A selection "
+                f"conclusion ({d.get('honest_verdict')!r}) -- whether bounded-null or PASS -- "
+                f"cannot be drawn from this: a 0-or-negative delta from non-diverse candidates is a "
+                f"NON-TEST, not a genuine result. Re-run with a candidate pool that genuinely spans "
+                f"held-out off-path generalization across >= the required games."
             ),
         )
     )

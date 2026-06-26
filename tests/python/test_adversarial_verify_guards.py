@@ -717,32 +717,41 @@ def test_chance_floor_score_recognizes_auroc_probe_control_but_not_metrics():
 # == 0.0 + a BOUNDED 'no_live_trust_value' verdict, but 2/5 games had           #
 # behaviorally-identical candidate engines -> a NON-TEST, not a genuine null.    #
 # --------------------------------------------------------------------------- #
-def _s2_artifact(per_game_recalls, verdict="complete_structural_energy_s2_no_live_trust_value", min_games=5):
+def _s2_artifact(
+    per_game_recalls,
+    verdict="complete_structural_energy_s2_no_live_trust_value",
+    min_games=5,
+    field="heldout_cell_recall",
+):
     return {
+        "experiment": "structural_energy_s2_offpath_trust_gate",
         "honest_verdict": verdict,
         "energy_minus_accuracy_delta": 0.0,
         "min_heldout_games": min_games,
         "game_results": [
-            {"candidate_rows": [{"heldout_cell_recall": r} for r in recalls]}
-            for recalls in per_game_recalls
+            {"candidate_rows": [{field: r} for r in recalls]} for recalls in per_game_recalls
         ],
     }
 
 
-def test_degenerate_candidate_pool_fires_on_low_effective_games():
-    # exp4791 shape: 2 of 5 games behaviorally diverse, min required 5
-    d = _s2_artifact([[1.0, 1.0], [1.0, 1.0], [0.3, 0.3], [0.3, 0.7], [0.4, 0.9]])
+def _has_degen(flags):
+    return bool([f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"])
+
+
+def _run_degen(d):
     flags = []
     av.check_engine_selection_candidate_diversity(d, flags)
-    assert [f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"]
+    return _has_degen(flags)
+
+
+def test_degenerate_candidate_pool_fires_on_low_effective_games():
+    # exp4791 shape: 2 of 5 games behaviorally diverse, required floor 5
+    assert _run_degen(_s2_artifact([[1.0, 1.0], [1.0, 1.0], [0.3, 0.3], [0.3, 0.7], [0.4, 0.9]]))
 
 
 def test_degenerate_candidate_pool_does_not_fire_when_pool_is_diverse():
     # all 5 games behaviorally diverse, required 5 -> a genuine test, no flag
-    d = _s2_artifact([[0.3, 0.7]] * 5)
-    flags = []
-    av.check_engine_selection_candidate_diversity(d, flags)
-    assert not [f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"]
+    assert not _run_degen(_s2_artifact([[0.3, 0.7]] * 5))
 
 
 def test_degenerate_candidate_pool_does_not_fire_on_non_selection_artifact():
@@ -751,18 +760,78 @@ def test_degenerate_candidate_pool_does_not_fire_on_non_selection_artifact():
     assert not flags
 
 
-def test_degenerate_candidate_pool_does_not_fire_on_pass_verdict():
-    # a PASS (not a no-value/bounded verdict) is caught elsewhere; this guards the null read only
+# --- hardening regressions (adversarial verify wf_3c4337f4) ------------------ #
+def test_degen_self_declared_min_games_cannot_dodge():
+    # FN-3: an artifact declaring min_heldout_games=1 (or 0) at effective=2/5 must STILL flag
+    assert _run_degen(_s2_artifact([[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [0.3, 0.7], [0.4, 0.9]], min_games=1))
+    assert _run_degen(_s2_artifact([[1.0, 1.0]] * 5, min_games=0))
+
+
+def test_degen_negative_delta_null_flags():
+    # FN-2: a negative delta (energy strictly LOSES) on a degenerate pool is a no-value read
+    d = _s2_artifact([[1.0, 1.0]] * 5, verdict="complete_s2_energy_below_control")
+    d["energy_minus_accuracy_delta"] = -0.2
+    assert _run_degen(d)
+
+
+def test_degen_noise_manufactured_diversity_flags():
+    # FN-4: 1e-8 float-noise "diversity" is not a real spread -> still degenerate
+    assert _run_degen(_s2_artifact([[0.5, 0.5 + 1e-8]] * 5))
+
+
+def test_degen_pass_verdict_on_degenerate_pool_now_flags():
+    # attack #3: a PASS off a degenerate pool is NOT exempt (the old test codified this hole)
     d = _s2_artifact([[1.0, 1.0]] * 5, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
-    d["energy_minus_accuracy_delta"] = 0.21  # a real positive delta
+    d["energy_minus_accuracy_delta"] = 0.21
+    assert _run_degen(d)
+
+
+def test_degen_genuinely_diverse_pass_does_not_flag():
+    # a PASS on a genuinely diverse pool (5 effective) must NOT flag
+    d = _s2_artifact([[0.3, 0.9]] * 5, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
+    d["energy_minus_accuracy_delta"] = 0.21
+    assert not _run_degen(d)
+
+
+def test_degen_renamed_delta_field_still_recognized():
+    # FN-1: a degenerate S2 whose delta is renamed 'trust_gate_margin' is still recognized via the S2 schema
+    d = _s2_artifact([[1.0, 1.0]] * 5, verdict="complete_s2_no_value")
+    del d["energy_minus_accuracy_delta"]
+    d["trust_gate_margin"] = 0.0
+    assert _run_degen(d)
+
+
+def test_degen_field_agnostic_diverse_pool_not_flagged():
+    # FP-2: a diverse pool logged under offpath_structural_energy must NOT be mis-flagged
+    assert not _run_degen(_s2_artifact([[10.0, 200.0]] * 5, field="offpath_structural_energy"))
+
+
+def test_degen_non_s2_incidental_energy_delta_not_flagged():
+    # FP-1: a non-S2 artifact with an incidental 'energy_delta' + candidate_rows is NOT recognized
+    d = {
+        "experiment": "some_other_unrelated_experiment",
+        "honest_verdict": "complete_no_value",
+        "game_results": [{"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]}],
+    }
+    # no delta/margin key, no S2 schema token -> not recognized
     flags = []
     av.check_engine_selection_candidate_diversity(d, flags)
-    assert not [f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"]
+    assert not flags
+
+
+def test_real_exp4791_still_flags():
+    # the original true positive must survive all the broadening
+    import json as _json
+    from pathlib import Path as _Path
+
+    p = _Path(__file__).resolve().parents[2] / "results" / "experiment_4791_structural_energy_s2_offpath_trust_gate.json"
+    if p.exists():
+        assert _run_degen(_json.load(open(p)))
 
 
 def test_effective_selection_games_count():
     gr = [
-        {"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]},  # degenerate
+        {"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]},  # degenerate (spread 0)
         {"candidate_rows": [{"heldout_cell_recall": 0.3}, {"heldout_cell_recall": 0.7}]},  # diverse
         {"candidate_rows": [{"heldout_cell_recall": 0.5}]},  # single candidate -> not effective
     ]
