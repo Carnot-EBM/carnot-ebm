@@ -217,6 +217,8 @@ def solve_via_explore(
 
     # SEED a verifier from the first solve (generic grid features -> steps-to-go),
     # so the captured solve trains the verifier that will route future searches.
+    from carnot.agentic.arc_value_learner import LearnedVerifier
+
     def featurize_frame(frame):
         g = grid_of(frame)
         nz = int((g != 0).sum())
