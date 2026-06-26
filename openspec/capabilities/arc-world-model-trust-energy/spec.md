@@ -9247,6 +9247,66 @@ When Experiment 4822 writes `results/experiment_4822_levelup_attempt.json`
 Then the checksum is deterministic, `schema_errors=[]`, and the artifact
 contains all required principle-annotated fields.
 
+### REQ-ARC-WMTE-4832: ARC Rotated Level-Up Attempt Guarantee
+
+Experiment 4832 SHALL run the standing ARC solve loop on the target selected by
+the 2026-06-26 conductor rotation note. It SHALL precheck
+`arc_solver_kit.offline_arcade()`, read `ops/arc_solve_registry.yaml`, prefer
+`bp35`, `sb26`, then `lf52` when any of those games is still a first-contact
+target, and otherwise select a +1 deepen attempt on the shallowest
+already-reproduced standing-loop game. The selected target SHALL be passed
+through `recommend_approach(game)` and the recommendation SHALL be recorded in
+the terminal artifact. A target result SHALL bank progress only when the offline
+reproduction gate reaches a strictly higher level than the registry prior; a
+same-depth result SHALL be retired and the next candidate SHALL be attempted or
+recorded as the rotate-on-no-bank residual.
+
+Experiment 4832 SHALL write
+`results/experiment_4832_levelup_attempt.json` with principle-annotated
+top-level fields for `honest_verdict`, `solve_provenance`,
+`offline_reproduced`, `reproduced_levels`, `inference_substrate`,
+`verifier_is_oracle`, `preconditions_checked`, `target_game`,
+`rotation_selection`, `approach_recommendation`, `attempted_games`,
+`dead_ends`, `registry_update`, `retire_if_same_verdict`,
+`reproducibility_checksum`, and `schema_errors`. A missing target offline
+environment SHALL produce `blocked_<game>_offline_env_missing` and SHALL not
+fabricate reproduced levels.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; banked is success_, no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery; NOT outer_loop_re (CRITICAL)."
+- `offline_reproduced`: principle "only reproduced levels count."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC metric."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor)."
+- `verifier_is_oracle`: principle "the reproduction gate is execution-grounded (true); this is a SOLVE task."
+- `preconditions_checked`: principle "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+
+#### SCENARIO-ARC-WMTE-4832-ROTATION-TARGET
+
+Given the ARC registry records `bp35`, `sb26`, and `lf52` as already reproduced
+and contains shallower reproduced standing-loop games
+When Experiment 4832 selects its rotation target
+Then it selects the shallowest already-reproduced standing-loop game for a +1
+deepen, records `bp35`, `sb26`, and `lf52` as non-first-contact public
+candidates, and records the recommendation for the selected target.
+
+#### SCENARIO-ARC-WMTE-4832-REPRODUCTION-GATE
+
+Given the standing loop result reports `offline_reproduced=true` but reaches
+only the registry's prior level
+When Experiment 4832 builds its terminal artifact
+Then `new_levels_banked=0`, `offline_reproduced=false`, `reproduced_levels=0`,
+and the dead-end entry explains that the result reproduced an existing depth
+before the workflow rotates or retires the same verdict.
+
+#### SCENARIO-ARC-WMTE-4832-STABLE-ARTIFACT
+
+Given the selected rotation target has a terminal loop artifact
+When Experiment 4832 writes `results/experiment_4832_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, and the artifact
+contains all required principle-annotated fields.
+
 ### REQ-ARC-WMTE-4763: ARC Self-Play Verifier Checkpoint Refresh
 
 Experiment 4763 SHALL run the standing ARC self-play loop on a banked game and
