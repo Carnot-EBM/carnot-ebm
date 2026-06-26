@@ -6,6 +6,15 @@
 
 ### 2026-06-26 (MANDATORY-NEXT-MILESTONE, operator-directed "ignoring the deadline, we MUST pursue oracle-distinct structural energy"): S0 — the cheap decisive core-bet probe
 
+> **STATUS (2026-06-26): PROGRAM CONCLUDED — do NOT re-propose energy stages.** The full staged
+> program ran S0(reopen) → S0'(leak-clean) → S1(landscape) → S2-v3(selection bounded, corpus-wide) →
+> S3(generation bounded, `.444 B1 verified genuine: s3_guidance_exercised=True). The honest verdict:
+> the oracle-distinct structural energy is a real OFFLINE cross-game discriminator but adds NO live
+> ARC agent value (selection OR generation). S4 is MOOT. The planner must NOT re-propose S4 or further
+> energy-as-ARC-lever stages. Forward focus returns to the L1-first-contact GENERATION wall (the actual
+> multi-level live-solve blocker; `project_arc_l1_first_contact_wall`). Full conclusion:
+> `docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md`.
+
 **Origin:** operator directive 2026-06-25 — the audit (`wf_88e2a7a7-2fe`) confirmed that
 energy-as-RFT-teacher and every other current energy formulation null on ARC for ONE root cause
 (frame-marginal features), and that the ONLY direction unlocking "extend with energy" is the
