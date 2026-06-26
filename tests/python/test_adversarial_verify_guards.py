@@ -674,3 +674,38 @@ def test_tautology_does_not_fire_on_checkpoint_mtime_pair():
     flags = []
     av.check_tautology(d, flags)
     assert not [f for f in flags if _kinds([f])[0] == "TAUTOLOGY"]
+
+
+# --------------------------------------------------------------------------- #
+# TAUTOLOGY skips two SCORE metrics both at the 0.5 chance floor (2026-06-26)   #
+# Origin: exp4771 (S0' origin-matched) success_..._reopens_s1 was flagged       #
+# because loo_auroc_majority_control=0.5 (definitional floor) ==                #
+# origin_probe_auroc=0.5 (the SUCCESS signal origin-matching removed the leak). #
+# --------------------------------------------------------------------------- #
+def test_tautology_skips_two_chance_floor_auroc_controls():
+    d = {
+        "honest_verdict": "success_structural_energy_s0prime_reopens_s1",
+        "loo_auroc_majority_control": 0.5,
+        "origin_probe_auroc": 0.5,
+        "loo_auroc_structural": 0.7386642861889572,
+    }
+    flags = []
+    av.check_tautology(d, flags)
+    assert not [f for f in flags if _kinds([f])[0] == "TAUTOLOGY"]
+
+
+def test_tautology_still_fires_on_real_distinct_metric_coincidence():
+    """Safety: two genuinely-distinct high-precision metrics coinciding (NOT at
+    the 0.5 floor) must still flag -- the carve-out must not blind the check."""
+    d = {"loo_auroc_structural": 0.738664, "unrelated_energy_gap": 0.738664}
+    flags = []
+    av.check_tautology(d, flags)
+    assert [f for f in flags if _kinds([f])[0] == "TAUTOLOGY"]
+
+
+def test_chance_floor_score_recognizes_auroc_probe_control_but_not_metrics():
+    assert av._is_chance_floor_score("origin_probe_auroc") is True
+    assert av._is_chance_floor_score("loo_auroc_majority_control") is True
+    assert av._is_chance_floor_score("shuffled_label_control_auroc") is True
+    assert av._is_chance_floor_score("heldout_first_win_rate") is False
+    assert av._is_chance_floor_score("loo_auroc_structural") is True  # auroc-named (ok; needs ==0.5 to skip)
