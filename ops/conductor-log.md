@@ -9371,3 +9371,4 @@ The contro |
 | 2026-06-26 17:48 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | OK | 88 passed, 1 warning in 6.98s |
 | 2026-06-26 18:01 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 91 passed, 1 warning in 8.95s |
 | 2026-06-26 18:14 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 91 passed, 1 warning in 9.36s |
+| 2026-06-26 18:28 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 88 passed, 1 warning in 6.18s |
