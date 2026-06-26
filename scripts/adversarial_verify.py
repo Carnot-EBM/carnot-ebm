@@ -1564,8 +1564,20 @@ def _inference_substrate_matches(d: dict[str, Any], canonical: str) -> bool:
     raw = _inference_substrate_text(d)
     if raw == canonical:
         return True
+    # Tolerate a human principle/floor note appended after the canonical value
+    # with ANY separator (space, `--`, `;`, `,`, `:`, `.`): the leading token is
+    # what selects the duration floor. exp4756 (.437 B2) correctly declared
+    # "aggregation_from_upstream_artifacts; 100us floor." but was
+    # DURATION_TOO_SHORT false-positive-flagged because the `;` separator was not
+    # recognized (only space / `--` were). The boundary-char check keeps a longer
+    # different enum (e.g. `<canonical>_v2`) from matching, since `_`/alnum are
+    # not separators.
     prefix = raw.split("--", 1)[0].strip()
-    return prefix == canonical or raw.startswith(f"{canonical} ")
+    if prefix == canonical:
+        return True
+    if raw.startswith(canonical):
+        return raw[len(canonical) : len(canonical) + 1] in {" ", "-", ";", ",", ":", "."}
+    return False
 
 
 def _is_live_llm_inference(d: dict[str, Any]) -> bool:
