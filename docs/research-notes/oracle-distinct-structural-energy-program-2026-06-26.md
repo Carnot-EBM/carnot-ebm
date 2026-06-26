@@ -85,6 +85,21 @@ the actual agent) is now authorized** per the staged gate; pre-stage it for `.44
   never proposed) and the actual ARC wall (selection ≠ generation; the ledger's finding is ARC is
   generation-bound). S2-v2 bounded does NOT refute S3, but it IS the first live null — a genuine
   decision point on whether to proceed to S3 or reconsider.
+- **S2-v3 (`.443 A1, exp4811) — CORPUS-WIDE settle: BOUNDED, slightly POSITIVE, robustly powered.** The
+  operator caught that S2-v2 tested only 5 of 25 games ("did we test all games or just one?"). S2-v3
+  re-ran corpus-wide with active diverse-engine generation: **n_available_games=25, n_games_attempted=25,
+  n_effective_games=23** (the "only a few games can form diverse pools" hypothesis is REFUTED — with
+  active generation, 23/25 do), `positive_control_passed=True`, `candidates_genuinely_induced=True`,
+  `DEGENERATE_CANDIDATE_POOL` does not fire (23 ≥ the tightened floor of 15). Verdict:
+  `complete_structural_energy_s2v3_bounded_corpus_wide`, **energy−accuracy delta = +0.091, CI95
+  [−0.063, +0.264]** (includes 0). **The point estimate FLIPPED from −0.158 (n=5) to +0.091 (n=23)** —
+  the 5-game S2-v2 had the *wrong sign*; the operator's narrowness concern was exactly right. **Robust
+  read: at engine SELECTION the energy is roughly NEUTRAL — it does not significantly beat the cheap
+  accuracy gate, but it does not hurt either (slightly positive, CI includes 0).** Selection is now
+  SETTLED (corpus-wide). Per the pre-registered gate, BOUNDED → the next test is **S3 (generation lift)**
+  — the energy's effect on GENERATION (put a winner into the pool the explorer never proposed), which is
+  the actual ARC wall and a different mechanism than selection. The slightly-positive selection estimate
+  is mildly encouraging (the energy isn't anti-helpful); S3 is the decisive live test.
 
 ---
 
