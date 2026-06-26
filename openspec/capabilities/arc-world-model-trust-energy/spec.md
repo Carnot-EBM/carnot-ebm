@@ -7512,6 +7512,95 @@ When Experiment 4761 runs
 Then it writes a blocked artifact with the failed precondition recorded, no
 claimed AUROC, `verifier_is_oracle=false`, and a reproducibility checksum.
 
+### REQ-ARC-WMTE-4771: S0 Prime Origin-Matched Structural Energy Re-Test
+
+Experiment 4771 SHALL run the `.439` S0' origin-matched re-test for the
+structural-energy direction. The workflow SHALL first verify that
+`arc_solver_kit.offline_arcade()` exits successfully and that
+`cross_game_features_v3` imports. If either precondition fails, the artifact
+SHALL stop with `honest_verdict=blocked_offline_arcade_missing` or
+`honest_verdict=blocked_structural_features_missing` and SHALL NOT report a
+fabricated AUROC.
+
+The dataset SHALL remove the Experiment 4761 origin confound. For every usable
+banked game, both positive and negative rows SHALL be induced-engine predictions
+on held-out transitions. A positive row is an induced prediction `s_hat` that
+exactly matches the held-out observed next grid `s'`; a negative row is an
+induced prediction `s_hat` that does not match `s'`. The classifier features
+SHALL be computed over `(s, s_hat)` so every scored sample has induced origin.
+The artifact SHALL record per-game correct/wrong counts and SHALL mark folds
+with only one test class as skipped instead of fabricating a fold AUROC.
+
+The primary head SHALL use only the `object_relational` and `frame_delta`
+families from `cross_game_features_v3`. It SHALL report leave-one-GAME-out
+structural AUROC with bootstrap CI95, majority-class and v2 frame-marginal
+controls on identical folds, structural-minus-marginal delta CI95, individual
+family LOO AUROC, an origin-probe audit expected to fall below `0.6`, a
+shuffled-label LOO leak control expected to score no higher than `0.55`, and an
+in-sample positive control expected to exceed `0.60`.
+
+Experiment 4771 SHALL write
+`results/experiment_4771_structural_energy_s0prime_origin_matched.json`, set
+`verifier_is_oracle=false`, and include principle-annotated fields for
+`honest_verdict`, `verifier_is_oracle`, `inference_substrate`,
+`preconditions_checked`, `loo_auroc_structural`, `loo_auroc_ci95`,
+`origin_probe_auroc`, `shuffled_label_control_auroc`,
+`structural_minus_marginal_delta_ci95`, `per_family_loo`,
+`per_game_class_balance`, `in_sample_auroc`, `random_seed`, and
+`reproducibility_checksum`.
+
+The decisive re-open gate SHALL pass only if structural LOO CI95 lower bound is
+greater than `0.5`, structural LOO point estimate is greater than `0.60`,
+structural-minus-marginal delta CI95 excludes `0`, at least one structural
+family independently clears `0.55`, origin-probe AUROC is less than `0.6`,
+shuffled-label control AUROC is no greater than `0.55`, and in-sample AUROC is
+greater than `0.60`. A collapse to chance after origin matching SHALL retire
+the structural-energy direction as `complete_structural_energy_s0prime_retired_was_origin_leak`.
+
+#### SCENARIO-ARC-WMTE-4771-ORIGIN-MATCHED-GATE
+
+Given the offline arcade and structural feature spine are importable and banked
+games produce induced held-out predictions
+When Experiment 4771 runs the origin-matched S0' re-test
+Then it writes
+`results/experiment_4771_structural_energy_s0prime_origin_matched.json`, keeps
+`verifier_is_oracle=false`, reports structural, marginal, majority, per-family,
+origin-probe, shuffled-label, per-game balance, and positive-control
+measurements, and emits a terminal `success_` verdict only when every S0' gate
+criterion is satisfied.
+
+#### SCENARIO-ARC-WMTE-4771-FIELD-PRINCIPLES
+
+The required field principles are: `honest_verdict` = "terminal prefix; a
+surviving origin-matched signal is
+success_structural_energy_s0prime_reopens_s1, a collapse is
+complete_structural_energy_s0prime_retired_was_origin_leak.";
+`verifier_is_oracle` = "MUST be false -- the energy never runs the env
+win-check; required for check_circular_moat_overclaim.";
+`inference_substrate` = "verifier_ensemble_against_cached_candidates -- scores
+structural features over cached transitions, no LLM; 1s floor.";
+`preconditions_checked` = "records the arcade/feature-import checks so a
+silent-missing-resource run cannot fabricate an AUROC.";
+`loo_auroc_structural` = "the load-bearing measurement -- cross-game LOO AUROC
+on the ORIGIN-MATCHED correct-vs-wrong induced-prediction label.";
+`loo_auroc_ci95` = "bootstrap CI95; the lower bound vs 0.5 decides
+reopen-vs-retire."; `origin_probe_auroc` = "with origin matched (all induced)
+this MUST drop below 0.6 (ideally ~0.5) -- the direct test that the S0 0.733
+leak is removed; if it is still high, the matching failed.";
+`shuffled_label_control_auroc` = "permuted-label LOO must be <=
+0.55 -- the second leak control proving the structural signal is genuinely
+label-correlated, not a nuisance path.";
+`structural_minus_marginal_delta_ci95` = "must exclude 0 -- structure must
+still beat frame-marginals on the clean (origin-matched) label.";
+`per_family_loo` = ">=1 family must independently clear 0.55 on the clean label
+-- kills the single-lever risk."; `per_game_class_balance` = "records each game's correct/wrong
+induced-prediction counts -- a fold needs both classes; an all-one-class game
+cannot contribute to LOO."; `in_sample_auroc` = "positive control > 0.60 --
+else the harness is broken and the result is uninformative."; `random_seed` =
+"determinism is the precondition for reproducibility.";
+`reproducibility_checksum` = "content hash of (corpus, folds, induced-engine
+fits, features) so a replication catches drift."
+
 ### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
 
 Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the

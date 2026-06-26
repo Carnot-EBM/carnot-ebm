@@ -1,0 +1,606 @@
+{
+  "controls": {
+    "majority_class_loo_auroc": 0.5,
+    "marginal_in_sample_auroc": 0.7848783044136486,
+    "shuffled_label_resamples": 128,
+    "v2_frame_marginal_loo_auroc": 0.510766138123749
+  },
+  "dataset_diagnostics": {
+    "feature_families_excluded": [
+      "v2",
+      "action_conditioned",
+      "predicate_distance"
+    ],
+    "feature_families_used": [
+      "object_relational",
+      "frame_delta"
+    ],
+    "ground_truth_corruptions": 0,
+    "near_miss_negative_fraction": 0.9314079422382672,
+    "origin_matched": true,
+    "structural_feature_names": [
+      "object_relational_pair_count_norm",
+      "object_relational_pair_manhattan_min_norm",
+      "object_relational_pair_manhattan_mean_norm",
+      "object_relational_pair_manhattan_max_norm",
+      "object_relational_pair_manhattan_std_norm",
+      "object_relational_correspondence_known",
+      "object_relational_correspondence_match_fraction",
+      "object_relational_correspondence_unmatched_prev_fraction",
+      "object_relational_correspondence_unmatched_cur_fraction",
+      "object_relational_correspondence_displacement_min_norm",
+      "object_relational_correspondence_displacement_mean_norm",
+      "object_relational_correspondence_displacement_max_norm",
+      "object_relational_correspondence_displacement_std_norm",
+      "object_relational_correspondence_area_delta_mean_norm",
+      "frame_delta_delta_known",
+      "frame_delta_changed_fraction",
+      "frame_delta_nonzero_delta_signed_fraction",
+      "frame_delta_nonzero_delta_abs_fraction",
+      "frame_delta_color_hist_l1_delta",
+      "frame_delta_object_count_delta_signed_norm",
+      "frame_delta_centroid_shift_norm",
+      "frame_delta_level_delta_norm",
+      "frame_delta_shape_changed"
+    ]
+  },
+  "experiment": "experiment_4771_structural_energy_s0prime_origin_matched",
+  "experiment_id": 4771,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; a surviving origin-matched signal is success_structural_energy_s0prime_reopens_s1, a collapse is complete_structural_energy_s0prime_retired_was_origin_leak."
+    },
+    "in_sample_auroc": {
+      "principle": "positive control > 0.60 -- else the harness is broken and the result is uninformative."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- scores structural features over cached transitions, no LLM; 1s floor."
+    },
+    "loo_auroc_ci95": {
+      "principle": "bootstrap CI95; the lower bound vs 0.5 decides reopen-vs-retire."
+    },
+    "loo_auroc_structural": {
+      "principle": "the load-bearing measurement -- cross-game LOO AUROC on the ORIGIN-MATCHED correct-vs-wrong induced-prediction label."
+    },
+    "origin_probe_auroc": {
+      "principle": "with origin matched (all induced) this MUST drop below 0.6 (ideally ~0.5) -- the direct test that the S0 0.733 leak is removed; if it is still high, the matching failed."
+    },
+    "per_family_loo": {
+      "principle": ">=1 family must independently clear 0.55 on the clean label -- kills the single-lever risk."
+    },
+    "per_game_class_balance": {
+      "principle": "records each game's correct/wrong induced-prediction counts -- a fold needs both classes; an all-one-class game cannot contribute to LOO."
+    },
+    "preconditions_checked": {
+      "principle": "records the arcade/feature-import checks so a silent-missing-resource run cannot fabricate an AUROC."
+    },
+    "random_seed": {
+      "principle": "determinism is the precondition for reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (corpus, folds, induced-engine fits, features) so a replication catches drift."
+    },
+    "shuffled_label_control_auroc": {
+      "principle": "permuted-label LOO must be <= 0.55 -- the second leak control proving the structural signal is genuinely label-correlated, not a nuisance path."
+    },
+    "structural_minus_marginal_delta_ci95": {
+      "principle": "must exclude 0 -- structure must still beat frame-marginals on the clean (origin-matched) label."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false -- the energy never runs the env win-check; required for check_circular_moat_overclaim."
+    }
+  },
+  "honest_verdict": "success_structural_energy_s0prime_reopens_s1",
+  "in_sample_auroc": 0.8479387446139514,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "loo_auroc_ci95": [
+    0.636412794237013,
+    0.8332008450933205
+  ],
+  "loo_auroc_majority_control": 0.5,
+  "loo_auroc_marginal_control": 0.510766138123749,
+  "loo_auroc_structural": 0.7386642861889572,
+  "n_candidate_rows": 463,
+  "n_held_out_games": 16,
+  "n_neg": 277,
+  "n_pos": 186,
+  "origin_probe": {
+    "loo_auroc": 0.5,
+    "origin_counts": {
+      "induced": 463
+    },
+    "status": "origin_matched_single_origin_all_induced"
+  },
+  "origin_probe_auroc": 0.5,
+  "per_family_loo": {
+    "frame_delta": 0.7392638081947291,
+    "object_relational": 0.659731635551948
+  },
+  "per_game_class_balance": {
+    "ar25": {
+      "contributes_to_loo": true,
+      "correct": 6,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 30,
+      "near_miss_negative_rows": 24,
+      "recorded_transition_count": 15,
+      "rows": 30,
+      "train_prefix_count": 9,
+      "wrong": 24
+    },
+    "cd82": {
+      "contributes_to_loo": true,
+      "correct": 2,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 10,
+      "near_miss_negative_rows": 7,
+      "recorded_transition_count": 5,
+      "rows": 10,
+      "train_prefix_count": 3,
+      "wrong": 8
+    },
+    "cn04": {
+      "contributes_to_loo": true,
+      "correct": 3,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 31,
+      "near_miss_negative_rows": 15,
+      "recorded_transition_count": 13,
+      "rows": 31,
+      "train_prefix_count": 7,
+      "wrong": 28
+    },
+    "dc22": {
+      "contributes_to_loo": true,
+      "correct": 8,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 24,
+      "recorded_transition_count": 93,
+      "rows": 32,
+      "train_prefix_count": 55,
+      "wrong": 24
+    },
+    "ka59": {
+      "contributes_to_loo": true,
+      "correct": 7,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 26,
+      "near_miss_negative_rows": 19,
+      "recorded_transition_count": 11,
+      "rows": 26,
+      "train_prefix_count": 6,
+      "wrong": 19
+    },
+    "lp85": {
+      "contributes_to_loo": true,
+      "correct": 31,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 1,
+      "recorded_transition_count": 54,
+      "rows": 32,
+      "train_prefix_count": 32,
+      "wrong": 1
+    },
+    "ls20": {
+      "contributes_to_loo": true,
+      "correct": 12,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 30,
+      "near_miss_negative_rows": 18,
+      "recorded_transition_count": 13,
+      "rows": 30,
+      "train_prefix_count": 7,
+      "wrong": 18
+    },
+    "m0r0": {
+      "contributes_to_loo": true,
+      "correct": 8,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 30,
+      "near_miss_negative_rows": 22,
+      "recorded_transition_count": 15,
+      "rows": 30,
+      "train_prefix_count": 9,
+      "wrong": 22
+    },
+    "r11l": {
+      "contributes_to_loo": false,
+      "correct": 0,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 12,
+      "near_miss_negative_rows": 12,
+      "recorded_transition_count": 4,
+      "rows": 12,
+      "train_prefix_count": 2,
+      "wrong": 12
+    },
+    "sc25": {
+      "contributes_to_loo": true,
+      "correct": 11,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 21,
+      "recorded_transition_count": 16,
+      "rows": 32,
+      "train_prefix_count": 9,
+      "wrong": 21
+    },
+    "sk48": {
+      "contributes_to_loo": true,
+      "correct": 12,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 30,
+      "near_miss_negative_rows": 13,
+      "recorded_transition_count": 14,
+      "rows": 30,
+      "train_prefix_count": 8,
+      "wrong": 18
+    },
+    "sp80": {
+      "contributes_to_loo": false,
+      "correct": 0,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 10,
+      "near_miss_negative_rows": 10,
+      "recorded_transition_count": 4,
+      "rows": 10,
+      "train_prefix_count": 2,
+      "wrong": 10
+    },
+    "su15": {
+      "contributes_to_loo": true,
+      "correct": 15,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 18,
+      "near_miss_negative_rows": 3,
+      "recorded_transition_count": 7,
+      "rows": 18,
+      "train_prefix_count": 4,
+      "wrong": 3
+    },
+    "tn36": {
+      "contributes_to_loo": true,
+      "correct": 28,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 4,
+      "recorded_transition_count": 102,
+      "rows": 32,
+      "train_prefix_count": 61,
+      "wrong": 4
+    },
+    "tr87": {
+      "contributes_to_loo": true,
+      "correct": 12,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 20,
+      "recorded_transition_count": 127,
+      "rows": 32,
+      "train_prefix_count": 76,
+      "wrong": 20
+    },
+    "tu93": {
+      "contributes_to_loo": true,
+      "correct": 14,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 18,
+      "recorded_transition_count": 64,
+      "rows": 32,
+      "train_prefix_count": 38,
+      "wrong": 18
+    },
+    "vc33": {
+      "contributes_to_loo": true,
+      "correct": 10,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 12,
+      "near_miss_negative_rows": 2,
+      "recorded_transition_count": 3,
+      "rows": 12,
+      "train_prefix_count": 1,
+      "wrong": 2
+    },
+    "wa30": {
+      "contributes_to_loo": true,
+      "correct": 7,
+      "ground_truth_corruptions": 0,
+      "heldout_offpath_count": 32,
+      "near_miss_negative_rows": 25,
+      "recorded_transition_count": 33,
+      "rows": 32,
+      "train_prefix_count": 19,
+      "wrong": 25
+    }
+  },
+  "per_game_loo": {
+    "marginal": {
+      "ar25": {
+        "auroc": 0.5277777777777778,
+        "n_neg": 24,
+        "n_pos": 6,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "cd82": {
+        "auroc": 0.6875,
+        "n_neg": 8,
+        "n_pos": 2,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "cn04": {
+        "auroc": 0.6666666666666666,
+        "n_neg": 28,
+        "n_pos": 3,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "dc22": {
+        "auroc": 0.609375,
+        "n_neg": 24,
+        "n_pos": 8,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "ka59": {
+        "auroc": 0.42857142857142855,
+        "n_neg": 19,
+        "n_pos": 7,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "lp85": {
+        "auroc": 0.3870967741935484,
+        "n_neg": 1,
+        "n_pos": 31,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "ls20": {
+        "auroc": 0.5,
+        "n_neg": 18,
+        "n_pos": 12,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "m0r0": {
+        "auroc": 0.5738636363636364,
+        "n_neg": 22,
+        "n_pos": 8,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "r11l": {
+        "auroc": null,
+        "n_neg": 12,
+        "n_pos": 0,
+        "skip_reason": "test_fold_single_class",
+        "skipped": true
+      },
+      "sc25": {
+        "auroc": 0.5216450216450217,
+        "n_neg": 21,
+        "n_pos": 11,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "sk48": {
+        "auroc": 0.4583333333333333,
+        "n_neg": 18,
+        "n_pos": 12,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "sp80": {
+        "auroc": null,
+        "n_neg": 10,
+        "n_pos": 0,
+        "skip_reason": "test_fold_single_class",
+        "skipped": true
+      },
+      "su15": {
+        "auroc": 0.5,
+        "n_neg": 3,
+        "n_pos": 15,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "tn36": {
+        "auroc": 0.375,
+        "n_neg": 4,
+        "n_pos": 28,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "tr87": {
+        "auroc": 0.525,
+        "n_neg": 20,
+        "n_pos": 12,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "tu93": {
+        "auroc": 0.5714285714285714,
+        "n_neg": 18,
+        "n_pos": 14,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "vc33": {
+        "auroc": 0.5,
+        "n_neg": 2,
+        "n_pos": 10,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "wa30": {
+        "auroc": 0.34,
+        "n_neg": 25,
+        "n_pos": 7,
+        "skip_reason": null,
+        "skipped": false
+      }
+    },
+    "structural": {
+      "ar25": {
+        "auroc": 0.625,
+        "n_neg": 24,
+        "n_pos": 6,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "cd82": {
+        "auroc": 0.9375,
+        "n_neg": 8,
+        "n_pos": 2,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "cn04": {
+        "auroc": 0.6488095238095238,
+        "n_neg": 28,
+        "n_pos": 3,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "dc22": {
+        "auroc": 0.9166666666666666,
+        "n_neg": 24,
+        "n_pos": 8,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "ka59": {
+        "auroc": 0.8157894736842105,
+        "n_neg": 19,
+        "n_pos": 7,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "lp85": {
+        "auroc": 1.0,
+        "n_neg": 1,
+        "n_pos": 31,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "ls20": {
+        "auroc": 0.75,
+        "n_neg": 18,
+        "n_pos": 12,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "m0r0": {
+        "auroc": 0.7045454545454546,
+        "n_neg": 22,
+        "n_pos": 8,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "r11l": {
+        "auroc": null,
+        "n_neg": 12,
+        "n_pos": 0,
+        "skip_reason": "test_fold_single_class",
+        "skipped": true
+      },
+      "sc25": {
+        "auroc": 0.5,
+        "n_neg": 21,
+        "n_pos": 11,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "sk48": {
+        "auroc": 0.7638888888888888,
+        "n_neg": 18,
+        "n_pos": 12,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "sp80": {
+        "auroc": null,
+        "n_neg": 10,
+        "n_pos": 0,
+        "skip_reason": "test_fold_single_class",
+        "skipped": true
+      },
+      "su15": {
+        "auroc": 0.5,
+        "n_neg": 3,
+        "n_pos": 15,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "tn36": {
+        "auroc": 0.35714285714285715,
+        "n_neg": 4,
+        "n_pos": 28,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "tr87": {
+        "auroc": 0.825,
+        "n_neg": 20,
+        "n_pos": 12,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "tu93": {
+        "auroc": 1.0,
+        "n_neg": 18,
+        "n_pos": 14,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "vc33": {
+        "auroc": 0.5,
+        "n_neg": 2,
+        "n_pos": 10,
+        "skip_reason": null,
+        "skipped": false
+      },
+      "wa30": {
+        "auroc": 0.9742857142857143,
+        "n_neg": 25,
+        "n_pos": 7,
+        "skip_reason": null,
+        "skipped": false
+      }
+    }
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "banked_game_count": 18,
+    "candidate_rows": 463,
+    "codex_md_read": true,
+    "cross_game_features_v3_import": true,
+    "duration_s_before_artifact": 22.23,
+    "offline_arcade": true,
+    "ok": true,
+    "spec_has_req_4771": true
+  },
+  "random_seed": 4771,
+  "reproducibility_checksum": "sha256:364a3f394c5397bd9225a2bf4c711e1d96ff24bc3f8a7d7357f456ad9a1d7632",
+  "result_path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+  "retire_energy_guided_direction": false,
+  "retire_if_same_verdict": true,
+  "s0prime_gate_passed": true,
+  "schema": "carnot.arc_structural_energy_s0prime_origin_matched_4771.v1",
+  "shuffled_label_control_auroc": 0.5033091959271814,
+  "spec_refs": [
+    "REQ-ARC-WMTE-4771",
+    "SCENARIO-ARC-WMTE-4771-ORIGIN-MATCHED-GATE",
+    "SCENARIO-ARC-WMTE-4771-FIELD-PRINCIPLES"
+  ],
+  "structural_minus_marginal_delta_ci95": [
+    0.1271826145701076,
+    0.33248035484558097
+  ],
+  "verifier_is_oracle": false
+}
