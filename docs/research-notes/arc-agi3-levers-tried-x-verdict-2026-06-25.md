@@ -180,3 +180,32 @@ The following are closed with a clean recorded verdict (`honest_null`, `not_robu
 
 **Retired in exclusion manifest:**
 - `cross_game_value_transfer_retired_exp4342_v401` (value-head cross-game transfer).
+
+---
+
+## STRATEGIC DECISIONS ALREADY SETTLED (do NOT re-derive — read this before any "should we switch / what else can we try" question)
+
+This section exists because the same *strategic* questions keep getting re-derived from first
+principles instead of read from the record. Each one below is **closed** with a recorded decision +
+the evidence that settles it. The only genuinely-open item is the single BUILD at the bottom.
+
+| Recurring question | Settled answer (where it lives) | The evidence / blocker |
+|---|---|---|
+| **"Should we switch to embrace a leaderboard project's generator and extend it with our energy models?"** | **DECIDED 2026-06-08 — this IS the standing architecture.** `ops/north-star.md` §0: *"the HYBRID architecture: generator = commodity/third-party, energy = verification layer. The generator does the induction; the energy verifier does NOT induce — it routes, prunes, verifies."* The playbook is `docs/research-notes/arc-energy-augmented-strategy.md` (*"NOT copy the leaderboard's CNN/RL — graft our contrastive energy verifier onto their winning techniques"*). | The **"extend with energy" half is blocked, and the blocker is recorded**: the ARC energy/discriminative verifier is **at CHANCE cross-game — leave-one-game-out AUROC = 0.503** (`results/arc_discriminative_verifier.json`), because *"our current energy/verifier features ARE frame-marginals, not game-agnostic STRUCTURE."* Same root as the saturated frame-change pruner (Family 2). So embracing a leader's generator is fine; bolting our **current** energy on it adds ~chance/~3%, not a moat. |
+| **"Why do the top leaderboard projects win when our approach struggles?"** | **Settled (this ledger + competitive intel `arc-leaderboard-competitive-intel-2026-06-20.md`).** The winners do NOT do weak-model symbolic induction: Family-A (just-explore, 3rd) = model-free graph exploration (compute, no model); Family-B winner = online per-game neural learning (no LLM); the executable-world-model winner = induce+verify **with a strong coding-agent inducer**. Carnot does the hardest route (symbolic induction) with the weakest tool (frozen 9B local). | The wall is **GENERATION** ("the winning prefix is never proposed"; `project_arc_generation_not_selection`, the `.431 pivot), NOT selection/verification — which is exactly Carnot's strength. Our one validated headline (FoVer ~0.91 AUROC) is in a **verification-bottlenecked** domain; ARC-AGI-3 is generation-bottlenecked. |
+| **"What rapid outer-loop lever could give a marked improvement this week?"** | **Settled — see the 44-lever inventory above.** 21 honest_null + 6 modest + 2 not-extractable + 4 non-banking validated; the rapid space is exhaustively swept. just-explore adoption, verifier-as-pruner, online-CNN, subgoal-decomposition (exp4676), and most SOTA-mapping live builds (exp4688/4569/4512) all closed. | A "marked improvement" from another outer-loop probe is **not supported by the record**. Realistic week-moves: bank easier levels (A3, monotonic score) + harden submission (B2). |
+| **"Is winning ARC-AGI-3 the same as proving the Carnot (energy-verifier) thesis?"** | **No — they are different problems** (`ops/north-star.md` §0 "do NOT overclaim the verifier here" + §5). The verifier's *proven* value is **execution-grounded but circular** (selection where headroom exists, ~10–100× cheaper than an LLM-judge). | ARC-AGI-3 is generation-bound, so it is a **poor showcase** for a verification-centric thesis; the FoVer/verification-bottlenecked domains are the better venue. |
+
+**THE ONE GENUINELY-OPEN STRATEGIC ITEM (a BUILD, not a decision):** the **oracle-distinct moat**
+(`ops/north-star.md` §5, 2026-06-14) — a learned/energy verifier built over **game-agnostic STRUCTURE**
+(the "GAP-ARCH-FEATURES" gate), capturing headroom where no cheap executable oracle exists. It does
+**not exist yet**; the DiffusionGemma gate is **STILL-PENDING** and enforced by CLAUDE.md
+"Circularity / Oracle-Distinctness Discipline" (`verifier_is_oracle` + `check_circular_moat_overclaim`).
+Until a structural energy is built and an oracle-distinct win lands with a matched control (CI95-excl-0),
+"extend with our energy" on ARC stays at chance. **This is the only direction where new strategic work
+is warranted — and it is a multi-week build, not a deadline-week rapid lever.**
+
+**Cross-references:** `ops/north-star.md` §0 (the hybrid decision) + §5 (the oracle-distinct frontier);
+`docs/research-notes/arc-energy-augmented-strategy.md` (the graft playbook + the LOO=0.503 evidence);
+`results/arc_discriminative_verifier.json` (energy-on-ARC = chance); `project_arc_generation_not_selection`
+(the wall is generation); `feedback_hybrid_pragmatic_architecture` (energy = verifier, never generator).
