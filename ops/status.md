@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix)
+
+## Session 2026-06-26 — Exp 4750 Structural-Alignment Detector Test Fix
+
+Fixed the Exp 4750 regression without modifying `scripts/research_conductor.py`.
+`python/carnot/experiment_4750_structural_alignment_detector_fix.py` now exposes
+the multi-exemplar L1-completion fallback required by `REQ-ARC-WMTE-4712`, replays
+both the Exp 4664 L1 trace and `arc3_lp85_offline_resolve`, and records fallback
+state in detector-fixed artifacts.
+
+Validation for this fix: Exp 4750 focused tests pass (`6 passed`), adjacent Exp
+4712+4750 tests pass (`10 passed`), and focused Ruff check/format pass on the
+touched Python files. Repo-wide `scripts/check_spec_coverage.py` remains blocked
+by pre-existing unreferenced legacy tests (`1124 test(s) missing spec
+traceability`).
+
 ## Session 2026-06-21 — ARC-AGI-3 exploration-diversity floor SHIPPED (milestone win banked)
 
 **What's working (banked this session): the hybrid exploration-diversity floor.** The submitted

@@ -688,12 +688,7 @@ def _same_color_components(g: np.ndarray) -> list[dict[str, Any]]:
                 cells.append((cy, cx))
                 for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     ny, nx = cy + dy, cx + dx
-                    if (
-                        0 <= ny < h
-                        and 0 <= nx < w
-                        and not seen[ny, nx]
-                        and int(g[ny, nx]) == color
-                    ):
+                    if 0 <= ny < h and 0 <= nx < w and not seen[ny, nx] and int(g[ny, nx]) == color:
                         seen[ny, nx] = True
                         stack.append((ny, nx))
             ys = [cell[0] for cell in cells]
@@ -749,6 +744,51 @@ def _corner_marker_pieces(components: Sequence[Mapping[str, Any]]) -> list[dict[
     return pieces
 
 
+def _marker_goal_distance(piece: Mapping[str, Any], goal: Mapping[str, Any]) -> int:
+    target = list(piece.get("target_goal_bbox") or [])
+    bbox = list(goal.get("bbox") or [])
+    if len(target) < 2 or len(bbox) < 2:
+        return 1_000_000
+    return int(abs(int(bbox[0]) - int(target[0])) + abs(int(bbox[1]) - int(target[1])))
+
+
+def _pair_corner_markers_to_goals(
+    pieces: Sequence[Mapping[str, Any]],
+    candidate_goals: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any] | None]:
+    matched: list[dict[str, Any] | None] = [None for _ in pieces]
+    used_goals: set[int] = set()
+    piece_indices_by_color: dict[int, list[int]] = {}
+    goal_indices_by_color: dict[int, list[int]] = {}
+    for index, piece in enumerate(pieces):
+        piece_indices_by_color.setdefault(int(piece.get("color") or 0), []).append(index)
+    for index, goal in enumerate(candidate_goals):
+        goal_indices_by_color.setdefault(int(goal.get("color") or 0), []).append(index)
+
+    for color, piece_indices in piece_indices_by_color.items():
+        goal_indices = goal_indices_by_color.get(color, [])
+        scored: list[tuple[int, int, int, int]] = []
+        for piece_index in piece_indices:
+            target = list(pieces[piece_index].get("target_goal_bbox") or [])
+            for goal_index in goal_indices:
+                goal = candidate_goals[goal_index]
+                exact = list(goal.get("bbox") or []) == target
+                scored.append(
+                    (
+                        0 if exact else 1,
+                        _marker_goal_distance(pieces[piece_index], goal),
+                        piece_index,
+                        goal_index,
+                    )
+                )
+        for _rank, _distance, piece_index, goal_index in sorted(scored):
+            if matched[piece_index] is not None or goal_index in used_goals:
+                continue
+            matched[piece_index] = dict(candidate_goals[goal_index])
+            used_goals.add(goal_index)
+    return matched
+
+
 def detect_marker_pair_shape_alignment(frame: Any) -> dict[str, Any]:
     """REQ-ARC-WMTE-4712: detect corner-marker pieces and same-color goal sprites.
 
@@ -780,35 +820,22 @@ def detect_marker_pair_shape_alignment(frame: Any) -> dict[str, Any]:
     ]
     colors_with_goals = {int(goal["color"]) for goal in raw_goals}
     pieces = [
-        piece for piece in _corner_marker_pieces(components) if int(piece["color"]) in colors_with_goals
+        piece
+        for piece in _corner_marker_pieces(components)
+        if int(piece["color"]) in colors_with_goals
     ]
     piece_colors = {int(piece["color"]) for piece in pieces}
-    goals = [goal for goal in raw_goals if int(goal["color"]) in piece_colors]
-    goals_by_color: dict[int, list[dict[str, Any]]] = {}
-    for goal in goals:
-        goals_by_color.setdefault(int(goal["color"]), []).append(goal)
+    candidate_goals = [goal for goal in raw_goals if int(goal["color"]) in piece_colors]
+    matched_goals = _pair_corner_markers_to_goals(pieces, candidate_goals)
+    goals = [goal for goal in matched_goals if goal is not None]
 
     pairs: list[dict[str, Any]] = []
-    for piece in pieces:
-        color = int(piece["color"])
+    for piece, aligned_goal in zip(pieces, matched_goals, strict=True):
         target = list(piece["target_goal_bbox"])
-        candidates = goals_by_color.get(color, [])
-        aligned_goal = next((goal for goal in candidates if list(goal["bbox"]) == target), None)
-        if aligned_goal is None and candidates:
-            tx = (target[0] + target[2]) / 2.0
-            ty = (target[1] + target[3]) / 2.0
-            aligned_goal = min(
-                candidates,
-                key=lambda goal: abs(float(goal["center"][0]) - tx)
-                + abs(float(goal["center"][1]) - ty),
-            )
         aligned = aligned_goal is not None and list(aligned_goal["bbox"]) == target
         distance = None
         if aligned_goal is not None:
-            distance = int(
-                abs(int(aligned_goal["bbox"][0]) - int(target[0]))
-                + abs(int(aligned_goal["bbox"][1]) - int(target[1]))
-            )
+            distance = _marker_goal_distance(piece, aligned_goal)
         pairs.append(
             {
                 "piece": piece,
@@ -818,15 +845,14 @@ def detect_marker_pair_shape_alignment(frame: Any) -> dict[str, Any]:
             }
         )
 
-    complete = bool(pieces) and len(pieces) <= len(goals) and all(
-        bool(pair["aligned"]) for pair in pairs
-    )
+    complete = bool(pieces) and all(bool(pair["aligned"]) for pair in pairs)
     return {
         "goal_expression": STRUCTURAL_ALIGNMENT_GOAL_EXPRESSION,
         "detected": bool(pieces and goals),
         "complete": bool(complete),
         "piece_count": int(len(pieces)),
         "goal_count": int(len(goals)),
+        "raw_goal_count": int(len(raw_goals)),
         "aligned_piece_count": int(sum(1 for pair in pairs if pair["aligned"])),
         "object_centric_slot_count": int(len(slots)),
         "pieces": pieces,
@@ -948,7 +974,12 @@ class OffPathCalibratedProposalRanker:
             score = self.score_features(features)
             out["surfacing_verifier_score"] = float(score)
             out["surfacing_ranker_oracle_distinct"] = True
-            base = float(out.get("object_centric_combined_score", out.get("object_centric_proposal_score", 0.0)) or 0.0)
+            base = float(
+                out.get(
+                    "object_centric_combined_score", out.get("object_centric_proposal_score", 0.0)
+                )
+                or 0.0
+            )
             scored.append((float(score), base, index, out))
         scored.sort(key=lambda item: (-item[0], -item[1], item[2]))
         return [row for _score, _base, _index, row in scored]
@@ -1070,12 +1101,13 @@ class ObjectCentricProposalPolicy:
         if total <= 0:
             return 0.0
         effect_rate = float(changed) / float(total)
-        return (
-            self.config.offpath_effect_bonus * effect_rate
-            - self.config.no_op_penalty * (1.0 - effect_rate)
+        return self.config.offpath_effect_bonus * effect_rate - self.config.no_op_penalty * (
+            1.0 - effect_rate
         )
 
-    def _slot_lookup(self, slots: Sequence[Mapping[str, Any]]) -> dict[tuple[int, int], Mapping[str, Any]]:
+    def _slot_lookup(
+        self, slots: Sequence[Mapping[str, Any]]
+    ) -> dict[tuple[int, int], Mapping[str, Any]]:
         return {(int(slot["x"]), int(slot["y"])): slot for slot in slots}
 
     def rank_candidates(
@@ -1392,9 +1424,7 @@ class DiscriminativeVerifier:
         return v
 
 
-DAGGER_WIN_REACHABILITY_VALUE_HEAD_SCHEMA = (
-    "carnot_arc_dagger_win_reachability_value_head_v1"
-)
+DAGGER_WIN_REACHABILITY_VALUE_HEAD_SCHEMA = "carnot_arc_dagger_win_reachability_value_head_v1"
 DAGGER_WIN_REACHABILITY_FEATURE_SUBSET = "cross_game_features_v3:v2_plus_frame_delta"
 
 
