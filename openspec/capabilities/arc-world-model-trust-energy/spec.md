@@ -8256,6 +8256,72 @@ When Experiment 4782 writes `results/experiment_4782_levelup_attempt.json`
 Then the checksum is deterministic, `schema_errors=[]`, and the artifact
 contains all required principle-annotated fields.
 
+### REQ-ARC-WMTE-4792: ARC Rotated Level-Up Attempt Guarantee
+
+Experiment 4792 SHALL run the standing ARC solve loop on the rotated target
+set required by the milestone note. It SHALL precheck
+`arc_solver_kit.offline_arcade()`, read `ops/arc_solve_registry.yaml`, retire
+`ka59` and `lf52` as recent no-bank residuals, retire `re86` as recently covered
+by self-play, prefer `sb26` followed by `bp35`, and otherwise select a +1
+deepen on the shallowest already-reproduced standing-loop target. The selected
+target SHALL be passed through `recommend_approach(game)` and the resulting
+recommendation SHALL be recorded in the terminal artifact. If the first
+preferred target does not bank a strictly new reproduced level, Experiment 4792
+SHALL rotate to the next preferred target before falling back to the shallowest
+already-solved standing-loop game.
+
+Experiment 4792 SHALL write
+`results/experiment_4792_levelup_attempt.json` with principle-annotated
+top-level fields for `honest_verdict`, `solve_provenance`,
+`offline_reproduced`, `reproduced_levels`, `inference_substrate`,
+`verifier_is_oracle`, `preconditions_checked`, `target_game`,
+`rotation_selection`, `approach_recommendation`, `attempted_games`,
+`dead_ends`, `registry_update`, `retire_if_same_verdict`,
+`reproducibility_checksum`, and `schema_errors`. A level counts only when the
+offline reproduction gate reaches a strictly higher level than the registry
+prior. If no selected target banks a new level, the artifact SHALL use a
+terminal `complete_<game>_no_new_level_residual_<cause>` verdict, set
+`offline_reproduced=false`, set `reproduced_levels=0`, preserve the registry
+total, set `retire_if_same_verdict=true`, and record the residual so the next
+milestone rotates rather than reattempting the same verdict. A missing target
+offline environment SHALL produce `blocked_<game>_offline_env_missing` and SHALL
+not fabricate reproduced levels.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- the agent advanced via its OWN attempts; NOT outer_loop_re (CRITICAL)."
+- `offline_reproduced`: principle "only reproduced levels count -- a live-recorded trajectory alone is provisional."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor)."
+- `verifier_is_oracle`: principle "the reproduction gate is execution-grounded (true); this is a SOLVE task."
+- `preconditions_checked`: principle "records arcade/env/generator checks so a missing-resource run emits blocked_, never a fabricated solve."
+
+#### SCENARIO-ARC-WMTE-4792-ROTATION-TARGET
+
+Given the ARC registry already records `sb26` and `bp35` as reproduced and the
+milestone retires `ka59`, `lf52`, and `re86` from the target pool
+When Experiment 4792 selects rotation targets
+Then it selects `sb26` first, records `bp35` as the next rotate-on-no-bank
+target, records each registry prior and target level, records why the retired
+targets were excluded, and records the recommendation for the selected target.
+
+#### SCENARIO-ARC-WMTE-4792-REPRODUCTION-GATE
+
+Given the standing loop result reports `offline_reproduced=true` but reaches
+only the registry's prior level
+When Experiment 4792 builds its terminal artifact
+Then `new_levels_banked=0`, `offline_reproduced=false`, `reproduced_levels=0`,
+and the dead-end entry explains that the result reproduced an existing depth
+before the workflow rotates to the next target.
+
+#### SCENARIO-ARC-WMTE-4792-STABLE-ARTIFACT
+
+Given the selected rotation target has a terminal loop artifact
+When Experiment 4792 writes `results/experiment_4792_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, and the artifact
+contains all required principle-annotated fields.
+
 ### REQ-ARC-WMTE-4763: ARC Self-Play Verifier Checkpoint Refresh
 
 Experiment 4763 SHALL run the standing ARC self-play loop on a banked game and
