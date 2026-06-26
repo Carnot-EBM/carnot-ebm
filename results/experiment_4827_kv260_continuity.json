@@ -1,0 +1,52 @@
+{
+  "board_state": {
+    "captured": false,
+    "reason": "kv260_ssh_unreachable"
+  },
+  "command_probes": {
+    "kv260_board_state": null,
+    "kv260_ssh": {
+      "combined_output": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 5.047129560960457,
+      "exit_code": 255,
+      "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps": null,
+    "kv260_xmutil_listapps_sudo": null
+  },
+  "duration_s": 5.0471,
+  "experiment": 4827,
+  "field_principles": {
+    "honest_verdict": "terminal prefix; reachable is success_/complete_; unreachable is blocked_kv260_ssh_unreachable -- and the artifact MUST be written either way (no 'No file changes' 3-fail-skip).",
+    "inference_substrate": "hardware_smoke (SSH-attached board test).",
+    "kv260_ssh_reachable": "the SSH reachability check -- false when the board is offline; the artifact is still written.",
+    "preconditions_checked": "records the SSH check; a blocked artifact is the correct output when the board is offline, NOT a no-file-changes failure."
+  },
+  "honest_verdict": "blocked_kv260_ssh_unreachable",
+  "inference_substrate": "hardware_smoke",
+  "kv260_ssh_reachable": false,
+  "loaded_overlay": null,
+  "next_forward_step": "OPERATOR ACTION: restore KV260 SSH reachability, then rerun the SSH-only continuity check; operator/audit queue: document the SSH outage and keep host SD-card preconditions retired.",
+  "preconditions_checked": [
+    {
+      "available": false,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 5.047129560960457,
+      "exit_code": 255,
+      "observed": "ssh: Could not resolve hostname kv260.local: Name or service not known",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 4827,
+  "reproducibility_checksum": "f3d2f43b0975bcc37c04ab72aa91eef9d41034306a12b6fecedd55bf139fb880",
+  "schema": "carnot.kv260_ssh_continuity.v7",
+  "spec_refs": [
+    "REQ-HW-4827",
+    "SCENARIO-HW-4827"
+  ],
+  "verifier_is_oracle": false,
+  "xmutil_requires_sudo": false
+}
