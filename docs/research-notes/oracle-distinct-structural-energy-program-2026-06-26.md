@@ -112,12 +112,23 @@ the actual agent) is now authorized** per the staged gate; pre-stage it for `.44
   generation vs λ=0** — a 0.0 delta could be a genuine "energy doesn't help generation" null OR a silent
   no-op (the `goal_energy` term had no effect, so guided==bare trivially). The `.444 B1 audit was
   strengthened to verify `s3_guidance_exercised` (λ=1 produced different proposals than λ=0); the S3
-  verdict is only trustworthy if that passes. **Do NOT conclude the program until the no-op check passes.**
-  IF S3 is a genuine bounded null, the staged program REACHES ITS HONEST END: the oracle-distinct
-  structural energy is a real OFFLINE cross-game discriminator (S0'/S1) that adds **NO live agent value**
-  — neither at engine selection (S2-v3 bounded) nor at generation (S3 bounded, the ARC wall) — and S4
-  transfer is moot (no live value to transfer). That is a clean, valuable negative answer to "does
-  extend-with-energy work on ARC": offline yes, live no.
+  verdict is only trustworthy if that passes.
+- **NO-OP CHECK PASSED → PROGRAM CONCLUDED (`.444 B1, exp4825).** The strengthened B1 audit verified
+  **`s3_guidance_exercised: True`** (the λ=1 guidance materially changed the candidate pool vs the λ=0
+  baseline) and **`s3_controls_verified: True`** (matched λ=0, NEW-levels-not-re-ranking, reachable-winner
+  positive control, live-path-reachable). So S3 is a **GENUINE, well-controlled BOUNDED null**, not a
+  no-op. **The staged energy program (S0' → S1 → S2-v3 → S3) is therefore CONCLUDED with a clean negative
+  answer: the oracle-distinct structural energy is a real OFFLINE cross-game discriminator (S0' 0.739
+  leak-clean, S1 0.713 multi-seed landscape) that adds NO live agent value — neither at engine SELECTION
+  (S2-v3 corpus-wide bounded, neutral) nor at GENERATION (S3 24-headroom-game bounded, zero lift). S4
+  transfer is MOOT (no live value to transfer). "Does extend-with-energy work on ARC?" — offline YES,
+  live NO.** This is a rigorously-earned, valuable negative: the operator's directed "only direction that
+  unlocks extend-with-energy" was pursued through four falsifiable staged gates and the honest answer is
+  that the structural energy does not translate into live ARC agent value. The forward focus returns to
+  the actual deliverable — multi-level LIVE solves, gated on the **L1-first-contact GENERATION wall**
+  (generic first-win 0.04 = 1/25; `project_arc_l1_first_contact_wall`), which the energy detour did not
+  move. The energy verifier remains a real offline discriminator (its proven value is the FoVer/
+  verification-bottlenecked domain, per north-star §0), just not a live ARC lever.
 
 ---
 
