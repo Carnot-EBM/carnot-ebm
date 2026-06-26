@@ -773,6 +773,25 @@ Entries here are SPECCED and QUEUED but GATED on a condition. The planner MUST N
 activate them until the gate is met, and the Overdue-Priority Forcing Function does
 NOT apply (these are intentionally deferred, not overdue).
 
+### GATED 2026-06-26: Ornith-1.0-9B candidate inducer A/B (gated behind the energy program S2/S3/S4)
+
+**Operator directive 2026-06-26:** "make note of it as another alternative LLM to consider in the
+future; do not let it get in the way of our energy model attempts: we want to try S2/S3/S4 first."
+
+`deepreinforce-ai/Ornith-1.0-9B-GGUF` is a same-envelope (Qwen-3.5-9B, ~5.6 GB Q4, MIT, GGUF) but
+markedly stronger **agentic-coder** (SWE-bench Verified 69.4%) than the current frozen
+`Qwen3.5-9B-MTP` generator. The binding ARC wall is **induction quality** (the 0.12-accurate
+free-form engine), and the SOTA winner uses a strong coding-agent inducer — so Ornith is the
+strongest same-footprint candidate to test in the **offline engine-induction** role. Full analysis +
+caveats (SWE-bench≠ARC; no MTP; the wall may be deeper than model strength; sprint freeze):
+`docs/research-notes/candidate-inducer-ornith-1.0-9b-2026-06-26.md`.
+
+**GATE (do NOT activate until met):** the structural-energy stages **S2 → S3 → S4 have run** (or the
+operator re-prioritizes). When ungated, the experiment is a scoped offline A/B (Ornith vs
+Qwen3.5-9B-MTP on held-out engine-induction accuracy vs the 0.12 lp85 baseline), PRECONDITIONS step 0
+= HF cache check (not yet cached), reproduction-gated, OFFLINE only (does not touch the frozen live
+submission stack). NOTE ONLY for now — not a queued experiment slot.
+
 ### GATED 2026-06-13: Energy-guided discrete diffusion (DiffusionGemma) — scale-up of the TRM verifier-guidance bet
 
 - **Spec:** `docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`
