@@ -1,0 +1,272 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "a69fd0c0be1d4638d9f6b9c70fa85eb34cad9395372cab0b2fc79abe6718f851",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "capstone_ready",
+        "s2v2_structural_energy_verdict",
+        "readiness",
+        "sota_handoff",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4809_capstone_v442.json",
+      "sha256": "6ec16b61772ff2bc79327e2a5e6ec50033dc82483e9a9d9350f30c48569fe095",
+      "source": "experiment_4809_capstone_v442"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "live_path_reachable",
+        "positive_control_passed",
+        "false_negative_risk_checked",
+        "energy_minus_accuracy_delta",
+        "energy_minus_accuracy_delta_ci95",
+        "n_effective_games",
+        "min_heldout_games",
+        "candidate_pool_diversity",
+        "game_results"
+      ],
+      "path": "results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json",
+      "sha256": "a351860f47303c5459a64f58160a3bdb9d9505f4685fe3b690db01d8671f0fa3",
+      "source": "experiment_4801_structural_energy_s2v2_diverse_trust_gate"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    },
+    {
+      "fields_imported": [
+        "n_available_games"
+      ],
+      "path": "environment_files",
+      "sha256": null,
+      "source": "environment_files"
+    }
+  ],
+  "close_state_442": {
+    "capstone_honest_verdict": "complete_s2v2_inconclusive_degenerate_pool_capstone_ready",
+    "capstone_ready": true,
+    "capstone_recorded_degenerate_candidate_pool": true,
+    "capstone_reported_reproducible_total_levels": 65,
+    "capstone_reported_s2v2_reason": "degenerate_candidate_pool_live_check",
+    "capstone_reported_s2v2_verdict": "inconclusive",
+    "readiness": {
+      "heldout_decision": "flat_null_no_readiness_gain",
+      "ready_for_operator_submit": false,
+      "reason": "requires_s2v2_win_clean_package_and_heldout_gain",
+      "s2v2_verdict": "inconclusive",
+      "submission_package_decision": "package_ready_operator_only"
+    },
+    "reproducible_total_levels": 65,
+    "s2v2_corrected_record": {
+      "candidate_pool_rows": 7,
+      "corrected_verdict": "bounded_but_under_covered_5_of_25",
+      "effective_coverage_fraction": 0.2,
+      "min_effective_games_required_under_tightened_gate": 15,
+      "n_available_games": 25,
+      "n_effective_games": 5,
+      "n_games_attempted": 5,
+      "old_effective_game_gate_passed": true,
+      "old_min_effective_games_required": 5,
+      "reason": "S2-v2 was a genuine bounded selection result, but only 5 effective games were covered out of the 25-game offline corpus.",
+      "reported_energy_minus_accuracy_delta": -0.157657763525,
+      "reported_energy_minus_accuracy_delta_ci95": [
+        -0.47765014592872246,
+        0.004044943820224719
+      ],
+      "reported_false_negative_risk_checked": true,
+      "reported_honest_verdict": "complete_structural_energy_s2v2_bounded_diverse_pool",
+      "reported_live_path_reachable": true,
+      "reported_positive_control_passed": true,
+      "reported_verifier_is_oracle": false,
+      "s2v3_required": true,
+      "s3_authorized": false,
+      "tested_effective_games": [
+        "ar25",
+        "cd82",
+        "cn04",
+        "ka59",
+        "sc25"
+      ],
+      "tightened_effective_game_gate_passed": false,
+      "upstream_genuine_bounded_result": true
+    },
+    "sota_handoff": {
+      "arxiv_ids_cited": [
+        "1806.10230",
+        "1909.06878",
+        "2202.11705",
+        "2207.12598",
+        "2305.12018",
+        "2309.15028",
+        "2502.07202",
+        "2605.28814"
+      ],
+      "decision": "sota_handoff_mapped",
+      "experiment_id": 4808,
+      "flagged_for_v443_candidates": [
+        "bolt_cold_cfg_value_tree_generator_for_s3",
+        "bes_energy_fitness_pool_inserter"
+      ],
+      "methods_mapped_count": 5,
+      "s3_context": {
+        "generation_constraint": "Use energy to guide generation and pool insertion, not as an environment oracle or solve claim.",
+        "input_energy_contract": "lower-is-better energy/value feedback from upstream trust and verification artifacts",
+        "roadmap_target": ".443",
+        "s3_generation_allowed": true
+      },
+      "source": "SOTA"
+    }
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4810_archive_442_activate_443",
+  "experiment_id": 4810,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_442_archived_443_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    },
+    "s2v2_recorded_as_under_covered": {
+      "principle": "S2-v2 tested 5 of 25 games -- a genuine but underpowered selection test; the verdict is not robust until S2-v3 tests corpus-wide."
+    }
+  },
+  "honest_verdict": "complete_442_archived_443_activated_already_active_bounded_but_under_covered_5_of_25",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "no_poison_observed_current_gate_green",
+    "current_gate_passed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.443",
+      "milestone_before_activation": "2026.06.443",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "capstone_4809": {
+      "available": true,
+      "path": "results/experiment_4809_capstone_v442.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4810": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "environment_files": {
+      "available": true,
+      "n_available_games": 25,
+      "path": "environment_files"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"import arc_solver_kit; arc_solver_kit.offline_arcade(); print('ok')\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
+      "literal_precondition_passed": false,
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "s2v2_4801": {
+      "available": true,
+      "path": "results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4810_archive_442_activate_443.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n87 passed, 1 warning in 5.85s\n"
+    }
+  },
+  "random_seed": 4810,
+  "reproducibility_checksum": "sha256:40b94e959dfcef7d8e8ce9356e6c25ebc11fefd7d068c5d349e081e0c07b4351",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4810_archive_442_activate_443.json",
+  "s2v2_recorded_as_under_covered": true,
+  "schema": "carnot.archive_activation.v442_to_v443_4810.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4810",
+    "SCENARIO-CAPSTONE-4810",
+    "SCENARIO-CAPSTONE-4810-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4810-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.443",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.442"
+  },
+  "v443_pivot": {
+    "direction": "attempt all offline games and require corpus coverage before treating the engine-selection trust gate as robust",
+    "headline": "S2-v3 corpus-wide off-path trust gate",
+    "n_available_games": 25,
+    "previous_effective_games": 5,
+    "required_effective_games": 15,
+    "retests_corpus_wide": true,
+    "source_correction": "bounded_but_under_covered_5_of_25",
+    "task_id": "exp4811-a1"
+  }
+}
