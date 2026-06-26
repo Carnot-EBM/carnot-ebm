@@ -1,0 +1,315 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone",
+        "exp4830_prompt",
+        "exp4831_l1_refocus"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "f9a27f56a44ad6188407fc372c23f271666d3210152308532732f40f4118872c",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone",
+        "literal_precondition"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": "f9a27f56a44ad6188407fc372c23f271666d3210152308532732f40f4118872c",
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "capstone_ready",
+        "s3_structural_energy_verdict",
+        "readiness",
+        "heldout_readiness",
+        "silent_bug_audit",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4829_capstone_v444.json",
+      "sha256": "b93ed53a8bf4e742cf8e42dfb4e0cca3b3c97d33e209482003a8b0c1e60bf506",
+      "source": "experiment_4829_capstone_v444"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "live_path_reachable",
+        "lambda0_control",
+        "n_headroom_games",
+        "min_headroom_games",
+        "positive_control_passed",
+        "winners_newly_entering_pool_delta",
+        "winners_newly_entering_pool_delta_ci95"
+      ],
+      "path": "results/experiment_4821_structural_energy_s3_generation_lift.json",
+      "sha256": "9230675dee8a6c0192ac1fb2be11cd2403c216717ff736a3f7482906257ed814",
+      "source": "experiment_4821_structural_energy_s3_generation_lift"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_444": {
+    "capstone_honest_verdict": "complete_s3_bounded_no_generation_lift_capstone_ready",
+    "capstone_ready": true,
+    "capstone_reported_reproducible_total_levels": 65,
+    "energy_close_state": {
+      "adds_live_arc_value": false,
+      "bounded_no_generation_lift": true,
+      "controls_verified_by_b1": true,
+      "direction_after_s3": "bounded_at_real_offline_discriminator_no_live_value",
+      "energy_program_concluded": true,
+      "generation_win": false,
+      "lambda0_control": {
+        "description": "goal_guidance_lambda=0 disables plan_in_model goal_energy guidance",
+        "lambda": 0.0,
+        "matched_control": true
+      },
+      "live_path_reachable": true,
+      "min_headroom_games": 5,
+      "n_headroom_games": 24,
+      "new_levels_not_re_ranking": true,
+      "planner_discipline": "do_not_repropose_energy_stages",
+      "positive_control_passed": true,
+      "s3_honest_verdict": "complete_structural_energy_s3_bounded_no_generation_lift",
+      "s3_verdict": "bounded_no_generation_lift",
+      "s4_authorized": false,
+      "s4_moot": true,
+      "winners_newly_entering_pool_delta": 0.0,
+      "winners_newly_entering_pool_delta_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "heldout_readiness": {
+      "decision": "flat_null_no_readiness_gain",
+      "experiment_id": 4824,
+      "first_win_baseline": 0.04,
+      "heldout_first_win_delta_vs_baseline": 0.0,
+      "heldout_first_win_delta_vs_prior_best": 0.0,
+      "heldout_first_win_rate": 0.04,
+      "heldout_variant_attempts": 100,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "null_delta_methodology_note_present": true,
+      "parity_test_green": true,
+      "positive_control_passed": true,
+      "prior_best_heldout_first_win_rate": 0.04,
+      "source": "HELDOUT"
+    },
+    "readiness": {
+      "heldout_decision": "flat_null_no_readiness_gain",
+      "ready_for_operator_submit": false,
+      "reason": "requires_s3_generation_win_clean_package_and_heldout_gain",
+      "s3_verdict": "bounded_no_generation_lift",
+      "s4_authorized": false,
+      "structural_energy_direction": "bounded_at_real_offline_discriminator_no_live_value",
+      "submission_package_decision": "package_ready_operator_only"
+    },
+    "reproducible_total_levels": 65,
+    "silent_bug_audit": {
+      "experiment_id": 4825,
+      "nulls_audited": 3,
+      "s3_control_check": {
+        "artifact_arc_orphan_solver_lint_passed": true,
+        "artifact_live_path_reachable": true,
+        "current_arc_orphan_solver_lint_passed": true,
+        "guidance_exercise_check": {
+          "candidate_pool_differs_from_baseline": true,
+          "candidate_states_scored": 24,
+          "differing_headroom_games": [
+            "ar25",
+            "bp35",
+            "cd82",
+            "cn04",
+            "dc22",
+            "g50t",
+            "ka59",
+            "lf52",
+            "ls20",
+            "m0r0",
+            "re86",
+            "sb26",
+            "sc25",
+            "sk48",
+            "sp80",
+            "tr87",
+            "tu93",
+            "wa30"
+          ],
+          "fingerprint_differences": [],
+          "goal_energy_score_variance": 0.0003908818794621362,
+          "guidance_exercised": true,
+          "real_candidate_state_evidence": true,
+          "source_present": true
+        },
+        "live_path_reachable": true,
+        "matched_lambda0_control": true,
+        "min_headroom_games": 5,
+        "n_headroom_games": 24,
+        "new_levels_not_in_bare_pool": true,
+        "positive_control_passed": true,
+        "s3_controls_verified": true,
+        "s3_guidance_exercised": true,
+        "same_games_seeds_budget": true,
+        "source_match_check": {
+          "baseline_headroom_games": 24,
+          "guided_headroom_games": 24,
+          "per_game_variant_counts_match": true,
+          "same_source_games_and_budget": true,
+          "single_random_seed_recorded": true,
+          "source_present": true,
+          "variant_signatures_match": true
+        }
+      },
+      "s3_controls_verified": true,
+      "s3_guidance_exercised": true,
+      "silent_bugs_found_count": 0,
+      "source": "BUG_AUDIT",
+      "trusted_nulls": [
+        "experiment_4821_structural_energy_s3_generation_lift",
+        "experiment_4822_levelup_attempt",
+        "experiment_4824_heldout_first_win_readiness"
+      ]
+    }
+  },
+  "duration_s": 0.0001,
+  "energy_program_concluded": true,
+  "experiment": "experiment_4830_archive_444_activate_445",
+  "experiment_id": 4830,
+  "field_principles": {
+    "energy_program_concluded": {
+      "principle": "the energy track is done (offline discriminator, no live value); the planner must NOT re-propose energy stages."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_444_archived_445_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    }
+  },
+  "honest_verdict": "complete_444_archived_445_activated_already_active_energy_program_concluded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "no_poison_observed_current_gate_green",
+    "current_gate_passed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.445",
+      "milestone_before_activation": "2026.06.445",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "capstone_4829": {
+      "available": true,
+      "path": "results/experiment_4829_capstone_v444.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4830": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"import arc_solver_kit; arc_solver_kit.offline_arcade(); print('ok')\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_roadmap_next_yaml": {
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": true,
+      "before_available": false,
+      "before_milestone": null,
+      "before_parses": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
+      "literal_precondition_passed": true,
+      "milestone": "2026.06.445",
+      "milestone_matches_activation": true,
+      "parses": true,
+      "path": "research-roadmap-next.yaml",
+      "restore_error": "",
+      "restored_from_active_roadmap": true
+    },
+    "s3_4821": {
+      "available": true,
+      "path": "results/experiment_4821_structural_energy_s3_generation_lift.json"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4830_archive_444_activate_445.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.69s\n"
+    }
+  },
+  "random_seed": 4830,
+  "reproducibility_checksum": "sha256:19b8db280b62d2afb47a8ff577557cb974deb7813c63ff7599acbb887c7a7136",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4830_archive_444_activate_445.json",
+  "schema": "carnot.archive_activation.v444_to_v445_4830.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4830",
+    "SCENARIO-CAPSTONE-4830",
+    "SCENARIO-CAPSTONE-4830-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4830-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.445",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.444"
+  },
+  "v445_refocus": {
+    "energy_program_concluded": true,
+    "generic_first_win_fraction": "1/25",
+    "generic_first_win_rate": 0.04,
+    "headline_direction": "amortized_in_context_exploration_prior",
+    "headline_task_id": "exp4831-a1",
+    "null_next_frontier_if_l1_prior_fails": "perception_representation",
+    "planner_must_not_repropose_energy_stages": true,
+    "root_blocker": "winning_l1_prefix_never_proposed",
+    "wall": "L1-FIRST-CONTACT"
+  }
+}
