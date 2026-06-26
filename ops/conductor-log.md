@@ -9295,3 +9295,4 @@ The contro |
 | 2026-06-25 23:28 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- RE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-26 00:46 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY) -- FIX THE STRU | OK | 111 passed, 1 warning in 10.98s |
 | 2026-06-26 01:07 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 94 passed, 1 warning in 9.12s |
+| 2026-06-26 01:33 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
