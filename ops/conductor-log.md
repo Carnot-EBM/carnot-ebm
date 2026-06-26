@@ -9380,3 +9380,4 @@ The contro |
 | 2026-06-26 19:10 UTC | PHASE D (SOTA-INGESTION -- the .444 frontier = ene | OK | 104 passed, 1 warning in 6.98s |
 | 2026-06-26 19:27 UTC | PHASE E (CAPSTONE .443) -- aggregate the .443 scor | OK | 87 passed, 1 warning in 8.34s |
 | 2026-06-26 20:02 UTC | Milestone 2026.06.444 activated | OK | 10 tasks queued |
+| 2026-06-26 20:18 UTC | PHASE 0 (TRANSITION) -- archive .443 -> activate . | OK | 86 passed, 1 warning in 8.78s |
