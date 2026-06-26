@@ -8804,6 +8804,73 @@ Then it writes a `blocked_` artifact with the failed precondition recorded,
 `verifier_checkpoint_refreshed=false`, and a deterministic reproducibility
 checksum.
 
+### REQ-ARC-WMTE-4803: ARC Self-Play Verifier Checkpoint Refresh
+
+Experiment 4803 SHALL run the standing ARC self-play loop on a banked game and
+write `results/experiment_4803_self_play_verifier_checkpoint.json`. The
+workflow SHALL precheck that `arc_solver_kit.offline_arcade()` initializes,
+that `ops/arc_solve_registry.yaml` is loadable, and that the selected target
+game already has `levels_reproduced >= 1` in the registry. A missing arcade,
+registry, target, or banked level SHALL produce a terminal `blocked_` artifact
+that records the failed precondition and SHALL NOT claim a refreshed
+checkpoint.
+
+The self-play run SHALL execute `scripts/arc_loop_solve.py` for the selected
+banked target, warm-start from `models/arc_verifier_<game>.json` when present,
+run the verifier-routed search and reproduction gate, and train plus persist
+the learned verifier when trajectory labels are available. The terminal
+artifact SHALL count success only when the learned verifier checkpoint's mtime
+advances past the recorded pre-run mtime and the loop reproduction gate passes
+on at least one level. A failed self-play run SHALL preserve the residual cause,
+search-state count, gate output, and checkpoint metadata rather than
+fabricating a green checkpoint.
+
+The artifact SHALL include principle-annotated top-level fields for
+`honest_verdict`, `verifier_checkpoint_refreshed`, `inference_substrate`,
+`solve_provenance`, and `preconditions_checked`, plus `target_game`,
+`checkpoint_path`, `checkpoint_mtime_before_ns`, `checkpoint_mtime_after_ns`,
+`checkpoint_mtime_delta_ns`, `states_expanded`, `search_state_count`,
+`offline_reproduced`, `reproduced_levels`, `reproduction_gate`,
+`self_play_residual`, `loop_result_path`, `random_seed`,
+`reproducibility_checksum`, and `schema_errors`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; checkpoint refreshed + gate green is success_."
+- `verifier_checkpoint_refreshed`: principle "the self-improvement signal."
+- `inference_substrate`: principle "live_llm_inference (60s floor)."
+- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+- `preconditions_checked`: principle "records arcade/registry checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+#### SCENARIO-ARC-WMTE-4803-CHECKPOINT-REFRESHED
+
+Given a selected banked target has a recorded pre-run verifier checkpoint mtime
+When the standing self-play loop reports `offline_reproduced=true`,
+`reproduced_levels>=1`, a positive search-state count, and a learned verifier
+checkpoint whose mtime advanced
+Then Experiment 4803 writes a `success_` artifact with
+`verifier_checkpoint_refreshed=true`, records both `states_expanded` and
+`search_state_count`, preserves the reproduction gate, and emits
+`schema_errors=[]`.
+
+#### SCENARIO-ARC-WMTE-4803-RESIDUAL-NO-FABRICATION
+
+Given the loop result is missing, the reproduction gate fails, the reproduced
+level is below one, or the verifier checkpoint mtime does not advance
+When Experiment 4803 builds its terminal artifact
+Then it writes a `complete_` residual verdict, keeps
+`verifier_checkpoint_refreshed=false`, records the failing residual cause, and
+does not invent a checkpoint path or refreshed mtime.
+
+#### SCENARIO-ARC-WMTE-4803-BLOCKED-PRECONDITION
+
+Given the offline arcade, registry, target selection, or banked-level
+precondition fails
+When Experiment 4803 runs
+Then it writes a `blocked_` artifact with the failed precondition recorded,
+`verifier_checkpoint_refreshed=false`, and a deterministic reproducibility
+checksum.
+
 ### REQ-ARC-WMTE-4775: .439 ARC Null Silent-Bug Audit
 
 Experiment 4775 SHALL audit the `.439` ARC null artifacts before their negative
