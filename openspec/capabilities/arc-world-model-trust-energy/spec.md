@@ -9060,6 +9060,75 @@ Then it writes a blocked artifact with the missing source in
 `preconditions_checked`, no silent-bug fabrication, no markdown append, and a
 stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4805: .442 ARC Null Silent-Bug Audit
+
+Experiment 4805 SHALL audit the `.442` ARC null artifacts before their negative
+verdicts are treated as capability limits. The audit SHALL read
+`results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json`,
+`results/experiment_4802_levelup_attempt.json`, and
+`results/experiment_4804_heldout_first_win_readiness.json`. Missing `.442`
+source artifacts SHALL produce a blocked artifact rather than a fabricated
+audit. Experiment 4803 is a success checkpoint refresh and SHALL be excluded
+from the null count unless it emits a terminal null/residual artifact.
+
+The audit SHALL verify that each null's lever was genuinely exercised. For
+S2-v2/Experiment 4801 it SHALL run
+`adversarial_verify.check_engine_selection_candidate_diversity` on the source
+artifact and SHALL flag S2-v2 as a silent bug if
+`DEGENERATE_CANDIDATE_POOL` fires. The S2-v2 audit SHALL also confirm
+`n_effective_games >= min_heldout_games`, confirm that every effective game
+logs `game_results[*].candidate_rows`, the energy-selected candidate, the
+accuracy-gate-selected candidate, and both selectors' held-out off-path
+`cell_recall`, and run `scripts/arc_orphan_solver_lint.py` to keep the graft
+live-path-reachable. For the level-up no-bank null it SHALL verify non-empty
+attempted-game rows, target/depth accounting, solution-label or terminal
+residual evidence, reproduction gates for reproduced depths, and same-depth
+vs. new-depth accounting. For the held-out first-win null it SHALL verify the
+held-out attempt floor, positive-control parity, parity-test success, proxy
+aggregation evidence, and the flat `0.04` methodology note.
+
+Experiment 4805 SHALL write
+`results/experiment_4805_silent_bug_audit.json` and append a human-readable
+section to `ops/arc_null_silent_bug_audit.md`. The artifact SHALL include
+principle-annotated top-level fields for `honest_verdict`,
+`s2v2_candidate_pool_diverse`, `nulls_audited`, and `inference_substrate`,
+plus per-null verdicts, silent-bug findings, trusted nulls, the S2-v2
+diversity check, the `arc_orphan_solver_lint.py` result, preconditions,
+checksums for audited artifacts, duration, random seed, and a stable
+reproducibility checksum. The audit SHALL make no solve, leaderboard,
+training, or fresh live-inference claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `s2v2_candidate_pool_diverse`: principle "the load-bearing check -- DEGENERATE_CANDIDATE_POOL must NOT fire on S2-v2, else its verdict is again a non-test."
+- `nulls_audited`: principle "count of nulls re-examined."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4805-SILENT-BUG-AUDIT
+
+Given the `.442` S2-v2, level-up no-bank, and held-out first-win null artifacts
+are present
+When Experiment 4805 cross-checks exercised-evidence fields, runs
+`adversarial_verify.check_engine_selection_candidate_diversity`, and runs
+`scripts/arc_orphan_solver_lint.py`
+Then it writes `results/experiment_4805_silent_bug_audit.json`, appends to
+`ops/arc_null_silent_bug_audit.md`, sets
+`s2v2_candidate_pool_diverse=true` only when `DEGENERATE_CANDIDATE_POOL` does
+not fire and `n_effective_games >= min_heldout_games`, keeps S2-v2 trusted only
+when per-game energy-vs-accuracy selections are logged and the live-path lint
+passes, keeps the other ARC nulls trusted only when their exercised-evidence
+fields are non-degenerate, and reports the complete audit with
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-ARC-WMTE-4805-BLOCKED-PRECONDITION
+
+Given any required `.442` source artifact is missing
+When Experiment 4805 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, no markdown append, and a
+stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts

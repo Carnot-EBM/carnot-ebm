@@ -109,3 +109,24 @@
 - Identical candidate sets: `True`
 - Binary selection reconstructed: `True`
 - Checked games: `5`
+## Experiment 4805 .442 ARC Null Silent-Bug Audit
+
+- Verdict: `complete_arc_null_silent_bug_audit_3_nulls_1_reopen`
+- Nulls audited: `3`
+- S2-v2 candidate pool diverse: `False`
+- Silent bugs found: `1`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Null | Verdict | Silent signatures | Evidence |
+|---|---|---|---|
+| `experiment_4801_structural_energy_s2v2_diverse_trust_gate` | `silent_bug_must_reopen` | `s2v2_degenerate_candidate_pool` | degenerate_candidate_pool_flagged=True<br>n_effective_games=5<br>artifact_n_effective_games=5<br>min_heldout_games=5<br>effective_game_floor_met=True<br>per_game_selections_logged=True<br>live_path_reachable_confirmed=True |
+| `experiment_4802_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=21<br>solution_label_count=596<br>reproduction_gates=15<br>existing_depth_reproduced=16<br>new_depth_claims=0<br>new_levels_banked=0<br>offline_reproduced=False<br>target_game=bp35 |
+| `experiment_4804_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True<br>inference_substrate=aggregation_from_upstream_artifacts<br>proxy_cache_used=True |
+
+### S2-v2 Diversity Check
+
+- DEGENERATE_CANDIDATE_POOL fired: `True`
+- Effective games: `5`
+- Minimum held-out games: `5`
+- Per-game selections logged: `True`
+- Live-path reachable confirmed: `True`
