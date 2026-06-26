@@ -9343,3 +9343,5 @@ The contro |
 | 2026-06-26 11:02 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT | OK | 88 passed, 1 warning in 9.10s |
 | 2026-06-26 11:20 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 87 passed, 1 warning in 5.85s |
 | 2026-06-26 11:42 UTC | PHASE D (SOTA-INGESTION -- the .441 frontier = ene | OK | 104 passed, 1 warning in 8.55s |
+| 2026-06-26 11:59 UTC | PHASE E (CAPSTONE .440) -- aggregate the .440 scor | OK | 88 passed, 1 warning in 9.84s |
+| 2026-06-26 12:01 UTC | Milestone 2026.06.441 activated | OK | 10 tasks queued |
