@@ -1,0 +1,381 @@
+{
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4771,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:e6c4de814d388107171969db028fd417d28de72eae25904cd88f98a308f36b62"
+    },
+    {
+      "experiment_id": 4772,
+      "fields_imported": [
+        "honest_verdict",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "registry_update",
+        "attempted_games",
+        "dead_ends",
+        "solve_provenance",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:b11bfd49e26cfca148afdb7300db8731affc2989b1f98fe12b804bb046ce69fb"
+    },
+    {
+      "experiment_id": 4773,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:65d584ac4063b358ccb417ad5c405920ff738b88b50f4026d56389368868f94b"
+    },
+    {
+      "experiment_id": 4774,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "first_win_baseline",
+        "prior_best_heldout_first_win_rate",
+        "heldout_first_win_delta_vs_baseline",
+        "heldout_first_win_delta_vs_prior_best",
+        "heldout_variant_attempts",
+        "positive_control_passed",
+        "parity_test_green",
+        "null_delta_methodology_note"
+      ],
+      "sha256": "sha256:bc5c4de9c2131f9599925fbd953906282841967ece626781673838ca261281be"
+    },
+    {
+      "experiment_id": 4775,
+      "fields_imported": [
+        "honest_verdict",
+        "nulls_audited",
+        "trusted_nulls",
+        "silent_bugs_found",
+        "per_null_verdicts",
+        "s0prime_leak_controls_fired",
+        "s0prime_leak_control_checks",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:84a02ca4f7eab0671ee504a79213329f0f3efe87fc10bed7faaf5e91657f6748"
+    },
+    {
+      "experiment_id": 4776,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:73fa13aef03a4a2db96ce45553edf71fcd339f202fe71ca045f61c7ec7ac5754"
+    },
+    {
+      "experiment_id": 4777,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "board_state",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:cff64e2702c381d32801f3929e0566c259298974ebff6c8900b225bd101c51d9"
+    },
+    {
+      "experiment_id": 4778,
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_for_v440",
+        "methods_mapped",
+        "leak_robust_evaluation_note",
+        "arxiv_ids_cited"
+      ],
+      "sha256": "sha256:c160a243d9d4a1e438a77420d2345977292ce41bc2377682e5b7f8aaed256fe9"
+    }
+  ],
+  "duration_s": 0.421557,
+  "experiment": "experiment_4779_capstone_v439",
+  "experiment_id": 4779,
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail."
+    },
+    "flagged_artifacts_skipped": {
+      "principle": "records which flagged_adversarial artifacts were excluded -- never aggregate a fabricated number."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; capstone_ready=true is success_/complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric carried from the registry, not re-counted."
+    },
+    "s0prime_structural_energy_verdict": {
+      "principle": "the headline -- direction REOPENS to S1 (origin-matched signal survives) or RETIRES (was an origin leak); the milestone's load-bearing result."
+    }
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4771,
+      "path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:e6c4de814d388107171969db028fd417d28de72eae25904cd88f98a308f36b62",
+      "source": "S0PRIME"
+    },
+    {
+      "experiment_id": 4773,
+      "path": "results/experiment_4773_self_play_verifier_checkpoint.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:65d584ac4063b358ccb417ad5c405920ff738b88b50f4026d56389368868f94b",
+      "source": "SELF_PLAY"
+    },
+    {
+      "experiment_id": 4776,
+      "path": "results/experiment_4776_submission_package_harden.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:73fa13aef03a4a2db96ce45553edf71fcd339f202fe71ca045f61c7ec7ac5754",
+      "source": "PACKAGE"
+    }
+  ],
+  "hardware_continuity": {
+    "board_hostname": "kv260",
+    "decision": "kv260_reachable",
+    "experiment_id": 4777,
+    "kv260_ssh_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "source": "HARDWARE",
+    "uio_device_count": 5
+  },
+  "heldout_readiness": {
+    "decision": "flat_null_no_readiness_gain",
+    "experiment_id": 4774,
+    "first_win_baseline": 0.04,
+    "heldout_first_win_delta_vs_baseline": 0.0,
+    "heldout_first_win_delta_vs_prior_best": 0.0,
+    "heldout_first_win_rate": 0.04,
+    "heldout_variant_attempts": 100,
+    "null_delta_methodology_note_present": true,
+    "parity_test_green": true,
+    "positive_control_passed": true,
+    "prior_best_heldout_first_win_rate": 0.04,
+    "source": "HELDOUT"
+  },
+  "honest_verdict": "complete_s0prime_structural_energy_retires_v439_capstone_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "levelup_bank": {
+    "experiment_id": 4772,
+    "moat_claim": false,
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "registry_updated": false,
+    "reproduced_levels": 0,
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "reproducible_total_levels_delta": 0,
+    "source": "LEVELUP",
+    "target_game": "ka59",
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4779": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "BUG_AUDIT": {
+        "path": "results/experiment_4775_silent_bug_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HARDWARE": {
+        "path": "results/experiment_4777_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HELDOUT": {
+        "path": "results/experiment_4774_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "LEVELUP": {
+        "path": "results/experiment_4772_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "PACKAGE": {
+        "path": "results/experiment_4776_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "S0PRIME": {
+        "path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SELF_PLAY": {
+        "path": "results/experiment_4773_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SOTA": {
+        "path": "results/experiment_4778_sota_ingestion_structural_energy.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 4779,
+  "readiness": {
+    "heldout_decision": "flat_null_no_readiness_gain",
+    "ready_for_operator_submit": false,
+    "reason": "requires_clean_package_and_heldout_gain",
+    "submission_package_decision": "skipped_flagged_adversarial"
+  },
+  "reproducibility_checksum": "sha256:5696dd4d9365791e15cd6d67096acc40de755014bde42bab86ab8e88e2c7bea2",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4779_capstone_v439.json",
+  "s0prime_structural_energy_verdict": {
+    "artifact_skipped": true,
+    "audit_control_numbers": {
+      "class_balance_non_degenerate": true,
+      "contributing_games_with_both_classes": 16,
+      "origin_probe_auroc": 0.5,
+      "origin_probe_refit_on_origin_matched_data": false,
+      "origin_probe_status": "origin_matched_single_origin_all_induced",
+      "s0prime_leak_controls_fired": false,
+      "shuffled_label_control_auroc": 0.503309195927,
+      "shuffled_label_permuted_and_reran_loo": true,
+      "shuffled_label_resamples": 128,
+      "single_class_games_skipped": 2
+    },
+    "control_numbers_source": "BUG_AUDIT",
+    "direction": "RETIRES",
+    "experiment_id": 4771,
+    "loo_auroc_structural": null,
+    "origin_probe_auroc": 0.5,
+    "origin_probe_refit_on_origin_matched_data": false,
+    "reason": "s0prime_flagged_adversarial_skipped_controls_unfired",
+    "s0prime_leak_controls_fired": false,
+    "s1_queued": false,
+    "shuffled_label_control_auroc": 0.503309195927,
+    "shuffled_label_resamples": 128,
+    "source": "S0PRIME",
+    "verifier_is_oracle": false
+  },
+  "schema": "carnot.exp4779.capstone_v439.v1",
+  "self_play_checkpoint": {
+    "decision": "skipped_flagged_adversarial",
+    "experiment_id": 4773,
+    "source": "SELF_PLAY"
+  },
+  "silent_bug_audit": {
+    "experiment_id": 4775,
+    "nulls_audited": 3,
+    "reopened_null_ids": [
+      "experiment_4771_structural_energy_s0prime_origin_matched"
+    ],
+    "s0prime_control_numbers": {
+      "class_balance_non_degenerate": true,
+      "contributing_games_with_both_classes": 16,
+      "origin_probe_auroc": 0.5,
+      "origin_probe_refit_on_origin_matched_data": false,
+      "origin_probe_status": "origin_matched_single_origin_all_induced",
+      "s0prime_leak_controls_fired": false,
+      "shuffled_label_control_auroc": 0.503309195927,
+      "shuffled_label_permuted_and_reran_loo": true,
+      "shuffled_label_resamples": 128,
+      "single_class_games_skipped": 2
+    },
+    "s0prime_leak_controls_fired": false,
+    "s0prime_reopened_for_control_bug": true,
+    "silent_bugs_found_count": 1,
+    "source": "BUG_AUDIT",
+    "trusted_nulls": [
+      "experiment_4772_levelup_attempt",
+      "experiment_4774_heldout_first_win_readiness"
+    ]
+  },
+  "sota_handoff": {
+    "arxiv_ids_cited": [
+      "1907.02893",
+      "1911.12247",
+      "2006.15055",
+      "2301.08243",
+      "2505.10819",
+      "2505.13910",
+      "2510.04542",
+      "2605.05138"
+    ],
+    "decision": "sota_handoff_mapped",
+    "experiment_id": 4778,
+    "flagged_for_v440_candidates": [
+      "slot_relational_contrastive_energy_s0prime_guarded",
+      "poe_code_world_model_trust_gate_after_s0prime"
+    ],
+    "leak_robust_roadmap_gate": "flagged_for_v440: leak_robust_eval_gate_for_all_structural_energy_continuations",
+    "methods_mapped_count": 4,
+    "source": "SOTA"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4779",
+    "SCENARIO-CAPSTONE-4779",
+    "SCENARIO-CAPSTONE-4779-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4779-FIELD-PRINCIPLES"
+  ],
+  "submission_package_state": {
+    "decision": "skipped_flagged_adversarial",
+    "experiment_id": 4776,
+    "source": "PACKAGE"
+  },
+  "upstream_oracle_declarations": {
+    "BUG_AUDIT": {
+      "experiment_id": 4775,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HARDWARE": {
+      "experiment_id": 4777,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HELDOUT": {
+      "experiment_id": 4774,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "LEVELUP": {
+      "experiment_id": 4772,
+      "moat_claim_allowed": false,
+      "verifier_is_oracle": true
+    },
+    "PACKAGE": {
+      "experiment_id": 4776,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "S0PRIME": {
+      "experiment_id": 4771,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SELF_PLAY": {
+      "experiment_id": 4773,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SOTA": {
+      "experiment_id": 4778,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    }
+  }
+}
