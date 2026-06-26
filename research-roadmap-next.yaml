@@ -115,7 +115,7 @@ tasks:
     ` imports. Else blocked_structural_features_missing, EXIT. (No GPU/LLM.)\n  1. For each banked game:\
     \ fit an induced engine on a prefix, run it on HELD-OUT transitions to produce\n     induced predictions\
     \ s_hat. Label each by whether s_hat == real s' (correct) or != (wrong/near-miss).\n     Build the\
-    \ dataset = {(features over (s, s_hat), correct?)}. ENSURE both classes are present per game (if\n\
+    \ dataset = {{(features over (s, s_hat), correct?)}}. ENSURE both classes are present per game (if\n\
     \     a game's engine is 0% or 100% accurate on held-out, it contributes only one class -- pool across\
     \ games\n     and report per-game class balance; a fold needs both classes).\n  2. Compute ONLY the\
     \ structural families (object_relational + frame_delta) over (s, s_hat). Fit a logistic head.\n  3.\
@@ -410,7 +410,7 @@ tasks:
     \ direction REOPENS to S1 (origin-matched signal survives) or RETIRES (was an origin leak); the milestone's\
     \ load-bearing result.\"\n  reproducible_total_levels:\n    principle: \"the monotonic ARC progress\
     \ metric carried from the registry, not re-counted.\"\n  cited_upstream_artifacts:\n    principle:\
-    \ \"list of {experiment_id, fields_imported, sha256} -- the audit trail.\"\n  flagged_artifacts_skipped:\n\
+    \ \"list of {{experiment_id, fields_imported, sha256}} -- the audit trail.\"\n  flagged_artifacts_skipped:\n\
     \    principle: \"records which flagged_adversarial artifacts were excluded -- never aggregate a fabricated\
     \ number.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts; 0.0001s\
     \ floor.\"\n"

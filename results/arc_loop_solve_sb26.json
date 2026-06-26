@@ -4,8 +4,16 @@
   "moves": 24,
   "states_expanded": 24,
   "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
-  "hazard_prune": false,
-  "hazard_pruner_stats": null,
+  "hazard_prune": true,
+  "hazard_pruner_stats": {
+    "observed": 24,
+    "pruned": 0,
+    "n_deaths": 0,
+    "lethal_mode": null,
+    "trust": 0.0,
+    "specificity": 0.0,
+    "model_fitted": false
+  },
   "offline_reproduced": true,
   "reproduced_levels": 2,
   "learned_verifier_checkpoint": "models/arc_verifier_sb26.json",
@@ -57,6 +65,22 @@
         "local_constraint",
         "verifier",
         "rule"
+      ]
+    },
+    {
+      "operator": "object_centric_representation_builder_operator",
+      "derived_from_games": [
+        "exp4700_object_centric_perception_proposal_live",
+        "exp4701_amortized_exploration_prior_go_explore_live"
+      ],
+      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+      "selector_tags": [
+        "object_centric",
+        "perception",
+        "representation_builder",
+        "candidate_generation",
+        "graph_explore",
+        "transfer"
       ]
     },
     {
