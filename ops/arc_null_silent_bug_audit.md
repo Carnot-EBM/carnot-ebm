@@ -61,3 +61,17 @@
 | `experiment_4761_structural_energy_s0_core_bet_probe` | `silent_bug_must_reopen` | `s0_origin_probe_leak` | s0_candidate_rows=463<br>origin_probe_rows=926<br>origin_probe_auroc=0.732793<br>near_miss_negative_fraction=0.924188<br>in_sample_auroc=0.846405 |
 | `experiment_4762_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=6<br>exercised_attempts=6<br>reproduced_existing=5<br>timed_no_gate=1 |
 | `experiment_4764_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True |
+
+## Experiment 4775 .439 ARC Null Silent-Bug Audit
+
+- Verdict: `complete_arc_null_silent_bug_audit_3_nulls_1_reopen`
+- Nulls audited: `3`
+- S0' leak controls fired: `False`
+- Silent bugs found: `1`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Null | Verdict | Silent signatures | Evidence |
+|---|---|---|---|
+| `experiment_4771_structural_energy_s0prime_origin_matched` | `silent_bug_must_reopen` | `s0prime_origin_probe_not_refit`, `s0prime_corrigendum_pending` | s0prime_candidate_rows=463<br>s0prime_n_pos=186<br>s0prime_n_neg=277<br>s0prime_contributing_games_with_both_classes=16<br>s0prime_single_class_games_skipped=2<br>origin_matched=True<br>origin_probe_status=origin_matched_single_origin_all_induced<br>origin_probe_refit_on_origin_matched_data=False<br>origin_probe_auroc=0.5<br>shuffled_label_control_auroc=0.503309<br>shuffled_label_resamples=128<br>shuffled_label_module_permutation_loo=True |
+| `experiment_4772_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=1<br>exercised_attempts=1<br>solution_label_count=11<br>reproduced_existing=1<br>new_levels_banked=0<br>reproduced_levels=0 |
+| `experiment_4774_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True |
