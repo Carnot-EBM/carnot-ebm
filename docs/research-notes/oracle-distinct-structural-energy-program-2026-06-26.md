@@ -57,6 +57,21 @@ leak-clean, multi-seed-robust, and forms a descent landscape. **S2 (the off-path
 induced world-models — the FIRST live-path-reachable stage, where the energy starts adding value to
 the actual agent) is now authorized** per the staged gate; pre-stage it for `.441.
 
+- **S2 (`.441 A1, exp4791) — INCONCLUSIVE (a DEGENERATE non-test), NOT bounded.** S2 reported
+  `energy_minus_accuracy_delta = 0.0` (CI [0,0]) and a `no_live_trust_value` verdict — but the
+  candidate engine pools were behaviorally degenerate: 2/5 held-out games had bit-identical candidate
+  predictions (same off-path energy + cell_recall), a 3rd had equal recalls, so only **2/5 games**
+  genuinely tested the selection (and in those the energy agreed with the accuracy gate). The 0-delta
+  is an artifact of non-diverse candidates, not evidence the energy lacks value. **The operator caught
+  the over-claim ("are we sure about S2?").** Outcome: (1) a `DEGENERATE_CANDIDATE_POOL` detector
+  shipped in `adversarial_verify.py` (`check_engine_selection_candidate_diversity`, adversarially
+  hardened to be non-gameable — independent floor, PASS not exempt, meaningful-spread, negative-delta);
+  (2) **S2-v2** (`.442 A1, exp4801) re-runs with an ENFORCED behaviorally-diverse candidate pool +
+  per-game logging + an effective-games gate + positive-control for any BOUNDED verdict. **The energy
+  direction is NOT paused on S2** — it is awaiting the S2-v2 real test. (The `.441 capstone's
+  honest_verdict string says "bounded"; that is a mislabel — it correctly SKIPPED the flagged artifact
+  and imported no numbers, but the true status is INCONCLUSIVE; the `.442 transition records it as such.)
+
 ---
 
 ## 0. Why this is the only direction left (settled, not re-derived)
