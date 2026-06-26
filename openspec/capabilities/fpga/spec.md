@@ -12122,3 +12122,81 @@ principle-annotated required fields, `kv260_ssh_reachable`, deterministic
 precondition.
 
 **Implementation status:** Implemented (Exp 4777)
+
+---
+
+### REQ-HW-4787
+
+**Title:** KV260 hardware continuity MUST preserve SSH-only board state and next-step discipline for Exp 4787
+
+**Description:**
+Experiment 4787 MUST produce `results/experiment_4787_kv260_continuity.json`
+as the next KV260 hardware-continuity artifact. The precondition MUST be board
+SSH reachability via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`;
+host SD-card device nodes are permanently retired for KV260 and MUST NOT be used
+as a precondition. If that SSH command returns non-zero, the artifact MUST stop
+honestly with `honest_verdict=blocked_kv260_ssh_unreachable`, record the failed
+SSH precondition in `preconditions_checked`, set `kv260_ssh_reachable=false`,
+skip `xmutil` and board-state commands, and record a concrete operator/audit
+step to restore SSH and rerun the SSH-only continuity check.
+
+When SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'` and
+preserve that direct transcript to report the loaded overlay. If non-sudo
+`xmutil` reports that root privileges are required, the experiment MAY retry
+with `ssh kria 'sudo xmutil listapps'` as a read-only board-state fallback and
+MUST preserve both transcripts. The experiment MUST also record lightweight
+board state over SSH, including hostname, kernel/OS line, uptime, and UIO device
+count. The reachable-board `next_forward_step` MUST record the next concrete
+KV260 track step as:
+`GRADUATED: KV260 terminal criteria met; continue per-milestone SSH-only continuity checks. Next concrete step: keep the board in the continuity rotation and queue an overlay-state audit only if a future SSH or xmutil probe changes.`
+If SSH is unreachable, the blocked `next_forward_step` MUST queue the operator
+and audit action as:
+`OPERATOR ACTION: restore KV260 SSH reachability, then rerun the SSH-only continuity check; operator/audit queue: document the SSH outage and keep host SD-card preconditions retired.`
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; reachable + state recorded is success_/complete_; unreachable is blocked_kv260_ssh_unreachable.`
+- `inference_substrate`: `hardware_smoke (SSH-attached board test).`
+- `kv260_ssh_reachable`: `the SSH reachability check -- the ONLY valid KV260 precondition (not host SD-card presence).`
+- `preconditions_checked`: `records the SSH check so a wrong-mechanism precondition cannot escalate the operator for a no-op.`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4787_kv260_continuity.py` writes
+  `results/experiment_4787_kv260_continuity.json`.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `preconditions_checked` records the SSH BatchMode command listed above and
+  contains no host SD-card device-node precondition.
+- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, no `xmutil` or board-state command is run,
+  and `next_forward_step` queues an operator/audit step to restore SSH and
+  rerun the SSH-only continuity check.
+- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
+  `success: kv260_continuity_recorded`, the direct `ssh kria 'xmutil listapps'`
+  transcript is preserved, a sudo read-only fallback transcript is preserved
+  when root is required, the loaded overlay is reported when present, lightweight
+  board state is recorded, and `next_forward_step` records the next concrete
+  KV260 continuity action.
+- `verifier_is_oracle=false`, `random_seed=4787`, `field_principles`,
+  `duration_s`, `command_probes`, and a stable `reproducibility_checksum` are
+  present.
+
+**Implementation status:** Implemented (Exp 4787)
+
+---
+
+### SCENARIO-HW-4787
+
+**Scenario:** Exp 4787 records SSH-attached KV260 continuity or an honest SSH-unreachable block.
+
+**Given:** The KV260 continuity task requires SSH reachability of the board and
+must not use a host SD-card device-node precondition.
+**When:** Experiment 4787 checks SSH and, only when reachable, records the
+direct `xmutil listapps` transcript plus lightweight board state over SSH.
+**Then:** It writes `results/experiment_4787_kv260_continuity.json` with a
+terminal-prefixed reachable `honest_verdict`, `inference_substrate=hardware_smoke`,
+principle-annotated required fields, `kv260_ssh_reachable`, deterministic
+`random_seed=4787`, a concrete `next_forward_step`, and no host SD-card
+precondition.
+
+**Implementation status:** Implemented (Exp 4787)
