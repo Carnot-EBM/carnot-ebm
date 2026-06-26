@@ -8059,6 +8059,66 @@ When Experiment 4772 writes `results/experiment_4772_levelup_attempt.json`
 Then the checksum is deterministic, `schema_errors=[]`, and the artifact
 contains all required principle-annotated fields.
 
+### REQ-ARC-WMTE-4782: ARC Rotated Level-Up Attempt Guarantee
+
+Experiment 4782 SHALL run the standing ARC solve loop on exactly one rotated
+target. It SHALL precheck `arc_solver_kit.offline_arcade()`, read
+`ops/arc_solve_registry.yaml`, skip the recently retired `ka59` residual and
+the recently banked `re86` self-play target, prefer the public rotation set
+`lf52`, `sb26`, and `bp35`, and otherwise select a +1 deepen on the shallowest
+already-reproduced standing-loop target. If the registry already records every
+public rotation target at a reproduced depth, Experiment 4782 SHALL treat the
+selected public game as a deepen attempt and compare the terminal loop result
+against the registry's prior `levels_reproduced`.
+
+Experiment 4782 SHALL write
+`results/experiment_4782_levelup_attempt.json` with principle-annotated
+top-level fields for `honest_verdict`, `solve_provenance`,
+`offline_reproduced`, `reproduced_levels`, `inference_substrate`,
+`verifier_is_oracle`, `preconditions_checked`, `target_game`,
+`rotation_selection`, `attempted_games`, `dead_ends`, `registry_update`,
+`retire_if_same_verdict`, `reproducibility_checksum`, and `schema_errors`. A
+level counts only when the offline reproduction gate reaches a strictly higher
+level than the registry prior. If the selected target does not bank a new level,
+the artifact SHALL use a terminal
+`complete_<game>_no_new_level_residual_<cause>` verdict, set
+`offline_reproduced=false`, set `reproduced_levels=0`, preserve the registry
+total, set `retire_if_same_verdict=true`, and record the residual so the next
+milestone rotates rather than reattempting the same verdict.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- the agent advanced via its OWN attempts + runtime RE; NOT outer_loop_re (CRITICAL)."
+- `offline_reproduced`: principle "only reproduced levels count -- a live-recorded trajectory alone is provisional."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor)."
+- `verifier_is_oracle`: principle "the reproduction gate is execution-grounded (true); this is a SOLVE task, not a moat claim."
+- `preconditions_checked`: principle "records arcade/env/generator checks so a missing-resource run emits blocked_, never a fabricated solve."
+
+#### SCENARIO-ARC-WMTE-4782-ROTATION-TARGET
+
+Given the ARC registry already records `lf52`, `sb26`, and `bp35` as reproduced
+and the milestone retires `ka59` and `re86` from the target pool
+When Experiment 4782 selects a rotation target
+Then it selects a public rotation deepen target, records the registry prior and
+target level, and records why the retired targets were excluded.
+
+#### SCENARIO-ARC-WMTE-4782-REPRODUCTION-GATE
+
+Given the standing loop result reports `offline_reproduced=true` but reaches
+only the registry's prior level
+When Experiment 4782 builds its terminal artifact
+Then `new_levels_banked=0`, `offline_reproduced=false`, `reproduced_levels=0`,
+and the dead-end entry explains that the result reproduced an existing depth.
+
+#### SCENARIO-ARC-WMTE-4782-STABLE-ARTIFACT
+
+Given the selected rotation target has a terminal loop artifact
+When Experiment 4782 writes `results/experiment_4782_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, and the artifact
+contains all required principle-annotated fields.
+
 ### REQ-ARC-WMTE-4763: ARC Self-Play Verifier Checkpoint Refresh
 
 Experiment 4763 SHALL run the standing ARC self-play loop on a banked game and
