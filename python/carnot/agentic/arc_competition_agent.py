@@ -101,6 +101,7 @@ SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_MODE = "persistent_aem_plus_optional_cnn
 SUBMITTED_GOAL_ENERGY_ENABLED = True
 SUBMITTED_GOAL_ENERGY_ALPHA = 0.9
 SUBMITTED_GOAL_ENERGY_BETA = 0.1
+SUBMITTED_GOAL_GUIDANCE_LAMBDA = 1.0
 SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED = True
 SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA = 0.0
 SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA = 1.0
@@ -1866,11 +1867,13 @@ class E3AgentPolicy:
         active_probe_controller: bool | None = None,
         active_probe_budget: int = 2,
         active_probe_concentration_threshold: float = 0.9,
+        goal_guidance_lambda: float = SUBMITTED_GOAL_GUIDANCE_LAMBDA,
     ) -> None:
         import os
 
         self.short = str(game_id).split("-", 1)[0]
         self.target_levels = int(target_levels)
+        self.goal_guidance_lambda = max(0.0, float(goal_guidance_lambda))
         if active_probe_controller is None:
             active_probe_controller = os.environ.get("CARNOT_ARC_ACTIVE_PROBE") == "1"
         self.active_probe_controller_enabled = bool(active_probe_controller)
@@ -2212,6 +2215,63 @@ class E3AgentPolicy:
         label = f"L{self._current_goal_level or '?'}_induced_goal_predicate"
         self.explorer.set_goal_bias(_bias, label=label)
 
+    def _goal_energy_for_plan(self, is_done):
+        """SCENARIO-ARC-WMTE-4821-LIVE-PLAN-WIRING: lambda-gated model planner energy."""
+
+        if self.goal_guidance_lambda <= 0.0 or not callable(is_done):
+            return None
+
+        import os
+
+        import numpy as np
+
+        exemplar = getattr(self, "_previous_level_complete_grid", None)
+        use_graded = os.environ.get("CARNOT_ARC_GRADED_GOAL_BIAS") == "1" and exemplar is not None
+        exemplar_arr = np.asarray(exemplar) if use_graded else None
+        scale = float(self.goal_guidance_lambda)
+
+        def _energy(grid: Any) -> float:
+            try:
+                if is_done(grid):
+                    return 0.0
+            except Exception:
+                pass
+            if exemplar_arr is not None:
+                g = np.asarray(grid)
+                if g.shape != exemplar_arr.shape:
+                    return scale
+                return scale * float(np.mean(g != exemplar_arr))
+            return scale
+
+        return _energy
+
+    @staticmethod
+    def _planner_accepts_goal_energy(plan_in_model) -> bool:
+        import inspect
+
+        try:
+            signature = inspect.signature(plan_in_model)
+        except (TypeError, ValueError):
+            return True
+        if "goal_energy" in signature.parameters:
+            return True
+        return any(
+            param.kind is inspect.Parameter.VAR_KEYWORD
+            for param in signature.parameters.values()
+        )
+
+    def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid):
+        goal_energy = self._goal_energy_for_plan(is_done)
+        if goal_energy is None or not self._planner_accepts_goal_energy(plan_in_model):
+            return plan_in_model(engine, is_done, start_grid)
+        return plan_in_model(engine, is_done, start_grid, goal_energy=goal_energy)
+
+    def _guided_plan_in_model(self, plan_in_model):
+        def _wrapped(engine, is_done, start_grid):
+            return self._call_plan_in_model(plan_in_model, engine, is_done, start_grid)
+
+        return _wrapped
+
     def _next_plan_move(self) -> tuple:
         step = self.plan[self.pi]
         self.pi += 1
@@ -2459,7 +2519,12 @@ class E3AgentPolicy:
                 attempt["ttt_prior_engine"] = _diag
                 if _eng is not None and self.root_grid is not None:
                     self._install_goal_bias(_isdone)
-                    _plan = e3.plan_in_model(_eng, _isdone, self.root_grid)
+                    _plan = self._call_plan_in_model(
+                        e3.plan_in_model,
+                        _eng,
+                        _isdone,
+                        self.root_grid,
+                    )
                     if _plan:
                         self.plan = _plan
                         attempt["planned"] = True
@@ -2510,7 +2575,7 @@ class E3AgentPolicy:
                     proposer=reinduction_proposer,
                     candidate_provider=self._world_model_candidates,
                     load_engine=reinduction_load_engine,
-                    plan_in_model=e3.plan_in_model,
+                    plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
                     max_rounds=MAX_REFINEMENT_ROUNDS,
                     min_heldout_accuracy=1.0,
                     previous_level_complete_grid=self._previous_level_complete_grid,
@@ -2709,7 +2774,7 @@ class E3AgentPolicy:
             self._install_goal_bias(is_done)
             # plan ENTIRELY in the model (zero real actions); execute phase RESETs then
             # replays this plan in the real env, halting on divergence.
-            plan = e3.plan_in_model(engine, is_done, self.root_grid)
+            plan = self._call_plan_in_model(e3.plan_in_model, engine, is_done, self.root_grid)
             if plan:
                 self.plan = plan
                 attempt["planned"] = True
@@ -2728,7 +2793,7 @@ class E3AgentPolicy:
                     final_goal=is_done,
                     start_grid=self.root_grid,
                     subgoals=subgoals,
-                    plan_in_model=e3.plan_in_model,
+                    plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
                     value_head=self.value_head,
                     max_subgoals=self.subgoal_budget,
                 )
@@ -2815,6 +2880,7 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_source": GOAL_ENERGY_SOURCE,
     "goal_energy_alpha": SUBMITTED_GOAL_ENERGY_ALPHA,
     "goal_energy_beta": SUBMITTED_GOAL_ENERGY_BETA,
+    "goal_guidance_lambda": SUBMITTED_GOAL_GUIDANCE_LAMBDA,
     "goal_energy_candidate_guidance_enabled": (
         SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED
     ),
