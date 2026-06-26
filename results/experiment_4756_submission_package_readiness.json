@@ -1,0 +1,143 @@
+{
+  "duration_s": 2.921863,
+  "experiment": "experiment_4756_submission_package_readiness",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; a package-ready run is success_/passed_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 100us floor."
+    },
+    "operator_checklist": {
+      "principle": "the steps the OPERATOR performs to submit -- the task ends at the checklist, not the submission."
+    },
+    "package_builds": {
+      "principle": "the package assembles + the entrypoint smoke-runs offline -- the readiness gate."
+    },
+    "preconditions_checked": {
+      "principle": "records the GGUF/binary checks."
+    },
+    "submission_package_ready": {
+      "principle": "True only if OPERATOR-ready; this task NEVER submits (operator-only external publication)."
+    }
+  },
+  "honest_verdict": "success_package_ready_offline_smoke_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts; 100us floor.",
+  "operator_checklist": [
+    "OPERATOR-ACTION: Confirm results/experiment_4756_submission_package_readiness.json is ready and submitted_to_leaderboard is false.",
+    "OPERATOR-ACTION: In Kaggle, open kernel iancblenke/carnot-arc-agi3-submission with GPU enabled and internet disabled.",
+    "OPERATOR-ACTION: Attach the ARC-AGI-3 competition plus datasets carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf.",
+    "OPERATOR-ACTION: Save & Run the kernel and wait for the non-rerun submission.parquet output before any external publication step.",
+    "OPERATOR-ACTION: Review logs for LLM TIER RESOLVED or LLM GENERATOR HEALTHY, and record any CPU-only degradation before submit.",
+    "OPERATOR-ACTION: Submit only through the operator-controlled Kaggle UI or API after the above checks; this experiment never submits."
+  ],
+  "operator_only": true,
+  "package_builds": {
+    "assembled": true,
+    "assembly": {
+      "assembled": true,
+      "blocked_resource": "",
+      "entrypoint_compiles": true,
+      "file_hashes": {
+        "kernel-metadata.json": "sha256:40629bd0ded774706e3356cddeb0e62d11178ab0f7e64f71e517296c423b6cc4",
+        "main.py": "sha256:893d9c196473c07ed99242494213dab4fa62f507a2173f30591d90065b56a03f"
+      },
+      "files": [
+        "kernel-metadata.json",
+        "main.py"
+      ],
+      "sha256": "sha256:900bd246f3c61ee8710ce53c2d9d0ff66a936459bcf76ce0e5b4958be55184c6"
+    },
+    "blocked_resource": "",
+    "clean_env": true,
+    "clean_env_smoke_ran": true,
+    "entrypoint_compiles": true,
+    "entrypoint_smoke": {
+      "blocked_resource": "",
+      "clean_env": true,
+      "passed": true,
+      "policy_class": "E3AgentPolicy",
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "{\"constructed\": true, \"policy_class\": \"E3AgentPolicy\"}\n"
+    },
+    "manifest_complete": true,
+    "requirements_complete": true,
+    "submitted_to_leaderboard": false
+  },
+  "package_manifest": {
+    "blocked_resources": [],
+    "checks": {
+      "code_file_main": true,
+      "competition_attached": true,
+      "datasets_attached": true,
+      "gpu_enabled": true,
+      "internet_off": true,
+      "main_present": true,
+      "metadata_present": true,
+      "script_kernel": true
+    },
+    "code_file": "main.py",
+    "competition_sources": [
+      "arc-prize-2026-arc-agi-3"
+    ],
+    "complete": true,
+    "dataset_sources": [
+      "iancblenke/carnot-agent-code",
+      "iancblenke/carnot-llamacpp-mtp-binary",
+      "iancblenke/carnot-qwen35-9b-mtp-gguf"
+    ],
+    "machine_shape": "NvidiaL4",
+    "metadata_path": "scripts/kaggle/submission_kernel/kernel-metadata.json"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_or_opencode_md_read": true,
+    "llama_server_binary_present": true,
+    "llama_server_paths": [
+      "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    ],
+    "ok": true,
+    "qwen35_mtp_gguf_cached": true,
+    "qwen35_mtp_gguf_paths": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    ],
+    "spec_has_req_4756": true,
+    "submission_kernel_present": true
+  },
+  "random_seed": 4756,
+  "reproducibility_checksum": "sha256:f876383dd1e94855a5bb01bef66cc6717cbde1b96e7eccaa3492a4b6cbac5dc0",
+  "requirements_check": {
+    "blocked_resources": [],
+    "checks": {
+      "agent_framework_copy": true,
+      "arc_agi_wheel": true,
+      "dotenv_wheel": true,
+      "gguf_env": true,
+      "llama_server_env": true,
+      "offline_pip_no_index": true,
+      "placeholder_parquet": true,
+      "qwen35_mtp_resolution": true,
+      "rerun_gateway_mode": true
+    },
+    "complete": true,
+    "offline_dependency_sources": [
+      "competition arc_agi_3_wheels",
+      "kaggle base image pandas/parquet stack",
+      "attached carnot-agent-code dataset",
+      "attached llama-server binary dataset",
+      "attached Qwen3.5-9B-MTP GGUF dataset"
+    ],
+    "source_path": "scripts/kaggle/submission_kernel/main.py"
+  },
+  "schema": "carnot.exp4756.submission_package_readiness.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4756",
+    "SCENARIO-CAPSTONE-4756",
+    "SCENARIO-CAPSTONE-4756-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4756-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": true,
+  "submitted_to_leaderboard": false
+}
