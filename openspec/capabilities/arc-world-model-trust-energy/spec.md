@@ -8374,6 +8374,68 @@ Then it writes a blocked artifact with the missing source in
 `preconditions_checked`, no silent-bug fabrication, no markdown append, and a
 stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4785: .440 ARC Null Silent-Bug Audit
+
+Experiment 4785 SHALL audit the `.440` ARC null and control-bearing artifacts
+before their negative or pass/bound verdicts are trusted as mechanism evidence.
+The audit SHALL read
+`results/experiment_4781_structural_energy_s1_contrastive_landscape.json`,
+`results/experiment_4782_levelup_attempt.json`, and
+`results/experiment_4784_heldout_first_win_readiness.json`. Missing `.440`
+source artifacts SHALL produce a blocked artifact rather than a fabricated
+audit.
+
+The audit SHALL cross-check each source artifact's exercised-evidence fields.
+For S1 it SHALL verify that the origin-probe leak control was recomputed or
+refit on the origin-matched S1 data rather than copied from S0/S0', that the
+shuffled-label control actually permuted labels and reran LOO energy metrics,
+that the denoising-direction agreement came from executable energy-direction
+code rather than a hardcoded artifact value, and that at least ten distinct
+random seeds contributed to the multi-seed result. For the level-up no-bank
+residual it SHALL verify a real attempted-game ledger, solution labels, and
+reproduction gate. For the held-out first-win null it SHALL verify the held-out
+attempt floor, positive-control parity, and the flat `0.04` methodology note.
+It SHALL flag silent bugs for dead or identity engines, byte-identical A/B arms,
+representation no-ops, and any S1 leak or denoising control that did not
+genuinely fire.
+
+Experiment 4785 SHALL write
+`results/experiment_4785_silent_bug_audit.json` and append a human-readable
+section to `ops/arc_null_silent_bug_audit.md`. The artifact SHALL include
+principle-annotated top-level fields for `honest_verdict`, `nulls_audited`,
+`s1_controls_fired`, and `inference_substrate`, plus per-null verdicts,
+silent-bug findings, trusted nulls, S1 control checks, preconditions, checksums
+for audited artifacts, duration, random seed, and a stable reproducibility
+checksum. The audit SHALL make no solve, leaderboard, training, or live-
+inference claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `nulls_audited`: principle "count of nulls re-examined -- a null that tested dead code is not trustworthy."
+- `s1_controls_fired`: principle "the load-bearing check -- the leak + denoising controls must have genuinely executed, else S1's pass/bound verdict is uninterpretable."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4785-SILENT-BUG-AUDIT
+
+Given the `.440` S1, level-up no-bank, and held-out first-win artifacts are
+present
+When Experiment 4785 cross-checks exercised-evidence fields
+Then it writes `results/experiment_4785_silent_bug_audit.json`, appends to
+`ops/arc_null_silent_bug_audit.md`, classifies S1 as a silent bug when any leak
+or denoising control did not genuinely execute, keeps genuinely exercised
+no-bank and flat first-win nulls trusted only when their evidence fields are
+non-degenerate, and reports the complete audit with
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-ARC-WMTE-4785-BLOCKED-PRECONDITION
+
+Given any required `.440` source artifact is missing
+When Experiment 4785 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, no markdown append, and a
+stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts

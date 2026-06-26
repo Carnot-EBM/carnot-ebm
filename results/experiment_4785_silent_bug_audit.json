@@ -1,0 +1,245 @@
+{
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "audited_artifact_checksums": {
+    "python/carnot/experiment_4781_structural_energy_s1_contrastive_landscape.py": "sha256:e9376a097544dad2441b20f301cf49e64f9a653ee9fe3651edfb8a84fc6ab8ae",
+    "results/experiment_4781_structural_energy_s1_contrastive_landscape.json": "sha256:eebfb0b4dafedc47b1dfc4dae91392aea263b761712decf6df8d1ec136a531f7",
+    "results/experiment_4782_levelup_attempt.json": "sha256:cc7ca4f07fc1e7d29a3a7c767ded3077398fb41b41246bcccd12e30328f6350b",
+    "results/experiment_4784_heldout_first_win_readiness.json": "sha256:2ae3d8ca6bbf80ceb2fc11f0ac229ac14ac97b45cca608f1530908987efded28"
+  },
+  "audited_artifacts": [
+    "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+    "results/experiment_4782_levelup_attempt.json",
+    "results/experiment_4784_heldout_first_win_readiness.json"
+  ],
+  "duration_s": 0.001139,
+  "experiment": "experiment_4785_silent_bug_audit",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined -- a null that tested dead code is not trustworthy."
+    },
+    "s1_controls_fired": {
+      "principle": "the load-bearing check -- the leak + denoising controls must have genuinely executed, else S1's pass/bound verdict is uninterpretable."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_1_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "artifact_path": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+      "exercise_evidence": [
+        "s1_candidate_rows=463",
+        "s1_n_pos=186",
+        "s1_n_neg=277",
+        "origin_matched=True",
+        "origin_probe_status=origin_matched_single_origin_all_induced",
+        "origin_probe_refit_on_origin_matched_data=False",
+        "origin_probe_auroc=0.5",
+        "shuffled_label_control_auroc=0.493356",
+        "shuffled_label_resamples=16",
+        "shuffled_label_module_permutation_loo=True",
+        "denoising_direction_executed=True",
+        "denoising_direction_agreement=0.622339",
+        "n_seeds=10",
+        "distinct_seed_count=10"
+      ],
+      "null_id": "experiment_4781_structural_energy_s1_contrastive_landscape",
+      "s1_control_checks": {
+        "all_controls_fired": false,
+        "candidate_rows": 463,
+        "denoising_direction_agreement": 0.6223390275952694,
+        "denoising_direction_executed": true,
+        "denoising_direction_method": "same-heldout-game wrong->correct feature-space midpoint must lower linear energy",
+        "denoising_direction_module_execution": true,
+        "distinct_seed_count": 10,
+        "n_neg": 277,
+        "n_pos": 186,
+        "n_seeds": 10,
+        "origin_matching_real": true,
+        "origin_probe_auroc": 0.5,
+        "origin_probe_passed": true,
+        "origin_probe_refit_on_origin_matched_data": false,
+        "origin_probe_status": "origin_matched_single_origin_all_induced",
+        "per_seed_metric_count": 10,
+        "random_seeds_distinct": true,
+        "random_seeds_used": [
+          4781,
+          4782,
+          4783,
+          4784,
+          4785,
+          4786,
+          4787,
+          4788,
+          4789,
+          4790
+        ],
+        "seed_floor_met": true,
+        "shuffled_label_control_auroc": 0.49335645814441664,
+        "shuffled_label_module_permutation_loo": true,
+        "shuffled_label_permuted_and_reran_loo": true,
+        "shuffled_label_resamples": 16
+      },
+      "s1_controls_fired": false,
+      "silent_bug_signatures": [
+        "s1_origin_probe_not_refit"
+      ],
+      "verdict": "silent_bug_must_reopen"
+    },
+    {
+      "artifact_path": "results/experiment_4782_levelup_attempt.json",
+      "exercise_evidence": [
+        "levelup_attempts=1",
+        "exercised_attempts=1",
+        "solution_label_count=42",
+        "reproduced_existing=1",
+        "new_levels_banked=0",
+        "reproduced_levels=0"
+      ],
+      "null_id": "experiment_4782_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "artifact_path": "results/experiment_4784_heldout_first_win_readiness.json",
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True"
+      ],
+      "null_id": "experiment_4784_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "milestone_440_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "s1_module_path": "python/carnot/experiment_4781_structural_energy_s1_contrastive_landscape.py",
+    "s1_module_present": true,
+    "source_artifacts_present": true
+  },
+  "random_seed": 4785,
+  "reproducibility_checksum": "sha256:82c5843dd8b0a944b508560df624c2f8128b36ad5b93ad3d1195a2a7ba4bbb44",
+  "s1_control_checks": {
+    "all_controls_fired": false,
+    "candidate_rows": 463,
+    "denoising_direction_agreement": 0.6223390275952694,
+    "denoising_direction_executed": true,
+    "denoising_direction_method": "same-heldout-game wrong->correct feature-space midpoint must lower linear energy",
+    "denoising_direction_module_execution": true,
+    "distinct_seed_count": 10,
+    "n_neg": 277,
+    "n_pos": 186,
+    "n_seeds": 10,
+    "origin_matching_real": true,
+    "origin_probe_auroc": 0.5,
+    "origin_probe_passed": true,
+    "origin_probe_refit_on_origin_matched_data": false,
+    "origin_probe_status": "origin_matched_single_origin_all_induced",
+    "per_seed_metric_count": 10,
+    "random_seeds_distinct": true,
+    "random_seeds_used": [
+      4781,
+      4782,
+      4783,
+      4784,
+      4785,
+      4786,
+      4787,
+      4788,
+      4789,
+      4790
+    ],
+    "seed_floor_met": true,
+    "shuffled_label_control_auroc": 0.49335645814441664,
+    "shuffled_label_module_permutation_loo": true,
+    "shuffled_label_permuted_and_reran_loo": true,
+    "shuffled_label_resamples": 16
+  },
+  "s1_controls_fired": false,
+  "schema": "carnot.arc.milestone_440_silent_bug_audit_4785.v1",
+  "silent_bugs_found": [
+    {
+      "artifact_path": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+      "exercise_evidence": [
+        "s1_candidate_rows=463",
+        "s1_n_pos=186",
+        "s1_n_neg=277",
+        "origin_matched=True",
+        "origin_probe_status=origin_matched_single_origin_all_induced",
+        "origin_probe_refit_on_origin_matched_data=False",
+        "origin_probe_auroc=0.5",
+        "shuffled_label_control_auroc=0.493356",
+        "shuffled_label_resamples=16",
+        "shuffled_label_module_permutation_loo=True",
+        "denoising_direction_executed=True",
+        "denoising_direction_agreement=0.622339",
+        "n_seeds=10",
+        "distinct_seed_count=10"
+      ],
+      "null_id": "experiment_4781_structural_energy_s1_contrastive_landscape",
+      "s1_control_checks": {
+        "all_controls_fired": false,
+        "candidate_rows": 463,
+        "denoising_direction_agreement": 0.6223390275952694,
+        "denoising_direction_executed": true,
+        "denoising_direction_method": "same-heldout-game wrong->correct feature-space midpoint must lower linear energy",
+        "denoising_direction_module_execution": true,
+        "distinct_seed_count": 10,
+        "n_neg": 277,
+        "n_pos": 186,
+        "n_seeds": 10,
+        "origin_matching_real": true,
+        "origin_probe_auroc": 0.5,
+        "origin_probe_passed": true,
+        "origin_probe_refit_on_origin_matched_data": false,
+        "origin_probe_status": "origin_matched_single_origin_all_induced",
+        "per_seed_metric_count": 10,
+        "random_seeds_distinct": true,
+        "random_seeds_used": [
+          4781,
+          4782,
+          4783,
+          4784,
+          4785,
+          4786,
+          4787,
+          4788,
+          4789,
+          4790
+        ],
+        "seed_floor_met": true,
+        "shuffled_label_control_auroc": 0.49335645814441664,
+        "shuffled_label_module_permutation_loo": true,
+        "shuffled_label_permuted_and_reran_loo": true,
+        "shuffled_label_resamples": 16
+      },
+      "s1_controls_fired": false,
+      "silent_bug_signatures": [
+        "s1_origin_probe_not_refit"
+      ],
+      "verdict": "silent_bug_must_reopen"
+    }
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4785",
+    "SCENARIO-ARC-WMTE-4785-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4785-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4782_levelup_attempt",
+    "experiment_4784_heldout_first_win_readiness"
+  ],
+  "verifier_is_oracle": false
+}
