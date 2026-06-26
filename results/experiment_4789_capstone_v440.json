@@ -1,0 +1,466 @@
+{
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4781,
+      "fields_imported": [
+        "honest_verdict",
+        "s1_gate_passed",
+        "s2_authorized",
+        "energy_ranking_loo_auroc_mean",
+        "energy_ranking_loo_auroc_ci95",
+        "energy_ranking_loo_auroc_per_seed",
+        "n_seeds",
+        "denoising_direction_agreement",
+        "origin_probe_auroc",
+        "origin_probe",
+        "shuffled_label_control_auroc",
+        "controls",
+        "per_family_loo",
+        "per_game_loo",
+        "n_candidate_rows",
+        "n_pos",
+        "n_neg",
+        "n_held_out_games",
+        "random_seeds_used",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:eebfb0b4dafedc47b1dfc4dae91392aea263b761712decf6df8d1ec136a531f7"
+    },
+    {
+      "experiment_id": 4782,
+      "fields_imported": [
+        "honest_verdict",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "registry_update",
+        "attempted_games",
+        "dead_ends",
+        "solve_provenance",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:cc7ca4f07fc1e7d29a3a7c767ded3077398fb41b41246bcccd12e30328f6350b"
+    },
+    {
+      "experiment_id": 4783,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_checkpoint_refreshed",
+        "target_game",
+        "self_play_residual",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "solve_provenance"
+      ],
+      "sha256": "sha256:430dae2503d7a67b08ea328d9e25e53d41c245b75b60b0b0bc3192ef4c3d152b"
+    },
+    {
+      "experiment_id": 4784,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "first_win_baseline",
+        "prior_best_heldout_first_win_rate",
+        "heldout_first_win_delta_vs_baseline",
+        "heldout_first_win_delta_vs_prior_best",
+        "heldout_variant_attempts",
+        "positive_control_passed",
+        "parity_test_green",
+        "null_delta_methodology_note"
+      ],
+      "sha256": "sha256:2ae3d8ca6bbf80ceb2fc11f0ac229ac14ac97b45cca608f1530908987efded28"
+    },
+    {
+      "experiment_id": 4785,
+      "fields_imported": [
+        "honest_verdict",
+        "nulls_audited",
+        "trusted_nulls",
+        "silent_bugs_found",
+        "per_null_verdicts",
+        "s1_controls_fired",
+        "s1_control_checks",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:78369cb374a7c1048734874d73f5dbf7a9f615448dada6725c2705a820a56fe4"
+    },
+    {
+      "experiment_id": 4786,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "submitted_to_leaderboard",
+        "operator_only",
+        "vram_estimate_gb",
+        "package_builds"
+      ],
+      "sha256": "sha256:0ca7bc8bd1319bed9ac738646979643fee5af961994df40bb918dff2c773afb0"
+    },
+    {
+      "experiment_id": 4787,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "board_state",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:698801b9c32770d59bfa85cd97912e976a2ebed2de01636bf306178e18985ba5"
+    },
+    {
+      "experiment_id": 4788,
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_for_v441",
+        "methods_mapped",
+        "s1_context",
+        "arxiv_ids_cited"
+      ],
+      "sha256": "sha256:2241350fc73e530b7698ee76546e50aef14f843dd4547d3d63101f78b6f3831f"
+    }
+  ],
+  "duration_s": 0.414376,
+  "experiment": "experiment_4789_capstone_v440",
+  "experiment_id": 4789,
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; capstone_ready=true is success_/complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric carried from the registry, not re-counted."
+    },
+    "s1_structural_energy_verdict": {
+      "principle": "the headline -- usable energy LANDSCAPE (S2 authorized) or BOUNDED; recorded from the gate numbers even if the conductor stale-flagged it."
+    },
+    "stale_false_positive_notes": {
+      "principle": "records which conductor flags were stale-linter false-positives (live re-check clean) vs genuine -- so the headline is not lost to a known false flag."
+    }
+  },
+  "flagged_artifacts_skipped": [],
+  "hardware_continuity": {
+    "board_hostname": "kv260",
+    "decision": "kv260_reachable",
+    "experiment_id": 4787,
+    "kv260_ssh_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "source": "HARDWARE",
+    "uio_device_count": 5
+  },
+  "heldout_readiness": {
+    "decision": "flat_null_no_readiness_gain",
+    "experiment_id": 4784,
+    "first_win_baseline": 0.04,
+    "heldout_first_win_delta_vs_baseline": 0.0,
+    "heldout_first_win_delta_vs_prior_best": 0.0,
+    "heldout_first_win_rate": 0.04,
+    "heldout_variant_attempts": 100,
+    "null_delta_methodology_note_present": true,
+    "parity_test_green": true,
+    "positive_control_passed": true,
+    "prior_best_heldout_first_win_rate": 0.04,
+    "source": "HELDOUT"
+  },
+  "honest_verdict": "success_s1_structural_energy_usable_landscape_s2_authorized",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "levelup_bank": {
+    "experiment_id": 4782,
+    "moat_claim": false,
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "registry_updated": false,
+    "reproduced_levels": 0,
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "reproducible_total_levels_delta": 0,
+    "source": "LEVELUP",
+    "target_game": "lf52",
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4789": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "BUG_AUDIT": {
+        "path": "results/experiment_4785_silent_bug_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HARDWARE": {
+        "path": "results/experiment_4787_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HELDOUT": {
+        "path": "results/experiment_4784_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "LEVELUP": {
+        "path": "results/experiment_4782_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "PACKAGE": {
+        "path": "results/experiment_4786_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "S1": {
+        "path": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SELF_PLAY": {
+        "path": "results/experiment_4783_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SOTA": {
+        "path": "results/experiment_4788_sota_ingestion_energy_guided_search.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 4789,
+  "readiness": {
+    "heldout_decision": "flat_null_no_readiness_gain",
+    "ready_for_operator_submit": false,
+    "reason": "requires_usable_s1_clean_package_and_heldout_gain",
+    "s1_verdict": "usable_landscape",
+    "submission_package_decision": "package_ready_operator_only"
+  },
+  "reproducibility_checksum": "sha256:d805ed1637c6053e7053768c95c2464397e77c6e3ba8682203efac19e2cefa47",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4789_capstone_v440.json",
+  "s1_structural_energy_verdict": {
+    "artifact_skipped": false,
+    "denoising_direction_agreement": 0.622339027595,
+    "denoising_direction_passed": true,
+    "energy_ranking_loo_auroc_ci95": [
+      0.7133175599984811,
+      0.7137104171413382
+    ],
+    "energy_ranking_loo_auroc_mean": 0.713496131427,
+    "energy_ranking_loo_auroc_per_seed": [
+      0.713210417141,
+      0.713924702856,
+      0.713924702856,
+      0.713210417141,
+      0.713567559998,
+      0.713210417141,
+      0.713567559998,
+      0.713210417141,
+      0.713924702856,
+      0.713210417141
+    ],
+    "experiment_id": 4781,
+    "leak_controls": {
+      "marginal_control_loo_auroc": 0.483970918936,
+      "marginal_control_passed": true,
+      "origin_probe_auroc": 0.5,
+      "origin_probe_passed": true,
+      "shuffled_label_control_auroc": 0.493356458144,
+      "shuffled_label_control_passed": true,
+      "shuffled_label_resamples": 16
+    },
+    "leak_controls_hold": true,
+    "loo_gate_passed": true,
+    "n_candidate_rows": 463,
+    "n_held_out_games": 16,
+    "n_neg": 277,
+    "n_pos": 186,
+    "n_seeds": 10,
+    "per_family_loo": {
+      "frame_delta": 0.7262429748613959,
+      "object_relational": 0.6602487486471862
+    },
+    "reason": "s1_gate_numbers_authorize_s2",
+    "s1_gate_passed": true,
+    "s2_authorized": true,
+    "seed_floor_met": true,
+    "source": "S1",
+    "upstream_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+    "upstream_s2_authorized": true,
+    "verdict": "usable_landscape",
+    "verifier_is_oracle": false
+  },
+  "schema": "carnot.exp4789.capstone_v440.v1",
+  "self_play_checkpoint": {
+    "decision": "checkpoint_refreshed",
+    "experiment_id": 4783,
+    "offline_reproduced": true,
+    "reproduced_levels": 2,
+    "self_play_residual": "checkpoint_refreshed_gate_passed",
+    "solve_provenance": "live_agent_self_discovery",
+    "source": "SELF_PLAY",
+    "target_game": "re86",
+    "verifier_checkpoint_refreshed": true
+  },
+  "silent_bug_audit": {
+    "experiment_id": 4785,
+    "nulls_audited": 3,
+    "reopened_null_ids": [
+      "experiment_4781_structural_energy_s1_contrastive_landscape"
+    ],
+    "s1_audit_note": "audit_note_recorded_does_not_override_live_clean_s1_pass",
+    "s1_control_numbers": {
+      "all_controls_fired": false,
+      "candidate_rows": 463,
+      "denoising_direction_agreement": 0.6223390275952694,
+      "denoising_direction_executed": true,
+      "denoising_direction_method": "same-heldout-game wrong->correct feature-space midpoint must lower linear energy",
+      "denoising_direction_module_execution": true,
+      "distinct_seed_count": 10,
+      "n_neg": 277,
+      "n_pos": 186,
+      "n_seeds": 10,
+      "origin_matching_real": true,
+      "origin_probe_auroc": 0.5,
+      "origin_probe_passed": true,
+      "origin_probe_refit_on_origin_matched_data": false,
+      "origin_probe_status": "origin_matched_single_origin_all_induced",
+      "per_seed_metric_count": 10,
+      "random_seeds_distinct": true,
+      "random_seeds_used": [
+        4781,
+        4782,
+        4783,
+        4784,
+        4785,
+        4786,
+        4787,
+        4788,
+        4789,
+        4790
+      ],
+      "seed_floor_met": true,
+      "shuffled_label_control_auroc": 0.49335645814441664,
+      "shuffled_label_module_permutation_loo": true,
+      "shuffled_label_permuted_and_reran_loo": true,
+      "shuffled_label_resamples": 16
+    },
+    "s1_controls_fired": false,
+    "silent_bugs_found_count": 1,
+    "source": "BUG_AUDIT",
+    "trusted_nulls": [
+      "experiment_4782_levelup_attempt",
+      "experiment_4784_heldout_first_win_readiness"
+    ]
+  },
+  "sota_handoff": {
+    "arxiv_ids_cited": [
+      "1909.06878",
+      "2103.11505",
+      "2202.11705",
+      "2206.09914",
+      "2304.14391",
+      "2309.15028",
+      "2502.07202",
+      "2505.10819"
+    ],
+    "decision": "sota_handoff_mapped",
+    "experiment_id": 4788,
+    "flagged_for_v441_candidates": [
+      "energy_value_guided_mcts_frontier_controller",
+      "ebm_poe_planner_for_s3_generation"
+    ],
+    "methods_mapped_count": 5,
+    "s1_context": {
+      "denoising_direction_agreement": 0.6223390275952694,
+      "energy_ranking_loo_auroc_ci95": [
+        0.7133175599984811,
+        0.7137104171413382
+      ],
+      "energy_ranking_loo_auroc_mean": 0.7134961314270525,
+      "imported_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+      "n_seeds": 10,
+      "origin_probe_auroc": 0.5,
+      "planning_constraint": "S1 provides a lower-is-better energy landscape; S2/S3 may use it only as guidance, never as an environment win oracle.",
+      "s1_gate_passed": true,
+      "s2_authorized": true,
+      "shuffled_label_control_auroc": 0.49335645814441664,
+      "source_artifact": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+      "stage": "S1"
+    },
+    "source": "SOTA"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4789",
+    "SCENARIO-CAPSTONE-4789",
+    "SCENARIO-CAPSTONE-4789-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4789-FIELD-PRINCIPLES"
+  ],
+  "stale_false_positive_notes": [],
+  "submission_package_state": {
+    "decision": "package_ready_operator_only",
+    "experiment_id": 4786,
+    "operator_only": true,
+    "source": "PACKAGE",
+    "submission_package_ready": true,
+    "submitted_to_leaderboard": false,
+    "vram_estimate_gb": 15.146
+  },
+  "upstream_oracle_declarations": {
+    "BUG_AUDIT": {
+      "experiment_id": 4785,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HARDWARE": {
+      "experiment_id": 4787,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HELDOUT": {
+      "experiment_id": 4784,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "LEVELUP": {
+      "experiment_id": 4782,
+      "moat_claim_allowed": false,
+      "verifier_is_oracle": true
+    },
+    "PACKAGE": {
+      "experiment_id": 4786,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "S1": {
+      "experiment_id": 4781,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SELF_PLAY": {
+      "experiment_id": 4783,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SOTA": {
+      "experiment_id": 4788,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    }
+  }
+}
