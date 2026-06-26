@@ -7813,6 +7813,73 @@ per-family, and positive-control measurements, and emits
 `success_structural_energy_s1_landscape_authorizes_s2` only when every S1 gate
 criterion is satisfied.
 
+### REQ-ARC-WMTE-4791: S2 Off-Path Structural-Energy Trust Gate
+
+Experiment 4791 SHALL graft the Experiment 4781 S1 structural transition energy
+into the live ARC world-model trust path by making
+`WorldModelVerifier`/`E3AgentPolicy` rank candidate induced engines with
+off-path predicted-transition energy before planning. The energy ranking SHALL
+score only candidate predictions on held-out off-path transitions, without
+calling the executable oracle, win predicate, or observed next grid. The matched
+control SHALL use the incumbent binary `WorldModelVerifier` exact-accuracy
+`<0.5` cutoff on the identical candidate engine sets.
+
+The workflow SHALL first verify that `arc_solver_kit.offline_arcade()` exits
+successfully and that `WorldModelVerifier` imports. If either precondition
+fails, the artifact SHALL stop with
+`honest_verdict=blocked_offline_arcade_missing` or
+`honest_verdict=blocked_world_model_verifier_missing` and SHALL NOT fabricate a
+held-out off-path `cell_recall`.
+
+Experiment 4791 SHALL write
+`results/experiment_4791_structural_energy_s2_offpath_trust_gate.json`, set the
+energy arm `verifier_is_oracle=false`, confirm `live_path_reachable=true` by
+passing `scripts/arc_orphan_solver_lint.py`, and include principle-annotated
+top-level fields for `honest_verdict`, `verifier_is_oracle`,
+`live_path_reachable`, `inference_substrate`, `preconditions_checked`,
+`energy_selected_offpath_cell_recall`,
+`accuracy_gate_selected_offpath_cell_recall`,
+`energy_minus_accuracy_delta_ci95`, `n_heldout_games`, `random_seed`, and
+`reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a live trust-gate win is success_structural_energy_s2_trust_gate_authorizes_s3, a bound is complete_structural_energy_s2_no_live_trust_value."
+- `verifier_is_oracle`: principle "MUST be false for the energy ranking (oracle-distinct); the binary-accuracy CONTROL is execution-grounded (true) -- S2 measures whether oracle-distinct energy beats execution-grounded selection."
+- `live_path_reachable`: principle "the energy gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint passes) -- a gate the live agent cannot reach adds no live value (ARC Live-Path Reachability Discipline)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates (scores the energy over cached candidate induced engines off-path predictions, no fresh LLM; 1s floor)."
+- `preconditions_checked`: principle "records the arcade / WorldModelVerifier import checks so a silent-missing-resource run cannot fabricate a cell_recall."
+- `energy_selected_offpath_cell_recall`: principle "the held-out off-path cell_recall of the engine the structural energy selected -- the load-bearing measurement."
+- `accuracy_gate_selected_offpath_cell_recall`: principle "the held-out off-path cell_recall of the engine the incumbent binary accuracy<0.5 gate selected -- the control the energy must beat."
+- `energy_minus_accuracy_delta_ci95`: principle "must EXCLUDE 0 (energy > accuracy-gate) for S2 to pass -- the oracle-distinct value-add over cheap execution-grounded selection."
+- `n_heldout_games`: principle ">=N held-out games -- the delta must hold across games, not a single-game artifact."
+- `random_seed`: principle "determinism for reproducibility of the selection + bootstrap."
+- `reproducibility_checksum`: principle "content hash of (engine candidates, folds, energy config) so a replication catches drift."
+
+The S2 gate SHALL pass only when the energy-selected engines' mean held-out
+off-path `cell_recall` minus the binary-accuracy-gate-selected engines' mean
+held-out off-path `cell_recall` is greater than zero with a bootstrap CI95 that
+excludes zero across at least five held-out hidden-state games. If the CI95
+includes zero, the artifact SHALL report
+`complete_structural_energy_s2_no_live_trust_value` with
+`retire_if_same_verdict=true`.
+
+#### SCENARIO-ARC-WMTE-4791-OFFPATH-TRUST-GATE
+
+Given the S1 structural energy artifact exists, the offline arcade and
+`WorldModelVerifier` import preconditions pass, and cached candidate induced
+engines are available for held-out hidden-state ARC games
+When Experiment 4791 ranks each game's identical candidate engine set by
+off-path structural energy and by the incumbent binary exact-accuracy gate
+Then it writes
+`results/experiment_4791_structural_energy_s2_offpath_trust_gate.json`, keeps
+the energy arm `verifier_is_oracle=false`, records the binary-control oracle
+declaration separately, confirms the gate is live-path reachable through
+`arc_orphan_solver_lint.py`, reports both selected engines' held-out off-path
+`cell_recall`, and emits
+`success_structural_energy_s2_trust_gate_authorizes_s3` only when the
+energy-minus-accuracy bootstrap CI95 excludes zero above zero.
+
 ### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
 
 Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the

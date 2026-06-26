@@ -1,0 +1,308 @@
+{
+  "accuracy_gate_selected_offpath_cell_recall": 0.32018531293855285,
+  "binary_accuracy_control": {
+    "selection_rule": "first_candidate_with_WorldModelVerifier_exact_accuracy_ge_0.5_else_first",
+    "threshold": 0.5,
+    "verifier_is_oracle": true
+  },
+  "candidate_sets": {
+    "ar25": [
+      "results/arc_e3/ar25/world_model.py",
+      "results/arc_logo_snapshot/ar25/world_model.py"
+    ],
+    "cd82": [
+      "results/arc_e3/cd82/world_model.best.py",
+      "results/arc_e3/cd82/world_model.py"
+    ],
+    "cn04": [
+      "results/arc_e3/cn04/world_model.py",
+      "results/arc_logo_snapshot/cn04/world_model.py",
+      "results/arc_e3_seedproto/cn04/world_model.py"
+    ],
+    "ka59": [
+      "results/arc_e3/ka59/world_model.py",
+      "results/arc_logo_snapshot/ka59/world_model.py"
+    ],
+    "sc25": [
+      "results/arc_e3/sc25/world_model.py",
+      "results/arc_logo_snapshot/sc25/world_model.py"
+    ]
+  },
+  "duration_s": 2.556,
+  "energy_config": {
+    "dim": 23,
+    "feature_families": [
+      "object_relational",
+      "frame_delta"
+    ],
+    "model": "frozen_linear_pairwise_margin_s1_structural_energy",
+    "no_change_penalty": 500.0,
+    "shape_mismatch_penalty": 1000000.0,
+    "source_experiment": 4781
+  },
+  "energy_minus_accuracy_delta": 0.0,
+  "energy_minus_accuracy_delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "energy_selected_offpath_cell_recall": 0.32018531293855285,
+  "experiment": "experiment_4791_structural_energy_s2_offpath_trust_gate",
+  "experiment_id": 4791,
+  "field_principles": {
+    "accuracy_gate_selected_offpath_cell_recall": {
+      "principle": "the held-out off-path cell_recall of the engine the incumbent binary accuracy<0.5 gate selected -- the control the energy must beat."
+    },
+    "energy_minus_accuracy_delta_ci95": {
+      "principle": "must EXCLUDE 0 (energy > accuracy-gate) for S2 to pass -- the oracle-distinct value-add over cheap execution-grounded selection."
+    },
+    "energy_selected_offpath_cell_recall": {
+      "principle": "the held-out off-path cell_recall of the engine the structural energy selected -- the load-bearing measurement."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a live trust-gate win is success_structural_energy_s2_trust_gate_authorizes_s3, a bound is complete_structural_energy_s2_no_live_trust_value."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (scores the energy over cached candidate induced engines off-path predictions, no fresh LLM; 1s floor)."
+    },
+    "live_path_reachable": {
+      "principle": "the energy gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint passes) -- a gate the live agent cannot reach adds no live value (ARC Live-Path Reachability Discipline)."
+    },
+    "n_heldout_games": {
+      "principle": ">=N held-out games -- the delta must hold across games, not a single-game artifact."
+    },
+    "preconditions_checked": {
+      "principle": "records the arcade / WorldModelVerifier import checks so a silent-missing-resource run cannot fabricate a cell_recall."
+    },
+    "random_seed": {
+      "principle": "determinism for reproducibility of the selection + bootstrap."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (engine candidates, folds, energy config) so a replication catches drift."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false for the energy ranking (oracle-distinct); the binary-accuracy CONTROL is execution-grounded (true) -- S2 measures whether oracle-distinct energy beats execution-grounded selection."
+    }
+  },
+  "game_results": [
+    {
+      "accuracy_gate_exact_accuracy": 1.0,
+      "accuracy_gate_passed": true,
+      "accuracy_gate_selected_candidate": "results/arc_e3/ar25/world_model.py",
+      "accuracy_gate_selected_offpath_cell_recall": 1.0,
+      "candidate_rows": [
+        {
+          "binary_gate_pass": true,
+          "candidate_name": "results/arc_e3/ar25/world_model.py",
+          "correct_changed_cells": 545,
+          "heldout_accuracy": 1.0,
+          "heldout_cell_recall": 1.0,
+          "heldout_change_consistency": 1.0,
+          "offpath_structural_energy": 189.14479776397968,
+          "prefix_accuracy": 1.0,
+          "true_changed_cells": 545
+        },
+        {
+          "binary_gate_pass": true,
+          "candidate_name": "results/arc_logo_snapshot/ar25/world_model.py",
+          "correct_changed_cells": 545,
+          "heldout_accuracy": 1.0,
+          "heldout_cell_recall": 1.0,
+          "heldout_change_consistency": 1.0,
+          "offpath_structural_energy": 189.14479776397968,
+          "prefix_accuracy": 1.0,
+          "true_changed_cells": 545
+        }
+      ],
+      "energy_minus_accuracy_delta": 0.0,
+      "energy_selected_candidate": "results/arc_e3/ar25/world_model.py",
+      "energy_selected_offpath_cell_recall": 1.0,
+      "energy_selected_structural_energy": 189.14479776397968,
+      "game": "ar25",
+      "n_candidates": 2
+    },
+    {
+      "accuracy_gate_exact_accuracy": 0.0,
+      "accuracy_gate_passed": false,
+      "accuracy_gate_selected_candidate": "results/arc_e3/cd82/world_model.best.py",
+      "accuracy_gate_selected_offpath_cell_recall": 0.0,
+      "candidate_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_e3/cd82/world_model.best.py",
+          "correct_changed_cells": 0,
+          "heldout_accuracy": 0.0,
+          "heldout_cell_recall": 0.0,
+          "heldout_change_consistency": 0.0,
+          "offpath_structural_energy": 1000000.0,
+          "prefix_accuracy": 0.0,
+          "true_changed_cells": 0
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_e3/cd82/world_model.py",
+          "correct_changed_cells": 0,
+          "heldout_accuracy": 0.375,
+          "heldout_cell_recall": 0.0,
+          "heldout_change_consistency": 0.0,
+          "offpath_structural_energy": 497.7490630125705,
+          "prefix_accuracy": 0.25,
+          "true_changed_cells": 5
+        }
+      ],
+      "energy_minus_accuracy_delta": 0.0,
+      "energy_selected_candidate": "results/arc_e3/cd82/world_model.py",
+      "energy_selected_offpath_cell_recall": 0.0,
+      "energy_selected_structural_energy": 497.7490630125705,
+      "game": "cd82",
+      "n_candidates": 2
+    },
+    {
+      "accuracy_gate_exact_accuracy": 0.08333333333333333,
+      "accuracy_gate_passed": false,
+      "accuracy_gate_selected_candidate": "results/arc_e3/cn04/world_model.py",
+      "accuracy_gate_selected_offpath_cell_recall": 0.03018882290239074,
+      "candidate_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_e3/cn04/world_model.py",
+          "correct_changed_cells": 36,
+          "heldout_accuracy": 0.125,
+          "heldout_cell_recall": 0.04477611940298507,
+          "heldout_change_consistency": 0.04477611940298507,
+          "offpath_structural_energy": 131.26142683026688,
+          "prefix_accuracy": 0.0625,
+          "true_changed_cells": 804
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_logo_snapshot/cn04/world_model.py",
+          "correct_changed_cells": 36,
+          "heldout_accuracy": 0.125,
+          "heldout_cell_recall": 0.04477611940298507,
+          "heldout_change_consistency": 0.04477611940298507,
+          "offpath_structural_energy": 131.26142683026688,
+          "prefix_accuracy": 0.0625,
+          "true_changed_cells": 804
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_e3_seedproto/cn04/world_model.py",
+          "correct_changed_cells": 41,
+          "heldout_accuracy": 0.0,
+          "heldout_cell_recall": 0.05099502487562189,
+          "heldout_change_consistency": 0.05099502487562189,
+          "offpath_structural_energy": 134.8143870447679,
+          "prefix_accuracy": 0.0,
+          "true_changed_cells": 804
+        }
+      ],
+      "energy_minus_accuracy_delta": 0.0,
+      "energy_selected_candidate": "results/arc_e3/cn04/world_model.py",
+      "energy_selected_offpath_cell_recall": 0.03018882290239074,
+      "energy_selected_structural_energy": 131.26142683026688,
+      "game": "cn04",
+      "n_candidates": 3
+    },
+    {
+      "accuracy_gate_exact_accuracy": 0.20833333333333334,
+      "accuracy_gate_passed": false,
+      "accuracy_gate_selected_candidate": "results/arc_e3/ka59/world_model.py",
+      "accuracy_gate_selected_offpath_cell_recall": 0.3976608187134503,
+      "candidate_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_e3/ka59/world_model.py",
+          "correct_changed_cells": 51,
+          "heldout_accuracy": 0.125,
+          "heldout_cell_recall": 0.864406779661017,
+          "heldout_change_consistency": 0.864406779661017,
+          "offpath_structural_energy": 310.6825626327457,
+          "prefix_accuracy": 0.25,
+          "true_changed_cells": 59
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_logo_snapshot/ka59/world_model.py",
+          "correct_changed_cells": 51,
+          "heldout_accuracy": 0.125,
+          "heldout_cell_recall": 0.864406779661017,
+          "heldout_change_consistency": 0.864406779661017,
+          "offpath_structural_energy": 310.6825626327457,
+          "prefix_accuracy": 0.0625,
+          "true_changed_cells": 59
+        }
+      ],
+      "energy_minus_accuracy_delta": 0.0,
+      "energy_selected_candidate": "results/arc_e3/ka59/world_model.py",
+      "energy_selected_offpath_cell_recall": 0.3976608187134503,
+      "energy_selected_structural_energy": 310.6825626327457,
+      "game": "ka59",
+      "n_candidates": 2
+    },
+    {
+      "accuracy_gate_exact_accuracy": 0.0,
+      "accuracy_gate_passed": false,
+      "accuracy_gate_selected_candidate": "results/arc_e3/sc25/world_model.py",
+      "accuracy_gate_selected_offpath_cell_recall": 0.17307692307692307,
+      "candidate_rows": [
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_e3/sc25/world_model.py",
+          "correct_changed_cells": 9,
+          "heldout_accuracy": 0.0,
+          "heldout_cell_recall": 0.12162162162162163,
+          "heldout_change_consistency": 0.12162162162162163,
+          "offpath_structural_energy": 125.34472928121748,
+          "prefix_accuracy": 0.0,
+          "true_changed_cells": 74
+        },
+        {
+          "binary_gate_pass": false,
+          "candidate_name": "results/arc_logo_snapshot/sc25/world_model.py",
+          "correct_changed_cells": 0,
+          "heldout_accuracy": 0.5,
+          "heldout_cell_recall": 0.0,
+          "heldout_change_consistency": 0.0,
+          "offpath_structural_energy": 497.8279288037516,
+          "prefix_accuracy": 0.1875,
+          "true_changed_cells": 74
+        }
+      ],
+      "energy_minus_accuracy_delta": 0.0,
+      "energy_selected_candidate": "results/arc_e3/sc25/world_model.py",
+      "energy_selected_offpath_cell_recall": 0.17307692307692307,
+      "energy_selected_structural_energy": 125.34472928121748,
+      "game": "sc25",
+      "n_candidates": 2
+    }
+  ],
+  "honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "live_path_reachable": true,
+  "min_heldout_games": 5,
+  "n_heldout_games": 5,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_orphan_solver_lint_passed": true,
+    "candidate_game_count": 5,
+    "codex_md_read": true,
+    "offline_arcade": true,
+    "ok": true,
+    "s1_artifact_path": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+    "s1_artifact_read": true,
+    "s1_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+    "spec_has_req_4791": true,
+    "world_model_verifier_import": true
+  },
+  "random_seed": 4791,
+  "reproducibility_checksum": "sha256:3f51359c1ddfaec38d878d3e8c55e3903577bf212e61d3c5b499eb4c436e231f",
+  "result_path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+  "retire_if_same_verdict": true,
+  "s3_authorized": false,
+  "schema": "carnot.arc_structural_energy_s2_offpath_trust_gate_4791.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4791",
+    "SCENARIO-ARC-WMTE-4791-OFFPATH-TRUST-GATE"
+  ],
+  "verifier_is_oracle": false
+}

@@ -696,6 +696,74 @@ class WorldModelVerifier:
         cell_recall = float(np.mean(cell_recalls)) if cell_recalls else 0.0
         return VerifyResult(n, n_correct, n_correct / max(1, n), mism, cell_recall=cell_recall)
 
+    def offpath_structural_energy(
+        self,
+        engine: Callable[[np.ndarray, int, Optional[dict]], np.ndarray],
+        *,
+        energy_scorer: Any,
+    ) -> float:
+        """REQ-ARC-WMTE-4791: score candidate predictions without reading true next grids."""
+
+        energies: list[float] = []
+        for t in self.transitions:
+            try:
+                pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
+                if hasattr(energy_scorer, "transition_energy"):
+                    value = energy_scorer.transition_energy(t.grid, t.action, t.data, pred)
+                else:
+                    value = energy_scorer(t.grid, t.action, t.data, pred)
+                value_f = float(value)
+                energies.append(value_f if value_f == value_f else float("inf"))
+            except Exception:
+                energies.append(float("inf"))
+        if not energies:
+            return float("inf")
+        finite = [value for value in energies if value < float("inf")]
+        if not finite:
+            return float("inf")
+        return float(np.mean(finite))
+
+    def rank_offpath_structural_energy(
+        self,
+        candidates: Sequence[
+            tuple[str, Callable[[np.ndarray, int, Optional[dict]], np.ndarray]]
+            | dict[str, Any]
+            | Any
+        ],
+        *,
+        energy_scorer: Any,
+    ) -> list[dict[str, Any]]:
+        """REQ-ARC-WMTE-4791: rank candidate engines by lower off-path structural energy."""
+
+        rows: list[dict[str, Any]] = []
+        for i, candidate in enumerate(candidates):
+            if isinstance(candidate, dict):
+                name = str(candidate.get("name") or f"candidate_{i}")
+                engine = candidate["engine"]
+            elif isinstance(candidate, tuple):
+                name = str(candidate[0])
+                engine = candidate[1]
+            else:
+                name = str(getattr(candidate, "name", f"candidate_{i}"))
+                engine = getattr(candidate, "engine", candidate)
+            rows.append(
+                {
+                    "candidate_name": name,
+                    "offpath_structural_energy": self.offpath_structural_energy(
+                        engine,
+                        energy_scorer=energy_scorer,
+                    ),
+                    "n_offpath_transitions": len(self.transitions),
+                }
+            )
+        return sorted(
+            rows,
+            key=lambda row: (
+                float(row["offpath_structural_energy"]),
+                str(row["candidate_name"]),
+            ),
+        )
+
 
 def predict_hypothesis_transition(
     hypothesis: Any,
