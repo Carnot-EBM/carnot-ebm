@@ -51509,3 +51509,69 @@ milestones:
       artifacts; record S2-v3 ONLY if DEGENERATE_CANDIDATE_POOL did not fire (corpus coverage verified).'
     deliverable: results/experiment_4819_capstone_v443.json
     result: OK (conductor)
+- id: 2026.06.444
+  title: S3 GENERATION LIFT -- wire the structural energy E as goal_energy into the live plan_in_model() and test whether
+    it puts a WINNER INTO the pool the bare explorer never proposed (vs a matched lambda=0 control), on held-out games with
+    generation headroom. The actual ARC wall (generation, not selection; selection settled at S2-v3 bounded). PASS -> S4 transfer;
+    BOUNDED -> the energy adds no live value (selection or generation); inconclusive -> no headroom. KV260 C task corrected
+    to always write a blocked artifact. Plus the sprint-mandated level-up (rotated), self-play, readiness, infra/sota/capstone.
+  doc: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
+  completed: '2026-06-26'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4820-phase0
+    title: 'PHASE 0 (TRANSITION) -- archive .443 -> activate .444; assert YAML parses + pre-test gate green; DETECT + RESOLVE
+      any poison pre-test. RECORD the true .443 close-state (S2-v3 SETTLED selection: corpus-wide BOUNDED + slightly positive
+      -> pivot to S3 generation).'
+    deliverable: results/experiment_4820_archive_443_activate_444.json
+    result: OK (conductor)
+  - id: exp4821-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S3 GENERATION LIFT: wire the structural energy
+      E as a goal_energy/guidance term into the LIVE plan_in_model() (E3AgentPolicy, live-path-reachable) and test whether
+      it puts a WINNER INTO the pool the bare explorer never proposed. The actual ARC wall (generation, not selection). S2-v3
+      settled selection (bounded, neutral); S3 is the decisive test of whether the energy helps GENERATION.'
+    deliverable: results/experiment_4821_structural_energy_s3_generation_lift.json
+    result: OK (conductor)
+  - id: exp4822-a2
+    title: PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on
+      a ROTATED unsolved target (bp35/sb26/lf52). offline_reproduced gated.
+    deliverable: results/experiment_4822_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4823-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- run the standing self-improvement loop on a banked game:
+      verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4823_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4824-a4
+    title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness) -- measure the live agent's held-out first-win
+      rate on the color-permuted variant harness, checkpoint/resume-capable.
+    deliverable: results/experiment_4824_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4825-b1
+    title: 'PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .444 ARC nulls + VERIFY the S3 controls: the lambda=0
+      control is matched, banked levels are NEW (not already in the bare pool = re-ranking), and the headroom games'' winners
+      are reachable (positive control).'
+    deliverable: results/experiment_4825_silent_bug_audit.json
+    result: OK (conductor)
+  - id: exp4826-b2
+    title: 'PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the Kaggle ARC-AGI-3
+      agent package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; operator checklist.'
+    deliverable: results/experiment_4826_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4827-c
+    title: PHASE C (HARDWARE continuity -- KV260) -- SSH-reachability check; ALWAYS write the deliverable artifact (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes, the .443 3-fail-skip bug). SSH precondition ONLY.
+    deliverable: results/experiment_4827_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4828-d
+    title: PHASE D (SOTA-INGESTION -- the .445 frontier = cross-family transfer / robustness) -- ingest the literature on
+      cross-domain/cross-family transfer of learned verifiers/energies + held-out robustness, to inform S4. Real arXiv IDs
+      only.
+    deliverable: results/experiment_4828_sota_ingestion_cross_family_transfer.json
+    result: OK (conductor)
+  - id: exp4829-e
+    title: 'PHASE E (CAPSTONE .444) -- aggregate the .444 scorecard: the S3 generation-lift verdict (generation WIN -> S4,
+      BOUNDED no-generation-lift, or inconclusive-no-headroom), the level-up bank, self-play, readiness. SKIP genuinely-flagged
+      artifacts; honor the S3 controls (matched lambda=0, NEW-not-re-rank).'
+    deliverable: results/experiment_4829_capstone_v444.json
+    result: OK (conductor)
