@@ -9329,3 +9329,4 @@ The contro |
 | 2026-06-26 07:37 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-26 07:52 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | 88 passed, 1 warning in 8.11s |
 | 2026-06-26 08:09 UTC | PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUD | OK | 88 passed, 1 warning in 7.72s |
+| 2026-06-26 08:20 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
