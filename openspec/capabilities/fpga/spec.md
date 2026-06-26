@@ -11894,3 +11894,79 @@ principle-annotated required fields, `verifier_is_oracle=false`, deterministic
 `complete:/blocked_kv260_ssh_unreachable` with null latency numbers.
 
 **Implementation status:** Implemented (Exp 4745)
+
+---
+
+### REQ-HW-4757
+
+**Title:** KV260 per-milestone continuity MUST use SSH-only reachability and record the next board step
+
+**Description:**
+Experiment 4757 MUST produce `results/experiment_4757_kv260_continuity.json`
+as the per-milestone KV260 continuity artifact. The precondition MUST be board
+SSH reachability via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`;
+the retired host SD-card device-node mechanism MUST NOT be used. If that SSH
+command returns non-zero, the artifact MUST stop honestly with
+`honest_verdict=complete:/blocked_kv260_ssh_unreachable`, record the failed
+SSH precondition in `preconditions_checked`, set `kv260_ssh_reachable=false`,
+and record the next forward step as restoring SSH and rerunning the SSH-only
+continuity check.
+
+When SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'`
+to report the loaded overlay and MUST preserve the direct command transcript.
+If the non-sudo `xmutil` probe reports that root is required, the experiment MAY
+retry with `ssh kria 'sudo xmutil listapps'` only to read board state; it MUST
+not use host SD-card device nodes. The experiment MUST also record lightweight
+board state over SSH, including hostname, kernel/OS line, uptime, and UIO device
+count. Per `ops/hardware-bringup-prep.md`, the reachable-board
+`next_forward_step` MUST preserve the KV260 terminal state as:
+`GRADUATED: KV260 terminal criteria met; continue per-milestone SSH-only continuity checks.`
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; blocked_kv260_ssh_unreachable is an honest non-terminal block, a continuity-recorded run is complete_.`
+- `inference_substrate`: `hardware_smoke (SSH-attached board).`
+- `preconditions_checked`: `records the SSH-reachability check (NEVER host SD-card) -- the KV260 wrong-mechanism guard.`
+- `kv260_ssh_reachable`: `the board's SSH reachability -- the only valid KV260 precondition.`
+- `next_forward_step`: `the next concrete board step recorded so the board stays visible in retros (the forget-pattern guard).`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4757_kv260_continuity.py` writes
+  `results/experiment_4757_kv260_continuity.json`.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `preconditions_checked` records the SSH BatchMode command listed above and
+  contains no host SD-card device-node precondition.
+- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
+  `complete:/blocked_kv260_ssh_unreachable`, no `xmutil` or board-state command
+  is run, and `next_forward_step` tells the operator to restore SSH and rerun
+  the SSH-only continuity check.
+- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
+  `success: kv260_continuity_recorded`, the direct `ssh kria 'xmutil listapps'`
+  transcript is preserved, a sudo read-only fallback transcript is preserved
+  when root is required, the loaded Carnot overlay is reported when present,
+  lightweight board state is recorded, and `next_forward_step` records the
+  terminal KV260 continuity action above.
+- `verifier_is_oracle=false`, `random_seed=4757`, `field_principles`,
+  `duration_s`, `command_probes`, and a stable `reproducibility_checksum` are
+  present.
+
+**Implementation status:** Planned (Exp 4757)
+
+---
+
+### SCENARIO-HW-4757
+
+**Scenario:** Exp 4757 records KV260 continuity or an honest SSH-unreachable block.
+
+**Given:** The KV260 continuity task requires SSH reachability of the board and
+must not use a host SD-card device-node precondition.
+**When:** Experiment 4757 checks SSH and, only when reachable, records the
+`xmutil listapps` transcript plus lightweight board state over SSH.
+**Then:** It writes `results/experiment_4757_kv260_continuity.json` with a
+terminal-prefixed `honest_verdict`, `inference_substrate=hardware_smoke`,
+principle-annotated required fields, `kv260_ssh_reachable`, deterministic
+`random_seed=4757`, a concrete `next_forward_step`, and no host SD-card
+precondition.
+
+**Implementation status:** Planned (Exp 4757)
