@@ -7512,6 +7512,64 @@ When Experiment 4761 runs
 Then it writes a blocked artifact with the failed precondition recorded, no
 claimed AUROC, `verifier_is_oracle=false`, and a reproducibility checksum.
 
+### REQ-ARC-WMTE-4765: .438 ARC Null Silent-Bug Audit
+
+Experiment 4765 SHALL audit the `.438` ARC null and no-bank residual artifacts
+before their negative results are trusted as mechanism evidence. The audit SHALL
+read `results/experiment_4761_structural_energy_s0_core_bet_probe.json`,
+`results/experiment_4762_levelup_attempt.json`,
+`results/experiment_4764_heldout_first_win_readiness.json`, and the prior
+silent-bug audits `results/experiment_4725_silent_bug_audit.json` and
+`results/experiment_4755_silent_bug_audit.json`. Missing `.438` source
+artifacts SHALL produce a blocked artifact rather than a fabricated audit.
+
+The audit SHALL cross-check each source artifact's exercised-evidence fields:
+for S0, the candidate row counts, near-miss negatives, in-sample positive
+control, and origin-probe rows/AUROC; for the level-up no-bank residual, the
+attempted-game ledger, reproduction gates, solution labels, and timed no-gate
+residuals; and for the held-out first-win null, the held-out attempt count,
+positive-control parity, flat `0.04` methodology note, and parity test. It
+SHALL flag silent bugs for dead or identity engines that change zero cells,
+byte-identical A/B arms, unannotated `0.04` first-win tautologies, dead archive
+or `_frame_grid (1,64,64)` representation no-ops, and S0 leak signatures where
+the origin probe was not run or `origin_probe_auroc >= 0.6`.
+
+Experiment 4765 SHALL write
+`results/experiment_4765_silent_bug_audit.json` and append a human-readable
+section to `ops/arc_null_silent_bug_audit.md`. The artifact SHALL include
+principle-annotated top-level fields for `honest_verdict`, `nulls_audited`,
+`silent_bugs_found`, and `inference_substrate`, plus per-null verdicts,
+preconditions, checksums for audited artifacts, duration, random seed, and a
+stable reproducibility checksum. The audit SHALL make no solve, leaderboard,
+training, or live-inference claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `nulls_audited`: principle "count of nulls re-examined -- a null that tested dead code is not a trustworthy null."
+- `silent_bugs_found`: principle "the load-bearing output -- which nulls must be reopened vs trusted."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts; 0.0001s floor."
+
+#### SCENARIO-ARC-WMTE-4765-SILENT-BUG-AUDIT
+
+Given the `.438` S0, level-up no-bank, and held-out first-win artifacts are
+present, along with the prior silent-bug audit artifacts
+When Experiment 4765 cross-checks exercised-evidence fields
+Then it writes `results/experiment_4765_silent_bug_audit.json`, appends to
+`ops/arc_null_silent_bug_audit.md`, classifies the S0 leak signature as a
+silent bug when `origin_probe_auroc >= 0.6` or the origin probe was not run,
+keeps genuinely exercised no-bank and flat first-win nulls trusted only when
+their evidence fields are non-degenerate, and reports the complete audit with
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-ARC-WMTE-4765-BLOCKED-PRECONDITION
+
+Given any required `.438` or prior-audit source artifact is missing
+When Experiment 4765 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, no markdown append, and a
+stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4751: SK48 Level-Up Self-Play Bank and Learned-Verifier Checkpoint
 
 Experiment 4751 SHALL bank exactly one new offline-reproduced public ARC level

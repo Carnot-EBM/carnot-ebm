@@ -1,0 +1,133 @@
+{
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "audited_artifact_checksums": {
+    "results/experiment_4725_silent_bug_audit.json": "sha256:4e0d52ae856e31b6287ea8ae5013d58d68dfaccf2f2d4b949ad9e25cd8cbd778",
+    "results/experiment_4755_silent_bug_audit.json": "sha256:0f8ea4db0b1789ad238182b64753217db8e0ee00b7bbefc7df79cded2263af75",
+    "results/experiment_4761_structural_energy_s0_core_bet_probe.json": "sha256:ca3a0a104aee73976fc7561a5e5278214a9e4b6004b5eba0288e079bed465cff",
+    "results/experiment_4762_levelup_attempt.json": "sha256:74161164ba8d1a118746cc4260b090652147a35689f686da7ffad79f63324f32",
+    "results/experiment_4764_heldout_first_win_readiness.json": "sha256:b960e0bb18da7dfdbc3cb6426731a98bb73ee2c4aa9c6847d55124a98ac68038"
+  },
+  "audited_artifacts": [
+    "results/experiment_4761_structural_energy_s0_core_bet_probe.json",
+    "results/experiment_4762_levelup_attempt.json",
+    "results/experiment_4764_heldout_first_win_readiness.json",
+    "results/experiment_4725_silent_bug_audit.json",
+    "results/experiment_4755_silent_bug_audit.json"
+  ],
+  "duration_s": 0.001563,
+  "experiment": "experiment_4765_silent_bug_audit",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined -- a null that tested dead code is not a trustworthy null."
+    },
+    "silent_bugs_found": {
+      "principle": "the load-bearing output -- which nulls must be reopened vs trusted."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_1_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "artifact_path": "results/experiment_4761_structural_energy_s0_core_bet_probe.json",
+      "exercise_evidence": [
+        "s0_candidate_rows=463",
+        "origin_probe_rows=926",
+        "origin_probe_auroc=0.732793",
+        "near_miss_negative_fraction=0.924188",
+        "in_sample_auroc=0.846405"
+      ],
+      "null_id": "experiment_4761_structural_energy_s0_core_bet_probe",
+      "silent_bug_signatures": [
+        "s0_origin_probe_leak"
+      ],
+      "verdict": "silent_bug_must_reopen"
+    },
+    {
+      "artifact_path": "results/experiment_4762_levelup_attempt.json",
+      "exercise_evidence": [
+        "levelup_attempts=6",
+        "exercised_attempts=6",
+        "reproduced_existing=5",
+        "timed_no_gate=1"
+      ],
+      "null_id": "experiment_4762_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "artifact_path": "results/experiment_4764_heldout_first_win_readiness.json",
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True"
+      ],
+      "null_id": "experiment_4764_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "milestone_438_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "prior_audits_present": true,
+    "source_artifacts_present": true
+  },
+  "prior_audit_context": {
+    "experiment_4725": {
+      "go_explore_fix_confirmed": true,
+      "nulls_audited": 12,
+      "silent_bug_null_count": 5
+    },
+    "experiment_4755": {
+      "levers_audited": 11,
+      "must_reopen": [
+        "experiment_4640_goal_energy_generation_live",
+        "experiment_4641_action_effect_expansion_prior_live",
+        "experiment_4653_energy_fitness_qd_generation_live",
+        "experiment_4676_hierarchical_subgoal_search_live",
+        "experiment_4701_amortized_exploration_prior_go_explore_live"
+      ]
+    }
+  },
+  "random_seed": 4765,
+  "reproducibility_checksum": "sha256:9d20963435bdf7982850dc3098e91e403a89f48d77c012a8ee2168ae7c33c0cc",
+  "schema": "carnot.arc.milestone_438_silent_bug_audit_4765.v1",
+  "silent_bugs_found": [
+    {
+      "artifact_path": "results/experiment_4761_structural_energy_s0_core_bet_probe.json",
+      "exercise_evidence": [
+        "s0_candidate_rows=463",
+        "origin_probe_rows=926",
+        "origin_probe_auroc=0.732793",
+        "near_miss_negative_fraction=0.924188",
+        "in_sample_auroc=0.846405"
+      ],
+      "null_id": "experiment_4761_structural_energy_s0_core_bet_probe",
+      "silent_bug_signatures": [
+        "s0_origin_probe_leak"
+      ],
+      "verdict": "silent_bug_must_reopen"
+    }
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4765",
+    "SCENARIO-ARC-WMTE-4765-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4765-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4762_levelup_attempt",
+    "experiment_4764_heldout_first_win_readiness"
+  ],
+  "verifier_is_oracle": false
+}
