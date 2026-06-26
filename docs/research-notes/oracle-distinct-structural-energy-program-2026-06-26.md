@@ -40,6 +40,23 @@ leak-controlled, oracle-distinct cross-game energy signal on ARC** — "extend w
 longer at chance. **S1 (the contrastive energy landscape) is now authorized** per the staged gate;
 pre-stage it for `.440.
 
+- **S1 (`.440 A1, exp4781) — PASSED; the energy is now a usable LANDSCAPE → S2 authorized.**
+  `honest_verdict: success_structural_energy_s1_landscape_authorizes_s2`, NOT flagged (live re-check
+  clean). The contrastive energy E(s,a,s') (margin/NCE over the S0' origin-matched induced-correct vs
+  induced-wrong pairs):
+  - energy-ranking LOO AUROC **0.713** across **10 seeds**, CI **[0.7133, 0.7137]** (excludes chance,
+    very tight multi-seed — the robustness S0' single-seed did not establish)
+  - **denoising-direction agreement 0.622** — −ΔE descent points toward correctness (the energy-vs-
+    classifier distinction; a point classifier cannot pass this)
+  - leak controls hold under contrastive training: origin-probe **0.500**, shuffled-label **0.493**
+  - per-family: frame_delta 0.726, object_relational 0.660 — both ≥ 0.60 (no single-lever); marginal
+    control 0.484 (structure +0.23 over marginals); in-sample 0.823 (positive control passes)
+
+**Two consecutive headline successes (S0' reopen → S1 landscape).** The structural energy is real,
+leak-clean, multi-seed-robust, and forms a descent landscape. **S2 (the off-path trust gate on
+induced world-models — the FIRST live-path-reachable stage, where the energy starts adding value to
+the actual agent) is now authorized** per the staged gate; pre-stage it for `.441.
+
 ---
 
 ## 0. Why this is the only direction left (settled, not re-derived)
