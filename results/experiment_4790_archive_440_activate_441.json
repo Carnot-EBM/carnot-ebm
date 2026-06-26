@@ -1,0 +1,369 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "25659c19003bcf66a0582649f3e43eed59fc15189700673c2bf099bcfc343556",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "capstone_ready",
+        "s1_structural_energy_verdict",
+        "levelup_bank",
+        "readiness",
+        "silent_bug_audit",
+        "sota_handoff",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4789_capstone_v440.json",
+      "sha256": "09875ff4dd4ce4cd30d2d401e7cf5260ab64a01674e7f26200dd143193b4eb9f",
+      "source": "experiment_4789_capstone_v440"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "s1_gate_passed",
+        "s2_authorized",
+        "energy_ranking_loo_auroc_mean",
+        "energy_ranking_loo_auroc_ci95",
+        "energy_ranking_loo_auroc_per_seed",
+        "n_seeds",
+        "denoising_direction_agreement",
+        "origin_probe_auroc",
+        "shuffled_label_control_auroc",
+        "controls",
+        "per_family_loo",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+      "sha256": "eebfb0b4dafedc47b1dfc4dae91392aea263b761712decf6df8d1ec136a531f7",
+      "source": "experiment_4781_structural_energy_s1_contrastive_landscape"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_440": {
+    "capstone_honest_verdict": "success_s1_structural_energy_usable_landscape_s2_authorized",
+    "capstone_ready": true,
+    "capstone_reported_reproducible_total_levels": 65,
+    "capstone_reported_s1_verdict": "usable_landscape",
+    "capstone_reported_s2_authorized": true,
+    "levelup_bank": {
+      "experiment_id": 4782,
+      "moat_claim": false,
+      "new_levels_banked": 0,
+      "offline_reproduced": false,
+      "registry_updated": false,
+      "reproduced_levels": 0,
+      "reproducible_total_levels_after": 65,
+      "reproducible_total_levels_before": 65,
+      "reproducible_total_levels_delta": 0,
+      "source": "LEVELUP",
+      "target_game": "lf52",
+      "verifier_is_oracle": true
+    },
+    "readiness": {
+      "heldout_decision": "flat_null_no_readiness_gain",
+      "ready_for_operator_submit": false,
+      "reason": "requires_usable_s1_clean_package_and_heldout_gain",
+      "s1_verdict": "usable_landscape",
+      "submission_package_decision": "package_ready_operator_only"
+    },
+    "reproducible_total_levels": 65,
+    "s1_pass": {
+      "denoising_direction_agreement": 0.622339027595,
+      "denoising_direction_agreement_rounded": 0.622,
+      "denoising_direction_passed": true,
+      "energy_ranking_loo_auroc_ci95": [
+        0.7133175599984811,
+        0.7137104171413382
+      ],
+      "energy_ranking_loo_auroc_mean": 0.713496131427,
+      "energy_ranking_loo_auroc_mean_rounded": 0.713,
+      "energy_ranking_loo_auroc_per_seed": [
+        0.7132104171413381,
+        0.7139247028556239,
+        0.7139247028556239,
+        0.7132104171413381,
+        0.713567559998481,
+        0.7132104171413381,
+        0.713567559998481,
+        0.7132104171413381,
+        0.7139247028556239,
+        0.7132104171413381
+      ],
+      "headline": "S1 PASSED -- usable LANDSCAPE; S2 authorized",
+      "honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+      "leak_controls_clean": true,
+      "marginal_control_loo_auroc": 0.483970918936,
+      "n_candidate_rows": 463,
+      "n_held_out_games": 16,
+      "n_neg": 277,
+      "n_pos": 186,
+      "n_seeds": 10,
+      "origin_probe_auroc": 0.5,
+      "per_family_loo": {
+        "frame_delta": 0.7262429748613959,
+        "object_relational": 0.6602487486471862
+      },
+      "random_seeds_used": [
+        4781,
+        4782,
+        4783,
+        4784,
+        4785,
+        4786,
+        4787,
+        4788,
+        4789,
+        4790
+      ],
+      "retire_energy_guided_direction": false,
+      "retire_if_same_verdict": true,
+      "s1_gate_passed": true,
+      "s2_authorized": true,
+      "seed_floor_met": true,
+      "shuffled_label_control_auroc": 0.493356458144,
+      "verdict": "usable_landscape",
+      "verifier_is_oracle": false
+    },
+    "silent_bug_audit": {
+      "experiment_id": 4785,
+      "nulls_audited": 3,
+      "reopened_null_ids": [
+        "experiment_4781_structural_energy_s1_contrastive_landscape"
+      ],
+      "s1_audit_note": "audit_note_recorded_does_not_override_live_clean_s1_pass",
+      "s1_control_numbers": {
+        "all_controls_fired": false,
+        "candidate_rows": 463,
+        "denoising_direction_agreement": 0.6223390275952694,
+        "denoising_direction_executed": true,
+        "denoising_direction_method": "same-heldout-game wrong->correct feature-space midpoint must lower linear energy",
+        "denoising_direction_module_execution": true,
+        "distinct_seed_count": 10,
+        "n_neg": 277,
+        "n_pos": 186,
+        "n_seeds": 10,
+        "origin_matching_real": true,
+        "origin_probe_auroc": 0.5,
+        "origin_probe_passed": true,
+        "origin_probe_refit_on_origin_matched_data": false,
+        "origin_probe_status": "origin_matched_single_origin_all_induced",
+        "per_seed_metric_count": 10,
+        "random_seeds_distinct": true,
+        "random_seeds_used": [
+          4781,
+          4782,
+          4783,
+          4784,
+          4785,
+          4786,
+          4787,
+          4788,
+          4789,
+          4790
+        ],
+        "seed_floor_met": true,
+        "shuffled_label_control_auroc": 0.49335645814441664,
+        "shuffled_label_module_permutation_loo": true,
+        "shuffled_label_permuted_and_reran_loo": true,
+        "shuffled_label_resamples": 16
+      },
+      "s1_controls_fired": false,
+      "silent_bugs_found_count": 1,
+      "source": "BUG_AUDIT",
+      "trusted_nulls": [
+        "experiment_4782_levelup_attempt",
+        "experiment_4784_heldout_first_win_readiness"
+      ]
+    },
+    "sota_handoff": {
+      "arxiv_ids_cited": [
+        "1909.06878",
+        "2103.11505",
+        "2202.11705",
+        "2206.09914",
+        "2304.14391",
+        "2309.15028",
+        "2502.07202",
+        "2505.10819"
+      ],
+      "decision": "sota_handoff_mapped",
+      "experiment_id": 4788,
+      "flagged_for_v441_candidates": [
+        "energy_value_guided_mcts_frontier_controller",
+        "ebm_poe_planner_for_s3_generation"
+      ],
+      "methods_mapped_count": 5,
+      "s1_context": {
+        "denoising_direction_agreement": 0.6223390275952694,
+        "energy_ranking_loo_auroc_ci95": [
+          0.7133175599984811,
+          0.7137104171413382
+        ],
+        "energy_ranking_loo_auroc_mean": 0.7134961314270525,
+        "imported_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+        "n_seeds": 10,
+        "origin_probe_auroc": 0.5,
+        "planning_constraint": "S1 provides a lower-is-better energy landscape; S2/S3 may use it only as guidance, never as an environment win oracle.",
+        "s1_gate_passed": true,
+        "s2_authorized": true,
+        "shuffled_label_control_auroc": 0.49335645814441664,
+        "source_artifact": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+        "stage": "S1"
+      },
+      "source": "SOTA"
+    }
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4790_archive_440_activate_441",
+  "experiment_id": 4790,
+  "field_principles": {
+    "close_state_440": {
+      "principle": "the honest `.440` close-state carried from Exp4789 plus the Exp4781 S1 gate result so the S2 authorization does not drift."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_440_archived_441_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "poison_test_resolved": {
+      "principle": "records whether a poison pre-test was found+fixed -- the cascade-skip guard."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    },
+    "s1_pass_recorded": {
+      "principle": "the .440 headline (S1 PASSED -> S2 authorized) carried forward."
+    },
+    "v441_pivot": {
+      "principle": "the `.441` headline rationale (S2 off-path trust gate) recorded so milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "complete_440_archived_441_activated_already_active_s1_pass_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "no_poison_observed_current_gate_green",
+    "current_gate_passed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.441",
+      "milestone_before_activation": "2026.06.441",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "capstone_4789": {
+      "available": true,
+      "path": "results/experiment_4789_capstone_v440.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4790": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade(); print('ok')\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('ok')\"",
+      "literal_precondition_passed": false,
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "s1_4781": {
+      "available": true,
+      "path": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4790_archive_440_activate_441.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.20s\n"
+    }
+  },
+  "random_seed": 4790,
+  "reproducibility_checksum": "sha256:f10b43759534a06415f9f0b8d8722cf02a20053288e7d1c59d917f765de0b933",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4790_archive_440_activate_441.json",
+  "s1_pass_recorded": true,
+  "schema": "carnot.archive_activation.v440_to_v441_4790.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4790",
+    "SCENARIO-CAPSTONE-4790",
+    "SCENARIO-CAPSTONE-4790-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4790-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.441",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.440"
+  },
+  "v441_pivot": {
+    "foundation_experiment": "experiment_4781_structural_energy_s1_contrastive_landscape",
+    "gate": "energy-ranked candidate induced world-model selection must beat the incumbent binary accuracy<0.5 trust gate on held-out off-path generalization",
+    "headline": "S2 off-path trust gate",
+    "s2_authorized_by_s1": true,
+    "target": "graft the S1 structural energy into the live WorldModelVerifier / E3AgentPolicy off-path trust decision",
+    "task_id": "exp4791-a1"
+  }
+}
