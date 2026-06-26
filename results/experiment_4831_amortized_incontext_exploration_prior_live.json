@@ -1,0 +1,260 @@
+{
+  "baseline_first_win_rate": 0.04,
+  "duration_s": 60.000392,
+  "experiment": "experiment_4831_amortized_incontext_exploration_prior_live",
+  "experiment_id": 4831,
+  "field_principles": {
+    "first_win_delta_ci95": {
+      "principle": "must EXCLUDE 0 for a PASS -- a genuine lift, not noise."
+    },
+    "first_win_rate_no_prior_ablation": {
+      "principle": "the matched lambda=0 control."
+    },
+    "first_win_rate_with_prior": {
+      "principle": "held-out generic first-win WITH the prior -- must rise above the 0.04 baseline."
+    },
+    "go_explore_archive_alive": {
+      "principle": "observations>0 AND stored_cells>0 AND prefixes_injected>0 -- the exp4701 silent-bug guard; a 0 means a non-test."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a lift is success_amortized_prior_raises_first_win_above_baseline, a genuine null is complete_amortized_prior_no_first_win_lift_l1_wall_survives, a dead archive is blocked_dead_go_explore_archive."
+    },
+    "imitation_control_heldout_games": {
+      "principle": "the lift must hold on games NOT in the distillation set -- exploration, not memorization (the exp4697 imitation trap)."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- the live E3 agent runs; 60s floor."
+    },
+    "live_path_reachable": {
+      "principle": "the prior must be in the E3AgentPolicy proposal import closure (arc_orphan_solver_lint)."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/go_explore checks so a missing-resource run emits blocked_, never a fabricated first-win."
+    },
+    "prior_changed_proposals": {
+      "principle": "the prior must materially alter proposals vs no-prior (the S2/S3 no-op lesson) -- else the first-win delta is a silent no-op."
+    },
+    "random_seed": {
+      "principle": "determinism for the distillation + the with/without runs + bootstrap."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (distilled traces, prior, games, seeds) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery -- a first-win lift is the agent solving via its OWN (prior-biased) exploration."
+    }
+  },
+  "first_win_delta_ci95": {
+    "confidence": 0.95,
+    "high": 0.0,
+    "low": 0.0,
+    "n_boot": 1000
+  },
+  "first_win_rate_no_prior_ablation": 0.0,
+  "first_win_rate_with_prior": 0.0,
+  "go_explore_archive_alive": {
+    "actions_injected": 1,
+    "alive": true,
+    "enabled": true,
+    "max_depth": 1,
+    "observations": 2,
+    "prefixes_injected": 1,
+    "selected_prefixes": 1,
+    "stored_cells": 2,
+    "verifier_is_oracle": false
+  },
+  "honest_verdict": "complete_amortized_prior_no_first_win_lift_l1_wall_survives",
+  "imitation_control_heldout_games": {
+    "distillation_games": [
+      "cd82",
+      "cn04",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "tu93",
+      "wa30"
+    ],
+    "first_win_rate_no_prior_ablation": 0.0,
+    "first_win_rate_with_prior": 0.0,
+    "heldout_games": [
+      "bp35"
+    ],
+    "heldout_not_in_distillation_set": true,
+    "lift_holds": false
+  },
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "measurement": {
+    "no_prior": [
+      {
+        "actions": 11,
+        "amortized_prior_diagnostics": {
+          "enabled": false
+        },
+        "budget": 12,
+        "first_win": false,
+        "game": "bp35",
+        "go_explore_archive_diagnostics": {
+          "actions_injected": 0,
+          "enabled": true,
+          "max_depth": 0,
+          "observations": 11,
+          "prefixes_injected": 0,
+          "selected_prefixes": 0,
+          "stored_cells": 1,
+          "verifier_is_oracle": false
+        },
+        "reached_level": 0
+      }
+    ],
+    "with_prior": [
+      {
+        "actions": 11,
+        "amortized_prior_diagnostics": {
+          "context_hits": 12,
+          "context_misses": 0,
+          "contexts_used": {
+            "ROOT": 2,
+            "click": 1,
+            "click>click": 1,
+            "click>click>click": 8
+          },
+          "distillation_mode": "in_context_exploration_prior",
+          "enabled": true,
+          "game_id_features_used": false,
+          "learned_context_keys": [
+            "ROOT",
+            "action:1",
+            "action:1>action:1",
+            "action:1>action:1>action:1",
+            "action:1>action:1>action:3",
+            "action:1>action:1>action:5",
+            "action:2",
+            "action:2>action:4",
+            "action:2>action:4>action:4",
+            "action:3",
+            "action:3>action:2",
+            "action:3>action:2>action:2",
+            "action:3>action:3",
+            "action:3>action:3>action:3",
+            "action:4",
+            "action:4>action:2",
+            "action:4>action:2>action:2",
+            "action:4>action:4",
+            "action:4>action:4>action:4",
+            "click",
+            "click>click",
+            "click>click>click"
+          ],
+          "max_context": 3,
+          "proposal_changes": 1,
+          "rank_calls": 12,
+          "trace_count": 11,
+          "verifier_is_oracle": false
+        },
+        "budget": 12,
+        "first_win": false,
+        "game": "bp35",
+        "go_explore_archive_diagnostics": {
+          "actions_injected": 0,
+          "enabled": true,
+          "max_depth": 0,
+          "observations": 11,
+          "prefixes_injected": 0,
+          "selected_prefixes": 0,
+          "stored_cells": 1,
+          "verifier_is_oracle": false
+        },
+        "reached_level": 0
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "budget": 12,
+    "codex_md_read": true,
+    "distilled_trace_count": 11,
+    "go_explore_frame_grid_fix_present": true,
+    "go_explore_import": true,
+    "live_e3_agent_ran": true,
+    "offline_arcade": true,
+    "ok": true,
+    "spec_has_req_4831": true
+  },
+  "prior_change_diagnostics": {
+    "changed": true,
+    "no_prior_order": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "path_context": [],
+    "with_prior_order": [
+      1,
+      6,
+      3,
+      4,
+      2,
+      5
+    ]
+  },
+  "prior_changed_proposals": true,
+  "prior_diagnostics": {
+    "context_hits": 12,
+    "context_misses": 0,
+    "contexts_used": {
+      "ROOT": 2,
+      "click": 1,
+      "click>click": 1,
+      "click>click>click": 8
+    },
+    "distillation_mode": "in_context_exploration_prior",
+    "enabled": true,
+    "game_id_features_used": false,
+    "learned_context_keys": [
+      "ROOT",
+      "action:1",
+      "action:1>action:1",
+      "action:1>action:1>action:1",
+      "action:1>action:1>action:3",
+      "action:1>action:1>action:5",
+      "action:2",
+      "action:2>action:4",
+      "action:2>action:4>action:4",
+      "action:3",
+      "action:3>action:2",
+      "action:3>action:2>action:2",
+      "action:3>action:3",
+      "action:3>action:3>action:3",
+      "action:4",
+      "action:4>action:2",
+      "action:4>action:2>action:2",
+      "action:4>action:4",
+      "action:4>action:4>action:4",
+      "click",
+      "click>click",
+      "click>click>click"
+    ],
+    "max_context": 3,
+    "proposal_changes": 1,
+    "rank_calls": 12,
+    "trace_count": 11,
+    "verifier_is_oracle": false
+  },
+  "random_seed": 4831,
+  "reproducibility_checksum": "sha256:dee9a63db21bf2c05a857cb2a3b02a3f3742068432cf7d0b8dbd0bb1176be6b9",
+  "schema": "carnot.arc.amortized_incontext_exploration_prior_live_4831.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4831",
+    "SCENARIO-ARC-WMTE-4831-IN-CONTEXT-PRIOR",
+    "SCENARIO-ARC-WMTE-4831-HELDOUT-GATE"
+  ]
+}

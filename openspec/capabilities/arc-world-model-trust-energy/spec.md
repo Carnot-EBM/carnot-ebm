@@ -2343,6 +2343,83 @@ arm wins and offline-reproduces while the no-prior arm fails, or records one of
 `archive_expands_dead_cells_no_goal_gradient`, or
 `replay_cannot_restore_cell` as the residual.
 
+### REQ-ARC-WMTE-4831: Amortized In-Context Exploration Prior Live Gate
+
+Experiment 4831 SHALL rerun the amortized exploration-prior class after the
+Go-Explore frame-grid fix and distinguish a live generation lift from the
+Experiment 4701 dead-archive silent bug. The live `StepwiseExplorer` /
+`E3AgentPolicy` proposal path SHALL accept an opt-in amortized in-context
+exploration prior distilled from banked first-contact winning trajectories. The
+prior SHALL condition proposal scores on the early exploration prefix observed
+in the fresh game, SHALL use reusable action-family/context signatures rather
+than game IDs or raw game labels, and SHALL remain oracle-distinct from the
+executable reproduction win-check.
+
+Experiment 4831 SHALL run an archive-alive check before interpreting any solve
+metric. The Go-Explore archive SHALL report `observations>0`, `stored_cells>0`,
+and `prefixes_injected>0`; otherwise the experiment SHALL emit
+`blocked_dead_go_explore_archive` and no solve claim. A valid measurement SHALL
+also prove that the prior materially changes proposal order relative to the
+matched lambda-zero/no-prior ablation, so a flat first-win delta cannot be a
+silent proposal no-op.
+
+Experiment 4831 SHALL measure held-out generic first-win with the prior against
+a matched no-prior ablation on the same games, seeds, and budget. A success
+claim SHALL require `first_win_rate_with_prior` above the locked 0.04 generic
+baseline and a positive with-prior minus no-prior bootstrap CI95 excluding zero.
+The imitation control SHALL separately report games not present in the
+distillation set, and the lift SHALL hold on those held-out games to count as
+learning to explore rather than copying a demonstrator or memorizing game IDs.
+If the archive is alive and the prior is exercised but the CI includes zero or
+the with-prior first-win does not rise above 0.04, the artifact SHALL emit the
+genuine-null verdict
+`complete_amortized_prior_no_first_win_lift_l1_wall_survives`.
+
+The artifact at
+`results/experiment_4831_amortized_incontext_exploration_prior_live.json` SHALL
+include `honest_verdict`, `go_explore_archive_alive`,
+`prior_changed_proposals`, `first_win_rate_with_prior`,
+`first_win_rate_no_prior_ablation`, `first_win_delta_ci95`,
+`imitation_control_heldout_games`, `live_path_reachable`, `solve_provenance`,
+`inference_substrate`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, and `field_principles`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a lift is success_amortized_prior_raises_first_win_above_baseline, a genuine null is complete_amortized_prior_no_first_win_lift_l1_wall_survives, a dead archive is blocked_dead_go_explore_archive."
+- `go_explore_archive_alive`: principle "observations>0 AND stored_cells>0 AND prefixes_injected>0 -- the exp4701 silent-bug guard; a 0 means a non-test."
+- `prior_changed_proposals`: principle "the prior must materially alter proposals vs no-prior (the S2/S3 no-op lesson) -- else the first-win delta is a silent no-op."
+- `first_win_rate_with_prior`: principle "held-out generic first-win WITH the prior -- must rise above the 0.04 baseline."
+- `first_win_rate_no_prior_ablation`: principle "the matched lambda=0 control."
+- `first_win_delta_ci95`: principle "must EXCLUDE 0 for a PASS -- a genuine lift, not noise."
+- `imitation_control_heldout_games`: principle "the lift must hold on games NOT in the distillation set -- exploration, not memorization (the exp4697 imitation trap)."
+- `live_path_reachable`: principle "the prior must be in the E3AgentPolicy proposal import closure (arc_orphan_solver_lint)."
+- `solve_provenance`: principle "live_agent_self_discovery -- a first-win lift is the agent solving via its OWN (prior-biased) exploration."
+- `inference_substrate`: principle "live_llm_inference -- the live E3 agent runs; 60s floor."
+- `preconditions_checked`: principle "records arcade/go_explore checks so a missing-resource run emits blocked_, never a fabricated first-win."
+- `random_seed`: principle "determinism for the distillation + the with/without runs + bootstrap."
+- `reproducibility_checksum`: principle "content hash of (distilled traces, prior, games, seeds) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4831-IN-CONTEXT-PRIOR
+
+Given banked first-contact winning trajectories and a fresh game's early
+exploration prefix
+When Experiment 4831 distills the amortized in-context prior and ranks live
+proposal candidates
+Then the scores depend on reusable prefix/action-family context rather than game
+IDs, the ranked proposal order differs from the no-prior order when matching
+context evidence exists, and diagnostics expose the exercised context buckets.
+
+#### SCENARIO-ARC-WMTE-4831-HELDOUT-GATE
+
+Given the offline arcade and `arc_go_explore` preconditions pass
+When Experiment 4831 runs the archive-alive check, no-prior ablation, prior arm,
+and held-out imitation control
+Then the artifact blocks on a dead archive, succeeds only when the positive
+first-win delta CI95 excludes zero and the lift holds on games outside the
+distillation set, or retires the amortized-prior generation class with a genuine
+null after positive archive and proposal-change evidence.
+
 ### REQ-ARC-WMTE-4705: Submitted A1/A2 Integration Gate For Object-Centric And Amortized Exploration
 
 Experiment 4705 SHALL read the object-centric proposal artifact
