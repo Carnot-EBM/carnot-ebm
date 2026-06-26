@@ -595,3 +595,41 @@ def test_ceiling_saturation_silent_with_real_headroom():
         flags,
     )
     assert "CEILING_SATURATION" not in _kinds(flags)
+
+
+# --------------------------------------------------------------------------- #
+# Separator-tolerant inference_substrate matching (2026-06-26 outer-loop fix)  #
+# Origin: .437 B2 exp4756 declared "aggregation_from_upstream_artifacts; 100us  #
+# floor." -- the `;` separator (a human note appended to the canonical value)  #
+# was not recognized, so the aggregation duration floor was NOT applied and a   #
+# legit 2.9s submission-package aggregation got DURATION_TOO_SHORT-flagged. The #
+# matcher must tolerate ANY separator after the canonical token, while NOT      #
+# matching a longer different enum (`<canonical>_v2`).                          #
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("aggregation_from_upstream_artifacts", True),  # bare
+        ("aggregation_from_upstream_artifacts; 100us floor.", True),  # the exp4756 `;` case
+        ("aggregation_from_upstream_artifacts -- reads upstream JSON", True),  # legacy `--`
+        ("aggregation_from_upstream_artifacts (0.0001s floor)", True),  # space separator
+        ("aggregation_from_upstream_artifacts, cites exp4761", True),  # comma
+        ("aggregation_from_upstream_artifacts: floor 100us", True),  # colon
+        ("aggregation_from_upstream_artifacts_v2", False),  # DIFFERENT enum -- must NOT match
+        ("live_llm_inference", False),  # different substrate
+    ],
+)
+def test_inference_substrate_matches_tolerates_any_separator(raw, expected):
+    d = {"inference_substrate": raw}
+    assert av._inference_substrate_matches(d, av.AGGREGATION_SUBSTRATE) is expected
+
+
+def test_aggregation_with_semicolon_note_uses_aggregation_floor():
+    """The exp4756 regression: `;`-separated note must still select the aggregation
+    floor (not the 60s compute-bound floor), so a fast aggregation is not flagged."""
+    d = {"inference_substrate": "aggregation_from_upstream_artifacts; 100us floor."}
+    assert av._is_aggregation_only(d) is True
+    floor = av.duration_floor_for_artifact(d)
+    assert floor is not None
+    assert floor["reason"] == "aggregation"
+    assert floor["min_duration_s"] <= 0.001
