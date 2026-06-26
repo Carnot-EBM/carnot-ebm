@@ -1,0 +1,238 @@
+{
+  "attempted_games": [
+    {
+      "dead_end": "lf52: same-depth reproduction reached L2 against registry prior L2; next run needs a new RE angle",
+      "game": "lf52",
+      "learned_verifier_checkpoint": "models/arc_verifier_lf52.json",
+      "loop_result_path": "results/arc_loop_solve_lf52.json",
+      "loop_solve_provenance": "development_proxy",
+      "new_levels_banked": 0,
+      "offline_reproduced_existing_depth": true,
+      "offline_reproduced_new_depth": false,
+      "prior_level": 2,
+      "reached_level": 2,
+      "reproduction_gate": {
+        "claimed_level": 2,
+        "game": "lf52",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 2,
+        "reproduced": true
+      },
+      "residual_cause": "reproduced_existing_or_lower_level",
+      "solution_labels": [
+        "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
+        "{\"action\":6,\"data\":{\"x\":30,\"y\":19}}",
+        "{\"action\":6,\"data\":{\"x\":30,\"y\":19}}",
+        "{\"action\":6,\"data\":{\"x\":42,\"y\":19}}",
+        "{\"action\":6,\"data\":{\"x\":42,\"y\":19}}",
+        "{\"action\":6,\"data\":{\"x\":42,\"y\":31}}",
+        "{\"action\":6,\"data\":{\"x\":42,\"y\":31}}",
+        "{\"action\":6,\"data\":{\"x\":42,\"y\":43}}",
+        "{\"action\":6,\"data\":{\"x\":14,\"y\":16}}",
+        "{\"action\":6,\"data\":{\"x\":26,\"y\":16}}",
+        "{\"action\":6,\"data\":{\"x\":26,\"y\":16}}",
+        "{\"action\":6,\"data\":{\"x\":38,\"y\":16}}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":1}",
+        "{\"action\":3}",
+        "{\"action\":6,\"data\":{\"x\":38,\"y\":16}}",
+        "{\"action\":6,\"data\":{\"x\":50,\"y\":16}}",
+        "{\"action\":4}",
+        "{\"action\":2}",
+        "{\"action\":2}",
+        "{\"action\":2}",
+        "{\"action\":3}",
+        "{\"action\":3}",
+        "{\"action\":3}",
+        "{\"action\":3}",
+        "{\"action\":3}",
+        "{\"action\":3}",
+        "{\"action\":3}",
+        "{\"action\":2}",
+        "{\"action\":2}",
+        "{\"action\":2}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":4}",
+        "{\"action\":6,\"data\":{\"x\":38,\"y\":52}}",
+        "{\"action\":6,\"data\":{\"x\":50,\"y\":52}}"
+      ],
+      "target_level": 3,
+      "target_selection_reason": "preferred_public_already_reproduced_deepen"
+    }
+  ],
+  "dead_ends": [
+    "lf52: same-depth reproduction reached L2 against registry prior L2; next run needs a new RE angle"
+  ],
+  "experiment": "experiment_4782_levelup_attempt",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>.",
+    "inference_substrate": "live_llm_inference if induction runs (60s floor).",
+    "offline_reproduced": "only reproduced levels count -- a live-recorded trajectory alone is provisional.",
+    "preconditions_checked": "records arcade/env/generator checks so a missing-resource run emits blocked_, never a fabricated solve.",
+    "reproduced_levels": "the new reproducible depth; the monotonic ARC progress metric.",
+    "solve_provenance": "live_agent_self_discovery -- the agent advanced via its OWN attempts + runtime RE; NOT outer_loop_re (CRITICAL).",
+    "verifier_is_oracle": "the reproduction gate is execution-grounded (true); this is a SOLVE task, not a moat claim."
+  },
+  "honest_verdict": "complete_lf52_no_new_level_residual_existing_depth",
+  "inference_substrate": "adapter_search_only_no_induction",
+  "new_levels_banked": 0,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "induction_needed": false,
+    "offline_arcade": {
+      "check": "arc_solver_kit.offline_arcade()",
+      "ok": true
+    },
+    "qwen_igpu": {
+      "needed": false,
+      "ok": null
+    },
+    "registry_loadable": {
+      "ok": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "target_offline_env": {
+      "game": "lf52",
+      "ok": true
+    }
+  },
+  "random_seed": 4782,
+  "registry_update": {
+    "path": "ops/arc_solve_registry.yaml",
+    "reason": "no_new_level_banked",
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "updated": false
+  },
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "c2e28422a4fbcb0b39d6333682b2f89e214c421108cc32d65bf1b0e15b58a34b",
+  "retire_if_same_verdict": true,
+  "rotation_selection": {
+    "game": "lf52",
+    "prior_level": 2,
+    "public_rotation": [
+      {
+        "game": "lf52",
+        "known": true,
+        "prior_level": 2,
+        "status": "already_reproduced"
+      },
+      {
+        "game": "sb26",
+        "known": true,
+        "prior_level": 2,
+        "status": "already_reproduced"
+      },
+      {
+        "game": "bp35",
+        "known": true,
+        "prior_level": 2,
+        "status": "already_reproduced"
+      }
+    ],
+    "reason": "preferred_public_already_reproduced_deepen",
+    "retired_targets": [
+      {
+        "game": "ka59",
+        "reason": "recent_no_bank_residual_existing_depth"
+      },
+      {
+        "game": "re86",
+        "reason": "recent_self_play_L2_bank"
+      }
+    ],
+    "shallowest_adaptered_fallbacks": [
+      {
+        "game": "cd82",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "cn04",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "dc22",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "ls20",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "m0r0",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "sk48",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "sp80",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "su15",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "vc33",
+        "prior_level": 2,
+        "target_level": 3
+      },
+      {
+        "game": "ar25",
+        "prior_level": 3,
+        "target_level": 4
+      },
+      {
+        "game": "ft09",
+        "prior_level": 3,
+        "target_level": 4
+      },
+      {
+        "game": "lp85",
+        "prior_level": 5,
+        "target_level": 6
+      },
+      {
+        "game": "tu93",
+        "prior_level": 5,
+        "target_level": 6
+      },
+      {
+        "game": "tr87",
+        "prior_level": 6,
+        "target_level": 7
+      }
+    ],
+    "target_level": 3
+  },
+  "schema": "carnot.exp4782.levelup_attempt.v1",
+  "schema_errors": [],
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4782",
+    "SCENARIO-ARC-WMTE-4782-ROTATION-TARGET",
+    "SCENARIO-ARC-WMTE-4782-REPRODUCTION-GATE",
+    "SCENARIO-ARC-WMTE-4782-STABLE-ARTIFACT"
+  ],
+  "target_game": "lf52",
+  "verifier_is_oracle": true
+}
