@@ -7888,6 +7888,78 @@ leaderboard, or solve result
 When the Experiment 4808 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4818: Reserved Energy-Guided Generation SOTA Ingestion For S3
+
+Experiment 4818 SHALL run the reserved `.444` SOTA-ingestion slot for
+energy/value-guided generation. The workflow SHALL verify that
+`research-studying.md` and `research-references.md` are present, read the
+discovered corpus filtered to energy-guided generation, emit focused
+`scripts/sweep_clusters.py` cluster URLs for energy-based models and
+neural/value-guided search, run `scripts/sweep_semscholar.py` on focused
+energy-guided generation queries, and use low-concurrency WebSearch/WebFetch
+plus direct arXiv checks to verify the top five to eight source papers. The
+workflow SHALL NOT invoke `/deep-research`, load models, train, submit to a
+leaderboard, or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4818 SHALL write
+`results/experiment_4818_sota_ingestion_energy_guided_generation.json` and
+update `research-studying.md` with an idempotent Exp 4818 section marked
+INGESTED. The artifact SHALL include the required fields `honest_verdict`,
+`methods_mapped`, `arxiv_ids_cited`, `flagged_for_v444`,
+`inference_substrate`, `preconditions_checked`, `citations`, `fresh_sweep`,
+`s3_context`, `note_path`, `random_seed`, `duration_s`,
+`reproducibility_checksum`, and `field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_energy_guided_generation_mapped`;
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`; and
+`flagged_for_v444` SHALL name the strongest method or methods for the `.444`
+planner. The mapping SHALL cover S3 of the live explorer by explaining how
+each method uses lower-is-better energy or value feedback to put a winner into
+the candidate pool instead of merely reranking a frozen pool. The mapping
+SHALL cover energy-guided sampling, classifier/score guidance,
+energy/value-guided tree generation, energy-as-fitness evolutionary search,
+and plan-with-energy trajectory generation.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_energy_guided_generation_mapped."
+- `methods_mapped`: principle "the strongest 3-5 methods mapped onto S3, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID."
+- `flagged_for_v444`: principle "the strongest method(s) flagged so the .444 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`1806.10230`, `1909.06878`, `2202.11705`, `2207.12598`, `2305.12018`,
+`2309.15028`, `2502.07202`, and `2605.28814`. The method map SHALL contain
+three to five methods, and every method claim SHALL cite only IDs from
+`arxiv_ids_cited`. The note SHALL identify COLD Decoding, BOLT,
+classifier-free guidance, value-guided MCTS decoding, Monte Carlo Tree
+Diffusion, model-based planning with EBMs, Guided Evolutionary Strategies, and
+Bidirectional Evolutionary Search as the ingested literature informing S3
+generation guidance.
+
+#### SCENARIO-ARC-WMTE-4818
+
+Given the research files are present, the reliable sweep helpers are available,
+Semantic Scholar is attempted through the reliable script, and the top arXiv
+sources are HTTP-200 verified
+When Experiment 4818 runs
+Then it writes
+`results/experiment_4818_sota_ingestion_energy_guided_generation.json`,
+records that `/deep-research` was not invoked, maps three to five SOTA methods
+onto S3 with real arXiv IDs, updates `research-studying.md` with the Exp 4818
+mapping note, and flags the strongest candidate inputs for `.444`.
+
+#### SCENARIO-ARC-WMTE-4818-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID, uses
+a stale `.443` roadmap flag, maps only S2 without S3, omits the "put a winner
+into the pool" generation handoff, or claims a model-load, training,
+leaderboard, or solve result
+When the Experiment 4818 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4781: S1 Contrastive Structural Energy Landscape
 
 Experiment 4781 SHALL promote the S0' origin-matched structural signal into a
