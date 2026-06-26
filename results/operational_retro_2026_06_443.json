@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.443",
+  "generated_at": "2026-06-26T19:32:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector AGAIN false-reported 0 commits since activation (the recurring observability gap documented .363-.435, now ~74 milestones); the locked numeric fields stay at the detector's 0/0/0/null per conductor constraint. On-disk artifacts exp4811-exp4819 (mtimes 2026-06-26T17:46:08Z->19:24:53Z UTC, ~99-min content window after the exp4810 archive/activate transition) show .443 executed cleanly: 8 present arms, zero adversarial flags, no monitored-3090 compute-bound task -- so both idle 3090s and gpu_idle_on_compute_bound_tasks=null are correct, not a bug.",
+  "bottlenecks_identified": [
+    "RECURRING (~74 milestones, .363-.443) HIGHEST-LEVERAGE: the milestone-scoped timing detector false-reported 0 commits since activation while on-disk exp4811-exp4819 (17:46:08Z->19:24:53Z UTC) show a clean ~99-min execution. The shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds the retro TIMING DATA block, so every retro pays a manual on-disk-reconstruction tax.",
+    "exp4817 (the kv260 hardware-continuity arm slot) artifact is ABSENT from the otherwise-contiguous exp4811-4819 range -- a missing-arm observability gap (the board task likely emitted a blocked_* verdict that did not write to the expected path, or was skipped), so per-board hardware continuity is unverifiable from artifacts this milestone."
+  ],
+  "improvements_suggested": [
+    "Move the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site (not just the standalone module), add a disk-mtime fallback so a detector false-zero degrades to a verifiable artifact-mtime window, and stamp duration_s / inference_substrate / compute_bound at artifact write-time.",
+    "Promote injected-timing == on-disk-artifact-count to a HARD retro-launch gate so a false-zero is caught before the retro runs rather than corrected after.",
+    "When an expected arm artifact is absent (exp4817 here), have the capstone/retro surface the missing-arm slot plus its blocked_* / skip reason in the retro input so hardware-continuity gaps are auditable without a manual ls.",
+    "Do NOT propose DualGPURunner or GPU-idle remediation: gpu_idle_on_compute_bound_tasks=null because no monitored-3090 compute-bound task ran -- the live arms ran on the AMD iGPU sprint generator + CPU cached-candidate verifier-scoring, so both idle 3090s are correct."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Re-point the detector-wire at the conductor's retro TIMING-DATA prompt-assembly consumer + add a disk-mtime fallback + write-time substrate/duration stamping -- the single fix that ends the ~74-milestone false-zero observability gap (recurring, highest-leverage).",
+    "Add a hard injected==on-disk retro-launch gate so the false-zero is blocked at source instead of hand-corrected from disk every milestone.",
+    "Surface absent-arm slots (e.g. exp4817 kv260 continuity) with their blocked/skip reason in the retro input so per-board hardware continuity is verifiable from artifacts."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "Execution itself was clean -- 8 .443 arms landed in a ~99-min window with correct substrate routing (CPU cached-candidate + iGPU live arms, aggregation capstone) and zero adversarial flags; the headline S2-v3 corpus-wide structural-energy gate returned a trustworthy GENUINE corpus-wide bounded null (delta +0.0905, CI95 includes zero) that pivots the energy program to S3 generation. The only operational defects are observability, not execution: the ~74-milestone false-zero timing detector and the absent exp4817 hardware-continuity artifact. The durable lesson is unchanged -- the detector-wire must reach the retro prompt-assembly consumer with a disk-mtime fallback, or every retro keeps paying the manual on-disk-reconstruction tax."
+}
