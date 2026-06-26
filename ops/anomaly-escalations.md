@@ -642,3 +642,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['DEGENERATE_CANDIDATE_POOL'] on a non-negative verdict
 - artifact: results/experiment_4791_structural_energy_s2_offpath_trust_gate.json
+
+## experiment_4801_structural_energy_s2v2_diverse_trust_gate.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DEGENERATE_CANDIDATE_POOL'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json
