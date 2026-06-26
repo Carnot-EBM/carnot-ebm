@@ -1,0 +1,386 @@
+{
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4791,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047"
+    },
+    {
+      "experiment_id": 4792,
+      "fields_imported": [
+        "honest_verdict",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "target_game",
+        "registry_update",
+        "attempted_games",
+        "dead_ends",
+        "solve_provenance",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:cd478028017ec8007eee5e3c767559f8b1f02fcf556fc3ef5e0d3b446d16918a"
+    },
+    {
+      "experiment_id": 4793,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_checkpoint_refreshed",
+        "target_game",
+        "self_play_residual",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproduction_gate",
+        "solve_provenance"
+      ],
+      "sha256": "sha256:8d1eb1445f10c02c5c4bd52feddbd45f269ad53d069d0c01f779869ee8781405"
+    },
+    {
+      "experiment_id": 4794,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "first_win_baseline",
+        "prior_best_heldout_first_win_rate",
+        "heldout_first_win_delta_vs_baseline",
+        "heldout_first_win_delta_vs_prior_best",
+        "heldout_variant_attempts",
+        "positive_control_passed",
+        "parity_test_green",
+        "null_delta_methodology_note"
+      ],
+      "sha256": "sha256:0654b39f23c70f647d76bedac2064f1e03bf89c25298cfdf3afeae4e08300cef"
+    },
+    {
+      "experiment_id": 4795,
+      "fields_imported": [
+        "honest_verdict",
+        "nulls_audited",
+        "trusted_nulls",
+        "silent_bugs_found",
+        "per_null_verdicts"
+      ],
+      "sha256": "sha256:556f1698012d66595d4321436b3e3793fb7415b73fb8157dd735ce3c25c2af88"
+    },
+    {
+      "experiment_id": 4796,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "submitted_to_leaderboard",
+        "operator_only",
+        "vram_estimate_gb",
+        "package_builds"
+      ],
+      "sha256": "sha256:14f3c89d3eb85857aa5d2eabe7da47dae7f19641f7967ba49368db1ca039d222"
+    },
+    {
+      "experiment_id": 4797,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "board_state",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:8afaa4b7f2212b5b767d88297f1302f5e25a0453efc444300e2c0e015a8cdd2c"
+    },
+    {
+      "experiment_id": 4798,
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_for_v442",
+        "methods_mapped",
+        "s1_s2_context",
+        "arxiv_ids_cited"
+      ],
+      "sha256": "sha256:b4a74cada6fa15938b7317377c917a77af76eba3da4217d4dbbed00e2d99cb8f"
+    }
+  ],
+  "duration_s": 0.461246,
+  "experiment": "experiment_4799_capstone_v441",
+  "experiment_id": 4799,
+  "field_principles": {
+    "cited_upstream_artifacts": {
+      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; capstone_ready=true is success_/complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric carried from the registry."
+    },
+    "s2_structural_energy_verdict": {
+      "principle": "the headline -- live off-path trust-gate WIN (S3 authorized) or BOUNDED; recorded from the gate numbers even if stale-flagged."
+    },
+    "stale_false_positive_notes": {
+      "principle": "records which conductor flags were stale-linter false-positives (live re-check clean) vs genuine."
+    }
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4791,
+      "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+      "reason": "live_critical_recheck",
+      "sha256": "sha256:70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047",
+      "source": "S2"
+    }
+  ],
+  "hardware_continuity": {
+    "board_hostname": "kv260",
+    "decision": "kv260_reachable",
+    "experiment_id": 4797,
+    "kv260_ssh_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "source": "HARDWARE",
+    "uio_device_count": 5
+  },
+  "heldout_readiness": {
+    "decision": "flat_null_no_readiness_gain",
+    "experiment_id": 4794,
+    "first_win_baseline": 0.04,
+    "heldout_first_win_delta_vs_baseline": 0.0,
+    "heldout_first_win_delta_vs_prior_best": 0.0,
+    "heldout_first_win_rate": 0.04,
+    "heldout_variant_attempts": 100,
+    "null_delta_methodology_note_present": true,
+    "parity_test_green": true,
+    "positive_control_passed": true,
+    "prior_best_heldout_first_win_rate": 0.04,
+    "source": "HELDOUT"
+  },
+  "honest_verdict": "complete_s2_structural_energy_bounded_v441_capstone_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "levelup_bank": {
+    "experiment_id": 4792,
+    "moat_claim": false,
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "registry_updated": false,
+    "reproduced_levels": 0,
+    "reproducible_total_levels_after": 65,
+    "reproducible_total_levels_before": 65,
+    "reproducible_total_levels_delta": 0,
+    "source": "LEVELUP",
+    "target_game": "sb26",
+    "verifier_is_oracle": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4799": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "BUG_AUDIT": {
+        "path": "results/experiment_4795_silent_bug_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HARDWARE": {
+        "path": "results/experiment_4797_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "HELDOUT": {
+        "path": "results/experiment_4794_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "LEVELUP": {
+        "path": "results/experiment_4792_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "PACKAGE": {
+        "path": "results/experiment_4796_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "S2": {
+        "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+        "present": true,
+        "summarizer_exit_code": 2
+      },
+      "SELF_PLAY": {
+        "path": "results/experiment_4793_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "SOTA": {
+        "path": "results/experiment_4798_sota_ingestion_energy_guided_generation.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 4799,
+  "readiness": {
+    "heldout_decision": "flat_null_no_readiness_gain",
+    "ready_for_operator_submit": false,
+    "reason": "requires_s2_trust_gate_win_clean_package_and_heldout_gain",
+    "s2_verdict": "bounded",
+    "submission_package_decision": "package_ready_operator_only"
+  },
+  "reproducibility_checksum": "sha256:bdaa7ca44176f7e336ba70db2368e7352852631605f0b0c830d26f5a9b32aa32",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4799_capstone_v441.json",
+  "s2_structural_energy_verdict": {
+    "artifact_skipped": true,
+    "experiment_id": 4791,
+    "metrics_imported": false,
+    "reason": "s2_artifact_skipped_live_or_genuine_flag",
+    "reported_energy_minus_accuracy_delta": 0.0,
+    "reported_energy_minus_accuracy_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "s3_authorized": false,
+    "source": "S2",
+    "upstream_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
+    "verdict": "bounded",
+    "verifier_is_oracle": false
+  },
+  "schema": "carnot.exp4799.capstone_v441.v1",
+  "self_play_checkpoint": {
+    "decision": "checkpoint_refreshed",
+    "experiment_id": 4793,
+    "offline_reproduced": true,
+    "reproduced_levels": 2,
+    "self_play_residual": "checkpoint_refreshed_gate_passed",
+    "solve_provenance": "live_agent_self_discovery",
+    "source": "SELF_PLAY",
+    "target_game": "re86",
+    "verifier_checkpoint_refreshed": true
+  },
+  "silent_bug_audit": {
+    "experiment_id": 4795,
+    "nulls_audited": 3,
+    "reopened_null_ids": [],
+    "s2_audit_note": "s2_null_audited_as_trustworthy",
+    "s2_null_audited_trustworthy": true,
+    "silent_bugs_found_count": 0,
+    "source": "BUG_AUDIT",
+    "trusted_nulls": [
+      "experiment_4791_structural_energy_s2_offpath_trust_gate",
+      "experiment_4792_levelup_attempt",
+      "experiment_4794_heldout_first_win_readiness"
+    ]
+  },
+  "sota_handoff": {
+    "arxiv_ids_cited": [
+      "1806.10230",
+      "1909.06878",
+      "2012.04322",
+      "2105.05233",
+      "2202.11705",
+      "2207.12598",
+      "2309.15028",
+      "2502.07202"
+    ],
+    "decision": "sota_handoff_mapped",
+    "experiment_id": 4798,
+    "flagged_for_v442_candidates": [
+      "cold_cfg_value_tree_generator_for_s3",
+      "energy_fitness_qd_pool_inserter"
+    ],
+    "methods_mapped_count": 5,
+    "s1_s2_context": {
+      "generation_constraint": "Use S1/S2 lower-is-better energy to guide new candidate generation and trust gating, not as an environment oracle or solve claim.",
+      "s1_energy_ranking_loo_auroc_mean": 0.7134961314270525,
+      "s1_gate_passed": true,
+      "s1_imported_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+      "s1_source_artifact": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+      "s2_candidate_pool_size": 11,
+      "s2_energy_minus_accuracy_delta": 0.0,
+      "s2_imported_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
+      "s2_live_path_reachable": true,
+      "s2_n_heldout_games": 5,
+      "s2_source_artifact": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
+      "s3_generation_allowed": true
+    },
+    "source": "SOTA"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4799",
+    "SCENARIO-CAPSTONE-4799",
+    "SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4799-FIELD-PRINCIPLES"
+  ],
+  "stale_false_positive_notes": [
+    {
+      "experiment_id": 4791,
+      "known_stale_conductor_commit": "",
+      "live_recheck_exit_code": 2,
+      "metrics_imported": false,
+      "note": "stamped flag was not live-clean; metrics skipped",
+      "source": "S2",
+      "status": "genuine_or_unresolved"
+    }
+  ],
+  "submission_package_state": {
+    "decision": "package_ready_operator_only",
+    "experiment_id": 4796,
+    "operator_only": true,
+    "source": "PACKAGE",
+    "submission_package_ready": true,
+    "submitted_to_leaderboard": false,
+    "vram_estimate_gb": 15.146
+  },
+  "upstream_oracle_declarations": {
+    "BUG_AUDIT": {
+      "experiment_id": 4795,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HARDWARE": {
+      "experiment_id": 4797,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "HELDOUT": {
+      "experiment_id": 4794,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "LEVELUP": {
+      "experiment_id": 4792,
+      "moat_claim_allowed": false,
+      "verifier_is_oracle": true
+    },
+    "PACKAGE": {
+      "experiment_id": 4796,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "S2": {
+      "experiment_id": 4791,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SELF_PLAY": {
+      "experiment_id": 4793,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    },
+    "SOTA": {
+      "experiment_id": 4798,
+      "moat_claim_allowed": true,
+      "verifier_is_oracle": false
+    }
+  }
+}
