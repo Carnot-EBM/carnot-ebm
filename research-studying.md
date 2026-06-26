@@ -10,6 +10,49 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4828-SOTA-INGESTION-CROSS-FAMILY-TRANSFER-START -->
+## 2026-06-26 Exp 4828 - .445 cross-family transfer SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4828_sota_ingestion_cross_family_transfer.json`.
+
+**Preconditions:** `research-studying.md` and `research-references.md` were
+present. `scripts/sweep_clusters.py` emitted verifier/reward, EBM, and
+neural-guided search cluster URLs. `scripts/sweep_semscholar.py` was run on
+three focused cross-family transfer queries and returned HTTP 429 for all of
+them, so no S2-only source was promoted. Low-concurrency WebSearch/WebFetch
+plus direct arXiv HTTP checks verified the top eight papers listed below.
+`/deep-research` was not invoked. No model load, training, leaderboard
+submission, or solve claim was made; this is a no solve claim ingestion note.
+
+**Verified source set:**
+- arXiv:1911.08731 -- Distributionally Robust Neural Networks for Group Shifts: On the Importance of Regularization for Worst-Case Generalization
+- arXiv:2003.00688 -- Out-of-Distribution Generalization via Risk Extrapolation (REx)
+- arXiv:2007.01434 -- In Search of Lost Domain Generalization
+- arXiv:2012.07421 -- WILDS: A Benchmark of in-the-Wild Distribution Shifts
+- arXiv:2311.14743 -- A Baseline Analysis of Reward Models' Ability To Accurately Analyze Foundation Models Under Distribution Shift
+- arXiv:2403.13787 -- RewardBench: Evaluating Reward Models for Language Modeling
+- arXiv:2602.08489 -- Beyond Correctness: Learning Robust Reasoning via Transfer
+- arXiv:2605.25629 -- When In-Distribution Gains Fail: Evaluating Weak-to-Strong Reward Models under Preference Shift
+
+**SOTA -> S4 cross-family transfer mapping:**
+- **Leave-one-family reward/verifier transfer gate** (arXiv:2311.14743, arXiv:2403.13787, arXiv:2007.01434, arXiv:2012.07421): maps to S4; Split the ARC family corpus into source families and one held-out target family, then report S4 energy accuracy, calibration, and OOD transfer deltas separately for prompt shift and response shift. Held-out family test: A family is successful only if its held-out score, worst-family score, and calibration stay positive; pooled source-family averages cannot authorize S4. Takes over: Takes over the old pooled transfer readout that let a strong source family hide a brittle held-out family. Fails when: The split leaks level identity, the held-out family has too few examples, or the verifier is calibrated only on source-family outputs.
+- **Representation anchoring for verifier-energy fine-tuning** (arXiv:2605.25629): maps to S4; Fine-tune the S4 energy with an anchor penalty to keep the verifier near the pretrained representation while allowing source-family adaptation where it improves held-out transfer. Held-out family test: Pick the anchor weight by source-family validation only, then score the held-out family once and require transfer-aware gain rather than source-family memorization. Takes over: Takes over unconstrained verifier fine-tuning that can chase family style features and lose the transferable representation. Fails when: The base representation lacks cross-family signal, the anchor is so strong that useful adaptation is blocked, or source labels encode family shortcuts.
+- **Worst-family group DRO energy training** (arXiv:1911.08731, arXiv:2012.07421): maps to S4; Treat source game families as groups and optimize the S4 verifier for worst-family loss with explicit L2 or early-stopping regularization before the held-out family is touched. Held-out family test: Report worst-source-family and held-out-family energy separation; the method passes only if the worst group improves without collapsing the held-out family. Takes over: Takes over average-loss energy training when rare mechanics families are swamped by easier frequent families. Fails when: Family labels are noisy, group sizes are too small for stable worst losses, or regularization is too weak to generalize beyond training groups.
+- **Risk extrapolation across source families** (arXiv:2003.00688, arXiv:2007.01434): maps to S4; Add a V-REx-style penalty that reduces variance in verifier-energy risk across source families, with DomainBed-style model selection that never tunes on the held-out family. Held-out family test: Score the held-out family after source-only model selection and compare against ERM, anchored fine-tuning, and group DRO controls. Takes over: Takes over source-family ERM when S4 needs a smoother transfer surface across mechanics families. Fails when: Source-family variation does not cover the held-out shift, the risk-equality penalty suppresses genuinely useful family-specific signals, or model selection overfits source domains.
+- **Transferable-reward prefix continuation stress** (arXiv:2602.08489): maps to S4; Stress the S4 energy by asking whether partial plans or reasoning prefixes generated from one source family help a separate policy continue in another family, rather than only judging final answers. Held-out family test: A held-out family earns credit only when source-family prefixes improve continuation quality under the target-family verifier without manual target labels. Takes over: Takes over final-outcome-only verifier checks that miss brittle reasoning traces which cannot transfer across models or families. Fails when: Families do not share transferable substructure, prefix swaps create invalid action contexts, or the continuation model learns a style cue.
+
+flagged_for_v445: anchor_leave_one_family_transfer_gate (arXiv:2605.25629 + arXiv:2311.14743 + arXiv:2403.13787)
+flagged_for_v445: worst_family_group_dro_s4_energy (arXiv:1911.08731 + arXiv:2012.07421)
+flagged_for_v445: rex_transferable_reward_stress (arXiv:2003.00688 + arXiv:2602.08489 + arXiv:2007.01434)
+
+**Bottom line for .445:** prioritize the Anchor plus leave-one-family transfer
+gate because it directly attacks the .393/GAP-4 failure mode: a verifier energy
+can look good in-distribution while failing on the family that matters. Pair it
+with worst-family Group DRO as the robust-training control, then use REx and
+RLTR-style transferable-reward stress as the falsifier when source families
+still look too easy.
+<!-- EXP4828-SOTA-INGESTION-CROSS-FAMILY-TRANSFER-END -->
+
 <!-- EXP4818-SOTA-INGESTION-ENERGY-GUIDED-GENERATION-START -->
 ## 2026-06-26 Exp 4818 - .444 energy-guided generation SOTA ingestion - INGESTED
 
