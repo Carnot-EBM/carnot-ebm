@@ -7204,6 +7204,78 @@ Then it emits `complete: <game>_delta_identified_no_bank`, keeps
 `new_levels_banked=0`, leaves `reproducible_total_levels=64`, and records the
 attempted target deltas as dead-ends for the next rotation.
 
+### REQ-ARC-WMTE-4751: SK48 Level-Up Self-Play Bank and Learned-Verifier Checkpoint
+
+Experiment 4751 SHALL bank exactly one new offline-reproduced public ARC level
+by deepening `sk48` from the registry's reproduced L1 row to L2 through the
+standing ARC self-play loop. Before counting the result, it SHALL precheck
+`ops/arc_solve_registry.yaml` and reject the run if `sk48` already records
+`levels_reproduced >= 2`. It SHALL verify that the Qwen3.5-9B-MTP GGUF cache is
+present and that `arc_solver_kit.offline_arcade()` initializes, but the
+adaptered `sk48` bank SHALL keep `inference_substrate` honest as the offline
+verifier-routed loop unless a live LLM proposer is genuinely invoked.
+
+Experiment 4751 SHALL use the live-path standing mechanism, not a parallel
+solver: `scripts/arc_loop_solve.py --game sk48 --target-level 2 --no-hazard-prune`.
+A new level SHALL count only when `arc_solver_kit.reproduce` confirms the
+reached level offline, the reached level is strictly greater than the
+prechecked registry level, and the learned verifier checkpoint is recorded at
+`models/arc_verifier_sk48.json`.
+
+The terminal artifact `results/experiment_4751_levelup_selfplay.json` SHALL
+include principle-annotated top-level fields for `honest_verdict`,
+`inference_substrate`, `preconditions_checked`, `offline_reproduced`,
+`reproduced_levels`, `solve_provenance`, and `verifier_is_oracle`, plus
+`new_levels_banked`, `reproducible_total_levels`, `verifier_checkpoint`,
+`registry_precheck_passed`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, and the standing loop reproduction gate. On success it SHALL
+update the `sk48` registry row and advance `reproducible_total_levels` from 64
+to 65.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced when a level is banked, complete: <game>_delta_identified_no_bank otherwise."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for this adaptered offline self-play bank; live_llm_inference; 60s floor applies only when the live proposer is actually invoked."
+- `preconditions_checked`: principle "records GGUF/arcade checks."
+- `offline_reproduced`: principle "true only if arc_solver_kit.reproduce re-derives the claimed level offline -- the ONLY counted-level signal (a live-recorded trajectory is provisional)."
+- `reproduced_levels`: principle "the count of offline-reproduced levels this run -- feeds reproducible_total_levels growth."
+- `solve_provenance`: principle "live_agent_self_discovery if the live agent advanced via its OWN attempts + runtime RE; development_proxy for the offline dev twin -- never outer_loop_re."
+- `verifier_is_oracle`: principle "false -- a learned/energy verifier routes/prunes; if the verifier IS the executable oracle the win is execution_grounded, not a moat."
+- `new_levels_banked`: principle "exactly +1 for the Level-Up Attempt Guarantee; zero is a complete no-bank attempt."
+- `reproducible_total_levels`: principle "authoritative registry total after a reproduced bank; Experiment 4751 advances 64->65 only on sk48 L2."
+- `verifier_checkpoint`: principle "models/arc_verifier_sk48.json records the trained learned verifier checkpoint from the standing loop."
+- `registry_precheck_passed`: principle "confirms sk48 L2 was not already reachable in the authoritative registry before counting."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `reproducibility_checksum`: principle "content-addressed hash of the reproduction-gated artifact fields."
+- `model_specs`: principle "records the cached Qwen3.5-9B-MTP GGUF precondition and whether it was invoked."
+
+#### SCENARIO-ARC-WMTE-4751-REGISTRY-PRECHECK
+
+Given the ARC registry records `sk48` at L1 and
+`reproducible_total_levels=64`
+When Experiment 4751 selects its target
+Then it selects `sk48` target L2, records that the target level is not already
+banked by the registry, and rejects any duplicate registry that already records
+`sk48` L2 or deeper.
+
+#### SCENARIO-ARC-WMTE-4751-REPRODUCTION-GATED-BANK
+
+Given the Qwen3.5-9B-MTP GGUF cache and offline arcade preconditions pass
+When Experiment 4751 runs `scripts/arc_loop_solve.py --game sk48 --target-level 2 --no-hazard-prune`
+Then `results/arc_loop_solve_sk48.json` reports `offline_reproduced=true`,
+`reproduced_levels=2`, a reproduction gate with `reproduced=true`,
+`solve_provenance=development_proxy`, and `verifier_is_oracle=false` in the
+terminal artifact.
+
+#### SCENARIO-ARC-WMTE-4751-REGISTRY-GATE
+
+Given the standing loop reproduces `sk48` L2 and trains
+`models/arc_verifier_sk48.json`
+When Experiment 4751 writes `results/experiment_4751_levelup_selfplay.json`
+Then it emits `success: sk48_L2_offline_reproduced`, records
+`new_levels_banked=1`, updates the registry row to `levels_reproduced: 2`, and
+sets `reproducible_total_levels=65`.
+
 ### REQ-ARC-WMTE-4731: .435 Submitted-Agent Integration Gate
 
 Experiment 4731 SHALL read the `.435` A1/A2 artifacts
