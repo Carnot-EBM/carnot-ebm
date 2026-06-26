@@ -9359,3 +9359,4 @@ The contro |
 | 2026-06-26 14:41 UTC | PHASE 0 (TRANSITION) -- archive .441 -> activate . | OK | 86 passed, 1 warning in 9.82s |
 | 2026-06-26 15:00 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | OK | 87 passed, 1 warning in 7.73s |
 | 2026-06-26 15:22 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 92 passed, 1 warning in 9.60s |
+| 2026-06-26 15:37 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 90 passed, 1 warning in 8.11s |
