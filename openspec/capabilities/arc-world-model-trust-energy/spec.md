@@ -1951,6 +1951,54 @@ empty generated pools, and the `.434` all-arms `0.04` online-driver tautology as
 `trustworthy_null`, and writes a prioritized reopen list without claiming a new
 solve.
 
+### REQ-ARC-WMTE-4755: Generation-Lever Silent No-Op Audit Refresh
+
+Experiment 4755 SHALL audit the `.428` through `.433` generation-lever null
+artifacts for silent representation no-ops before the planner propagates any
+closed negative result. The audit SHALL read the prior
+`results/experiment_4725_silent_bug_audit.json` reopen list, inspect the
+checked-in generation-lever artifacts for experiments 4640, 4641, 4653, 4676,
+4677, 4688, 4689, 4700, 4701, 4710, and 4713 when present, and classify each
+lever from upstream artifact evidence only. It SHALL treat byte-identical arms, a scorer
+or CNN that never fires, a dead archive, an empty or unchanged candidate pool,
+and an array-shape or representation mismatch as silent no-op signatures. It
+SHALL classify a lever as `must_reopen` only when the artifact's null is a
+dead-code or silent-representation artifact, and as `genuine_null` when the
+mechanism has positive exercise evidence on non-degenerate data.
+
+Experiment 4755 SHALL verify the upstream artifacts exist and that the offline
+ARC arcade import exits successfully before emitting a complete audit. Missing
+upstream artifacts SHALL produce `honest_verdict=blocked_upstream_artifacts`;
+an arcade import failure SHALL produce `honest_verdict=blocked_arcade_import`.
+The audit SHALL not auto-fix any lever or claim any solve.
+
+Experiment 4755 SHALL write
+`results/experiment_4755_silent_bug_audit.json` with principle-annotated
+top-level fields for `honest_verdict`, `inference_substrate`,
+`preconditions_checked`, `levers_audited`, `silent_no_op_findings`, and
+`must_reopen`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; an audit-complete report is complete_."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts; 100us floor."
+- `preconditions_checked`: principle "records the upstream-artifact checks."
+- `levers_audited`: principle "the list of generation-lever nulls inspected -- the audit coverage."
+- `silent_no_op_findings`: principle "per-lever {lever, no_op_signature, classification} -- distinguishes dead-code artifacts from genuine nulls so the planner does not trust a dead-code null."
+- `must_reopen`: principle "the levers whose null is a dead-code artifact and must be re-tested validly -- the actionable output."
+
+#### SCENARIO-ARC-WMTE-4755-GENERATION-LEVER-AUDIT
+
+Given the `.428` through `.433` generation-lever artifacts, the prior
+Experiment 4725 audit, and an importable offline ARC arcade
+When Experiment 4755 inspects each lever for byte-identical arms, non-firing
+scorers/CNNs, dead archives, empty or unchanged generated pools, and
+array-shape or representation mismatches
+Then it emits one `silent_no_op_findings` entry per audited lever, separates
+`must_reopen` from `genuine_null`, records preconditions, writes
+`results/experiment_4755_silent_bug_audit.json`, and makes no code changes to
+the audited levers.
+
 ### REQ-ARC-WMTE-4732: Adversarial Verify Lever Exercise-Evidence Guard
 
 The `scripts/adversarial_verify.py` reader SHALL mechanize the Experiment 4725

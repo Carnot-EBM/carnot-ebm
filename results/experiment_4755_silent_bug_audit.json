@@ -1,0 +1,222 @@
+{
+  "audited_artifact_checksums": {
+    "results/experiment_4640_goal_energy_generation_live.json": "sha256:34c43c077b1fdb61d6442666ba9586dcf9a4d10161667476c8f20dbb9e7955b0",
+    "results/experiment_4641_action_effect_expansion_prior_live.json": "sha256:a06ceb53abaad34d5e9e5ed1bb4849d174f1e2149ef27c4fd80f6b7ebb58a887",
+    "results/experiment_4653_energy_fitness_qd_generation_live.json": "sha256:ee2f10e1846ed9bb77be96ea75a21857806d8da9fe9e909b36e26a54f0a72fdb",
+    "results/experiment_4676_hierarchical_subgoal_search_live.json": "sha256:0c3016d5ddd801d29791df62be13ab995908e953aea91bc4262c0f1d4608bf30",
+    "results/experiment_4677_poe_world_factored_subgoal_planner.json": "sha256:be67f2ed5b6ba21c191f4cbd7db12247240600b0054f31d2b921c54171b95ca2",
+    "results/experiment_4688_controllable_novelty_proposal_policy_live.json": "sha256:48927da3f9d483f4936d56a1e572e9eb1d0f937ca0cc4c532781c5254c62013f",
+    "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json": "sha256:bf6220a9da8c56c8e357b17bb8e12067f42f0a0c67d5534393fb07a8c799a184",
+    "results/experiment_4700_object_centric_perception_proposal_live.json": "sha256:6774823cb7f4fab9caf5767b363eccbdaaead76f4ea33fc4bb324e6e5142ce5c",
+    "results/experiment_4701_amortized_exploration_prior_go_explore_live.json": "sha256:5eda0919811a53f9bd0d8a1b7896678f1671aa39d73f4d6c5b1a5f77c6552f89",
+    "results/experiment_4710_arms_summary.json": "sha256:3e713c653efa85e399235bf5c646e1301b71ceb80cffe1b98878d7e148b00b0a",
+    "results/experiment_4713_surface_present_winner_verifier_ranker.json": "sha256:cc73d7e86c0462528abde580a84f1c40604c7acdc808e5f5786f80098c060960",
+    "results/experiment_4725_silent_bug_audit.json": "sha256:4e0d52ae856e31b6287ea8ae5013d58d68dfaccf2f2d4b949ad9e25cd8cbd778"
+  },
+  "audited_artifacts": [
+    "results/experiment_4640_goal_energy_generation_live.json",
+    "results/experiment_4641_action_effect_expansion_prior_live.json",
+    "results/experiment_4653_energy_fitness_qd_generation_live.json",
+    "results/experiment_4676_hierarchical_subgoal_search_live.json",
+    "results/experiment_4677_poe_world_factored_subgoal_planner.json",
+    "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+    "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
+    "results/experiment_4700_object_centric_perception_proposal_live.json",
+    "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
+    "results/experiment_4710_arms_summary.json",
+    "results/experiment_4713_surface_present_winner_verifier_ranker.json"
+  ],
+  "duration_s": 0.803959,
+  "experiment": "experiment_4755_silent_bug_audit",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; an audit-complete report is complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 100us floor."
+    },
+    "levers_audited": {
+      "principle": "the list of generation-lever nulls inspected -- the audit coverage."
+    },
+    "must_reopen": {
+      "principle": "the levers whose null is a dead-code artifact and must be re-tested validly -- the actionable output."
+    },
+    "preconditions_checked": {
+      "principle": "records the upstream-artifact checks."
+    },
+    "silent_no_op_findings": {
+      "principle": "per-lever {lever, no_op_signature, classification} -- distinguishes dead-code artifacts from genuine nulls so the planner does not trust a dead-code null."
+    }
+  },
+  "honest_verdict": "complete_generation_lever_silent_bug_audit_11_levers_5_must_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts; 100us floor.",
+  "levers_audited": [
+    "experiment_4640_goal_energy_generation_live",
+    "experiment_4641_action_effect_expansion_prior_live",
+    "experiment_4653_energy_fitness_qd_generation_live",
+    "experiment_4676_hierarchical_subgoal_search_live",
+    "experiment_4677_poe_world_factored_subgoal_planner",
+    "experiment_4688_controllable_novelty_proposal_policy_live",
+    "experiment_4689_program_synthesis_action_effect_proposal_filter",
+    "experiment_4700_object_centric_perception_proposal_live",
+    "experiment_4701_amortized_exploration_prior_go_explore_live",
+    "experiment_4710_arms_summary",
+    "experiment_4713_surface_present_winner_verifier_ranker"
+  ],
+  "must_reopen": [
+    "experiment_4640_goal_energy_generation_live",
+    "experiment_4641_action_effect_expansion_prior_live",
+    "experiment_4653_energy_fitness_qd_generation_live",
+    "experiment_4676_hierarchical_subgoal_search_live",
+    "experiment_4701_amortized_exploration_prior_go_explore_live"
+  ],
+  "preconditions_checked": {
+    "arcade_import_error": "",
+    "arcade_import_exits_0": true,
+    "missing_upstream_artifacts": [],
+    "ok": true,
+    "prior_audit_present": true,
+    "upstream_artifacts_present": true
+  },
+  "prior_audit_path": "results/experiment_4725_silent_bug_audit.json",
+  "prior_reopen_list": [
+    "experiment_4715_online_action_learning_driver_corrected",
+    "experiment_4701_amortized_exploration_prior_go_explore_live",
+    "experiment_4640_goal_energy_generation_live",
+    "experiment_4653_energy_fitness_qd_generation_live",
+    "experiment_4676_hierarchical_subgoal_search_live"
+  ],
+  "random_seed": 4755,
+  "reproducibility_checksum": "sha256:af13771ad49f24b5db1d34bc7f28c6cc2a71262564892b52530a3add589fc106",
+  "schema": "carnot.arc.generation_lever_silent_bug_audit_4755.v1",
+  "silent_no_op_findings": [
+    {
+      "artifact_path": "results/experiment_4640_goal_energy_generation_live.json",
+      "classification": "must_reopen",
+      "evidence": [
+        "goal-energy arm cloned 25 baseline rows; neutral_cached=25"
+      ],
+      "lever": "experiment_4640_goal_energy_generation_live",
+      "no_op_signature": [
+        "byte_identical_arms",
+        "scorer_or_energy_never_fires"
+      ],
+      "prior_4725_reopen": true
+    },
+    {
+      "artifact_path": "results/experiment_4641_action_effect_expansion_prior_live.json",
+      "classification": "must_reopen",
+      "evidence": [
+        "ranker and expansion-prior rows are byte-identical for 25 attempts"
+      ],
+      "lever": "experiment_4641_action_effect_expansion_prior_live",
+      "no_op_signature": [
+        "byte_identical_arms"
+      ],
+      "prior_4725_reopen": false
+    },
+    {
+      "artifact_path": "results/experiment_4653_energy_fitness_qd_generation_live.json",
+      "classification": "must_reopen",
+      "evidence": [
+        "search/random/QD arms share 4 identical attempts except arm labels"
+      ],
+      "lever": "experiment_4653_energy_fitness_qd_generation_live",
+      "no_op_signature": [
+        "byte_identical_arms",
+        "empty_or_unchanged_candidate_pool"
+      ],
+      "prior_4725_reopen": true
+    },
+    {
+      "artifact_path": "results/experiment_4676_hierarchical_subgoal_search_live.json",
+      "classification": "must_reopen",
+      "evidence": [
+        "subgoal decomposition and reachability evidence are empty"
+      ],
+      "lever": "experiment_4676_hierarchical_subgoal_search_live",
+      "no_op_signature": [
+        "empty_or_unchanged_candidate_pool"
+      ],
+      "prior_4725_reopen": true
+    },
+    {
+      "artifact_path": "results/experiment_4677_poe_world_factored_subgoal_planner.json",
+      "classification": "genuine_null",
+      "evidence": [
+        "poe_factored_experts_exercised count=8"
+      ],
+      "lever": "experiment_4677_poe_world_factored_subgoal_planner",
+      "no_op_signature": [],
+      "prior_4725_reopen": false
+    },
+    {
+      "artifact_path": "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+      "classification": "genuine_null",
+      "evidence": [
+        "controllable_novelty_exercised candidate_scores=4641, observed=194, rnd_updates=194"
+      ],
+      "lever": "experiment_4688_controllable_novelty_proposal_policy_live",
+      "no_op_signature": [],
+      "prior_4725_reopen": false
+    },
+    {
+      "artifact_path": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
+      "classification": "genuine_null",
+      "evidence": [
+        "program_filter_exercised kept=0, rejected=2, weights=2"
+      ],
+      "lever": "experiment_4689_program_synthesis_action_effect_proposal_filter",
+      "no_op_signature": [],
+      "prior_4725_reopen": false
+    },
+    {
+      "artifact_path": "results/experiment_4700_object_centric_perception_proposal_live.json",
+      "classification": "genuine_null",
+      "evidence": [
+        "object_centric_pool_exercised counts=[186, 186, 148, 148], augmented=6913, scores=8477"
+      ],
+      "lever": "experiment_4700_object_centric_perception_proposal_live",
+      "no_op_signature": [],
+      "prior_4725_reopen": false
+    },
+    {
+      "artifact_path": "results/experiment_4701_amortized_exploration_prior_go_explore_live.json",
+      "classification": "must_reopen",
+      "evidence": [
+        "go_explore_archive observations=0, stored_cells=0, actions_injected=0, prefixes_injected=0, total_steps=0"
+      ],
+      "lever": "experiment_4701_amortized_exploration_prior_go_explore_live",
+      "no_op_signature": [
+        "dead_archive",
+        "empty_candidate_pool"
+      ],
+      "prior_4725_reopen": true
+    },
+    {
+      "artifact_path": "results/experiment_4710_arms_summary.json",
+      "classification": "genuine_null",
+      "evidence": [
+        "online_cnn_exercised observed=4737, fits=935, errors=0"
+      ],
+      "lever": "experiment_4710_arms_summary",
+      "no_op_signature": [],
+      "prior_4725_reopen": false
+    },
+    {
+      "artifact_path": "results/experiment_4713_surface_present_winner_verifier_ranker.json",
+      "classification": "genuine_null",
+      "evidence": [
+        "surfacing_ranker_exercised samples=235, fits=156, scores=22684"
+      ],
+      "lever": "experiment_4713_surface_present_winner_verifier_ranker",
+      "no_op_signature": [],
+      "prior_4725_reopen": false
+    }
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4755",
+    "SCENARIO-ARC-WMTE-4755-GENERATION-LEVER-AUDIT"
+  ],
+  "verifier_is_oracle": false
+}
