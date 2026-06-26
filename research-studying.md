@@ -10,6 +10,55 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4788-SOTA-INGESTION-ENERGY-GUIDED-SEARCH-START -->
+## 2026-06-26 Exp 4788 - .441 energy-guided search SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4788_sota_ingestion_energy_guided_search.json`.
+
+**Preconditions:** `research-studying.md` and `research-references.md` were
+present. `scripts/sweep_clusters.py` emitted the EBM and neural-guided search
+cluster URLs. `scripts/sweep_semscholar.py` was run on two focused
+energy-guided search queries and returned HTTP 429, so no S2-only source was
+promoted. Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks
+verified the top eight papers listed below. `/deep-research` was not invoked.
+No model load, training, leaderboard submission, or solve claim was made; this
+is a no solve claim ingestion note.
+
+**S1 context imported:** `results/experiment_4781_structural_energy_s1_contrastive_landscape.json` reports
+`success_structural_energy_s1_landscape_authorizes_s2` with
+`energy_ranking_loo_auroc_mean=0.7134961314270525`
+and `denoising_direction_agreement=0.6223390275952694`.
+The .441 planner should treat S1 as a lower-is-better guide for search and
+generation, not as an environment oracle.
+
+**Verified source set:**
+- arXiv:1909.06878 -- Model Based Planning with Energy Based Models
+- arXiv:2103.11505 -- Policy-Guided Heuristic Search with Guarantees
+- arXiv:2202.11705 -- COLD Decoding: Energy-based Constrained Text Generation with Langevin Dynamics
+- arXiv:2206.09914 -- A Langevin-like Sampler for Discrete Distributions
+- arXiv:2304.14391 -- Energy-based Models are Zero-Shot Planners for Compositional Scene Rearrangement
+- arXiv:2309.15028 -- Do not throw away your value model! Generating more preferable text with Value-Guided Monte-Carlo Tree Search decoding
+- arXiv:2502.07202 -- Monte Carlo Tree Diffusion for System 2 Planning
+- arXiv:2505.10819 -- PoE-World: Compositional World Modeling with Products of Programmatic Experts
+
+**SOTA -> S2/S3 energy-guided search mapping:**
+- **Energy/value-guided MCTS frontier controller** (arXiv:2309.15028, arXiv:2502.07202): maps to S2; Use negative S1 energy as the value term in the S2 tree policy: expand induced partial plans whose predicted transition rollouts fall downhill, and re-score every child through verify before acting. Takes over: Takes over uniform or static best-first expansion when the live induce->verify->plan loop has several plausible next engine states. Fails when: The S1 energy is miscalibrated off distribution, tree branching is too wide for value reuse, or partial-rollout scores become a shortcut for known generator provenance.
+- **Energy-weighted policy-guided best-first search** (arXiv:2103.11505, arXiv:2309.15028): maps to S2; Rank the live frontier by a composite priority: learned policy prior for cheap action plausibility plus lower S1 energy for transition trust, with verification gating before a node consumes action budget. Takes over: Takes over hand-tuned value_weight and FIFO frontier scheduling by making the S1 landscape the admissibility-aware heuristic term. Fails when: The energy and policy disagree without a tie-break budget, low-energy nodes are all duplicates, or the heuristic over-prunes the one action that would reveal the game mechanic.
+- **Gradient-guided discrete energy search** (arXiv:2202.11705, arXiv:2206.09914): maps to S3; Treat candidate action programs, latent action slots, or text plans as discrete variables and use S1-energy gradients or discrete Langevin proposals to mutate them before normal verify accepts any plan. Takes over: Takes over random local repair of generated candidates by proposing low-energy edits that still pass the executable verifier. Fails when: The candidate representation is not differentiable enough to expose a useful neighborhood, gradient proposals violate hard grid mechanics, or repeated Langevin steps collapse to near-duplicate candidates.
+- **EBM-as-planner state trajectory refinement** (arXiv:1909.06878, arXiv:2304.14391): maps to S3; Use S1 energy directly as the planner objective over intermediate state hypotheses: sample or optimize a sequence of latent next states, then ask the existing inducer to synthesize actions that realize them. Takes over: Takes over plan-in-model reranking when no winning action sequence is present in the static candidate pool. Fails when: State-space descent finds physically impossible intermediate grids, the action realizer cannot execute the inferred state path, or the energy ignores small but decisive object changes.
+- **Product-of-experts compositional planning** (arXiv:2304.14391, arXiv:2505.10819, arXiv:1909.06878): maps to S2, S3; Make the S1 energy one expert in a product with code-world-model, spatial-relation, and action-effect experts; S2 scores which factor to trust, while S3 composes factors to generate new plans. Takes over: Takes over monolithic world-model acceptance by requiring each expert factor to improve or preserve the joint product energy before a plan is promoted. Fails when: Experts double-count the same shortcut, one factor dominates the product, sparse observations synthesize the wrong programmatic expert, or product energy improves without executable action support.
+
+flagged_for_v441: energy_value_guided_mcts_frontier_controller (arXiv:2309.15028 + arXiv:2502.07202 + arXiv:2103.11505)
+flagged_for_v441: ebm_poe_planner_for_s3_generation (arXiv:1909.06878 + arXiv:2304.14391 + arXiv:2505.10819)
+
+**Bottom line for .441:** start with the energy/value-guided MCTS frontier
+controller for S2, because it grafts the S1 energy onto the live
+induce->verify->plan loop with the smallest change in control flow. In
+parallel, prepare the EBM/PoE planner path for S3 generation so low-energy
+trajectory and product-of-experts proposals can make new candidate plans appear
+instead of merely reranking a frozen pool.
+<!-- EXP4788-SOTA-INGESTION-ENERGY-GUIDED-SEARCH-END -->
+
 <!-- EXP4778-SOTA-INGESTION-STRUCTURAL-ENERGY-START -->
 ## 2026-06-26 Exp 4778 - .440 structural-energy SOTA ingestion after S0' - INGESTED
 

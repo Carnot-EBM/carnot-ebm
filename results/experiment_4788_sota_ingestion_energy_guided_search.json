@@ -1,0 +1,294 @@
+{
+  "arxiv_ids_cited": [
+    "1909.06878",
+    "2103.11505",
+    "2202.11705",
+    "2206.09914",
+    "2304.14391",
+    "2309.15028",
+    "2502.07202",
+    "2505.10819"
+  ],
+  "citations": {
+    "1909.06878": {
+      "http_status": 200,
+      "title": "Model Based Planning with Energy Based Models",
+      "url": "https://arxiv.org/abs/1909.06878"
+    },
+    "2103.11505": {
+      "http_status": 200,
+      "title": "Policy-Guided Heuristic Search with Guarantees",
+      "url": "https://arxiv.org/abs/2103.11505"
+    },
+    "2202.11705": {
+      "http_status": 200,
+      "title": "COLD Decoding: Energy-based Constrained Text Generation with Langevin Dynamics",
+      "url": "https://arxiv.org/abs/2202.11705"
+    },
+    "2206.09914": {
+      "http_status": 200,
+      "title": "A Langevin-like Sampler for Discrete Distributions",
+      "url": "https://arxiv.org/abs/2206.09914"
+    },
+    "2304.14391": {
+      "http_status": 200,
+      "title": "Energy-based Models are Zero-Shot Planners for Compositional Scene Rearrangement",
+      "url": "https://arxiv.org/abs/2304.14391"
+    },
+    "2309.15028": {
+      "http_status": 200,
+      "title": "Do not throw away your value model! Generating more preferable text with Value-Guided Monte-Carlo Tree Search decoding",
+      "url": "https://arxiv.org/abs/2309.15028"
+    },
+    "2502.07202": {
+      "http_status": 200,
+      "title": "Monte Carlo Tree Diffusion for System 2 Planning",
+      "url": "https://arxiv.org/abs/2502.07202"
+    },
+    "2505.10819": {
+      "http_status": 200,
+      "title": "PoE-World: Compositional World Modeling with Products of Programmatic Experts",
+      "url": "https://arxiv.org/abs/2505.10819"
+    }
+  },
+  "duration_s": 0.0001,
+  "field_principles": {
+    "arxiv_ids_cited": {
+      "principle": "every method claim must cite a verifiable arXiv ID -- an ingestion with no citations is fabrication."
+    },
+    "citations": {
+      "principle": "HTTP-200 arXiv source metadata backing every method claim."
+    },
+    "duration_s": {
+      "principle": "0.0001s floor for aggregation-only inference substrate."
+    },
+    "flagged_for_v441": {
+      "principle": "the strongest method(s) flagged so the .441 planner reads the mapping."
+    },
+    "fresh_sweep": {
+      "principle": "records focused sweep_clusters, sweep_semscholar, and WebFetch provenance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; mapping emitted is success_sota_ingestion_energy_guided_search_mapped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "methods_mapped": {
+      "principle": "the strongest 3-5 methods mapped onto S2/S3, each with a real arXiv ID."
+    },
+    "note_path": {
+      "principle": "points to the idempotent research-studying.md ingestion note."
+    },
+    "preconditions_checked": {
+      "principle": "records reliable-channel checks and explicitly excludes banned channels."
+    },
+    "random_seed": {
+      "principle": "deterministic experiment identifier for reproducible artifact generation."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of citations, method map, flags, and S1 context."
+    },
+    "s1_context": {
+      "principle": "imports the S1 close-state so S2/S3 only consume an authorized energy landscape."
+    }
+  },
+  "flagged_for_v441": [
+    {
+      "candidate": "energy_value_guided_mcts_frontier_controller",
+      "flag": "flagged_for_v441: energy_value_guided_mcts_frontier_controller (arXiv:2309.15028 + arXiv:2502.07202 + arXiv:2103.11505)",
+      "maps_to_stages": [
+        "S2"
+      ],
+      "source_ids": [
+        "2309.15028",
+        "2502.07202",
+        "2103.11505"
+      ]
+    },
+    {
+      "candidate": "ebm_poe_planner_for_s3_generation",
+      "flag": "flagged_for_v441: ebm_poe_planner_for_s3_generation (arXiv:1909.06878 + arXiv:2304.14391 + arXiv:2505.10819)",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "source_ids": [
+        "1909.06878",
+        "2304.14391",
+        "2505.10819"
+      ]
+    }
+  ],
+  "fresh_sweep": {
+    "cluster_ids": [
+      1,
+      6
+    ],
+    "filtered_track": "energy-guided search + EBM planning for S2/S3",
+    "semantic_scholar_queries": [
+      "energy based model planning MCTS product of experts COLD decoding",
+      "value guided MCTS best first search energy guided decoding discrete Langevin"
+    ],
+    "semantic_scholar_result": "HTTP 429 on both focused queries; no S2-only source promoted.",
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/1909.06878",
+      "https://arxiv.org/abs/2103.11505",
+      "https://arxiv.org/abs/2202.11705",
+      "https://arxiv.org/abs/2206.09914",
+      "https://arxiv.org/abs/2304.14391",
+      "https://arxiv.org/abs/2309.15028",
+      "https://arxiv.org/abs/2502.07202",
+      "https://arxiv.org/abs/2505.10819"
+    ]
+  },
+  "honest_verdict": "success_sota_ingestion_energy_guided_search_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "fails_when": "The S1 energy is miscalibrated off distribution, tree branching is too wide for value reuse, or partial-rollout scores become a shortcut for known generator provenance.",
+      "graft_to_live_loop": "Use negative S1 energy as the value term in the S2 tree policy: expand induced partial plans whose predicted transition rollouts fall downhill, and re-score every child through verify before acting.",
+      "maps_to_stages": [
+        "S2"
+      ],
+      "method": "Energy/value-guided MCTS frontier controller",
+      "roadmap_candidate": "flagged_for_v441: energy_value_guided_mcts_frontier_controller (arXiv:2309.15028 + arXiv:2502.07202 + arXiv:2103.11505)",
+      "source_ids": [
+        "2309.15028",
+        "2502.07202"
+      ],
+      "takes_over_from_current_stack": "Takes over uniform or static best-first expansion when the live induce->verify->plan loop has several plausible next engine states.",
+      "track": "energy_value_guided_mcts"
+    },
+    {
+      "fails_when": "The energy and policy disagree without a tie-break budget, low-energy nodes are all duplicates, or the heuristic over-prunes the one action that would reveal the game mechanic.",
+      "graft_to_live_loop": "Rank the live frontier by a composite priority: learned policy prior for cheap action plausibility plus lower S1 energy for transition trust, with verification gating before a node consumes action budget.",
+      "maps_to_stages": [
+        "S2"
+      ],
+      "method": "Energy-weighted policy-guided best-first search",
+      "roadmap_candidate": "flagged_for_v441: energy_value_guided_mcts_frontier_controller (arXiv:2309.15028 + arXiv:2502.07202 + arXiv:2103.11505)",
+      "source_ids": [
+        "2103.11505",
+        "2309.15028"
+      ],
+      "takes_over_from_current_stack": "Takes over hand-tuned value_weight and FIFO frontier scheduling by making the S1 landscape the admissibility-aware heuristic term.",
+      "track": "energy_best_first_frontier"
+    },
+    {
+      "fails_when": "The candidate representation is not differentiable enough to expose a useful neighborhood, gradient proposals violate hard grid mechanics, or repeated Langevin steps collapse to near-duplicate candidates.",
+      "graft_to_live_loop": "Treat candidate action programs, latent action slots, or text plans as discrete variables and use S1-energy gradients or discrete Langevin proposals to mutate them before normal verify accepts any plan.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "Gradient-guided discrete energy search",
+      "roadmap_candidate": "support_for_v441: gradient_guided_discrete_candidate_repair",
+      "source_ids": [
+        "2202.11705",
+        "2206.09914"
+      ],
+      "takes_over_from_current_stack": "Takes over random local repair of generated candidates by proposing low-energy edits that still pass the executable verifier.",
+      "track": "gradient_guided_discrete_search"
+    },
+    {
+      "fails_when": "State-space descent finds physically impossible intermediate grids, the action realizer cannot execute the inferred state path, or the energy ignores small but decisive object changes.",
+      "graft_to_live_loop": "Use S1 energy directly as the planner objective over intermediate state hypotheses: sample or optimize a sequence of latent next states, then ask the existing inducer to synthesize actions that realize them.",
+      "maps_to_stages": [
+        "S3"
+      ],
+      "method": "EBM-as-planner state trajectory refinement",
+      "roadmap_candidate": "flagged_for_v441: ebm_poe_planner_for_s3_generation (arXiv:1909.06878 + arXiv:2304.14391 + arXiv:2505.10819)",
+      "source_ids": [
+        "1909.06878",
+        "2304.14391"
+      ],
+      "takes_over_from_current_stack": "Takes over plan-in-model reranking when no winning action sequence is present in the static candidate pool.",
+      "track": "ebm_as_planner"
+    },
+    {
+      "fails_when": "Experts double-count the same shortcut, one factor dominates the product, sparse observations synthesize the wrong programmatic expert, or product energy improves without executable action support.",
+      "graft_to_live_loop": "Make the S1 energy one expert in a product with code-world-model, spatial-relation, and action-effect experts; S2 scores which factor to trust, while S3 composes factors to generate new plans.",
+      "maps_to_stages": [
+        "S2",
+        "S3"
+      ],
+      "method": "Product-of-experts compositional planning",
+      "roadmap_candidate": "flagged_for_v441: ebm_poe_planner_for_s3_generation (arXiv:1909.06878 + arXiv:2304.14391 + arXiv:2505.10819)",
+      "source_ids": [
+        "2304.14391",
+        "2505.10819",
+        "1909.06878"
+      ],
+      "takes_over_from_current_stack": "Takes over monolithic world-model acceptance by requiring each expert factor to improve or preserve the joint product energy before a plan is promoted.",
+      "track": "poe_compositional_planning"
+    }
+  ],
+  "note_path": "research-studying.md#exp-4788-sota-ingestion-energy-guided-search",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/1909.06878",
+      "https://arxiv.org/abs/2103.11505",
+      "https://arxiv.org/abs/2202.11705",
+      "https://arxiv.org/abs/2206.09914",
+      "https://arxiv.org/abs/2304.14391",
+      "https://arxiv.org/abs/2309.15028",
+      "https://arxiv.org/abs/2502.07202",
+      "https://arxiv.org/abs/2505.10819"
+    ],
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "leaderboard_submission": false,
+    "model_load": false,
+    "ops_docs_modified": false,
+    "research_references_present": true,
+    "research_studying_present": true,
+    "solve_claim_made": false,
+    "sweep_cluster_ids": [
+      1,
+      6
+    ],
+    "sweep_cluster_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"energy+based+model\"+OR+abs:\"energy-based+model\"+OR+abs:\"energy+guided+decoding\"+OR+abs:\"token+energy\"+OR+abs:\"EBT\")+AND+(abs:\"reasoning\"+OR+abs:\"verification\"+OR+abs:\"LLM\"+OR+abs:\"language+model\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_http_429": true,
+    "sweep_semscholar_queries": [
+      "energy based model planning MCTS product of experts COLD decoding",
+      "value guided MCTS best first search energy guided decoding discrete Langevin"
+    ],
+    "sweep_semscholar_used": true,
+    "top_source_count": 8,
+    "training_launched": false,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/1909.06878",
+      "https://arxiv.org/abs/2103.11505",
+      "https://arxiv.org/abs/2202.11705",
+      "https://arxiv.org/abs/2206.09914",
+      "https://arxiv.org/abs/2304.14391",
+      "https://arxiv.org/abs/2309.15028",
+      "https://arxiv.org/abs/2502.07202",
+      "https://arxiv.org/abs/2505.10819"
+    ],
+    "websearch_webfetch_used": true
+  },
+  "random_seed": 4788,
+  "reproducibility_checksum": "sha256:3c4c3f82786a62239d2d47f7bd0706777f60846276572474fcc6ce3c4ba2c5e7",
+  "s1_context": {
+    "denoising_direction_agreement": 0.6223390275952694,
+    "energy_ranking_loo_auroc_ci95": [
+      0.7133175599984811,
+      0.7137104171413382
+    ],
+    "energy_ranking_loo_auroc_mean": 0.7134961314270525,
+    "imported_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
+    "n_seeds": 10,
+    "origin_probe_auroc": 0.5,
+    "planning_constraint": "S1 provides a lower-is-better energy landscape; S2/S3 may use it only as guidance, never as an environment win oracle.",
+    "s1_gate_passed": true,
+    "s2_authorized": true,
+    "shuffled_label_control_auroc": 0.49335645814441664,
+    "source_artifact": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
+    "stage": "S1"
+  }
+}
