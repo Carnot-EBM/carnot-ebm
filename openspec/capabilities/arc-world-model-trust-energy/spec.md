@@ -7953,6 +7953,84 @@ declaration separately, confirms the gate is live-path reachable through
 `success_structural_energy_s2_trust_gate_authorizes_s3` only when the
 energy-minus-accuracy bootstrap CI95 excludes zero above zero.
 
+### REQ-ARC-WMTE-4801: S2-v2 Diverse-Pool Structural-Energy Trust Gate
+
+Experiment 4801 SHALL rerun the S2 off-path trust gate with behaviorally
+diverse candidate pools instead of the degenerate Experiment 4791 cached-pair
+pools. For each held-out hidden-state game, the workflow SHALL assemble at
+least three genuinely induced candidate engines when available, using varied
+refinement rounds, cached induction seeds, and deterministic programmatic
+expert-induction snapshots derived from prefix transitions. It SHALL NOT inject
+a deliberately broken zero-recall engine to manufacture diversity.
+
+The workflow SHALL first verify that `arc_solver_kit.offline_arcade()` exits
+successfully and that `WorldModelVerifier` imports. If either precondition
+fails, the artifact SHALL stop with
+`honest_verdict=blocked_offline_arcade_missing` or
+`honest_verdict=blocked_world_model_verifier_missing` and SHALL NOT fabricate a
+held-out off-path `cell_recall`.
+
+A game is EFFECTIVE only when its candidate rows contain at least three
+candidate engines and the exact `candidate_rows[*].heldout_cell_recall` field
+spans more than `1e-3` across the pool. Experiment 4801 SHALL compute
+`n_effective_games` from that exact field, SHALL set `min_heldout_games` to
+`n_effective_games`, SHALL require `n_effective_games >= 5` before drawing a
+bounded or passing selection conclusion, and SHALL report
+`complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity`
+if fewer than five effective games can be assembled.
+
+Experiment 4801 SHALL write
+`results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json`, set
+the energy arm `verifier_is_oracle=false`, confirm `live_path_reachable=true`
+by passing `scripts/arc_orphan_solver_lint.py`, and include principle-annotated
+top-level fields for `honest_verdict`, `verifier_is_oracle`,
+`n_effective_games`, `min_heldout_games`, `game_results`,
+`candidate_pool_diversity`, `energy_minus_accuracy_delta_ci95`,
+`live_path_reachable`, `preconditions_checked`, `positive_control_passed`,
+`false_negative_risk_checked`, `candidates_genuinely_induced`, `random_seed`,
+and `reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a live trust win is success_structural_energy_s2v2_trust_gate_authorizes_s3, a genuine null on a diverse pool is complete_structural_energy_s2v2_bounded_diverse_pool, an under-diverse non-test is complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity."
+- `verifier_is_oracle`: principle "MUST be false for the energy ranking (oracle-distinct); the binary-accuracy CONTROL is execution-grounded."
+- `n_effective_games`: principle "games whose candidate pool has >=2 distinct held-out off-path cell_recall -- the ONLY games that genuinely test selection; the exp4791 failure was n_effective=2 of 5. MUST equal the linter-computed effective count (cell_recall spread > 1e-3); a mismatch is a CRITICAL fabrication."
+- `min_heldout_games`: principle "set to n_effective; check_engine_selection_candidate_diversity requires effective>=this, so a degenerate pool cannot pass as a null."
+- `game_results`: principle "per-game candidate_rows + energy-selected vs accuracy-selected candidate + each off-path cell_recall -- the per-game logging exp4791 lacked (it only reported the aggregate)."
+- `candidate_pool_diversity`: principle "records distinct off-path cell_recall count per game -- proves the pool genuinely spans generalization, not near-duplicate induction snapshots."
+- `energy_minus_accuracy_delta_ci95`: principle "must EXCLUDE 0 (energy>accuracy) for PASS, on >=5 EFFECTIVE games -- a 0-delta is only meaningful on a diverse pool."
+- `live_path_reachable`: principle "the energy gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint)."
+- `preconditions_checked`: principle "records the arcade / WorldModelVerifier import checks so a silent-missing-resource run cannot fabricate a cell_recall."
+- `positive_control_passed`: principle "REQUIRED for a BOUNDED verdict -- a documented oracle/headroom upper bound proving the diverse pool CONTAINS a candidate the accuracy gate misses, so BOUNDED means 'energy could have won but didn't', not a degenerate non-test."
+- `false_negative_risk_checked`: principle "engages check_false_negative_risk on the bounded verdict -- a null is only trustworthy with a passing positive control."
+- `candidates_genuinely_induced`: principle "the diversity spread must come from genuinely-induced engines (varied rounds/seeds), NOT an injected broken 0.0-recall sabotage candidate -- a PASS off a sabotage pool is invalid."
+- `random_seed`: principle "determinism for the candidate generation + selection + bootstrap."
+- `reproducibility_checksum`: principle "content hash of (candidate engines, folds, energy config) so a replication catches drift."
+
+The S2-v2 gate SHALL pass only when, across at least five effective games, the
+energy-selected engines' mean held-out off-path `cell_recall` minus the
+binary-accuracy-gate-selected engines' mean held-out off-path `cell_recall` is
+greater than zero with a bootstrap CI95 that excludes zero. If at least five
+effective games exist and the CI95 includes zero, the artifact SHALL report
+`complete_structural_energy_s2v2_bounded_diverse_pool` only when
+`positive_control_passed=true` and `false_negative_risk_checked=true`; otherwise
+it SHALL remain inconclusive.
+
+#### SCENARIO-ARC-WMTE-4801-DIVERSE-TRUST-GATE
+
+Given the S1 structural energy artifact exists, the offline arcade and
+`WorldModelVerifier` import preconditions pass, and cached or deterministic
+programmatic induced engines are available for held-out hidden-state ARC games
+When Experiment 4801 ranks only effective games by off-path structural energy
+and by the incumbent binary exact-accuracy gate
+Then it writes
+`results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json`, keeps
+the energy arm `verifier_is_oracle=false`, logs every effective game's
+`candidate_rows[*].heldout_cell_recall`, records whether the two selectors
+differed, records both selectors' off-path `cell_recall`, keeps skipped or
+under-diverse attempts in `candidate_pool_diversity`, and emits a pass only when
+the energy-minus-accuracy bootstrap CI95 excludes zero above zero.
+
 ### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
 
 Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the
