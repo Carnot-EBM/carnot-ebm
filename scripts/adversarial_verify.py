@@ -382,6 +382,19 @@ def _is_timestamp_field(k: str) -> bool:
     return False
 
 
+def _is_chance_floor_score(k: str) -> bool:
+    """True if the field is an AUROC / probe / control SCORE whose chance floor
+    is 0.5 -- such fields legitimately sit at exactly 0.5 (a majority-class
+    control by construction, a null/origin probe driven to chance, a shuffled
+    control), so two of them coinciding at 0.5 is a floor coincidence, not a
+    distinct-measurement tautology. See exp4771 (S0' reopen) in check_tautology."""
+    kl = k.lower()
+    return any(
+        t in kl
+        for t in ("auroc", "auc", "probe", "control", "chance", "baseline", "majority", "shuffled")
+    )
+
+
 def _is_identifier_field(k: str) -> bool:
     """True if the field is an identifier / seed / timestamp / metadata field,
     not a measured metric. Identifiers and timestamps legitimately coincide
@@ -1293,6 +1306,18 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
         # this rule was false-flagging as TAUTOLOGY). Two identifiers agreeing
         # is structural, not a coincidence between two distinct measurements.
         if _is_identifier_field(k1) or _is_identifier_field(k2):
+            continue
+        # Skip two SCORE metrics both pinned at the 0.5 chance floor. An AUROC
+        # majority-class control is 0.5 BY CONSTRUCTION; a successful null /
+        # origin probe driven to chance is 0.5 (the DESIRED outcome); a
+        # shuffled-label control is ~0.5. Two of them landing at exactly 0.5 is a
+        # floor coincidence, not a distinct-measurement bug.
+        # Origin: exp4771 (S0' origin-matched) -- the SUCCESS verdict
+        # success_structural_energy_s0prime_reopens_s1 was TAUTOLOGY-flagged
+        # because loo_auroc_majority_control=0.5 (definitional floor) ==
+        # origin_probe_auroc=0.5 (the success signal that origin-matching removed
+        # the S0 leak). Quarantining that would hide the headline result.
+        if v1 == 0.5 and v2 == 0.5 and (_is_chance_floor_score(k1) or _is_chance_floor_score(k2)):
             continue
         # Skip small shared-denominator ARC rate metrics. A pair such as
         # `winner_generated_rate=2/25` and `generic_transfer_rate=2/25`
