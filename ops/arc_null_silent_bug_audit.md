@@ -48,3 +48,16 @@
   }
 }
 ```
+
+## Experiment 4765 .438 ARC Null Silent-Bug Audit
+
+- Verdict: `complete_arc_null_silent_bug_audit_3_nulls_1_reopen`
+- Nulls audited: `3`
+- Silent bugs found: `1`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Null | Verdict | Silent signatures | Evidence |
+|---|---|---|---|
+| `experiment_4761_structural_energy_s0_core_bet_probe` | `silent_bug_must_reopen` | `s0_origin_probe_leak` | s0_candidate_rows=463<br>origin_probe_rows=926<br>origin_probe_auroc=0.732793<br>near_miss_negative_fraction=0.924188<br>in_sample_auroc=0.846405 |
+| `experiment_4762_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=6<br>exercised_attempts=6<br>reproduced_existing=5<br>timed_no_gate=1 |
+| `experiment_4764_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True |
