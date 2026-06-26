@@ -7512,6 +7512,78 @@ When Experiment 4761 runs
 Then it writes a blocked artifact with the failed precondition recorded, no
 claimed AUROC, `verifier_is_oracle=false`, and a reproducibility checksum.
 
+### REQ-ARC-WMTE-4778: SOTA Ingestion For S0-Prime Structural-Energy Leak-Robust S1-S4 Planning
+
+Experiment 4778 SHALL run the reserved `.440` SOTA-ingestion slot for the
+oracle-distinct S0' structural-energy headline and the leak-robustness problem
+surfaced by S0/S0'. The workflow SHALL verify that `research-studying.md` and
+`research-references.md` are present, read the discovered structural-energy
+corpus, emit focused `scripts/sweep_clusters.py` URLs for energy/object/world
+model tracks, run `scripts/sweep_semscholar.py` on focused structural-energy
+and shortcut-robust evaluation queries, and use low-concurrency
+WebSearch/WebFetch plus direct arXiv checks to verify the top five to eight
+source papers. The workflow SHALL NOT invoke `/deep-research`, load models,
+train, submit to a leaderboard, or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4778 SHALL write
+`results/experiment_4778_sota_ingestion_structural_energy.json` and update
+`research-studying.md` with an idempotent Exp 4778 section marked INGESTED. The
+artifact SHALL include the required fields `honest_verdict`, `methods_mapped`,
+`arxiv_ids_cited`, `flagged_for_v440`, `inference_substrate`,
+`preconditions_checked`, `citations`, `fresh_sweep`, `s0prime_context`,
+`leak_robust_evaluation_note`, `note_path`, `random_seed`, `duration_s`,
+`reproducibility_checksum`, and `field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_structural_energy_mapped`; `inference_substrate` SHALL
+equal `aggregation_from_upstream_artifacts`; and `flagged_for_v440` SHALL name
+the strongest method or methods for the `.440` planner. The mapping SHALL cover
+S1 through S4 of the structural-energy program and SHALL include a specific
+leak-robust evaluation note for origin/provenance controls,
+shortcut-confound probes, and counterfactual/invariance probes before any
+S1-S4 continuation claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_structural_energy_mapped."
+- `methods_mapped`: principle "the strongest 3-5 methods mapped onto S1-S4 + leak-robust eval, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID -- an ingestion with no citations is fabrication."
+- `flagged_for_v440`: principle "the strongest method(s) flagged so the .440 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts; 0.0001s floor."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`1907.02893`, `1911.12247`, `2006.15055`, `2301.08243`, `2505.10819`,
+`2505.13910`, `2510.04542`, and `2605.05138`. The method map SHALL contain
+three to five methods, and every method claim SHALL cite only IDs from
+`arxiv_ids_cited`. The note SHALL identify Slot Attention/object-centric slots,
+C-SWM relational contrastive transition energy, PoE-World/product-of-experts
+factors, JEPA-class predictive representation energy, executable/code
+world-model induction, and ShortcutProbe/IRM-style shortcut and invariance
+evaluation as the ingested literature informing the S1-S4 build.
+
+#### SCENARIO-ARC-WMTE-4778
+
+Given the research files are present, the reliable sweep helpers are available,
+Semantic Scholar is attempted through the reliable script, and the top arXiv
+sources are HTTP-200 verified
+When Experiment 4778 runs
+Then it writes
+`results/experiment_4778_sota_ingestion_structural_energy.json`, records that
+`/deep-research` was not invoked, maps three to five SOTA methods onto S1-S4
+and leak-robust evaluation with real arXiv IDs, updates `research-studying.md`
+with the Exp 4778 mapping note, and flags the strongest candidate inputs for
+`.440`.
+
+#### SCENARIO-ARC-WMTE-4778-LEAK-ROBUST
+
+Given S0' reports a structural signal after origin matching but still carries
+an adversarial warning
+When Experiment 4778 synthesizes the SOTA mapping
+Then its artifact records the S0' context, requires origin/provenance leak
+controls, shuffled-label or shortcut probes, and counterfactual/invariance
+stress tests, and refuses a mapping whose methods or leak-evaluation notes cite
+unverified or missing arXiv IDs.
+
 ### REQ-ARC-WMTE-4771: S0 Prime Origin-Matched Structural Energy Re-Test
 
 Experiment 4771 SHALL run the `.439` S0' origin-matched re-test for the

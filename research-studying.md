@@ -10,6 +10,60 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4778-SOTA-INGESTION-STRUCTURAL-ENERGY-START -->
+## 2026-06-26 Exp 4778 - .440 structural-energy SOTA ingestion after S0' - INGESTED
+
+**Status:** INGESTED into `results/experiment_4778_sota_ingestion_structural_energy.json`.
+
+**Preconditions:** `research-studying.md` and `research-references.md` were
+present. `scripts/sweep_clusters.py` emitted the EBM, action/effect, and
+neural-guided/world-model cluster URLs. `scripts/sweep_semscholar.py` was run
+on three focused queries and returned HTTP 429, so no S2-only source was
+promoted. Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks
+verified the top eight papers listed below. `/deep-research` was not invoked.
+No model load, training, leaderboard submission, or solve claim was made; this
+is a no solve claim ingestion note.
+
+**S0' context imported:** `results/experiment_4771_structural_energy_s0prime_origin_matched.json` reports
+`success_structural_energy_s0prime_reopens_s1` with
+`origin_probe_auroc=0.5` and
+`shuffled_label_control_auroc=0.5033091959271814`.
+Because the artifact is also adversarial-flagged, .440 should treat leak-robust
+evaluation as the gate for every S1-S4 continuation.
+
+**Verified source set:**
+- arXiv:1907.02893 -- Invariant Risk Minimization
+- arXiv:1911.12247 -- Contrastive Learning of Structured World Models
+- arXiv:2006.15055 -- Object-Centric Learning with Slot Attention
+- arXiv:2301.08243 -- Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture
+- arXiv:2505.10819 -- PoE-World: Compositional World Modeling with Products of Programmatic Experts
+- arXiv:2505.13910 -- ShortcutProbe: Probing Prediction Shortcuts for Learning Robust Models
+- arXiv:2510.04542 -- Code World Models for General Game Playing
+- arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents
+
+**SOTA -> S1-S4 structural-energy mapping:**
+- **Slot-relational contrastive transition energy** (arXiv:2006.15055, arXiv:1911.12247, arXiv:2505.10819): maps to S1, S2; Takes over the S0' scalar structural probe by making the score an object-factorized transition energy that can rank off-path candidate next states and induced engines. Leak eval: Run only on origin-matched induced rows, then require origin/provenance probe failure and shortcut probes before accepting the energy as oracle-distinct. Fails when: Slot binding drifts across frames, PoE factors memorize source provenance, or contrastive negatives are too easy to separate without learning transition mechanics.
+- **Executable PoE/code world-model trust energy** (arXiv:2505.10819, arXiv:2605.05138, arXiv:2510.04542): maps to S2, S3, S4; Takes over binary executable-model accept/reject checks by ranking world-model factors and code engines on transition consistency where the environment win-check is unavailable. Leak eval: Each executable factor must be evaluated on held-out transitions with no terminal win oracle, no source-origin token, and a provenance probe that stays at chance. Fails when: The generated program overfits public prefixes, hidden-state inference is wrong, or the trust energy leaks private solution facts through a verifier shortcut.
+- **JEPA latent residual energy for transfer survival** (arXiv:2301.08243, arXiv:1911.12247): maps to S1, S4; Takes over raw frame-marginal controls by asking whether the structural signal survives in a predictive representation that is not allowed to encode source provenance. Leak eval: Pair leave-one-game and leave-one-family folds with shuffled-label controls so a JEPA residual cannot pass by memorizing nuisance origin. Fails when: The latent discards exact grid consequences, learns a value head rather than transition mechanics, or transfers only within one ARC family.
+- **Shortcut/invariance leak-robust energy evaluation gate** (arXiv:2505.13910, arXiv:1907.02893): maps to S1, S2, S3, S4; Takes over the ad hoc S0 origin-probe warning by making leak detection a required gate with provenance probes, shuffled-label controls, and counterfactual/invariance stress tests. Leak eval: This is the .440 acceptance harness: S1-S4 methods must pass shortcut probe, origin/provenance chance probe, and invariance under counterfactual origin swaps before roadmap promotion. Fails when: Shortcut probes have no hard negatives, environments are too correlated with labels for invariance to identify the causal feature, or the probe is tuned after seeing the target fold.
+
+**Leak-robust evaluation note:** S0' reopens S1 only if .440 treats origin/provenance leakage as a first-class failure mode: every energy result needs origin/provenance controls, shortcut probes, and counterfactual/invariance stress tests.
+Use ShortcutProbe and IRM as the explicit shortcut/invariance evaluation
+templates.
+- origin-matched induced-only rows for positive and negative transition candidates
+- chance-level origin/provenance probe before any oracle-distinct continuation claim
+- shuffled-label or ShortcutProbe-style latent shortcut control on identical folds
+- counterfactual/invariance probes over game family, origin, and candidate-generator environments
+
+flagged_for_v440: slot_relational_contrastive_energy_s0prime_guarded (arXiv:2006.15055 + arXiv:1911.12247 + arXiv:2505.10819 + arXiv:2505.13910 + arXiv:1907.02893)
+flagged_for_v440: poe_code_world_model_trust_gate_after_s0prime (arXiv:2505.10819 + arXiv:2605.05138 + arXiv:2510.04542)
+
+**Bottom line for .440:** prioritize the Slot Attention + C-SWM
+slot-relational contrastive energy rerun under the explicit leak gate, then
+connect PoE/code world-model trust only after origin/provenance and
+shortcut/invariance controls stay clean.
+<!-- EXP4778-SOTA-INGESTION-STRUCTURAL-ENERGY-END -->
+
 <!-- EXP4768-SOTA-INGESTION-STRUCTURAL-ENERGY-START -->
 ## 2026-06-26 Exp 4768 - .438 structural-energy SOTA ingestion for S1-S4 - INGESTED
 
