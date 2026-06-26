@@ -49,6 +49,17 @@ def _live_verifier_for_adapter(game: str, adapter):
     spatial = load_live_spatial_value_head(root=REPO, game=game)
     if spatial is not None:
         return spatial, "spatial_value_head_live_checkpoint"
+    ckpt = _ckpt_path(game)
+    if ckpt.exists() and getattr(adapter, "featurize", None) is not None:
+        try:
+            from carnot.agentic.arc_value_learner import LearnedVerifier
+
+            return (
+                LearnedVerifier.load(ckpt, adapter.featurize),
+                "learned_verifier_live_checkpoint",
+            )
+        except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+            return adapter.hand_verifier, "hand_verifier_cold_start_checkpoint_load_failed"
     return adapter.hand_verifier, "hand_verifier_cold_start_no_spatial_checkpoint"
 
 
