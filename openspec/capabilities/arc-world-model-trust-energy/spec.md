@@ -8103,6 +8103,80 @@ differed, records both selectors' off-path `cell_recall`, keeps skipped or
 under-diverse attempts in `candidate_pool_diversity`, and emits a pass only when
 the energy-minus-accuracy bootstrap CI95 excludes zero above zero.
 
+### REQ-ARC-WMTE-4811: S2-v3 Corpus-Wide Structural-Energy Trust Gate
+
+Experiment 4811 SHALL settle the S2 engine-selection question corpus-wide
+instead of repeating Experiment 4801's five-game narrow sample. The workflow
+SHALL read the complete offline corpus from `environment_files/`, record
+`n_available_games` as that corpus size, attempt every available game, and
+record `n_games_attempted` as the number of games for which candidate generation
+and scoring was attempted. `n_games_attempted` SHALL match `n_available_games`
+unless an explicit blocked precondition stops the run before scoring.
+
+For each attempted game, the workflow SHALL actively assemble at least three
+genuinely induced candidate engines from varied deterministic induction rounds,
+refinement snapshots, seeds, or temperatures. It SHALL NOT rely only on
+near-duplicate `world_model.py` / `world_model.best.py` cached pairs and SHALL
+NOT inject a deliberately broken zero-recall engine to manufacture diversity.
+A game is EFFECTIVE only when its `candidate_rows[*].heldout_cell_recall` spans
+more than `1e-3` across the candidate pool. The required effective count SHALL
+be `max(10, ceil(0.6 * max(n_games_attempted, n_available_games)))`; a 25-game
+corpus therefore requires at least 15 effective games before a PASS or BOUNDED
+selection conclusion is valid.
+
+Experiment 4811 SHALL write
+`results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json`,
+set the energy arm `verifier_is_oracle=false`, keep the binary-accuracy control
+execution-grounded, confirm `live_path_reachable=true` by passing
+`scripts/arc_orphan_solver_lint.py`, and include principle-annotated top-level
+fields for `honest_verdict`, `verifier_is_oracle`, `n_available_games`,
+`n_games_attempted`, `n_effective_games`, `game_results`,
+`energy_minus_accuracy_delta_ci95`, `positive_control_passed`,
+`candidates_genuinely_induced`, `live_path_reachable`, `preconditions_checked`,
+`random_seed`, and `reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a corpus-wide trust win is success_structural_energy_s2v3_trust_gate_authorizes_s3, a genuine corpus-wide null is complete_structural_energy_s2v3_bounded_corpus_wide, an under-covered result is complete_structural_energy_s2v3_inconclusive_insufficient_corpus_diversity."
+- `verifier_is_oracle`: principle "MUST be false for the energy ranking (oracle-distinct); the binary-accuracy CONTROL is execution-grounded."
+- `n_available_games`: principle "the full offline corpus size (ls environment_files/) -- the .443 B1 audit verifies this against the real corpus; the gate requires effective >= max(10, 0.6*this)."
+- `n_games_attempted`: principle "must ~= n_available_games -- S2-v2's failure was testing 5 of 25; a corpus-wide test attempts ALL games."
+- `n_effective_games`: principle "games whose candidate pool spans > 1e-3 off-path cell_recall -- must be >= max(10, ceil(0.6*n_available)) for a PASS/BOUNDED verdict; else INCONCLUSIVE."
+- `game_results`: principle "per-game candidate_rows (heldout_cell_recall + offpath_structural_energy + accuracy) + energy-selected vs accuracy-selected candidate -- the corpus-wide per-game log."
+- `energy_minus_accuracy_delta_ci95`: principle "must EXCLUDE 0 for PASS, on >= the required effective games -- a corpus-wide delta, not n=5."
+- `positive_control_passed`: principle "REQUIRED for a BOUNDED verdict -- a documented headroom upper bound proving the diverse pool contains a candidate the accuracy gate misses, so BOUNDED means 'energy could have won but didn't'."
+- `candidates_genuinely_induced`: principle "the diversity must come from genuinely-induced engines (varied rounds/seeds), NOT an injected broken 0.0-recall sabotage candidate."
+- `live_path_reachable`: principle "the energy gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint)."
+- `preconditions_checked`: principle "records the arcade / corpus checks so a silent-missing-resource run cannot fabricate a cell_recall."
+- `random_seed`: principle "determinism for the candidate generation + selection + bootstrap."
+- `reproducibility_checksum`: principle "content hash of (candidate engines, folds, energy config) so a replication catches drift."
+
+The S2-v3 gate SHALL pass only when `n_effective_games` meets the corpus-wide
+required effective count and the energy-selected engines' mean held-out
+off-path `cell_recall` minus the binary-accuracy-gate-selected engines' mean
+held-out off-path `cell_recall` is greater than zero with a bootstrap CI95 that
+excludes zero. If that many effective games exist and the CI95 includes zero,
+the artifact SHALL report
+`complete_structural_energy_s2v3_bounded_corpus_wide` only when
+`positive_control_passed=true`. If fewer effective games can be formed after
+attempting the full corpus, the artifact SHALL report
+`complete_structural_energy_s2v3_inconclusive_insufficient_corpus_diversity`
+and SHALL retire the off-path-trust-gate framing via `retire_if_same_verdict`.
+
+#### SCENARIO-ARC-WMTE-4811-CORPUS-WIDE-TRUST-GATE
+
+Given the offline arcade precondition passes and the offline corpus contains at
+least 20 games
+When Experiment 4811 actively generates varied induced candidate pools for all
+available games and ranks effective games by off-path structural energy versus
+the incumbent binary exact-accuracy gate
+Then it writes
+`results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json`,
+records `n_available_games`, `n_games_attempted`, `n_effective_games`, and
+every attempted game's `candidate_rows[*].heldout_cell_recall`, keeps the
+energy arm `verifier_is_oracle=false`, and emits a PASS or BOUNDED verdict only
+when the effective-game count clears the corpus-wide floor.
+
 ### REQ-ARC-WMTE-4768: Structural-Energy SOTA Ingestion For S1-S4
 
 Experiment 4768 SHALL run the reserved `.438` SOTA-ingestion slot for the
