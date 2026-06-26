@@ -1,0 +1,74 @@
+{
+  "checkpoint_mtime_after_ns": "1782497498856419797",
+  "checkpoint_mtime_before_ns": "1782488075481285421",
+  "checkpoint_mtime_delta_ns": 9423375134376,
+  "checkpoint_path": "models/arc_verifier_re86.json",
+  "experiment": "experiment_4813_self_play_verifier_checkpoint",
+  "field_principles": {
+    "honest_verdict": "terminal prefix; checkpoint refreshed + gate green is success_.",
+    "inference_substrate": "live_llm_inference (60s floor).",
+    "preconditions_checked": "records arcade/registry checks; a missing target emits blocked_, never a fabricated checkpoint.",
+    "solve_provenance": "live_agent_self_discovery -- self-play is the agent improving on its own attempts.",
+    "verifier_checkpoint_refreshed": "the self-improvement signal."
+  },
+  "honest_verdict": "success_re86_L2_checkpoint_refreshed",
+  "inference_substrate": "live_llm_inference",
+  "loop_result_path": "results/arc_loop_solve_re86.json",
+  "loop_solve_provenance": "development_proxy",
+  "model_specs": {
+    "checkpoint_template": "models/arc_verifier_<game>.json",
+    "standing_loop": "scripts/arc_loop_solve.py"
+  },
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade": {
+      "check": "arc_solver_kit.offline_arcade()",
+      "ok": true
+    },
+    "ok": true,
+    "registry_loadable": {
+      "ok": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "target_banked": {
+      "game": "re86",
+      "ok": true,
+      "prior_level": 2,
+      "reason": "preferred_banked_target"
+    },
+    "target_selection": {
+      "banked": true,
+      "game": "re86",
+      "prior_level": 2,
+      "reason": "preferred_banked_target"
+    }
+  },
+  "random_seed": 4813,
+  "reproduced_levels": 2,
+  "reproducibility_checksum": "0f4d96cd2e676a06acdc2478c738b6ed85ca7dbda88bb111dd4d215fd3267292",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "re86",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "schema": "carnot.exp4813.self_play_verifier_checkpoint.v1",
+  "schema_errors": [],
+  "search_state_count": 56,
+  "self_play_residual": "checkpoint_refreshed_gate_passed",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4813",
+    "SCENARIO-ARC-WMTE-4813-CHECKPOINT-REFRESHED",
+    "SCENARIO-ARC-WMTE-4813-RESIDUAL-NO-FABRICATION",
+    "SCENARIO-ARC-WMTE-4813-BLOCKED-PRECONDITION"
+  ],
+  "states_expanded": 56,
+  "target_game": "re86",
+  "target_registry_prior_level": 2,
+  "target_selection_reason": "preferred_banked_target",
+  "verifier_checkpoint_refreshed": true
+}
