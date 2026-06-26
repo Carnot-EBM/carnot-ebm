@@ -100,6 +100,24 @@ the actual agent) is now authorized** per the staged gate; pre-stage it for `.44
   — the energy's effect on GENERATION (put a winner into the pool the explorer never proposed), which is
   the actual ARC wall and a different mechanism than selection. The slightly-positive selection estimate
   is mildly encouraging (the energy isn't anti-helpful); S3 is the decisive live test.
+- **S3 (`.444 A1, exp4821) — BOUNDED on GENERATION (no lift), well-controlled, but PENDING a guidance-
+  exercised no-op check.** S3 wired E as `goal_energy` into the live `plan_in_model()` and tested whether
+  it puts a winner INTO the pool the bare explorer never proposed, on **24 headroom games** (bare banks 0,
+  winner reachable), vs a matched λ=0 control. Result:
+  `complete_structural_energy_s3_bounded_no_generation_lift` — **winners-newly-entering-pool delta = 0.0,
+  CI [0,0]**, `new_levels_not_in_bare_pool: []` (zero new winners), `positive_control_passed=True`,
+  `live_path_reachable=True`, `e_guided_attempts=4`/game. So on a well-powered, positive-control-passing
+  test, the energy-guided generation banked **zero** winners the bare explorer didn't.
+  **CAVEAT (the S2 lesson): the artifact does NOT demonstrate the λ=1 guidance materially CHANGED
+  generation vs λ=0** — a 0.0 delta could be a genuine "energy doesn't help generation" null OR a silent
+  no-op (the `goal_energy` term had no effect, so guided==bare trivially). The `.444 B1 audit was
+  strengthened to verify `s3_guidance_exercised` (λ=1 produced different proposals than λ=0); the S3
+  verdict is only trustworthy if that passes. **Do NOT conclude the program until the no-op check passes.**
+  IF S3 is a genuine bounded null, the staged program REACHES ITS HONEST END: the oracle-distinct
+  structural energy is a real OFFLINE cross-game discriminator (S0'/S1) that adds **NO live agent value**
+  — neither at engine selection (S2-v3 bounded) nor at generation (S3 bounded, the ARC wall) — and S4
+  transfer is moot (no live value to transfer). That is a clean, valuable negative answer to "does
+  extend-with-energy work on ARC": offline yes, live no.
 
 ---
 

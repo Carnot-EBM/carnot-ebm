@@ -271,15 +271,24 @@ tasks:
     \ S3\n(exp4821) specifically: (1) confirm the lambda=0 control is genuinely matched (same games/seeds/budget);\n\
     (2) confirm any banked level is NEW (was NOT already in the bare explorer's pool -- else it is re-ranking,\n\
     not generation); (3) confirm the headroom games' winners are reachable (positive_control_passed) so\
-    \ a null\nis 'energy could have generated the winner but didn't'; (4) confirm the goal_energy graft\
+    \ a null\nis 'energy could have generated the winner but didn't'; (5) CRITICAL no-op check (the S2\
+    \ degeneracy lesson applied to S3): verify the energy guidance was NON-TRIVIALLY EXERCISED -- confirm\
+    \ the lambda=1 run produced DIFFERENT candidate proposals / search states / explored nodes than the\
+    \ matched lambda=0 control on >=1 headroom game. If guided==bare proposals (the goal_energy term had\
+    \ no effect), the 0.0 winners-newly-entering-pool delta is a NO-OP artifact, NOT a genuine 'energy\
+    \ doesn't help generation' null -- record s3_guidance_exercised=false and flag S3 as inconclusive_guidance_no_op.\
+    \ The S3 verdict is only trustworthy if s3_guidance_exercised=true.\n(4) confirm the goal_energy graft\
     \ is live-path-\nreachable (arc_orphan_solver_lint).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .444\
     \ result artifacts present.\n  1. Verify the S3 controls above. For each other ARC null, verify the\
     \ lever was genuinely exercised.\n  2. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\
     \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix;\
     \ audit complete is complete_/success_.\"\n  s3_controls_verified:\n    principle: \"the load-bearing\
     \ check -- matched lambda=0, NEW-levels-not-re-ranking, reachable-winner positive control; else S3's\
-    \ verdict is uninterpretable.\"\n  nulls_audited:\n    principle: \"count of nulls re-examined.\"\n\
-    \  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
+    \ verdict is uninterpretable.\"\n  s3_guidance_exercised:\n    principle: \"true only if lambda=1\
+    \ produced different candidate proposals/search than lambda=0 on >=1 headroom game -- else the S3\
+    \ 0.0 delta is a no-op, not a genuine generation null.\"\n  nulls_audited:\n    principle: \"count\
+    \ of nulls re-examined.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
+    \ (0.0001s floor).\"\n"
   milestone: 2026.06.444
   agent_type: codex
   model: gpt-5.5
