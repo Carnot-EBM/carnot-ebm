@@ -136,28 +136,55 @@ tasks:
     \ pivots to testing the energy on S3 generation directly).\n  retire_if_same_verdict: true -- if <5\
     \ effective games can be assembled (still degenerate), return\n  INCONCLUSIVE and retire the off-path-trust-gate\
     \ framing (do NOT re-run on degenerate pools); the energy's\n  next live test becomes S3 generation.\n\
-    \n  The artifact MUST pass adversarial_verify.check_engine_selection_candidate_diversity: effective_games\n\
-    \  (games with >=2 distinct candidate cell_recall) >= min_heldout_games. A 0-delta with effective<required\n\
-    \  is correctly flagged DEGENERATE_CANDIDATE_POOL -- so a bounded verdict is only valid on a diverse\
-    \ pool.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal\
-    \ prefix; a live trust win is success_structural_energy_s2v2_trust_gate_authorizes_s3, a genuine null\
-    \ on a diverse pool is complete_structural_energy_s2v2_bounded_diverse_pool, an under-diverse non-test\
-    \ is complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity.\"\n  verifier_is_oracle:\n\
-    \    principle: \"MUST be false for the energy ranking (oracle-distinct); the binary-accuracy CONTROL\
-    \ is execution-grounded.\"\n  n_effective_games:\n    principle: \"games whose candidate pool has\
-    \ >=2 distinct held-out off-path cell_recall -- the ONLY games that genuinely test selection; the\
-    \ exp4791 failure was n_effective=2 of 5.\"\n  min_heldout_games:\n    principle: \"set to n_effective;\
-    \ check_engine_selection_candidate_diversity requires effective>=this, so a degenerate pool cannot\
-    \ pass as a null.\"\n  game_results:\n    principle: \"per-game candidate_rows + energy-selected vs\
-    \ accuracy-selected candidate + each off-path cell_recall -- the per-game logging exp4791 lacked (it\
-    \ only reported the aggregate).\"\n  candidate_pool_diversity:\n    principle: \"records distinct\
-    \ off-path cell_recall count per game -- proves the pool genuinely spans generalization, not near-duplicate\
-    \ induction snapshots.\"\n  energy_minus_accuracy_delta_ci95:\n    principle: \"must EXCLUDE 0 (energy>accuracy)\
-    \ for PASS, on >=5 EFFECTIVE games -- a 0-delta is only meaningful on a diverse pool.\"\n  live_path_reachable:\n\
-    \    principle: \"the energy gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint).\"\
-    \n  preconditions_checked:\n    principle: \"records the arcade / WorldModelVerifier import checks\
-    \ so a silent-missing-resource run cannot fabricate a cell_recall.\"\n  random_seed:\n    principle:\
-    \ \"determinism for the candidate generation + selection + bootstrap.\"\n  reproducibility_checksum:\n\
+    \nGATE HARDENING (adversarial verify wf_3c4337f4 -- the diversity gate is now mechanically non-gameable;\
+    \ do NOT\ntry to dodge it):\n  - INDEPENDENT FLOOR: adversarial_verify.check_engine_selection_candidate_diversity\
+    \ now requires\n    effective_games >= max(5, ceil(0.6*total_games)) -- your declared min_heldout_games\
+    \ can only TIGHTEN this,\n    never lower it. Declaring min_heldout_games=1 will NOT dodge the check.\
+    \ A game counts EFFECTIVE only if its\n    candidates' held-out off-path cell_recall spans > 1e-3\
+    \ (a real spread, not float noise).\n  - EXACT KEY: log each candidate's `heldout_cell_recall` (the\
+    \ exact field the delta + the linter read) in\n    candidate_rows, alongside offpath_structural_energy\
+    \ + prefix/held-out accuracy.\n  - CONSISTENCY: n_effective_games MUST equal the linter-computed effective\
+    \ count (games with candidate\n    cell_recall spread > 1e-3). A fabricated n_effective_games that\
+    \ disagrees is a CRITICAL mismatch.\n  - GENUINE INDUCTION, NO SABOTAGE: the candidate pool's diversity\
+    \ MUST come from GENUINELY INDUCED engines\n    (varied refinement rounds / seeds spanning a real\
+    \ off-path quality gradient) -- NOT from injecting a\n    deliberately-broken 0.0-recall engine to\
+    \ manufacture spread. For a PASS, energy must out-select the\n    accuracy gate on games where BOTH\
+    \ selected candidates are non-degenerate (off-path cell_recall > 0); a\n    PASS whose win comes solely\
+    \ from energy AVOIDING a broken candidate the accuracy gate picked is INVALID\n    (report it as such,\
+    \ not a win).\n  - BOUNDED REQUIRES A POSITIVE CONTROL: a BOUNDED verdict (energy does not beat accuracy\
+    \ on a diverse pool)\n    is only valid if positive_control_passed=true -- a documented oracle/headroom\
+    \ upper bound showing the\n    diverse pool CONTAINS a candidate the accuracy gate MISSES (i.e. energy\
+    \ COULD have won but didn't), so\n    BOUNDED means 'no oracle-distinct value' and not 'nothing in\
+    \ the pool distinguished anything'.\n\n  The artifact MUST pass adversarial_verify.check_engine_selection_candidate_diversity:\
+    \ effective_games\n  (games with >=2 distinct candidate cell_recall) >= min_heldout_games. A 0-delta\
+    \ with effective<required\n  is correctly flagged DEGENERATE_CANDIDATE_POOL -- so a bounded verdict\
+    \ is only valid on a diverse pool.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
+    \    principle: \"terminal prefix; a live trust win is success_structural_energy_s2v2_trust_gate_authorizes_s3,\
+    \ a genuine null on a diverse pool is complete_structural_energy_s2v2_bounded_diverse_pool, an under-diverse\
+    \ non-test is complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity.\"\n \
+    \ verifier_is_oracle:\n    principle: \"MUST be false for the energy ranking (oracle-distinct); the\
+    \ binary-accuracy CONTROL is execution-grounded.\"\n  n_effective_games:\n    principle: \"games whose\
+    \ candidate pool has >=2 distinct held-out off-path cell_recall -- the ONLY games that genuinely test\
+    \ selection; the exp4791 failure was n_effective=2 of 5. MUST equal the linter-computed effective\
+    \ count (cell_recall spread > 1e-3); a mismatch is a CRITICAL fabrication.\"\n  min_heldout_games:\n\
+    \    principle: \"set to n_effective; check_engine_selection_candidate_diversity requires effective>=this,\
+    \ so a degenerate pool cannot pass as a null.\"\n  game_results:\n    principle: \"per-game candidate_rows\
+    \ + energy-selected vs accuracy-selected candidate + each off-path cell_recall -- the per-game logging\
+    \ exp4791 lacked (it only reported the aggregate).\"\n  candidate_pool_diversity:\n    principle:\
+    \ \"records distinct off-path cell_recall count per game -- proves the pool genuinely spans generalization,\
+    \ not near-duplicate induction snapshots.\"\n  energy_minus_accuracy_delta_ci95:\n    principle: \"\
+    must EXCLUDE 0 (energy>accuracy) for PASS, on >=5 EFFECTIVE games -- a 0-delta is only meaningful\
+    \ on a diverse pool.\"\n  live_path_reachable:\n    principle: \"the energy gate must be in the E3AgentPolicy\
+    \ import closure (arc_orphan_solver_lint).\"\n  preconditions_checked:\n    principle: \"records the\
+    \ arcade / WorldModelVerifier import checks so a silent-missing-resource run cannot fabricate a cell_recall.\"\
+    \n  positive_control_passed:\n    principle: \"REQUIRED for a BOUNDED verdict -- a documented oracle/headroom\
+    \ upper bound proving the diverse pool CONTAINS a candidate the accuracy gate misses, so BOUNDED means\
+    \ 'energy could have won but didn't', not a degenerate non-test.\"\n  false_negative_risk_checked:\n\
+    \    principle: \"engages check_false_negative_risk on the bounded verdict -- a null is only trustworthy\
+    \ with a passing positive control.\"\n  candidates_genuinely_induced:\n    principle: \"the diversity\
+    \ spread must come from genuinely-induced engines (varied rounds/seeds), NOT an injected broken 0.0-recall\
+    \ sabotage candidate -- a PASS off a sabotage pool is invalid.\"\n  random_seed:\n    principle: \"\
+    determinism for the candidate generation + selection + bootstrap.\"\n  reproducibility_checksum:\n\
     \    principle: \"content hash of (candidate engines, folds, energy config) so a replication catches\
     \ drift.\"\n"
   milestone: 2026.06.442
