@@ -9301,3 +9301,4 @@ The contro |
 | 2026-06-26 02:25 UTC | PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUD | OK | 87 passed, 1 warning in 9.24s |
 | 2026-06-26 02:38 UTC | PHASE B2 (INFRA reserved slot 2; DEADLINE-CRITICAL | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-26 02:52 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 132 passed, 1 warning in 10.08s |
+| 2026-06-26 03:06 UTC | PHASE D (SOTA-INGESTION -- the .438 frontier) -- t | OK | 105 passed, 1 warning in 6.59s |
