@@ -1,0 +1,151 @@
+{
+  "checkpoint_emitted": false,
+  "checkpoint_path": "results/experiment_4774_heldout_first_win_readiness.partial.json",
+  "duration_s": 10.401404,
+  "experiment": "experiment_4774_heldout_first_win_readiness",
+  "experiment_id": 4774,
+  "field_principles": {
+    "checkpoint_emitted": {
+      "principle": "a capped run must still emit a usable partial artifact."
+    },
+    "heldout_first_win_rate": {
+      "principle": "the deadline-relevant generalization signal -- held-out, not in-sample."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a measured rate is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/cache hit -- declare what actually ran."
+    },
+    "null_delta_methodology_note": {
+      "principle": "for a flat null (rate == baseline 0.04), explains why the agreement is a genuine no-improvement result, not a TAUTOLOGY bug."
+    },
+    "preconditions_checked": {
+      "principle": "records generator/harness checks; a missing resource emits blocked_, never a fabricated rate."
+    }
+  },
+  "first_win_baseline": 0.04,
+  "heldout_first_win_ci": {
+    "bootstrap_resamples": 1000,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "method": "paired_percentile_bootstrap",
+    "point": 0.0,
+    "random_seed": 4605
+  },
+  "heldout_first_win_ci_lower": 0.0,
+  "heldout_first_win_delta_vs_baseline": 0.0,
+  "heldout_first_win_delta_vs_prior_best": 0.0,
+  "heldout_first_win_rate": 0.04,
+  "heldout_proxy_summary": {
+    "heldout_first_win_ci": {
+      "bootstrap_resamples": 1000,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "paired_percentile_bootstrap",
+      "point": 0.0,
+      "random_seed": 4605
+    },
+    "heldout_first_win_rate": 0.04,
+    "heldout_variant_attempts": 100,
+    "proxy_cache_reason": "Existing Experiment 4605 held-out proxy is SCORE-compatible; Exp 4764 aggregates that upstream evidence and therefore declares aggregation_from_upstream_artifacts.",
+    "proxy_cache_used": true,
+    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+  },
+  "heldout_variant_attempt_floor": "B>=100",
+  "heldout_variant_attempts": 100,
+  "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_agent_ran": false,
+  "null_delta_methodology_note": "Held-out first-win rate equals the 0.04 baseline with positive-control parity passed; this is a genuine no-improvement result from the scored held-out variant harness, not a TAUTOLOGY bug or fabricated agreement.",
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.17s ==============================\n"
+  },
+  "parity_test_green": true,
+  "partial": false,
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "experiment_4605_importable": true,
+    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
+    "experiment_4605_importable_returncode": 0,
+    "forbidden_3090s_used": false,
+    "generator_device": "iGPU",
+    "offline_arcade": true,
+    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
+    "offline_arcade_returncode": 0,
+    "ok": true,
+    "qwen35_mtp_gguf_cached": true,
+    "qwen35_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+    "qwen_generator_device_policy": "iGPU_only_no_3090s"
+  },
+  "prior_best": {
+    "candidates": [
+      {
+        "exists": true,
+        "experiment_id": 4691,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4691_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4703,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4703_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4716,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4716_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4740,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4740_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4752,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4752_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4764,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4764_heldout_first_win_readiness.json"
+      }
+    ],
+    "prior_best_experiment_id": 4764,
+    "prior_best_heldout_first_win_rate": 0.04,
+    "prior_best_result_path": "results/experiment_4764_heldout_first_win_readiness.json"
+  },
+  "prior_best_heldout_first_win_rate": 0.04,
+  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
+  "random_seed": 4774,
+  "reproducibility_checksum": "sha256:dc4987649afe60a19d880f17c0983fdc3adf01bcf3dd93916b3c1d0806bfe751",
+  "result_path": "results/experiment_4774_heldout_first_win_readiness.json",
+  "schema": "carnot.arc.heldout_first_win_readiness_4774.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4774",
+    "SCENARIO-CAPSTONE-4774",
+    "SCENARIO-CAPSTONE-4774-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4774-FIELD-PRINCIPLES"
+  ]
+}
