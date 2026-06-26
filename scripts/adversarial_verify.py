@@ -4604,6 +4604,105 @@ def _grid_changing_correct_evidence(value: Any) -> tuple[str, float] | None:
     return None
 
 
+def _engine_selection_game_rows(d: dict[str, Any]) -> list[Any] | None:
+    """Per-game candidate rows for an S2-style engine-SELECTION comparison, or None.
+    Recognized by `game_results` rows carrying `candidate_rows` AND a top-level
+    energy-vs-control selection delta field."""
+    gr = d.get("game_results")
+    if not isinstance(gr, list) or not gr:
+        return None
+    if not any(isinstance(g, dict) and "candidate_rows" in g for g in gr):
+        return None
+    if not any(
+        ("delta" in k.lower() and ("energy" in k.lower() or "select" in k.lower()))
+        for k in d
+    ):
+        return None
+    return gr
+
+
+def _count_effective_selection_games(gr: list[Any]) -> tuple[int, int]:
+    """(effective, total). A game is EFFECTIVE iff its candidate pool is
+    behaviorally diverse -- >=2 distinct held-out cell_recall among candidates --
+    i.e. the SELECTION genuinely matters. A pool whose candidates all share one
+    cell_recall cannot distinguish any selector from any other (the exp4791 trap:
+    different files, bit-identical off-path predictions)."""
+    effective = 0
+    total = 0
+    for g in gr:
+        if not isinstance(g, dict):
+            continue
+        total += 1
+        rows = g.get("candidate_rows")
+        if not isinstance(rows, list) or len(rows) < 2:
+            continue
+        recalls = {
+            round(float(r.get("heldout_cell_recall")), 9)
+            for r in rows
+            if isinstance(r, dict) and _is_finite_number(r.get("heldout_cell_recall"))
+        }
+        if len(recalls) >= 2:
+            effective += 1
+    return effective, total
+
+
+def _near_zero_selection_delta(d: dict[str, Any]) -> bool:
+    for k, v in d.items():
+        if (
+            "delta" in k.lower()
+            and ("energy" in k.lower() or "select" in k.lower())
+            and _is_finite_number(v)
+            and abs(float(v)) < 1e-9
+        ):
+            return True
+    return False
+
+
+def check_engine_selection_candidate_diversity(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Flag an S2-style engine-SELECTION comparison whose verdict rests on a
+    behaviorally-DEGENERATE candidate pool.
+
+    Origin: exp4791 (S2 off-path trust gate). It reported energy_minus_accuracy_delta
+    == 0.0 (CI [0,0]) and the BOUNDED verdict 'no_live_trust_value' -- but 2 of 5
+    games had behaviorally-IDENTICAL candidate engines (bit-identical off-path energy
+    + cell_recall) and a 3rd had equal recalls, so only 2 games genuinely tested
+    whether the energy beats the accuracy gate. A 0-delta from a pool with no
+    behavioral diversity is a NON-TEST, not a genuine null -- it must NOT be read as
+    'energy adds no value'. The required count of effective games is the artifact's
+    declared `min_heldout_games`, else min(total, 5)."""
+    gr = _engine_selection_game_rows(d)
+    if gr is None:
+        return
+    effective, total = _count_effective_selection_games(gr)
+    required = d.get("min_heldout_games")
+    if not _is_finite_number(required):
+        required = min(total, 5)
+    if effective >= required:
+        return  # enough behaviorally-diverse games -- a genuine selection test
+    verdict = str(d.get("honest_verdict", "")).lower()
+    draws_no_value = (
+        any(t in verdict for t in ("no_live_trust_value", "no_trust", "no_value", "bounded"))
+        or _near_zero_selection_delta(d)
+    )
+    if not draws_no_value:
+        return  # only guards a null/bounded conclusion; a PASS on few games is caught elsewhere
+    flags.append(
+        Flag(
+            kind="DEGENERATE_CANDIDATE_POOL",
+            severity="critical",
+            detail=(
+                f"Engine-selection comparison rests on a degenerate candidate pool: only "
+                f"{effective}/{total} games had behaviorally-diverse candidates (>=2 distinct "
+                f"held-out cell_recall), below the required {required}. A no-value/bounded verdict "
+                f"({d.get('honest_verdict')!r}) cannot be concluded from this -- a 0-delta from "
+                f"non-diverse candidates is a NON-TEST, not a genuine null. Re-run with a "
+                f"behaviorally-diverse candidate pool (engines that differ in held-out off-path "
+                f"cell_recall) and an effective-games gate."
+            ),
+        )
+    )
+
+
 def check_world_model_trust_degeneracy(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag circular or degenerate ARC world-model trust-pass claims.
 
@@ -4854,6 +4953,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
     check_world_model_trust_degeneracy(d, flags)
+    check_engine_selection_candidate_diversity(d, flags)
     check_arc_offline_live_overclaim(d, flags)
     check_arc_outer_loop_solve(d, flags)
 

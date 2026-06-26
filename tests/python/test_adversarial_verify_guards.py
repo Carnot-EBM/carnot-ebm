@@ -709,3 +709,62 @@ def test_chance_floor_score_recognizes_auroc_probe_control_but_not_metrics():
     assert av._is_chance_floor_score("shuffled_label_control_auroc") is True
     assert av._is_chance_floor_score("heldout_first_win_rate") is False
     assert av._is_chance_floor_score("loo_auroc_structural") is True  # auroc-named (ok; needs ==0.5 to skip)
+
+
+# --------------------------------------------------------------------------- #
+# DEGENERATE_CANDIDATE_POOL on S2-style engine-selection (2026-06-26)          #
+# Origin: exp4791 (S2 off-path trust gate) reported energy_minus_accuracy_delta #
+# == 0.0 + a BOUNDED 'no_live_trust_value' verdict, but 2/5 games had           #
+# behaviorally-identical candidate engines -> a NON-TEST, not a genuine null.    #
+# --------------------------------------------------------------------------- #
+def _s2_artifact(per_game_recalls, verdict="complete_structural_energy_s2_no_live_trust_value", min_games=5):
+    return {
+        "honest_verdict": verdict,
+        "energy_minus_accuracy_delta": 0.0,
+        "min_heldout_games": min_games,
+        "game_results": [
+            {"candidate_rows": [{"heldout_cell_recall": r} for r in recalls]}
+            for recalls in per_game_recalls
+        ],
+    }
+
+
+def test_degenerate_candidate_pool_fires_on_low_effective_games():
+    # exp4791 shape: 2 of 5 games behaviorally diverse, min required 5
+    d = _s2_artifact([[1.0, 1.0], [1.0, 1.0], [0.3, 0.3], [0.3, 0.7], [0.4, 0.9]])
+    flags = []
+    av.check_engine_selection_candidate_diversity(d, flags)
+    assert [f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"]
+
+
+def test_degenerate_candidate_pool_does_not_fire_when_pool_is_diverse():
+    # all 5 games behaviorally diverse, required 5 -> a genuine test, no flag
+    d = _s2_artifact([[0.3, 0.7]] * 5)
+    flags = []
+    av.check_engine_selection_candidate_diversity(d, flags)
+    assert not [f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"]
+
+
+def test_degenerate_candidate_pool_does_not_fire_on_non_selection_artifact():
+    flags = []
+    av.check_engine_selection_candidate_diversity({"honest_verdict": "success_foo", "loo_auroc": 0.7}, flags)
+    assert not flags
+
+
+def test_degenerate_candidate_pool_does_not_fire_on_pass_verdict():
+    # a PASS (not a no-value/bounded verdict) is caught elsewhere; this guards the null read only
+    d = _s2_artifact([[1.0, 1.0]] * 5, verdict="success_structural_energy_s2_trust_gate_authorizes_s3")
+    d["energy_minus_accuracy_delta"] = 0.21  # a real positive delta
+    flags = []
+    av.check_engine_selection_candidate_diversity(d, flags)
+    assert not [f for f in flags if _kinds([f])[0] == "DEGENERATE_CANDIDATE_POOL"]
+
+
+def test_effective_selection_games_count():
+    gr = [
+        {"candidate_rows": [{"heldout_cell_recall": 1.0}, {"heldout_cell_recall": 1.0}]},  # degenerate
+        {"candidate_rows": [{"heldout_cell_recall": 0.3}, {"heldout_cell_recall": 0.7}]},  # diverse
+        {"candidate_rows": [{"heldout_cell_recall": 0.5}]},  # single candidate -> not effective
+    ]
+    eff, tot = av._count_effective_selection_games(gr)
+    assert (eff, tot) == (1, 3)
