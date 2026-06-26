@@ -1,0 +1,345 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "dbcf58e5913b5927228a3d09a2857b378ec1e1e289aa8f1c52f6343eb8b76156",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "s0prime_structural_energy_verdict",
+        "flagged_artifacts_skipped",
+        "levelup_bank",
+        "readiness",
+        "silent_bug_audit",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4779_capstone_v439.json",
+      "sha256": "d183075b0ad5d4fe4455e4dc06853b46319daa116ffb01b3c2cb7a9c63762d4e",
+      "source": "experiment_4779_capstone_v439"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "flagged_adversarial",
+        "corrigendum_pending",
+        "s0prime_gate_passed",
+        "loo_auroc_structural",
+        "loo_auroc_ci95",
+        "origin_probe_auroc",
+        "shuffled_label_control_auroc",
+        "structural_minus_marginal_delta_ci95",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+      "sha256": "e6c4de814d388107171969db028fd417d28de72eae25904cd88f98a308f36b62",
+      "source": "experiment_4771_structural_energy_s0prime_origin_matched"
+    },
+    {
+      "fields_imported": [
+        "s0prime_reopens_s1_headline",
+        "s1_authorized"
+      ],
+      "path": "docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md",
+      "sha256": "ff7b197453dba72afa6937e9da1c833f25d07ea49daabb449131a34de879f66e",
+      "source": "oracle_distinct_structural_energy_program_note"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_439": {
+    "capstone_honest_verdict": "complete_s0prime_structural_energy_retires_v439_capstone_ready",
+    "capstone_reported_reproducible_total_levels": 65,
+    "capstone_reported_s0prime_direction": "RETIRES",
+    "capstone_skip_reason": "s0prime_flagged_adversarial_skipped_controls_unfired",
+    "capstone_skipped_s0prime": true,
+    "flagged_artifacts_skipped": [
+      {
+        "experiment_id": 4771,
+        "path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:e6c4de814d388107171969db028fd417d28de72eae25904cd88f98a308f36b62",
+        "source": "S0PRIME"
+      },
+      {
+        "experiment_id": 4773,
+        "path": "results/experiment_4773_self_play_verifier_checkpoint.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:65d584ac4063b358ccb417ad5c405920ff738b88b50f4026d56389368868f94b",
+        "source": "SELF_PLAY"
+      },
+      {
+        "experiment_id": 4776,
+        "path": "results/experiment_4776_submission_package_harden.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:73fa13aef03a4a2db96ce45553edf71fcd339f202fe71ca045f61c7ec7ac5754",
+        "source": "PACKAGE"
+      }
+    ],
+    "levelup_bank": {
+      "experiment_id": 4772,
+      "moat_claim": false,
+      "new_levels_banked": 0,
+      "offline_reproduced": false,
+      "registry_updated": false,
+      "reproduced_levels": 0,
+      "reproducible_total_levels_after": 65,
+      "reproducible_total_levels_before": 65,
+      "reproducible_total_levels_delta": 0,
+      "source": "LEVELUP",
+      "target_game": "ka59",
+      "verifier_is_oracle": true
+    },
+    "note_citation": {
+      "conclusion": "S0' passed; structural energy direction is alive; S1 authorized.",
+      "path": "docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md"
+    },
+    "readiness": {
+      "heldout_decision": "flat_null_no_readiness_gain",
+      "ready_for_operator_submit": false,
+      "reason": "requires_clean_package_and_heldout_gain",
+      "submission_package_decision": "skipped_flagged_adversarial"
+    },
+    "reproducible_total_levels": 65,
+    "s0prime_true_close_state": {
+      "artifact_flagged_adversarial": true,
+      "direction": "REOPENS_TO_S1",
+      "flag_is_known_false_positive": true,
+      "headline": "S0' REOPENS to S1 despite stale-conductor TAUTOLOGY skip",
+      "honest_verdict": "success_structural_energy_s0prime_reopens_s1",
+      "loo_auroc_ci95": [
+        0.636412794237013,
+        0.8332008450933205
+      ],
+      "loo_auroc_majority_control": 0.5,
+      "loo_auroc_marginal_control": 0.510766138124,
+      "loo_auroc_structural": 0.738664286189,
+      "loo_auroc_structural_rounded": 0.739,
+      "loo_ci_excludes_chance": true,
+      "n_candidate_rows": 463,
+      "n_held_out_games": 16,
+      "n_neg": 277,
+      "n_pos": 186,
+      "origin_matched": true,
+      "origin_probe_auroc_after": 0.5,
+      "origin_probe_auroc_before": 0.733,
+      "per_family_loo": {
+        "frame_delta": 0.7392638081947291,
+        "object_relational": 0.659731635551948
+      },
+      "retire_energy_guided_direction": false,
+      "retire_if_same_verdict": true,
+      "s0prime_gate_passed": true,
+      "s1_queued": true,
+      "shuffled_label_control_auroc": 0.503309195927,
+      "stale_linter_fix_commit": "93db8c015",
+      "structural_minus_marginal_delta_ci95": [
+        0.1271826145701076,
+        0.33248035484558097
+      ],
+      "verifier_is_oracle": false
+    },
+    "silent_bug_audit": {
+      "experiment_id": 4775,
+      "nulls_audited": 3,
+      "reopened_null_ids": [
+        "experiment_4771_structural_energy_s0prime_origin_matched"
+      ],
+      "s0prime_control_numbers": {
+        "class_balance_non_degenerate": true,
+        "contributing_games_with_both_classes": 16,
+        "origin_probe_auroc": 0.5,
+        "origin_probe_refit_on_origin_matched_data": false,
+        "origin_probe_status": "origin_matched_single_origin_all_induced",
+        "s0prime_leak_controls_fired": false,
+        "shuffled_label_control_auroc": 0.503309195927,
+        "shuffled_label_permuted_and_reran_loo": true,
+        "shuffled_label_resamples": 128,
+        "single_class_games_skipped": 2
+      },
+      "s0prime_leak_controls_fired": false,
+      "s0prime_reopened_for_control_bug": true,
+      "silent_bugs_found_count": 1,
+      "source": "BUG_AUDIT",
+      "trusted_nulls": [
+        "experiment_4772_levelup_attempt",
+        "experiment_4774_heldout_first_win_readiness"
+      ]
+    },
+    "sota_handoff": {
+      "arxiv_ids_cited": [
+        "1907.02893",
+        "1911.12247",
+        "2006.15055",
+        "2301.08243",
+        "2505.10819",
+        "2505.13910",
+        "2510.04542",
+        "2605.05138"
+      ],
+      "decision": "sota_handoff_mapped",
+      "experiment_id": 4778,
+      "flagged_for_v440_candidates": [
+        "slot_relational_contrastive_energy_s0prime_guarded",
+        "poe_code_world_model_trust_gate_after_s0prime"
+      ],
+      "leak_robust_roadmap_gate": "flagged_for_v440: leak_robust_eval_gate_for_all_structural_energy_continuations",
+      "methods_mapped_count": 4,
+      "source": "SOTA"
+    }
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_4780_archive_439_activate_440",
+  "experiment_id": 4780,
+  "field_principles": {
+    "close_state_439": {
+      "principle": "the honest `.439` close-state carried from Exp4779 plus the corrected Exp4771 S0' result so the stale-conductor skip does not erase the real headline."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_439_archived_440_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "poison_test_resolved": {
+      "principle": "records whether a poison pre-test was found+fixed -- the cascade-skip guard."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    },
+    "s0prime_reopen_recorded": {
+      "principle": "the .439 headline (S0' REOPENS to S1) must be carried forward even though the capstone skipped the flagged artifact."
+    },
+    "v440_pivot": {
+      "principle": "the `.440` headline rationale (S1 contrastive energy landscape authorized by S0') recorded so milestone intent is traceable."
+    }
+  },
+  "honest_verdict": "complete_439_archived_440_activated_already_active_s0prime_reopen_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "no_poison_observed_current_gate_green",
+    "current_gate_passed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.440",
+      "milestone_before_activation": "2026.06.440",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "capstone_4779": {
+      "available": true,
+      "path": "results/experiment_4779_capstone_v439.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4780": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade(); print('ok')\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_note": {
+      "available": true,
+      "path": "docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md"
+    },
+    "research_roadmap_next_yaml": {
+      "accepted_missing_because_already_active": true,
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('ok')\"",
+      "literal_precondition_passed": false,
+      "milestone": null,
+      "parses": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "s0prime_4771": {
+      "available": true,
+      "path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4780_archive_439_activate_440.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.19s\n"
+    }
+  },
+  "random_seed": 4780,
+  "reproducibility_checksum": "sha256:730fdef7b2141471be48f266ab4cbb07154abd9800fb17c59624bca6f3152170",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4780_archive_439_activate_440.json",
+  "s0prime_reopen_recorded": true,
+  "schema": "carnot.archive_activation.v439_to_v440_4780.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4780",
+    "SCENARIO-CAPSTONE-4780",
+    "SCENARIO-CAPSTONE-4780-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4780-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.440",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.439"
+  },
+  "v440_pivot": {
+    "foundation_experiment": "experiment_4771_structural_energy_s0prime_origin_matched",
+    "gate": "validate -deltaE descent across >=10 seeds with origin-probe and shuffled-label controls carried forward",
+    "headline": "S1 contrastive energy landscape",
+    "s1_authorized_by_s0prime": true,
+    "target": "promote the S0' origin-matched logistic into a contrastive energy E(s,a,s')",
+    "task_id": "exp4781-a1"
+  }
+}
