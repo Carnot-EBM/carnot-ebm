@@ -1,0 +1,146 @@
+{
+  "agent_config_resolution": {
+    "blocked_resource": "",
+    "checks": {
+      "binary_not_wheel": true,
+      "cuda_128_server": true,
+      "model_filename": true,
+      "model_is_qwen35_mtp": true,
+      "mtp_enabled": true,
+      "n_predict_floor": true,
+      "no_think": true,
+      "q8_kv": true,
+      "submitted_cascade": true,
+      "submitted_policy_e3": true
+    },
+    "kv_quant": "q8_0",
+    "llama_server_kind": "cuda-12.8-binary",
+    "max_tokens": 2560,
+    "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+    "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "model_path_env": "CARNOT_ARC_GGUF_PATH",
+    "mtp": true,
+    "n_predict_min": 2048,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "resolved": true,
+    "server_path_env": "CARNOT_LLAMA_SERVER",
+    "spec_type": "draft-mtp"
+  },
+  "duration_s": 0.810238,
+  "experiment": "experiment_4786_submission_package_harden",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; package builds is success_/complete_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "submission_package_ready": {
+      "principle": "True iff ready for the OPERATOR to submit; the task itself NEVER submits."
+    },
+    "vram_estimate_gb": {
+      "principle": "must fit ~16GB Kaggle with KV + headroom -- the deployment gate."
+    }
+  },
+  "honest_verdict": "success_package_builds_vram_gate_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "model_path_resolution": {
+    "all_gguf_candidates": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    ],
+    "all_llama_server_candidates": [
+      "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    ],
+    "blocked_resource": "",
+    "gguf": {
+      "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "present": true,
+      "size_bytes": 5868826976,
+      "size_gb": 5.868827
+    },
+    "llama_server": {
+      "cuda_12_8_capable": true,
+      "filename": "llama-server",
+      "kind": "cuda-12.8-binary",
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "present": true
+    },
+    "llama_server_candidate_checks": [
+      {
+        "cuda_12_8_capable": false,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+        "present": true
+      },
+      {
+        "cuda_12_8_capable": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "present": true
+      }
+    ],
+    "resolved": true
+  },
+  "operator_checklist": [
+    "OPERATOR-CHECK: Confirm results/experiment_4786_submission_package_harden.json is ready, submitted_to_leaderboard=false, and operator_only=true.",
+    "OPERATOR-CHECK: In Kaggle, use kernel iancblenke/carnot-arc-agi3-submission with GPU enabled, internet disabled, and the ARC-AGI-3 competition attached.",
+    "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf before Save & Run.",
+    "OPERATOR-CHECK: Verify the rerun log resolves Qwen3.5-9B-MTP, draft-mtp, q8_0 KV, and the CUDA-12.8 llama-server.",
+    "OPERATOR-CHECK: Verify VRAM estimate 15.146GB is below the ~16GB Kaggle budget with headroom.",
+    "OPERATOR-CHECK: Submit only through the operator-controlled Kaggle UI or API; this task never submits."
+  ],
+  "operator_only": true,
+  "package_builds": {
+    "blocked_resource": "",
+    "dry_build_ran": true,
+    "entrypoint_compiles": true,
+    "file_hashes": {
+      "kernel-metadata.json": "sha256:40629bd0ded774706e3356cddeb0e62d11178ab0f7e64f71e517296c423b6cc4",
+      "main.py": "sha256:893d9c196473c07ed99242494213dab4fa62f507a2173f30591d90065b56a03f"
+    },
+    "files": [
+      "kernel-metadata.json",
+      "main.py"
+    ],
+    "kernel_main_present": true,
+    "manifest_present": true,
+    "package_builds": true,
+    "package_sha256": "sha256:900bd246f3c61ee8710ce53c2d9d0ff66a936459bcf76ce0e5b4958be55184c6",
+    "submitted_to_leaderboard": false
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_competition_agent_present": true,
+    "codex_or_opencode_md_read": true,
+    "ok": true,
+    "spec_has_req_4786": true,
+    "submission_kernel_present": true
+  },
+  "random_seed": 4786,
+  "reproducibility_checksum": "sha256:76f33bf3d14b3f8acda5d9d4cfd886209a3f214b7c869ddcc575a58fbac09a5d",
+  "schema": "carnot.exp4786.submission_package_harden.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4786",
+    "SCENARIO-CAPSTONE-4786",
+    "SCENARIO-CAPSTONE-4786-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4786-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": true,
+  "submitted_to_leaderboard": false,
+  "vram_breakdown": {
+    "context_tokens": 16384,
+    "draft_model_weights_gb": 5.869,
+    "fits_16gb": true,
+    "kv_cache_gb": 1.208,
+    "kv_quant": "q8_0",
+    "limit_gb": 16.0,
+    "model_copies": 2,
+    "model_weights_gb": 5.869,
+    "remaining_headroom_gb": 0.854,
+    "required_headroom_gb": 1.5,
+    "runtime_overhead_gb": 0.7,
+    "total_with_headroom_gb": 15.146,
+    "vram_estimate_gb": 15.146
+  },
+  "vram_estimate_gb": 15.146
+}
