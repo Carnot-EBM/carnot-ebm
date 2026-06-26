@@ -1,0 +1,220 @@
+{
+  "bridge_crossed_for_solve": false,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4749,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:ede74bf4e3164a8a4bfadb1f0f04ffeb0628c889f71133c2966303cca372b5d2"
+    },
+    {
+      "experiment_id": 4750,
+      "fields_imported": [
+        "goal_predicate_satisfiable",
+        "l2_plan_reaches_goal",
+        "offline_reproduced",
+        "reproduced_levels",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:3e95bd956352a611d58798f445049b13ca1ee8b163830d37e8813dbe2c4c8d44"
+    },
+    {
+      "experiment_id": 4751,
+      "fields_imported": [
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels",
+        "target_game",
+        "verifier_is_oracle"
+      ],
+      "sha256": "sha256:649484c141aa93eeb698f8788afb84c35507edc808c8c0100ee0b24e4b90a022"
+    },
+    {
+      "experiment_id": 4752,
+      "fields_imported": [
+        "flagged_adversarial"
+      ],
+      "sha256": "sha256:bce8a0d9faf759f3aa77a4e6b951df52b285edc7782c60decd3546b19b77080d"
+    }
+  ],
+  "duration_s": 0.20163144706748426,
+  "experiment": "experiment_4759_capstone_v437",
+  "field_principles": {
+    "bridge_crossed_for_solve": {
+      "principle": "the honest headline -- did the agent solve a hidden-class game; false is honest, not a failure."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "{experiment_id, fields_imported, sha256} so every aggregated number traces to a real measurement (the aggregation audit trail)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; the capstone is complete_ (an aggregation), success_ only if a real bank landed."
+    },
+    "induction_quality_decision": {
+      "principle": "did A1 beat the 0.12 free-form baseline and/or A2 make the structural goal satisfiable -- the .437 headline result."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 100us floor."
+    },
+    "preconditions_checked": {
+      "principle": "records which upstream artifacts were present."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative banked-level count from the registry -- the monotonic sprint metric."
+    },
+    "submission_package_ready": {
+      "principle": "True only if OPERATOR-ready; the capstone NEVER submits."
+    },
+    "verifier_is_oracle": {
+      "principle": "false on every aggregated value claim."
+    }
+  },
+  "honest_verdict": "success: real_bank_landed_sk48_L2_capstone_complete",
+  "induction_quality_decision": {
+    "a1": {
+      "banked_l2": false,
+      "beat_0_12_freeform_baseline": null,
+      "decision": "skipped_flagged_adversarial",
+      "present": true
+    },
+    "a2": {
+      "banked_l2": false,
+      "decision": "detector_fixed_no_satisfiable_goal_no_bank",
+      "goal_predicate_satisfiable": false,
+      "l2_plan_reaches_goal": false,
+      "offline_reproduced": false,
+      "present": true,
+      "reproduced_levels": 1
+    },
+    "cleared_induction_quality_wall": false,
+    "headline": "A1 was not admissible or did not beat 0.12; A2 did not make the goal satisfiable or bank L2."
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream JSON, registry, and publication gate; no model load (100us floor).",
+  "missing_artifacts": [],
+  "paper_ready": true,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "publication_gate": {
+      "available": true,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/publication_gate.py --json",
+      "returncode": 0
+    },
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "yaml_loadable": true
+    },
+    "spec_has_req_4759": true,
+    "upstream_artifacts": {
+      "A1": {
+        "path": "results/experiment_4749_structured_engine_vs_freeform.json",
+        "present": true
+      },
+      "A2": {
+        "path": "results/experiment_4750_structural_alignment_detector_fix.json",
+        "present": true
+      },
+      "A3": {
+        "path": "results/experiment_4751_levelup_selfplay.json",
+        "present": true
+      },
+      "A4": {
+        "path": "results/experiment_4752_held_out_first_win_readiness.json",
+        "present": true
+      }
+    }
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4759,
+  "registry_provenance": {
+    "fields_imported": [
+      "reproducible_total_levels"
+    ],
+    "path": "ops/arc_solve_registry.yaml",
+    "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4"
+  },
+  "reproducibility_checksum": "sha256:13bc5d153cc5cec38c2f5de3b569ca897baef4087d8add7db982e51fc95ae2ef",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4759_capstone_v437.json",
+  "schema": "carnot.exp4759.capstone_v437.v1",
+  "scorecard": {
+    "A1": {
+      "banked_l2": false,
+      "beat_0_12_freeform_baseline": null,
+      "decision": "skipped_flagged_adversarial",
+      "present": true
+    },
+    "A2": {
+      "banked_l2": false,
+      "decision": "detector_fixed_no_satisfiable_goal_no_bank",
+      "goal_predicate_satisfiable": false,
+      "l2_plan_reaches_goal": false,
+      "offline_reproduced": false,
+      "present": true,
+      "reproduced_levels": 1
+    },
+    "A3": {
+      "decision": "real_bank_landed",
+      "new_levels_banked": 1,
+      "offline_reproduced": true,
+      "present": true,
+      "reached_level": 2,
+      "real_bank_landed": true,
+      "target_game": "sk48"
+    },
+    "A4": {
+      "decision": "skipped_flagged_adversarial",
+      "present": true,
+      "submission_package_ready": false
+    }
+  },
+  "skipped_artifacts": [
+    {
+      "experiment_id": 4749,
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:ede74bf4e3164a8a4bfadb1f0f04ffeb0628c889f71133c2966303cca372b5d2",
+      "source": "A1"
+    },
+    {
+      "experiment_id": 4752,
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:bce8a0d9faf759f3aa77a4e6b951df52b285edc7782c60decd3546b19b77080d",
+      "source": "A4"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-4759",
+    "SCENARIO-CAPSTONE-4759",
+    "SCENARIO-CAPSTONE-4759-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": false,
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false
+}
