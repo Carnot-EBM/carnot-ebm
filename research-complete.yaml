@@ -51376,3 +51376,70 @@ milestones:
       artifacts but record the S2 true verdict from the gate numbers (note any stale-conductor false-positive).'
     deliverable: results/experiment_4799_capstone_v441.json
     result: OK (conductor)
+- id: 2026.06.442
+  title: S2-v2 OFF-PATH TRUST GATE on a DIVERSE candidate pool -- fix the exp4791 degenerate non-test. Generate K behaviorally-diverse
+    candidate engines per game (varied refinement rounds/seeds spanning held-out off-path cell_recall), log per-game energy-vs-accuracy
+    selections, and gate on >=5 EFFECTIVE games so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake
+    null. PASS -> S3 generation lift; GENUINE bounded (diverse pool) -> pivot the energy to S3 directly. Plus the sprint-mandated
+    level-up (rotated), self-play, readiness, reserved infra/hardware/SOTA/capstone.
+  doc: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
+  completed: '2026-06-26'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4800-phase0
+    title: PHASE 0 (TRANSITION) -- archive .441 -> activate .442; assert YAML parses + pre-test gate green; DETECT + RESOLVE
+      any poison pre-test. RECORD the true .441 close-state (S2 was a DEGENERATE NON-TEST -- inconclusive, NOT bounded; S2-v2
+      re-tests with a diverse pool).
+    deliverable: results/experiment_4800_archive_441_activate_442.json
+    result: OK (conductor)
+  - id: exp4801-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S2-v2 OFF-PATH TRUST GATE with an ENFORCED behaviorally-DIVERSE
+      candidate pool. S2 (exp4791) was a degenerate non-test (candidate engines bit-identical on held-out transitions, so
+      any selector scored the same). S2-v2 generates a candidate pool that genuinely spans off-path generalization, logs per-game
+      selections, and uses an EFFECTIVE-GAMES gate so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake
+      null.
+    deliverable: results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json
+    result: OK (conductor)
+  - id: exp4802-a2
+    title: PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on
+      a ROTATED unsolved target (bp35/sb26). offline_reproduced gated.
+    deliverable: results/experiment_4802_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4803-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- run the standing self-improvement loop on a banked game:
+      verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4803_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4804-a4
+    title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness) -- measure the live agent's held-out first-win
+      rate on the color-permuted variant harness, checkpoint/resume-capable.
+    deliverable: results/experiment_4804_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4805-b1
+    title: 'PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .442 ARC nulls + RUN the degenerate-pool detector
+      on S2-v2: confirm n_effective_games >= min_heldout_games (the candidate pool is genuinely diverse) so a bounded/0-delta
+      verdict is a real test, not a degenerate non-test like S2 (exp4791).'
+    deliverable: results/experiment_4805_silent_bug_audit.json
+    result: OK (conductor)
+  - id: exp4806-b2
+    title: 'PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the Kaggle ARC-AGI-3
+      agent package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; operator checklist.'
+    deliverable: results/experiment_4806_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4807-c
+    title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty anchor) -- the per-milestone KV260 continuity task: SSH-reachability,
+      loaded overlay, next concrete forward step. SSH precondition ONLY.'
+    deliverable: results/experiment_4807_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4808-d
+    title: PHASE D (SOTA-INGESTION -- the .443 frontier = energy-guided GENERATION) -- ingest the literature on using a learned
+      energy/value to GUIDE candidate generation (energy-guided sampling, score guidance, energy-as-fitness search) to inform
+      S3. Real arXiv IDs only.
+    deliverable: results/experiment_4808_sota_ingestion_energy_guided_generation.json
+    result: OK (conductor)
+  - id: exp4809-e
+    title: 'PHASE E (CAPSTONE .442) -- aggregate the .442 scorecard: the S2-v2 verdict (trust win -> S3, GENUINE bounded on
+      a DIVERSE pool, or still-inconclusive), the level-up bank, self-play, readiness. SKIP genuinely-flagged artifacts; record
+      S2-v2''s true verdict ONLY if DEGENERATE_CANDIDATE_POOL did NOT fire.'
+    deliverable: results/experiment_4809_capstone_v442.json
+    result: OK (conductor)
