@@ -7431,6 +7431,87 @@ Then it writes a `blocked_network` artifact, records the failed network check,
 leaves `methods_mapped`, `citations`, and `flagged_for_438` empty, and makes no
 paper, solve, model-load, training, or leaderboard claim.
 
+### REQ-ARC-WMTE-4761: Structural Energy S0 Transition-Correctness Core-Bet Probe
+
+Experiment 4761 SHALL run the `.438` S0 core-bet probe for oracle-distinct
+structural energy. The workflow SHALL first verify that `arc_solver_kit`
+initializes the offline arcade and that `cross_game_features_v3` imports. If
+either precondition fails, the artifact SHALL stop with
+`honest_verdict=blocked_offline_arcade_missing` or
+`honest_verdict=blocked_structural_features_missing` and SHALL NOT report a
+fabricated AUROC.
+
+The dataset SHALL be built from the banked ARC games only. For each usable game,
+the workflow SHALL replay the banked recorded transitions, fit an
+`InducedWorldModel` on a prefix of those recorded transitions, and score held-out
+off-path transitions that were not fit on. The transition-correctness label
+SHALL be oracle-free: a positive row is the model's predicted next grid when it
+exactly matches the held-out observed next grid, and a negative row is the
+model's predicted next grid when it mispredicts. Negatives SHALL be real
+induced-engine near misses, never synthetic corruptions of the observed
+ground-truth next grid.
+
+The primary head SHALL use only the `object_relational` and `frame_delta`
+families from `cross_game_features_v3`, with the v1/v2 frame marginals,
+`action_conditioned`, and `predicate_distance` excluded. It SHALL train a
+logistic head under leave-one-GAME-out folds and report structural LOO AUROC,
+bootstrap CI95, in-sample AUROC, a majority-class chance control, a v2
+frame-marginal logistic control on identical folds and seed, the
+structural-minus-marginal delta CI95, per-family LOO AUROC for the structural
+families, and an origin-probe leak audit that classifies induced-vs-real rows on
+the same feature view.
+
+The artifact `results/experiment_4761_structural_energy_s0_core_bet_probe.json`
+SHALL set `verifier_is_oracle=false` and include principle-annotated fields for
+`honest_verdict`, `verifier_is_oracle`, `inference_substrate`,
+`preconditions_checked`, `loo_auroc_structural`, `loo_auroc_ci95`,
+`loo_auroc_marginal_control`, `structural_minus_marginal_delta_ci95`,
+`per_family_loo`, `origin_probe_auroc`, `near_miss_negative_fraction`,
+`in_sample_auroc`, `random_seed`, and `reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a clean cross-game above-chance result is success_, an honest null is complete_; a null with CI-incl-0.5 RETIRES the direction."
+- `verifier_is_oracle`: principle "MUST be false -- the energy never runs the env win-check; required for check_circular_moat_overclaim."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- scores structural features over cached transitions, no LLM; 1s floor."
+- `preconditions_checked`: principle "records the arcade/feature-import checks so a silent-missing-resource run cannot fabricate an AUROC."
+- `loo_auroc_structural`: principle "the load-bearing measurement -- cross-game leave-one-GAME-out AUROC on held-out transition-correctness with the structural features."
+- `loo_auroc_ci95`: principle "bootstrap CI95; the lower bound vs 0.5 is the decisive non-circular signal."
+- `loo_auroc_marginal_control`: principle "the v2 frame-marginal head on identical folds -- proves whether STRUCTURE adds transfer beyond marginals."
+- `structural_minus_marginal_delta_ci95`: principle "must exclude 0 -- otherwise structure carries no signal beyond marginals and the direction retires."
+- `per_family_loo`: principle ">=1 non-frame_delta structural family must independently clear 0.55 -- kills the frame_delta-single-lever risk."
+- `origin_probe_auroc`: principle "induced-vs-real leak audit; must be < 0.6 -- else the head is a provenance discriminator."
+- `near_miss_negative_fraction`: principle "fraction of negatives that are REAL near-misses (<=5% cells changed); GAP-3 aced synthetic corruptions but failed real near-misses."
+- `in_sample_auroc`: principle "positive control > 0.60 -- else the harness is broken and the LOO null is uninformative."
+- `random_seed`: principle "determinism is the precondition for reproducibility; a third party must re-run the LOO."
+- `reproducibility_checksum`: principle "content hash of the (corpus, folds, features) so a future replication catches drift."
+
+The S0 gate SHALL pass only if structural LOO AUROC has CI95 lower bound greater
+than true chance 0.5, the point estimate is greater than 0.60, the
+structural-minus-marginal delta CI95 excludes 0, at least one genuinely
+structural family clears 0.55 LOO, the origin probe scores AUROC less than 0.6,
+and the in-sample positive control exceeds 0.60. If the CI95 includes 0.5, the
+structural-minus-marginal delta CI95 includes 0, or the origin probe leaks, the
+artifact SHALL retire the energy-guided direction with an honest null verdict.
+
+#### SCENARIO-ARC-WMTE-4761-S0-GATE
+
+Given the offline arcade and structural feature spine are importable and at
+least sixteen banked games produce held-out transition-correctness rows
+When Experiment 4761 runs the structural S0 probe
+Then it writes
+`results/experiment_4761_structural_energy_s0_core_bet_probe.json`, keeps
+`verifier_is_oracle=false`, reports the matched structural, marginal, majority,
+per-family, leak-audit, near-miss, and positive-control measurements, and marks
+the gate as passed only when every numeric S0 criterion is satisfied.
+
+#### SCENARIO-ARC-WMTE-4761-BLOCKED-PRECONDITION
+
+Given the offline arcade smoke check or structural feature import check fails
+When Experiment 4761 runs
+Then it writes a blocked artifact with the failed precondition recorded, no
+claimed AUROC, `verifier_is_oracle=false`, and a reproducibility checksum.
+
 ### REQ-ARC-WMTE-4751: SK48 Level-Up Self-Play Bank and Learned-Verifier Checkpoint
 
 Experiment 4751 SHALL bank exactly one new offline-reproduced public ARC level
