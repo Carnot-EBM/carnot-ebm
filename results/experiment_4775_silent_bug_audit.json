@@ -1,0 +1,249 @@
+{
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "audited_artifact_checksums": {
+    "python/carnot/experiment_4771_structural_energy_s0prime_origin_matched.py": "sha256:8ce868151258398051262efde08fb842fd57c1598d25568c738dfa21f2d7cba9",
+    "results/experiment_4771_structural_energy_s0prime_origin_matched.json": "sha256:e6c4de814d388107171969db028fd417d28de72eae25904cd88f98a308f36b62",
+    "results/experiment_4772_levelup_attempt.json": "sha256:b11bfd49e26cfca148afdb7300db8731affc2989b1f98fe12b804bb046ce69fb",
+    "results/experiment_4774_heldout_first_win_readiness.json": "sha256:bc5c4de9c2131f9599925fbd953906282841967ece626781673838ca261281be"
+  },
+  "audited_artifacts": [
+    "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+    "results/experiment_4772_levelup_attempt.json",
+    "results/experiment_4774_heldout_first_win_readiness.json"
+  ],
+  "duration_s": 0.000905,
+  "experiment": "experiment_4775_silent_bug_audit",
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts; 0.0001s floor."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined -- a null that tested dead code is not trustworthy."
+    },
+    "s0prime_leak_controls_fired": {
+      "principle": "the load-bearing check -- the origin-probe + shuffled-label controls must have genuinely executed, else S0''s reopen/retire verdict is uninterpretable."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_1_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "artifact_path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+      "exercise_evidence": [
+        "s0prime_candidate_rows=463",
+        "s0prime_n_pos=186",
+        "s0prime_n_neg=277",
+        "s0prime_contributing_games_with_both_classes=16",
+        "s0prime_single_class_games_skipped=2",
+        "origin_matched=True",
+        "origin_probe_status=origin_matched_single_origin_all_induced",
+        "origin_probe_refit_on_origin_matched_data=False",
+        "origin_probe_auroc=0.5",
+        "shuffled_label_control_auroc=0.503309",
+        "shuffled_label_resamples=128",
+        "shuffled_label_module_permutation_loo=True"
+      ],
+      "null_id": "experiment_4771_structural_energy_s0prime_origin_matched",
+      "s0prime_leak_control_checks": {
+        "all_controls_fired": false,
+        "class_balance_non_degenerate": true,
+        "contributing_games_missing_a_class": [],
+        "contributing_games_with_both_classes": [
+          "ar25",
+          "cd82",
+          "cn04",
+          "dc22",
+          "ka59",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sc25",
+          "sk48",
+          "su15",
+          "tn36",
+          "tr87",
+          "tu93",
+          "vc33",
+          "wa30"
+        ],
+        "origin_matching_real": true,
+        "origin_probe_auroc": 0.5,
+        "origin_probe_not_stale_s0_value": true,
+        "origin_probe_refit_on_origin_matched_data": false,
+        "origin_probe_status": "origin_matched_single_origin_all_induced",
+        "shuffled_label_control_auroc": 0.5033091959271814,
+        "shuffled_label_module_permutation_loo": true,
+        "shuffled_label_permuted_and_reran_loo": true,
+        "shuffled_label_resamples": 128,
+        "single_class_games_not_skipped": [],
+        "single_class_games_skipped": [
+          "r11l",
+          "sp80"
+        ],
+        "single_class_games_skipped_correctly": true
+      },
+      "s0prime_leak_controls_fired": false,
+      "silent_bug_signatures": [
+        "s0prime_origin_probe_not_refit",
+        "s0prime_corrigendum_pending"
+      ],
+      "verdict": "silent_bug_must_reopen"
+    },
+    {
+      "artifact_path": "results/experiment_4772_levelup_attempt.json",
+      "exercise_evidence": [
+        "levelup_attempts=1",
+        "exercised_attempts=1",
+        "solution_label_count=11",
+        "reproduced_existing=1",
+        "new_levels_banked=0",
+        "reproduced_levels=0"
+      ],
+      "null_id": "experiment_4772_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "artifact_path": "results/experiment_4774_heldout_first_win_readiness.json",
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True"
+      ],
+      "null_id": "experiment_4774_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "milestone_439_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "s0prime_module_path": "python/carnot/experiment_4771_structural_energy_s0prime_origin_matched.py",
+    "s0prime_module_present": true,
+    "source_artifacts_present": true
+  },
+  "random_seed": 4775,
+  "reproducibility_checksum": "sha256:dab991d6f4502b54171afb32155a98a8bf320ebdc7f09ae5d8e619af8c14c25d",
+  "s0prime_leak_control_checks": {
+    "all_controls_fired": false,
+    "class_balance_non_degenerate": true,
+    "contributing_games_missing_a_class": [],
+    "contributing_games_with_both_classes": [
+      "ar25",
+      "cd82",
+      "cn04",
+      "dc22",
+      "ka59",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "sc25",
+      "sk48",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33",
+      "wa30"
+    ],
+    "origin_matching_real": true,
+    "origin_probe_auroc": 0.5,
+    "origin_probe_not_stale_s0_value": true,
+    "origin_probe_refit_on_origin_matched_data": false,
+    "origin_probe_status": "origin_matched_single_origin_all_induced",
+    "shuffled_label_control_auroc": 0.5033091959271814,
+    "shuffled_label_module_permutation_loo": true,
+    "shuffled_label_permuted_and_reran_loo": true,
+    "shuffled_label_resamples": 128,
+    "single_class_games_not_skipped": [],
+    "single_class_games_skipped": [
+      "r11l",
+      "sp80"
+    ],
+    "single_class_games_skipped_correctly": true
+  },
+  "s0prime_leak_controls_fired": false,
+  "schema": "carnot.arc.milestone_439_silent_bug_audit_4775.v1",
+  "silent_bugs_found": [
+    {
+      "artifact_path": "results/experiment_4771_structural_energy_s0prime_origin_matched.json",
+      "exercise_evidence": [
+        "s0prime_candidate_rows=463",
+        "s0prime_n_pos=186",
+        "s0prime_n_neg=277",
+        "s0prime_contributing_games_with_both_classes=16",
+        "s0prime_single_class_games_skipped=2",
+        "origin_matched=True",
+        "origin_probe_status=origin_matched_single_origin_all_induced",
+        "origin_probe_refit_on_origin_matched_data=False",
+        "origin_probe_auroc=0.5",
+        "shuffled_label_control_auroc=0.503309",
+        "shuffled_label_resamples=128",
+        "shuffled_label_module_permutation_loo=True"
+      ],
+      "null_id": "experiment_4771_structural_energy_s0prime_origin_matched",
+      "s0prime_leak_control_checks": {
+        "all_controls_fired": false,
+        "class_balance_non_degenerate": true,
+        "contributing_games_missing_a_class": [],
+        "contributing_games_with_both_classes": [
+          "ar25",
+          "cd82",
+          "cn04",
+          "dc22",
+          "ka59",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sc25",
+          "sk48",
+          "su15",
+          "tn36",
+          "tr87",
+          "tu93",
+          "vc33",
+          "wa30"
+        ],
+        "origin_matching_real": true,
+        "origin_probe_auroc": 0.5,
+        "origin_probe_not_stale_s0_value": true,
+        "origin_probe_refit_on_origin_matched_data": false,
+        "origin_probe_status": "origin_matched_single_origin_all_induced",
+        "shuffled_label_control_auroc": 0.5033091959271814,
+        "shuffled_label_module_permutation_loo": true,
+        "shuffled_label_permuted_and_reran_loo": true,
+        "shuffled_label_resamples": 128,
+        "single_class_games_not_skipped": [],
+        "single_class_games_skipped": [
+          "r11l",
+          "sp80"
+        ],
+        "single_class_games_skipped_correctly": true
+      },
+      "s0prime_leak_controls_fired": false,
+      "silent_bug_signatures": [
+        "s0prime_origin_probe_not_refit",
+        "s0prime_corrigendum_pending"
+      ],
+      "verdict": "silent_bug_must_reopen"
+    }
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4775",
+    "SCENARIO-ARC-WMTE-4775-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4775-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4772_levelup_attempt",
+    "experiment_4774_heldout_first_win_readiness"
+  ],
+  "verifier_is_oracle": false
+}
