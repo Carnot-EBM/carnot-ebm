@@ -17016,6 +17016,24 @@ Top 10 selected by relevance score.
 - **Complexity:** high
 - **Description:** Extend Carnot's constraint extraction pipeline (currently arithmetic-only) to factual claims grounded in a lightweight knowledge graph. Use Wikidata SPARQL (public endpoint, no cost) to resolve named entities and their relations as soft constraints encoded into Ising couplings. Run on 100 TriviaQA questions using Qwen3.5-0.8B as the LLM. Measure: (a) factual claim detection rate, (b) KG resolution success rate, (c) Ising verifier precision/recall on factual hallucinations vs arithmetic-only baseline. Success: ≥60% factual claim detection with ≥70% verifier precision — establishing the first data point for Goal #3 (factual extractor). Also test with google/gemma-4-E4B-it to check model-agnosticism.
 
+<!-- EXP4879-V450-FRONTIER-REFERENCES-START -->
+## 2026-06-27 Exp 4879 V450 frontier source set
+
+Reliable-channel ingestion for `.450`, aimed at the computed
+`INDUCER_CEILING` residual while recording that A1's source fork was null and
+A1b's CEGIS delta was zero. These papers are marked INGESTED for the V450
+frontier roadmap handoff:
+
+- **arXiv:2203.13474 -- CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2506.02918 -- World Modelling Improves Language Model Agents.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2507.03160 -- Assessing Small Language Models for Code Generation: An Empirical Study with Benchmarks.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2507.15877 -- Out-of-Distribution Generalization in the ARC-AGI Domain: Comparing Execution-Guided Neural Program Synthesis and Test-Time Fine-Tuning.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2509.03956 -- World Model Implanting for Test-time Adaptation of Embodied Agents.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2606.25421 -- Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+- **arXiv:2606.26217 -- Fast LeWorldModel.** Exp 4879 use: V450 INDUCER_CEILING residual source for test-time dynamics adaptation, stronger executable-world-model induction, or local open-code inducer selection after nulled A1b CEGIS.
+<!-- EXP4879-V450-FRONTIER-REFERENCES-END -->
+
 <!-- EXP4868-V449-FRONTIER-REFERENCES-START -->
 ## 2026-06-27 Exp 4868 V449 frontier source set
 

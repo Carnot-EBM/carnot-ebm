@@ -10,6 +10,56 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4879-SOTA-INGESTION-V450-FRONTIER-START -->
+## 2026-06-27 Exp 4879 - .450 V450 frontier SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4879_sota_ingestion_v450_frontier.json`.
+
+**Preconditions:** `research-studying.md`, `research-references.md`,
+`results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json`,
+`results/experiment_4872_cegis_world_model_refinement.json`, and
+`results/experiment_4868_sota_ingestion_v449_frontier.json` were present. A1's
+source `fork_verdict` is null because the positive-control check failed, but the
+numeric fork table computes to `INDUCER_CEILING`. A1b CEGIS delta was 0.0 with
+CI95 [0.0, 0.0], so this note carries forward the next inducer candidates, not
+the current CEGIS refinement loop. `scripts/sweep_clusters.py` emitted the
+neural-guided-search/world-model cluster 6 URLs. `scripts/sweep_semscholar.py`
+was run on five focused queries; rate limits were recorded rather than promoted
+as evidence. Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks
+verified the top eight papers listed below. `/deep-research` was not invoked.
+The retired macro-vocab/click-heatmap coverage, exploration-strategy, and
+energy classes were not re-ingested. No model load, training, leaderboard
+submission, or solve claim was made; this is a no solve claim ingestion note.
+
+**A1/A1b branch:** `INDUCER_CEILING` residual with an A1 positive-control caveat
+and a nulled A1b CEGIS refinement delta.
+
+**Verified source set:**
+- arXiv:2203.13474 -- CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis
+- arXiv:2506.02918 -- World Modelling Improves Language Model Agents
+- arXiv:2507.03160 -- Assessing Small Language Models for Code Generation: An Empirical Study with Benchmarks
+- arXiv:2507.15877 -- Out-of-Distribution Generalization in the ARC-AGI Domain: Comparing Execution-Guided Neural Program Synthesis and Test-Time Fine-Tuning
+- arXiv:2509.03956 -- World Model Implanting for Test-time Adaptation of Embodied Agents
+- arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents
+- arXiv:2606.25421 -- Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making
+- arXiv:2606.26217 -- Fast LeWorldModel
+
+**SOTA -> .450 frontier mapping:**
+- **Test-time world-model and dynamics adaptation loop** (arXiv:2506.02918, arXiv:2509.03956, arXiv:2507.15877): maps to .450 / INDUCER_CEILING. A1b fit: A1b CEGIS delta was 0.0, so the next swing adapts or retrieves dynamics at test time before planning through the engine. Evidence: arXiv:2506.02918 trains internal state prediction for language agents; arXiv:2509.03956 composes world models at test time; arXiv:2507.15877 compares ARC execution-guided synthesis with test-time fine-tuning. Experiment graft: Collect cold-start transitions, fit or retrieve a compact dynamics adapter, then remeasure held-out transition accuracy before any planner reranking. Validation gate: Promote only if held-out off-prefix transition accuracy improves on games disjoint from the adapter's observed-prefix fit. Sovereignty: The adapter can be selected or trained locally from game observations, preserving the air-gapped path. Fails when: The adapter memorizes prefix frames, loses hidden state, or improves observed replay while held-out dynamics remain flat.
+- **Family-B reference versus local open-code inducer A/B** (arXiv:2605.05138, arXiv:2507.03160, arXiv:2203.13474): maps to .450 / INDUCER_CEILING. A1b fit: A1b's null CEGIS result means the loop needs a stronger inducer measurement, not another repair pass from the same engine. Evidence: arXiv:2605.05138 supplies the executable-world-model coding-agent reference; arXiv:2507.03160 evaluates small code models; arXiv:2203.13474 establishes open multi-turn code synthesis. Experiment graft: Run one Family-B reference lane and one local open-code lane against the same engine interface and held-out transition gate. Validation gate: The reference lane measures the capability ceiling; the local lane is promoted only if it beats the current Qwen3.5-9B-MTP inducer under the A1 held-out game set. Sovereignty: The cloud-strength lane is a ceiling measurement; the desired deployment lane remains local and open. Fails when: The reference lane still overfits observed prefixes, or no local open inducer can synthesize executable state updates.
+- **Agent-authored world-model target construction** (arXiv:2606.25421, arXiv:2506.02918): maps to .450 / INDUCER_CEILING. A1b fit: A1b failed to repair from generic counterexamples; decision-oriented targets ask the agent what transition facts it needs before acting. Evidence: arXiv:2606.25421 replaces next-observation prediction with agent-authored dynamics targets; arXiv:2506.02918 shows state prediction can support language-agent tool planning. Experiment graft: For each failed held-out transition, generate a decision-need target such as hidden toggle state, object persistence, or action effect, then train or prompt the inducer against that target. Validation gate: Count the method only when targeted transition facts raise held-out engine accuracy, not just when next-frame text improves. Sovereignty: Target construction is derived from local traces and can feed either the local inducer or the reference lane. Fails when: The generated targets mirror the model's misconception or require observations the game has not exposed.
+- **Action-prefix latent world-model adapter** (arXiv:2606.26217, arXiv:2506.02918, arXiv:2507.15877): maps to .450 / INDUCER_CEILING. A1b fit: A1b's flat delta leaves compounding one-step dynamics error as a candidate residual; prefix-level prediction attacks that error. Evidence: arXiv:2606.26217 predicts latents for action prefixes instead of rolling one step at a time; arXiv:2506.02918 adds state prediction to agents; arXiv:2507.15877 keeps ARC execution guidance in scope. Experiment graft: Add an action-prefix probe over candidate sequences and compare its held-out transition predictions against the current one-step engine. Validation gate: Promote only if long-horizon held-out transition accuracy improves without degrading one-step observed-prefix replay. Sovereignty: A small prefix adapter can run locally and can be swapped behind the same executable-engine interface. Fails when: Prefix supervision hides wrong mechanics, or the latent state cannot be decoded into executable game-state checks.
+
+flagged_for_v450: test_time_dynamics_adaptation_loop (arXiv:2506.02918 + arXiv:2509.03956 + arXiv:2507.15877)
+flagged_for_v450: family_b_vs_local_open_code_inducer_ab (arXiv:2605.05138 + arXiv:2507.03160 + arXiv:2203.13474)
+flagged_for_v450: agent_authored_world_model_targets (arXiv:2606.25421 + arXiv:2506.02918)
+
+**Bottom line for .450:** try test-time dynamics adaptation first, then compare
+a Family-B executable-world-model reference inducer with a local open-code
+inducer. Use agent-authored targets and action-prefix adapters as targeted
+engine-quality improvements; keep the current CEGIS loop recorded as nulled.
+<!-- EXP4879-SOTA-INGESTION-V450-FRONTIER-END -->
+
 <!-- EXP4868-SOTA-INGESTION-V449-FRONTIER-START -->
 ## 2026-06-27 Exp 4868 - .449 V449 frontier SOTA ingestion - INGESTED
 

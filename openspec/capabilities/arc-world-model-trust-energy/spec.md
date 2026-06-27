@@ -11367,6 +11367,90 @@ or modifies `scripts/research_conductor.py`
 When the Experiment 4868 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4879: V450 Frontier SOTA Ingestion Follows The Measured A1/A1b Fork
+
+Experiment 4879 SHALL run the reserved `.450` SOTA-ingestion slot after reading
+the measured A1 fork probe and A1b CEGIS-refinement artifacts:
+`results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json`,
+`results/experiment_4872_cegis_world_model_refinement.json`, and the `.448` to
+`.449` handoff at `results/experiment_4868_sota_ingestion_v449_frontier.json`.
+It SHALL also read `research-studying.md`, `research-references.md`,
+`scripts/sweep_clusters.py`, and `scripts/sweep_semscholar.py`. The workflow
+SHALL use only the reliable channel: `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, low-concurrency WebSearch/WebFetch, and direct
+arXiv HTTP checks. It SHALL NOT invoke `/deep-research`, SHALL NOT re-ingest
+retired macro-vocabulary/click-heatmap coverage, exploration-strategy, or energy
+classes, SHALL NOT load a model, train, submit to a leaderboard, make a solve
+claim, or modify `scripts/research_conductor.py`, `ops/changelog.md`,
+`ops/status.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL preserve the actual A1/A1b facts in the artifact. If A1
+reports `fork_verdict=INDUCER_CEILING` and A1b reports a held-out CEGIS accuracy
+delta whose CI95 excludes zero, the mapping SHALL target scaling the CEGIS and
+engine-refinement loop. If A1 reports `fork_verdict=INDUCER_CEILING` and A1b
+reports a null held-out CEGIS delta, the mapping SHALL target the next inducer
+candidate: test-time dynamics/world-model adaptation first, then a stronger
+local-open-code inducer or a Family-B reference-versus-local inducer A/B. If A1
+reports `GUIDANCE_WALL` or `PLANNER_GAP` with high engine accuracy, the mapping
+SHALL target neural-guided planning, MCTS, and search-verifier loops over the
+accurate executable world model. If the checked-in A1 `fork_verdict` is null
+because the positive control failed, the workflow SHALL record the null verdict
+honestly and may follow the computed inducer-ceiling residual branch only while
+explicitly preserving the positive-control caveat.
+
+On a successful ingestion-synthesis run, Experiment 4879 SHALL write
+`results/experiment_4879_sota_ingestion_v450_frontier.json`, update
+`research-studying.md` with an idempotent Exp 4879 INGESTED section, and update
+`research-references.md` with an idempotent Exp 4879 source section. The
+artifact SHALL include the required user-facing fields `honest_verdict`,
+`methods_mapped`, `arxiv_ids_cited`, `aimed_at_fork_verdict`,
+`flagged_for_v450`, and `inference_substrate`, plus provenance fields sufficient
+to audit the reliable sweep and upstream artifacts.
+
+The complete-path `honest_verdict` SHALL equal
+`success_sota_ingestion_v450_frontier_mapped`; `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`; `methods_mapped` SHALL contain three to
+five methods; every method claim SHALL cite only verified arXiv IDs from
+`arxiv_ids_cited`; and `duration_s` SHALL use the aggregation-only `0.0001`
+floor. For the checked-in A1/A1b residual branch, the source set SHALL include
+direct arXiv HTTP-200 checks for `2203.13474`, `2506.02918`, `2507.03160`,
+`2507.15877`, `2509.03956`, `2605.05138`, `2606.25421`, and `2606.26217`.
+The strongest `.450` flags SHALL prioritize test-time dynamics adaptation and
+the Family-B reference-versus-local open-code inducer A/B; the current CEGIS
+loop SHALL be recorded as nulled rather than promoted.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_v450_frontier_mapped."
+- `methods_mapped`: principle "the strongest 3-5 methods aimed at A1's ACTUAL fork verdict + A1b's CEGIS result, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID (no fabrication -- adversarial_verify bar)."
+- `aimed_at_fork_verdict`: principle "the A1 fork_verdict the ingestion targets (INDUCER_CEILING -> inducer/CEGIS scale; GUIDANCE/PLANNER -> planning/search)."
+- `flagged_for_v450`: principle "the strongest method(s) flagged so the .450 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4879-V450-FRONTIER-MAPPED
+
+Given the research files, Exp 4871 A1 artifact, Exp 4872 A1b artifact, and Exp
+4868 handoff artifact are present
+When Experiment 4879 runs through the reliable channel
+Then it writes `results/experiment_4879_sota_ingestion_v450_frontier.json`,
+records that `/deep-research` was not invoked, maps three to five SOTA methods
+onto the `.450` frontier with real arXiv IDs, records the actual A1 null
+positive-control caveat and A1b zero CEGIS delta, updates `research-studying.md`
+and `research-references.md` idempotently, and flags the strongest `.450`
+candidate inputs.
+
+#### SCENARIO-ARC-WMTE-4879-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID,
+targets a fork verdict inconsistent with A1/A1b, promotes the nulled CEGIS loop
+as the strongest `.450` flag, uses a stale `.449` flag, re-ingests retired
+coverage/exploration/energy classes, invokes `/deep-research`, claims a
+model-load, training, leaderboard, or solve result, or modifies
+`scripts/research_conductor.py`
+When the Experiment 4879 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
