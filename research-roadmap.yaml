@@ -195,8 +195,8 @@ tasks:
         principle: "terminal prefix; a measured decomposition is complete_generation_wall_<dominant_bucket>_dominant
           (e.g. complete_generation_wall_never_enumerated_dominant)."
       per_game_coverage:
-        principle: "per-game mapping game -> {bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED,
-          winning_prefix_len, pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
+        principle: "per-game mapping game -> {{bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED,
+          winning_prefix_len, pool_size, reached_l1_win, budget_actions}} -- the quantitative measurement."
       dominant_bucket:
         principle: "the bucket the majority of held-out games fall in -- the headline that redirects .448
           (never_enumerated -> generation expressibility; enumerated_but_lost -> budget/pruning; covered -> ranking)."
@@ -654,7 +654,7 @@ tasks:
 
     EXISTING CODE TO READ FIRST:
       - {project_root}/scripts/summarize_artifact.py
-      - all results/experiment_485{1,2,3,4,5,6,7,8}_*.json (the .447 upstreams)
+      - all results/experiment_485{{1,2,3,4,5,6,7,8}}_*.json (the .447 upstreams)
       - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels)
 
     CONCRETE STEPS:
@@ -668,15 +668,15 @@ tasks:
       honest_verdict:
         principle: "terminal prefix; capstone_ready=true is complete_a1_generation_wall_<dominant_bucket>_capstone_ready."
       a1_generation_wall_verdict:
-        principle: "the headline -- {dominant_bucket, b1_trusted (proposer-blind + positive-control + buckets-match),
-          per_game_coverage}; the redirection for .448."
+        principle: "the headline -- {{dominant_bucket, b1_trusted (proposer-blind + positive-control + buckets-match),
+          per_game_coverage}}; the redirection for .448."
       scored_lever_state:
-        principle: "the deadline track -- {level_up_banked, heldout_first_win_rate, live_agent_ran, submission_package_ready};
+        principle: "the deadline track -- {{level_up_banked, heldout_first_win_rate, live_agent_ran, submission_package_ready}};
           the realistic 6/30 signal."
       reproducible_total_levels:
         principle: "the monotonic ARC progress metric carried from the registry."
       cited_upstream_artifacts:
-        principle: "list of {experiment_id, fields_imported, sha256} -- the audit trail."
+        principle: "list of {{experiment_id, fields_imported, sha256}} -- the audit trail."
       flagged_artifacts_skipped:
         principle: "any upstream with flagged_adversarial=true that was excluded from aggregation."
       inference_substrate:
