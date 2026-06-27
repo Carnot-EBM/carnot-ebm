@@ -1,6 +1,22 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed regression fix)
+**Last Updated:** 2026-06-27 (Exp 4861 generation-wall fork probe median-validation regression fix)
+
+## Session 2026-06-27 — Exp 4861 Generation-Wall Fork Probe Test Fix
+
+Fixed the Exp 4861 schema-validation regression without modifying
+`scripts/research_conductor.py`. `_median_accuracy()` now ignores malformed or
+out-of-range `engine_heldout_accuracy` values, so `artifact_schema_errors()`
+flags inconsistent `median_engine_heldout_accuracy` values instead of treating
+invalid row data as a valid median source.
+
+Validation for this fix: Exp 4861 focused tests pass (`8 passed`), and scoped
+Coverage.py report for the Exp 4861 module is 100% (`291` statements, `0`
+missing). The E2E plan has no Exp 4861-specific check; this change is covered
+by the focused schema/run tests. Repo-wide `scripts/check_spec_coverage.py`
+remains blocked by pre-existing unreferenced legacy tests (`1124 test(s)
+missing spec traceability`), and `scripts/validate-reconciliation.sh` remains
+blocked by that plus stale architecture documentation.
 
 ## Session 2026-06-27 — Exp 4855 A1 Generation-Diagnostic Audit Test Fix
 
