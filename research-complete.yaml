@@ -51937,3 +51937,519 @@ milestones:
       state (B2), hardware (C), .449 handoff (D).'
     deliverable: results/experiment_4869_capstone_v448.json
     result: OK (conductor)
+- id: 2026.06.449
+  title: 'UNBLOCK + MEASURE THE GENERATION-WALL FORK, then take the FIRST INDUCER swing. .448 A1 blocked on the GPU precondition
+    bug (the 2026-06-27 directive fix); .449 re-runs the fork probe on the conductor''s dedicated GPU-0 CUDA generator (A1
+    HEADLINE: joint induced-engine held-out accuracy x coverage migration, tu93 positive control), then -- gated on A1''s
+    low-accuracy INDUCER regime -- runs a CEGIS executable-world-model refinement loop that repairs the engine from its OWN
+    held-out mispredictions and re-measures the accuracy delta (A1b, the first attempt to MOVE the ~0.12 wall). PLUS the scored
+    deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30
+    go/no-go -- .448''s was a cache hit), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v449.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4870-phase0
+    title: PHASE 0 (TRANSITION) -- archive .448 -> activate .449; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .448 close-state (A1 BLOCKED on the GPU precondition bug -> fork UNMEASURED; A2 banked r11l L2
+      -> reproducible_total_levels=66; A3 self-play pass; A4 flat-0.04 CACHE not live; B2 package ready 15.146GB; energy CONCLUDED;
+      INDUCER_CEILING strongly-indicated).
+    deliverable: results/experiment_4870_archive_448_activate_449.json
+    result: OK (conductor)
+  - id: exp4871-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE, GPU-FIXED. RE-RUN the .448 fork probe
+      with the generator precondition CORRECTED to accept the conductor's dedicated GPU-0 CUDA generator (the 2026-06-27 operator
+      directive fix; the .448 run blocked on cuda_3090_generator_disallowed). For the NEVER_ENUMERATED held-out games, induce->plan_in_model
+      BLIND to the banked answer and measure the JOINT (induced world-model held-out transition accuracy x coverage migration),
+      tu93 = positive control. The decisive fork that redirects .450.
+    deliverable: results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json
+    result: OK (conductor)
+  - id: exp4872-a1b
+    title: PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's low-accuracy
+      INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's held-out MISPREDICTED (s,a,s') transitions as counterexamples,
+      ask the LLM inducer to REPAIR the executable engine program (not re-induce from scratch), accept a repair only if it
+      fixes held-out counterexamples without regressing observed-prefix replay, and RE-MEASURE held-out transition accuracy
+      vs A1's baseline. The first attempt to MOVE the ~0.12 inducer wall.
+    deliverable: results/experiment_4872_cegis_world_model_refinement.json
+    result: OK (conductor)
+  - id: exp4873-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .448 r11l and re86; pick a shallow game with a grounded next-level delta via recommend_approach + dead_ends -- avoid
+      the hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4873_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4874-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4874_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4875-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, on the conductor's GPU-0 generator (drop the iGPU pin, same GPU fix as A1), checkpoint/resume-capable. .448's
+      A4 was a CACHE hit (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the operator 6/30 go/no-go.
+    deliverable: results/experiment_4875_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4876-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's GPU-0
+      generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448 failure mode), was planner-blind, the tu93 positive
+      control genuinely migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS held-out-accuracy delta
+      is REAL (measured on a held-out split disjoint from the repair counterexamples, not a tautology).
+    deliverable: results/experiment_4876_fork_probe_inducer_audit.json
+    result: OK (conductor)
+  - id: exp4877-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .448 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4877_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4878-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .448 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4878_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4879-d
+    title: 'PHASE D (SOTA-INGESTION -- the .450 frontier) -- given A1''s ACTUAL (now-measured) fork verdict + A1b''s CEGIS
+      result, ingest the matching SOTA. If INDUCER_CEILING and A1b moved accuracy: scale CEGIS / deepen the inducer ladder
+      (test-time dynamics adaptation, Family-B reference vs local-open-code inducer). If INDUCER_CEILING and A1b nulled: the
+      next inducer candidate. If GUIDANCE/PLANNER: pivot to neural-guided planning / MCTS / search-verifier. Real arXiv IDs
+      only; do NOT re-ingest the nulled coverage/exploration/energy classes.'
+    deliverable: results/experiment_4879_sota_ingestion_v450_frontier.json
+    result: OK (conductor)
+  - id: exp4880-e
+    title: 'PHASE E (CAPSTONE .449) -- aggregate the scorecard: the A1 generation-wall FORK verdict (NOW measured on the GPU-0
+      generator, trusted only if B1 confirmed live+planner-blind+positive-control-migrated +numbers-match), A1b''s CEGIS held-out-accuracy
+      delta (did the first inducer swing move the ~0.12 wall?), the level-up bank (A2), self-play checkpoint (A3), the FRESH
+      LIVE held-out readiness (A4), submission- package state (B2), hardware (C), .450 handoff (D).'
+    deliverable: results/experiment_4880_capstone_v449.json
+    result: OK (conductor)
+- id: 2026.06.449
+  title: 'UNBLOCK + MEASURE THE GENERATION-WALL FORK, then take the FIRST INDUCER swing. .448 A1 blocked on the GPU precondition
+    bug (the 2026-06-27 directive fix); .449 re-runs the fork probe on the conductor''s dedicated GPU-0 CUDA generator (A1
+    HEADLINE: joint induced-engine held-out accuracy x coverage migration, tu93 positive control), then -- gated on A1''s
+    low-accuracy INDUCER regime -- runs a CEGIS executable-world-model refinement loop that repairs the engine from its OWN
+    held-out mispredictions and re-measures the accuracy delta (A1b, the first attempt to MOVE the ~0.12 wall). PLUS the scored
+    deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30
+    go/no-go -- .448''s was a cache hit), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v449.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4870-phase0
+    title: PHASE 0 (TRANSITION) -- archive .448 -> activate .449; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .448 close-state (A1 BLOCKED on the GPU precondition bug -> fork UNMEASURED; A2 banked r11l L2
+      -> reproducible_total_levels=66; A3 self-play pass; A4 flat-0.04 CACHE not live; B2 package ready 15.146GB; energy CONCLUDED;
+      INDUCER_CEILING strongly-indicated).
+    deliverable: results/experiment_4870_archive_448_activate_449.json
+    result: OK (conductor)
+  - id: exp4871-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE, GPU-FIXED. RE-RUN the .448 fork probe
+      with the generator precondition CORRECTED to accept the conductor's dedicated GPU-0 CUDA generator (the 2026-06-27 operator
+      directive fix; the .448 run blocked on cuda_3090_generator_disallowed). For the NEVER_ENUMERATED held-out games, induce->plan_in_model
+      BLIND to the banked answer and measure the JOINT (induced world-model held-out transition accuracy x coverage migration),
+      tu93 = positive control. The decisive fork that redirects .450.
+    deliverable: results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json
+    result: OK (conductor)
+  - id: exp4872-a1b
+    title: PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's low-accuracy
+      INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's held-out MISPREDICTED (s,a,s') transitions as counterexamples,
+      ask the LLM inducer to REPAIR the executable engine program (not re-induce from scratch), accept a repair only if it
+      fixes held-out counterexamples without regressing observed-prefix replay, and RE-MEASURE held-out transition accuracy
+      vs A1's baseline. The first attempt to MOVE the ~0.12 inducer wall.
+    deliverable: results/experiment_4872_cegis_world_model_refinement.json
+    result: OK (conductor)
+  - id: exp4873-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .448 r11l and re86; pick a shallow game with a grounded next-level delta via recommend_approach + dead_ends -- avoid
+      the hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4873_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4874-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4874_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4875-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, on the conductor's GPU-0 generator (drop the iGPU pin, same GPU fix as A1), checkpoint/resume-capable. .448's
+      A4 was a CACHE hit (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the operator 6/30 go/no-go.
+    deliverable: results/experiment_4875_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4876-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's GPU-0
+      generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448 failure mode), was planner-blind, the tu93 positive
+      control genuinely migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS held-out-accuracy delta
+      is REAL (measured on a held-out split disjoint from the repair counterexamples, not a tautology).
+    deliverable: results/experiment_4876_fork_probe_inducer_audit.json
+    result: OK (conductor)
+  - id: exp4877-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .448 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4877_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4878-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .448 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4878_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4879-d
+    title: 'PHASE D (SOTA-INGESTION -- the .450 frontier) -- given A1''s ACTUAL (now-measured) fork verdict + A1b''s CEGIS
+      result, ingest the matching SOTA. If INDUCER_CEILING and A1b moved accuracy: scale CEGIS / deepen the inducer ladder
+      (test-time dynamics adaptation, Family-B reference vs local-open-code inducer). If INDUCER_CEILING and A1b nulled: the
+      next inducer candidate. If GUIDANCE/PLANNER: pivot to neural-guided planning / MCTS / search-verifier. Real arXiv IDs
+      only; do NOT re-ingest the nulled coverage/exploration/energy classes.'
+    deliverable: results/experiment_4879_sota_ingestion_v450_frontier.json
+    result: OK (conductor)
+  - id: exp4880-e
+    title: 'PHASE E (CAPSTONE .449) -- aggregate the scorecard: the A1 generation-wall FORK verdict (NOW measured on the GPU-0
+      generator, trusted only if B1 confirmed live+planner-blind+positive-control-migrated +numbers-match), A1b''s CEGIS held-out-accuracy
+      delta (did the first inducer swing move the ~0.12 wall?), the level-up bank (A2), self-play checkpoint (A3), the FRESH
+      LIVE held-out readiness (A4), submission- package state (B2), hardware (C), .450 handoff (D).'
+    deliverable: results/experiment_4880_capstone_v449.json
+    result: OK (conductor)
+- id: 2026.06.449
+  title: 'UNBLOCK + MEASURE THE GENERATION-WALL FORK, then take the FIRST INDUCER swing. .448 A1 blocked on the GPU precondition
+    bug (the 2026-06-27 directive fix); .449 re-runs the fork probe on the conductor''s dedicated GPU-0 CUDA generator (A1
+    HEADLINE: joint induced-engine held-out accuracy x coverage migration, tu93 positive control), then -- gated on A1''s
+    low-accuracy INDUCER regime -- runs a CEGIS executable-world-model refinement loop that repairs the engine from its OWN
+    held-out mispredictions and re-measures the accuracy delta (A1b, the first attempt to MOVE the ~0.12 wall). PLUS the scored
+    deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30
+    go/no-go -- .448''s was a cache hit), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v449.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4870-phase0
+    title: PHASE 0 (TRANSITION) -- archive .448 -> activate .449; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .448 close-state (A1 BLOCKED on the GPU precondition bug -> fork UNMEASURED; A2 banked r11l L2
+      -> reproducible_total_levels=66; A3 self-play pass; A4 flat-0.04 CACHE not live; B2 package ready 15.146GB; energy CONCLUDED;
+      INDUCER_CEILING strongly-indicated).
+    deliverable: results/experiment_4870_archive_448_activate_449.json
+    result: OK (conductor)
+  - id: exp4871-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE, GPU-FIXED. RE-RUN the .448 fork probe
+      with the generator precondition CORRECTED to accept the conductor's dedicated GPU-0 CUDA generator (the 2026-06-27 operator
+      directive fix; the .448 run blocked on cuda_3090_generator_disallowed). For the NEVER_ENUMERATED held-out games, induce->plan_in_model
+      BLIND to the banked answer and measure the JOINT (induced world-model held-out transition accuracy x coverage migration),
+      tu93 = positive control. The decisive fork that redirects .450.
+    deliverable: results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json
+    result: OK (conductor)
+  - id: exp4872-a1b
+    title: PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's low-accuracy
+      INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's held-out MISPREDICTED (s,a,s') transitions as counterexamples,
+      ask the LLM inducer to REPAIR the executable engine program (not re-induce from scratch), accept a repair only if it
+      fixes held-out counterexamples without regressing observed-prefix replay, and RE-MEASURE held-out transition accuracy
+      vs A1's baseline. The first attempt to MOVE the ~0.12 inducer wall.
+    deliverable: results/experiment_4872_cegis_world_model_refinement.json
+    result: OK (conductor)
+  - id: exp4873-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .448 r11l and re86; pick a shallow game with a grounded next-level delta via recommend_approach + dead_ends -- avoid
+      the hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4873_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4874-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4874_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4875-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, on the conductor's GPU-0 generator (drop the iGPU pin, same GPU fix as A1), checkpoint/resume-capable. .448's
+      A4 was a CACHE hit (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the operator 6/30 go/no-go.
+    deliverable: results/experiment_4875_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4876-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's GPU-0
+      generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448 failure mode), was planner-blind, the tu93 positive
+      control genuinely migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS held-out-accuracy delta
+      is REAL (measured on a held-out split disjoint from the repair counterexamples, not a tautology).
+    deliverable: results/experiment_4876_fork_probe_inducer_audit.json
+    result: OK (conductor)
+  - id: exp4877-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .448 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4877_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4878-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .448 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4878_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4879-d
+    title: 'PHASE D (SOTA-INGESTION -- the .450 frontier) -- given A1''s ACTUAL (now-measured) fork verdict + A1b''s CEGIS
+      result, ingest the matching SOTA. If INDUCER_CEILING and A1b moved accuracy: scale CEGIS / deepen the inducer ladder
+      (test-time dynamics adaptation, Family-B reference vs local-open-code inducer). If INDUCER_CEILING and A1b nulled: the
+      next inducer candidate. If GUIDANCE/PLANNER: pivot to neural-guided planning / MCTS / search-verifier. Real arXiv IDs
+      only; do NOT re-ingest the nulled coverage/exploration/energy classes.'
+    deliverable: results/experiment_4879_sota_ingestion_v450_frontier.json
+    result: OK (conductor)
+  - id: exp4880-e
+    title: 'PHASE E (CAPSTONE .449) -- aggregate the scorecard: the A1 generation-wall FORK verdict (NOW measured on the GPU-0
+      generator, trusted only if B1 confirmed live+planner-blind+positive-control-migrated +numbers-match), A1b''s CEGIS held-out-accuracy
+      delta (did the first inducer swing move the ~0.12 wall?), the level-up bank (A2), self-play checkpoint (A3), the FRESH
+      LIVE held-out readiness (A4), submission- package state (B2), hardware (C), .450 handoff (D).'
+    deliverable: results/experiment_4880_capstone_v449.json
+    result: OK (conductor)
+- id: 2026.06.449
+  title: 'UNBLOCK + MEASURE THE GENERATION-WALL FORK, then take the FIRST INDUCER swing. .448 A1 blocked on the GPU precondition
+    bug (the 2026-06-27 directive fix); .449 re-runs the fork probe on the conductor''s dedicated GPU-0 CUDA generator (A1
+    HEADLINE: joint induced-engine held-out accuracy x coverage migration, tu93 positive control), then -- gated on A1''s
+    low-accuracy INDUCER regime -- runs a CEGIS executable-world-model refinement loop that repairs the engine from its OWN
+    held-out mispredictions and re-measures the accuracy delta (A1b, the first attempt to MOVE the ~0.12 wall). PLUS the scored
+    deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30
+    go/no-go -- .448''s was a cache hit), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v449.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4870-phase0
+    title: PHASE 0 (TRANSITION) -- archive .448 -> activate .449; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .448 close-state (A1 BLOCKED on the GPU precondition bug -> fork UNMEASURED; A2 banked r11l L2
+      -> reproducible_total_levels=66; A3 self-play pass; A4 flat-0.04 CACHE not live; B2 package ready 15.146GB; energy CONCLUDED;
+      INDUCER_CEILING strongly-indicated).
+    deliverable: results/experiment_4870_archive_448_activate_449.json
+    result: OK (conductor)
+  - id: exp4871-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE, GPU-FIXED. RE-RUN the .448 fork probe
+      with the generator precondition CORRECTED to accept the conductor's dedicated GPU-0 CUDA generator (the 2026-06-27 operator
+      directive fix; the .448 run blocked on cuda_3090_generator_disallowed). For the NEVER_ENUMERATED held-out games, induce->plan_in_model
+      BLIND to the banked answer and measure the JOINT (induced world-model held-out transition accuracy x coverage migration),
+      tu93 = positive control. The decisive fork that redirects .450.
+    deliverable: results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json
+    result: OK (conductor)
+  - id: exp4872-a1b
+    title: PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's low-accuracy
+      INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's held-out MISPREDICTED (s,a,s') transitions as counterexamples,
+      ask the LLM inducer to REPAIR the executable engine program (not re-induce from scratch), accept a repair only if it
+      fixes held-out counterexamples without regressing observed-prefix replay, and RE-MEASURE held-out transition accuracy
+      vs A1's baseline. The first attempt to MOVE the ~0.12 inducer wall.
+    deliverable: results/experiment_4872_cegis_world_model_refinement.json
+    result: OK (conductor)
+  - id: exp4873-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .448 r11l and re86; pick a shallow game with a grounded next-level delta via recommend_approach + dead_ends -- avoid
+      the hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4873_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4874-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4874_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4875-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, on the conductor's GPU-0 generator (drop the iGPU pin, same GPU fix as A1), checkpoint/resume-capable. .448's
+      A4 was a CACHE hit (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the operator 6/30 go/no-go.
+    deliverable: results/experiment_4875_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4876-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's GPU-0
+      generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448 failure mode), was planner-blind, the tu93 positive
+      control genuinely migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS held-out-accuracy delta
+      is REAL (measured on a held-out split disjoint from the repair counterexamples, not a tautology).
+    deliverable: results/experiment_4876_fork_probe_inducer_audit.json
+    result: OK (conductor)
+  - id: exp4877-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .448 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4877_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4878-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .448 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4878_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4879-d
+    title: 'PHASE D (SOTA-INGESTION -- the .450 frontier) -- given A1''s ACTUAL (now-measured) fork verdict + A1b''s CEGIS
+      result, ingest the matching SOTA. If INDUCER_CEILING and A1b moved accuracy: scale CEGIS / deepen the inducer ladder
+      (test-time dynamics adaptation, Family-B reference vs local-open-code inducer). If INDUCER_CEILING and A1b nulled: the
+      next inducer candidate. If GUIDANCE/PLANNER: pivot to neural-guided planning / MCTS / search-verifier. Real arXiv IDs
+      only; do NOT re-ingest the nulled coverage/exploration/energy classes.'
+    deliverable: results/experiment_4879_sota_ingestion_v450_frontier.json
+    result: OK (conductor)
+  - id: exp4880-e
+    title: 'PHASE E (CAPSTONE .449) -- aggregate the scorecard: the A1 generation-wall FORK verdict (NOW measured on the GPU-0
+      generator, trusted only if B1 confirmed live+planner-blind+positive-control-migrated +numbers-match), A1b''s CEGIS held-out-accuracy
+      delta (did the first inducer swing move the ~0.12 wall?), the level-up bank (A2), self-play checkpoint (A3), the FRESH
+      LIVE held-out readiness (A4), submission- package state (B2), hardware (C), .450 handoff (D).'
+    deliverable: results/experiment_4880_capstone_v449.json
+    result: OK (conductor)
+- id: 2026.06.449
+  title: 'UNBLOCK + MEASURE THE GENERATION-WALL FORK, then take the FIRST INDUCER swing. .448 A1 blocked on the GPU precondition
+    bug (the 2026-06-27 directive fix); .449 re-runs the fork probe on the conductor''s dedicated GPU-0 CUDA generator (A1
+    HEADLINE: joint induced-engine held-out accuracy x coverage migration, tu93 positive control), then -- gated on A1''s
+    low-accuracy INDUCER regime -- runs a CEGIS executable-world-model refinement loop that repairs the engine from its OWN
+    held-out mispredictions and re-measures the accuracy delta (A1b, the first attempt to MOVE the ~0.12 wall). PLUS the scored
+    deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30
+    go/no-go -- .448''s was a cache hit), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v449.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4870-phase0
+    title: PHASE 0 (TRANSITION) -- archive .448 -> activate .449; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .448 close-state (A1 BLOCKED on the GPU precondition bug -> fork UNMEASURED; A2 banked r11l L2
+      -> reproducible_total_levels=66; A3 self-play pass; A4 flat-0.04 CACHE not live; B2 package ready 15.146GB; energy CONCLUDED;
+      INDUCER_CEILING strongly-indicated).
+    deliverable: results/experiment_4870_archive_448_activate_449.json
+    result: OK (conductor)
+  - id: exp4871-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE, GPU-FIXED. RE-RUN the .448 fork probe
+      with the generator precondition CORRECTED to accept the conductor's dedicated GPU-0 CUDA generator (the 2026-06-27 operator
+      directive fix; the .448 run blocked on cuda_3090_generator_disallowed). For the NEVER_ENUMERATED held-out games, induce->plan_in_model
+      BLIND to the banked answer and measure the JOINT (induced world-model held-out transition accuracy x coverage migration),
+      tu93 = positive control. The decisive fork that redirects .450.
+    deliverable: results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json
+    result: OK (conductor)
+  - id: exp4872-a1b
+    title: PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's low-accuracy
+      INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's held-out MISPREDICTED (s,a,s') transitions as counterexamples,
+      ask the LLM inducer to REPAIR the executable engine program (not re-induce from scratch), accept a repair only if it
+      fixes held-out counterexamples without regressing observed-prefix replay, and RE-MEASURE held-out transition accuracy
+      vs A1's baseline. The first attempt to MOVE the ~0.12 inducer wall.
+    deliverable: results/experiment_4872_cegis_world_model_refinement.json
+    result: OK (conductor)
+  - id: exp4873-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .448 r11l and re86; pick a shallow game with a grounded next-level delta via recommend_approach + dead_ends -- avoid
+      the hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4873_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4874-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4874_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4875-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, on the conductor's GPU-0 generator (drop the iGPU pin, same GPU fix as A1), checkpoint/resume-capable. .448's
+      A4 was a CACHE hit (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the operator 6/30 go/no-go.
+    deliverable: results/experiment_4875_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4876-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's GPU-0
+      generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448 failure mode), was planner-blind, the tu93 positive
+      control genuinely migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS held-out-accuracy delta
+      is REAL (measured on a held-out split disjoint from the repair counterexamples, not a tautology).
+    deliverable: results/experiment_4876_fork_probe_inducer_audit.json
+    result: OK (conductor)
+  - id: exp4877-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .448 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4877_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4878-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .448 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4878_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4879-d
+    title: 'PHASE D (SOTA-INGESTION -- the .450 frontier) -- given A1''s ACTUAL (now-measured) fork verdict + A1b''s CEGIS
+      result, ingest the matching SOTA. If INDUCER_CEILING and A1b moved accuracy: scale CEGIS / deepen the inducer ladder
+      (test-time dynamics adaptation, Family-B reference vs local-open-code inducer). If INDUCER_CEILING and A1b nulled: the
+      next inducer candidate. If GUIDANCE/PLANNER: pivot to neural-guided planning / MCTS / search-verifier. Real arXiv IDs
+      only; do NOT re-ingest the nulled coverage/exploration/energy classes.'
+    deliverable: results/experiment_4879_sota_ingestion_v450_frontier.json
+    result: OK (conductor)
+  - id: exp4880-e
+    title: 'PHASE E (CAPSTONE .449) -- aggregate the scorecard: the A1 generation-wall FORK verdict (NOW measured on the GPU-0
+      generator, trusted only if B1 confirmed live+planner-blind+positive-control-migrated +numbers-match), A1b''s CEGIS held-out-accuracy
+      delta (did the first inducer swing move the ~0.12 wall?), the level-up bank (A2), self-play checkpoint (A3), the FRESH
+      LIVE held-out readiness (A4), submission- package state (B2), hardware (C), .450 handoff (D).'
+    deliverable: results/experiment_4880_capstone_v449.json
+    result: OK (conductor)
+- id: 2026.06.449
+  title: 'UNBLOCK + MEASURE THE GENERATION-WALL FORK, then take the FIRST INDUCER swing. .448 A1 blocked on the GPU precondition
+    bug (the 2026-06-27 directive fix); .449 re-runs the fork probe on the conductor''s dedicated GPU-0 CUDA generator (A1
+    HEADLINE: joint induced-engine held-out accuracy x coverage migration, tu93 positive control), then -- gated on A1''s
+    low-accuracy INDUCER regime -- runs a CEGIS executable-world-model refinement loop that repairs the engine from its OWN
+    held-out mispredictions and re-measures the accuracy delta (A1b, the first attempt to MOVE the ~0.12 wall). PLUS the scored
+    deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30
+    go/no-go -- .448''s was a cache hit), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v449.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4870-phase0
+    title: PHASE 0 (TRANSITION) -- archive .448 -> activate .449; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .448 close-state (A1 BLOCKED on the GPU precondition bug -> fork UNMEASURED; A2 banked r11l L2
+      -> reproducible_total_levels=66; A3 self-play pass; A4 flat-0.04 CACHE not live; B2 package ready 15.146GB; energy CONCLUDED;
+      INDUCER_CEILING strongly-indicated).
+    deliverable: results/experiment_4870_archive_448_activate_449.json
+    result: OK (conductor)
+  - id: exp4871-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE, GPU-FIXED. RE-RUN the .448 fork probe
+      with the generator precondition CORRECTED to accept the conductor's dedicated GPU-0 CUDA generator (the 2026-06-27 operator
+      directive fix; the .448 run blocked on cuda_3090_generator_disallowed). For the NEVER_ENUMERATED held-out games, induce->plan_in_model
+      BLIND to the banked answer and measure the JOINT (induced world-model held-out transition accuracy x coverage migration),
+      tu93 = positive control. The decisive fork that redirects .450.
+    deliverable: results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json
+    result: OK (conductor)
+  - id: exp4872-a1b
+    title: PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's low-accuracy
+      INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's held-out MISPREDICTED (s,a,s') transitions as counterexamples,
+      ask the LLM inducer to REPAIR the executable engine program (not re-induce from scratch), accept a repair only if it
+      fixes held-out counterexamples without regressing observed-prefix replay, and RE-MEASURE held-out transition accuracy
+      vs A1's baseline. The first attempt to MOVE the ~0.12 inducer wall.
+    deliverable: results/experiment_4872_cegis_world_model_refinement.json
+    result: OK (conductor)
+  - id: exp4873-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .448 r11l and re86; pick a shallow game with a grounded next-level delta via recommend_approach + dead_ends -- avoid
+      the hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4873_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4874-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4874_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4875-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, on the conductor's GPU-0 generator (drop the iGPU pin, same GPU fix as A1), checkpoint/resume-capable. .448's
+      A4 was a CACHE hit (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the operator 6/30 go/no-go.
+    deliverable: results/experiment_4875_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4876-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's GPU-0
+      generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448 failure mode), was planner-blind, the tu93 positive
+      control genuinely migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS held-out-accuracy delta
+      is REAL (measured on a held-out split disjoint from the repair counterexamples, not a tautology).
+    deliverable: results/experiment_4876_fork_probe_inducer_audit.json
+    result: OK (conductor)
+  - id: exp4877-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .448 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4877_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4878-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .448 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4878_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4879-d
+    title: 'PHASE D (SOTA-INGESTION -- the .450 frontier) -- given A1''s ACTUAL (now-measured) fork verdict + A1b''s CEGIS
+      result, ingest the matching SOTA. If INDUCER_CEILING and A1b moved accuracy: scale CEGIS / deepen the inducer ladder
+      (test-time dynamics adaptation, Family-B reference vs local-open-code inducer). If INDUCER_CEILING and A1b nulled: the
+      next inducer candidate. If GUIDANCE/PLANNER: pivot to neural-guided planning / MCTS / search-verifier. Real arXiv IDs
+      only; do NOT re-ingest the nulled coverage/exploration/energy classes.'
+    deliverable: results/experiment_4879_sota_ingestion_v450_frontier.json
+    result: OK (conductor)
+  - id: exp4880-e
+    title: 'PHASE E (CAPSTONE .449) -- aggregate the scorecard: the A1 generation-wall FORK verdict (NOW measured on the GPU-0
+      generator, trusted only if B1 confirmed live+planner-blind+positive-control-migrated +numbers-match), A1b''s CEGIS held-out-accuracy
+      delta (did the first inducer swing move the ~0.12 wall?), the level-up bank (A2), self-play checkpoint (A3), the FRESH
+      LIVE held-out readiness (A4), submission- package state (B2), hardware (C), .450 handoff (D).'
+    deliverable: results/experiment_4880_capstone_v449.json
+    result: OK (conductor)
