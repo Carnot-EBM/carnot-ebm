@@ -10,6 +10,57 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4848-SOTA-INGESTION-OBJECT-WORLD-MODEL-START -->
+## 2026-06-27 Exp 4848 - .447 object-world-model planning SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4848_sota_ingestion_object_world_model.json`.
+
+**Preconditions:** `research-studying.md`, `research-references.md`, and
+`results/experiment_4838_sota_ingestion_perception_representation.json` were
+present. `scripts/sweep_clusters.py` emitted world-model, affordance/action-effect,
+and neural-guided world-model cluster URLs. `scripts/sweep_semscholar.py` was
+run on three focused object-world-model planning queries; one query returned
+eight arXiv IDs and two returned HTTP 429, so no S2-only source was promoted.
+Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks verified the
+top eight papers listed below. `/deep-research` was not invoked. The nulled
+exploration-strategy class was not re-ingested. No model load, training,
+leaderboard submission, or solve claim was made; this is a no solve claim
+ingestion note.
+
+**A1 object layer imported from Exp 4838:** the .447 question is not more
+perception and not more generic exploration. Given object IDs, slots, relation
+edges, persistence tracks, object/action bindings, and causal shortcut guards,
+the planner must turn object-relational state into a proposable winner on a
+novel game.
+
+**Verified source set:**
+- arXiv:1911.12247 -- Contrastive Learning of Structured World Models
+- arXiv:2402.03326 -- Slot Structured World Models
+- arXiv:2507.03298 -- Dyn-O: Building Structured World Models with Object-Centric Representations
+- arXiv:2511.02225 -- Learning Interactive World Model for Object-Centric Reinforcement Learning
+- arXiv:2601.06604 -- Object-Centric World Models Meet Monte Carlo Tree Search
+- arXiv:2605.14937 -- Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations
+- arXiv:2606.12316 -- Slots, Transitions, Loops: Learning Composable World Models for ARC
+- arXiv:2606.14418 -- Causal Object-Centric Models for Planning with Monte Carlo Tree Search
+
+**SOTA -> object-world-model planning mapping for .447:**
+- **Object-relation transition graph proposer** (arXiv:1911.12247, arXiv:2402.03326): maps to .447; Consumes the A1 object layer as persistent object IDs, relation edges, and before/after object-action bindings. Object-relational state: State is a set of object slots plus a graph of inferred pairwise relations and action-conditioned edge changes. Planning graft: Learn a compact transition model over object-relation edits and ask the proposer to enumerate the smallest graph edits that move a near state toward a terminal-looking structure. Proposable winner output: Produce a proposable winner as a concrete object-relation edit plus the executable action template that should cause that edit. Verification handoff: Replay the action template in the live harness and keep only edits whose rendered before/after object graph matches the predicted delta. Takes over: Takes over frame-only candidate generation when the pool cannot name which object relation should change. Fails when: The A1 tracker merges objects, graph edges encode visual proximity instead of mechanics, or relation edits cannot be lowered to actions.
+- **Slot-structured imagined rollout planner** (arXiv:2402.03326, arXiv:2507.03298): maps to .447; Consumes the A1 object layer as slot-aligned object features, dynamics-aware attributes, and slot persistence tracks. Object-relational state: State is an object slot table with dynamics-aware fields separated from visual nuisance fields, plus learned interaction messages. Planning graft: Roll forward short object-slot trajectories, score imagined deltas for goal-like object changes, and back out the action prefix that caused the best rollout. Proposable winner output: Produce a proposable winner as a replayable object-slot rollout and a small action prefix for the live verifier. Verification handoff: Promote only rollouts that replay into the predicted object IDs, positions, and relation deltas without relying on a terminal oracle. Takes over: Takes over static ranking by generating structured futures that were not present in the old candidate pool. Fails when: Slot identity drifts, imagined trajectories chase texture changes, or rollout error compounds before a concrete action can be verified.
+- **Causal object-centric MCTS planner** (arXiv:2601.06604, arXiv:2606.14418): maps to .447; Consumes the A1 object layer as object tokens, action-slot fusions, and causal relevance scores for which objects matter to a decision. Object-relational state: State is a MuZero-style latent object tree with object-causal attention over relevant slot interactions. Planning graft: Run shallow MCTS over object-latent transitions, using causal attention to expand actions bound to task-relevant objects first. Proposable winner output: Produce a proposable winner as the best replayable MCTS branch: object-bound actions plus predicted object-state deltas. Verification handoff: Submit only the branch action prefix to the live verifier, then compare observed object deltas against the MCTS predicted state. Takes over: Takes over unguided first-contact search by deciding which object interactions to expand before spending live actions. Fails when: The latent tree cannot be grounded into executable actions, causal attention locks onto distractors, or MCTS optimizes an unobservable latent reward shortcut.
+- **Goal-conditioned slot MPC action optimizer** (arXiv:2605.14937, arXiv:2507.03298): maps to .447; Consumes the A1 object layer as differentiable slot features and object-level target deltas. Object-relational state: State is a differentiable slot dynamics model with action-conditioned object updates and goal-conditioned target slots. Planning graft: Use gradient-based MPC over the object dynamics to optimize a short action sequence toward a target object configuration. Proposable winner output: Produce a proposable winner as an optimized action sequence that should realize a specific object-level goal state. Verification handoff: Replay the optimized sequence and reject it unless the observed A1 object tracks reach the planned goal-conditioned slot delta. Takes over: Takes over random coordinate retries by directly optimizing actions against object-level dynamics. Fails when: The action space is not differentiable enough, the goal slot is wrong, or the optimizer finds an invalid but smooth object shortcut.
+- **Interaction-primitive loop policy for ARC** (arXiv:2511.02225, arXiv:2606.12316): maps to .447; Consumes the A1 object layer as composable object interactions, looped slot transitions, and demonstration-conditioned summaries. Object-relational state: State is a structured ARC object graph with interaction primitives and loop variables over colors, shapes, and spatial relations. Planning graft: Select a high-level interaction primitive and looped transition order, then lower it into object-bound primitive actions. Proposable winner output: Produce a proposable winner as an ARC-specific transformation sketch plus concrete object-bound actions that enter the candidate pool. Verification handoff: Run the lowered actions and retain the sketch only when the observed object graph follows the predicted looped transition. Takes over: Takes over generic exploration by constructing a new object-level candidate instead of waiting for one to appear by chance. Fails when: The primitive library misses the game mechanic, the loop summary memorizes family style, or the transformation sketch cannot lower to live actions.
+
+flagged_for_v447: comet_object_mcts_planner (arXiv:2606.14418 + arXiv:2601.06604 + arXiv:2402.03326)
+flagged_for_v447: slot_mpc_object_action_optimizer (arXiv:2605.14937 + arXiv:2507.03298)
+flagged_for_v447: loop_owm_interaction_primitive_proposer (arXiv:2606.12316 + arXiv:2511.02225 + arXiv:1911.12247)
+
+**Bottom line for .447:** prioritize COMET/ObjectZero-style object-MCTS as the
+main planner, Slot-MPC as the direct object-action optimizer, and
+Loop-OWM/FIOC-WM interaction primitives as the ARC-specific proposal layer.
+The handoff is object-relational planning that creates a candidate winner, not
+another pass over an unchanged exploration pool.
+<!-- EXP4848-SOTA-INGESTION-OBJECT-WORLD-MODEL-END -->
+
 <!-- EXP4838-SOTA-INGESTION-PERCEPTION-REPRESENTATION-START -->
 ## 2026-06-27 Exp 4838 - .446 perception/representation SOTA ingestion - INGESTED
 
