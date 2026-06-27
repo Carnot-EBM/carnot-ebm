@@ -17016,6 +17016,21 @@ Top 10 selected by relevance score.
 - **Complexity:** high
 - **Description:** Extend Carnot's constraint extraction pipeline (currently arithmetic-only) to factual claims grounded in a lightweight knowledge graph. Use Wikidata SPARQL (public endpoint, no cost) to resolve named entities and their relations as soft constraints encoded into Ising couplings. Run on 100 TriviaQA questions using Qwen3.5-0.8B as the LLM. Measure: (a) factual claim detection rate, (b) KG resolution success rate, (c) Ising verifier precision/recall on factual hallucinations vs arithmetic-only baseline. Success: ≥60% factual claim detection with ≥70% verifier precision — establishing the first data point for Goal #3 (factual extractor). Also test with google/gemma-4-E4B-it to check model-agnosticism.
 
+<!-- EXP4890-V451-FRONTIER-REFERENCES-START -->
+## 2026-06-27 Exp 4890 V451 frontier source set
+
+Reliable-channel ingestion for `.451`, aimed at A1's actual
+`INDUCER_CEILING_HARD` fork and A1b's `METHOD_IS_CEILING` attribution. These
+papers are marked INGESTED for the V451 frontier roadmap handoff:
+
+- **arXiv:2503.18938 -- AdaWorld: Learning Adaptable World Models with Latent Actions.** Exp 4890 use: V451 INDUCER_CEILING_HARD + METHOD_IS_CEILING source for alternative world-model representations beyond executable code.
+- **arXiv:2505.08073 -- Explainable Reinforcement Learning Agents Using World Models.** Exp 4890 use: V451 INDUCER_CEILING_HARD + METHOD_IS_CEILING source for alternative world-model representations beyond executable code.
+- **arXiv:2602.23997 -- Foundation World Models for Agents that Learn, Verify, and Adapt Reliably Beyond Static Environments.** Exp 4890 use: V451 INDUCER_CEILING_HARD + METHOD_IS_CEILING source for alternative world-model representations beyond executable code.
+- **arXiv:2603.19312 -- LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels.** Exp 4890 use: V451 INDUCER_CEILING_HARD + METHOD_IS_CEILING source for alternative world-model representations beyond executable code.
+- **arXiv:2606.25421 -- Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making.** Exp 4890 use: V451 INDUCER_CEILING_HARD + METHOD_IS_CEILING source for alternative world-model representations beyond executable code.
+- **arXiv:2606.26217 -- Fast LeWorldModel.** Exp 4890 use: V451 INDUCER_CEILING_HARD + METHOD_IS_CEILING source for alternative world-model representations beyond executable code.
+<!-- EXP4890-V451-FRONTIER-REFERENCES-END -->
+
 <!-- EXP4879-V450-FRONTIER-REFERENCES-START -->
 ## 2026-06-27 Exp 4879 V450 frontier source set
 
