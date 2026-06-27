@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation test fix — codex)
+
+- Fixed the failing Exp 4851 diagnostic test without reverting prior changes and without modifying
+  `scripts/research_conductor.py`. Malformed `per_game_coverage` rows now flow through
+  `artifact_schema_errors()` as explicit `per_game_coverage.<game>` errors instead of raising while
+  recomputing the dominant bucket.
+- Validation: `pytest tests/python/test_experiment_4851_generation_coverage_diagnostic.py -q --no-cov`
+  passed (`8 passed`); direct Coverage.py scoped to the Exp 4851 module reported 100%
+  (`262` statements, `0` missing); focused Ruff check/format passed. Repo-wide spec coverage remains
+  blocked by pre-existing unreferenced legacy tests (`1124 test(s) missing spec traceability`).
+
 ## 2026-06-27 (Operational retrospective .446 -- GENUINE empty just-activated window, NOT a false-zero detector gap; 0 experiments executed -- outer-loop)
 
 Operational retro for milestone 2026.06.446. Unlike the recurring false-zero timing-detector gap of .435/.443 (where real high-numbered artifacts existed on disk despite the detector reporting 0), .446 is a GENUINELY EMPTY window: the milestone was activated 2026-06-27T03:57:33Z (commit b088ff144) and the retro ran ~7 minutes later at 04:04:50Z, with ZERO experiments executed in between. Definitive on-disk check: the only results/*.json modified after activation is operational_retro_2026_06_446.json itself; the 15 most-recent experiment artifacts (all mtime ~03:54Z, BEFORE activation) are low-numbered (exp1593-2071) bulk-touched files, not real runs; the highest on-disk experiment artifacts (exp4846-4849) are from the prior cycle. The detector's 0/0/0/null is therefore CORRECT here, not a false zero.

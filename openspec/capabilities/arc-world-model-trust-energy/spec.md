@@ -10705,3 +10705,82 @@ When Experiment 4845 audits that artifact
 Then the audit records the corresponding failed check, emits a terminal
 `complete_a1_perception_probe_non_test_*` verdict, and sets
 `a1_genuinely_exercised=false`.
+
+### REQ-ARC-WMTE-4851: L1 First-Contact Generation Coverage Diagnostic
+
+Experiment 4851 SHALL measure the L1-first-contact candidate-generation wall as
+a Phase-Prototype diagnostic, not as another solve lever. The workflow SHALL use
+the live generic first-contact proposer path (`StepwiseExplorer._candidates`,
+with optional `OfflineSolver` adaptered proposal path only for the positive
+control) from a cold offline reset, shall keep the proposer blind to banked
+answers, and shall load banked L1 winning prefixes only after proposal
+enumeration for executable-oracle classification. It SHALL not inject a
+`GameAdapter` into the held-out generic proposer measurement.
+
+The diagnostic SHALL first verify that `arc_solver_kit.offline_arcade()` is
+available, that no LLM generator is required unless the configured proposer
+actually invokes one, and that at least three games have banked L1 ground truth
+present in both `ops/arc_solve_registry.yaml` and the offline environment. A
+missing resource SHALL produce a terminal `blocked_*` artifact rather than a
+fabricated coverage bucket.
+
+For each measured held-out game the workflow SHALL run the cold live proposer
+under a bounded action budget, capture each enumerated candidate pool, and
+classify the game into exactly one of `COVERED`, `ENUMERATED_BUT_LOST`, or
+`NEVER_ENUMERATED`. `COVERED` means the live run reaches an L1 win within
+budget. `ENUMERATED_BUT_LOST` means the banked winning prefix was proposed at
+each corresponding prefix state but the run did not reach the win within the
+budget. `NEVER_ENUMERATED` means at least one winning-prefix action primitive
+was absent from the recorded proposal pools at the corresponding prefix state.
+
+The workflow SHALL include a positive control on an adaptered game such as
+`tu93`; the positive control must classify as `COVERED` or the diagnostic is
+retired as a harness artifact. A passing diagnostic SHALL report a named
+dominant bucket over at least three held-out games and write
+`results/experiment_4851_generation_coverage_diagnostic.json`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a measured decomposition is complete_generation_wall_<dominant_bucket>_dominant (e.g. complete_generation_wall_never_enumerated_dominant)."
+- `per_game_coverage`: principle "per-game mapping game -> {bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, winning_prefix_len, pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
+- `dominant_bucket`: principle "the bucket the majority of held-out games fall in -- the headline that redirects .448 (never_enumerated -> generation expressibility; enumerated_but_lost -> budget/pruning; covered -> ranking)."
+- `positive_control_game`: principle "the adaptered game used as positive control; it MUST be COVERED or the measurement is a harness artifact (a Phase-Prototype positive control)."
+- `positive_control_covered`: principle "true iff the positive control came out COVERED -- the load-bearing not-a-harness-artifact check."
+- `proposer_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into the proposer (the tautology trap B1 audits)."
+- `n_games_measured`: principle ">=3 held-out games for a non-degenerate distribution."
+- `verifier_is_oracle`: principle "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+- `live_path_reachable`: principle "the instrumentation hooks the live proposer (arc_orphan_solver_lint passes) -- a diagnostic the live agent cannot reach is wasted effort."
+- `solve_provenance`: principle "development_proxy -- an offline coverage measurement, NOT a live first-win; declared honestly."
+- `inference_substrate`: principle "live_llm_inference if the proposer invokes the LLM (60s floor), else verifier_ensemble_against_cached_candidates -- declare what actually ran."
+- `preconditions_checked`: principle "records arcade/generator/ground-truth checks; a missing resource emits blocked_, never a fabricated bucket."
+- `random_seed`: principle "determinism for the proposer's stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, proposer config, budget) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS
+
+Given banked L1 winning prefixes and a bounded cold `StepwiseExplorer` run
+When Experiment 4851 compares recorded proposal pools against the executable
+oracle prefixes after the run
+Then every measured held-out game is assigned exactly one coverage bucket,
+records `winning_prefix_len`, `pool_size`, `reached_l1_win`, and
+`budget_actions`, and the artifact reports the majority `dominant_bucket`.
+
+#### SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL
+
+Given the adaptered `tu93` positive-control path is available
+When Experiment 4851 runs the adaptered proposal control without injecting the
+banked answer
+Then `positive_control_game="tu93"` and `positive_control_covered=true`; if the
+control is not covered, the diagnostic emits a retired/non-test verdict rather
+than claiming a generation-wall decomposition.
+
+#### SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION
+
+Given the offline arcade is unavailable, generator availability is required but
+missing, or fewer than three banked L1 prefixes are present in the registry and
+offline environment
+When Experiment 4851 starts
+Then it writes
+`results/experiment_4851_generation_coverage_diagnostic.json` with a terminal
+`blocked_*` verdict, empty or partial coverage fields, and explicit
+`preconditions_checked` details.
