@@ -9447,3 +9447,4 @@ The contro |
 | 2026-06-27 12:01 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBM | OK | 90 passed, 1 warning in 8.63s |
 | 2026-06-27 12:11 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability co | OK | 85 passed, 1 warning in 8.60s |
 | 2026-06-27 12:29 UTC | PHASE D (SOTA-INGESTION -- the .449 frontier) -- g | OK | 110 passed, 1 warning in 5.82s |
+| 2026-06-27 12:48 UTC | PHASE E (CAPSTONE .448) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.19s |
