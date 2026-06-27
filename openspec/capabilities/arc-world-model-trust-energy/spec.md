@@ -11072,6 +11072,74 @@ When Experiment 4852 writes `results/experiment_4852_levelup_attempt.json`
 Then the checksum is deterministic, `schema_errors=[]`, and every required
 principle-annotated field is present.
 
+### REQ-ARC-WMTE-4862: Rotated ARC Level-Up Attempt Guarantee
+
+Experiment 4862 SHALL run the standing ARC solve loop on a rotated target that
+is not `.447`'s `s5i5` and not `.446`'s `ka59`. It SHALL precheck
+`arc_solver_kit.offline_arcade()`, read `ops/arc_solve_registry.yaml`, inspect
+the shallow L1-only candidates `g50t`, `wa30`, and `r11l`, and use
+`recommend_approach(game)` plus registry dead-end notes to avoid known
+no-grounded-delta walls. The preferred target for the 2026-06-27 registry SHALL
+be `r11l`: `g50t` is skipped for prior target-offset/clone-replay no-bank
+notes, `wa30` is skipped for hidden-state-bound notes, and `r11l` has a
+grounded click-template handle-average L2 delta derived from the offline
+environment and replay seed.
+
+Experiment 4862 SHALL register any needed `GameAdapter` delta, run
+`.venv/bin/python scripts/arc_loop_solve.py --game r11l`, reproduction-gate the
+result through `arc_solver_kit.reproduce`, update
+`ops/arc_solve_registry.yaml` only when the gate reports a depth above the prior
+registry level, and write `results/experiment_4862_levelup_attempt.json`.
+
+The artifact SHALL include principle-annotated top-level fields for
+`honest_verdict`, `solve_provenance`, `target_game`, `offline_reproduced`,
+`reproduced_levels`, `new_levels_banked`, `inference_substrate`, and
+`preconditions_checked`. It SHALL also include `rotation_selection`,
+`approach_recommendation`, `attempted_games`, `dead_ends`, `registry_update`,
+`retire_if_same_verdict`, `reproducibility_checksum`, and `schema_errors`. A
+missing offline arcade or target environment SHALL produce
+`blocked_<game>_offline_env_missing` and SHALL not fabricate reproduced levels.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- the agent solved via its own attempts/RE; NOT outer_loop_re (CRITICAL)."
+- `target_game`: principle "the rotated target (must differ from .447 s5i5 and .446 ka59) so coverage sweeps the corpus."
+- `offline_reproduced`: principle "only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `new_levels_banked`: principle ">=1 for a PASS; 0 records the rotation dead-end for the next planner."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor)."
+- `preconditions_checked`: principle "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+
+#### SCENARIO-ARC-WMTE-4862-ROTATED-TARGET
+
+Given the ARC registry records `g50t`, `wa30`, and `r11l` as L1-only and
+records `.447`'s `s5i5` and `.446`'s `ka59` as excluded recent targets
+When Experiment 4862 selects a target
+Then it excludes `s5i5` and `ka59`, audits shallow candidates' dead-end notes,
+selects `r11l` for the grounded click-template L2 handle-average delta, and
+records the `recommend_approach(r11l)` payload.
+
+#### SCENARIO-ARC-WMTE-4862-REPRODUCTION-GATE
+
+Given the standing loop result for `r11l` reports an offline-reproduced depth
+greater than the registry prior
+When Experiment 4862 builds its terminal artifact
+Then `new_levels_banked>=1`, `offline_reproduced=true`,
+`reproduced_levels>=prior+1`, the registry total increases only by the new
+banked levels, and `solve_provenance=live_agent_self_discovery` is preserved in
+the artifact.
+
+#### SCENARIO-ARC-WMTE-4862-STABLE-ARTIFACT
+
+Given a selected target, preconditions, recommendation, and standing-loop
+result
+When Experiment 4862 writes `results/experiment_4862_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, every required
+principle-annotated field is present, and same-depth or failed reproduction
+attempts emit a terminal no-bank verdict without incrementing the registry
+total.
+
 ### REQ-ARC-WMTE-4853: ARC Self-Play Verifier Checkpoint Refresh Artifact
 
 Experiment 4853 SHALL run the standing ARC self-play loop on a banked target

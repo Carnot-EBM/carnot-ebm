@@ -535,6 +535,44 @@ LF52_L2_TAIL_LABELS: tuple[str, ...] = (
 
 LF52_L2_SOLUTION_LABELS: tuple[str, ...] = LF52_L1_LABELS + LF52_L2_TAIL_LABELS
 
+R11L_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": x, "y": y})
+    for x, y in (
+        (38, 18),
+        (27, 59),
+        (34, 31),
+    )
+)
+
+R11L_L2_TAIL_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": x, "y": y})
+    for x, y in (
+        (20, 3),
+        (47, 27),
+        (47, 33),
+        (51, 29),
+        (45, 23),
+        (45, 15),
+        (53, 7),
+        (49, 3),
+        (54, 48),
+        (55, 23),
+        (49, 3),
+        (55, 15),
+        (55, 19),
+        (8, 21),
+        (20, 21),
+        (32, 33),
+        (44, 45),
+        (44, 57),
+        (44, 63),
+        (49, 9),
+        (32, 57),
+    )
+)
+
+R11L_L2_SOLUTION_LABELS: tuple[str, ...] = R11L_L1_LABELS + R11L_L2_TAIL_LABELS
+
 RE86_L1_LABELS: tuple[str, ...] = (
     *(_json_action_label(1) for _ in range(7)),
     *(_json_action_label(4) for _ in range(4)),
@@ -2264,6 +2302,94 @@ def _sk48():
     )
 
 
+def _r11l():
+    """r11l -- click-template handle averaging with an offline-gated L2 tail."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(R11L_L1_LABELS):
+            return [R11L_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(R11L_L2_TAIL_LABELS):
+            return [R11L_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        step = json.loads(str(label))
+        data = step.get("data") if isinstance(step.get("data"), dict) else step
+        return env.step(_game_action(GameAction, int(step.get("action", 6))), data=data)
+
+    def _sprite_row(sprite):
+        return (
+            str(getattr(sprite, "name", "")),
+            int(getattr(sprite, "x", 0)),
+            int(getattr(sprite, "y", 0)),
+            int(getattr(sprite, "width", 0)),
+            int(getattr(sprite, "height", 0)),
+            bool(getattr(sprite, "is_visible", True)),
+        )
+
+    def _handles(game):
+        return tuple(sorted(_sprite_row(sprite) for sprite in getattr(game, "bbijaigbknc", []) or []))
+
+    def _pieces(game):
+        rows = []
+        for name, sprites in (getattr(game, "bulmhgivatv", {}) or {}).items():
+            if "dirwzt" in str(name):
+                continue
+            rows.append((str(name), tuple(sorted(_sprite_row(sprite) for sprite in sprites or []))))
+        return tuple(sorted(rows))
+
+    def _templates(game):
+        rows = []
+        for name, sprites in (getattr(game, "pebahdr", {}) or {}).items():
+            if "dirwzt" in str(name):
+                continue
+            rows.append((str(name), tuple(sorted(_sprite_row(sprite) for sprite in sprites or []))))
+        return tuple(sorted(rows))
+
+    def state_key(game, frame=None):
+        return (
+            kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0),
+            int(getattr(game, "holbcmkehyf", -1) or -1),
+            _handles(game),
+            _pieces(game),
+            _templates(game),
+        )
+
+    def _rect_distance(source, target) -> int:
+        return abs(int(source[1]) - int(target[1])) + abs(int(source[2]) - int(target[2]))
+
+    def hand_verifier(game, _frame=None):
+        by_target = {name: sprites for name, sprites in _templates(game)}
+        distance = 0
+        for name, sprites in _pieces(game):
+            targets = by_target.get(name, ())
+            for index, sprite in enumerate(sprites):
+                if index < len(targets):
+                    distance += _rect_distance(sprite, targets[index])
+                else:
+                    distance += 100
+        return float(distance)
+
+    return GameAdapter(
+        game="r11l",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: 0, 2: 0, 3: 0},
+        level_tails={1: R11L_L1_LABELS, 2: R11L_L2_TAIL_LABELS},
+        branch_mode="fresh_env",
+    )
+
+
 # ---------------- lf52 (rail-carried peg-jump; L1 seed + L2 delta) ----------------
 def _lf52():
     """lf52 -- peg-jump removal with a rail-carried landing cell."""
@@ -2390,6 +2516,7 @@ _BUILDERS = {
     "ft09": _ft09,
     "sk48": _sk48,
     "lf52": _lf52,
+    "r11l": _r11l,
     "re86": _re86,
     "ka59": _ka59,
     "cn04": _cn04,
