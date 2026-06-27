@@ -11542,6 +11542,92 @@ When Experiment 4882 stops the current process
 Then it writes per-game checkpoints and a schema-valid partial artifact so the
 next run can resume without losing the primary value-accuracy measurement.
 
+### REQ-ARC-WMTE-4883: Inducer-Ceiling Reference Versus Local A/B
+
+Experiment 4883 SHALL run only when Experiment 4882 produced the low-value-delta
+regime: `results/experiment_4882_ttt_dynamics_value_gap.json` exists,
+`tta_changed_cell_value_accuracy_delta_median < 0.1`, and the A1 artifact
+contains per-game baselines plus the held-out split. If the offline arcade,
+GPU-fixed generator, or low-delta A1 baseline preconditions fail, Experiment
+4883 SHALL emit `blocked_offline_arcade_missing`,
+`blocked_generator_unavailable`, or `blocked_a1_baseline_missing` rather than a
+fabricated A/B result.
+
+For the same A1 NEVER_ENUMERATED held-out games and the same A1 held-out split,
+Experiment 4883 SHALL measure two induction lanes through the live
+`arc_executable_world_model.load_engine` interface: a Family-B reference
+executable-world-model inducer lane and the local open-code
+Qwen3.5-9B-MTP lane. Both lanes SHALL score held-out off-path transitions with
+the Experiment 4882 graded metric (`cell_recall` and
+`changed_cell_value_accuracy`), SHALL report per-lane per-game deltas against
+A1's `value_acc_baseline`, and SHALL use per-game/per-lane checkpointing so a
+capped run still emits a usable partial. The Family-B lane is a ceiling
+measurement only; the deployment path remains the local Qwen3.5-9B-MTP lane.
+
+Experiment 4883 SHALL write
+`results/experiment_4883_inducer_ceiling_ab.json` with the required fields
+`honest_verdict`, `inducer_ceiling_attribution`,
+`reference_lane_value_accuracy_delta`, `local_lane_value_accuracy_delta`,
+`per_lane_per_game`, `delta_on_truly_heldout_split`, `verifier_is_oracle`,
+`live_path_reachable`, `reference_lane_is_ceiling_only`,
+`solve_provenance`, `checkpoint_emitted`, `inference_substrate`,
+`model_specs`, `preconditions_checked`, `random_seed`, and
+`reproducibility_checksum`.
+
+If the reference lane raises held-out changed-cell value accuracy above A1's
+baseline while the local lane does not, the attribution SHALL be
+`LOCAL_MODEL_IS_CEILING`. If neither lane raises value accuracy above A1's
+baseline and both lane delta CI95 intervals include zero, the attribution SHALL
+be `METHOD_IS_CEILING` and the artifact SHALL set `retire_if_same_verdict=true`.
+If the local lane also raises value accuracy, the attribution SHALL be
+`LOCAL_ALREADY_SUFFICIENT`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a real lane lift is success_inducer_ceiling_<attribution>; a flat null is complete_inducer_ceiling_neither_lane_lifts_method_is_ceiling."
+- `inducer_ceiling_attribution`: principle "one of LOCAL_MODEL_IS_CEILING | METHOD_IS_CEILING | LOCAL_ALREADY_SUFFICIENT -- redirects .451."
+- `reference_lane_value_accuracy_delta`: principle "Family-B reference lane changed-cell value-accuracy delta vs A1 baseline (the capability ceiling)."
+- `local_lane_value_accuracy_delta`: principle "local open-code lane delta vs A1 baseline (the deployment lane -- what actually ships)."
+- `per_lane_per_game`: principle "per-lane per-game {value_acc, cell_recall, delta_vs_baseline, ci95} -- the quantitative A/B table."
+- `delta_on_truly_heldout_split`: principle "true -- both lanes scored on the SAME held-out split as A1, disjoint from any fit set (B1 audits)."
+- `verifier_is_oracle`: principle "false -- the held-out transition score is oracle-distinct from the env's level-up check (circularity discipline)."
+- `live_path_reachable`: principle "both lanes use the live e3 load_engine interface (arc_orphan_solver_lint passes), not a parallel solver."
+- `reference_lane_is_ceiling_only`: principle "true -- the Family-B reference lane is a ceiling measurement; the deployment lane stays local (decentralization Rule 2)."
+- `solve_provenance`: principle "development_proxy -- an inducer-ceiling measurement, NOT a banked level."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (per-game + per-lane checkpointing)."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- both induction lanes invoke an LLM."
+- `model_specs`: principle "names both inducers (Family-B reference + local Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server)."
+- `preconditions_checked`: principle "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+- `random_seed`: principle "determinism for both induction lanes' stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, A1 baseline, both lane configs, held-out split) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4883-A1-LOW-VALUE-GATE
+
+Given the offline arcade and GPU-fixed generator preconditions
+When Experiment 4883 reads the A1 value-gap artifact
+Then it blocks if the artifact is missing, malformed, lacks per-game baselines
+or held-out split ids, or has
+`tta_changed_cell_value_accuracy_delta_median >= 0.1`, and otherwise proceeds
+using A1's same held-out games and split.
+
+#### SCENARIO-ARC-WMTE-4883-SAME-SPLIT-AB
+
+Given reference and local lane inducers
+When Experiment 4883 measures each lane on a game
+Then both lanes emit an executable engine, load it through
+`arc_executable_world_model.load_engine`, score the same held-out transition
+ids with the graded metric, and report per-lane per-game value accuracy,
+cell recall, delta versus A1 baseline, and CI95.
+
+#### SCENARIO-ARC-WMTE-4883-ATTRIBUTION
+
+Given at least three completed games with both lanes measured
+When Experiment 4883 aggregates lane deltas
+Then it emits one of `LOCAL_MODEL_IS_CEILING`, `METHOD_IS_CEILING`, or
+`LOCAL_ALREADY_SUFFICIENT`, keeps `verifier_is_oracle=false`, marks the
+reference lane as ceiling-only, and retires the inducer direction when neither
+lane's delta CI95 excludes zero.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
