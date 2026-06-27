@@ -1,0 +1,29 @@
+{
+  "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+  "schema": "carnot.arc_within_game_l3_self_induction.v1",
+  "honest_verdict": "complete_self_induction_bounded_no_l3_win_exemplar_floor_n_win_1",
+  "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "game": "cd82",
+  "level_reached": 2,
+  "n_win_grids": 1,
+  "n_nonwin_grids": 20,
+  "induce_goal_energy_fired": false,
+  "energy_separation": null,
+  "stage": 1,
+  "solve_provenance": "live_agent_self_discovery",
+  "used_env_source": false,
+  "read_game_source": false,
+  "offline_ground_truth_bfs": false,
+  "hand_calibrated_per_game": false,
+  "interpretation": "STAGE 1 gate before the graph_explore L3 search. induce_fired=False -> win-exemplar floor (<2 self-played win grids at the level transition). separates=False -> goal-induction REPRESENTATION ceiling: object/color hypotheses can't express cd82's mask-match goal, OR L1/L2 win exemplars don't determine L3's different target. Either is a NAMED missing-verifier gap (not a fabrication). separates=True -> proceed to STAGE 2 (graph_explore_solve_v2 to L3).",
+  "missing_verifier_gaps": "within-game L2->L3 goal re-induction: induce_goal_energy needs >=2 win grids and only object/color hypotheses; cd82's per-level target-mask-match goal needs a goal-induction operator that (a) works from few win exemplars and (b) expresses canvas==target-under-mask, derived live.",
+  "cites_upstream": [
+    "wf_b77c3b40-f11 design",
+    "arc_solve_registry.yaml cd82 dead_end"
+  ],
+  "random_seed": 20260627,
+  "duration_s": 2.36,
+  "reproducibility_checksum": "sha256:2f3380c87a6a47ebae060b617fc6500900fea358cc436e9d41c8ff7ea4b16c9e"
+}
