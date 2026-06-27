@@ -10354,3 +10354,82 @@ offline-reproduce a new level, and A4 reports a clean refreshed package
 and `scripts/arc_orphan_solver_lint.py` green, reports the live-submittable count
 from the clean refreshed package, and writes an honest-null artifact with a
 stable checksum.
+
+### REQ-ARC-WMTE-4841: Grid-Grounded Object Identity Perception Probe
+
+Experiment 4841 SHALL build a prototype object-identity perception module under
+`python/carnot/agentic/` that segments rendered ARC frames into connected
+components and tracks object identity across frame transitions by shape,
+connectivity, overlap, and displacement rather than by color identity. The
+module SHALL expose deterministic per-object tracks and object-relational
+features suitable for later goal-predicate grounding, while making no live
+solver integration or first-win claim in this milestone.
+
+The probe SHALL measure real rendered frames for `lp85`, `r11l`, and `tu93`
+from the offline environment or banked frame sources. Missing frames for one
+game SHALL be recorded and skipped; if no target game has frames, the experiment
+SHALL write a terminal `blocked_no_offline_frames` artifact instead of
+fabricating correspondence scores. Before frame measurement the workflow SHALL
+verify `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"`
+or the equivalent import smoke; failure SHALL produce
+`blocked_offline_arcade_missing`.
+
+Experiment 4841 SHALL compare the shape/motion tracker against a color-centroid
+baseline on the same frames and SHALL report a quantitative per-game
+correspondence score rather than a binary self-grade. The positive control on
+`tu93` SHALL require stable player and goal identity tracks on visible-goal
+solving transitions. The headline gate SHALL pass only when the `tu93` positive
+control passes and at least two of `lp85`, `r11l`, and `tu93` have a
+shape/motion correspondence score materially above the color-centroid baseline.
+If the shape/motion tracker also fails on at least two games, the artifact SHALL
+report the deeper rendered-grid object-identity null honestly.
+
+Experiment 4841 SHALL write
+`results/experiment_4841_object_identity_perception_probe.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`measured_on_real_frames`, `per_game_correspondence`,
+`positive_control_tu93_passed`, `games_with_recovery`, `verifier_is_oracle`,
+`live_path_reachable`, `solve_provenance`, `inference_substrate`,
+`preconditions_checked`, `random_seed`, and `reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding."
+- `measured_on_real_frames`: principle "true iff the correspondence scores are measured on REAL lp85/r11l/tu93 frames, NOT synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST."
+- `per_game_correspondence`: principle "per-game mapping game -> (shape_motion_score, color_centroid_baseline_score, n_frames) -- the quantitative recovery measure vs the color-centroid comparator on the same frames."
+- `positive_control_tu93_passed`: principle "the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype positive control so a global null is not a harness artifact."
+- `games_with_recovery`: principle "count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS."
+- `verifier_is_oracle`: principle "true -- execution-grounded structural perception, NOT an oracle-distinct moat (circularity discipline); this probe is about grounding."
+- `live_path_reachable`: principle "the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception layer the live agent cannot reach is wasted effort."
+- `solve_provenance`: principle "development_proxy -- an offline perception probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery)."
+- `inference_substrate`: principle "live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates -- declare what actually ran (the probe is mostly CPU segmentation; do not claim live inference if none ran)."
+- `preconditions_checked`: principle "records arcade/frame-availability checks so a missing-resource run emits blocked_, never a fabricated correspondence score."
+- `random_seed`: principle "determinism for any stochastic segmentation/tracking step + the baseline."
+- `reproducibility_checksum`: principle "content hash of (frames, tracker params, baseline) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE
+
+Given real offline/banked frames are available for at least one of `lp85`,
+`r11l`, or `tu93`
+When Experiment 4841 runs the object-identity tracker and the color-centroid
+baseline on the same transition sequence
+Then the artifact records `measured_on_real_frames=true`, one
+`per_game_correspondence` row per available target game, frame counts, stable
+shape/motion scores, color-baseline scores, `games_with_recovery`, and a stable
+checksum over frames and tracker parameters.
+
+#### SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL
+
+Given `tu93` real solving-transition frames are available
+When the prototype tracker runs on that sequence
+Then `positive_control_tu93_passed=true` only if at least one player-like moving
+track and one goal-like persistent track remain stable enough to ground the
+visible-goal control.
+
+#### SCENARIO-ARC-WMTE-4841-LIVE-PATH-REACHABLE
+
+Given the object-identity module is committed under `python/carnot/agentic/`
+When `scripts/arc_orphan_solver_lint.py` runs
+Then the lint passes and the artifact records `live_path_reachable=true` only
+when the module is importable from the live agent path or consciously
+allow-listed with a reason.

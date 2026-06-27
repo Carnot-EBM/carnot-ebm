@@ -1,0 +1,1135 @@
+{
+  "baseline": "same-color nearest-centroid over active changed components",
+  "duration_s": 1.264711,
+  "experiment": "experiment_4841_object_identity_perception_probe",
+  "field_principles": {
+    "games_with_recovery": {
+      "principle": "count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates -- declare what actually ran (the probe is mostly CPU segmentation; do not claim live inference if none ran)."
+    },
+    "live_path_reachable": {
+      "principle": "the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception layer the live agent cannot reach is wasted effort."
+    },
+    "measured_on_real_frames": {
+      "principle": "true iff the correspondence scores are measured on REAL lp85/r11l/tu93 frames, NOT synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST."
+    },
+    "per_game_correspondence": {
+      "principle": "per-game mapping game -> (shape_motion_score, color_centroid_baseline_score, n_frames) -- the quantitative recovery measure vs the color-centroid comparator on the same frames."
+    },
+    "positive_control_tu93_passed": {
+      "principle": "the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype positive control so a global null is not a harness artifact."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/frame-availability checks so a missing-resource run emits blocked_, never a fabricated correspondence score."
+    },
+    "random_seed": {
+      "principle": "determinism for any stochastic segmentation/tracking step + the baseline."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (frames, tracker params, baseline) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline perception probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery)."
+    },
+    "verifier_is_oracle": {
+      "principle": "true -- execution-grounded structural perception, NOT an oracle-distinct moat (circularity discipline); this probe is about grounding."
+    }
+  },
+  "frame_checksums": {
+    "lp85": "sha256:2bfd9ee40b1a280d1670b11989393001af00da331196a716bf2fee448f6dea60",
+    "r11l": "sha256:12a7ceddc25b26ff8935523180f8ca4b0b209a92944bf2c7b449448f6acc4794",
+    "tu93": "sha256:b0b2a5424679fb817ef8dc9cc4dc049cfa59d3ce6094a5c8adf5a2148bcd2717"
+  },
+  "games_with_recovery": 1,
+  "honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "live_path_reachable": true,
+  "measured_on_real_frames": true,
+  "per_game_correspondence": {
+    "lp85": {
+      "color_centroid_baseline_score": 0.842473,
+      "color_centroid_matches": 845,
+      "eligible_objects": 1003,
+      "frame_checksum": "sha256:2bfd9ee40b1a280d1670b11989393001af00da331196a716bf2fee448f6dea60",
+      "n_frames": 53,
+      "n_transition_pairs": 52,
+      "recovered": false,
+      "shape_motion_matches": 895,
+      "shape_motion_score": 0.892323,
+      "source_kind": "banked_replay",
+      "source_path": "results/arc3_live_banked_trajectories/lp85.json"
+    },
+    "r11l": {
+      "color_centroid_baseline_score": 0.403846,
+      "color_centroid_matches": 21,
+      "eligible_objects": 52,
+      "frame_checksum": "sha256:12a7ceddc25b26ff8935523180f8ca4b0b209a92944bf2c7b449448f6acc4794",
+      "n_frames": 5,
+      "n_transition_pairs": 4,
+      "recovered": true,
+      "shape_motion_matches": 31,
+      "shape_motion_score": 0.596154,
+      "source_kind": "banked_replay",
+      "source_path": "results/arc3_live_banked_trajectories/r11l.json"
+    },
+    "tu93": {
+      "color_centroid_baseline_score": 0.857884,
+      "color_centroid_matches": 827,
+      "eligible_objects": 964,
+      "frame_checksum": "sha256:b0b2a5424679fb817ef8dc9cc4dc049cfa59d3ce6094a5c8adf5a2148bcd2717",
+      "n_frames": 94,
+      "n_transition_pairs": 93,
+      "recovered": false,
+      "shape_motion_matches": 891,
+      "shape_motion_score": 0.924274,
+      "source_kind": "banked_replay",
+      "source_path": "results/arc3_live_banked_trajectories/tu93.json"
+    }
+  },
+  "positive_control_tu93": {
+    "goal_persistence": 0.5,
+    "goal_track_id": 39,
+    "passed": true,
+    "player_motion": 220.624731,
+    "player_track_id": 9,
+    "track_summary": {
+      "1": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.125
+      },
+      "10": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "100": {
+        "frames_present": 19,
+        "mean_pixels": 8.947368,
+        "persistence": 0.202128,
+        "total_motion": 0.125
+      },
+      "101": {
+        "frames_present": 66,
+        "mean_pixels": 8.863636,
+        "persistence": 0.702128,
+        "total_motion": 9.29118
+      },
+      "102": {
+        "frames_present": 66,
+        "mean_pixels": 9.0,
+        "persistence": 0.702128,
+        "total_motion": 7.0
+      },
+      "103": {
+        "frames_present": 66,
+        "mean_pixels": 8.939394,
+        "persistence": 0.702128,
+        "total_motion": 15.329409
+      },
+      "104": {
+        "frames_present": 18,
+        "mean_pixels": 17.333333,
+        "persistence": 0.191489,
+        "total_motion": 15.5
+      },
+      "105": {
+        "frames_present": 47,
+        "mean_pixels": 1.0,
+        "persistence": 0.5,
+        "total_motion": 159.081028
+      },
+      "106": {
+        "frames_present": 23,
+        "mean_pixels": 1.0,
+        "persistence": 0.244681,
+        "total_motion": 155.147581
+      },
+      "107": {
+        "frames_present": 46,
+        "mean_pixels": 27.0,
+        "persistence": 0.489362,
+        "total_motion": 12.649111
+      },
+      "108": {
+        "frames_present": 17,
+        "mean_pixels": 38.411765,
+        "persistence": 0.180851,
+        "total_motion": 25.5
+      },
+      "109": {
+        "frames_present": 45,
+        "mean_pixels": 39.355556,
+        "persistence": 0.478723,
+        "total_motion": 48.5
+      },
+      "11": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "110": {
+        "frames_present": 30,
+        "mean_pixels": 8.966667,
+        "persistence": 0.319149,
+        "total_motion": 29.04236
+      },
+      "111": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 27.294688
+      },
+      "112": {
+        "frames_present": 30,
+        "mean_pixels": 8.966667,
+        "persistence": 0.319149,
+        "total_motion": 4.25
+      },
+      "113": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 4.0
+      },
+      "114": {
+        "frames_present": 30,
+        "mean_pixels": 8.966667,
+        "persistence": 0.319149,
+        "total_motion": 4.25
+      },
+      "115": {
+        "frames_present": 30,
+        "mean_pixels": 8.966667,
+        "persistence": 0.319149,
+        "total_motion": 16.677945
+      },
+      "116": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 3.162278
+      },
+      "117": {
+        "frames_present": 30,
+        "mean_pixels": 204.6,
+        "persistence": 0.319149,
+        "total_motion": 8.467141
+      },
+      "118": {
+        "frames_present": 30,
+        "mean_pixels": 8.933333,
+        "persistence": 0.319149,
+        "total_motion": 9.555385
+      },
+      "119": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 27.892651
+      },
+      "12": {
+        "frames_present": 18,
+        "mean_pixels": 27.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "120": {
+        "frames_present": 30,
+        "mean_pixels": 8.9,
+        "persistence": 0.319149,
+        "total_motion": 29.54236
+      },
+      "121": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 29.966648
+      },
+      "122": {
+        "frames_present": 30,
+        "mean_pixels": 8.833333,
+        "persistence": 0.319149,
+        "total_motion": 31.079322
+      },
+      "123": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 28.79236
+      },
+      "124": {
+        "frames_present": 30,
+        "mean_pixels": 8.833333,
+        "persistence": 0.319149,
+        "total_motion": 9.794004
+      },
+      "125": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 1.0
+      },
+      "126": {
+        "frames_present": 30,
+        "mean_pixels": 8.466667,
+        "persistence": 0.319149,
+        "total_motion": 7.105551
+      },
+      "127": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 1.0
+      },
+      "128": {
+        "frames_present": 16,
+        "mean_pixels": 1.0,
+        "persistence": 0.170213,
+        "total_motion": 87.236444
+      },
+      "129": {
+        "frames_present": 11,
+        "mean_pixels": 1.0,
+        "persistence": 0.117021,
+        "total_motion": 61.36296
+      },
+      "13": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "130": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 3.162278
+      },
+      "131": {
+        "frames_present": 29,
+        "mean_pixels": 63.0,
+        "persistence": 0.308511,
+        "total_motion": 0.0
+      },
+      "132": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 1.0
+      },
+      "133": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 1.0
+      },
+      "134": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 11.401754
+      },
+      "135": {
+        "frames_present": 30,
+        "mean_pixels": 8.933333,
+        "persistence": 0.319149,
+        "total_motion": 10.150284
+      },
+      "136": {
+        "frames_present": 30,
+        "mean_pixels": 8.566667,
+        "persistence": 0.319149,
+        "total_motion": 7.92506
+      },
+      "137": {
+        "frames_present": 30,
+        "mean_pixels": 19.5,
+        "persistence": 0.319149,
+        "total_motion": 74.511626
+      },
+      "138": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 1.0
+      },
+      "139": {
+        "frames_present": 30,
+        "mean_pixels": 8.966667,
+        "persistence": 0.319149,
+        "total_motion": 3.855551
+      },
+      "14": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "140": {
+        "frames_present": 30,
+        "mean_pixels": 9.0,
+        "persistence": 0.319149,
+        "total_motion": 2.0
+      },
+      "141": {
+        "frames_present": 30,
+        "mean_pixels": 8.966667,
+        "persistence": 0.319149,
+        "total_motion": 2.25
+      },
+      "142": {
+        "frames_present": 30,
+        "mean_pixels": 8.8,
+        "persistence": 0.319149,
+        "total_motion": 2.5
+      },
+      "143": {
+        "frames_present": 8,
+        "mean_pixels": 1.0,
+        "persistence": 0.085106,
+        "total_motion": 37.09902
+      },
+      "144": {
+        "frames_present": 23,
+        "mean_pixels": 1.0,
+        "persistence": 0.244681,
+        "total_motion": 117.242784
+      },
+      "145": {
+        "frames_present": 14,
+        "mean_pixels": 1.0,
+        "persistence": 0.148936,
+        "total_motion": 70.0
+      },
+      "146": {
+        "frames_present": 3,
+        "mean_pixels": 1.0,
+        "persistence": 0.031915,
+        "total_motion": 20.764823
+      },
+      "147": {
+        "frames_present": 4,
+        "mean_pixels": 1.0,
+        "persistence": 0.042553,
+        "total_motion": 26.74676
+      },
+      "148": {
+        "frames_present": 7,
+        "mean_pixels": 1.0,
+        "persistence": 0.074468,
+        "total_motion": 41.928388
+      },
+      "149": {
+        "frames_present": 8,
+        "mean_pixels": 1.0,
+        "persistence": 0.085106,
+        "total_motion": 48.269107
+      },
+      "15": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "150": {
+        "frames_present": 3,
+        "mean_pixels": 1.0,
+        "persistence": 0.031915,
+        "total_motion": 12.544004
+      },
+      "151": {
+        "frames_present": 3,
+        "mean_pixels": 1.0,
+        "persistence": 0.031915,
+        "total_motion": 43.560081
+      },
+      "152": {
+        "frames_present": 1,
+        "mean_pixels": 8.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "153": {
+        "frames_present": 1,
+        "mean_pixels": 27.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "154": {
+        "frames_present": 1,
+        "mean_pixels": 45.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "155": {
+        "frames_present": 1,
+        "mean_pixels": 1.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "156": {
+        "frames_present": 1,
+        "mean_pixels": 1.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "157": {
+        "frames_present": 1,
+        "mean_pixels": 8.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "158": {
+        "frames_present": 1,
+        "mean_pixels": 1.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "159": {
+        "frames_present": 1,
+        "mean_pixels": 9.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "16": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "160": {
+        "frames_present": 1,
+        "mean_pixels": 8.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "161": {
+        "frames_present": 1,
+        "mean_pixels": 1.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "162": {
+        "frames_present": 1,
+        "mean_pixels": 9.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "163": {
+        "frames_present": 1,
+        "mean_pixels": 9.0,
+        "persistence": 0.010638,
+        "total_motion": 0.0
+      },
+      "17": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "18": {
+        "frames_present": 94,
+        "mean_pixels": 8.904255,
+        "persistence": 1.0,
+        "total_motion": 25.214982
+      },
+      "19": {
+        "frames_present": 94,
+        "mean_pixels": 8.989362,
+        "persistence": 1.0,
+        "total_motion": 28.214623
+      },
+      "2": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "20": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "21": {
+        "frames_present": 94,
+        "mean_pixels": 8.989362,
+        "persistence": 1.0,
+        "total_motion": 34.855832
+      },
+      "22": {
+        "frames_present": 47,
+        "mean_pixels": 8.957447,
+        "persistence": 0.5,
+        "total_motion": 7.742641
+      },
+      "23": {
+        "frames_present": 47,
+        "mean_pixels": 9.0,
+        "persistence": 0.5,
+        "total_motion": 4.242641
+      },
+      "24": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 6.958204
+      },
+      "25": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 3.25
+      },
+      "26": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 3.25
+      },
+      "27": {
+        "frames_present": 94,
+        "mean_pixels": 8.989362,
+        "persistence": 1.0,
+        "total_motion": 18.028051
+      },
+      "28": {
+        "frames_present": 94,
+        "mean_pixels": 8.819149,
+        "persistence": 1.0,
+        "total_motion": 13.676777
+      },
+      "29": {
+        "frames_present": 94,
+        "mean_pixels": 8.957447,
+        "persistence": 1.0,
+        "total_motion": 17.605551
+      },
+      "3": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "30": {
+        "frames_present": 94,
+        "mean_pixels": 8.829787,
+        "persistence": 1.0,
+        "total_motion": 28.927042
+      },
+      "31": {
+        "frames_present": 47,
+        "mean_pixels": 9.0,
+        "persistence": 0.5,
+        "total_motion": 0.0
+      },
+      "32": {
+        "frames_present": 94,
+        "mean_pixels": 8.93617,
+        "persistence": 1.0,
+        "total_motion": 23.286644
+      },
+      "33": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 4.492641
+      },
+      "34": {
+        "frames_present": 47,
+        "mean_pixels": 9.0,
+        "persistence": 0.5,
+        "total_motion": 9.708204
+      },
+      "35": {
+        "frames_present": 47,
+        "mean_pixels": 8.957447,
+        "persistence": 0.5,
+        "total_motion": 4.742641
+      },
+      "36": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 6.25
+      },
+      "37": {
+        "frames_present": 94,
+        "mean_pixels": 8.957447,
+        "persistence": 1.0,
+        "total_motion": 16.453743
+      },
+      "38": {
+        "frames_present": 94,
+        "mean_pixels": 8.968085,
+        "persistence": 1.0,
+        "total_motion": 10.365773
+      },
+      "39": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 0.25
+      },
+      "4": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "40": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 3.25
+      },
+      "41": {
+        "frames_present": 94,
+        "mean_pixels": 8.87234,
+        "persistence": 1.0,
+        "total_motion": 22.524858
+      },
+      "42": {
+        "frames_present": 94,
+        "mean_pixels": 8.968085,
+        "persistence": 1.0,
+        "total_motion": 24.840026
+      },
+      "43": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 16.445037
+      },
+      "44": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "45": {
+        "frames_present": 47,
+        "mean_pixels": 9.0,
+        "persistence": 0.5,
+        "total_motion": 8.485281
+      },
+      "46": {
+        "frames_present": 47,
+        "mean_pixels": 8.978723,
+        "persistence": 0.5,
+        "total_motion": 6.721637
+      },
+      "47": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "48": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "49": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "5": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "50": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "51": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "52": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "53": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "54": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "55": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.125
+      },
+      "56": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "57": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "58": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "59": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "6": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "60": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "61": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "62": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "63": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "64": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "65": {
+        "frames_present": 18,
+        "mean_pixels": 8.944444,
+        "persistence": 0.191489,
+        "total_motion": 0.25
+      },
+      "66": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "67": {
+        "frames_present": 47,
+        "mean_pixels": 51.957447,
+        "persistence": 0.5,
+        "total_motion": 50.5
+      },
+      "68": {
+        "frames_present": 17,
+        "mean_pixels": 11.529412,
+        "persistence": 0.180851,
+        "total_motion": 10.5
+      },
+      "69": {
+        "frames_present": 7,
+        "mean_pixels": 1.0,
+        "persistence": 0.074468,
+        "total_motion": 39.213203
+      },
+      "7": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "70": {
+        "frames_present": 9,
+        "mean_pixels": 6.444444,
+        "persistence": 0.095745,
+        "total_motion": 5.5
+      },
+      "71": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 9.574555
+      },
+      "72": {
+        "frames_present": 66,
+        "mean_pixels": 8.833333,
+        "persistence": 0.702128,
+        "total_motion": 7.912278
+      },
+      "73": {
+        "frames_present": 66,
+        "mean_pixels": 8.878788,
+        "persistence": 0.702128,
+        "total_motion": 15.987135
+      },
+      "74": {
+        "frames_present": 66,
+        "mean_pixels": 9.0,
+        "persistence": 0.702128,
+        "total_motion": 15.29563
+      },
+      "75": {
+        "frames_present": 66,
+        "mean_pixels": 8.969697,
+        "persistence": 0.702128,
+        "total_motion": 15.79563
+      },
+      "76": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 8.080952
+      },
+      "77": {
+        "frames_present": 66,
+        "mean_pixels": 9.0,
+        "persistence": 0.702128,
+        "total_motion": 9.615773
+      },
+      "78": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 13.690307
+      },
+      "79": {
+        "frames_present": 66,
+        "mean_pixels": 8.848485,
+        "persistence": 0.702128,
+        "total_motion": 21.953624
+      },
+      "8": {
+        "frames_present": 18,
+        "mean_pixels": 9.0,
+        "persistence": 0.191489,
+        "total_motion": 0.0
+      },
+      "80": {
+        "frames_present": 66,
+        "mean_pixels": 8.727273,
+        "persistence": 0.702128,
+        "total_motion": 12.819606
+      },
+      "81": {
+        "frames_present": 66,
+        "mean_pixels": 8.818182,
+        "persistence": 0.702128,
+        "total_motion": 16.301777
+      },
+      "82": {
+        "frames_present": 11,
+        "mean_pixels": 1.0,
+        "persistence": 0.117021,
+        "total_motion": 1.414214
+      },
+      "83": {
+        "frames_present": 16,
+        "mean_pixels": 1.0,
+        "persistence": 0.170213,
+        "total_motion": 27.556349
+      },
+      "84": {
+        "frames_present": 19,
+        "mean_pixels": 45.0,
+        "persistence": 0.202128,
+        "total_motion": 0.0
+      },
+      "85": {
+        "frames_present": 66,
+        "mean_pixels": 8.939394,
+        "persistence": 0.702128,
+        "total_motion": 4.0
+      },
+      "86": {
+        "frames_present": 66,
+        "mean_pixels": 8.954545,
+        "persistence": 0.702128,
+        "total_motion": 25.247968
+      },
+      "87": {
+        "frames_present": 66,
+        "mean_pixels": 8.939394,
+        "persistence": 0.702128,
+        "total_motion": 8.0
+      },
+      "88": {
+        "frames_present": 66,
+        "mean_pixels": 8.924242,
+        "persistence": 0.702128,
+        "total_motion": 6.855551
+      },
+      "89": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 8.017829
+      },
+      "9": {
+        "frames_present": 38,
+        "mean_pixels": 1.0,
+        "persistence": 0.404255,
+        "total_motion": 220.624731
+      },
+      "90": {
+        "frames_present": 19,
+        "mean_pixels": 8.105263,
+        "persistence": 0.202128,
+        "total_motion": 0.301777
+      },
+      "91": {
+        "frames_present": 19,
+        "mean_pixels": 9.0,
+        "persistence": 0.202128,
+        "total_motion": 0.0
+      },
+      "92": {
+        "frames_present": 19,
+        "mean_pixels": 8.947368,
+        "persistence": 0.202128,
+        "total_motion": 0.25
+      },
+      "93": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 6.25
+      },
+      "94": {
+        "frames_present": 66,
+        "mean_pixels": 8.969697,
+        "persistence": 0.702128,
+        "total_motion": 10.5
+      },
+      "95": {
+        "frames_present": 66,
+        "mean_pixels": 9.0,
+        "persistence": 0.702128,
+        "total_motion": 8.324555
+      },
+      "96": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 18.550425
+      },
+      "97": {
+        "frames_present": 34,
+        "mean_pixels": 1.0,
+        "persistence": 0.361702,
+        "total_motion": 131.983787
+      },
+      "98": {
+        "frames_present": 19,
+        "mean_pixels": 9.0,
+        "persistence": 0.202128,
+        "total_motion": 0.0
+      },
+      "99": {
+        "frames_present": 66,
+        "mean_pixels": 8.984848,
+        "persistence": 0.702128,
+        "total_motion": 14.351089
+      }
+    }
+  },
+  "positive_control_tu93_passed": true,
+  "preconditions_checked": {
+    "arc_orphan_solver_lint": {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py",
+      "passed": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (40 modules in the live closure).\n"
+    },
+    "available_games": [
+      "lp85",
+      "r11l",
+      "tu93"
+    ],
+    "frame_sources": {
+      "lp85": {
+        "n_frames": 53,
+        "present": true,
+        "source_kind": "banked_replay",
+        "source_path": "results/arc3_live_banked_trajectories/lp85.json"
+      },
+      "r11l": {
+        "n_frames": 5,
+        "present": true,
+        "source_kind": "banked_replay",
+        "source_path": "results/arc3_live_banked_trajectories/r11l.json"
+      },
+      "tu93": {
+        "n_frames": 94,
+        "present": true,
+        "source_kind": "banked_replay",
+        "source_path": "results/arc3_live_banked_trajectories/tu93.json"
+      }
+    },
+    "missing_games": [],
+    "offline_arcade": {
+      "check": "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
+      "error": null,
+      "ok": true
+    }
+  },
+  "random_seed": 4841,
+  "reproducibility_checksum": "sha256:a743a61962eb8608b98452e5088a3341deac2d6d97f3614b5f567ff0b5b9f8a3",
+  "retire_if_same_verdict": true,
+  "solve_provenance": "development_proxy",
+  "tracker_params": {
+    "max_component_fraction": 0.45,
+    "max_match_distance": 18.0,
+    "min_match_score": 0.45,
+    "min_pixels": 1,
+    "positive_control_min_persistence": 0.35,
+    "recovery_margin": 0.1
+  },
+  "verifier_is_oracle": true
+}

@@ -125,6 +125,14 @@ _DEFAULT_FRAME_CHANGE_SCORER = object()
 _DEFAULT_GOAL_BIAS = object()
 
 
+def _object_identity_perception_hook() -> type:
+    """REQ-ARC-WMTE-4841: keep the prototype perception layer live-path importable."""
+
+    from carnot.agentic.arc_object_identity_perception import TrackerConfig
+
+    return TrackerConfig
+
+
 def load_solutions() -> dict[str, list[dict]]:
     """game-short -> [{"action": int, "data": {x,y}|None}] for every banked solution,
     via the metaharness's loader (single source of truth for the trajectories)."""
