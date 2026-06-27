@@ -263,7 +263,7 @@ def test_req_capstone_4752_checkpoint_wrapper_retargets_base_constants(
     assert proxy["integrated_measurement"]["variant_attempts_count"] == 100
     assert captured["partial_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
     assert captured["soft_budget_env"] == "EXP4729_SOFT_BUDGET_S"
-    assert captured["default_soft_budget"] == 4200.0
+    assert captured["default_soft_budget"] == 3500.0  # lowered 4200->3500 2026-06-27 (A4 cap-margin)
     assert captured["kwargs"]["soft_budget_s"] == 123.0
     assert mod.base.PARTIAL_RESULT_RELATIVE_PATH == old_partial
     assert mod.base.SOFT_BUDGET_ENV == old_budget_env
