@@ -11451,6 +11451,97 @@ model-load, training, leaderboard, or solve result, or modifies
 When the Experiment 4879 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4882: TTT Dynamics Value-Gap Fork Probe
+
+Experiment 4882 SHALL rerun the generation-wall fork on a corrigendum-corrected
+graded metric. The workflow SHALL first check the offline ARC arcade, then the
+GPU-fixed generator precondition from Experiment 4871 accepting either GPU-0
+CUDA or iGPU HIP, and then the held-out NEVER_ENUMERATED games
+`cd82`, `cn04`, `ls20`, `m0r0`, `r11l`, `sk48`, `sp80`, `su15`, and `wa30`
+plus the `tu93` positive control. Missing preconditions SHALL emit
+`blocked_offline_arcade_missing`, `blocked_generator_unavailable`, or
+`blocked_no_heldout_games` artifacts rather than a fabricated fork.
+
+For each measured game, Experiment 4882 SHALL measure held-out
+`cell_recall` as the fraction of actually changed cells whose location the
+engine predicts as changed, and `changed_cell_value_accuracy` as the fraction
+of cells that were both actually changed and predicted changed whose predicted
+value equals the true next grid. The baseline SHALL use the warm-started live
+dynamics path. The intervention SHALL fit a compact test-time dynamics adapter
+from the agent's own cold-start transitions and SHALL remeasure value accuracy
+on a disjoint held-out split. The banked winning answer SHALL be used only as
+classification ground truth after planning, not as induction, adaptation, or
+planning input. The positive control `tu93` SHALL be non-degenerate
+(`cell_recall > 0`) or the probe family SHALL retire with
+`complete_ttt_dynamics_positive_control_degenerate_retired`.
+
+Experiment 4882 SHALL write
+`results/experiment_4882_ttt_dynamics_value_gap.json` with the required fields
+`honest_verdict`, `fork_verdict`,
+`tta_changed_cell_value_accuracy_delta_median`,
+`tta_value_accuracy_delta_ci95`, `per_game_value_gap`,
+`engine_cell_recall_median`, `coverage_migration_count`,
+`positive_control_game`, `positive_control_non_degenerate`,
+`delta_on_truly_heldout_split`, `planner_blind_to_banked_answer`,
+`verifier_is_oracle`, `live_path_reachable`, `generator_backend`,
+`solve_provenance`, `checkpoint_emitted`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `random_seed`, and
+`reproducibility_checksum`.
+
+If the value-accuracy delta CI95 excludes zero and at least one
+NEVER_ENUMERATED game migrates to `COVERED`, the artifact SHALL report
+`fork_verdict=INDUCER_CEILING_BEATABLE`. If the CI95 excludes zero and no game
+migrates, it SHALL report `fork_verdict=PLANNER_GAP`. If the CI95 includes zero,
+it SHALL report `fork_verdict=INDUCER_CEILING_HARD`. The median value-accuracy
+delta SHALL be emitted as a bare numeric
+`tta_changed_cell_value_accuracy_delta_median`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a real value lift is success_ttt_dynamics_value_gap_closed_<delta>; a null is complete_ttt_dynamics_no_value_lift_<fork>; a degenerate control is complete_ttt_dynamics_positive_control_degenerate_retired."
+- `fork_verdict`: principle "one of INDUCER_CEILING_BEATABLE | PLANNER_GAP | INDUCER_CEILING_HARD -- the headline that redirects .451."
+- `tta_changed_cell_value_accuracy_delta_median`: principle "EMIT BARE (not a {value,principle} dict) -- A1b's gated_on reads this raw value. Median (adapted - baseline) changed-cell VALUE accuracy across games; did TTA close the corrigendum value gap?"
+- `tta_value_accuracy_delta_ci95`: principle "bootstrap CI95 of the value-accuracy delta; PASS requires it to exclude 0 for a real lift."
+- `per_game_value_gap`: principle "per-game {cell_recall_baseline, value_acc_baseline, value_acc_adapted, value_delta, planned_bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated} -- the quantitative table."
+- `engine_cell_recall_median`: principle "the corrigendum change-LOCATION floor; proves the graded metric is non-degenerate (where exact-match was 0)."
+- `coverage_migration_count`: principle "how many NEVER_ENUMERATED games migrated to COVERED under the adapted engine + plan_in_model."
+- `positive_control_game`: principle "tu93 -- MUST be non-degenerate (cell_recall > 0) on the graded metric or the measurement is a harness artifact."
+- `positive_control_non_degenerate`: principle "true iff tu93 came out with HIGH cell_recall -- the load-bearing fix for the .449 degenerate-metric failure."
+- `delta_on_truly_heldout_split`: principle "true -- the adapted re-measure split is DISJOINT from the TTA adapter's fit transitions (B1 audits; else tautology)."
+- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into induction, adaptation, or planning."
+- `verifier_is_oracle`: principle "false -- the held-out transition accuracy is oracle-distinct from the env's level-up check (circularity discipline)."
+- `live_path_reachable`: principle "the adaptation improves the live e3.load_engine/plan_in_model path (arc_orphan_solver_lint passes)."
+- `generator_backend`: principle "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+- `solve_provenance`: principle "development_proxy -- an offline inducer-accuracy measurement, NOT a live first-win; declared honestly."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- induce/adapt/plan invokes the LLM on the GPU-0 generator."
+- `preconditions_checked`: principle "records arcade/generator/held-out-games checks; a missing resource emits blocked_, never a fabricated fork."
+- `model_specs`: principle "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+- `random_seed`: principle "determinism for induction + adaptation + planning stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, induce/adapt/plan config, held-out split, budget) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4882-GRADED-METRIC
+
+Given held-out off-path transitions and an engine prediction
+When Experiment 4882 scores the engine
+Then it reports change-location `cell_recall` and changed-cell
+`value_accuracy` without using exact-full-grid-match as the primary metric.
+
+#### SCENARIO-ARC-WMTE-4882-DISJOINT-TTA-DELTA
+
+Given baseline and adapted dynamics measurements
+When Experiment 4882 builds the value-gap table
+Then every adapter fit transition id is disjoint from every adapted held-out
+remeasure transition id, and the bare median changed-cell value-accuracy delta
+plus bootstrap CI95 drive the fork verdict.
+
+#### SCENARIO-ARC-WMTE-4882-PARTIAL-CHECKPOINT
+
+Given the run reaches its elapsed budget after at least one game
+When Experiment 4882 stops the current process
+Then it writes per-game checkpoints and a schema-valid partial artifact so the
+next run can resume without losing the primary value-accuracy measurement.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
