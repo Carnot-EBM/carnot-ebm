@@ -9432,3 +9432,4 @@ The contro |
 | 2026-06-27 06:05 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | OK | 89 passed, 1 warning in 8.08s |
 | 2026-06-27 06:27 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | 88 passed, 1 warning in 6.92s |
 | 2026-06-27 06:40 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBM | OK | 87 passed, 1 warning in 6.39s |
+| 2026-06-27 06:52 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability co | OK | 85 passed, 1 warning in 8.58s |
