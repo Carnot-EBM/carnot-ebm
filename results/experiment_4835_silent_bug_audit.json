@@ -1,0 +1,167 @@
+{
+  "a1_archive_alive_and_prior_exercised": true,
+  "a1_control_check": {
+    "archive_alive": true,
+    "distillation_games": [
+      "cd82",
+      "cn04",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "tu93",
+      "wa30"
+    ],
+    "first_win_rate_no_prior_ablation": 0.0,
+    "first_win_rate_with_prior": 0.0,
+    "heldout_games": [
+      "bp35"
+    ],
+    "heldout_not_in_distillation_set": true,
+    "imitation_control_confirmed": true,
+    "imitation_lift_holds": false,
+    "observations": 2,
+    "prefixes_injected": 1,
+    "prior_changed": true,
+    "proposal_changes": 1,
+    "proposal_order_changed": true,
+    "stored_cells": 2
+  },
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "audited_artifact_checksums": {
+    "results/experiment_4831_amortized_incontext_exploration_prior_live.json": "sha256:7159105ab781b19e3cc1e74b784d79a2624b91b7ba5b1f92cb67faf3f8646376",
+    "results/experiment_4832_levelup_attempt.json": "sha256:d88f60545136a3f1a5bef6816dc07861c6b652f3801cb57fd17f4adcf16828cf",
+    "results/experiment_4834_heldout_first_win_readiness.json": "sha256:b7d3a5c73cab25be2da9e7bf991213c0176185fc6e7a3fc9d5a0182d2f955a1b"
+  },
+  "audited_artifacts": [
+    "results/experiment_4831_amortized_incontext_exploration_prior_live.json",
+    "results/experiment_4832_levelup_attempt.json",
+    "results/experiment_4834_heldout_first_win_readiness.json"
+  ],
+  "duration_s": 0.0001,
+  "experiment": "experiment_4835_silent_bug_audit",
+  "experiment_id": 4835,
+  "field_principles": {
+    "a1_archive_alive_and_prior_exercised": {
+      "principle": "the load-bearing check -- archive alive (positive cells) AND prior changed proposals, else A1 is a non-test (exp4701 recurrence or no-op)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "nulls_audited": {
+      "principle": "count of nulls re-examined."
+    }
+  },
+  "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_0_reopen",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nulls_audited": 3,
+  "per_null_verdicts": [
+    {
+      "a1_archive_alive_and_prior_exercised": true,
+      "a1_control_check": {
+        "archive_alive": true,
+        "distillation_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ],
+        "first_win_rate_no_prior_ablation": 0.0,
+        "first_win_rate_with_prior": 0.0,
+        "heldout_games": [
+          "bp35"
+        ],
+        "heldout_not_in_distillation_set": true,
+        "imitation_control_confirmed": true,
+        "imitation_lift_holds": false,
+        "observations": 2,
+        "prefixes_injected": 1,
+        "prior_changed": true,
+        "proposal_changes": 1,
+        "proposal_order_changed": true,
+        "stored_cells": 2
+      },
+      "exercise_evidence": [
+        "archive_observations=2",
+        "archive_stored_cells=2",
+        "prefixes_injected=1",
+        "prior_changed_proposals=True",
+        "proposal_changes=1",
+        "imitation_heldout_games=1",
+        "heldout_not_in_distillation_set=True",
+        "first_win_rate_with_prior=0",
+        "first_win_rate_no_prior_ablation=0"
+      ],
+      "null_id": "experiment_4831_amortized_incontext_exploration_prior_live",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "levelup_attempts=19",
+        "solution_label_count=832",
+        "reproduction_gates=19",
+        "existing_depth_reproduced=19",
+        "new_depth_claims=0",
+        "new_levels_banked=0",
+        "offline_reproduced=False",
+        "target_game=ka59"
+      ],
+      "null_id": "experiment_4832_levelup_attempt",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    },
+    {
+      "exercise_evidence": [
+        "heldout_first_win_rate=0.04",
+        "first_win_baseline=0.04",
+        "heldout_attempts=100",
+        "positive_control_passed=True",
+        "parity_test_green=True",
+        "null_delta_methodology_note_present=True",
+        "inference_substrate=aggregation_from_upstream_artifacts",
+        "proxy_cache_used=True"
+      ],
+      "null_id": "experiment_4834_heldout_first_win_readiness",
+      "silent_bug_signatures": [],
+      "verdict": "trustworthy_null"
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "milestone_445_artifacts_present": true,
+    "missing_source_artifacts": [],
+    "ok": true,
+    "source_artifacts_present": true,
+    "spec_has_req_4835": true
+  },
+  "random_seed": 4835,
+  "reproducibility_checksum": "sha256:88840bae1de0f2fa7bdcb37ce0b3d25708e073ef1b4dc66d4b55aa6712641f72",
+  "result_path": "results/experiment_4835_silent_bug_audit.json",
+  "schema": "carnot.arc.milestone_445_silent_bug_audit_4835.v1",
+  "silent_bugs_found": [],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4835",
+    "SCENARIO-ARC-WMTE-4835-SILENT-BUG-AUDIT",
+    "SCENARIO-ARC-WMTE-4835-BLOCKED-PRECONDITION"
+  ],
+  "trusted_nulls": [
+    "experiment_4831_amortized_incontext_exploration_prior_live",
+    "experiment_4832_levelup_attempt",
+    "experiment_4834_heldout_first_win_readiness"
+  ]
+}

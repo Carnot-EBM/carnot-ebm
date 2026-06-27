@@ -9837,6 +9837,66 @@ Then it writes a `blocked_` artifact with the failed precondition recorded,
 `verifier_checkpoint_refreshed=false`, and a deterministic reproducibility
 checksum.
 
+### REQ-ARC-WMTE-4835: .445 ARC Null Silent-Bug Audit
+
+Experiment 4835 SHALL audit the `.445` ARC null artifacts
+`results/experiment_4831_amortized_incontext_exploration_prior_live.json`,
+`results/experiment_4832_levelup_attempt.json`, and
+`results/experiment_4834_heldout_first_win_readiness.json` for silent no-op
+bugs. It SHALL write `results/experiment_4835_silent_bug_audit.json` and append
+a human-readable section to `ops/arc_null_silent_bug_audit.md`. The audit SHALL
+use only upstream artifacts and SHALL declare
+`inference_substrate=aggregation_from_upstream_artifacts` with the `0.0001s`
+duration floor.
+
+The A1 Exp 4831 audit SHALL treat the first-win verdict as a non-test unless
+`go_explore_archive_alive` reports `observations>0`, `stored_cells>0`, and
+`prefixes_injected>0`, and `prior_changed_proposals=true` with diagnostics
+showing materially changed proposal order versus the no-prior ablation. It
+SHALL also verify that the imitation control uses held-out games outside the
+distillation set before trusting an A1 null. For every other audited ARC null,
+the audit SHALL verify that the relevant lever was genuinely exercised before
+classifying the null as trustworthy: level-up artifacts need attempted-game,
+solution-label, reproduction-gate, and same-depth accounting evidence, while
+held-out first-win artifacts need the held-out attempt floor, positive-control
+parity, parity-test success, aggregation/proxy evidence, and the flat-null
+methodology note.
+
+The artifact SHALL include principle-annotated top-level fields for
+`honest_verdict`, `a1_archive_alive_and_prior_exercised`, `nulls_audited`, and
+`inference_substrate`, plus per-null verdicts, silent-bug findings, trusted
+nulls, the A1 control check, preconditions, audited-artifact checksums,
+duration, random seed, and a stable reproducibility checksum. The audit SHALL
+make no solve, leaderboard, training, ops-status, or fresh live-inference claim.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `a1_archive_alive_and_prior_exercised`: principle "the load-bearing check -- archive alive (positive cells) AND prior changed proposals, else A1 is a non-test (exp4701 recurrence or no-op)."
+- `nulls_audited`: principle "count of nulls re-examined."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4835-SILENT-BUG-AUDIT
+
+Given the `.445` A1 amortized-prior, level-up no-bank, and held-out first-win
+null artifacts are present
+When Experiment 4835 cross-checks exercised-evidence fields
+Then it writes `results/experiment_4835_silent_bug_audit.json`, sets
+`a1_archive_alive_and_prior_exercised=true` only when Exp 4831 has positive
+archive observations, stored cells, injected prefixes, and changed proposals,
+classifies A1 as `silent_bug_must_reopen` when the archive is dead or the prior
+is a no-op, verifies the imitation-control held-out split, and classifies the
+level-up and held-out readiness nulls only after their exercised-lever evidence
+is present.
+
+#### SCENARIO-ARC-WMTE-4835-BLOCKED-PRECONDITION
+
+Given any required `.445` source artifact is missing
+When Experiment 4835 runs
+Then it writes a blocked artifact with the missing source in
+`preconditions_checked`, no silent-bug fabrication, no markdown append, and a
+stable reproducibility checksum.
+
 ### REQ-ARC-WMTE-4775: .439 ARC Null Silent-Bug Audit
 
 Experiment 4775 SHALL audit the `.439` ARC null artifacts before their negative

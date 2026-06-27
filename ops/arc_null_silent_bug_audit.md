@@ -155,3 +155,24 @@
 - Live-path reachable: `True`
 - Guidance exercised: `True`
 - Differing headroom games: `18`
+## Experiment 4835 .445 ARC Null Silent-Bug Audit
+
+- Verdict: `complete_arc_null_silent_bug_audit_3_nulls_0_reopen`
+- Nulls audited: `3`
+- A1 archive alive and prior exercised: `True`
+- Silent bugs found: `0`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Null | Verdict | Silent signatures | Evidence |
+|---|---|---|---|
+| `experiment_4831_amortized_incontext_exploration_prior_live` | `trustworthy_null` | - | archive_observations=2<br>archive_stored_cells=2<br>prefixes_injected=1<br>prior_changed_proposals=True<br>proposal_changes=1<br>imitation_heldout_games=1<br>heldout_not_in_distillation_set=True<br>first_win_rate_with_prior=0<br>first_win_rate_no_prior_ablation=0 |
+| `experiment_4832_levelup_attempt` | `trustworthy_null` | - | levelup_attempts=19<br>solution_label_count=832<br>reproduction_gates=19<br>existing_depth_reproduced=19<br>new_depth_claims=0<br>new_levels_banked=0<br>offline_reproduced=False<br>target_game=ka59 |
+| `experiment_4834_heldout_first_win_readiness` | `trustworthy_null` | - | heldout_first_win_rate=0.04<br>first_win_baseline=0.04<br>heldout_attempts=100<br>positive_control_passed=True<br>parity_test_green=True<br>null_delta_methodology_note_present=True<br>inference_substrate=aggregation_from_upstream_artifacts<br>proxy_cache_used=True |
+
+### A1 Control Check
+
+- Archive observations: `2`
+- Archive stored cells: `2`
+- Prefixes injected: `1`
+- Prior changed proposals: `True`
+- Imitation control held-out split: `True`

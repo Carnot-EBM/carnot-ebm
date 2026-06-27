@@ -88,12 +88,12 @@ tasks:
     verdict: 'complete: color_centroid_goal_detector_recovers_none_on_complex_rendering_games (genuine null on real
       grids)'
     addressed_by: 'The lever-#4 mechanic-template build (perception-wall note) used a naive COLOR-CENTROID goal
-      detector: it recovered the structural goal condition on NONE of {lp85 (whole board recolors -- no stable color
-      identity), r11l (zero stationary goal colors), tu93 (trail of new cells)}. This A1 is a DIFFERENT mechanism:
+      detector: it recovered the structural goal condition on NONE of {{lp85 (whole board recolors -- no stable color
+      identity), r11l (zero stationary goal colors), tu93 (trail of new cells)}}. This A1 is a DIFFERENT mechanism:
       track object identity by SHAPE/CONNECTIVITY/MOTION (connected-component + cross-frame correspondence by overlap/shape,
       recolor-INVARIANT), the exact build the note recommends (''track by shape/connectivity/motion, not color --
       robust to recoloring''). retire_if_same_verdict: true -- if a shape/motion-based object tracker ALSO cannot
-      recover stable cross-frame object correspondence on >=2 of {lp85, r11l, tu93}, then object-identity is genuinely
+      recover stable cross-frame object correspondence on >=2 of {{lp85, r11l, tu93}}, then object-identity is genuinely
       unrecoverable from the RENDERED grid (the agent would need internal sprite state, which does not generalize
       to hidden games) -- a deeper, headline finding that retires grid-grounded goal-grounding.'
     retire_if_same_verdict: true
@@ -105,8 +105,8 @@ tasks:
     \ is MEASURED-ADEQUATE (v3 features LOO-AUROC 0.725, exp4545). The blocker is generic GOAL-PREDICATE GROUNDING:\
     \ recovering stable structural OBJECTS (their identity across frames) from the RENDERED grid precisely enough\
     \ to evaluate an object-relational is_level_complete. The naive color-centroid detector recovered the goal on\
-    \ NONE of {lp85 (whole board RECOLORS -- no stable color identity), r11l (zero stationary goal colors), tu93\
-    \ (trail of new cells)} because object identity is lost under recoloring/trails. Per-game GameAdapters succeed\
+    \ NONE of {{lp85 (whole board RECOLORS -- no stable color identity), r11l (zero stationary goal colors), tu93\
+    \ (trail of new cells)}} because object identity is lost under recoloring/trails. Per-game GameAdapters succeed\
     \ only by reading INTERNAL sprite state, which does NOT generalize to hidden games.\n\nTHE BUILD (the note's\
     \ own recommendation): a generic, grid-grounded OBJECT-IDENTITY perception module. Segment each frame into persistent\
     \ OBJECTS via connected-component / shape segmentation, then track identity ACROSS transitions by SHAPE + CONNECTIVITY\
@@ -133,7 +133,7 @@ tasks:
     \ transition sequence), NOT a binary self-grade.\n  4. WRITE the artifact with solve_provenance=development_proxy\
     \ (this is an offline perception PROBE measured on banked frames -- it is NOT a live first-win; declare honestly).\n\
     \nFALSIFIABLE GATE:\n  PASS iff (i) the positive control (tu93) yields stable player+goal identity tracks; AND\
-    \ (ii) on >=2 of {lp85, r11l, tu93} the shape/motion tracker recovers stable cross-frame object correspondence\
+    \ (ii) on >=2 of {{lp85, r11l, tu93}} the shape/motion tracker recovers stable cross-frame object correspondence\
     \ (correspondence score materially above a color-centroid baseline run on the SAME frames -- include that baseline\
     \ as the comparator). retire_if_same_verdict: true -- if the shape/motion tracker ALSO fails on >=2 games (no\
     \ better than color-centroid), object-identity is genuinely unrecoverable from the rendered grid: a deeper finding\
@@ -150,7 +150,7 @@ tasks:
     \ recovery measure vs the color-centroid comparator on the same frames.\"\n  positive_control_tu93_passed:\n\
     \    principle: \"the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype\
     \ positive control so a global null is not a harness artifact.\"\n  games_with_recovery:\n    principle: \"\
-    count of {lp85, r11l, tu93} where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS.\"\
+    count of {{lp85, r11l, tu93}} where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS.\"\
     \n  verifier_is_oracle:\n    principle: \"true -- execution-grounded structural perception, NOT an oracle-distinct\
     \ moat (circularity discipline); this probe is about grounding.\"\n  live_path_reachable:\n    principle: \"\
     the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception layer the live agent\
