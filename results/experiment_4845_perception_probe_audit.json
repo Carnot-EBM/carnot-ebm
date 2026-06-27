@@ -1,0 +1,146 @@
+{
+  "a1_genuinely_exercised": true,
+  "adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4841_object_identity_perception_probe.json",
+    "exp_id": "experiment_4841_object_identity_perception_probe",
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "checks": {
+    "live_path_and_provenance": {
+      "arc_orphan_solver_lint_passed": true,
+      "artifact_live_path_reachable": true,
+      "not_live_agent_self_discovery": true,
+      "passed": true,
+      "solve_provenance": "development_proxy"
+    },
+    "measured_on_real_frames": {
+      "artifact_measured_on_real_frames": true,
+      "bad_games": [],
+      "passed": true,
+      "target_rows": {
+        "lp85": {
+          "enough_frames": true,
+          "n_frames": 53,
+          "present": true,
+          "real_frame_backed": true,
+          "source_kind": "banked_replay"
+        },
+        "r11l": {
+          "enough_frames": true,
+          "n_frames": 5,
+          "present": true,
+          "real_frame_backed": true,
+          "source_kind": "banked_replay"
+        },
+        "tu93": {
+          "enough_frames": true,
+          "n_frames": 94,
+          "present": true,
+          "real_frame_backed": true,
+          "source_kind": "banked_replay"
+        }
+      }
+    },
+    "positive_control_and_recovery_claim": {
+      "artifact_games_with_recovery": 1,
+      "claimed_recovery_matches_rows": true,
+      "complete_claimed": true,
+      "goal_persistence": 0.5,
+      "goal_track_id": 39,
+      "passed": true,
+      "player_motion": 220.624731,
+      "player_track_id": 9,
+      "positive_control_passed": true,
+      "recovered_count": 1,
+      "recovered_games": [
+        "r11l"
+      ],
+      "should_be_success": false,
+      "success_claimed": false,
+      "verdict_matches_numbers": true
+    },
+    "summarizer_and_adversarial_verify": {
+      "adversarial_flag_count": 0,
+      "adversarial_loaded": true,
+      "passed": true,
+      "summarizer_returncode": 0
+    },
+    "tracker_changed_vs_baseline": {
+      "deltas": {
+        "lp85": 0.04985,
+        "r11l": 0.192308,
+        "tu93": 0.06639
+      },
+      "distinct_delta_count": 3,
+      "missing_numeric_games": [],
+      "nonzero_delta_games": [
+        "lp85",
+        "r11l",
+        "tu93"
+      ],
+      "passed": true
+    }
+  },
+  "claimed_recovery_matches_rows": true,
+  "duration_s": 0.524804,
+  "experiment": "experiment_4845_perception_probe_audit",
+  "experiment_id": 4845,
+  "field_principles": {
+    "a1_genuinely_exercised": {
+      "principle": "the load-bearing check -- measured_on_real_frames AND tracker!=baseline no-op AND positive control real AND verdict matches numbers; else A1 is a non-test (synthetic-only or a silent degenerate-to-baseline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_/success_."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    }
+  },
+  "honest_verdict": "complete_a1_perception_probe_audit_genuinely_exercised",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_lint_result": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (40 modules in the live closure).\n"
+  },
+  "non_test_reasons": [],
+  "per_game_correspondence_deltas": {
+    "lp85": 0.04985,
+    "r11l": 0.192308,
+    "tu93": 0.06639
+  },
+  "preconditions_checked": {
+    "adversarial_verify_script_present": true,
+    "arc_orphan_solver_lint_present": true,
+    "ok": true,
+    "source_artifact_present": true,
+    "spec_has_req_4845": true,
+    "summarizer_script_present": true
+  },
+  "random_seed": 4845,
+  "recovered_games_from_rows": 1,
+  "reproducibility_checksum": "sha256:675c18d76195d5d20dcd63b980596d525a16d7d7db181527c31b6e31d1b16838",
+  "result_path": "results/experiment_4845_perception_probe_audit.json",
+  "schema": "carnot.arc.a1_perception_probe_audit_4845.v1",
+  "source_artifact_checksum": "sha256:f34b2628f231f7ccd67147963c40e486acd8890a18c26e0182b43dac889bd313",
+  "source_artifact_path": "results/experiment_4841_object_identity_perception_probe.json",
+  "source_honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4845",
+    "SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT",
+    "SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION"
+  ],
+  "summarizer_result": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "==============================================================================\nARTIFACT  experiment_4841_object_identity_perception_probe.json\n------------------------------------------------------------------------------\n  verdict          : complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.264711   substrate: verifier_ensemble_against_cached_candidates\n  duration floor   : verifier_ensemble_against_cached_candidates >=1.0s (verifier_scoring)\n  adversarial flags: none\n"
+  }
+}
