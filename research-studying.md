@@ -5308,3 +5308,15 @@ use = ONE taxonomy paragraph (state[Cognometry]/feature[Silico]/COMPUTATION[this
 tier, NEVER the black-box core (decentralization rules 1+7; also cross-vendor transfer ceiling cos 0.043 + no
 black-box spillover = most-degraded of the three). NO build; ARC=no-help; Phase-3=orthogonal; amortized-theme=echo
 only (do NOT add to corroboration list). docs/research-notes/forward-self-models-white-box-complementary-sota-ingestion-2026-06-27.md
+
+## INGESTED 2026-06-27: "Socratic agents for autonomous scientific discovery" / AHOIS (arXiv:2606.26722) -> autonomous-loop PEER
+Multi-agent AI scientist; centerpiece = a physics-critic doing an explicit 4-step Socratic interrogation (causal-question ->
+constraint-check -> counterexample-gen -> falsification-criteria); optical-fibre demo (MNIST 76.97%/Fashion-MNIST 83.17%), NO
+code. Carnot placement: a PEER of the conductor/outer-loop (cluster with Self-Harness/W2S/Sakana-DGM), NOT the verifier core.
+WEAKEST peer on the metric-gaming axis: cataloged own-system failure modes W2S=4, Sakana=2, AHOIS=0 -> corroboration, NOT
+validation; do NOT stack as equal gaming-resistance evidence. The 4-step critic maps 1:1 onto machinery Carnot already runs
+(adversarial_verify / CEGIS exp4872 / check_false_negative_risk) -> the borrow is PROMPT STRUCTURE ONLY (force a generated
+counterexample in the milestone-close audit prompts), untested in our domain (needs an A/B), increases the Layer-1.5
+audit-integrity-guard surface (gate behind it), LLM-judge/audit tier ONLY never the energy core. NO build; ARC=no-help
+(selection device, wall=generation); no codebase to extend; paper-v6 cite gated on the two-source rule.
+docs/research-notes/ahois-socratic-agents-autonomous-loop-peer-sota-ingestion-2026-06-27.md
