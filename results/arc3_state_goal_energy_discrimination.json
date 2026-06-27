@@ -1,32 +1,161 @@
 {
   "experiment": "arc3_state_goal_energy_discrimination",
-  "honest_verdict": "blocked_insufficient_win_states_for_logo",
+  "schema": "carnot.arc3_state_goal_energy_discrimination.v1",
+  "honest_verdict": "complete: state_energy_does_not_discriminate_win_states_cross_game_logo_0.4958_vs_shuffled_0.509",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
-  "usable_games": [
-    "ls20"
-  ],
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "question": "does a structurally-correct contrastive STATE-energy discriminate win-states from non-win states cross-game (LOGO), isolating the model from the generation-gated planning integration?",
+  "mean_logo_auroc": 0.4958,
+  "mean_shuffled_control_auroc": 0.509,
+  "state_energy_discriminates": false,
+  "per_game_logo_auroc": {
+    "bp35": 0.4455,
+    "cd82": 0.2632,
+    "cn04": 0.3659,
+    "ft09": 0.5,
+    "lf52": 0.4375,
+    "ls20": 0.6161,
+    "m0r0": 0.4861,
+    "re86": 0.6944,
+    "sb26": 0.4091,
+    "sk48": 0.494,
+    "sp80": 0.5,
+    "su15": 0.5,
+    "tr87": 0.6083,
+    "tu93": 0.6792,
+    "vc33": 0.4375
+  },
+  "per_game_shuffled_auroc": {
+    "bp35": 0.7818,
+    "cd82": 0.9474,
+    "cn04": 0.6829,
+    "ft09": 0.1818,
+    "lf52": 0.4625,
+    "ls20": 0.5536,
+    "m0r0": 0.5972,
+    "re86": 0.5648,
+    "sb26": 0.2727,
+    "sk48": 0.0714,
+    "sp80": 0.9839,
+    "su15": 0.5526,
+    "tr87": 0.4694,
+    "tu93": 0.2625,
+    "vc33": 0.25
+  },
   "per_game_counts": {
-    "ls20": {
+    "ar25": {
+      "n_win": 0,
+      "n_nonwin": 0,
+      "status": "ok"
+    },
+    "bp35": {
       "n_win": 2,
-      "n_nonwin": 56
+      "n_nonwin": 55,
+      "status": "ok"
     },
-    "sc25": {
-      "n_win": 0,
-      "n_nonwin": 0
+    "cd82": {
+      "n_win": 1,
+      "n_nonwin": 19,
+      "status": "ok"
     },
-    "lp85": {
-      "n_win": 0,
-      "n_nonwin": 0
+    "cn04": {
+      "n_win": 2,
+      "n_nonwin": 41,
+      "status": "ok"
     },
-    "tn36": {
+    "dc22": {
       "n_win": 0,
-      "n_nonwin": 0
+      "n_nonwin": 93,
+      "status": "ok"
+    },
+    "ft09": {
+      "n_win": 3,
+      "n_nonwin": 22,
+      "status": "ok"
     },
     "ka59": {
       "n_win": 0,
-      "n_nonwin": 0
+      "n_nonwin": 0,
+      "status": "ok"
+    },
+    "lf52": {
+      "n_win": 2,
+      "n_nonwin": 40,
+      "status": "ok"
+    },
+    "ls20": {
+      "n_win": 2,
+      "n_nonwin": 56,
+      "status": "ok"
+    },
+    "m0r0": {
+      "n_win": 2,
+      "n_nonwin": 36,
+      "status": "ok"
+    },
+    "re86": {
+      "n_win": 2,
+      "n_nonwin": 54,
+      "status": "ok"
+    },
+    "sb26": {
+      "n_win": 2,
+      "n_nonwin": 22,
+      "status": "ok"
+    },
+    "sk48": {
+      "n_win": 2,
+      "n_nonwin": 42,
+      "status": "ok"
+    },
+    "sp80": {
+      "n_win": 2,
+      "n_nonwin": 31,
+      "status": "ok"
+    },
+    "su15": {
+      "n_win": 2,
+      "n_nonwin": 19,
+      "status": "ok"
+    },
+    "tr87": {
+      "n_win": 6,
+      "n_nonwin": 120,
+      "status": "ok"
+    },
+    "tu93": {
+      "n_win": 4,
+      "n_nonwin": 60,
+      "status": "ok"
+    },
+    "vc33": {
+      "n_win": 2,
+      "n_nonwin": 8,
+      "status": "ok"
     }
   },
-  "duration_s": 1.02,
-  "reproducibility_checksum": "sha256:423a9d45406cc08b0ecb133e961fdea08a3e057d55b7faf8b2c4868bc71efd23"
+  "usable_games": [
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "lf52",
+    "ls20",
+    "m0r0",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "su15",
+    "tr87",
+    "tu93",
+    "vc33"
+  ],
+  "value_head_reference_loo_auroc": 0.725,
+  "methodology_note": "Cross-game LEAVE-ONE-GAME-OUT, the same methodology as the 0.725 value-head number. Win-states = level-increment grids from banked offline solves; non-win = the rest. Win-states augmented (D4 + color-permute, ARC-invariant) to balance; AUROC reported on UN-augmented held-out states. SHUFFLED-label control must be ~0.5 (degenerate-pool / FALSE_NEGATIVE guard). This measures the MODEL (discrimination) only; it does NOT test whether the energy moves the GENERATION wall -- that is gated on the generation problem the whole thread diagnosed as binding.",
+  "interpretation": "A high LOGO AUROC means the structurally-correct state-energy WORKS as a discriminator (the operator's 'right type' is sound) -- but it remains a SELECTOR; the wall is generation (make-a-winner-appear), so a working discriminator still cannot move the headline wall, only rank/shape a frontier a generator must first populate with a winner.",
+  "random_seed": 4664,
+  "duration_s": 1611.03,
+  "reproducibility_checksum": "sha256:4bb3224891086fdbb532f96ef0758d5f448e995a9edac0f334930cfdce4ce9db"
 }
