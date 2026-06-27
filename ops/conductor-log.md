@@ -9423,3 +9423,5 @@ The contro |
 | 2026-06-27 03:59 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability; A | OK | Deliverable already exists in repo |
 | 2026-06-27 03:59 UTC | PHASE D (SOTA-INGESTION -- the .447 frontier) -- i | OK | Deliverable already exists in repo |
 | 2026-06-27 03:59 UTC | PHASE E (CAPSTONE .446) -- aggregate the scorecard | OK | Deliverable already exists in repo |
+| 2026-06-27 04:43 UTC | Plan milestone 2026.06.447 | OK | 10 tasks proposed |
+| 2026-06-27 04:46 UTC | Milestone 2026.06.447 activated | OK | 10 tasks queued |
