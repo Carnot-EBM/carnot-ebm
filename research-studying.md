@@ -5293,3 +5293,18 @@ docs/research-notes/thinking-to-recall-verifier-gated-reasoning-sota-ingestion-2
 (a) paper-v6 corroboration quote bank (FLAGGED, re-verify before publication); (b) scoped experiment
 VERIFIER-GATED REASONING (process verifier filters/repairs intermediate facts -> reliable factual priming;
 arms A/B/C, CI95 gate, GPU 1). Flagged for a verifier-core milestone, NOT the ARC sprint.
+UPDATE 2026-06-27: de-risked. #1 risk RESOLVED POSITIVE (no-retrieval model-native self-consistency
+discriminates Qwen3.5-9B hallucinations, AUROC 0.759 CI95 [0.698,0.818]); but #2 risk FAILED the gate
+(priming headroom +2.4pp CI95 [-0.024,+0.072] straddles 0 -> paper's effect does not significantly
+reproduce at 9B/SimpleQA-Verified) -> full A/B/C build MOOT for this model/corpus (revive only with a
+32B-class model or a higher-headroom corpus). results/verifier_gated_reasoning_{derisk_hardened,headroom}.json.
+
+## INGESTED 2026-06-27: "Forward Self-Models" (jagilley.github.io, NOT on arXiv) -> white-box-complementary tier
+A small aux transformer predicts a model's later-layer activations from earlier ones; the residual ("computational
+novelty") tracks COMPUTE COMPLEXITY (attention-entropy r=+0.332) but is UNCORRELATED with prediction difficulty
+(d~=+-0.03) and the author makes NO uncertainty/hallucination claim. KEY: this REFUTES the tempting bridge
+"residual = white-box hallucination signal for the verifier" (cite the dissociation every time it recurs). Honest
+use = ONE taxonomy paragraph (state[Cognometry]/feature[Silico]/COMPUTATION[this]) in the white-box-COMPLEMENTARY
+tier, NEVER the black-box core (decentralization rules 1+7; also cross-vendor transfer ceiling cos 0.043 + no
+black-box spillover = most-degraded of the three). NO build; ARC=no-help; Phase-3=orthogonal; amortized-theme=echo
+only (do NOT add to corroboration list). docs/research-notes/forward-self-models-white-box-complementary-sota-ingestion-2026-06-27.md
