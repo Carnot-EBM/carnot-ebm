@@ -1,0 +1,83 @@
+{
+  "experiment": "arc_fork_probe_accuracy_corrigendum",
+  "schema": "carnot.arc_fork_probe_accuracy_corrigendum.v1",
+  "honest_verdict": "complete_fork_probe_0667_unreproduced_honest_changing_acc_0.0_noop_hypothesis_refuted_noopfrac_0.0195",
+  "question": "is exp4871's CNN-prior held-out accuracy (cd82 0.667) a real change-prediction signal or no-op-inflated (WorldModelVerifier.accuracy counts no-op transitions as correct)?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": true,
+  "method": "reproduce the fork-probe path: warm-start models/arc_dynamics_prior.pt, fit a CNNDynamics on the contiguous prefix, score the contiguous last-1/3 held-out with the SAME WorldModelVerifier; decompose accuracy into no-op-credit vs changing-transition exact accuracy.",
+  "prior_path": "/home/ianblenke/github.com/ianblenke/carnot/models/arc_dynamics_prior.pt",
+  "epochs": 20,
+  "per_game": [
+    {
+      "game": "cd82",
+      "n_heldout": 45,
+      "n_noop": 1,
+      "n_changing": 44,
+      "noop_fraction": 0.0222,
+      "acc_all_identity_engine": 0.0222,
+      "acc_all_prior_engine": 0.0,
+      "changing_acc_prior_engine": 0.0,
+      "cell_recall_prior_engine": 0.2839
+    },
+    {
+      "game": "ka59",
+      "n_heldout": 310,
+      "n_noop": 1,
+      "n_changing": 309,
+      "noop_fraction": 0.0032,
+      "acc_all_identity_engine": 0.0032,
+      "acc_all_prior_engine": 0.0,
+      "changing_acc_prior_engine": 0.0,
+      "cell_recall_prior_engine": 0.8853
+    },
+    {
+      "game": "sc25",
+      "n_heldout": 72,
+      "n_noop": 0,
+      "n_changing": 72,
+      "noop_fraction": 0.0,
+      "acc_all_identity_engine": 0.0,
+      "acc_all_prior_engine": 0.0,
+      "changing_acc_prior_engine": 0.0,
+      "cell_recall_prior_engine": 0.7506
+    },
+    {
+      "game": "tn36",
+      "n_heldout": 83,
+      "n_noop": 3,
+      "n_changing": 80,
+      "noop_fraction": 0.0361,
+      "acc_all_identity_engine": 0.0361,
+      "acc_all_prior_engine": 0.0,
+      "changing_acc_prior_engine": 0.0,
+      "cell_recall_prior_engine": 0.8633
+    },
+    {
+      "game": "lp85",
+      "n_heldout": 139,
+      "n_noop": 5,
+      "n_changing": 134,
+      "noop_fraction": 0.036,
+      "acc_all_identity_engine": 0.036,
+      "acc_all_prior_engine": 0.0,
+      "changing_acc_prior_engine": 0.0,
+      "cell_recall_prior_engine": 0.2574
+    }
+  ],
+  "mean_noop_fraction": 0.0195,
+  "mean_acc_all_prior": 0.0,
+  "mean_changing_acc_prior": 0.0,
+  "noop_inflation_hypothesis_refuted": true,
+  "fork_probe_0667_reproduced": false,
+  "changing_acc_near_zero": true,
+  "fork_probe_number_is_artifact": true,
+  "interpretation": "The fork-probe cd82 heldout_accuracy=0.667 does NOT reproduce under a faithful warm-prior re-run (this run: acc_all=0.0 on every holdout game). My original no-op-inflation hypothesis is REFUTED: the held-out tails are ~98% CHANGING transitions (mean noop_fraction ~0.02), so 0.667 is not free no-op credit. The honest exact accuracy on changing transitions is ~0.0 across all 5 holdout games, matching arc_pretrain_prior.json (warm_acc=0.0). Therefore the 0.667 is an artifact of exp4871's OWN fork-probe induction path (likely an in-sample / leaked eval in its ttt_prior_engine construction), not a transfer signal -- exp4871's per-game ttt_prior_engine.heldout_accuracy needs a corrigendum, and the trained prior's REAL transferable signal is change-LOCATION (cell_recall), NOT exact transition VALUES (which are ~0).",
+  "cites_upstream": [
+    "experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
+    "arc_pretrain_prior.json"
+  ],
+  "random_seed": 20260627,
+  "duration_s": 15.9,
+  "reproducibility_checksum": "sha256:e9942680c7681d33828a309573e9001bdb40d259e6bba3243706652acd3f7d64"
+}
