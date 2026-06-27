@@ -9462,3 +9462,10 @@ The contro |
 | 2026-06-27 18:04 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability co | OK | 85 passed, 1 warning in 9.97s |
 | 2026-06-27 18:25 UTC | PHASE D (SOTA-INGESTION -- the .450 frontier) -- g | OK | 113 passed, 1 warning in 9.57s |
 | 2026-06-27 18:42 UTC | PHASE E (CAPSTONE .449) -- aggregate the scorecard | OK | 86 passed, 1 warning in 8.58s |
+| 2026-06-27 19:29 UTC | Plan milestone 2026.06.450 | OK | 10 tasks proposed |
+| 2026-06-27 19:31 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-27 19:33 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-27 19:35 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-27 19:37 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-27 19:39 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-06-27 19:42 UTC | Milestone 2026.06.450 activated | OK | 10 tasks queued |
