@@ -1,0 +1,270 @@
+{
+  "completed_games": [
+    "ar25",
+    "bp35",
+    "cd82"
+  ],
+  "completed_variants": [
+    "ar25~color01",
+    "ar25~color02",
+    "ar25~color03",
+    "ar25~color04",
+    "bp35~color01",
+    "bp35~color02",
+    "bp35~color03",
+    "bp35~color04",
+    "cd82~color01",
+    "cd82~color02",
+    "cd82~color03",
+    "cd82~color04"
+  ],
+  "duration_s": 11.397408,
+  "experiment": "experiment_4729_held_out_first_win_readiness",
+  "experiment_id": 4729,
+  "field_principles": {
+    "first_win_ci_lower": {
+      "principle": "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion; a point estimate is gameable by one lucky variant."
+    },
+    "first_win_rate_integrated": {
+      "principle": "the held-out generic first-win on color-permuted variants -- the only offline proxy that tracks the scored leaderboard lane; the replay count does not."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success: held_out_first_win_improved_<delta> OR complete: held_out_first_win_flat_no_leaderboard_change."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor)."
+    },
+    "multi_level_deepen_rate_integrated": {
+      "principle": "deepening past L1 is the second scored lever; tracking it held-out keeps A4 honest about depth without the replay count."
+    },
+    "null_delta_methodology_note": {
+      "principle": "present when first-win is flat; the TAUTOLOGY carve-out reads it to downgrade CRITICAL->WARN (honest no-change, not a measurement bug)."
+    },
+    "parity_test_green": {
+      "principle": "the held-out proxy is valid only if the measured agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates readiness."
+    },
+    "positive_control_passed": {
+      "principle": "bool(parity_test_green) -- GATES the TAUTOLOGY exemption; an unvalidated flat result is NOT excused."
+    },
+    "preconditions_checked": {
+      "principle": "records resources verified (offline arcade, experiment_4605 importable); pre-empts missing-resource fabrication."
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility."
+    },
+    "replay_package_floor_reproduced": {
+      "principle": "the replay package stays a reproduced FLOOR, but its level count is explicitly NOT the leaderboard score."
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed hash catches silent harness/corpus drift."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the held-out lane measures the agent; no oracle is invoked."
+    }
+  },
+  "first_win_baseline": 0.04,
+  "first_win_ci_lower": 0.0,
+  "first_win_delta_vs_baseline": -0.04,
+  "first_win_rate_integrated": 0.0,
+  "held_out_first_win_readiness": false,
+  "held_out_proxy_summary": {
+    "first_win_baseline": 0.04,
+    "first_win_ci_lower": 0.0,
+    "first_win_delta_vs_baseline": -0.04,
+    "first_win_rate_integrated": 0.0,
+    "held_out_variant_attempts": 12,
+    "multi_level_deepen_rate_integrated": 0.0,
+    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+  },
+  "held_out_variant_attempt_floor": "B>=100",
+  "held_out_variant_attempts": 12,
+  "honest_verdict": "complete: held_out_first_win_soft_budget_stop_partial_3_of_25_games_12_attempts_resume_to_finish",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor).",
+  "multi_level_deepen_rate_integrated": 0.0,
+  "null_delta_methodology_note": "",
+  "operator_only": true,
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.49s ==============================\n"
+  },
+  "parity_test_green": true,
+  "partial": true,
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "experiment_4605_importable": true,
+    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
+    "experiment_4605_importable_returncode": 0,
+    "offline_arcade": true,
+    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
+    "offline_arcade_returncode": 0,
+    "ok": true,
+    "soft_budget_partial": true
+  },
+  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
+  "random_seed": 4729,
+  "ready_for_operator_submit": false,
+  "remaining_games": [
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+  ],
+  "remaining_variants": [
+    "cn04~color01",
+    "cn04~color02",
+    "cn04~color03",
+    "cn04~color04",
+    "dc22~color01",
+    "dc22~color02",
+    "dc22~color03",
+    "dc22~color04",
+    "ft09~color01",
+    "ft09~color02",
+    "ft09~color03",
+    "ft09~color04",
+    "g50t~color01",
+    "g50t~color02",
+    "g50t~color03",
+    "g50t~color04",
+    "ka59~color01",
+    "ka59~color02",
+    "ka59~color03",
+    "ka59~color04",
+    "lf52~color01",
+    "lf52~color02",
+    "lf52~color03",
+    "lf52~color04",
+    "lp85~color01",
+    "lp85~color02",
+    "lp85~color03",
+    "lp85~color04",
+    "ls20~color01",
+    "ls20~color02",
+    "ls20~color03",
+    "ls20~color04",
+    "m0r0~color01",
+    "m0r0~color02",
+    "m0r0~color03",
+    "m0r0~color04",
+    "r11l~color01",
+    "r11l~color02",
+    "r11l~color03",
+    "r11l~color04",
+    "re86~color01",
+    "re86~color02",
+    "re86~color03",
+    "re86~color04",
+    "s5i5~color01",
+    "s5i5~color02",
+    "s5i5~color03",
+    "s5i5~color04",
+    "sb26~color01",
+    "sb26~color02",
+    "sb26~color03",
+    "sb26~color04",
+    "sc25~color01",
+    "sc25~color02",
+    "sc25~color03",
+    "sc25~color04",
+    "sk48~color01",
+    "sk48~color02",
+    "sk48~color03",
+    "sk48~color04",
+    "sp80~color01",
+    "sp80~color02",
+    "sp80~color03",
+    "sp80~color04",
+    "su15~color01",
+    "su15~color02",
+    "su15~color03",
+    "su15~color04",
+    "tn36~color01",
+    "tn36~color02",
+    "tn36~color03",
+    "tn36~color04",
+    "tr87~color01",
+    "tr87~color02",
+    "tr87~color03",
+    "tr87~color04",
+    "tu93~color01",
+    "tu93~color02",
+    "tu93~color03",
+    "tu93~color04",
+    "vc33~color01",
+    "vc33~color02",
+    "vc33~color03",
+    "vc33~color04",
+    "wa30~color01",
+    "wa30~color02",
+    "wa30~color03",
+    "wa30~color04"
+  ],
+  "replay_count_is_not_the_score": true,
+  "replay_floor": {
+    "live_submittable_level_count": 60,
+    "live_submittable_subset_of_reproducible": true,
+    "note": "replay package floor only; live_submittable_level_count is not the leaderboard score.",
+    "offline_reproduced": true,
+    "package_exists": true,
+    "package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
+    "ready_for_operator_submit": true,
+    "replay_package_floor_reproduced": true,
+    "reproducible_total_levels": 66,
+    "reproducible_vs_submittable_gap": 6,
+    "source_result_exists": true,
+    "source_result_path": "results/experiment_4679_refresh_submission_package.json"
+  },
+  "replay_floor_package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
+  "replay_package_floor_reproduced": true,
+  "reproducibility_checksum": "sha256:573c9f968c2dc96bab4b23a79b037f69f94a21b5e38eb923440e65e6a6dd7d1f",
+  "result_path": "results/experiment_4729_held_out_first_win_readiness.json",
+  "schema": "carnot.arc.held_out_first_win_readiness_4729.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4729",
+    "SCENARIO-CAPSTONE-4729",
+    "SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES"
+  ],
+  "submitted_to_leaderboard": false,
+  "v435_lever_inputs": {
+    "a1": {
+      "chosen_submitted_config": "unchanged",
+      "exists": true,
+      "experiment": "experiment_4726_online_action_learning_driver_valid_test",
+      "honest_verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_genuinely_too_sparse",
+      "path": "results/experiment_4726_online_action_learning_driver_valid_test.json",
+      "sha256": "sha256:aa4b83fbef26477aa35fd6561393e88a80b2db1e5ae78174a5c5cf29d9662a93"
+    },
+    "a2": {
+      "chosen_submitted_config": "unchanged",
+      "exists": true,
+      "experiment": "experiment_4727_active_probe_disambiguation",
+      "honest_verdict": "complete: active_probe_no_new_level_residual_budget_insufficient",
+      "path": "results/experiment_4727_active_probe_disambiguation.json",
+      "sha256": "sha256:5b3a03831aaa79a1b8c27dd5911358950261dc02c93d7f1e1f7802601073b4bc"
+    }
+  },
+  "verifier_is_oracle": false
+}
