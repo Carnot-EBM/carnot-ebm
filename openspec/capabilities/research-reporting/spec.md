@@ -140,6 +140,78 @@ close-state empty, and does not claim `.408` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4420 | Implemented (`python/carnot/reporting/archive_408_activate_409_4420.py`, `results/experiment_4420_archive_408_activate_409.py`) | Implemented (`tests/python/test_experiment_4420_archive_408_activate_409.py`) |
 
+### REQ-REPORT-4881: Archive .449, Activate .450, Record The Corrected Fork-Probe Close-State
+
+The Exp 4881 workflow SHALL write
+`results/experiment_4881_archive_449_activate_450.json` for the record-only
+transition from milestone `2026.06.449` to `2026.06.450`. Before reading or
+editing implementation state, it SHALL run both required preconditions:
+`yaml.safe_load` on `research-roadmap-next.yaml` and
+`carnot.agentic.arc_solver_kit.offline_arcade()`. If either precondition fails,
+the workflow SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource under `preconditions_checked`, skips the
+pre-test gate, and does not claim a clean archive/activation.
+
+On the complete path, the workflow SHALL confirm `.450` is active, run the
+pre-test gate, and record that `.449` closed with A1 as an untrusted non-test,
+not a trusted generation-wall fork finding. The artifact SHALL aggregate from
+the upstream registry, capstone, and corrigendum artifacts without live LLM
+inference, and it SHALL include principle-annotated fields for
+`honest_verdict`, `inference_substrate`, `a449_fork_untrusted_non_test`,
+`corrigendum_change_location_learnable`,
+`exact_match_metric_was_degenerate`, `energy_program_concluded`, and
+`reproducible_total_levels`.
+
+The close-state SHALL truthfully record that A1 ran live on the GPU-0 CUDA
+generator but failed its positive control because the exact-full-grid-match
+metric was degenerate; that the corrigendum showed change-location recall was
+learnable while change-value accuracy remained near zero; that A1b CEGIS was
+nulled with zero held-out delta and a failed positive control; that A2 banked
+`s5i5` L2 and carried the authoritative registry total to 67; that A3 refreshed
+the `re86` self-play checkpoint; that A4 was a fresh live flat-null first-win
+readiness run; that B2 was operator-only package-ready, C found KV260 reachable,
+and D mapped the inducer-ceiling frontier; and that the energy-as-ARC-lever
+program is concluded and must not be re-proposed.
+
+Required field principles:
+
+- `honest_verdict`: terminal prefix; clean transition is complete_449_archived_450_activated_<state>.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).
+- `a449_fork_untrusted_non_test`: true -- the .449 A1 fork probe ran live on GPU-0 but its positive control failed on the degenerate exact-match metric (B1 b1_trusted=false); the fork is NOT trustworthy.
+- `corrigendum_change_location_learnable`: true -- the induced engine predicts change-LOCATION (cell_recall <=0.88) but change-VALUE ~0; the binding residual is the engine's VALUE prediction, and the .449 metric was degenerate.
+- `exact_match_metric_was_degenerate`: true -- exact-full-grid-match held-out accuracy was 0.0 on every game incl tu93 (FALSE_NEGATIVE_RISK); .450 A1 uses the corrigendum-corrected GRADED metric instead.
+- `energy_program_concluded`: true -- the energy-as-ARC-lever program is concluded (negative); the planner must NOT re-propose energy stages.
+- `reproducible_total_levels`: the authoritative ARC progress metric carried from the registry (67 after s5i5 L2), not re-counted.
+
+#### SCENARIO-REPORT-4881: Blocked Roadmap-Next Precondition Still Writes The Deliverable
+
+**Given** `research-roadmap-next.yaml` is absent or not parseable, the offline
+arcade precondition result is recorded, and the `.449` capstone, corrigendum,
+and ARC solve registry are available
+**When** the Exp 4881 workflow runs
+**Then** it writes `results/experiment_4881_archive_449_activate_450.json` with
+a `blocked_research_roadmap_next_...` verdict, records the failed precondition,
+skips the pre-test gate, preserves the required principle-annotated fields, and
+carries `reproducible_total_levels=67` from `ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-REPORT-4881: Complete Transition Records The Corrected .449 State
+
+**Given** `research-roadmap-next.yaml` parses, the offline arcade precondition
+passes, `.450` is the active roadmap milestone, the pre-test gate is green, and
+the upstream `.449` artifacts are available
+**When** the Exp 4881 workflow runs
+**Then** it records a `complete_449_archived_450_activated_...` verdict,
+declares `aggregation_from_upstream_artifacts`, marks A1 as an untrusted
+non-test, marks the exact-match metric as degenerate, marks the corrigendum's
+change-location signal as learnable with change-value residual, marks the energy
+program concluded, and uses the registry's authoritative reproducible total.
+
+## Implementation Status (REQ-REPORT-4881)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4881 | Implemented (`python/carnot/experiment_4881_archive_449_activate_450.py`) | Implemented (`tests/python/test_experiment_4881_archive_449_activate_450.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans
