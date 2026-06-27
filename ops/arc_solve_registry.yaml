@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-23'
+updated: '2026-06-27'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -810,28 +810,17 @@ games:
   gotchas: []
 - game: s5i5
   reproducibility: reproduced
-  levels_reproduced: 1
+  levels_reproduced: 2
   mechanic_class: config_toggle_marker_coverage
-  win_condition: 'L1 marker-coverage config: controlled marker sprites tagged 0064ocqkuqacti
-    must occupy every target marker coordinate tagged 0087vvmblxkzdi. L1 targets [(9,51),(51,9)];
-    initial controlled markers [(9,33),(30,9)].'
-  action_model: ACTION6 click-only; h_extend click (47,21) increases the horizontal
-    controlled marker x by +3; v_extend click (22,47) increases the vertical controlled
-    marker y by +3.
-  solver: python/carnot/experiment_4421_config_rule_solve_unseen.py derives ['h_extend']*7
-    + ['v_extend']*6 from the Qwen-proposed marker-coverage predicate and replays
-    it through arc_solver_kit.reproduce.
-  reproduce: Exp4421 results/experiment_4421_config_rule_solve_unseen.json offline_reproduced=True,
-    reproduced_levels=1, checksum bdc1ee86e85595873b11f11bf8ee38ab5a4ecf987c3530fa6dc01c43550f16bb.
+  win_condition: 'L1 marker coverage plus L2 dynamic marker-control coverage: discover 0064ocqkuqacti controlled markers, 0087vvmblxkzdi target markers, and pigtralzpb/uricqfoplr control links from the offline env, then click each control edge until every marker reaches an axis-aligned target.'
+  action_model: ACTION6 click-only; GameAdapter _s5i5 derives display click points from the current level's resize controls rather than hardcoding the L1 h_extend/v_extend pair.
+  solver: GameAdapter _s5i5 in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game s5i5.
+  reproduce: Exp4873 results/experiment_4873_levelup_attempt.json re-gated results/arc_loop_solve_s5i5.json offline_reproduced=True, reached_level=2, banked +1, checksum 608084647e52e0487704cc51ab2ad6f287ac782fb54e152db1ca73f5f4554f11.
   gotchas:
-  - next_level() fires in the same action that creates final marker coverage, so the
-    L1 pre-win grid is not returned; ground on execution-state marker coords and count
-    only reproduce() level advance.
+  - next_level() fires in the same action that creates final marker coverage, so the L1 pre-win grid is not returned; ground on execution-state marker coords and count only reproduce() level advance.
   dead_ends:
-  - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE;
-    post-L1 L2 state exposed a chain-carried marker delta (controlled marker at
-    (15,36), target marker at (51,30), four chained controls), but no GameAdapter
-    or reproduction-gated L2 path was banked.'
+  - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
+  - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
   latest_exp4852_levelup_attempt:
     artifact: results/experiment_4852_levelup_attempt.json
     loop_artifact: results/arc_loop_solve_s5i5.json
@@ -840,6 +829,14 @@ games:
     new_levels_banked: 0
     target_rotation: rotated_off_ka59_s5i5_L1_to_L2
     residual: needs_per_game_RE_marker_coverage_L2_delta_not_adaptered
+  latest_exp4873_levelup_attempt:
+    artifact: results/experiment_4873_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_s5i5.json
+    offline_reproduced: true
+    reproduced_levels: 2
+    new_levels_banked: 1
+    target_rotation: rotated_off_r11l_re86_hidden_state_bound_targets
+    reproducibility_checksum: 608084647e52e0487704cc51ab2ad6f287ac782fb54e152db1ca73f5f4554f11
 - game: lp85
   reproducibility: reproduced
   levels_reproduced: 5
@@ -1786,7 +1783,7 @@ games:
     verifier_checkpoint: models/arc_verifier_bp35.json
     target_rotation: clean_L1_to_L2_not_deepened_in_429_433
     reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
-reproducible_total_levels: 66
+reproducible_total_levels: 67
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
