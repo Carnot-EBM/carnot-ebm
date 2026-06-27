@@ -1,0 +1,238 @@
+{
+  "a1_adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
+    "exp_id": 4871,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_generation_wall_fork_probe_retired_positive_control_failed",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "a1_artifact_checksum": "sha256:f223196660e020cef86c8f3901aedebe269012ab3eee7c1c9be6e4cea9bac081",
+  "a1_artifact_path": "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
+  "a1_failure_reasons": [
+    "positive_control_not_migrated",
+    "positive_control_not_covered",
+    "positive_control_low_accuracy",
+    "fork_verdict_missing"
+  ],
+  "a1_genuinely_diagnostic": false,
+  "a1_ran_live_on_gpu0": true,
+  "a1_script_checksum": "sha256:3a96f5b124687b1562ec0e1578e810852adebf85034150f50e4b389b506049bf",
+  "a1_script_path": "python/carnot/experiment_4871_generation_wall_fork_probe_gpu_fixed.py",
+  "a1_source_fork_verdict": null,
+  "a1_source_honest_verdict": "complete_generation_wall_fork_probe_retired_positive_control_failed",
+  "a1_source_n_games_measured": 9,
+  "a1_summarizer_result": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "==============================================================================\nARTIFACT  experiment_4871_generation_wall_fork_probe_gpu_fixed.json\n------------------------------------------------------------------------------\n  verdict          : complete_generation_wall_fork_probe_retired_positive_control_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 587.0132269859314   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      median_engine_heldout_accuracy = 0.0\n  adversarial flags: none\n"
+  },
+  "a1b_adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4872_cegis_world_model_refinement.json",
+    "exp_id": 4872,
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "cegis_heldout_accuracy_delta_median=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      }
+    ],
+    "honest_verdict": "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed",
+    "loaded": true,
+    "max_severity": 0,
+    "title": ""
+  },
+  "a1b_artifact_checksum": "sha256:0afdde35fa4ca01fd551d6df3136e2f4cff5b7d7b694df969c035e89d9b03bd8",
+  "a1b_artifact_path": "results/experiment_4872_cegis_world_model_refinement.json",
+  "a1b_delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "a1b_delta_median": 0.0,
+  "a1b_delta_trustworthy": true,
+  "a1b_failure_reasons": [],
+  "a1b_residual_reasons": [
+    "a1b_positive_control_failed"
+  ],
+  "a1b_source_honest_verdict": "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed",
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "checks": {
+    "a1_live_gpu": {
+      "duration_floor_s": 60.0,
+      "duration_s": 587.0132269859314,
+      "flagged_adversarial": false,
+      "generator_backend": "gpu0_cuda",
+      "passed": true
+    },
+    "a1_live_path": {
+      "arc_orphan_solver_lint_passed": true,
+      "artifact_live_path_reachable": true,
+      "passed": true,
+      "solve_provenance": "development_proxy",
+      "source_live_path": {
+        "calls": [
+          "_collect_cold_policy_transitions",
+          "list",
+          "int",
+          "_heldout_transitions",
+          "normalize_sequence",
+          "classify_planned_pool",
+          "row.update",
+          "policy._induce_and_plan",
+          "e3.load_engine",
+          "live_methods.append",
+          "score",
+          "float",
+          "float",
+          "_execute_plan_reaches_l1",
+          "max",
+          "e3.plan_in_model",
+          "live_methods.append",
+          "round",
+          "round",
+          "len",
+          "len",
+          "int",
+          "list",
+          "repr",
+          "sum",
+          "e3.WorldModelVerifier",
+          "float",
+          "float",
+          "getattr",
+          "int",
+          "int",
+          "repr",
+          "ord"
+        ],
+        "function_present": true,
+        "induce_and_plan_called": true,
+        "load_engine_called": true,
+        "passed": true,
+        "plan_in_model_called": true
+      },
+      "source_live_path_called": true
+    },
+    "a1_numbers_match_fork": {
+      "computed_coverage_migration_count": 0,
+      "computed_fork_verdict": "INDUCER_CEILING",
+      "computed_median_engine_heldout_accuracy": 0.0,
+      "invalid_games": [],
+      "passed": false,
+      "per_game_count": 9,
+      "reported_coverage_migration_count": 0,
+      "reported_fork_verdict": null,
+      "reported_median_engine_heldout_accuracy": 0.0,
+      "reported_n_games_measured": 9
+    },
+    "a1_planner_blind_to_banked_answer": {
+      "allowed_only_in_classify_planned_pool": true,
+      "artifact_flag": true,
+      "disallowed_refs": [],
+      "function_present": true,
+      "passed": true,
+      "winning_prefix_refs": 1
+    },
+    "a1_positive_control": {
+      "artifact_positive_control_migrated": false,
+      "engine_heldout_accuracy": 0.0,
+      "high_accuracy_threshold": 0.5,
+      "passed": false,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "positive_control_game": "tu93",
+      "row_game": "tu93"
+    },
+    "a1_summarizer_and_adversarial_verify": {
+      "adversarial_flag_count": 0,
+      "adversarial_loaded": true,
+      "passed": true,
+      "summarizer_returncode": 0
+    },
+    "a1b_delta": {
+      "adversarial_flag_count": 1,
+      "artifact_delta_on_truly_heldout_split": true,
+      "circular_moat_flag_count": 0,
+      "computed_ci95": [
+        0.0,
+        0.0
+      ],
+      "computed_median": 0.0,
+      "live_path_reachable": true,
+      "n_games_measured": 9,
+      "oracle_distinct": true,
+      "passed": true,
+      "positive_control_passed": false,
+      "reported_ci95": [
+        0.0,
+        0.0
+      ],
+      "reported_median": 0.0,
+      "split_disjoint": true,
+      "status": "ran",
+      "verifier_is_oracle": false
+    }
+  },
+  "duration_s": 0.664567,
+  "experiment": "experiment_4876_fork_probe_inducer_audit",
+  "experiment_id": 4876,
+  "field_principles": {
+    "a1_genuinely_diagnostic": {
+      "principle": "the load-bearing check -- ran-live-on-GPU0 AND planner-blind AND positive-control-migrated AND numbers-match-fork AND live-path-reachable; else A1's fork verdict is void."
+    },
+    "a1_ran_live_on_gpu0": {
+      "principle": "true iff generator_backend is gpu0_cuda/igpu_hip AND duration clears the 60s floor AND not flagged_adversarial -- proves the .448 cuda_3090_generator_disallowed block is gone."
+    },
+    "a1b_delta_trustworthy": {
+      "principle": "true iff A1b's accuracy delta is on a held-out split DISJOINT from the repair set and oracle-distinct (or A1b was gate-skipped)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_a1_a1b_audited."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "numbers_match_fork": {
+      "principle": "true iff the per-game accuracy x bucket numbers support the claimed fork_verdict."
+    },
+    "planner_blind_confirmed": {
+      "principle": "true iff the banked winner was used only to classify, never to seed induction/planning."
+    },
+    "positive_control_confirmed": {
+      "principle": "true iff tu93 really came out HIGH accuracy + COVERED."
+    }
+  },
+  "honest_verdict": "complete_a1_a1b_audited",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_lint_result": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (42 modules in the live closure).\n"
+  },
+  "numbers_match_fork": false,
+  "planner_blind_confirmed": true,
+  "positive_control_confirmed": false,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a1_script_present": true,
+    "a1b_artifact_present": true,
+    "adversarial_verify_script_present": true,
+    "arc_orphan_solver_lint_present": true,
+    "ok": true,
+    "spec_has_req_4876": true,
+    "summarizer_script_present": true
+  },
+  "random_seed": 4876,
+  "reproducibility_checksum": "sha256:4d2ac89a12b3bdf52b6173c1f81716603e8bf89d3d94f5ebddc1fc5362060b82",
+  "result_path": "results/experiment_4876_fork_probe_inducer_audit.json",
+  "schema": "carnot.arc.a1_a1b_fork_probe_inducer_audit_4876.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4876",
+    "SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT",
+    "SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT"
+  ]
+}
