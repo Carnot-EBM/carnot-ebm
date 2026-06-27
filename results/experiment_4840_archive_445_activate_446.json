@@ -1,0 +1,391 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone",
+        "exp4840_prompt",
+        "exp4841_perception_frontier"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "5a38fb4b1d6bf66f624f9ed1c2359d94ff4439ce6ba960bf367a5b3c2287c331",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone",
+        "literal_precondition"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": "5a38fb4b1d6bf66f624f9ed1c2359d94ff4439ce6ba960bf367a5b3c2287c331",
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "a1_amortized_prior_verdict",
+        "readiness",
+        "heldout_readiness",
+        "silent_bug_audit",
+        "sota_handoff",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4839_capstone_v445.json",
+      "sha256": "5b0a7366dc3c7a1140f80fe7ab429b62be7e5bf32f0d2655b8b5d74209316644",
+      "source": "experiment_4839_capstone_v445"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "go_explore_archive_alive",
+        "prior_changed_proposals",
+        "baseline_first_win_rate",
+        "first_win_rate_with_prior",
+        "first_win_rate_no_prior_ablation",
+        "first_win_delta_ci95",
+        "imitation_control_heldout_games",
+        "live_path_reachable"
+      ],
+      "path": "results/experiment_4831_amortized_incontext_exploration_prior_live.json",
+      "sha256": "7159105ab781b19e3cc1e74b784d79a2624b91b7ba5b1f92cb67faf3f8646376",
+      "source": "experiment_4831_amortized_incontext_exploration_prior_live"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "a1_archive_alive_and_prior_exercised",
+        "a1_control_check",
+        "silent_bugs_found",
+        "trusted_nulls"
+      ],
+      "path": "results/experiment_4835_silent_bug_audit.json",
+      "sha256": "2fd97c680a7d7b1912412d158ce9d620241bb0cfeeae730b945962f87a106585",
+      "source": "experiment_4835_silent_bug_audit"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_445": {
+    "a1_amortized_prior_verdict": {
+      "archive_alive": true,
+      "archive_alive_confirmed_by_b1": true,
+      "baseline_first_win_rate": 0.04,
+      "dead_archive_non_test": false,
+      "direction_next": "perception_representation_frontier",
+      "experiment_id": 4831,
+      "exploration_prior_class_closed": true,
+      "first_win_delta_ci95": {
+        "confidence": 0.95,
+        "high": 0.0,
+        "low": 0.0,
+        "n_boot": 1000
+      },
+      "first_win_rate_no_prior_ablation": 0.0,
+      "first_win_rate_with_prior": 0.0,
+      "heldout_not_in_distillation_set": true,
+      "imitation_control_confirmed": true,
+      "imitation_lift_holds": false,
+      "lift_over_baseline": false,
+      "live_path_reachable": true,
+      "prior_changed_proposals": true,
+      "prior_exercised_confirmed_by_b1": true,
+      "reason": "archive_alive_prior_exercised_no_heldout_lift",
+      "silent_bugs_found": [],
+      "source": "A1",
+      "upstream_honest_verdict": "complete_amortized_prior_no_first_win_lift_l1_wall_survives",
+      "verdict": "genuine_null_l1_wall_survives_exploration_prior_closed",
+      "wall_moves": false
+    },
+    "capstone_honest_verdict": "complete_a1_genuine_null_l1_wall_survives_exploration_prior_closed_capstone_ready",
+    "capstone_ready": true,
+    "capstone_reported_reproducible_total_levels": 65,
+    "energy_program_concluded": true,
+    "exploration_prior_class_closed": true,
+    "heldout_readiness": {
+      "a1_prior_decision": {
+        "exists": true,
+        "first_win_delta_ci95": {
+          "confidence": 0.95,
+          "high": 0.0,
+          "low": 0.0,
+          "n_boot": 1000
+        },
+        "first_win_rate_no_prior_ablation": 0.0,
+        "first_win_rate_with_prior": 0.0,
+        "go_explore_archive_alive": {
+          "actions_injected": 1,
+          "alive": true,
+          "enabled": true,
+          "max_depth": 1,
+          "observations": 2,
+          "prefixes_injected": 1,
+          "selected_prefixes": 1,
+          "stored_cells": 2,
+          "verifier_is_oracle": false
+        },
+        "honest_verdict": "complete_amortized_prior_no_first_win_lift_l1_wall_survives",
+        "included_in_measurement": false,
+        "live_path_reachable": true,
+        "passed": false,
+        "prior_changed_proposals": true,
+        "reason": "a1_prior_not_passed",
+        "source_artifact_path": "results/experiment_4831_amortized_incontext_exploration_prior_live.json"
+      },
+      "decision": "flat_baseline_first_win_null",
+      "experiment_id": 4834,
+      "first_win_baseline": 0.04,
+      "heldout_first_win_delta_vs_baseline": 0.0,
+      "heldout_first_win_delta_vs_prior_best": 0.0,
+      "heldout_first_win_rate": 0.04,
+      "heldout_variant_attempts": 100,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "live_agent_ran": false,
+      "parity_test_green": true,
+      "positive_control_passed": true,
+      "prior_best_heldout_first_win_rate": 0.04,
+      "source": "HELDOUT"
+    },
+    "readiness": {
+      "a1_verdict": "genuine_null_l1_wall_survives_exploration_prior_closed",
+      "exploration_prior_class_closed": true,
+      "heldout_decision": "flat_baseline_first_win_null",
+      "l1_wall_survives": true,
+      "ready_for_operator_submit": false,
+      "reason": "a1_genuine_null_frontier_moves_to_perception_representation",
+      "submission_package_decision": "package_ready_operator_only",
+      "v446_frontier": "perception/representation",
+      "wall_moves": false
+    },
+    "reproducible_total_levels": 65,
+    "silent_bug_audit": {
+      "a1_archive_alive_and_prior_exercised": true,
+      "a1_control_check": {
+        "archive_alive": true,
+        "distillation_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ],
+        "first_win_rate_no_prior_ablation": 0.0,
+        "first_win_rate_with_prior": 0.0,
+        "heldout_games": [
+          "bp35"
+        ],
+        "heldout_not_in_distillation_set": true,
+        "imitation_control_confirmed": true,
+        "imitation_lift_holds": false,
+        "observations": 2,
+        "prefixes_injected": 1,
+        "prior_changed": true,
+        "proposal_changes": 1,
+        "proposal_order_changed": true,
+        "stored_cells": 2
+      },
+      "experiment_id": 4835,
+      "nulls_audited": 3,
+      "silent_bugs_found": [],
+      "silent_bugs_found_count": 0,
+      "source": "B1_AUDIT",
+      "trusted_nulls": [
+        "experiment_4831_amortized_incontext_exploration_prior_live",
+        "experiment_4832_levelup_attempt",
+        "experiment_4834_heldout_first_win_readiness"
+      ]
+    },
+    "sota_handoff": {
+      "arxiv_ids_cited": [
+        "1802.04687",
+        "1911.12247",
+        "2006.15055",
+        "2402.03326",
+        "2507.03298",
+        "2601.06604",
+        "2602.11389",
+        "2606.12316"
+      ],
+      "decision": "perception_representation_handoff",
+      "experiment_id": 4838,
+      "exploration_strategy_class_retired": true,
+      "flagged_for_v446_candidates": [
+        "loop_owm_slot_transition_proposer",
+        "object_relational_world_model_mcts",
+        "causal_object_jepa_shortcut_guard"
+      ],
+      "l1_wall_context": {
+        "exploration_strategy_class_retired": true,
+        "frame_only_order1_features_at_chance": true,
+        "nulled_lever_count_approx": 15,
+        "planner_constraint": "Do not spend .446 on another exploration reweighting run; require a representation that can make a novel winning prefix enter the pool.",
+        "roadmap_target": ".446",
+        "root_cause": "perception/representation",
+        "source_artifacts": [
+          "results/experiment_4830_archive_444_activate_445.json",
+          "results/experiment_4831_amortized_incontext_exploration_prior_live.json",
+          "results/experiment_4834_heldout_first_win_readiness.json",
+          "results/experiment_4835_silent_bug_audit.json"
+        ],
+        "upstream_root_blocker": "winning_l1_prefix_never_proposed",
+        "wall": "L1-FIRST-CONTACT"
+      },
+      "methods_mapped_count": 5,
+      "source": "SOTA",
+      "v446_frontier": "perception/representation"
+    }
+  },
+  "duration_s": 0.0001,
+  "energy_program_concluded": true,
+  "experiment": "experiment_4840_archive_445_activate_446",
+  "experiment_id": 4840,
+  "exploration_prior_class_closed": true,
+  "field_principles": {
+    "energy_program_concluded": {
+      "principle": "the energy program already concluded at `.444`; `.446` must not re-open energy stages."
+    },
+    "exploration_prior_class_closed": {
+      "principle": "the amortized-prior fair-test nulled with a live archive; the planner must NOT re-propose exploration-strategy levers -- the .446 frontier is perception/representation."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_445_archived_446_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    }
+  },
+  "honest_verdict": "complete_445_archived_446_activated_already_active_exploration_prior_closed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "no_poison_observed_current_gate_green",
+    "current_gate_passed": true,
+    "poison_tests": [],
+    "resolved": true
+  },
+  "preconditions_checked": {
+    "a1_4831": {
+      "available": true,
+      "path": "results/experiment_4831_amortized_incontext_exploration_prior_live.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.446",
+      "milestone_before_activation": "2026.06.446",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "b1_4835": {
+      "available": true,
+      "path": "results/experiment_4835_silent_bug_audit.json"
+    },
+    "capstone_4839": {
+      "available": true,
+      "path": "results/experiment_4839_capstone_v445.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4840": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "offline_arcade": {
+      "available": true,
+      "command": ".venv/bin/python -c \"import arc_solver_kit; arc_solver_kit.offline_arcade(); print('ok')\"",
+      "error": ""
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_roadmap_next_yaml": {
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": true,
+      "before_available": false,
+      "before_milestone": null,
+      "before_parses": false,
+      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
+      "literal_precondition_passed": true,
+      "milestone": "2026.06.446",
+      "milestone_matches_activation": true,
+      "parses": true,
+      "path": "research-roadmap-next.yaml",
+      "restore_error": "",
+      "restored_from_active_roadmap": true
+    },
+    "smart_subset_pretest_gate": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4840_archive_445_activate_446.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 7.03s\n"
+    }
+  },
+  "random_seed": 4840,
+  "reproducibility_checksum": "sha256:0a9db02a2067d4cffc16aef86ac4356b43bf8f6d8a88fa72abeac9a9610cf84d",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4840_archive_445_activate_446.json",
+  "schema": "carnot.archive_activation.v445_to_v446_4840.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4840",
+    "SCENARIO-CAPSTONE-4840",
+    "SCENARIO-CAPSTONE-4840-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4840-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.446",
+    "activation_state": "already_activated_by_conductor",
+    "active_milestone_confirmed": true,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.445"
+  },
+  "v446_frontier": {
+    "color_centroid_detector_retired": true,
+    "headline_build": "generic_object_identity_perception_layer_for_goal_grounding",
+    "next_headline_task_id": "exp4841-a1",
+    "nulled_generation_exploration_levers_approx": 15,
+    "object_identity_features": [
+      "shape",
+      "connectivity",
+      "motion"
+    ],
+    "planner_must_not_reopen_energy_program": true,
+    "planner_must_not_repropose_exploration_strategy_levers": true,
+    "precise_blocker": "generic_goal_predicate_grounding",
+    "root_cause": "perception/representation"
+  }
+}
