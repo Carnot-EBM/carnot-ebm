@@ -251,3 +251,31 @@
 - A1 artifact checksum: `sha256:f223196660e020cef86c8f3901aedebe269012ab3eee7c1c9be6e4cea9bac081`
 - A1 script checksum: `sha256:3a96f5b124687b1562ec0e1578e810852adebf85034150f50e4b389b506049bf`
 - A1b artifact checksum: `sha256:0afdde35fa4ca01fd551d6df3136e2f4cff5b7d7b694df969c035e89d9b03bd8`
+## Experiment 4887 A1/A1b Audit
+
+- Verdict: `complete_a1_a1b_audited`
+- a1_genuinely_diagnostic: `True`
+- a1_positive_control_non_degenerate_confirmed: `True`
+- a1_delta_on_heldout_disjoint_confirmed: `True`
+- planner_blind_confirmed: `True`
+- numbers_match_fork: `True`
+- a1b_ab_trustworthy: `False`
+- A1 reasons: `-`
+- A1b reasons: `a1b_flagged_adversarial_stamp, a1b_adversarial_verify_flagged, a1b_duration_below_live_floor`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Check | Passed | Detail |
+|---|---:|---|
+| `a1_live_gpu` | `True` | `{"duration_floor_s": 60.0, "duration_s": 168.14787244796753, "flagged_adversarial": false, "generator_backend": "gpu0_cuda"}` |
+| `a1_positive_control` | `True` | `{"artifact_positive_control_non_degenerate": true, "cell_recall": 0.177143, "positive_control_game": "tu93", "row_game": "tu93"}` |
+| `a1_heldout_disjoint_delta` | `True` | `{"artifact_delta_on_truly_heldout_split": true, "bad_games": [], "checked_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "wa30"]}` |
+| `a1_planner_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_planned_pool": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
+| `a1_numbers_match_fork` | `True` | `{"computed_ci95": [-0.177673, 0.0], "computed_coverage_migration_count": 0, "computed_engine_cell_recall_median": 0.727273, "computed_fork_verdict": "INDUCER_CEILING_HARD", "computed_median_delta": -0.008699, "invalid_games": [], "never_enumerated_games": 9, "per_game_count": 9, "reported_ci95": [-0.177673, 0.0], "reported_coverage_migration_count": 0, "reported_engine_cell_recall_median": 0.727273, "reported_fork_verdict": "INDUCER_CEILING_HARD", "reported_median_delta": -0.008699, "reported_n_games_measured": 9}` |
+| `a1_summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
+| `a1_oracle_distinct` | `True` | `{"circular_moat_flag_count": 0, "verifier_is_oracle": false}` |
+| `a1_live_path` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "solve_provenance": "development_proxy", "source_live_path": {"calls": ["a1._collect_cold_policy_transitions", "list", "cold.get", "_fit_warm_ttt_model", "DynamicsValueAdapter.fit", "adapter.wrap", "e3.collect_transitions", "list", "score_graded_engine", "score_graded_engine", "float", "float", "a1.classify_planned_pool", "classification.update", "int", "sum", "np.asarray", "_plan_with_adapted_engine", "int", "max", "cold.get", "int", "a1._execute_plan_reaches_l1", "round", "round", "round", "round", "round", "_transition_ids", "_transition_ids", "_transition_ids", "len", "len", "len", "ord", "np.asarray", "float", "float", "str", "int"], "classification_path_called": true, "dynamics_value_adapter_called": true, "function_present": true, "passed": true, "plan_path_called": true}, "source_live_path_called": true}` |
+| `a1b_ab_fairness` | `False` | `{"a1_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "wa30"], "adversarial_flag_count": 1, "bad_delta_games": [], "bad_split_games": [], "duration_floor_s": 60.0, "duration_s": 13.697947978973389, "live_path_reachable": true, "local_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "wa30"], "oracle_distinct": true, "reference_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "wa30"], "reference_lane_is_ceiling_only": true, "same_games_as_a1": true, "same_split_as_a1": true, "status": "ran", "verifier_is_oracle": false}` |
+
+- A1 artifact checksum: `sha256:6a0f5e5552d56b267cb79f1b9414289514ae65bd3f6ff5653a98237b1b3c6333`
+- A1 script checksum: `sha256:b678bbb29a94dca56189acfe144ddf9a69968784e7d4969a1fd90749b2d52e27`
+- A1b artifact checksum: `sha256:e7b2a79e8d5e0393574b641be54e50ee9d3ab6491096cf18ce822e8286febb21`
