@@ -10785,6 +10785,85 @@ Then it writes
 `blocked_*` verdict, empty or partial coverage fields, and explicit
 `preconditions_checked` details.
 
+### REQ-ARC-WMTE-4858: Generation Expressibility SOTA Ingestion For .448
+
+Experiment 4858 SHALL run the reserved `.448` SOTA-ingestion slot for methods
+that widen what the first-contact proposer can express after Experiment 4851
+reported `dominant_bucket="NEVER_ENUMERATED"`. The workflow SHALL read
+`results/experiment_4848_sota_ingestion_object_world_model.json`,
+`results/experiment_4851_generation_coverage_diagnostic.json`,
+`research-studying.md`, and `research-references.md`; it SHALL filter the
+corpus to program synthesis, library learning over action primitives,
+object-relational MCTS proposers, executable world-model program search, and
+neural-guided program search for ARC/grid games. The workflow SHALL use the
+reliable channel: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
+low-concurrency WebSearch/WebFetch, and direct arXiv HTTP checks. It SHALL NOT
+invoke `/deep-research`, re-ingest the nulled exploration-strategy class, re-open
+the concluded energy-stage class, load models, train, submit to a leaderboard,
+or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4858 SHALL write
+`results/experiment_4858_sota_ingestion_generation_expressibility.json`, update
+`research-studying.md` with an idempotent Exp 4858 section marked INGESTED, and
+update `research-references.md` with an idempotent Exp 4858 source section. The
+artifact SHALL include the required fields `honest_verdict`, `methods_mapped`,
+`arxiv_ids_cited`, `aimed_at_dominant_bucket`, `flagged_for_v448`,
+`inference_substrate`, `preconditions_checked`, `citations`, `fresh_sweep`,
+`upstream_artifacts`, `generation_expressibility_mapping_note`, `note_path`,
+`references_path`, `random_seed`, `duration_s`, `reproducibility_checksum`, and
+`field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_generation_expressibility_mapped`;
+`aimed_at_dominant_bucket` SHALL equal `NEVER_ENUMERATED`;
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`; and
+`flagged_for_v448` SHALL name the strongest method or methods for the `.448`
+planner. The mapping SHALL explain how each method changes the proposer's
+action-primitive vocabulary so a missing winning prefix enters the pool before
+any ranker scores it. The mapping SHALL consume only partial or noisy object
+signals from the Exp 4848 object-world-model handoff, not exact object identity
+as a precondition.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_generation_expressibility_mapped."
+- `methods_mapped`: principle "the strongest 3-5 generation-expressibility methods, each mapped onto putting the winning prefix into the pool, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID (no fabrication -- adversarial_verify bar)."
+- `aimed_at_dominant_bucket`: principle "the A1 dominant_bucket the ingestion targets (never_enumerated -> expressibility; covered -> ranking)."
+- `flagged_for_v448`: principle "the strongest method(s) flagged so the .448 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`2006.08381`, `2310.19791`, `2411.17708`, `2507.14172`, `2507.15877`,
+`2601.06604`, `2605.05138`, and `2606.14418`. The method map SHALL contain
+three to five methods, and every method claim SHALL cite only IDs from
+`arxiv_ids_cited`. The note SHALL identify DreamCoder, LILO, ARC neurally guided
+program induction, SOAR, execution-guided neural program synthesis,
+ObjectZero/COMET object-centric MCTS, and executable ARC-AGI-3 world models as
+the ingested literature informing `.448` generation expressibility.
+
+#### SCENARIO-ARC-WMTE-4858
+
+Given the research files, Exp 4848 handoff artifact, and Exp 4851 A1 diagnostic
+artifact are present, and Exp 4851 reports `dominant_bucket="NEVER_ENUMERATED"`
+When Experiment 4858 runs through the reliable channel
+Then it writes
+`results/experiment_4858_sota_ingestion_generation_expressibility.json`,
+records that `/deep-research` was not invoked, maps three to five SOTA methods
+onto the generation-expressibility handoff with real arXiv IDs, updates
+`research-studying.md` and `research-references.md` idempotently, and flags the
+strongest candidate inputs for `.448`.
+
+#### SCENARIO-ARC-WMTE-4858-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID, targets
+ranking despite `NEVER_ENUMERATED`, requires exact object identity instead of
+partial/noisy object signals, maps generic exploration or concluded energy-stage
+reranking instead of proposer expressibility, uses a stale `.447` flag, or
+claims a model-load, training, leaderboard, or solve result
+When the Experiment 4858 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4855: Hostile A1 Generation-Coverage Diagnostic Audit
 
 Experiment 4855 SHALL adversarially audit the Exp 4851 A1 generation-coverage
