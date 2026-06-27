@@ -10784,3 +10784,66 @@ Then it writes
 `results/experiment_4851_generation_coverage_diagnostic.json` with a terminal
 `blocked_*` verdict, empty or partial coverage fields, and explicit
 `preconditions_checked` details.
+
+### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
+
+Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
+is not `.446`'s `ka59`. It SHALL precheck `arc_solver_kit.offline_arcade()`,
+read `ops/arc_solve_registry.yaml`, inspect the shallow L1-only candidates
+`g50t`, `s5i5`, `wa30`, and `r11l`, and use registry dead-end notes to avoid
+known no-grounded-delta walls. The preferred target SHALL be the first
+candidate with a grounded next-level delta and no stronger skip reason; for the
+2026-06-27 registry this is `s5i5`, whose marker-coverage L2 delta remains
+adapter-required while `g50t`, `wa30`, and `r11l` carry prior no-bank or
+hidden-state/stalled notes. The selected target SHALL be passed through
+`recommend_approach(game)`, then `scripts/arc_loop_solve.py --game <target>`,
+and the terminal artifact SHALL record either a banked new reproduced level or
+the residual dead-end.
+
+Experiment 4852 SHALL write `results/experiment_4852_levelup_attempt.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`solve_provenance`, `target_game`, `offline_reproduced`,
+`reproduced_levels`, `new_levels_banked`, `inference_substrate`, and
+`preconditions_checked`. It SHALL also include `rotation_selection`,
+`approach_recommendation`, `attempted_games`, `dead_ends`,
+`registry_update`, `retire_if_same_verdict`, `reproducibility_checksum`, and
+`schema_errors`. A missing target offline environment SHALL produce
+`blocked_<game>_offline_env_missing` and SHALL not fabricate reproduced levels.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- the agent solved via its own attempts/RE; NOT outer_loop_re (CRITICAL)."
+- `target_game`: principle "the rotated target (must differ from .446 ka59) so coverage sweeps the corpus."
+- `offline_reproduced`: principle "only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `new_levels_banked`: principle ">=1 for a PASS; 0 records the rotation dead-end for the next planner."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor)."
+- `preconditions_checked`: principle "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+
+#### SCENARIO-ARC-WMTE-4852-ROTATED-TARGET
+
+Given the ARC registry records `g50t`, `s5i5`, `wa30`, and `r11l` as L1-only
+and records `.446`'s `ka59` as the previous target
+When Experiment 4852 selects a target
+Then it excludes `ka59`, audits the shallow candidates' dead-end notes, selects
+`s5i5` for the grounded marker-coverage adapter-required delta, and records
+the `recommend_approach(s5i5)` payload.
+
+#### SCENARIO-ARC-WMTE-4852-REPRODUCTION-GATE
+
+Given the standing loop result for the selected target does not report an
+offline-reproduced depth greater than the registry prior
+When Experiment 4852 builds its terminal artifact
+Then `new_levels_banked=0`, `offline_reproduced=false`,
+`reproduced_levels=0`, `retire_if_same_verdict=true`, and the dead-end entry
+records the `needs_per_game_RE` or no-bank residual instead of incrementing the
+registry total.
+
+#### SCENARIO-ARC-WMTE-4852-STABLE-ARTIFACT
+
+Given a selected target, preconditions, recommendation, and standing-loop
+result
+When Experiment 4852 writes `results/experiment_4852_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, and every required
+principle-annotated field is present.

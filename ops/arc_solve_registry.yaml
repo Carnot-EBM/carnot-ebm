@@ -797,6 +797,19 @@ games:
   - next_level() fires in the same action that creates final marker coverage, so the
     L1 pre-win grid is not returned; ground on execution-state marker coords and count
     only reproduce() level advance.
+  dead_ends:
+  - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE;
+    post-L1 L2 state exposed a chain-carried marker delta (controlled marker at
+    (15,36), target marker at (51,30), four chained controls), but no GameAdapter
+    or reproduction-gated L2 path was banked.'
+  latest_exp4852_levelup_attempt:
+    artifact: results/experiment_4852_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_s5i5.json
+    offline_reproduced: false
+    reproduced_levels: 0
+    new_levels_banked: 0
+    target_rotation: rotated_off_ka59_s5i5_L1_to_L2
+    residual: needs_per_game_RE_marker_coverage_L2_delta_not_adaptered
 - game: lp85
   reproducibility: reproduced
   levels_reproduced: 5
