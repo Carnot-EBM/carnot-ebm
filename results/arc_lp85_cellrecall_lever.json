@@ -1,0 +1,65 @@
+{
+  "experiment": "arc_lp85_cellrecall_lever",
+  "schema": "carnot.arc_lp85_cellrecall_lever.v1",
+  "honest_verdict": "complete_lp85_cellrecall_modestly_pushed_via_coverage_best_0.3405_but_gap_not_closed_still_far_below_0.75_band_mechanic_is_OOD",
+  "question": "can lp85's cross-game change-LOCATION (cell-recall) transfer be pushed above the 0.278 baseline via more fewshot adaptation (axis A) or broader corpus coverage (axis B)?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "game": "lp85",
+  "epochs": 30,
+  "prior_path": "/home/ianblenke/github.com/ianblenke/carnot/models/arc_dynamics_prior.pt",
+  "baseline_20game_fewshot80_cellrec": 0.278,
+  "axis_a_fewshot_sweep": [
+    {
+      "fewshot": 40,
+      "test_changing": 370,
+      "scratch_cellrec": 0.1633,
+      "warm_cellrec": 0.2497,
+      "warm_beats_scratch": true
+    },
+    {
+      "fewshot": 80,
+      "test_changing": 331,
+      "scratch_cellrec": 0.1849,
+      "warm_cellrec": 0.2778,
+      "warm_beats_scratch": true
+    },
+    {
+      "fewshot": 160,
+      "test_changing": 251,
+      "scratch_cellrec": 0.1727,
+      "warm_cellrec": 0.3086,
+      "warm_beats_scratch": true
+    },
+    {
+      "fewshot": 240,
+      "test_changing": 171,
+      "scratch_cellrec": 0.222,
+      "warm_cellrec": 0.2931,
+      "warm_beats_scratch": true
+    }
+  ],
+  "axis_b_corpus_coverage": {
+    "train_games": 24,
+    "fewshot": 80,
+    "test_changing": 331,
+    "warm24_cellrec": 0.3405,
+    "baseline_20game_cellrec": 0.278,
+    "coverage_helps": true
+  },
+  "fewshot_helps": false,
+  "coverage_helps": true,
+  "lp85_cellrecall_pushed": true,
+  "best_cellrec_achieved": 0.3405,
+  "gap_closed_to_good_band": false,
+  "gap_to_good_band_0p75": 0.4095,
+  "interpretation": "FINDING: more lp85 adaptation data (AXIS A) does NOT move the laggard (fewshot 40->240 plateaus ~0.25-0.31, below the +0.05 bar) -> not data-starved. Broader public-game coverage (AXIS B, 24-game prior) gives a MODEST, real lift (0.278 -> 0.341, +0.063), but lp85 stays FAR below the well-transferring ka59/sc25/tn36 band (0.75-0.89) -- the gap is NOT closed (best 0.341 vs 0.75 floor). lp85's mechanic is substantially OOD for the cross-game prior; the coverage lever helps at the margin but the real fix is a representation / corpus-diversity change (lp85-like mechanics in training), not more of the same. NOTE: cell-recall is change-LOCATION only; exact transition VALUES remain ~0 (per arc_fork_probe_accuracy_corrigendum) -- this lever serves probe-efficiency, not world-modeling.",
+  "missing_verifier_gaps": "lp85 change-VALUE prediction (not just location) is unsolved by the frame-only CNN prior; a verifier/predictor that captures lp85's hidden-state-dependent transition values is the gap.",
+  "cites_upstream": [
+    "arc_pretrain_prior.json",
+    "arc_fork_probe_accuracy_corrigendum.json"
+  ],
+  "random_seed": 20260627,
+  "duration_s": 192.51,
+  "reproducibility_checksum": "sha256:bb9f0c6235a83c439916280cf6246473988eedfd3146a8700ba04f6e67bca79f"
+}
