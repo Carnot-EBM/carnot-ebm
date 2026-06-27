@@ -1,0 +1,358 @@
+{
+  "a1_perception_layer_input": {
+    "carried_forward_v446_flags": [
+      "loop_owm_slot_transition_proposer",
+      "object_relational_world_model_mcts",
+      "causal_object_jepa_shortcut_guard"
+    ],
+    "consumed_state_fields": [
+      "object_ids",
+      "slots",
+      "relation_edges",
+      "persistence_tracks",
+      "object_action_bindings",
+      "causal_shortcut_guard_features"
+    ],
+    "exploration_strategy_class_closed": true,
+    "planner_question": "Given recovered object structure, turn the A1 object layer into a proposable winner on a novel game.",
+    "source_artifact": "results/experiment_4838_sota_ingestion_perception_representation.json",
+    "source_honest_verdict": "success_sota_ingestion_perception_representation_mapped",
+    "target_roadmap": ".447"
+  },
+  "arxiv_ids_cited": [
+    "1911.12247",
+    "2402.03326",
+    "2507.03298",
+    "2511.02225",
+    "2601.06604",
+    "2605.14937",
+    "2606.12316",
+    "2606.14418"
+  ],
+  "citations": {
+    "1911.12247": {
+      "http_status": 200,
+      "title": "Contrastive Learning of Structured World Models",
+      "url": "https://arxiv.org/abs/1911.12247"
+    },
+    "2402.03326": {
+      "http_status": 200,
+      "title": "Slot Structured World Models",
+      "url": "https://arxiv.org/abs/2402.03326"
+    },
+    "2507.03298": {
+      "http_status": 200,
+      "title": "Dyn-O: Building Structured World Models with Object-Centric Representations",
+      "url": "https://arxiv.org/abs/2507.03298"
+    },
+    "2511.02225": {
+      "http_status": 200,
+      "title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2511.02225"
+    },
+    "2601.06604": {
+      "http_status": 200,
+      "title": "Object-Centric World Models Meet Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2601.06604"
+    },
+    "2605.14937": {
+      "http_status": 200,
+      "title": "Slot-MPC: Goal-Conditioned Model Predictive Control with Object-Centric Representations",
+      "url": "https://arxiv.org/abs/2605.14937"
+    },
+    "2606.12316": {
+      "http_status": 200,
+      "title": "Slots, Transitions, Loops: Learning Composable World Models for ARC",
+      "url": "https://arxiv.org/abs/2606.12316"
+    },
+    "2606.14418": {
+      "http_status": 200,
+      "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
+      "url": "https://arxiv.org/abs/2606.14418"
+    }
+  },
+  "duration_s": 0.0001,
+  "field_principles": {
+    "a1_perception_layer_input": {
+      "principle": "imports Exp 4838 object identity outputs as the planner input contract."
+    },
+    "arxiv_ids_cited": {
+      "principle": "every method claim must cite a verifiable arXiv ID."
+    },
+    "citations": {
+      "principle": "HTTP-200 arXiv source metadata backing every method claim."
+    },
+    "duration_s": {
+      "principle": "0.0001s floor for aggregation-only inference substrate."
+    },
+    "flagged_for_v447": {
+      "principle": "the strongest method(s) flagged so the .447 planner reads the mapping."
+    },
+    "fresh_sweep": {
+      "principle": "records focused sweep_clusters, sweep_semscholar, and WebFetch provenance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; mapping emitted is success_sota_ingestion_object_world_model_mapped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "methods_mapped": {
+      "principle": "the strongest 3-5 object-centric world-model/planning methods mapped onto consuming the A1 perception layer, each with a real arXiv ID."
+    },
+    "note_path": {
+      "principle": "points to the idempotent research-studying.md ingestion note."
+    },
+    "object_world_model_mapping_note": {
+      "principle": "states how object-relational state becomes a proposable winner for .447."
+    },
+    "preconditions_checked": {
+      "principle": "records reliable-channel checks and explicitly excludes banned channels."
+    },
+    "random_seed": {
+      "principle": "deterministic experiment identifier for reproducible artifact generation."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of citations, method map, flags, A1 input, and mapping note."
+    }
+  },
+  "flagged_for_v447": [
+    {
+      "candidate": "comet_object_mcts_planner",
+      "flag": "flagged_for_v447: comet_object_mcts_planner (arXiv:2606.14418 + arXiv:2601.06604 + arXiv:2402.03326)",
+      "maps_to_frontier": ".447",
+      "source_ids": [
+        "2606.14418",
+        "2601.06604",
+        "2402.03326"
+      ]
+    },
+    {
+      "candidate": "slot_mpc_object_action_optimizer",
+      "flag": "flagged_for_v447: slot_mpc_object_action_optimizer (arXiv:2605.14937 + arXiv:2507.03298)",
+      "maps_to_frontier": ".447",
+      "source_ids": [
+        "2605.14937",
+        "2507.03298"
+      ]
+    },
+    {
+      "candidate": "loop_owm_interaction_primitive_proposer",
+      "flag": "flagged_for_v447: loop_owm_interaction_primitive_proposer (arXiv:2606.12316 + arXiv:2511.02225 + arXiv:1911.12247)",
+      "maps_to_frontier": ".447",
+      "source_ids": [
+        "2606.12316",
+        "2511.02225",
+        "1911.12247"
+      ]
+    }
+  ],
+  "fresh_sweep": {
+    "cluster_ids": [
+      3,
+      5,
+      6
+    ],
+    "filtered_track": "object-centric world-models and relational planners that consume object-relational state for novel-game proposal generation",
+    "semantic_scholar_queries": [
+      "object centric world model relational planning MCTS object relational state",
+      "slot structured world model object centric planning dynamics",
+      "object relational dynamics learning graph planner reinforcement learning"
+    ],
+    "semantic_scholar_result": "One focused query returned eight arXiv IDs; two focused queries returned HTTP 429, so no S2-only source was promoted.",
+    "semantic_scholar_unique_arxiv_ids": [
+      "2402.03326",
+      "2410.08822",
+      "2502.07600",
+      "2503.06170",
+      "2507.03298",
+      "2511.02225",
+      "2605.14937",
+      "2606.14418"
+    ],
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/1911.12247",
+      "https://arxiv.org/abs/2402.03326",
+      "https://arxiv.org/abs/2507.03298",
+      "https://arxiv.org/abs/2511.02225",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2605.14937",
+      "https://arxiv.org/abs/2606.12316",
+      "https://arxiv.org/abs/2606.14418"
+    ]
+  },
+  "honest_verdict": "success_sota_ingestion_object_world_model_mapped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "methods_mapped": [
+    {
+      "consumes_a1_object_layer": "Consumes the A1 object layer as persistent object IDs, relation edges, and before/after object-action bindings.",
+      "fails_when": "The A1 tracker merges objects, graph edges encode visual proximity instead of mechanics, or relation edits cannot be lowered to actions.",
+      "maps_to_frontier": ".447",
+      "method": "Object-relation transition graph proposer",
+      "object_relational_state": "State is a set of object slots plus a graph of inferred pairwise relations and action-conditioned edge changes.",
+      "planning_graft": "Learn a compact transition model over object-relation edits and ask the proposer to enumerate the smallest graph edits that move a near state toward a terminal-looking structure.",
+      "proposable_winner_output": "Produce a proposable winner as a concrete object-relation edit plus the executable action template that should cause that edit.",
+      "roadmap_candidate": "flagged_for_v447: loop_owm_interaction_primitive_proposer (arXiv:2606.12316 + arXiv:2511.02225 + arXiv:1911.12247)",
+      "source_ids": [
+        "1911.12247",
+        "2402.03326"
+      ],
+      "takes_over_from_current_stack": "Takes over frame-only candidate generation when the pool cannot name which object relation should change.",
+      "track": "object_relation_transition_graph",
+      "verification_handoff": "Replay the action template in the live harness and keep only edits whose rendered before/after object graph matches the predicted delta."
+    },
+    {
+      "consumes_a1_object_layer": "Consumes the A1 object layer as slot-aligned object features, dynamics-aware attributes, and slot persistence tracks.",
+      "fails_when": "Slot identity drifts, imagined trajectories chase texture changes, or rollout error compounds before a concrete action can be verified.",
+      "maps_to_frontier": ".447",
+      "method": "Slot-structured imagined rollout planner",
+      "object_relational_state": "State is an object slot table with dynamics-aware fields separated from visual nuisance fields, plus learned interaction messages.",
+      "planning_graft": "Roll forward short object-slot trajectories, score imagined deltas for goal-like object changes, and back out the action prefix that caused the best rollout.",
+      "proposable_winner_output": "Produce a proposable winner as a replayable object-slot rollout and a small action prefix for the live verifier.",
+      "roadmap_candidate": "flagged_for_v447: slot_mpc_object_action_optimizer (arXiv:2605.14937 + arXiv:2507.03298)",
+      "source_ids": [
+        "2402.03326",
+        "2507.03298"
+      ],
+      "takes_over_from_current_stack": "Takes over static ranking by generating structured futures that were not present in the old candidate pool.",
+      "track": "slot_structured_rollout_model",
+      "verification_handoff": "Promote only rollouts that replay into the predicted object IDs, positions, and relation deltas without relying on a terminal oracle."
+    },
+    {
+      "consumes_a1_object_layer": "Consumes the A1 object layer as object tokens, action-slot fusions, and causal relevance scores for which objects matter to a decision.",
+      "fails_when": "The latent tree cannot be grounded into executable actions, causal attention locks onto distractors, or MCTS optimizes an unobservable latent reward shortcut.",
+      "maps_to_frontier": ".447",
+      "method": "Causal object-centric MCTS planner",
+      "object_relational_state": "State is a MuZero-style latent object tree with object-causal attention over relevant slot interactions.",
+      "planning_graft": "Run shallow MCTS over object-latent transitions, using causal attention to expand actions bound to task-relevant objects first.",
+      "proposable_winner_output": "Produce a proposable winner as the best replayable MCTS branch: object-bound actions plus predicted object-state deltas.",
+      "roadmap_candidate": "flagged_for_v447: comet_object_mcts_planner (arXiv:2606.14418 + arXiv:2601.06604 + arXiv:2402.03326)",
+      "source_ids": [
+        "2601.06604",
+        "2606.14418"
+      ],
+      "takes_over_from_current_stack": "Takes over unguided first-contact search by deciding which object interactions to expand before spending live actions.",
+      "track": "object_causal_mcts_planner",
+      "verification_handoff": "Submit only the branch action prefix to the live verifier, then compare observed object deltas against the MCTS predicted state."
+    },
+    {
+      "consumes_a1_object_layer": "Consumes the A1 object layer as differentiable slot features and object-level target deltas.",
+      "fails_when": "The action space is not differentiable enough, the goal slot is wrong, or the optimizer finds an invalid but smooth object shortcut.",
+      "maps_to_frontier": ".447",
+      "method": "Goal-conditioned slot MPC action optimizer",
+      "object_relational_state": "State is a differentiable slot dynamics model with action-conditioned object updates and goal-conditioned target slots.",
+      "planning_graft": "Use gradient-based MPC over the object dynamics to optimize a short action sequence toward a target object configuration.",
+      "proposable_winner_output": "Produce a proposable winner as an optimized action sequence that should realize a specific object-level goal state.",
+      "roadmap_candidate": "flagged_for_v447: slot_mpc_object_action_optimizer (arXiv:2605.14937 + arXiv:2507.03298)",
+      "source_ids": [
+        "2605.14937",
+        "2507.03298"
+      ],
+      "takes_over_from_current_stack": "Takes over random coordinate retries by directly optimizing actions against object-level dynamics.",
+      "track": "goal_conditioned_slot_mpc",
+      "verification_handoff": "Replay the optimized sequence and reject it unless the observed A1 object tracks reach the planned goal-conditioned slot delta."
+    },
+    {
+      "consumes_a1_object_layer": "Consumes the A1 object layer as composable object interactions, looped slot transitions, and demonstration-conditioned summaries.",
+      "fails_when": "The primitive library misses the game mechanic, the loop summary memorizes family style, or the transformation sketch cannot lower to live actions.",
+      "maps_to_frontier": ".447",
+      "method": "Interaction-primitive loop policy for ARC",
+      "object_relational_state": "State is a structured ARC object graph with interaction primitives and loop variables over colors, shapes, and spatial relations.",
+      "planning_graft": "Select a high-level interaction primitive and looped transition order, then lower it into object-bound primitive actions.",
+      "proposable_winner_output": "Produce a proposable winner as an ARC-specific transformation sketch plus concrete object-bound actions that enter the candidate pool.",
+      "roadmap_candidate": "flagged_for_v447: loop_owm_interaction_primitive_proposer (arXiv:2606.12316 + arXiv:2511.02225 + arXiv:1911.12247)",
+      "source_ids": [
+        "2511.02225",
+        "2606.12316"
+      ],
+      "takes_over_from_current_stack": "Takes over generic exploration by constructing a new object-level candidate instead of waiting for one to appear by chance.",
+      "track": "interaction_primitive_loop_policy",
+      "verification_handoff": "Run the lowered actions and retain the sketch only when the observed object graph follows the predicted looped transition."
+    }
+  ],
+  "note_path": "research-studying.md#exp-4848-sota-ingestion-object-world-model",
+  "object_world_model_mapping_note": {
+    "planner_instruction": "Prioritize COMET/ObjectZero object-MCTS, Slot-MPC over object slots, and Loop-OWM/FIOC-WM interaction primitives as the .447 planning inputs.",
+    "root_cause": "object-world-model planning",
+    "source_ids": [
+      "1911.12247",
+      "2402.03326",
+      "2507.03298",
+      "2511.02225",
+      "2601.06604",
+      "2605.14937",
+      "2606.12316",
+      "2606.14418"
+    ],
+    "summary": "The .447 handoff is object-world-model planning: consume the A1 object layer, roll or search over object-relational state, and emit a proposable winner before any ranker scores the pool.",
+    "terminal_success": "success_sota_ingestion_object_world_model_mapped"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arxiv_http_200_verified_ids": [
+      "https://arxiv.org/abs/1911.12247",
+      "https://arxiv.org/abs/2402.03326",
+      "https://arxiv.org/abs/2507.03298",
+      "https://arxiv.org/abs/2511.02225",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2605.14937",
+      "https://arxiv.org/abs/2606.12316",
+      "https://arxiv.org/abs/2606.14418"
+    ],
+    "claude_md_consulted": true,
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "exploration_strategy_reingested": false,
+    "leaderboard_submission": false,
+    "model_load": false,
+    "ops_docs_modified": false,
+    "research_references_present": true,
+    "research_studying_present": true,
+    "semantic_scholar_unique_arxiv_ids": [
+      "2402.03326",
+      "2410.08822",
+      "2502.07600",
+      "2503.06170",
+      "2507.03298",
+      "2511.02225",
+      "2605.14937",
+      "2606.14418"
+    ],
+    "solve_claim_made": false,
+    "sweep_cluster_ids": [
+      3,
+      5,
+      6
+    ],
+    "sweep_cluster_urls": [
+      "http://export.arxiv.org/api/query?search_query=(abs:\"active+inference\"+OR+abs:\"free+energy\"+OR+abs:\"free+energy+principle\"+OR+abs:\"predictive+coding\"+OR+abs:\"world+model\")+AND+(abs:\"LLM\"+OR+abs:\"language+model\"+OR+abs:\"reasoning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"affordance\"+OR+abs:\"action+effect\"+OR+abs:\"clickability\"+OR+abs:\"frame+prediction\"+OR+abs:\"intrinsic+motivation\"+OR+abs:\"directed+exploration\"+OR+abs:\"novelty+search\")+AND+(abs:\"reinforcement+learning\"+OR+abs:\"agent\"+OR+abs:\"exploration\"+OR+abs:\"interactive+environment\"+OR+abs:\"ARC\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
+      "http://export.arxiv.org/api/query?search_query=(abs:\"neural+guided+search\"+OR+abs:\"learned+heuristic\"+OR+abs:\"value+guided+search\"+OR+abs:\"program+induction\"+OR+abs:\"world+model\"+OR+abs:\"goal+induction\")+AND+(abs:\"planning\"+OR+abs:\"agent\"+OR+abs:\"reasoning\"+OR+abs:\"reinforcement+learning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_queries": [
+      "object centric world model relational planning MCTS object relational state",
+      "slot structured world model object centric planning dynamics",
+      "object relational dynamics learning graph planner reinforcement learning"
+    ],
+    "sweep_semscholar_result": "One focused query returned eight arXiv IDs; two focused queries returned HTTP 429, so no S2-only source was promoted.",
+    "sweep_semscholar_used": true,
+    "top_source_count": 8,
+    "training_launched": false,
+    "upstream_flagged_for_v446_read": true,
+    "upstream_perception_artifact_present": true,
+    "websearch_webfetch_top_sources": [
+      "https://arxiv.org/abs/1911.12247",
+      "https://arxiv.org/abs/2402.03326",
+      "https://arxiv.org/abs/2507.03298",
+      "https://arxiv.org/abs/2511.02225",
+      "https://arxiv.org/abs/2601.06604",
+      "https://arxiv.org/abs/2605.14937",
+      "https://arxiv.org/abs/2606.12316",
+      "https://arxiv.org/abs/2606.14418"
+    ],
+    "websearch_webfetch_used": true
+  },
+  "random_seed": 4848,
+  "reproducibility_checksum": "sha256:c836002e1f10579a453880206f82f8ae225c44719da8cbeab22c39e85d0d7deb"
+}

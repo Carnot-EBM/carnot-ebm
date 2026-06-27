@@ -10025,6 +10025,87 @@ Then it writes a blocked artifact with the missing source in
 `preconditions_checked`, no silent-bug fabrication, no markdown append, and a
 stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4848: Object-Centric World-Model Planning SOTA Ingestion For .447
+
+Experiment 4848 SHALL run the reserved `.447` SOTA-ingestion slot for
+object-centric world models and structured or relational planning that consume
+the Exp 4838 A1 object-identity perception layer. The workflow SHALL verify
+that `research-studying.md`, `research-references.md`, and
+`results/experiment_4838_sota_ingestion_perception_representation.json` are
+present, read the discovered corpus filtered to object-centric world-models,
+object-relational dynamics, graph/slot planners, model-predictive control, and
+MCTS over object-relational state, emit focused `scripts/sweep_clusters.py`
+cluster URLs for world-model, affordance/action-effect, and neural-guided
+world-model literature, run `scripts/sweep_semscholar.py` on focused
+object-world-model and relational-planning queries, and use low-concurrency
+WebSearch/WebFetch plus direct arXiv checks to verify the top five to eight
+source papers. The workflow SHALL NOT invoke `/deep-research`, re-ingest the
+nulled exploration-strategy class, load models, train, submit to a leaderboard,
+or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4848 SHALL write
+`results/experiment_4848_sota_ingestion_object_world_model.json` and update
+`research-studying.md` with an idempotent Exp 4848 section marked INGESTED.
+The artifact SHALL include the required fields `honest_verdict`,
+`methods_mapped`, `arxiv_ids_cited`, `flagged_for_v447`,
+`inference_substrate`, `preconditions_checked`, `citations`, `fresh_sweep`,
+`a1_perception_layer_input`, `object_world_model_mapping_note`, `note_path`,
+`random_seed`, `duration_s`, `reproducibility_checksum`, and
+`field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_object_world_model_mapped`; `inference_substrate`
+SHALL equal `aggregation_from_upstream_artifacts`; and `flagged_for_v447`
+SHALL name the strongest method or methods for the `.447` planner. The mapping
+SHALL explain how each method consumes the A1 object layer from Exp 4838
+(`object_ids`, slots, relation edges, persistence tracks, object/action
+bindings, and causal shortcut guards) to produce a proposable winner on a novel
+game rather than merely ranking, re-weighting, or exploring an unchanged pool.
+The mapping SHALL cover object-relational transition graphs, slot-structured
+rollout world models, object-centric MCTS or MuZero-style planning,
+goal-conditioned object-level MPC, modular interaction-primitive policies, and
+ARC composable slot-transition loops.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_object_world_model_mapped."
+- `methods_mapped`: principle "the strongest 3-5 object-centric world-model/planning methods mapped onto consuming the A1 perception layer, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID."
+- `flagged_for_v447`: principle "the strongest method(s) flagged so the .447 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`1911.12247`, `2402.03326`, `2507.03298`, `2511.02225`, `2601.06604`,
+`2605.14937`, `2606.12316`, and `2606.14418`. The method map
+SHALL contain three to five methods, and every method claim SHALL cite only IDs
+from `arxiv_ids_cited`. The note SHALL identify Contrastively-trained
+Structured World Models, Slot Structured World Models, Dyn-O, FIOC-WM,
+ObjectZero, Slot-MPC, Loop-OWM, and COMET as the ingested literature informing
+`.447` object-world-model planning.
+
+#### SCENARIO-ARC-WMTE-4848
+
+Given the research files and Exp 4838 perception artifact are present, the
+reliable sweep helpers are available, Semantic Scholar is attempted through the
+reliable script, and the top arXiv sources are HTTP-200 verified
+When Experiment 4848 runs
+Then it writes
+`results/experiment_4848_sota_ingestion_object_world_model.json`, records that
+`/deep-research` was not invoked, maps three to five SOTA methods onto the
+object-centric world-model/planning handoff with real arXiv IDs, updates
+`research-studying.md` with the Exp 4848 mapping note, and flags the strongest
+candidate inputs for `.447`.
+
+#### SCENARIO-ARC-WMTE-4848-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID, uses
+a stale `.446` roadmap flag, maps generic exploration re-weighting instead of
+object-world-model planning, omits the A1-object-layer consumption or
+proposable-winner handoff, omits the Exp 4838 upstream carry-forward, or claims
+a model-load, training, leaderboard, or solve result
+When the Experiment 4848 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4838: Perception/Representation SOTA Ingestion For The L1-First-Contact Wall
 
 Experiment 4838 SHALL run the reserved `.446` SOTA-ingestion slot for
