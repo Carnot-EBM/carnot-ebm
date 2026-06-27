@@ -1,5 +1,16 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-06-27 Exp 4855 A1 generation-diagnostic audit
+regression fix hardened `run()` for missing source inputs under
+`REQ-ARC-WMTE-4855`. The audit now rechecks the Exp 4851 source artifact and
+script before reading them, even when a caller-provided precondition result says
+ok, preserving the documented `blocked_a1_artifact_missing` fail-closed path.
+Focused tests:
+`tests/python/test_experiment_4855_generation_diagnostic_audit.py`
+(`7 passed`); scoped Coverage.py for the Exp 4855 module is 100% (`293`
+statements, `0` missing); focused Ruff check/format passed. The full
+spec-coverage audit is still blocked by pre-existing unreferenced legacy tests.
+
 **Operational Note:** 2026-06-27 Exp 4851 generation-coverage diagnostic
 regression fix hardened `artifact_schema_errors()` for malformed
 `per_game_coverage` rows under `REQ-ARC-WMTE-4851`. The validator now reports
@@ -27,7 +38,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix; REQ-ARC-WMTE-4851 implementation/test traceability reconciled)
+**Last Updated:** 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed regression fix; REQ-ARC-WMTE-4855 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 

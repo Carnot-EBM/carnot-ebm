@@ -10785,6 +10785,63 @@ Then it writes
 `blocked_*` verdict, empty or partial coverage fields, and explicit
 `preconditions_checked` details.
 
+### REQ-ARC-WMTE-4855: Hostile A1 Generation-Coverage Diagnostic Audit
+
+Experiment 4855 SHALL adversarially audit the Exp 4851 A1 generation-coverage
+diagnostic before any capstone trusts the dominant-bucket finding. The audit
+SHALL read `results/experiment_4851_generation_coverage_diagnostic.json`,
+`python/carnot/experiment_4851_generation_coverage_diagnostic.py`,
+`scripts/summarize_artifact.py`, and `scripts/adversarial_verify.py`.
+
+The audit SHALL verify four load-bearing gates: the held-out proposer was blind
+to the banked winning answer and used banked prefixes only after proposal
+enumeration for classification; the positive control is a real adaptered game
+and is covered; the per-game coverage buckets support the claimed
+`dominant_bucket` over at least three measured games; and the live path remains
+reachable while `solve_provenance=development_proxy`. If any gate fails,
+`a1_genuinely_diagnostic` SHALL be false and the dominant-bucket finding SHALL
+be labeled untrustworthy/non-test. A missing A1 artifact or script SHALL write a
+terminal `blocked_a1_artifact_missing` artifact.
+
+Experiment 4855 SHALL run the disciplined artifact summarizer, run
+`scripts/adversarial_verify.py` against the A1 artifact, run
+`scripts/arc_orphan_solver_lint.py`, write
+`results/experiment_4855_generation_diagnostic_audit.json`, and append a stable
+section to `ops/arc_null_silent_bug_audit.md`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_generation_diagnostic_audited."
+- `a1_genuinely_diagnostic`: principle "the load-bearing check -- proposer-blind AND positive-control-covered AND buckets-match-claim AND live-path-reachable; else A1 is a tautology/harness non-test and its dominant-bucket finding is void."
+- `proposer_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed the proposer (the tautology trap)."
+- `positive_control_confirmed`: principle "true iff the positive control really came out COVERED on a real adaptered game."
+- `buckets_match_claim`: principle "true iff the per-game buckets support the claimed dominant_bucket."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4855-A1-HOSTILE-AUDIT
+
+Given the Exp 4851 generation-coverage diagnostic artifact and script are
+present
+When Experiment 4855 audits the proposal path, positive control, bucket
+distribution, live lint result, solve provenance, summarizer result, and
+adversarial verifier result
+Then it writes `results/experiment_4855_generation_diagnostic_audit.json`,
+appends a stable section to `ops/arc_null_silent_bug_audit.md`, records
+`inference_substrate=aggregation_from_upstream_artifacts`, and sets
+`a1_genuinely_diagnostic=true` only when all four gates pass.
+
+#### SCENARIO-ARC-WMTE-4855-NON-TEST-CLASSIFICATION
+
+Given an Exp 4851-like artifact or script that injects the banked answer into
+the proposer, lacks a covered adaptered positive control, has per-game buckets
+that contradict the claimed dominant bucket, measures fewer than three games,
+has an unreachable live path, or declares any provenance other than
+`development_proxy`
+When Experiment 4855 audits it
+Then the audit records the corresponding failed check, emits a terminal
+`complete_a1_generation_diagnostic_non_test_*` verdict, and sets
+`a1_genuinely_diagnostic=false`.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
