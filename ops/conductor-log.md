@@ -9469,3 +9469,4 @@ The contro |
 | 2026-06-27 19:37 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-27 19:39 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-27 19:42 UTC | Milestone 2026.06.450 activated | OK | 10 tasks queued |
+| 2026-06-27 19:56 UTC | PHASE 0 (TRANSITION) -- archive .449 -> activate . | OK | 86 passed, 1 warning in 7.17s |
