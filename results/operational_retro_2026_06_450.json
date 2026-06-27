@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.450",
+  "generated_at": "2026-06-27T23:36:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked detector fields (0/0/0/null) are a FALSE ZERO, not a genuine empty window. The milestone-scoped timing detector reported 0 commits since activation, but direct on-disk verification shows the archive transition exp4881 plus 9 substantive experiments exp4882-exp4890, mtimes 2026-06-27 19:55:46Z -> 23:28:14Z (~212-min real window). This is the recurring false-zero detector gap, documented .363-.449 and now extending to .450 (~77 milestones). Four arms are compute-bound (exp4882/4883/4885/4886 carry inference_substrate=live_llm_inference and ran on GPU-0 via generator_backend=gpu0_cuda), so compute_bound_experiments_count is really 4, not 0. The 23:36Z idle-GPU snapshot is post-window (8 min after exp4890), so it cannot evidence GPU-idle-during-compute; null is defensible only as insufficient-evidence, but generator_backend=gpu0_cuda shows the GPU was actually engaged.",
+  "bottlenecks_identified": [
+    "RECURRING FALSE-ZERO DETECTOR GAP (~77 milestones, .363->.450): the milestone-scoped timing detector reports 0 commits since activation while exp4881-exp4890 exist on disk with post-activation mtimes. The shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that fills the retro TIMING DATA block. Every retro is forced into manual on-disk archaeology to recover the real window. This is the highest-leverage operational defect.",
+    "TWO of the four compute-bound arms are flagged_adversarial=True: exp4883 (A1b inducer-ceiling A/B) and exp4886 (held-out first-win, 0.0625 soft-budget partial, live_agent_ran=True). The fabrication gate correctly quarantines them from headline aggregation, but flagged compute-bound arms consume GPU-0 wall-time without producing headline-eligible numbers."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro receives the real commit/mtime window instead of a false zero. This single fix removes the manual on-disk archaeology every retro currently performs.",
+    "Add a disk-mtime FALLBACK so a detector false-zero degrades to a verifiable artifact-mtime window (exp range + span) rather than a misleading 'genuinely empty' report.",
+    "Stamp duration_s, inference_substrate, and compute_bound at artifact write-time on every experiment so slowest-experiment and GPU-efficiency analysis is mechanical rather than reconstructed from mtimes.",
+    "Take NO GPU-efficiency action this milestone: the compute-bound arms ran on GPU-0 (generator_backend=gpu0_cuda); the post-window idle snapshot is expected, and DualGPURunner enforcement is a non-sequitur for sequential single-generator arms."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the false-zero detector wiring: route the milestone-scoped timing detector into the conductor's retro TIMING-DATA prompt-assembly call site (recurring #1 across ~77 milestones).",
+    "Add a disk-mtime fallback + write-time duration_s/inference_substrate/compute_bound stamping so an empty-detector report self-corrects to a verifiable artifact-mtime window.",
+    "Investigate why exp4883 and exp4886 flagged_adversarial (2 of 4 compute-bound arms) so the A1b confirmation and held-out first-win lanes produce headline-eligible numbers next milestone."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "Operationally .450 ran cleanly (~212 min, archive + 9 experiments, one clean win: g50t +1 level lifting reproducible_total_levels 67->68; A1 fork attributed INDUCER_CEILING_HARD live on GPU-0). The single persistent process failure is not in the milestone's research execution but in its MEASUREMENT: the timing detector's false zero has now mis-reported the operational window for ~77 consecutive milestones, and only manual on-disk verification keeps each retro honest. Until the detector-wire is moved to the retro prompt-assembly call site, every future retro pays the same archaeology tax."
+}
