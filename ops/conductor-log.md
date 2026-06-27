@@ -9430,3 +9430,4 @@ The contro |
 | 2026-06-27 05:36 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 88 passed, 1 warning in 8.37s |
 | 2026-06-27 05:50 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 6.86s |
 | 2026-06-27 06:05 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | OK | 89 passed, 1 warning in 8.08s |
+| 2026-06-27 06:27 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | 88 passed, 1 warning in 6.92s |
