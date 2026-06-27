@@ -10,6 +10,55 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4838-SOTA-INGESTION-PERCEPTION-REPRESENTATION-START -->
+## 2026-06-27 Exp 4838 - .446 perception/representation SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4838_sota_ingestion_perception_representation.json`.
+
+**Preconditions:** `research-studying.md` and `research-references.md` were
+present. `scripts/sweep_clusters.py` emitted world-model, affordance/action-effect,
+and neural-guided world-model cluster URLs. `scripts/sweep_semscholar.py` was
+run on three focused perception/representation queries and returned HTTP 429
+for all of them, so no S2-only source was promoted. Low-concurrency
+WebSearch/WebFetch plus direct arXiv HTTP checks verified the top eight papers
+listed below. `/deep-research` was not invoked. The nulled exploration-strategy
+class was not re-ingested. No model load, training, leaderboard submission, or
+solve claim was made; this is a no solve claim ingestion note.
+
+**L1-wall context imported:** `.445` left the wall at L1-first-contact:
+the winning L1 prefix is not entering the pool, frame-only order-1 features are
+at chance for the current diagnosis, and exploration reweighting has nulled.
+The .446 target is therefore perception/representation: make a novel game's
+winner representable/proposable before ranking.
+
+**Verified source set:**
+- arXiv:1802.04687 -- Neural Relational Inference for Interacting Systems
+- arXiv:1911.12247 -- Contrastive Learning of Structured World Models
+- arXiv:2006.15055 -- Object-Centric Learning with Slot Attention
+- arXiv:2402.03326 -- Slot Structured World Models
+- arXiv:2507.03298 -- Dyn-O: Building Structured World Models with Object-Centric Representations
+- arXiv:2601.06604 -- Object-Centric World Models Meet Monte Carlo Tree Search
+- arXiv:2602.11389 -- Causal-JEPA: Learning World Models through Object-Level Latent Masking
+- arXiv:2606.12316 -- Slots, Transitions, Loops: Learning Composable World Models for ARC
+
+**SOTA -> perception/representation mapping for the L1 wall:**
+- **Slotized ARC object-state proposal binder** (arXiv:2006.15055, arXiv:2606.12316): maps to L1-FIRST-CONTACT / GAP-ARCH-FEATURES; Replace frame-only order-1 features with color/object slots, masks, object permanence IDs, and spatial relation tokens from each frame. Winner representable/proposable test: A novel game's winning prefix is representable only if each decisive click/action can bind to a slot object and a before/after relation, with no terminal win oracle. Proposable output: Propose slot-conditioned action templates such as select/move/merge/fill over objects instead of only raw coordinate retries. Takes over: Takes over frame-delta scalar features that cannot name the object whose transformation makes the first win possible. Fails when: Slot binding drifts between frames, small ARC objects are merged into background, or the proposer cannot turn slots into executable actions.
+- **Object-relational transition graph proposer** (arXiv:1802.04687, arXiv:1911.12247, arXiv:2402.03326): maps to L1-FIRST-CONTACT / GAP-ARCH-FEATURES; Represent each state as objects plus inferred interaction edges, then learn action-conditioned transition rules over that graph. Winner representable/proposable test: The winning prefix is representable if the graph transition predicts the decisive object/relation change before the live explorer sees a win. Proposable output: Propose near-miss next states and action prefixes by editing object relations that the graph predicts will change. Takes over: Takes over exploration-prior reweighting when the candidate pool lacks a structured transition that could produce the winner. Fails when: Edges encode visual proximity rather than mechanics, negatives are too easy, or relation edits produce impossible grid states.
+- **Object-centric latent-dynamics planner with MCTS** (arXiv:2507.03298, arXiv:2601.06604): maps to L1-FIRST-CONTACT / GAP-ARCH-FEATURES; Use an object-centric world model as the state substrate for short lookahead planning, keeping dynamics-aware features separate from visual nuisance features. Winner representable/proposable test: The winning prefix is representable if MCTS over object latents can reach a low-depth candidate state whose replayable action prefix was absent from the frame-only pool. Proposable output: Propose a small set of replayable object-state rollouts and concrete action prefixes for the live verifier to test. Takes over: Takes over unguided first-contact exploration after representation, not search depth, is the limiting factor. Fails when: Latent rollout drift compounds, object discovery fails under clutter, or MCTS optimizes a latent state that cannot be grounded into actions.
+- **Causal object-level JEPA shortcut guard** (arXiv:2602.11389, arXiv:1802.04687): maps to L1-FIRST-CONTACT / GAP-ARCH-FEATURES; Mask or intervene on object-level latents so the encoder must infer interaction-dependent structure rather than frame provenance shortcuts. Winner representable/proposable test: The winning prefix is representable only if masked-object prediction recovers the decisive hidden relation and the relation survives counterfactual object swaps. Proposable output: Propose shortcut-guarded object features used to filter and construct candidate prefixes before any ranker scores them. Takes over: Takes over chance-level order-1 features by forcing the representation to encode causal object dependencies. Fails when: The mask objective can be solved from color/style shortcuts, the object set is wrong, or counterfactual swaps break valid mechanics.
+- **ARC composable slot-transition loop model** (arXiv:2606.12316, arXiv:2006.15055, arXiv:1911.12247): maps to L1-FIRST-CONTACT / GAP-ARCH-FEATURES; Learn ARC rules as composable transitions over color slots, objects, loops, and demonstration-conditioned task summaries. Winner representable/proposable test: The winning prefix is representable if the demonstration-conditioned slot loop proposes the missing first-contact transformation on a held-out game. Proposable output: Propose an executable transformation sketch or action prefix that enters the live candidate pool before static ranking. Takes over: Takes over generic exploration levers by changing what the pool can express: object transformations instead of raw prefix frequency. Fails when: The demo-conditioned summary memorizes family style, the loop fails on single-shot mechanics, or transformations cannot lower to live actions.
+
+flagged_for_v446: loop_owm_slot_transition_proposer (arXiv:2606.12316 + arXiv:2006.15055 + arXiv:1911.12247)
+flagged_for_v446: object_relational_world_model_mcts (arXiv:2601.06604 + arXiv:2402.03326 + arXiv:2507.03298)
+flagged_for_v446: causal_object_jepa_shortcut_guard (arXiv:2602.11389 + arXiv:1802.04687)
+
+**Bottom line for .446:** prioritize Loop-OWM slot-transition proposals
+with Slot Attention/C-SWM as the substrate, then pair that with object-relational
+world-model MCTS. Use Causal-JEPA as the shortcut guard so the learned
+representation captures object interactions rather than provenance or frame
+style. This is perception, not more exploration.
+<!-- EXP4838-SOTA-INGESTION-PERCEPTION-REPRESENTATION-END -->
+
 <!-- EXP4828-SOTA-INGESTION-CROSS-FAMILY-TRANSFER-START -->
 ## 2026-06-26 Exp 4828 - .445 cross-family transfer SOTA ingestion - INGESTED
 
