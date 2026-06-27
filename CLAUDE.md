@@ -2985,6 +2985,20 @@ planner MUST, every milestone:
    Kaggle engine = the CUDA-12.8 `llama-server` binary (NOT a wheel — MTP is in libllama-common). Planner
    tasks build ON this stack; do not re-litigate model selection (settled 2026-06-19).
 
+**GPU allocation — the "iGPU NEVER 3090s" rule applies to the LIVE submission stack ONLY (operator
+directive 2026-06-27).** The iGPU-only constraint in rule 4 above exists for KAGGLE-PARITY: the scored
+eval is iGPU/~16GB-class, so the LIVE submission generator must run there. It does NOT govern OFFLINE /
+dev induction (fork probes, generic-solve world-model induction, the LocalGGUFProposer at dev time). Per
+the 2026-06-27 operator allocation, the two discrete RTX 3090s are dedicated: **the CONDUCTOR owns GPU 0**
+(its offline ARC generator runs there via `CARNOT_ARC_GENERATOR_CUDA_GPU=0`, the systemd drop-in
+`40-arc-generator-3090-20260619.conf`), and **the OUTER LOOP owns GPU 1** (`CUDA_VISIBLE_DEVICES=1` for its
+own experiments). This stops GPU contention and removes the ~4 tok/s iGPU throughput bottleneck for novel
+induction. **PLANNER CONSEQUENCE:** offline induction tasks must NOT hardcode an `igpu_required: True` /
+`cuda_3090_generator_disallowed` precondition — that was sourced from rule 4's live-stack constraint and
+WRONGLY blocks the conductor's own dedicated GPU-0 generator (cf. the `.448` exp4861 fork-probe non-test).
+Offline induction uses GPU 0 (conductor) / GPU 1 (outer loop); only the LIVE submission generator is
+iGPU-pinned.
+
 **Reserved slots still apply.** The 2 infra slots, 1-per-attached-board hardware-continuity slot, and the
 SOTA-ingestion slot are still reserved each milestone (those disciplines are not suspended) — the
 "majority" in rule 1 is of the REMAINING slots.
