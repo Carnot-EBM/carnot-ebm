@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.449",
+  "generated_at": "2026-06-27T18:47:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation, so the locked retro fields are 0/0/0/null. This is the RECURRING FALSE-ZERO DETECTOR GAP, NOT a genuinely empty milestone: 11 real .449 artifacts exist on disk (exp4870 archive/activate -> exp4880 capstone, mtimes 2026-06-27 09:56:01->14:39:38 EDT, ~283-min window). Both RTX 3090s read idle at the 18:47Z snapshot because that snapshot post-dates the capstone (~8 min later); the GPU-bound arms (A1 live fork probe, held-out first-win) ran and finished earlier in the window on GPU0, so gpu_idle_on_compute_bound_tasks=null is correct and GPU idle is NOT flagged.",
+  "bottlenecks_identified": [
+    "RECURRING false-zero milestone-scoped timing detector gap (documented since ~.363, now ~.449, ~76 milestones): the conductor's retro TIMING-DATA prompt-assembly consumer never receives the shipped detector output, so the retro's locked fields are 0/0/0/null even though 11 real artifacts (exp4870-exp4880, ~283-min on-disk window) committed this milestone. This is an OBSERVABILITY bug, not an execution bottleneck -- no wall-time was lost, but the retro cannot analyze per-experiment timing without manual on-disk reconstruction.",
+    "GPU idle at the 18:47Z snapshot is NOT a bottleneck: the snapshot post-dates capstone completion; the compute-bound arms (A1 fork probe + held-out first-win) used GPU0 earlier in the window and finished. With an empty authoritative timing block there are no [compute_bound] rows to gate the claim on, so gpu_idle_on_compute_bound_tasks=null."
+  ],
+  "improvements_suggested": [
+    "MOVE the shipped milestone-scoped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro receives the real commit list instead of a false zero (the root-cause fix for the ~76-milestone gap).",
+    "Add a disk-mtime fallback: when the detector returns 0 commits, scan results/experiment_*.json mtimes within the activation window so a detector false-zero degrades to a verifiable artifact-mtime window (exp4870-exp4880 this milestone) rather than an empty 0/0/0 block.",
+    "Stamp duration_s + inference_substrate + compute_bound at artifact write-time so future retros can classify GPU-bound vs synthesis vs aggregation arms directly from artifacts without re-deriving from git.",
+    "These are the SAME recurring observability fixes flagged across ~.363-.448 -- they remain the single highest-leverage change because every retro currently pays a manual on-disk reconstruction tax."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the milestone-scoped timing detector into the conductor's retro TIMING-DATA prompt-assembly call site (fixes the ~76-milestone false-zero gap at the root).",
+    "Add a disk-mtime activation-window fallback so an empty detector result degrades to a real artifact-mtime list (e.g. exp4870-exp4880) instead of 0/0/0/null.",
+    "Add write-time duration_s / inference_substrate / compute_bound stamping so future retros can answer the GPU-efficiency questions directly from artifacts."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "Execution was NOT the problem this milestone -- 11 arms (exp4870-exp4880) completed in a normal ~283-min window with GPU-bound work correctly placed on GPU0 and no doomed reruns. The problem is OBSERVABILITY: the recurring false-zero timing detector forces every retro to reconstruct the milestone from on-disk artifacts by hand. Fixing the detector-to-retro wire (plus a disk-mtime fallback) is a one-time change that has been the top recurring action for ~76 milestones; the estimated saving is in retro fidelity / analyst time, not reclaimable wall-clock, since the milestone itself ran efficiently."
+}
