@@ -11930,3 +11930,70 @@ When Experiment 4874 checks preconditions
 Then it writes `results/experiment_4874_self_play_verifier_checkpoint.json`
 with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
 fabricated checkpoint refresh.
+
+### REQ-ARC-WMTE-4885: Rotated ARC Continuous Self-Play Verifier Checkpoint Refresh
+
+Experiment 4885 SHALL run the standing ARC self-play loop on a rotated banked
+target with an existing learned verifier checkpoint, preferring `ls20` so the
+continuous self-learning checkpoint task rotates off the prior `re86` target.
+The loop SHALL warm-start from `models/arc_verifier_ls20.json`, reproduction-gate
+at least one offline level, train on this run's self-play traces, refresh the
+checkpoint, and write
+`results/experiment_4885_self_play_verifier_checkpoint.json`.
+
+The preconditions SHALL verify that `arc_solver_kit.offline_arcade()` exits 0,
+that `ops/arc_solve_registry.yaml` is loadable, that the selected target has a
+banked level, and that `models/arc_verifier_<game>.json` exists before the run.
+If any required resource is missing, Experiment 4885 SHALL write a terminal
+`blocked_*` artifact that records the failed precondition and SHALL NOT claim a
+refreshed checkpoint.
+
+The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
+only when the checkpoint mtime advances, `offline_reproduced=true`, and
+`reproduced_levels >= 1`. A failed loop, missing checkpoint, stale mtime, or
+failed reproduction gate SHALL write a terminal `complete_*` or `blocked_*`
+artifact with the residual instead of fabricating checkpoint progress.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
+- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
+- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
+- `reproduced_levels`: principle "the depth confirmed this run."
+- `target_game`: principle "the rotated self-play target (differs from .449 re86)."
+- `inference_substrate`: principle "live_llm_inference (60s floor)."
+- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+#### SCENARIO-ARC-WMTE-4885-CHECKPOINT-REFRESHED
+
+Given `arc_solver_kit.offline_arcade()` is available, `ls20` is banked in
+`ops/arc_solve_registry.yaml`, and `models/arc_verifier_ls20.json` exists before
+the standing loop runs
+When `scripts/arc_loop_solve.py --game ls20` reports an offline-reproduced
+level and writes the learned verifier checkpoint
+Then Experiment 4885 records `verifier_checkpoint_refreshed=true`,
+`checkpoint_path=models/arc_verifier_ls20.json`, advanced checkpoint mtimes,
+`offline_reproduced=true`, `reproduced_levels >= 1`, `target_game=ls20`,
+`solve_provenance=live_agent_self_discovery`, and
+`honest_verdict=success_self_play_checkpoint_refreshed`.
+
+#### SCENARIO-ARC-WMTE-4885-RESIDUAL-NO-FABRICATION
+
+Given the loop result is missing, the reproduction gate fails, the checkpoint
+path is absent, or the checkpoint mtime does not advance
+When Experiment 4885 builds its artifact
+Then it records `verifier_checkpoint_refreshed=false`, preserves the residual
+cause, keeps `offline_reproduced` and `reproduced_levels` grounded in the
+loop result, and does not emit a success verdict.
+
+#### SCENARIO-ARC-WMTE-4885-BLOCKED-PRECONDITION
+
+Given the offline arcade is unavailable, the registry is missing, the selected
+target is not banked, the checkpoint file is absent before the run, or the
+selection is the prior `re86` target
+When Experiment 4885 checks preconditions
+Then it writes `results/experiment_4885_self_play_verifier_checkpoint.json`
+with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
+fabricated checkpoint refresh.
