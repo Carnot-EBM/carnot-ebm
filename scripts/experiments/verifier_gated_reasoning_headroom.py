@@ -28,9 +28,7 @@ from pathlib import Path
 # reuse the de-risk harness verbatim (same corpus loader, matcher, server client)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from verifier_gated_reasoning_derisk import (  # noqa: E402
-    PORT,
     SEED,
-    _match,
     _post,
     load_simpleqa,
 )
@@ -51,26 +49,56 @@ def answer_off(q: str) -> str:
     return c.splitlines()[0].strip() if c else ""
 
 
-def answer_on(q: str) -> str:
-    """Reasoning ON: real <think> trace enabled, then parse the 'Final answer:' line."""
+def gen_facts(q: str) -> str:
+    """Stage 1 of factual priming: elicit relevant intermediate facts (the paper's mechanism).
+    A small model burns an unbounded <think> on hard QA, so cap it and use whatever was generated
+    as the 'facts' (strip the <think> wrapper). These are the self-generated facts that may be
+    hallucinated -- exactly what arm C's verifier will gate."""
     prompt = (
-        f"<|im_start|>user\nThink step by step, recalling any relevant facts, then end with a line "
-        f"'Final answer: <short factual answer>'.\nQuestion: {q}<|im_end|>\n<|im_start|>assistant\n"
+        f"<|im_start|>user\nList the key facts you can recall that are relevant to answering this "
+        f"question. Be concise -- a few short factual statements, no final answer yet.\n"
+        f"Question: {q}<|im_end|>\n<|im_start|>assistant\n"
     )
     d = _post(
-        {"prompt": prompt, "n_predict": 700, "temperature": 0.0, "cache_prompt": True},
-        timeout=180,
+        {"prompt": prompt, "n_predict": 256, "temperature": 0.0, "cache_prompt": True},
+        timeout=120,
     )
     c = (d.get("content") or "")
-    # answer is after the think block, on the 'Final answer:' line if present
-    tail = c.split("</think>")[-1]
-    for line in tail.splitlines():
-        low = line.lower()
-        if "final answer" in low:
-            return line.split(":", 1)[-1].strip() if ":" in line else line.strip()
-    # fallback: last non-empty line of the post-think tail
-    lines = [ln.strip() for ln in tail.splitlines() if ln.strip()]
-    return lines[-1] if lines else ""
+    # strip a leading <think> wrapper; take the content up to </think> if it closed, else the cap
+    if "<think>" in c:
+        c = c.split("<think>", 1)[-1]
+    c = c.split("</think>")[0]
+    return c.strip()[:2000]
+
+
+def answer_on(q: str) -> str:
+    """Reasoning ON (factual priming, arm B): answer CONDITIONED on the self-generated facts."""
+    facts = gen_facts(q)
+    prompt = (
+        f"<|im_start|>user\nRelevant facts:\n{facts}\n\nUsing these facts, answer the question with "
+        f"ONLY the short factual answer, no explanation.\nQuestion: {q}<|im_end|>\n"
+        f"<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    )
+    d = _post({"prompt": prompt, "n_predict": 32, "temperature": 0.0, "cache_prompt": True})
+    c = (d.get("content") or "").strip()
+    return c.splitlines()[0].strip() if c else ""
+
+
+def judge(q: str, gold: str, pred: str) -> int:
+    """Local LLM-judge grading (SimpleQA-style), applied IDENTICALLY to both arms so grader bias is
+    common-mode and cancels in the A-vs-B delta. Replaces crude substring matching, which had a
+    length bias favoring the verbose priming arm (e.g. gold '6' substring-matches '1956')."""
+    if not pred.strip():
+        return 0
+    prompt = (
+        f"<|im_start|>user\nQuestion: {q}\nReference (correct) answer: {gold}\nProposed answer: {pred}\n"
+        f"Is the proposed answer consistent with the reference answer (same fact; allow paraphrase, "
+        f"formatting, and extra words)? Answer ONLY 'yes' or 'no'.<|im_end|>\n"
+        f"<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    )
+    d = _post({"prompt": prompt, "n_predict": 1, "temperature": 0.0, "cache_prompt": True})
+    c = (d.get("content") or "").strip().lower()
+    return 1 if c.startswith("y") else 0
 
 
 def boot_delta_ci95(off_ok, on_ok, n_boot: int, seed: int):
@@ -99,8 +127,8 @@ def main() -> int:
         try:
             a_off = answer_off(it["q"])
             a_on = answer_on(it["q"])
-            off_ok.append(1 if _match(a_off, it["gold"]) else 0)
-            on_ok.append(1 if _match(a_on, it["gold"]) else 0)
+            off_ok.append(judge(it["q"], it["gold"], a_off))
+            on_ok.append(judge(it["q"], it["gold"], a_on))
             if (i + 1) % 25 == 0:
                 print(
                     f"  [{i+1}/{len(items)}] off={sum(off_ok)/len(off_ok):.3f} "
