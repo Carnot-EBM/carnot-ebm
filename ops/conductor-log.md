@@ -9435,3 +9435,4 @@ The contro |
 | 2026-06-27 06:52 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability co | OK | 85 passed, 1 warning in 8.58s |
 | 2026-06-27 07:11 UTC | PHASE D (SOTA-INGESTION -- the .448 frontier) -- g | OK | 110 passed, 1 warning in 6.96s |
 | 2026-06-27 08:34 UTC | PHASE E (CAPSTONE .447) -- aggregate the scorecard | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: stream_precond |
+| 2026-06-27 08:42 UTC | PHASE E (CAPSTONE .447) -- aggregate the scorecard | OK | cache hit: 87 passed, 1 warning in 9.73s |
