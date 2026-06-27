@@ -34,10 +34,13 @@ sys.path.insert(0, str(REPO / "scripts"))
 
 from carnot.agentic import arc_game_adapters as adapters  # noqa: E402
 from carnot.agentic import arc_solver_kit as kit  # noqa: E402
-from carnot.agentic.arc_agi3_goal_induction import induce_goal_energy  # noqa: E402
+from carnot.agentic.arc_agi3_goal_induction import (  # noqa: E402
+    induce_goal_energy,
+    induce_goal_energy_single_positive,
+)
 from carnot.agentic.arc_agi3_world_model import grid_of  # noqa: E402
 
-GAME = "cd82"
+GAME = sys.argv[1] if len(sys.argv) > 1 else "cd82"
 SEED = 20260627
 
 
@@ -103,9 +106,12 @@ def main() -> int:
     win_grids = _uniq(win_grids)
     non_win_grids = _uniq(non_win_grids)
 
-    # STAGE 1 test: does goal induction fire, and does it separate win from non-win?
-    energy = induce_goal_energy(win_grids, non_win_grids) if len(win_grids) >= 1 else None
+    # STAGE 1.5 (GAP-4890): the OLD operator needs >=2 wins (floor); the NEW single-positive operator
+    # fires from ONE win iff it is strictly separated from the negatives. Test BOTH on cd82's real grids.
+    energy_two_win = induce_goal_energy(win_grids, non_win_grids) if len(win_grids) >= 2 else None
+    energy = induce_goal_energy_single_positive(win_grids[0], non_win_grids) if win_grids else None
     induce_fired = energy is not None
+    two_win_floor_blocked = energy_two_win is None and len(win_grids) < 2
     sep = None
     if induce_fired:
         we = [float(energy(g)) for g in win_grids]
@@ -124,13 +130,16 @@ def main() -> int:
     if level_reached < 2:
         verdict = f"complete_self_induction_stage1_could_not_reach_l2_reached_{level_reached}"
     elif not induce_fired:
-        verdict = f"complete_self_induction_bounded_no_l3_win_exemplar_floor_n_win_{len(win_grids)}"
+        # the single-positive operator clears the win-exemplar FLOOR; None now means the deeper ceiling:
+        # object/colour features cannot separate the lone win from the negatives (representation ceiling).
+        verdict = (f"complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling"
+                   f"_n_win_{len(win_grids)}")
     elif not sep["separates"]:
-        verdict = (f"complete_self_induction_bounded_no_l3_goal_representation_ceiling"
+        verdict = (f"complete_self_induction_gap4890_energy_does_not_separate_on_real_grids"
                    f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}")
     else:
-        verdict = (f"complete_self_induction_stage1_goal_energy_separates_proceed_to_stage2_search"
-                   f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}")
+        verdict = (f"success_gap4890_single_positive_goal_energy_fires_and_separates_from_one_win"
+                   f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}_proceed_to_stage2_search")
 
     art = {
         "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
@@ -144,9 +153,11 @@ def main() -> int:
         "level_reached": level_reached,
         "n_win_grids": len(win_grids),
         "n_nonwin_grids": len(non_win_grids),
-        "induce_goal_energy_fired": induce_fired,
+        "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
+        "two_win_floor_blocked_old_operator": two_win_floor_blocked,
+        "single_positive_operator_fired": induce_fired,
         "energy_separation": sep,
-        "stage": 1,
+        "stage": 1.5,
         "solve_provenance": "live_agent_self_discovery",
         "used_env_source": False, "read_game_source": False,
         "offline_ground_truth_bfs": False, "hand_calibrated_per_game": False,
@@ -169,10 +180,11 @@ def main() -> int:
     payload = dict(art); payload["reproducibility_checksum"] = ""
     art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
         json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
-    (REPO / "results" / "arc_within_game_l3_self_induction_cd82_stage1.json").write_text(json.dumps(art, indent=2) + "\n")
+    out = REPO / "results" / f"arc_within_game_l3_self_induction_{GAME}_stage1.json"
+    out.write_text(json.dumps(art, indent=2) + "\n")
     print("\n=== VERDICT:", verdict)
-    print(f"level_reached={level_reached} n_win={len(win_grids)} n_nonwin={len(non_win_grids)} induce_fired={induce_fired} sep={sep}")
-    print("-> results/arc_within_game_l3_self_induction_cd82_stage1.json")
+    print(f"[{GAME}] level_reached={level_reached} n_win={len(win_grids)} n_nonwin={len(non_win_grids)} induce_fired={induce_fired} sep={sep}")
+    print(f"-> {out}")
     return 0
 
 

@@ -101,3 +101,50 @@ def induce_goal_energy(
             return lambda g: float(len(disappearing.intersection(set(np.unique(g).tolist()))))
     # H5 fallback (same as the predicate's fallback, graded)
     return lambda g: float(max(0, len(objects(g)) - max_win_objs))
+
+
+def induce_goal_energy_single_positive(
+    win_grid: Optional[np.ndarray], non_win_grids: List[np.ndarray]
+) -> Optional[Callable[[np.ndarray], float]]:
+    """Single-WIN-exemplar goal-energy (GAP-4890, 2026-06-27 — the within-game L2->L3 deepening unblock).
+
+    WHY: ``induce_goal_energy`` returns None with <2 win grids, but at a game's solved frontier the agent
+    has only ONE level-completion exemplar (verified empirically on cd82:
+    results/arc_within_game_l3_self_induction_cd82_stage1.json). The >=2 floor was a conservatism guard
+    against single-example mis-induction, NOT a mathematical necessity — H1/H3/H4 already use only the win's
+    feature value plus the NON-WIN distribution. This relaxes the floor to ONE win while KEEPING the
+    anti-mis-induction guard a different way: a hypothesis fires ONLY when the lone win is STRICTLY
+    separated from EVERY negative on that feature (so a single accidental win cannot mis-induce a goal that
+    the negatives also satisfy). Returns ``energy(grid) -> float >= 0`` (0 == goal satisfied), or None when
+    no feature separates the win from the negatives — an HONEST "cannot induce", not a fabricated goal.
+
+    Contract matches ``induce_goal_energy`` so it drops into the graph_explore_solve_v2 ``goal_energy`` hook.
+    Per the goal-induction doctrine the CALLER MUST still run the BFS-only ablation: the energy only counts
+    if it reaches the win faster than navigation-only."""
+    if win_grid is None or not non_win_grids:
+        return None
+    w_obj = len(objects(win_grid))
+    n_obj = [len(objects(g)) for g in non_win_grids]
+    # H1: win has strictly FEWER objects than every negative -> goal = reduce objects to the win's count.
+    if w_obj < min(n_obj):
+        return lambda g: float(max(0, len(objects(g)) - w_obj))
+    # H2: win has strictly MORE objects than every negative -> goal = grow objects to the win's count.
+    if w_obj > max(n_obj):
+        return lambda g: float(max(0, w_obj - len(objects(g))))
+    w_col = len(np.unique(win_grid))
+    n_col = [len(np.unique(g)) for g in non_win_grids]
+    # H3: win has strictly FEWER unique colours than every negative -> reduce colours to the win's count.
+    if w_col < min(n_col):
+        return lambda g: float(max(0, len(np.unique(g)) - w_col))
+    # H4: colours present in EVERY negative but ABSENT from the win -> goal = make them disappear.
+    common_non_win = set.intersection(*[set(np.unique(g).tolist()) for g in non_win_grids])
+    win_cols = set(np.unique(win_grid).tolist())
+    disappearing = common_non_win - win_cols
+    if disappearing:
+        return lambda g: float(len(disappearing.intersection(set(np.unique(g).tolist()))))
+    # H5: exact object-count match, but ONLY if the win's count never appears among the negatives
+    # (otherwise the energy would read 0 on a negative -> mis-induction).
+    if w_obj not in n_obj:
+        return lambda g: float(abs(len(objects(g)) - w_obj))
+    # No feature strictly separates the single win from the negatives -> cannot induce honestly.
+    return None
