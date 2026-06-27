@@ -1,26 +1,26 @@
 {
   "experiment": "verifier_gated_reasoning_headroom",
   "schema": "carnot.verifier_gated_reasoning_headroom.v1",
-  "honest_verdict": "complete: no_reasoning_headroom_delta_0.0_ci95_0.0_0.0_straddles_zero_line_moot_for_this_model_corpus",
+  "honest_verdict": "complete: no_reasoning_headroom_delta_0.024_ci95_-0.024_0.0721_straddles_zero_line_moot_for_this_model_corpus",
   "question": "does reasoning-on beat reasoning-off (the arXiv:2603.09906 recall effect) for the local model on SimpleQA-Verified? (risk #2: the headroom premise of verifier-gated reasoning)",
   "inference_substrate": "live_llm_inference",
   "verifier_is_oracle": false,
   "model": "Qwen3.5-9B-MTP (GPU 1, port 8921)",
   "corpus": "google/simpleqa-verified eval",
-  "n_items": 6,
-  "acc_reasoning_off": 0.0,
-  "acc_reasoning_on": 0.0,
-  "delta_on_minus_off": 0.0,
+  "n_items": 208,
+  "acc_reasoning_off": 0.0769,
+  "acc_reasoning_on": 0.101,
+  "delta_on_minus_off": 0.024,
   "delta_ci95": [
-    0.0,
-    0.0
+    -0.024,
+    0.0721
   ],
-  "discordant_on_right_off_wrong": 0,
-  "discordant_off_right_on_wrong": 0,
+  "discordant_on_right_off_wrong": 15,
+  "discordant_off_right_on_wrong": 10,
   "n_bootstrap": 2000,
   "reasoning_headroom_confirmed": false,
   "interpretation": "headroom=True (CI95 of acc(ON)-acc(OFF) excludes 0) -> reasoning unlocks recall for this model/corpus; a process verifier protecting intermediate facts has something to improve -> build the full A/B/C experiment. headroom=False (CI95 straddles 0) -> no reasoning gain here; verifier-gating cannot raise final accuracy by construction -> the line is moot for this model/corpus (report; do not build).",
   "random_seed": 2603,
-  "duration_s": 39.24,
-  "reproducibility_checksum": "sha256:567f19f763e3c5c4ab77dded019f7fc7a1c9436c975ed16366763498342ff3ee"
+  "duration_s": 657.59,
+  "reproducibility_checksum": "sha256:351097c2b4e492054a13c470f4128ee9da2a2cf38091132e5082ed3c5d3c9bd0"
 }

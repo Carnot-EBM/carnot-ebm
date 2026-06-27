@@ -166,10 +166,39 @@ recall," with the Google paper as the motivating corroboration.
 
 ---
 
+## 4a. UPDATE 2026-06-27 — risk #2 (headroom) checked: PREMISE DOES NOT HOLD for this model/corpus
+
+Before building the full A/B/C, the headroom premise (risk #2) was validated cheaply
+(`scripts/experiments/verifier_gated_reasoning_headroom.py`,
+`results/verifier_gated_reasoning_headroom.json`, n=208, GPU 1). Two-stage factual priming (generate
+intermediate facts → answer conditioned on them; the paper's mechanism) vs direct answer, graded by a
+local LLM-judge applied identically to both arms (the crude substring matcher had a length bias
+favoring the verbose priming arm — fixed):
+
+- **acc(priming) = 0.101, acc(direct) = 0.077, delta = +2.4pp, paired-bootstrap CI95 [−0.024, +0.072]
+  — STRADDLES 0.** `reasoning_headroom_confirmed: false`.
+
+**Conclusion:** the arXiv:2603.09906 recall effect (measured by the authors on Gemini-2.5 / Qwen3-32B)
+does **not** significantly reproduce on **Qwen3.5-9B / SimpleQA-Verified**. With no significant
+reasoning-recall gain, a process verifier protecting intermediate facts has nothing to improve
+(C ≈ B by construction) — so **the full A/B/C build is moot for this exact model+corpus** and is NOT
+built. This is the cheap-validation discipline working as intended: the #1 risk was resolved positive
+(the verifier *can* discriminate, §1) but the #2 premise failed the gate, saving the large build.
+
+**Revival conditions (any one would re-open the build):** (a) a larger local model where the recall
+effect is significant — the authors' positive results were on a 32B-class model, so a Qwen3-32B-class
+local run on GPU 0/1 is the natural next test; (b) a higher-headroom corpus (multi-hop / EntityQuestions,
+where priming helps more than on single-hop SimpleQA); (c) restricting to the items the paper's effect
+is strongest on (`multi_step`/`requires_reasoning` flags exist in the SimpleQA-Verified schema).
+Discordant pairs were ON-right/OFF-wrong=15 vs OFF-right/ON-wrong=10 — a real but small, noisy tilt
+toward priming, consistent with "effect exists but is sub-threshold at 9B."
+
 ## 5. Flagged for the next roadmap
 
-- **Strongest method to build:** verifier-gated reasoning (§4) — flagged for a verifier-core milestone
-  (NOT the ARC sprint; this is paper-v6 verifier-thesis work, runs on the outer-loop's GPU 1).
+- **Verifier-gated reasoning (§4): PAUSED — premise failed at 9B (§4a).** Do NOT build the full A/B/C
+  on Qwen3.5-9B/SimpleQA-Verified. Re-open only under a §4a revival condition (larger model, or a
+  higher-headroom corpus). The #1-risk de-risk (model-native verifier discriminates, §1) remains a
+  standalone positive result usable elsewhere.
 - **Cite in paper-v6:** the §2 quote bank, alongside the Anthropic + LeCun banks, in the
   verification/limitations sections.
 - Marked ingested in `research-studying.md`.
